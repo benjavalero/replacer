@@ -1,12 +1,12 @@
 package es.bvalero.replacer.page.review;
 
 import es.bvalero.replacer.common.domain.*;
-import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.finder.listing.Misspelling;
 import es.bvalero.replacer.finder.replacement.ReplacementMapper;
 import es.bvalero.replacer.finder.replacement.custom.CustomOptions;
 import es.bvalero.replacer.finder.replacement.custom.CustomReplacementFinderService;
 import es.bvalero.replacer.repository.CustomRepository;
+import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.wikipedia.WikipediaSearchResult;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import java.util.*;
@@ -83,14 +83,14 @@ class PageReviewCustomFinder extends PageReviewFinder {
                     return PageSearchResult.of(totalToReview, pageIds);
                 }
             }
-        } catch (ReplacerException e) {
+        } catch (WikipediaException e) {
             LOGGER.error("Error finding page IDs in Wikipedia for options: {}", options, e);
         }
 
         return PageSearchResult.ofEmpty();
     }
 
-    private WikipediaSearchResult findWikipediaResults(PageReviewOptions options) throws ReplacerException {
+    private WikipediaSearchResult findWikipediaResults(PageReviewOptions options) throws WikipediaException {
         String subtype = options.getSubtype();
         Boolean cs = options.getCs();
         Integer offset = this.getOffset();

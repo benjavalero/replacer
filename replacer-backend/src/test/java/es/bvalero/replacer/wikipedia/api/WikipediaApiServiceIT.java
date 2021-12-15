@@ -3,8 +3,8 @@ package es.bvalero.replacer.wikipedia.api;
 import static org.junit.jupiter.api.Assertions.*;
 
 import es.bvalero.replacer.common.domain.*;
-import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.config.JsonMapperConfiguration;
+import es.bvalero.replacer.wikipedia.WikipediaException;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collection;
@@ -26,11 +26,11 @@ class WikipediaApiServiceIT {
     private WikipediaApiService wikipediaService;
 
     @Test
-    void testGetPageContent() throws ReplacerException {
+    void testGetPageContent() throws WikipediaException {
         String title = "Usuario:Benjavalero";
         WikipediaPage page = wikipediaService
             .getPageByTitle(WikipediaLanguage.SPANISH, title)
-            .orElseThrow(ReplacerException::new);
+            .orElseThrow(WikipediaException::new);
         assertNotNull(page);
         assertEquals(6219990, page.getId().getPageId());
         assertEquals(title, page.getTitle());
@@ -40,7 +40,7 @@ class WikipediaApiServiceIT {
     }
 
     @Test
-    void testGetPagesContent() throws ReplacerException {
+    void testGetPagesContent() throws WikipediaException {
         // We pass a null access token to retrieve an anonymous edit token
         Collection<WikipediaPage> pages = wikipediaService.getPagesByIds(
             Arrays.asList(6219990, 6903884),
@@ -54,7 +54,7 @@ class WikipediaApiServiceIT {
                 .stream()
                 .filter(page -> page.getId().getPageId() == 6219990)
                 .findAny()
-                .orElseThrow(ReplacerException::new)
+                .orElseThrow(WikipediaException::new)
                 .getContent()
                 .contains("Orihuela")
         );
@@ -64,19 +64,19 @@ class WikipediaApiServiceIT {
                 .stream()
                 .filter(page -> page.getId().getPageId() == 6903884)
                 .findAny()
-                .orElseThrow(ReplacerException::new)
+                .orElseThrow(WikipediaException::new)
                 .getContent()
                 .contains("Pais Vasco")
         );
     }
 
     @Test
-    void testGetPageContentUnavailable() throws ReplacerException {
+    void testGetPageContentUnavailable() throws WikipediaException {
         assertFalse(wikipediaService.getPageByTitle(WikipediaLanguage.SPANISH, "Usuario:Benjavaleroxx").isPresent());
     }
 
     @Test
-    void testGetEditToken() throws ReplacerException {
+    void testGetEditToken() throws WikipediaException {
         // We pass an empty access token to retrieve an anonymous edit token
         WikipediaPageId pageId = WikipediaPageId.of(WikipediaLanguage.SPANISH, 6903884);
         EditToken editToken = wikipediaService.getEditToken(pageId, AccessToken.empty());
@@ -86,10 +86,10 @@ class WikipediaApiServiceIT {
     }
 
     @Test
-    void testSavePageWithConflicts() throws ReplacerException {
+    void testSavePageWithConflicts() throws WikipediaException {
         WikipediaPage page = wikipediaService
             .getPageByTitle(WikipediaLanguage.SPANISH, "Wikipedia:Zona de pruebas/5")
-            .orElseThrow(ReplacerException::new);
+            .orElseThrow(WikipediaException::new);
 
         String originalContent = page.getContent();
         String newContent = originalContent + "\nEdición sencilla para probar conflictos de edición.";
@@ -109,7 +109,7 @@ class WikipediaApiServiceIT {
         LocalDateTime before = page.getQueryTimestamp().minusDays(1);
 
         assertThrows(
-            ReplacerException.class,
+            WikipediaException.class,
             () ->
                 wikipediaService.savePageContent(
                     page.getId(),

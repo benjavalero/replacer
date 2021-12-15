@@ -3,7 +3,6 @@ package es.bvalero.replacer.page.save;
 import com.github.rozidan.springboot.logger.Loggable;
 import es.bvalero.replacer.common.domain.*;
 import es.bvalero.replacer.common.dto.CommonQueryParameters;
-import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.common.util.WikipediaDateUtils;
 import es.bvalero.replacer.page.review.PageReviewMapper;
 import es.bvalero.replacer.page.review.PageReviewOptions;
@@ -37,7 +36,7 @@ public class PageSaveController {
         @Parameter(description = "Page ID", example = "1") @PathVariable("id") int pageId,
         @Valid CommonQueryParameters queryParameters,
         @Valid @RequestBody PageSaveRequest request
-    ) throws ReplacerException {
+    ) {
         if (!Objects.equals(pageId, request.getPage().getId())) {
             return new ResponseEntity<>("Page ID mismatch", HttpStatus.BAD_REQUEST);
         }

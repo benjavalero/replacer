@@ -1,7 +1,6 @@
 package es.bvalero.replacer.wikipedia;
 
 import es.bvalero.replacer.common.domain.*;
-import es.bvalero.replacer.common.exception.ReplacerException;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Optional;
@@ -9,15 +8,15 @@ import org.springframework.lang.Nullable;
 
 /** Service to perform operations on Wikipedia */
 public interface WikipediaService {
-    WikipediaUser getAuthenticatedUser(WikipediaLanguage lang, AccessToken accessToken) throws ReplacerException;
+    WikipediaUser getAuthenticatedUser(WikipediaLanguage lang, AccessToken accessToken) throws WikipediaException;
 
-    Optional<WikipediaPage> getPageByTitle(WikipediaLanguage lang, String pageTitle) throws ReplacerException;
+    Optional<WikipediaPage> getPageByTitle(WikipediaLanguage lang, String pageTitle);
 
-    Optional<WikipediaPage> getPageById(WikipediaPageId id) throws ReplacerException;
+    Optional<WikipediaPage> getPageById(WikipediaPageId id);
 
-    Collection<WikipediaSection> getPageSections(WikipediaPageId id) throws ReplacerException;
+    Collection<WikipediaSection> getPageSections(WikipediaPageId id) throws WikipediaException;
 
-    Optional<WikipediaPage> getPageSection(WikipediaPageId id, WikipediaSection section) throws ReplacerException;
+    Optional<WikipediaPage> getPageSection(WikipediaPageId id, WikipediaSection section);
 
     WikipediaSearchResult searchByText(
         WikipediaLanguage lang,
@@ -26,7 +25,7 @@ public interface WikipediaService {
         boolean caseSensitive,
         int offset,
         int limit
-    ) throws ReplacerException;
+    ) throws WikipediaException;
 
     void savePageContent(
         WikipediaPageId id,
@@ -35,5 +34,5 @@ public interface WikipediaService {
         LocalDateTime queryTimestamp,
         String editSummary,
         AccessToken accessToken
-    ) throws ReplacerException;
+    ) throws WikipediaException;
 }

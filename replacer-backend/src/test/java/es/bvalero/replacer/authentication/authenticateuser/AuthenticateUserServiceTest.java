@@ -10,7 +10,7 @@ import es.bvalero.replacer.authentication.oauth.RequestToken;
 import es.bvalero.replacer.authentication.useradmin.CheckUserAdminService;
 import es.bvalero.replacer.common.domain.AccessToken;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import es.bvalero.replacer.common.exception.ReplacerException;
+import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import es.bvalero.replacer.wikipedia.WikipediaUser;
 import es.bvalero.replacer.wikipedia.WikipediaUserGroup;
@@ -41,7 +41,7 @@ class AuthenticateUserServiceTest {
     }
 
     @Test
-    void testGetAuthenticatedUser() throws AuthenticationException, ReplacerException {
+    void testGetAuthenticatedUser() throws AuthenticationException, WikipediaException {
         WikipediaLanguage lang = WikipediaLanguage.getDefault();
         RequestToken requestToken = RequestToken.of("R", "S");
         String oAuthVerifier = "Z";

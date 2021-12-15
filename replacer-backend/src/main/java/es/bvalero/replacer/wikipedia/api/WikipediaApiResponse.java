@@ -1,7 +1,7 @@
 package es.bvalero.replacer.wikipedia.api;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import es.bvalero.replacer.common.exception.ReplacerException;
+import es.bvalero.replacer.wikipedia.WikipediaException;
 import java.util.List;
 import lombok.Data;
 import org.springframework.lang.Nullable;
@@ -20,13 +20,13 @@ class WikipediaApiResponse {
     private Page parse;
 
     /**
-     * @throws ReplacerException if the response contains an error.
+     * @throws WikipediaException if the response contains an error.
      */
-    void validate() throws ReplacerException {
+    void validate() throws WikipediaException {
         if (this.error != null) {
             String code = this.error.getCode();
             String info = this.error.getInfo();
-            throw new ReplacerException(String.format("%s: %s", code, info));
+            throw new WikipediaException(String.format("%s: %s", code, info));
         }
     }
 

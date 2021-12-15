@@ -9,7 +9,7 @@ import com.github.scribejava.core.model.Response;
 import com.github.scribejava.core.oauth.OAuth10aService;
 import es.bvalero.replacer.common.domain.AccessToken;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import es.bvalero.replacer.common.exception.ReplacerException;
+import es.bvalero.replacer.wikipedia.WikipediaException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -51,7 +51,7 @@ class WikipediaApiRequestHelperTest {
                 .lang(WikipediaLanguage.getDefault())
                 .build();
             wikipediaApiRequestHelper.executeApiRequest(apiRequest);
-        } catch (ReplacerException e) {
+        } catch (WikipediaException e) {
             assertTrue(e.getMessage().startsWith("too-many-pageids"));
         }
     }
@@ -68,7 +68,7 @@ class WikipediaApiRequestHelperTest {
             .verb(WikipediaApiRequestVerb.GET)
             .lang(WikipediaLanguage.getDefault())
             .build();
-        assertThrows(ReplacerException.class, () -> wikipediaApiRequestHelper.executeApiRequest(apiRequest));
+        assertThrows(WikipediaException.class, () -> wikipediaApiRequestHelper.executeApiRequest(apiRequest));
     }
 
     @Test

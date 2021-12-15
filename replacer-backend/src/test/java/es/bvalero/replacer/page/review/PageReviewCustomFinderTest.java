@@ -4,13 +4,13 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import es.bvalero.replacer.common.domain.*;
-import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.finder.listing.SimpleMisspelling;
 import es.bvalero.replacer.finder.replacement.Replacement;
 import es.bvalero.replacer.finder.replacement.custom.CustomOptions;
 import es.bvalero.replacer.finder.replacement.custom.CustomReplacementFinderService;
 import es.bvalero.replacer.repository.CustomModel;
 import es.bvalero.replacer.repository.CustomRepository;
+import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.wikipedia.WikipediaSearchResult;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import java.time.LocalDateTime;
@@ -56,7 +56,7 @@ class PageReviewCustomFinderTest {
     }
 
     @Test
-    void testNoResults() throws ReplacerException {
+    void testNoResults() throws WikipediaException {
         final WikipediaLanguage lang = WikipediaLanguage.getDefault();
         final String replacement = "R";
         final String suggestion = "S";
@@ -86,7 +86,7 @@ class PageReviewCustomFinderTest {
     }
 
     @Test
-    void testResultAlreadyReviewed() throws ReplacerException {
+    void testResultAlreadyReviewed() throws WikipediaException {
         final WikipediaLanguage lang = WikipediaLanguage.getDefault();
         final String replacement = "R";
         final String suggestion = "S";
@@ -124,7 +124,7 @@ class PageReviewCustomFinderTest {
     }
 
     @Test
-    void testResultWithReview() throws ReplacerException {
+    void testResultWithReview() throws WikipediaException {
         final WikipediaLanguage lang = WikipediaLanguage.getDefault();
         final String replacement = "R";
         final String suggestion = "S";
@@ -195,7 +195,7 @@ class PageReviewCustomFinderTest {
     }
 
     @Test
-    void testResultWithNoReplacements() throws ReplacerException {
+    void testResultWithNoReplacements() throws WikipediaException {
         final WikipediaLanguage lang = WikipediaLanguage.getDefault();
         final String replacement = "R";
         final String suggestion = "S";
@@ -249,7 +249,7 @@ class PageReviewCustomFinderTest {
     }
 
     @Test
-    void testTwoResultsFirstReviewed() throws ReplacerException {
+    void testTwoResultsFirstReviewed() throws WikipediaException {
         final WikipediaLanguage lang = WikipediaLanguage.getDefault();
         final String replacement = "R";
         final String suggestion = "S";
@@ -320,7 +320,7 @@ class PageReviewCustomFinderTest {
     }
 
     @Test
-    void testSeveralResultsAllReviewed() throws ReplacerException {
+    void testSeveralResultsAllReviewed() throws WikipediaException {
         final WikipediaLanguage lang = WikipediaLanguage.getDefault();
         final String replacement = "R";
         final String suggestion = "S";
@@ -359,7 +359,7 @@ class PageReviewCustomFinderTest {
     }
 
     @Test
-    void testSeveralResults() throws ReplacerException {
+    void testSeveralResults() throws WikipediaException {
         final WikipediaLanguage lang = WikipediaLanguage.getDefault();
         final String replacement = "R";
         final String suggestion = "S";
@@ -473,7 +473,7 @@ class PageReviewCustomFinderTest {
     }
 
     @Test
-    void testAllResultsWithoutReplacements() throws ReplacerException {
+    void testAllResultsWithoutReplacements() throws WikipediaException {
         final WikipediaLanguage lang = WikipediaLanguage.getDefault();
         final String replacement = "R";
         final String suggestion = "S";

@@ -1,6 +1,7 @@
 package es.bvalero.replacer.finder.benchmark;
 
 import es.bvalero.replacer.common.exception.ReplacerException;
+import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.wikipedia.api.WikipediaUtils;
 import java.util.List;
 
@@ -14,14 +15,18 @@ public abstract class BaseFinderBenchmark {
     }
 
     protected void runBenchmark(List<BenchmarkFinder> finders, int warmUp, int iterations) throws ReplacerException {
-        List<String> sampleContents = WikipediaUtils.findSampleContents();
+        try {
+            List<String> sampleContents = WikipediaUtils.findSampleContents();
 
-        // Warm-up
-        System.out.println("WARM-UP...");
-        run(finders, warmUp, sampleContents, false);
+            // Warm-up
+            System.out.println("WARM-UP...");
+            run(finders, warmUp, sampleContents, false);
 
-        // Real run
-        run(finders, iterations, sampleContents, true);
+            // Real run
+            run(finders, iterations, sampleContents, true);
+        } catch (WikipediaException e) {
+            throw new ReplacerException(e);
+        }
     }
 
     private void run(List<BenchmarkFinder> finders, int numIterations, List<String> sampleContents, boolean print) {
@@ -44,6 +49,10 @@ public abstract class BaseFinderBenchmark {
     }
 
     protected List<String> findSampleContents() throws ReplacerException {
-        return WikipediaUtils.findSampleContents();
+        try {
+            return WikipediaUtils.findSampleContents();
+        } catch (WikipediaException e) {
+            throw new ReplacerException(e);
+        }
     }
 }

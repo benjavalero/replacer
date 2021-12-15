@@ -10,7 +10,7 @@ import com.github.scribejava.core.model.Verb;
 import com.github.scribejava.core.oauth.OAuth10aService;
 import es.bvalero.replacer.common.domain.AccessToken;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import es.bvalero.replacer.common.exception.ReplacerException;
+import es.bvalero.replacer.wikipedia.WikipediaException;
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 import lombok.extern.slf4j.Slf4j;
@@ -34,7 +34,7 @@ class WikipediaApiRequestHelper {
     private ObjectMapper jsonMapper;
 
     @Loggable(LogLevel.TRACE)
-    WikipediaApiResponse executeApiRequest(WikipediaApiRequest apiRequest) throws ReplacerException {
+    WikipediaApiResponse executeApiRequest(WikipediaApiRequest apiRequest) throws WikipediaException {
         // Add common parameters to receive a JSON response from Wikipedia API
         WikipediaApiRequest request = apiRequest
             .toBuilder()
@@ -46,7 +46,7 @@ class WikipediaApiRequestHelper {
         return convert(responseBody);
     }
 
-    private String executeMediaWikiRequest(WikipediaApiRequest apiRequest) throws ReplacerException {
+    private String executeMediaWikiRequest(WikipediaApiRequest apiRequest) throws WikipediaException {
         Verb verb = convertVerb(apiRequest.getVerb());
         String url = buildWikipediaRequestUrl(apiRequest.getLang());
         OAuthRequest mediaWikiRequest = new OAuthRequest(verb, url);
@@ -61,7 +61,7 @@ class WikipediaApiRequestHelper {
         try {
             Response response = mediaWikiApiService.execute(mediaWikiRequest);
             if (!response.isSuccessful()) {
-                throw new ReplacerException(
+                throw new WikipediaException(
                     String.format("Call not successful: %d - %s", response.getCode(), response.getMessage())
                 );
             }
@@ -69,9 +69,11 @@ class WikipediaApiRequestHelper {
             return response.getBody();
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            throw new ReplacerException("ERROR executing OAuth Request", e);
+            LOGGER.error("Error executing OAuth request", e);
+            throw new WikipediaException("Error executing OAuth request");
         } catch (ExecutionException | IOException | IllegalArgumentException | NullPointerException e) {
-            throw new ReplacerException("ERROR executing OAuth Request", e);
+            LOGGER.error("Error executing OAuth request", e);
+            throw new WikipediaException("Error executing OAuth request");
         }
     }
 
@@ -87,14 +89,15 @@ class WikipediaApiRequestHelper {
         return new OAuth1AccessToken(accessToken.getToken(), accessToken.getTokenSecret());
     }
 
-    private WikipediaApiResponse convert(String responseBody) throws ReplacerException {
+    private WikipediaApiResponse convert(String responseBody) throws WikipediaException {
         LOGGER.trace("OAuth response body: {}", responseBody);
         try {
             WikipediaApiResponse apiResponse = jsonMapper.readValue(responseBody, WikipediaApiResponse.class);
             apiResponse.validate();
             return apiResponse;
         } catch (JsonProcessingException e) {
-            throw new ReplacerException(e);
+            LOGGER.error("Error converting Wikipedia API response: {}", responseBody, e);
+            throw new WikipediaException("Error converting Wikipedia API response");
         }
     }
 }

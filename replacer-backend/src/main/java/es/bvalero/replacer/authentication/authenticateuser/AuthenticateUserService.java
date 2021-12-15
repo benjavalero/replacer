@@ -6,7 +6,7 @@ import es.bvalero.replacer.authentication.oauth.RequestToken;
 import es.bvalero.replacer.authentication.useradmin.CheckUserAdminService;
 import es.bvalero.replacer.common.domain.AccessToken;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import es.bvalero.replacer.common.exception.ReplacerException;
+import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import es.bvalero.replacer.wikipedia.WikipediaUser;
 import lombok.extern.slf4j.Slf4j;
@@ -32,7 +32,7 @@ public class AuthenticateUserService {
             AccessToken accessToken = oAuthService.getAccessToken(requestToken, oAuthVerifier);
             WikipediaUser wikipediaUser = wikipediaService.getAuthenticatedUser(lang, accessToken);
             return toDto(wikipediaUser, accessToken);
-        } catch (ReplacerException e) {
+        } catch (WikipediaException e) {
             LOGGER.error("Error authenticating the user");
             throw new AuthenticationException();
         }

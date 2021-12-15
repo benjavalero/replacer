@@ -3,7 +3,7 @@ package es.bvalero.replacer.page.review;
 import es.bvalero.replacer.common.domain.Replacement;
 import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.common.domain.WikipediaSection;
-import es.bvalero.replacer.common.exception.ReplacerException;
+import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -74,7 +74,7 @@ class PageReviewSectionFinder {
                     return Optional.of(sectionReview);
                 }
             }
-        } catch (ReplacerException e) {
+        } catch (WikipediaException e) {
             // No need to log the details as they are logged at the end of the method
             LOGGER.warn("Error finding section", e);
         }
@@ -141,10 +141,10 @@ class PageReviewSectionFinder {
     }
 
     private void validateTranslatedReplacements(Collection<Replacement> replacements, WikipediaPage pageSection)
-        throws ReplacerException {
+        throws WikipediaException {
         if (replacements.stream().anyMatch(rep -> !validatePageReplacement(rep, pageSection.getContent()))) {
             LOGGER.warn("Not valid byte-offset in page section: {} - {}", pageSection.getId(), pageSection.getTitle());
-            throw new ReplacerException("Not valid byte-offset in page section");
+            throw new WikipediaException("Not valid byte-offset in page section");
         }
     }
 

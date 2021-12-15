@@ -2,7 +2,6 @@ package es.bvalero.replacer.wikipedia.api;
 
 import com.github.rozidan.springboot.logger.Loggable;
 import es.bvalero.replacer.common.domain.*;
-import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.common.util.WikipediaDateUtils;
 import es.bvalero.replacer.wikipedia.*;
 import java.time.LocalDateTime;
@@ -36,7 +35,7 @@ class WikipediaApiService implements WikipediaService {
 
     @Override
     public WikipediaUser getAuthenticatedUser(WikipediaLanguage lang, AccessToken accessToken)
-        throws ReplacerException {
+        throws WikipediaException {
         return convertUserInfo(getLoggedUserName(lang, accessToken));
     }
 
@@ -56,7 +55,7 @@ class WikipediaApiService implements WikipediaService {
 
     @VisibleForTesting
     WikipediaApiResponse.UserInfo getLoggedUserName(WikipediaLanguage lang, AccessToken accessToken)
-        throws ReplacerException {
+        throws WikipediaException {
         WikipediaApiRequest apiRequest = WikipediaApiRequest
             .builder()
             .verb(WikipediaApiRequestVerb.GET)
@@ -81,19 +80,29 @@ class WikipediaApiService implements WikipediaService {
     }
 
     @Override
-    public Optional<WikipediaPage> getPageByTitle(WikipediaLanguage lang, String pageTitle) throws ReplacerException {
-        // Return the only value that should be in the map
-        return getPagesByIds("titles", pageTitle, lang).stream().findAny();
+    public Optional<WikipediaPage> getPageByTitle(WikipediaLanguage lang, String pageTitle) {
+        try {
+            // Return the only value that should be in the map
+            return getPagesByIds("titles", pageTitle, lang).stream().findAny();
+        } catch (WikipediaException e) {
+            LOGGER.error("Error getting page by title: {} - {}", lang, pageTitle, e);
+            return Optional.empty();
+        }
     }
 
     @Override
-    public Optional<WikipediaPage> getPageById(WikipediaPageId id) throws ReplacerException {
-        // Return the only value that should be in the map
-        return getPagesByIds(List.of(id.getPageId()), id.getLang()).stream().findAny();
+    public Optional<WikipediaPage> getPageById(WikipediaPageId id) {
+        try {
+            // Return the only value that should be in the map
+            return getPagesByIds(List.of(id.getPageId()), id.getLang()).stream().findAny();
+        } catch (WikipediaException e) {
+            LOGGER.error("Error getting page by ID: {}", id, e);
+            return Optional.empty();
+        }
     }
 
     @VisibleForTesting
-    Collection<WikipediaPage> getPagesByIds(List<Integer> pageIds, WikipediaLanguage lang) throws ReplacerException {
+    Collection<WikipediaPage> getPagesByIds(List<Integer> pageIds, WikipediaLanguage lang) throws WikipediaException {
         List<WikipediaPage> pages = new ArrayList<>(pageIds.size());
         // There is a maximum number of pages to request
         // We split the request in several sub-lists
@@ -110,7 +119,7 @@ class WikipediaApiService implements WikipediaService {
     }
 
     private Collection<WikipediaPage> getPagesByIds(String pagesParam, String pagesValue, WikipediaLanguage lang)
-        throws ReplacerException {
+        throws WikipediaException {
         WikipediaApiRequest apiRequest = WikipediaApiRequest
             .builder()
             .verb(WikipediaApiRequestVerb.GET)
@@ -157,7 +166,7 @@ class WikipediaApiService implements WikipediaService {
     }
 
     @Override
-    public Collection<WikipediaSection> getPageSections(WikipediaPageId id) throws ReplacerException {
+    public Collection<WikipediaSection> getPageSections(WikipediaPageId id) throws WikipediaException {
         WikipediaApiRequest apiRequest = WikipediaApiRequest
             .builder()
             .verb(WikipediaApiRequestVerb.GET)
@@ -206,17 +215,21 @@ class WikipediaApiService implements WikipediaService {
     }
 
     @Override
-    public Optional<WikipediaPage> getPageSection(WikipediaPageId id, WikipediaSection section)
-        throws ReplacerException {
-        WikipediaApiRequest apiRequest = WikipediaApiRequest
-            .builder()
-            .verb(WikipediaApiRequestVerb.GET)
-            .lang(id.getLang())
-            .params(buildPageIdsAndSectionRequestParams(id.getPageId(), section.getIndex()))
-            .build();
-        WikipediaApiResponse apiResponse = wikipediaApiRequestHelper.executeApiRequest(apiRequest);
-        Collection<WikipediaPage> pages = extractPagesFromJson(apiResponse, id.getLang());
-        return pages.stream().findAny();
+    public Optional<WikipediaPage> getPageSection(WikipediaPageId id, WikipediaSection section) {
+        try {
+            WikipediaApiRequest apiRequest = WikipediaApiRequest
+                .builder()
+                .verb(WikipediaApiRequestVerb.GET)
+                .lang(id.getLang())
+                .params(buildPageIdsAndSectionRequestParams(id.getPageId(), section.getIndex()))
+                .build();
+            WikipediaApiResponse apiResponse = wikipediaApiRequestHelper.executeApiRequest(apiRequest);
+            Collection<WikipediaPage> pages = extractPagesFromJson(apiResponse, id.getLang());
+            return pages.stream().findAny();
+        } catch (WikipediaException e) {
+            LOGGER.error("Error getting page section: {} - {}", id, section, e);
+            return Optional.empty();
+        }
     }
 
     private Map<String, String> buildPageIdsAndSectionRequestParams(int pageId, int section) {
@@ -234,7 +247,7 @@ class WikipediaApiService implements WikipediaService {
         boolean caseSensitive,
         int offset,
         int limit
-    ) throws ReplacerException {
+    ) throws WikipediaException {
         // Avoid exception when reaching the maximum offset limit
         if (offset + limit >= MAX_OFFSET_LIMIT) {
             LOGGER.warn("Maximum offset reached: {} - {} - {}", lang, text, caseSensitive);
@@ -315,7 +328,7 @@ class WikipediaApiService implements WikipediaService {
         LocalDateTime queryTimestamp,
         String editSummary,
         AccessToken accessToken
-    ) throws ReplacerException {
+    ) throws WikipediaException {
         EditToken editToken = getEditToken(id, accessToken);
         // Pre-check of edit conflicts
         if (queryTimestamp.compareTo(editToken.getTimestamp()) <= 0) {
@@ -326,7 +339,7 @@ class WikipediaApiService implements WikipediaService {
                 id,
                 pageContent
             );
-            throw new ReplacerException(
+            throw new WikipediaException(
                 "Esta página de Wikipedia ha sido editada por otra persona. Recargue para revisarla de nuevo."
             );
         }
@@ -378,7 +391,7 @@ class WikipediaApiService implements WikipediaService {
     }
 
     @VisibleForTesting
-    EditToken getEditToken(WikipediaPageId id, AccessToken accessToken) throws ReplacerException {
+    EditToken getEditToken(WikipediaPageId id, AccessToken accessToken) throws WikipediaException {
         WikipediaApiRequest apiRequest = WikipediaApiRequest
             .builder()
             .verb(WikipediaApiRequestVerb.POST)

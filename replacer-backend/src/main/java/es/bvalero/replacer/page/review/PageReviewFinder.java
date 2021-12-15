@@ -5,7 +5,6 @@ import com.github.benmanes.caffeine.cache.Caffeine;
 import es.bvalero.replacer.common.domain.Replacement;
 import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.common.domain.WikipediaPageId;
-import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.page.index.PageIndexResult;
 import es.bvalero.replacer.page.index.PageIndexer;
 import es.bvalero.replacer.wikipedia.WikipediaService;
@@ -152,17 +151,13 @@ abstract class PageReviewFinder {
     }
 
     private Optional<WikipediaPage> getPageFromWikipedia(int pageId, PageReviewOptions options) {
-        try {
-            WikipediaPageId wikipediaPageId = WikipediaPageId.of(options.getWikipediaLanguage(), pageId);
-            Optional<WikipediaPage> page = wikipediaService.getPageById(wikipediaPageId);
-            if (page.isPresent()) {
-                return page;
-            } else {
-                LOGGER.warn("No page found in Wikipedia for {}", wikipediaPageId);
-                pageIndexer.indexObsoletePage(wikipediaPageId);
-            }
-        } catch (ReplacerException e) {
-            LOGGER.error("Error finding page in Wikipedia for {} - {}", options.getLang(), pageId, e);
+        WikipediaPageId wikipediaPageId = WikipediaPageId.of(options.getWikipediaLanguage(), pageId);
+        Optional<WikipediaPage> page = wikipediaService.getPageById(wikipediaPageId);
+        if (page.isPresent()) {
+            return page;
+        } else {
+            LOGGER.warn("No page found in Wikipedia for {}", wikipediaPageId);
+            pageIndexer.indexObsoletePage(wikipediaPageId);
         }
 
         return Optional.empty();

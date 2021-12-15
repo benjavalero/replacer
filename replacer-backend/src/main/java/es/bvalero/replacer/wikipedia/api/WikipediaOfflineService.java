@@ -24,26 +24,33 @@ class WikipediaOfflineService implements WikipediaService {
     }
 
     @Override
-    public Optional<WikipediaPage> getPageByTitle(WikipediaLanguage lang, String pageTitle) throws ReplacerException {
-        return Optional.of(buildFakePage(1));
+    public Optional<WikipediaPage> getPageByTitle(WikipediaLanguage lang, String pageTitle) {
+        return buildFakePage(1);
     }
 
-    private WikipediaPage buildFakePage(int pageId) throws ReplacerException {
-        LocalDateTime now = LocalDateTime.now();
-        return WikipediaPage
-            .builder()
-            .id(WikipediaPageId.of(WikipediaLanguage.getDefault(), pageId))
-            .namespace(WikipediaNamespace.getDefault())
-            .title("América del Norte")
-            .content(FileOfflineUtils.getFileContent("/offline/sample-page.txt"))
-            .lastUpdate(now)
-            .queryTimestamp(now)
-            .build();
+    private Optional<WikipediaPage> buildFakePage(int pageId) {
+        try {
+            LocalDateTime now = LocalDateTime.now();
+            return Optional.of(
+                WikipediaPage
+                    .builder()
+                    .id(WikipediaPageId.of(WikipediaLanguage.getDefault(), pageId))
+                    .namespace(WikipediaNamespace.getDefault())
+                    .title("América del Norte")
+                    .content(FileOfflineUtils.getFileContent("/offline/sample-page.txt"))
+                    .lastUpdate(now)
+                    .queryTimestamp(now)
+                    .build()
+            );
+        } catch (ReplacerException e) {
+            LOGGER.error("Error building fake page", e);
+            return Optional.empty();
+        }
     }
 
     @Override
-    public Optional<WikipediaPage> getPageById(WikipediaPageId id) throws ReplacerException {
-        return Optional.of(buildFakePage(id.getPageId()));
+    public Optional<WikipediaPage> getPageById(WikipediaPageId id) {
+        return buildFakePage(id.getPageId());
     }
 
     @Override
@@ -52,9 +59,8 @@ class WikipediaOfflineService implements WikipediaService {
     }
 
     @Override
-    public Optional<WikipediaPage> getPageSection(WikipediaPageId id, WikipediaSection section)
-        throws ReplacerException {
-        return Optional.of(buildFakePage(id.getPageId()));
+    public Optional<WikipediaPage> getPageSection(WikipediaPageId id, WikipediaSection section) {
+        return buildFakePage(id.getPageId());
     }
 
     @Override

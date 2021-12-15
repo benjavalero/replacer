@@ -5,7 +5,6 @@ import static org.mockito.Mockito.*;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import es.bvalero.replacer.common.domain.*;
-import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.common.util.WikipediaDateUtils;
 import es.bvalero.replacer.wikipedia.*;
 import java.time.LocalDateTime;
@@ -68,7 +67,7 @@ class WikipediaApiServiceTest {
         String title = "Usuario:Benjavalero";
         WikipediaPage page = wikipediaService
             .getPageByTitle(WikipediaLanguage.SPANISH, title)
-            .orElseThrow(ReplacerException::new);
+            .orElseThrow(WikipediaException::new);
         assertNotNull(page);
         assertEquals(pageId, page.getId().getPageId());
         assertEquals(title, page.getTitle());
@@ -87,7 +86,7 @@ class WikipediaApiServiceTest {
 
         WikipediaPageId pageId = WikipediaPageId.of(WikipediaLanguage.SPANISH, 6219990);
         String title = "Usuario:Benjavalero";
-        WikipediaPage page = wikipediaService.getPageById(pageId).orElseThrow(ReplacerException::new);
+        WikipediaPage page = wikipediaService.getPageById(pageId).orElseThrow(WikipediaException::new);
         assertNotNull(page);
         assertEquals(pageId, page.getId());
         assertEquals(title, page.getTitle());
@@ -116,7 +115,7 @@ class WikipediaApiServiceTest {
                 .stream()
                 .filter(page -> page.getId().getPageId() == 6219990)
                 .findAny()
-                .orElseThrow(ReplacerException::new)
+                .orElseThrow(WikipediaException::new)
                 .getContent()
                 .contains("Orihuela")
         );
@@ -126,7 +125,7 @@ class WikipediaApiServiceTest {
                 .stream()
                 .filter(page -> page.getId().getPageId() == 6903884)
                 .findAny()
-                .orElseThrow(ReplacerException::new)
+                .orElseThrow(WikipediaException::new)
                 .getContent()
                 .contains("Pais Vasco")
         );
@@ -208,7 +207,7 @@ class WikipediaApiServiceTest {
         LocalDateTime currentTimestamp = WikipediaDateUtils.parseWikipediaTimestamp("2019-06-23T21:24:09Z");
 
         assertThrows(
-            ReplacerException.class,
+            WikipediaException.class,
             () ->
                 wikipediaService.savePageContent(
                     WikipediaPageId.of(WikipediaLanguage.SPANISH, 1),
@@ -294,7 +293,7 @@ class WikipediaApiServiceTest {
                 .stream()
                 .filter(sec -> sec.getIndex() == 1)
                 .findAny()
-                .orElseThrow(ReplacerException::new)
+                .orElseThrow(WikipediaException::new)
                 .getByteOffset()
         );
 
@@ -305,7 +304,7 @@ class WikipediaApiServiceTest {
                 .stream()
                 .filter(sec -> sec.getIndex() == 2)
                 .findAny()
-                .orElseThrow(ReplacerException::new)
+                .orElseThrow(WikipediaException::new)
                 .getByteOffset()
         );
 
@@ -316,7 +315,7 @@ class WikipediaApiServiceTest {
                 .stream()
                 .filter(sec -> sec.getIndex() == 3)
                 .findAny()
-                .orElseThrow(ReplacerException::new)
+                .orElseThrow(WikipediaException::new)
                 .getByteOffset()
         );
 
@@ -356,7 +355,7 @@ class WikipediaApiServiceTest {
             .anchor("X")
             .build();
         String title = "Usuario:Benjavalero/Taller";
-        WikipediaPage page = wikipediaService.getPageSection(pageId, section).orElseThrow(ReplacerException::new);
+        WikipediaPage page = wikipediaService.getPageSection(pageId, section).orElseThrow(WikipediaException::new);
         assertNotNull(page);
         assertEquals(WikipediaLanguage.getDefault(), page.getId().getLang());
         assertEquals(pageId, page.getId());
@@ -367,7 +366,7 @@ class WikipediaApiServiceTest {
     }
 
     @Test
-    void testWikipediaServiceOffline() throws ReplacerException {
+    void testWikipediaServiceOffline() throws WikipediaException {
         assertEquals(
             Integer.valueOf(1),
             wikipediaServiceOffline

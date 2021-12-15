@@ -1,7 +1,6 @@
 package es.bvalero.replacer.page.save;
 
 import es.bvalero.replacer.common.domain.*;
-import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.cosmetic.CosmeticFinderService;
 import es.bvalero.replacer.page.review.PageReviewOptions;
@@ -9,12 +8,15 @@ import es.bvalero.replacer.page.review.PageReviewOptionsType;
 import es.bvalero.replacer.repository.CustomModel;
 import es.bvalero.replacer.repository.CustomRepository;
 import es.bvalero.replacer.repository.ReplacementRepository;
+import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import java.time.LocalDate;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 class PageSaveService {
 
@@ -38,21 +40,25 @@ class PageSaveService {
         @Nullable Integer sectionId,
         PageReviewOptions options,
         AccessToken accessToken
-    ) throws ReplacerException {
+    ) {
         // Apply cosmetic changes
         FinderPage finderPage = FinderPage.of(page.getId().getLang(), page.getContent(), page.getTitle());
         String textToSave = cosmeticFinderService.applyCosmeticChanges(finderPage);
         boolean applyCosmetics = !textToSave.equals(finderPage.getContent());
 
-        // Upload new content to Wikipedia
-        wikipediaService.savePageContent(
-            page.getId(),
-            sectionId,
-            textToSave,
-            page.getQueryTimestamp(),
-            buildEditSummary(options, applyCosmetics),
-            accessToken
-        );
+        try {
+            // Upload new content to Wikipedia
+            wikipediaService.savePageContent(
+                page.getId(),
+                sectionId,
+                textToSave,
+                page.getQueryTimestamp(),
+                buildEditSummary(options, applyCosmetics),
+                accessToken
+            );
+        } catch (WikipediaException e) {
+            LOGGER.error("Error saving page content", e);
+        }
 
         // Mark page as reviewed in the database
         this.markAsReviewed(page.getId().getPageId(), options);

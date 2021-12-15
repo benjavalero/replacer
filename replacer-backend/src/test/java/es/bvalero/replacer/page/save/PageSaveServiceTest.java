@@ -3,12 +3,12 @@ package es.bvalero.replacer.page.save;
 import static org.mockito.Mockito.*;
 
 import es.bvalero.replacer.common.domain.*;
-import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.cosmetic.CosmeticFinderService;
 import es.bvalero.replacer.page.review.PageReviewOptions;
 import es.bvalero.replacer.repository.CustomRepository;
 import es.bvalero.replacer.repository.ReplacementRepository;
+import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -42,7 +42,7 @@ class PageSaveServiceTest {
     }
 
     @Test
-    void testSaveWithChanges() throws ReplacerException {
+    void testSaveWithChanges() throws WikipediaException {
         int pageId = 123;
         LocalDateTime timestamp = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
         WikipediaPage page = WikipediaPage
@@ -76,7 +76,7 @@ class PageSaveServiceTest {
     }
 
     @Test
-    void testSaveWithNoChanges() throws ReplacerException {
+    void testSaveWithNoChanges() throws WikipediaException {
         int pageId = 123;
         String type = "T";
         String subtype = "S";
