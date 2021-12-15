@@ -6,9 +6,9 @@ import static org.mockito.Mockito.when;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.repository.ReplacementRepository;
+import es.bvalero.replacer.repository.ResultCount;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -50,8 +50,9 @@ class ReplacementStatsServiceTest {
 
     @Test
     void testCountReplacementsGroupedByReviewer() {
-        Map<String, Long> countMap = Map.of("A", 10L);
-        when(replacementRepository.countReplacementsByReviewer(any(WikipediaLanguage.class))).thenReturn(countMap);
+        ResultCount<String> count = ResultCount.of("A", 10L);
+        when(replacementRepository.countReplacementsByReviewer(any(WikipediaLanguage.class)))
+            .thenReturn(List.of(count));
 
         Collection<ReviewerCount> expected = List.of(ReviewerCount.of("A", 10L));
         assertEquals(expected, replacementStatsService.countReplacementsGroupedByReviewer(WikipediaLanguage.SPANISH));

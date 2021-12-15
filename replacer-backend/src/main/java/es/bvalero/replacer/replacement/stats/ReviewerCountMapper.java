@@ -1,18 +1,17 @@
 package es.bvalero.replacer.replacement.stats;
 
+import es.bvalero.replacer.repository.ResultCount;
 import java.util.Collection;
-import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
 class ReviewerCountMapper {
 
-    Collection<ReviewerCount> fromModel(Map<String, Long> countMap) {
-        return countMap
-            .entrySet()
+    Collection<ReviewerCount> fromModel(Collection<ResultCount<String>> counts) {
+        return counts
             .stream()
-            .map(entry -> ReviewerCount.of(entry.getKey(), entry.getValue()))
+            .map(count -> ReviewerCount.of(count.getKey(), count.getCount()))
             .sorted()
             .collect(Collectors.toUnmodifiableList());
     }

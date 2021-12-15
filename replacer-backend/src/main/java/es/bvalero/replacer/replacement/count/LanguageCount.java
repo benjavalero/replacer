@@ -1,6 +1,7 @@
 package es.bvalero.replacer.replacement.count;
 
-import es.bvalero.replacer.repository.TypeSubtypeCount;
+import es.bvalero.replacer.common.domain.ReplacementType;
+import es.bvalero.replacer.repository.ResultCount;
 import java.util.Collection;
 import java.util.Map;
 import java.util.TreeMap;
@@ -14,12 +15,12 @@ class LanguageCount {
     // Store internally the type counts in a sorted map
     private final Map<String, TypeCount> typeCounts;
 
-    static LanguageCount build(Collection<TypeSubtypeCount> counts) {
+    static LanguageCount build(Collection<ResultCount<ReplacementType>> counts) {
         final Map<String, TypeCount> typeCounts = new TreeMap<>();
-        for (TypeSubtypeCount count : counts) {
-            String type = count.getType();
+        for (ResultCount<ReplacementType> count : counts) {
+            String type = count.getKey().getKind().getLabel();
             TypeCount typeCount = typeCounts.computeIfAbsent(type, TypeCount::of);
-            typeCount.add(SubtypeCount.of(count.getSubtype(), count.getCount()));
+            typeCount.add(SubtypeCount.of(count.getKey().getSubtype(), count.getCount()));
         }
         return new LanguageCount(typeCounts);
     }

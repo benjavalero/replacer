@@ -4,13 +4,10 @@ import lombok.Value;
 import org.springframework.lang.NonNull;
 
 @Value(staticConstructor = "of")
-public class TypeSubtypeCount {
+public class ResultCount<T> {
 
     @NonNull
-    String type;
-
-    @NonNull
-    String subtype;
+    T key;
 
     @NonNull
     Long count;

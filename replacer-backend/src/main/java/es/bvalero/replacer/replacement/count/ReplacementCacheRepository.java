@@ -1,11 +1,12 @@
 package es.bvalero.replacer.replacement.count;
 
 import com.github.rozidan.springboot.logger.Loggable;
+import es.bvalero.replacer.common.domain.ReplacementType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.repository.ReplacementModel;
 import es.bvalero.replacer.repository.ReplacementRepository;
-import es.bvalero.replacer.repository.TypeSubtypeCount;
+import es.bvalero.replacer.repository.ResultCount;
 import java.util.Collection;
 import java.util.EnumMap;
 import java.util.Map;
@@ -116,7 +117,7 @@ class ReplacementCacheRepository implements ReplacementRepository {
     }
 
     private LanguageCount getReplacementsTypeCountsByLang(WikipediaLanguage lang) {
-        Collection<TypeSubtypeCount> typeSubtypeCounts = countReplacementsByType(lang);
+        Collection<ResultCount<ReplacementType>> typeSubtypeCounts = countReplacementsByType(lang);
         return LanguageCount.build(typeSubtypeCounts);
     }
 
@@ -148,12 +149,12 @@ class ReplacementCacheRepository implements ReplacementRepository {
     }
 
     @Override
-    public Map<String, Long> countReplacementsByReviewer(WikipediaLanguage lang) {
+    public Collection<ResultCount<String>> countReplacementsByReviewer(WikipediaLanguage lang) {
         return replacementRepository.countReplacementsByReviewer(lang);
     }
 
     @Override
-    public Collection<TypeSubtypeCount> countReplacementsByType(WikipediaLanguage lang) {
+    public Collection<ResultCount<ReplacementType>> countReplacementsByType(WikipediaLanguage lang) {
         return replacementRepository.countReplacementsByType(lang);
     }
 

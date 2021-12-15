@@ -1,8 +1,8 @@
 package es.bvalero.replacer.repository;
 
+import es.bvalero.replacer.common.domain.ReplacementType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import java.util.Collection;
-import java.util.Map;
 import org.springframework.lang.Nullable;
 
 public interface ReplacementRepository {
@@ -24,10 +24,10 @@ public interface ReplacementRepository {
     long countReplacementsNotReviewed(WikipediaLanguage lang);
 
     /** Count the number of reviewed replacements by reviewer */
-    Map<String, Long> countReplacementsByReviewer(WikipediaLanguage lang);
+    Collection<ResultCount<String>> countReplacementsByReviewer(WikipediaLanguage lang);
 
     /** Count the number of replacements to review by type */
-    Collection<TypeSubtypeCount> countReplacementsByType(WikipediaLanguage lang);
+    Collection<ResultCount<ReplacementType>> countReplacementsByType(WikipediaLanguage lang);
 
     /** Update the reviewer of all the replacements of the given type to review */
     void updateReviewerByType(WikipediaLanguage lang, String type, String subtype, String reviewer);

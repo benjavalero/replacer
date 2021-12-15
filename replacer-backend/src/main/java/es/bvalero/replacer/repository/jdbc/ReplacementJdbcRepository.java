@@ -1,12 +1,16 @@
 package es.bvalero.replacer.repository.jdbc;
 
 import com.github.rozidan.springboot.logger.Loggable;
+import es.bvalero.replacer.common.domain.ReplacementKind;
+import es.bvalero.replacer.common.domain.ReplacementType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.repository.ReplacementModel;
 import es.bvalero.replacer.repository.ReplacementRepository;
-import es.bvalero.replacer.repository.TypeSubtypeCount;
+import es.bvalero.replacer.repository.ResultCount;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.Collection;
+import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
@@ -80,7 +84,7 @@ class ReplacementJdbcRepository implements ReplacementRepository {
     }
 
     @Override
-    public Map<String, Long> countReplacementsByReviewer(WikipediaLanguage lang) {
+    public Collection<ResultCount<String>> countReplacementsByReviewer(WikipediaLanguage lang) {
         String sql =
             "SELECT reviewer, COUNT(*) AS num FROM replacement " +
             "WHERE lang = :lang AND reviewer IS NOT NULL AND reviewer <> :system " +
@@ -92,19 +96,13 @@ class ReplacementJdbcRepository implements ReplacementRepository {
             jdbcTemplate.query(
                 sql,
                 namedParameters,
-                rs -> {
-                    Map<String, Long> map = new HashMap<>();
-                    while (rs.next()) {
-                        map.put(rs.getString("REVIEWER"), rs.getLong("NUM"));
-                    }
-                    return map;
-                }
+                (resultSet, i) -> ResultCount.of(resultSet.getString("REVIEWER"), resultSet.getLong("NUM"))
             )
         );
     }
 
     @Override
-    public Collection<TypeSubtypeCount> countReplacementsByType(WikipediaLanguage lang) {
+    public Collection<ResultCount<ReplacementType>> countReplacementsByType(WikipediaLanguage lang) {
         String sql =
             "SELECT type, subtype, COUNT(DISTINCT article_id) AS num FROM replacement " +
             "WHERE lang = :lang AND reviewer IS NULL " +
@@ -114,9 +112,11 @@ class ReplacementJdbcRepository implements ReplacementRepository {
             sql,
             namedParameters,
             (resultSet, i) ->
-                TypeSubtypeCount.of(
-                    resultSet.getString("TYPE"),
-                    resultSet.getString("SUBTYPE"),
+                ResultCount.of(
+                    ReplacementType.of(
+                        ReplacementKind.valueOfLabel(resultSet.getString("TYPE")),
+                        resultSet.getString("SUBTYPE")
+                    ),
                     resultSet.getLong("NUM")
                 )
         );
