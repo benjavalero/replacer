@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
  * The indexing will be executed periodically in @{@link DumpScheduledTask},
  * or manually from @{@link DumpController}.
  * The dumps are parsed with @{@link DumpParser}.
- * Each page found in the dump is indexed in @{@link DumpPageIndexer}.
  */
 @Slf4j
 @Service

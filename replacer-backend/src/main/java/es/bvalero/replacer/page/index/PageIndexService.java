@@ -39,7 +39,7 @@ public class PageIndexService implements PageIndexer {
     private PageIndexResultSaver pageIndexResultSaver;
 
     @Override
-    public PageIndexResult indexPageReplacements(WikipediaPage page) {
+    public PageIndexResult indexPage(WikipediaPage page) {
         try {
             IndexablePage dbPage = findIndexablePageInDb(page.getId());
 
@@ -122,7 +122,7 @@ public class PageIndexService implements PageIndexer {
     }
 
     @Override
-    public void forceSave() {
-        throw new IllegalCallerException();
+    public void finish() {
+        // Do nothing
     }
 }

@@ -59,7 +59,7 @@ class PageIndexServiceTest {
     void testPageNotIndexable() {
         when(pageIndexValidator.isPageIndexableByNamespace(page)).thenReturn(false);
 
-        PageIndexResult result = pageIndexService.indexPageReplacements(page);
+        PageIndexResult result = pageIndexService.indexPage(page);
 
         assertEquals(PageIndexStatus.PAGE_NOT_INDEXABLE, result.getStatus());
 
@@ -78,7 +78,7 @@ class PageIndexServiceTest {
         PageIndexResult mockResult = PageIndexResult.builder().status(PageIndexStatus.PAGE_INDEXED).build();
         when(indexablePageComparator.indexPageReplacements(any(IndexablePage.class), isNull())).thenReturn(mockResult);
 
-        PageIndexResult result = pageIndexService.indexPageReplacements(page);
+        PageIndexResult result = pageIndexService.indexPage(page);
 
         assertEquals(PageIndexStatus.PAGE_INDEXED, result.getStatus());
 
@@ -98,7 +98,7 @@ class PageIndexServiceTest {
         PageIndexResult mockResult = PageIndexResult.builder().status(PageIndexStatus.PAGE_INDEXED).build();
         when(indexablePageComparator.indexPageReplacements(any(IndexablePage.class), isNull())).thenReturn(mockResult);
 
-        PageIndexResult result = pageIndexService.indexPageReplacements(page);
+        PageIndexResult result = pageIndexService.indexPage(page);
 
         assertEquals(PageIndexStatus.PAGE_INDEXED, result.getStatus());
 
@@ -115,7 +115,7 @@ class PageIndexServiceTest {
         when(pageIndexValidator.isIndexableByTimestamp(page, null)).thenReturn(false);
         when(pageIndexValidator.isIndexableByPageTitle(page, null)).thenReturn(false);
 
-        PageIndexResult result = pageIndexService.indexPageReplacements(page);
+        PageIndexResult result = pageIndexService.indexPage(page);
 
         assertEquals(PageIndexStatus.PAGE_NOT_INDEXED, result.getStatus());
 
@@ -139,7 +139,7 @@ class PageIndexServiceTest {
 
         when(pageIndexValidator.isPageIndexableByNamespace(page)).thenReturn(false);
 
-        PageIndexResult result = pageIndexService.indexPageReplacements(page);
+        PageIndexResult result = pageIndexService.indexPage(page);
 
         assertEquals(PageIndexStatus.PAGE_NOT_INDEXABLE, result.getStatus());
 

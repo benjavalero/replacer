@@ -31,7 +31,7 @@ class PageIndexBatchService extends PageIndexService implements PageIndexer {
     }
 
     @Override
-    public void forceSave() {
+    public void finish() {
         pageIndexResultSaver.forceSave();
         pageIndexCacheHelper.resetCache();
     }

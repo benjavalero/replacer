@@ -4,12 +4,16 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
+import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.common.exception.ReplacerException;
+import es.bvalero.replacer.page.index.PageIndexResult;
 import es.bvalero.replacer.page.index.PageIndexStatus;
+import es.bvalero.replacer.page.index.PageIndexer;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Objects;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,7 +25,7 @@ import org.mockito.MockitoAnnotations;
 class DumpSaxParserTest {
 
     @Mock
-    private DumpPageIndexer dumpPageIndexer;
+    private PageIndexer pageIndexer;
 
     @Mock
     private Map<String, Long> numPagesEstimated;
@@ -56,17 +60,17 @@ class DumpSaxParserTest {
         assertNull(status.getNumPagesRead());
         assertNull(status.getNumPagesIndexed());
 
-        when(dumpPageIndexer.index(any(DumpPage.class)))
-            .thenReturn(PageIndexStatus.PAGE_INDEXED)
-            .thenReturn(PageIndexStatus.PAGE_NOT_INDEXED)
-            .thenReturn(PageIndexStatus.PAGE_INDEXED)
-            .thenReturn(PageIndexStatus.PAGE_NOT_INDEXABLE);
+        when(pageIndexer.indexPage(any(WikipediaPage.class)))
+            .thenReturn(PageIndexResult.ofEmpty(PageIndexStatus.PAGE_INDEXED, Collections.emptyList()))
+            .thenReturn(PageIndexResult.ofEmpty(PageIndexStatus.PAGE_NOT_INDEXED, Collections.emptyList()))
+            .thenReturn(PageIndexResult.ofEmpty(PageIndexStatus.PAGE_INDEXED, Collections.emptyList()))
+            .thenReturn(PageIndexResult.ofEmpty(PageIndexStatus.PAGE_NOT_INDEXABLE, Collections.emptyList()));
 
         dumpParser.parseDumpFile(WikipediaLanguage.SPANISH, DumpFile.of(dumpFile));
 
         assertFalse(dumpParser.getDumpIndexingStatus().getRunning());
-        verify(dumpPageIndexer, times(4)).index(any(DumpPage.class));
-        verify(dumpPageIndexer).finish();
+        verify(pageIndexer, times(4)).indexPage(any(WikipediaPage.class));
+        verify(pageIndexer).finish();
 
         status = dumpParser.getDumpIndexingStatus();
         assertFalse(status.getRunning());

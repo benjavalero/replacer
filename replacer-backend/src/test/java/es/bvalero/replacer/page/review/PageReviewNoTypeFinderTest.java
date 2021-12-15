@@ -110,12 +110,12 @@ class PageReviewNoTypeFinderTest {
         // The page exists in Wikipedia
         when(wikipediaService.getPageById(randomPageId)).thenReturn(Optional.of(page));
 
-        when(pageIndexer.indexPageReplacements(page))
+        when(pageIndexer.indexPage(page))
             .thenReturn(PageIndexResult.ofEmpty(PageIndexStatus.PAGE_INDEXED, replacements));
 
         Optional<PageReview> review = pageReviewNoTypeService.findRandomPageReview(options);
 
-        verify(pageIndexer).indexPageReplacements(page);
+        verify(pageIndexer).indexPage(page);
 
         assertTrue(review.isPresent());
         assertEquals(randomId, review.get().getPage().getId().getPageId());
@@ -133,12 +133,12 @@ class PageReviewNoTypeFinderTest {
 
         // The page doesn't contain replacements
         List<Replacement> noPageReplacements = Collections.emptyList();
-        when(pageIndexer.indexPageReplacements(page))
+        when(pageIndexer.indexPage(page))
             .thenReturn(PageIndexResult.ofEmpty(PageIndexStatus.PAGE_INDEXED, noPageReplacements));
 
         Optional<PageReview> review = pageReviewNoTypeService.findRandomPageReview(options);
 
-        verify(pageIndexer).indexPageReplacements(page);
+        verify(pageIndexer).indexPage(page);
 
         assertFalse(review.isPresent());
     }
@@ -153,12 +153,12 @@ class PageReviewNoTypeFinderTest {
         when(wikipediaService.getPageById(randomPageId)).thenReturn(Optional.empty());
         when(wikipediaService.getPageById(randomPageId2)).thenReturn(Optional.of(page2));
 
-        when(pageIndexer.indexPageReplacements(page2))
+        when(pageIndexer.indexPage(page2))
             .thenReturn(PageIndexResult.ofEmpty(PageIndexStatus.PAGE_INDEXED, replacements));
 
         Optional<PageReview> review = pageReviewNoTypeService.findRandomPageReview(options);
 
-        verify(pageIndexer).indexPageReplacements(page2);
+        verify(pageIndexer).indexPage(page2);
 
         assertTrue(review.isPresent());
         assertEquals(randomId2, review.get().getPage().getId().getPageId());

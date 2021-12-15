@@ -3,6 +3,7 @@ package es.bvalero.replacer.dump;
 import com.github.rozidan.springboot.logger.Loggable;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.exception.ReplacerException;
+import es.bvalero.replacer.page.index.PageIndexer;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -16,6 +17,7 @@ import javax.xml.parsers.SAXParserFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.logging.LogLevel;
 import org.springframework.stereotype.Component;
 import org.xml.sax.SAXException;
@@ -25,8 +27,9 @@ import org.xml.sax.SAXException;
 @Component
 class DumpSaxParser implements DumpParser {
 
+    @Qualifier("pageBatchIndexService")
     @Autowired
-    private DumpPageIndexer dumpPageIndexer;
+    private PageIndexer pageIndexer;
 
     @Resource
     private Map<String, Long> numPagesEstimated;
@@ -53,7 +56,7 @@ class DumpSaxParser implements DumpParser {
             saxParser.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
 
             this.dumpFile = dumpFile;
-            this.dumpHandler = new DumpSaxHandler(lang, dumpPageIndexer);
+            this.dumpHandler = new DumpSaxHandler(lang, pageIndexer);
             saxParser.parse(xmlInput, dumpHandler);
         } catch (IOException e) {
             throw new ReplacerException("Dump file not valid", e);

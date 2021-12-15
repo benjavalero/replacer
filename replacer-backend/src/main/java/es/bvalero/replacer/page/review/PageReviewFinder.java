@@ -199,7 +199,7 @@ abstract class PageReviewFinder {
 
     protected PageIndexResult indexReplacements(WikipediaPage page) {
         LOGGER.trace("Update page replacements in database");
-        return pageIndexer.indexPageReplacements(page);
+        return pageIndexer.indexPage(page);
     }
 
     private long findTotalResultsFromCache(PageReviewOptions options) {
