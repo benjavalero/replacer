@@ -62,7 +62,7 @@ class DumpSaxParserTest {
             .thenReturn(PageIndexStatus.PAGE_INDEXED)
             .thenReturn(PageIndexStatus.PAGE_NOT_INDEXABLE);
 
-        dumpParser.parseDumpFile(WikipediaLanguage.SPANISH, dumpFile);
+        dumpParser.parseDumpFile(WikipediaLanguage.SPANISH, DumpFile.of(dumpFile));
 
         assertFalse(dumpParser.getDumpIndexingStatus().getRunning());
         verify(dumpPageIndexer, times(4)).index(any(DumpPage.class));

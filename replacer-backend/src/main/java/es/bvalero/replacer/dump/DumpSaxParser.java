@@ -6,7 +6,6 @@ import es.bvalero.replacer.common.exception.ReplacerException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
@@ -35,7 +34,7 @@ class DumpSaxParser implements DumpParser {
     // Singleton properties to be set in each dump parsing
     // We assume we only parse one dump at a time
     private DumpSaxHandler dumpHandler;
-    private Path dumpFile;
+    private DumpFile dumpFile;
 
     @PostConstruct
     void setProperty() {
@@ -44,10 +43,10 @@ class DumpSaxParser implements DumpParser {
 
     @Override
     @Loggable(value = LogLevel.DEBUG, entered = true, skipResult = true)
-    public void parseDumpFile(WikipediaLanguage lang, Path dumpFile) throws ReplacerException {
+    public void parseDumpFile(WikipediaLanguage lang, DumpFile dumpFile) throws ReplacerException {
         assert !getDumpIndexingStatus().getRunning();
 
-        try (InputStream xmlInput = new BZip2CompressorInputStream(Files.newInputStream(dumpFile), true)) {
+        try (InputStream xmlInput = new BZip2CompressorInputStream(Files.newInputStream(dumpFile.getPath()), true)) {
             SAXParserFactory factory = SAXParserFactory.newInstance();
             SAXParser saxParser = factory.newSAXParser();
             saxParser.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "");
@@ -74,7 +73,7 @@ class DumpSaxParser implements DumpParser {
                 .numPagesRead(this.dumpHandler.getNumPagesRead())
                 .numPagesIndexed(this.dumpHandler.getNumPagesIndexed())
                 .numPagesEstimated(numPagesEstimated.get(this.dumpHandler.getLang().getCode()))
-                .dumpFileName(this.dumpFile.getFileName().toString())
+                .dumpFileName(this.dumpFile.getPath().getFileName().toString())
                 .start(this.dumpHandler.getStart())
                 .end(this.dumpHandler.getEnd())
                 .build();

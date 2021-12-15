@@ -3,15 +3,16 @@ package es.bvalero.replacer.dump;
 import com.github.rozidan.springboot.logger.Loggable;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.exception.ReplacerException;
-import java.nio.file.Path;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.logging.LogLevel;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 /**
- * Service to find the latest Wikipedia dumps, parse and index the found pages.
+ * Service to manage the dump indexing tasks,
+ * in particular to get the status of the current (or latest) indexing
+ * and start a new one.
  *
  * The indexing will be executed periodically in @{@link DumpScheduledTask},
  * or manually from @{@link DumpController}.
@@ -19,7 +20,7 @@ import org.springframework.stereotype.Component;
  * Each page found in the dump is indexed in @{@link DumpPageIndexer}.
  */
 @Slf4j
-@Component
+@Service
 class DumpManager {
 
     @Autowired
@@ -43,12 +44,15 @@ class DumpManager {
         }
 
         for (WikipediaLanguage lang : WikipediaLanguage.values()) {
-            try {
-                Path latestDumpFile = dumpFinder.findLatestDumpFile(lang);
-                dumpParser.parseDumpFile(lang, latestDumpFile);
-            } catch (ReplacerException e) {
-                LOGGER.error("Error indexing latest dump file for lang {}", lang, e);
-            }
+            dumpFinder
+                .findLatestDumpFile(lang)
+                .ifPresent(dumpFile -> {
+                    try {
+                        dumpParser.parseDumpFile(lang, dumpFile);
+                    } catch (ReplacerException e) {
+                        LOGGER.error("Error indexing latest dump file for lang {}", lang, e);
+                    }
+                });
         }
     }
 

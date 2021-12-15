@@ -1,12 +1,13 @@
 package es.bvalero.replacer.dump;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import es.bvalero.replacer.common.exception.ReplacerException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -46,10 +47,10 @@ class DumpFileSystemFinderTest {
 
         dumpFinder.setDumpPathBase(dumpPathBase);
 
-        Path latestDumpFile = dumpFinder.findLatestDumpFile(WikipediaLanguage.SPANISH);
+        Optional<DumpFile> latestDumpFile = dumpFinder.findLatestDumpFile(WikipediaLanguage.SPANISH);
 
-        assertNotNull(latestDumpFile);
-        assertEquals(dumpFile2, latestDumpFile);
+        assertTrue(latestDumpFile.isPresent());
+        assertEquals(dumpFile2, latestDumpFile.get().getPath());
     }
 
     @Test
@@ -71,10 +72,10 @@ class DumpFileSystemFinderTest {
 
         dumpFinder.setDumpPathBase(dumpPathBase);
 
-        Path latestDumpFile = dumpFinder.findLatestDumpFile(WikipediaLanguage.SPANISH);
+        Optional<DumpFile> latestDumpFile = dumpFinder.findLatestDumpFile(WikipediaLanguage.SPANISH);
 
-        assertNotNull(latestDumpFile);
-        assertEquals(dumpFile1, latestDumpFile);
+        assertTrue(latestDumpFile.isPresent());
+        assertEquals(dumpFile1, latestDumpFile.get().getPath());
     }
 
     @Test
@@ -91,7 +92,7 @@ class DumpFileSystemFinderTest {
 
         dumpFinder.setDumpPathBase(dumpPathBase);
 
-        assertThrows(ReplacerException.class, () -> dumpFinder.findLatestDumpFile(WikipediaLanguage.SPANISH));
+        assertTrue(dumpFinder.findLatestDumpFile(WikipediaLanguage.SPANISH).isEmpty());
     }
 
     @Test
@@ -109,7 +110,7 @@ class DumpFileSystemFinderTest {
 
         dumpFinder.setDumpPathBase(dumpPathBase);
 
-        assertThrows(ReplacerException.class, () -> dumpFinder.findLatestDumpFile(WikipediaLanguage.SPANISH));
+        assertTrue(dumpFinder.findLatestDumpFile(WikipediaLanguage.SPANISH).isEmpty());
     }
 
     @Test
@@ -117,13 +118,13 @@ class DumpFileSystemFinderTest {
         dumpFinder.setDumpPathBase(dumpBaseFolder.toString());
 
         // Don't create the project sub-folder for the test
-        assertThrows(ReplacerException.class, () -> dumpFinder.findLatestDumpFile(WikipediaLanguage.SPANISH));
+        assertTrue(dumpFinder.findLatestDumpFile(WikipediaLanguage.SPANISH).isEmpty());
     }
 
     @Test
     void testNotExistingDumpBaseFolder() {
         dumpFinder.setDumpPathBase("xxx");
 
-        assertThrows(ReplacerException.class, () -> dumpFinder.findLatestDumpFile(WikipediaLanguage.SPANISH));
+        assertTrue(dumpFinder.findLatestDumpFile(WikipediaLanguage.SPANISH).isEmpty());
     }
 }

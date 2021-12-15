@@ -2,13 +2,12 @@ package es.bvalero.replacer.dump;
 
 import com.github.rozidan.springboot.logger.Loggable;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import es.bvalero.replacer.common.exception.ReplacerException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -48,12 +47,12 @@ class DumpFileSystemFinder implements DumpFinder {
     private String dumpPathBase;
 
     @Loggable(LogLevel.DEBUG)
-    public Path findLatestDumpFile(WikipediaLanguage lang) throws ReplacerException {
-        Path dumPath = Paths.get(dumpPathBase, getDumpPathProject(lang));
-        LOGGER.trace("Dump path: {}", dumPath);
+    public Optional<DumpFile> findLatestDumpFile(WikipediaLanguage lang) {
+        Path dumpPath = Paths.get(dumpPathBase, getDumpPathProject(lang));
+        LOGGER.trace("Dump path: {}", dumpPath);
 
         Path latestDumpFile = null;
-        for (Path dumpFolder : findDumpFolders(dumPath)) {
+        for (Path dumpFolder : findDumpFolders(dumpPath)) {
             Optional<Path> dumpFile = findDumpFile(dumpFolder, lang);
             if (dumpFile.isPresent()) {
                 latestDumpFile = dumpFile.get();
@@ -61,13 +60,14 @@ class DumpFileSystemFinder implements DumpFinder {
             }
         }
         if (latestDumpFile == null) {
-            throw new ReplacerException("No dump file has been found");
+            LOGGER.error("No dump file has been found");
+            return Optional.empty();
         }
 
-        return latestDumpFile;
+        return Optional.of(DumpFile.of(latestDumpFile));
     }
 
-    private List<Path> findDumpFolders(Path dumpPath) throws ReplacerException {
+    private Collection<Path> findDumpFolders(Path dumpPath) {
         try (Stream<Path> listedFiles = Files.list(Paths.get(dumpPath.toString()))) {
             // Return the dump folders reverse-ordered by name (date)
             return listedFiles
@@ -75,7 +75,8 @@ class DumpFileSystemFinder implements DumpFinder {
                 .sorted(Collections.reverseOrder())
                 .collect(Collectors.toUnmodifiableList());
         } catch (IOException e) {
-            throw new ReplacerException("Error listing files in base folder", e);
+            LOGGER.error("Error listing files in base folder", e);
+            return Collections.emptyList();
         }
     }
 

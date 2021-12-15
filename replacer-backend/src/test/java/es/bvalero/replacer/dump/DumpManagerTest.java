@@ -7,6 +7,7 @@ import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.exception.ReplacerException;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -34,13 +35,14 @@ class DumpManagerTest {
         when(dumpParser.getDumpIndexingStatus()).thenReturn(DumpIndexingStatus.ofEmpty());
 
         Path dumpPath = mock(Path.class);
-        when(dumpFinder.findLatestDumpFile(any(WikipediaLanguage.class))).thenReturn(dumpPath);
+        DumpFile dumpFile = DumpFile.of(dumpPath);
+        when(dumpFinder.findLatestDumpFile(any(WikipediaLanguage.class))).thenReturn(Optional.of(dumpFile));
 
         dumpManager.indexLatestDumpFiles();
 
         // 2 executions, one per language.
         verify(dumpFinder, times(2)).findLatestDumpFile(any(WikipediaLanguage.class));
-        verify(dumpParser, times(2)).parseDumpFile(any(WikipediaLanguage.class), any(Path.class));
+        verify(dumpParser, times(2)).parseDumpFile(any(WikipediaLanguage.class), any(DumpFile.class));
     }
 
     @Test
@@ -48,14 +50,17 @@ class DumpManagerTest {
         when(dumpParser.getDumpIndexingStatus()).thenReturn(DumpIndexingStatus.ofEmpty());
 
         Path dumpPath = mock(Path.class);
-        when(dumpFinder.findLatestDumpFile(any(WikipediaLanguage.class))).thenReturn(dumpPath);
-        doThrow(ReplacerException.class).when(dumpParser).parseDumpFile(any(WikipediaLanguage.class), any(Path.class));
+        DumpFile dumpFile = DumpFile.of(dumpPath);
+        when(dumpFinder.findLatestDumpFile(any(WikipediaLanguage.class))).thenReturn(Optional.of(dumpFile));
+        doThrow(ReplacerException.class)
+            .when(dumpParser)
+            .parseDumpFile(any(WikipediaLanguage.class), any(DumpFile.class));
 
         dumpManager.indexLatestDumpFiles();
 
         // 2 executions, one per language.
         verify(dumpFinder, times(2)).findLatestDumpFile(any(WikipediaLanguage.class));
-        verify(dumpParser, times(2)).parseDumpFile(any(WikipediaLanguage.class), any(Path.class));
+        verify(dumpParser, times(2)).parseDumpFile(any(WikipediaLanguage.class), any(DumpFile.class));
     }
 
     @Test
@@ -66,7 +71,7 @@ class DumpManagerTest {
 
         // 2 executions, one per language.
         verify(dumpFinder, never()).findLatestDumpFile(any(WikipediaLanguage.class));
-        verify(dumpParser, never()).parseDumpFile(any(WikipediaLanguage.class), any(Path.class));
+        verify(dumpParser, never()).parseDumpFile(any(WikipediaLanguage.class), any(DumpFile.class));
     }
 
     @Test
