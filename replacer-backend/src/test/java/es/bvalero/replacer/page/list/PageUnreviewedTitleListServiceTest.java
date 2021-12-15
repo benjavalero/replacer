@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import es.bvalero.replacer.common.domain.ReplacementKind;
+import es.bvalero.replacer.common.domain.ReplacementType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.repository.PageRepository;
 import java.util.Arrays;
@@ -35,15 +37,22 @@ class PageUnreviewedTitleListServiceTest {
         List<String> list = Arrays.asList("Bo", "C", "Aá", "Bñ", null, "Ae");
         List<String> sorted = List.of("Aá", "Ae", "Bñ", "Bo", "C");
 
-        when(pageRepository.findPageTitlesToReviewByType(WikipediaLanguage.getDefault(), "X", "Y")).thenReturn(list);
+        when(
+            pageRepository.findPageTitlesToReviewByType(
+                WikipediaLanguage.getDefault(),
+                ReplacementKind.DATE.getLabel(),
+                "Y"
+            )
+        )
+            .thenReturn(list);
 
         Collection<String> result = pageUnreviewedTitleListService.findPageTitlesToReviewByType(
             WikipediaLanguage.getDefault(),
-            "X",
-            "Y"
+            ReplacementType.of(ReplacementKind.DATE, "Y")
         );
         assertEquals(sorted, result);
 
-        verify(pageRepository).findPageTitlesToReviewByType(WikipediaLanguage.getDefault(), "X", "Y");
+        verify(pageRepository)
+            .findPageTitlesToReviewByType(WikipediaLanguage.getDefault(), ReplacementKind.DATE.getLabel(), "Y");
     }
 }

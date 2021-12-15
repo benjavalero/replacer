@@ -1,6 +1,8 @@
 package es.bvalero.replacer.page.list;
 
 import com.github.rozidan.springboot.logger.Loggable;
+import es.bvalero.replacer.common.domain.ReplacementKind;
+import es.bvalero.replacer.common.domain.ReplacementType;
 import es.bvalero.replacer.common.dto.CommonQueryParameters;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -35,8 +37,7 @@ public class PageListController {
         String titleList = StringUtils.join(
             pageUnreviewedTitleListService.findPageTitlesToReviewByType(
                 queryParameters.getWikipediaLanguage(),
-                request.getType(),
-                request.getSubtype()
+                toDomain(request)
             ),
             "\n"
         );
@@ -47,10 +48,10 @@ public class PageListController {
     @PostMapping(value = "/review")
     public void reviewAsSystemByType(@Valid CommonQueryParameters queryParameters, @Valid PageListRequest request) {
         // Set as reviewed in the database
-        reviewByTypeService.reviewAsSystemByType(
-            queryParameters.getWikipediaLanguage(),
-            request.getType(),
-            request.getSubtype()
-        );
+        reviewByTypeService.reviewAsSystemByType(queryParameters.getWikipediaLanguage(), toDomain(request));
+    }
+
+    private ReplacementType toDomain(PageListRequest request) {
+        return ReplacementType.of(ReplacementKind.valueOfLabel(request.getType()), request.getSubtype());
     }
 }

@@ -6,6 +6,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import es.bvalero.replacer.common.domain.ReplacementKind;
+import es.bvalero.replacer.common.domain.ReplacementType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -40,8 +41,7 @@ class PageListControllerTest {
         verify(pageUnreviewedTitleListService)
             .findPageTitlesToReviewByType(
                 WikipediaLanguage.SPANISH,
-                ReplacementKind.MISSPELLING_SIMPLE.getLabel(),
-                "Africa"
+                ReplacementType.of(ReplacementKind.MISSPELLING_SIMPLE, "Africa")
             );
     }
 
@@ -55,6 +55,9 @@ class PageListControllerTest {
             .andExpect(status().isOk());
 
         verify(reviewByTypeService)
-            .reviewAsSystemByType(WikipediaLanguage.SPANISH, ReplacementKind.MISSPELLING_SIMPLE.getLabel(), "Africa");
+            .reviewAsSystemByType(
+                WikipediaLanguage.SPANISH,
+                ReplacementType.of(ReplacementKind.MISSPELLING_SIMPLE, "Africa")
+            );
     }
 }

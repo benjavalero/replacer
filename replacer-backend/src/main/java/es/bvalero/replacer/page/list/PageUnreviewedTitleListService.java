@@ -1,5 +1,6 @@
 package es.bvalero.replacer.page.list;
 
+import es.bvalero.replacer.common.domain.ReplacementType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.repository.PageRepository;
@@ -16,9 +17,9 @@ class PageUnreviewedTitleListService {
     @Autowired
     private PageRepository pageRepository;
 
-    Collection<String> findPageTitlesToReviewByType(WikipediaLanguage lang, String type, String subtype) {
+    Collection<String> findPageTitlesToReviewByType(WikipediaLanguage lang, ReplacementType type) {
         return pageRepository
-            .findPageTitlesToReviewByType(lang, type, subtype)
+            .findPageTitlesToReviewByType(lang, type.getKind().getLabel(), type.getSubtype())
             .stream()
             .filter(Objects::nonNull)
             .sorted(Collator.getInstance(FinderUtils.LOCALE_ES))
