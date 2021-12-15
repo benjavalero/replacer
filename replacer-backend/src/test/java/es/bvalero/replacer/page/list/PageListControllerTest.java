@@ -24,7 +24,10 @@ class PageListControllerTest {
     private MockMvc mvc;
 
     @MockBean
-    private PageListService pageListService;
+    private PageUnreviewedTitleListService pageUnreviewedTitleListService;
+
+    @MockBean
+    private ReviewByTypeService reviewByTypeService;
 
     @Test
     void testFindPageTitlesToReviewByType() throws Exception {
@@ -34,7 +37,7 @@ class PageListControllerTest {
             )
             .andExpect(status().isOk());
 
-        verify(pageListService)
+        verify(pageUnreviewedTitleListService)
             .findPageTitlesToReviewByType(
                 WikipediaLanguage.SPANISH,
                 ReplacementKind.MISSPELLING_SIMPLE.getLabel(),
@@ -51,7 +54,7 @@ class PageListControllerTest {
             )
             .andExpect(status().isOk());
 
-        verify(pageListService)
+        verify(reviewByTypeService)
             .reviewAsSystemByType(WikipediaLanguage.SPANISH, ReplacementKind.MISSPELLING_SIMPLE.getLabel(), "Africa");
     }
 }

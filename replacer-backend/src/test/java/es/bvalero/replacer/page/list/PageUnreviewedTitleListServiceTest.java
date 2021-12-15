@@ -1,12 +1,11 @@
 package es.bvalero.replacer.page.list;
 
-import static es.bvalero.replacer.repository.ReplacementRepository.REVIEWER_SYSTEM;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.repository.PageRepository;
-import es.bvalero.replacer.repository.ReplacementRepository;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -16,20 +15,17 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-class PageListServiceTest {
+class PageUnreviewedTitleListServiceTest {
 
     @Mock
     private PageRepository pageRepository;
 
-    @Mock
-    private ReplacementRepository replacementRepository;
-
     @InjectMocks
-    private PageListService pageListService;
+    private PageUnreviewedTitleListService pageUnreviewedTitleListService;
 
     @BeforeEach
     public void setUp() {
-        pageListService = new PageListService();
+        pageUnreviewedTitleListService = new PageUnreviewedTitleListService();
         MockitoAnnotations.openMocks(this);
     }
 
@@ -41,7 +37,7 @@ class PageListServiceTest {
 
         when(pageRepository.findPageTitlesToReviewByType(WikipediaLanguage.getDefault(), "X", "Y")).thenReturn(list);
 
-        Collection<String> result = pageListService.findPageTitlesToReviewByType(
+        Collection<String> result = pageUnreviewedTitleListService.findPageTitlesToReviewByType(
             WikipediaLanguage.getDefault(),
             "X",
             "Y"
@@ -49,12 +45,5 @@ class PageListServiceTest {
         assertEquals(sorted, result);
 
         verify(pageRepository).findPageTitlesToReviewByType(WikipediaLanguage.getDefault(), "X", "Y");
-    }
-
-    @Test
-    void testReviewAsSystemByType() {
-        pageListService.reviewAsSystemByType(WikipediaLanguage.getDefault(), "X", "Y");
-
-        verify(replacementRepository).updateReviewerByType(WikipediaLanguage.getDefault(), "X", "Y", REVIEWER_SYSTEM);
     }
 }

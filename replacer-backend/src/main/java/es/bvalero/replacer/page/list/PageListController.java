@@ -19,7 +19,10 @@ import org.springframework.web.bind.annotation.*;
 public class PageListController {
 
     @Autowired
-    private PageListService pageListService;
+    private PageUnreviewedTitleListService pageUnreviewedTitleListService;
+
+    @Autowired
+    private ReviewByTypeService reviewByTypeService;
 
     @Operation(
         summary = "Produce a list in plain text with the titles of the pages containing the given replacement type to review"
@@ -30,7 +33,7 @@ public class PageListController {
         @Valid PageListRequest request
     ) {
         String titleList = StringUtils.join(
-            pageListService.findPageTitlesToReviewByType(
+            pageUnreviewedTitleListService.findPageTitlesToReviewByType(
                 queryParameters.getWikipediaLanguage(),
                 request.getType(),
                 request.getSubtype()
@@ -44,7 +47,7 @@ public class PageListController {
     @PostMapping(value = "/review")
     public void reviewAsSystemByType(@Valid CommonQueryParameters queryParameters, @Valid PageListRequest request) {
         // Set as reviewed in the database
-        pageListService.reviewAsSystemByType(
+        reviewByTypeService.reviewAsSystemByType(
             queryParameters.getWikipediaLanguage(),
             request.getType(),
             request.getSubtype()

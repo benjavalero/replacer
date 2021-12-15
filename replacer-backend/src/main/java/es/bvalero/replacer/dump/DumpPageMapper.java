@@ -2,13 +2,12 @@ package es.bvalero.replacer.dump;
 
 import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.common.domain.WikipediaPageId;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import lombok.experimental.UtilityClass;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@UtilityClass
 class DumpPageMapper {
 
-    static WikipediaPage toDomain(DumpPage dumpPage) {
+    WikipediaPage toDomain(DumpPage dumpPage) {
         return WikipediaPage
             .builder()
             .id(WikipediaPageId.of(dumpPage.getLang(), dumpPage.getId()))
