@@ -1,7 +1,8 @@
 package es.bvalero.replacer.replacement.stats;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.any;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
@@ -37,6 +38,8 @@ class ReplacementStatsServiceTest {
         when(replacementStatsRepository.countReplacementsReviewed(any(WikipediaLanguage.class))).thenReturn(count);
 
         assertEquals(count, replacementStatsService.countReplacementsReviewed(WikipediaLanguage.SPANISH));
+
+        verify(replacementStatsRepository).countReplacementsReviewed(any(WikipediaLanguage.class));
     }
 
     @Test
@@ -46,15 +49,17 @@ class ReplacementStatsServiceTest {
         when(replacementStatsRepository.countReplacementsNotReviewed(any(WikipediaLanguage.class))).thenReturn(count);
 
         assertEquals(count, replacementStatsService.countReplacementsNotReviewed(WikipediaLanguage.SPANISH));
+
+        verify(replacementStatsRepository).countReplacementsNotReviewed(any(WikipediaLanguage.class));
     }
 
     @Test
     void testCountReplacementsGroupedByReviewer() {
-        ResultCount<String> count = ResultCount.of("A", 10L);
-        when(replacementStatsRepository.countReplacementsByReviewer(any(WikipediaLanguage.class)))
-            .thenReturn(List.of(count));
+        Collection<ResultCount<String>> counts = List.of(ResultCount.of("A", 10L));
+        when(replacementStatsRepository.countReplacementsByReviewer(any(WikipediaLanguage.class))).thenReturn(counts);
 
-        Collection<ReviewerCount> expected = List.of(ReviewerCount.of("A", 10L));
-        assertEquals(expected, replacementStatsService.countReplacementsGroupedByReviewer(WikipediaLanguage.SPANISH));
+        assertEquals(counts, replacementStatsService.countReplacementsGroupedByReviewer(WikipediaLanguage.SPANISH));
+
+        verify(replacementStatsRepository).countReplacementsByReviewer(any(WikipediaLanguage.class));
     }
 }

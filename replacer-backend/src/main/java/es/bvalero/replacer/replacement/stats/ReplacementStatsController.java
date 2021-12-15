@@ -3,10 +3,12 @@ package es.bvalero.replacer.replacement.stats;
 import com.github.rozidan.springboot.logger.Loggable;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.dto.CommonQueryParameters;
+import es.bvalero.replacer.repository.ResultCount;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.Collection;
+import java.util.stream.Collectors;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -44,6 +46,16 @@ public class ReplacementStatsController {
     @Operation(summary = "Number of reviewed replacements grouped by reviewer")
     @GetMapping(value = "/users/count")
     public Collection<ReviewerCount> countReplacementsGroupedByReviewer(@Valid CommonQueryParameters queryParameters) {
-        return replacementStatsService.countReplacementsGroupedByReviewer(queryParameters.getWikipediaLanguage());
+        return toDto(
+            replacementStatsService.countReplacementsGroupedByReviewer(queryParameters.getWikipediaLanguage())
+        );
+    }
+
+    private Collection<ReviewerCount> toDto(Collection<ResultCount<String>> counts) {
+        return counts
+            .stream()
+            .sorted()
+            .map(count -> ReviewerCount.of(count.getKey(), count.getCount()))
+            .collect(Collectors.toUnmodifiableList());
     }
 }

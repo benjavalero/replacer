@@ -8,6 +8,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
+import es.bvalero.replacer.repository.ResultCount;
 import java.util.Collections;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -58,7 +59,7 @@ class ReplacementStatsControllerTest {
 
     @Test
     void testCountReplacementsGroupedByReviewer() throws Exception {
-        ReviewerCount count = ReviewerCount.of("X", 100L);
+        ResultCount<String> count = ResultCount.of("X", 100L);
         when(replacementStatsService.countReplacementsGroupedByReviewer(WikipediaLanguage.SPANISH))
             .thenReturn(Collections.singletonList(count));
 
