@@ -23,7 +23,7 @@ public class ReplacementStatsController {
     @Autowired
     private ReplacementStatsService replacementStatsService;
 
-    @Operation(summary = "Count the number replacements")
+    @Operation(summary = "Count the reviewed or unreviewed replacements")
     @GetMapping(value = "/replacements/count")
     public ReplacementCount countReplacementsReviewed(
         @Valid CommonQueryParameters queryParameters,
@@ -41,7 +41,7 @@ public class ReplacementStatsController {
         );
     }
 
-    @Operation(summary = "List users with the number of reviewed replacements")
+    @Operation(summary = "Number of reviewed replacements grouped by reviewer")
     @GetMapping(value = "/users/count")
     public Collection<ReviewerCount> countReplacementsGroupedByReviewer(@Valid CommonQueryParameters queryParameters) {
         return replacementStatsService.countReplacementsGroupedByReviewer(queryParameters.getWikipediaLanguage());

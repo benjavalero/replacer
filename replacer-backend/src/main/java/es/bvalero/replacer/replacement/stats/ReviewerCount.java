@@ -6,7 +6,7 @@ import org.springframework.lang.NonNull;
 
 @Schema
 @Value(staticConstructor = "of")
-class ReviewerCount implements Comparable<ReviewerCount> {
+class ReviewerCount {
 
     @Schema(description = "Name of the user in Wikipedia", required = true, example = "Benjavalero")
     @NonNull
@@ -15,9 +15,4 @@ class ReviewerCount implements Comparable<ReviewerCount> {
     @Schema(required = true, example = "1")
     @NonNull
     Long count;
-
-    @Override
-    public int compareTo(ReviewerCount count) {
-        return count.getCount().compareTo(this.count);
-    }
 }

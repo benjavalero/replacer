@@ -11,8 +11,8 @@ class ReviewerCountMapper {
     Collection<ReviewerCount> fromModel(Collection<ResultCount<String>> counts) {
         return counts
             .stream()
-            .map(count -> ReviewerCount.of(count.getKey(), count.getCount()))
             .sorted()
+            .map(count -> ReviewerCount.of(count.getKey(), count.getCount()))
             .collect(Collectors.toUnmodifiableList());
     }
 }
