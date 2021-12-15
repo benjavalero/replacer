@@ -1,5 +1,7 @@
-package es.bvalero.replacer.repository;
+package es.bvalero.replacer.repository.jdbc;
 
+import es.bvalero.replacer.repository.PageModel;
+import es.bvalero.replacer.repository.ReplacementModel;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;

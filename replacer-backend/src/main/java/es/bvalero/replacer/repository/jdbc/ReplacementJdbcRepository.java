@@ -1,7 +1,10 @@
-package es.bvalero.replacer.repository;
+package es.bvalero.replacer.repository.jdbc;
 
 import com.github.rozidan.springboot.logger.Loggable;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
+import es.bvalero.replacer.repository.ReplacementModel;
+import es.bvalero.replacer.repository.ReplacementRepository;
+import es.bvalero.replacer.repository.TypeSubtypeCount;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.concurrent.TimeUnit;

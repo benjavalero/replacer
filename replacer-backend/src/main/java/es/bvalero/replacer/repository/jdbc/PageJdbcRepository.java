@@ -1,8 +1,9 @@
-package es.bvalero.replacer.repository;
+package es.bvalero.replacer.repository.jdbc;
 
 import com.github.rozidan.springboot.logger.Loggable;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.domain.WikipediaPageId;
+import es.bvalero.replacer.repository.*;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.Optional;
