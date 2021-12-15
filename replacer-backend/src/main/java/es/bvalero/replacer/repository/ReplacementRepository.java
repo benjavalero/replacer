@@ -17,15 +17,6 @@ public interface ReplacementRepository {
     /** Delete a collection of replacements */
     void removeReplacements(Collection<ReplacementModel> replacements);
 
-    /** Count the number of replacements reviewed */
-    long countReplacementsReviewed(WikipediaLanguage lang);
-
-    /** Count the number of replacements to review */
-    long countReplacementsNotReviewed(WikipediaLanguage lang);
-
-    /** Count the number of reviewed replacements by reviewer */
-    Collection<ResultCount<String>> countReplacementsByReviewer(WikipediaLanguage lang);
-
     /** Count the number of replacements to review by type */
     Collection<ResultCount<ReplacementType>> countReplacementsByType(WikipediaLanguage lang);
 

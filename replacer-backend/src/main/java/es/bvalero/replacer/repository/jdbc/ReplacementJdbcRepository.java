@@ -6,6 +6,7 @@ import es.bvalero.replacer.common.domain.ReplacementType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.repository.ReplacementModel;
 import es.bvalero.replacer.repository.ReplacementRepository;
+import es.bvalero.replacer.repository.ReplacementStatsRepository;
 import es.bvalero.replacer.repository.ResultCount;
 import java.time.LocalDate;
 import java.util.Collection;
@@ -29,7 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @Repository
 @Qualifier("replacementJdbcRepository")
-class ReplacementJdbcRepository implements ReplacementRepository {
+class ReplacementJdbcRepository implements ReplacementRepository, ReplacementStatsRepository {
 
     @Autowired
     private NamedParameterJdbcTemplate jdbcTemplate;

@@ -5,7 +5,7 @@ import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.when;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import es.bvalero.replacer.repository.ReplacementRepository;
+import es.bvalero.replacer.repository.ReplacementStatsRepository;
 import es.bvalero.replacer.repository.ResultCount;
 import java.util.Collection;
 import java.util.List;
@@ -19,7 +19,7 @@ import org.mockito.MockitoAnnotations;
 class ReplacementStatsServiceTest {
 
     @Mock
-    private ReplacementRepository replacementRepository;
+    private ReplacementStatsRepository replacementStatsRepository;
 
     @InjectMocks
     private ReplacementStatsService replacementStatsService;
@@ -34,7 +34,7 @@ class ReplacementStatsServiceTest {
     void testCountReplacementsReviewed() {
         long count = new Random().nextLong();
 
-        when(replacementRepository.countReplacementsReviewed(any(WikipediaLanguage.class))).thenReturn(count);
+        when(replacementStatsRepository.countReplacementsReviewed(any(WikipediaLanguage.class))).thenReturn(count);
 
         assertEquals(count, replacementStatsService.countReplacementsReviewed(WikipediaLanguage.SPANISH));
     }
@@ -43,7 +43,7 @@ class ReplacementStatsServiceTest {
     void testCountReplacementsToReview() {
         long count = new Random().nextLong();
 
-        when(replacementRepository.countReplacementsNotReviewed(any(WikipediaLanguage.class))).thenReturn(count);
+        when(replacementStatsRepository.countReplacementsNotReviewed(any(WikipediaLanguage.class))).thenReturn(count);
 
         assertEquals(count, replacementStatsService.countReplacementsNotReviewed(WikipediaLanguage.SPANISH));
     }
@@ -51,7 +51,7 @@ class ReplacementStatsServiceTest {
     @Test
     void testCountReplacementsGroupedByReviewer() {
         ResultCount<String> count = ResultCount.of("A", 10L);
-        when(replacementRepository.countReplacementsByReviewer(any(WikipediaLanguage.class)))
+        when(replacementStatsRepository.countReplacementsByReviewer(any(WikipediaLanguage.class)))
             .thenReturn(List.of(count));
 
         Collection<ReviewerCount> expected = List.of(ReviewerCount.of("A", 10L));

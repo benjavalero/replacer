@@ -139,21 +139,6 @@ class ReplacementCacheRepository implements ReplacementRepository {
     }
 
     @Override
-    public long countReplacementsReviewed(WikipediaLanguage lang) {
-        return replacementRepository.countReplacementsReviewed(lang);
-    }
-
-    @Override
-    public long countReplacementsNotReviewed(WikipediaLanguage lang) {
-        return replacementRepository.countReplacementsNotReviewed(lang);
-    }
-
-    @Override
-    public Collection<ResultCount<String>> countReplacementsByReviewer(WikipediaLanguage lang) {
-        return replacementRepository.countReplacementsByReviewer(lang);
-    }
-
-    @Override
     public Collection<ResultCount<ReplacementType>> countReplacementsByType(WikipediaLanguage lang) {
         return replacementRepository.countReplacementsByType(lang);
     }
