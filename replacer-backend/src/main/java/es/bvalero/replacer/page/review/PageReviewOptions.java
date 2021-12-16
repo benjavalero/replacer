@@ -2,6 +2,7 @@ package es.bvalero.replacer.page.review;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import es.bvalero.replacer.common.domain.ReplacementKind;
+import es.bvalero.replacer.common.domain.ReplacementType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -60,6 +61,13 @@ public class PageReviewOptions {
 
     public WikipediaLanguage getWikipediaLanguage() {
         return WikipediaLanguage.valueOfCode(lang);
+    }
+
+    @Nullable
+    public ReplacementType getReplacementType() {
+        return Objects.nonNull(type) && Objects.nonNull(subtype)
+            ? ReplacementType.of(ReplacementKind.valueOfLabel(type), subtype)
+            : null;
     }
 
     @TestOnly

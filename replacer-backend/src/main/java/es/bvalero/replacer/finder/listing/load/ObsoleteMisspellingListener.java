@@ -1,6 +1,7 @@
 package es.bvalero.replacer.finder.listing.load;
 
 import es.bvalero.replacer.common.domain.ReplacementKind;
+import es.bvalero.replacer.common.domain.ReplacementType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.listing.Misspelling;
 import java.beans.PropertyChangeEvent;
@@ -44,7 +45,11 @@ public abstract class ObsoleteMisspellingListener implements PropertyChangeListe
         // Find the misspellings removed from the list to remove them from the database
         for (WikipediaLanguage lang : WikipediaLanguage.values()) {
             Set<String> oldWords = oldItems.get(lang).stream().map(Misspelling::getWord).collect(Collectors.toSet());
-            Set<String> newWords = newItems.get(lang).stream().map(Misspelling::getWord).collect(Collectors.toSet());
+            Set<String> newWords = newItems
+                .get(lang)
+                .stream()
+                .map(Misspelling::getWord)
+                .collect(Collectors.toUnmodifiableSet());
             oldWords.removeAll(newWords);
             if (!oldWords.isEmpty()) {
                 ReplacementKind misspellingType = oldItems
@@ -59,14 +64,14 @@ public abstract class ObsoleteMisspellingListener implements PropertyChangeListe
                     misspellingType,
                     oldWords
                 );
-                processObsoleteReplacementTypes(lang, misspellingType, oldWords);
+                Collection<ReplacementType> types = oldWords
+                    .stream()
+                    .map(word -> ReplacementType.of(misspellingType, word))
+                    .collect(Collectors.toUnmodifiableSet());
+                processObsoleteReplacementTypes(lang, types);
             }
         }
     }
 
-    protected abstract void processObsoleteReplacementTypes(
-        WikipediaLanguage lang,
-        ReplacementKind type,
-        Collection<String> subtypes
-    );
+    protected abstract void processObsoleteReplacementTypes(WikipediaLanguage lang, Collection<ReplacementType> types);
 }

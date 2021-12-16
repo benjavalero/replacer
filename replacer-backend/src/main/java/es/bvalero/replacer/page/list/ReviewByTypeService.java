@@ -16,11 +16,6 @@ class ReviewByTypeService {
 
     void reviewAsSystemByType(WikipediaLanguage lang, ReplacementType type) {
         // These reviewed replacements will be cleaned up in the next dump indexing
-        replacementTypeRepository.updateReviewerByType(
-            lang,
-            type.getKind().getLabel(),
-            type.getSubtype(),
-            REVIEWER_SYSTEM
-        );
+        replacementTypeRepository.updateReviewerByType(lang, type, REVIEWER_SYSTEM);
     }
 }

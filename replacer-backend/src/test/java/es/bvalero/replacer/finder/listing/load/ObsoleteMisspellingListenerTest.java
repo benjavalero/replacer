@@ -3,6 +3,7 @@ package es.bvalero.replacer.finder.listing.load;
 import static org.mockito.Mockito.*;
 
 import es.bvalero.replacer.common.domain.ReplacementKind;
+import es.bvalero.replacer.common.domain.ReplacementType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.listing.SimpleMisspelling;
 import java.beans.PropertyChangeEvent;
@@ -32,7 +33,7 @@ class ObsoleteMisspellingListenerTest {
         );
 
         verify(obsoleteMisspellingListener, times(0))
-            .processObsoleteReplacementTypes(any(WikipediaLanguage.class), any(ReplacementKind.class), anySet());
+            .processObsoleteReplacementTypes(any(WikipediaLanguage.class), anyCollection());
 
         SimpleMisspelling misspelling3 = SimpleMisspelling.ofCaseInsensitive("C", "D");
         SetValuedMap<WikipediaLanguage, SimpleMisspelling> map2 = new HashSetValuedHashMap<>();
@@ -46,8 +47,7 @@ class ObsoleteMisspellingListenerTest {
         verify(obsoleteMisspellingListener)
             .processObsoleteReplacementTypes(
                 WikipediaLanguage.SPANISH,
-                ReplacementKind.MISSPELLING_SIMPLE,
-                Collections.singleton("A")
+                Collections.singleton(ReplacementType.of(ReplacementKind.MISSPELLING_SIMPLE, "A"))
             );
     }
 }

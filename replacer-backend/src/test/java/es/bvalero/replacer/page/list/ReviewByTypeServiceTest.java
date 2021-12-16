@@ -29,17 +29,10 @@ class ReviewByTypeServiceTest {
 
     @Test
     void testReviewAsSystemByType() {
-        reviewByTypeService.reviewAsSystemByType(
-            WikipediaLanguage.getDefault(),
-            ReplacementType.of(ReplacementKind.DATE, "Y")
-        );
+        ReplacementType type = ReplacementType.of(ReplacementKind.DATE, "Y");
 
-        verify(replacementTypeRepository)
-            .updateReviewerByType(
-                WikipediaLanguage.getDefault(),
-                ReplacementKind.DATE.getLabel(),
-                "Y",
-                REVIEWER_SYSTEM
-            );
+        reviewByTypeService.reviewAsSystemByType(WikipediaLanguage.getDefault(), type);
+
+        verify(replacementTypeRepository).updateReviewerByType(WikipediaLanguage.getDefault(), type, REVIEWER_SYSTEM);
     }
 }

@@ -11,7 +11,6 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.logging.LogLevel;
@@ -122,7 +121,7 @@ class ReplacementJdbcRepository
     }
 
     @Override
-    public void updateReviewerByType(WikipediaLanguage lang, String type, String subtype, String reviewer) {
+    public void updateReviewerByType(WikipediaLanguage lang, ReplacementType type, String reviewer) {
         String sql =
             "UPDATE replacement SET reviewer=:system, last_update=:now " +
             "WHERE lang = :lang AND type = :type AND subtype = :subtype AND reviewer IS NULL";
@@ -130,8 +129,8 @@ class ReplacementJdbcRepository
             .addValue("system", reviewer)
             .addValue("now", LocalDate.now())
             .addValue("lang", lang.getCode())
-            .addValue("type", type)
-            .addValue("subtype", subtype);
+            .addValue("type", type.getKind().getLabel())
+            .addValue("subtype", type.getSubtype());
         jdbcTemplate.update(sql, namedParameters);
     }
 
@@ -139,8 +138,7 @@ class ReplacementJdbcRepository
     public void updateReviewerByPageAndType(
         WikipediaLanguage lang,
         int pageId,
-        @Nullable String type,
-        @Nullable String subtype,
+        @Nullable ReplacementType type,
         String reviewer
     ) {
         String sql =
@@ -151,27 +149,37 @@ class ReplacementJdbcRepository
             .addValue("now", LocalDate.now())
             .addValue("lang", lang.getCode())
             .addValue("pageId", pageId);
-        if (StringUtils.isNotBlank(type) && StringUtils.isNotBlank(subtype)) {
+        if (Objects.nonNull(type)) {
             sql += "AND type = :type AND subtype = :subtype";
-            namedParameters = namedParameters.addValue("type", type).addValue("subtype", subtype);
+            namedParameters =
+                namedParameters.addValue("type", type.getKind().getLabel()).addValue("subtype", type.getSubtype());
         }
         jdbcTemplate.update(sql, namedParameters);
     }
 
     @Override
-    public void removeReplacementsByType(WikipediaLanguage lang, String type, Collection<String> subtypes) {
-        if (subtypes.isEmpty()) {
+    public void removeReplacementsByType(WikipediaLanguage lang, Collection<ReplacementType> types) {
+        if (types.isEmpty() || validateTypesSameKind(types)) {
             throw new IllegalArgumentException();
         } else {
             String sql =
                 "DELETE FROM replacement " +
                 "WHERE lang = :lang AND type = :type AND subtype IN (:subtypes) AND reviewer IS NULL";
+            ReplacementKind kind = types.stream().findAny().orElseThrow(IllegalStateException::new).getKind();
+            Collection<String> subtypes = types
+                .stream()
+                .map(ReplacementType::getSubtype)
+                .collect(Collectors.toUnmodifiableSet());
             SqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("lang", lang.getCode())
-                .addValue("type", type)
+                .addValue("type", kind.getLabel())
                 .addValue("subtypes", subtypes);
             jdbcTemplate.update(sql, namedParameters);
         }
+    }
+
+    private boolean validateTypesSameKind(Collection<ReplacementType> types) {
+        return types.stream().map(ReplacementType::getKind).distinct().count() == 1;
     }
 
     @Override

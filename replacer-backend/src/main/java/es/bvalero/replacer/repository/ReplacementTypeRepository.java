@@ -10,17 +10,16 @@ public interface ReplacementTypeRepository {
     Collection<ResultCount<ReplacementType>> countReplacementsByType(WikipediaLanguage lang);
 
     /** Update the reviewer of all the replacements of the given type to review */
-    void updateReviewerByType(WikipediaLanguage lang, String type, String subtype, String reviewer);
+    void updateReviewerByType(WikipediaLanguage lang, ReplacementType type, String reviewer);
 
     /** Update the reviewer of all the replacements of the given page and (optionally) type to review */
     void updateReviewerByPageAndType(
         WikipediaLanguage lang,
         int pageId,
-        @Nullable String type,
-        @Nullable String subtype,
+        @Nullable ReplacementType type,
         String reviewer
     );
 
-    /** Delete all the replacements to review by the given types */
-    void removeReplacementsByType(WikipediaLanguage lang, String type, Collection<String> subtypes);
+    /** Delete all the replacements to review by the given types. We assume all the types are of the same kind. */
+    void removeReplacementsByType(WikipediaLanguage lang, Collection<ReplacementType> types);
 }

@@ -26,8 +26,7 @@ class PageReviewTypeSubtypeFinder extends PageReviewFinder {
     protected void markAsReviewed(PageReviewOptions options) {
         replacementTypeRepository.updateReviewerByType(
             options.getWikipediaLanguage(),
-            Objects.requireNonNull(options.getType()),
-            Objects.requireNonNull(options.getSubtype()),
+            Objects.requireNonNull(options.getReplacementType()),
             REVIEWER_SYSTEM
         );
     }

@@ -96,21 +96,14 @@ class PageSaveService {
     }
 
     private void markAsReviewedNoType(int pageId, PageReviewOptions options, String reviewer) {
-        replacementTypeRepository.updateReviewerByPageAndType(
-            options.getWikipediaLanguage(),
-            pageId,
-            null,
-            null,
-            reviewer
-        );
+        replacementTypeRepository.updateReviewerByPageAndType(options.getWikipediaLanguage(), pageId, null, reviewer);
     }
 
     private void markAsReviewedTypeSubtype(int pageId, PageReviewOptions options, String reviewer) {
         replacementTypeRepository.updateReviewerByPageAndType(
             options.getWikipediaLanguage(),
             pageId,
-            options.getType(),
-            options.getSubtype(),
+            options.getReplacementType(),
             reviewer
         );
     }

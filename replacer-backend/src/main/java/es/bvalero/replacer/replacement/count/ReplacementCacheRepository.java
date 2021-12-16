@@ -11,8 +11,8 @@ import es.bvalero.replacer.repository.ResultCount;
 import java.util.Collection;
 import java.util.EnumMap;
 import java.util.Map;
+import java.util.Objects;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.VisibleForTesting;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -57,39 +57,38 @@ class ReplacementCacheRepository implements ReplacementRepository, ReplacementTy
     }
 
     @Override
-    public void updateReviewerByType(WikipediaLanguage lang, String type, String subtype, String reviewer) {
-        this.removeCachedReplacementCount(lang, type, subtype);
-        replacementTypeRepository.updateReviewerByType(lang, type, subtype, reviewer);
+    public void updateReviewerByType(WikipediaLanguage lang, ReplacementType type, String reviewer) {
+        this.removeCachedReplacementCount(lang, type);
+        replacementTypeRepository.updateReviewerByType(lang, type, reviewer);
     }
 
     @VisibleForTesting
-    void removeCachedReplacementCount(WikipediaLanguage lang, String type, String subtype) {
-        this.replacementCount.get(lang).removeTypeCount(type, subtype);
+    void removeCachedReplacementCount(WikipediaLanguage lang, ReplacementType type) {
+        this.replacementCount.get(lang).removeTypeCount(type.getKind().getLabel(), type.getSubtype());
     }
 
     @Override
     public void updateReviewerByPageAndType(
         WikipediaLanguage lang,
         int pageId,
-        @Nullable String type,
-        @Nullable String subtype,
+        @Nullable ReplacementType type,
         String reviewer
     ) {
-        if (StringUtils.isNotBlank(type) && StringUtils.isNotBlank(subtype)) {
-            this.decrementSubtypeCount(lang, type, subtype);
+        if (Objects.nonNull(type)) {
+            this.decrementSubtypeCount(lang, type);
         }
-        this.replacementTypeRepository.updateReviewerByPageAndType(lang, pageId, type, subtype, reviewer);
+        this.replacementTypeRepository.updateReviewerByPageAndType(lang, pageId, type, reviewer);
     }
 
     @VisibleForTesting
-    void decrementSubtypeCount(WikipediaLanguage lang, String type, String subtype) {
-        this.replacementCount.get(lang).decrementSubtypeCount(type, subtype);
+    void decrementSubtypeCount(WikipediaLanguage lang, ReplacementType type) {
+        this.replacementCount.get(lang).decrementSubtypeCount(type.getKind().getLabel(), type.getSubtype());
     }
 
     @Override
-    public void removeReplacementsByType(WikipediaLanguage lang, String type, Collection<String> subtypes) {
-        subtypes.forEach(subtype -> removeCachedReplacementCount(lang, type, subtype));
-        this.replacementTypeRepository.removeReplacementsByType(lang, type, subtypes);
+    public void removeReplacementsByType(WikipediaLanguage lang, Collection<ReplacementType> types) {
+        types.forEach(type -> removeCachedReplacementCount(lang, type));
+        this.replacementTypeRepository.removeReplacementsByType(lang, types);
     }
 
     /* SCHEDULED UPDATE OF CACHE */

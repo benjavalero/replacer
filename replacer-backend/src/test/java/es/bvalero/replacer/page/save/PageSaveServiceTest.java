@@ -72,15 +72,16 @@ class PageSaveServiceTest {
                 eq(accessToken)
             );
         verify(replacementTypeRepository)
-            .updateReviewerByPageAndType(WikipediaLanguage.getDefault(), pageId, null, null, "A");
+            .updateReviewerByPageAndType(WikipediaLanguage.getDefault(), pageId, null, "A");
     }
 
     @Test
     void testSaveWithNoChanges() throws WikipediaException {
         int pageId = 123;
-        String type = "T";
+        String type = ReplacementKind.DATE.getLabel();
         String subtype = "S";
-        pageSaveService.savePageWithNoChanges(pageId, PageReviewOptions.ofTypeSubtype(type, subtype));
+        PageReviewOptions options = PageReviewOptions.ofTypeSubtype(type, subtype);
+        pageSaveService.savePageWithNoChanges(pageId, options);
 
         verify(cosmeticFinderService, never()).applyCosmeticChanges(any(FinderPage.class));
         verify(wikipediaService, never())
@@ -93,6 +94,11 @@ class PageSaveServiceTest {
                 any(AccessToken.class)
             );
         verify(replacementTypeRepository)
-            .updateReviewerByPageAndType(WikipediaLanguage.getDefault(), pageId, type, subtype, "A");
+            .updateReviewerByPageAndType(
+                WikipediaLanguage.getDefault(),
+                pageId,
+                options.getReplacementType(),
+                options.getUser()
+            );
     }
 }
