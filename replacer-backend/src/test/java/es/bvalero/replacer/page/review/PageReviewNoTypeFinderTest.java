@@ -8,7 +8,7 @@ import es.bvalero.replacer.common.domain.ReplacementKind;
 import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.page.index.PageIndexResult;
 import es.bvalero.replacer.page.index.PageIndexStatus;
-import es.bvalero.replacer.page.index.PageIndexer;
+import es.bvalero.replacer.page.index.PageIndexService;
 import es.bvalero.replacer.page.removeobsolete.RemoveObsoletePageService;
 import es.bvalero.replacer.repository.PageRepository;
 import es.bvalero.replacer.wikipedia.WikipediaService;
@@ -62,7 +62,7 @@ class PageReviewNoTypeFinderTest {
     private WikipediaService wikipediaService;
 
     @Mock
-    private PageIndexer pageIndexer;
+    private PageIndexService pageIndexService;
 
     @Mock
     private RemoveObsoletePageService removeObsoletePageService;
@@ -114,12 +114,12 @@ class PageReviewNoTypeFinderTest {
         // The page exists in Wikipedia
         when(wikipediaService.getPageById(randomPageId)).thenReturn(Optional.of(page));
 
-        when(pageIndexer.indexPage(page))
+        when(pageIndexService.indexPage(page))
             .thenReturn(PageIndexResult.ofEmpty(PageIndexStatus.PAGE_INDEXED, replacements));
 
         Optional<PageReview> review = pageReviewNoTypeService.findRandomPageReview(options);
 
-        verify(pageIndexer).indexPage(page);
+        verify(pageIndexService).indexPage(page);
 
         assertTrue(review.isPresent());
         assertEquals(randomId, review.get().getPage().getId().getPageId());
@@ -137,12 +137,12 @@ class PageReviewNoTypeFinderTest {
 
         // The page doesn't contain replacements
         List<Replacement> noPageReplacements = Collections.emptyList();
-        when(pageIndexer.indexPage(page))
+        when(pageIndexService.indexPage(page))
             .thenReturn(PageIndexResult.ofEmpty(PageIndexStatus.PAGE_INDEXED, noPageReplacements));
 
         Optional<PageReview> review = pageReviewNoTypeService.findRandomPageReview(options);
 
-        verify(pageIndexer).indexPage(page);
+        verify(pageIndexService).indexPage(page);
 
         assertFalse(review.isPresent());
     }
@@ -157,12 +157,12 @@ class PageReviewNoTypeFinderTest {
         when(wikipediaService.getPageById(randomPageId)).thenReturn(Optional.empty());
         when(wikipediaService.getPageById(randomPageId2)).thenReturn(Optional.of(page2));
 
-        when(pageIndexer.indexPage(page2))
+        when(pageIndexService.indexPage(page2))
             .thenReturn(PageIndexResult.ofEmpty(PageIndexStatus.PAGE_INDEXED, replacements));
 
         Optional<PageReview> review = pageReviewNoTypeService.findRandomPageReview(options);
 
-        verify(pageIndexer).indexPage(page2);
+        verify(pageIndexService).indexPage(page2);
 
         assertTrue(review.isPresent());
         assertEquals(randomId2, review.get().getPage().getId().getPageId());

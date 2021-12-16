@@ -5,7 +5,7 @@ import es.bvalero.replacer.common.domain.WikipediaNamespace;
 import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.common.util.WikipediaDateUtils;
 import es.bvalero.replacer.page.index.PageIndexStatus;
-import es.bvalero.replacer.page.index.PageIndexer;
+import es.bvalero.replacer.page.index.PageIndexService;
 import java.time.LocalDateTime;
 import lombok.Getter;
 import org.xml.sax.Attributes;
@@ -28,7 +28,7 @@ class DumpSaxHandler extends DefaultHandler {
     @Getter
     private final WikipediaLanguage lang;
 
-    private final PageIndexer pageIndexer;
+    private final PageIndexService pageIndexService;
 
     // Current page values
     private final StringBuilder currentChars = new StringBuilder(5000);
@@ -54,9 +54,9 @@ class DumpSaxHandler extends DefaultHandler {
     @Getter
     private LocalDateTime end = null;
 
-    DumpSaxHandler(WikipediaLanguage lang, PageIndexer indexer) {
+    DumpSaxHandler(WikipediaLanguage lang, PageIndexService indexer) {
         this.lang = lang;
-        this.pageIndexer = indexer;
+        this.pageIndexService = indexer;
     }
 
     @Override
@@ -72,7 +72,7 @@ class DumpSaxHandler extends DefaultHandler {
         this.running = false;
         this.end = LocalDateTime.now();
 
-        this.pageIndexer.finish();
+        this.pageIndexService.finish();
     }
 
     @Override
@@ -133,7 +133,7 @@ class DumpSaxHandler extends DefaultHandler {
             .build();
 
         WikipediaPage page = DumpPageMapper.toDomain(dumpPage);
-        PageIndexStatus result = pageIndexer.indexPage(page).getStatus();
+        PageIndexStatus result = pageIndexService.indexPage(page).getStatus();
         switch (result) {
             case PAGE_NOT_INDEXABLE:
                 break;

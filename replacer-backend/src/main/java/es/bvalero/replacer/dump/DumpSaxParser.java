@@ -3,7 +3,7 @@ package es.bvalero.replacer.dump;
 import com.github.rozidan.springboot.logger.Loggable;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.exception.ReplacerException;
-import es.bvalero.replacer.page.index.PageIndexer;
+import es.bvalero.replacer.page.index.PageIndexService;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -29,7 +29,7 @@ class DumpSaxParser implements DumpParser {
 
     @Autowired
     @Qualifier("pageBatchIndexService")
-    private PageIndexer pageIndexer;
+    private PageIndexService pageIndexService;
 
     @Resource
     private Map<String, Long> numPagesEstimated;
@@ -56,7 +56,7 @@ class DumpSaxParser implements DumpParser {
             saxParser.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
 
             this.dumpFile = dumpFile;
-            this.dumpHandler = new DumpSaxHandler(lang, pageIndexer);
+            this.dumpHandler = new DumpSaxHandler(lang, pageIndexService);
             saxParser.parse(xmlInput, dumpHandler);
         } catch (IOException e) {
             throw new ReplacerException("Dump file not valid", e);

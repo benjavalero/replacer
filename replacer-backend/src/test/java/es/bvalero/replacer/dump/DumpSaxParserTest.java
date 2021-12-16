@@ -8,7 +8,7 @@ import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.page.index.PageIndexResult;
 import es.bvalero.replacer.page.index.PageIndexStatus;
-import es.bvalero.replacer.page.index.PageIndexer;
+import es.bvalero.replacer.page.index.PageIndexService;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -25,7 +25,7 @@ import org.mockito.MockitoAnnotations;
 class DumpSaxParserTest {
 
     @Mock
-    private PageIndexer pageIndexer;
+    private PageIndexService pageIndexService;
 
     @Mock
     private Map<String, Long> numPagesEstimated;
@@ -60,7 +60,7 @@ class DumpSaxParserTest {
         assertNull(status.getNumPagesRead());
         assertNull(status.getNumPagesIndexed());
 
-        when(pageIndexer.indexPage(any(WikipediaPage.class)))
+        when(pageIndexService.indexPage(any(WikipediaPage.class)))
             .thenReturn(PageIndexResult.ofEmpty(PageIndexStatus.PAGE_INDEXED, Collections.emptyList()))
             .thenReturn(PageIndexResult.ofEmpty(PageIndexStatus.PAGE_NOT_INDEXED, Collections.emptyList()))
             .thenReturn(PageIndexResult.ofEmpty(PageIndexStatus.PAGE_INDEXED, Collections.emptyList()))
@@ -69,8 +69,8 @@ class DumpSaxParserTest {
         dumpParser.parseDumpFile(WikipediaLanguage.SPANISH, DumpFile.of(dumpFile));
 
         assertFalse(dumpParser.getDumpIndexingStatus().getRunning());
-        verify(pageIndexer, times(4)).indexPage(any(WikipediaPage.class));
-        verify(pageIndexer).finish();
+        verify(pageIndexService, times(4)).indexPage(any(WikipediaPage.class));
+        verify(pageIndexService).finish();
 
         status = dumpParser.getDumpIndexingStatus();
         assertFalse(status.getRunning());

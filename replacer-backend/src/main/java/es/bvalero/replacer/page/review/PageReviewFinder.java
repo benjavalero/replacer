@@ -6,7 +6,7 @@ import es.bvalero.replacer.common.domain.Replacement;
 import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.common.domain.WikipediaPageId;
 import es.bvalero.replacer.page.index.PageIndexResult;
-import es.bvalero.replacer.page.index.PageIndexer;
+import es.bvalero.replacer.page.index.PageIndexService;
 import es.bvalero.replacer.page.removeobsolete.RemoveObsoletePageService;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import java.util.*;
@@ -27,7 +27,7 @@ abstract class PageReviewFinder {
     private WikipediaService wikipediaService;
 
     @Autowired
-    private PageIndexer pageIndexer;
+    private PageIndexService pageIndexService;
 
     @Autowired
     private RemoveObsoletePageService removeObsoletePageService;
@@ -203,7 +203,7 @@ abstract class PageReviewFinder {
 
     protected PageIndexResult indexReplacements(WikipediaPage page) {
         LOGGER.trace("Update page replacements in database");
-        return pageIndexer.indexPage(page);
+        return pageIndexService.indexPage(page);
     }
 
     private long findTotalResultsFromCache(PageReviewOptions options) {
