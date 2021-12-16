@@ -8,7 +8,6 @@ import es.bvalero.replacer.common.domain.ReplacementKind;
 import es.bvalero.replacer.common.domain.ReplacementType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.exception.ReplacerException;
-import es.bvalero.replacer.repository.ReplacementRepository;
 import es.bvalero.replacer.repository.ReplacementTypeRepository;
 import es.bvalero.replacer.repository.ResultCount;
 import java.util.Collection;
@@ -20,9 +19,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 class ReplacementCacheRepositoryTest {
-
-    @Mock
-    private ReplacementRepository replacementRepository;
 
     @Mock
     private ReplacementTypeRepository replacementTypeRepository;

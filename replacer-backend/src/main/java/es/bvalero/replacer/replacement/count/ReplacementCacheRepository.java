@@ -4,8 +4,6 @@ import com.github.rozidan.springboot.logger.Loggable;
 import es.bvalero.replacer.common.domain.ReplacementType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.exception.ReplacerException;
-import es.bvalero.replacer.repository.ReplacementModel;
-import es.bvalero.replacer.repository.ReplacementRepository;
 import es.bvalero.replacer.repository.ReplacementTypeRepository;
 import es.bvalero.replacer.repository.ResultCount;
 import java.util.Collection;
@@ -31,11 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Primary
 @Transactional
 @Repository
-class ReplacementCacheRepository implements ReplacementRepository, ReplacementTypeRepository {
-
-    @Autowired
-    @Qualifier("replacementJdbcRepository")
-    private ReplacementRepository replacementRepository;
+class ReplacementCacheRepository implements ReplacementTypeRepository {
 
     @Autowired
     @Qualifier("replacementJdbcRepository")
@@ -128,27 +122,7 @@ class ReplacementCacheRepository implements ReplacementRepository, ReplacementTy
     /* NOT OVERWRITTEN */
 
     @Override
-    public void addReplacements(Collection<ReplacementModel> replacements) {
-        replacementRepository.addReplacements(replacements);
-    }
-
-    @Override
-    public void updateReplacements(Collection<ReplacementModel> replacements) {
-        replacementRepository.updateReplacements(replacements);
-    }
-
-    @Override
-    public void removeReplacements(Collection<ReplacementModel> replacements) {
-        replacementRepository.removeReplacements(replacements);
-    }
-
-    @Override
     public Collection<ResultCount<ReplacementType>> countReplacementsByType(WikipediaLanguage lang) {
         return replacementTypeRepository.countReplacementsByType(lang);
-    }
-
-    @Override
-    public long findReplacementToReview(WikipediaLanguage lang, long chunkSize) {
-        return replacementRepository.findReplacementToReview(lang, chunkSize);
     }
 }
