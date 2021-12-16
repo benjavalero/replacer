@@ -22,7 +22,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Primary
 @Service
-class PageIndexService implements PageIndexer {
+class PageIndexSingleService implements PageIndexer {
 
     @Autowired
     private PageIndexRepository pageIndexRepository;

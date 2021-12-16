@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @Qualifier("pageBatchIndexService")
-class PageIndexBatchService extends PageIndexService implements PageIndexer {
+class PageIndexBatchService extends PageIndexSingleService implements PageIndexer {
 
     @Qualifier("pageIndexBatchRepository")
     @Autowired
