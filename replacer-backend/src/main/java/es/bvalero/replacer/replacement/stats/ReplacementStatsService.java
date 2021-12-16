@@ -5,14 +5,12 @@ import es.bvalero.replacer.repository.ReplacementStatsRepository;
 import es.bvalero.replacer.repository.ResultCount;
 import java.util.Collection;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 /** Service to retrieve and cache the replacement counts for statistics */
 @Service
 class ReplacementStatsService {
 
-    @Qualifier("replacementStatsCacheRepository")
     @Autowired
     private ReplacementStatsRepository replacementStatsRepository;
 

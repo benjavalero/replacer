@@ -23,9 +23,9 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 @Loggable(value = LogLevel.TRACE, skipResult = true, warnOver = 10, warnUnit = TimeUnit.SECONDS)
+@Qualifier("replacementJdbcRepository")
 @Transactional
 @Repository
-@Qualifier("replacementJdbcRepository")
 class ReplacementJdbcRepository
     implements ReplacementRepository, ReplacementTypeRepository, ReplacementStatsRepository {
 

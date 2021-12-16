@@ -10,16 +10,19 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.logging.LogLevel;
+import org.springframework.context.annotation.Primary;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 /** Implementation of the replacement repository which maintains a cache of the replacement stats */
-@Qualifier("replacementStatsCacheRepository")
+@Primary
+@Transactional
 @Repository
 class ReplacementStatsCacheRepository implements ReplacementStatsRepository {
 
-    @Qualifier("replacementJdbcRepository")
     @Autowired
+    @Qualifier("replacementJdbcRepository")
     private ReplacementStatsRepository replacementStatsRepository;
 
     // Statistics caches

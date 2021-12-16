@@ -27,8 +27,8 @@ import org.xml.sax.SAXException;
 @Component
 class DumpSaxParser implements DumpParser {
 
-    @Qualifier("pageBatchIndexService")
     @Autowired
+    @Qualifier("pageBatchIndexService")
     private PageIndexer pageIndexer;
 
     @Resource
