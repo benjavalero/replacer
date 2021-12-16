@@ -53,6 +53,6 @@ public class PageListController {
     }
 
     private ReplacementType toDomain(PageListRequest request) {
-        return ReplacementType.of(ReplacementKind.valueOfLabel(request.getType()), request.getSubtype());
+        return ReplacementType.of(request.getType(), request.getSubtype());
     }
 }

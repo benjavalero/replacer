@@ -65,9 +65,7 @@ public class PageReviewOptions {
 
     @Nullable
     public ReplacementType getReplacementType() {
-        return Objects.nonNull(type) && Objects.nonNull(subtype)
-            ? ReplacementType.of(ReplacementKind.valueOfLabel(type), subtype)
-            : null;
+        return Objects.nonNull(type) && Objects.nonNull(subtype) ? ReplacementType.of(type, subtype) : null;
     }
 
     @TestOnly

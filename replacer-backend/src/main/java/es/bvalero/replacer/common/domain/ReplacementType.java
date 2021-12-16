@@ -16,6 +16,10 @@ public class ReplacementType {
     @NonNull
     String subtype;
 
+    public static ReplacementType of(String type, String subtype) {
+        return ReplacementType.of(ReplacementKind.valueOfLabel(type), subtype);
+    }
+
     private static ReplacementType ofEmpty() {
         return new ReplacementType(ReplacementKind.EMPTY, "");
     }
