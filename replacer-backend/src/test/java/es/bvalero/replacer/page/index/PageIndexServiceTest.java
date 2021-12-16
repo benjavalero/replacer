@@ -149,19 +149,4 @@ class PageIndexServiceTest {
         verify(replacementFinderService, never()).find(any(FinderPage.class));
         verify(pageIndexResultSaver).save(any(PageIndexResult.class));
     }
-
-    @Test
-    void testIndexObsoletePage() {
-        PageModel pageModel = PageModel
-            .builder()
-            .lang(page.getId().getLang().getCode())
-            .pageId(page.getId().getPageId())
-            .replacements(Collections.emptyList())
-            .build();
-        when(pageRepository.findPageById(page.getId())).thenReturn(Optional.of(pageModel));
-
-        pageIndexService.indexObsoletePage(page.getId());
-
-        verify(pageIndexResultSaver).save(any(PageIndexResult.class));
-    }
 }

@@ -4,6 +4,7 @@ import com.github.rozidan.springboot.logger.Loggable;
 import es.bvalero.replacer.common.domain.ReplacementKind;
 import es.bvalero.replacer.common.domain.ReplacementType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
+import es.bvalero.replacer.common.domain.WikipediaPageId;
 import es.bvalero.replacer.repository.*;
 import java.time.LocalDate;
 import java.util.Collection;
@@ -60,6 +61,17 @@ class ReplacementJdbcRepository
             SqlParameterSource namedParameters = new MapSqlParameterSource().addValue("ids", ids);
             jdbcTemplate.update(sql, namedParameters);
         }
+    }
+
+    @Override
+    public void removeReplacementsByPageId(Collection<WikipediaPageId> wikipediaPageIds) {
+        String sql =
+            "DELETE FROM replacement WHERE lang = :lang AND article_id = :pageId " +
+            "AND (reviewer IS NULL OR reviewer = :system)";
+
+        Collection<PageId> pageIds = wikipediaPageIds.stream().map(PageId::of).collect(Collectors.toUnmodifiableSet());
+        SqlParameterSource[] namedParameters = SqlParameterSourceUtils.createBatch(pageIds.toArray());
+        jdbcTemplate.batchUpdate(sql, namedParameters);
     }
 
     @Override

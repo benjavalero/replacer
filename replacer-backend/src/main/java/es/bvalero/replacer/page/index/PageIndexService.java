@@ -114,14 +114,6 @@ public class PageIndexService implements PageIndexer {
     }
 
     @Override
-    public void indexObsoletePage(WikipediaPageId pageId) {
-        IndexablePage page = findIndexablePageInDb(pageId);
-        if (page != null) {
-            this.indexObsoletePage(page);
-        }
-    }
-
-    @Override
     public void finish() {
         // Do nothing
     }

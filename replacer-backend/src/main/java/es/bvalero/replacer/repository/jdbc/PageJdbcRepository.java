@@ -88,6 +88,17 @@ class PageJdbcRepository implements PageRepository {
     }
 
     @Override
+    public void removePagesById(Collection<WikipediaPageId> wikipediaPageIds) {
+        // First delete the replacements
+        replacementRepository.removeReplacementsByPageId(wikipediaPageIds);
+
+        Collection<PageId> pageIds = wikipediaPageIds.stream().map(PageId::of).collect(Collectors.toUnmodifiableSet());
+        SqlParameterSource[] namedParameters = SqlParameterSourceUtils.createBatch(pageIds.toArray());
+        String sqlPages = "DELETE FROM page WHERE lang = :lang AND article_id = :pageId";
+        jdbcTemplate.batchUpdate(sqlPages, namedParameters);
+    }
+
+    @Override
     public Collection<Integer> findPageIdsToReview(WikipediaLanguage lang, int numResults) {
         // Find a random page without filtering by type takes a lot
         // Instead we find a random replacement and then the following pages

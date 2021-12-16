@@ -7,6 +7,7 @@ import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.common.domain.WikipediaPageId;
 import es.bvalero.replacer.page.index.PageIndexResult;
 import es.bvalero.replacer.page.index.PageIndexer;
+import es.bvalero.replacer.page.removeobsolete.RemoveObsoletePageService;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -27,6 +28,9 @@ abstract class PageReviewFinder {
 
     @Autowired
     private PageIndexer pageIndexer;
+
+    @Autowired
+    private RemoveObsoletePageService removeObsoletePageService;
 
     @Autowired
     private PageReviewSectionFinder pageReviewSectionFinder;
@@ -157,7 +161,7 @@ abstract class PageReviewFinder {
             return page;
         } else {
             LOGGER.warn("No page found in Wikipedia for {}", wikipediaPageId);
-            pageIndexer.indexObsoletePage(wikipediaPageId);
+            removeObsoletePageService.removeObsoletePages(Collections.singleton(wikipediaPageId));
         }
 
         return Optional.empty();
