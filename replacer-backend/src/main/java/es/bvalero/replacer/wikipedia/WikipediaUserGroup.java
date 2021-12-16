@@ -6,11 +6,15 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.lang.Nullable;
 
-/** Enumurate the Wikipedia user groups supported by the application */
+/** Enumerate the Wikipedia user groups supported by the application */
+@Slf4j
 @Getter
 @AllArgsConstructor
 public enum WikipediaUserGroup {
+    GENERIC("*"),
     AUTOCONFIRMED("autoconfirmed"),
     BOT("bot");
 
@@ -21,11 +25,12 @@ public enum WikipediaUserGroup {
     private final String group;
 
     // We cannot override the static method "valueOf(String)"
+    // TODO: Temporarily return an optional to detect unknown user groups
+    @Nullable
     public static WikipediaUserGroup valueOfLabel(String group) {
-        if (map.containsKey(group)) {
-            return map.get(group);
-        } else {
-            throw new IllegalArgumentException("Wrong group label: " + group);
+        if (!map.containsKey(group)) {
+            LOGGER.error("Wrong group label: " + group);
         }
+        return map.get(group);
     }
 }

@@ -48,6 +48,7 @@ class WikipediaApiService implements WikipediaService {
                     .getGroups()
                     .stream()
                     .map(WikipediaUserGroup::valueOfLabel)
+                    .filter(Objects::nonNull)
                     .collect(Collectors.toUnmodifiableSet())
             )
             .build();
