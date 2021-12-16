@@ -4,6 +4,7 @@ import es.bvalero.replacer.common.domain.ReplacementKind;
 import es.bvalero.replacer.common.domain.ReplacementType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.listing.Misspelling;
+import es.bvalero.replacer.finder.replacement.RemoveObsoleteReplacementType;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Collection;
@@ -15,13 +16,16 @@ import org.apache.commons.collections4.SetValuedMap;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @Slf4j
-public abstract class ObsoleteMisspellingListener implements PropertyChangeListener {
+class ObsoleteMisspellingListener implements PropertyChangeListener {
 
     @Autowired
     private SimpleMisspellingLoader simpleMisspellingLoader;
 
     @Autowired
     private ComposedMisspellingLoader composedMisspellingLoader;
+
+    @Autowired
+    private RemoveObsoleteReplacementType removeObsoleteReplacementType;
 
     @PostConstruct
     public void init() {
@@ -68,10 +72,8 @@ public abstract class ObsoleteMisspellingListener implements PropertyChangeListe
                     .stream()
                     .map(word -> ReplacementType.of(misspellingType, word))
                     .collect(Collectors.toUnmodifiableSet());
-                processObsoleteReplacementTypes(lang, types);
+                removeObsoleteReplacementType.removeObsoleteReplacementTypes(lang, types);
             }
         }
     }
-
-    protected abstract void processObsoleteReplacementTypes(WikipediaLanguage lang, Collection<ReplacementType> types);
 }
