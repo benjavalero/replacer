@@ -13,6 +13,7 @@ import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import org.apache.commons.lang3.StringUtils;
 import org.intellij.lang.annotations.RegExp;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
 /** Find categories containing unnecessary spaces */
@@ -23,7 +24,7 @@ class CategoryWhiteSpaceFinder extends CosmeticCheckedFinder {
     private Map<String, String> categoryWords;
 
     @RegExp
-    private static final String REGEX_CATEGORY_SPACE = "\\[\\[(\\s*%s\\s*):(.+?)]]";
+    private static final String REGEX_CATEGORY_SPACE = "\\[\\[(\\s*%s\\s*):(.+?)(\\|.+?)?]]";
 
     private Pattern patternCategorySpace;
 
@@ -42,9 +43,32 @@ class CategoryWhiteSpaceFinder extends CosmeticCheckedFinder {
 
     @Override
     public boolean validate(MatchResult match, FinderPage page) {
-        String templateName = match.group(1);
-        String templateContent = match.group(2);
-        return !templateName.equals(templateName.trim()) || !templateContent.equals(templateContent.trim());
+        String categoryWord = match.group(1);
+        String categoryName = match.group(2);
+        String categoryAlias = match.group(3);
+        return (
+            validateCategoryWord(categoryWord) ||
+            validateCategoryName(categoryName) ||
+            validateCategoryAlias(categoryAlias)
+        );
+    }
+
+    private boolean validateCategoryWord(String word) {
+        return !word.equals(word.trim());
+    }
+
+    private boolean validateCategoryName(String name) {
+        return !name.equals(name.trim());
+    }
+
+    private boolean validateCategoryAlias(@Nullable String alias) {
+        // We trim also the alias except if it is an empty whitespace which has a special meaning
+        assert alias == null || alias.startsWith("|");
+        if (alias == null || StringUtils.isBlank(alias.substring(1))) {
+            return false;
+        } else {
+            return !alias.substring(1).equals(alias.substring(1).trim());
+        }
     }
 
     @Override
@@ -55,6 +79,11 @@ class CategoryWhiteSpaceFinder extends CosmeticCheckedFinder {
     @Override
     public String getFix(MatchResult match, FinderPage page) {
         String categoryWord = FinderUtils.getFirstItemInList(categoryWords.get(page.getLang().getCode()));
-        return String.format("[[%s:%s]]", categoryWord, match.group(2).trim());
+        return String.format(
+            "[[%s:%s%s]]",
+            categoryWord,
+            match.group(2).trim(),
+            match.group(3) == null ? "" : "|" + match.group(3).substring(1).trim()
+        );
     }
 }

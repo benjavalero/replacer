@@ -34,6 +34,7 @@ class CategoryWhiteSpaceFinderTest {
             "[[Categoría :Animal]], [[Categoría:Animal]]",
             "[[Categoría: Animal]], [[Categoría:Animal]]",
             "[[Categoría:Animal ]], [[Categoría:Animal]]",
+            "[[Categoría:Animal| Animal ]], [[Categoría:Animal|Animal]]",
         }
     )
     void testCategoryWithSpace(String text, String fix) {
@@ -45,7 +46,7 @@ class CategoryWhiteSpaceFinderTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = { "[[Categoría:Animal]]" })
+    @ValueSource(strings = { "[[Categoría:Animal]], [[Categoría:Animal| ]]" })
     void testCategoryWithNoSpace(String text) {
         List<Cosmetic> cosmetics = categoryWhiteSpaceFinder.findList(text);
 

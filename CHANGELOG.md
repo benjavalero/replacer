@@ -1,5 +1,8 @@
 # Versions
 
+## 2.13.2 (??)
+- Fix: don't apply cosmetic change when a category has an empty alias
+
 ## 2.13.1 (12 Dic 2021)
 - Fix issue when a user has an unknown permission group.
 
