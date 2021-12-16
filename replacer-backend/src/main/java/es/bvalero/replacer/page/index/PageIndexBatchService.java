@@ -1,6 +1,7 @@
 package es.bvalero.replacer.page.index;
 
 import es.bvalero.replacer.common.domain.WikipediaPageId;
+import es.bvalero.replacer.repository.PageIndexRepository;
 import es.bvalero.replacer.repository.PageModel;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,15 +12,16 @@ import org.springframework.stereotype.Service;
 @Qualifier("pageBatchIndexService")
 class PageIndexBatchService extends PageIndexService implements PageIndexer {
 
+    @Qualifier("pageIndexBatchRepository")
     @Autowired
-    private PageIndexCacheHelper pageIndexCacheHelper;
+    private PageIndexRepository pageIndexRepository;
 
     @Autowired
     private PageIndexResultBatchSaver pageIndexResultSaver;
 
     @Override
     protected Optional<PageModel> findByPageId(WikipediaPageId pageId) {
-        return pageIndexCacheHelper.findPageById(pageId);
+        return pageIndexRepository.findPageById(pageId);
     }
 
     @Override
@@ -30,6 +32,5 @@ class PageIndexBatchService extends PageIndexService implements PageIndexer {
     @Override
     public void finish() {
         pageIndexResultSaver.forceSave();
-        pageIndexCacheHelper.resetCache();
     }
 }

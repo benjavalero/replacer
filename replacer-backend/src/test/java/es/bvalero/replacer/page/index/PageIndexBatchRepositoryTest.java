@@ -21,7 +21,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-class PageIndexCacheHelperTest {
+class PageIndexBatchRepositoryTest {
 
     @Mock
     private PageIndexRepository pageIndexRepository;
@@ -30,12 +30,12 @@ class PageIndexCacheHelperTest {
     private RemoveObsoletePageService removeObsoletePageService;
 
     @InjectMocks
-    private PageIndexCacheHelper pageIndexCacheHelper;
+    private PageIndexBatchRepository pageIndexBatchRepository;
 
     @BeforeEach
     public void setUp() {
-        pageIndexCacheHelper = new PageIndexCacheHelper();
-        pageIndexCacheHelper.setChunkSize(1000);
+        pageIndexBatchRepository = new PageIndexBatchRepository();
+        pageIndexBatchRepository.setChunkSize(1000);
         MockitoAnnotations.openMocks(this);
     }
 
@@ -82,12 +82,12 @@ class PageIndexCacheHelperTest {
         when(pageIndexRepository.findPagesByIdInterval(WikipediaLanguage.getDefault(), 1001, 2000))
             .thenReturn(List.of(page2));
 
-        Optional<PageModel> PageModelDB = pageIndexCacheHelper.findPageById(
+        Optional<PageModel> PageModelDB = pageIndexBatchRepository.findPageById(
             WikipediaPageId.of(WikipediaLanguage.getDefault(), 1)
         );
         assertTrue(PageModelDB.isEmpty());
 
-        PageModelDB = pageIndexCacheHelper.findPageById(WikipediaPageId.of(WikipediaLanguage.getDefault(), 1001));
+        PageModelDB = pageIndexBatchRepository.findPageById(WikipediaPageId.of(WikipediaLanguage.getDefault(), 1001));
         assertEquals(page2, PageModelDB.orElse(null));
 
         // Check that the page 2 has been cleaned
@@ -118,7 +118,7 @@ class PageIndexCacheHelperTest {
         when(pageIndexRepository.findPagesByIdInterval(WikipediaLanguage.getDefault(), 1, 2000))
             .thenReturn(List.of(page));
 
-        Optional<PageModel> PageModelDB = pageIndexCacheHelper.findPageById(
+        Optional<PageModel> PageModelDB = pageIndexBatchRepository.findPageById(
             WikipediaPageId.of(WikipediaLanguage.getDefault(), 1001)
         );
         assertEquals(page, PageModelDB.orElse(null));

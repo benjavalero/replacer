@@ -13,16 +13,18 @@ import java.util.stream.Collectors;
 import lombok.Setter;
 import org.jetbrains.annotations.TestOnly;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
-/**
- * Helper component to retrieve the pages and replacements in batches
- * and cache temporarily the results in order to reduce the calls to database while dump indexing.
- */
-@Component
-class PageIndexCacheHelper {
+/** Implementation of the page repository which retrieves the pages in batch when indexing */
+@Qualifier("pageIndexBatchRepository")
+@Transactional
+@Repository
+class PageIndexBatchRepository implements PageIndexRepository {
 
+    @Qualifier("pageJdbcRepository")
     @Autowired
     private PageIndexRepository pageIndexRepository;
 
@@ -36,25 +38,33 @@ class PageIndexCacheHelper {
     // No need to store the lang. We can assume we are not indexing more than one language at a time.
     private final Map<Integer, PageModel> pageMap = new HashMap<>(chunkSize);
 
+    private int minCachedId = 0;
     private int maxCachedId = 0;
 
-    Optional<PageModel> findPageById(WikipediaPageId id) {
+    @Override
+    public Optional<PageModel> findPageById(WikipediaPageId id) {
+        // If the page ID is lower than the minimum ID then we are in a new indexing
+        if (id.getPageId() < minCachedId) {
+            resetCache();
+        }
+
         // Load the cache the first time or when needed
         if (maxCachedId == 0 || id.getPageId() > maxCachedId) {
             clean();
 
-            int minId = maxCachedId + 1;
+            minCachedId = maxCachedId + 1;
             while (id.getPageId() > maxCachedId) {
                 // In case there is a gap greater than the configured chunk size between DB Replacement IDs
                 maxCachedId += chunkSize;
             }
-            load(minId, maxCachedId, id.getLang());
+            load(minCachedId, maxCachedId, id.getLang());
         }
 
         return Optional.ofNullable(pageMap.remove(id.getPageId()));
     }
 
-    private Collection<PageModel> findPagesByIdInterval(WikipediaLanguage lang, int minPageId, int maxPageId) {
+    @Override
+    public Collection<PageModel> findPagesByIdInterval(WikipediaLanguage lang, int minPageId, int maxPageId) {
         return pageIndexRepository.findPagesByIdInterval(lang, minPageId, maxPageId);
     }
 
@@ -66,14 +76,16 @@ class PageIndexCacheHelper {
     private void clean() {
         // Clear the cache if obsolete (we assume the dump pages are in order)
         // The remaining cached pages are not in the dump, so we remove them from DB.
+        //  Note that this might not be called for the last pages in a dump until the next indexing starts
         if (!pageMap.isEmpty()) {
             this.removePages(pageMap.values());
             pageMap.clear();
         }
     }
 
-    void resetCache() {
+    private void resetCache() {
         this.clean();
+        this.minCachedId = 0;
         this.maxCachedId = 0;
     }
 
