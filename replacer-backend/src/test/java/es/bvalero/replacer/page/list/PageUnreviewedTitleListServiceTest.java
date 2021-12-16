@@ -37,22 +37,15 @@ class PageUnreviewedTitleListServiceTest {
         List<String> list = Arrays.asList("Bo", "C", "Aá", "Bñ", null, "Ae");
         List<String> sorted = List.of("Aá", "Ae", "Bñ", "Bo", "C");
 
-        when(
-            pageRepository.findPageTitlesToReviewByType(
-                WikipediaLanguage.getDefault(),
-                ReplacementKind.DATE.getLabel(),
-                "Y"
-            )
-        )
-            .thenReturn(list);
+        ReplacementType type = ReplacementType.of(ReplacementKind.DATE, "Y");
+        when(pageRepository.findPageTitlesToReviewByType(WikipediaLanguage.getDefault(), type)).thenReturn(list);
 
         Collection<String> result = pageUnreviewedTitleListService.findPageTitlesToReviewByType(
             WikipediaLanguage.getDefault(),
-            ReplacementType.of(ReplacementKind.DATE, "Y")
+            type
         );
         assertEquals(sorted, result);
 
-        verify(pageRepository)
-            .findPageTitlesToReviewByType(WikipediaLanguage.getDefault(), ReplacementKind.DATE.getLabel(), "Y");
+        verify(pageRepository).findPageTitlesToReviewByType(WikipediaLanguage.getDefault(), type);
     }
 }

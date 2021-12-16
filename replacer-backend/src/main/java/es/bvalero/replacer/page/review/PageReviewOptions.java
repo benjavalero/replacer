@@ -76,13 +76,13 @@ public class PageReviewOptions {
     }
 
     @TestOnly
-    public static PageReviewOptions ofTypeSubtype(String type, String subtype) {
+    public static PageReviewOptions ofType(ReplacementType type) {
         return PageReviewOptions
             .builder()
             .lang(WikipediaLanguage.getDefault().getCode())
             .user("A")
-            .type(type)
-            .subtype(subtype)
+            .type(type.getKind().getLabel())
+            .subtype(type.getSubtype())
             .build();
     }
 

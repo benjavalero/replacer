@@ -5,12 +5,11 @@ import static org.mockito.Mockito.*;
 
 import es.bvalero.replacer.common.domain.*;
 import es.bvalero.replacer.common.domain.ReplacementKind;
-import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.page.index.PageIndexResult;
 import es.bvalero.replacer.page.index.PageIndexStatus;
 import es.bvalero.replacer.page.index.PageIndexer;
 import es.bvalero.replacer.repository.PageRepository;
-import es.bvalero.replacer.repository.ReplacementRepository;
+import es.bvalero.replacer.repository.ReplacementTypeRepository;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -53,20 +52,18 @@ class PageReviewTypeSubtypeFinderTest {
         .suggestions(List.of(Suggestion.ofNoComment("Z")))
         .build();
     private final List<Replacement> replacements = Collections.singletonList(replacement);
-    private final PageReviewOptions options = PageReviewOptions.ofTypeSubtype(
-        ReplacementKind.MISSPELLING_SIMPLE.getLabel(),
-        "Y"
+    private final PageReviewOptions options = PageReviewOptions.ofType(
+        ReplacementType.of(ReplacementKind.MISSPELLING_SIMPLE, "Y")
     );
-    private final PageReviewOptions options2 = PageReviewOptions.ofTypeSubtype(
-        ReplacementKind.MISSPELLING_COMPOSED.getLabel(),
-        "B"
+    private final PageReviewOptions options2 = PageReviewOptions.ofType(
+        ReplacementType.of(ReplacementKind.MISSPELLING_COMPOSED, "B")
     );
 
     @Mock
     private PageRepository pageRepository;
 
     @Mock
-    private ReplacementRepository replacementRepository;
+    private ReplacementTypeRepository replacementTypeRepository;
 
     @Mock
     private WikipediaService wikipediaService;
@@ -87,9 +84,11 @@ class PageReviewTypeSubtypeFinderTest {
     }
 
     @Test
-    void testFindRandomPageToReviewTypeNotFiltered() throws ReplacerException {
+    void testFindRandomPageToReviewTypeNotFiltered() {
         // 1 result in DB
-        when(pageRepository.findPageIdsToReviewByType(any(WikipediaLanguage.class), anyString(), anyString(), anyInt()))
+        when(
+            pageRepository.findPageIdsToReviewByType(any(WikipediaLanguage.class), any(ReplacementType.class), anyInt())
+        )
             .thenReturn(new ArrayList<>(Collections.singleton(randomId)))
             .thenReturn(Collections.emptyList());
 
@@ -107,9 +106,11 @@ class PageReviewTypeSubtypeFinderTest {
     }
 
     @Test
-    void testFindRandomPageToReviewTypeFiltered() throws ReplacerException {
+    void testFindRandomPageToReviewTypeFiltered() {
         // 1 result in DB
-        when(pageRepository.findPageIdsToReviewByType(any(WikipediaLanguage.class), anyString(), anyString(), anyInt()))
+        when(
+            pageRepository.findPageIdsToReviewByType(any(WikipediaLanguage.class), any(ReplacementType.class), anyInt())
+        )
             .thenReturn(new ArrayList<>(Collections.singleton(randomId)));
 
         // The page exists in Wikipedia
@@ -127,13 +128,15 @@ class PageReviewTypeSubtypeFinderTest {
     }
 
     @Test
-    void testFindRandomPageToReviewNoTypeAndThenFiltered() throws ReplacerException {
+    void testFindRandomPageToReviewNoTypeAndThenFiltered() {
         // 1. Find the random page 1 by type. In DB there exists also the page 2.
         // 2. Find the random page 2 by no type. The page 2 is supposed to be removed from all the caches.
         // 3. Find a random page by type. In DB there is no page.
 
         // 2 results in DB by type, no results the second time.
-        when(pageRepository.findPageIdsToReviewByType(any(WikipediaLanguage.class), anyString(), anyString(), anyInt()))
+        when(
+            pageRepository.findPageIdsToReviewByType(any(WikipediaLanguage.class), any(ReplacementType.class), anyInt())
+        )
             .thenReturn(new ArrayList<>(Arrays.asList(randomId, randomId2)))
             .thenReturn(Collections.emptyList());
         // 1 result in DB by no type
@@ -160,7 +163,7 @@ class PageReviewTypeSubtypeFinderTest {
     }
 
     @Test
-    void testPageReviewWithSection() throws ReplacerException {
+    void testPageReviewWithSection() {
         final int sectionId = 1;
 
         // The page exists in Wikipedia
@@ -199,7 +202,7 @@ class PageReviewTypeSubtypeFinderTest {
     }
 
     @Test
-    void testPageReviewWithNoSection() throws ReplacerException {
+    void testPageReviewWithNoSection() {
         // The page exists in Wikipedia
         when(wikipediaService.getPageById(randomPageId)).thenReturn(Optional.of(page));
 

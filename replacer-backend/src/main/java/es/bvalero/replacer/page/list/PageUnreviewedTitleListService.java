@@ -19,7 +19,7 @@ class PageUnreviewedTitleListService {
 
     Collection<String> findPageTitlesToReviewByType(WikipediaLanguage lang, ReplacementType type) {
         return pageRepository
-            .findPageTitlesToReviewByType(lang, type.getKind().getLabel(), type.getSubtype())
+            .findPageTitlesToReviewByType(lang, type)
             .stream()
             .filter(Objects::nonNull)
             .sorted(Collator.getInstance(FinderUtils.LOCALE_ES))

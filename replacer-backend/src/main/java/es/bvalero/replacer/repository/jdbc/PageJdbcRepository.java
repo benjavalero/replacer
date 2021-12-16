@@ -1,6 +1,7 @@
 package es.bvalero.replacer.repository.jdbc;
 
 import com.github.rozidan.springboot.logger.Loggable;
+import es.bvalero.replacer.common.domain.ReplacementType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.domain.WikipediaPageId;
 import es.bvalero.replacer.repository.*;
@@ -11,7 +12,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.logging.LogLevel;
-import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -120,12 +120,7 @@ class PageJdbcRepository implements PageRepository {
     }
 
     @Override
-    public Collection<Integer> findPageIdsToReviewByType(
-        WikipediaLanguage lang,
-        String type,
-        String subtype,
-        int numResults
-    ) {
+    public Collection<Integer> findPageIdsToReviewByType(WikipediaLanguage lang, ReplacementType type, int numResults) {
         // When filtering by type/subtype ORDER BY RAND() still takes a while, but it is admissible.
         // Not worth to DISTINCT. Instead, we return the results as a set to avoid duplicates.
         String sql =
@@ -136,8 +131,8 @@ class PageJdbcRepository implements PageRepository {
             numResults;
         SqlParameterSource namedParameters = new MapSqlParameterSource()
             .addValue("lang", lang.getCode())
-            .addValue("type", type)
-            .addValue("subtype", subtype);
+            .addValue("type", type.getKind().getLabel())
+            .addValue("subtype", type.getSubtype());
         return jdbcTemplate
             .queryForList(sql, namedParameters, Integer.class)
             .stream()
@@ -145,20 +140,20 @@ class PageJdbcRepository implements PageRepository {
     }
 
     @Override
-    public long countPagesToReviewByType(WikipediaLanguage lang, String type, String subtype) {
+    public long countPagesToReviewByType(WikipediaLanguage lang, ReplacementType type) {
         String sql =
             "SELECT COUNT (DISTINCT article_id) FROM replacement " +
             "WHERE lang = :lang AND type = :type AND subtype = :subtype AND reviewer IS NULL";
         SqlParameterSource namedParameters = new MapSqlParameterSource()
             .addValue("lang", lang.getCode())
-            .addValue("type", type)
-            .addValue("subtype", subtype);
+            .addValue("type", type.getKind().getLabel())
+            .addValue("subtype", type.getSubtype());
         Long result = jdbcTemplate.queryForObject(sql, namedParameters, Long.class);
         return Objects.requireNonNullElse(result, 0L);
     }
 
     @Override
-    public Collection<String> findPageTitlesToReviewByType(WikipediaLanguage lang, String type, String subtype) {
+    public Collection<String> findPageTitlesToReviewByType(WikipediaLanguage lang, ReplacementType type) {
         // TODO: Check if it is better to make a DISTINCT or retrieve them all and return a Set
         String sql =
             "SELECT DISTINCT(p.title) " +
@@ -166,8 +161,8 @@ class PageJdbcRepository implements PageRepository {
             "WHERE r.lang = :lang AND r.type = :type AND r.subtype = :subtype AND r.reviewer IS NULL";
         SqlParameterSource namedParameters = new MapSqlParameterSource()
             .addValue("lang", lang.getCode())
-            .addValue("type", type)
-            .addValue("subtype", subtype);
+            .addValue("type", type.getKind().getLabel())
+            .addValue("subtype", type.getSubtype());
         return jdbcTemplate.queryForList(sql, namedParameters, String.class);
     }
 }

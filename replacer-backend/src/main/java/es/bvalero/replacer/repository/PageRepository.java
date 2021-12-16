@@ -1,5 +1,6 @@
 package es.bvalero.replacer.repository;
 
+import es.bvalero.replacer.common.domain.ReplacementType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.domain.WikipediaPageId;
 import java.util.Collection;
@@ -28,11 +29,11 @@ public interface PageRepository {
     long countPagesToReview(WikipediaLanguage lang);
 
     /** Find a random batch of pages to review for a given type and return the IDs */
-    Collection<Integer> findPageIdsToReviewByType(WikipediaLanguage lang, String type, String subtype, int numResult);
+    Collection<Integer> findPageIdsToReviewByType(WikipediaLanguage lang, ReplacementType type, int numResult);
 
     /** Count the number of pages to review by type */
-    long countPagesToReviewByType(WikipediaLanguage lang, String type, String subtype);
+    long countPagesToReviewByType(WikipediaLanguage lang, ReplacementType type);
 
     /** Find the pages to review by the given type and return the titles */
-    Collection<String> findPageTitlesToReviewByType(WikipediaLanguage lang, String type, String subtype);
+    Collection<String> findPageTitlesToReviewByType(WikipediaLanguage lang, ReplacementType type);
 }

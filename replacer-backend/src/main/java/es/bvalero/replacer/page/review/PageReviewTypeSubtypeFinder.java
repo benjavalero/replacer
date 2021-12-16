@@ -35,15 +35,13 @@ class PageReviewTypeSubtypeFinder extends PageReviewFinder {
     PageSearchResult findPageIdsToReview(PageReviewOptions options) {
         Collection<Integer> pageIds = pageRepository.findPageIdsToReviewByType(
             options.getWikipediaLanguage(),
-            Objects.requireNonNull(options.getType()),
-            Objects.requireNonNull(options.getSubtype()),
+            Objects.requireNonNull(options.getReplacementType()),
             getCacheSize()
         );
 
         long totalResults = pageRepository.countPagesToReviewByType(
             options.getWikipediaLanguage(),
-            Objects.requireNonNull(options.getType()),
-            Objects.requireNonNull(options.getSubtype())
+            Objects.requireNonNull(options.getReplacementType())
         );
         return PageSearchResult.of(totalResults, pageIds);
     }
@@ -65,20 +63,7 @@ class PageReviewTypeSubtypeFinder extends PageReviewFinder {
     ) {
         return replacements
             .stream()
-            .filter(replacement ->
-                hasType(
-                    replacement,
-                    Objects.requireNonNull(options.getType()),
-                    Objects.requireNonNull(options.getSubtype())
-                )
-            )
+            .filter(replacement -> Objects.equals(replacement.getType(), options.getReplacementType()))
             .collect(Collectors.toUnmodifiableList());
-    }
-
-    private boolean hasType(Replacement replacement, String type, String subtype) {
-        return (
-            replacement.getType().getKind().getLabel().equals(type) &&
-            replacement.getType().getSubtype().equals(subtype)
-        );
     }
 }

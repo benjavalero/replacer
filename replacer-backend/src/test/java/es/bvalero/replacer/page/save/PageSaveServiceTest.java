@@ -78,9 +78,8 @@ class PageSaveServiceTest {
     @Test
     void testSaveWithNoChanges() throws WikipediaException {
         int pageId = 123;
-        String type = ReplacementKind.DATE.getLabel();
-        String subtype = "S";
-        PageReviewOptions options = PageReviewOptions.ofTypeSubtype(type, subtype);
+        ReplacementType type = ReplacementType.of(ReplacementKind.DATE, "S");
+        PageReviewOptions options = PageReviewOptions.ofType(type);
         pageSaveService.savePageWithNoChanges(pageId, options);
 
         verify(cosmeticFinderService, never()).applyCosmeticChanges(any(FinderPage.class));
