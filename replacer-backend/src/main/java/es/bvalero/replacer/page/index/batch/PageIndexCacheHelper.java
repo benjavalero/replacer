@@ -3,8 +3,8 @@ package es.bvalero.replacer.page.index.batch;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.domain.WikipediaPageId;
 import es.bvalero.replacer.page.removeobsolete.RemoveObsoletePageService;
+import es.bvalero.replacer.repository.PageIndexRepository;
 import es.bvalero.replacer.repository.PageModel;
-import es.bvalero.replacer.repository.PageRepository;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -24,7 +24,7 @@ import org.springframework.stereotype.Component;
 class PageIndexCacheHelper {
 
     @Autowired
-    private PageRepository pageRepository;
+    private PageIndexRepository pageIndexRepository;
 
     @Autowired
     private RemoveObsoletePageService removeObsoletePageService;
@@ -55,7 +55,7 @@ class PageIndexCacheHelper {
     }
 
     private Collection<PageModel> findPagesByIdInterval(WikipediaLanguage lang, int minPageId, int maxPageId) {
-        return pageRepository.findPagesByIdInterval(lang, minPageId, maxPageId);
+        return pageIndexRepository.findPagesByIdInterval(lang, minPageId, maxPageId);
     }
 
     private void load(int minId, int maxId, WikipediaLanguage lang) {

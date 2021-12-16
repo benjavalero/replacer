@@ -9,8 +9,8 @@ import static org.mockito.Mockito.when;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.domain.WikipediaPageId;
 import es.bvalero.replacer.page.removeobsolete.RemoveObsoletePageService;
+import es.bvalero.replacer.repository.PageIndexRepository;
 import es.bvalero.replacer.repository.PageModel;
-import es.bvalero.replacer.repository.PageRepository;
 import es.bvalero.replacer.repository.ReplacementModel;
 import java.time.LocalDate;
 import java.util.List;
@@ -24,7 +24,7 @@ import org.mockito.MockitoAnnotations;
 class PageIndexCacheHelperTest {
 
     @Mock
-    private PageRepository pageRepository;
+    private PageIndexRepository pageIndexRepository;
 
     @Mock
     private RemoveObsoletePageService removeObsoletePageService;
@@ -77,8 +77,9 @@ class PageIndexCacheHelperTest {
             .pageId(pageId2)
             .replacements(List.of(replacement2))
             .build();
-        when(pageRepository.findPagesByIdInterval(WikipediaLanguage.getDefault(), 1, 1000)).thenReturn(List.of(page1));
-        when(pageRepository.findPagesByIdInterval(WikipediaLanguage.getDefault(), 1001, 2000))
+        when(pageIndexRepository.findPagesByIdInterval(WikipediaLanguage.getDefault(), 1, 1000))
+            .thenReturn(List.of(page1));
+        when(pageIndexRepository.findPagesByIdInterval(WikipediaLanguage.getDefault(), 1001, 2000))
             .thenReturn(List.of(page2));
 
         Optional<PageModel> PageModelDB = pageIndexCacheHelper.findPageById(
@@ -114,7 +115,8 @@ class PageIndexCacheHelperTest {
             .pageId(pageId)
             .replacements(List.of(replacement))
             .build();
-        when(pageRepository.findPagesByIdInterval(WikipediaLanguage.getDefault(), 1, 2000)).thenReturn(List.of(page));
+        when(pageIndexRepository.findPagesByIdInterval(WikipediaLanguage.getDefault(), 1, 2000))
+            .thenReturn(List.of(page));
 
         Optional<PageModel> PageModelDB = pageIndexCacheHelper.findPageById(
             WikipediaPageId.of(WikipediaLanguage.getDefault(), 1001)

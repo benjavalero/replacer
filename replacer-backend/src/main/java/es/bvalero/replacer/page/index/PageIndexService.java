@@ -7,8 +7,8 @@ import es.bvalero.replacer.finder.FinderPageMapper;
 import es.bvalero.replacer.finder.replacement.ReplacementFinderService;
 import es.bvalero.replacer.finder.replacement.ReplacementMapper;
 import es.bvalero.replacer.page.removeobsolete.RemoveObsoletePageService;
+import es.bvalero.replacer.repository.PageIndexRepository;
 import es.bvalero.replacer.repository.PageModel;
-import es.bvalero.replacer.repository.PageRepository;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Optional;
@@ -25,7 +25,7 @@ import org.springframework.stereotype.Service;
 public class PageIndexService implements PageIndexer {
 
     @Autowired
-    private PageRepository pageRepository;
+    private PageIndexRepository pageIndexRepository;
 
     @Autowired
     private RemoveObsoletePageService removeObsoletePageService;
@@ -74,7 +74,7 @@ public class PageIndexService implements PageIndexer {
     }
 
     protected Optional<PageModel> findByPageId(WikipediaPageId pageId) {
-        return pageRepository.findPageById(pageId);
+        return pageIndexRepository.findPageById(pageId);
     }
 
     private boolean isPageNotIndexable(WikipediaPage page, @Nullable IndexablePage dbPage) {

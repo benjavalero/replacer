@@ -10,8 +10,8 @@ import es.bvalero.replacer.common.domain.WikipediaPageId;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.replacement.ReplacementFinderService;
 import es.bvalero.replacer.page.removeobsolete.RemoveObsoletePageService;
+import es.bvalero.replacer.repository.PageIndexRepository;
 import es.bvalero.replacer.repository.PageModel;
-import es.bvalero.replacer.repository.PageRepository;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Optional;
@@ -24,7 +24,7 @@ import org.mockito.MockitoAnnotations;
 class PageIndexServiceTest {
 
     @Mock
-    private PageRepository pageRepository;
+    private PageIndexRepository pageIndexRepository;
 
     @Mock
     private RemoveObsoletePageService removeObsoletePageService;
@@ -139,7 +139,7 @@ class PageIndexServiceTest {
             .pageId(page.getId().getPageId())
             .replacements(Collections.emptyList())
             .build();
-        when(pageRepository.findPageById(page.getId())).thenReturn(Optional.of(pageModel));
+        when(pageIndexRepository.findPageById(page.getId())).thenReturn(Optional.of(pageModel));
 
         when(pageIndexValidator.isPageIndexableByNamespace(page)).thenReturn(false);
 

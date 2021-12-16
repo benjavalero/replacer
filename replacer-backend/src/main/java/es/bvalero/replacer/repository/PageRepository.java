@@ -4,15 +4,8 @@ import es.bvalero.replacer.common.domain.ReplacementType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.domain.WikipediaPageId;
 import java.util.Collection;
-import java.util.Optional;
 
 public interface PageRepository {
-    /** Find a page including all the replacements */
-    Optional<PageModel> findPageById(WikipediaPageId id);
-
-    /** Find pages, including all the replacements, by a range of page IDs. */
-    Collection<PageModel> findPagesByIdInterval(WikipediaLanguage lang, int minPageId, int maxPageId);
-
     /** Add a collection of pages without adding the replacements */
     void addPages(Collection<PageModel> pages);
 

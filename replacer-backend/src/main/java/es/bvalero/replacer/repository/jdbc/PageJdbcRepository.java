@@ -22,7 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Loggable(value = LogLevel.TRACE, skipResult = true, warnOver = 10, warnUnit = TimeUnit.SECONDS)
 @Transactional
 @Repository
-class PageJdbcRepository implements PageRepository {
+class PageJdbcRepository implements PageRepository, PageIndexRepository {
 
     private static final String FROM_REPLACEMENT_JOIN_PAGE =
         "FROM replacement r JOIN page p ON r.lang = p.lang AND r.article_id = p.article_id ";
