@@ -3,7 +3,6 @@ package es.bvalero.replacer.replacement.count;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Value;
-import lombok.With;
 import org.springframework.lang.NonNull;
 
 @Schema(description = "Page counts by replacement subtype")
@@ -19,7 +18,6 @@ class SubtypeCount {
 
     @Schema(description = "Number of pages containing this subtype to review", required = true, example = "1")
     @JsonProperty("c")
-    @With
     @NonNull
     Long count;
 }

@@ -2,14 +2,9 @@ package es.bvalero.replacer.replacement.count;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
-import java.util.Collection;
-import java.util.Map;
-import java.util.Optional;
-import java.util.TreeMap;
-import lombok.AccessLevel;
-import lombok.Getter;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.Value;
-import org.jetbrains.annotations.TestOnly;
 import org.springframework.lang.NonNull;
 
 @Schema(description = "Replacement kind along with the related types and the page counts")
@@ -23,35 +18,13 @@ class TypeCount implements Comparable<TypeCount> {
     @NonNull
     String type;
 
-    // Store internally the subtype counts in a sorted map
-    @Getter(AccessLevel.NONE)
-    Map<String, SubtypeCount> subtypeCounts = new TreeMap<>();
-
+    // No need to store the list sorted
     @Schema(description = "List of page counts by type", required = true)
     @JsonProperty("l")
-    Collection<SubtypeCount> getSubtypeCounts() {
-        return this.subtypeCounts.values();
-    }
+    List<SubtypeCount> subtypeCounts = new ArrayList<>();
 
     void add(SubtypeCount subtypeCount) {
-        this.subtypeCounts.put(subtypeCount.getSubtype(), subtypeCount);
-    }
-
-    void remove(String subtype) {
-        this.subtypeCounts.remove(subtype);
-    }
-
-    boolean isEmpty() {
-        return this.subtypeCounts.isEmpty();
-    }
-
-    @TestOnly
-    int size() {
-        return this.subtypeCounts.size();
-    }
-
-    Optional<SubtypeCount> get(String subtype) {
-        return Optional.ofNullable(subtypeCounts.get(subtype));
+        this.subtypeCounts.add(subtypeCount);
     }
 
     @Override

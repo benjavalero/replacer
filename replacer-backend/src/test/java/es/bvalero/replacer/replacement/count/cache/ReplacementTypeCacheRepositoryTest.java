@@ -1,4 +1,4 @@
-package es.bvalero.replacer.replacement.count;
+package es.bvalero.replacer.replacement.count.cache;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -18,17 +18,17 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-class ReplacementCacheRepositoryTest {
+class ReplacementTypeCacheRepositoryTest {
 
     @Mock
     private ReplacementTypeRepository replacementTypeRepository;
 
     @InjectMocks
-    private ReplacementCacheRepository replacementCacheRepository;
+    private ReplacementTypeCacheRepository replacementCacheRepository;
 
     @BeforeEach
     public void setUp() {
-        replacementCacheRepository = new ReplacementCacheRepository();
+        replacementCacheRepository = new ReplacementTypeCacheRepository();
         MockitoAnnotations.openMocks(this);
     }
 
@@ -36,9 +36,9 @@ class ReplacementCacheRepositoryTest {
     void testGetCachedReplacementCount() throws ReplacerException {
         WikipediaLanguage lang = WikipediaLanguage.getDefault();
 
-        String kind = ReplacementKind.DATE.getLabel();
-        ReplacementType type1 = ReplacementType.of(ReplacementKind.DATE, "Y");
-        ReplacementType type2 = ReplacementType.of(ReplacementKind.DATE, "Z");
+        ReplacementKind kind = ReplacementKind.DATE;
+        ReplacementType type1 = ReplacementType.of(kind, "Y");
+        ReplacementType type2 = ReplacementType.of(kind, "Z");
         ResultCount<ReplacementType> count1 = ResultCount.of(type1, 2L);
         ResultCount<ReplacementType> count2 = ResultCount.of(type2, 1L);
         Collection<ResultCount<ReplacementType>> counts = List.of(count1, count2);

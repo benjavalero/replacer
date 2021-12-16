@@ -1,4 +1,4 @@
-package es.bvalero.replacer.replacement.count;
+package es.bvalero.replacer.replacement.count.cache;
 
 import com.github.rozidan.springboot.logger.Loggable;
 import es.bvalero.replacer.common.domain.ReplacementType;
@@ -6,10 +6,7 @@ import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.repository.ReplacementTypeRepository;
 import es.bvalero.replacer.repository.ResultCount;
-import java.util.Collection;
-import java.util.EnumMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.VisibleForTesting;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,15 +18,12 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- * Implementation of the replacement repository which maintains a cache of the replacement counts.
- * This is the one public which must be used by other services or components.
- */
+/**Implementation of the replacement repository which maintains a cache of the replacement counts */
 @Slf4j
 @Primary
 @Transactional
 @Repository
-class ReplacementCacheRepository implements ReplacementTypeRepository {
+class ReplacementTypeCacheRepository implements ReplacementTypeRepository {
 
     @Autowired
     @Qualifier("replacementJdbcRepository")
@@ -41,8 +35,13 @@ class ReplacementCacheRepository implements ReplacementTypeRepository {
     // We add synchronization just in case the list is requested while still loading on start.
     private Map<WikipediaLanguage, LanguageCount> replacementCount;
 
-    Collection<TypeCount> countReplacementsGroupedByType(WikipediaLanguage lang) throws ReplacerException {
-        return this.getLanguageCount(lang).getTypeCounts();
+    @Override
+    public Collection<ResultCount<ReplacementType>> countReplacementsByType(WikipediaLanguage lang) {
+        try {
+            return this.getReplacementCount().get(lang).toModel();
+        } catch (ReplacerException e) {
+            return Collections.emptyList();
+        }
     }
 
     @VisibleForTesting
@@ -58,7 +57,7 @@ class ReplacementCacheRepository implements ReplacementTypeRepository {
 
     @VisibleForTesting
     void removeCachedReplacementCount(WikipediaLanguage lang, ReplacementType type) {
-        this.replacementCount.get(lang).removeTypeCount(type.getKind().getLabel(), type.getSubtype());
+        this.replacementCount.get(lang).removeTypeCount(type.getKind(), type.getSubtype());
     }
 
     @Override
@@ -76,7 +75,7 @@ class ReplacementCacheRepository implements ReplacementTypeRepository {
 
     @VisibleForTesting
     void decrementSubtypeCount(WikipediaLanguage lang, ReplacementType type) {
-        this.replacementCount.get(lang).decrementSubtypeCount(type.getKind().getLabel(), type.getSubtype());
+        this.replacementCount.get(lang).decrementSubtypeCount(type.getKind(), type.getSubtype());
     }
 
     @Override
@@ -93,6 +92,7 @@ class ReplacementCacheRepository implements ReplacementTypeRepository {
                 this.wait();
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
+                LOGGER.error("Error getting the synchronized replacement count");
                 throw new ReplacerException(e);
             }
         }
@@ -115,14 +115,6 @@ class ReplacementCacheRepository implements ReplacementTypeRepository {
     }
 
     private LanguageCount getReplacementsTypeCountsByLang(WikipediaLanguage lang) {
-        Collection<ResultCount<ReplacementType>> typeSubtypeCounts = countReplacementsByType(lang);
-        return LanguageCount.build(typeSubtypeCounts);
-    }
-
-    /* NOT OVERWRITTEN */
-
-    @Override
-    public Collection<ResultCount<ReplacementType>> countReplacementsByType(WikipediaLanguage lang) {
-        return replacementTypeRepository.countReplacementsByType(lang);
+        return LanguageCount.fromModel(this.replacementTypeRepository.countReplacementsByType(lang));
     }
 }
