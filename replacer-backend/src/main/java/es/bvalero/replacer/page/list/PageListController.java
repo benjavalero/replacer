@@ -45,6 +45,7 @@ public class PageListController {
     }
 
     @Operation(summary = "Mark as reviewed by the system all pages pages containing the given replacement type")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @PostMapping(value = "/review")
     public void reviewAsSystemByType(@Valid CommonQueryParameters queryParameters, @Valid PageListRequest request) {
         // Set as reviewed in the database

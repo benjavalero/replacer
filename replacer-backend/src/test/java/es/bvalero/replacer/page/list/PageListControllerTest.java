@@ -52,7 +52,7 @@ class PageListControllerTest {
                 post("/api/pages/review?type=Ortografía&subtype=Africa&lang=es&user=A")
                     .contentType(MediaType.APPLICATION_JSON)
             )
-            .andExpect(status().isOk());
+            .andExpect(status().isNoContent());
 
         verify(reviewByTypeService)
             .reviewAsSystemByType(
