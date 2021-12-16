@@ -1,9 +1,6 @@
-package es.bvalero.replacer.page.index.batch;
+package es.bvalero.replacer.page.index;
 
 import es.bvalero.replacer.common.domain.WikipediaPageId;
-import es.bvalero.replacer.page.index.PageIndexResult;
-import es.bvalero.replacer.page.index.PageIndexService;
-import es.bvalero.replacer.page.index.PageIndexer;
 import es.bvalero.replacer.repository.PageModel;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,4 +1,4 @@
-package es.bvalero.replacer.page.index.batch;
+package es.bvalero.replacer.page.index;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.domain.WikipediaPageId;

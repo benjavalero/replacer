@@ -1,4 +1,4 @@
-package es.bvalero.replacer.page.index.batch;
+package es.bvalero.replacer.page.index;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;

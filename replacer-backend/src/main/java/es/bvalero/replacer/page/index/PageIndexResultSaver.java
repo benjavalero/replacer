@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
  * When batch-saving, the results will be saved if the result size is large enough.
  */
 @Component
-public class PageIndexResultSaver {
+class PageIndexResultSaver {
 
     @Autowired
     PageRepository pageRepository;
