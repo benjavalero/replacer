@@ -15,6 +15,7 @@ import org.springframework.lang.Nullable;
 @AllArgsConstructor
 public enum WikipediaUserGroup {
     GENERIC("*"),
+    USER("user"),
     AUTOCONFIRMED("autoconfirmed"),
     BOT("bot");
 
