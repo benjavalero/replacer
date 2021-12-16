@@ -1,7 +1,5 @@
 package es.bvalero.replacer.page.index;
 
-import es.bvalero.replacer.page.index.PageIndexResult;
-import es.bvalero.replacer.page.index.PageIndexResultSaver;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 

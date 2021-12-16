@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @Qualifier("pageBatchIndexService")
-class PageIndexBatchService extends PageIndexSingleService implements PageIndexService {
+class PageIndexBatchService extends PageIndexAbstractService implements PageIndexService {
 
     @Qualifier("pageIndexBatchRepository")
     @Autowired
@@ -20,12 +20,12 @@ class PageIndexBatchService extends PageIndexSingleService implements PageIndexS
     private PageIndexResultBatchSaver pageIndexResultSaver;
 
     @Override
-    protected Optional<PageModel> findByPageId(WikipediaPageId pageId) {
+    Optional<PageModel> findByPageId(WikipediaPageId pageId) {
         return pageIndexRepository.findPageById(pageId);
     }
 
     @Override
-    protected void saveResult(PageIndexResult result) {
+    void saveResult(PageIndexResult result) {
         pageIndexResultSaver.save(result);
     }
 
