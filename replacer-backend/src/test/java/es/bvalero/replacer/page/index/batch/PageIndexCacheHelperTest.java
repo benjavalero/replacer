@@ -8,6 +8,7 @@ import static org.mockito.Mockito.when;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.domain.WikipediaPageId;
+import es.bvalero.replacer.page.removeobsolete.RemoveObsoletePageService;
 import es.bvalero.replacer.repository.PageModel;
 import es.bvalero.replacer.repository.PageRepository;
 import es.bvalero.replacer.repository.ReplacementModel;
@@ -24,6 +25,9 @@ class PageIndexCacheHelperTest {
 
     @Mock
     private PageRepository pageRepository;
+
+    @Mock
+    private RemoveObsoletePageService removeObsoletePageService;
 
     @InjectMocks
     private PageIndexCacheHelper pageIndexCacheHelper;
@@ -86,7 +90,7 @@ class PageIndexCacheHelperTest {
         assertEquals(page2, PageModelDB.orElse(null));
 
         // Check that the page 2 has been cleaned
-        verify(pageRepository).removePages(anyCollection());
+        verify(removeObsoletePageService).removeObsoletePages(anyCollection());
     }
 
     @Test

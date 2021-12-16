@@ -20,9 +20,6 @@ public interface PageRepository {
     void updatePages(Collection<PageModel> pages);
 
     /** Remove a collection of pages and its related replacements */
-    void removePages(Collection<PageModel> pages);
-
-    /** Remove a collection of pages and its related replacements */
     void removePagesById(Collection<WikipediaPageId> pages);
 
     /** Find a random batch of pages to review and return the IDs */

@@ -9,6 +9,7 @@ import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.common.domain.WikipediaPageId;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.replacement.ReplacementFinderService;
+import es.bvalero.replacer.page.removeobsolete.RemoveObsoletePageService;
 import es.bvalero.replacer.repository.PageModel;
 import es.bvalero.replacer.repository.PageRepository;
 import java.time.LocalDateTime;
@@ -24,6 +25,9 @@ class PageIndexServiceTest {
 
     @Mock
     private PageRepository pageRepository;
+
+    @Mock
+    private RemoveObsoletePageService removeObsoletePageService;
 
     @Mock
     private PageIndexValidator pageIndexValidator;
@@ -147,6 +151,7 @@ class PageIndexServiceTest {
         verify(pageIndexValidator, never()).isIndexableByTimestamp(page, null);
         verify(pageIndexValidator, never()).isIndexableByPageTitle(page, null);
         verify(replacementFinderService, never()).find(any(FinderPage.class));
-        verify(pageIndexResultSaver).save(any(PageIndexResult.class));
+        verify(pageIndexResultSaver, never()).save(any(PageIndexResult.class));
+        verify(removeObsoletePageService).removeObsoletePages(anyCollection());
     }
 }

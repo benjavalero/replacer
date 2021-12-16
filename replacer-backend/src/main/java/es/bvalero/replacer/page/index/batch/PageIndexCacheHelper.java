@@ -2,12 +2,14 @@ package es.bvalero.replacer.page.index.batch;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.domain.WikipediaPageId;
+import es.bvalero.replacer.page.removeobsolete.RemoveObsoletePageService;
 import es.bvalero.replacer.repository.PageModel;
 import es.bvalero.replacer.repository.PageRepository;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import lombok.Setter;
 import org.jetbrains.annotations.TestOnly;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,9 @@ class PageIndexCacheHelper {
 
     @Autowired
     private PageRepository pageRepository;
+
+    @Autowired
+    private RemoveObsoletePageService removeObsoletePageService;
 
     @Setter(onMethod_ = @TestOnly)
     @Value("${replacer.dump.batch.chunk.size}")
@@ -73,6 +78,12 @@ class PageIndexCacheHelper {
     }
 
     private void removePages(Collection<PageModel> pages) {
-        pageRepository.removePages(pages);
+        removeObsoletePageService.removeObsoletePages(
+            pages.stream().map(this::toDomain).collect(Collectors.toUnmodifiableSet())
+        );
+    }
+
+    private WikipediaPageId toDomain(PageModel page) {
+        return WikipediaPageId.of(WikipediaLanguage.valueOfCode(page.getLang()), page.getPageId());
     }
 }

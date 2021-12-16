@@ -42,7 +42,6 @@ public class PageIndexResultSaver {
         // We assume the replacements removed correspond to not removed pages
         pageRepository.addPages(IndexablePageMapper.toModel(batchResult.getAddPages()));
         pageRepository.updatePages(IndexablePageMapper.toModel(batchResult.getUpdatePages()));
-        pageRepository.removePages(IndexablePageMapper.toModel(batchResult.getRemovePages()));
         replacementRepository.addReplacements(IndexableReplacementMapper.toModel(batchResult.getAddReplacements()));
         replacementRepository.updateReplacements(
             IndexableReplacementMapper.toModel(batchResult.getUpdateReplacements())

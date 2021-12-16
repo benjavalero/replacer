@@ -74,20 +74,6 @@ class PageJdbcRepository implements PageRepository {
     }
 
     @Override
-    public void removePages(Collection<PageModel> pages) {
-        // First delete the replacements
-        Collection<ReplacementModel> replacements = pages
-            .stream()
-            .flatMap(page -> page.getReplacements().stream())
-            .collect(Collectors.toUnmodifiableList());
-        replacementRepository.removeReplacements(replacements);
-
-        SqlParameterSource[] namedParameters = SqlParameterSourceUtils.createBatch(pages.toArray());
-        String sqlPages = "DELETE FROM page WHERE lang = :lang AND article_id = :pageId";
-        jdbcTemplate.batchUpdate(sqlPages, namedParameters);
-    }
-
-    @Override
     public void removePagesById(Collection<WikipediaPageId> wikipediaPageIds) {
         // First delete the replacements
         replacementRepository.removeReplacementsByPageId(wikipediaPageIds);

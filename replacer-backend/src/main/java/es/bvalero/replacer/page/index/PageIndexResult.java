@@ -44,9 +44,6 @@ public final class PageIndexResult {
     Set<IndexablePage> updatePages = new HashSet<>();
 
     @Builder.Default
-    Set<IndexablePage> removePages = new HashSet<>();
-
-    @Builder.Default
     Set<IndexableReplacement> addReplacements = new HashSet<>();
 
     // The attributes of a replacement may vary, e.g. the last update date, or the context/position.
@@ -60,7 +57,6 @@ public final class PageIndexResult {
         return (
             addPages.size() +
             updatePages.size() +
-            removePages.size() +
             addReplacements.size() +
             updateReplacements.size() +
             removeReplacements.size()
@@ -74,7 +70,6 @@ public final class PageIndexResult {
     void add(PageIndexResult pageIndexResult) {
         this.addPages.addAll(pageIndexResult.getAddPages());
         this.updatePages.addAll(pageIndexResult.getUpdatePages());
-        this.removePages.addAll(pageIndexResult.getRemovePages());
         this.addReplacements.addAll(pageIndexResult.getAddReplacements());
         this.updateReplacements.addAll(pageIndexResult.getUpdateReplacements());
         this.removeReplacements.addAll(pageIndexResult.getRemoveReplacements());
@@ -96,7 +91,6 @@ public final class PageIndexResult {
     void clear() {
         this.addPages.clear();
         this.updatePages.clear();
-        this.removePages.clear();
         this.addReplacements.clear();
         this.updateReplacements.clear();
         this.removeReplacements.clear();

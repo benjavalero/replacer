@@ -6,11 +6,12 @@ import es.bvalero.replacer.common.domain.WikipediaPageId;
 import es.bvalero.replacer.finder.FinderPageMapper;
 import es.bvalero.replacer.finder.replacement.ReplacementFinderService;
 import es.bvalero.replacer.finder.replacement.ReplacementMapper;
+import es.bvalero.replacer.page.removeobsolete.RemoveObsoletePageService;
 import es.bvalero.replacer.repository.PageModel;
 import es.bvalero.replacer.repository.PageRepository;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Optional;
-import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
@@ -25,6 +26,9 @@ public class PageIndexService implements PageIndexer {
 
     @Autowired
     private PageRepository pageRepository;
+
+    @Autowired
+    private RemoveObsoletePageService removeObsoletePageService;
 
     @Autowired
     private PageIndexValidator pageIndexValidator;
@@ -94,7 +98,9 @@ public class PageIndexService implements PageIndexer {
     }
 
     private void indexObsoletePage(IndexablePage dbPage) {
-        saveResult(PageIndexResult.builder().removePages(Set.of(dbPage)).build());
+        removeObsoletePageService.removeObsoletePages(
+            Collections.singleton(IndexablePageMapper.toDomain(dbPage.getId()))
+        );
     }
 
     protected void saveResult(PageIndexResult result) {
