@@ -4,10 +4,7 @@ import com.github.rozidan.springboot.logger.Loggable;
 import es.bvalero.replacer.common.domain.ReplacementKind;
 import es.bvalero.replacer.common.domain.ReplacementType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import es.bvalero.replacer.repository.ReplacementModel;
-import es.bvalero.replacer.repository.ReplacementRepository;
-import es.bvalero.replacer.repository.ReplacementStatsRepository;
-import es.bvalero.replacer.repository.ResultCount;
+import es.bvalero.replacer.repository.*;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Objects;
@@ -30,7 +27,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @Repository
 @Qualifier("replacementJdbcRepository")
-class ReplacementJdbcRepository implements ReplacementRepository, ReplacementStatsRepository {
+class ReplacementJdbcRepository
+    implements ReplacementRepository, ReplacementTypeRepository, ReplacementStatsRepository {
 
     @Autowired
     private NamedParameterJdbcTemplate jdbcTemplate;

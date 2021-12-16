@@ -6,6 +6,7 @@ import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.repository.ReplacementModel;
 import es.bvalero.replacer.repository.ReplacementRepository;
+import es.bvalero.replacer.repository.ReplacementTypeRepository;
 import es.bvalero.replacer.repository.ResultCount;
 import java.util.Collection;
 import java.util.EnumMap;
@@ -30,11 +31,15 @@ import org.springframework.transaction.annotation.Transactional;
 @Primary
 @Transactional
 @Repository
-class ReplacementCacheRepository implements ReplacementRepository {
+class ReplacementCacheRepository implements ReplacementRepository, ReplacementTypeRepository {
 
     @Autowired
     @Qualifier("replacementJdbcRepository")
     private ReplacementRepository replacementRepository;
+
+    @Autowired
+    @Qualifier("replacementJdbcRepository")
+    private ReplacementTypeRepository replacementTypeRepository;
 
     // Replacement count cache
     // It's a heavy query in database (several seconds), so we load the counts on start and refresh them periodically.
@@ -54,7 +59,7 @@ class ReplacementCacheRepository implements ReplacementRepository {
     @Override
     public void updateReviewerByType(WikipediaLanguage lang, String type, String subtype, String reviewer) {
         this.removeCachedReplacementCount(lang, type, subtype);
-        replacementRepository.updateReviewerByType(lang, type, subtype, reviewer);
+        replacementTypeRepository.updateReviewerByType(lang, type, subtype, reviewer);
     }
 
     @VisibleForTesting
@@ -73,7 +78,7 @@ class ReplacementCacheRepository implements ReplacementRepository {
         if (StringUtils.isNotBlank(type) && StringUtils.isNotBlank(subtype)) {
             this.decrementSubtypeCount(lang, type, subtype);
         }
-        this.replacementRepository.updateReviewerByPageAndType(lang, pageId, type, subtype, reviewer);
+        this.replacementTypeRepository.updateReviewerByPageAndType(lang, pageId, type, subtype, reviewer);
     }
 
     @VisibleForTesting
@@ -84,7 +89,7 @@ class ReplacementCacheRepository implements ReplacementRepository {
     @Override
     public void removeReplacementsByType(WikipediaLanguage lang, String type, Collection<String> subtypes) {
         subtypes.forEach(subtype -> removeCachedReplacementCount(lang, type, subtype));
-        this.replacementRepository.removeReplacementsByType(lang, type, subtypes);
+        this.replacementTypeRepository.removeReplacementsByType(lang, type, subtypes);
     }
 
     /* SCHEDULED UPDATE OF CACHE */
@@ -140,7 +145,7 @@ class ReplacementCacheRepository implements ReplacementRepository {
 
     @Override
     public Collection<ResultCount<ReplacementType>> countReplacementsByType(WikipediaLanguage lang) {
-        return replacementRepository.countReplacementsByType(lang);
+        return replacementTypeRepository.countReplacementsByType(lang);
     }
 
     @Override

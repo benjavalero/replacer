@@ -4,7 +4,7 @@ import static es.bvalero.replacer.repository.ReplacementRepository.REVIEWER_SYST
 
 import es.bvalero.replacer.common.domain.ReplacementType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import es.bvalero.replacer.repository.ReplacementRepository;
+import es.bvalero.replacer.repository.ReplacementTypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,10 +12,15 @@ import org.springframework.stereotype.Service;
 class ReviewByTypeService {
 
     @Autowired
-    private ReplacementRepository replacementRepository;
+    private ReplacementTypeRepository replacementTypeRepository;
 
     void reviewAsSystemByType(WikipediaLanguage lang, ReplacementType type) {
         // These reviewed replacements will be cleaned up in the next dump indexing
-        replacementRepository.updateReviewerByType(lang, type.getKind().getLabel(), type.getSubtype(), REVIEWER_SYSTEM);
+        replacementTypeRepository.updateReviewerByType(
+            lang,
+            type.getKind().getLabel(),
+            type.getSubtype(),
+            REVIEWER_SYSTEM
+        );
     }
 }

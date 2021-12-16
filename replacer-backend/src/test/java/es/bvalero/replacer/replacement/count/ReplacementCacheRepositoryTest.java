@@ -9,6 +9,7 @@ import es.bvalero.replacer.common.domain.ReplacementType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.repository.ReplacementRepository;
+import es.bvalero.replacer.repository.ReplacementTypeRepository;
 import es.bvalero.replacer.repository.ResultCount;
 import java.util.Collection;
 import java.util.List;
@@ -22,6 +23,9 @@ class ReplacementCacheRepositoryTest {
 
     @Mock
     private ReplacementRepository replacementRepository;
+
+    @Mock
+    private ReplacementTypeRepository replacementTypeRepository;
 
     @InjectMocks
     private ReplacementCacheRepository replacementCacheRepository;
@@ -40,7 +44,7 @@ class ReplacementCacheRepositoryTest {
         ResultCount<ReplacementType> count1 = ResultCount.of(ReplacementType.of(ReplacementKind.DATE, "Y"), 2L);
         ResultCount<ReplacementType> count2 = ResultCount.of(ReplacementType.of(ReplacementKind.DATE, "Z"), 1L);
         Collection<ResultCount<ReplacementType>> counts = List.of(count1, count2);
-        when(replacementRepository.countReplacementsByType(lang)).thenReturn(counts);
+        when(replacementTypeRepository.countReplacementsByType(lang)).thenReturn(counts);
 
         replacementCacheRepository.scheduledUpdateReplacementCount();
 

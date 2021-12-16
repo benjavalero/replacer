@@ -6,7 +6,7 @@ import static org.mockito.Mockito.*;
 import es.bvalero.replacer.common.domain.ReplacementKind;
 import es.bvalero.replacer.common.domain.ReplacementType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import es.bvalero.replacer.repository.ReplacementRepository;
+import es.bvalero.replacer.repository.ReplacementTypeRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -16,7 +16,7 @@ import org.mockito.MockitoAnnotations;
 class ReviewByTypeServiceTest {
 
     @Mock
-    private ReplacementRepository replacementRepository;
+    private ReplacementTypeRepository replacementTypeRepository;
 
     @InjectMocks
     private ReviewByTypeService reviewByTypeService;
@@ -34,7 +34,7 @@ class ReviewByTypeServiceTest {
             ReplacementType.of(ReplacementKind.DATE, "Y")
         );
 
-        verify(replacementRepository)
+        verify(replacementTypeRepository)
             .updateReviewerByType(
                 WikipediaLanguage.getDefault(),
                 ReplacementKind.DATE.getLabel(),

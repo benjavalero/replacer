@@ -7,7 +7,7 @@ import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.cosmetic.CosmeticFinderService;
 import es.bvalero.replacer.page.review.PageReviewOptions;
 import es.bvalero.replacer.repository.CustomRepository;
-import es.bvalero.replacer.repository.ReplacementRepository;
+import es.bvalero.replacer.repository.ReplacementTypeRepository;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import java.time.LocalDateTime;
@@ -21,7 +21,7 @@ import org.mockito.MockitoAnnotations;
 class PageSaveServiceTest {
 
     @Mock
-    private ReplacementRepository replacementRepository;
+    private ReplacementTypeRepository replacementTypeRepository;
 
     @Mock
     private CustomRepository customRepository;
@@ -71,7 +71,7 @@ class PageSaveServiceTest {
                 anyString(),
                 eq(accessToken)
             );
-        verify(replacementRepository)
+        verify(replacementTypeRepository)
             .updateReviewerByPageAndType(WikipediaLanguage.getDefault(), pageId, null, null, "A");
     }
 
@@ -92,7 +92,7 @@ class PageSaveServiceTest {
                 anyString(),
                 any(AccessToken.class)
             );
-        verify(replacementRepository)
+        verify(replacementTypeRepository)
             .updateReviewerByPageAndType(WikipediaLanguage.getDefault(), pageId, type, subtype, "A");
     }
 }

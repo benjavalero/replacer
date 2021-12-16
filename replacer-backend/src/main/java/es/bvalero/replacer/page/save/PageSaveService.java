@@ -7,7 +7,7 @@ import es.bvalero.replacer.page.review.PageReviewOptions;
 import es.bvalero.replacer.page.review.PageReviewOptionsType;
 import es.bvalero.replacer.repository.CustomModel;
 import es.bvalero.replacer.repository.CustomRepository;
-import es.bvalero.replacer.repository.ReplacementRepository;
+import es.bvalero.replacer.repository.ReplacementTypeRepository;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import java.time.LocalDate;
@@ -24,7 +24,7 @@ class PageSaveService {
     private static final String COSMETIC_CHANGES = "mejoras cosméticas";
 
     @Autowired
-    private ReplacementRepository replacementRepository;
+    private ReplacementTypeRepository replacementTypeRepository;
 
     @Autowired
     private CustomRepository customRepository;
@@ -96,11 +96,17 @@ class PageSaveService {
     }
 
     private void markAsReviewedNoType(int pageId, PageReviewOptions options, String reviewer) {
-        replacementRepository.updateReviewerByPageAndType(options.getWikipediaLanguage(), pageId, null, null, reviewer);
+        replacementTypeRepository.updateReviewerByPageAndType(
+            options.getWikipediaLanguage(),
+            pageId,
+            null,
+            null,
+            reviewer
+        );
     }
 
     private void markAsReviewedTypeSubtype(int pageId, PageReviewOptions options, String reviewer) {
-        replacementRepository.updateReviewerByPageAndType(
+        replacementTypeRepository.updateReviewerByPageAndType(
             options.getWikipediaLanguage(),
             pageId,
             options.getType(),
