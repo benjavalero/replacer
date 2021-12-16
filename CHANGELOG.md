@@ -1,5 +1,8 @@
 # Versions
 
+## 2.13.1 (12 Dic 2021)
+- Fix issue when a user has an unknown permission group.
+
 ## 2.13.0 (12 Dic 2021)
 - Internal refactoring. Upgrade to SpringBoot 2.5.
 
