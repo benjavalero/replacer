@@ -1,8 +1,9 @@
 package es.bvalero.replacer.page.list;
 
+import static es.bvalero.replacer.common.util.ReplacerUtils.LOCALE_ES;
+
 import es.bvalero.replacer.common.domain.ReplacementType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.repository.PageRepository;
 import java.text.Collator;
 import java.util.Collection;
@@ -22,7 +23,7 @@ class PageUnreviewedTitleListService {
             .findPageTitlesToReviewByType(lang, type)
             .stream()
             .filter(Objects::nonNull)
-            .sorted(Collator.getInstance(FinderUtils.LOCALE_ES))
+            .sorted(Collator.getInstance(LOCALE_ES))
             .collect(Collectors.toUnmodifiableList());
     }
 }
