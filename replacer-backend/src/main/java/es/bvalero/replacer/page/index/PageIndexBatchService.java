@@ -17,7 +17,7 @@ class PageIndexBatchService extends PageIndexAbstractService implements PageInde
     private PageIndexRepository pageIndexRepository;
 
     @Autowired
-    private PageIndexResultBatchSaver pageIndexResultSaver;
+    private PageIndexResultSaver pageIndexResultSaver;
 
     @Override
     Optional<PageModel> findByPageId(WikipediaPageId pageId) {
@@ -26,7 +26,7 @@ class PageIndexBatchService extends PageIndexAbstractService implements PageInde
 
     @Override
     void saveResult(PageIndexResult result) {
-        pageIndexResultSaver.save(result);
+        pageIndexResultSaver.saveBatch(result);
     }
 
     @Override
