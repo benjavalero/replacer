@@ -53,8 +53,4 @@ class IndexablePageMapper {
     IndexablePageId fromDomain(WikipediaPageId id) {
         return IndexablePageId.of(id.getLang(), id.getPageId());
     }
-
-    WikipediaPageId toDomain(IndexablePageId id) {
-        return WikipediaPageId.of(id.getLang(), id.getPageId());
-    }
 }
