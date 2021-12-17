@@ -48,7 +48,8 @@ public class Replacement implements Comparable<Replacement> {
 
         // There must exist at least a suggestion different from the found text
         if (suggestions.isEmpty() || suggestions.stream().allMatch(s -> s.getText().equals(text))) {
-            throw new IllegalArgumentException("Invalid replacement suggestions");
+            String msg = String.format("%s - %s", type, StringUtils.join(suggestions));
+            throw new IllegalArgumentException("Invalid replacement suggestions: " + msg);
         }
 
         this.start = start;
