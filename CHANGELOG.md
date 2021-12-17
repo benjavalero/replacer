@@ -1,12 +1,12 @@
 # Versions
 
-## 2.13.2 (??)
+## 2.13.2 (17 Dec 2021)
 - Fix: don't apply cosmetic change when a category has an empty alias
 
-## 2.13.1 (12 Dic 2021)
+## 2.13.1 (12 Dec 2021)
 - Fix issue when a user has an unknown permission group.
 
-## 2.13.0 (12 Dic 2021)
+## 2.13.0 (12 Dec 2021)
 - Internal refactoring. Upgrade to SpringBoot 2.5.
 
 ## 2.12.1 (3 Nov 2021)
