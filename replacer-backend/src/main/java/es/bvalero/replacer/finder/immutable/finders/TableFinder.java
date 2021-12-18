@@ -1,7 +1,7 @@
 package es.bvalero.replacer.finder.immutable.finders;
 
 import es.bvalero.replacer.finder.FinderPage;
-import es.bvalero.replacer.finder.immutable.ImmutableCheckedFinder;
+import es.bvalero.replacer.finder.immutable.ImmutableFinder;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
 import es.bvalero.replacer.finder.util.LinearMatchResult;
 import java.util.ArrayList;
@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
  * </ul>
  */
 @Component
-class TableFinder extends ImmutableCheckedFinder {
+class TableFinder implements ImmutableFinder {
 
     private static final String TABLE_START = "{|";
     private static final String ROW_START = "|-";

@@ -7,7 +7,7 @@ public interface FinderResult extends Comparable<FinderResult> {
     int getStart();
     String getText();
 
-    private int getEnd() {
+    default int getEnd() {
         return this.getStart() + this.getText().length();
     }
 

@@ -1,8 +1,7 @@
 package es.bvalero.replacer.finder.immutable.finders;
 
 import es.bvalero.replacer.finder.FinderPage;
-import es.bvalero.replacer.finder.immutable.Immutable;
-import es.bvalero.replacer.finder.immutable.ImmutableCheckedFinder;
+import es.bvalero.replacer.finder.immutable.ImmutableFinder;
 import es.bvalero.replacer.finder.immutable.ImmutableFinderPriority;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.LinearMatchResult;
@@ -29,7 +28,7 @@ import org.springframework.stereotype.Component;
  * </ul>
  */
 @Component
-class TemplateFinder extends ImmutableCheckedFinder {
+class TemplateFinder implements ImmutableFinder {
 
     private static final String WILDCARD = "*";
 
@@ -77,21 +76,15 @@ class TemplateFinder extends ImmutableCheckedFinder {
     }
 
     @Override
-    public Iterable<Immutable> find(FinderPage page) {
-        List<Immutable> immutables = new ArrayList<>(100);
+    public Iterable<MatchResult> findMatchResults(FinderPage page) {
+        List<MatchResult> immutables = new ArrayList<>(100);
         for (LinearMatchResult template : TemplateUtils.findAllTemplates(page)) {
             immutables.addAll(findImmutables(template));
         }
         return immutables;
     }
 
-    @Override
-    public Iterable<MatchResult> findMatchResults(FinderPage page) {
-        // We are overriding the more general find method
-        throw new IllegalCallerException();
-    }
-
-    private List<Immutable> findImmutables(LinearMatchResult template) {
+    private List<MatchResult> findImmutables(LinearMatchResult template) {
         String content = template.group();
 
         // Special case "{{|}}"
@@ -128,13 +121,13 @@ class TemplateFinder extends ImmutableCheckedFinder {
 
         // If the template is to be ignored as a whole then return an immutable of the complete template
         if (ignoreCompleteTemplate(templateName)) {
-            return Collections.singletonList(this.convert(template));
+            return Collections.singletonList(template);
         }
 
-        List<Immutable> immutables = new ArrayList<>();
+        List<MatchResult> immutables = new ArrayList<>();
 
         // Add the template name
-        immutables.add(Immutable.of(template.start() + TemplateUtils.START_TEMPLATE.length(), templateName));
+        immutables.add(LinearMatchResult.of(template.start() + TemplateUtils.START_TEMPLATE.length(), templateName));
 
         // Process the rest of parameters
         for (int i = 1; i < parameters.length; i++) {
@@ -161,12 +154,12 @@ class TemplateFinder extends ImmutableCheckedFinder {
                 ) +
                 1;
             if (posEquals >= 0) {
-                immutables.add(Immutable.of(startParameter, param));
+                immutables.add(LinearMatchResult.of(startParameter, param));
             } else {
                 // Don't take into account parameters with no equals and value (except if they are files)
                 // By the way we skip parameters which actually are link aliases
                 if (matchesFile(param)) {
-                    immutables.add(Immutable.of(startParameter, param));
+                    immutables.add(LinearMatchResult.of(startParameter, param));
                 }
                 continue;
             }
@@ -191,7 +184,7 @@ class TemplateFinder extends ImmutableCheckedFinder {
                     matchesFile(value)
                 ) {
                     int startValue = startParameter + posEquals + 1;
-                    immutables.add(Immutable.of(startValue, value));
+                    immutables.add(LinearMatchResult.of(startValue, value));
                 }
             }
         }

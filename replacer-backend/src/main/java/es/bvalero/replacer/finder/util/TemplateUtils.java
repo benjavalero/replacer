@@ -4,17 +4,16 @@ import es.bvalero.replacer.finder.FinderPage;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import lombok.experimental.UtilityClass;
 import org.springframework.lang.Nullable;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@UtilityClass
 public class TemplateUtils {
 
     public static final String START_TEMPLATE = "{{";
     public static final String END_TEMPLATE = "}}";
 
-    public static List<LinearMatchResult> findAllTemplates(FinderPage page) {
+    public List<LinearMatchResult> findAllTemplates(FinderPage page) {
         List<LinearMatchResult> matches = new ArrayList<>(100);
 
         // Each template found may contain nested templates which are added after
@@ -29,7 +28,7 @@ public class TemplateUtils {
         return matches;
     }
 
-    private static int findTemplate(FinderPage page, int start, List<LinearMatchResult> matches) {
+    private int findTemplate(FinderPage page, int start, List<LinearMatchResult> matches) {
         String text = page.getContent();
         int startTemplate = findStartTemplate(text, start);
         if (startTemplate >= 0) {
@@ -39,11 +38,8 @@ public class TemplateUtils {
                 return completeMatch.end();
             } else {
                 // Template not closed. Not worth keep on searching as the next templates are considered as nested.
-                FinderUtils.logWarning(
-                    text,
-                    startTemplate,
-                    startTemplate + START_TEMPLATE.length(),
-                    page,
+                FinderUtils.logFinderResult(
+                    FinderUtils.getPageSnippet(startTemplate, startTemplate + START_TEMPLATE.length(), page),
                     "Template not closed"
                 );
                 return -1;
@@ -53,21 +49,17 @@ public class TemplateUtils {
         }
     }
 
-    private static int findStartTemplate(String text, int start) {
+    private int findStartTemplate(String text, int start) {
         return text.indexOf(START_TEMPLATE, start);
     }
 
-    private static int findEndTemplate(String text, int start) {
+    private int findEndTemplate(String text, int start) {
         return text.indexOf(END_TEMPLATE, start);
     }
 
     /* Find the immutable of the template. It also finds nested templates and adds them to the given list. */
     @Nullable
-    private static LinearMatchResult findNestedTemplate(
-        String text,
-        int startTemplate,
-        List<LinearMatchResult> matches
-    ) {
+    private LinearMatchResult findNestedTemplate(String text, int startTemplate, List<LinearMatchResult> matches) {
         List<LinearMatchResult> nestedMatches = new ArrayList<>();
         int start = startTemplate;
         if (text.startsWith(START_TEMPLATE, start)) {

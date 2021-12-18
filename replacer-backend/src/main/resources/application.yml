@@ -56,6 +56,7 @@ replacer:
   wikipedia.api:
     key: xxxxxx
     secret: xxxxxx
+  show.immutable.warning: false
 
 ---
 

@@ -4,7 +4,6 @@ import es.bvalero.replacer.finder.Finder;
 import es.bvalero.replacer.finder.immutable.ImmutableFinderService;
 import java.util.ArrayList;
 import java.util.List;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +13,6 @@ import org.springframework.stereotype.Service;
  * which implement the same interface.
  * The service applies all these specific finders and returns the collected results.
  */
-@Slf4j
 @Service
 public class ReplacementFinderService extends ImmutableFilterFinderService<Replacement> {
 

@@ -2,12 +2,10 @@ package es.bvalero.replacer.finder.immutable;
 
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.util.FinderUtils;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.IterableUtils;
 import org.springframework.beans.factory.annotation.Value;
 
 /** Decorator to perform some checks in found immutables */
-@Slf4j
 public abstract class ImmutableCheckedFinder implements ImmutableFinder {
 
     private static final String SUFFIX_FINDER_CLASS = "Finder";
@@ -19,6 +17,7 @@ public abstract class ImmutableCheckedFinder implements ImmutableFinder {
         this.showImmutableWarning = Boolean.parseBoolean(showImmutableWarning);
     }
 
+    // NOTE this will not be applied if overridden by an Immutable Finder
     @Override
     public Iterable<Immutable> find(FinderPage page) {
         // Trick: use iterable converter with no conversion at all but decoration
@@ -29,9 +28,7 @@ public abstract class ImmutableCheckedFinder implements ImmutableFinder {
     }
 
     private Immutable check(Immutable immutable, FinderPage page) {
-        if (showImmutableWarning) {
-            this.checkMaxLength(immutable, page);
-        }
+        this.checkMaxLength(immutable, page);
         return immutable;
     }
 
@@ -42,8 +39,16 @@ public abstract class ImmutableCheckedFinder implements ImmutableFinder {
     private void checkMaxLength(Immutable immutable, FinderPage page) {
         if (immutable.getText().length() > getMaxLength()) {
             String message = String.format("%s too long", getImmutableType());
-            FinderUtils.logWarning(immutable.getText(), page, message);
+            logImmutableCheck(getImmutableSnippet(immutable, page), message);
         }
+    }
+
+    private String getImmutableSnippet(Immutable immutable, FinderPage page) {
+        return getImmutableSnippet(immutable.getStart(), immutable.getEnd(), page);
+    }
+
+    protected String getImmutableSnippet(int start, int end, FinderPage page) {
+        return FinderUtils.getPageSnippet(start, end, page);
     }
 
     private String getImmutableType() {
@@ -51,9 +56,9 @@ public abstract class ImmutableCheckedFinder implements ImmutableFinder {
         return className.substring(className.length() - SUFFIX_FINDER_CLASS.length());
     }
 
-    protected void logWarning(String pageContent, int start, int end, FinderPage page, String message) {
+    protected void logImmutableCheck(String snippet, String message) {
         if (showImmutableWarning) {
-            FinderUtils.logWarning(pageContent, start, end, page, message);
+            FinderUtils.logFinderResult(snippet, message);
         }
     }
 }

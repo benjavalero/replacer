@@ -3,6 +3,7 @@ package es.bvalero.replacer.finder.immutable.finders;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.immutable.ImmutableCheckedFinder;
 import es.bvalero.replacer.finder.immutable.ImmutableFinderPriority;
+import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
 import es.bvalero.replacer.finder.util.LinearMatchResult;
 import java.util.ArrayList;
@@ -54,8 +55,11 @@ class CommentFinder extends ImmutableCheckedFinder {
                 matches.add(LinearMatchResult.of(startComment, text.substring(startComment, endComment)));
                 return endComment;
             } else {
-                // Comment not closed. Notify and continue.
-                logWarning(text, startComment, startCommentText, page, "Comment not closed");
+                // Comment not closed. Trace warning and continue.
+                FinderUtils.logFinderResult(
+                    getImmutableSnippet(startComment, startCommentText, page),
+                    "Comment not closed"
+                );
                 return startCommentText;
             }
         } else {

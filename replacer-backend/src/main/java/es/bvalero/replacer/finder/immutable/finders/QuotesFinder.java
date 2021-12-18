@@ -9,11 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.MatchResult;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.Nullable;
 
-@Slf4j
 abstract class QuotesFinder extends ImmutableCheckedFinder {
 
     private static final char NEW_LINE = '\n';
@@ -66,7 +64,7 @@ abstract class QuotesFinder extends ImmutableCheckedFinder {
 
                 // Check the quoted text is not empty and is not an attribute
                 if (StringUtils.isBlank(innerText) && text.charAt(startQuote - 1) != '=') {
-                    logWarning(text, startQuote, endQuote, page, "Empty quoted text");
+                    logImmutableCheck(getImmutableSnippet(startQuote, endQuote, page), "Empty quoted text");
                     return endQuote;
                 }
 
@@ -76,7 +74,7 @@ abstract class QuotesFinder extends ImmutableCheckedFinder {
                     QUOTE_CHARS.contains(innerText.charAt(0)) &&
                     QUOTE_CHARS.contains(innerText.charAt(innerText.length() - 1))
                 ) {
-                    logWarning(text, startQuote, endQuote, page, "Redundant quotes");
+                    logImmutableCheck(getImmutableSnippet(startQuote, endQuote, page), "Redundant quotes");
                     // Continue
                 }
 
@@ -85,7 +83,7 @@ abstract class QuotesFinder extends ImmutableCheckedFinder {
             } else {
                 // No quote ending found
                 // It's possible that the quote start was a false positive or the quote contains new lines
-                logWarning(text, startQuote, startQuote + 1, page, "Truncated quotes");
+                logImmutableCheck(getImmutableSnippet(startQuote, startQuote + 1, page), "Truncated quotes");
                 return startQuote + 1;
             }
         } else {

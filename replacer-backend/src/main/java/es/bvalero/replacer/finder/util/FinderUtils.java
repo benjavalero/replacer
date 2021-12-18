@@ -17,10 +17,10 @@ import org.apache.commons.lang3.StringUtils;
 @UtilityClass
 public class FinderUtils {
 
-    public final String STRING_EMPTY = "";
-    private final Set<Character> invalidLeftSeparators = Set.of('_', '/', '.');
-    private final Set<Character> invalidRightSeparators = Set.of('_', '/');
-    private final int CONTEXT_THRESHOLD = 50;
+    public static final String STRING_EMPTY = "";
+    private static final Set<Character> invalidLeftSeparators = Set.of('_', '/', '.');
+    private static final Set<Character> invalidRightSeparators = Set.of('_', '/');
+    private static final int CONTEXT_THRESHOLD = 50;
 
     public String toLowerCase(String str) {
         return str.toLowerCase(LOCALE_ES);
@@ -124,13 +124,12 @@ public class FinderUtils {
         return false;
     }
 
-    public void logWarning(String pageContent, int start, int end, FinderPage page, String message) {
-        String immutableText = ReplacerUtils.getContextAroundWord(pageContent, start, end, CONTEXT_THRESHOLD);
-        logWarning(immutableText, page, message);
+    public String getPageSnippet(int start, int end, FinderPage page) {
+        return ReplacerUtils.getContextAroundWord(page.getContent(), start, end, CONTEXT_THRESHOLD);
     }
 
-    public void logWarning(String matchText, FinderPage page, String message) {
-        LOGGER.warn("{}: {} - {} - {}", message, matchText, page.getLang(), page.getTitle());
+    public void logFinderResult(String snippet, String message) {
+        LOGGER.warn("{} : {}", message, snippet);
     }
 
     /** Get the items in a collection of strings where each string is a comma-separated list itself */

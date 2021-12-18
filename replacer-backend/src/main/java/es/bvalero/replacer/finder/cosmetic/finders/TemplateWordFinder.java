@@ -9,13 +9,11 @@ import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.intellij.lang.annotations.RegExp;
 import org.springframework.stereotype.Component;
 
 /** Find templates containing the useless "template" word */
-@Slf4j
 @Component
 class TemplateWordFinder extends CosmeticCheckedFinder {
 

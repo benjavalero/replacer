@@ -4,17 +4,16 @@ import es.bvalero.replacer.finder.FinderPage;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import lombok.experimental.UtilityClass;
 import org.springframework.lang.Nullable;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@UtilityClass
 public class LinkUtils {
 
     public static final String START_LINK = "[[";
     public static final String END_LINK = "]]";
 
-    public static List<LinearMatchResult> findAllLinks(FinderPage page) {
+    public List<LinearMatchResult> findAllLinks(FinderPage page) {
         List<LinearMatchResult> matches = new ArrayList<>(100);
         // Each link found may contain nested links which are added after
         int start = 0;
@@ -27,14 +26,17 @@ public class LinkUtils {
         return matches;
     }
 
-    private static int findLink(FinderPage page, int start, List<LinearMatchResult> matches) {
+    private int findLink(FinderPage page, int start, List<LinearMatchResult> matches) {
         String text = page.getContent();
         int startLink = findStartLink(text, start);
         if (startLink >= 0) {
             LinearMatchResult completeMatch = findNestedLink(text, startLink, matches);
             if (completeMatch == null) {
                 // Link not closed. Not worth keep on searching as the next links are considered as nested.
-                FinderUtils.logWarning(text, startLink, startLink + START_LINK.length(), page, "Link not closed");
+                FinderUtils.logFinderResult(
+                    FinderUtils.getPageSnippet(startLink, startLink + START_LINK.length(), page),
+                    "Link not closed"
+                );
                 return -1;
             } else {
                 matches.add(0, completeMatch);
@@ -45,17 +47,17 @@ public class LinkUtils {
         }
     }
 
-    private static int findStartLink(String text, int start) {
+    private int findStartLink(String text, int start) {
         return text.indexOf(START_LINK, start);
     }
 
-    private static int findEndLink(String text, int start) {
+    private int findEndLink(String text, int start) {
         return text.indexOf(END_LINK, start);
     }
 
     /* Find the immutable of the link. It also finds nested links and adds them to the given list. */
     @Nullable
-    private static LinearMatchResult findNestedLink(String text, int startLink, List<LinearMatchResult> matches) {
+    private LinearMatchResult findNestedLink(String text, int startLink, List<LinearMatchResult> matches) {
         int start = startLink;
         while (true) {
             if (text.startsWith(START_LINK, start)) {

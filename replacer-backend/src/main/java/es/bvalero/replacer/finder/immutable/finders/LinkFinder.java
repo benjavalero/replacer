@@ -4,7 +4,6 @@ import static es.bvalero.replacer.finder.util.LinkUtils.END_LINK;
 import static es.bvalero.replacer.finder.util.LinkUtils.START_LINK;
 
 import es.bvalero.replacer.finder.FinderPage;
-import es.bvalero.replacer.finder.immutable.Immutable;
 import es.bvalero.replacer.finder.immutable.ImmutableCheckedFinder;
 import es.bvalero.replacer.finder.immutable.ImmutableFinderPriority;
 import es.bvalero.replacer.finder.util.FinderUtils;
@@ -61,26 +60,22 @@ class LinkFinder extends ImmutableCheckedFinder {
     }
 
     @Override
-    public Iterable<Immutable> find(FinderPage page) {
-        List<Immutable> immutables = new ArrayList<>(100);
+    public Iterable<MatchResult> findMatchResults(FinderPage page) {
+        List<MatchResult> immutables = new ArrayList<>(100);
         for (LinearMatchResult template : LinkUtils.findAllLinks(page)) {
             immutables.addAll(findImmutables(template, page));
         }
         return immutables;
     }
 
-    @Override
-    public Iterable<MatchResult> findMatchResults(FinderPage page) {
-        // We are overriding the more general find method
-        throw new IllegalCallerException();
-    }
-
-    private List<Immutable> findImmutables(LinearMatchResult link, FinderPage page) {
+    private List<MatchResult> findImmutables(LinearMatchResult link, FinderPage page) {
         // If the link is suffixed then return the complete link
         String text = page.getContent();
         int endSuffix = findEndSuffix(text, link.end());
         if (endSuffix > link.end()) {
-            return Collections.singletonList(Immutable.of(link.start(), text.substring(link.start(), endSuffix)));
+            return Collections.singletonList(
+                LinearMatchResult.of(link.start(), text.substring(link.start(), endSuffix))
+            );
         }
 
         String content = link.group().substring(START_LINK.length(), link.group().length() - END_LINK.length());
@@ -94,21 +89,21 @@ class LinkFinder extends ImmutableCheckedFinder {
 
         // If the link space is in the list then return an immutable of the complete link
         if (isCategorySpace(linkSpace)) {
-            return Collections.singletonList(this.convert(link));
+            return Collections.singletonList(link);
         }
 
         // If the link alias doesn't exist and the link is in file/lang space then return the complete link
         if (linkAlias == null && (isFileSpace(linkSpace) || isLangSpace(linkSpace) || isInterWikiSpace(linkSpace))) {
-            return Collections.singletonList(this.convert(link));
+            return Collections.singletonList(link);
         }
 
         // If the link alias exists then return the link title
         // In case the alias exists but is a parameter then return the complete link
         if (linkAlias != null) {
             if (linkAlias.contains("=")) {
-                return Collections.singletonList(this.convert(link));
+                return Collections.singletonList(link);
             } else {
-                return Collections.singletonList(Immutable.of(link.start() + START_LINK.length(), linkTitle));
+                return Collections.singletonList(LinearMatchResult.of(link.start() + START_LINK.length(), linkTitle));
             }
         }
 
