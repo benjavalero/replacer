@@ -7,8 +7,7 @@ import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.domain.WikipediaNamespace;
 import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.common.domain.WikipediaPageId;
-import es.bvalero.replacer.finder.FinderPage;
-import es.bvalero.replacer.finder.replacement.ReplacementFinderService;
+import es.bvalero.replacer.page.findreplacement.FindReplacementsService;
 import es.bvalero.replacer.page.removeobsolete.RemoveObsoletePageService;
 import es.bvalero.replacer.repository.PageIndexRepository;
 import es.bvalero.replacer.repository.PageModel;
@@ -33,7 +32,7 @@ class PageIndexSingleServiceTest {
     private PageIndexValidator pageIndexValidator;
 
     @Mock
-    private ReplacementFinderService replacementFinderService;
+    private FindReplacementsService findReplacementsService;
 
     @Mock
     private IndexablePageComparator indexablePageComparator;
@@ -70,7 +69,7 @@ class PageIndexSingleServiceTest {
         verify(pageIndexValidator).isPageIndexableByNamespace(page);
         verify(pageIndexValidator, never()).isIndexableByTimestamp(page, null);
         verify(pageIndexValidator, never()).isIndexableByPageTitle(page, null);
-        verify(replacementFinderService, never()).find(any(FinderPage.class));
+        verify(findReplacementsService, never()).findReplacements(any(WikipediaPage.class));
     }
 
     @Test
@@ -89,7 +88,7 @@ class PageIndexSingleServiceTest {
         verify(pageIndexValidator).isPageIndexableByNamespace(page);
         verify(pageIndexValidator).isIndexableByTimestamp(page, null);
         verify(pageIndexValidator).isIndexableByPageTitle(page, null);
-        verify(replacementFinderService).find(any(FinderPage.class));
+        verify(findReplacementsService).findReplacements(page);
         verify(indexablePageComparator).indexPageReplacements(any(IndexablePage.class), isNull());
     }
 
@@ -109,7 +108,7 @@ class PageIndexSingleServiceTest {
         verify(pageIndexValidator).isPageIndexableByNamespace(page);
         verify(pageIndexValidator).isIndexableByTimestamp(page, null);
         verify(pageIndexValidator, never()).isIndexableByPageTitle(page, null);
-        verify(replacementFinderService).find(any(FinderPage.class));
+        verify(findReplacementsService).findReplacements(page);
         verify(indexablePageComparator).indexPageReplacements(any(IndexablePage.class), isNull());
     }
 
@@ -126,7 +125,7 @@ class PageIndexSingleServiceTest {
         verify(pageIndexValidator).isPageIndexableByNamespace(page);
         verify(pageIndexValidator).isIndexableByTimestamp(page, null);
         verify(pageIndexValidator).isIndexableByPageTitle(page, null);
-        verify(replacementFinderService, never()).find(any(FinderPage.class));
+        verify(findReplacementsService, never()).findReplacements(any(WikipediaPage.class));
         verify(indexablePageComparator, never())
             .indexPageReplacements(any(IndexablePage.class), any(IndexablePage.class));
     }
@@ -150,7 +149,7 @@ class PageIndexSingleServiceTest {
         verify(pageIndexValidator).isPageIndexableByNamespace(page);
         verify(pageIndexValidator, never()).isIndexableByTimestamp(page, null);
         verify(pageIndexValidator, never()).isIndexableByPageTitle(page, null);
-        verify(replacementFinderService, never()).find(any(FinderPage.class));
+        verify(findReplacementsService, never()).findReplacements(any(WikipediaPage.class));
         verify(pageIndexResultSaver, never()).save(any(PageIndexResult.class));
         verify(removeObsoletePageService).removeObsoletePages(anyCollection());
     }

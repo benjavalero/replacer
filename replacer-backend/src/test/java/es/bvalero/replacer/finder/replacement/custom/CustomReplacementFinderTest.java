@@ -15,7 +15,9 @@ class CustomReplacementFinderTest {
         String suggestion = "y";
         String text = "Ax x.";
 
-        CustomReplacementFinder customReplacementFinder = CustomReplacementFinder.of(replacement, false, suggestion);
+        CustomReplacementFinder customReplacementFinder = CustomReplacementFinder.of(
+            CustomOptions.of(replacement, false, suggestion)
+        );
         List<Replacement> replacements = customReplacementFinder.findList(text);
 
         assertEquals(1, replacements.size());
@@ -30,7 +32,9 @@ class CustomReplacementFinderTest {
         String suggestion = "París";
         String text = "En parís París.";
 
-        CustomReplacementFinder customReplacementFinder = CustomReplacementFinder.of(replacement, true, suggestion);
+        CustomReplacementFinder customReplacementFinder = CustomReplacementFinder.of(
+            CustomOptions.of(replacement, true, suggestion)
+        );
         List<Replacement> replacements = customReplacementFinder.findList(text);
 
         assertEquals(1, replacements.size());
@@ -44,7 +48,9 @@ class CustomReplacementFinderTest {
         String suggestion = "enero";
         String text = "En enero Enero.";
 
-        CustomReplacementFinder customReplacementFinder = CustomReplacementFinder.of(replacement, true, suggestion);
+        CustomReplacementFinder customReplacementFinder = CustomReplacementFinder.of(
+            CustomOptions.of(replacement, true, suggestion)
+        );
         List<Replacement> replacements = customReplacementFinder.findList(text);
 
         assertEquals(1, replacements.size());
@@ -61,7 +67,9 @@ class CustomReplacementFinderTest {
         String suggestion = "Taiwán";
         String text = "En taiwan Taiwan taiwán Taiwán.";
 
-        CustomReplacementFinder customReplacementFinder = CustomReplacementFinder.of(replacement, true, suggestion);
+        CustomReplacementFinder customReplacementFinder = CustomReplacementFinder.of(
+            CustomOptions.of(replacement, true, suggestion)
+        );
         List<Replacement> replacements = customReplacementFinder.findList(text);
 
         assertEquals(1, replacements.size());
@@ -75,7 +83,9 @@ class CustomReplacementFinderTest {
         String suggestion = "más";
         String text = "En mas Mas más Más.";
 
-        CustomReplacementFinder customReplacementFinder = CustomReplacementFinder.of(replacement, false, suggestion);
+        CustomReplacementFinder customReplacementFinder = CustomReplacementFinder.of(
+            CustomOptions.of(replacement, false, suggestion)
+        );
         List<Replacement> replacements = customReplacementFinder.findList(text);
 
         assertEquals(2, replacements.size());
@@ -92,7 +102,9 @@ class CustomReplacementFinderTest {
         String suggestion = "Washington, D.C.";
         String text = "En Washington D.CX. y Washington D.C. y Madrid";
 
-        CustomReplacementFinder customReplacementFinder = CustomReplacementFinder.of(replacement, false, suggestion);
+        CustomReplacementFinder customReplacementFinder = CustomReplacementFinder.of(
+            CustomOptions.of(replacement, false, suggestion)
+        );
         List<Replacement> replacements = customReplacementFinder.findList(text);
 
         assertEquals(1, replacements.size());
@@ -105,7 +117,9 @@ class CustomReplacementFinderTest {
         String suggestion = "online, en línea";
         String text = "Curso on line.";
 
-        CustomReplacementFinder customReplacementFinder = CustomReplacementFinder.of(replacement, false, suggestion);
+        CustomReplacementFinder customReplacementFinder = CustomReplacementFinder.of(
+            CustomOptions.of(replacement, false, suggestion)
+        );
         List<Replacement> replacements = customReplacementFinder.findList(text);
 
         assertEquals(1, replacements.size());

@@ -3,9 +3,7 @@ package es.bvalero.replacer.page.index;
 import es.bvalero.replacer.common.domain.PageReplacement;
 import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.common.domain.WikipediaPageId;
-import es.bvalero.replacer.finder.FinderPageMapper;
-import es.bvalero.replacer.finder.replacement.ReplacementFinderService;
-import es.bvalero.replacer.finder.replacement.ReplacementMapper;
+import es.bvalero.replacer.page.findreplacement.FindReplacementsService;
 import es.bvalero.replacer.page.removeobsolete.RemoveObsoletePageService;
 import es.bvalero.replacer.repository.PageModel;
 import java.util.Collection;
@@ -28,7 +26,7 @@ abstract class PageIndexAbstractService {
     private PageIndexValidator pageIndexValidator;
 
     @Autowired
-    private ReplacementFinderService replacementFinderService;
+    private FindReplacementsService findReplacementsService;
 
     @Autowired
     private IndexablePageComparator indexablePageComparator;
@@ -104,6 +102,6 @@ abstract class PageIndexAbstractService {
     }
 
     private Collection<PageReplacement> findPageReplacements(WikipediaPage page) {
-        return ReplacementMapper.toDomain(replacementFinderService.find(FinderPageMapper.fromDomain(page)));
+        return findReplacementsService.findReplacements(page);
     }
 }

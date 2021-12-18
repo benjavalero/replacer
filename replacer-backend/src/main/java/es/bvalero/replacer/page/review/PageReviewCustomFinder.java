@@ -2,9 +2,8 @@ package es.bvalero.replacer.page.review;
 
 import es.bvalero.replacer.common.domain.*;
 import es.bvalero.replacer.finder.listing.Misspelling;
-import es.bvalero.replacer.finder.replacement.ReplacementMapper;
-import es.bvalero.replacer.finder.replacement.custom.CustomOptions;
 import es.bvalero.replacer.finder.replacement.custom.CustomReplacementFinderService;
+import es.bvalero.replacer.page.findreplacement.FindReplacementsService;
 import es.bvalero.replacer.repository.CustomRepository;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.wikipedia.WikipediaSearchResult;
@@ -13,7 +12,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections4.IterableUtils;
 import org.jetbrains.annotations.TestOnly;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,6 +26,9 @@ class PageReviewCustomFinder extends PageReviewFinder {
 
     @Autowired
     private WikipediaService wikipediaService;
+
+    @Autowired
+    private FindReplacementsService findReplacementsService;
 
     @Autowired
     private CustomReplacementFinderService customReplacementFinderService;
@@ -109,17 +110,7 @@ class PageReviewCustomFinder extends PageReviewFinder {
     Collection<PageReplacement> findAllReplacements(WikipediaPage page, PageReviewOptions options) {
         // We do nothing in the database in case the list is empty
         // We want to review the page every time in case anything has changed
-        return ReplacementMapper.toDomain(
-            IterableUtils.toList(customReplacementFinderService.findCustomReplacements(page, convertOptions(options)))
-        );
-    }
-
-    private CustomOptions convertOptions(PageReviewOptions options) {
-        String subtype = options.getSubtype();
-        Boolean cs = options.getCs();
-        String suggestion = options.getSuggestion();
-        assert subtype != null && cs != null && suggestion != null;
-        return CustomOptions.of(subtype, cs, suggestion);
+        return findReplacementsService.findCustomReplacements(page, options);
     }
 
     ReplacementValidationResponse validateCustomReplacement(

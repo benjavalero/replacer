@@ -13,8 +13,8 @@ import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import org.jetbrains.annotations.TestOnly;
 
+/** Special case of Replacement Finder where the options are set at runtime */
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 class CustomReplacementFinder implements ReplacementFinder {
 
@@ -24,16 +24,11 @@ class CustomReplacementFinder implements ReplacementFinder {
     private final Pattern pattern;
 
     static CustomReplacementFinder of(CustomOptions customOptions) {
-        return of(customOptions.getReplacement(), customOptions.isCaseSensitive(), customOptions.getSuggestion());
-    }
-
-    @TestOnly
-    static CustomReplacementFinder of(String replacement, boolean caseSensitive, String suggestion) {
         return new CustomReplacementFinder(
-            replacement,
-            caseSensitive,
-            suggestion,
-            buildCustomRegex(replacement, caseSensitive)
+            customOptions.getReplacement(),
+            customOptions.isCaseSensitive(),
+            customOptions.getSuggestion(),
+            buildCustomRegex(customOptions.getReplacement(), customOptions.isCaseSensitive())
         );
     }
 

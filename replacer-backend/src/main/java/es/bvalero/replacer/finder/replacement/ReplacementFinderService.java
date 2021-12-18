@@ -1,7 +1,7 @@
 package es.bvalero.replacer.finder.replacement;
 
 import es.bvalero.replacer.finder.Finder;
-import es.bvalero.replacer.finder.immutable.ImmutableFinderService;
+import es.bvalero.replacer.finder.FinderService;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,13 +14,10 @@ import org.springframework.stereotype.Service;
  * The service applies all these specific finders and returns the collected results.
  */
 @Service
-public class ReplacementFinderService extends ImmutableFilterFinderService<Replacement> {
+public class ReplacementFinderService implements FinderService<Replacement> {
 
     @Autowired
     private List<ReplacementFinder> replacementFinders;
-
-    @Autowired
-    private ImmutableFinderService immutableFinderService;
 
     @Override
     public Iterable<Finder<Replacement>> getFinders() {

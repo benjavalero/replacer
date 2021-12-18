@@ -5,9 +5,8 @@ import static org.mockito.Mockito.*;
 
 import es.bvalero.replacer.common.domain.*;
 import es.bvalero.replacer.finder.listing.SimpleMisspelling;
-import es.bvalero.replacer.finder.replacement.Replacement;
-import es.bvalero.replacer.finder.replacement.custom.CustomOptions;
 import es.bvalero.replacer.finder.replacement.custom.CustomReplacementFinderService;
+import es.bvalero.replacer.page.findreplacement.FindReplacementsService;
 import es.bvalero.replacer.repository.CustomModel;
 import es.bvalero.replacer.repository.CustomRepository;
 import es.bvalero.replacer.wikipedia.WikipediaException;
@@ -35,6 +34,9 @@ class PageReviewCustomFinderTest {
 
     @Mock
     private WikipediaService wikipediaService;
+
+    @Mock
+    private FindReplacementsService findReplacementsService;
 
     @Mock
     private CustomReplacementFinderService customReplacementFinderService;
@@ -136,7 +138,7 @@ class PageReviewCustomFinderTest {
 
         final int pageId = 123;
         final String content = "A R";
-        final Replacement customRep = Replacement
+        final PageReplacement customRep = PageReplacement
             .builder()
             .start(2)
             .type(ReplacementType.of(ReplacementKind.CUSTOM, "R"))
@@ -169,7 +171,7 @@ class PageReviewCustomFinderTest {
         when(customRepository.findPageIdsReviewed(any(WikipediaLanguage.class), anyString(), anyBoolean()))
             .thenReturn(Collections.emptyList());
         when(wikipediaService.getPageById(any(WikipediaPageId.class))).thenReturn(Optional.of(page));
-        when(customReplacementFinderService.findCustomReplacements(any(WikipediaPage.class), any(CustomOptions.class)))
+        when(findReplacementsService.findCustomReplacements(any(WikipediaPage.class), any(PageReviewOptions.class)))
             .thenReturn(List.of(customRep));
 
         // First call
@@ -233,7 +235,7 @@ class PageReviewCustomFinderTest {
         when(customRepository.findPageIdsReviewed(any(WikipediaLanguage.class), anyString(), anyBoolean()))
             .thenReturn(Collections.emptyList());
         when(wikipediaService.getPageById(any(WikipediaPageId.class))).thenReturn(Optional.of(page));
-        when(customReplacementFinderService.findCustomReplacements(any(WikipediaPage.class), any(CustomOptions.class)))
+        when(findReplacementsService.findCustomReplacements(any(WikipediaPage.class), any(PageReviewOptions.class)))
             .thenReturn(Collections.emptyList());
 
         // Only call
@@ -260,7 +262,7 @@ class PageReviewCustomFinderTest {
         final int pageId1 = 123;
         final int pageId2 = 456;
         final String content = "A R";
-        final Replacement customRep = Replacement
+        final PageReplacement customRep = PageReplacement
             .builder()
             .start(2)
             .type(ReplacementType.of(ReplacementKind.CUSTOM, "R"))
@@ -298,7 +300,7 @@ class PageReviewCustomFinderTest {
         when(customRepository.findPageIdsReviewed(any(WikipediaLanguage.class), anyString(), anyBoolean()))
             .thenReturn(List.of(pageId1));
         when(wikipediaService.getPageById(any(WikipediaPageId.class))).thenReturn(Optional.of(page));
-        when(customReplacementFinderService.findCustomReplacements(any(WikipediaPage.class), any(CustomOptions.class)))
+        when(findReplacementsService.findCustomReplacements(any(WikipediaPage.class), any(PageReviewOptions.class)))
             .thenReturn(List.of(customRep));
 
         // Only call
@@ -369,7 +371,7 @@ class PageReviewCustomFinderTest {
         // The user will review with no changes the rest, i.e. 2, 4
 
         final String content = "A R";
-        final Replacement customRep = Replacement
+        final PageReplacement customRep = PageReplacement
             .builder()
             .start(2)
             .type(ReplacementType.of(ReplacementKind.CUSTOM, "R"))
@@ -417,7 +419,7 @@ class PageReviewCustomFinderTest {
             .thenReturn(Optional.of(pages.get(3))) // Call 3
             .thenReturn(Optional.of(pages.get(4))); // Call 4
 
-        when(customReplacementFinderService.findCustomReplacements(any(WikipediaPage.class), any(CustomOptions.class)))
+        when(findReplacementsService.findCustomReplacements(any(WikipediaPage.class), any(PageReviewOptions.class)))
             .thenReturn(List.of(customRep));
 
         // We cannot use the same options object for all calls as it is mutable (and mutated)
@@ -520,7 +522,7 @@ class PageReviewCustomFinderTest {
             .thenReturn(Optional.of(pages.get(3))) // Call 3
             .thenReturn(Optional.of(pages.get(4))); // Call 4
 
-        when(customReplacementFinderService.findCustomReplacements(any(WikipediaPage.class), any(CustomOptions.class)))
+        when(findReplacementsService.findCustomReplacements(any(WikipediaPage.class), any(PageReviewOptions.class)))
             .thenReturn(Collections.emptyList());
 
         // Only Call
