@@ -1,8 +1,8 @@
 package es.bvalero.replacer.page.save;
 
-import es.bvalero.replacer.common.domain.*;
-import es.bvalero.replacer.finder.FinderPage;
-import es.bvalero.replacer.finder.cosmetic.CosmeticFinderService;
+import es.bvalero.replacer.common.domain.AccessToken;
+import es.bvalero.replacer.common.domain.WikipediaLanguage;
+import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.page.review.PageReviewOptions;
 import es.bvalero.replacer.page.review.PageReviewOptionsType;
 import es.bvalero.replacer.repository.CustomModel;
@@ -33,7 +33,7 @@ class PageSaveService {
     private WikipediaService wikipediaService;
 
     @Autowired
-    private CosmeticFinderService cosmeticFinderService;
+    private ApplyCosmeticsService applyCosmeticChanges;
 
     void savePageContent(
         WikipediaPage page,
@@ -42,9 +42,8 @@ class PageSaveService {
         AccessToken accessToken
     ) {
         // Apply cosmetic changes
-        FinderPage finderPage = FinderPage.of(page.getId().getLang(), page.getContent(), page.getTitle());
-        String textToSave = cosmeticFinderService.applyCosmeticChanges(finderPage);
-        boolean applyCosmetics = !textToSave.equals(finderPage.getContent());
+        String textToSave = applyCosmeticChanges.applyCosmeticChanges(page);
+        boolean applyCosmetics = !textToSave.equals(page.getContent());
 
         try {
             // Upload new content to Wikipedia

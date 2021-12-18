@@ -25,7 +25,7 @@ public class ReplacementFinderService extends ImmutableFilterFinderService<Repla
     private ImmutableFinderService immutableFinderService;
 
     @Override
-    public List<Finder<Replacement>> getFinders() {
+    public Iterable<Finder<Replacement>> getFinders() {
         return new ArrayList<>(replacementFinders);
     }
 }

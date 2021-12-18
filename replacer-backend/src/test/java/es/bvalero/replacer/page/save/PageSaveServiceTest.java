@@ -3,8 +3,6 @@ package es.bvalero.replacer.page.save;
 import static org.mockito.Mockito.*;
 
 import es.bvalero.replacer.common.domain.*;
-import es.bvalero.replacer.finder.FinderPage;
-import es.bvalero.replacer.finder.cosmetic.CosmeticFinderService;
 import es.bvalero.replacer.page.review.PageReviewOptions;
 import es.bvalero.replacer.repository.CustomRepository;
 import es.bvalero.replacer.repository.ReplacementTypeRepository;
@@ -30,7 +28,7 @@ class PageSaveServiceTest {
     private WikipediaService wikipediaService;
 
     @Mock
-    private CosmeticFinderService cosmeticFinderService;
+    private ApplyCosmeticsService applyCosmeticsService;
 
     @InjectMocks
     private PageSaveService pageSaveService;
@@ -56,12 +54,12 @@ class PageSaveServiceTest {
             .build();
 
         String contentAfterCosmetics = "C";
-        when(cosmeticFinderService.applyCosmeticChanges(any(FinderPage.class))).thenReturn(contentAfterCosmetics);
+        when(applyCosmeticsService.applyCosmeticChanges(page)).thenReturn(contentAfterCosmetics);
 
         AccessToken accessToken = AccessToken.of("A", "B");
         pageSaveService.savePageContent(page, null, PageReviewOptions.ofNoType(), accessToken);
 
-        verify(cosmeticFinderService).applyCosmeticChanges(any(FinderPage.class));
+        verify(applyCosmeticsService).applyCosmeticChanges(page);
         verify(wikipediaService)
             .savePageContent(
                 eq(page.getId()),
@@ -82,7 +80,7 @@ class PageSaveServiceTest {
         PageReviewOptions options = PageReviewOptions.ofType(type);
         pageSaveService.savePageWithNoChanges(pageId, options);
 
-        verify(cosmeticFinderService, never()).applyCosmeticChanges(any(FinderPage.class));
+        verify(applyCosmeticsService, never()).applyCosmeticChanges(any(WikipediaPage.class));
         verify(wikipediaService, never())
             .savePageContent(
                 any(WikipediaPageId.class),
