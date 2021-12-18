@@ -2,7 +2,7 @@ package es.bvalero.replacer.page.review;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
-import es.bvalero.replacer.common.domain.Replacement;
+import es.bvalero.replacer.common.domain.PageReplacement;
 import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.common.domain.WikipediaPageId;
 import es.bvalero.replacer.page.index.PageIndexResult;
@@ -169,7 +169,7 @@ abstract class PageReviewFinder {
 
     private Optional<PageReview> buildPageReview(WikipediaPage page, PageReviewOptions options) {
         // STEP 2.2.1: Find the replacements in the page
-        Collection<Replacement> replacements = findReplacements(page, options);
+        Collection<PageReplacement> replacements = findReplacements(page, options);
 
         if (replacements.isEmpty()) {
             return Optional.empty();
@@ -183,8 +183,8 @@ abstract class PageReviewFinder {
         return Optional.of(pageReviewSectionFinder.findPageReviewSection(pageReview).orElse(pageReview));
     }
 
-    private List<Replacement> findReplacements(WikipediaPage page, PageReviewOptions options) {
-        List<Replacement> replacements = new LinkedList<>(findAllReplacements(page, options));
+    private List<PageReplacement> findReplacements(WikipediaPage page, PageReviewOptions options) {
+        List<PageReplacement> replacements = new LinkedList<>(findAllReplacements(page, options));
 
         // Return the replacements sorted as they appear in the text
         // So there is no need to sort them in the frontend
@@ -199,7 +199,7 @@ abstract class PageReviewFinder {
         return replacements;
     }
 
-    abstract Collection<Replacement> findAllReplacements(WikipediaPage page, PageReviewOptions options);
+    abstract Collection<PageReplacement> findAllReplacements(WikipediaPage page, PageReviewOptions options);
 
     protected PageIndexResult indexReplacements(WikipediaPage page) {
         LOGGER.trace("Update page replacements in database");

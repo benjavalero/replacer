@@ -20,7 +20,7 @@ import org.springframework.lang.NonNull;
  */
 @Value
 @Builder
-public class Replacement implements Comparable<Replacement> {
+public class PageReplacement implements Comparable<PageReplacement> {
 
     @With
     @NonNull
@@ -35,7 +35,7 @@ public class Replacement implements Comparable<Replacement> {
     @NonNull
     Collection<Suggestion> suggestions;
 
-    Replacement(Integer start, String text, ReplacementType type, Collection<Suggestion> suggestions) {
+    PageReplacement(Integer start, String text, ReplacementType type, Collection<Suggestion> suggestions) {
         // Validate start
         if (start < 0) {
             throw new IllegalArgumentException("Negative replacement start: " + start);
@@ -63,7 +63,7 @@ public class Replacement implements Comparable<Replacement> {
     }
 
     @Override
-    public int compareTo(Replacement o) {
+    public int compareTo(PageReplacement o) {
         // Order descendant by start. If equals, the lower end.
         return Objects.equals(o.getStart(), getStart()) ? getEnd() - o.getEnd() : o.getStart() - getStart();
     }

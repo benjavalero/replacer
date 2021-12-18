@@ -44,14 +44,14 @@ class PageReviewTypeSubtypeFinderTest {
         .lastUpdate(LocalDateTime.now())
         .build();
     private final int offset = 1;
-    private final Replacement replacement = Replacement
+    private final PageReplacement replacement = PageReplacement
         .builder()
         .start(offset)
         .type(ReplacementType.of(ReplacementKind.MISSPELLING_SIMPLE, "Y"))
         .text("Y")
         .suggestions(List.of(Suggestion.ofNoComment("Z")))
         .build();
-    private final List<Replacement> replacements = Collections.singletonList(replacement);
+    private final List<PageReplacement> replacements = Collections.singletonList(replacement);
     private final PageReviewOptions options = PageReviewOptions.ofType(
         ReplacementType.of(ReplacementKind.MISSPELLING_SIMPLE, "Y")
     );

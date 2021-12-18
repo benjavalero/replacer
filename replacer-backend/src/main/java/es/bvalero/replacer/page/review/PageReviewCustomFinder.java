@@ -106,7 +106,7 @@ class PageReviewCustomFinder extends PageReviewFinder {
     }
 
     @Override
-    Collection<Replacement> findAllReplacements(WikipediaPage page, PageReviewOptions options) {
+    Collection<PageReplacement> findAllReplacements(WikipediaPage page, PageReviewOptions options) {
         // We do nothing in the database in case the list is empty
         // We want to review the page every time in case anything has changed
         return ReplacementMapper.toDomain(

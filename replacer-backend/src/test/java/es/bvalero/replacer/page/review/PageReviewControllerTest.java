@@ -66,7 +66,7 @@ class PageReviewControllerTest {
     private final int start = 5;
     private final String rep = "A";
     private final Suggestion suggestion = Suggestion.of("a", "b");
-    private final Replacement replacement = Replacement
+    private final PageReplacement replacement = PageReplacement
         .builder()
         .start(start)
         .text(rep)

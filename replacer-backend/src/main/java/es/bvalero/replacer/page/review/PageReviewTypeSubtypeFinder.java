@@ -2,7 +2,7 @@ package es.bvalero.replacer.page.review;
 
 import static es.bvalero.replacer.repository.ReplacementRepository.REVIEWER_SYSTEM;
 
-import es.bvalero.replacer.common.domain.Replacement;
+import es.bvalero.replacer.common.domain.PageReplacement;
 import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.page.index.PageIndexResult;
 import es.bvalero.replacer.repository.PageRepository;
@@ -47,7 +47,7 @@ class PageReviewTypeSubtypeFinder extends PageReviewFinder {
     }
 
     @Override
-    Collection<Replacement> findAllReplacements(WikipediaPage page, PageReviewOptions options) {
+    Collection<PageReplacement> findAllReplacements(WikipediaPage page, PageReviewOptions options) {
         // We take profit, and we update the database with the just calculated replacements (also when empty).
         // If the page has not been indexed (or is not indexable) the collection of replacements will be empty
         PageIndexResult pageIndexResult = indexReplacements(page);
@@ -57,8 +57,8 @@ class PageReviewTypeSubtypeFinder extends PageReviewFinder {
         return filterReplacementsByTypeAndSubtype(pageIndexResult.getReplacements(), options);
     }
 
-    private Collection<Replacement> filterReplacementsByTypeAndSubtype(
-        Collection<Replacement> replacements,
+    private Collection<PageReplacement> filterReplacementsByTypeAndSubtype(
+        Collection<PageReplacement> replacements,
         PageReviewOptions options
     ) {
         return replacements

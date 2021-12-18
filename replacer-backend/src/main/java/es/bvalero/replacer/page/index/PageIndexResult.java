@@ -1,6 +1,6 @@
 package es.bvalero.replacer.page.index;
 
-import es.bvalero.replacer.common.domain.Replacement;
+import es.bvalero.replacer.common.domain.PageReplacement;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -31,7 +31,7 @@ public final class PageIndexResult {
     @With
     @Getter(AccessLevel.PUBLIC)
     @Builder.Default
-    Collection<Replacement> replacements = Collections.emptyList();
+    Collection<PageReplacement> replacements = Collections.emptyList();
 
     /* Changes to be applied in the database */
 
@@ -84,7 +84,7 @@ public final class PageIndexResult {
     }
 
     @TestOnly
-    public static PageIndexResult ofEmpty(PageIndexStatus status, Collection<Replacement> replacements) {
+    public static PageIndexResult ofEmpty(PageIndexStatus status, Collection<PageReplacement> replacements) {
         return PageIndexResult.builder().status(status).replacements(replacements).build();
     }
 

@@ -54,7 +54,7 @@ class IndexableReplacementMapper {
             .build();
     }
 
-    IndexableReplacement fromDomain(Replacement replacement, WikipediaPage page) {
+    IndexableReplacement fromDomain(PageReplacement replacement, WikipediaPage page) {
         return IndexableReplacement
             .builder()
             .indexablePageId(IndexablePageMapper.fromDomain(page.getId()))
@@ -65,7 +65,7 @@ class IndexableReplacementMapper {
             .build();
     }
 
-    private String getContext(Replacement replacement, WikipediaPage page) {
+    private String getContext(PageReplacement replacement, WikipediaPage page) {
         return ReplacerUtils.getContextAroundWord(page.getContent(), replacement.getStart(), replacement.getEnd(), 20);
     }
 }

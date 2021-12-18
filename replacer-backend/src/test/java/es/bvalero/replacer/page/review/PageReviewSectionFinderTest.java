@@ -32,7 +32,7 @@ class PageReviewSectionFinderTest {
     @Test
     void testFindSectionReviewNoSections() throws WikipediaException {
         WikipediaPage page = mock(WikipediaPage.class);
-        List<Replacement> replacements = Collections.emptyList();
+        List<PageReplacement> replacements = Collections.emptyList();
 
         when(wikipediaService.getPageSections(any(WikipediaPageId.class))).thenReturn(Collections.emptyList());
 
@@ -47,14 +47,14 @@ class PageReviewSectionFinderTest {
         int pageId = 1;
         String content = "This is an sample content.";
         Suggestion suggestion = Suggestion.ofNoComment("a");
-        Replacement replacement = Replacement
+        PageReplacement replacement = PageReplacement
             .builder()
             .start(8)
             .text("an")
             .type(ReplacementType.of(ReplacementKind.MISSPELLING_SIMPLE, "an"))
             .suggestions(Collections.singletonList(suggestion))
             .build();
-        List<Replacement> replacements = Collections.singletonList(replacement);
+        List<PageReplacement> replacements = Collections.singletonList(replacement);
         WikipediaPage page = WikipediaPage
             .builder()
             .id(WikipediaPageId.of(WikipediaLanguage.getDefault(), pageId))

@@ -1,6 +1,6 @@
 package es.bvalero.replacer.page.review;
 
-import es.bvalero.replacer.common.domain.Replacement;
+import es.bvalero.replacer.common.domain.PageReplacement;
 import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.repository.PageRepository;
 import java.util.Collection;
@@ -26,7 +26,7 @@ class PageReviewNoTypeFinder extends PageReviewFinder {
     }
 
     @Override
-    Collection<Replacement> findAllReplacements(WikipediaPage page, PageReviewOptions options) {
+    Collection<PageReplacement> findAllReplacements(WikipediaPage page, PageReviewOptions options) {
         // We take profit, and we update the database with the just calculated replacements (also when empty).
         // If the page has not been indexed (or is not indexable) the collection of replacements is empty
         return indexReplacements(page).getReplacements();
