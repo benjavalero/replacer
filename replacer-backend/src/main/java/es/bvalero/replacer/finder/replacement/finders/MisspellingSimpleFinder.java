@@ -50,7 +50,7 @@ public class MisspellingSimpleFinder extends MisspellingFinder implements Proper
 
     @Nullable
     private MatchResult findResult(FinderPage page, int start) {
-        List<MatchResult> matches = new ArrayList<>();
+        final List<MatchResult> matches = new ArrayList<>();
         while (start >= 0 && start < page.getContent().length() && matches.isEmpty()) {
             start = findWord(page.getContent(), start, matches);
         }
@@ -71,14 +71,14 @@ public class MisspellingSimpleFinder extends MisspellingFinder implements Proper
             // Find complete word
             for (int j = startWord + 1; j < text.length(); j++) {
                 if (!isLetter(text.charAt(j))) {
-                    String word = text.substring(startWord, j);
+                    final String word = text.substring(startWord, j);
                     matches.add(LinearMatchResult.of(startWord, word));
                     return j;
                 }
             }
 
             // In case of getting here the text ends with a word
-            String word = text.substring(startWord);
+            final String word = text.substring(startWord);
             matches.add(LinearMatchResult.of(startWord, word));
         }
         return -1;

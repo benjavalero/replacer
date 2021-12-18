@@ -14,12 +14,12 @@ public class LinkUtils {
     public static final String END_LINK = "]]";
 
     public List<LinearMatchResult> findAllLinks(FinderPage page) {
-        List<LinearMatchResult> matches = new ArrayList<>(100);
+        final List<LinearMatchResult> matches = new ArrayList<>(100);
         // Each link found may contain nested links which are added after
         int start = 0;
         while (start >= 0 && start < page.getContent().length()) {
             // Use a LinkedList as some elements will be prepended
-            List<LinearMatchResult> subMatches = new LinkedList<>();
+            final List<LinearMatchResult> subMatches = new LinkedList<>();
             start = findLink(page, start, subMatches);
             matches.addAll(subMatches);
         }
@@ -27,10 +27,10 @@ public class LinkUtils {
     }
 
     private int findLink(FinderPage page, int start, List<LinearMatchResult> matches) {
-        String text = page.getContent();
-        int startLink = findStartLink(text, start);
+        final String text = page.getContent();
+        final int startLink = findStartLink(text, start);
         if (startLink >= 0) {
-            LinearMatchResult completeMatch = findNestedLink(text, startLink, matches);
+            final LinearMatchResult completeMatch = findNestedLink(text, startLink, matches);
             if (completeMatch == null) {
                 // Link not closed. Not worth keep on searching as the next links are considered as nested.
                 FinderUtils.logFinderResult(
@@ -63,16 +63,16 @@ public class LinkUtils {
             if (text.startsWith(START_LINK, start)) {
                 start += START_LINK.length();
             }
-            int end = findEndLink(text, start);
+            final int end = findEndLink(text, start);
             if (end < 0) {
                 return null;
             }
 
-            int startNested = findStartLink(text, start);
+            final int startNested = findStartLink(text, start);
             if (startNested >= 0 && startNested < end) {
                 // Nested
                 // Find the end of the nested which can be the found end or forward in case of more nesting levels
-                LinearMatchResult nestedMatch = findNestedLink(text, startNested, matches);
+                final LinearMatchResult nestedMatch = findNestedLink(text, startNested, matches);
                 if (nestedMatch == null) {
                     return null;
                 }

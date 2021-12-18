@@ -47,7 +47,7 @@ public class FinderUtils {
     }
 
     public String setFirstUpperCaseClass(String word) {
-        String first = word.substring(0, 1);
+        final String first = word.substring(0, 1);
         return Character.isLetter(first.charAt(0))
             ? String.format("[%s%s]%s", toUpperCase(first), toLowerCase(first), word.substring(1))
             : word;
@@ -58,7 +58,7 @@ public class FinderUtils {
             return false;
         }
 
-        int end = start + word.length();
+        final int end = start + word.length();
         if (start == 0) {
             return end == text.length() || isValidRightSeparator(text.charAt(end));
         } else if (end == text.length()) {
@@ -101,7 +101,7 @@ public class FinderUtils {
     }
 
     public boolean isWordFollowedByUppercase(int start, String word, String text) {
-        int upperCasePos = start + word.length() + 1;
+        final int upperCasePos = start + word.length() + 1;
         return (
             upperCasePos < text.length() &&
             isWordCompleteInText(start, word, text) &&
@@ -113,7 +113,7 @@ public class FinderUtils {
         if (isWordCompleteInText(start, word, text) && start >= 2) {
             char lastLetter = text.charAt(start - 1);
             for (int i = start - 2; i >= 0; i--) {
-                char ch = text.charAt(i);
+                final char ch = text.charAt(i);
                 if (Character.isLetter(ch)) {
                     lastLetter = ch;
                 } else {
@@ -142,7 +142,7 @@ public class FinderUtils {
     }
 
     public String getFirstItemInList(String list) {
-        List<String> actualList = splitList(list);
+        final List<String> actualList = splitList(list);
         assert !actualList.isEmpty();
         return actualList.get(0);
     }

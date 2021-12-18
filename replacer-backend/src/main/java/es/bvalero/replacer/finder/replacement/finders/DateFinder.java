@@ -90,7 +90,7 @@ public class DateFinder implements ReplacementFinder {
 
     @Override
     public Iterable<MatchResult> findMatchResults(FinderPage page) {
-        RunAutomaton dateAutomaton = dateAutomata.get(page.getLang());
+        final RunAutomaton dateAutomaton = dateAutomata.get(page.getLang());
         return dateAutomaton != null
             ? AutomatonMatchFinder.find(page.getContent(), dateAutomaton)
             : Collections.emptyList();
@@ -106,7 +106,7 @@ public class DateFinder implements ReplacementFinder {
     }
 
     private boolean isValidLongDate(String date) {
-        List<String> tokens = new LinkedList<>(Arrays.asList(date.split(" ")));
+        final List<String> tokens = new LinkedList<>(Arrays.asList(date.split(" ")));
         return (
             tokens.size() == 5 &&
             FinderUtils.toLowerCase(date).equals(date) &&
@@ -116,7 +116,7 @@ public class DateFinder implements ReplacementFinder {
     }
 
     private boolean isValidMonthYear(String date) {
-        List<String> tokens = new LinkedList<>(Arrays.asList(date.split(" ")));
+        final List<String> tokens = new LinkedList<>(Arrays.asList(date.split(" ")));
         return (
             tokens.size() == 4 &&
             FinderUtils.toLowerCase(date.substring(1)).equals(date.substring(1)) &&
@@ -126,7 +126,7 @@ public class DateFinder implements ReplacementFinder {
 
     @Override
     public Replacement convert(MatchResult matcher, FinderPage page) {
-        WikipediaLanguage lang = page.getLang();
+        final WikipediaLanguage lang = page.getLang();
         return startsWithNumber(matcher.group()) ? convertLongDate(matcher, lang) : convertMonthYear(matcher, lang);
     }
 
@@ -135,13 +135,13 @@ public class DateFinder implements ReplacementFinder {
     }
 
     private Replacement convertLongDate(MatchResult match, WikipediaLanguage lang) {
-        String date = match.group();
-        List<String> tokens = new LinkedList<>(Arrays.asList(date.split(" ")));
+        final String date = match.group();
+        final List<String> tokens = new LinkedList<>(Arrays.asList(date.split(" ")));
         String subtype = null;
 
         // Fix year with dot
-        String year = tokens.get(tokens.size() - 1);
-        String fixedYear = fixYearWithDot(year);
+        final String year = tokens.get(tokens.size() - 1);
+        final String fixedYear = fixYearWithDot(year);
         if (!fixedYear.equals(year)) {
             subtype = SUBTYPE_DOT_YEAR;
             tokens.set(tokens.size() - 1, fixedYear);
@@ -158,8 +158,8 @@ public class DateFinder implements ReplacementFinder {
         }
 
         // Fix leading zero
-        String day = tokens.get(0);
-        String fixedDay = fixLeadingZero(day);
+        final String day = tokens.get(0);
+        final String fixedDay = fixLeadingZero(day);
         if (!fixedDay.equals(day)) {
             subtype = SUBTYPE_LEADING_ZERO;
             tokens.set(0, fixedDay);
@@ -167,7 +167,7 @@ public class DateFinder implements ReplacementFinder {
 
         // Fix uppercase
         String fixedDate = StringUtils.join(tokens, " ");
-        String lowerDate = FinderUtils.toLowerCase(fixedDate);
+        final String lowerDate = FinderUtils.toLowerCase(fixedDate);
         if (!lowerDate.equals(fixedDate)) {
             subtype = SUBTYPE_UPPERCASE;
             fixedDate = lowerDate;
@@ -190,13 +190,13 @@ public class DateFinder implements ReplacementFinder {
     }
 
     private Replacement convertMonthYear(MatchResult match, WikipediaLanguage lang) {
-        String date = match.group();
-        List<String> tokens = new LinkedList<>(Arrays.asList(date.split(" ")));
+        final String date = match.group();
+        final List<String> tokens = new LinkedList<>(Arrays.asList(date.split(" ")));
         String subtype = null;
 
         // Fix year with dot
-        String year = tokens.get(tokens.size() - 1);
-        String fixedYear = fixYearWithDot(year);
+        final String year = tokens.get(tokens.size() - 1);
+        final String fixedYear = fixYearWithDot(year);
         if (!fixedYear.equals(year)) {
             subtype = SUBTYPE_DOT_YEAR;
             tokens.set(tokens.size() - 1, fixedYear);
@@ -210,7 +210,7 @@ public class DateFinder implements ReplacementFinder {
 
         // Fix uppercase
         String monthYear = StringUtils.join(tokens.subList(1, tokens.size()), " ");
-        String lowerMonthYear = FinderUtils.toLowerCase(monthYear);
+        final String lowerMonthYear = FinderUtils.toLowerCase(monthYear);
         if (!lowerMonthYear.equals(monthYear)) {
             subtype = SUBTYPE_UPPERCASE;
             monthYear = lowerMonthYear;
@@ -219,7 +219,7 @@ public class DateFinder implements ReplacementFinder {
         // Fix September
         monthYear = fixSeptember(monthYear, lang);
 
-        String fixedDate = String.format("%s %s", tokens.get(0), monthYear);
+        final String fixedDate = String.format("%s %s", tokens.get(0), monthYear);
 
         if (subtype == null) {
             throw new IllegalArgumentException(String.format("Not valid date to convert: %s", date));

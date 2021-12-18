@@ -70,7 +70,7 @@ class PersonNameFinder implements ImmutableFinder {
 
         @Nullable
         private MatchResult findResult(FinderPage page, int start) {
-            List<MatchResult> matches = new ArrayList<>();
+            final List<MatchResult> matches = new ArrayList<>();
             while (start >= 0 && start < page.getContent().length() && matches.isEmpty()) {
                 start = findPersonName(page, start, personName, matches);
             }
@@ -78,8 +78,8 @@ class PersonNameFinder implements ImmutableFinder {
         }
 
         private int findPersonName(FinderPage page, int start, String personName, List<MatchResult> matches) {
-            String text = page.getContent();
-            int personNameStart = text.indexOf(personName, start);
+            final String text = page.getContent();
+            final int personNameStart = text.indexOf(personName, start);
             if (personNameStart >= 0) {
                 if (FinderUtils.isWordFollowedByUppercase(personNameStart, personName, text)) {
                     matches.add(LinearMatchResult.of(personNameStart, personName));

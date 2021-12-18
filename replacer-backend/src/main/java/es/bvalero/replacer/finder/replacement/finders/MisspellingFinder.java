@@ -28,7 +28,7 @@ public abstract class MisspellingFinder implements ReplacementFinder {
     private Map<WikipediaLanguage, Map<String, Misspelling>> misspellingMap = new EnumMap<>(WikipediaLanguage.class);
 
     private Map<String, Misspelling> getMisspellingMap(WikipediaLanguage lang) {
-        Map<String, Misspelling> langMap = this.misspellingMap.get(lang);
+        final Map<String, Misspelling> langMap = this.misspellingMap.get(lang);
         if (langMap == null) {
             LOGGER.error("No misspelling map for lang {}", lang);
             return Collections.emptyMap();
@@ -40,7 +40,7 @@ public abstract class MisspellingFinder implements ReplacementFinder {
     @Loggable(value = LogLevel.DEBUG, skipArgs = true, skipResult = true)
     void buildMisspellingMaps(SetValuedMap<WikipediaLanguage, Misspelling> misspellings) {
         // Build a map to quick access the misspellings by word
-        Map<WikipediaLanguage, Map<String, Misspelling>> map = new EnumMap<>(WikipediaLanguage.class);
+        final Map<WikipediaLanguage, Map<String, Misspelling>> map = new EnumMap<>(WikipediaLanguage.class);
         for (WikipediaLanguage lang : misspellings.keySet()) {
             map.put(lang, buildMisspellingMap(misspellings.get(lang)));
         }
@@ -50,9 +50,9 @@ public abstract class MisspellingFinder implements ReplacementFinder {
     @VisibleForTesting
     public Map<String, Misspelling> buildMisspellingMap(Set<Misspelling> misspellings) {
         // Build a map to quick access the misspellings by word
-        Map<String, Misspelling> map = new HashMap<>(misspellings.size());
+        final Map<String, Misspelling> map = new HashMap<>(misspellings.size());
         misspellings.forEach(misspelling -> {
-            String word = misspelling.getWord();
+            final String word = misspelling.getWord();
             if (misspelling.isCaseSensitive()) {
                 map.put(word, misspelling);
             } else {
@@ -75,8 +75,8 @@ public abstract class MisspellingFinder implements ReplacementFinder {
 
     @Override
     public Replacement convert(MatchResult matcher, FinderPage page) {
-        int start = matcher.start();
-        String text = matcher.group();
+        final int start = matcher.start();
+        final String text = matcher.group();
         return Replacement
             .builder()
             .type(ReplacementType.of(getType(), getSubtype(text, page.getLang())))
@@ -101,14 +101,15 @@ public abstract class MisspellingFinder implements ReplacementFinder {
     // Transform the case of the suggestion, e.g. "Habia" -> "Había"
     List<Suggestion> findSuggestions(String originalWord, WikipediaLanguage lang) {
         // We are sure in this point that the Misspelling exists
-        Misspelling misspelling = findMisspellingByWord(originalWord, lang).orElseThrow(IllegalArgumentException::new);
+        final Misspelling misspelling = findMisspellingByWord(originalWord, lang)
+            .orElseThrow(IllegalArgumentException::new);
         return applyMisspellingSuggestions(originalWord, misspelling);
     }
 
     public static List<Suggestion> applyMisspellingSuggestions(String word, Misspelling misspelling) {
-        List<Suggestion> suggestions = new LinkedList<>();
+        final List<Suggestion> suggestions = new LinkedList<>();
         for (MisspellingSuggestion misspellingSuggestion : misspelling.getSuggestions()) {
-            Suggestion suggestion = convertSuggestion(misspellingSuggestion);
+            final Suggestion suggestion = convertSuggestion(misspellingSuggestion);
             if (misspelling.isCaseSensitive()) {
                 suggestions.add(suggestion);
             } else {
@@ -135,7 +136,7 @@ public abstract class MisspellingFinder implements ReplacementFinder {
         // If any of the suggestions matches the original then move it as the first suggestion
         for (int i = 0; i < suggestions.size(); i++) {
             if (suggestions.get(i).getText().equals(word)) {
-                Suggestion original = suggestions.remove(i);
+                final Suggestion original = suggestions.remove(i);
                 suggestions.add(0, original);
                 break;
             }

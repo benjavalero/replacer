@@ -61,7 +61,7 @@ class LinkFinder extends ImmutableCheckedFinder {
 
     @Override
     public Iterable<MatchResult> findMatchResults(FinderPage page) {
-        List<MatchResult> immutables = new ArrayList<>(100);
+        final List<MatchResult> immutables = new ArrayList<>(100);
         for (LinearMatchResult template : LinkUtils.findAllLinks(page)) {
             immutables.addAll(findImmutables(template, page));
         }
@@ -70,22 +70,22 @@ class LinkFinder extends ImmutableCheckedFinder {
 
     private List<MatchResult> findImmutables(LinearMatchResult link, FinderPage page) {
         // If the link is suffixed then return the complete link
-        String text = page.getContent();
-        int endSuffix = findEndSuffix(text, link.end());
+        final String text = page.getContent();
+        final int endSuffix = findEndSuffix(text, link.end());
         if (endSuffix > link.end()) {
             return Collections.singletonList(
                 LinearMatchResult.of(link.start(), text.substring(link.start(), endSuffix))
             );
         }
 
-        String content = link.group().substring(START_LINK.length(), link.group().length() - END_LINK.length());
+        final String content = link.group().substring(START_LINK.length(), link.group().length() - END_LINK.length());
 
-        int posPipe = content.lastIndexOf('|');
-        String linkTitle = posPipe >= 0 ? content.substring(0, posPipe) : content;
-        String linkAlias = posPipe >= 0 ? content.substring(posPipe + 1) : null;
+        final int posPipe = content.lastIndexOf('|');
+        final String linkTitle = posPipe >= 0 ? content.substring(0, posPipe) : content;
+        final String linkAlias = posPipe >= 0 ? content.substring(posPipe + 1) : null;
 
-        int posColon = linkTitle.indexOf(':');
-        String linkSpace = posColon >= 0 ? linkTitle.substring(0, posColon) : null;
+        final int posColon = linkTitle.indexOf(':');
+        final String linkSpace = posColon >= 0 ? linkTitle.substring(0, posColon) : null;
 
         // If the link space is in the list then return an immutable of the complete link
         if (isCategorySpace(linkSpace)) {

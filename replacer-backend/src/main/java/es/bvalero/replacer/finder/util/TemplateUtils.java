@@ -14,13 +14,13 @@ public class TemplateUtils {
     public static final String END_TEMPLATE = "}}";
 
     public List<LinearMatchResult> findAllTemplates(FinderPage page) {
-        List<LinearMatchResult> matches = new ArrayList<>(100);
+        final List<LinearMatchResult> matches = new ArrayList<>(100);
 
         // Each template found may contain nested templates which are added after
         int start = 0;
         while (start >= 0 && start < page.getContent().length()) {
             // Use a LinkedList as some elements will be prepended
-            List<LinearMatchResult> subMatches = new LinkedList<>();
+            final List<LinearMatchResult> subMatches = new LinkedList<>();
             start = findTemplate(page, start, subMatches);
             matches.addAll(subMatches);
         }
@@ -29,10 +29,10 @@ public class TemplateUtils {
     }
 
     private int findTemplate(FinderPage page, int start, List<LinearMatchResult> matches) {
-        String text = page.getContent();
-        int startTemplate = findStartTemplate(text, start);
+        final String text = page.getContent();
+        final int startTemplate = findStartTemplate(text, start);
         if (startTemplate >= 0) {
-            LinearMatchResult completeMatch = findNestedTemplate(text, startTemplate, matches);
+            final LinearMatchResult completeMatch = findNestedTemplate(text, startTemplate, matches);
             if (completeMatch != null) {
                 matches.add(0, completeMatch);
                 return completeMatch.end();
@@ -60,22 +60,22 @@ public class TemplateUtils {
     /* Find the immutable of the template. It also finds nested templates and adds them to the given list. */
     @Nullable
     private LinearMatchResult findNestedTemplate(String text, int startTemplate, List<LinearMatchResult> matches) {
-        List<LinearMatchResult> nestedMatches = new ArrayList<>();
+        final List<LinearMatchResult> nestedMatches = new ArrayList<>();
         int start = startTemplate;
         if (text.startsWith(START_TEMPLATE, start)) {
             start += START_TEMPLATE.length();
         }
         while (true) {
-            int end = findEndTemplate(text, start);
+            final int end = findEndTemplate(text, start);
             if (end < 0) {
                 return null;
             }
 
-            int startNested = findStartTemplate(text, start);
+            final int startNested = findStartTemplate(text, start);
             if (startNested >= 0 && startNested < end) {
                 // Nested
                 // Find the end of the nested which can be the found end or forward in case of more nesting levels
-                LinearMatchResult nestedMatch = findNestedTemplate(text, startNested, matches);
+                final LinearMatchResult nestedMatch = findNestedTemplate(text, startNested, matches);
                 if (nestedMatch == null) {
                     return null;
                 }
@@ -86,7 +86,7 @@ public class TemplateUtils {
                 // Prepare to find the next nested
                 start = nestedMatch.end();
             } else {
-                LinearMatchResult completeMatch = LinearMatchResult.of(
+                final LinearMatchResult completeMatch = LinearMatchResult.of(
                     startTemplate,
                     text.substring(startTemplate, end + END_TEMPLATE.length())
                 );

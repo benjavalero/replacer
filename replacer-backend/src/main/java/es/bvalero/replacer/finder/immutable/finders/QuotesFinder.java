@@ -39,7 +39,7 @@ abstract class QuotesFinder extends ImmutableCheckedFinder {
 
     @Nullable
     private MatchResult findResult(FinderPage page, int start) {
-        List<MatchResult> matches = new ArrayList<>();
+        final List<MatchResult> matches = new ArrayList<>();
         while (start >= 0 && start < page.getContent().length() && matches.isEmpty()) {
             start = findQuote(page, start, matches);
         }
@@ -47,15 +47,15 @@ abstract class QuotesFinder extends ImmutableCheckedFinder {
     }
 
     private int findQuote(FinderPage page, int start, List<MatchResult> matches) {
-        String text = page.getContent();
-        int startQuote = findStartQuote(text, start);
+        final String text = page.getContent();
+        final int startQuote = findStartQuote(text, start);
         if (startQuote >= 0) {
             int endQuote = findEndQuote(text, startQuote + 1);
             if (endQuote >= 0) {
                 endQuote++; // Move to the position next to the end of the quote
 
-                String quotedText = text.substring(startQuote, endQuote);
-                String innerText = quotedText.substring(1, quotedText.length() - 1);
+                final String quotedText = text.substring(startQuote, endQuote);
+                final String innerText = quotedText.substring(1, quotedText.length() - 1);
 
                 if (!validateForbiddenChars(quotedText)) {
                     // Quote containing forbidden chars. Continue.
@@ -97,7 +97,7 @@ abstract class QuotesFinder extends ImmutableCheckedFinder {
 
     private int findEndQuote(String text, int start) {
         for (int i = start; i < text.length(); i++) {
-            char ch = text.charAt(i);
+            final char ch = text.charAt(i);
             if (ch == NEW_LINE) {
                 // New lines are not allowed inside quotes
                 return -1;

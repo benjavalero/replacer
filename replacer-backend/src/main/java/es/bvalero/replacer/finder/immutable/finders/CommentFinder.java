@@ -38,7 +38,7 @@ class CommentFinder extends ImmutableCheckedFinder {
 
     @Nullable
     private MatchResult findResult(FinderPage page, int start) {
-        List<MatchResult> matches = new ArrayList<>();
+        final List<MatchResult> matches = new ArrayList<>();
         while (start >= 0 && start < page.getContent().length() && matches.isEmpty()) {
             start = findComment(page, start, matches);
         }
@@ -46,11 +46,11 @@ class CommentFinder extends ImmutableCheckedFinder {
     }
 
     private int findComment(FinderPage page, int start, List<MatchResult> matches) {
-        String text = page.getContent();
-        int startComment = findStartComment(text, start);
+        final String text = page.getContent();
+        final int startComment = findStartComment(text, start);
         if (startComment >= 0) {
-            int startCommentText = startComment + START_COMMENT.length();
-            int endComment = findEndComment(text, startCommentText);
+            final int startCommentText = startComment + START_COMMENT.length();
+            final int endComment = findEndComment(text, startCommentText);
             if (endComment >= 0) {
                 matches.add(LinearMatchResult.of(startComment, text.substring(startComment, endComment)));
                 return endComment;
@@ -72,7 +72,7 @@ class CommentFinder extends ImmutableCheckedFinder {
     }
 
     private int findEndComment(String text, int start) {
-        int posTagEndComment = text.indexOf(END_COMMENT, start);
+        final int posTagEndComment = text.indexOf(END_COMMENT, start);
         if (posTagEndComment >= 0) {
             return posTagEndComment + END_COMMENT.length();
         } else {

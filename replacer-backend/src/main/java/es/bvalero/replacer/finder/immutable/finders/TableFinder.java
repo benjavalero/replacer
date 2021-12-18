@@ -30,7 +30,7 @@ class TableFinder implements ImmutableFinder {
 
     @Nullable
     private MatchResult findResult(FinderPage page, int start) {
-        List<MatchResult> matches = new ArrayList<>();
+        final List<MatchResult> matches = new ArrayList<>();
         while (start >= 0 && start < page.getContent().length() && matches.isEmpty()) {
             start = findLine(page, start, matches);
         }
@@ -38,11 +38,11 @@ class TableFinder implements ImmutableFinder {
     }
 
     private int findLine(FinderPage page, int start, List<MatchResult> matches) {
-        String text = page.getContent();
-        int startLine = findStartLine(text, start);
+        final String text = page.getContent();
+        final int startLine = findStartLine(text, start);
         if (startLine >= 0) {
-            int endLine = findEndLine(text, startLine);
-            String line;
+            final int endLine = findEndLine(text, startLine);
+            final String line;
             if (endLine >= 0) {
                 line = text.substring(startLine, endLine);
             } else {

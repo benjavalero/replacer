@@ -32,13 +32,13 @@ class IgnorableTemplateFinder extends ImmutableCheckedFinder {
 
     @PostConstruct
     public void init() {
-        List<String> fixedTemplates = ignorableTemplates
+        final List<String> fixedTemplates = ignorableTemplates
             .stream()
             .map(s -> s.replace("{", "\\{"))
             .map(s -> s.replace("#", "\\#"))
             .map(FinderUtils::toLowerCase)
             .collect(Collectors.toList());
-        String alternations = '(' + StringUtils.join(fixedTemplates, "|") + ')';
+        final String alternations = '(' + StringUtils.join(fixedTemplates, "|") + ')';
         this.automaton = new RunAutomaton(new RegExp(alternations).toAutomaton());
     }
 

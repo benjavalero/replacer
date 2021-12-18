@@ -56,9 +56,9 @@ public class MisspellingComposedFinder extends MisspellingFinder implements Prop
     private Map<WikipediaLanguage, RunAutomaton> buildComposedMisspellingAutomata(
         SetValuedMap<WikipediaLanguage, ComposedMisspelling> misspellings
     ) {
-        Map<WikipediaLanguage, RunAutomaton> map = new EnumMap<>(WikipediaLanguage.class);
+        final Map<WikipediaLanguage, RunAutomaton> map = new EnumMap<>(WikipediaLanguage.class);
         for (WikipediaLanguage lang : misspellings.keySet()) {
-            String alternations = String.format(
+            final String alternations = String.format(
                 "(%s)",
                 StringUtils.join(
                     misspellings.get(lang).stream().map(this::processComposedMisspelling).collect(Collectors.toList()),
@@ -71,7 +71,7 @@ public class MisspellingComposedFinder extends MisspellingFinder implements Prop
     }
 
     private String processComposedMisspelling(ComposedMisspelling misspelling) {
-        String words = misspelling.getWord();
+        final String words = misspelling.getWord();
         return misspelling.isCaseSensitive() ? words : FinderUtils.setFirstUpperCaseClass(words);
     }
 
@@ -79,7 +79,7 @@ public class MisspellingComposedFinder extends MisspellingFinder implements Prop
     public Iterable<MatchResult> findMatchResults(FinderPage page) {
         // With more than 400 composed misspellings
         // the best approach is an automaton of oll the terms alternated
-        RunAutomaton automaton = this.automata.get(page.getLang());
+        final RunAutomaton automaton = this.automata.get(page.getLang());
         if (automaton == null) {
             return Collections.emptyList();
         } else {

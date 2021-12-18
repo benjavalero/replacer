@@ -47,8 +47,8 @@ class CustomReplacementFinder implements ReplacementFinder {
 
     @Override
     public Replacement convert(MatchResult matcher, FinderPage page) {
-        int start = matcher.start();
-        String text = matcher.group();
+        final int start = matcher.start();
+        final String text = matcher.group();
         return Replacement
             .builder()
             .type(ReplacementType.of(ReplacementKind.CUSTOM, this.replacement))
@@ -59,7 +59,7 @@ class CustomReplacementFinder implements ReplacementFinder {
     }
 
     private List<Suggestion> findSuggestions(String text) {
-        CustomMisspelling misspelling = CustomMisspelling.of(replacement, caseSensitive, suggestion);
+        final CustomMisspelling misspelling = CustomMisspelling.of(replacement, caseSensitive, suggestion);
         return MisspellingFinder.applyMisspellingSuggestions(text, misspelling);
     }
 }

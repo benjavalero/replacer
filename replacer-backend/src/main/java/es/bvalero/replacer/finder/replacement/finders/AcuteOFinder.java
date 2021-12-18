@@ -41,7 +41,7 @@ public class AcuteOFinder implements ReplacementFinder {
 
     @Nullable
     private MatchResult findResult(FinderPage page, int start) {
-        List<MatchResult> matches = new ArrayList<>();
+        final List<MatchResult> matches = new ArrayList<>();
         while (start >= 0 && start < page.getContent().length() && matches.isEmpty()) {
             start = findAcuteO(page.getContent(), start, matches);
         }
@@ -49,11 +49,11 @@ public class AcuteOFinder implements ReplacementFinder {
     }
 
     private int findAcuteO(String text, int start, List<MatchResult> matches) {
-        int startAcuteO = text.indexOf(SEARCH_ACUTE_O, start);
+        final int startAcuteO = text.indexOf(SEARCH_ACUTE_O, start);
         if (startAcuteO >= 0) {
-            int endAcuteO = startAcuteO + SEARCH_ACUTE_O.length();
-            String wordBefore = findWordBefore(text, startAcuteO);
-            String wordAfter = findWordAfter(text, endAcuteO);
+            final int endAcuteO = startAcuteO + SEARCH_ACUTE_O.length();
+            final String wordBefore = findWordBefore(text, startAcuteO);
+            final String wordAfter = findWordAfter(text, endAcuteO);
             if (wordBefore == null || wordAfter == null) {
                 return endAcuteO;
             } else {
@@ -79,7 +79,7 @@ public class AcuteOFinder implements ReplacementFinder {
     }
 
     private String findSubtype(String text) {
-        int pos = text.indexOf(SEARCH_ACUTE_O);
+        final int pos = text.indexOf(SEARCH_ACUTE_O);
         return (
                 FinderUtils.isNumber(text.substring(0, pos)) &&
                 FinderUtils.isNumber(text.substring(pos + SEARCH_ACUTE_O.length()))
@@ -96,12 +96,12 @@ public class AcuteOFinder implements ReplacementFinder {
     private String findWordAfter(String text, int start) {
         int end;
         for (end = start; end < text.length(); end++) {
-            char ch = text.charAt(end);
+            final char ch = text.charAt(end);
             if (!Character.isLetterOrDigit(ch)) {
                 break;
             }
         }
-        String word = text.substring(start, end);
+        final String word = text.substring(start, end);
         return StringUtils.isBlank(word) ? null : word.trim();
     }
 
@@ -109,12 +109,12 @@ public class AcuteOFinder implements ReplacementFinder {
     private String findWordBefore(String text, int start) {
         int end;
         for (end = start - 1; end >= 0; end--) {
-            char ch = text.charAt(end);
+            final char ch = text.charAt(end);
             if (!Character.isLetterOrDigit(ch)) {
                 break;
             }
         }
-        String word = text.substring(Math.max(0, end), start);
+        final String word = text.substring(Math.max(0, end), start);
         return StringUtils.isBlank(word) ? null : word.trim();
     }
 }

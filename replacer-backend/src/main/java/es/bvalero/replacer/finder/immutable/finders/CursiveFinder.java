@@ -36,7 +36,7 @@ class CursiveFinder extends ImmutableCheckedFinder {
 
     @Nullable
     private MatchResult findResult(FinderPage page, int start) {
-        List<MatchResult> matches = new ArrayList<>();
+        final List<MatchResult> matches = new ArrayList<>();
         while (start >= 0 && start < page.getContent().length() && matches.isEmpty()) {
             start = findCursive(page, start, matches);
         }
@@ -44,15 +44,15 @@ class CursiveFinder extends ImmutableCheckedFinder {
     }
 
     private int findCursive(FinderPage page, int start, List<MatchResult> matches) {
-        String text = page.getContent();
-        int startCursive = findStartCursive(text, start);
+        final String text = page.getContent();
+        final int startCursive = findStartCursive(text, start);
         if (startCursive >= 0) {
-            int numQuotes = findNumQuotes(text, startCursive);
+            final int numQuotes = findNumQuotes(text, startCursive);
             assert numQuotes >= 2;
-            int endQuotes = findEndQuotes(text, startCursive + numQuotes, numQuotes);
+            final int endQuotes = findEndQuotes(text, startCursive + numQuotes, numQuotes);
             if (endQuotes >= 0) {
                 // Check if the content of the cursive is empty. Notify and continue in such a case.
-                int endCursiveText = text.length() == endQuotes || text.charAt(endQuotes) == '\n'
+                final int endCursiveText = text.length() == endQuotes || text.charAt(endQuotes) == '\n'
                     ? endQuotes
                     : endQuotes - numQuotes;
                 if (StringUtils.isBlank(text.substring(startCursive + numQuotes, endCursiveText))) {
@@ -79,9 +79,9 @@ class CursiveFinder extends ImmutableCheckedFinder {
     }
 
     private int findNumQuotes(String text, int start) {
-        StringBuilder quotesBuilder = new StringBuilder();
+        final StringBuilder quotesBuilder = new StringBuilder();
         for (int i = start; i < text.length(); i++) {
-            char ch = text.charAt(i);
+            final char ch = text.charAt(i);
             if (ch == '\'') {
                 quotesBuilder.append(ch);
             } else {
@@ -95,7 +95,7 @@ class CursiveFinder extends ImmutableCheckedFinder {
         StringBuilder tagBuilder = new StringBuilder();
         int i = start;
         for (; i < text.length(); i++) {
-            char ch = text.charAt(i);
+            final char ch = text.charAt(i);
             if (ch == '\n') {
                 // New lines are considered as an ending for cursive
                 return i;

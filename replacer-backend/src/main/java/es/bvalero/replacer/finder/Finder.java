@@ -15,8 +15,8 @@ public interface Finder<T extends FinderResult> {
         //    and filter the list to keep only the valid match results
         // 3. Convert the list of match results into a list of T items
 
-        Iterable<MatchResult> allMatchResults = findMatchResults(page);
-        Iterable<MatchResult> validMatchResults = filterValidMatchResults(allMatchResults, page);
+        final Iterable<MatchResult> allMatchResults = findMatchResults(page);
+        final Iterable<MatchResult> validMatchResults = filterValidMatchResults(allMatchResults, page);
         return convertMatchResults(validMatchResults, page);
     }
 

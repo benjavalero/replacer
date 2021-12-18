@@ -51,10 +51,10 @@ class TemplateFinder implements ImmutableFinder {
     @PostConstruct
     public void initTemplateParams() {
         for (String pair : templateParams) {
-            String[] tokens = pair.split("\\|");
+            final String[] tokens = pair.split("\\|");
             if (tokens.length == 2) {
-                String name = FinderUtils.toLowerCase(tokens[0].trim());
-                String param = FinderUtils.toLowerCase(tokens[1].trim());
+                final String name = FinderUtils.toLowerCase(tokens[0].trim());
+                final String param = FinderUtils.toLowerCase(tokens[1].trim());
                 if (WILDCARD.equals(param)) {
                     if (name.endsWith(WILDCARD)) {
                         this.templateNamesPartial.add(name.substring(0, name.length() - 1));
@@ -77,7 +77,7 @@ class TemplateFinder implements ImmutableFinder {
 
     @Override
     public Iterable<MatchResult> findMatchResults(FinderPage page) {
-        List<MatchResult> immutables = new ArrayList<>(100);
+        final List<MatchResult> immutables = new ArrayList<>(100);
         for (LinearMatchResult template : TemplateUtils.findAllTemplates(page)) {
             immutables.addAll(findImmutables(template));
         }
@@ -110,11 +110,11 @@ class TemplateFinder implements ImmutableFinder {
                 content.length() - TemplateUtils.END_TEMPLATE.length()
             );
 
-        String[] parameters = content.split("\\|");
+        final String[] parameters = content.split("\\|");
 
         String templateName = parameters[0];
         // Check in case the template name is followed by a colon
-        int posColon = templateName.indexOf(':');
+        final int posColon = templateName.indexOf(':');
         if (posColon >= 0) {
             templateName = templateName.substring(0, posColon);
         }
@@ -124,17 +124,17 @@ class TemplateFinder implements ImmutableFinder {
             return Collections.singletonList(template);
         }
 
-        List<MatchResult> immutables = new ArrayList<>();
+        final List<MatchResult> immutables = new ArrayList<>();
 
         // Add the template name
         immutables.add(LinearMatchResult.of(template.start() + TemplateUtils.START_TEMPLATE.length(), templateName));
 
         // Process the rest of parameters
         for (int i = 1; i < parameters.length; i++) {
-            String parameter = parameters[i];
+            final String parameter = parameters[i];
             String param = parameter;
             String value = null;
-            int posEquals = parameter.indexOf('=');
+            final int posEquals = parameter.indexOf('=');
             if (posEquals >= 0) {
                 param = parameter.substring(0, posEquals);
                 value = parameter.substring(posEquals + 1);
@@ -145,7 +145,7 @@ class TemplateFinder implements ImmutableFinder {
             // As we are removing nested templates, the only way to calculate the position is find the first match.
             // We take into account also the value to find the position, or just the parameter in case there was a
             // nested template that has been removed and thus cannot be found.
-            int startParameter =
+            final int startParameter =
                 template.start() +
                 (
                     template.group().contains("|" + parameter)
@@ -166,7 +166,7 @@ class TemplateFinder implements ImmutableFinder {
 
             if (StringUtils.isNotEmpty(value)) {
                 // If the value is followed by a reference, comment or similar we ignore it
-                int posLessThan = value.indexOf('<');
+                final int posLessThan = value.indexOf('<');
                 if (posLessThan >= 0) {
                     value = value.substring(0, posLessThan);
                 }
@@ -183,7 +183,7 @@ class TemplateFinder implements ImmutableFinder {
                     ) ||
                     matchesFile(value)
                 ) {
-                    int startValue = startParameter + posEquals + 1;
+                    final int startValue = startParameter + posEquals + 1;
                     immutables.add(LinearMatchResult.of(startValue, value));
                 }
             }
@@ -193,22 +193,22 @@ class TemplateFinder implements ImmutableFinder {
     }
 
     private boolean validateSpecialCharacters(String template) {
-        String content = template.substring(2, template.length() - 2);
+        final String content = template.substring(2, template.length() - 2);
 
         // Check that not all the characters are a pipe
         return content.chars().anyMatch(ch -> ch != '|');
     }
 
     private boolean ignoreCompleteTemplate(String templateName) {
-        String template = FinderUtils.toLowerCase(templateName.trim()).replace('_', ' ');
+        final String template = FinderUtils.toLowerCase(templateName.trim()).replace('_', ' ');
         return (templateNames.contains(template) || templateNamesPartial.stream().anyMatch(template::startsWith));
     }
 
     private boolean matchesFile(String text) {
-        String value = text.trim();
-        int dot = value.lastIndexOf('.');
+        final String value = text.trim();
+        final int dot = value.lastIndexOf('.');
         if (dot >= 0) {
-            String extension = value.substring(dot + 1);
+            final String extension = value.substring(dot + 1);
             return extension.length() >= 2 && extension.length() <= 4;
         } else {
             return false;

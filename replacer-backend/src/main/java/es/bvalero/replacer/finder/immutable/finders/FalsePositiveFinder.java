@@ -48,7 +48,7 @@ class FalsePositiveFinder implements ImmutableFinder, PropertyChangeListener {
     @Override
     @SuppressWarnings("unchecked")
     public void propertyChange(PropertyChangeEvent evt) {
-        SetValuedMap<WikipediaLanguage, FalsePositive> falsePositives = (SetValuedMap<WikipediaLanguage, FalsePositive>) evt.getNewValue();
+        final SetValuedMap<WikipediaLanguage, FalsePositive> falsePositives = (SetValuedMap<WikipediaLanguage, FalsePositive>) evt.getNewValue();
         this.falsePositivesAutomata = buildFalsePositivesAutomata(falsePositives);
     }
 
@@ -56,7 +56,7 @@ class FalsePositiveFinder implements ImmutableFinder, PropertyChangeListener {
     private Map<WikipediaLanguage, RunAutomaton> buildFalsePositivesAutomata(
         SetValuedMap<WikipediaLanguage, FalsePositive> falsePositives
     ) {
-        Map<WikipediaLanguage, RunAutomaton> map = new EnumMap<>(WikipediaLanguage.class);
+        final Map<WikipediaLanguage, RunAutomaton> map = new EnumMap<>(WikipediaLanguage.class);
         for (WikipediaLanguage lang : falsePositives.keySet()) {
             map.put(lang, buildFalsePositivesAutomaton(falsePositives.get(lang)));
         }
@@ -72,7 +72,7 @@ class FalsePositiveFinder implements ImmutableFinder, PropertyChangeListener {
         // For instance, in "ratones aún son", the false positive "es aún" is matched but not valid,
         // and it makes that the next one "aún son" is not matched.
         if (falsePositives != null && !falsePositives.isEmpty()) {
-            String alternations = String.format(
+            final String alternations = String.format(
                 "(%s)",
                 StringUtils.join(
                     falsePositives.stream().map(FalsePositive::getExpression).collect(Collectors.toList()),
@@ -92,7 +92,7 @@ class FalsePositiveFinder implements ImmutableFinder, PropertyChangeListener {
 
     @Override
     public Iterable<MatchResult> findMatchResults(FinderPage page) {
-        RunAutomaton automaton = this.falsePositivesAutomata.get(page.getLang());
+        final RunAutomaton automaton = this.falsePositivesAutomata.get(page.getLang());
         return automaton == null ? Collections.emptyList() : AutomatonMatchFinder.find(page.getContent(), automaton);
     }
 

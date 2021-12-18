@@ -41,7 +41,7 @@ class CompleteTagFinder extends ImmutableCheckedFinder {
 
     @Nullable
     private MatchResult findResult(FinderPage page, int start) {
-        List<MatchResult> matches = new ArrayList<>();
+        final List<MatchResult> matches = new ArrayList<>();
         while (start >= 0 && start < page.getContent().length() && matches.isEmpty()) {
             start = findCompleteTag(page, start, matches);
         }
@@ -49,11 +49,11 @@ class CompleteTagFinder extends ImmutableCheckedFinder {
     }
 
     private int findCompleteTag(FinderPage page, int start, List<MatchResult> matches) {
-        String text = page.getContent();
-        int startCompleteTag = findStartCompleteTag(text, start);
+        final String text = page.getContent();
+        final int startCompleteTag = findStartCompleteTag(text, start);
         if (startCompleteTag >= 0) {
-            int startOpenTag = startCompleteTag + 1;
-            String tag = findSupportedTag(text, startOpenTag);
+            final int startOpenTag = startCompleteTag + 1;
+            final String tag = findSupportedTag(text, startOpenTag);
             if (tag == null) {
                 // The tag found is not in the list. Continue.
                 return startOpenTag;
@@ -67,7 +67,7 @@ class CompleteTagFinder extends ImmutableCheckedFinder {
                         return endOpenTag;
                     }
 
-                    int endCompleteTag = findEndCompleteTag(text, endOpenTag, tag);
+                    final int endCompleteTag = findEndCompleteTag(text, endOpenTag, tag);
                     if (endCompleteTag >= 0) {
                         matches.add(
                             LinearMatchResult.of(startCompleteTag, text.substring(startCompleteTag, endCompleteTag))
@@ -101,16 +101,16 @@ class CompleteTagFinder extends ImmutableCheckedFinder {
 
     @Nullable
     private String findSupportedTag(String text, int start) {
-        StringBuilder tagBuilder = new StringBuilder();
+        final StringBuilder tagBuilder = new StringBuilder();
         for (int i = start; i < text.length(); i++) {
-            char ch = text.charAt(i);
+            final char ch = text.charAt(i);
             if (FinderUtils.isAscii(ch)) {
                 tagBuilder.append(ch);
             } else {
                 break;
             }
         }
-        String tag = tagBuilder.toString();
+        final String tag = tagBuilder.toString();
         return completeTags.contains(tag) ? tag : null;
     }
 
@@ -119,8 +119,8 @@ class CompleteTagFinder extends ImmutableCheckedFinder {
     }
 
     private int findEndCompleteTag(String text, int start, String tag) {
-        String closeTag = "</" + tag + '>';
-        int startCloseTag = text.indexOf(closeTag, start);
+        final String closeTag = "</" + tag + '>';
+        final int startCloseTag = text.indexOf(closeTag, start);
         if (startCloseTag >= 0) {
             // Returns the position next to the end of the complete tag
             return startCloseTag + closeTag.length();

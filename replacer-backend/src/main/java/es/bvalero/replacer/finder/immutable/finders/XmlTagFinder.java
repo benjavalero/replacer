@@ -30,7 +30,7 @@ class XmlTagFinder extends ImmutableCheckedFinder {
 
     @Nullable
     private MatchResult findResult(FinderPage page, int start) {
-        List<MatchResult> matches = new ArrayList<>();
+        final List<MatchResult> matches = new ArrayList<>();
         while (start >= 0 && start < page.getContent().length() && matches.isEmpty()) {
             start = findTag(page.getContent(), start, matches);
         }
@@ -38,13 +38,13 @@ class XmlTagFinder extends ImmutableCheckedFinder {
     }
 
     private int findTag(String text, int start, List<MatchResult> matches) {
-        int startTag = findStartTag(text, start);
+        final int startTag = findStartTag(text, start);
         if (startTag >= 0) {
-            char first = text.charAt(startTag + 1);
+            final char first = text.charAt(startTag + 1);
             if (Character.isLetter(first) || first == '/') {
-                int endTag = findEndTag(text, startTag + 1);
+                final int endTag = findEndTag(text, startTag + 1);
                 if (endTag >= 0) {
-                    String tag = text.substring(startTag + 1, endTag);
+                    final String tag = text.substring(startTag + 1, endTag);
                     if (validateTagChars(tag)) {
                         matches.add(LinearMatchResult.of(startTag, text.substring(startTag, endTag + 1)));
                     }

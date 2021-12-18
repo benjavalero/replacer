@@ -39,13 +39,13 @@ public class CustomReplacementFinderService implements FinderService<Replacement
     }
 
     public Iterable<Replacement> findCustomReplacements(FinderPage page, CustomOptions customOptions) {
-        CustomReplacementFinder finder = CustomReplacementFinder.of(customOptions);
+        final CustomReplacementFinder finder = CustomReplacementFinder.of(customOptions);
         return findIterable(page, Collections.singleton(finder));
     }
 
     /** Checks if the given word exists as a misspelling and in this case returns the type */
     public Optional<Misspelling> findExistingMisspelling(String word, WikipediaLanguage lang) {
-        Optional<Misspelling> simpleMisspelling = misspellingSimpleFinder.findMisspellingByWord(word, lang);
+        final Optional<Misspelling> simpleMisspelling = misspellingSimpleFinder.findMisspellingByWord(word, lang);
         if (simpleMisspelling.isPresent()) {
             return simpleMisspelling;
         } else {

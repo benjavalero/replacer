@@ -90,7 +90,7 @@ public class UppercaseFinder implements ImmutableFinder, PropertyChangeListener 
     @Override
     @SuppressWarnings("unchecked")
     public void propertyChange(PropertyChangeEvent evt) {
-        SetValuedMap<WikipediaLanguage, String> uppercaseWords = getUppercaseWords(
+        final SetValuedMap<WikipediaLanguage, String> uppercaseWords = getUppercaseWords(
             (SetValuedMap<WikipediaLanguage, SimpleMisspelling>) evt.getNewValue()
         );
         this.uppercaseAutomata = buildUppercaseAutomata(uppercaseWords);
@@ -100,7 +100,7 @@ public class UppercaseFinder implements ImmutableFinder, PropertyChangeListener 
     public SetValuedMap<WikipediaLanguage, String> getUppercaseWords(
         SetValuedMap<WikipediaLanguage, SimpleMisspelling> misspellings
     ) {
-        SetValuedMap<WikipediaLanguage, String> map = new HashSetValuedHashMap<>();
+        final SetValuedMap<WikipediaLanguage, String> map = new HashSetValuedHashMap<>();
         for (WikipediaLanguage lang : misspellings.keySet()) {
             map.putAll(lang, getUppercaseWords(misspellings.get(lang)));
         }
@@ -119,7 +119,7 @@ public class UppercaseFinder implements ImmutableFinder, PropertyChangeListener 
     }
 
     private boolean isUppercaseMisspelling(SimpleMisspelling misspelling) {
-        String word = misspelling.getWord();
+        final String word = misspelling.getWord();
         // Any of the suggestions is the misspelling word in lowercase
         return (
             misspelling.isCaseSensitive() &&
@@ -136,7 +136,7 @@ public class UppercaseFinder implements ImmutableFinder, PropertyChangeListener 
     private Map<WikipediaLanguage, RunAutomaton> buildUppercaseAutomata(
         SetValuedMap<WikipediaLanguage, String> uppercaseWords
     ) {
-        Map<WikipediaLanguage, RunAutomaton> map = new EnumMap<>(WikipediaLanguage.class);
+        final Map<WikipediaLanguage, RunAutomaton> map = new EnumMap<>(WikipediaLanguage.class);
         for (WikipediaLanguage lang : uppercaseWords.keySet()) {
             map.put(lang, buildUppercaseAutomaton(uppercaseWords.get(lang)));
         }
@@ -148,7 +148,7 @@ public class UppercaseFinder implements ImmutableFinder, PropertyChangeListener 
         // Currently, there are about 60 uppercase case-sensitive misspellings,
         // so the best approach is an automaton of oll the terms alternated.
         if (words != null && !words.isEmpty()) {
-            String alternations = String.format(REGEX_UPPERCASE_PUNCTUATION, StringUtils.join(words, "|"));
+            final String alternations = String.format(REGEX_UPPERCASE_PUNCTUATION, StringUtils.join(words, "|"));
             return new RunAutomaton(new RegExp(alternations).toAutomaton(new DatatypesAutomatonProvider()));
         } else {
             return null;
@@ -162,7 +162,7 @@ public class UppercaseFinder implements ImmutableFinder, PropertyChangeListener 
 
     @Override
     public Iterable<MatchResult> findMatchResults(FinderPage page) {
-        RunAutomaton automaton = this.uppercaseAutomata.get(page.getLang());
+        final RunAutomaton automaton = this.uppercaseAutomata.get(page.getLang());
         if (automaton == null) {
             return Collections.emptyList();
         } else {
@@ -174,11 +174,11 @@ public class UppercaseFinder implements ImmutableFinder, PropertyChangeListener 
     @Override
     public Immutable convert(MatchResult match) {
         // Find the first uppercase letter
-        String text = match.group();
+        final String text = match.group();
         for (int i = 0; i < text.length(); i++) {
             if (Character.isUpperCase(text.charAt(i))) {
-                String word = text.substring(i).trim();
-                int startPos = match.start() + i;
+                final String word = text.substring(i).trim();
+                final int startPos = match.start() + i;
                 return Immutable.of(startPos, word);
             }
         }
@@ -188,11 +188,11 @@ public class UppercaseFinder implements ImmutableFinder, PropertyChangeListener 
     @Override
     public boolean validate(MatchResult match, FinderPage page) {
         // Find the first uppercase letter
-        String text = match.group();
+        final String text = match.group();
         for (int i = 0; i < text.length(); i++) {
             if (Character.isUpperCase(text.charAt(i))) {
-                String word = text.substring(i).trim();
-                int startPos = match.start() + i;
+                final String word = text.substring(i).trim();
+                final int startPos = match.start() + i;
                 return FinderUtils.isWordCompleteInText(startPos, word, page.getContent());
             }
         }
