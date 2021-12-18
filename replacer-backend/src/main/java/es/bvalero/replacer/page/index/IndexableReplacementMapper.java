@@ -4,7 +4,6 @@ import es.bvalero.replacer.common.domain.*;
 import es.bvalero.replacer.common.util.ReplacerUtils;
 import es.bvalero.replacer.repository.ReplacementModel;
 import java.util.Collection;
-import java.util.Objects;
 import java.util.stream.Collectors;
 import lombok.experimental.UtilityClass;
 
@@ -48,7 +47,7 @@ class IndexableReplacementMapper {
             )
             .type(ReplacementType.of(replacement.getType(), replacement.getSubtype()))
             .position(replacement.getPosition())
-            .context(Objects.requireNonNullElse(replacement.getContext(), ""))
+            .context(replacement.getContext())
             .lastUpdate(replacement.getLastUpdate())
             .reviewer(replacement.getReviewer())
             .build();

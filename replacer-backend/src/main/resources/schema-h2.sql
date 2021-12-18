@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS replacement (
 	"type" VARCHAR(25) NOT NULL,
 	subtype VARCHAR(100) NOT NULL,
 	"position" INTEGER DEFAULT 0,
-	context VARCHAR(255),
+	context VARCHAR(255) NOT NULL,
 	last_update DATE NOT NULL,
 	reviewer VARCHAR(100),
 	title VARCHAR(255),
