@@ -73,64 +73,6 @@ class PageIndexSingleServiceTest {
     }
 
     @Test
-    void testPageNotIndexedByTimestampButIndexedByTitle() {
-        when(pageIndexValidator.isPageIndexableByNamespace(page)).thenReturn(true);
-        when(pageIndexValidator.isIndexableByTimestamp(page, null)).thenReturn(false);
-        when(pageIndexValidator.isIndexableByPageTitle(page, null)).thenReturn(true);
-
-        PageIndexResult mockResult = PageIndexResult.builder().status(PageIndexStatus.PAGE_INDEXED).build();
-        when(indexablePageComparator.indexPageReplacements(any(IndexablePage.class), isNull())).thenReturn(mockResult);
-
-        PageIndexResult result = pageIndexSingleService.indexPage(page);
-
-        assertEquals(PageIndexStatus.PAGE_INDEXED, result.getStatus());
-
-        verify(pageIndexValidator).isPageIndexableByNamespace(page);
-        verify(pageIndexValidator).isIndexableByTimestamp(page, null);
-        verify(pageIndexValidator).isIndexableByPageTitle(page, null);
-        verify(findReplacementsService).findReplacements(page);
-        verify(indexablePageComparator).indexPageReplacements(any(IndexablePage.class), isNull());
-    }
-
-    @Test
-    void testPageNotIndexedByTitleButIndexedByTimestamp() {
-        when(pageIndexValidator.isPageIndexableByNamespace(page)).thenReturn(true);
-        when(pageIndexValidator.isIndexableByTimestamp(page, null)).thenReturn(true);
-        when(pageIndexValidator.isIndexableByPageTitle(page, null)).thenReturn(false);
-
-        PageIndexResult mockResult = PageIndexResult.builder().status(PageIndexStatus.PAGE_INDEXED).build();
-        when(indexablePageComparator.indexPageReplacements(any(IndexablePage.class), isNull())).thenReturn(mockResult);
-
-        PageIndexResult result = pageIndexSingleService.indexPage(page);
-
-        assertEquals(PageIndexStatus.PAGE_INDEXED, result.getStatus());
-
-        verify(pageIndexValidator).isPageIndexableByNamespace(page);
-        verify(pageIndexValidator).isIndexableByTimestamp(page, null);
-        verify(pageIndexValidator, never()).isIndexableByPageTitle(page, null);
-        verify(findReplacementsService).findReplacements(page);
-        verify(indexablePageComparator).indexPageReplacements(any(IndexablePage.class), isNull());
-    }
-
-    @Test
-    void testPageNotIndexedByTitleOrTimestamp() {
-        when(pageIndexValidator.isPageIndexableByNamespace(page)).thenReturn(true);
-        when(pageIndexValidator.isIndexableByTimestamp(page, null)).thenReturn(false);
-        when(pageIndexValidator.isIndexableByPageTitle(page, null)).thenReturn(false);
-
-        PageIndexResult result = pageIndexSingleService.indexPage(page);
-
-        assertEquals(PageIndexStatus.PAGE_NOT_INDEXED, result.getStatus());
-
-        verify(pageIndexValidator).isPageIndexableByNamespace(page);
-        verify(pageIndexValidator).isIndexableByTimestamp(page, null);
-        verify(pageIndexValidator).isIndexableByPageTitle(page, null);
-        verify(findReplacementsService, never()).findReplacements(any(WikipediaPage.class));
-        verify(indexablePageComparator, never())
-            .indexPageReplacements(any(IndexablePage.class), any(IndexablePage.class));
-    }
-
-    @Test
     void testObsoletePageNotIndexable() {
         PageModel pageModel = PageModel
             .builder()

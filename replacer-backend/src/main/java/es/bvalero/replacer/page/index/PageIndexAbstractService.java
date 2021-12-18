@@ -40,17 +40,9 @@ abstract class PageIndexAbstractService {
             // because they have already been indexed recently in the database
             if (!isPageIndexable(page, dbPage)) {
                 return PageIndexResult.builder().status(PageIndexStatus.PAGE_NOT_INDEXABLE).build();
-            } else if (!isPageToBeIndexed(page, dbPage)) {
-                return PageIndexResult.builder().status(PageIndexStatus.PAGE_NOT_INDEXED).build();
             }
 
-            Collection<PageReplacement> replacements = findPageReplacements(page);
-            IndexablePage indexablePage = IndexablePageMapper.fromDomain(page, replacements);
-
-            PageIndexResult result = indexablePageComparator.indexPageReplacements(indexablePage, dbPage);
-            saveResult(result);
-
-            return result.withReplacements(replacements);
+            return indexPage(page, dbPage);
         } catch (Exception e) {
             // Just in case capture possible exceptions to continue indexing other pages
             LOGGER.error("Page not indexed: {}", page, e);
@@ -61,6 +53,17 @@ abstract class PageIndexAbstractService {
     @Nullable
     private IndexablePage findIndexablePageInDb(WikipediaPageId pageId) {
         return findByPageId(pageId).map(IndexablePageMapper::fromModel).orElse(null);
+    }
+
+    // This method can be overridden in case we want to avoid calculating the replacements under some circumstances
+    PageIndexResult indexPage(WikipediaPage page, @Nullable IndexablePage dbPage) {
+        Collection<PageReplacement> replacements = findPageReplacements(page);
+        IndexablePage indexablePage = IndexablePageMapper.fromDomain(page, replacements);
+
+        PageIndexResult result = indexablePageComparator.indexPageReplacements(indexablePage, dbPage);
+        saveResult(result);
+
+        return result.withReplacements(replacements);
     }
 
     abstract Optional<PageModel> findByPageId(WikipediaPageId pageId);
@@ -90,16 +93,6 @@ abstract class PageIndexAbstractService {
     }
 
     abstract void saveResult(PageIndexResult result);
-
-    private boolean isPageToBeIndexed(WikipediaPage page, @Nullable IndexablePage dbPage) {
-        // We assume at this point that the page is indexable
-        // Check if the page will be re-indexed (by timestamp)
-        // Page will also be indexed in case the title is not aligned
-        return (
-            pageIndexValidator.isIndexableByTimestamp(page, dbPage) ||
-            pageIndexValidator.isIndexableByPageTitle(page, dbPage)
-        );
-    }
 
     private Collection<PageReplacement> findPageReplacements(WikipediaPage page) {
         return findReplacementsService.findReplacements(page);
