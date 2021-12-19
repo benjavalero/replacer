@@ -41,5 +41,6 @@ CREATE TABLE page (
     lang VARCHAR(2) NOT NULL,
     article_id INT NOT NULL,
     title VARCHAR(255) COLLATE utf8mb4_bin,
+    last_update DATE,
     PRIMARY KEY (lang, article_id)
 );

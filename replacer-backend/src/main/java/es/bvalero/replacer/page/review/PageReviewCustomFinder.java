@@ -133,6 +133,7 @@ class PageReviewCustomFinder extends PageReviewFinder {
             .lang(page.getId().getLang().getCode())
             .pageId(page.getId().getPageId())
             .title(page.getTitle())
+            .lastUpdate(page.getLastUpdate().toLocalDate())
             .replacements(Collections.emptyList())
             .build();
     }

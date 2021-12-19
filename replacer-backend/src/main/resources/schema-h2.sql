@@ -2,9 +2,9 @@ CREATE TABLE IF NOT EXISTS replacement (
 	id BIGINT NOT NULL AUTO_INCREMENT,
 	article_id INTEGER,
 	lang VARCHAR(2),
-	"type" VARCHAR(25) NOT NULL,
+	type VARCHAR(25) NOT NULL,
 	subtype VARCHAR(100) NOT NULL,
-	"position" INTEGER DEFAULT 0,
+	position INTEGER DEFAULT 0,
 	context VARCHAR(255) NOT NULL,
 	last_update DATE NOT NULL,
 	reviewer VARCHAR(100),
@@ -32,5 +32,6 @@ CREATE TABLE IF NOT EXISTS page (
     lang VARCHAR(2) NOT NULL,
     article_id INTEGER NOT NULL,
     title VARCHAR(255),
+    last_update DATE,
     CONSTRAINT constraint_p PRIMARY KEY (lang, article_id)
 );

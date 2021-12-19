@@ -39,6 +39,7 @@ class PageIndexValidator {
         // If page modified in dump equals to the last indexing, always reindex.
         // If page modified in dump after last indexing, always reindex.
         // If page modified in dump before last indexing, do not index.
+        // TODO: Temporarily if page has no last update, always reindex.
         LocalDate dbDate = Optional.ofNullable(dbPage).map(IndexablePage::getLastUpdate).orElse(null);
         if (dbDate == null) {
             return true;

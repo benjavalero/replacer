@@ -43,7 +43,8 @@ class PageJdbcRepository implements PageRepository, PageIndexRepository {
     @Override
     public Optional<PageModel> findPageById(WikipediaPageId id) {
         String sql =
-            "SELECT p.lang, p.article_id, p.title, r.id, r.type, r.subtype, r.position, r.context, r.last_update, r.reviewer " +
+            "SELECT p.lang, p.article_id, p.title, p.last_update AS page_update, " +
+            "r.id, r.type, r.subtype, r.position, r.context, r.last_update AS rep_update, r.reviewer " +
             FROM_REPLACEMENT_JOIN_PAGE +
             "WHERE p.lang = :lang AND p.article_id = :pageId";
         SqlParameterSource namedParameters = new MapSqlParameterSource()
@@ -56,7 +57,8 @@ class PageJdbcRepository implements PageRepository, PageIndexRepository {
     @Override
     public Collection<PageModel> findPagesByIdInterval(WikipediaLanguage lang, int minPageId, int maxPageId) {
         String sql =
-            "SELECT p.lang, p.article_id, p.title, r.id, r.type, r.subtype, r.position, r.context, r.last_update, r.reviewer " +
+            "SELECT p.lang, p.article_id, p.title, p.last_update AS page_update, " +
+            "r.id, r.type, r.subtype, r.position, r.context, r.last_update AS rep_update, r.reviewer " +
             FROM_REPLACEMENT_JOIN_PAGE +
             "WHERE p.lang = :lang AND p.article_id BETWEEN :minPageId AND :maxPageId";
         SqlParameterSource namedParameters = new MapSqlParameterSource()
@@ -68,14 +70,17 @@ class PageJdbcRepository implements PageRepository, PageIndexRepository {
 
     @Override
     public void addPages(Collection<PageModel> pages) {
-        String sql = "INSERT INTO page (lang, article_id, title) VALUES (:lang, :pageId, :title)";
+        String sql =
+            "INSERT INTO page (lang, article_id, title, last_update) VALUES (:lang, :pageId, :title, :lastUpdate)";
         SqlParameterSource[] namedParameters = SqlParameterSourceUtils.createBatch(pages.toArray());
         jdbcTemplate.batchUpdate(sql, namedParameters);
     }
 
     @Override
     public void updatePages(Collection<PageModel> pages) {
-        String sql = "UPDATE page SET title = :title WHERE lang = :lang AND article_id = :pageId";
+        String sql =
+            "UPDATE page SET title = :title, last_update = :lastUpdate " +
+            "WHERE lang = :lang AND article_id = :pageId";
         SqlParameterSource[] namedParameters = SqlParameterSourceUtils.createBatch(pages.toArray());
         jdbcTemplate.batchUpdate(sql, namedParameters);
     }

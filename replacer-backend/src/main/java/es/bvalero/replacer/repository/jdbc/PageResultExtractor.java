@@ -2,6 +2,7 @@ package es.bvalero.replacer.repository.jdbc;
 
 import es.bvalero.replacer.repository.PageModel;
 import es.bvalero.replacer.repository.ReplacementModel;
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
@@ -17,14 +18,23 @@ class PageResultExtractor implements ResultSetExtractor<Collection<PageModel>> {
         // We can assume the lang is the same for all the results
         String lang = null;
 
-        Map<Integer, String> titleMap = new HashMap<>();
+        Map<Integer, PageModel> pageMap = new HashMap<>();
         ListValuedMap<Integer, ReplacementModel> replacementMap = new ArrayListValuedHashMap<>();
 
         while (rs.next()) {
             lang = rs.getString("LANG");
             Integer pageId = rs.getInt("ARTICLE_ID");
 
-            titleMap.put(pageId, rs.getString("TITLE"));
+            pageMap.put(
+                pageId,
+                PageModel
+                    .builder()
+                    .lang(lang)
+                    .pageId(pageId)
+                    .title(rs.getString("TITLE"))
+                    .lastUpdate(Optional.ofNullable(rs.getDate("PAGE_UPDATE")).map(Date::toLocalDate).orElse(null))
+                    .build()
+            );
             replacementMap.put(
                 pageId,
                 ReplacementModel
@@ -36,26 +46,27 @@ class PageResultExtractor implements ResultSetExtractor<Collection<PageModel>> {
                     .subtype(rs.getString("SUBTYPE"))
                     .position(rs.getInt("POSITION"))
                     .context(rs.getString("CONTEXT"))
-                    .lastUpdate(rs.getDate("LAST_UPDATE").toLocalDate())
+                    .lastUpdate(rs.getDate("REP_UPDATE").toLocalDate())
                     .reviewer(rs.getString("REVIEWER"))
                     .build()
             );
         }
 
-        if (titleMap.isEmpty()) {
+        if (pageMap.isEmpty()) {
             return Collections.emptyList();
         } else {
             Objects.requireNonNull(lang);
-            List<PageModel> pageList = new ArrayList<>(titleMap.size());
-            for (Map.Entry<Integer, String> entry : titleMap.entrySet()) {
+            List<PageModel> pageList = new ArrayList<>(pageMap.size());
+            for (Map.Entry<Integer, PageModel> entry : pageMap.entrySet()) {
                 Integer pageId = entry.getKey();
-                String title = entry.getValue();
+                PageModel page = entry.getValue();
                 pageList.add(
                     PageModel
                         .builder()
                         .lang(lang)
                         .pageId(pageId)
-                        .title(title)
+                        .title(page.getTitle())
+                        .lastUpdate(page.getLastUpdate())
                         .replacements(replacementMap.get(pageId))
                         .build()
                 );

@@ -1,6 +1,8 @@
 package es.bvalero.replacer.repository;
 
+import java.time.LocalDate;
 import java.util.Collection;
+import java.util.Collections;
 import lombok.Builder;
 import lombok.Value;
 import org.springframework.lang.NonNull;
@@ -22,6 +24,10 @@ public class PageModel {
     @Nullable
     String title;
 
-    @NonNull
-    Collection<ReplacementModel> replacements;
+    // TODO: This should be non-null once everything is re-indexed in database
+    @Nullable
+    LocalDate lastUpdate;
+
+    @Builder.Default
+    Collection<ReplacementModel> replacements = Collections.emptyList();
 }

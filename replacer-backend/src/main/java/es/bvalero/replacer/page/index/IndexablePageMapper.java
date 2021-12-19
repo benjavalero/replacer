@@ -22,6 +22,7 @@ class IndexablePageMapper {
             .lang(page.getId().getLang().getCode())
             .pageId(page.getId().getPageId())
             .title(page.getTitle())
+            .lastUpdate(page.getLastUpdate())
             .replacements(IndexableReplacementMapper.toModel(page.getReplacements()))
             .build();
     }
@@ -31,6 +32,7 @@ class IndexablePageMapper {
             .builder()
             .id(IndexablePageId.of(WikipediaLanguage.valueOfCode(page.getLang()), page.getPageId()))
             .title(page.getTitle())
+            .lastUpdate(page.getLastUpdate())
             .replacements(IndexableReplacementMapper.fromModel(page.getReplacements()))
             .build();
     }
