@@ -35,6 +35,9 @@ class PageJdbcRepository implements PageRepository, PageIndexRepository {
     private ReplacementRepository replacementRepository;
 
     @Autowired
+    private CustomRepository customRepository;
+
+    @Autowired
     private NamedParameterJdbcTemplate jdbcTemplate;
 
     @Override
@@ -81,6 +84,7 @@ class PageJdbcRepository implements PageRepository, PageIndexRepository {
     public void removePagesById(Collection<WikipediaPageId> wikipediaPageIds) {
         // First delete the replacements
         replacementRepository.removeReplacementsByPageId(wikipediaPageIds);
+        customRepository.removeCustomReplacementsByPageId(wikipediaPageIds);
 
         Collection<PageId> pageIds = wikipediaPageIds.stream().map(PageId::of).collect(Collectors.toUnmodifiableSet());
         SqlParameterSource[] namedParameters = SqlParameterSourceUtils.createBatch(pageIds.toArray());

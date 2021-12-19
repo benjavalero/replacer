@@ -2,6 +2,7 @@ package es.bvalero.replacer.repository.jdbc;
 
 import com.github.rozidan.springboot.logger.Loggable;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
+import es.bvalero.replacer.common.domain.WikipediaPageId;
 import es.bvalero.replacer.repository.CustomModel;
 import es.bvalero.replacer.repository.CustomRepository;
 import java.util.Collection;
@@ -9,10 +10,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.logging.LogLevel;
-import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.namedparam.*;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -45,5 +43,16 @@ class CustomJdbcRepository implements CustomRepository {
             .queryForList(sql, namedParameters, Integer.class)
             .stream()
             .collect(Collectors.toUnmodifiableSet());
+    }
+
+    @Override
+    public void removeCustomReplacementsByPageId(Collection<WikipediaPageId> wikipediaPageIds) {
+        String sql =
+            "DELETE FROM custom WHERE lang = :lang AND article_id = :pageId " +
+            "AND (reviewer IS NULL OR reviewer = :system)";
+
+        Collection<PageId> pageIds = wikipediaPageIds.stream().map(PageId::of).collect(Collectors.toUnmodifiableSet());
+        SqlParameterSource[] namedParameters = SqlParameterSourceUtils.createBatch(pageIds.toArray());
+        jdbcTemplate.batchUpdate(sql, namedParameters);
     }
 }
