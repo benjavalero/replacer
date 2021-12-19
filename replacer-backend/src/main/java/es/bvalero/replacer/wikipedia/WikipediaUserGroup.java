@@ -17,6 +17,9 @@ public enum WikipediaUserGroup {
     GENERIC("*"),
     USER("user"),
     AUTOCONFIRMED("autoconfirmed"),
+    ROLLBACKER("rollbacker"),
+    PATROLLER("patroller"),
+    AUTOPATROLLED("autopatrolled"),
     BOT("bot");
 
     private static final Map<String, WikipediaUserGroup> map = Arrays
