@@ -23,7 +23,8 @@ public class CustomModel {
     @NonNull
     String replacement;
 
-    boolean cs;
+    @NonNull
+    Byte cs;
 
     @NonNull
     LocalDate lastUpdate;

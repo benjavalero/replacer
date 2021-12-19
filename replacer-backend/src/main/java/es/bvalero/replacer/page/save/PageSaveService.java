@@ -127,7 +127,7 @@ class PageSaveService {
             .lang(lang.getCode())
             .pageId(pageId)
             .replacement(replacement)
-            .cs(cs)
+            .cs((byte) (cs ? 1 : 0))
             .lastUpdate(LocalDate.now())
             .reviewer(reviewer)
             .build();
