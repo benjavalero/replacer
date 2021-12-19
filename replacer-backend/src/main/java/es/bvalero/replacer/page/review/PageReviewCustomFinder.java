@@ -5,6 +5,9 @@ import es.bvalero.replacer.finder.listing.Misspelling;
 import es.bvalero.replacer.finder.replacement.custom.CustomReplacementFinderService;
 import es.bvalero.replacer.page.findreplacement.FindReplacementsService;
 import es.bvalero.replacer.repository.CustomRepository;
+import es.bvalero.replacer.repository.PageIndexRepository;
+import es.bvalero.replacer.repository.PageModel;
+import es.bvalero.replacer.repository.PageRepository;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.wikipedia.WikipediaSearchResult;
 import es.bvalero.replacer.wikipedia.WikipediaService;
@@ -20,6 +23,12 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 class PageReviewCustomFinder extends PageReviewFinder {
+
+    @Autowired
+    private PageIndexRepository pageIndexRepository;
+
+    @Autowired
+    private PageRepository pageRepository;
 
     @Autowired
     private CustomRepository customRepository;
@@ -108,9 +117,24 @@ class PageReviewCustomFinder extends PageReviewFinder {
 
     @Override
     Collection<PageReplacement> findAllReplacements(WikipediaPage page, PageReviewOptions options) {
+        // Add the page to the database in case it doesn't exist yet
+        if (pageIndexRepository.findPageById(page.getId()).isEmpty()) {
+            pageRepository.addPages(List.of(buildNewPage(page)));
+        }
+
         // We do nothing in the database in case the list is empty
         // We want to review the page every time in case anything has changed
         return findReplacementsService.findCustomReplacements(page, options);
+    }
+
+    private PageModel buildNewPage(WikipediaPage page) {
+        return PageModel
+            .builder()
+            .lang(page.getId().getLang().getCode())
+            .pageId(page.getId().getPageId())
+            .title(page.getTitle())
+            .replacements(Collections.emptyList())
+            .build();
     }
 
     ReplacementValidationResponse validateCustomReplacement(

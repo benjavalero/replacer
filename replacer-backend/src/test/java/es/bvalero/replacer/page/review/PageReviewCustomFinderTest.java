@@ -9,6 +9,8 @@ import es.bvalero.replacer.finder.replacement.custom.CustomReplacementFinderServ
 import es.bvalero.replacer.page.findreplacement.FindReplacementsService;
 import es.bvalero.replacer.repository.CustomModel;
 import es.bvalero.replacer.repository.CustomRepository;
+import es.bvalero.replacer.repository.PageIndexRepository;
+import es.bvalero.replacer.repository.PageRepository;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.wikipedia.WikipediaSearchResult;
 import es.bvalero.replacer.wikipedia.WikipediaService;
@@ -28,6 +30,12 @@ class PageReviewCustomFinderTest {
     private static final Collection<WikipediaNamespace> NAMESPACES = Collections.singleton(
         WikipediaNamespace.getDefault()
     );
+
+    @Mock
+    private PageIndexRepository pageIndexRepository;
+
+    @Mock
+    private PageRepository pageRepository;
 
     @Mock
     private CustomRepository customRepository;
