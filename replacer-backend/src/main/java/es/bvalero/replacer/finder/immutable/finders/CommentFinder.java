@@ -56,10 +56,7 @@ class CommentFinder extends ImmutableCheckedFinder {
                 return endComment;
             } else {
                 // Comment not closed. Trace warning and continue.
-                FinderUtils.logFinderResult(
-                    getImmutableSnippet(startComment, startCommentText, page),
-                    "Comment not closed"
-                );
+                FinderUtils.logFinderResult(page, startComment, startCommentText, "Comment not closed");
                 return startCommentText;
             }
         } else {

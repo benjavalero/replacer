@@ -75,16 +75,15 @@ class CompleteTagFinder extends ImmutableCheckedFinder {
                         return endCompleteTag;
                     } else {
                         // Tag not closed. Trace warning and continue.
-                        FinderUtils.logFinderResult(
-                            getImmutableSnippet(startCompleteTag, endOpenTag, page),
-                            "Tag not closed"
-                        );
+                        FinderUtils.logFinderResult(page, startCompleteTag, endOpenTag, "Tag not closed");
                         return endOpenTag;
                     }
                 } else {
                     // Open tag not closed. Trace warning and continue.
                     FinderUtils.logFinderResult(
-                        getImmutableSnippet(startCompleteTag, startOpenTag + tag.length(), page),
+                        page,
+                        startCompleteTag,
+                        startOpenTag + tag.length(),
                         "Open tag not closed"
                     );
                     return startOpenTag + tag.length();

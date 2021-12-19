@@ -33,10 +33,7 @@ public class LinkUtils {
             final LinearMatchResult completeMatch = findNestedLink(text, startLink, matches);
             if (completeMatch == null) {
                 // Link not closed. Not worth keep on searching as the next links are considered as nested.
-                FinderUtils.logFinderResult(
-                    FinderUtils.getPageSnippet(startLink, startLink + START_LINK.length(), page),
-                    "Link not closed"
-                );
+                FinderUtils.logFinderResult(page, startLink, startLink + START_LINK.length(), "Link not closed");
                 return -1;
             } else {
                 matches.add(0, completeMatch);

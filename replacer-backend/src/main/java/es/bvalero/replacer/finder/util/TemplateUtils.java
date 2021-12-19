@@ -39,7 +39,9 @@ public class TemplateUtils {
             } else {
                 // Template not closed. Not worth keep on searching as the next templates are considered as nested.
                 FinderUtils.logFinderResult(
-                    FinderUtils.getPageSnippet(startTemplate, startTemplate + START_TEMPLATE.length(), page),
+                    page,
+                    startTemplate,
+                    startTemplate + START_TEMPLATE.length(),
                     "Template not closed"
                 );
                 return -1;

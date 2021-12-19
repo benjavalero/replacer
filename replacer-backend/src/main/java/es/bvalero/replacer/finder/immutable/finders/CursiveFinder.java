@@ -56,17 +56,14 @@ class CursiveFinder extends ImmutableCheckedFinder {
                     ? endQuotes
                     : endQuotes - numQuotes;
                 if (StringUtils.isBlank(text.substring(startCursive + numQuotes, endCursiveText))) {
-                    logImmutableCheck(getImmutableSnippet(startCursive, endQuotes, page), "Empty cursive");
+                    logImmutableCheck(page, startCursive, endQuotes, "Empty cursive");
                 } else {
                     matches.add(LinearMatchResult.of(startCursive, text.substring(startCursive, endQuotes)));
                 }
                 return endQuotes;
             } else {
                 // No cursive ending found. Notify and continue.
-                logImmutableCheck(
-                    getImmutableSnippet(startCursive, startCursive + numQuotes, page),
-                    "Truncated cursive"
-                );
+                logImmutableCheck(page, startCursive, startCursive + numQuotes, "Truncated cursive");
                 return startCursive + numQuotes;
             }
         } else {

@@ -39,16 +39,8 @@ public abstract class ImmutableCheckedFinder implements ImmutableFinder {
     private void checkMaxLength(Immutable immutable, FinderPage page) {
         if (immutable.getText().length() > getMaxLength()) {
             final String message = String.format("%s too long", getImmutableType());
-            logImmutableCheck(getImmutableSnippet(immutable, page), message);
+            logImmutableCheck(page, immutable, message);
         }
-    }
-
-    private String getImmutableSnippet(Immutable immutable, FinderPage page) {
-        return getImmutableSnippet(immutable.getStart(), immutable.getEnd(), page);
-    }
-
-    protected String getImmutableSnippet(int start, int end, FinderPage page) {
-        return FinderUtils.getPageSnippet(start, end, page);
     }
 
     private String getImmutableType() {
@@ -56,9 +48,13 @@ public abstract class ImmutableCheckedFinder implements ImmutableFinder {
         return className.substring(className.length() - SUFFIX_FINDER_CLASS.length());
     }
 
-    protected void logImmutableCheck(String snippet, String message) {
+    private void logImmutableCheck(FinderPage page, Immutable immutable, String message) {
+        logImmutableCheck(page, immutable.getStart(), immutable.getEnd(), message);
+    }
+
+    protected void logImmutableCheck(FinderPage page, int start, int end, String message) {
         if (showImmutableWarning) {
-            FinderUtils.logFinderResult(snippet, message);
+            FinderUtils.logFinderResult(page, start, end, message);
         }
     }
 }

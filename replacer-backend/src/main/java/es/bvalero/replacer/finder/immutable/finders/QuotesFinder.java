@@ -64,7 +64,7 @@ abstract class QuotesFinder extends ImmutableCheckedFinder {
 
                 // Check the quoted text is not empty and is not an attribute
                 if (StringUtils.isBlank(innerText) && text.charAt(startQuote - 1) != '=') {
-                    logImmutableCheck(getImmutableSnippet(startQuote, endQuote, page), "Empty quoted text");
+                    logImmutableCheck(page, startQuote, endQuote, "Empty quoted text");
                     return endQuote;
                 }
 
@@ -74,7 +74,7 @@ abstract class QuotesFinder extends ImmutableCheckedFinder {
                     QUOTE_CHARS.contains(innerText.charAt(0)) &&
                     QUOTE_CHARS.contains(innerText.charAt(innerText.length() - 1))
                 ) {
-                    logImmutableCheck(getImmutableSnippet(startQuote, endQuote, page), "Redundant quotes");
+                    logImmutableCheck(page, startQuote, endQuote, "Redundant quotes");
                     // Continue
                 }
 
@@ -83,7 +83,7 @@ abstract class QuotesFinder extends ImmutableCheckedFinder {
             } else {
                 // No quote ending found
                 // It's possible that the quote start was a false positive or the quote contains new lines
-                logImmutableCheck(getImmutableSnippet(startQuote, startQuote + 1, page), "Truncated quotes");
+                logImmutableCheck(page, startQuote, startQuote + 1, "Truncated quotes");
                 return startQuote + 1;
             }
         } else {
