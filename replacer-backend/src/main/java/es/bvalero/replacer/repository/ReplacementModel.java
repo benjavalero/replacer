@@ -1,6 +1,5 @@
 package es.bvalero.replacer.repository;
 
-import java.time.LocalDate;
 import lombok.Builder;
 import lombok.Value;
 import org.springframework.lang.NonNull;
@@ -31,9 +30,6 @@ public class ReplacementModel {
 
     @NonNull
     String context;
-
-    @NonNull
-    LocalDate lastUpdate;
 
     @Nullable
     String reviewer;

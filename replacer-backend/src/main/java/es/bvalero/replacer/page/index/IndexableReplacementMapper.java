@@ -24,7 +24,6 @@ class IndexableReplacementMapper {
             .subtype(replacement.getType().getSubtype())
             .position(replacement.getPosition())
             .context(replacement.getContext())
-            .lastUpdate(replacement.getLastUpdate())
             .reviewer(replacement.getReviewer())
             .build();
     }
@@ -48,7 +47,6 @@ class IndexableReplacementMapper {
             .type(ReplacementType.of(replacement.getType(), replacement.getSubtype()))
             .position(replacement.getPosition())
             .context(replacement.getContext())
-            .lastUpdate(replacement.getLastUpdate())
             .reviewer(replacement.getReviewer())
             .build();
     }
@@ -60,7 +58,6 @@ class IndexableReplacementMapper {
             .type(replacement.getType())
             .position(replacement.getStart())
             .context(getContext(replacement, page))
-            .lastUpdate(page.getLastUpdate().toLocalDate())
             .build();
     }
 

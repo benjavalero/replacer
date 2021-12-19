@@ -35,10 +35,9 @@ abstract class PageIndexAbstractService {
         try {
             IndexablePage dbPage = findIndexablePageInDb(page.getId());
 
-            // 1. Consider as "indexable" all pages belonging to the configured namespaces
-            // 2. Consider as "not indexed" all indexable pages which are not worth to be re-indexed
-            // because they have already been indexed recently in the database
-            if (!isPageIndexable(page, dbPage)) {
+            // Consider as "indexable" all pages belonging to the configured namespaces
+            if (!isPageIndexable(page)) {
+                removeObsoletePage(dbPage);
                 return PageIndexResult.builder().status(PageIndexStatus.PAGE_NOT_INDEXABLE).build();
             }
 
@@ -68,28 +67,20 @@ abstract class PageIndexAbstractService {
 
     abstract Optional<PageModel> findByPageId(WikipediaPageId pageId);
 
-    private boolean isPageIndexable(WikipediaPage page, @Nullable IndexablePage dbPage) {
+    private boolean isPageIndexable(WikipediaPage page) {
         // Only check if the page is indexable by namespace
         // Redirection pages are now considered indexable but discarded when finding immutables
-        if (pageIndexValidator.isPageIndexableByNamespace(page)) {
-            return true;
-        } else {
-            // Just in case the page already exists in database but is not indexable anymore
-            if (dbPage != null) {
-                LOGGER.error(
-                    "Unexpected page in DB not indexable: {} - {} - {}",
-                    page.getId().getLang(),
-                    page.getTitle(),
-                    dbPage.getTitle()
-                );
-                removeObsoletePage(page);
-            }
-            return false;
-        }
+        return pageIndexValidator.isPageIndexableByNamespace(page);
     }
 
-    private void removeObsoletePage(WikipediaPage page) {
-        removeObsoletePageService.removeObsoletePages(Collections.singleton(page.getId()));
+    private void removeObsoletePage(@Nullable IndexablePage dbPage) {
+        // Just in case the page already exists in database but is not indexable anymore
+        if (dbPage != null) {
+            LOGGER.error("Unexpected page in DB not indexable: {} - {}", dbPage.getId().getLang(), dbPage.getTitle());
+            removeObsoletePageService.removeObsoletePages(
+                Collections.singleton(IndexablePageMapper.toDomain(dbPage.getId()))
+            );
+        }
     }
 
     abstract void saveResult(PageIndexResult result);

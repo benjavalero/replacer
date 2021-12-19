@@ -17,7 +17,8 @@ public interface ReplacementTypeRepository {
         WikipediaLanguage lang,
         int pageId,
         @Nullable ReplacementType type,
-        String reviewer
+        String reviewer,
+        boolean updateDate
     );
 
     /** Delete all the replacements to review by the given types. We assume all the types are of the same kind. */

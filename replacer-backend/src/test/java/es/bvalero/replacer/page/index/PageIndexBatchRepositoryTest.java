@@ -12,7 +12,6 @@ import es.bvalero.replacer.page.removeobsolete.RemoveObsoletePageService;
 import es.bvalero.replacer.repository.PageIndexRepository;
 import es.bvalero.replacer.repository.PageModel;
 import es.bvalero.replacer.repository.ReplacementModel;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -52,7 +51,6 @@ class PageIndexBatchRepositoryTest {
             .subtype("")
             .position(0)
             .context("")
-            .lastUpdate(LocalDate.now())
             .build();
         PageModel page1 = PageModel
             .builder()
@@ -69,7 +67,6 @@ class PageIndexBatchRepositoryTest {
             .subtype("")
             .position(0)
             .context("")
-            .lastUpdate(LocalDate.now())
             .build();
         PageModel page2 = PageModel
             .builder()
@@ -107,7 +104,6 @@ class PageIndexBatchRepositoryTest {
             .subtype("")
             .position(0)
             .context("")
-            .lastUpdate(LocalDate.now())
             .build();
         PageModel page = PageModel
             .builder()

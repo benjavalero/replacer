@@ -70,7 +70,7 @@ class PageSaveServiceTest {
                 eq(accessToken)
             );
         verify(replacementTypeRepository)
-            .updateReviewerByPageAndType(WikipediaLanguage.getDefault(), pageId, null, "A");
+            .updateReviewerByPageAndType(WikipediaLanguage.getDefault(), pageId, null, "A", true);
     }
 
     @Test
@@ -95,7 +95,8 @@ class PageSaveServiceTest {
                 WikipediaLanguage.getDefault(),
                 pageId,
                 options.getReplacementType(),
-                options.getUser()
+                options.getUser(),
+                false
             );
     }
 }

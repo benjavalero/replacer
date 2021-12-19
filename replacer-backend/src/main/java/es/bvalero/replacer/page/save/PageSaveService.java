@@ -60,12 +60,12 @@ class PageSaveService {
         }
 
         // Mark page as reviewed in the database
-        this.markAsReviewed(page.getId().getPageId(), options);
+        this.markAsReviewed(page.getId().getPageId(), options, true);
     }
 
     void savePageWithNoChanges(int pageId, PageReviewOptions options) {
         // Mark page as reviewed in the database
-        this.markAsReviewed(pageId, options);
+        this.markAsReviewed(pageId, options, false);
     }
 
     private String buildEditSummary(PageReviewOptions options, boolean applyCosmetics) {
@@ -79,14 +79,14 @@ class PageSaveService {
         return summary.toString();
     }
 
-    private void markAsReviewed(int pageId, PageReviewOptions options) {
+    private void markAsReviewed(int pageId, PageReviewOptions options, boolean updateDate) {
         String reviewer = options.getUser();
         switch (options.getOptionsType()) {
             case NO_TYPE:
-                markAsReviewedNoType(pageId, options, reviewer);
+                markAsReviewedNoType(pageId, options, reviewer, updateDate);
                 break;
             case TYPE_SUBTYPE:
-                markAsReviewedTypeSubtype(pageId, options, reviewer);
+                markAsReviewedTypeSubtype(pageId, options, reviewer, updateDate);
                 break;
             case CUSTOM:
                 markAsReviewedCustom(pageId, options, reviewer);
@@ -94,16 +94,23 @@ class PageSaveService {
         }
     }
 
-    private void markAsReviewedNoType(int pageId, PageReviewOptions options, String reviewer) {
-        replacementTypeRepository.updateReviewerByPageAndType(options.getWikipediaLanguage(), pageId, null, reviewer);
+    private void markAsReviewedNoType(int pageId, PageReviewOptions options, String reviewer, boolean updateDate) {
+        replacementTypeRepository.updateReviewerByPageAndType(
+            options.getWikipediaLanguage(),
+            pageId,
+            null,
+            reviewer,
+            updateDate
+        );
     }
 
-    private void markAsReviewedTypeSubtype(int pageId, PageReviewOptions options, String reviewer) {
+    private void markAsReviewedTypeSubtype(int pageId, PageReviewOptions options, String reviewer, boolean updateDate) {
         replacementTypeRepository.updateReviewerByPageAndType(
             options.getWikipediaLanguage(),
             pageId,
             options.getReplacementType(),
-            reviewer
+            reviewer,
+            updateDate
         );
     }
 

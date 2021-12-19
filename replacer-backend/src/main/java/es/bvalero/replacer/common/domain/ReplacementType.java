@@ -1,6 +1,7 @@
 package es.bvalero.replacer.common.domain;
 
 import lombok.Value;
+import org.jetbrains.annotations.TestOnly;
 import org.springframework.lang.NonNull;
 
 /** Type of replacement found in the content of a page */
@@ -8,7 +9,6 @@ import org.springframework.lang.NonNull;
 public class ReplacementType {
 
     private static final int MAX_SUBTYPE_LENGTH = 100; // Constrained by the database
-    public static final ReplacementType EMPTY = ofEmpty();
 
     @NonNull
     ReplacementKind kind;
@@ -20,7 +20,8 @@ public class ReplacementType {
         return ReplacementType.of(ReplacementKind.valueOfLabel(type), subtype);
     }
 
-    private static ReplacementType ofEmpty() {
+    @TestOnly
+    public static ReplacementType ofEmpty() {
         return new ReplacementType(ReplacementKind.EMPTY, "");
     }
 

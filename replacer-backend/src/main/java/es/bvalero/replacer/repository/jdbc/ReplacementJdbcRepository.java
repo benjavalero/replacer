@@ -36,16 +36,15 @@ class ReplacementJdbcRepository
     @Override
     public void addReplacements(Collection<ReplacementModel> replacements) {
         String sql =
-            "INSERT INTO replacement (article_id, lang, type, subtype, position, context, last_update, reviewer) " +
-            "VALUES (:pageId, :lang, :type, :subtype, :position, :context, :lastUpdate, :reviewer)";
+            "INSERT INTO replacement (article_id, lang, type, subtype, position, context, reviewer) " +
+            "VALUES (:pageId, :lang, :type, :subtype, :position, :context, :reviewer)";
         SqlParameterSource[] namedParameters = SqlParameterSourceUtils.createBatch(replacements.toArray());
         jdbcTemplate.batchUpdate(sql, namedParameters);
     }
 
     @Override
     public void updateReplacements(Collection<ReplacementModel> replacements) {
-        String sql =
-            "UPDATE replacement SET position = :position, context = :context, last_update = :lastUpdate WHERE id = :id";
+        String sql = "UPDATE replacement SET position = :position, context = :context WHERE id = :id";
         SqlParameterSource[] namedParameters = SqlParameterSourceUtils.createBatch(replacements.toArray());
         jdbcTemplate.batchUpdate(sql, namedParameters);
     }
@@ -129,11 +128,10 @@ class ReplacementJdbcRepository
     @Override
     public void updateReviewerByType(WikipediaLanguage lang, ReplacementType type, String reviewer) {
         String sql =
-            "UPDATE replacement SET reviewer=:system, last_update=:now " +
+            "UPDATE replacement SET reviewer=:system " +
             "WHERE lang = :lang AND type = :type AND subtype = :subtype AND reviewer IS NULL";
         SqlParameterSource namedParameters = new MapSqlParameterSource()
             .addValue("system", reviewer)
-            .addValue("now", LocalDate.now())
             .addValue("lang", lang.getCode())
             .addValue("type", type.getKind().getLabel())
             .addValue("subtype", type.getSubtype());
@@ -145,21 +143,26 @@ class ReplacementJdbcRepository
         WikipediaLanguage lang,
         int pageId,
         @Nullable ReplacementType type,
-        String reviewer
+        String reviewer,
+        boolean updateDate
     ) {
-        String sql =
-            "UPDATE replacement SET reviewer=:reviewer, last_update=:now " +
-            "WHERE lang = :lang AND article_id = :pageId AND reviewer IS NULL ";
+        String from = "UPDATE replacement SET reviewer=:reviewer ";
+        String where = "WHERE lang = :lang AND article_id = :pageId AND reviewer IS NULL";
         MapSqlParameterSource namedParameters = new MapSqlParameterSource()
             .addValue("reviewer", reviewer)
-            .addValue("now", LocalDate.now())
             .addValue("lang", lang.getCode())
             .addValue("pageId", pageId);
+
+        if (updateDate) {
+            from += ", last_update = :now ";
+            namedParameters = namedParameters.addValue("now", LocalDate.now());
+        }
         if (Objects.nonNull(type)) {
-            sql += "AND type = :type AND subtype = :subtype";
+            where += "AND type = :type AND subtype = :subtype";
             namedParameters =
                 namedParameters.addValue("type", type.getKind().getLabel()).addValue("subtype", type.getSubtype());
         }
+        String sql = from + where;
         jdbcTemplate.update(sql, namedParameters);
     }
 

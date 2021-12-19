@@ -36,6 +36,8 @@ class PageIndexBatchService extends PageIndexAbstractService implements PageInde
 
     @Override
     PageIndexResult indexPage(WikipediaPage page, @Nullable IndexablePage dbPage) {
+        // Consider as "not indexed" all indexable pages which are not worth to be re-indexed
+        // because they have already been indexed recently in the database
         if (!isPageToBeIndexed(page, dbPage)) {
             return PageIndexResult.builder().status(PageIndexStatus.PAGE_NOT_INDEXED).build();
         }

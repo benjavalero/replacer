@@ -17,7 +17,7 @@ class IndexablePageComparatorTest {
     private final IndexablePageComparator indexablePageComparator = new IndexablePageComparator();
 
     @Test
-    void testIndexNewPageReplacements() {
+    void testIndexNewPageWitNoReplacements() {
         int pageId = new Random().nextInt();
         IndexablePage page = IndexablePage
             .builder()
@@ -32,7 +32,6 @@ class IndexablePageComparatorTest {
             .builder()
             .status(PageIndexStatus.PAGE_INDEXED)
             .addPages(Set.of(page))
-            .addReplacements(Set.of(IndexableReplacement.ofDummy(page)))
             .build();
         assertEquals(expected, result);
     }
@@ -43,10 +42,9 @@ class IndexablePageComparatorTest {
         IndexableReplacement rep1 = IndexableReplacement
             .builder()
             .indexablePageId(pageId)
-            .type(ReplacementType.EMPTY)
+            .type(ReplacementType.ofEmpty())
             .position(0)
             .context("")
-            .lastUpdate(LocalDate.now())
             .build(); // New => ADD
         IndexablePage page = IndexablePage
             .builder()
@@ -81,18 +79,16 @@ class IndexablePageComparatorTest {
         IndexableReplacement rep2 = IndexableReplacement
             .builder()
             .indexablePageId(pageId)
-            .type(ReplacementType.EMPTY)
+            .type(ReplacementType.ofEmpty())
             .position(2)
             .context("")
-            .lastUpdate(LocalDate.now())
             .build();
         IndexableReplacement rep3 = IndexableReplacement
             .builder()
             .indexablePageId(pageId)
-            .type(ReplacementType.EMPTY)
+            .type(ReplacementType.ofEmpty())
             .position(3)
             .context("")
-            .lastUpdate(LocalDate.now())
             .build()
             .setSystemReviewed();
         IndexablePage dbPage = IndexablePage
@@ -107,7 +103,6 @@ class IndexablePageComparatorTest {
         PageIndexResult expected = PageIndexResult
             .builder()
             .status(PageIndexStatus.PAGE_INDEXED)
-            .addReplacements(Set.of(IndexableReplacement.ofDummy(page)))
             .removeReplacements(Set.of(rep2, rep3))
             .build();
 
@@ -115,36 +110,9 @@ class IndexablePageComparatorTest {
     }
 
     @Test
-    void testIndexPageWithoutReplacements() {
-        IndexablePageId pageId = IndexablePageId.of(WikipediaLanguage.getDefault(), 100);
-        IndexablePage page = IndexablePage
-            .builder()
-            .id(pageId)
-            .replacements(Collections.emptyList())
-            .lastUpdate(LocalDate.now())
-            .build();
-        PageIndexResult result = indexablePageComparator.indexPageReplacements(page, null);
-
-        // Save the dummy replacement
-        PageIndexResult expected = PageIndexResult
-            .builder()
-            .status(PageIndexStatus.PAGE_INDEXED)
-            .addPages(Set.of(page))
-            .addReplacements(Set.of(IndexableReplacement.ofDummy(page)))
-            .build();
-
-        assertEquals(expected, result);
-    }
-
-    @Test
     void testIndexExistingPageSameDate() {
-        LocalDate same = LocalDate.now();
-        LocalDate before = same.minusDays(1);
-
         // R1 : In DB not reviewed => Do nothing
         // R2 : In DB reviewed => Do nothing
-        // R3 : In DB older not reviewed => Update timestamp
-        // R4 : In DB older reviewed => Do nothing
         // R5 : Not in DB => Add
         // R6 : Only in DB not reviewed => Delete
         // R7 : Only in DB reviewed by user => Do nothing
@@ -158,7 +126,6 @@ class IndexablePageComparatorTest {
             .type(ReplacementType.of(ReplacementKind.MISSPELLING_SIMPLE, "1"))
             .position(1)
             .context("")
-            .lastUpdate(same)
             .build();
         IndexableReplacement r2 = IndexableReplacement
             .builder()
@@ -166,23 +133,6 @@ class IndexablePageComparatorTest {
             .type(ReplacementType.of(ReplacementKind.MISSPELLING_SIMPLE, "2"))
             .position(2)
             .context("")
-            .lastUpdate(same)
-            .build();
-        IndexableReplacement r3 = IndexableReplacement
-            .builder()
-            .indexablePageId(pageId)
-            .type(ReplacementType.of(ReplacementKind.MISSPELLING_SIMPLE, "3"))
-            .position(3)
-            .context("")
-            .lastUpdate(same)
-            .build();
-        IndexableReplacement r4 = IndexableReplacement
-            .builder()
-            .indexablePageId(pageId)
-            .type(ReplacementType.of(ReplacementKind.MISSPELLING_SIMPLE, "4"))
-            .position(4)
-            .context("")
-            .lastUpdate(same)
             .build();
         IndexableReplacement r5 = IndexableReplacement
             .builder()
@@ -190,27 +140,23 @@ class IndexablePageComparatorTest {
             .type(ReplacementType.of(ReplacementKind.MISSPELLING_SIMPLE, "5"))
             .position(5)
             .context("")
-            .lastUpdate(same)
             .build();
         IndexablePage page = IndexablePage
             .builder()
             .id(pageId)
-            .replacements(List.of(r1, r2, r3, r4, r5))
-            .lastUpdate(same)
+            .replacements(List.of(r1, r2, r5))
+            .lastUpdate(LocalDate.now())
             .build();
 
         // Existing replacements in DB
         IndexableReplacement r1db = r1.withTouched(false); // Trick to clone and match with the one found to index
         IndexableReplacement r2db = r2.withReviewer("");
-        IndexableReplacement r3db = r3.withLastUpdate(before);
-        IndexableReplacement r4db = r4.withReviewer("").withLastUpdate(before);
         IndexableReplacement r6db = IndexableReplacement
             .builder()
             .indexablePageId(pageId)
             .type(ReplacementType.of(ReplacementKind.MISSPELLING_SIMPLE, "6"))
             .position(6)
             .context("")
-            .lastUpdate(same)
             .build();
         IndexableReplacement r7db = IndexableReplacement
             .builder()
@@ -218,7 +164,6 @@ class IndexablePageComparatorTest {
             .type(ReplacementType.of(ReplacementKind.MISSPELLING_SIMPLE, "7"))
             .position(7)
             .context("")
-            .lastUpdate(same)
             .reviewer("")
             .build();
         IndexableReplacement r8db = IndexableReplacement
@@ -227,14 +172,13 @@ class IndexablePageComparatorTest {
             .type(ReplacementType.of(ReplacementKind.MISSPELLING_SIMPLE, "8"))
             .position(8)
             .context("")
-            .lastUpdate(same)
             .build()
             .setSystemReviewed();
         IndexablePage dbPage = IndexablePage
             .builder()
             .id(pageId)
-            .replacements(List.of(r1db, r2db, r3db, r4db, r6db, r7db, r8db))
-            .lastUpdate(same)
+            .replacements(List.of(r1db, r2db, r6db, r7db, r8db))
+            .lastUpdate(LocalDate.now())
             .build();
 
         PageIndexResult toIndex = indexablePageComparator.indexPageReplacements(page, dbPage);
@@ -242,7 +186,6 @@ class IndexablePageComparatorTest {
         PageIndexResult expected = PageIndexResult
             .builder()
             .status(PageIndexStatus.PAGE_INDEXED)
-            .updateReplacements(Set.of(r3db.withLastUpdate(same)))
             .addReplacements(Set.of(r5))
             .removeReplacements(Set.of(r6db, r8db))
             .build();
@@ -254,7 +197,9 @@ class IndexablePageComparatorTest {
         LocalDate same = LocalDate.now();
         LocalDate before = same.minusDays(1);
 
-        // R1 : In DB older not reviewed => Update timestamp
+        // Page: In DB older ==> Update
+
+        // R1 : In DB older not reviewed => Do nothing
         // R2 : In DB older reviewed => Do nothing
         // R3 : Not in DB => Add
         // R4 : Only in DB not reviewed => Delete
@@ -269,7 +214,6 @@ class IndexablePageComparatorTest {
             .type(ReplacementType.of(ReplacementKind.MISSPELLING_SIMPLE, "1"))
             .position(1)
             .context("")
-            .lastUpdate(same)
             .build();
         IndexableReplacement r2 = IndexableReplacement
             .builder()
@@ -277,7 +221,6 @@ class IndexablePageComparatorTest {
             .type(ReplacementType.of(ReplacementKind.MISSPELLING_SIMPLE, "2"))
             .position(2)
             .context("")
-            .lastUpdate(same)
             .build();
         IndexableReplacement r3 = IndexableReplacement
             .builder()
@@ -285,7 +228,6 @@ class IndexablePageComparatorTest {
             .type(ReplacementType.of(ReplacementKind.MISSPELLING_SIMPLE, "3"))
             .position(3)
             .context("")
-            .lastUpdate(same)
             .build();
         IndexablePage page = IndexablePage
             .builder()
@@ -295,15 +237,14 @@ class IndexablePageComparatorTest {
             .build();
 
         // Existing replacements in DB
-        IndexableReplacement r1db = r1.withLastUpdate(before);
-        IndexableReplacement r2db = r2.withReviewer("").withLastUpdate(before);
+        IndexableReplacement r1db = r1.withTouched(false); // Trick to clone and match with the one found to index
+        IndexableReplacement r2db = r2.withReviewer("");
         IndexableReplacement r4db = IndexableReplacement
             .builder()
             .indexablePageId(pageId)
             .type(ReplacementType.of(ReplacementKind.MISSPELLING_SIMPLE, "4"))
             .position(4)
             .context("")
-            .lastUpdate(before)
             .build();
         IndexableReplacement r5db = IndexableReplacement
             .builder()
@@ -312,7 +253,6 @@ class IndexablePageComparatorTest {
             .position(5)
             .context("")
             .reviewer("")
-            .lastUpdate(before)
             .build();
         IndexableReplacement r6db = IndexableReplacement
             .builder()
@@ -320,7 +260,6 @@ class IndexablePageComparatorTest {
             .type(ReplacementType.of(ReplacementKind.MISSPELLING_SIMPLE, "6"))
             .position(6)
             .context("")
-            .lastUpdate(before)
             .build()
             .setSystemReviewed();
         IndexablePage dbPage = IndexablePage
@@ -335,42 +274,9 @@ class IndexablePageComparatorTest {
         PageIndexResult expected = PageIndexResult
             .builder()
             .status(PageIndexStatus.PAGE_INDEXED)
-            .updateReplacements(Set.of(r1db.withLastUpdate(same)))
+            .updatePages(Set.of(page))
             .addReplacements(Set.of(r3))
             .removeReplacements(Set.of(r4db, r6db))
-            .build();
-        assertEquals(expected, toIndex);
-    }
-
-    @Test
-    void testSeveralDummies() {
-        LocalDate same = LocalDate.now();
-        LocalDate before = same.minusDays(1);
-
-        IndexablePageId pageId = IndexablePageId.of(WikipediaLanguage.getDefault(), 1);
-        IndexablePage page = IndexablePage
-            .builder()
-            .id(pageId)
-            .replacements(Collections.emptyList())
-            .lastUpdate(same)
-            .build();
-
-        // Existing replacements in DB: two dummies, one of them old and obsolete.
-        IndexableReplacement r1db = IndexableReplacement.ofDummy(page).withLastUpdate(before);
-        IndexableReplacement r2db = IndexableReplacement.ofDummy(page);
-        IndexablePage dbPage = IndexablePage
-            .builder()
-            .id(pageId)
-            .replacements(List.of(r1db, r2db))
-            .lastUpdate(same)
-            .build();
-
-        PageIndexResult toIndex = indexablePageComparator.indexPageReplacements(page, dbPage);
-
-        PageIndexResult expected = PageIndexResult
-            .builder()
-            .status(PageIndexStatus.PAGE_INDEXED)
-            .removeReplacements(Set.of(r1db))
             .build();
         assertEquals(expected, toIndex);
     }
@@ -389,7 +295,6 @@ class IndexablePageComparatorTest {
             .type(ReplacementType.of(ReplacementKind.MISSPELLING_SIMPLE, "1"))
             .position(1)
             .context("")
-            .lastUpdate(same)
             .build();
         IndexablePage page = IndexablePage.builder().id(pageId).replacements(List.of(r1)).lastUpdate(same).build();
 

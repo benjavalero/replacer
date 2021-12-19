@@ -65,12 +65,13 @@ class ReplacementTypeCacheRepository implements ReplacementTypeRepository {
         WikipediaLanguage lang,
         int pageId,
         @Nullable ReplacementType type,
-        String reviewer
+        String reviewer,
+        boolean updateDate
     ) {
         if (Objects.nonNull(type)) {
             this.decrementSubtypeCount(lang, type);
         }
-        this.replacementTypeRepository.updateReviewerByPageAndType(lang, pageId, type, reviewer);
+        this.replacementTypeRepository.updateReviewerByPageAndType(lang, pageId, type, reviewer, updateDate);
     }
 
     @VisibleForTesting

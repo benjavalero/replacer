@@ -32,7 +32,7 @@ class PageResultExtractor implements ResultSetExtractor<Collection<PageModel>> {
                     .lang(lang)
                     .pageId(pageId)
                     .title(rs.getString("TITLE"))
-                    .lastUpdate(Optional.ofNullable(rs.getDate("PAGE_UPDATE")).map(Date::toLocalDate).orElse(null))
+                    .lastUpdate(Optional.ofNullable(rs.getDate("LAST_UPDATE")).map(Date::toLocalDate).orElse(null))
                     .build()
             );
             replacementMap.put(
@@ -46,7 +46,6 @@ class PageResultExtractor implements ResultSetExtractor<Collection<PageModel>> {
                     .subtype(rs.getString("SUBTYPE"))
                     .position(rs.getInt("POSITION"))
                     .context(rs.getString("CONTEXT"))
-                    .lastUpdate(rs.getDate("REP_UPDATE").toLocalDate())
                     .reviewer(rs.getString("REVIEWER"))
                     .build()
             );

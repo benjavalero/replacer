@@ -33,19 +33,16 @@ class IndexablePageComparator {
             pageIndexResult.add(handleReplacement(replacement, dbReplacements, ignoreContext));
         }
 
-        // Check new page
+        // Check changes in the page
         if (dbPage == null) {
+            // New page
             pageIndexResult.add(PageIndexResult.builder().addPages(Set.of(page)).build());
-        } else {
-            if (!Objects.equals(page.getTitle(), dbPage.getTitle())) {
-                // Just in case check the title as it might change with time
-                // The title could be null in case of indexing an obsolete dummy page
-
-                pageIndexResult.add(PageIndexResult.builder().updatePages(Set.of(page)).build());
-            }
+        } else if (isUpdatePage(page, dbPage)) {
+            // Update page if needed
+            pageIndexResult.add(PageIndexResult.builder().updatePages(Set.of(page)).build());
         }
 
-        pageIndexResult.add(cleanUpPageReplacements(page, dbReplacements));
+        pageIndexResult.add(cleanUpPageReplacements(dbReplacements));
         return pageIndexResult;
     }
 
@@ -118,11 +115,26 @@ class IndexablePageComparator {
         return (
             dbReplacement.isToBeReviewed() &&
             (
-                dbReplacement.isOlderThan(replacement) ||
                 !Objects.equals(replacement.getPosition(), dbReplacement.getPosition()) ||
                 !Objects.equals(replacement.getContext(), dbReplacement.getContext())
             )
         );
+    }
+
+    /* Check if it is needed to update the page in database */
+    private boolean isUpdatePage(IndexablePage page, IndexablePage dbPage) {
+        if (!Objects.equals(page.getTitle(), dbPage.getTitle())) {
+            // Just in case check the title as it might change with time
+            // TODO: The title could be null in case of indexing an obsolete dummy page
+            return true;
+        } else if (dbPage.getLastUpdate() == null) {
+            // The last update of the page could also be null in case of indexing an old page
+            return true;
+        } else {
+            return Objects
+                .requireNonNull(dbPage.getLastUpdate())
+                .isBefore(Objects.requireNonNull(page.getLastUpdate()));
+        }
     }
 
     /**
@@ -130,13 +142,13 @@ class IndexablePageComparator {
      *
      * @return A list of replacements to be managed in DB.
      */
-    private PageIndexResult cleanUpPageReplacements(IndexablePage page, Set<IndexableReplacement> dbReplacements) {
+    private PageIndexResult cleanUpPageReplacements(Set<IndexableReplacement> dbReplacements) {
         PageIndexResult result = PageIndexResult.ofEmpty();
 
         // Find just in case the system-reviewed replacements and delete them
         Set<IndexableReplacement> systemReviewed = dbReplacements
             .stream()
-            .filter(rep -> rep.isSystemReviewed() && !rep.isDummy())
+            .filter(IndexableReplacement::isSystemReviewed)
             .collect(Collectors.toSet());
         systemReviewed.forEach(dbReplacements::remove);
         result.add(PageIndexResult.builder().removeReplacements(systemReviewed).build());
@@ -148,54 +160,6 @@ class IndexablePageComparator {
             .collect(Collectors.toSet());
         obsolete.forEach(dbReplacements::remove);
         result.add(PageIndexResult.builder().removeReplacements(obsolete).build());
-
-        // We use a dummy replacement to store in some place the last update of the page
-        // in case there are no replacements to review to store it instead.
-        // The user-reviewed replacements can't be used as they are only kept for the sake of statistics
-        // and have the date of the user review action.
-
-        // Just in case check there is only one dummy
-        List<IndexableReplacement> dummies = dbReplacements
-            .stream()
-            .filter(IndexableReplacement::isDummy)
-            .sorted(Comparator.comparing(IndexableReplacement::getLastUpdate).reversed())
-            .collect(Collectors.toList());
-        if (dummies.size() > 1) {
-            Set<IndexableReplacement> obsoleteDummies = new HashSet<>(dummies.subList(1, dummies.size()));
-            obsoleteDummies.forEach(dbReplacements::remove);
-            result.add(PageIndexResult.builder().removeReplacements(obsoleteDummies).build());
-        }
-
-        // If there remain replacements to review there is no need of dummy replacement
-        // If not a dummy replacement must be created or updated (if older)
-        // As this is the last step there is no need to update the DB list
-        boolean existReplacementsToReview = dbReplacements.stream().anyMatch(IndexableReplacement::isToBeReviewed);
-        Optional<IndexableReplacement> dummy = dummies.isEmpty() ? Optional.empty() : Optional.of(dummies.get(0));
-        if (existReplacementsToReview) {
-            dummy.ifPresent(indexableReplacement ->
-                result.add(PageIndexResult.builder().removeReplacements(Set.of(indexableReplacement)).build())
-            );
-        } else {
-            if (dummy.isPresent()) {
-                if (
-                    !page.getReplacements().isEmpty() &&
-                    dummy.get().isOlderThan(Objects.requireNonNull(page.getLastUpdate()))
-                ) {
-                    result.add(
-                        PageIndexResult
-                            .builder()
-                            .updateReplacements(
-                                Set.of(dummy.get().withLastUpdate(Objects.requireNonNull(page.getLastUpdate())))
-                            )
-                            .build()
-                    );
-                }
-            } else {
-                result.add(
-                    PageIndexResult.builder().addReplacements(Set.of(IndexableReplacement.ofDummy(page))).build()
-                );
-            }
-        }
 
         return result;
     }
