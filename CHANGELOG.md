@@ -1,5 +1,9 @@
 # Versions
 
+## 2.13.3 (18 Dec 2021)
+- Improve performance when finding replacements
+- Only trace the most important immutable warnings
+
 ## 2.13.2 (17 Dec 2021)
 - Fix: don't apply cosmetic change when a category has an empty alias
 
