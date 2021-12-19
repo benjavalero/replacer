@@ -29,7 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 class PageJdbcRepository implements PageRepository, PageIndexRepository {
 
     private static final String FROM_REPLACEMENT_JOIN_PAGE =
-        "FROM replacement r JOIN page p ON r.lang = p.lang AND r.article_id = p.article_id ";
+        "FROM page p JOIN replacement r ON p.lang = r.lang AND p.article_id = r.article_id ";
 
     @Autowired
     private ReplacementRepository replacementRepository;
@@ -43,9 +43,9 @@ class PageJdbcRepository implements PageRepository, PageIndexRepository {
     @Override
     public Optional<PageModel> findPageById(WikipediaPageId id) {
         String sql =
-            "SELECT r.id, r.lang, r.article_id, r.type, r.subtype, r.position, r.context, r.last_update, r.reviewer, p.title " +
+            "SELECT p.lang, p.article_id, p.title, r.id, r.type, r.subtype, r.position, r.context, r.last_update, r.reviewer " +
             FROM_REPLACEMENT_JOIN_PAGE +
-            "WHERE r.lang = :lang AND r.article_id = :pageId";
+            "WHERE p.lang = :lang AND p.article_id = :pageId";
         SqlParameterSource namedParameters = new MapSqlParameterSource()
             .addValue("lang", id.getLang().getCode())
             .addValue("pageId", id.getPageId());
@@ -56,9 +56,9 @@ class PageJdbcRepository implements PageRepository, PageIndexRepository {
     @Override
     public Collection<PageModel> findPagesByIdInterval(WikipediaLanguage lang, int minPageId, int maxPageId) {
         String sql =
-            "SELECT r.id, r.lang, r.article_id, r.type, r.subtype, r.position, r.context, r.last_update, r.reviewer, p.title " +
+            "SELECT p.lang, p.article_id, p.title, r.id, r.type, r.subtype, r.position, r.context, r.last_update, r.reviewer " +
             FROM_REPLACEMENT_JOIN_PAGE +
-            "WHERE r.lang = :lang AND r.article_id BETWEEN :minPageId AND :maxPageId";
+            "WHERE p.lang = :lang AND p.article_id BETWEEN :minPageId AND :maxPageId";
         SqlParameterSource namedParameters = new MapSqlParameterSource()
             .addValue("lang", lang.getCode())
             .addValue("minPageId", minPageId)
@@ -163,7 +163,7 @@ class PageJdbcRepository implements PageRepository, PageIndexRepository {
         String sql =
             "SELECT DISTINCT(p.title) " +
             FROM_REPLACEMENT_JOIN_PAGE +
-            "WHERE r.lang = :lang AND r.type = :type AND r.subtype = :subtype AND r.reviewer IS NULL";
+            "WHERE p.lang = :lang AND r.type = :type AND r.subtype = :subtype AND r.reviewer IS NULL";
         SqlParameterSource namedParameters = new MapSqlParameterSource()
             .addValue("lang", lang.getCode())
             .addValue("type", type.getKind().getLabel())

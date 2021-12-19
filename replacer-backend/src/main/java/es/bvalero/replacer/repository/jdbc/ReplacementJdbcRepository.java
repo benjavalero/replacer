@@ -65,10 +65,7 @@ class ReplacementJdbcRepository
 
     @Override
     public void removeReplacementsByPageId(Collection<WikipediaPageId> wikipediaPageIds) {
-        String sql =
-            "DELETE FROM replacement WHERE lang = :lang AND article_id = :pageId " +
-            "AND (reviewer IS NULL OR reviewer = :system)";
-
+        String sql = "DELETE FROM replacement WHERE lang = :lang AND article_id = :pageId";
         Collection<PageId> pageIds = wikipediaPageIds.stream().map(PageId::of).collect(Collectors.toUnmodifiableSet());
         SqlParameterSource[] namedParameters = SqlParameterSourceUtils.createBatch(pageIds.toArray());
         jdbcTemplate.batchUpdate(sql, namedParameters);
