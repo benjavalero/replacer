@@ -13,7 +13,6 @@ import org.springframework.lang.Nullable;
 @Builder
 public class PageModel {
 
-    // TODO: There should exist a FK in DB to the pair (lang, pageId)
     @NonNull
     String lang;
 

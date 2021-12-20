@@ -19,6 +19,9 @@ CREATE TABLE replacement (
     PRIMARY KEY (id)
 );
 
+ALTER TABLE replacement
+ADD CONSTRAINT fk_page_id FOREIGN KEY (lang, article_id) REFERENCES page (lang, article_id);
+
 -- To find random pages and count the group replacements
 CREATE INDEX idx_count ON replacement (lang, reviewer, type, subtype);
 CREATE INDEX idx_count_no_type ON replacement (lang, reviewer);

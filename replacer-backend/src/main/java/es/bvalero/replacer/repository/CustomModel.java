@@ -14,6 +14,7 @@ public class CustomModel {
     @Nullable
     Long id; // Nullable when still to be created in database
 
+    // TODO: There should exist a FK in DB to the pair (lang, pageId)
     @NonNull
     String lang;
 
