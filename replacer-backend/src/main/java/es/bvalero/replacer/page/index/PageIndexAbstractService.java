@@ -33,7 +33,7 @@ abstract class PageIndexAbstractService {
 
     public PageIndexResult indexPage(WikipediaPage page) {
         try {
-            IndexablePage dbPage = findIndexablePageInDb(page.getId());
+            final IndexablePage dbPage = findIndexablePageInDb(page.getId());
 
             // Consider as "indexable" all pages belonging to the configured namespaces
             if (!isPageIndexable(page)) {
@@ -56,10 +56,10 @@ abstract class PageIndexAbstractService {
 
     // This method can be overridden in case we want to avoid calculating the replacements under some circumstances
     PageIndexResult indexPage(WikipediaPage page, @Nullable IndexablePage dbPage) {
-        Collection<PageReplacement> replacements = findPageReplacements(page);
-        IndexablePage indexablePage = IndexablePageMapper.fromDomain(page, replacements);
+        final Collection<PageReplacement> replacements = findPageReplacements(page);
+        final IndexablePage indexablePage = IndexablePageMapper.fromDomain(page, replacements);
 
-        PageIndexResult result = indexablePageComparator.indexPageReplacements(indexablePage, dbPage);
+        final PageIndexResult result = indexablePageComparator.indexPageReplacements(indexablePage, dbPage);
         saveResult(result);
 
         return result.withReplacements(replacements);

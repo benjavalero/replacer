@@ -122,7 +122,7 @@ class DumpSaxHandler extends DefaultHandler {
     }
 
     private void indexPage() {
-        DumpPage dumpPage = DumpPage
+        final DumpPage dumpPage = DumpPage
             .builder()
             .lang(this.lang)
             .id(this.currentId)
@@ -132,8 +132,8 @@ class DumpSaxHandler extends DefaultHandler {
             .lastUpdate(WikipediaDateUtils.parseWikipediaTimestamp(this.currentTimestamp))
             .build();
 
-        WikipediaPage page = DumpPageMapper.toDomain(dumpPage);
-        PageIndexStatus result = pageIndexService.indexPage(page).getStatus();
+        final WikipediaPage page = DumpPageMapper.toDomain(dumpPage);
+        final PageIndexStatus result = pageIndexService.indexPage(page).getStatus();
         switch (result) {
             case PAGE_NOT_INDEXABLE:
                 break;
