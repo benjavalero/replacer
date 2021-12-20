@@ -29,7 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 class PageJdbcRepository implements PageRepository, PageIndexRepository {
 
     private static final String FROM_REPLACEMENT_JOIN_PAGE =
-        "FROM page p JOIN replacement r ON p.lang = r.lang AND p.article_id = r.article_id ";
+        "FROM page p LEFT JOIN replacement r ON p.lang = r.lang AND p.article_id = r.article_id ";
 
     @Autowired
     private ReplacementRepository replacementRepository;

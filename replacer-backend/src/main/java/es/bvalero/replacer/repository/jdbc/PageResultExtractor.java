@@ -18,12 +18,12 @@ class PageResultExtractor implements ResultSetExtractor<Collection<PageModel>> {
         // We can assume the lang is the same for all the results
         String lang = null;
 
-        Map<Integer, PageModel> pageMap = new HashMap<>();
-        ListValuedMap<Integer, ReplacementModel> replacementMap = new ArrayListValuedHashMap<>();
+        final Map<Integer, PageModel> pageMap = new HashMap<>();
+        final ListValuedMap<Integer, ReplacementModel> replacementMap = new ArrayListValuedHashMap<>();
 
         while (rs.next()) {
             lang = rs.getString("LANG");
-            Integer pageId = rs.getInt("ARTICLE_ID");
+            final Integer pageId = rs.getInt("ARTICLE_ID");
 
             pageMap.put(
                 pageId,
@@ -35,30 +35,34 @@ class PageResultExtractor implements ResultSetExtractor<Collection<PageModel>> {
                     .lastUpdate(Optional.ofNullable(rs.getDate("LAST_UPDATE")).map(Date::toLocalDate).orElse(null))
                     .build()
             );
-            replacementMap.put(
-                pageId,
-                ReplacementModel
-                    .builder()
-                    .id(rs.getLong("ID"))
-                    .lang(lang)
-                    .pageId(pageId)
-                    .type(rs.getString("TYPE"))
-                    .subtype(rs.getString("SUBTYPE"))
-                    .position(rs.getInt("POSITION"))
-                    .context(rs.getString("CONTEXT"))
-                    .reviewer(rs.getString("REVIEWER"))
-                    .build()
-            );
+            // The page might exist without replacements. We check it with the type, for instance.
+            final String type = rs.getString("TYPE");
+            if (type != null) {
+                replacementMap.put(
+                    pageId,
+                    ReplacementModel
+                        .builder()
+                        .id(rs.getLong("ID"))
+                        .lang(lang)
+                        .pageId(pageId)
+                        .type(type)
+                        .subtype(rs.getString("SUBTYPE"))
+                        .position(rs.getInt("POSITION"))
+                        .context(rs.getString("CONTEXT"))
+                        .reviewer(rs.getString("REVIEWER"))
+                        .build()
+                );
+            }
         }
 
         if (pageMap.isEmpty()) {
             return Collections.emptyList();
         } else {
             Objects.requireNonNull(lang);
-            List<PageModel> pageList = new ArrayList<>(pageMap.size());
+            final List<PageModel> pageList = new ArrayList<>(pageMap.size());
             for (Map.Entry<Integer, PageModel> entry : pageMap.entrySet()) {
-                Integer pageId = entry.getKey();
-                PageModel page = entry.getValue();
+                final Integer pageId = entry.getKey();
+                final PageModel page = entry.getValue();
                 pageList.add(
                     PageModel
                         .builder()
