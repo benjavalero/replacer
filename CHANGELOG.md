@@ -1,5 +1,8 @@
 # Versions
 
+## 2.14.0 (20 Dec 2021)
+- Improve indexing performance. Save last update date at page level instead of replacement.
+
 ## 2.13.3 (18 Dec 2021)
 - Improve performance when finding replacements
 - Only trace the most important immutable warnings
