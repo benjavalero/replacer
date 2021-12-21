@@ -1,63 +1,40 @@
 package es.bvalero.replacer.page.review;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import es.bvalero.replacer.common.domain.ReplacementKind;
 import es.bvalero.replacer.common.domain.ReplacementType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Value;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.TestOnly;
-import org.springdoc.api.annotations.ParameterObject;
+import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
-@ParameterObject
-@PageReviewOptionsValid
-@Data
-@NoArgsConstructor
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
-@Builder(access = AccessLevel.PRIVATE)
+@Value
+@Builder(access = AccessLevel.PACKAGE)
 public class PageReviewOptions {
 
-    // TODO: Remove the lang and user common query parameters
-    // In fact we should split this object into a DTO and a Domain one and validate the Domain one
+    @NonNull
+    String lang;
 
-    @Parameter(
-        description = "Language of the Wikipedia in use",
-        schema = @Schema(type = "string", allowableValues = { "es", "gl" }),
-        required = true
-    )
-    @NotNull
-    private String lang;
+    @NonNull
+    String user;
 
-    @Parameter(description = "Name of the user in Wikipedia", required = true, example = "Benjavalero")
-    @Size(max = 100)
-    @NotBlank
-    private String user;
-
-    @Parameter(description = "Replacement type", example = "Ortografía")
     @Nullable
-    private String type; // TODO: ReplacementType
+    String type; // TODO: ReplacementType
 
-    @Size(max = 100)
-    @Parameter(description = "Replacement subtype", example = "aún")
     @Nullable
-    private String subtype;
+    String subtype;
 
-    @Parameter(description = "Custom replacement suggestion", example = "todavía")
     @Nullable
-    private String suggestion;
+    String suggestion;
 
-    @Parameter(description = "If the custom replacement is case-sensitive", example = "false")
     @Nullable
-    private Boolean cs;
+    Boolean cs;
 
     public WikipediaLanguage getWikipediaLanguage() {
         return WikipediaLanguage.valueOfCode(lang);
@@ -102,7 +79,6 @@ public class PageReviewOptions {
             .build();
     }
 
-    @JsonIgnore
     public PageReviewOptionsType getOptionsType() {
         if (StringUtils.isBlank(type)) {
             return PageReviewOptionsType.NO_TYPE;
@@ -137,6 +113,26 @@ public class PageReviewOptions {
         }
 
         return StringUtils.join(list, " - ");
+    }
+
+    private PageReviewOptions(
+        String lang,
+        String user,
+        @Nullable String type,
+        @Nullable String subtype,
+        @Nullable String suggestion,
+        @Nullable Boolean cs
+    ) {
+        this.lang = lang;
+        this.user = user;
+        this.type = type;
+        this.subtype = subtype;
+        this.suggestion = suggestion;
+        this.cs = cs;
+
+        if (!isValid()) {
+            throw new IllegalArgumentException("Page Review Options not valid");
+        }
     }
 
     boolean isValid() {

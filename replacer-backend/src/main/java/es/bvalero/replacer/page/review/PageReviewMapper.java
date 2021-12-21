@@ -72,14 +72,15 @@ public class PageReviewMapper {
         return search;
     }
 
-    public PageReviewOptions fromDto(PageReviewOptionsDto search, CommonQueryParameters queryParameters) {
-        PageReviewOptions pageReviewOptions = new PageReviewOptions();
-        pageReviewOptions.setLang(queryParameters.getLang());
-        pageReviewOptions.setUser(queryParameters.getUser());
-        pageReviewOptions.setType(search.getType());
-        pageReviewOptions.setSubtype(search.getSubtype());
-        pageReviewOptions.setSuggestion(search.getSuggestion());
-        pageReviewOptions.setCs(search.getCs());
-        return pageReviewOptions;
+    public PageReviewOptions fromDto(PageReviewOptionsDto options, CommonQueryParameters queryParameters) {
+        return PageReviewOptions
+            .builder()
+            .lang(queryParameters.getLang())
+            .user(queryParameters.getUser())
+            .type(options.getType())
+            .subtype(options.getSubtype())
+            .suggestion(options.getSuggestion())
+            .cs(options.getCs())
+            .build();
     }
 }

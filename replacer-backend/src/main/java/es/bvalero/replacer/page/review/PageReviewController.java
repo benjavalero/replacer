@@ -2,6 +2,7 @@ package es.bvalero.replacer.page.review;
 
 import com.github.rozidan.springboot.logger.Loggable;
 import es.bvalero.replacer.common.dto.CommonQueryParameters;
+import es.bvalero.replacer.common.dto.PageReviewOptionsDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -27,8 +28,12 @@ public class PageReviewController {
 
     @Operation(summary = "Find a random page and the replacements to review")
     @GetMapping(value = "/random")
-    public Optional<PageReviewResponse> findRandomPageWithReplacements(@Valid PageReviewOptions options) {
+    public Optional<PageReviewResponse> findRandomPageWithReplacements(
+        @Valid CommonQueryParameters queryParameters,
+        @Valid PageReviewOptionsDto optionsDto
+    ) {
         Optional<PageReview> review = Optional.empty();
+        PageReviewOptions options = PageReviewMapper.fromDto(optionsDto, queryParameters);
         switch (options.getOptionsType()) {
             case NO_TYPE:
                 review = pageReviewNoTypeFinder.findRandomPageReview(options);
@@ -47,9 +52,11 @@ public class PageReviewController {
     @GetMapping(value = "/{id}")
     public Optional<PageReviewResponse> findPageReviewById(
         @Parameter(description = "Page ID", example = "6980716") @PathVariable("id") int pageId,
-        @Valid PageReviewOptions options
+        @Valid CommonQueryParameters queryParameters,
+        @Valid PageReviewOptionsDto optionsDto
     ) {
         Optional<PageReview> review = Optional.empty();
+        PageReviewOptions options = PageReviewMapper.fromDto(optionsDto, queryParameters);
         switch (options.getOptionsType()) {
             case NO_TYPE:
                 review = pageReviewNoTypeFinder.getPageReview(pageId, options);
