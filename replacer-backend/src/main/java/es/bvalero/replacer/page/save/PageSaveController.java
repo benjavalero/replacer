@@ -49,7 +49,7 @@ public class PageSaveController {
         if (StringUtils.isBlank(content) && !EMPTY_CONTENT.equals(content)) {
             return new ResponseEntity<>("Non valid empty content", HttpStatus.BAD_REQUEST);
         }
-        PageReviewOptions options = PageReviewMapper.fromDto(request.getSearch(), queryParameters);
+        PageReviewOptions options = PageReviewMapper.fromDto(request.getOptions(), queryParameters);
         if (EMPTY_CONTENT.equals(content)) {
             pageSaveService.savePageWithNoChanges(pageId, options);
         } else {

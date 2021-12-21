@@ -8,9 +8,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import es.bvalero.replacer.common.domain.*;
 import es.bvalero.replacer.common.dto.AccessTokenDto;
+import es.bvalero.replacer.common.dto.PageReviewOptionsDto;
 import es.bvalero.replacer.common.util.WikipediaDateUtils;
 import es.bvalero.replacer.page.review.PageReviewOptions;
-import es.bvalero.replacer.page.review.PageReviewSearch;
 import es.bvalero.replacer.page.review.ReviewPage;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -53,8 +53,8 @@ class PageSaveControllerTest {
         reviewPage.setContent(content);
         reviewPage.setQueryTimestamp(WikipediaDateUtils.formatWikipediaTimestamp(timestamp));
         request.setPage(reviewPage);
-        PageReviewSearch search = new PageReviewSearch();
-        request.setSearch(search);
+        PageReviewOptionsDto search = new PageReviewOptionsDto();
+        request.setOptions(search);
         request.setAccessToken(AccessTokenDto.fromDomain(accessToken));
 
         mvc
@@ -93,8 +93,8 @@ class PageSaveControllerTest {
         reviewPage.setContent(EMPTY_CONTENT);
         reviewPage.setQueryTimestamp(WikipediaDateUtils.formatWikipediaTimestamp(timestamp));
         request.setPage(reviewPage);
-        PageReviewSearch search = new PageReviewSearch();
-        request.setSearch(search);
+        PageReviewOptionsDto options = new PageReviewOptionsDto();
+        request.setOptions(options);
         request.setAccessToken(AccessTokenDto.fromDomain(accessToken));
 
         mvc

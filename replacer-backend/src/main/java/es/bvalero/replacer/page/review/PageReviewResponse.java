@@ -1,5 +1,6 @@
 package es.bvalero.replacer.page.review;
 
+import es.bvalero.replacer.common.dto.PageReviewOptionsDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.Collection;
 import lombok.Value;
@@ -19,7 +20,7 @@ class PageReviewResponse {
 
     @Schema(required = true)
     @NonNull
-    PageReviewSearch search;
+    PageReviewOptionsDto options;
 
     @Schema(description = "Number of pending pages to review of the given type", required = true, example = "1704147")
     @NonNull

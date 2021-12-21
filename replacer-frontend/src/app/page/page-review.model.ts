@@ -19,7 +19,7 @@ export class ReviewOptions {
 export interface PageReviewResponse {
   page: ReviewPage;
   replacements: ReviewReplacement[];
-  search: PageReviewSearch;
+  options: PageReviewOptions;
   numPending: number;
 }
 
@@ -37,7 +37,7 @@ interface ReviewSection {
   title: string;
 }
 
-export interface PageReviewSearch {
+export interface PageReviewOptions {
   type?: string;
   subtype?: string;
   suggestion?: string;
@@ -46,12 +46,12 @@ export interface PageReviewSearch {
 
 export class PageSaveRequest {
   page: ReviewPage;
-  search: PageReviewSearch;
+  options: PageReviewOptions;
   accessToken: AccessToken;
 
-  constructor(page: ReviewPage, search: PageReviewSearch, accessToken: AccessToken) {
+  constructor(page: ReviewPage, options: PageReviewOptions, accessToken: AccessToken) {
     this.page = page;
-    this.search = search;
+    this.options = options;
     this.accessToken = accessToken;
   }
 }

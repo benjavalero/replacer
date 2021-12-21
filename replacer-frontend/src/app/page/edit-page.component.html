@@ -1,15 +1,15 @@
 <div *ngIf="review.replacements.length" class="container">
-  <nav *ngIf="review.search.type && review.search.subtype" aria-label="breadcrumb">
+  <nav *ngIf="review.options.type && review.options.subtype" aria-label="breadcrumb">
     <ol class="breadcrumb">
-      <li class="breadcrumb-item">{{ review.search.type }}</li>
-      <ng-template [ngIf]="!review.search.suggestion">
-        <li class="breadcrumb-item">{{ review.search.subtype }}
+      <li class="breadcrumb-item">{{ review.options.type }}</li>
+      <ng-template [ngIf]="!review.options.suggestion">
+        <li class="breadcrumb-item">{{ review.options.subtype }}
           &nbsp;<span class="badge badge-light"><span class="align-middle">{{ review.numPending }}</span></span>
         </li>
       </ng-template>
-      <ng-template [ngIf]="review.search.suggestion">
-        <li class="breadcrumb-item">{{ review.search.subtype }}</li>
-        <li class="breadcrumb-item">{{ review.search.suggestion }}
+      <ng-template [ngIf]="review.options.suggestion">
+        <li class="breadcrumb-item">{{ review.options.subtype }}</li>
+        <li class="breadcrumb-item">{{ review.options.suggestion }}
           &nbsp;<span class="badge badge-light"><span class="align-middle">{{ review.numPending }}</span></span>
         </li>
       </ng-template>
@@ -35,7 +35,7 @@
   </button>
 
   <app-alert type="warning" [icon]="true" class="alert-small"
-    *ngIf="review.search.type === 'Personalizado' && review.numPending > 50">
+    *ngIf="review.options.type === 'Personalizado' && review.numPending > 50">
     <p>El reemplazo personalizado introducido tiene muchas ocurrencias. Se recomienda añadirlo a los <a
         href="https://es.wikipedia.org/wiki/Usuario:Benjavalero/Replacer#Tipos_de_reemplazos" target="_blank"
         rel="noopener noreferrer">listados generales</a> para un mantenimiento más óptimo.</p>

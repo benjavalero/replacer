@@ -1,4 +1,4 @@
-package es.bvalero.replacer.page.review;
+package es.bvalero.replacer.common.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -10,13 +10,11 @@ import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.Nullable;
 
-@Schema(description = "Search options of the replacements to review")
+@Schema(description = "Options of the replacements to review")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Data
 @NoArgsConstructor
-public class PageReviewSearch {
-
-    // Public: it is an in/out DTO
+public class PageReviewOptionsDto {
 
     @Schema(description = "Replacement kind", example = "Ortografía")
     @Nullable

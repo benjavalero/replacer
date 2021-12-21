@@ -2,6 +2,7 @@ package es.bvalero.replacer.page.review;
 
 import es.bvalero.replacer.common.domain.*;
 import es.bvalero.replacer.common.dto.CommonQueryParameters;
+import es.bvalero.replacer.common.dto.PageReviewOptionsDto;
 import es.bvalero.replacer.common.util.WikipediaDateUtils;
 import java.util.Collection;
 import java.util.stream.Collectors;
@@ -59,8 +60,8 @@ public class PageReviewMapper {
         return ReviewSuggestion.of(suggestion.getText(), suggestion.getComment());
     }
 
-    private PageReviewSearch toDto(PageReviewOptions options) {
-        PageReviewSearch search = new PageReviewSearch();
+    private PageReviewOptionsDto toDto(PageReviewOptions options) {
+        PageReviewOptionsDto search = new PageReviewOptionsDto();
         if (options.getOptionsType() != PageReviewOptionsType.NO_TYPE) {
             search.setType(options.getType());
             search.setSubtype(options.getSubtype());
@@ -70,7 +71,7 @@ public class PageReviewMapper {
         return search;
     }
 
-    public PageReviewOptions fromDto(PageReviewSearch search, CommonQueryParameters queryParameters) {
+    public PageReviewOptions fromDto(PageReviewOptionsDto search, CommonQueryParameters queryParameters) {
         PageReviewOptions pageReviewOptions = new PageReviewOptions();
         pageReviewOptions.setLang(queryParameters.getLang());
         pageReviewOptions.setUser(queryParameters.getUser());

@@ -97,7 +97,7 @@ export class EditPageComponent implements OnChanges {
     this.review.replacements = [];
 
     const savePage = { ...this.review.page, content: content };
-    this.pageService.savePage(savePage, this.review.search).subscribe(
+    this.pageService.savePage(savePage, this.review.options).subscribe(
       (res) => {
         // Do nothing
       },
@@ -117,10 +117,10 @@ export class EditPageComponent implements OnChanges {
 
         this.saved.emit(
           new ReviewOptions(
-            this.review.search.type || null,
-            this.review.search.subtype || null,
-            this.review.search.suggestion || null,
-            this.review.search.cs || false
+            this.review.options.type || null,
+            this.review.options.subtype || null,
+            this.review.options.suggestion || null,
+            this.review.options.cs || false
           )
         );
       }
