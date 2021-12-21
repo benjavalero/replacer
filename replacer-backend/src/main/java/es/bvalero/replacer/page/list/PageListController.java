@@ -1,7 +1,6 @@
 package es.bvalero.replacer.page.list;
 
 import com.github.rozidan.springboot.logger.Loggable;
-import es.bvalero.replacer.common.domain.ReplacementKind;
 import es.bvalero.replacer.common.domain.ReplacementType;
 import es.bvalero.replacer.common.dto.CommonQueryParameters;
 import io.swagger.v3.oas.annotations.Operation;
