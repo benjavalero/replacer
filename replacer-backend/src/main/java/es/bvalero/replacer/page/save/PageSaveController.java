@@ -57,8 +57,9 @@ public class PageSaveController {
             return ResponseEntity.badRequest().build();
         }
         PageReviewOptions options = PageReviewMapper.fromDto(request.getOptions(), queryParameters);
+        WikipediaPageId wikipediaPageId = WikipediaPageId.of(queryParameters.getWikipediaLanguage(), pageId);
         if (EMPTY_CONTENT.equals(content)) {
-            pageSaveService.savePageWithNoChanges(pageId, options);
+            pageSaveService.savePageWithNoChanges(wikipediaPageId, options);
         } else {
             ReviewSection section = request.getPage().getSection();
             Integer sectionId = section == null ? null : section.getId();

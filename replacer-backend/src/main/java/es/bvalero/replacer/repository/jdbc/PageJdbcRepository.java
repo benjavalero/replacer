@@ -5,6 +5,7 @@ import es.bvalero.replacer.common.domain.ReplacementType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.domain.WikipediaPageId;
 import es.bvalero.replacer.repository.*;
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.Optional;
@@ -83,6 +84,16 @@ class PageJdbcRepository implements PageRepository, PageIndexRepository {
             "WHERE lang = :lang AND article_id = :pageId";
         SqlParameterSource[] namedParameters = SqlParameterSourceUtils.createBatch(pages.toArray());
         jdbcTemplate.batchUpdate(sql, namedParameters);
+    }
+
+    @Override
+    public void updatePageLastUpdate(WikipediaPageId id, LocalDate lastUpdate) {
+        String sql = "UPDATE page SET last_update = :now WHERE lang = :lang AND article_id = :pageId";
+        SqlParameterSource namedParameters = new MapSqlParameterSource()
+            .addValue("now", lastUpdate)
+            .addValue("lang", id.getLang().getCode())
+            .addValue("pageId", id.getPageId());
+        jdbcTemplate.update(sql, namedParameters);
     }
 
     @Override

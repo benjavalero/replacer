@@ -3,6 +3,7 @@ package es.bvalero.replacer.replacement.count.cache;
 import com.github.rozidan.springboot.logger.Loggable;
 import es.bvalero.replacer.common.domain.ReplacementType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
+import es.bvalero.replacer.common.domain.WikipediaPageId;
 import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.repository.ReplacementTypeRepository;
 import es.bvalero.replacer.repository.ResultCount;
@@ -61,17 +62,11 @@ class ReplacementTypeCacheRepository implements ReplacementTypeRepository {
     }
 
     @Override
-    public void updateReviewerByPageAndType(
-        WikipediaLanguage lang,
-        int pageId,
-        @Nullable ReplacementType type,
-        String reviewer,
-        boolean updateDate
-    ) {
+    public void updateReviewerByPageAndType(WikipediaPageId pageId, @Nullable ReplacementType type, String reviewer) {
         if (Objects.nonNull(type)) {
-            this.decrementSubtypeCount(lang, type);
+            this.decrementSubtypeCount(pageId.getLang(), type);
         }
-        this.replacementTypeRepository.updateReviewerByPageAndType(lang, pageId, type, reviewer, updateDate);
+        this.replacementTypeRepository.updateReviewerByPageAndType(pageId, type, reviewer);
     }
 
     @VisibleForTesting

@@ -105,6 +105,7 @@ class PageSaveControllerTest {
             )
             .andExpect(status().isNoContent());
 
-        verify(pageSaveService).savePageWithNoChanges(pageId, PageReviewOptions.ofNoType());
+        WikipediaPageId wikipediaPageId = WikipediaPageId.of(WikipediaLanguage.SPANISH, pageId);
+        verify(pageSaveService).savePageWithNoChanges(wikipediaPageId, PageReviewOptions.ofNoType());
     }
 }

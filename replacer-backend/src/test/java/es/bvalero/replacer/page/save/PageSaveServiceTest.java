@@ -5,6 +5,7 @@ import static org.mockito.Mockito.*;
 import es.bvalero.replacer.common.domain.*;
 import es.bvalero.replacer.page.review.PageReviewOptions;
 import es.bvalero.replacer.repository.CustomRepository;
+import es.bvalero.replacer.repository.PageRepository;
 import es.bvalero.replacer.repository.ReplacementTypeRepository;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.wikipedia.WikipediaService;
@@ -20,6 +21,9 @@ class PageSaveServiceTest {
 
     @Mock
     private ReplacementTypeRepository replacementTypeRepository;
+
+    @Mock
+    private PageRepository pageRepository;
 
     @Mock
     private CustomRepository customRepository;
@@ -69,8 +73,7 @@ class PageSaveServiceTest {
                 anyString(),
                 eq(accessToken)
             );
-        verify(replacementTypeRepository)
-            .updateReviewerByPageAndType(WikipediaLanguage.getDefault(), pageId, null, "A", true);
+        verify(replacementTypeRepository).updateReviewerByPageAndType(page.getId(), null, "A");
     }
 
     @Test
@@ -78,7 +81,8 @@ class PageSaveServiceTest {
         int pageId = 123;
         ReplacementType type = ReplacementType.of(ReplacementKind.DATE, "S");
         PageReviewOptions options = PageReviewOptions.ofType(type);
-        pageSaveService.savePageWithNoChanges(pageId, options);
+        WikipediaPageId wikipediaPageId = WikipediaPageId.of(WikipediaLanguage.getDefault(), pageId);
+        pageSaveService.savePageWithNoChanges(wikipediaPageId, options);
 
         verify(applyCosmeticsService, never()).applyCosmeticChanges(any(WikipediaPage.class));
         verify(wikipediaService, never())
@@ -91,12 +95,6 @@ class PageSaveServiceTest {
                 any(AccessToken.class)
             );
         verify(replacementTypeRepository)
-            .updateReviewerByPageAndType(
-                WikipediaLanguage.getDefault(),
-                pageId,
-                options.getType(),
-                options.getUser(),
-                false
-            );
+            .updateReviewerByPageAndType(wikipediaPageId, options.getType(), options.getUser());
     }
 }

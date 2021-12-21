@@ -6,7 +6,6 @@ import es.bvalero.replacer.common.domain.ReplacementType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.domain.WikipediaPageId;
 import es.bvalero.replacer.repository.*;
-import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.Set;
@@ -140,18 +139,16 @@ class ReplacementJdbcRepository
 
     @Override
     public void updateReviewerByPageAndType(
-        WikipediaLanguage lang,
-        int pageId,
+        WikipediaPageId wikipediaPageId,
         @Nullable ReplacementType type,
-        String reviewer,
-        boolean updateDate
+        String reviewer
     ) {
         String from = "UPDATE replacement SET reviewer=:reviewer ";
         String where = "WHERE lang = :lang AND article_id = :pageId AND reviewer IS NULL ";
         MapSqlParameterSource namedParameters = new MapSqlParameterSource()
             .addValue("reviewer", reviewer)
-            .addValue("lang", lang.getCode())
-            .addValue("pageId", pageId);
+            .addValue("lang", wikipediaPageId.getLang().getCode())
+            .addValue("pageId", wikipediaPageId.getPageId());
 
         if (Objects.nonNull(type)) {
             where += "AND type = :type AND subtype = :subtype";
@@ -159,20 +156,6 @@ class ReplacementJdbcRepository
                 namedParameters.addValue("type", type.getKind().getLabel()).addValue("subtype", type.getSubtype());
         }
         String sql = from + where;
-        jdbcTemplate.update(sql, namedParameters);
-
-        // Update the page date if needed
-        if (updateDate) {
-            this.updatePageDate(lang, pageId);
-        }
-    }
-
-    private void updatePageDate(WikipediaLanguage lang, int pageId) {
-        String sql = "UPDATE page SET last_update = :now WHERE lang = :lang AND article_id = :pageId";
-        SqlParameterSource namedParameters = new MapSqlParameterSource()
-            .addValue("now", LocalDate.now())
-            .addValue("lang", lang.getCode())
-            .addValue("pageId", pageId);
         jdbcTemplate.update(sql, namedParameters);
     }
 
