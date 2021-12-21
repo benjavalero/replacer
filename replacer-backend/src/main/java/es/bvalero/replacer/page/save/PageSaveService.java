@@ -91,18 +91,12 @@ class PageSaveService {
     }
 
     private void markAsReviewedNoType(int pageId, PageReviewOptions options, String reviewer, boolean updateDate) {
-        replacementTypeRepository.updateReviewerByPageAndType(
-            options.getWikipediaLanguage(),
-            pageId,
-            null,
-            reviewer,
-            updateDate
-        );
+        replacementTypeRepository.updateReviewerByPageAndType(options.getLang(), pageId, null, reviewer, updateDate);
     }
 
     private void markAsReviewedTypeSubtype(int pageId, PageReviewOptions options, String reviewer, boolean updateDate) {
         replacementTypeRepository.updateReviewerByPageAndType(
-            options.getWikipediaLanguage(),
+            options.getLang(),
             pageId,
             options.getReplacementType(),
             reviewer,
@@ -115,7 +109,7 @@ class PageSaveService {
         String subtype = options.getSubtype();
         boolean cs = options.getCs() != null && Boolean.TRUE.equals(options.getCs());
         assert subtype != null;
-        customRepository.addCustom(buildCustomReviewed(pageId, options.getWikipediaLanguage(), subtype, cs, reviewer));
+        customRepository.addCustom(buildCustomReviewed(pageId, options.getLang(), subtype, cs, reviewer));
     }
 
     private CustomModel buildCustomReviewed(

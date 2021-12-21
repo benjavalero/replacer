@@ -19,7 +19,7 @@ import org.springframework.lang.Nullable;
 public class PageReviewOptions {
 
     @NonNull
-    String lang;
+    WikipediaLanguage lang;
 
     @NonNull
     String user;
@@ -36,10 +36,6 @@ public class PageReviewOptions {
     @Nullable
     Boolean cs;
 
-    public WikipediaLanguage getWikipediaLanguage() {
-        return WikipediaLanguage.valueOfCode(lang);
-    }
-
     @Nullable
     public ReplacementType getReplacementType() {
         return Objects.nonNull(type) && Objects.nonNull(subtype) ? ReplacementType.of(type, subtype) : null;
@@ -47,14 +43,14 @@ public class PageReviewOptions {
 
     @TestOnly
     public static PageReviewOptions ofNoType() {
-        return PageReviewOptions.builder().lang(WikipediaLanguage.getDefault().getCode()).user("A").build();
+        return PageReviewOptions.builder().lang(WikipediaLanguage.getDefault()).user("A").build();
     }
 
     @TestOnly
     public static PageReviewOptions ofType(ReplacementType type) {
         return PageReviewOptions
             .builder()
-            .lang(WikipediaLanguage.getDefault().getCode())
+            .lang(WikipediaLanguage.getDefault())
             .user("A")
             .type(type.getKind().getLabel())
             .subtype(type.getSubtype())
@@ -70,7 +66,7 @@ public class PageReviewOptions {
     ) {
         return PageReviewOptions
             .builder()
-            .lang(lang.getCode())
+            .lang(lang)
             .user("A")
             .type(ReplacementKind.CUSTOM.getLabel())
             .subtype(replacement)
@@ -116,7 +112,7 @@ public class PageReviewOptions {
     }
 
     private PageReviewOptions(
-        String lang,
+        WikipediaLanguage lang,
         String user,
         @Nullable String type,
         @Nullable String subtype,
