@@ -1,5 +1,8 @@
 # Versions
 
+## 2.14.1 (21 Dec 2021)
+- Hotfix: error on query to mark a replacement as reviewed
+
 ## 2.14.0 (20 Dec 2021)
 - Improve indexing performance. Save last update date at page level instead of replacement.
 
