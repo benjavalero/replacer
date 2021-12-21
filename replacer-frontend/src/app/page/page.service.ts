@@ -47,7 +47,7 @@ export class PageService {
     return this.httpClient.get<PageReviewResponse>(`${this.baseUrl}/${pageId}`, { params });
   }
 
-  savePage(page: ReviewPage, options: PageReviewOptions): Observable<any> {
+  savePage(page: ReviewPage, options: PageReviewOptions): Observable<void> {
     if (!this.userService.isValidUser()) {
       return throwError('El usuario no está autenticado. Recargue la página para retomar la sesión.');
     }
@@ -73,6 +73,6 @@ export class PageService {
     }
 
     // Call backend and delay the observable response
-    return this.httpClient.post<string>(`${this.baseUrl}/${page.id}`, savePage).pipe(delay(sleepTime));
+    return this.httpClient.post<void>(`${this.baseUrl}/${page.id}`, savePage).pipe(delay(sleepTime));
   }
 }

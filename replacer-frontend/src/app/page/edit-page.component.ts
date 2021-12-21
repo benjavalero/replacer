@@ -1,3 +1,4 @@
+import { HttpStatusCode } from '@angular/common/http';
 import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { AlertService } from '../alert/alert.service';
 import { UserService } from '../user/user.service';
@@ -102,13 +103,17 @@ export class EditPageComponent implements OnChanges {
         // Do nothing
       },
       (err) => {
-        const errMsg = `Error al guardar el artículo: ${err.error}`;
-        if (errMsg.includes('mwoauth-invalid-authorization')) {
+        const errStatus = err.status;
+        if (errStatus == HttpStatusCode.Conflict) {
+          this.alertService.addErrorMessage(
+            'Esta página de Wikipedia ha sido editada por otra persona. Recargue para revisarla de nuevo.'
+          );
+        } else if (errStatus == HttpStatusCode.Unauthorized) {
           // Clear session and reload the page
           this.userService.clearSession();
           window.location.reload();
         } else {
-          this.alertService.addErrorMessage(errMsg);
+          this.alertService.addErrorMessage('Error al guardar la página');
         }
       },
       () => {

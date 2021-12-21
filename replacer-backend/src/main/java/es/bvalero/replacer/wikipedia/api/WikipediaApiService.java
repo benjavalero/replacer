@@ -344,10 +344,7 @@ class WikipediaApiService implements WikipediaService {
                 id,
                 pageContent
             );
-            // TODO: Try not to log this as an error
-            throw new WikipediaException(
-                "Esta página de Wikipedia ha sido editada por otra persona. Recargue para revisarla de nuevo."
-            );
+            throw new WikipediaConflictException();
         }
 
         WikipediaApiRequest apiRequest = WikipediaApiRequest

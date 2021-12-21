@@ -40,24 +40,20 @@ class PageSaveService {
         @Nullable Integer sectionId,
         PageReviewOptions options,
         AccessToken accessToken
-    ) {
+    ) throws WikipediaException {
         // Apply cosmetic changes
         String textToSave = applyCosmeticChanges.applyCosmeticChanges(page);
         boolean applyCosmetics = !textToSave.equals(page.getContent());
 
-        try {
-            // Upload new content to Wikipedia
-            wikipediaService.savePageContent(
-                page.getId(),
-                sectionId,
-                textToSave,
-                page.getQueryTimestamp(),
-                buildEditSummary(options, applyCosmetics),
-                accessToken
-            );
-        } catch (WikipediaException e) {
-            LOGGER.error("Error saving page content", e);
-        }
+        // Upload new content to Wikipedia
+        wikipediaService.savePageContent(
+            page.getId(),
+            sectionId,
+            textToSave,
+            page.getQueryTimestamp(),
+            buildEditSummary(options, applyCosmetics),
+            accessToken
+        );
 
         // Mark page as reviewed in the database
         this.markAsReviewed(page.getId().getPageId(), options, true);

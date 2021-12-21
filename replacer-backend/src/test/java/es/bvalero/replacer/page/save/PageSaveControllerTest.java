@@ -63,7 +63,7 @@ class PageSaveControllerTest {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(request))
             )
-            .andExpect(status().isOk());
+            .andExpect(status().isNoContent());
 
         WikipediaPage page = WikipediaPage
             .builder()
@@ -103,7 +103,7 @@ class PageSaveControllerTest {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(request))
             )
-            .andExpect(status().isOk());
+            .andExpect(status().isNoContent());
 
         verify(pageSaveService).savePageWithNoChanges(pageId, PageReviewOptions.ofNoType());
     }
