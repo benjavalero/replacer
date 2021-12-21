@@ -94,7 +94,7 @@ class PageSaveServiceTest {
             .updateReviewerByPageAndType(
                 WikipediaLanguage.getDefault(),
                 pageId,
-                options.getReplacementType(),
+                options.getType(),
                 options.getUser(),
                 false
             );

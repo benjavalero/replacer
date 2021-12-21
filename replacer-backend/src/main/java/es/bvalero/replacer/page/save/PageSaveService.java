@@ -66,8 +66,8 @@ class PageSaveService {
 
     private String buildEditSummary(PageReviewOptions options, boolean applyCosmetics) {
         StringBuilder summary = new StringBuilder(EDIT_SUMMARY);
-        if (options.getOptionsType() == PageReviewOptionsType.TYPE_SUBTYPE) {
-            summary.append(": «").append(options.getSubtype()).append('»');
+        if (options.getOptionsType() != PageReviewOptionsType.NO_TYPE) {
+            summary.append(": «").append(options.getType().getSubtype()).append('»');
         }
         if (applyCosmetics) {
             summary.append(" + ").append(COSMETIC_CHANGES);
@@ -98,7 +98,7 @@ class PageSaveService {
         replacementTypeRepository.updateReviewerByPageAndType(
             options.getLang(),
             pageId,
-            options.getReplacementType(),
+            options.getType(),
             reviewer,
             updateDate
         );
@@ -106,9 +106,8 @@ class PageSaveService {
 
     private void markAsReviewedCustom(int pageId, PageReviewOptions options, String reviewer) {
         // Custom replacements don't exist in the database to be reviewed
-        String subtype = options.getSubtype();
+        String subtype = options.getType().getSubtype();
         boolean cs = options.getCs() != null && Boolean.TRUE.equals(options.getCs());
-        assert subtype != null;
         customRepository.addCustom(buildCustomReviewed(pageId, options.getLang(), subtype, cs, reviewer));
     }
 

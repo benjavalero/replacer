@@ -24,11 +24,8 @@ public class PageReviewOptions {
     @NonNull
     String user;
 
-    @Nullable
-    String type; // TODO: ReplacementType
-
-    @Nullable
-    String subtype;
+    @NonNull
+    ReplacementType type;
 
     @Nullable
     String suggestion;
@@ -36,25 +33,19 @@ public class PageReviewOptions {
     @Nullable
     Boolean cs;
 
-    @Nullable
-    public ReplacementType getReplacementType() {
-        return Objects.nonNull(type) && Objects.nonNull(subtype) ? ReplacementType.of(type, subtype) : null;
-    }
-
     @TestOnly
     public static PageReviewOptions ofNoType() {
-        return PageReviewOptions.builder().lang(WikipediaLanguage.getDefault()).user("A").build();
-    }
-
-    @TestOnly
-    public static PageReviewOptions ofType(ReplacementType type) {
         return PageReviewOptions
             .builder()
             .lang(WikipediaLanguage.getDefault())
             .user("A")
-            .type(type.getKind().getLabel())
-            .subtype(type.getSubtype())
+            .type(ReplacementType.ofEmpty())
             .build();
+    }
+
+    @TestOnly
+    public static PageReviewOptions ofType(ReplacementType type) {
+        return PageReviewOptions.builder().lang(WikipediaLanguage.getDefault()).user("A").type(type).build();
     }
 
     @TestOnly
@@ -68,20 +59,20 @@ public class PageReviewOptions {
             .builder()
             .lang(lang)
             .user("A")
-            .type(ReplacementKind.CUSTOM.getLabel())
-            .subtype(replacement)
+            .type(ReplacementType.of(ReplacementKind.CUSTOM, replacement))
             .suggestion(suggestion)
             .cs(caseSensitive)
             .build();
     }
 
     public PageReviewOptionsType getOptionsType() {
-        if (StringUtils.isBlank(type)) {
-            return PageReviewOptionsType.NO_TYPE;
-        } else if (StringUtils.isBlank(suggestion)) {
-            return PageReviewOptionsType.TYPE_SUBTYPE;
-        } else {
-            return PageReviewOptionsType.CUSTOM;
+        switch (type.getKind()) {
+            case EMPTY:
+                return PageReviewOptionsType.NO_TYPE;
+            case CUSTOM:
+                return PageReviewOptionsType.CUSTOM;
+            default:
+                return PageReviewOptionsType.TYPE_SUBTYPE;
         }
     }
 
@@ -97,12 +88,10 @@ public class PageReviewOptions {
                 list.add("NO TYPE");
                 break;
             case TYPE_SUBTYPE:
-                list.add(type);
-                list.add(subtype);
+                list.add(type.toString());
                 break;
             case CUSTOM:
-                list.add(type);
-                list.add(subtype);
+                list.add(type.toString());
                 list.add(suggestion);
                 list.add(Boolean.toString(Objects.requireNonNull(cs)));
                 break;
@@ -114,15 +103,13 @@ public class PageReviewOptions {
     private PageReviewOptions(
         WikipediaLanguage lang,
         String user,
-        @Nullable String type,
-        @Nullable String subtype,
+        ReplacementType type,
         @Nullable String suggestion,
         @Nullable Boolean cs
     ) {
         this.lang = lang;
         this.user = user;
         this.type = type;
-        this.subtype = subtype;
         this.suggestion = suggestion;
         this.cs = cs;
 
@@ -132,21 +119,16 @@ public class PageReviewOptions {
     }
 
     boolean isValid() {
-        boolean isValid = false;
-        switch (getOptionsType()) {
-            case NO_TYPE:
-                isValid = type == null && subtype == null && suggestion == null && cs == null;
-                break;
-            case TYPE_SUBTYPE:
-                isValid =
-                    StringUtils.isNotBlank(type) && StringUtils.isNotBlank(subtype) && suggestion == null && cs == null;
+        boolean isValid;
+        switch (type.getKind()) {
+            case EMPTY:
+                isValid = StringUtils.isEmpty(type.getSubtype()) && suggestion == null && cs == null;
                 break;
             case CUSTOM:
-                isValid =
-                    ReplacementKind.CUSTOM.getLabel().equals(type) &&
-                    StringUtils.isNotBlank(subtype) &&
-                    StringUtils.isNotBlank(suggestion) &&
-                    cs != null;
+                isValid = StringUtils.isNotBlank(type.getSubtype()) && StringUtils.isNotBlank(suggestion) && cs != null;
+                break;
+            default:
+                isValid = StringUtils.isNotBlank(type.getSubtype()) && suggestion == null && cs == null;
                 break;
         }
         return isValid;

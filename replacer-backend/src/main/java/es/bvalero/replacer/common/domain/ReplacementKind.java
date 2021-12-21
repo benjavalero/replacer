@@ -16,9 +16,7 @@ public enum ReplacementKind {
     MISSPELLING_COMPOSED("Compuestos"),
     CUSTOM("Personalizado"),
     DATE("Fechas"),
-    EMPTY("");
-
-    // TODO: Remove EMPTY when dummy replacements are removed from application
+    EMPTY("EMPTY"); // To be used but not meant to be serialized
 
     private static final Map<String, ReplacementKind> map = Arrays
         .stream(ReplacementKind.values())

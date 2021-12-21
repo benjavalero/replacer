@@ -62,14 +62,14 @@ public class PageReviewMapper {
     }
 
     private PageReviewOptionsDto toDto(PageReviewOptions options) {
-        PageReviewOptionsDto search = new PageReviewOptionsDto();
+        PageReviewOptionsDto dto = new PageReviewOptionsDto();
         if (options.getOptionsType() != PageReviewOptionsType.NO_TYPE) {
-            search.setType(options.getType());
-            search.setSubtype(options.getSubtype());
-            search.setSuggestion(options.getSuggestion());
-            search.setCs(options.getCs());
+            dto.setType(options.getType().getKind().getLabel());
+            dto.setSubtype(options.getType().getSubtype());
+            dto.setSuggestion(options.getSuggestion());
+            dto.setCs(options.getCs());
         }
-        return search;
+        return dto;
     }
 
     public PageReviewOptions fromDto(PageReviewOptionsDto options, CommonQueryParameters queryParameters) {
@@ -77,8 +77,7 @@ public class PageReviewMapper {
             .builder()
             .lang(WikipediaLanguage.valueOfCode(queryParameters.getLang()))
             .user(queryParameters.getUser())
-            .type(options.getType())
-            .subtype(options.getSubtype())
+            .type(ReplacementType.of(options.getType(), options.getSubtype()))
             .suggestion(options.getSuggestion())
             .cs(options.getCs())
             .build();

@@ -60,10 +60,10 @@ public class FindReplacementsService {
     }
 
     private CustomOptions convertOptions(PageReviewOptions options) {
-        String subtype = options.getSubtype();
+        String subtype = options.getType().getSubtype();
         Boolean cs = options.getCs();
         String suggestion = options.getSuggestion();
-        assert subtype != null && cs != null && suggestion != null;
+        assert cs != null && suggestion != null;
         return CustomOptions.of(subtype, cs, suggestion);
     }
 

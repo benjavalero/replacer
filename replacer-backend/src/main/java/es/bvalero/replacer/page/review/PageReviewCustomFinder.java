@@ -57,11 +57,9 @@ class PageReviewCustomFinder extends PageReviewFinder {
             long totalToReview = searchResult.getTotal();
             final List<Integer> pageIds = new LinkedList<>(searchResult.getPageIds());
 
-            String type = options.getType();
-            String subtype = options.getSubtype();
+            String subtype = options.getType().getSubtype();
             boolean cs = options.getCs() != null && Boolean.TRUE.equals(options.getCs());
-            assert ReplacementKind.CUSTOM.getLabel().equals(type);
-            assert subtype != null;
+            assert options.getType().getKind() == ReplacementKind.CUSTOM;
 
             // Calculate this out of the loop only if needed the first time
             List<Integer> reviewedIds = new ArrayList<>();
@@ -101,10 +99,10 @@ class PageReviewCustomFinder extends PageReviewFinder {
     }
 
     private WikipediaSearchResult findWikipediaResults(PageReviewOptions options) throws WikipediaException {
-        String subtype = options.getSubtype();
+        String subtype = options.getType().getSubtype();
         Boolean cs = options.getCs();
         Integer offset = this.getOffset();
-        assert subtype != null && cs != null && offset != null;
+        assert cs != null && offset != null;
         return wikipediaService.searchByText(
             options.getLang(),
             indexableNamespaces.stream().map(WikipediaNamespace::valueOf).collect(Collectors.toUnmodifiableSet()),

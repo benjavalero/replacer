@@ -1,8 +1,9 @@
 package es.bvalero.replacer.common.domain;
 
 import lombok.Value;
-import org.jetbrains.annotations.TestOnly;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 
 /** Type of replacement found in the content of a page */
 @Value(staticConstructor = "of")
@@ -16,11 +17,16 @@ public class ReplacementType {
     @NonNull
     String subtype;
 
-    public static ReplacementType of(String type, String subtype) {
-        return ReplacementType.of(ReplacementKind.valueOfLabel(type), subtype);
+    public static ReplacementType of(@Nullable String type, @Nullable String subtype) {
+        if (type == null && subtype == null) {
+            return ofEmpty();
+        } else if (type == null || subtype == null) {
+            throw new IllegalArgumentException();
+        } else {
+            return ReplacementType.of(ReplacementKind.valueOfLabel(type), subtype);
+        }
     }
 
-    @TestOnly
     public static ReplacementType ofEmpty() {
         return new ReplacementType(ReplacementKind.EMPTY, "");
     }
@@ -29,6 +35,15 @@ public class ReplacementType {
         // Validate subtype
         if (subtype.length() > MAX_SUBTYPE_LENGTH) {
             throw new IllegalArgumentException("Too long replacement subtype: " + subtype);
+        }
+        if (kind == ReplacementKind.EMPTY) {
+            if (StringUtils.isNotBlank(subtype)) {
+                throw new IllegalArgumentException("Non-empty subtype for an empty type: " + subtype);
+            }
+        } else {
+            if (StringUtils.isBlank(subtype)) {
+                throw new IllegalArgumentException("Empty subtype for a non-empty type");
+            }
         }
 
         this.kind = kind;

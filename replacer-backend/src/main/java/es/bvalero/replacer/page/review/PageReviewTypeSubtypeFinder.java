@@ -24,25 +24,18 @@ class PageReviewTypeSubtypeFinder extends PageReviewFinder {
 
     @Override
     protected void markAsReviewed(PageReviewOptions options) {
-        replacementTypeRepository.updateReviewerByType(
-            options.getLang(),
-            Objects.requireNonNull(options.getReplacementType()),
-            REVIEWER_SYSTEM
-        );
+        replacementTypeRepository.updateReviewerByType(options.getLang(), options.getType(), REVIEWER_SYSTEM);
     }
 
     @Override
     PageSearchResult findPageIdsToReview(PageReviewOptions options) {
         Collection<Integer> pageIds = pageRepository.findPageIdsToReviewByType(
             options.getLang(),
-            Objects.requireNonNull(options.getReplacementType()),
+            options.getType(),
             getCacheSize()
         );
 
-        long totalResults = pageRepository.countPagesToReviewByType(
-            options.getLang(),
-            Objects.requireNonNull(options.getReplacementType())
-        );
+        long totalResults = pageRepository.countPagesToReviewByType(options.getLang(), options.getType());
         return PageSearchResult.of(totalResults, pageIds);
     }
 
@@ -63,7 +56,7 @@ class PageReviewTypeSubtypeFinder extends PageReviewFinder {
     ) {
         return replacements
             .stream()
-            .filter(replacement -> Objects.equals(replacement.getType(), options.getReplacementType()))
+            .filter(replacement -> Objects.equals(replacement.getType(), options.getType()))
             .collect(Collectors.toUnmodifiableList());
     }
 }
