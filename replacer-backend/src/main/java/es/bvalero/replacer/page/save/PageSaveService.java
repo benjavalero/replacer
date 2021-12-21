@@ -125,7 +125,6 @@ class PageSaveService {
             .pageId(wikipediaPageId.getPageId())
             .replacement(replacement)
             .cs((byte) (cs ? 1 : 0))
-            .lastUpdate(LocalDate.now())
             .reviewer(reviewer)
             .build();
     }

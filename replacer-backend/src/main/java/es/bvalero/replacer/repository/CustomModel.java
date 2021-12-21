@@ -27,8 +27,7 @@ public class CustomModel {
     @NonNull
     Byte cs;
 
-    @NonNull
-    LocalDate lastUpdate;
+    // TODO: Remove the last-update column from database
 
     @NonNull
     String reviewer;
