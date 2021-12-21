@@ -147,22 +147,32 @@ class ReplacementJdbcRepository
         boolean updateDate
     ) {
         String from = "UPDATE replacement SET reviewer=:reviewer ";
-        String where = "WHERE lang = :lang AND article_id = :pageId AND reviewer IS NULL";
+        String where = "WHERE lang = :lang AND article_id = :pageId AND reviewer IS NULL ";
         MapSqlParameterSource namedParameters = new MapSqlParameterSource()
             .addValue("reviewer", reviewer)
             .addValue("lang", lang.getCode())
             .addValue("pageId", pageId);
 
-        if (updateDate) {
-            from += ", last_update = :now ";
-            namedParameters = namedParameters.addValue("now", LocalDate.now());
-        }
         if (Objects.nonNull(type)) {
             where += "AND type = :type AND subtype = :subtype";
             namedParameters =
                 namedParameters.addValue("type", type.getKind().getLabel()).addValue("subtype", type.getSubtype());
         }
         String sql = from + where;
+        jdbcTemplate.update(sql, namedParameters);
+
+        // Update the page date if needed
+        if (updateDate) {
+            this.updatePageDate(lang, pageId);
+        }
+    }
+
+    private void updatePageDate(WikipediaLanguage lang, int pageId) {
+        String sql = "UPDATE page SET last_update = :now WHERE lang = :lang AND article_id = :pageId";
+        SqlParameterSource namedParameters = new MapSqlParameterSource()
+            .addValue("now", LocalDate.now())
+            .addValue("lang", lang.getCode())
+            .addValue("pageId", pageId);
         jdbcTemplate.update(sql, namedParameters);
     }
 
