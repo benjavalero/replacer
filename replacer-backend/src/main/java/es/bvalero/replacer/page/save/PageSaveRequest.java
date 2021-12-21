@@ -2,7 +2,7 @@ package es.bvalero.replacer.page.save;
 
 import es.bvalero.replacer.common.dto.AccessTokenDto;
 import es.bvalero.replacer.common.dto.PageReviewOptionsDto;
-import es.bvalero.replacer.page.review.ReviewPage;
+import es.bvalero.replacer.common.dto.ReviewPage;
 import io.swagger.v3.oas.annotations.media.Schema;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;

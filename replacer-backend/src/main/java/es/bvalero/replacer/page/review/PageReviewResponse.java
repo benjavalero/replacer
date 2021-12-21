@@ -1,6 +1,7 @@
 package es.bvalero.replacer.page.review;
 
 import es.bvalero.replacer.common.dto.PageReviewOptionsDto;
+import es.bvalero.replacer.common.dto.ReviewPage;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.Collection;
 import lombok.Value;

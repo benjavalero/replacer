@@ -3,6 +3,7 @@ package es.bvalero.replacer.page.review;
 import es.bvalero.replacer.common.domain.*;
 import es.bvalero.replacer.common.dto.CommonQueryParameters;
 import es.bvalero.replacer.common.dto.PageReviewOptionsDto;
+import es.bvalero.replacer.common.dto.ReviewPage;
 import es.bvalero.replacer.common.util.WikipediaDateUtils;
 import java.util.Collection;
 import java.util.stream.Collectors;

@@ -1,6 +1,7 @@
-package es.bvalero.replacer.page.review;
+package es.bvalero.replacer.common.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import es.bvalero.replacer.page.review.ReviewSection;
 import io.swagger.v3.oas.annotations.media.Schema;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -16,8 +17,6 @@ import org.springframework.lang.Nullable;
 @Data
 @NoArgsConstructor
 public class ReviewPage {
-
-    // Public: it is an in/out DTO
 
     private static final int SHORT_CONTENT_LENGTH = 50;
 
