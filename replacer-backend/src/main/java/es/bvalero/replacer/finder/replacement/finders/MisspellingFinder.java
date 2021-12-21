@@ -94,7 +94,7 @@ public abstract class MisspellingFinder implements ReplacementFinder {
     }
 
     // Return the misspelling related to the given word, or empty if there is no such misspelling.
-    public Optional<Misspelling> findMisspellingByWord(String word, WikipediaLanguage lang) {
+    private Optional<Misspelling> findMisspellingByWord(String word, WikipediaLanguage lang) {
         return Optional.ofNullable(getMisspellingMap(lang).get(word));
     }
 
@@ -151,5 +151,29 @@ public abstract class MisspellingFinder implements ReplacementFinder {
 
     static Suggestion toUppercase(Suggestion suggestion) {
         return Suggestion.of(FinderUtils.setFirstUpperCase(suggestion.getText()), suggestion.getComment());
+    }
+
+    @Override
+    public Optional<ReplacementType> findMatchingReplacementType(
+        WikipediaLanguage lang,
+        String replacement,
+        boolean caseSensitive
+    ) {
+        Optional<Misspelling> misspelling = findMisspellingByWord(replacement, lang);
+        ReplacementType type;
+        if (misspelling.isEmpty()) {
+            type = null;
+        } else if (misspelling.get().isCaseSensitive()) {
+            type =
+                caseSensitive && misspelling.get().getWord().equals(replacement)
+                    ? ReplacementType.of(misspelling.get().getReplacementKind(), misspelling.get().getWord())
+                    : null;
+        } else {
+            type =
+                !caseSensitive && misspelling.get().getWord().equalsIgnoreCase(replacement)
+                    ? ReplacementType.of(misspelling.get().getReplacementKind(), misspelling.get().getWord())
+                    : null;
+        }
+        return Optional.ofNullable(type);
     }
 }

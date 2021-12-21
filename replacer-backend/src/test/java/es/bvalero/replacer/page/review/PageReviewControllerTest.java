@@ -41,6 +41,9 @@ class PageReviewControllerTest {
     @MockBean
     private PageReviewCustomFinder pageReviewCustomFinder;
 
+    @MockBean
+    private ReplacementValidationService replacementValidationService;
+
     private final int pageId = 3;
     private final String title = "T";
     private final String content = "C";
@@ -193,8 +196,8 @@ class PageReviewControllerTest {
     @Test
     void testValidateCustomReplacement() throws Exception {
         final String replacement = "Africa";
-        when(pageReviewCustomFinder.validateCustomReplacement(WikipediaLanguage.SPANISH, replacement, true))
-            .thenReturn(ReplacementValidationResponse.of(ReplacementKind.MISSPELLING_SIMPLE, replacement));
+        when(replacementValidationService.findMatchingReplacementType(WikipediaLanguage.SPANISH, replacement, true))
+            .thenReturn(Optional.of(ReplacementType.of(ReplacementKind.MISSPELLING_SIMPLE, replacement)));
 
         mvc
             .perform(
@@ -205,6 +208,6 @@ class PageReviewControllerTest {
             .andExpect(jsonPath("$.type", is(ReplacementKind.MISSPELLING_SIMPLE.getLabel())))
             .andExpect(jsonPath("$.subtype", is(replacement)));
 
-        verify(pageReviewCustomFinder).validateCustomReplacement(WikipediaLanguage.SPANISH, replacement, true);
+        verify(replacementValidationService).findMatchingReplacementType(WikipediaLanguage.SPANISH, replacement, true);
     }
 }

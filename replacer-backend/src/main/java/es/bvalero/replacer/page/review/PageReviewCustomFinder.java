@@ -1,8 +1,6 @@
 package es.bvalero.replacer.page.review;
 
 import es.bvalero.replacer.common.domain.*;
-import es.bvalero.replacer.finder.listing.Misspelling;
-import es.bvalero.replacer.finder.replacement.custom.CustomReplacementFinderService;
 import es.bvalero.replacer.page.findreplacement.FindReplacementsService;
 import es.bvalero.replacer.repository.CustomRepository;
 import es.bvalero.replacer.repository.PageIndexRepository;
@@ -38,9 +36,6 @@ class PageReviewCustomFinder extends PageReviewFinder {
 
     @Autowired
     private FindReplacementsService findReplacementsService;
-
-    @Autowired
-    private CustomReplacementFinderService customReplacementFinderService;
 
     @Setter(onMethod_ = @TestOnly)
     @Value("${replacer.indexable.namespaces}")
@@ -134,25 +129,5 @@ class PageReviewCustomFinder extends PageReviewFinder {
             .lastUpdate(page.getLastUpdate().toLocalDate())
             .replacements(Collections.emptyList())
             .build();
-    }
-
-    ReplacementValidationResponse validateCustomReplacement(
-        WikipediaLanguage lang,
-        String replacement,
-        boolean caseSensitive
-    ) {
-        // TODO: Return a ReplacementType and convert to DTO in the Controller
-        Optional<Misspelling> misspelling = customReplacementFinderService.findExistingMisspelling(replacement, lang);
-        if (misspelling.isEmpty()) {
-            return ReplacementValidationResponse.ofEmpty();
-        } else if (misspelling.get().isCaseSensitive()) {
-            return caseSensitive && misspelling.get().getWord().equals(replacement)
-                ? ReplacementValidationResponse.of(misspelling.get().getReplacementKind(), misspelling.get().getWord())
-                : ReplacementValidationResponse.ofEmpty();
-        } else {
-            return !caseSensitive && misspelling.get().getWord().equalsIgnoreCase(replacement)
-                ? ReplacementValidationResponse.of(misspelling.get().getReplacementKind(), misspelling.get().getWord())
-                : ReplacementValidationResponse.ofEmpty();
-        }
     }
 }

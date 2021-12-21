@@ -154,7 +154,7 @@ export class FindRandomComponent implements OnInit {
     this.pageService
       .validateCustomReplacement(replacement, options.cs!)
       .subscribe((validateType: ReplacementValidationResponse) => {
-        if (validateType.type && validateType.subtype) {
+        if (validateType) {
           this.openValidationModal$(validateType.type, validateType.subtype).then((result) => {
             const knownTypeOptions = new ReviewOptions(validateType.type!, validateType.subtype!, null, null);
             this.router.navigate([this.getReviewUrl(knownTypeOptions, null)]);

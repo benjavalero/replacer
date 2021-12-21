@@ -2,6 +2,7 @@ package es.bvalero.replacer.page.review;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import es.bvalero.replacer.common.domain.ReplacementKind;
+import es.bvalero.replacer.common.domain.ReplacementType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Value;
 import org.springframework.lang.Nullable;
@@ -13,13 +14,13 @@ class ReplacementValidationResponse {
 
     @Schema(description = "Known replacement type or empty", example = "Ortografía")
     @Nullable
-    ReplacementKind type;
+    String type;
 
     @Schema(description = "Known replacement subtype or empty", example = "aún")
     @Nullable
     String subtype;
 
-    static ReplacementValidationResponse ofEmpty() {
-        return ReplacementValidationResponse.of(null, null);
+    static ReplacementValidationResponse of(ReplacementType replacementType) {
+        return ReplacementValidationResponse.of(replacementType.getKind().getLabel(), replacementType.getSubtype());
     }
 }

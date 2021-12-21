@@ -4,8 +4,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import es.bvalero.replacer.common.domain.*;
-import es.bvalero.replacer.finder.listing.SimpleMisspelling;
-import es.bvalero.replacer.finder.replacement.custom.CustomReplacementFinderService;
 import es.bvalero.replacer.page.findreplacement.FindReplacementsService;
 import es.bvalero.replacer.repository.CustomModel;
 import es.bvalero.replacer.repository.CustomRepository;
@@ -17,7 +15,6 @@ import es.bvalero.replacer.wikipedia.WikipediaService;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -45,9 +42,6 @@ class PageReviewCustomFinderTest {
 
     @Mock
     private FindReplacementsService findReplacementsService;
-
-    @Mock
-    private CustomReplacementFinderService customReplacementFinderService;
 
     @Mock
     private PageReviewSectionFinder pageReviewSectionFinder;
@@ -544,78 +538,5 @@ class PageReviewCustomFinderTest {
         verify(wikipediaService).searchByText(lang, NAMESPACES, replacement, true, 2 * CACHE_SIZE, CACHE_SIZE);
         verify(customRepository, times(2)).findPageIdsReviewed(lang, replacement, true);
         verify(wikipediaService, times(4)).getPageById(any(WikipediaPageId.class));
-    }
-
-    @Test
-    void testValidateCustomReplacement() {
-        final WikipediaLanguage lang = WikipediaLanguage.getDefault();
-        final ReplacementKind simple = ReplacementKind.MISSPELLING_SIMPLE;
-
-        // Case-insensitive: accion||acción
-        SimpleMisspelling misspelling1 = SimpleMisspelling.of("accion", false, "acción");
-        when(customReplacementFinderService.findExistingMisspelling("accion", lang))
-            .thenReturn(Optional.of(misspelling1));
-        when(customReplacementFinderService.findExistingMisspelling("Accion", lang))
-            .thenReturn(Optional.of(misspelling1));
-        Assertions.assertEquals(
-            ReplacementValidationResponse.ofEmpty(),
-            pageReviewCustomService.validateCustomReplacement(lang, "accion", true)
-        );
-        assertEquals(
-            ReplacementValidationResponse.of(simple, "accion"),
-            pageReviewCustomService.validateCustomReplacement(lang, "accion", false)
-        );
-        assertEquals(
-            ReplacementValidationResponse.ofEmpty(),
-            pageReviewCustomService.validateCustomReplacement(lang, "Accion", true)
-        );
-        assertEquals(
-            ReplacementValidationResponse.of(simple, "accion"),
-            pageReviewCustomService.validateCustomReplacement(lang, "Accion", false)
-        );
-
-        // Case-sensitive uppercase: Enero|cs|enero
-        SimpleMisspelling misspelling2 = SimpleMisspelling.of("Enero", true, "enero");
-        when(customReplacementFinderService.findExistingMisspelling("Enero", lang))
-            .thenReturn(Optional.of(misspelling2));
-        when(customReplacementFinderService.findExistingMisspelling("enero", lang)).thenReturn(Optional.empty());
-        assertEquals(
-            ReplacementValidationResponse.ofEmpty(),
-            pageReviewCustomService.validateCustomReplacement(lang, "enero", true)
-        );
-        assertEquals(
-            ReplacementValidationResponse.ofEmpty(),
-            pageReviewCustomService.validateCustomReplacement(lang, "enero", false)
-        );
-        assertEquals(
-            ReplacementValidationResponse.of(simple, "Enero"),
-            pageReviewCustomService.validateCustomReplacement(lang, "Enero", true)
-        );
-        assertEquals(
-            ReplacementValidationResponse.ofEmpty(),
-            pageReviewCustomService.validateCustomReplacement(lang, "Enero", false)
-        );
-
-        // Case-sensitive lowercase: madrid|cs|Madrid
-        SimpleMisspelling misspelling3 = SimpleMisspelling.of("madrid", true, "Madrid");
-        when(customReplacementFinderService.findExistingMisspelling("madrid", lang))
-            .thenReturn(Optional.of(misspelling3));
-        when(customReplacementFinderService.findExistingMisspelling("Madrid", lang)).thenReturn(Optional.empty());
-        assertEquals(
-            ReplacementValidationResponse.of(simple, "madrid"),
-            pageReviewCustomService.validateCustomReplacement(lang, "madrid", true)
-        );
-        assertEquals(
-            ReplacementValidationResponse.ofEmpty(),
-            pageReviewCustomService.validateCustomReplacement(lang, "madrid", false)
-        );
-        assertEquals(
-            ReplacementValidationResponse.ofEmpty(),
-            pageReviewCustomService.validateCustomReplacement(lang, "Madrid", true)
-        );
-        assertEquals(
-            ReplacementValidationResponse.ofEmpty(),
-            pageReviewCustomService.validateCustomReplacement(lang, "Madrid", false)
-        );
     }
 }

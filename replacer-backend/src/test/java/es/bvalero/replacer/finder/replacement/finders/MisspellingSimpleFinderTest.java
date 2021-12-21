@@ -13,6 +13,7 @@ import es.bvalero.replacer.finder.replacement.Replacement;
 import java.beans.PropertyChangeEvent;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import org.apache.commons.collections4.SetValuedMap;
 import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
@@ -374,5 +375,46 @@ class MisspellingSimpleFinderTest {
             .suggestions(List.of(Suggestion.ofNoComment("Brasil")))
             .build();
         assertEquals(Set.of(expected), new HashSet<>(results));
+    }
+
+    @Test
+    void testFindMatchingReplacementType() {
+        final WikipediaLanguage lang = WikipediaLanguage.getDefault();
+        final ReplacementKind simple = ReplacementKind.MISSPELLING_SIMPLE;
+
+        SimpleMisspelling misspelling1 = SimpleMisspelling.of("accion", false, "acción");
+        SimpleMisspelling misspelling2 = SimpleMisspelling.of("Enero", true, "enero");
+        SimpleMisspelling misspelling3 = SimpleMisspelling.of("madrid", true, "Madrid");
+        this.fakeUpdateMisspellingList(List.of(misspelling1, misspelling2, misspelling3));
+
+        // Case-insensitive: accion||acción
+        assertEquals(Optional.empty(), misspellingFinder.findMatchingReplacementType(lang, "accion", true));
+        assertEquals(
+            Optional.of(ReplacementType.of(simple, "accion")),
+            misspellingFinder.findMatchingReplacementType(lang, "accion", false)
+        );
+        assertEquals(Optional.empty(), misspellingFinder.findMatchingReplacementType(lang, "Accion", true));
+        assertEquals(
+            Optional.of(ReplacementType.of(simple, "accion")),
+            misspellingFinder.findMatchingReplacementType(lang, "Accion", false)
+        );
+
+        // Case-sensitive uppercase: Enero|cs|enero
+        assertEquals(Optional.empty(), misspellingFinder.findMatchingReplacementType(lang, "enero", true));
+        assertEquals(Optional.empty(), misspellingFinder.findMatchingReplacementType(lang, "enero", false));
+        assertEquals(
+            Optional.of(ReplacementType.of(simple, "Enero")),
+            misspellingFinder.findMatchingReplacementType(lang, "Enero", true)
+        );
+        assertEquals(Optional.empty(), misspellingFinder.findMatchingReplacementType(lang, "Enero", false));
+
+        // Case-sensitive lowercase: madrid|cs|Madrid
+        assertEquals(
+            Optional.of(ReplacementType.of(simple, "madrid")),
+            misspellingFinder.findMatchingReplacementType(lang, "madrid", true)
+        );
+        assertEquals(Optional.empty(), misspellingFinder.findMatchingReplacementType(lang, "madrid", false));
+        assertEquals(Optional.empty(), misspellingFinder.findMatchingReplacementType(lang, "Madrid", true));
+        assertEquals(Optional.empty(), misspellingFinder.findMatchingReplacementType(lang, "Madrid", false));
     }
 }
