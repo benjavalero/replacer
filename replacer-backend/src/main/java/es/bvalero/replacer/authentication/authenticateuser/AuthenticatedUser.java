@@ -1,5 +1,6 @@
 package es.bvalero.replacer.authentication.authenticateuser;
 
+import es.bvalero.replacer.common.dto.AccessTokenDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.ToString;
@@ -27,13 +28,8 @@ public class AuthenticatedUser {
     @NonNull
     Boolean admin;
 
-    @Schema(required = true, example = "f8e520e8669a2d65e094d649a96427ff")
+    @Schema(description = "Access token authenticating the user to perform operations in Wikipedia", required = true)
     @ToString.Exclude
     @NonNull
-    String token;
-
-    @Schema(required = true, example = "36dd90e87c59acc138ee0c38487e975af6da141e")
-    @ToString.Exclude
-    @NonNull
-    String tokenSecret;
+    AccessTokenDto accessToken;
 }

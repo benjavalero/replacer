@@ -2,6 +2,7 @@ package es.bvalero.replacer.page.save;
 
 import com.github.rozidan.springboot.logger.Loggable;
 import es.bvalero.replacer.common.domain.*;
+import es.bvalero.replacer.common.dto.AccessTokenDto;
 import es.bvalero.replacer.common.dto.CommonQueryParameters;
 import es.bvalero.replacer.common.util.WikipediaDateUtils;
 import es.bvalero.replacer.page.review.PageReviewMapper;
@@ -66,7 +67,7 @@ public class PageSaveController {
                 .lastUpdate(saveTimestamp)
                 .queryTimestamp(saveTimestamp)
                 .build();
-            AccessToken accessToken = AccessToken.of(request.getToken(), request.getTokenSecret());
+            AccessToken accessToken = AccessTokenDto.toDomain(request.getAccessToken());
             pageSaveService.savePageContent(page, sectionId, options, accessToken);
         }
 

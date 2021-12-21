@@ -1,3 +1,5 @@
+import { AccessToken } from '../user/user.model';
+
 export interface RequestTokenResponse {
   token: string;
   tokenSecret: string;
@@ -21,6 +23,5 @@ export interface AuthenticateResponse {
   hasRights: boolean;
   bot: boolean;
   admin: boolean;
-  token: string;
-  tokenSecret: string;
+  accessToken: AccessToken;
 }

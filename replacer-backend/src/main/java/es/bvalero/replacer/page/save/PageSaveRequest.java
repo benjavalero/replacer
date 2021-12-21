@@ -1,5 +1,6 @@
 package es.bvalero.replacer.page.save;
 
+import es.bvalero.replacer.common.dto.AccessTokenDto;
 import es.bvalero.replacer.page.review.PageReviewSearch;
 import es.bvalero.replacer.page.review.ReviewPage;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -24,13 +25,8 @@ class PageSaveRequest {
     @NotNull
     private PageReviewSearch search;
 
-    @Schema(required = true, example = "f8e520e8669a2d65e094d649a96427ff")
+    @Schema(description = "Access token authenticating the user to save the page", required = true)
     @ToString.Exclude
     @NotNull
-    private String token;
-
-    @Schema(required = true, example = "36dd90e87c59acc138ee0c38487e975af6da141e")
-    @ToString.Exclude
-    @NotNull
-    private String tokenSecret;
+    private AccessTokenDto accessToken;
 }

@@ -12,16 +12,11 @@ export class User {
     this.hasRights = response.hasRights;
     this.bot = response.bot;
     this.admin = response.admin;
-    this.accessToken = new AccessToken(response.token, response.tokenSecret);
+    this.accessToken = response.accessToken;
   }
 }
 
-export class AccessToken {
+export interface AccessToken {
   token: string;
   tokenSecret: string;
-
-  constructor(token: string, tokenSecret: string) {
-    this.token = token;
-    this.tokenSecret = tokenSecret;
-  }
 }

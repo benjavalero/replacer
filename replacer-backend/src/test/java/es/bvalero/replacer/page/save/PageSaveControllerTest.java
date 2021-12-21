@@ -7,6 +7,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import es.bvalero.replacer.common.domain.*;
+import es.bvalero.replacer.common.dto.AccessTokenDto;
 import es.bvalero.replacer.common.util.WikipediaDateUtils;
 import es.bvalero.replacer.page.review.PageReviewOptions;
 import es.bvalero.replacer.page.review.PageReviewSearch;
@@ -43,6 +44,7 @@ class PageSaveControllerTest {
         LocalDateTime timestamp = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
         String token = "A";
         String tokenSecret = "B";
+        AccessToken accessToken = AccessToken.of(token, tokenSecret);
         PageSaveRequest request = new PageSaveRequest();
         ReviewPage reviewPage = new ReviewPage();
         reviewPage.setLang(WikipediaLanguage.SPANISH.getCode());
@@ -53,8 +55,7 @@ class PageSaveControllerTest {
         request.setPage(reviewPage);
         PageReviewSearch search = new PageReviewSearch();
         request.setSearch(search);
-        request.setToken(token);
-        request.setTokenSecret(tokenSecret);
+        request.setAccessToken(AccessTokenDto.fromDomain(accessToken));
 
         mvc
             .perform(
@@ -73,7 +74,6 @@ class PageSaveControllerTest {
             .lastUpdate(timestamp)
             .queryTimestamp(timestamp)
             .build();
-        AccessToken accessToken = AccessToken.of(token, tokenSecret);
         verify(pageSaveService).savePageContent(page, null, PageReviewOptions.ofNoType(), accessToken);
     }
 
@@ -84,6 +84,7 @@ class PageSaveControllerTest {
         LocalDateTime timestamp = LocalDateTime.now();
         String token = "A";
         String tokenSecret = "B";
+        AccessToken accessToken = AccessToken.of(token, tokenSecret);
         PageSaveRequest request = new PageSaveRequest();
         ReviewPage reviewPage = new ReviewPage();
         reviewPage.setLang(WikipediaLanguage.SPANISH.getCode());
@@ -94,8 +95,7 @@ class PageSaveControllerTest {
         request.setPage(reviewPage);
         PageReviewSearch search = new PageReviewSearch();
         request.setSearch(search);
-        request.setToken(token);
-        request.setTokenSecret(tokenSecret);
+        request.setAccessToken(AccessTokenDto.fromDomain(accessToken));
 
         mvc
             .perform(

@@ -10,6 +10,7 @@ import es.bvalero.replacer.authentication.oauth.RequestToken;
 import es.bvalero.replacer.authentication.useradmin.CheckUserAdminService;
 import es.bvalero.replacer.common.domain.AccessToken;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
+import es.bvalero.replacer.common.dto.AccessTokenDto;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import es.bvalero.replacer.wikipedia.WikipediaUser;
@@ -63,8 +64,7 @@ class AuthenticateUserServiceTest {
             .hasRights(true)
             .bot(false)
             .admin(true)
-            .token(accessToken.getToken())
-            .tokenSecret(accessToken.getTokenSecret())
+            .accessToken(AccessTokenDto.fromDomain(accessToken))
             .build();
         assertEquals(expected, actual);
 

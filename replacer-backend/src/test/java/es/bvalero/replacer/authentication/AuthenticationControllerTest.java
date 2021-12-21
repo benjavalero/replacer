@@ -16,6 +16,7 @@ import es.bvalero.replacer.authentication.requesttoken.GetRequestTokenResponse;
 import es.bvalero.replacer.authentication.requesttoken.GetRequestTokenService;
 import es.bvalero.replacer.common.domain.AccessToken;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
+import es.bvalero.replacer.common.dto.AccessTokenDto;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,8 +80,7 @@ class AuthenticationControllerTest {
             .hasRights(true)
             .bot(false)
             .admin(true)
-            .token(accessToken.getToken())
-            .tokenSecret(accessToken.getTokenSecret())
+            .accessToken(AccessTokenDto.fromDomain(accessToken))
             .build();
         when(authenticateUserService.authenticateUser(WikipediaLanguage.getDefault(), requestToken, oAuthVerifier))
             .thenReturn(authenticatedUser);
@@ -100,8 +100,8 @@ class AuthenticationControllerTest {
             .andExpect(jsonPath("$.hasRights", equalTo(authenticatedUser.getHasRights())))
             .andExpect(jsonPath("$.bot", equalTo(authenticatedUser.getBot())))
             .andExpect(jsonPath("$.admin", equalTo(authenticatedUser.getAdmin())))
-            .andExpect(jsonPath("$.token", is(accessToken.getToken())))
-            .andExpect(jsonPath("$.tokenSecret", is(accessToken.getTokenSecret())));
+            .andExpect(jsonPath("$.accessToken.token", is(accessToken.getToken())))
+            .andExpect(jsonPath("$.accessToken.tokenSecret", is(accessToken.getTokenSecret())));
 
         verify(authenticateUserService).authenticateUser(WikipediaLanguage.getDefault(), requestToken, oAuthVerifier);
     }

@@ -1,4 +1,5 @@
 import { Language } from '../user/language-model';
+import { AccessToken } from '../user/user.model';
 import { ReviewReplacement } from './page-replacement.model';
 
 export class ReviewOptions {
@@ -46,13 +47,11 @@ export interface PageReviewSearch {
 export class PageSaveRequest {
   page: ReviewPage;
   search: PageReviewSearch;
-  token: string;
-  tokenSecret: string;
+  accessToken: AccessToken;
 
-  constructor(page: ReviewPage, search: PageReviewSearch, token: string, tokenSecret: string) {
+  constructor(page: ReviewPage, search: PageReviewSearch, accessToken: AccessToken) {
     this.page = page;
     this.search = search;
-    this.token = token;
-    this.tokenSecret = tokenSecret;
+    this.accessToken = accessToken;
   }
 }
