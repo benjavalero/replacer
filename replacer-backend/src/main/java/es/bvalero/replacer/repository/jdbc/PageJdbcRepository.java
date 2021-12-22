@@ -174,11 +174,11 @@ class PageJdbcRepository implements PageRepository, PageIndexRepository {
 
     @Override
     public Collection<String> findPageTitlesToReviewByType(WikipediaLanguage lang, ReplacementType type) {
-        // TODO: Check if it is better to make a DISTINCT or retrieve them all and return a Set
         String sql =
-            "SELECT DISTINCT(p.title) " +
-            FROM_REPLACEMENT_JOIN_PAGE +
-            "WHERE p.lang = :lang AND r.type = :type AND r.subtype = :subtype AND r.reviewer IS NULL";
+            "SELECT p.title FROM page p " +
+            "WHERE p.lang = :lang AND EXISTS " +
+            "(SELECT NULL FROM replacement r WHERE p.lang = r.lang AND p.article_id = r.article_id " +
+            "AND r.type = :type AND r.subtype = :subtype AND r.reviewer IS NULL)";
         SqlParameterSource namedParameters = new MapSqlParameterSource()
             .addValue("lang", lang.getCode())
             .addValue("type", type.getKind().getLabel())
