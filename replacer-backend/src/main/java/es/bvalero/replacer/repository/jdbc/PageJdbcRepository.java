@@ -132,9 +132,8 @@ class PageJdbcRepository implements PageRepository, PageIndexRepository {
 
     @Override
     public long countPagesToReview(WikipediaLanguage lang) {
-        // FIXME: This should be returning the count of pages to review and not the count of replacements
         // To check how this would affect to performance
-        String sql = "SELECT COUNT(*) FROM replacement WHERE lang = :lang AND reviewer IS NULL";
+        String sql = "SELECT COUNT (DISTINCT article_id) FROM replacement WHERE lang = :lang AND reviewer IS NULL";
         SqlParameterSource namedParameters = new MapSqlParameterSource().addValue("lang", lang.getCode());
         Long result = jdbcTemplate.queryForObject(sql, namedParameters, Long.class);
         return Objects.requireNonNullElse(result, 0L);
