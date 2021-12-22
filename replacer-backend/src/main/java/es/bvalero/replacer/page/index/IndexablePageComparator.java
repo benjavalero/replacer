@@ -65,9 +65,10 @@ class IndexablePageComparator {
             final IndexableReplacement dbReplacement = existing.get();
             final boolean handleReplacement = handleExistingReplacement(replacement, dbReplacement);
             dbPageReplacements.remove(dbReplacement);
-            dbPageReplacements.add(replacement.withTouched(true));
+            final IndexableReplacement updatedReplacement = replacement.withId(dbReplacement.getId()).withTouched(true);
+            dbPageReplacements.add(updatedReplacement);
             if (handleReplacement) {
-                result = PageIndexResult.builder().updateReplacements(Set.of(replacement)).build();
+                result = PageIndexResult.builder().updateReplacements(Set.of(updatedReplacement)).build();
             } else {
                 result = PageIndexResult.ofEmpty();
             }

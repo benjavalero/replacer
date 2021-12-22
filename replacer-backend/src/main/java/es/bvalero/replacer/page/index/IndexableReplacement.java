@@ -15,6 +15,7 @@ import org.springframework.lang.Nullable;
 @Builder
 class IndexableReplacement {
 
+    @With
     @Nullable
     Long id; // Nullable when still to be created in database
 
