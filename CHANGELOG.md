@@ -1,5 +1,9 @@
 # Versions
 
+## 2.14.2 (22 Dec 2021)
+- Upgrade frontend to Angular 13
+- Improve indexing performance. Last update not needed for custom replacements anymore.
+
 ## 2.14.1 (21 Dec 2021)
 - Hotfix: error on query to mark a replacement as reviewed
 
