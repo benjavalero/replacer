@@ -35,3 +35,6 @@ CREATE TABLE IF NOT EXISTS custom (
 	reviewer VARCHAR(100) NOT NULL,
 	CONSTRAINT constraint_c PRIMARY KEY (id)
 );
+
+ALTER TABLE custom
+ADD CONSTRAINT fk_custom_page_id FOREIGN KEY (lang, article_id) REFERENCES page (lang, article_id);

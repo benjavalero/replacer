@@ -41,3 +41,6 @@ CREATE TABLE custom (
     reviewer VARCHAR(100) NOT NULL, -- In order to make the index work
     PRIMARY KEY (id)
 );
+
+ALTER TABLE custom
+ADD CONSTRAINT fk_custom_page_id FOREIGN KEY (lang, article_id) REFERENCES page (lang, article_id);

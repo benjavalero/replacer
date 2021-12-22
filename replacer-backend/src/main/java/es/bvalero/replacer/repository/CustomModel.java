@@ -1,6 +1,5 @@
 package es.bvalero.replacer.repository;
 
-import java.time.LocalDate;
 import lombok.Builder;
 import lombok.Value;
 import org.springframework.lang.NonNull;
@@ -14,7 +13,6 @@ public class CustomModel {
     @Nullable
     Long id; // Nullable when still to be created in database
 
-    // TODO: There should exist a FK in DB to the pair (lang, pageId)
     @NonNull
     String lang;
 
@@ -26,8 +24,6 @@ public class CustomModel {
 
     @NonNull
     Byte cs;
-
-    // TODO: Remove the last-update column from database
 
     @NonNull
     String reviewer;
