@@ -33,7 +33,6 @@ CREATE TABLE IF NOT EXISTS custom (
 	lang VARCHAR(2) NOT NULL,
 	replacement VARCHAR(100) NOT NULL,
 	cs TINYINT DEFAULT 0,
-	last_update DATE NOT NULL,
 	reviewer VARCHAR(100) NOT NULL,
 	CONSTRAINT constraint_c PRIMARY KEY (id)
 );

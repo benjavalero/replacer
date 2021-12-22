@@ -39,7 +39,6 @@ CREATE TABLE custom (
     lang VARCHAR(2) NOT NULL,
     replacement VARCHAR(100) COLLATE utf8mb4_bin NOT NULL,
     cs TINYINT(1) NOT NULL DEFAULT 0,
-    last_update DATE NOT NULL,
     reviewer VARCHAR(100) NOT NULL, -- In order to make the index work
     PRIMARY KEY (id)
 );
