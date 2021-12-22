@@ -1,8 +1,8 @@
 CREATE TABLE page (
     lang VARCHAR(2) NOT NULL,
     article_id INT NOT NULL,
-    title VARCHAR(255) COLLATE utf8mb4_bin,
-    last_update DATE,
+    title VARCHAR(255) COLLATE utf8mb4_bin NOT NULL,
+    last_update DATE NOT NULL,
     PRIMARY KEY (lang, article_id)
 );
 
@@ -15,7 +15,6 @@ CREATE TABLE replacement (
     position INT NOT NULL DEFAULT 0,
     context VARCHAR(255) COLLATE utf8mb4_bin NOT NULL,
     reviewer VARCHAR(100), -- In order to make the index work
-    title VARCHAR(255) COLLATE utf8mb4_bin, -- For the sake of simplicity even if it breaks schema normality
     PRIMARY KEY (id)
 );
 

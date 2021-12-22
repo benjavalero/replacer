@@ -1,8 +1,8 @@
 CREATE TABLE IF NOT EXISTS page (
     lang VARCHAR(2) NOT NULL,
     article_id INTEGER NOT NULL,
-    title VARCHAR(255),
-    last_update DATE,
+    title VARCHAR(255) NOT NULL,
+    last_update DATE NOT NULL,
     CONSTRAINT constraint_p PRIMARY KEY (lang, article_id)
 );
 
@@ -15,7 +15,6 @@ CREATE TABLE IF NOT EXISTS replacement (
 	position INTEGER DEFAULT 0,
 	context VARCHAR(255) NOT NULL,
 	reviewer VARCHAR(100),
-	title VARCHAR(255),
 	CONSTRAINT constraint_r PRIMARY KEY (id)
 );
 

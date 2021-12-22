@@ -22,6 +22,7 @@ class IndexablePageComparatorTest {
         IndexablePage page = IndexablePage
             .builder()
             .id(IndexablePageId.of(WikipediaLanguage.getDefault(), pageId))
+            .title("T")
             .replacements(Collections.emptyList())
             .lastUpdate(LocalDate.now())
             .build();
@@ -49,6 +50,7 @@ class IndexablePageComparatorTest {
         IndexablePage page = IndexablePage
             .builder()
             .id(pageId)
+            .title("T")
             .replacements(List.of(rep1))
             .lastUpdate(LocalDate.now())
             .build();
@@ -70,6 +72,7 @@ class IndexablePageComparatorTest {
         IndexablePage page = IndexablePage
             .builder()
             .id(pageId)
+            .title("T")
             .replacements(Collections.emptyList())
             .lastUpdate(LocalDate.now())
             .build();
@@ -94,6 +97,7 @@ class IndexablePageComparatorTest {
         IndexablePage dbPage = IndexablePage
             .builder()
             .id(pageId)
+            .title("T")
             .replacements(List.of(rep2, rep3))
             .lastUpdate(LocalDate.now())
             .build();
@@ -144,6 +148,7 @@ class IndexablePageComparatorTest {
         IndexablePage page = IndexablePage
             .builder()
             .id(pageId)
+            .title("T")
             .replacements(List.of(r1, r2, r5))
             .lastUpdate(LocalDate.now())
             .build();
@@ -177,6 +182,7 @@ class IndexablePageComparatorTest {
         IndexablePage dbPage = IndexablePage
             .builder()
             .id(pageId)
+            .title("T")
             .replacements(List.of(r1db, r2db, r6db, r7db, r8db))
             .lastUpdate(LocalDate.now())
             .build();
@@ -232,6 +238,7 @@ class IndexablePageComparatorTest {
         IndexablePage page = IndexablePage
             .builder()
             .id(pageId)
+            .title("T")
             .replacements(List.of(r1, r2, r3))
             .lastUpdate(same)
             .build();
@@ -265,6 +272,7 @@ class IndexablePageComparatorTest {
         IndexablePage dbPage = IndexablePage
             .builder()
             .id(pageId)
+            .title("T")
             .replacements(List.of(r1db, r2db, r4db, r5db, r6db))
             .lastUpdate(before)
             .build();
@@ -296,11 +304,23 @@ class IndexablePageComparatorTest {
             .position(1)
             .context("")
             .build();
-        IndexablePage page = IndexablePage.builder().id(pageId).replacements(List.of(r1)).lastUpdate(same).build();
+        IndexablePage page = IndexablePage
+            .builder()
+            .id(pageId)
+            .title("T")
+            .replacements(List.of(r1))
+            .lastUpdate(same)
+            .build();
 
         // Existing replacements in DB
         IndexableReplacement r1db = r1.withTouched(false); // Trick to clone and match with the one found to index
-        IndexablePage dbPage = IndexablePage.builder().id(pageId).replacements(List.of(r1db)).lastUpdate(same).build();
+        IndexablePage dbPage = IndexablePage
+            .builder()
+            .id(pageId)
+            .title("T")
+            .replacements(List.of(r1db))
+            .lastUpdate(same)
+            .build();
 
         PageIndexResult toIndex = indexablePageComparator.indexPageReplacements(page, dbPage);
 

@@ -12,6 +12,7 @@ import es.bvalero.replacer.page.removeobsolete.RemoveObsoletePageService;
 import es.bvalero.replacer.repository.PageIndexRepository;
 import es.bvalero.replacer.repository.PageModel;
 import es.bvalero.replacer.repository.ReplacementModel;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -56,7 +57,9 @@ class PageIndexBatchRepositoryTest {
             .builder()
             .lang(WikipediaLanguage.getDefault().getCode())
             .pageId(pageId1)
+            .title("T1")
             .replacements(List.of(replacement1))
+            .lastUpdate(LocalDate.now())
             .build();
         Integer pageId2 = 1001;
         ReplacementModel replacement2 = ReplacementModel
@@ -72,7 +75,9 @@ class PageIndexBatchRepositoryTest {
             .builder()
             .lang(WikipediaLanguage.getDefault().getCode())
             .pageId(pageId2)
+            .title("T2")
             .replacements(List.of(replacement2))
+            .lastUpdate(LocalDate.now())
             .build();
         when(pageIndexRepository.findPagesByIdInterval(WikipediaLanguage.getDefault(), 1, 1000))
             .thenReturn(List.of(page1));
@@ -109,7 +114,9 @@ class PageIndexBatchRepositoryTest {
             .builder()
             .lang(WikipediaLanguage.getDefault().getCode())
             .pageId(pageId)
+            .title("T")
             .replacements(List.of(replacement))
+            .lastUpdate(LocalDate.now())
             .build();
         when(pageIndexRepository.findPagesByIdInterval(WikipediaLanguage.getDefault(), 1, 2000))
             .thenReturn(List.of(page));

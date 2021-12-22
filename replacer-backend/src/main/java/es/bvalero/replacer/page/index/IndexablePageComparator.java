@@ -124,15 +124,9 @@ class IndexablePageComparator {
     private boolean isUpdatePage(IndexablePage page, IndexablePage dbPage) {
         if (!Objects.equals(page.getTitle(), dbPage.getTitle())) {
             // Just in case check the title as it might change with time
-            // TODO: The title could be null in case of indexing an obsolete dummy page
-            return true;
-        } else if (dbPage.getLastUpdate() == null) {
-            // The last update of the page could also be null in case of indexing an old page
             return true;
         } else {
-            return Objects
-                .requireNonNull(dbPage.getLastUpdate())
-                .isBefore(Objects.requireNonNull(page.getLastUpdate()));
+            return dbPage.getLastUpdate().isBefore(page.getLastUpdate());
         }
     }
 

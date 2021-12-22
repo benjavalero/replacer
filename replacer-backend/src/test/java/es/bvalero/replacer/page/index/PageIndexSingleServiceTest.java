@@ -11,6 +11,7 @@ import es.bvalero.replacer.page.findreplacement.FindReplacementsService;
 import es.bvalero.replacer.page.removeobsolete.RemoveObsoletePageService;
 import es.bvalero.replacer.repository.PageIndexRepository;
 import es.bvalero.replacer.repository.PageModel;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Optional;
@@ -78,7 +79,9 @@ class PageIndexSingleServiceTest {
             .builder()
             .lang(page.getId().getLang().getCode())
             .pageId(page.getId().getPageId())
+            .title("T")
             .replacements(Collections.emptyList())
+            .lastUpdate(LocalDate.now())
             .build();
         when(pageIndexRepository.findPageById(page.getId())).thenReturn(Optional.of(pageModel));
 
