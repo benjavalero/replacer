@@ -17,7 +17,7 @@ public class WikipediaUser {
     Set<WikipediaUserGroup> groups;
 
     public boolean hasRights() {
-        return this.groups.contains(WikipediaUserGroup.AUTOCONFIRMED);
+        return this.groups.contains(WikipediaUserGroup.AUTO_CONFIRMED);
     }
 
     public boolean isBot() {

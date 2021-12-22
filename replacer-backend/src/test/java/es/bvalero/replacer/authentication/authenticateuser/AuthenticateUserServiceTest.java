@@ -50,7 +50,11 @@ class AuthenticateUserServiceTest {
         AccessToken accessToken = AccessToken.of("A", "B");
         when(oAuthService.getAccessToken(requestToken, oAuthVerifier)).thenReturn(accessToken);
 
-        WikipediaUser wikipediaUser = WikipediaUser.builder().name("C").group(WikipediaUserGroup.AUTOCONFIRMED).build();
+        WikipediaUser wikipediaUser = WikipediaUser
+            .builder()
+            .name("C")
+            .group(WikipediaUserGroup.AUTO_CONFIRMED)
+            .build();
         when(wikipediaService.getAuthenticatedUser(lang, accessToken)).thenReturn(wikipediaUser);
 
         String username = "C";
