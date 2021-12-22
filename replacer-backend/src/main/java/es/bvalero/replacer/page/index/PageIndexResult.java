@@ -2,56 +2,48 @@ package es.bvalero.replacer.page.index;
 
 import es.bvalero.replacer.common.domain.PageReplacement;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.Set;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Singular;
+import lombok.Value;
 import org.jetbrains.annotations.TestOnly;
 import org.springframework.lang.NonNull;
 
-/**
- * Result of indexing a page or several pages.
- * We implement it as a mutable object (we can add items to the collections)
- * and with builder pattern for simplicity.
- */
-@Getter(AccessLevel.PACKAGE)
-@EqualsAndHashCode
-@Builder(access = AccessLevel.PACKAGE)
-public final class PageIndexResult {
+/** Result of indexing a page or several pages */
+@Value
+@Builder(toBuilder = true, access = AccessLevel.PACKAGE)
+public class PageIndexResult {
 
     /* Resulting status of the page indexing */
 
     @NonNull
-    @Getter(AccessLevel.PUBLIC)
     @Builder.Default
     PageIndexStatus status = PageIndexStatus.PAGE_NOT_INDEXED;
 
     /* Replacements resolved from the page content */
-    @NonNull
-    @With
-    @Getter(AccessLevel.PUBLIC)
-    @Builder.Default
-    Collection<PageReplacement> replacements = Collections.emptyList();
+    @Singular
+    Collection<PageReplacement> replacements;
 
     /* Changes to be applied in the database */
 
     // Pages to be created. The related replacements must be added apart.
-    @Builder.Default
-    Set<IndexablePage> addPages = new HashSet<>();
+    @Singular
+    Set<IndexablePage> addPages;
 
     // The attributes of a page may vary with time. In particular, we are interested in update the titles.
-    @Builder.Default
-    Set<IndexablePage> updatePages = new HashSet<>();
+    @Singular
+    Set<IndexablePage> updatePages;
 
-    @Builder.Default
-    Set<IndexableReplacement> addReplacements = new HashSet<>();
+    @Singular
+    Set<IndexableReplacement> addReplacements;
 
     // The attributes of a replacement may vary, e.g. the last update date, or the context/position.
-    @Builder.Default
-    Set<IndexableReplacement> updateReplacements = new HashSet<>();
+    @Singular
+    Set<IndexableReplacement> updateReplacements;
 
-    @Builder.Default
-    Set<IndexableReplacement> removeReplacements = new HashSet<>();
+    @Singular
+    Set<IndexableReplacement> removeReplacements;
 
     int size() {
         return (
@@ -63,20 +55,23 @@ public final class PageIndexResult {
         );
     }
 
-    boolean isNotEmpty() {
+    private boolean isNotEmpty() {
         return this.size() > 0;
     }
 
-    void add(PageIndexResult pageIndexResult) {
-        this.addPages.addAll(pageIndexResult.getAddPages());
-        this.updatePages.addAll(pageIndexResult.getUpdatePages());
-        this.addReplacements.addAll(pageIndexResult.getAddReplacements());
-        this.updateReplacements.addAll(pageIndexResult.getUpdateReplacements());
-        this.removeReplacements.addAll(pageIndexResult.getRemoveReplacements());
-
-        if (isNotEmpty()) {
-            this.status = PageIndexStatus.PAGE_INDEXED;
+    PageIndexResult add(PageIndexResult pageIndexResult) {
+        PageIndexResult merged =
+            this.toBuilder()
+                .addPages(pageIndexResult.getAddPages())
+                .updatePages(pageIndexResult.getUpdatePages())
+                .addReplacements(pageIndexResult.getAddReplacements())
+                .updateReplacements(pageIndexResult.getUpdateReplacements())
+                .removeReplacements(pageIndexResult.getRemoveReplacements())
+                .build();
+        if (pageIndexResult.isNotEmpty()) {
+            merged = merged.toBuilder().status(PageIndexStatus.PAGE_INDEXED).build();
         }
+        return merged;
     }
 
     static PageIndexResult ofEmpty() {
@@ -86,15 +81,5 @@ public final class PageIndexResult {
     @TestOnly
     public static PageIndexResult ofEmpty(PageIndexStatus status, Collection<PageReplacement> replacements) {
         return PageIndexResult.builder().status(status).replacements(replacements).build();
-    }
-
-    void clear() {
-        this.addPages.clear();
-        this.updatePages.clear();
-        this.addReplacements.clear();
-        this.updateReplacements.clear();
-        this.removeReplacements.clear();
-
-        this.status = PageIndexStatus.PAGE_NOT_INDEXED;
     }
 }

@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 class IndexablePageComparator {
 
     PageIndexResult indexPageReplacements(IndexablePage page, @Nullable IndexablePage dbPage) {
-        final PageIndexResult pageIndexResult = PageIndexResult.ofEmpty();
+        PageIndexResult result = PageIndexResult.ofEmpty();
         final Set<IndexableReplacement> dbReplacements = dbPage == null
             ? new HashSet<>() // The set must be mutable
             : new HashSet<>(dbPage.getReplacements());
@@ -30,20 +30,19 @@ class IndexablePageComparator {
         // All replacements modified in the DB set are marked as "touched".
         // In case a replacement is kept as is, we also mark it as "touched".
         for (IndexableReplacement replacement : page.getReplacements()) {
-            pageIndexResult.add(handleReplacement(replacement, dbReplacements, ignoreContext));
+            result = result.add(handleReplacement(replacement, dbReplacements, ignoreContext));
         }
 
         // Check changes in the page
         if (dbPage == null) {
             // New page
-            pageIndexResult.add(PageIndexResult.builder().addPages(Set.of(page)).build());
+            result = result.add(PageIndexResult.builder().addPages(Set.of(page)).build());
         } else if (isUpdatePage(page, dbPage)) {
             // Update page if needed
-            pageIndexResult.add(PageIndexResult.builder().updatePages(Set.of(page)).build());
+            result = result.add(PageIndexResult.builder().updatePages(Set.of(page)).build());
         }
 
-        pageIndexResult.add(cleanUpPageReplacements(dbReplacements));
-        return pageIndexResult;
+        return result.add(cleanUpPageReplacements(dbReplacements));
     }
 
     private boolean existReplacementsWithSameContext(Collection<IndexableReplacement> replacements) {
@@ -143,7 +142,7 @@ class IndexablePageComparator {
      * @return A list of replacements to be managed in DB.
      */
     private PageIndexResult cleanUpPageReplacements(Set<IndexableReplacement> dbReplacements) {
-        final PageIndexResult result = PageIndexResult.ofEmpty();
+        PageIndexResult result = PageIndexResult.ofEmpty();
 
         // Find just in case the system-reviewed replacements and delete them
         final Set<IndexableReplacement> systemReviewed = dbReplacements
@@ -151,7 +150,7 @@ class IndexablePageComparator {
             .filter(IndexableReplacement::isSystemReviewed)
             .collect(Collectors.toSet());
         systemReviewed.forEach(dbReplacements::remove);
-        result.add(PageIndexResult.builder().removeReplacements(systemReviewed).build());
+        result = result.add(PageIndexResult.builder().removeReplacements(systemReviewed).build());
 
         // All remaining replacements to review and not checked so far are obsolete and thus to be deleted
         final Set<IndexableReplacement> obsolete = dbReplacements
@@ -159,7 +158,7 @@ class IndexablePageComparator {
             .filter(rep -> rep.isToBeReviewed() && !rep.isTouched())
             .collect(Collectors.toSet());
         obsolete.forEach(dbReplacements::remove);
-        result.add(PageIndexResult.builder().removeReplacements(obsolete).build());
+        result = result.add(PageIndexResult.builder().removeReplacements(obsolete).build());
 
         return result;
     }

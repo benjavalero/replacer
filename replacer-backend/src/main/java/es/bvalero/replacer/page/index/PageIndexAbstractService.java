@@ -62,7 +62,7 @@ abstract class PageIndexAbstractService {
         final PageIndexResult result = indexablePageComparator.indexPageReplacements(indexablePage, dbPage);
         saveResult(result);
 
-        return result.withReplacements(replacements);
+        return result.toBuilder().replacements(replacements).build();
     }
 
     abstract Optional<PageModel> findByPageId(WikipediaPageId pageId);
