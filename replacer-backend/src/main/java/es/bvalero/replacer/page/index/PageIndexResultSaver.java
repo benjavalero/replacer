@@ -1,11 +1,10 @@
 package es.bvalero.replacer.page.index;
 
+import es.bvalero.replacer.repository.PageModel;
 import es.bvalero.replacer.repository.PageRepository;
+import es.bvalero.replacer.repository.ReplacementModel;
 import es.bvalero.replacer.repository.ReplacementRepository;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -53,43 +52,33 @@ class PageIndexResultSaver {
     }
 
     private void saveBatchResult() {
+        // We use a good-old "for" loop in order to avoid a ConcurrentModificationException
+        // See: https://medium.com/xiumeteo-labs/stream-and-concurrentmodificationexception-2d14ed8ff4b2
+        // Also use sets just in case to prevent duplicated insertions
+        final Set<PageModel> addPages = new HashSet<>();
+        final Set<PageModel> updatePages = new HashSet<>();
+        final Set<ReplacementModel> addReplacements = new HashSet<>();
+        final Set<ReplacementModel> updateReplacements = new HashSet<>();
+        final Set<ReplacementModel> removeReplacements = new HashSet<>();
+
+        //noinspection ForLoopReplaceableByForEach
+        for (int i = 0; i < this.batchResult.size(); i++) {
+            PageIndexResult result = this.batchResult.get(i);
+            addPages.addAll(IndexablePageMapper.toModel(result.getAddPages()));
+            updatePages.addAll(IndexablePageMapper.toModel(result.getUpdatePages()));
+            addReplacements.addAll(IndexableReplacementMapper.toModel(result.getAddReplacements()));
+            updateReplacements.addAll(IndexableReplacementMapper.toModel(result.getUpdateReplacements()));
+            removeReplacements.addAll(IndexableReplacementMapper.toModel(result.getRemoveReplacements()));
+        }
+
         // Pages must be added before adding the related replacements
         // Pages are removed along with their replacements
         // We assume the replacements removed correspond to not removed pages
-        pageRepository.addPages(
-            IndexablePageMapper.toModel(
-                batchResult.stream().flatMap(r -> r.getAddPages().stream()).collect(Collectors.toUnmodifiableSet())
-            )
-        );
-        pageRepository.updatePages(
-            IndexablePageMapper.toModel(
-                batchResult.stream().flatMap(r -> r.getUpdatePages().stream()).collect(Collectors.toUnmodifiableSet())
-            )
-        );
-        replacementRepository.addReplacements(
-            IndexableReplacementMapper.toModel(
-                batchResult
-                    .stream()
-                    .flatMap(r -> r.getAddReplacements().stream())
-                    .collect(Collectors.toUnmodifiableSet())
-            )
-        );
-        replacementRepository.updateReplacements(
-            IndexableReplacementMapper.toModel(
-                batchResult
-                    .stream()
-                    .flatMap(r -> r.getUpdateReplacements().stream())
-                    .collect(Collectors.toUnmodifiableSet())
-            )
-        );
-        replacementRepository.removeReplacements(
-            IndexableReplacementMapper.toModel(
-                batchResult
-                    .stream()
-                    .flatMap(r -> r.getRemoveReplacements().stream())
-                    .collect(Collectors.toUnmodifiableSet())
-            )
-        );
+        pageRepository.addPages(addPages);
+        pageRepository.updatePages(updatePages);
+        replacementRepository.addReplacements(addReplacements);
+        replacementRepository.updateReplacements(updateReplacements);
+        replacementRepository.removeReplacements(removeReplacements);
 
         this.clearBatchResult();
     }

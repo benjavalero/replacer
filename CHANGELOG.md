@@ -1,5 +1,8 @@
 # Versions
 
+## 2.14.4 (??)
+- Improve indexing. Fix bug on concurrent modification.
+
 ## 2.14.3 (22 Dec 2021)
 - Fix replacements not updated on indexing
 
