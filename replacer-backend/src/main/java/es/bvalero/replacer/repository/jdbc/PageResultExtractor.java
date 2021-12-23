@@ -2,7 +2,6 @@ package es.bvalero.replacer.repository.jdbc;
 
 import es.bvalero.replacer.repository.PageModel;
 import es.bvalero.replacer.repository.ReplacementModel;
-import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
@@ -32,7 +31,7 @@ class PageResultExtractor implements ResultSetExtractor<Collection<PageModel>> {
                     .lang(lang)
                     .pageId(pageId)
                     .title(rs.getString("TITLE"))
-                    .lastUpdate(Optional.ofNullable(rs.getDate("LAST_UPDATE")).map(Date::toLocalDate).orElse(null))
+                    .lastUpdate(rs.getDate("LAST_UPDATE").toLocalDate())
                     .build()
             );
             // The page might exist without replacements. We check it with the type, for instance.

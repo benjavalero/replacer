@@ -100,7 +100,8 @@ public class PageReviewOptions {
         return StringUtils.join(list, " - ");
     }
 
-    private PageReviewOptions(
+    // Used by the builder
+    PageReviewOptions(
         WikipediaLanguage lang,
         String user,
         ReplacementType type,
