@@ -4,7 +4,6 @@ import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AlertService } from '../alert/alert.service';
-import { ReplacementListService } from '../replacement-list/replacement-list.service';
 import { PageReviewResponse, ReviewOptions } from './page-review.model';
 import { PageService } from './page.service';
 import { ValidateCustomComponent } from './validate-custom.component';
@@ -27,8 +26,7 @@ export class FindRandomComponent implements OnInit {
     private route: ActivatedRoute,
     private titleService: Title,
     private location: Location,
-    private modalService: NgbModal,
-    private replacementListService: ReplacementListService
+    private modalService: NgbModal
   ) {
     this.review = null;
   }
@@ -64,8 +62,8 @@ export class FindRandomComponent implements OnInit {
 
     this.alertService.addInfoMessage(msg);
 
-    this.pageService.findRandomPage(options).subscribe(
-      (review: PageReviewResponse) => {
+    this.pageService.findRandomPage(options).subscribe({
+      next: (review: PageReviewResponse) => {
         if (review) {
           this.manageReview(review, options);
         } else {
@@ -76,17 +74,17 @@ export class FindRandomComponent implements OnInit {
           );
         }
       },
-      (err) => {
+      error: (err) => {
         this.alertService.addErrorMessage(
           'Error al buscar artículos con reemplazos: ' + (err.error?.message || err.message)
         );
       }
-    );
+    });
   }
 
   private findPageReview(pageId: number, options: ReviewOptions): void {
-    this.pageService.findPageReviewById(pageId, options).subscribe(
-      (review: PageReviewResponse) => {
+    this.pageService.findPageReviewById(pageId, options).subscribe({
+      next: (review: PageReviewResponse) => {
         if (review) {
           this.manageReview(review, options);
         } else {
@@ -97,12 +95,12 @@ export class FindRandomComponent implements OnInit {
           this.findRandomPage(options);
         }
       },
-      (err) => {
+      error: (err) => {
         this.alertService.addErrorMessage(
           'Error al buscar los reemplazos en el artículo: ' + (err.error?.message || err.message)
         );
       }
-    );
+    });
   }
 
   private manageReview(review: PageReviewResponse, options: ReviewOptions): void {
@@ -156,7 +154,7 @@ export class FindRandomComponent implements OnInit {
       .subscribe((validateType: ReplacementValidationResponse) => {
         if (validateType) {
           this.openValidationModal$(validateType.type, validateType.subtype).then((result) => {
-            const knownTypeOptions = new ReviewOptions(validateType.type!, validateType.subtype!, null, null);
+            const knownTypeOptions = new ReviewOptions(validateType.type, validateType.subtype, null, null);
             this.router.navigate([this.getReviewUrl(knownTypeOptions, null)]);
           });
         } else {

@@ -98,11 +98,8 @@ export class EditPageComponent implements OnChanges {
     this.review.replacements = [];
 
     const savePage = { ...this.review.page, content: content };
-    this.pageService.savePage(savePage, this.review.options).subscribe(
-      (res) => {
-        // Do nothing
-      },
-      (err) => {
+    this.pageService.savePage(savePage, this.review.options).subscribe({
+      error: (err) => {
         const errStatus = err.status;
         if (errStatus == HttpStatusCode.Conflict) {
           this.alertService.addErrorMessage(
@@ -116,7 +113,7 @@ export class EditPageComponent implements OnChanges {
           this.alertService.addErrorMessage('Error al guardar la página');
         }
       },
-      () => {
+      complete: () => {
         // This alert will be short as it will be cleared on redirecting to next page
         this.alertService.addSuccessMessage('Cambios guardados con éxito');
 
@@ -129,7 +126,7 @@ export class EditPageComponent implements OnChanges {
           )
         );
       }
-    );
+    });
   }
 
   private replaceText(fullText: string, position: number, currentText: string, newText: string): string {

@@ -24,14 +24,14 @@ export class OAuthResponseComponent implements OnInit {
     this.route.queryParams.subscribe((params) => {
       const oauthVerifier: string = params['oauth_verifier'];
       if (oauthVerifier) {
-        this.authenticationService.loginUser$(oauthVerifier).subscribe(
-          (user: User) => {
+        this.authenticationService.loginUser$(oauthVerifier).subscribe({
+          next: (user: User) => {
             this.router.navigate([this.authenticationService.redirectPath || 'dashboard']);
           },
-          (err) => {
+          error: (err) => {
             this.alertService.addErrorMessage('Error al solicitar un Access Token del API de MediaWiki');
           }
-        );
+        });
       } else {
         this.router.navigate(['dashboard']);
       }

@@ -49,7 +49,7 @@ export class PageService {
 
   savePage(page: ReviewPage, options: PageReviewOptions): Observable<void> {
     if (!this.userService.isValidUser()) {
-      return throwError('El usuario no está autenticado. Recargue la página para retomar la sesión.');
+      return throwError(() => new Error('El usuario no está autenticado. Recargue la página para retomar la sesión.'));
     }
 
     // Store the date of the last save to check there are at least 12 s between savings (5 editions/min)
