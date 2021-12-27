@@ -79,19 +79,23 @@ public class PageSaveController {
             try {
                 pageSaveService.savePageContent(page, sectionId, options, accessToken);
             } catch (WikipediaException e) {
-                if (e instanceof WikipediaConflictException) {
-                    // Already logged in Wikipedia service
-                    return ResponseEntity.status(HttpStatus.CONFLICT).build();
-                } else if (e.getMessage() != null && e.getMessage().contains("mwoauth-invalid-authorization")) {
-                    LOGGER.warn("Authentication error saving page content: " + e.getMessage());
-                    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-                } else {
-                    LOGGER.error("Error saving page content", e);
-                    return ResponseEntity.internalServerError().build();
-                }
+                return manageWikipediaException(e);
             }
         }
 
         return ResponseEntity.noContent().build();
+    }
+
+    private ResponseEntity<Void> manageWikipediaException(WikipediaException e) {
+        if (e instanceof WikipediaConflictException) {
+            LOGGER.warn(e.getMessage());
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        } else if (e.getMessage() != null && e.getMessage().contains("mwoauth-invalid-authorization")) {
+            LOGGER.warn("Authentication error saving page content: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        } else {
+            LOGGER.error("Error saving page content", e);
+            return ResponseEntity.internalServerError().build();
+        }
     }
 }

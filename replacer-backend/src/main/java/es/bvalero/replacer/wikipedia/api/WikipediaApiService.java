@@ -337,14 +337,13 @@ class WikipediaApiService implements WikipediaService {
         EditToken editToken = getEditToken(id, accessToken);
         // Pre-check of edit conflicts
         if (queryTimestamp.compareTo(editToken.getTimestamp()) <= 0) {
-            LOGGER.warn(
-                "Page edited at the same time: {} - {} - {} - {}",
-                queryTimestamp,
-                editToken.getTimestamp(),
+            String message = String.format(
+                "Page edited at the same time: %s -%s - %s",
                 id,
-                pageContent
+                queryTimestamp,
+                queryTimestamp
             );
-            throw new WikipediaConflictException();
+            throw new WikipediaConflictException(message);
         }
 
         WikipediaApiRequest apiRequest = WikipediaApiRequest
