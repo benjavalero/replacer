@@ -859,14 +859,8 @@
  antoxos||antollos
  anudar||anoar
  añadir||engadir
- anexo||anello, vello, anexo (é correcto se se refire a engadido, un anexo)
- anexa||anella, vella, anexa (é correcto se se refire a engadida, un anexo)
- anexos||anellos, vellos, anexos (é correcto se se refire a engadidos, uns anexos)
- anexas||anellas, vellas, anexas (é correcto se se refire a engadidas, uns anexos)
  añexa||vella, anella
  añexas||vellas, anellas
- añexo||vello, anello
- añexos||vellos, anellos
  año||ano, año (é correcto cando é a cría da ovella)
  añoranza||morriña
  años||anos, años (é correcto cando son crías de ovella)
@@ -6429,6 +6423,8 @@
  Estadounidenses|cs|estadounidenses
  estadunidense||estadounidense
  estadunidenses||estadounidenses
+ estafe||time  (se é unha tradución incorrecta do inglés)
+ estafes||times  (se é unha tradución incorrecta do inglés)
  estambul||Istambul
  estan||están
  estandar||estándar
@@ -7001,8 +6997,8 @@
  febrifugo||febrífugo
  febrifugos||febrífugos
  February||febreiro
- fecha||data, fecha (é correcto se é pequena cantidade de líquido)
- fechas||datas, fechas (é correcto se é pequena cantidade de líquido)
+ fecha||data (é correcto se é sinónimo de "grolo" ou de "pecha")
+ fechas||datas (é correcto se é sinónimo de "grolos" ou de "pechas")
  fecula||fécula
  feculas||féculas
  federacion||federación
@@ -9319,9 +9315,9 @@
 
 == K ==
  kabul||Cabul
- Kathmandu||Katmandu
- Katmandú||Katmandu
- katmandu|cs|Katmandu
+ Kathmandu||Katmandú
+ Katmandu||Katmandú
+ katmandu|cs|Katmandú
  Kazagistan||Casaquistán
  Kazagistán||Casaquistán
  Kazajistan||Casaquistán
@@ -9444,6 +9440,7 @@
  lásers||láseres
  latego||látego
  lategos||látegos
+ latexa||late (se é unha tradución incorrecta do inglés)
  latido||latexo
  latigo||látego
  látigo||látego
@@ -9958,6 +9955,7 @@
  Marzo|cs|marzo
  mascara||máscara (substantivo), mascara (é correcto se é do verbo mascar),  mascará (se é do verbo mascar)
  mascaras||máscaras (substantivo), mascaras (é correcto se é do verbo mascar), mascarás (se é do verbo mascar)
+ mási||máis
  mason||masón
  masoneria||masonería
  masonerias||masonerías
@@ -10301,7 +10299,7 @@
  mila||milla
  milas||millas
  milan||Milán
- milano||miñato (ave)
+ milano||miñato (ave), Milán
  milanos||miñatos (aves)
  miligacha||limacha, lesma
  miligachas||limachas, lesmas
@@ -12269,6 +12267,8 @@
  sabrosas||saborosas
  saeteira||seteira
  saeteiras||seteiras
+ saindo||saíndo
+ sair||saír
  salgue||sae
  salguen||saen
  salir||saír
@@ -12675,7 +12675,7 @@
  subcampeonatos||subcampionatos
  subscriptor||subscritor
  subscriptora||subscritora
- subscritoras||subscritoras
+ subscriptoras||subscritoras
  subscriptores||subscritores
  subscripción||subscrición
  subscripcións||subscricións

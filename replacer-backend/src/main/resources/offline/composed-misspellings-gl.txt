@@ -1,6 +1,6 @@
 Nesta lista detállanse os «termos compostos» que a ferramenta [[Wikipedia:Replacer|Replacer]] detecta como potencialmente erróneos.
 
-O formato é o mesmo que o do [[Wikipedia:Revisor ortográfico/Listaxe|listado de termos simples]], coa salvedade de que esta lista extende ó anterior con termos ou expresións que conteñen caracteres non alfabéticos: espazos, números, etc. As recomendacións aplican igualmente.
+O formato é o mesmo que o do [[Wikipedia:Revisor ortográfico/Listaxe|lista de termos simples]], coa salvedade de que esta lista estende á anterior con termos ou expresións que conteñen caracteres non alfabéticos: espazos, números, etc. As recomendacións aplican igualmente.
 
  Administración Publica|cs|Administración Pública
  Alberto Del Río|cs|Alberto Del Rio (nome comercial do loitador, sen til)

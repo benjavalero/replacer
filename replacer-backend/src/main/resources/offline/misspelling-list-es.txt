@@ -176,6 +176,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  acepsión||acepción
  acepsion||acepción
  aceptacion||aceptación
+ acercandose||acercándose
  aceria||acería
  acerias||acerías
  acerrima||acérrima
@@ -1001,8 +1002,8 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  angela||Ángela
  ángela|cs|Ángela
  angeles||ángeles
- angelica||Angélica, angélica (para el nombre común de la planta)
- angélica|cs|Angélica
+ angelica||Angélica (nombre propio de mujer), angélica (nombre vulgar de una planta; sinónimo de «angelical»), angelical
+ angélica|cs|Angélica (nombre propio de mujer), angélica (nombre vulgar de una planta; sinónimo de «angelical»), angelical
  angioplastía||angioplastia
  angioplastías||angioplastias
  anglofona||anglófona
@@ -1362,7 +1363,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  archipielagos||archipiélagos
  archirival||archirrival
  archirivales||archirrivales
- arcoiris||arcoíris
+ arcoiris||arcoíris, arco iris
  arcon||arcón
  area||área
  aréa||área
@@ -1528,6 +1529,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  asceticas||ascéticas
  ascetico||ascético
  asceticos||ascéticos
+ asciendía||ascendía
  ascorbico||ascórbico
  ascorbicos||ascórbicos
  asenso||ascenso (sustantivo), asenso (acción y efecto de asentir, o planta)
@@ -1904,6 +1906,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  axon||axón
  axteca||azteca
  axtecas||aztecas
+ ayllu||aillu
  aymara||aimara
  azacan||azacán
  azadon||azadón
@@ -1943,7 +1946,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  bagon||vagón
  bagón||vagón
  bahamas|cs|Bahamas
- Bahia|cs|Bahía (localidades)
+ Bahia|cs|Bahía (en español), Bahia (en portugués)
  bahia|cs|bahía
  bahias||bahías
  baho||vaho
@@ -2152,8 +2155,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  begiga||vejiga
  begigas||vejigas
  beirut|cs|Beirut
- beisbol||béisbol
- beísbol||béisbol
+ beísbol||béisbol, beisbol
  bejar||Béjar
  béjar|cs|Béjar
  bejiga||vejiga
@@ -4063,7 +4065,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  colunna||columna
  comadreria||comadrería
  comadrerias||comadrerías
- comandad||comandada, comandado (participio); comandad (imperativo)
+ comandad||comandada, comandado (participio), comandad (imperativo)
  comandadad||comandadas
  comandadada||comandada
  comandadadas||comandadas
@@ -5119,8 +5121,8 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  críticados||criticados
  críticar||criticar
  criticas||críticas (adjetivo o sustantivo, plural), criticas (verbo)
- críticó||crítico (adejtivo o sustantivo), criticó (verbo)
- critico||crítico (adejtivo o sustantivo), criticó (verbo en pasado), critico (verbo en presente)
+ críticó||crítico (adjetivo o sustantivo), criticó (verbo)
+ critico||crítico (adjetivo o sustantivo), criticó (verbo en pasado, 3.ª persona), critico (verbo en presente, 1.ª persona)
  criticos||críticos
  croacia|cs|Croacia
  croche||croché
@@ -5333,7 +5335,8 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  dariais||daríais
  dariamos||daríamos
  darian||darían
- darias||darías
+ darias|cs|darías
+ Darias|cs|Darias (apellido), Darías (verbo)
  Dario||Darío, diario
  darío|cs|Darío
  darsela||dársela
@@ -6556,9 +6559,9 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  dolar||dólar (sustantivo, moneda), dolar (verbo, desbastar)
  dolares||dólares (sustantivo, plural, moneda), dolares (verbo, desbastar)
  doláres||dólares (sustantivo, plural, moneda), dolares (verbo, desbastar)
- domestica||doméstica (adjetivo), domestica (verbo, 1.ª persona)
+ domestica||doméstica (adjetivo), domestica (verbo, 3.ª persona)
  domesticacion||domesticación
- domesticas||domésticas (adjetivo), domesticás (verbo, 1.ª persona)
+ domesticas||domésticas (adjetivo), domesticas (verbo, 1.ª persona: tú), domesticás (verbo, 1.ª persona: vos)
  domestico||doméstico (adjetivo), domesticó (verbo, 3.ª persona), domestico (verbo, 1.ª persona)
  domesticos||domésticos
  domicilo||domicilio
@@ -6706,7 +6709,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  echagüe|cs|Echagüe
  Echeverria||Echeverría
  echeverría|cs|Echeverría
- echo||echo («eco» en inglés; verbo, 1.ª persona), echó (verbo, 3.ª persona), hecho (sustantivo y participio)
+ echo||echo (‘eco’ en inglés), echo (verbo, 1.ª persona), echó (verbo, 3.ª persona), hecho (sustantivo y participio)
  ecicion||edición
  ecición||edición
  ecision||escisión
@@ -6962,8 +6965,8 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  elloas||ellas
  éllos||ellos
  emabrgo||embargo
- email||correo electrónico
- emails||correos electrónicos
+ email||mensaje de correo electrónico, correo electrónico
+ emails||mensajes de correo electrónico, correos electrónicos
  emanacion||emanación
  emancipacion||emancipación
  embarcacion||embarcación
@@ -7225,6 +7228,8 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  entericas||entéricas
  enterico||entérico
  entericos||entéricos
+ entevista||entrevista
+ entevistas||entrevistas
  entomces||entonces
  entómces||entonces
  entomologa||entomóloga
@@ -7741,9 +7746,10 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  esqui||esquí
  esquies||esquíes
  esquis||esquís (o esquíes)
- ésta||esta (determinante y pronombre), ésta (pronombre)
  estába||estaba
  estabán||estaban
+ estabelece||establece
+ estabelecen||establecen
  estableciendose||estableciéndose
  establecio||estableció
  establicieron||establecieron
@@ -7782,7 +7788,6 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  estaria||estaría
  estariamos||estaríamos
  estarian||estarían
- éstas||estas (determinante y pronombre), éstas (pronombre)
  estatica||estática
  estaticas||estáticas
  estatico||estático
@@ -7799,7 +7804,6 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  estba||estaba
  estban||estaban
  estbas||estabas
- éste||este (determinante y pronombre), éste (pronombre)
  estearico||esteárico
  estearicos||esteáricos
  estefania||Estefanía
@@ -7877,7 +7881,6 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  estomatologias||estomatologías
  estomatologo||estomatólogo
  estomatologos||estomatólogos
- éstos||estos (determinante y pronombre), éstos (pronombre)
  estrambotica||estrambótica
  estramboticas||estrambóticas
  estrambotico||estrambótico
@@ -8105,6 +8108,15 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  excentrico||excéntrico
  excentricos||excéntricos
  excepcion||excepción
+ exceptica||escéptica
+ excéptica||escéptica
+ excepticas||escépticas
+ excépticas||escépticas
+ excepticismo||escepticismo
+ exceptico||escéptico
+ excéptico||escéptico
+ excepticos||escépticos
+ excépticos||escépticos
  exceptuan||exceptúan
  excision||escisión
  excisión||escisión
@@ -8229,6 +8241,22 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  exogenas||exógenas
  exogeno||exógeno
  exogenos||exógenos
+ exorta||exhorta
+ exortacion||exhortación
+ exortación||exhortación
+ exortaciones||exhortaciones
+ exortado||exhortado
+ exortador||exhortador
+ exortadora||exhortadora
+ exortando||exhortando
+ exortar||exhortar
+ exortaron||exhortaron
+ exortativa||exhortativa
+ exortativas||exhortativas
+ exortativo||exhortativo
+ exortativos||exhortativos
+ exorto||exhorto (sustantivo), exhorto (verbo 1.ª persona), exhortó (verbo 3.ª persona)
+ exortos||exhortos
  exoterica||exotérica
  exotericas||exotéricas
  exoterico||exotérico
@@ -8598,7 +8626,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  fernández|cs|Fernández
  Fernado||Fernando
  fernando|cs|Fernando
- feroes||feroés
+ feroes||feroés (natural de las islas Feroe, o perteneciente o relativo a estas; lengua que se habla en las islas Feroe, o perteneciente o relativo a ella), Feroe (islas)
  ferrari|cs|Ferrari
  ferrcarriles||ferrocarriles
  ferrea||férrea
@@ -9282,6 +9310,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  genealogicos||genealógicos
  generacion||generación
  generalemente||generalmente
+ generalitat||Generalidad
  generica||genérica
  genericas||genéricas
  generico||genérico
@@ -9321,8 +9350,8 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  genoves||genovés
  gentilica||gentílica
  gentilicas||gentílicas
- gentilico||gentílico
- gentilicos||gentílicos
+ gentilico||gentílico (perteneciente o relativo a los gentiles), gentilicio (que denota relación con un lugar geográfico)
+ gentilicos||gentílicos (pertenecientes o relativos a los gentiles), gentilicios (que denotan relación con un lugar geográfico)
  gentio||gentío (multitud de personas), Gencio (rey de los ilirios)
  gentios||gentíos
  geodesica||geodésica
@@ -10845,6 +10874,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  incoporarse||incorporarse
  incoporó||incorporó
  incorporacion||incorporación
+ incorporandose||incorporándose
  incorporo||incorporó (3.ª persona), incorporo (1.ª persona)
  incostitucionalidad||inconstitucionalidad
  incoveniente||inconveniente
@@ -11008,6 +11038,8 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  infrarojo||infrarrojo
  infrarojos||infrarrojos
  infrastructura||infraestructura
+ infrestructura||infraestructura
+ infrestructuras||infraestructuras
  infucion||infusión
  infución||infusión
  infula||ínfula
@@ -11597,7 +11629,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  Junio|cs|junio
  junior||júnior (excepto el término eclesiástico)
  jupiter||Júpiter
- júpiteres||jupiteres o jupíteres
+ júpiteres||jupíteres
  jurasica||jurásica
  jurasicas||jurásicas
  jurasico||jurásico
@@ -12336,7 +12368,6 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  malevolas||malévolas
  malevolo||malévolo
  malevolos||malévolos
- Mali||Malí
  malnutricion||malnutrición
  malon||malón
  maltes||maltés
@@ -14067,6 +14098,8 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  ordalias||ordalías
  órden||orden
  ordén||orden
+ órdena||ordena
+ órdenan||ordenan
  ordenes||órdenes (sustantivo, plural), Órdenes (apellido), ordenes (verbo)
  ordeno||ordenó (3.ª persona), ordeno (1.ª persona)
  ordoñez||Ordóñez
@@ -14207,8 +14240,8 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  ortopedicas||ortopédicas
  ortopedico||ortopédico
  ortopedicos||ortopédicos
- oscar|cs|Óscar (premio de cine, oscar (pez de agua dulce)
- óscar|cs|Óscar (premio de cine, oscar (pez de agua dulce)
+ oscar|cs|Óscar (premio de cine), óscar (estatuilla que representa el premio de cine, pez de agua dulce)
+ óscar|cs|Óscar (premio de cine), óscar (estatuilla que representa el premio de cine, pez de agua dulce)
  osculo||ósculo
  osculos||ósculos
  osea||o sea, ósea (relativa al hueso)
@@ -14423,14 +14456,12 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  pantominas||pantomimas
  panty||panti
  pantys||pantis
- paparazi||paparazzi
- paparazis||paparazzis
  papeleria||papelería
  papelografo||papelógrafo
  papelografos||papelógrafos
  papelon||papelón
- paper||ensayo, comunicación, ponencia, informe o, entre estudiantes, trabajo
- papers||ensayos, comunicaciones, ponencias, informes o, entre estudiantes, trabajos
+ paper||ensayo, comunicación, ponencia, informe, trabajo
+ papers||ensayos, comunicaciones, ponencias, informes, trabajos
  papilionacea||papilionácea
  papilionaceas||papilionáceas
  papilionaceo||papilionáceo
@@ -14935,6 +14966,8 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  perpendiculo||perpendículo
  perpendiculos||perpendículos
  perpetracion||perpetración
+ Perpignan||Perpiñán
+ perpiñán|cs|Perpiñán
  persecucion||persecución
  persecusion||persecución
  persecusión||persecución
@@ -15398,7 +15431,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  poquer||póquer, póker
  porcedente||procedente
  porcedentes||procedentes
- porciento||por ciento (excepto el sinónimo de «porcentaje»)
+ porciento||por ciento (por cada cien), % (símbolo de «por ciento»), porciento (sinónimo de «porcentaje»), porcentaje
  porcion||porción
  porel||por el
  porfin||por fin
@@ -15484,7 +15517,6 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  postcombustion||postcombustión
  poster||póster
  posteriomente||posteriormente
- Posteriomente||Posteriormente
  posterioremente||posteriormente
  posters||pósteres
  pósters||pósteres
@@ -16032,6 +16064,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  província||provincia
  províncias||provincias
  proviniente||proveniente
+ provicional||provisional
  provoco||provocó
  provoncando||provocando
  proxima||próxima
@@ -16179,11 +16212,13 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  putrefaccion||putrefacción
  puzzle||puzle
  puzzles||puzles
+ Pyeongchang||Pieonchang
  Pyongyang||Pionyang
 
 == Q ==
  qe||que
  qeu||que
+ qual||cual (pronombre relativo), cuál (pronombre interrogativo), qual (en otros idiomas)
  qualquier||cualquier
  qualquiera||cualquiera
  qualy||fase de clasificación
@@ -16570,7 +16605,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  reevaluandolos||revaluándolos
  reevaluándolos||revaluándolos
  reevaluar||revaluar
- reevaluara||revaluará
+ reevaluara||revaluara, revaluará
  reevaluará||revaluará
  reevaluaran||revaluarán
  reevaluarán||revaluarán
@@ -17893,7 +17928,6 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  solipedos||solípedos
  Solis||Solís
  solís|cs|Solís
- sólo||solo (adjetivo y adverbio), sólo (adverbio), solamente (para evitar ambigüedades)
  solucion||solución
  somali||somalí
  sombria||sombría
@@ -18211,6 +18245,10 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  suscedía||sucedía
  suscedían||sucedían
  suscedías||sucedías
+ suscinta||sucinta
+ suscintas||sucintas
+ suscinto||sucinto
+ suscintos||sucintos
  suscitacion||suscitación
  suscripcion||suscripción, subscripción
  suseción||sucesión
@@ -19591,7 +19629,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  validacion||validación
  validas||válidas (adjetivo o sustantivo, plural), validas (adjetivo, plural, o verbo)
  valido||válido (adjetivo), valido (adjetivo, sustantivo o verbo)
- validos||válidos (adjetivo o sustantivo, plural), validos (adjetivo o sustantivo, plural)
+ validos||válidos (que valen legalmente; aceptables; que pueden valerse por sí mismos; robustos, fuertes; esforzados), validos (recibidos, creídos, apreciados, estimados; hombres que ejercían el poder de altos personajes)
  valon||valón
  valvua||válvula
  válvua||válvula
@@ -19845,7 +19883,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  vigues||vigués
  viivo||vivió
  viivó||vivió
- vinculo||vínculo (sustantivo), vinculo (verbo, 1.ª persona)
+ vinculo||vínculo (sustantivo), vinculó (verbo, 3.ª persona), vinculo (verbo, 1.ª persona)
  vinculos||vínculos
  vineria||vinería
  vinerias||vinerías
@@ -20223,7 +20261,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  zoologicos||zoológicos
  zoologo||zoólogo
  zoologos||zoólogos
- zoom||zum, Zoom (aplicación de videollamada)
+ zoom||zum, Zoom (aplicación de videollamada, software)
  zoomorfica||zoomórfica
  zoomorficas||zoomórficas
  zoomorfico||zoomórfico

@@ -1,8 +1,25 @@
-== Lista de falsos positivos ==
+Esta lista inclúe termos ou expresións (case sempre) falsos positivos e que a ferramenta [[Wikipedia:Replacer|Replacer]] usa para ocultar posibles substitucións. Por exemplo:
+* "CD Badajoz" ocultará a posible substitución de "Badajoz".
+* "Dragon Ball" ocultará a posible substitución de "Dragon".A
+Todas as palabras que aparecen nestas expresións deben estar completas e incluír todo o falso positivo que desexe ignorar. Por exemplo, <code>Carlos A</code> non sería unha expresión válida para ignorar as ocorrencias de "Carlos Arroyo".
 
-* A idea xeral é incluír os termos ou conxunto de termos que son falsos positivos, ou que o son na gran maioría de casos, polo que non compensa ter que revisar por exemplo mil aparicións para detectar un só verdadeiro positivo.
-* Se é posible tentamos que non se solapen con outras excepcións. Ordena os termos en orde alfabética do termo incorrecto.
-* De momento usa unha expresión regular (automaton) polo que podemos incluír algo de sintaxe destas.
+As expresións desta lista distinguen entre maiúsculas e minúsculas. Permítense algunhas expresións regulares sinxelas. Por exemplo, <code>[Aa]índa así</code> ignorará as ocorrencias de "Aínda así" e "aínda así".
+
+Pódense incluír comentarios, comezando por <code>#</code>, en particular para indicar o número aproximado de ocorrencias da expresión.
+
+=== Número de ocorrencias ===
+Para calcular o número de ocorrencias, cando non distingue entre maiúsculas e minúsculas, recoméndase buscar a expresión na caixa de busca de Wikipedia pero incluída entre comiñas dobres. Para distinguir entre maiúsculas e minúsculas, pode engadir a opción ''fonte'' que busca o texto tal cal. Por exemplo:
+* <code>"aínda así"</code> busca aparicións de "aínda así" sen distinción entre maiúsculas e minúsculas.
+* <code>"Aínda así" insource:/"Aínda así"/</code> busca aparicións de "Aínda así" distinguindo entre maiúsculas e minúsculas. Debe introducir a expresión dúas veces para optimizar o tempo de resposta á busca.
+Tamén tem que filtrar polos espazos ''Principal'' e ''Anexo'', que son os espazos que usa Replacer actualmente.
+
+{{Aviso
+| tipo = contido
+| header = ''O número de expresións desta lista pode afectar o rendemento de Replacer''.
+| text = <br> Recoméndase incluír só aquelas expresións con máis de 100 aparicións.
+}}
+
+=== Lista ===
 
  # ---------A
  [Aa]ctualmente
@@ -19,8 +36,6 @@
  Al Qaeda
 
  Muhammad Ali
-
- [Rr]hythm and blues
 
  Carlos Arroyo
  David Arroyo
@@ -114,6 +129,7 @@
  et. al
  Lynx [Ee]dicions
  Estrella Castrillón
+ [Ee]l mesmo
 
  # ---------I
  # Ivan
@@ -288,12 +304,18 @@
  # round
  [Rr]ound [Rr]obin
  [Rr]ock and [Rr]oll
+ [Rr]hythm and blues
+
+ San Román
+ Alfa Romeo
 
  # ---------S
  # sebastian
  Sebastian Bach
  Sebastian Vettel
  Sebastian Ingrosso
+ Ford Sierra
+ de la Sierra
 
  # ---------V
  # version

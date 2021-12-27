@@ -33,6 +33,7 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  Castilla y Leon||Castilla y León
  Castilla la Mancha||Castilla-La Mancha
  Castilla La Mancha||Castilla-La Mancha
+ Castilla- La Mancha||Castilla-La Mancha
  con mas||con más
  continua estando||continúa estando
  continua siendo||continúa siendo
@@ -128,6 +129,7 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  hm2||hm² (hectómetro cuadrado)
  hm3||hm³ (hectómetro cúbico)
  hay mas||hay más
+ han habido||ha habido
  Hugo Chavez|cs|Hugo Chávez
  Jose Antonio|cs|José Antonio (nombre propio español)
  Jose Manuel|cs|José Manuel (nombre propio español y portugués)
@@ -138,6 +140,8 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  km2||km² (kilómetro cuadrado)
  km3||km³ (kilómetro cúbico)
  km. de||km de
+ km. del||km del
+ km. al||km al
  la mas||la más
  la perdida||la pérdida
  la practica||la practica (verbo), la práctica (sustantivo)
@@ -151,10 +155,10 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  los mas||los más
  lucky loser||perdedor afortunado (deporte)
  luego paso||luego pasó
- m2||m² (metro cuadrado), m2 (variable, nombre propio o para plantilla convertir)
- m3||m³ (metro cúbico), m3 (variable, nombre propio o para plantilla convertir)
- mm2||mm² (milímetro cuadrado)
- mm3||mm³ (milímetro cúbico)
+ m2|cs|m² (metro cuadrado), m2 (variable, nombre propio o para plantilla convertir)
+ m3|cs|m³ (metro cúbico), m3 (variable, nombre propio o para plantilla convertir)
+ mm2|cs|mm² (milímetro cuadrado)
+ mm3|cs|mm³ (milímetro cúbico)
  main draw||cuadro principal
  mal entendido||mal entendido (adjetivo), malentendido (sustantivo)
  Maria Antonia|cs|María Antonia (nombre propio español)

@@ -67,6 +67,9 @@ También hay que filtrar por los espacios ''Principal'' y ''Anexo'', que son los
  Alex Dimitriades    # 100
  Alex Jones          # 100
 
+ # alla
+ Alla Kudryavtseva
+
  # america
  # North America Editorial  # Cubierto por North America
  America Tour
@@ -606,7 +609,7 @@ También hay que filtrar por los espacios ''Principal'' y ''Anexo'', que son los
  Nicolas Lapierre
  Nicolas Poussin
 
- #Octubre
+ # Octubre
  # | Octubre
  # px"|Octubre
  # = Octubre
@@ -660,6 +663,9 @@ También hay que filtrar por los espacios ''Principal'' y ''Anexo'', que son los
  Paris-Levallois         # 100
  Théâtre de Paris        # 100
 
+ # Pidio
+ Quintana del Pidio      # municipio​ español
+
  # publica
  publica el
  publica en
@@ -678,6 +684,15 @@ También hay que filtrar por los espacios ''Principal'' y ''Anexo'', que son los
  # records
  # Se encuentra también como inmutable en SurnameFinder
  [Rr]ecords of
+
+ # reference
+ [Bb]asketball[ -][Rr]eference
+ [Ss]ports[ -][Rr]eference
+ [Bb]aseball[ -][Rr]eference
+ [Pp]ro[ -][Ff]ootball[ -][Rr]eference
+ [Rr]acing[ -][Rr]eference
+ [Ff]ilm[ -][Rr]eference
+ Mammal Species of the World. A Taxonomic and Geographic Reference
 
  # retiro
  [Ss]u retiro       # 7150
@@ -732,6 +747,7 @@ También hay que filtrar por los espacios ''Principal'' y ''Anexo'', que son los
  # text:Septiembre
  # text: Septiembre
  # * Septiembre
+ Septiembre Negro
 
  # Simon
  Simon and Schuster    # 1230
