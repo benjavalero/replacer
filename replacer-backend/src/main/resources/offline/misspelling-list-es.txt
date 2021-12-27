@@ -152,6 +152,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  accesit||accésit
  accion||acción
  acciónes||acciones
+ Accra||Acra
  accra||Acra (capital de Ghana)
  accsesorio||accesorio
  accsesorios||accesorios
@@ -313,7 +314,6 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  acutalmente||actualmente
  acutangulo||acutángulo
  acutangulos||acutángulos
- Accra||Acra
  adaptacion||adaptación
  adapto||adaptó (3.ª persona), adapto (1.ª persona)
  Adelaide||Adelaida (ciudad australiana)
@@ -410,13 +410,13 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  áereas||aéreas
  aereo||aéreo
  áereo||aéreo
- áereos||aéreos
  aereogenerador||aerogenerador
  aéreogenerador||aerogenerador
  aereogeneradores||aerogeneradores
  aéreogeneradores||aerogeneradores
  aereopuerto||aeropuerto
  aereopuertos||aeropuertos
+ áereos||aéreos
  aereos||aéreos
  aerodinamica||aerodinámica
  aerodinamicas||aerodinámicas
@@ -565,10 +565,10 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  ajigolon||ajigolón, agigolón
  ajis||ajís
  ajises||ajíes, ajís
- alagar||halagar, alargar
- alago||halago (sustantivo y verbo, 1.ª persona), halagó (verbo, 3.ª persona)
- alagó||halagó, alargó
  alacran||alacrán
+ alagar||halagar, alargar
+ alagó||halagó, alargó
+ alago||halago (sustantivo y verbo, 1.ª persona), halagó (verbo, 3.ª persona)
  alalimon||alalimón
  alamo||álamo
  alamos||álamos
@@ -804,11 +804,9 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  alzo||alzó (3.ª persona), alzo (1.ª persona)
  am|cs|AM (sigla del ingl. Amplitude Modulation ‘modulación de amplitud’), a. m. (ante merídiem), am (código ISO 639-1 del idioma amhárico)
  Aman||Amán
- Amatitlan||Amatitlán
- Amman||Amán
- Ammán||Amán
  amasanderia||amasandería
  amasanderias||amasanderías
+ Amatitlan||Amatitlán
  amazonica||amazónica
  amazonicas||amazónicas
  amazonico||amazónico
@@ -864,6 +862,8 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  amigdalas||amígdalas
  aminoacido||aminoácido
  aminoacidos||aminoácidos
+ Amman||Amán
+ Ammán||Amán
  amman||Ammán
  ammán|cs|Ammán
  amnesica||amnésica
@@ -3714,8 +3714,8 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  cinamico||cinámico
  cinamicos||cinámicos
  cinchon||cinchón
- cincos||cinco (número, normalmente en singular), cincos (uso extraño del número, en plural)
  cínco||cinco
+ cincos||cinco (número, normalmente en singular), cincos (uso extraño del número, en plural)
  cinefila||cinéfila
  cinefilas||cinéfilas
  cinefilo||cinéfilo
@@ -4177,8 +4177,8 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  compartio||compartió
  compas||compás
  compasion||compasión
- competancia||competencia, competición
  compentencia||competencia
+ competancia||competencia, competición
  competecia||competencia
  competecias||competencias
  competicion||competición
@@ -5001,8 +5001,8 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  coxigeas||coxígeas
  coxigeo||coxígeo
  coxigeos||coxígeos
- coys||coyes
  Coyoacan||Coyoacán
+ coys||coyes
  cráck||crack
  craneo||cráneo
  craneos||cráneos
@@ -5205,11 +5205,11 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  cuaqueros||cuáqueros
  cuaquier||cualquier
  cuaquiera||cualquiera
- cuatros||cuatro (número, normalmente en singular), cuatros (instrumentos musicales o uso extraño del número, en plural)
  cuasar||cuásar
  cuasars||cuásares
  cuásars||cuásares
  cuátro||cuatro
+ cuatros||cuatro (número, normalmente en singular), cuatros (instrumentos musicales o uso extraño del número, en plural)
  cuátros||cuatros
  Cuauhtemoc||Cuauhtémoc
  Cuautitlan||Cuautitlán
@@ -6692,10 +6692,6 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  ecclesiástico||eclesiástico
  ecclesiasticos||eclesiásticos
  ecclesiásticos||eclesiásticos
- eclesiática||eclesiástica
- eclesiáticas||eclesiásticas
- eclesiático||eclesiástico
- eclesiáticos||eclesiásticos
  ecena||escena
  ecenas||escenas
  ecencia||esencia
@@ -6722,6 +6718,10 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  eclesiasticas||eclesiásticas
  eclesiastico||eclesiástico
  eclesiasticos||eclesiásticos
+ eclesiática||eclesiástica
+ eclesiáticas||eclesiásticas
+ eclesiático||eclesiástico
+ eclesiáticos||eclesiásticos
  ecliptica||eclíptica
  ecografia||ecografía
  ecografias||ecografías
@@ -8621,10 +8621,10 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  fermentacion||fermentación
  Fermin||Fermín
  fermín|cs|Fermín
+ Fernado||Fernando
  fernándes||Fernández
  fernandez||Fernández
  fernández|cs|Fernández
- Fernado||Fernando
  fernando|cs|Fernando
  feroes||feroés (natural de las islas Feroe, o perteneciente o relativo a estas; lengua que se habla en las islas Feroe, o perteneciente o relativo a ella), Feroe (islas)
  ferrari|cs|Ferrari
@@ -9312,12 +9312,12 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  generalemente||generalmente
  generalitat||Generalidad
  generica||genérica
- genericas||genéricas
- generico||genérico
- genericos||genéricos
  génerica||genérica
+ genericas||genéricas
  génericas||genéricas
+ generico||genérico
  génerico||genérico
+ genericos||genéricos
  génericos||genéricos
  generlamente||generalmente
  genero||género (sustantivo), generó (verbo, 3.ª persona), genero (verbo, 1.ª persona)
@@ -9769,7 +9769,6 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  guitarreria||guitarrería
  guitarrerias||guitarrerías
  Gujarat||Guyarat (estado indio)
- guyarati||guyaratí (idioma)
  gupo||grupo
  gupos||grupos
  gustacion||gustación
@@ -9778,6 +9777,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  gustarias||gustarías
  Gutierrez||Gutiérrez
  gutiérrez|cs|Gutiérrez
+ guyarati||guyaratí (idioma)
  guzman||Guzmán
  guzmán|cs|Guzmán
  gw|cs|GW
@@ -11293,12 +11293,12 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  intrinsecas||intrínsecas
  intrinseco||intrínseco
  intrinsecos||intrínsecos
+ introduccion||introducción
  introducí||introduje
+ introducieron||introdujeron
  introdució||introdujo
  introducio||introdujo
  introducion||introducción
- introduccion||introducción
- introducieron||introdujeron
  introdución||introducción
  introdujó||introdujo
  intromision||intromisión
@@ -11379,7 +11379,6 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  islamicos||islámicos
  islandes||islandés
  islandia|cs|Islandia
- Ispahan||Isfahán
  isobarica||isobárica
  isobaricas||isobáricas
  isobarico||isobárico
@@ -11423,6 +11422,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  isotopicos||isotópicos
  isotropia||isotropía
  isotropias||isotropías
+ Ispahan||Isfahán
  isquierda||izquierda
  israel|cs|Israel
  israeli||israelí
@@ -12813,10 +12813,6 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  metamorfico||metamórfico
  metamorficos||metamórficos
  meteorizacion||meteorización
- meteorıtica||meteorítica
- meteorıticas||meteoríticas
- meteorıtico||meteorítico
- meteorıticos||meteoríticos
  meteorologa||meteoróloga
  meteórologa||meteoróloga
  meteorologas||meteorólogas
@@ -12831,6 +12827,10 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  meteórologo||meteorólogo
  meteorologos||meteorólogos
  meteórologos||meteorólogos
+ meteorıtica||meteorítica
+ meteorıticas||meteoríticas
+ meteorıtico||meteorítico
+ meteorıticos||meteoríticos
  metereologa||meteoróloga
  metereóloga||meteoróloga
  metereologas||meteorólogas
@@ -13040,8 +13040,8 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  misogino||misógino
  misoginos||misóginos
  Misouri||Misuri
- Missouri||Misuri
  Mississippi||Misisipi
+ Missouri||Misuri
  mistagogica||mistagógica
  mistagogicas||mistagógicas
  mistagogico||mistagógico
@@ -13466,10 +13466,10 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  náugrafo||náufrago
  naugrafos||náufragos
  náugrafos||náufragos
- nausea||náusea (sustantivo), nausea (verbo)
  naúsea||náusea
- nauseas||náuseas (sustantivo), nauseas (verbo)
+ nausea||náusea (sustantivo), nausea (verbo)
  naúseas||náuseas
+ nauseas||náuseas (sustantivo), nauseas (verbo)
  nautica||náutica
  naútica||náutica
  nauticas||náuticas
@@ -13785,9 +13785,6 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  ñapindas||ñapindás
 
 == O ==
- Ouagadougou||Uagadugú
- Ouarzazate||Uarzazat
- Oujda||Uchda
  obia||obvia
  obiamente||obviamente
  obice||óbice
@@ -14284,6 +14281,9 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  otrogó||otorgó
  otrsa||otras
  ottawa|cs|Ottawa (ciudad), ottawa (tribu)
+ Ouagadougou||Uagadugú
+ Ouarzazate||Uarzazat
+ Oujda||Uchda
  ovacion||ovación
  OVNI|cs|ovni
  OVNIS|cs|ovnis
@@ -14615,8 +14615,6 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  parroquías||parroquias
  partcipacion||participación
  partcipación||participación
- participe||partícipe (adjetivo, sustantivo), participe (verbo)
- participes||partícipes (adjetivo, sustantivo), participes (verbo)
  partede||parte de
  parteneire||partenaire
  parteneires||partenaires
@@ -14624,6 +14622,8 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  participacion||participación
  participaciónes||participaciones
  participarón||participaron
+ participe||partícipe (adjetivo, sustantivo), participe (verbo)
+ participes||partícipes (adjetivo, sustantivo), participes (verbo)
  participió||participio, participó
  participo||participó (3.ª persona), participo (1.ª persona)
  particípó||participó, participo
@@ -16058,13 +16058,13 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  provicias||provincias
  provicion||provisión
  provición||provisión
+ provicional||provisional
  proviciones||provisiones
  provinca||provincia
  provincas||provincias
  província||provincia
  províncias||provincias
  proviniente||proveniente
- provicional||provisional
  provoco||provocó
  provoncando||provocando
  proxima||próxima
@@ -18115,10 +18115,10 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  sudafrica||Sudáfrica
  sudáfrica|cs|Sudáfrica
  sudamerica||Sudamérica
- sudamérica|cs|Sudamérica
  sudámerica||Sudamérica
- Sudan|cs|Sudán (país)
+ sudamérica|cs|Sudamérica
  sudán|cs|Sudán
+ Sudan|cs|Sudán (país)
  sudanes||sudanés
  sudoracion||sudoración
  sudoripara||sudorípara
@@ -19784,8 +19784,8 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  versiculos||versículos
  version||versión
  versíon||versión
- versiono||versionó (3.ª persona), versiono (1.ª persona)
  versionas||versiones
+ versiono||versionó (3.ª persona), versiono (1.ª persona)
  vertebra||vértebra (sustantivo), vertebra (verbo)
  vertebras||vértebras (sustantivo, plural), vertebras (verbo)
  vertice||vértice

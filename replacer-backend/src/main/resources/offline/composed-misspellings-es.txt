@@ -6,15 +6,19 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  1º de Mayo|cs|1.º de Mayo, Primero de Mayo
  1° de Mayo|cs|1.º de Mayo, Primero de Mayo
  1ro de Mayo|cs|1.º de Mayo, Primero de Mayo
+ 1 sólo||un solo, Un solo
+ 1º de Mayo|cs|1.º de Mayo, Primero de Mayo
  a demás||además (adverbio)
- a el||al, a él, a El
- a mas||a más
- a parte||a parte (locución), aparte (adjetivo, sustantivo, adverbio o verbo)
- a pesar que||a pesar de que
  Administración Publica|cs|Administración Pública
+ a el||al, a él, a El
  Alberto Del Río|cs|Alberto Del Rio (nombre comercial del luchador, sin tilde)
+ a mas||a más
  Angel Nieto|cs|Ángel Nieto (piloto español)
  anuncio su||anunció su
+ a parte||a parte (locución), aparte (adjetivo, sustantivo, adverbio o verbo)
+ a pesar que||a pesar de que
+ aun,|cs|aún,
+ aun.|cs|aún.
  aún así||aun así, aún así (todavía así)
  aún cuando||aun cuando (incluso), aún cuando (todavía)
  aún estando||aun estando (incluso), aún estando (todavía)
@@ -22,18 +26,16 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  aún no teniendo||aun no teniendo (incluso), aún no teniendo (todavía)
  aún siendo||aun siendo (incluso), aún siendo (todavía)
  aún teniendo||aun teniendo (incluso), aún teniendo (todavía)
- aun.|cs|aún.
- aun,|cs|aún,
- cm2||cm² (centímetro cuadrado)
- cm3||cm³ (centímetro cúbico)
  Carlos Ménem|cs|Carlos Menem
+ Castilla la Mancha||Castilla-La Mancha
+ Castilla La Mancha||Castilla-La Mancha
+ Castilla- La Mancha||Castilla-La Mancha
  Castilla-León||Castilla y León
  Castilla León||Castilla y León
  Castilla Leon||Castilla y León
  Castilla y Leon||Castilla y León
- Castilla la Mancha||Castilla-La Mancha
- Castilla La Mancha||Castilla-La Mancha
- Castilla- La Mancha||Castilla-La Mancha
+ cm2||cm² (centímetro cuadrado)
+ cm3||cm³ (centímetro cúbico)
  con mas||con más
  continua estando||continúa estando
  continua siendo||continúa siendo
@@ -41,18 +43,18 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  continuo sus||continuó sus
  dam2||dam² (decámetro cuadrado)
  dam3||dam³ (decámetro cúbico)
- dm2||dm² (decímetro cuadrado)
- dm3||dm³ (decímetro cúbico)
  darse cuenta que||darse cuenta de que
  de Cordoba||de Córdoba
  de el||del, de él, de El, dé el, dé él
  de estás||de estas
- de mas||de más
- de Mexico||de México
  dejo el||dejó el
  del genero||del género
+ de mas||de más
+ de Mexico||de México
  desarrollo un||desarrolló un (verbo)
  distrito de Verdun||distrito de Verdún
+ dm2||dm² (decímetro cuadrado)
+ dm3||dm³ (decímetro cúbico)
  donde paso||donde pasó
  drop shot||dejada (tenis)
  Educación Publica|cs|Educación Pública
@@ -60,26 +62,26 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  el proximo||el próximo
  el sólo||el solo (adjetivo), él solamente (para evitar ambigüedad)
  el titulo||el título
+ enel||en el, Enel (compañía eléctrica)
  en el qué||en el que
  en estás||en estas
- enel||en el, Enel (compañía eléctrica)
  en la qué||en la que
  en perdida||en pérdida
  entorno a||en torno a (locución adverbial)
  entre si||entre sí (pronombre), entre si (conjunción)
  es mas||es más
- esta compuesta||está compuesta
- esta compuesto||está compuesto
- esta libre||está libre
  ésta área||esta área
  ésta canción||esta canción
  ésta ciudad||esta ciudad
+ esta compuesta||está compuesta
+ esta compuesto||está compuesto
  ésta edición||esta edición
  ésta época||esta época
  ésta especie||esta especie
  ésta estación||esta estación
  ésta etapa||esta etapa
  ésta información||esta información
+ esta libre||está libre
  ésta línea||esta línea
  ésta localidad||esta localidad
  ésta manera||esta manera
@@ -91,18 +93,18 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  ésta población||esta población
  ésta producción||esta producción
  ésta región||esta región
+ éstas dos||estas dos
  ésta serie||esta serie
  esta siendo||está siendo
  ésta situación||esta situación
+ éstas tierras||estas tierras
+ éstas últimas||estas últimas
  ésta técnica||esta técnica
  ésta temporada||esta temporada
  ésta última|| esta última
  ésta versión||esta versión
  ésta vez||esta vez
  ésta zona||esta zona
- éstas dos||estas dos
- éstas tierras||estas tierras
- éstas últimas||estas últimas
  éste álbum||este álbum
  éste año||este año
  éste caso||este caso
@@ -125,11 +127,11 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  éstos dos||estos dos
  éstos últimos||estos últimos
  grandes perdidas||grandes pérdidas
+ han habido||ha habido
  hawk-eye||ojo de halcón
+ hay mas||hay más
  hm2||hm² (hectómetro cuadrado)
  hm3||hm³ (hectómetro cúbico)
- hay mas||hay más
- han habido||ha habido
  Hugo Chavez|cs|Hugo Chávez
  Jose Antonio|cs|José Antonio (nombre propio español)
  Jose Manuel|cs|José Manuel (nombre propio español y portugués)
@@ -137,28 +139,26 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  Jose María|cs|José María (nombre propio español)
  José Maria|cs|José María (nombre propio español), José Maria (nombre propio portugués)
  jugo en||jugó en
- km2||km² (kilómetro cuadrado)
- km3||km³ (kilómetro cúbico)
+ km. al||km al
  km. de||km de
  km. del||km del
- km. al||km al
+ km2||km² (kilómetro cuadrado)
+ km3||km³ (kilómetro cúbico)
  la mas||la más
+ laminas de||láminas de
  la perdida||la pérdida
  la practica||la practica (verbo), la práctica (sustantivo)
  la primer||la primera, el primero, lo primero
- la version||la versión
- laminas de||láminas de
  las mas||las más
  Latino América||Latinoamérica
- lo mas||lo más
+ la version||la versión
  logro ganar||logró ganar
+ lo mas||lo más
  los mas||los más
  lucky loser||perdedor afortunado (deporte)
  luego paso||luego pasó
  m2|cs|m² (metro cuadrado), m2 (variable, nombre propio o para plantilla convertir)
  m3|cs|m³ (metro cúbico), m3 (variable, nombre propio o para plantilla convertir)
- mm2|cs|mm² (milímetro cuadrado)
- mm3|cs|mm³ (milímetro cúbico)
  main draw||cuadro principal
  mal entendido||mal entendido (adjetivo), malentendido (sustantivo)
  Maria Antonia|cs|María Antonia (nombre propio español)
@@ -173,6 +173,7 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  Maria Magdalena|cs|María Magdalena (nombre en español, en particular del personaje bíblico)
  Maria Rosa|cs|María Rosa (nombre propio español)
  Maria Teresa|cs|María Teresa (nombre propio español)
+ mas.|cs|más.
  mas adelante||más adelante
  mas allá||más allá
  mas alta||más alta
@@ -191,11 +192,12 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  mas que||más que
  mas tarde||más tarde
  mas y|cs|más y
- mas.|cs|más.
  match ball||pelota de partido
  match point||punto de partido
  Metro de Paris|cs|Metro de París (en español), Métro de Paris (en francés)
  Miguel Angel|cs|Miguel Ángel (nombre propio, en particular castellanización del artista italiano)
+ mm2|cs|mm² (milímetro cuadrado)
+ mm3|cs|mm³ (milímetro cúbico)
  mucho mas||mucho más
  nada mas||nada más
  Nicolas de Bari|cs|Nicolás de Bari
@@ -215,41 +217,43 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  que desempeño||que desempeñó
  que esta en||que está en
  que mas||que más
- que tenia||que tenía
  que seria||que sería
+ que tenia||que tenía
  que venia de||que venía de
  Ramón Llull|cs|Ramon Llull
- revelarse contra||rebelarse contra
  relacionada a||relacionada con
  relacionadas a||relacionadas con
  relacionado a||relacionado con
  relacionados a||relacionados con
+ revelarse contra||rebelarse contra
  Rio 2016|cs|Río 2016 (Juegos Olímpicos de Verano)
  Rio Claro|cs|Río Claro (región o río en varios países de lengua española y Brasil), Rio Claro (en portugués)
  Rio de Janeiro|cs|Río de Janeiro (en español), Rio de Janeiro (en portugués y otros idiomas)
  Rio Negro|cs|Río Negro (región o río en varios países de lengua española, EE. UU. y Brasil), Rio Negro (en portugués e inglés)
  round robin||todos contra todos, fase de liguilla
+ S. D. Éibar|cs|S. D. Eibar
+ S.D. Éibar|cs|S. D. Eibar
  Salud Publica|cs|Salud Pública
  salud publica|cs|salud pública
  San Sebastian||San Sebastián
  Santa Barbara|cs|Santa Bárbara (localidad o región en varios países de lengua española y EE. UU.), Santa Barbara (en inglés)
  Santa Monica|cs|Santa Mónica (localidad o región en varios países de lengua española y EE. UU.), Santa Monica (en inglés)
  SD Éibar|cs|SD Eibar
- S. D. Éibar|cs|S. D. Eibar
- S.D. Éibar|cs|S. D. Eibar
  se anuncio||se anunció
  se cambio||se cambió
  se caso||se casó
  se continuo||se continuó
- se desarrollo||se desarrolló
- se desempeño||se desempeñó
  se da cuenta que||se da cuenta de que
  se dan cuenta que||se dan cuenta de que
+ se desarrollo||se desarrolló
+ se desempeño||se desempeñó
  se dieron cuenta que||se dieron cuenta de que
  se dio cuenta que||se dio cuenta de que
  se encuentro||se encuentra (presente), se encontró (pretérito)
  se entero||se enteró
  se fundo||se fundó
+ Segunda Division|cs|Segunda División
+ Seguridad Publica|cs|Seguridad Pública
  se ira||se irá
  se jugo||se jugó
  se llamo||se llamó
@@ -257,12 +261,10 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  se publico||se publicó
  se puedo||se puede (presente), se pudo (pretérito)
  se registro||se registró
- se uso||se usó
- Segunda Division|cs|Segunda División
- Seguridad Publica|cs|Seguridad Pública
  ser mas||ser más
  set ball||pelota de set
  set point||punto de set
+ se uso||se usó
  sí bien||si bien (locución conjuntiva)
  si misma||sí misma
  si mismas||sí mismas
@@ -279,11 +281,11 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  top spin||golpe liftado
  top ten||los diez primeros, los diez mejores
  TV Publica|cs|TV Pública
- un sin fin||un sinfín
- un sólo||un solo
  una perdida||una pérdida
  una version||una versión
  Universidad de Paris|cs|Universidad de París
+ un sin fin||un sinfín
+ un sólo||un solo
  vez mas||vez más
  vía publica||vía pública
  Victor Manuel|cs|Víctor Manuel (entre otros, nombre en español de varios monarcas italianos)
