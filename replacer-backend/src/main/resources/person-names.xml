@@ -29,6 +29,7 @@
 
     <util:set id="personSurnames" value-type="java.lang.String">
         <value>Abril</value>
+        <value>de Abril</value>
         <value>Albums</value>
         <value>Basket</value>
         <value>Canada</value>
@@ -36,12 +37,16 @@
         <value>de Catalunya</value>
         <value>Comics</value>
         <value>Domingo</value>
+        <value>de Febrero</value>
+        <value>de Julio</value>
         <value>Latin</value>
         <value>Link</value>
+        <value>de Marzo</value>
         <value>Master</value>
         <value>Match</value>
         <value>Mayo</value>
         <value>de Mayo</value>
+        <value>de Noviembre</value>
         <value>de Octubre</value>
         <value>Online</value>
         <value>Pinto</value>
