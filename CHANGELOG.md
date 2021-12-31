@@ -1,5 +1,8 @@
 # Versions
 
+## 2.14.5 (31 Dec 2021)
+- Add more surnames to ignore as false positives
+
 ## 2.14.4 (23 Dec 2021)
 - Improve indexing. Fix bug on concurrent modification.
 
