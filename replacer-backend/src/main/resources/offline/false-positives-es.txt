@@ -22,7 +22,6 @@ También hay que filtrar por los espacios ''Principal'' y ''Anexo'', que son los
 === Listado ===
 
  # Abril
- Feria de Abril
  # | Abril
  # px"|Abril
  # = Abril
@@ -173,18 +172,14 @@ También hay que filtrar por los espacios ''Principal'' y ''Anexo'', que son los
  Division I
 
  # Febrero
+ ([Aa]venida|[Cc]alle|[Pp]laza|[Bb]arrio|Estadio) [0-9]+ de Febrero
  [Aa]tlético 3 de Febrero
  3 de Febrero FBC
  3 de Febrero CDE
- Tres de Febrero
- Siete de Febrero
- Veintidós de Febrero
  [Pp]arque 3 de Febrero
  [Pp]arque Tres de Febrero
- [Ee]stadio 12 de Febrero
  [Aa]tlético 7 de Febrero
  [Aa]v. 20 de Febrero
- [Aa]venida 20 de Febrero
  [Aa]venida del 20 de Febrero
  # | Febrero
  # px"|Febrero
@@ -194,19 +189,14 @@ También hay que filtrar por los espacios ''Principal'' y ''Anexo'', que son los
  # text: Febrero
  # * Febrero
  Avenida del 28 de Febrero
- Avenida 28 de Febrero
  [Aa]v. 28 de Febrero
  [Cc]lub 6 de Febrero
  [Cc]lub 7 de Febrero
  [Cc]lub 20 de Febrero
- [Cc]alle 3 de Febrero
  [Rr]evolución de Febrero
  [Ee]stación 25 de Febrero
  [Mm]unicipalidad de 3 de Febrero
  [Mm]unicipalidad 3 de Febrero
- Pedro Febrero
- Bartolomé Febrero
- Ramón Febrero
  [Ee]xpreso 27 de Febrero
  [Aa]grupación 24 de Febrero
  [Bb]ulevar 27 de Febrero
@@ -277,7 +267,6 @@ También hay que filtrar por los espacios ''Principal'' y ''Anexo'', que son los
  Julian Casablancas
 
  # Julio
- Nueve de Julio
  # | Julio
  # px"|Julio
  # = Julio
@@ -401,15 +390,10 @@ También hay que filtrar por los espacios ''Principal'' y ''Anexo'', que son los
  Maria Bueno             # 100
 
  #Marzo
- José Luis Marzo
- Tres de Marzo
- Cuatro de Marzo
+ ([Aa]venida|[Cc]alle|[Pp]laza|[Bb]arrio|Estadio) [0-9]+ de Marzo
  [Dd]eportivo 18 de Marzo
  [Rr]evolución de Marzo
  [Aa]lianza del 14 de Marzo
- Mario Marzo
- Primero de Marzo
- [Pp]laza 18 de Marzo
  [Mm]ovimiento del 1 de Marzo
  [Mm]ovimiento 1 de Marzo
  [Mm]ovimiento del 26 de Marzo
@@ -422,12 +406,6 @@ También hay que filtrar por los espacios ''Principal'' y ''Anexo'', que son los
  21 de Marzo FC
  [Ll]iebre de Marzo
  [Ee]stadio 1º de Marzo
- [Ee]stadio 1 de Marzo
- [Ee]stadio 3 de Marzo
- [Ee]stadio 26 de Marzo
- [Ee]stadio 28 de Marzo
- [Pp]laza 11 de Marzo
- [Cc]alle 30 de Marzo
  [Ff]iebre de Marzo
  Marzo [Pp]araguayo
  # | Marzo
@@ -455,110 +433,20 @@ También hay que filtrar por los espacios ''Principal'' y ''Anexo'', que son los
  Geoff Masters
 
  # Mayo
-  # Hay varios casos de nombres propios, incluso ciudades, con el día y el mes.
+ # Los casos como Iban Mayo o Revolución de Mayo los cubrimos con Mayo como apellido
+ # Hay varios casos de nombres propios, incluso ciudades, con el día y el mes.
  # Las fechas completas son más largas y machacan estos falsos positivos
- [Rr]ío Mayo
- [Cc]onde de Mayo
- [Cc]ondesa de Mayo
- [Ff]eria de Mayo
- [Vv]irgen de Mayo
- Mayo [Ff]rancés
- Mayo del 68
- Carlos Mayo
- Andrés Mayo
- Gregorio Mayo
- Carta de Mayo
- Radio Mayo
- Ediciones Mayo
- [Aa]ndador 5 de Mayo
- Cultural de Mayo
- [Oo]rden de Mayo
- Señor de Mayo
- Mayo Hibi
- [Cc]ompañía Mayo
- Archie Mayo
- [Cc]ampo de Mayo
- Cruz de Mayo
- [Pp]laza de Mayo
- [Rr]evolución de Mayo
- San José de Mayo
- Sol de Mayo
- Primer[oa] de Mayo
- Dos de Mayo
- Tres de Mayo
- Cuatro de Mayo
- Cinco de Mayo
- Nueve de Mayo
- Veinticinco de Mayo
- Pasaje Histórico 5 de Mayo
- Cultura Mayo
- Cruces de Mayo
- County Mayo
- Alto Mayo
- Susana Mayo
- Julio Mayo
- Alfredo Mayo
- Iban Mayo
- Iván Mayo
- David Mayo
- Mayo Musical
- [Ii]sla de Mayo
- [Mm]ayo de 1968
- Karen Mayo
- Palo de Mayo
- Mayo Hotel
- Poetas en Mayo
- Nacional 14 de Mayo
- [Gg]eneración de Mayo
- Mayo Clinic
- [Bb]éisbol 3 de [Mm]ayo
- [Ss]ucesos de Mayo
- Margaret Mayo
- Virginia Mayo
- [Pp]actos de Mayo
- Villa de Mayo
- [Cc]ondado de Mayo
- [Pp]ingada del Mayo
- [Ss]alón de Mayo
- Gran Premio del 1 de Mayo
- Mayo-[ABCDEFGHIJKLMNOPQRSTUVWXYZ]
- César Mayo
- [Uu]rbanización Flor de Mayo
- Cruz del Mayo
- Centenario de Mayo
- Editorial de Mayo
- Editorial Mayo
- Mayo Negro
- [Bb]anco Mayo
- Flor de Mayo
- [Bb]iblioteca de Mayo
- [Aa]venida de Mayo
- [Aa]v de Mayo
- [Aa]v. de Mayo
- [Aa]venida [123456789] de Mayo
- [Aa]venida [123456789][123456789] de Mayo
- [Aa]venida del [123456789] de Mayo
- [Aa]venida del [123456789][123456789] de Mayo
- [Aa]v del [123456789] de Mayo
- [Aa]v del [123456789][123456789] de Mayo
- [Aa]v [123456789] de Mayo
- [Aa]v. [123456789] de Mayo
- [Aa]v. del [123456789] de Mayo
- [Cc]alle [123456789] de Mayo
- [Cc]. [123456789] de Mayo
- [Bb]ulevar [123456789] de Mayo
- [Pp]laza [123456789] de Mayo
- [Bb]arrio [123456789] de Mayo
- [Pa]rque [123456789] de Mayo
- [Ee]stadio [123456789] de Mayo
- [Ee]stadio [123456789][123456789] de Mayo
- [Cc]lub [123456789] de Mayo
- [Mm]ovimiento [123456789] de Mayo
- [Cc]olonia [123456789] de Mayo
- [Pp]aseo [123456789] de Mayo
- [Oo]rden [123456789] de Mayo
- [Hh]éroes del [123456789] de Mayo
- El Mayo
+ ([Aa]venida|[Cc]alle|[Pp]laza|[Bb]arrio|Estadio) [0-9]+ de Mayo
+ 1.º de Mayo             # 240
+ río Mayo                # 140
+ Mayo [Ff]rancés         # 120
+ Mayo del 68             # 145
+ Mayo de 1968            # 110
+ Mayo Clinic             # 260
+ [Aa]utopista 25 de Mayo # 95
+ Sportivo 2 de Mayo      # 90
+ condado de Mayo         # 80
+ Gran Premio del 1 de Mayo # 50
  # | Mayo
  # px"|Mayo
  # = Mayo
@@ -574,9 +462,7 @@ También hay que filtrar por los espacios ''Principal'' y ''Anexo'', que son los
  el Milan
 
  # Noviembre
- [Rr]evolución de Noviembre
- [Ee]stadio 11 de Noviembre
- [Ee]stadio 25 de Noviembre
+ ([Aa]venida|[Cc]alle|[Pp]laza|[Bb]arrio|Estadio) [0-9]+ de Noviembre
  # | Noviembre
  # px"|Noviembre
  # = Noviembre
@@ -584,15 +470,10 @@ También hay que filtrar por los espacios ''Principal'' y ''Anexo'', que son los
  # text:Noviembre
  # text: Noviembre
  # * Noviembre
- Primero de Noviembre
  [Aa]v. 12 de Noviembre
- [Aa]venida 12 de Noviembre
  [Aa]venida del 12 de Noviembre
  [Aa]v. 24 de Noviembre
- [Aa]venida 24 de Noviembre
  [Aa]venida del 24 de Noviembre
- Sol de Noviembre
- [Ll]evantamiento de Noviembre
  [Mm]ovimiento [Rr]evolucionario 13 de Noviembre
  [Cc]entro [Uu]rbano 5 de Noviembre
  [Hh]ospital 20 de Noviembre
@@ -610,6 +491,7 @@ También hay que filtrar por los espacios ''Principal'' y ''Anexo'', que son los
  Nicolas Poussin
 
  # Octubre
+ ([Aa]venida|[Cc]alle|[Pp]laza|[Bb]arrio|Estadio) [0-9]+ de Octubre
  # | Octubre
  # px"|Octubre
  # = Octubre
@@ -621,13 +503,9 @@ También hay que filtrar por los espacios ''Principal'' y ''Anexo'', que son los
  Octubre [Nn]egro
  Octubre polaco
  [Vv]alle 16 de Octubre
- [Rr]evolución de Octubre
  [Gg]rupo Octubre
- Revolución de Octubre
  [Hh]ospital 12 de Octubre
  Hospital Universitario 12 de Octubre
- [Aa]venida [123456789] de Octubre
- [Aa]venida [123456789][1234567890] de Octubre
  [Aa]venida del [123456789] de Octubre
  [Aa]venida del [123456789][1234567890] de Octubre
  [Aa]v del [123456789] de Octubre
@@ -635,14 +513,9 @@ También hay que filtrar por los espacios ''Principal'' y ''Anexo'', que son los
  [Aa]v [123456789] de Octubre
  [Aa]v. [123456789] de Octubre
  [Aa]v. del [123456789] de Octubre
- [Cc]alle [123456789] de Octubre
  [Cc]. [123456789] de Octubre
  [Bb]ulevar [123456789] de Octubre
- [Pp]laza [123456789] de Octubre
- [Bb]arrio [123456789] de Octubre
  [Pa]rque [123456789] de Octubre
- [Ee]stadio [123456789] de Octubre
- [Ee]stadio [123456789][1234567890] de Octubre
  [Cc]olonia [123456789] de Octubre
 
  # Paris
