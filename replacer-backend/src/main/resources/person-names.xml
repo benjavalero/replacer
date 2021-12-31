@@ -8,49 +8,49 @@
    		   http://www.springframework.org/schema/util/spring-util.xsd">
 
     <util:set id="personNames" value-type="java.lang.String">
+        <value>Basket</value>
+        <value>Canada</value>
+        <value>Division</value>
         <value>Domingo</value>
+        <value>Frances</value>
         <value>Julio</value>
+        <value>Latin</value>
         <value>Los Angeles</value>
         <value>Manchester</value>
-        <value>Sky</value>
-        <value>Sidney</value>
-        <value>Frances</value>
-        <value>Television</value>
-        <value>Missouri</value>
-        <value>Tokyo</value>
-        <value>Canada</value>
         <value>Master</value>
         <value>Milan</value>
+        <value>Missouri</value>
         <value>Online</value>
-        <value>Division</value>
-        <value>Latin</value>
-        <value>Basket</value>
+        <value>Sky</value>
+        <value>Sidney</value>
+        <value>Television</value>
+        <value>Tokyo</value>
     </util:set>
 
     <util:set id="personSurnames" value-type="java.lang.String">
-        <value>Domingo</value>
-        <value>Records</value>
-        <value>Sky</value>
-        <value>Carter</value>
-        <value>Union</value>
+        <value>Abril</value>
         <value>Albums</value>
-        <value>Comics</value>
-        <value>Television</value>
-        <value>Pinto</value>
-        <value>Version</value>
+        <value>Basket</value>
         <value>Canada</value>
+        <value>Carter</value>
+        <value>de Catalunya</value>
+        <value>Comics</value>
+        <value>Domingo</value>
+        <value>Latin</value>
+        <value>Link</value>
         <value>Master</value>
         <value>Match</value>
-        <value>Link</value>
-        <value>Online</value>
-        <value>Latin</value>
-        <value>Basket</value>
-        <value>de Catalunya</value>
-        <value>de Verano</value>
-        <value>Abril</value>
-        <value>de Octubre</value>
         <value>Mayo</value>
         <value>de Mayo</value>
+        <value>de Octubre</value>
+        <value>Online</value>
+        <value>Pinto</value>
+        <value>Records</value>
+        <value>Sky</value>
+        <value>Television</value>
+        <value>Union</value>
+        <value>de Verano</value>
+        <value>Version</value>
     </util:set>
 
 </beans>
