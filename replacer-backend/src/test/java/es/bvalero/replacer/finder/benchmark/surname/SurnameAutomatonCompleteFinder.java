@@ -6,14 +6,17 @@ import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
 import es.bvalero.replacer.finder.benchmark.BenchmarkResult;
-import java.util.*;
+import es.bvalero.replacer.finder.util.FinderUtils;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 class SurnameAutomatonCompleteFinder implements BenchmarkFinder {
 
-    private final List<RunAutomaton> words;
+    private final Collection<RunAutomaton> words = new ArrayList<>();
 
     SurnameAutomatonCompleteFinder(Collection<String> words) {
-        this.words = new ArrayList<>();
         for (String word : words) {
             this.words.add(
                     new RunAutomaton(new RegExp("<Lu><L>+ " + word).toAutomaton(new DatatypesAutomatonProvider()))
@@ -24,12 +27,16 @@ class SurnameAutomatonCompleteFinder implements BenchmarkFinder {
     @Override
     public Set<BenchmarkResult> findMatches(String text) {
         // We loop over all the words and find them completely in the text with an automaton
-        Set<BenchmarkResult> matches = new HashSet<>();
+        final Set<BenchmarkResult> matches = new HashSet<>();
         for (RunAutomaton word : this.words) {
-            AutomatonMatcher m = word.newMatcher(text);
+            final AutomatonMatcher m = word.newMatcher(text);
             while (m.find()) {
-                int pos = m.group().indexOf(' ') + 1;
-                matches.add(BenchmarkResult.of(m.start() + pos, m.group().substring(pos)));
+                final int pos = m.group().indexOf(' ') + 1;
+                final int start = m.start() + pos;
+                final String matchText = m.group().substring(pos);
+                if (FinderUtils.isWordCompleteInText(start, matchText, text)) {
+                    matches.add(BenchmarkResult.of(start, matchText));
+                }
             }
         }
         return matches;

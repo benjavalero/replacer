@@ -20,7 +20,7 @@ class SurnameFinderTest {
     public void setUp() {
         this.words = Arrays.asList("Online", "Records", "de Verano", "Pinto");
 
-        this.text = "En News Online, Álvaro Pinto, Victor Records, Juegos Olímpicos de Verano.";
+        this.text = "En News Online, Álvaro Pinto, Victor Records, Juegos Olímpicos de Verano, Juan Pintor.";
 
         this.expected = new HashSet<>();
         this.expected.add(BenchmarkResult.of(8, "Online"));

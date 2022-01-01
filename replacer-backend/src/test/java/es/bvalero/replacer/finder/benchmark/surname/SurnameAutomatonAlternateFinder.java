@@ -16,15 +16,15 @@ class SurnameAutomatonAlternateFinder implements BenchmarkFinder {
     private final RunAutomaton words;
 
     SurnameAutomatonAlternateFinder(Collection<String> words) {
-        String alternations = '(' + StringUtils.join(words, "|") + ')';
+        final String alternations = '(' + StringUtils.join(words, "|") + ')';
         this.words = new RunAutomaton(new RegExp(alternations).toAutomaton());
     }
 
     @Override
     public Set<BenchmarkResult> findMatches(String text) {
         // Build an alternate automaton with all the words and match it against the text
-        Set<BenchmarkResult> matches = new HashSet<>();
-        AutomatonMatcher m = this.words.newMatcher(text);
+        final Set<BenchmarkResult> matches = new HashSet<>();
+        final AutomatonMatcher m = this.words.newMatcher(text);
         while (m.find()) {
             if (FinderUtils.isWordPrecededByUppercase(m.start(), m.group(), text)) {
                 matches.add(BenchmarkResult.of(m.start(), m.group()));

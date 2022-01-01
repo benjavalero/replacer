@@ -15,17 +15,17 @@ class SurnameRegexAlternateFinder implements BenchmarkFinder {
     private final Pattern words;
 
     SurnameRegexAlternateFinder(Collection<String> words) {
-        String alternations = '(' + StringUtils.join(words, "|") + ')';
+        final String alternations = '(' + StringUtils.join(words, "|") + ')';
         this.words = Pattern.compile(alternations);
     }
 
     @Override
     public Set<BenchmarkResult> findMatches(String text) {
         // Build an alternate regex with all the words and match it against the text
-        Set<BenchmarkResult> matches = new HashSet<>();
-        Matcher m = this.words.matcher(text);
+        final Set<BenchmarkResult> matches = new HashSet<>();
+        final Matcher m = this.words.matcher(text);
         while (m.find()) {
-            BenchmarkResult match = BenchmarkResult.of(m.start(), m.group());
+            final BenchmarkResult match = BenchmarkResult.of(m.start(), m.group());
             if (FinderUtils.isWordPrecededByUppercase(m.start(), m.group(), text)) {
                 matches.add(match);
             }

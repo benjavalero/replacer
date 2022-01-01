@@ -6,14 +6,16 @@ import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
 import es.bvalero.replacer.finder.benchmark.BenchmarkResult;
 import es.bvalero.replacer.finder.util.FinderUtils;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 class SurnameAutomatonFinder implements BenchmarkFinder {
 
-    private final List<RunAutomaton> words;
+    private final Collection<RunAutomaton> words = new ArrayList<>();
 
     SurnameAutomatonFinder(Collection<String> words) {
-        this.words = new ArrayList<>();
         for (String word : words) {
             this.words.add(new RunAutomaton(new RegExp(word).toAutomaton()));
         }
@@ -24,7 +26,7 @@ class SurnameAutomatonFinder implements BenchmarkFinder {
         // We loop over all the words and find them in the text with an automaton
         Set<BenchmarkResult> matches = new HashSet<>();
         for (RunAutomaton word : this.words) {
-            AutomatonMatcher m = word.newMatcher(text);
+            final AutomatonMatcher m = word.newMatcher(text);
             while (m.find()) {
                 if (FinderUtils.isWordPrecededByUppercase(m.start(), m.group(), text)) {
                     matches.add(BenchmarkResult.of(m.start(), m.group()));
