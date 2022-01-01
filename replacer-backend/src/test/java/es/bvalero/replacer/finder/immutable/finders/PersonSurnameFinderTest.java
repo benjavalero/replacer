@@ -35,7 +35,7 @@ class PersonSurnameFinderTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = { "A varios Records", "Juegos Olímpicos de verano" })
+    @ValueSource(strings = { "A varios Records", "Juegos Olímpicos de verano", "A Juan Pintor" })
     void testFindPersonSurnamesNonValid(String text) {
         List<Immutable> matches = personSurnameFinder.findList(text);
 
