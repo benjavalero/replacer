@@ -50,6 +50,7 @@ class UppercaseFinderTest {
             "Enero\n# Febrero\nMarzo", // Ordered list
             "Enero. Febrero.", // After dot
             "{{ param=Febrero }}", // Parameter value
+            "{{ param = Febrero }}", // Parameter value
             "{|\n" + "|+ Febrero\n" + "|}", // Table row properties
             "{|\n" + "|-\n" + "! Febrero !! Junio\n" + "|}", // Table header
             "{|\n" + "|-\n" + "! Junio !! Febrero\n" + "|}", // Table header
@@ -57,6 +58,7 @@ class UppercaseFinderTest {
             "{|\n" + "|-\n" + "| Junio || Febrero\n" + "|}", // Table cell
             "<table><tr><td>Febrero</td></tr></table>", // HTML cell
             "<timeline>\n  text:Febrero\n</timeline>", // Timeline text
+            "<timeline>\n  text: Febrero\n</timeline>", // Timeline text
         }
     )
     void testUppercaseAfter(String text) {

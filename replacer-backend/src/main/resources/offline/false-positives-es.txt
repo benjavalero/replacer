@@ -22,12 +22,6 @@ También hay que filtrar por los espacios ''Principal'' y ''Anexo'', que son los
 === Listado ===
 
  # Abril
- # | Abril
- # px"|Abril
- # = Abril
- # }} Abril
- # text:Abril
- # text: Abril
 
  # Adrian
  Adrian Mannarino
@@ -42,6 +36,8 @@ También hay que filtrar por los espacios ''Principal'' y ''Anexo'', que son los
  Africa Tour
  Africa Cup
  Africa Sports
+
+ # Agosto
 
  # Albums
  Albums Chart
@@ -90,16 +86,6 @@ También hay que filtrar por los espacios ''Principal'' y ''Anexo'', que son los
  # Se encuentra también como inmutable en PersonNameFinder
  of Los Angeles
 
- # Agosto
- [Pp]arque 25 de Agosto
- # | Agosto
- # px"|Agosto
- # = Agosto
- # }} Agosto
- # text:Agosto
- # text: Agosto
- # * Agosto
-
  # Astana
  Astana Pro Team
  FC Astana
@@ -123,6 +109,8 @@ También hay que filtrar por los espacios ''Principal'' y ''Anexo'', que son los
  Iniciativa per Catalunya
  Junts per Catalunya
 
+ # Diciembre
+
  # disparo
  # La inmensa mayoría se refieren al sustantivo y por tanto son correctos
  un disparo
@@ -135,36 +123,6 @@ También hay que filtrar por los espacios ''Principal'' y ''Anexo'', que son los
  Division of
  Division I
 
- # Febrero
- ([Aa]venida|[Cc]alle|[Pp]laza|[Bb]arrio|Estadio) [0-9]+ de Febrero
- [Aa]tlético 3 de Febrero
- 3 de Febrero FBC
- 3 de Febrero CDE
- [Pp]arque 3 de Febrero
- [Pp]arque Tres de Febrero
- [Aa]tlético 7 de Febrero
- [Aa]v. 20 de Febrero
- [Aa]venida del 20 de Febrero
- # | Febrero
- # px"|Febrero
- # = Febrero
- # }} Febrero
- # text:Febrero
- # text: Febrero
- # * Febrero
- Avenida del 28 de Febrero
- [Aa]v. 28 de Febrero
- [Cc]lub 6 de Febrero
- [Cc]lub 7 de Febrero
- [Cc]lub 20 de Febrero
- [Rr]evolución de Febrero
- [Ee]stación 25 de Febrero
- [Mm]unicipalidad de 3 de Febrero
- [Mm]unicipalidad 3 de Febrero
- [Ee]xpreso 27 de Febrero
- [Aa]grupación 24 de Febrero
- [Bb]ulevar 27 de Febrero
-
  First Division
  Second Division
  Third Division
@@ -172,16 +130,6 @@ También hay que filtrar por los espacios ''Principal'' y ''Anexo'', que son los
  Joy Division
  Premier Division
  X Division
-
- #Diciembre
- # | Diciembre
- # px"|Diciembre
- # = Diciembre
- # }} Diciembre
- # text:Diciembre
- # text: Diciembre
- # * Diciembre
- [Aa]sesinatos de Diciembre
 
  # Domingo
  # Se encuentra también como inmutable en SurnameFinder y en PersonNameFinder
@@ -192,19 +140,19 @@ También hay que filtrar por los espacios ''Principal'' y ''Anexo'', que son los
  Plácido Domingo
  Santo Domingo
 
- #Enero
- # | Enero
- # px"|Enero
- # = Enero
- # }} Enero
- # text:Enero
- # text: Enero
- # * Enero
-
  # Eibar: la ciudad es con tilde y el equipo sin ella.
  SD Eibar
  S. ?D. Eibar
  Sociedad Deportiva Eibar
+
+ # Enero
+
+ # Febrero
+ 3 de Febrero FBC
+ 3 de Febrero CDE
+ [Aa]venida del 20 de Febrero
+ Avenida del 28 de Febrero
+ [Mm]unicipalidad de 3 de Febrero
 
  # Ivan
  Ivan Lendl
@@ -222,22 +170,8 @@ También hay que filtrar por los espacios ''Principal'' y ''Anexo'', que son los
  Julian Casablancas
 
  # Julio
- # | Julio
- # px"|Julio
- # = Julio
- # }} Julio
- # text:Julio
- # text: Julio
- # * Julio
 
  # Junio
- # | Junio
- # px"|Junio
- # = Junio
- # }} Junio
- # text:Junio
- # text: Junio
- # * Junio
 
  # junior
  Junior de Barranquilla # 690 Equipo de fútbol colombiano
@@ -344,32 +278,15 @@ También hay que filtrar por los espacios ''Principal'' y ''Anexo'', que son los
  Anna-Maria              # 100
  Maria Bueno             # 100
 
- #Marzo
- ([Aa]venida|[Cc]alle|[Pp]laza|[Bb]arrio|Estadio) [0-9]+ de Marzo
- [Dd]eportivo 18 de Marzo
- [Rr]evolución de Marzo
+ # Marzo
  [Aa]lianza del 14 de Marzo
  [Mm]ovimiento del 1 de Marzo
- [Mm]ovimiento 1 de Marzo
  [Mm]ovimiento del 26 de Marzo
- [Mm]ovimiento 26 de Marzo
  [Mm]ovimiento del 22 de Marzo
- [Mm]ovimiento 22 de Marzo
- U.D. 21 de Marzo
- [Dd]eportiva 21 de Marzo
  19 de Marzo FC
  21 de Marzo FC
- [Ll]iebre de Marzo
  [Ee]stadio 1º de Marzo
- [Ff]iebre de Marzo
  Marzo [Pp]araguayo
- # | Marzo
- # px"|Marzo
- # = Marzo
- # }} Marzo
- # text:Marzo
- # text: Marzo
- # * Marzo
 
  # mas
  mas no
@@ -391,47 +308,20 @@ También hay que filtrar por los espacios ''Principal'' y ''Anexo'', que son los
  # Los casos como Iban Mayo o Revolución de Mayo los cubrimos con Mayo como apellido
  # Hay varios casos de nombres propios, incluso ciudades, con el día y el mes.
  # Las fechas completas son más largas y machacan estos falsos positivos
- ([Aa]venida|[Cc]alle|[Pp]laza|[Bb]arrio|Estadio) [0-9]+ de Mayo
  1.º de Mayo             # 240
  río Mayo                # 140
  Mayo [Ff]rancés         # 120
  Mayo del 68             # 145
  Mayo de 1968            # 110
  Mayo Clinic             # 260
- [Aa]utopista 25 de Mayo # 95
- Sportivo 2 de Mayo      # 90
  condado de Mayo         # 80
  Gran Premio del 1 de Mayo # 50
- # | Mayo
- # px"|Mayo
- # = Mayo
- # }} Mayo
- # text:Mayo
- # text: Mayo
- # * Mayo
 
  # Milan
  # La mayoría son del equipo de fútbol que se escribe sin tilde
  Calcio Milan
  AC Milan
  el Milan
-
- # Noviembre
- ([Aa]venida|[Cc]alle|[Pp]laza|[Bb]arrio|Estadio) [0-9]+ de Noviembre
- # | Noviembre
- # px"|Noviembre
- # = Noviembre
- # }} Noviembre
- # text:Noviembre
- # text: Noviembre
- # * Noviembre
- [Aa]v. 12 de Noviembre
- [Aa]venida del 12 de Noviembre
- [Aa]v. 24 de Noviembre
- [Aa]venida del 24 de Noviembre
- [Mm]ovimiento [Rr]evolucionario 13 de Noviembre
- [Cc]entro [Uu]rbano 5 de Noviembre
- [Hh]ospital 20 de Noviembre
 
  # Missouri
  of Missouri
@@ -445,33 +335,24 @@ También hay que filtrar por los espacios ''Principal'' y ''Anexo'', que son los
  Nicolas Lapierre
  Nicolas Poussin
 
+ # Noviembre
+ [Aa]venida del 12 de Noviembre
+ [Aa]venida del 24 de Noviembre
+ [Mm]ovimiento [Rr]evolucionario 13 de Noviembre
+ [Hh]ospital 20 de Noviembre
+
  # Octubre
- ([Aa]venida|[Cc]alle|[Pp]laza|[Bb]arrio|Estadio) [0-9]+ de Octubre
- # | Octubre
- # px"|Octubre
- # = Octubre
- # }} Octubre
- # text:Octubre
- # text: Octubre
- # * Octubre
  Octubre [Rr]ojo
  Octubre [Nn]egro
  Octubre polaco
- [Vv]alle 16 de Octubre
  [Gg]rupo Octubre
  [Hh]ospital 12 de Octubre
- Hospital Universitario 12 de Octubre
  [Aa]venida del [123456789] de Octubre
  [Aa]venida del [123456789][1234567890] de Octubre
  [Aa]v del [123456789] de Octubre
  [Aa]v del [123456789][1234567890] de Octubre
- [Aa]v [123456789] de Octubre
- [Aa]v. [123456789] de Octubre
  [Aa]v. del [123456789] de Octubre
  [Cc]. [123456789] de Octubre
- [Bb]ulevar [123456789] de Octubre
- [Pa]rque [123456789] de Octubre
- [Cc]olonia [123456789] de Octubre
 
  # Paris
  in Paris                # 1340
@@ -492,7 +373,7 @@ También hay que filtrar por los espacios ''Principal'' y ''Anexo'', que son los
  Théâtre de Paris        # 100
 
  # Pidio
- Quintana del Pidio      # municipio​ español
+ Quintana del Pidio      # municipio español
 
  # publica
  publica el
@@ -568,13 +449,7 @@ También hay que filtrar por los espacios ''Principal'' y ''Anexo'', que son los
  [Ff]ue [Ss]ecretaria
  y [Ss]ecretaria
 
- # | Septiembre
- # px"|Septiembre
- # = Septiembre
- # }} Septiembre
- # text:Septiembre
- # text: Septiembre
- # * Septiembre
+ # Septiembre
  Septiembre Negro
 
  # Simon
