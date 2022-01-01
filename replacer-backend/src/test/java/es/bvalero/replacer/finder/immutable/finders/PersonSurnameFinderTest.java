@@ -41,4 +41,13 @@ class PersonSurnameFinderTest {
 
         assertTrue(matches.isEmpty());
     }
+
+    @ParameterizedTest
+    @CsvSource(value = { "Revolución de Octubre, de Octubre", "Estadio 12 de Octubre, 12 de Octubre" })
+    void testFindMonthsAsSurnames(String text, String noun) {
+        List<Immutable> matches = personSurnameFinder.findList(text);
+
+        assertEquals(1, matches.size());
+        assertEquals(noun, matches.get(0).getText());
+    }
 }
