@@ -105,42 +105,6 @@ También hay que filtrar por los espacios ''Principal'' y ''Anexo'', que son los
  FC Astana
  Team Astana
 
- # aun
- # La mayoría de los casos considero que hay que revisarlos manualmente
- [Aa]un así
- [Aa]un cuando
-
- # aún
- aún[\\.,]
- aún conserva
- aún era
- aún estaba
- aún está
- aún es
- [Aa]ún hoy
- [Aa]ún más
- aún mayor
- [Aa]ún no
- aún por
- [Aa]ún se
- aún sigue
- aún son
-
- aunque aún
- cuando aún
- donde aún
- era aún
- estaba aún
- está aún
- es aún
- fue aún
- [Mm]ás aún
- mientras aún
- pero aún
- que aún
- siendo aún
- son aún
-
  # barbara
  Barbara Schett
  Barbara Potter
@@ -241,15 +205,6 @@ También hay que filtrar por los espacios ''Principal'' y ''Anexo'', que son los
  SD Eibar
  S. ?D. Eibar
  Sociedad Deportiva Eibar
-
- # éste (y derivados). Ídem con aquél (y derivados).
- # Esta forma no es incorrecta (salvo en «ésto»), aunque la forma recomendada desde 2010 sea sin tilde en cualquier caso.
- # Se añaden a la lista puesto que ha habido quejas, ya que siguen siendo términos controvertidos.
- [Éé]st?[ea]
- [Éé]st?[oa]s
- [Aa]quél
- [Aa]quélla
- [Aa]quéll[oa]s
 
  # Ivan
  Ivan Lendl
@@ -660,11 +615,6 @@ También hay que filtrar por los espacios ''Principal'' y ''Anexo'', que son los
  Levski Sofia
  Slavia Sofia
  Sofia Kenin
-
- # sólo
- # Esta forma no es incorrecta, aunque la forma recomendada desde 2010 sea sin tilde en cualquier caso.
- # Se añade a la lista puesto que ha habido quejas, ya que sigue siendo un término controvertido.
- [Ss]ólo
 
  # Tokyo
  TV Tokyo
