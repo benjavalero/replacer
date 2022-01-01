@@ -2,8 +2,11 @@
 # -*- coding: utf-8 -*-
 
 import pandas as pd
+import matplotlib
 import matplotlib.pyplot as plt
 import seaborn as sns
+
+matplotlib.use("TkAgg")
 
 # Import data
 words = pd.read_csv('replacement-benchmark.csv', sep='\t')
