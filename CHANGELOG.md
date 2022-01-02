@@ -1,5 +1,9 @@
 # Versions
 
+## 2.14.6 (??)
+- Add regular expression for Spanish months as surnames
+- Fix empty references only when using the simple tag
+
 ## 2.14.5 (31 Dec 2021)
 - Add more surnames to ignore as false positives
 

@@ -33,6 +33,7 @@ class TagEmptyFinderTest {
             "<span data-key=\"url\"></span>",
             "<div style=\"text-align: right; font-size: 85%;\"></div>",
             "<center></center>",
+            "<ref></ref>",
         }
     )
     void testTagEmpty(String text) {
@@ -44,7 +45,7 @@ class TagEmptyFinderTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = { "<span>x</span>", "<div> </div>" })
+    @ValueSource(strings = { "<span>x</span>", "<div> </div>", "<ref name=\"x\"></ref>" })
     void testSingleSmallTag(String text) {
         List<Cosmetic> cosmetics = tagEmptyFinder.findList(text);
 

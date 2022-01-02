@@ -25,6 +25,8 @@ class TagEmptyFinder extends CosmeticCheckedFinder {
         "noinclude"
     );
 
+    private static final Set<String> TAGS_SIMPLE = Set.of("ref");
+
     @RegExp
     private static final String REGEX_TAG_EMPTY = "<(%s)[^>]*></\\1>";
 
@@ -35,6 +37,16 @@ class TagEmptyFinder extends CosmeticCheckedFinder {
     @Override
     public Iterable<MatchResult> findMatchResults(FinderPage page) {
         return RegexMatchFinder.find(page.getContent(), PATTERN_TAG_EMPTY);
+    }
+
+    @Override
+    public boolean validate(MatchResult matchResult, FinderPage page) {
+        final String tag = matchResult.group(1);
+        if (TAGS_SIMPLE.contains(tag)) {
+            final String expectedSimpleTag = String.format("<%s></%s>", tag, tag);
+            return matchResult.group().equals(expectedSimpleTag);
+        }
+        return true;
     }
 
     @Override
