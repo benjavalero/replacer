@@ -4,7 +4,7 @@ import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.immutable.Immutable;
-import es.bvalero.replacer.finder.immutable.ImmutableCheckedFinder;
+import es.bvalero.replacer.finder.immutable.ImmutableFinder;
 import es.bvalero.replacer.finder.immutable.ImmutableFinderPriority;
 import es.bvalero.replacer.finder.util.AutomatonMatchFinder;
 import es.bvalero.replacer.finder.util.FinderUtils;
@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
 
 /** Find some ignorable templates. In case they are found the complete text must be ignored. */
 @Component
-class IgnorableTemplateFinder extends ImmutableCheckedFinder {
+class IgnorableTemplateFinder implements ImmutableFinder {
 
     private RunAutomaton automaton;
 
@@ -49,11 +49,7 @@ class IgnorableTemplateFinder extends ImmutableCheckedFinder {
 
     @Override
     public boolean validate(MatchResult match, FinderPage page) {
-        return FinderUtils.isWordCompleteInText(
-            match.start(),
-            match.group(),
-            FinderUtils.toLowerCase(page.getContent())
-        );
+        return FinderUtils.isWordCompleteInText(match.start(), match.group(), page.getContent());
     }
 
     @Override
