@@ -20,11 +20,15 @@ public abstract class ImmutableCheckedFinder implements ImmutableFinder {
     // NOTE this will not be applied if overridden by an Immutable Finder
     @Override
     public Iterable<Immutable> find(FinderPage page) {
-        // Trick: use iterable converter with no conversion at all but decoration
-        return IterableUtils.transformedIterable(
-            ImmutableFinder.super.find(page),
-            immutable -> this.check(immutable, page)
-        );
+        if (showImmutableWarning) {
+            // Trick: use iterable converter with no conversion at all but decoration
+            return IterableUtils.transformedIterable(
+                ImmutableFinder.super.find(page),
+                immutable -> this.check(immutable, page)
+            );
+        } else {
+            return ImmutableFinder.super.find(page);
+        }
     }
 
     private Immutable check(Immutable immutable, FinderPage page) {
