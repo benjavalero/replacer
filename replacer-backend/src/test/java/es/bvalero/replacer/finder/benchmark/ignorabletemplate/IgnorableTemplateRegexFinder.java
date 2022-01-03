@@ -27,7 +27,7 @@ class IgnorableTemplateRegexFinder implements BenchmarkFinder {
     public Set<BenchmarkResult> findMatches(String text) {
         Set<BenchmarkResult> matches = new HashSet<>();
         String lowerCaseText = FinderUtils.toLowerCase(text);
-        Matcher m = this.pattern.matcher(FinderUtils.toLowerCase(lowerCaseText));
+        Matcher m = this.pattern.matcher(lowerCaseText);
         while (m.find()) {
             if (FinderUtils.isWordCompleteInText(m.start(), m.group(), lowerCaseText)) {
                 matches.add(BenchmarkResult.of(0, text));
