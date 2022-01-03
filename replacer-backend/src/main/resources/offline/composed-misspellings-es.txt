@@ -6,8 +6,6 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  1º de Mayo|cs|1.º de Mayo, Primero de Mayo
  1° de Mayo|cs|1.º de Mayo, Primero de Mayo
  1ro de Mayo|cs|1.º de Mayo, Primero de Mayo
- 1 sólo||un solo, Un solo
- 1º de Mayo|cs|1.º de Mayo, Primero de Mayo
  a demás||además (adverbio)
  Administración Publica|cs|Administración Pública
  a el||al, a él, a El
@@ -168,7 +166,7 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  Maria Eugenia|cs|María Eugenia (nombre propio español)
  Maria Fernanda|cs|María Fernanda (nombre propio español), Maria Fernanda (nombre propio portugués)
  Maria Isabel|cs|María Isabel (nombre propio español)
- Maria José|cs|María José (nombre propio español)
+ Maria José|cs|María José (nombre propio español), Maria José (nombre propio catalán y portugués)
  Maria Luisa|cs|María Luisa (nombre propio español)
  Maria Magdalena|cs|María Magdalena (nombre en español, en particular del personaje bíblico)
  Maria Rosa|cs|María Rosa (nombre propio español)

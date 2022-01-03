@@ -194,7 +194,7 @@ También hay que filtrar por los espacios ''Principal'' y ''Anexo'', que son los
  mayor logro
  su logro
 
- #M2
+ # M2
  Browning M2
  [Ll]ínea M2
  [Aa]utopista M2
@@ -209,7 +209,7 @@ También hay que filtrar por los espacios ''Principal'' y ''Anexo'', que son los
  y M2
  M2 y
 
- #M3
+ # M3
  Browning M3
  [Ll]ínea M3
  [Aa]utopista M3

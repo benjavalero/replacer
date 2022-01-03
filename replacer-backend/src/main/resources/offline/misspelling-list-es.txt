@@ -1311,11 +1311,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  aquárium||acuario
  aquariums||acuarios
  aquáriums||acuarios
- aquél||aquel (determinante y pronombre), aquél (pronombre)
- aquélla||aquella (determinante y pronombre), aquélla (pronombre)
- aquéllas||aquellas (determinante y pronombre), aquéllas (pronombre)
  aquéllo||aquello
- aquéllos||aquellos (determinante y pronombre), aquéllos (pronombre)
  aqui||aquí
  aquménida||aqueménida
  arabe||árabe
@@ -10847,7 +10843,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  incolume||incólume
  incolumes||incólumes
  incomodas||incómodas (adjetivo), incomodas (verbo, 2.ª persona)
- incomodo||incómodo (adjetivo), incomodó (verbo, 3.ª persona), incomodo (verbo, 1.ª persona)
+ incomodo||incómodo (adjetivo), incomodó (verbo, 3.ª persona), incomodo (verbo, 1.ª persona; sustantivo)
  inconciente||inconsciente
  inconcientes||inconscientes
  inconita||incógnita
@@ -11627,7 +11623,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  Junin||Junín
  junín|cs|Junín
  Junio|cs|junio
- junior||júnior (excepto el término eclesiástico)
+ junior||júnior (adjetivo), junior (sustantivo, término eclesiástico)
  jupiter||Júpiter
  júpiteres||jupíteres
  jurasica||jurásica
@@ -12416,7 +12412,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  maniaticos||maniáticos
  manies||maníes
  manifestacion||manifestación
- manifiestó||manifiesto, manifestó
+ manifiestó||manifiesto (adjetivo o sustantivo; verbo, 1.ª persona), manifestó (verbo, 3.ª persona)
  manipulacion||manipulación
  manipulear||manipular
  manipulearon||manipularon
@@ -14582,8 +14578,8 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  pariodados||parodiados
  pariodando||parodiando
  pariodas||parodias
- Paris|cs|París (nombre en español de la capital francesa), Paris (nombre en otros idiomas de la capital francesa, nombre de varias localidades estadounidenses, personaje mitológico), parís (verbo)
- parís|cs|París (ciudad francesa), parís (verbo)
+ paris||París (nombre en español de la capital francesa), Paris (1. nombre en otros idiomas de la capital francesa; 2. nombre de varias localidades estadounidenses; 3. personaje mitológico), parís (verbo «parir»)
+ parís|cs|París (ciudad francesa), parís (verbo «parir»)
  parking||aparcamiento, estacionamiento, parqueo, parqueadero, playa (de estacionamiento), parquin
  parkings||aparcamientos, estacionamientos, parqueos, parqueaderos, playas (de estacionamiento), párquines
  parkinson|cs|enfermedad de Parkinson, párkinson
@@ -14861,7 +14857,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  percecución||persecución
  percecuciones||persecuciones
  percusion||percusión
- percusor||precursor (que precede), percusor (1. el que hiere, 2. sinónimo de percutor), percutor (pieza que percute, especialmente, en armas de fuego)
+ percusor||precursor (que precede), percusor (1. el que hiere; 2. sinónimo de percutor), percutor (pieza que percute, especialmente, en armas de fuego)
  perdída||pérdida (sustantivo), perdida (adjetivo o sustantivo)
  perdídas||pérdidas (sustantivo, plural), perdidas (adjetivo o sustantivo)
  perdído||perdido
@@ -17566,7 +17562,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  seudonimos||seudónimos
  seudopodo||seudópodo
  seudopodos||seudópodos
- Seul|cs|Seúl (ciudad coreana)
+ Seul|cs|Seúl (ciudad coreana), Seul (nombre propio coreano)
  seúl|cs|Seúl
  sexagesima||sexagésima
  sexagesimas||sexagésimas
@@ -17701,7 +17697,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  simil||símil
  similaridad||similitud
  similaridades||similitudes
- Simon|cs|Simón
+ Simon|cs|Simon (nombre propio en inglés, francés y otros idiomas), Simón (nombre propio en español)
  simpatia||simpatía
  simpatias||simpatías
  simpatica||simpática
