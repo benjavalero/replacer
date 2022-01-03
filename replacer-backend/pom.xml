@@ -170,6 +170,8 @@
                 <dependency>
                     <groupId>com.h2database</groupId>
                     <artifactId>h2</artifactId>
+                    <!-- Downgrade the version to match the one in DBeaver -->
+                    <version>1.4.197</version>
                     <scope>runtime</scope>
                 </dependency>
             </dependencies>
