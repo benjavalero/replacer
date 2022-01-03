@@ -18,6 +18,7 @@
 
   <h3>{{ review.page.title }}
     <a href="{{ url }}" target="_blank" rel="noopener noreferrer" class="small">[Abrir en Wikipedia]</a>
+    <a href="{{ historyUrl }}" target="_blank" rel="noopener noreferrer" class="small">[Historial]</a>
   </h3>
 
   <app-edit-snippet *ngFor="let replacement of review.replacements; let i = index; let first = first; let last = last"

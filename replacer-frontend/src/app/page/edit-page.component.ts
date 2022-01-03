@@ -140,4 +140,8 @@ export class EditPageComponent implements OnChanges {
     }
     return url;
   }
+
+  get historyUrl(): string {
+    return `https://${this.review.page.lang}.wikipedia.org/w/index.php?title=${this.review.page.title}&action=history`;
+  }
 }

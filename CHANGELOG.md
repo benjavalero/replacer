@@ -3,6 +3,8 @@
 ## 2.14.6 (??)
 - Add regular expression for Spanish months as surnames
 - Fix empty references only when using the simple tag
+- Improve indexing when finding ignorable templates
+- Feature: add link to page history
 
 ## 2.14.5 (31 Dec 2021)
 - Add more surnames to ignore as false positives
