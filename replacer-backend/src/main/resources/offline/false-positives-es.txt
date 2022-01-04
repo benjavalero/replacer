@@ -21,8 +21,6 @@ También hay que filtrar por los espacios ''Principal'' y ''Anexo'', que son los
 
 === Listado ===
 
- # Abril
-
  # Adrian
  Adrian Mannarino
  Adrian Sutil
@@ -36,8 +34,6 @@ También hay que filtrar por los espacios ''Principal'' y ''Anexo'', que son los
  Africa Tour
  Africa Cup
  Africa Sports
-
- # Agosto
 
  # Albums
  Albums Chart
@@ -109,8 +105,6 @@ También hay que filtrar por los espacios ''Principal'' y ''Anexo'', que son los
  Iniciativa per Catalunya
  Junts per Catalunya
 
- # Diciembre
-
  # disparo
  # La inmensa mayoría se refieren al sustantivo y por tanto son correctos
  un disparo
@@ -145,14 +139,9 @@ También hay que filtrar por los espacios ''Principal'' y ''Anexo'', que son los
  S. ?D. Eibar
  Sociedad Deportiva Eibar
 
- # Enero
-
  # Febrero
- 3 de Febrero FBC
- 3 de Febrero CDE
- [Aa]venida del 20 de Febrero
- Avenida del 28 de Febrero
- [Mm]unicipalidad de 3 de Febrero
+ 3 de Febrero FBC        # 150
+ 3 de Febrero CDE        # 100
 
  # Ivan
  Ivan Lendl
@@ -168,10 +157,6 @@ También hay que filtrar por los espacios ''Principal'' y ''Anexo'', que son los
  Julian Alaphilippe
  Julian Assange
  Julian Casablancas
-
- # Julio
-
- # Junio
 
  # junior
  Junior de Barranquilla # 690 Equipo de fútbol colombiano
@@ -279,14 +264,7 @@ También hay que filtrar por los espacios ''Principal'' y ''Anexo'', que son los
  Maria Bueno             # 100
 
  # Marzo
- [Aa]lianza del 14 de Marzo
- [Mm]ovimiento del 1 de Marzo
- [Mm]ovimiento del 26 de Marzo
- [Mm]ovimiento del 22 de Marzo
- 19 de Marzo FC
- 21 de Marzo FC
- [Ee]stadio 1º de Marzo
- Marzo [Pp]araguayo
+ 1.º de Marzo            # 120
 
  # mas
  mas no
@@ -335,24 +313,8 @@ También hay que filtrar por los espacios ''Principal'' y ''Anexo'', que son los
  Nicolas Lapierre
  Nicolas Poussin
 
- # Noviembre
- [Aa]venida del 12 de Noviembre
- [Aa]venida del 24 de Noviembre
- [Mm]ovimiento [Rr]evolucionario 13 de Noviembre
- [Hh]ospital 20 de Noviembre
-
  # Octubre
- Octubre [Rr]ojo
- Octubre [Nn]egro
- Octubre polaco
- [Gg]rupo Octubre
- [Hh]ospital 12 de Octubre
- [Aa]venida del [123456789] de Octubre
- [Aa]venida del [123456789][1234567890] de Octubre
- [Aa]v del [123456789] de Octubre
- [Aa]v del [123456789][1234567890] de Octubre
- [Aa]v. del [123456789] de Octubre
- [Cc]. [123456789] de Octubre
+ Grupo Octubre           # 70
 
  # Paris
  in Paris                # 1340
@@ -450,7 +412,7 @@ También hay que filtrar por los espacios ''Principal'' y ''Anexo'', que son los
  y [Ss]ecretaria
 
  # Septiembre
- Septiembre Negro
+ Septiembre Negro      # 200
 
  # Simon
  Simon and Schuster    # 1230
