@@ -16,13 +16,11 @@ import es.bvalero.replacer.finder.util.AutomatonMatchFinder;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.Collections;
-import java.util.EnumMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.MatchResult;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
+import lombok.Getter;
 import org.apache.commons.collections4.SetValuedMap;
 import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
 import org.apache.commons.lang3.StringUtils;
@@ -59,6 +57,9 @@ public class UppercaseFinder implements ImmutableFinder, PropertyChangeListener 
     // Escaping is necessary for automaton
     private static final String CELL_HTML_TAG = "\\<td\\>";
 
+    // Escaping is necessary for automaton
+    private static final String REF_END_TAG = "\\</ref\\>";
+
     private static final String TIMELINE_TEXT = "text:";
 
     @org.intellij.lang.annotations.RegExp
@@ -66,11 +67,12 @@ public class UppercaseFinder implements ImmutableFinder, PropertyChangeListener 
 
     @org.intellij.lang.annotations.RegExp
     private static final String REGEX_UPPERCASE_PUNCTUATION = String.format(
-        "(%s|%s|%s|%s|%s|%s)<Zs>*(%%s)",
+        "(%s|%s|%s|%s|%s|%s|%s)<Zs>*(\\[\\[)?(%%s)(]])?",
         CLASS_PUNCTUATION,
         FIRST_CELL_SEPARATOR,
         CELL_SEPARATOR,
         CAPTION_SEPARATOR,
+        REF_END_TAG,
         CELL_HTML_TAG,
         TIMELINE_TEXT
     );
@@ -82,6 +84,9 @@ public class UppercaseFinder implements ImmutableFinder, PropertyChangeListener 
     // and starting with a special character which justifies the uppercase
     private Map<WikipediaLanguage, RunAutomaton> uppercaseAutomata = new EnumMap<>(WikipediaLanguage.class);
 
+    @Getter
+    private SetValuedMap<WikipediaLanguage, String> uppercaseMap = new HashSetValuedHashMap<>();
+
     @PostConstruct
     public void init() {
         simpleMisspellingLoader.addPropertyChangeListener(this);
@@ -90,10 +95,8 @@ public class UppercaseFinder implements ImmutableFinder, PropertyChangeListener 
     @Override
     @SuppressWarnings("unchecked")
     public void propertyChange(PropertyChangeEvent evt) {
-        final SetValuedMap<WikipediaLanguage, String> uppercaseWords = getUppercaseWords(
-            (SetValuedMap<WikipediaLanguage, SimpleMisspelling>) evt.getNewValue()
-        );
-        this.uppercaseAutomata = buildUppercaseAutomata(uppercaseWords);
+        this.uppercaseMap = getUppercaseWords((SetValuedMap<WikipediaLanguage, SimpleMisspelling>) evt.getNewValue());
+        this.uppercaseAutomata = buildUppercaseAutomata(this.uppercaseMap);
     }
 
     @VisibleForTesting
@@ -177,7 +180,10 @@ public class UppercaseFinder implements ImmutableFinder, PropertyChangeListener 
         final String text = match.group();
         for (int i = 0; i < text.length(); i++) {
             if (Character.isUpperCase(text.charAt(i))) {
-                final String word = text.substring(i).trim();
+                String word = text.substring(i).trim();
+                if (word.endsWith("]]")) {
+                    word = word.substring(0, word.length() - 2);
+                }
                 final int startPos = match.start() + i;
                 return Immutable.of(startPos, word);
             }

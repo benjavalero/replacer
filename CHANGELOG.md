@@ -5,6 +5,7 @@
 - Fix empty references only when using the simple tag
 - Improve indexing when finding ignorable templates
 - Feature: add link to page history
+- Add more cases to ignore uppercase words
 
 ## 2.14.5 (31 Dec 2021)
 - Add more surnames to ignore as false positives

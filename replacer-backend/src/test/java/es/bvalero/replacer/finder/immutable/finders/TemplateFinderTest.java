@@ -4,6 +4,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import es.bvalero.replacer.config.XmlConfiguration;
 import es.bvalero.replacer.finder.immutable.Immutable;
+import es.bvalero.replacer.finder.listing.find.ListingOfflineFinder;
+import es.bvalero.replacer.finder.listing.load.SimpleMisspellingLoader;
+import es.bvalero.replacer.finder.listing.parse.SimpleMisspellingParser;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -11,9 +14,23 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
-@SpringBootTest(classes = { TemplateFinder.class, XmlConfiguration.class })
+@ActiveProfiles("offline")
+@SpringBootTest(
+    classes = {
+        TemplateFinder.class,
+        UppercaseFinder.class,
+        SimpleMisspellingLoader.class,
+        ListingOfflineFinder.class,
+        SimpleMisspellingParser.class,
+        XmlConfiguration.class,
+    }
+)
 class TemplateFinderTest {
+
+    @Autowired
+    private SimpleMisspellingLoader simpleMisspellingLoader;
 
     @Autowired
     private TemplateFinder templateFinder;
@@ -178,6 +195,25 @@ class TemplateFinderTest {
         List<Immutable> matches = templateFinder.findList(text);
 
         Set<Immutable> expected = Set.of(Immutable.of(2, "T"), Immutable.of(4, "xxx.jpg"));
+        Set<Immutable> actual = new HashSet<>(matches);
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void testArgumentWithUppercase() {
+        // Load misspellings
+        simpleMisspellingLoader.load();
+
+        String text = "{{T|Enero de 1980|p=Febrero de 1979}}";
+
+        List<Immutable> matches = templateFinder.findList(text);
+
+        Set<Immutable> expected = Set.of(
+            Immutable.of(2, "T"),
+            Immutable.of(4, "Enero"),
+            Immutable.of(18, "p"),
+            Immutable.of(20, "Febrero")
+        );
         Set<Immutable> actual = new HashSet<>(matches);
         assertEquals(expected, actual);
     }

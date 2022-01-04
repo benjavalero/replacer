@@ -47,4 +47,12 @@ class FinderUtilsTest {
         assertTrue(FinderUtils.isWordCompleteInText(21, "mismo", text));
         assertTrue(FinderUtils.isWordCompleteInText(28, "X", text));
     }
+
+    @Test
+    void testGetFirstWord() {
+        assertEquals("", FinderUtils.getFirstWord(",. "));
+        assertEquals("Text", FinderUtils.getFirstWord("Text"));
+        assertEquals("Text", FinderUtils.getFirstWord("Text of text"));
+        assertEquals("Text", FinderUtils.getFirstWord(" Text, of text"));
+    }
 }

@@ -146,4 +146,19 @@ public class FinderUtils {
         assert !actualList.isEmpty();
         return actualList.get(0);
     }
+
+    public String getFirstWord(String text) {
+        int start = -1;
+        for (int i = 0; i < text.length(); i++) {
+            final char ch = text.charAt(i);
+            if (Character.isLetter(ch)) {
+                if (start < 0) {
+                    start = i;
+                }
+            } else if (start >= 0) {
+                return text.substring(start, i);
+            }
+        }
+        return start >= 0 ? text : "";
+    }
 }

@@ -1,5 +1,6 @@
 package es.bvalero.replacer.finder.immutable.finders;
 
+import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.immutable.ImmutableFinder;
 import es.bvalero.replacer.finder.immutable.ImmutableFinderPriority;
@@ -13,6 +14,7 @@ import javax.annotation.Resource;
 import org.apache.commons.collections4.SetValuedMap;
 import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -34,6 +36,9 @@ class TemplateFinder implements ImmutableFinder {
 
     @Resource
     private List<String> templateParams;
+
+    @Autowired
+    private UppercaseFinder uppercaseFinder;
 
     // Set with the names of the templates to be ignored as a whole
     private final Set<String> templateNames = new HashSet<>();
@@ -79,12 +84,12 @@ class TemplateFinder implements ImmutableFinder {
     public Iterable<MatchResult> findMatchResults(FinderPage page) {
         final List<MatchResult> immutables = new ArrayList<>(100);
         for (LinearMatchResult template : TemplateUtils.findAllTemplates(page)) {
-            immutables.addAll(findImmutables(template));
+            immutables.addAll(findImmutables(page.getLang(), template));
         }
         return immutables;
     }
 
-    private List<MatchResult> findImmutables(LinearMatchResult template) {
+    private List<MatchResult> findImmutables(WikipediaLanguage lang, LinearMatchResult template) {
         String content = template.group();
 
         // Special case "{{|}}"
@@ -156,10 +161,15 @@ class TemplateFinder implements ImmutableFinder {
             if (posEquals >= 0) {
                 immutables.add(LinearMatchResult.of(startParameter, param));
             } else {
-                // Don't take into account parameters with no equals and value (except if they are files)
+                // Don't take into account parameters with no equals and value (except if they are files or uppercase)
                 // By the way we skip parameters which actually are link aliases
                 if (matchesFile(param)) {
                     immutables.add(LinearMatchResult.of(startParameter, param));
+                } else {
+                    final String firstWord = FinderUtils.getFirstWord(param);
+                    if (matchesUppercase(lang, firstWord)) {
+                        immutables.add(LinearMatchResult.of(startParameter, firstWord));
+                    }
                 }
                 continue;
             }
@@ -185,6 +195,13 @@ class TemplateFinder implements ImmutableFinder {
                 ) {
                     final int startValue = startParameter + posEquals + 1;
                     immutables.add(LinearMatchResult.of(startValue, value));
+                } else {
+                    // If the value starts with an uppercase word then we return this word
+                    final String firstWord = FinderUtils.getFirstWord(value);
+                    if (matchesUppercase(lang, firstWord)) {
+                        final int startValue = startParameter + posEquals + 1;
+                        immutables.add(LinearMatchResult.of(startValue, firstWord));
+                    }
                 }
             }
         }
@@ -213,5 +230,9 @@ class TemplateFinder implements ImmutableFinder {
         } else {
             return false;
         }
+    }
+
+    private boolean matchesUppercase(WikipediaLanguage lang, String text) {
+        return uppercaseFinder.getUppercaseMap().containsMapping(lang, text);
     }
 }
