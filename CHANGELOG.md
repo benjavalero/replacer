@@ -1,5 +1,9 @@
 # Versions
 
+## 2.14.7 (??)
+- Improve indexing: consider replacements with same position or context as equal
+- Feature: add possibility to ignore complete page sections
+
 ## 2.14.6 (4 Jan 2022)
 - Add regular expression for Spanish months as surnames
 - Fix empty references only when using the simple tag

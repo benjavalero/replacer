@@ -61,4 +61,7 @@
         <value>{{formatowiki</value>
     </util:list>
 
+    <util:set id="ignorableSections" value-type="java.lang.String">
+        <value>Bibliografía</value>
+    </util:set>
 </beans>
