@@ -6,10 +6,7 @@ import es.bvalero.replacer.common.domain.ReplacementKind;
 import es.bvalero.replacer.common.domain.ReplacementType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import java.time.LocalDate;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 import org.junit.jupiter.api.Test;
 
 class IndexablePageComparatorTest {
@@ -78,20 +75,19 @@ class IndexablePageComparatorTest {
             .build();
 
         // Both obsolete to review or reviewed by system ==> Delete
-        // A dummy replacement will be created instead
         IndexableReplacement rep2 = IndexableReplacement
             .builder()
             .indexablePageId(pageId)
             .type(ReplacementType.ofEmpty())
             .position(2)
-            .context("")
+            .context("2")
             .build();
         IndexableReplacement rep3 = IndexableReplacement
             .builder()
             .indexablePageId(pageId)
             .type(ReplacementType.ofEmpty())
             .position(3)
-            .context("")
+            .context("3")
             .build()
             .setSystemReviewed();
         IndexablePage dbPage = IndexablePage
@@ -325,6 +321,55 @@ class IndexablePageComparatorTest {
         PageIndexResult toIndex = indexablePageComparator.indexPageReplacements(page, dbPage);
 
         PageIndexResult expected = PageIndexResult.ofEmpty();
+        assertEquals(expected, toIndex);
+    }
+
+    @Test
+    void testIndexExistingPageWithDuplicatedReplacements() {
+        LocalDate same = LocalDate.now();
+
+        // Replacements found to index: the same replacement found in 2 different positions with same context
+        IndexablePageId pageId = IndexablePageId.of(WikipediaLanguage.getDefault(), 1);
+        IndexableReplacement r1 = IndexableReplacement
+            .builder()
+            .indexablePageId(pageId)
+            .type(ReplacementType.of(ReplacementKind.MISSPELLING_SIMPLE, "1"))
+            .position(1)
+            .context("C")
+            .build();
+        IndexableReplacement r2 = IndexableReplacement
+            .builder()
+            .indexablePageId(pageId)
+            .type(ReplacementType.of(ReplacementKind.MISSPELLING_SIMPLE, "1"))
+            .position(5)
+            .context("C")
+            .build();
+        IndexablePage page = IndexablePage
+            .builder()
+            .id(pageId)
+            .title("T")
+            .replacements(List.of(r1, r2))
+            .lastUpdate(same)
+            .build();
+
+        // Existing replacements in DB
+        IndexableReplacement r1db = r1.withTouched(false); // Trick to clone and match with the one found to index
+        IndexableReplacement r2db = r2.withTouched(false); // Trick to clone and match with the one found to index
+        IndexablePage dbPage = IndexablePage
+            .builder()
+            .id(pageId)
+            .title("T")
+            .replacements(List.of(r1db, r2db))
+            .lastUpdate(same)
+            .build();
+
+        PageIndexResult toIndex = indexablePageComparator.indexPageReplacements(page, dbPage);
+
+        PageIndexResult expected = PageIndexResult
+            .builder()
+            .status(PageIndexStatus.PAGE_INDEXED)
+            .removeReplacements(Set.of(r2db))
+            .build();
         assertEquals(expected, toIndex);
     }
 }

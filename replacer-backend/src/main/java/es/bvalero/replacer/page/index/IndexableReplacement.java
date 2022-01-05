@@ -3,6 +3,7 @@ package es.bvalero.replacer.page.index;
 import static es.bvalero.replacer.repository.ReplacementRepository.REVIEWER_SYSTEM;
 
 import es.bvalero.replacer.common.domain.ReplacementType;
+import java.util.Objects;
 import lombok.Builder;
 import lombok.Value;
 import lombok.With;
@@ -54,5 +55,24 @@ class IndexableReplacement {
     @TestOnly
     IndexableReplacement setSystemReviewed() {
         return withReviewer(REVIEWER_SYSTEM);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, indexablePageId, type);
+    }
+
+    /* If two replacements have the same position or context they will be considered equal */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        IndexableReplacement that = (IndexableReplacement) o;
+        return (
+            Objects.equals(id, that.id) &&
+            indexablePageId.equals(that.indexablePageId) &&
+            type.equals(that.type) &&
+            (position.equals(that.position) || context.equals(that.context))
+        );
     }
 }

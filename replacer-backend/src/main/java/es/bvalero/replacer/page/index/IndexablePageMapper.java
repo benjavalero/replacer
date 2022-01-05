@@ -47,7 +47,7 @@ class IndexablePageMapper {
                 replacements
                     .stream()
                     .map(r -> IndexableReplacementMapper.fromDomain(r, page))
-                    .collect(Collectors.toList())
+                    .collect(Collectors.toUnmodifiableList())
             )
             .build();
     }

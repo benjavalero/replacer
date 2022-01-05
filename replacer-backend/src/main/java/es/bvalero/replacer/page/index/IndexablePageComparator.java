@@ -15,22 +15,22 @@ class IndexablePageComparator {
 
     PageIndexResult indexPageReplacements(IndexablePage page, @Nullable IndexablePage dbPage) {
         PageIndexResult result = PageIndexResult.ofEmpty();
-        final Set<IndexableReplacement> dbReplacements = dbPage == null
-            ? new HashSet<>() // The set must be mutable
-            : new HashSet<>(dbPage.getReplacements());
 
-        // Ignore context when comparing replacements in case there are cases with the same context
-        final boolean ignoreContext =
-            existReplacementsWithSameContext(page.getReplacements()) ||
-            existReplacementsWithSameContext(dbReplacements);
+        // Use a Set for page replacements as we don't want to index duplicated replacements
+        // Use a List for DB replacements as we want to detect possible duplicated in database
+        final Set<IndexableReplacement> pageReplacements = new HashSet<>(page.getReplacements());
+        final List<IndexableReplacement> dbReplacements = dbPage == null
+            ? new ArrayList<>() // The collection must be mutable
+            : new ArrayList<>(dbPage.getReplacements());
 
         // We compare each replacement found in the page to index with the ones existing in database
         // We add to the result the needed modifications to align the database with the actual replacements
         // Meanwhile we also modify the set of DB replacements to eventually contain the final result
         // All replacements modified in the DB set are marked as "touched".
         // In case a replacement is kept as is, we also mark it as "touched".
-        for (IndexableReplacement replacement : page.getReplacements()) {
-            result = result.add(handleReplacement(replacement, dbReplacements, ignoreContext));
+        // Replacements with the same position or context are considered equal and only one will be indexed
+        for (IndexableReplacement replacement : pageReplacements) {
+            result = result.add(handleReplacement(replacement, dbReplacements));
         }
 
         // Check changes in the page
@@ -45,21 +45,15 @@ class IndexablePageComparator {
         return result.add(cleanUpPageReplacements(dbReplacements));
     }
 
-    private boolean existReplacementsWithSameContext(Collection<IndexableReplacement> replacements) {
-        return replacements.size() != replacements.stream().map(IndexableReplacement::getContext).distinct().count();
-    }
-
     /* Check the given replacement with the ones in DB. Update the given DB list if needed. */
     private PageIndexResult handleReplacement(
         IndexableReplacement replacement,
-        Set<IndexableReplacement> dbPageReplacements,
-        boolean ignoreContext
+        Collection<IndexableReplacement> dbPageReplacements
     ) {
         final PageIndexResult result;
         final Optional<IndexableReplacement> existing = findSameReplacementInCollection(
             replacement,
-            dbPageReplacements,
-            ignoreContext
+            dbPageReplacements
         );
         if (existing.isPresent()) {
             final IndexableReplacement dbReplacement = existing.get();
@@ -82,32 +76,9 @@ class IndexablePageComparator {
 
     private Optional<IndexableReplacement> findSameReplacementInCollection(
         IndexableReplacement replacement,
-        Collection<IndexableReplacement> entities,
-        boolean ignoreContext
+        Collection<IndexableReplacement> entities
     ) {
-        return entities.stream().filter(entity -> isSameReplacement(replacement, entity, ignoreContext)).findAny();
-    }
-
-    private boolean isSameReplacement(
-        IndexableReplacement replacement,
-        IndexableReplacement entity,
-        boolean ignoreContext
-    ) {
-        if (
-            Objects.equals(replacement.getIndexablePageId(), entity.getIndexablePageId()) &&
-            Objects.equals(replacement.getType(), entity.getType())
-        ) {
-            if (ignoreContext) {
-                return Objects.equals(replacement.getPosition(), entity.getPosition());
-            } else {
-                return (
-                    Objects.equals(replacement.getPosition(), entity.getPosition()) ||
-                    Objects.equals(replacement.getContext(), entity.getContext())
-                );
-            }
-        } else {
-            return false;
-        }
+        return entities.stream().filter(entity -> Objects.equals(replacement, entity)).findAny();
     }
 
     /* Compare the given replacement with the counterpart in DB and return if it must be updated */
@@ -136,7 +107,7 @@ class IndexablePageComparator {
      *
      * @return A list of replacements to be managed in DB.
      */
-    private PageIndexResult cleanUpPageReplacements(Set<IndexableReplacement> dbReplacements) {
+    private PageIndexResult cleanUpPageReplacements(Collection<IndexableReplacement> dbReplacements) {
         PageIndexResult result = PageIndexResult.ofEmpty();
 
         // Find just in case the system-reviewed replacements and delete them
