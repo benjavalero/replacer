@@ -20,6 +20,15 @@ class WikipediaOfflineService implements WikipediaService {
 
     @Override
     public WikipediaUser getAuthenticatedUser(WikipediaLanguage lang, AccessToken accessToken) {
+        return getOfflineUser(lang);
+    }
+
+    @Override
+    public WikipediaUser getWikipediaUser(WikipediaLanguage lang, String username) {
+        return getOfflineUser(lang);
+    }
+
+    private WikipediaUser getOfflineUser(WikipediaLanguage lang) {
         return WikipediaUser.builder().lang(lang).name("offline").group(WikipediaUserGroup.AUTO_CONFIRMED).build();
     }
 

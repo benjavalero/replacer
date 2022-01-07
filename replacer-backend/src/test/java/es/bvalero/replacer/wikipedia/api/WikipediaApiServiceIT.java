@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import es.bvalero.replacer.common.domain.*;
 import es.bvalero.replacer.config.JsonMapperConfiguration;
 import es.bvalero.replacer.wikipedia.WikipediaException;
+import es.bvalero.replacer.wikipedia.WikipediaUser;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collection;
@@ -71,7 +72,7 @@ class WikipediaApiServiceIT {
     }
 
     @Test
-    void testGetPageContentUnavailable() throws WikipediaException {
+    void testGetPageContentUnavailable() {
         assertFalse(wikipediaService.getPageByTitle(WikipediaLanguage.SPANISH, "Usuario:Benjavaleroxx").isPresent());
     }
 
@@ -120,5 +121,16 @@ class WikipediaApiServiceIT {
                     AccessToken.empty()
                 )
         );
+    }
+
+    @Test
+    void testGetUser() throws WikipediaException {
+        String username = "Benjavalero";
+        WikipediaUser user = wikipediaService.getWikipediaUser(WikipediaLanguage.SPANISH, username);
+        assertNotNull(user);
+        assertEquals(WikipediaLanguage.SPANISH, user.getLang());
+        assertEquals(username, user.getName());
+        assertTrue(user.hasRights());
+        assertFalse(user.isBot());
     }
 }

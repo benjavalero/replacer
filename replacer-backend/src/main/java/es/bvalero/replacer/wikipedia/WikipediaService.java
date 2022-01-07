@@ -10,6 +10,8 @@ import org.springframework.lang.Nullable;
 public interface WikipediaService {
     WikipediaUser getAuthenticatedUser(WikipediaLanguage lang, AccessToken accessToken) throws WikipediaException;
 
+    WikipediaUser getWikipediaUser(WikipediaLanguage lang, String username) throws WikipediaException;
+
     Optional<WikipediaPage> getPageByTitle(WikipediaLanguage lang, String pageTitle);
 
     Optional<WikipediaPage> getPageById(WikipediaPageId id);

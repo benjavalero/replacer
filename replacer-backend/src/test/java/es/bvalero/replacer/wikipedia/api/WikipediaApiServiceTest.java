@@ -187,12 +187,25 @@ class WikipediaApiServiceTest {
         WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
         when(wikipediaApiRequestHelper.executeApiRequest(any(WikipediaApiRequest.class))).thenReturn(response);
 
-        WikipediaApiResponse.UserInfo userInfo = wikipediaService.getLoggedUserName(
+        WikipediaApiResponse.UserInfo userInfo = wikipediaService.getLoggedUserInfo(
             WikipediaLanguage.getDefault(),
             AccessToken.empty()
         );
         assertEquals("Benjavalero", userInfo.getName());
         assertEquals(List.of("*", "user", "autoconfirmed"), userInfo.getGroups());
+    }
+
+    @Test
+    void testLoggedUser() throws Exception {
+        // API response
+        String textResponse =
+            "{\"batchcomplete\":true,\"query\":{\"users\":[{\"userid\":24149,\"name\":\"Benjavalero\",\"groups\":[\"*\",\"user\",\"autoconfirmed\"]}]}}";
+        WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
+        when(wikipediaApiRequestHelper.executeApiRequest(any(WikipediaApiRequest.class))).thenReturn(response);
+
+        WikipediaApiResponse.User user = wikipediaService.getLoggedUser(WikipediaLanguage.getDefault(), "Benjavalero");
+        assertEquals("Benjavalero", user.getName());
+        assertEquals(List.of("*", "user", "autoconfirmed"), user.getGroups());
     }
 
     @Test

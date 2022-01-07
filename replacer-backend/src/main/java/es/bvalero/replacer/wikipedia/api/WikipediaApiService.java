@@ -36,7 +36,7 @@ class WikipediaApiService implements WikipediaService {
     @Override
     public WikipediaUser getAuthenticatedUser(WikipediaLanguage lang, AccessToken accessToken)
         throws WikipediaException {
-        return convertUserInfo(lang, getLoggedUserName(lang, accessToken));
+        return convertUserInfo(lang, getLoggedUserInfo(lang, accessToken));
     }
 
     private WikipediaUser convertUserInfo(WikipediaLanguage lang, WikipediaApiResponse.UserInfo userInfo) {
@@ -56,20 +56,20 @@ class WikipediaApiService implements WikipediaService {
     }
 
     @VisibleForTesting
-    WikipediaApiResponse.UserInfo getLoggedUserName(WikipediaLanguage lang, AccessToken accessToken)
+    WikipediaApiResponse.UserInfo getLoggedUserInfo(WikipediaLanguage lang, AccessToken accessToken)
         throws WikipediaException {
         WikipediaApiRequest apiRequest = WikipediaApiRequest
             .builder()
             .verb(WikipediaApiRequestVerb.GET)
             .lang(lang)
-            .params(buildUserNameRequestParams())
+            .params(buildUserInfoRequestParams())
             .accessToken(accessToken)
             .build();
         WikipediaApiResponse apiResponse = wikipediaApiRequestHelper.executeApiRequest(apiRequest);
-        return extractUserNameFromJson(apiResponse);
+        return extractUserInfoFromJson(apiResponse);
     }
 
-    private Map<String, String> buildUserNameRequestParams() {
+    private Map<String, String> buildUserInfoRequestParams() {
         Map<String, String> params = new HashMap<>();
         params.put(PARAM_ACTION, VALUE_QUERY);
         params.put("meta", "userinfo");
@@ -77,8 +77,54 @@ class WikipediaApiService implements WikipediaService {
         return params;
     }
 
-    private WikipediaApiResponse.UserInfo extractUserNameFromJson(WikipediaApiResponse response) {
+    private WikipediaApiResponse.UserInfo extractUserInfoFromJson(WikipediaApiResponse response) {
         return response.getQuery().getUserinfo();
+    }
+
+    @Override
+    public WikipediaUser getWikipediaUser(WikipediaLanguage lang, String username) throws WikipediaException {
+        return convertUser(lang, getLoggedUser(lang, username));
+    }
+
+    private WikipediaUser convertUser(WikipediaLanguage lang, WikipediaApiResponse.User user) {
+        return WikipediaUser
+            .builder()
+            .lang(lang)
+            .name(user.getName())
+            .groups(
+                user
+                    .getGroups()
+                    .stream()
+                    .map(WikipediaUserGroup::valueOfLabel)
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toUnmodifiableSet())
+            )
+            .build();
+    }
+
+    @VisibleForTesting
+    WikipediaApiResponse.User getLoggedUser(WikipediaLanguage lang, String username) throws WikipediaException {
+        WikipediaApiRequest apiRequest = WikipediaApiRequest
+            .builder()
+            .verb(WikipediaApiRequestVerb.GET)
+            .lang(lang)
+            .params(buildUserRequestParams(username))
+            .build();
+        WikipediaApiResponse apiResponse = wikipediaApiRequestHelper.executeApiRequest(apiRequest);
+        return extractUserFromJson(apiResponse);
+    }
+
+    private Map<String, String> buildUserRequestParams(String username) {
+        Map<String, String> params = new HashMap<>();
+        params.put(PARAM_ACTION, VALUE_QUERY);
+        params.put("list", "users");
+        params.put("ususers", username);
+        params.put("usprop", "groups");
+        return params;
+    }
+
+    private WikipediaApiResponse.User extractUserFromJson(WikipediaApiResponse response) {
+        return response.getQuery().getUsers().get(0);
     }
 
     @Override

@@ -47,6 +47,7 @@ class WikipediaApiResponse {
         private List<Page> search;
         private List<Page> pages;
         private Tokens tokens;
+        private List<User> users;
     }
 
     @Data
@@ -111,5 +112,13 @@ class WikipediaApiResponse {
         private String fromtitle;
         private Integer byteoffset;
         private String anchor;
+    }
+
+    @Data
+    static class User {
+
+        private int userid;
+        private String name;
+        private List<String> groups;
     }
 }
