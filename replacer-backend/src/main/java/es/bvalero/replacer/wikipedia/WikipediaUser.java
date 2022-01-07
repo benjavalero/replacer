@@ -1,5 +1,6 @@
 package es.bvalero.replacer.wikipedia;
 
+import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import java.util.Set;
 import lombok.*;
 import org.springframework.lang.NonNull;
@@ -8,6 +9,9 @@ import org.springframework.lang.NonNull;
 @Value
 @Builder
 public class WikipediaUser {
+
+    @NonNull
+    WikipediaLanguage lang;
 
     @NonNull
     String name;

@@ -52,6 +52,7 @@ class AuthenticateUserServiceTest {
 
         WikipediaUser wikipediaUser = WikipediaUser
             .builder()
+            .lang(lang)
             .name("C")
             .group(WikipediaUserGroup.AUTO_CONFIRMED)
             .build();

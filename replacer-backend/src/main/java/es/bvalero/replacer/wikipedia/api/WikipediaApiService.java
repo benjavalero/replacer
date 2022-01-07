@@ -36,12 +36,13 @@ class WikipediaApiService implements WikipediaService {
     @Override
     public WikipediaUser getAuthenticatedUser(WikipediaLanguage lang, AccessToken accessToken)
         throws WikipediaException {
-        return convertUserInfo(getLoggedUserName(lang, accessToken));
+        return convertUserInfo(lang, getLoggedUserName(lang, accessToken));
     }
 
-    private WikipediaUser convertUserInfo(WikipediaApiResponse.UserInfo userInfo) {
+    private WikipediaUser convertUserInfo(WikipediaLanguage lang, WikipediaApiResponse.UserInfo userInfo) {
         return WikipediaUser
             .builder()
+            .lang(lang)
             .name(userInfo.getName())
             .groups(
                 userInfo
