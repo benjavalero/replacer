@@ -2,7 +2,8 @@ En esta lista se detallan los «términos compuestos» que la herramienta [[Usua
 
 El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|listado de términos simples]], con la salvedad de que este listado extiende al anterior con términos o expresiones que contienen caracteres no alfabéticos: espacios, números, etc. Las recomendaciones aplican igualmente.
 
- 1 sólo||un solo, Un solo
+ 1 sólo||un solo, Un solo, 1 solamente, uno solamente
+ 1º de Agosto|cs|1.º de Agosto, Primero de Agosto
  1º de Mayo|cs|1.º de Mayo, Primero de Mayo
  1° de Mayo|cs|1.º de Mayo, Primero de Mayo
  1ro de Mayo|cs|1.º de Mayo, Primero de Mayo
@@ -25,13 +26,13 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  aún siendo||aun siendo (incluso), aún siendo (todavía)
  aún teniendo||aun teniendo (incluso), aún teniendo (todavía)
  Carlos Ménem|cs|Carlos Menem
- Castilla la Mancha||Castilla-La Mancha
- Castilla La Mancha||Castilla-La Mancha
- Castilla- La Mancha||Castilla-La Mancha
- Castilla-León||Castilla y León
- Castilla León||Castilla y León
- Castilla Leon||Castilla y León
- Castilla y Leon||Castilla y León
+ Castilla la Mancha|cs|Castilla-La Mancha
+ Castilla La Mancha|cs|Castilla-La Mancha
+ Castilla- La Mancha|cs|Castilla-La Mancha
+ Castilla-León|cs|Castilla y León
+ Castilla León|cs|Castilla y León
+ Castilla Leon|cs|Castilla y León
+ Castilla y Leon|cs|Castilla y León
  cm2||cm² (centímetro cuadrado)
  cm3||cm³ (centímetro cúbico)
  con mas||con más
@@ -148,7 +149,7 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  la practica||la practica (verbo), la práctica (sustantivo)
  la primer||la primera, el primero, lo primero
  las mas||las más
- Latino América||Latinoamérica
+ Latino América|cs|Latinoamérica
  la version||la versión
  logro ganar||logró ganar
  lo mas||lo más
@@ -165,12 +166,12 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  Maria del Carmen|cs|María del Carmen (nombre propio español)
  Maria Eugenia|cs|María Eugenia (nombre propio español)
  Maria Fernanda|cs|María Fernanda (nombre propio español), Maria Fernanda (nombre propio portugués)
- Maria Isabel|cs|María Isabel (nombre propio español)
+ Maria Isabel|cs|María Isabel (nombre propio español), Maria Isabel (nombre propio catalán y portugués)
  Maria José|cs|María José (nombre propio español), Maria José (nombre propio catalán y portugués)
- Maria Luisa|cs|María Luisa (nombre propio español)
+ Maria Luisa|cs|María Luisa (nombre propio español), Maria Luisa (nombre propio catalán e italiano)
  Maria Magdalena|cs|María Magdalena (nombre en español, en particular del personaje bíblico)
- Maria Rosa|cs|María Rosa (nombre propio español)
- Maria Teresa|cs|María Teresa (nombre propio español)
+ Maria Rosa|cs|María Rosa (nombre propio español), Maria Rosa (nombre propio catalán y portugués)
+ Maria Teresa|cs|María Teresa (nombre propio español), Maria Teresa (nombre propio catalán e italiano)
  mas.|cs|más.
  mas adelante||más adelante
  mas allá||más allá
@@ -233,7 +234,7 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  S.D. Éibar|cs|S. D. Eibar
  Salud Publica|cs|Salud Pública
  salud publica|cs|salud pública
- San Sebastian||San Sebastián
+ San Sebastian|cs|San Sebastián
  Santa Barbara|cs|Santa Bárbara (localidad o región en varios países de lengua española y EE. UU.), Santa Barbara (en inglés)
  Santa Monica|cs|Santa Mónica (localidad o región en varios países de lengua española y EE. UU.), Santa Monica (en inglés)
  SD Éibar|cs|SD Eibar

@@ -52,8 +52,8 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  abece||abecé
  aber||a ver, haber, aber (‘pero’ en alemán)
  aberracion||aberración
- Abidjan||Abiyán
- Abidján||Abiyán
+ abidjan||Abiyán
+ abidján||Abiyán
  abietacea||abietácea
  abietaceas||abietáceas
  abietaceo||abietáceo
@@ -68,7 +68,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  abitual||habitual
  abituales||habituales
  abitualmente||habitualmente
- Abiyan||Abiyán
+ abiyan||Abiyán
  abjaza||abjasia
  abjazas||abjasias
  abjazo||abjasio
@@ -119,7 +119,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  abudabi||abudabí
  abudabies||abudabíes
  abudabis||abudabís
- Abuja||Abuya
+ abuja||Abuya
  abulica||abúlica
  abulicas||abúlicas
  abulico||abúlico
@@ -143,7 +143,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  acapulco|cs|Acapulco
  acaro||ácaro
  acaros||ácaros
- Acatlan||Acatlán
+ acatlan||Acatlán
  accecibilidad||accesibilidad
  accecible||accesible
  accecibles||accesibles
@@ -152,7 +152,6 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  accesit||accésit
  accion||acción
  acciónes||acciones
- Accra||Acra
  accra||Acra (capital de Ghana)
  accsesorio||accesorio
  accsesorios||accesorios
@@ -316,7 +315,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  acutangulos||acutángulos
  adaptacion||adaptación
  adapto||adaptó (3.ª persona), adapto (1.ª persona)
- Adelaide||Adelaida (ciudad australiana)
+ adelaide||Adelaida (ciudad australiana)
  adelantádola||adelantándola
  adelantádolas||adelantándolas
  adelantádole||adelantándole
@@ -392,9 +391,9 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  adrenergicas||adrenérgicas
  adrenergico||adrenérgico
  adrenergicos||adrenérgicos
- Adrian||Adrián
+ adrian||Adrián
  adrián|cs|Adrián
- Adrogue||Adrogué
+ adrogue||Adrogué
  adrogué|cs|Adrogué
  adsl|cs|ADSL (sigla del inglés Asymmetric Digital Subscriber Line ‘línea de abonado digital asimétrica’)
  aduccion||aducción
@@ -471,7 +470,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  agarrandose||agarrándose
  agata||ágata
  agatas||ágatas (sustantivo, plural), a gatas (locución adverbial)
- Agentina||Argentina
+ agentina||Argentina
  agibilibus||agibílibus
  agigolon||agigolón, ajigolón
  aglomeracion||aglomeración
@@ -545,10 +544,10 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  agutis||agutís
  ahi||ahí
  ahinco||ahínco
- Ahuachapan||Ahuachapán
+ ahuachapan||Ahuachapán
  ahujero||agujero
  ahunque||aunque
- Aida|cs|Aída (nombre propio), Aida (ópera)
+ aida||Aída (nombre propio), Aida (ópera)
  aída|cs|Aída
  aikidō||aikido
  ainhoa|cs|Ainhoa
@@ -663,7 +662,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  alevies||alevíes
  alevin||alevín
  alevis||alevís
- Alex||Álex (nombre español), Àlex (nombre catalán), Alex (nombre en otros idiomas)
+ alex||Álex (nombre español), Àlex (nombre catalán), Alex (nombre en otros idiomas)
  alfabega||alfábega, albahaca
  alfabegas||alfábegas, albahacas
  alfabetica||alfabética
@@ -688,7 +687,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  alfoli||alfolí
  alfolies||alfolíes
  alfolis||alfolís
- Alfonsin||Alfonsín
+ alfonsin||Alfonsín
  alfonsín|cs|Alfonsín
  alfredo|cs|Alfredo
  algebra||álgebra
@@ -730,7 +729,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  almadena||almádena
  almadenas||almádenas
  almenos||al menos
- Almeria||Almería
+ almeria||Almería
  almibar||almíbar
  almibares||almíbares
  almidon||almidón
@@ -803,10 +802,10 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  alvergar||albergar
  alzo||alzó (3.ª persona), alzo (1.ª persona)
  am|cs|AM (sigla del ingl. Amplitude Modulation ‘modulación de amplitud’), a. m. (ante merídiem), am (código ISO 639-1 del idioma amhárico)
- Aman||Amán
+ aman||Amán
  amasanderia||amasandería
  amasanderias||amasanderías
- Amatitlan||Amatitlán
+ amatitlan||Amatitlán
  amazonica||amazónica
  amazonicas||amazónicas
  amazonico||amazónico
@@ -862,10 +861,8 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  amigdalas||amígdalas
  aminoacido||aminoácido
  aminoacidos||aminoácidos
- Amman||Amán
- Ammán||Amán
- amman||Ammán
- ammán|cs|Ammán
+ amman||Amán
+ ammán||Amán
  amnesica||amnésica
  amnesicas||amnésicas
  amnesico||amnésico
@@ -896,7 +893,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  anaerobicas||anaeróbicas
  anaerobico||anaeróbico
  anaerobicos||anaeróbicos
- Anahuac||Anáhuac
+ anahuac||Anáhuac
  analisis||análisis
  analísis||análisis
  analitica||analítica
@@ -932,7 +929,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  anatomicos||anatómicos
  andaluci||andalusí
  andalucí||andalusí
- Andalucia||Andalucía
+ andalucia||Andalucía
  andalucía|cs|Andalucía
  andalucies||andalusíes
  andalucíes||andalusíes
@@ -949,12 +946,12 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  andasen||anduviesen
  anden||andén (sustantivo), anden (verbo, 3.ª persona plural)
  andó||anduvo
- Andoain||Andoáin
+ andoain||Andoáin
  andorra|cs|Andorra
  andrea|cs|Andrea
- Andreina||Andreína
+ andreina||Andreína
  andreína|cs|Andreína
- Andres||Andrés
+ andres||Andrés
  andrés|cs|Andrés
  androcentrica||androcéntrica
  androcentricas||androcéntricas
@@ -970,7 +967,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  androginas||andróginas
  androgino||andrógino
  androginos||andróginos
- Andromeda||Andrómeda
+ andromeda||Andrómeda
  anecdota||anécdota
  anecdotas||anécdotas
  anecdotica||anecdótica
@@ -1013,7 +1010,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  anglosajon||anglosajón
  angola|cs|Angola
  angulo||ángulo (excepto Angulo, apellido)
- Anibal||Aníbal
+ anibal||Aníbal
  aníbal|cs|Aníbal
  animacion||animación
  animalistica||animalística
@@ -1222,7 +1219,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  apartir||a partir
  apatrida||apátrida
  apatridas||apátridas
- Apatzingan||Apatzingán
+ apatzingan||Apatzingán
  apénas||apenas
  apendice||apéndice
  apendices||apéndices
@@ -1325,7 +1322,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  aracnidas||arácnidas
  aracnido||arácnido
  aracnidos||arácnidos
- Aragon|cs|Aragón
+ aragon||Aragón
  aragón|cs|Aragón
  aragones||aragonés
  arandano||arándano
@@ -1538,7 +1535,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  asfalticas||asfálticas
  asfaltico||asfáltico
  asfalticos||asfálticos
- Ashgabat||Asjabad
+ ashgabat||Asjabad
  asi||así
  asia|cs|Asia
  asiatica||asiática
@@ -1585,7 +1582,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  aspiracion||aspiración
  assistente||asistente
  assistentes||asistentes
- Astana||Astaná (ciudad), Astana (equipo deportivo)
+ astana||Astaná (ciudad), Astana (equipo deportivo)
  astaná|cs|Astaná
  astatica||astática
  astaticas||astáticas
@@ -1850,7 +1847,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  autotrofos||autótrofos
  autovia||autovía
  autovias||autovías
- Auvergne||Auvernia
+ auvergne||Auvernia
  auxílio||auxilio
  auxílios||auxilios
  auxuliar||auxiliar
@@ -1879,7 +1876,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  avidos||ávidos
  avignon||Aviñón
  avignón||Aviñón
- Avila||Ávila
+ avila||Ávila
  ávila|cs|Ávila
  aviñon||Aviñón
  aviñón|cs|Aviñón
@@ -1907,8 +1904,8 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  azacan||azacán
  azadon||azadón
  azafran||azafrán
- Azerbaijan|cs|Azerbaiyán
- Azerbaiján|cs|Azerbaiyán
+ azerbaijan||Azerbaiyán
+ azerbaiján||Azerbaiyán
  azerbaiyan||Azerbaiyán
  azerbaiyán|cs|Azerbaiyán
  azima||ázima
@@ -1925,7 +1922,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  babilonico||babilónico
  babilonicos||babilónicos
  baca||vaca
- Bacolod||Bacólod (ciudad filipina)
+ bacolod||Bacólod (ciudad filipina)
  bacon||bacón, beicon
  baculo||báculo
  baculos||báculos
@@ -1936,7 +1933,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  bagdadi||bagdadí
  bagdadies||bagdadíes
  bagdadis||bagdadís
- Baghdad||Bagdad
+ baghdad||Bagdad
  bagilla||vajilla
  bagillas||vajillas
  bagon||vagón
@@ -1970,7 +1967,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  balago||bálago
  balagos||bálagos
  balays||balayes
- Balbin||Balbín
+ balbin||Balbín
  balbín|cs|Balbín
  balcanica||balcánica
  balcanicas||balcánicas
@@ -2028,7 +2025,8 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  bandoneon||bandoneón
  banear||restringir, prohibir, excluir, vetar, denegar
  bangkok|cs|Bangkok
- Bangladesh|cs|Bangladés
+ bangladesh||Bangladés
+ Banglades|cs|Bangladés
  barahunda||barahúnda, baraúnda
  barahundas||barahúndas, baraúndas
  barajais||barajáis
@@ -2086,7 +2084,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  baron||barón
  bartender||barman
  bartenders||bármanes
- Bartolome||Bartolomé
+ bartolome||Bartolomé
  bartolomé|cs|Bartolomé
  bartulo||bártulos
  bártulo||bártulos
@@ -2100,7 +2098,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  basandome||basándome
  basandose||basándose
  basandote||basándote
- Basañez||Basáñez
+ basañez||Basáñez
  basáñez|cs|Basáñez
  bascula||báscula (sustantivo), bascula (verbo, presente del indicativo, e imperativo: tú), basculá (verbo, imperativo: vos)
  basculas||básculas (sustantivo, plural), basculas (verbo, 2.ª persona: tú), basculás (verbo, 2.ª persona: vos)
@@ -2145,7 +2143,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  bavaro||bávaro
  bavaros||bávaros
  baviera|cs|Baviera
- Beatríz||Beatriz
+ beatríz||Beatriz
  beatriz|cs|Beatriz
  bebian||bebían
  begiga||vejiga
@@ -2156,7 +2154,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  béjar|cs|Béjar
  bejiga||vejiga
  bejigas||vejigas
- Belarus||Bielorrusia
+ belarus||Bielorrusia
  belcia||bélica
  bélcia||bélica
  belcias||bélicas
@@ -2165,18 +2163,18 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  bélcio||bélico
  belcios||bélicos
  bélcios||bélicos
- Belen||Belén
+ belen||Belén
  belgica||Bélgica
  bélgica|cs|Bélgica
  belgrado|cs|Belgrado
  belica||bélica
  belicas||bélicas
- Bélice||Belice
+ bélice||Belice
  belice|cs|Belice
  belico||bélico
  belicos||bélicos
- Belize||Belice
- Belmopan||Belmopán
+ belize||Belice
+ belmopan||Belmopán
  belmopán|cs|Belmopán
  benda||venda
  bendas||vendas
@@ -2228,7 +2226,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  berengena||berenjena
  berengenas||berenjenas
  bergantin||bergantín
- Berlin||Berlín
+ berlin||Berlín
  bermudez||Bermúdez
  bermúdez|cs|Bermúdez
  berna|cs|Berna
@@ -2237,10 +2235,10 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  besandose||besándose
  bestseller||best seller, superventas (excepto nombre propio)
  bestsellers||best seller, superventas
- Bethoven||Beethoven
+ bethoven||Beethoven
  betseller||best seller, superventas
  betun||betún
- Bhutan||Bután (país)
+ bhutan||Bután (país)
  bibero||vivero
  biberos||viveros
  bibilioteca||biblioteca
@@ -2319,7 +2317,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  bilbaino||bilbaíno
  bilbainos||bilbaínos
  bilbao|cs|Bilbao
- Bilboard||Billboard
+ bilboard||Billboard
  bilingue||bilingüe
  bilíngüe||bilingüe
  bilingues||bilingües
@@ -2385,9 +2383,9 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  biosintesis||biosíntesis
  biraro||biraró
  biraros||birarós
- Bisau||Bisáu
+ bisau||Bisáu
  biseccion||bisección
- Bishkek||Biskek
+ bishkek||Biskek
  bisilaba||bisílaba
  bisilabas||bisílabas
  bisilabica||bisilábica
@@ -2417,7 +2415,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  bitters||bíteres
  bivero||vivero
  biveros||viveros
- Bizkaia||Vizcaya
+ bizkaia||Vizcaya
  blason||blasón
  blister||blíster
  blisteres||blísteres
@@ -2440,7 +2438,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  boeres||bóeres
  boers||bóeres
  bóers||bóeres
- Bogota||Bogotá
+ bogota||Bogotá
  bogotá|cs|Bogotá
  boico||boicot
  boicó||boicot
@@ -2449,8 +2447,8 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  boletin||boletín
  boligrafo||bolígrafo
  boligrafos||bolígrafos
- Bolivar||Bolívar
- Bolívia||Bolivia
+ bolivar||Bolívar
+ bolívia||Bolivia
  bolivia|cs|Bolivia
  boloñes||boloñés
  bombacacea||bombacácea, bombácea
@@ -2515,7 +2513,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  botanícos||botánicos
  botellon||botellón
  botsuana|cs|Botsuana (país), botsuana (gentilicio)
- Botswana||Botsuana
+ botswana||Botsuana
  boulevar||bulevar
  boulevard||bulevar
  bouque||buqué
@@ -2535,8 +2533,8 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  boxisticas||boxísticas
  boxistico||boxístico
  boxisticos||boxísticos
- Boyaca||Boyacá
- Boyacà||Boyacá
+ boyaca||Boyacá
+ boyacà||Boyacá
  boyacá|cs|Boyacá
  boycot||boicot
  boycots||boicots
@@ -2551,7 +2549,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  braquicefalos||braquicéfalos
  brasil|cs|Brasil
  brasilia|cs|Brasilia
- Brazil||Brasil
+ brazil||Brasil
  brebe||breve
  breton||bretón
  bribiatica||bribiática
@@ -2610,11 +2608,11 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  bugias||bujías
  buho||búho
  buhos||búhos
- Bujara|cs|Bujará (ciudad en Uzbekistán)
+ bujara||Bujará (ciudad en Uzbekistán)
  bujia||bujía
  bujias||bujías
- Bujumbura||Buyumbura
- Bukhara||Bujará (ciudad en Uzbekistán)
+ bujumbura||Buyumbura
+ bukhara||Bujará (ciudad en Uzbekistán)
  bulgara||búlgara
  bulgaras||búlgaras
  bulgaria|cs|Bulgaria
@@ -2663,7 +2661,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  buros||burós
  bursatil||bursátil
  bursatiles||bursátiles
- Burundí||Burundi (país), burundés (gentilicio)
+ burundí||Burundi (país), burundés (gentilicio)
  burundi|cs|Burundi
  bús||bus
  buscapies||buscapiés
@@ -2683,7 +2681,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
 
 == C ==
  cabacera||cabecera
- Cabaiguan||Cabaiguán
+ cabaiguan||Cabaiguán
  cabala||cábala
  cabalas||cábalas
  cabalistica||cabalística
@@ -2704,7 +2702,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  cacan||cacán, cacana
  cacatua||cacatúa
  cacatuas||cacatúas
- Caceres||Cáceres
+ caceres||Cáceres
  cáceres|cs|Cáceres
  cacerio||caserío
  cacerío||caserío
@@ -2743,14 +2741,14 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  cafeses||cafés
  cafeteria||cafetería
  cafeterias||cafeterías
- Cagayan||Cagayán (localidad filipina)
+ cagayan||Cagayán (localidad filipina)
  caid||caíd
  caida||caída
  caidas||caídas
  caides||caídes
  caido||caído
  caidos||caídos
- caiman||caimán (nombre común), ''Caiman'' (género taxonómico)
+ caiman|cs|caimán (nombre común), ''Caiman'' (género taxonómico)
  Caiman|cs|Caimán (nombre, de Islas Caimán)
  cain||Caín
  caín|cs|Caín
@@ -2778,7 +2776,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  calcomanias||calcomanías
  calculo||cálculo (sustantivo), calculó (verbo, 3.ª persona), calculo (verbo, 1.ª persona)
  calculos||cálculos
- Calcutta||Calcuta (ciudad)
+ calcutta||Calcuta (ciudad)
  calderon|cs|calderón (signo ortográfico; cetáceo; otros significados), Calderón (apellido)
  Calderon|cs|Calderón
  calefaccion||calefacción
@@ -2821,7 +2819,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  calsificacion||calcificación, clasificación
  calsificación||calcificación, clasificación
  calsificaciones||calcificaciones, clasificaciones
- Camaguey||Camagüey
+ camaguey||Camagüey
  camaleon||camaleón
  camapaña||campaña
  camara||cámara
@@ -2833,7 +2831,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  camaron||camarón
  cambarin||cambarín
  camberra|cs|Camberra
- Cambodia||Camboya
+ cambodia||Camboya
  camboya|cs|Camboya
  cambrica||cámbrica
  cambricas||cámbricas
@@ -2842,7 +2840,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  cambron||cambrón
  camelido||camélido
  camelidos||camélidos
- Camerun||Camerún
+ camerun||Camerún
  camerún|cs|Camerún
  camerunes||camerunés
  camion||camión
@@ -2891,7 +2889,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  cancíon||canción
  canciòn||canción
  canciónes||canciones
- Cancun||Cancún
+ cancun||Cancún
  candadear||candear
  candida||cándida (adjetivo), Candida (género taxonómico)
  candidas||cándidas
@@ -2982,7 +2980,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  canticos||cánticos
  cantides||cantidades
  Canton|cs|Cantón (ciudad china)
- canton||cantón
+ canton|cs|cantón
  cantro||centro
  cantros||centros
  cañadon||cañadón
@@ -3149,7 +3147,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  carcél||cárcel
  carceles||cárceles
  cardena||cárdena
- Cardenas||Cárdenas
+ cardenas||Cárdenas
  cardeno||cárdeno
  cardenos||cárdenos
  cardigam||cárdigan
@@ -3215,7 +3213,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  carpologias||carpologías
  carrara||carrera
  carraras||carreras
- Carreon||Carreón
+ carreon||Carreón
  carreón|cs|Carreón
  carretara||carretera
  carreton||carretón
@@ -3264,7 +3262,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  cassetes||casetes
  cassette||casete
  cassettes||casetes
- Casteldefels||Castelldefels (nombre oficial y preferido según la política de topónimos de Wikipedia)
+ casteldefels||Castelldefels (nombre oficial y preferido según la política de topónimos de Wikipedia)
  cástin||castin, casting
  cásting||casting, castin
  castings||cástines
@@ -3353,7 +3351,8 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  caucasicas||caucásicas, caucáseas
  caucasico||caucásico, caucáseo
  caucasicos||caucásicos, caucáseos
- Caúcaso|cs|Cáucaso
+ caúcaso||Cáucaso
+ cáucaso|cs|Cáucaso
  caul||cual, cuál
  caundo||cuando
  causo||causó (3.ª persona), causo (1.ª persona)
@@ -3379,7 +3378,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  ceatica||ceática
  ceaticas||ceáticas
  Cebu|cs|Cebú (ciudad filipina)
- cebu||cebú
+ cebu|cs|cebú
  cebues||cebúes
  cebus||cebús
  cedaceria||cedacería
@@ -3522,7 +3521,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  cetaceas||cetáceas
  cetaceo||cetáceo
  cetaceos||cetáceos
- Cetinje||Cetiña
+ cetinje||Cetiña
  cetreria||cetrería
  cetrerias||cetrerías
  ceuti||ceutí
@@ -3551,7 +3550,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  chamanistico||chamanístico
  chamanisticos||chamanísticos
  chambon||chambón
- Chamelecon||Chamelecón
+ chamelecon||Chamelecón
  champagne||champán, champaña
  champagnes||champanes, champañas
  champan||champán
@@ -3582,10 +3581,10 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  chásis||chasis, chasís
  chasises||chasis
  chassis||chasis, chasís
- Chavez||Chávez
+ chavez||Chávez
  chávez|cs|Chávez
  checoslovaquia|cs|Checoslovaquia
- Chelyabinsk||Cheliábinsk
+ chelyabinsk||Cheliábinsk
  chibuqui||chibuquí
  chibuquies||chibuquíes
  chibuquis||chibuquís
@@ -3596,13 +3595,13 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  chiísmos||chiismos
  chiíta||chiita
  chiítas||chiitas
- Chimalhuacan||Chimalhuacán
+ chimalhuacan||Chimalhuacán
  chimpance||chimpancé
  chimpances||chimpancés
  chimu||chimú
  chimues||chimúes
  chipre|cs|Chipre
- Chisinau||Chisináu (capital de Moldavia)
+ chisinau||Chisináu (capital de Moldavia)
  chocarreria||chocarrería
  chocarrerias||chocarrerías
  chochin||chochín
@@ -3820,8 +3819,8 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  citricas||cítricas
  citrico||cítrico
  citricos||cítricos
- Citroen||Citroën
- Citröen||Citroën
+ citroen||Citroën
+ citröen||Citroën
  citron||citrón
  ciuad||ciudad
  ciuda||ciudad
@@ -3921,13 +3920,13 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  cmts||cm
  coach||entrenador, preparador
  coagulacion||coagulación
- Coalcoman||Coalcomán
+ coalcoman||Coalcomán
  coalicción||coalición
  coalicion||coalición
  coati||coatí
  coaties||coatíes
  coatis||coatís
- Coban||Cobán (ciudad en Guatemala)
+ coban||Cobán (ciudad en Guatemala)
  cocaina||cocaína
  coccido||cóccido
  coccidos||cóccidos
@@ -4079,7 +4078,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  comaprtio||compartió
  comaprtió||compartió
  comaprtir||compartir
- Comayaguela||Comayagüela (ciudad en Honduras)
+ comayaguela||Comayagüela (ciudad en Honduras)
  comayaguense||comayagüense
  combatio||combatió
  combiancion||combinación
@@ -4217,7 +4216,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  comunicologos||comunicólogos
  comunion||comunión
  comunmente||comúnmente
- Conakry||Conakri
+ conakry||Conakri
  conbina||combina
  conbinacion||combinación
  conbinación||combinación
@@ -4795,10 +4794,10 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  coorporacion||corporación
  coorporación||corporación
  Copan|cs|Copán
- Copenhage||Copenhague
- Copenhagen||Copenhague
+ copenhage||Copenhague
+ copenhagen||Copenhague
  copenhague|cs|Copenhague
- Copenhaguen||Copenhague
+ copenhaguen||Copenhague
  coperacion||cooperación
  coperación||cooperación
  coperar||cooperar
@@ -4923,7 +4922,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  cortesia||cortesía
  cortesias||cortesías
  cortesmente||cortésmente
- Cortéz|cs|Cortez
+ cortéz||Cortez
  cosecho||cosechó (3.ª persona), cosecho (1.ª persona)
  cosmetica||cosmética
  cosmeticas||cosméticas
@@ -4979,8 +4978,8 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  cotiledoneos||cotiledóneos
  cotonia||cotonía
  cotonias||cotonías
- Cotonou||Cotonú
- Cotonu||Cotonú
+ cotonou||Cotonú
+ cotonu||Cotonú
  cotra||contra, corta
  cotrae||contrae
  cotro||corto (adjetivo), Cotro (apellido)
@@ -4997,7 +4996,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  coxigeas||coxígeas
  coxigeo||coxígeo
  coxigeos||coxígeos
- Coyoacan||Coyoacán
+ coyoacan||Coyoacán
  coys||coyes
  cráck||crack
  craneo||cráneo
@@ -5103,7 +5102,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  cristalografico||cristalográfico
  cristalograficos||cristalográficos
  cristianizacion||cristianización
- Cristobal||Cristóbal
+ cristobal||Cristóbal
  cristóbal|cs|Cristóbal
  critério||criterio
  critérios||criterios
@@ -5207,8 +5206,8 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  cuátro||cuatro
  cuatros||cuatro (número, normalmente en singular), cuatros (instrumentos musicales o uso extraño del número, en plural)
  cuátros||cuatros
- Cuauhtemoc||Cuauhtémoc
- Cuautitlan||Cuautitlán
+ cuauhtemoc||Cuauhtémoc
+ cuautitlan||Cuautitlán
  cubica||cúbica
  cubicas||cúbicas
  cubico||cúbico
@@ -5234,7 +5233,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  cuidadano||ciudadano
  cuidadanos||ciudadanos
  cuidades||ciudades
- Culiacan||Culiacán
+ culiacan||Culiacán
  culmino||culminó (3.ª persona), culmino (1.ª persona)
  cumel||cúmel
  cumplio||cumplió
@@ -5325,7 +5324,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  danicas||dánicas
  danico||dánico
  danicos||dánicos
- Danli||Danlí (ciudad en Honduras)
+ danli||Danlí (ciudad en Honduras)
  dara||dará
  daria|cs|daría
  dariais||daríais
@@ -5333,7 +5332,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  darian||darían
  darias|cs|darías
  Darias|cs|Darias (apellido), Darías (verbo)
- Dario||Darío, diario
+ dario||Darío, diario
  darío|cs|Darío
  darsela||dársela
  darselas||dárselas
@@ -5352,7 +5351,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  dasonomicos||dasonómicos
  datil||dátil
  datiles||dátiles
- Davao||Dávao (ciudad filipina)
+ davao||Dávao (ciudad filipina)
  david|cs|David
  ddt|cs|DDT (sigla de Dicloro-Difenil-Tricloroetano, marca reg.)
  ddts||DDT (sigla de Dicloro-Difenil-Tricloroetano, marca reg.)
@@ -5677,7 +5676,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  demografico||demográfico
  demograficos||demográficos
  demolicion||demolición
- Demostenes||Demóstenes
+ demostenes||Demóstenes
  demóstenes|cs|Demóstenes
  demostrabamos||demostrábamos
  demostraramos||demostráramos
@@ -6170,7 +6169,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  diatopicas||diatópicas
  diatopico||diatópico
  diatopicos||diatópicos
- Diaz||Díaz
+ diaz||Díaz
  díaz|cs|Díaz
  dicarboxilico||dicarboxílico
  dicarboxilicos||dicarboxílicos
@@ -6528,8 +6527,8 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  division||división
  divisón||división
  divisones||divisiones
- Djakarta||Yakarta
- Djibouti||Yibuti
+ djakarta||Yakarta
+ djibouti||Yibuti
  dni|cs|DNI (sigla de Documento Nacional de Identidad)
  dnis||DNI (sigla de Documento Nacional de Identidad)
  doblage||doblaje
@@ -6567,7 +6566,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  dominacion||dominación
  Domingo|cs|domingo (día de la semana), Domingo (nombre propio)
  Domingos|cs|domingos (día de la semana)
- Dominguez||Domínguez
+ dominguez||Domínguez
  domínguez|cs|Domínguez
  dominiques||dominiqués
  domotica||domótica
@@ -6622,7 +6621,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  duarante||durante
  duas||dúas
  dubai||Dubái
- Dublin||Dublín
+ dublin||Dublín
  dublín|cs|Dublín
  dublines||dublinés
  ducentesima||ducentésima
@@ -6648,11 +6647,11 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  duquezas||duquesas
  duracción||duración
  duracion||duración
- Durcal||Dúrcal
+ durcal||Dúrcal
  dúrcal|cs|Dúrcal
  durente||durante
  duriante||durante
- Dusambe|cs|Dusambé (capital de Tayikistán)
+ dusambe||Dusambé (capital de Tayikistán)
  dvd|cs|DVD
  dvds||DVD
 
@@ -6699,7 +6698,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  echacorverias||echacorverías
  echague||Echagüe
  echagüe|cs|Echagüe
- Echeverria||Echeverría
+ echeverria||Echeverría
  echeverría|cs|Echeverría
  echo||echo (‘eco’ en inglés), echo (verbo, 1.ª persona), echó (verbo, 3.ª persona), hecho (sustantivo y participio)
  ecicion||edición
@@ -6784,7 +6783,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  eduación||educación
  eduardo|cs|Eduardo
  educacion||educación
- EEUU||EE.{{esd}}UU. (con espacio duro), EUA, Estados Unidos
+ EEUU|cs|EE.{{esd}}UU. (con espacio duro), EUA, Estados Unidos
  efectauda||efectuada
  efectaudas||efectuadas
  efectaudo||efectuado
@@ -6792,7 +6791,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  efemeride||efeméride
  efemerides||efemérides
  éfeso|cs|Éfeso
- Efeso||Éfeso
+ efeso||Éfeso
  efetiva||efectiva
  efetivas||efectivas
  efetivo||efectivo
@@ -6807,7 +6806,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  efimeros||efímeros
  efisema||enfisema
  efisemas||enfisemas
- Efrain||Efraín
+ efrain||Efraín
  efraín|cs|Efraín
  efrentan||enfrentan
  efrentar||enfrentar
@@ -6841,7 +6840,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  egolatras||ególatras
  egolatria||egolatría
  egolatrias||egolatrías
- Eibar||Éibar (ciudad), Eibar (equipo de fútbol)
+ eibar||Éibar (ciudad), Eibar (equipo de fútbol)
  ejecuccion||ejecución
  ejecucción||ejecución
  ejecucion||ejecución
@@ -7366,7 +7365,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  eregirían||erigirían
  eregirle||erigirle
  eregirse||erigirse
- Erevan||Ereván
+ erevan||Ereván
  ereván|cs|Ereván
  ergonomia||ergonomía
  ergonomias||ergonomías
@@ -7551,7 +7550,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  esotericos||esotéricos
  esótericos||esotéricos
  espaldon||espaldón
- Espana||España
+ espana||España
  espande||expande
  espander||expandir
  espandida||expandida
@@ -7804,7 +7803,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  estearicos||esteáricos
  estefania||Estefanía
  estefanía|cs|Estefanía
- Esteli||Estelí
+ esteli||Estelí
  esten||estén
  estensa||extensa
  estensas||extensas
@@ -7850,7 +7849,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  esteticas||estéticas
  estetico||estético
  esteticos||estéticos
- Estevez||Estévez
+ estevez||Estévez
  estévez|cs|Estévez
  estiercol||estiércol
  estilistica||estilística
@@ -8043,7 +8042,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  euclideano||euclidiano
  euclideanos||euclidianos
  eufrates||Éufrates
- Eúfrates||Éufrates
+ eúfrates||Éufrates
  éufrates|cs|Éufrates
  europa|cs|Europa
  Eurozona|cs|eurozona
@@ -8421,10 +8420,10 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  exumar||exhumar
 
 == F ==
- Fabian||Fabián
+ fabian||Fabián
  fabián|cs|Fabián
  fabio|cs|Fabio
- Fabregas||Fábregas
+ fabregas||Fábregas
  fábregas|cs|Fábregas
  fabrica||fábrica (sustantivo), fabrica (verbo)
  fabricacion||fabricación
@@ -8458,7 +8457,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  fagaceas||fagáceas
  fagaceo||fagáceo
  fagaceos||fagáceos
- Fagundez||Fagúndez
+ fagundez||Fagúndez
  fagúndez|cs|Fagúndez
  faisan||faisán
  fajon||fajón
@@ -8477,7 +8476,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  famelico||famélico
  famelicos||famélicos
  famias||familias
- Famicon||Famicom (Family Computer)
+ famicon||Famicom (Family Computer)
  famila||familia
  familas||familias
  família||familia
@@ -8521,7 +8520,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  faraonicas||faraónicas
  faraonico||faraónico
  faraonicos||faraónicos
- Farenheit||Fahrenheit
+ farenheit||Fahrenheit
  farinacea||farinácea
  farinaceas||farináceas
  farinaceo||farináceo
@@ -8569,7 +8568,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  fatidicas||fatídicas
  fatidico||fatídico
  fatidicos||fatídicos
- Fatima||Fátima
+ fatima||Fátima
  fátima|cs|Fátima
  fatricida||fratricida
  fatricidas||fratricidas
@@ -8615,9 +8614,9 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  feretro||féretro
  feretros||féretros
  fermentacion||fermentación
- Fermin||Fermín
+ fermin||Fermín
  fermín|cs|Fermín
- Fernado||Fernando
+ fernado||Fernando
  fernándes||Fernández
  fernandez||Fernández
  fernández|cs|Fernández
@@ -8655,8 +8654,8 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  fibroina||fibroína
  fibroinas||fibroínas
  ficcion||ficción
- Fidji||Fiyi
- Fidyi||Fiyi
+ fidji||Fiyi
+ fidyi||Fiyi
  fié||fie
  fiéis||fieis
  fienes||fines
@@ -8664,7 +8663,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  fifies||fifíes
  fifis||fifís
  figuron||figurón
- Fiji||Fiyi
+ fiji||Fiyi
  filantropa||filántropa
  filantropas||filántropas
  filantropia||filantropía
@@ -8679,11 +8678,11 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  filarmonicas||filarmónicas
  filastica||filástica
  filasticas||filásticas
- Filemon||Filemón
+ filemon||Filemón
  filemón|cs|Filemón
  filiacion||filiación
  Filipina|cs|filipina
- Filipines||Filipinas
+ filipines||Filipinas
  Filipino|cs|filipino
  Filipinos|cs|filipinos
  filmo||filmó (3.ª persona), filmo (1.ª persona)
@@ -8879,7 +8878,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  fonologizacion||fonologización
  fonologo||fonólogo
  fonologos||fonólogos
- Fontibon||Fontibón (localidad de Bogotá)
+ fontibon||Fontibón (localidad de Bogotá)
  foranea||foránea
  foraneas||foráneas
  foraneo||foráneo
@@ -8962,8 +8961,8 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  fraguandote||fraguándote
  fraguo||fraguó (3.ª persona), fraguo (1.ª persona)
  frances||francés
- Francfort||Fráncfort
- Francfórt||Fráncfort
+ francfort||Fráncfort
+ francfórt||Fráncfort
  fráncfort|cs|Fráncfort
  francia|cs|Francia
  francisco|cs|Francisco
@@ -9135,7 +9134,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
 
 == G ==
  gabañon||gabañón
- Gabon||Gabón
+ gabon||Gabón
  gabón|cs|Gabón
  gabones||gabonés
  gaelica||gaélica
@@ -9161,7 +9160,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  galactometro||galactómetro
  galactometros||galactómetros
  galan||galán
- Galapagos||Galápagos
+ galapagos||Galápagos
  galápagos|cs|Galápagos
  galardon||galardón
  galeria||galería
@@ -9177,9 +9176,9 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  gallinaceo||gallináceo
  gallinaceos||gallináceos
  galon||galón
- Galvan||Galván
+ galvan||Galván
  galván|cs|Galván
- Galvez||Gálvez
+ galvez||Gálvez
  gálvez|cs|Gálvez
  gametogenesis||gametogénesis
  ganacia||ganancia
@@ -9208,7 +9207,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  ganzuas||ganzúas
  garage||garaje
  garages||garajes
- Garcia||García
+ garcia||García
  garcía|cs|García
  garcilaso|cs|Garcilaso
  garfield|cs|Garfield
@@ -9226,7 +9225,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  gasteropodas||gasterópodas
  gasteropodo||gasterópodo
  gasteropodos||gasterópodos
- Gaston||Gastón
+ gaston||Gastón
  gastón|cs|Gastón
  gastralgica||gastrálgica
  gastralgicas||gastrálgicas
@@ -9362,7 +9361,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  geofráficos||geográficos
  geografa||geógrafa
  geografas||geógrafas
- Geografia||Geografía
+ geografia||Geografía
  geografica||geográfica
  geógrafica||geográfica
  geograficamente||geográficamente
@@ -9441,7 +9440,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  gestoria||gestoría
  gestorias||gestorías
  ghana|cs|Ghana
- Ghandi||Gandhi
+ ghandi||Gandhi
  ghanes||ghanés
  gheto||gueto
  ghetos||guetos
@@ -9451,7 +9450,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  gijón|cs|Gijón
  gili||gilí
  gilis||gilís
- Gimenez||Giménez
+ gimenez||Giménez
  giménez|cs|Giménez
  gimnacia||gimnasia
  gimnacias||gimnasias
@@ -9474,10 +9473,10 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  ginete||jinete
  ginetes||jinetes
  gintonic||gin-tonic
- Gipuzkoa||Guipúzcoa
+ gipuzkoa||Guipúzcoa
  girandula||girándula
  girandulas||girándulas
- Girona||Gerona (salvo el río Girona)
+ girona||Gerona (salvo el río Girona)
  giroscopica||giroscópica
  giroscopicas||giroscópicas
  giroscopico||giroscópico
@@ -9488,7 +9487,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  girostaticas||girostáticas
  girostatico||girostático
  girostaticos||girostáticos
- Giza|cs|Guiza (ciudad de Egipto)
+ giza||Guiza (ciudad de Egipto)
  glaciacion||glaciación
  glaciario||glaciar (relativo a los glaciares), glacial (muy frío)
  glaciologa||glacióloga
@@ -9556,7 +9555,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  gogo||gogó
  gomeria||gomería
  gomerias||gomerías
- Gomez||Gómez
+ gomez||Gómez
  gómez|cs|Gómez
  gonada||gónada
  gonadas||gónadas
@@ -9572,7 +9571,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  gorki|cs|Gorki
  gorky||Gorki
  gotele||gotelé
- Gothemburgo||Gotemburgo
+ gothemburgo||Gotemburgo
  gotica||gótica
  goticas||góticas
  gotico||gótico
@@ -9706,7 +9705,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  guaguanco||guaguancó
  guajardo|cs|Guajardo
  guamuchil||guamúchil (planta), Guamúchil (ciudad en el estado de Sinaloa, México)
- Guantanamo||Guantánamo
+ guantanamo||Guantánamo
  guarani||guaraní
  güarani||guaraní
  güaraní||guaraní
@@ -9746,10 +9745,10 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  guié||guie
  guiéis||guieis
  guinaldes||guinaldés
- Guines||Güines (ciudad cubana)
+ guines||Güines (ciudad cubana)
  guió||guio
  guión||guion (los monosílabos ortográficos no se tildan nunca, salvo en los casos de tilde diacrítica)
- Guipuzcoa||Guipúzcoa
+ guipuzcoa||Guipúzcoa
  guipúzcoa|cs|Guipúzcoa
  guirigays||guirigayes
  guisqueria||güisquería, whiskería
@@ -9764,14 +9763,14 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  guitaristas||guitarristas
  guitarreria||guitarrería
  guitarrerias||guitarrerías
- Gujarat||Guyarat (estado indio)
+ gujarat||Guyarat (estado indio)
  gupo||grupo
  gupos||grupos
  gustacion||gustación
  gustaria||gustaría
  gustarian||gustarían
  gustarias||gustarías
- Gutierrez||Gutiérrez
+ gutierrez||Gutiérrez
  gutiérrez|cs|Gutiérrez
  guyarati||guyaratí (idioma)
  guzman||Guzmán
@@ -9893,7 +9892,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  hamters||hámsteres
  hámters||hámsteres
  handball||balonmano
- Hanoi||Hanói
+ hanoi||Hanói
  hanói|cs|Hanói
  haora||ahora
  hara|cs|hará
@@ -9915,16 +9914,16 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  harmónicos||armónicos
  harpia||harpía
  harpias||harpías
- Hasburgo||Habsburgo
+ hasburgo||Habsburgo
  haschisch||hachís (droga)
  haschish||hachís
  hashish||hachís (droga)
  hashísh||hachís (droga)
  havía||había
  haviendo||habiendo
- Hawai||Hawái
+ hawai||Hawái
  hawái|cs|Hawái
- Hawaii||Hawái
+ hawaii||Hawái
  haxix||hachís
  hayaba||hallaba
  hayaban||hallaban
@@ -9938,7 +9937,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  hé||he
  heben||hebén
  hebijon||hebijón
- Hebron||Hebrón
+ hebron||Hebrón
  hechada||echada
  hechadas||echadas
  hechado||echado
@@ -10064,7 +10063,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  herculeas||hercúleas
  herculeo||hercúleo
  herculeos||hercúleos
- Hercules||Hércules
+ hercules||Hércules
  hermeneutica||hermenéutica
  hermeneuticas||hermenéuticas
  hermeneutico||hermenéutico
@@ -10233,7 +10232,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  higroscopicas||higroscópicas
  higroscopico||higroscópico
  higroscopicos||higroscópicos
- Higuey||Higüey
+ higuey||Higüey
  hilación||ilación
  hincapie||hincapié
  hincapies||hincapiés
@@ -10297,7 +10296,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  hipodromo||hipódromo
  hipodromos||hipódromos
  hipofisis||hipófisis
- Hipolito||Hipólito
+ hipolito||Hipólito
  hipólito|cs|Hipólito
  hipopotamo||hipopótamo
  hipopotamos||hipopótamos
@@ -10377,7 +10376,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  holografias||holografías
  holografo||hológrafo
  holografos||hológrafos
- Holywood||Hollywood (Estados Unidos), Holywood (Irlanda del Norte)
+ holywood||Hollywood (Estados Unidos), Holywood (Irlanda del Norte)
  homeage||homenaje
  homeaje||homenaje
  homenage||homenaje
@@ -10556,10 +10555,10 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  iatrogenico||iatrogénico
  iatrogenicos||iatrogénicos
  íba||iba
- Ibadan||Ibadán
+ ibadan||Ibadán
  ibamos||íbamos
  íban||iban
- Ibañez||Ibáñez
+ ibañez||Ibáñez
  ibáñez|cs|Ibáñez
  iberica||ibérica
  ibericas||ibéricas
@@ -10650,7 +10649,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  igualemente||igualmente
  igualemte||igualmente
  igualidad||igualdad
- Iguazu||Iguazú
+ iguazu||Iguazú
  iguazú|cs|Iguazú
  iker|cs|Iker
  ildefonso|cs|Ildefonso
@@ -10836,7 +10835,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  incluyía||incluía
  incluyo||incluyó (3.ª persona), incluyo (1.ª persona)
  inclyendo||incluyendo
- incognita||incógnita
+ incognita||incógnita, incognita (en latín)
  incognitas||incógnitas
  incognito||incógnito
  incognitos||incógnitos
@@ -10918,7 +10917,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  independientista||independentista
  independientistas||independentistas
  index||índice
- Indianapolis||Indianápolis
+ indianapolis||Indianápolis
  indianápolis|cs|Indianápolis
  indianes||indianés
  indicacion||indicación
@@ -11325,7 +11324,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  ionico||iónico
  ionicos||iónicos
  irak|cs|Irak
- iran||irán
+ iran|cs|irán
  Iran|cs|Irán
  irani||iraní
  iranies||iraníes
@@ -11367,7 +11366,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  isaias||Isaías
  isaías|cs|Isaías
  isavel||Isabel
- Isfahan||Isfahán
+ isfahan||Isfahán
  islamabad|cs|Islamabad
  islamica||islámica
  islamicas||islámicas
@@ -11418,7 +11417,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  isotopicos||isotópicos
  isotropia||isotropía
  isotropias||isotropías
- Ispahan||Isfahán
+ ispahan||Isfahán
  isquierda||izquierda
  israel|cs|Israel
  israeli||israelí
@@ -11426,7 +11425,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  israelis||israelís
  issn|cs|ISSN (sigla del inglés International Standard Serial Number ‘número de serie [del sistema] estándar internacional’)
  istalacion||instalación
- Istanbul||Estambul
+ istanbul||Estambul
  isteria||histeria
  isterias||histerias
  isterica||histérica
@@ -11442,8 +11441,8 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  items||ítems
  ito||hito
  itos||hitos
- Ivan|cs|Iván (nombre propio en español)
- Iztaccihuatl||Iztaccíhuatl
+ ivan||Iván (nombre propio en español), Ivan (nombre propio en otros idiomas)
+ iztaccihuatl||Iztaccíhuatl
 
 == J ==
  jabalcon||jabalcón
@@ -11460,10 +11459,10 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  jacarilla|cs|Jacarilla
  jacaro||jácaro
  jacaros||jácaros
- Jaen||Jaén
+ jaen||Jaén
  jaén|cs|Jaén
- Jaguey||Jagüey
- Jakarta||Yakarta
+ jaguey||Jagüey
+ jakarta||Yakarta
  jaliciense||jalisciense
  jaliscience||jalisciense
  jalisciences||jaliscienses
@@ -11482,7 +11481,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  járkov|cs|Járkov
  jarron||jarrón
  jartum|cs|Jartum
- Javian||Javián
+ javian||Javián
  javián|cs|Javián
  jehova||Jehová
  jehová|cs|Jehová
@@ -11503,10 +11502,10 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  jerarquico||jerárquico
  jerarquicos||jerárquicos
  jerarquizacion||jerarquización
- Jeremias||Jeremías
+ jeremias||Jeremías
  jeremías|cs|Jeremías
  jeréz||jerez
- Jerico||Jericó
+ jerico||Jericó
  jersei||jersey
  jerséi||jersey
  jerseis||jerséis
@@ -11514,8 +11513,8 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  jerséises||jerséis
  jerseys||jerséis
  jerséys||jerséis
- Jerusalem||Jerusalén
- Jerusalen||Jerusalén
+ jerusalem||Jerusalén
+ jerusalen||Jerusalén
  jerusalén|cs|Jerusalén
  jesucristo|cs|Jesucristo
  jesúita||jesuita
@@ -11542,9 +11541,9 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  jívaro||jíbaro
  jivaros||jíbaros
  jívaros||jíbaros
- Joaquin||Joaquín
+ joaquin||Joaquín
  joaquín|cs|Joaquín
- Johanesburgo||Johannesburgo
+ johanesburgo||Johannesburgo
  jonica||jónica
  jonicas||jónicas
  jonico||jónico
@@ -11562,7 +11561,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  jovénes||jóvenes
  joyeria||joyería
  joyerias||joyerías
- Juán||Juan
+ juán||Juan
  juan|cs|Juan
  juanto||junto (excepto nombres y apellidos)
  juarez||Juárez
@@ -11570,7 +11569,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  jubeteria||jubetería
  jubeterias||jubeterías
  jubilacion||jubilación
- Juchitan||Juchitán
+ juchitan||Juchitán
  judaismo||judaísmo
  judaismos||judaísmos
  judaizacion||judaización
@@ -11617,10 +11616,10 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  jugueterias||jugueterías
  jugueton||juguetón
  julia|cs|Julia
- Julian||Julián
+ julian||Julián
  julián|cs|Julián
  Julio|cs|julio (mes o unidad de energía), Julio (nombre propio)
- Junin||Junín
+ junin||Junín
  junín|cs|Junín
  Junio|cs|junio
  junior||júnior (adjetivo), junior (sustantivo, término eclesiástico)
@@ -11657,24 +11656,24 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  kabalisticos||cabalísticos
  kabalísticos||cabalísticos
  kabul|cs|Kabul
- Kampuchea||Camboya (excepto en referencia al antiguo nombre de este)
+ kampuchea||Camboya (excepto en referencia al antiguo nombre de este)
  kaqui||caqui, kaki
  kaquis||caquis, kakis
  karstica||kárstica
  karsticas||kársticas
  karstico||kárstico
  karsticos||kársticos
- Kathmandu||Katmandú
- Katmandu||Katmandú
+ kathmandu||Katmandú
+ katmandu||Katmandú
  katmandú|cs|Katmandú
  kayac||kayak
  kayacs||kayaks
- Kazagistan||Kazajistán
- Kazagistán||Kazajistán
- Kazajistan||Kazajistán
+ kazagistan||Kazajistán
+ kazagistán||Kazajistán
+ kazajistan||Kazajistán
  kazajistán|cs|Kazajistán
- Kazajstan||Kazajistán
- Kazajstán||Kazajistán
+ kazajstan||Kazajistán
+ kazajstán||Kazajistán
  ke||que
  kefir||kéfir
  kefires||kéfires
@@ -11687,7 +11686,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  kgrm||kg
  kgrms||kg
  kgrs||kg
- Khartoum||Jartum
+ khartoum||Jartum
  Khz|cs|kHz (kilohercio)
  KHz|cs|kHz (kilohercio)
  kiliarea||kiliárea, quiliárea
@@ -11729,7 +11728,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  kioskos||quioscos, kioscos
  kipa||kipá
  kipas||kipás
- Kirguistan||Kirguistán
+ kirguistan||Kirguistán
  Km|cs|km (símbolo del kilómetro), kilómetro (cuando va antepuesto al número)
  kms||km
  kmts||km
@@ -11751,7 +11750,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  KW|cs|kW (kilovatio, unidad de potencia)
  KWh|cs|kWh (kilovatio-hora)
  kwh|cs|kWh (kilovatio-hora)
- Kyrgyzstan||Kirguistán
+ kyrgyzstan||Kirguistán
 
 == L ==
  laberintica||laberíntica
@@ -11842,8 +11841,8 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  Latinoamericanas|cs|latinoamericanas (excepto nombre de institución)
  Latinoamericano|cs|latinoamericano (excepto nombre de institución)
  Latinoamericanos|cs|latinoamericanos (excepto nombre de institución)
- Latvia||Letonia
- Latvijas||Letonia
+ latvia||Letonia
+ latvijas||Letonia
  latvio||letón
  laud||laúd (instrumento musical), Laud (arzobispo británico o nombre del códice en su honor)
  lauracea||laurácea
@@ -11932,7 +11931,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  lesgilador||legislador
  lesgiladores||legisladores
  lesion||lesión
- Lesotho|cs|Lesoto
+ lesotho||Lesoto
  lesoto|cs|Lesoto
  leticia|cs|Leticia
  letizia|cs|Letizia
@@ -12008,8 +12007,8 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  liliaceas||liliáceas
  liliaceo||liliáceo
  liliaceos||liliáceos
- Lilongue||Lilongüe
- Lilongwe||Lilongüe
+ lilongue||Lilongüe
+ lilongwe||Lilongüe
  límita||limita
  limitacion||limitación
  limite||límite (sustantivo), limite (verbo, presente del subjuntivo), limité (verbo, pretérito perfecto simple del indicativo)
@@ -12052,7 +12051,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  link||enlace, vínculo
  links||enlaces, vínculos (informática), campo, cancha (de golf)
  lió||lio
- Lión|cs|Lion
+ lión|cs|Lion
  liones||lionés
  lios||líos
  lipidica||lipídica
@@ -12188,7 +12187,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  lombardicas||lombárdicas
  lombardico||lombárdico
  lombardicos||lombárdicos
- Lome|cs|Lomé (capital de Togo)
+ lome||Lomé (capital de Togo)
  londres|cs|Londres
  lonjeva||longeva
  lonjevas||longevas
@@ -12227,7 +12226,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  lugubre||lúgubre
  lugubres||lúgubres
  lugues||lugués
- Luís||Luis (excepto si es el nombre portugués)
+ luís||Luis (excepto si es el nombre portugués)
  Lunes|cs|lunes
  lúnes||lunes
  lupulo||lúpulo
@@ -12338,7 +12337,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  maices||maíces
  mail||correo, ''e-mail'' (‘correo electrónico’ en inglés), correo electrónico
  mails||correos, ''e-mails'' (‘correos electrónicos’ en inglés), correos electrónicos
- Maipu||Maipú
+ maipu||Maipú
  maipú|cs|Maipú
  maiz||maíz
  maizes||maíces
@@ -12349,10 +12348,10 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  majaraníes||maharaníes
  majaranis||maharanís
  majaranís||maharanís
- Malaga||Málaga
+ malaga||Málaga
  málaga|cs|Málaga
  malasia|cs|Malasia (país), malasia (adjetivo)
- Malawi||Malaui
+ malawi||Malaui
  maldicion||maldición
  malecon||malecón
  malefica||maléfica
@@ -12386,7 +12385,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  manatis||manatís, manatíes
  mancebia||mancebía
  mancebias||mancebías
- Manchester||Mánchester
+ manchester||Mánchester
  manchu||manchú
  manchues||manchúes
  manchús||manchúes
@@ -12488,7 +12487,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  marmoles||mármoles
  maron||marón
  marques||marqués
- Marquez||Márquez
+ marquez||Márquez
  márquez|cs|Márquez
  marron||marrón
  marroqui||marroquí
@@ -12568,7 +12567,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  maximas||máximas
  maximo||máximo
  maximos||máximos (sustantivo o adjetivo plural), Maximos (nombre propio)
- Mayaguez||Mayagüez
+ mayaguez||Mayagüez
  mayestatica||mayestática
  mayestaticas||mayestáticas
  mayestatico||mayestático
@@ -12586,7 +12585,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  mayusculo||mayúsculo
  mayusculos||mayúsculos
  mazapan||mazapán
- Mazatlan||Mazatlán
+ mazatlan||Mazatlán
  mazoneria||mazonería
  mazonerias||mazonerías
  mecanica||mecánica
@@ -12608,7 +12607,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  medallon||medallón
  medano||médano
  medanos||médanos
- Medellin||Medellín
+ medellin||Medellín
  medellín|cs|Medellín
  mediadios||mediados
  mediambiental||medioambiental
@@ -12627,8 +12626,8 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  mediodia||mediodía
  mediodias||mediodías
  meditacion||meditación
- Meditarraneo||Mediterráneo
- Meditarráneo||Mediterráneo
+ meditarraneo||mediterráneo (adjetivo), Mediterráneo (mar)
+ meditarráneo||mediterráneo (adjetivo), Mediterráneo (mar)
  mediterranea||mediterránea
  mediterraneas||mediterráneas
  mediterraneo|cs|mediterráneo (adjetivo), Mediterráneo (mar)
@@ -12644,7 +12643,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  megawatio||megavatio
  megawatios||megavatios
  meintras||mientras
- Mejico||Méjico
+ mejico||Méjico
  méjico|cs|Méjico
  mejillon||mejillón
  mejorea||mejores
@@ -12688,10 +12687,10 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  menciondo||mencionado
  menciondos||mencionados
  menciono||mencionó (3.ª persona), menciono (1.ª persona)
- Mendez||Méndez
+ mendez||Méndez
  méndez|cs|Méndez
  mendicacion||mendicación
- Menendez||Menéndez
+ menendez||Menéndez
  menéndez|cs|Menéndez
  menistra||ministra
  menistras||ministras
@@ -12890,11 +12889,11 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  meztizo||mestizo
  meztizos||mestizos
  Mhz|cs|MHz (símbolo del megahercio en el Sistema Internacional de Unidades; «Mhz» no es una abreviatura oficial)
- Miahuatlan||Miahuatlán
+ miahuatlan||Miahuatlán
  miccion||micción
- Michigan||Míchigan
+ michigan||Míchigan
  míchigan|cs|Míchigan
- Michoacan||Michoacán
+ michoacan||Michoacán
  microfonica||microfónica
  microfonicas||microfónicas
  microfonico||microfónico
@@ -12916,6 +12915,8 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  microscopicas||microscópicas
  microscopico||microscópico
  microscopicos||microscópicos
+ microtubulo||microtúbulo
+ microtubulos||microtúbulos
  midad||mitad
  midades||mitades
  miebro||miembro
@@ -12959,7 +12960,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  mimicas||mímicas
  mimico||mímico
  mimicos||mímicos
- Minatitlan||Minatitlán
+ minatitlan||Minatitlán
  mineralizacion||mineralización
  mineralogia||mineralogía
  mineralogias||mineralogías
@@ -13035,9 +13036,9 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  misoginas||misóginas
  misogino||misógino
  misoginos||misóginos
- Misouri||Misuri
- Mississippi||Misisipi
- Missouri||Misuri
+ misouri||Misuri
+ mississippi||Misisipi
+ missouri||Misuri
  mistagogica||mistagógica
  mistagogicas||mistagógicas
  mistagogico||mistagógico
@@ -13099,7 +13100,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  modicos||módicos
  modulo||módulo (sustantivo), moduló (verbo, 3.ª persona), modulo (verbo, 1.ª persona)
  modulos||módulos
- Mogadishu||Mogadiscio
+ mogadishu||Mogadiscio
  mogreb||Magreb
  mogrebi||magrebí
  mogrebí||magrebí
@@ -13110,7 +13111,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  moire||muaré, moaré
  moires||muarés, moarés
  moises||Moisés
- Moldova|cs|Moldavia (país)
+ moldova||Moldavia (país)
  molecula||molécula
  moleculas||moléculas
  molestía||molestia
@@ -13123,7 +13124,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  momentariamente||momentáneamente
  momentáriamente||momentáneamente
  momumento||monumento
- Monaco||Mónaco
+ monaco||Mónaco
  monadologia||monadología
  monadologias||monadologías
  monarquia||monarquía
@@ -13197,7 +13198,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  moraceas||moráceas
  moraceo||moráceo
  moraceos||moráceos
- Morazan||Morazán
+ morazan||Morazán
  morbida||mórbida
  morbidamente||mórbidamente
  morbidas||mórbidas
@@ -13217,8 +13218,8 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  morian||morían
  morias||morías
  mormon||mormón
- Moroleon||Moroleón
- Moron||Morón (localidad o apellido)
+ moroleon||Moroleón
+ moron||Morón (localidad o apellido)
  morten||mortem
  mortifera||mortífera
  mortiferas||mortíferas
@@ -13354,7 +13355,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  musaceas||musáceas
  musaceo||musáceo
  musaceos||musáceos
- Muscat||Mascate (capital de Omán)
+ muscat||Mascate (capital de Omán)
  muscial||musical
  muscilar||muscular
  musculo||músculo (sustantivo), musculó (verbo, 3.ª persona), musculo (verbo, 1.ª persona)
@@ -13418,9 +13419,9 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  naiden||nadie
  náilon||nailon, nilón
  nairobi|cs|Nairobi
- Nanjing||Nankín
- Nankin||Nankín
- Nanking||Nankín
+ nanjing||Nankín
+ nankin||Nankín
+ nanking||Nankín
  nanometro||nanómetro
  nanometros||nanómetros
  nanotecnologia||nanotecnología
@@ -13446,7 +13447,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  narracción||narración
  narracion||narración
  nartex||nártex
- Narvaez||Narváez
+ narvaez||Narváez
  narváez|cs|Narváez
  nasalizacion||nasalización
  Nasau|cs|Nasáu (capital de las Bahamas)
@@ -13494,7 +13495,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  nectar||néctar
  nectares||néctares
  neerlandes||neerlandés
- Neftali||Neftalí
+ neftali||Neftalí
  neftalí|cs|Neftalí
  negacion||negación
  nego||negó
@@ -13533,7 +13534,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  nesesidades||necesidades
  nesesita||necesita
  nesesitas||necesitas
- Nestor||Néstor
+ nestor||Néstor
  néstor|cs|Néstor
  netacea||netácea, gnetácea
  netaceas||netáceas, gnetáceas
@@ -13547,7 +13548,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  neumonóloga||neumóloga
  neumonologo||neumólogo
  neumonólogo||neumólogo
- Neuquen||Neuquén
+ neuquen||Neuquén
  neuquén|cs|Neuquén
  neuralgica||neurálgica
  neuralgicas||neurálgicas
@@ -13587,16 +13588,16 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  newyorquinas||neoyorquinas
  newyorquino||neoyorquino
  newyorquinos||neoyorquinos
- Nezahualcoyotl||Nezahualcóyotl
- Nicaragüa||Nicaragua
+ nezahualcoyotl||Nezahualcóyotl
+ nicaragüa||Nicaragua
  nicaragua|cs|Nicaragua
  nicaraguense||nicaragüense
  nicaraguenses||nicaragüenses
  nicolas||Nicolás
  nicolás|cs|Nicolás
  nicosia|cs|Nicosia
- Nïctimo||Níctimo
- Niger||Níger
+ nïctimo||Níctimo
+ niger||Níger
  níger|cs|Níger
  nigeria|cs|Nigeria
  nigún||ningún
@@ -13637,7 +13638,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  nível||nivel
  nivelacion||nivelación
  níveles||niveles
- Nóbel||Nobel
+ nóbel||Nobel (premio), nobel (persona o institución galardonada con el premio)
  nocáut||nocaut
  nocáuts||nocauts
  nochebuena|cs|Nochebuena
@@ -13707,9 +13708,9 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  notica||noticia
  noticas||noticias
  noticion||notición
- Nouakchott||Nuakchot
- Nouméa||Numea (capital de Nueva Caledonia)
- Noumea||Numea (capital de Nueva Caledonia)
+ nouakchott||Nuakchot
+ nouméa||Numea (capital de Nueva Caledonia)
+ noumea||Numea (capital de Nueva Caledonia)
  nóvel||novel
  novéla||novela
  novélas||novelas
@@ -13725,7 +13726,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  novienbre||noviembre
  novocaina||novocaína
  novocainas||novocaínas
- Nuakchott||Nuakchot
+ nuakchott||Nuakchot
  nubarron||nubarrón
  nubil||núbil
  nubiles||núbiles
@@ -13756,10 +13757,10 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  numismaticos||numismáticos
  nunguna||ninguna
  nunguno||ninguno
- Nuremberg||Núremberg
- Nüremberg||Núremberg
+ nuremberg||Núremberg
+ nüremberg||Núremberg
  núremberg|cs|Núremberg
- Núria||Nuria
+ núria||Nuria
  nuria|cs|Nuria
  nutricion||nutrición
  nylon||nailon, nilón
@@ -13800,7 +13801,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  oblícuos||oblicuos
  obligacion||obligación
  obligo||obligó (3.ª persona), obligo (1.ª persona)
- Obregon||Obregón
+ obregon||Obregón
  obregón|cs|Obregón
  obsecionarse||obsesionarse
  obsena||obscena
@@ -13930,7 +13931,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  ocupacion||ocupación
  ocupo||ocupó (3.ª persona), ocupo (1.ª persona)
  ocurrio||ocurrió
- Odin||Odín
+ odin||Odín
  odín|cs|Odín
  odontologa||odontóloga
  odontologas||odontólogas
@@ -14002,7 +14003,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  olografo||ológrafo u hológrafo
  olografos||ológrafos u hológrafos
  ols||los
- Oman||Omán
+ oman||Omán
  omani||omaní
  ombre||hombre
  ombria||ombría
@@ -14149,7 +14150,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  origino||originó (3.ª persona), origino (1.ª persona)
  orignal||original
  orignales||originales
- Orion||Orión
+ orion||Orión
  ornamentacion||ornamentación
  ornitologa||ornitóloga
  ornitologas||ornitólogas
@@ -14215,7 +14216,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  orquidologos||orquideólogos
  orrilla||orilla
  orrillas||orillas
- Ortíz||Ortiz
+ ortíz||Ortiz
  ortiz|cs|Ortiz
  ortodromia||ortodromía
  ortodromias||ortodromías
@@ -14277,9 +14278,9 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  otrogó||otorgó
  otrsa||otras
  ottawa|cs|Ottawa (ciudad), ottawa (tribu)
- Ouagadougou||Uagadugú
- Ouarzazate||Uarzazat
- Oujda||Uchda
+ ouagadougou||Uagadugú
+ ouarzazate||Uarzazat
+ oujda||Uchda
  ovacion||ovación
  OVNI|cs|ovni
  OVNIS|cs|ovnis
@@ -14323,7 +14324,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  padesca||padezca
  padescan||padezcan
  padeser||padecer
- Paez||Páez
+ paez||Páez
  páez|cs|Páez
  pagina||página (sustantivo), pagina (verbo)
  paginas||páginas (sustantivo, plural), paginas (verbo)
@@ -14395,7 +14396,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  palmipedas||palmípedas
  palmipedo||palmípedo
  palmipedos||palmípedos
- Palmyra||Palmira (ciudad)
+ palmyra||Palmira (ciudad)
  paludicola||paludícola
  paludicolas||paludícolas
  panaderia||panadería
@@ -14447,7 +14448,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  pantalónes||pantalones
  panteon||panteón
  panties||pantis
- Pantitlan||Pantitlán
+ pantitlan||Pantitlán
  pantomina||pantomima
  pantominas||pantomimas
  panty||panti
@@ -14700,7 +14701,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  patriotico||patriótico
  patrioticos||patrióticos
  patron||patrón
- Patzcuaro||Pátzcuaro
+ patzcuaro||Pátzcuaro
  paula|cs|Paula
  pauperrima||paupérrima
  pauperrimas||paupérrimas
@@ -14764,7 +14765,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  pekin||Pekín
  pekín|cs|Pekín
  pekines||pekinés
- Pelaez||Peláez
+ pelaez||Peláez
  peláez|cs|Peláez
  pelagica||pelágica
  pelagicas||pelágicas
@@ -14807,8 +14808,8 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  penitencionarias||penitenciarias
  penitencionario||penitenciario
  penitencionarios||penitenciarios
- Penjamo||Pénjamo
- Pennsylvania||Pensilvania
+ penjamo||Pénjamo
+ pennsylvania||Pensilvania
  pensilvania|cs|Pensilvania
  pension||pensión
  penso||pensó
@@ -14878,7 +14879,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  perenifolias||perennifolias
  perenifolio||perennifolio
  perenifolios||perennifolios
- Perez||Pérez
+ perez||Pérez
  pérez|cs|Pérez
  perfecciono||perfeccionó (3.ª persona), perfecciono (1.ª persona)
  perfida||pérfida
@@ -14962,7 +14963,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  perpendiculo||perpendículo
  perpendiculos||perpendículos
  perpetracion||perpetración
- Perpignan||Perpiñán
+ perpignan||Perpiñán
  perpiñán|cs|Perpiñán
  persecucion||persecución
  persecusion||persecución
@@ -15002,7 +15003,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  pesimos||pésimos
  petalo||pétalo
  petalos||pétalos
- Petesburgo||Petersburgo
+ petesburgo||Petersburgo
  peticion||petición
  petrea||pétrea
  petreas||pétreas
@@ -15015,7 +15016,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  pezcado||pescado
  pezcados||pescados
  pezon||pezón
- Philadelphia|cs|Filadelfia (ciudad)
+ philadelphia|cs|Filadelfia (ciudad)
  piáis||piais
  piamontes||piamontés
  picara||pícara (adjetivo), picara (verbo, 3.ª persona)
@@ -15080,7 +15081,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  pindaricas||pindáricas
  pindarico||pindárico
  pindaricos||pindáricos
- Pindaro||Píndaro
+ pindaro||Píndaro
  píndaro|cs|Píndaro
  pinguino||pingüino
  pinguinos||pingüinos
@@ -15089,7 +15090,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  pintorequismo||pintoresquismo
  pinula||pínula
  pinulas||pínulas
- Pinzon||Pinzón
+ pinzon||Pinzón
  piñon||piñón
  pió||pio
  pión||pion
@@ -15135,7 +15136,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  pirulis||pirulís
  pison||pisón
  piston||pistón
- Pitagoras||Pitágoras
+ pitagoras||Pitágoras
  pitágoras|cs|Pitágoras
  pitagorica||pitagórica
  pitagoricas||pitagóricas
@@ -15188,7 +15189,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  platformas||plataformas
  platica||platica (verbo), plática (sustantivo)
  platicas||pláticas (sustantivo), platicas (verbo, 2.ª persona: tú), platicás (verbo, 2.ª persona: vos)
- Platon||Platón
+ platon||Platón
  platonica||platónica
  platonicamente||platónicamente
  platonicas||platónicas
@@ -15383,7 +15384,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  polizon||polizón
  pollilla||polilla
  pollillas||polillas
- Polónia||Polonia
+ polónia||Polonia
  polonia|cs|Polonia
  polvadera||polvareda
  polvora||pólvora
@@ -15415,7 +15416,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  pontifices||pontífices
  pony||poni, póney, jaca
  ponys||ponis
- Popocatepetl||Popocatépetl
+ popocatepetl||Popocatépetl
  popularisar||popularizar
  popularisó||popularizó
  populariso||popularizó (3.ª persona), popularizo (1.ª persona)
@@ -16208,8 +16209,8 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  putrefaccion||putrefacción
  puzzle||puzle
  puzzles||puzles
- Pyeongchang||Pieonchang
- Pyongyang||Pionyang
+ pyeongchang||Pieonchang
+ pyongyang||Pionyang
 
 == Q ==
  qe||que
@@ -16220,7 +16221,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  qualy||fase de clasificación
  quásar||cuásar, ''quasar''
  quásars||cuásares, ''quasars''
- Québec||Quebec (en español), Québec (en francés)
+ québec||Quebec (en español), Québec (en francés)
  quebeques||quebequés, quebequense
  quedarón||quedaron
  quedo||quedó (verbo, 3.ª persona), quedo (adjetivo, adverbio o verbo, 1.ª persona)
@@ -16249,7 +16250,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  quimicas||químicas
  quimico||químico
  quimicos||químicos
- Quimistan||Quimistán (municipio en Honduras)
+ quimistan||Quimistán (municipio en Honduras)
  quincuagesima||quincuagésima
  quincuagesimas||quincuagésimas
  quincuagesimo||quincuagésimo
@@ -16285,10 +16286,10 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  quintuples||quíntuples
  quintuplo||quíntuplo
  quintuplos||quíntuplos
- Quirigua||Quiriguá (yacimiento arqueológico en Guatemala)
+ quirigua||Quiriguá (yacimiento arqueológico en Guatemala)
  quiroptero||quiróptero
  quiropteros||quirópteros
- Quiros||Quirós
+ quiros||Quirós
  quirós|cs|Quirós
  quirurgica||quirúrgica
  quirurgicas||quirúrgicas
@@ -16382,13 +16383,13 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  raiz||raíz
  raizes||raíces
  raízes||raíces
- Rajastan||Rayastán (estado indio)
+ rajastan||Rayastán (estado indio)
  ralizar||realizar
  ralizaron||realizaron
  ralizó||realizó
  ramificacion||ramificación
- Ramirez||Ramírez
- Rámirez||Ramírez
+ ramirez||Ramírez
+ rámirez||Ramírez
  ramírez|cs|Ramírez
  ramon||Ramón
  ramón|cs|Ramón
@@ -16400,7 +16401,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  rancherias||rancherías
  rangifero||rangífero
  rangiferos||rangíferos
- Rangun|cs|Rangún (ciudad)
+ rangun||Rangún (ciudad)
  rangún|cs|Rangún (ciudad)
  ránking||ranking, ranquin
  ránkings||rankings, ránquines
@@ -16429,7 +16430,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  raton||ratón
  raul||Raúl
  raúl|cs|Raúl
- Rayastan||Rayastán (estado indio)
+ rayastan||Rayastán (estado indio)
  rayon||rayón
  razgo||rasgo
  razgos||rasgos
@@ -16669,7 +16670,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  regaetón||reggaetón
  regaton||regatón
  regeneracion||regeneración
- Regensburgo||Ratisbona
+ regensburgo||Ratisbona
  regeton||reguetón
  regetón||reguetón
  reggaetón||reguetón
@@ -16794,9 +16795,9 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  rencarnación||reencarnación
  rencuentra||reencuentra
  rencuentran||reencuentran
- Rendon||Rendón
+ rendon||Rendón
  rendón|cs|Rendón
- Rene||René
+ rene||René
  rené|cs|René
  rengifero||rengífero
  rengiferos||rengíferos
@@ -17049,11 +17050,11 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  ritmicos||rítmicos
  rítmo||ritmo
  rítmos||ritmos
- Riyad||Riad
- Riyadh||Riad
+ riyad||Riad
+ riyadh||Riad
  rna|cs|RNA (sigla del inglés Ribonucleic Acid ‘ácido ribonucleico’)
  rnas||RNA (sigla del inglés Ribonucleic Acid ‘ácido ribonucleico’)
- Roatan||Roatán
+ roatan||Roatán
  robotica||robótica
  roboticas||robóticas
  robotico||robótico
@@ -17082,7 +17083,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  rodapies||rodapiés
  rodeores||roedores
  rodesia|cs|Rodesia
- Rodriguez||Rodríguez
+ rodriguez||Rodríguez
  rodríguez|cs|Rodríguez
  roi|cs|Roi
  rokera||roquera
@@ -17103,21 +17104,21 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  romerias||romerías
  rompio||rompió
  ropon||ropón
- Róque||Roque
+ róque||Roque
  rosacea||rosácea
  rosaceas||rosáceas
  rosaceo||rosáceo
  rosaceos||rosáceos
- Rosalia||Rosalía
+ rosalia||Rosalía
  rosalía|cs|Rosalía
- Rosalio||Rosalío
+ rosalio||Rosalío
  rosalío|cs|Rosalío
  rosbife||rosbif
  rosbifes||rosbifs
  roseton||rosetón
- Roterdam||Róterdam
+ roterdam||Róterdam
  róterdam|cs|Róterdam
- Rotterdam||Róterdam
+ rotterdam||Róterdam
  rotula||rótula (sustantivo), rotula (verbo)
  rotulas||rótulas (sustantivo, plural), rotulas (verbo)
  round||asalto
@@ -17132,7 +17133,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  ruáis||ruais
  ruán||ruan
  ruandes||ruandés
- Ruben||Rubén
+ ruben||Rubén
  rubén|cs|Rubén
  rubi||rubí
  rubiacea||rubiácea
@@ -17160,7 +17161,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  runrun||runrún, rum rum
  ruó||ruo
  rusia|cs|Rusia
- Russia||Rusia
+ russia||Rusia
  rustica||rústica (adjetivo), rustica (verbo)
  rusticamente||rústicamente
  rusticas||rústicas (adjetivo, plural), rusticas (verbo)
@@ -17206,10 +17207,10 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  sagati||sagatí
  sagaties||sagatíes
  sagatis||sagatís
- Saigon||Saigón (ciudad)
+ saigon||Saigón (ciudad)
  saino||saíno
  sainos||saínos
- Saipan||Saipán (isla)
+ saipan||Saipán (isla)
  salacion||salación
  salamin||salamín
  salchichon||salchichón
@@ -17225,7 +17226,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  salío||salió
  salír||salir
  salmon||salmón
- Salome||Salomé
+ salome||Salomé
  salomé|cs|Salomé
  salomon||Salomón
  salomón|cs|Salomón
@@ -17234,14 +17235,14 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  salomonico||salomónico
  salomonicos||salomónicos
  salon||salón
- Salonica||Salónica
+ salonica||Salónica
  salúd||salud
  salvame||sálvame
  salvandole||salvándole
  salvandoles||salvándoles
  saman||samán
- Samarkand||Samarcanda (ciudad en Uzbekistán)
- Samarqand||Samarcanda (ciudad en Uzbekistán)
+ samarkand||Samarcanda (ciudad en Uzbekistán)
+ samarqand||Samarcanda (ciudad en Uzbekistán)
  samurai||samurái
  samurais||samuráis
  samuray||samurái
@@ -17280,7 +17281,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  santalaceos||santaláceos
  santander|cs|Santander
  santiamen||santiamén
- Santillan||Santillán
+ santillan||Santillán
  santillán|cs|Santillán
  sanwich||sándwich
  sanwiches||sándwiches
@@ -17340,7 +17341,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  saturacion||saturación
  saudi||saudí
  saudies||saudíes
- Saul||Saúl
+ saul||Saúl
  saúl|cs|Saúl
  saxofon||saxofón
  saxofono||saxófono
@@ -17592,9 +17593,9 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  shampú||champú
  shampus||champús
  shampús||champús
- Shangai||Shanghái (romanización en español), Shanghai (romanización en inglés)
- Shangái||Shanghái
- Shanghai||Shanghái (romanización en español), Shanghai (romanización en inglés)
+ shangai||Shanghái (romanización en español), Shanghai (romanización en inglés)
+ shangái||Shanghái
+ shanghai||Shanghái (romanización en español), Shanghai (romanización en inglés)
  shanghái|cs|Shanghái
  share||cuota de audiencia, porcentaje de audiencia, cuota de pantalla
  shares||cuotas de audiencia, porcentajes de audiencia, cuotas de pantalla
@@ -17633,7 +17634,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  sicronización||sincronización
  sicronizaciones||sincronizaciones
  SIDA|cs|sida
- Sidney||Sídney
+ sidney||Sídney
  sídney|cs|Sídney
  sieglo||siglo
  sieglos||siglos
@@ -17697,7 +17698,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  simil||símil
  similaridad||similitud
  similaridades||similitudes
- Simon|cs|Simon (nombre propio en inglés, francés y otros idiomas), Simón (nombre propio en español)
+ simon||Simon (nombre propio en inglés, francés y otros idiomas), Simón (nombre propio en español)
  simpatia||simpatía
  simpatias||simpatías
  simpatica||simpática
@@ -17738,7 +17739,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  sinfonicas||sinfónicas
  sinfonico||sinfónico
  sinfonicos||sinfónicos
- Singapore||Singapur
+ singapore||Singapur
  singapur|cs|Singapur
  single||sencillo (música), individual (tenis), individuales (tenis)
  sinlges||singles
@@ -17848,7 +17849,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  snoopy|cs|Snoopy
  soberania||soberanía
  soberanias||soberanías
- Soberon||Soberón
+ soberon||Soberón
  soberón|cs|Soberón
  sobredósis||sobredosis
  sobreestimada||sobrestimada
@@ -17898,7 +17899,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  sofa||sofá
  sofas||sofás
  sofases||sofás
- Sofia||Sofía
+ sofia||Sofía
  sofía|cs|Sofía
  sofisticacion||sofisticación
  sofware||software
@@ -17922,7 +17923,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  soliman||solimán
  solipedo||solípedo
  solipedos||solípedos
- Solis||Solís
+ solis||Solís
  solís|cs|Solís
  solucion||solución
  somali||somalí
@@ -18282,10 +18283,10 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  svásticas||esvásticas
  swastika||esvástica
  swastikas||esvásticas
- Swazilandia||Suazilandia
+ swazilandia||Suazilandia
  sweater||suéter
  sweaters||suéteres
- Sydney||Sídney (ciudad), Sydney (nombre)
+ sydney||Sídney (ciudad), Sydney (nombre)
 
 == T ==
  tabaja||trabaja
@@ -18323,7 +18324,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  taipei||Taipéi
  taiwan||Taiwán
  taiwán|cs|Taiwán
- Tajikistán|cs|Tayikistán
+ tajikistán||Tayikistán
  talabarteria||talabartería
  talabarterias||talabarterías
  talaiot||talayot
@@ -18362,7 +18363,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  tanden||tándem
  tandens||tándems
  tándens||tándems
- Tanger||Tánger
+ tanger||Tánger
  tantan||tantán
  tantrica||tántrica
  tantricas||tántricas
@@ -18411,7 +18412,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  tartricas||tártricas
  tartrico||tártrico
  tartricos||tártricos
- Tashkent||Taskent (capital de Uzbekistán)
+ tashkent||Taskent (capital de Uzbekistán)
  taxacea||taxácea
  taxaceas||taxáceas
  taxaceo||taxáceo
@@ -18434,7 +18435,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  taxonomicos||taxonómicos
  taxonomo||taxónomo
  taxonomos||taxónomos
- Tayikistan|cs|Tayikistán
+ tayikistan||Tayikistán
  teacea||teácea
  teaceas||teáceas
  teaceo||teáceo
@@ -18455,14 +18456,14 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  tecnologíco||tecnológico
  tecnologicos||tecnológicos
  tecnologícos||tecnológicos
- Tecoman||Tecomán
+ tecoman||Tecomán
  tectonica||tectónica
  tectonicas||tectónicas
  tectonico||tectónico
  tectonicos||tectónicos
  teflon||teflón
- Teheran||Teherán
- Tehuacan||Tehuacán
+ teheran||Teherán
+ tehuacan||Tehuacán
  tejao||tejado
  tejon||tejón
  teleespectador||telespectador
@@ -18591,7 +18592,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  tentenpié||tentempié
  tentenpies||tentempiés
  tentenpiés||tentempiés
- Teofilo||Teófilo
+ teofilo||Teófilo
  teologa||teóloga
  teologas||teólogas
  teologia||teología
@@ -18610,9 +18611,9 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  teoricas||teóricas
  teorico||teórico
  teoricos||teóricos
- Teotihuacan||Teotihuacán
- Tepatitlan||Tepatitlán
- Tepotzotlan||Tepotzotlán
+ teotihuacan||Teotihuacán
+ tepatitlan||Tepatitlán
+ tepotzotlan||Tepotzotlán
  terapeutica||terapéutica
  terapeútica||terapéutica
  terapeuticas||terapéuticas
@@ -18681,7 +18682,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  terraqueas||terráqueas
  terraqueo||terráqueo
  terraqueos||terráqueos
- Terrassa||Tarrasa
+ terrassa||Tarrasa
  terreste||terrestre
  terrestes||terrestres
  terriorio||territorio
@@ -18722,17 +18723,17 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  tetricas||tétricas
  tetrico||tétrico
  tetricos||tétricos
- Tevez||Tévez
+ tevez||Tévez
  tévez|cs|Tévez
  téxtil||textil
  textileria||textilería
  textilerias||textilerías
- Teziutlan||Teziutlán
+ teziutlan||Teziutlán
  thailand||Tailandia
  thailandes||tailandés
  thailandés||tailandés
  thailandia||Tailandia
- Thamesis||Támesis
+ thamesis||Támesis
  tí||ti
  tia||tía
  tias||tías
@@ -18792,8 +18793,8 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  titulo||título (sustantivo), tituló (verbo, 3.ª persona), titulo (verbo, 1.ª persona)
  títuló||tituló (verbo, 3.ª persona), título (sustantivo), titulo (verbo, 1.ª persona)
  titulos||títulos
- Tizimin||Tizimín
- Tlahuac||Tláhuac
+ tizimin||Tizimín
+ tlahuac||Tláhuac
  tocarian||tocarían
  tocarón||tocaron
  todabia||todavía
@@ -18801,7 +18802,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  todavia||todavía
  togoles||togolés
  tokio|cs|Tokio
- Tokyo||Tokio
+ tokyo||Tokio
  tomaar||tomar
  tomarón||tomaron
  Tomatlan|cs|Tomatlán (municipio en el estado de Jalisco, México)
@@ -18809,7 +18810,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  tombolas||tómbolas
  tombolo||tómbolo
  tombolos||tómbolos
- Toncontin||Toncontín
+ toncontin||Toncontín
  toner||tóner
  toners||tóneres
  tóners||tóneres
@@ -18873,7 +18874,6 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  torpido||tórpido
  torpidos||tórpidos
  torreon||torreón
- Torreon|cs|Torreón
  torrida||tórrida
  torridas||tórridas
  torrido||tórrido
@@ -18883,7 +18883,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  tortículis||tortícolis
  tortola||tórtola
  tortolas||tórtolas
- Toshkent||Taskent (capital de Uzbekistán)
+ toshkent||Taskent (capital de Uzbekistán)
  totalemente||totalmente
  toxica||tóxica
  toxicas||tóxicas
@@ -19298,7 +19298,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  tuberia||tubería
  tuberias||tuberías
  tubieron||tuvieron
- Tucuman||Tucumán
+ tucuman||Tucumán
  tucumán|cs|Tucumán
  tuenti|cs|Tuenti
  tuetano||tuétano
@@ -19312,7 +19312,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  tunel||túnel
  tunes||Túnez
  túnes||Túnez
- Tunez||Túnez
+ tunez||Túnez
  túnez|cs|Túnez
  tunica||túnica
  tunicas||túnicas
@@ -19334,7 +19334,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  turistico||turístico
  turistíco||turístico
  turisticos||turísticos
- Turkmenistan|cs|Turkmenistán
+ turkmenistan||Turkmenistán
  turmix||túrmix
  turquia||Turquía
  turquía|cs|Turquía
@@ -19347,7 +19347,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  tuvierón||tuvieron
  tuviesemos||tuviésemos
  tuvó||tuvo
- Tuxpam||Túxpam
+ tuxpam||Túxpam
  tw|cs|TW
  tweet||tuit, tuitear
  tweetera||tuitera
@@ -19388,7 +19388,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  tzotzil||tsotsil (forma única según la Academia Mexicana de la Lengua)
 
 == U ==
- Uagadugu||Uagadugú
+ uagadugu||Uagadugú
  uberrima||ubérrima
  uberrimas||ubérrimas
  uberrimo||ubérrimo
@@ -19398,7 +19398,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  ubicandose||ubicándose
  ubico||ubicó (3.ª persona), ubico (1.ª persona)
  ucrania|cs|Ucrania (país), ucrania (gentilicio)
- Ucránia||Ucrania
+ ucránia||Ucrania
  ufologa||ufóloga
  ufologas||ufólogas
  ufologia||ufología
@@ -19409,7 +19409,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  ugandes||ugandés
  ulcera||úlcera (sustantivo), ulcera (verbo)
  ulceras||úlceras (sustantivo), ulceras (verbo)
- Ulster||Úlster
+ ulster||Úlster
  ultilogo||ultílogo
  ultilogos||ultílogos
  ultima||última (adjetivo), ultima (verbo)
@@ -19492,12 +19492,12 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  uricotelicas||uricotélicas
  uricotelico||uricotélico
  uricotelicos||uricotélicos
- Ursula||Úrsula
+ ursula||Úrsula
  úrsula|cs|Úrsula
  uruguay|cs|Uruguay
  usadba||usaba
  usalmente||usualmente
- Usaquen||Usaquén (localidad de Bogotá)
+ usaquen||Usaquén (localidad de Bogotá)
  usaria||usaría
  usarian||usarían
  usarias||usarías
@@ -19505,7 +19505,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  ushuaia|cs|Ushuaia
  usté||usted
  usuhaia||Ushuaia
- Usulutan||Usulután
+ usulutan||Usulután
  utencilio||utensilio
  utencilios||utensilios
  utensillo||utensilio
@@ -19576,7 +19576,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  uvula||úvula
  uvulas||úvulas
  uzbekistán|cs|Uzbekistán
- Uzbekistan|cs|Uzbekistán
+ uzbekistan||Uzbekistán
 
 == V ==
  vacacion||vacación
@@ -19610,7 +19610,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  vajinas||vaginas
  vajinitis||vaginitis
  valdés|cs|Valdés
- Valdéz||Valdez
+ valdéz||Valdez
  valdez|cs|Valdez
  valentia||valentía (sustantivo), Valentia (nombre romano de Valencia)
  valentias||valentías
@@ -19663,7 +19663,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  variós||varios
  varíos||varios
  varon||varón
- Varsóvia||Varsovia
+ varsóvia||Varsovia
  varsovia|cs|Varsovia
  vasilar||vacilar
  vasquez||Vásquez
@@ -19672,7 +19672,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  vastagos||vástagos
  vater||váter
  vateres||váteres
- Vazquez||Vázquez
+ vazquez||Vázquez
  vázquez|cs|Vázquez
  veaee||véase
  véaee||véase
@@ -19694,11 +19694,11 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  veintitres||veintitrés
  veintiun||veintiún
  veintivuatro||veinticuatro
- Velasquez||Velásquez
+ velasquez||Velásquez
  velásquez|cs|Velásquez
  velazquez||Velázquez
  velázquez|cs|Velázquez
- Velez||Vélez
+ velez||Vélez
  vélez|cs|Vélez
  velite||vélite
  velites||vélites
@@ -19774,7 +19774,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  vernaculos||vernáculos
  vernao||verano
  vernaos||veranos
- Veronica||Verónica
+ veronica||Verónica
  versatil||versátil
  versiculo||versículo
  versiculos||versículos
@@ -19830,7 +19830,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  vicerectores||vicerrectores
  victima||víctima
  victimas||víctimas
- Victor||Víctor
+ victor||Víctor
  victora||victoria
  victoras||victorias
  victoría||victoria
@@ -19851,9 +19851,9 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  vidoes||videos
  vídoes||vídeos
  viendose||viéndose
- Vientiane||Vientián
+ vientiane||Vientián
  Viernes|cs|viernes
- Vietnám||Vietnam
+ vietnám||Vietnam
  vietnam|cs|Vietnam
  vigesima||vigésima
  vigesimas||vigésimas
@@ -20031,8 +20031,8 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  vuleves||vuelves
 
 == W ==
- Washignton||Washington
- Wáshington||Washington
+ washignton||Washington
+ wáshington||Washington
  washington|cs|Washington
  water||wáter
  wateres||wáteres
@@ -20074,7 +20074,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  xerografias||xerografías
  xerografo||xerógrafo
  xerografos||xerógrafos
- Xicohtencatl||Xicohténcatl
+ xicohtencatl||Xicohténcatl
  xilofaga||xilófaga
  xilofagas||xilófagas
  xilofago||xilófago
@@ -20091,7 +20091,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  xornalismo||periodismo
  xornalista||periodista
  xornalistas||periodistas
- Xoxocotlan||Xoxocotlán (ciudad en el estado de Oaxaca, México)
+ xoxocotlan||Xoxocotlán (ciudad en el estado de Oaxaca, México)
  xunta||Junta
 
 == Y ==
@@ -20115,10 +20115,10 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  yambicos||yámbicos
  yamena|cs|Yamena
  yamusukro|cs|Yamusukro
- Yangon||Rangún
- Yañez||Yáñez
- Yaoundé||Yaundé
- Yaounde||Yaundé
+ yangon||Rangún
+ yañez||Yáñez
+ yaoundé||Yaundé
+ yaounde||Yaundé
  yarara||yarará
  yararas||yararás
  yaren|cs|Yaren
@@ -20140,8 +20140,8 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  yemen|cs|Yemen
  yenin||Yenín
  yenín|cs|Yenín
- Yerevan||Ereván
- Yereván||Ereván
+ yerevan||Ereván
+ yereván||Ereván
  yersei||yérsey
  yérsei||yérsey
  yérseis||yerseis
@@ -20178,7 +20178,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
 
 == Z ==
  zacapin||zacapín
- Zacatlan||Zacatlán
+ zacatlan||Zacatlán
  zagreb|cs|Zagreb
  zahori||zahorí
  zahories||zahoríes
@@ -20268,7 +20268,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  zulu||zulú
  zulues||zulúes
  zulus||zulús
- Zuniga|cs|Zúñiga
- Zuñiga|cs|Zúñiga
- Zúniga|cs|Zúñiga
+ zuniga||Zúñiga
+ zuñiga||Zúñiga
+ zúniga||Zúñiga
  zurich||Zúrich

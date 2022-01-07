@@ -683,8 +683,8 @@
  ali||alí
  aliación||aliaxe
  aliacións||aliaxes
- Alicante||Alacant
- Algeciras||Alxeciras
+ alicante||Alacant
+ algeciras||Alxeciras
  alinear||aliñar
  alineación||aliñación (en caso dos deportes), aliñamento (en caso de tipografía e para os menhires)
  allanar||achaiar, achandar, achanzar
@@ -746,8 +746,7 @@
  amatistas||amestistas
  ambente||ambiente
  ambentes||ambientes
- Amberes||Antuerpen
- amberes|cs|Antuerpen
+ amberes||Antuerpen
  ámbeto||ámbito
  ámbetos||ámbitos
  ambiguidade||ambigüidade
@@ -758,8 +757,7 @@
  ambitos||ámbitos
  america||América
  américa|cs|América
- America||América
- Ámerica||América
+ ámerica||América
  amerizar||amarar
  amerizaxe||amaraxe
  amerizou||amarou
@@ -831,7 +829,7 @@
  anilla||anel
  anillas||aneis
  animales||animais
- Ankara||Ancara
+ ankara||Ancara
  anodino||anódino
  anodinos||anódinos
  anodina||anódina
@@ -946,7 +944,7 @@
  apretos||apertos, apuros
  aprezar||apreciar
  aprezo||aprecio
- April||abril
+ april||abril
  apromar||achumbar
  apromo||seguridade, decisión
  apunte||apuntamento
@@ -1034,7 +1032,7 @@
  artesonados||artesoados
  artígo||artigo
  artígos||artigos
- Arxelia||Alxeria
+ arxelia||Alxeria
  arzebispado||arcebispado
  arzebispo||arcebispo
  arzebispados||arcebispados
@@ -1133,7 +1131,7 @@
  audio||son (audio- soamente como prefixo)
  augua||auga
  auguas||augas
- August||agosto
+ august||agosto
  aunar||unificar
  aurela||orela, ourela
  aurelas||orelas, ourelas
@@ -1362,7 +1360,7 @@
  becarios||bolseiros
  becaria||bolseira
  becarias||bolseiras
- Belice||Belize
+ belice||Belize
  belorizo||velorizo
  belorizos||velorizos
  bellota||landra, belota
@@ -1414,7 +1412,7 @@
  bever||beber
  bilbaino||bilbaíno
  bilbainos||bilbaínos
- Bilbo||Bilbao (cidade), Bilbo (é correcto se é o personaxe de Tolkien)
+ bilbo||Bilbao (cidade), Bilbo (é correcto se é o personaxe de Tolkien)
  bilis||bile
  billo||bulló
  billó||bulló
@@ -1437,7 +1435,7 @@
  biturón||viturón
  biturons||vituróns
  bituróns||vituróns
- Bizkaia||Biscaia
+ bizkaia||Biscaia
  blanco||branco
  blancos||brancos
  blanca||branca
@@ -1576,7 +1574,7 @@
  burladeros||abeiros
  burmeiro||brumeiro
  burmeiros||brumeiros
- Burquina||Burkina
+ burquina||Burkina
  burquinense||burkinense
  burquinenses||burkinenses
  burrumbiada||rebumbio
@@ -1644,7 +1642,7 @@
  cabron||cabrón
  cabrons||cabróns
  cabul|cs|Cabul
- Caceres||Cáceres
+ caceres||Cáceres
  cáceres|cs|Cáceres
  cacerio||casarío
  cacerío||casarío
@@ -1797,13 +1795,13 @@
  camaraderias||camaraderías
  camaras||cámaras
  camberra|cs|Camberra
- Camboia||Camboxa
- Camboya||Camboxa
+ camboia||Camboxa
+ camboya||Camboxa
  cambrica||cámbrica
  cambricas||cámbricas
  cambrico||cámbrico
  cambricos||cámbricos
- Camerun||Camerún
+ camerun||Camerún
  camerún|cs|Camerún
  camerunes||camerunés
  camilla||padiola, angarellas, cama
@@ -2017,7 +2015,7 @@
  carceres||cárceres
  carcoma||caruncho, couza
  carcomas||carunchos, couzas
- Cardenas||Cárdenas
+ cardenas||Cárdenas
  cardiologa||cardióloga
  cardiologas||cardiólogas
  cardiologo||cardiólogo
@@ -2086,7 +2084,7 @@
  cartografias||cartografías, cartografas (se é de cartografar)
  cartografo||cartógrafo, cartografo (é correcto se é de cartografar)
  cartografos||cartógrafos
- Casaquistan||Casaquistán
+ casaquistan||Casaquistán
  casaquistán|cs|Casaquistán
  casario||casarío
  casarios||casaríos
@@ -2208,7 +2206,7 @@
  cefalorraquideos||cefalorraquídeos
  cefiro||céfiro
  cefiros||céfiros
- Ceilan||Ceilán
+ ceilan||Ceilán
  ceilán|cs|Ceilán
  celda||cela
  celdas||celas
@@ -2246,7 +2244,6 @@
  centripetas||centrípetas
  centripeto||centrípeto
  centripetos||centrípetos
- Centroamerica||Centroamérica
  centroamerica||Centroamérica
  centroamérica|cs|Centroamérica
  centurion||centurión
@@ -2318,7 +2315,7 @@
  chapuzón||mergullo, chapuzón (é correcto se significa chapuceiro)
  chapuzóns||mergullo, chapuzóns (é correcto se significa chapuceiros)
  chasís||chasis
- Chavez||Chávez
+ chavez||Chávez
  chávez|cs|Chávez
  checoslovaquia|cs|Checoslovaquia
  chelín||xilin
@@ -2724,7 +2721,7 @@
  comoranas||comorianas
  comorano||comoriano
  comoranos||comorianos
- Comoras||Comores
+ comoras||Comores
  comores|cs|Comores
  compaixon||compaixón
  compaixons||compaixóns
@@ -3580,7 +3577,7 @@
  cristáis||cristais
  cristianizacion||cristianización
  cristianizacions||cristianizacións
- Cristobal||Cristóbal
+ cristobal||Cristóbal
  cristóbal|cs|Cristóbal
  critério||criterio
  critérios||criterios
@@ -3944,7 +3941,7 @@
  daquelo||daquilo
  dara||dará
  daras||darás
- Dario||Darío, diario
+ dario||Darío, diario
  darío|cs|Darío
  darsena||dársena
  darsenas||dársenas
@@ -3999,7 +3996,7 @@
  decatlon||décatlon
  decea||decena (se é un conxunto de dez unidades), desexa (se é do verbo desexar)
  deceas||decenas (se é un conxunto de dez unidades), desexas (se é do verbo desexar)
- December||decembro
+ december||decembro
  Decembro|cs|decembro
  decende||descende
  decender||descender
@@ -4625,7 +4622,7 @@
  diastolicas||diastólicas
  diastolico||diastólico
  diastolicos||diastólicos
- Diaz||Díaz
+ diaz||Díaz
  díaz|cs|Díaz
  diccionario||dicionario
  diccionarios||dicionarios
@@ -4733,14 +4730,10 @@
  dipticos||dípticos
  diptongo||ditongo
  diptongos||ditongos
- Diputación||Deputación
- Diputacion||Deputación
- Diputacións||Deputacións
- Diputacions||Deputacións
- diputación|cs|Deputación
- diputacións|cs|Deputacións
- diputacion|cs|Deputación
- diputacions|cs|Deputacións
+ diputación||Deputación
+ diputacion||Deputación
+ diputacións||Deputacións
+ diputacions||Deputacións
  diminuir||diminuír
  direccion||dirección
  direccions||direccións
@@ -4891,7 +4884,7 @@
  domigos||domingos
  dominacion||dominación
  dominacions||dominacións
- Dominguez||Domínguez
+ dominguez||Domínguez
  domínguez|cs|Domínguez
  dominiques||dominiqués
  donacion||doazón
@@ -5008,7 +5001,7 @@
  ecepto||excepto
  echague||Echagüe
  echagüe|cs|Echagüe
- Echeverria||Echeverría
+ echeverria||Echeverría
  echeverría|cs|Echeverría
  ecicion||edición
  ecición||edición
@@ -5073,7 +5066,7 @@
  eimoloxias||etimoloxías
  etimoloxia||etimoloxía
  etimoloxias||etimoloxías
- Eibar||Éibar
+ eibar||Éibar
  eiquí||aquí
  eiqui||aquí
  eis||velaí, velaquí
@@ -5445,6 +5438,7 @@
  enfase||énfase
  enfasis||énfase
  énfasis||énfase
+ enfatizar||salientar, destacar, resaltar, realzar, subliñar, recalcar…
  enfermeria||enfermería
  enfermerias||enfermerías
  enfervorizar||afervoar
@@ -6012,7 +6006,7 @@
  erectiles||eréctiles
  erectis||eréctiles
  eréctis||eréctiles
- Erevan||Ereván
+ erevan||Ereván
  ereván|cs|Ereván
  ergonomia||ergonomía
  ergonomias||ergonomías
@@ -6275,7 +6269,7 @@
  espaldas||lombos, costas
  espaldeira||espaleira
  espaldeiras||espaleiras
- Espana||España
+ espana||España
  espande||expande
  espander||expandir
  espandida||expandida
@@ -6477,7 +6471,7 @@
  esternas||externas (exteriores)
  éstes||estes
  estés||esteas
- Estevez||Estévez
+ estevez||Estévez
  estévez|cs|Estévez
  estilistícamente||estilisticamente
  estilísticamente||estilisticamente
@@ -6584,7 +6578,7 @@
  etnoloxico||etnolóxico
  etnoloxicos||etnolóxicos
  eufrates||Éufrates
- Eúfrates||Éufrates
+ eúfrates||Éufrates
  éufrates|cs|Éufrates
  europa|cs|Europa
  europeu||europeo
@@ -6862,10 +6856,10 @@
  exumar||exhumar
 
 == F ==
- Fabian||Fabián
+ fabian||Fabián
  fabián|cs|Fabián
  fabio|cs|Fabio
- Fabregas||Fábregas
+ fabregas||Fábregas
  fábregas|cs|Fábregas
  fabula||fábula (substantivo), fabula (é correcto se é do verbo fabular)
  fabulas||fábulas (substantivo), fabulas (é correcto se é do verbo fabular)
@@ -6896,7 +6890,7 @@
  facticos||fácticos
  faculdade||facultade
  faculdades||facultades
- Fagundez||Fagúndez
+ fagundez||Fagúndez
  fagúndez|cs|Fagúndez
  falda||saia, faldra
  falica||fálica
@@ -6946,7 +6940,7 @@
  fantasticos||fantásticos
  farallon||farallón
  farallons||farallóns
- Farenheit||Fahrenheit
+ farenheit||Fahrenheit
  farinacea||farinácea
  farinaceas||farináceas
  farinaceo||farináceo
@@ -6982,7 +6976,7 @@
  fatidicas||fatídicas
  fatidico||fatídico
  fatidicos||fatídicos
- Fatima||Fátima
+ fatima||Fátima
  fátima|cs|Fátima
  fatricida||fratricida
  faunistica||faunística
@@ -6996,7 +6990,7 @@
  febrifugas||febrífugas
  febrifugo||febrífugo
  febrifugos||febrífugos
- February||febreiro
+ february||febreiro
  fecha||data (é correcto se é sinónimo de "grolo" ou de "pecha")
  fechas||datas (é correcto se é sinónimo de "grolos" ou de "pechas")
  fecula||fécula
@@ -7059,9 +7053,9 @@
  fetidos||fétidos
  ficcion||ficción
  ficcions||ficcións
- Fidji||Fidxi
+ fidji||Fidxi
  fiéis||fieis
- Fiji||Fidxi
+ fiji||Fidxi
  fiambre||friame
  fiambres||friames
  filantropa||filántropa
@@ -7183,7 +7177,7 @@
  florestas||forestas
  florestal||forestal
  florestales||forestales
- Florez||Flórez
+ florez||Flórez
  flórez|cs|Flórez
  floristería||floraría
  floristerías||florarías
@@ -7321,8 +7315,8 @@
  frambuesas||framboesas
  frambuesos||framboeseiros
  frances||francés
- Francfort||Fráncfort
- Francfórt||Fráncfort
+ francfort||Fráncfort
+ francfórt||Fráncfort
  fráncfort|cs|Fráncfort
  francia|cs|Francia
  francisco|cs|Francisco
@@ -7512,7 +7506,7 @@
  galacticas||galácticas
  galactico||galáctico
  galacticos||galácticos
- Galapagos||Galápagos
+ galapagos||Galápagos
  galápagos|cs|Galápagos
  galardon||galardón
  galeira||galera
@@ -7526,9 +7520,9 @@
  gallopes||galopes
  galpón||pendello
  galpóns||pendellos
- Galvan||Galván
+ galvan||Galván
  galván|cs|Galván
- Galvez||Gálvez
+ galvez||Gálvez
  gálvez|cs|Gálvez
  gamberro||vándalo
  gamberros||vándalos
@@ -7567,7 +7561,7 @@
  garbanzo||garavanzo
  garbanzos||garavanzos
  gardamallas||gardameta
- Garcia||García
+ garcia||García
  garcía|cs|García
  garderia||gardería
  garderias||garderías
@@ -7588,7 +7582,7 @@
  gasteropodas||gasterópodas
  gasteropodo||gasterópodo
  gasteropodos||gasterópodos
- Gaston||Gastón
+ gaston||Gastón
  gastón|cs|Gastón
  gastrica||gástrica
  gastricas||gástricas
@@ -7646,12 +7640,10 @@
  gegrafíco||xeográfico
  gegraficos||xeográficos
  gegrafícos||xeográficos
- German||Germán
- german|cs|Germán
+ german||Germán
  ghana|cs|Ghana
- Gipuzkoa||Guipúscoa
- Gibraltar||Xibraltar
- gibraltar|cs|Xibraltar
+ gipuzkoa||Guipúscoa
+ gibraltar||Xibraltar
  gibraltareño||xibraltareño
  gibraltareños||xibraltareños
  gibraltareña||xibraltareña
@@ -7696,7 +7688,7 @@
  golos||goros
  golondrina||andoriña
  golondrinas||andoriñas
- Gomez||Gómez
+ gomez||Gómez
  gómez|cs|Gómez
  gomina||brillantina
  gomita||vomita
@@ -7970,8 +7962,8 @@
  guiñois||monicreques
  guiñoles||monicreques
  guipúscoa|cs|Guipúscoa
- Guipuzcoa||Guipúscoa
- Guipúzcoa||Guipúscoa
+ guipuzcoa||Guipúscoa
+ guipúzcoa||Guipúscoa
  guirnalda||grilanda
  guirnaldas||grilandas
  guisante||chícharo, ervella
@@ -7984,7 +7976,7 @@
  gusma||usma
  gusmas||usmas
  gustaria||gustaría
- Gutierrez||Gutiérrez
+ gutierrez||Gutiérrez
  gutiérrez|cs|Gutiérrez
  guzman||Guzmán
  guzmán|cs|Guzmán
@@ -8062,7 +8054,7 @@
  helados||xeados
  helicoptero||helicóptero
  helicopteros||helicópteros
- Helsinki||Helsinqui
+ helsinki||Helsinqui
  helvetica||helvética
  helveticas||helvéticas
  helvetico||helvético
@@ -8242,7 +8234,7 @@
  hipocritas||hipócritas
  hipodromo||hipódromo
  hipodromos||hipódromos
- Hipolito||Hipólito
+ hipolito||Hipólito
  hipólito|cs|Hipólito
  hipotalamo||hipotálamo
  hipotalamos||hipotálamos
@@ -8262,7 +8254,7 @@
  hispanicas||hispánicas
  hispanico||hispánico
  hispanicos||hispánicos
- Hispanoamerica||Hispanoamérica
+ hispanoamerica||Hispanoamérica
  hispanoamérica|cs|Hispanoamérica
  histerica||histérica
  histericas||histéricas
@@ -8287,7 +8279,7 @@
  hoi||hoxe
  hola||ola
  hollywood|cs|Hollywood
- Holywood||Hollywood
+ holywood||Hollywood
  hombro||ombreiro, ombro
  hombros||ombreiros, ombros
  homonima||homónima
@@ -8388,7 +8380,7 @@
  hurañas||túzaras
 
 == I ==
- Ibañez||Ibáñez
+ ibañez||Ibáñez
  ibáñez|cs|Ibáñez
  iberica||ibérica
  ibericas||ibéricas
@@ -8426,7 +8418,7 @@
  interdicción||interdición
  interdiccións||interdicións
  inusual||infrecuente
- Idelfonso||Ildefonso
+ idelfonso||Ildefonso
  identica||idéntica
  identicas||idénticas
  identico||idéntico
@@ -8465,7 +8457,7 @@
  ignifugas||ignífugas
  ignifugo||ignífugo
  ignifugos||ignífugos
- Iguazu||Iguazú
+ iguazu||Iguazú
  iguazú|cs|Iguazú
  il||el
  iles||eles
@@ -8722,7 +8714,7 @@
  indianápolis|cs|Indianápolis
  indice||índice
  indices||índices
- Indico||Índico (océano), indico (verbo)
+ indico||Índico (océano), indico (verbo)
  indiferencia||indiferenza
  indiferencias||indiferenzas
  indivíduo||individuo
@@ -9194,7 +9186,7 @@
  inxertounos||enxertounos
  inxestion||inxestión
  inxestions||inxestións
- Iorque||York
+ iorque||York
  irak|cs|Irak
  iran||irán
  irani||iraniano, iraniana
@@ -9221,8 +9213,8 @@
  irrenconciliables||irreconciliables
  irrevocable||irrevogable
  irrevocables||irrevogables
- Irun||Irún
- Iruña||Pamplona
+ irun||Irún
+ iruña||Pamplona
  isa||esa
  isas||esas
  isabel|cs|Isabel
@@ -9272,22 +9264,22 @@
  iúniors||júniors
  iunque||engra, incre, zafra, bigornia (son todas femininas)
  iunques||engras, incres, zafras, bigornias (son todas femininas)
- IVA||IVE (Imposto sobre o Valor Engadido)
+ IVA|cs|IVE (Imposto sobre o Valor Engadido)
 
 == J ==
  ja||ha
- Jaen||Jaén
+ jaen||Jaén
  jaén|cs|Jaén
- January||xaneiro
- Jalisco||Xalisco
+ january||xaneiro
+ jalisco||Xalisco
  jarcha||kharxa
  jartum|cs|Jartum
- Javian||Javián
+ javian||Javián
  javián|cs|Javián
  je||he
  jehova||Jehová
  jehová|cs|Jehová
- Jeremias||Jeremías
+ jeremias||Jeremías
  jeremías|cs|Jeremías
  jesus||Jesús
  jesús|cs|Jesús
@@ -9295,18 +9287,18 @@
  jimenez||Jiménez
  jiménez|cs|Jiménez
  jo||ho
- Joaquin||Joaquín
+ joaquin||Joaquín
  joaquín|cs|Joaquín
  jorge|cs|Jorge
  jorje||Jorge
  jose|cs|Jose
  josé|cs|José
  ju||hu
- Juán||Juan
+ juán||Juan
  juan|cs|Juan
- July||xullo
+ july||xullo
  julio||xullo
- June||xuño
+ june||xuño
  junio||xuño
  junior||júnior
  juniors||júniors
@@ -9315,15 +9307,14 @@
 
 == K ==
  kabul||Cabul
- Kathmandu||Katmandú
- Katmandu||Katmandú
- katmandu|cs|Katmandú
- Kazagistan||Casaquistán
- Kazagistán||Casaquistán
- Kazajistan||Casaquistán
- Kazajistán||Casaquistán
+ kathmandu||Katmandú
+ katmandu||Katmandú
+ kazagistan||Casaquistán
+ kazagistán||Casaquistán
+ kazajistan||Casaquistán
+ kazajistán||Casaquistán
  ke||que
- Kenia||Kenya
+ kenia||Kenya
  kermesse||quermese
  kilo||quilo
  kilocaloria||quilocaloría
@@ -9454,8 +9445,8 @@
  Latinoamericanas|cs|latinoamericanas (excepto nome de institución)
  Latinoamericano|cs|latinoamericano (excepto nome de institución)
  Latinoamericanos|cs|latinoamericanos (excepto nome de institución)
- Latvia||Letonia
- Latvijas||Letonia
+ Latvia|cs|Letonia
+ latvijas||Letonia
  latvio||letón
  latvios||letóns
  latvia||letona
@@ -9662,7 +9653,7 @@
  lonxanas||distantes, arredadas, afastadas, apartadas, remotas
  lonxano||distante, arredado, afastado, apartado, remoto
  lonxanos||distantes, arredados, afastados, apartados, remotos
- Lopez||López
+ lopez||López
  lópez|cs|López
  lorenzo|cs|Lorenzo
  loro||papagaio
@@ -9704,7 +9695,7 @@
  madagascar|cs|Madagascar
  madastra||madrasta
  madastras||madrastas
- Madrdi||Madrid
+ madrdi||Madrid
  madrid|cs|Madrid
  madrugón||madruga
  maduracion||maduración
@@ -9740,7 +9731,7 @@
  maiorias|| maiorías
  maiorista||grosista, comerciante por xunto
  maioristas||grosistas, comerciantes por xunto
- Maipu||Maipú
+ maipu||Maipú
  maipú|cs|Maipú
  maís||máis (adverbio), mais (conxunción, equivale a "pero")
  maitíns||matíns, matinas
@@ -9752,7 +9743,7 @@
  maíz||millo
  maízes||millos
  maizes||millos
- Malaga||Málaga
+ malaga||Málaga
  málaga|cs|Málaga
  malasia|cs|Malaisia
  malecon||dique
@@ -9906,7 +9897,7 @@
  maravillosas||marabillosas
  maravilloso||marabilloso
  maravillosos||marabillosos
- March||marzo
+ march||marzo
  marejada||marusía
  marexada||marusía
  marexadiña||mar teso
@@ -9936,13 +9927,13 @@
  marmores||mármores
  marquesina||marquesiña
  márquetin||márketing ou mercadotecnia
- Marquez||Márquez
+ marquez||Márquez
  márquez|cs|Márquez
  marron||marrón
  marroqui||marroquí
  marroquis||marroquís
  mártes||martes
- Martin||Martín
+ martin||Martín
  martín|cs|Martín
  martinez||Martínez
  martínez|cs|Martínez
@@ -10000,7 +9991,7 @@
  maximas||máximas
  maximo||máximo
  maximos||máximos
- May||maio
+ may||maio
  mayo||maio
  mazmorra||alxube
  mazmorras||alxubes
@@ -10011,7 +10002,7 @@
  mecanicas||mecánicas
  mecanico||mecánico
  mecanicos||mecánicos
- Medellin||Medellín
+ medellin||Medellín
  medellín|cs|Medellín
  mediambiental||medioambiental
  mediantes||mediante
@@ -10037,9 +10028,9 @@
  mediodias||mediodías
  meditacion||meditación
  meditacions||meditacións
- Meditarraneo||Mediterráneo
- Meditarráneo||Mediterráneo
- Mediterraneo||Mediterráneo
+ meditarraneo||Mediterráneo
+ meditarráneo||Mediterráneo
+ mediterraneo||Mediterráneo
  medoñento||medorento
  medoñenta||medorenta
  medoñentos||medorentos
@@ -10089,7 +10080,7 @@
  mencheviques||menxeviques
  mencion||mención
  mencions||mencións
- Mendez||Méndez
+ mendez||Méndez
  méndez|cs|Méndez
  mendrugo||chusco
  mendrugos||chuscos
@@ -10255,7 +10246,6 @@
  metropoli||metrópole
  metrópolis||metrópoles
  metropolis||metrópoles
- Mexico||México
  mexico||México
  mèxico||México
  méxico|cs|México
@@ -10277,9 +10267,9 @@
  meztizaxes||mestizaxes
  meztizo||mestizo
  meztizos||mestizos
- Michigan||Míchigan
+ michigan||Míchigan
  míchigan|cs|Míchigan
- Michoacan||Michoacán
+ michoacan||Michoacán
  micra||micrómetro
  micras||micrómetros
  microfono||micrófono
@@ -10361,7 +10351,7 @@
  mismas||mesmas
  mismo||mesmo
  mismos||mesmos
- Misouri||Missouri
+ misouri||Missouri
  misoxina||misóxina
  misoxinas||misóxinas
  misoxino||misóxino
@@ -10639,7 +10629,7 @@
  naranxeiras||laranxeiras
  naranxo||laranxeira
  naranxos||laranxeiras
- Narbonne||Narbona (cidade de Francia)
+ narbonne||Narbona (cidade de Francia)
  naquelo||naquilo
  naquelos||naqueles
  natilla||crema
@@ -10748,7 +10738,7 @@
  noros||xenros
  noruego||noruegués
  noruegos||noruegueses
- November||novembro
+ november||novembro
  Novembro|cs|novembro
  novicia||noviza
  novicias||novizas
@@ -10806,7 +10796,7 @@
  octavos||oitavos
  octava||oitava
  octavas||oitavas
- October||outubro
+ october||outubro
  octubre||outubro
  ocurrir||ocorrer
  odometria||hodometría
@@ -11020,7 +11010,7 @@
  parexas||parellas
  parpadear||escintilar, pestanexar
  parpadexar||escintilar, pestanexar
- Paris||París
+ paris||París
  parís|cs|París
  Parides|cs|París (tradución errónea da capital
  párking||aparcadoiro, aparcamento
@@ -12241,7 +12231,6 @@
  rumiante||ruminante
  rumiantes||ruminantes
  rumanía||Romanía
- Rumanía||Romanía
  rumano||romanés
  rumana||romanesa
  rumanos||romaneses
@@ -12355,7 +12344,7 @@
  senon||senón
  sentencia||sentenza
  sentencias||sentenzas
- September||setembro
+ september||setembro
  septentrional||setentrional
  septiembre||setembro
  séptimo||sétimo
@@ -12740,8 +12729,8 @@
  sucre||azucre, sucre (é correcto se é a moeda)
  sudacion||sudación
  sudacions||sudacións
- Sudafrica||Suráfrica
- Sudáfrica||Suráfrica
+ sudafrica||Suráfrica
+ sudáfrica||Suráfrica
  sudadeira||suadoiro
  sudadeiras||suadoiros
  sudadeiro||suadoiro
@@ -12756,7 +12745,7 @@
  sudafricanos||surafricanos
  sudafricana||surafricana
  sudafricanas||surafricanas
- Sudamérica||Suramérica
+ sudamérica||Suramérica
  sudamericán||suramericano
  sudamericáns||suramericanos
  sudamerican||suramericano
@@ -12894,7 +12883,6 @@
  supervivinte||supervivente
  supervivintes||superviventes
  suráfrica|cs|Suráfrica
- sudáfrica|cs|Suráfrica
  surdimento||xurdimento
  sureste||sueste
  surestes||suestes
@@ -13130,7 +13118,7 @@
  toscas||rudas, bastas
  tosco||rudo, basto
  toscos||rudos, bastos
- Toulouse||Tolosa (cidade de Francia)
+ toulouse||Tolosa (cidade de Francia)
  touron||tourón
  tourons||touróns
  toxico||tóxico
@@ -13854,7 +13842,7 @@
  zarpar||levantar áncora
  zarrapo||farrapo
  zarrapos||farrapos
- Zelanda||Zelandia
+ zelanda||Zelandia
  zen||cen, zen (é correcto se é a rama do budismo)
  zendo||cendo
  zeolita||ceolita
@@ -13893,4 +13881,4 @@
  zumbidos||zunidos
  zumo||zume
  zumos||zumes
- Zurich||Zúric
+ zurich||Zúric
