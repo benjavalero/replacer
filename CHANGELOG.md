@@ -1,5 +1,8 @@
 # Versions
 
+## 2.14.8 (7 Jan 2022)
+- Fix detection of duplicated replacements
+
 ## 2.14.7 (5 Jan 2022)
 - Improve indexing: consider replacements with same position or context as equal
 - Feature: add possibility to ignore complete page sections
