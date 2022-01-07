@@ -159,21 +159,21 @@ public abstract class MisspellingFinder implements ReplacementFinder {
         String replacement,
         boolean caseSensitive
     ) {
-        Optional<Misspelling> misspelling = findMisspellingByWord(replacement, lang);
-        ReplacementType type;
-        if (misspelling.isEmpty()) {
-            type = null;
-        } else if (misspelling.get().isCaseSensitive()) {
-            type =
-                caseSensitive && misspelling.get().getWord().equals(replacement)
-                    ? ReplacementType.of(misspelling.get().getReplacementKind(), misspelling.get().getWord())
-                    : null;
-        } else {
-            type =
-                !caseSensitive && misspelling.get().getWord().equalsIgnoreCase(replacement)
-                    ? ReplacementType.of(misspelling.get().getReplacementKind(), misspelling.get().getWord())
-                    : null;
+        final String word = !caseSensitive && FinderUtils.startsWithUpperCase(replacement)
+            ? FinderUtils.toLowerCase(replacement)
+            : replacement;
+        Optional<Misspelling> misspelling = findMisspellingByWord(word, lang);
+        ReplacementType type = null;
+        if (
+            misspelling.isPresent() &&
+            (
+                (misspelling.get().isCaseSensitive() && caseSensitive) ||
+                (!misspelling.get().isCaseSensitive() && !caseSensitive)
+            )
+        ) {
+            type = ReplacementType.of(misspelling.get().getReplacementKind(), misspelling.get().getWord());
         }
+
         return Optional.ofNullable(type);
     }
 }

@@ -385,9 +385,14 @@ class MisspellingSimpleFinderTest {
         SimpleMisspelling misspelling1 = SimpleMisspelling.of("accion", false, "acción");
         SimpleMisspelling misspelling2 = SimpleMisspelling.of("Enero", true, "enero");
         SimpleMisspelling misspelling3 = SimpleMisspelling.of("madrid", true, "Madrid");
-        this.fakeUpdateMisspellingList(List.of(misspelling1, misspelling2, misspelling3));
+        SimpleMisspelling misspelling4 = SimpleMisspelling.of("peru", false, "Perú");
+        this.fakeUpdateMisspellingList(List.of(misspelling1, misspelling2, misspelling3, misspelling4));
 
-        // Case-insensitive: accion||acción
+        // 1. Case-insensitive: accion||acción
+        // accion - true  => KO
+        // accion - false => OK
+        // Accion - true  => KO
+        // Accion - false => OK
         assertEquals(Optional.empty(), misspellingFinder.findMatchingReplacementType(lang, "accion", true));
         assertEquals(
             Optional.of(ReplacementType.of(simple, "accion")),
@@ -399,7 +404,11 @@ class MisspellingSimpleFinderTest {
             misspellingFinder.findMatchingReplacementType(lang, "Accion", false)
         );
 
-        // Case-sensitive uppercase: Enero|cs|enero
+        // 2. Case-sensitive uppercase to lowercase: Enero|cs|enero
+        // enero - true  => KO
+        // enero - false => KO
+        // Enero - true  => OK
+        // Enero - false => KO
         assertEquals(Optional.empty(), misspellingFinder.findMatchingReplacementType(lang, "enero", true));
         assertEquals(Optional.empty(), misspellingFinder.findMatchingReplacementType(lang, "enero", false));
         assertEquals(
@@ -408,7 +417,11 @@ class MisspellingSimpleFinderTest {
         );
         assertEquals(Optional.empty(), misspellingFinder.findMatchingReplacementType(lang, "Enero", false));
 
-        // Case-sensitive lowercase: madrid|cs|Madrid
+        // 3. Case-sensitive lowercase to uppercase: madrid|cs|Madrid
+        // madrid - true  => OK
+        // madrid - false => KO
+        // Madrid - true  => KO
+        // Madrid - false => KO
         assertEquals(
             Optional.of(ReplacementType.of(simple, "madrid")),
             misspellingFinder.findMatchingReplacementType(lang, "madrid", true)
@@ -416,5 +429,21 @@ class MisspellingSimpleFinderTest {
         assertEquals(Optional.empty(), misspellingFinder.findMatchingReplacementType(lang, "madrid", false));
         assertEquals(Optional.empty(), misspellingFinder.findMatchingReplacementType(lang, "Madrid", true));
         assertEquals(Optional.empty(), misspellingFinder.findMatchingReplacementType(lang, "Madrid", false));
+
+        // 4. Case-insensitive lowercase to uppercase: peru||Peru
+        // peru - true  => KO
+        // peru - false => OK
+        // Peru - true  => KO
+        // Peru - false => OK
+        assertEquals(Optional.empty(), misspellingFinder.findMatchingReplacementType(lang, "peru", true));
+        assertEquals(
+            Optional.of(ReplacementType.of(simple, "peru")),
+            misspellingFinder.findMatchingReplacementType(lang, "peru", false)
+        );
+        assertEquals(Optional.empty(), misspellingFinder.findMatchingReplacementType(lang, "Peru", true));
+        assertEquals(
+            Optional.of(ReplacementType.of(simple, "peru")),
+            misspellingFinder.findMatchingReplacementType(lang, "Peru", false)
+        );
     }
 }
