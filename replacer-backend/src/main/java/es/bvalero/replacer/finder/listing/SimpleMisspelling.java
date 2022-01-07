@@ -19,6 +19,8 @@ public class SimpleMisspelling implements Misspelling {
         this.word = word;
         this.caseSensitive = caseSensitive;
         this.suggestions = parseComment(comment);
+
+        validateWordCase();
     }
 
     private void validateMisspellingWord(String word) {

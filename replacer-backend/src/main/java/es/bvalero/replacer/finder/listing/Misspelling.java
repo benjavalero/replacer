@@ -6,9 +6,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import lombok.extern.slf4j.Slf4j;
 import org.intellij.lang.annotations.RegExp;
 
 public interface Misspelling extends ListingItem {
+    @Slf4j
+    final class LogHolder {
+        // Trick to be able to log in interfaces
+    }
+
     @RegExp
     String REGEX_BRACKETS = "\\([^)]+\\)";
 
@@ -26,6 +32,12 @@ public interface Misspelling extends ListingItem {
     List<MisspellingSuggestion> getSuggestions();
 
     ReplacementKind getReplacementKind();
+
+    default void validateWordCase() {
+        if (!isCaseSensitive() && FinderUtils.startsWithUpperCase(getWord())) {
+            LogHolder.LOGGER.warn("Case-insensitive uppercase misspelling: " + getWord());
+        }
+    }
 
     default List<MisspellingSuggestion> parseComment(String comment) {
         List<MisspellingSuggestion> suggestionList = new ArrayList<>();

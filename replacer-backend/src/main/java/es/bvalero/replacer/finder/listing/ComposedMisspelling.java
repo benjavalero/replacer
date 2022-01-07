@@ -15,6 +15,8 @@ public class ComposedMisspelling implements Misspelling {
         this.word = word;
         this.caseSensitive = caseSensitive;
         this.suggestions = parseComment(comment);
+
+        validateWordCase();
     }
 
     public static ComposedMisspelling of(String word, boolean caseSensitive, String comment) {
