@@ -7,13 +7,13 @@
   </div>
 
   <div *ngIf="filteredItems.length">
-    <table class="table"
+    <table class="table" *ngIf="user$ | async as user"
       aria-describedby="Lista de potenciales reemplazos sin revisar y la cantidad estimada de páginas que los contienen">
       <thead>
         <tr>
           <th scope="col" class="{{ columnDirection('s') }}" (click)="sort('s')">Subtipo</th>
           <th scope="col" class="{{ columnDirection('c') }}" (click)="sort('c')">N.º</th>
-          <th scope="col" class="d-none d-sm-table-cell text-nowrap">
+          <th scope="col" class="d-none d-sm-table-cell text-nowrap" *ngIf="user.bot">
             Lista de
             <br />
             páginas
@@ -28,7 +28,7 @@
             <span *ngIf="!item.c">{{ item.s }}</span>
           </td>
           <td class="w-25">{{ item.c }}</td>
-          <td class="d-none d-sm-table-cell text-nowrap">
+          <td class="d-none d-sm-table-cell text-nowrap" *ngIf="user.bot">
             <a class="btn btn-outline-secondary" role="button"
               href="{{ pageListUrl }}&type={{ type }}&subtype={{ item.s }}" target="_blank" rel="noopener noreferrer"
               title="Abrir lista de páginas" [ngClass]="{'disabled': item.c === 0}">

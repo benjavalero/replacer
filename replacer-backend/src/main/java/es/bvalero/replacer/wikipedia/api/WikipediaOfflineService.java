@@ -29,7 +29,13 @@ class WikipediaOfflineService implements WikipediaService {
     }
 
     private WikipediaUser getOfflineUser(WikipediaLanguage lang) {
-        return WikipediaUser.builder().lang(lang).name("offline").group(WikipediaUserGroup.AUTO_CONFIRMED).build();
+        return WikipediaUser
+            .builder()
+            .lang(lang)
+            .name("offline")
+            .group(WikipediaUserGroup.AUTO_CONFIRMED)
+            .group(WikipediaUserGroup.BOT)
+            .build();
     }
 
     @Override

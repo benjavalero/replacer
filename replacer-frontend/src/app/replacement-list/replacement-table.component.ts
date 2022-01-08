@@ -1,8 +1,10 @@
-import { Component, Input, OnChanges } from '@angular/core';
+import { Component, Input, OnChanges, OnInit } from '@angular/core';
 import { faCheckDouble, faList } from '@fortawesome/free-solid-svg-icons';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { UserConfigService } from '../user/user-config.service';
+import { User } from '../user/user.model';
 import { UserService } from '../user/user.service';
 import { SubtypeCount } from './replacement-list.model';
 import { ReplacementListService } from './replacement-list.service';
@@ -14,7 +16,7 @@ import { rotate, SortDirection } from './sort-direction.model';
   templateUrl: './replacement-table.component.html',
   styleUrls: ['./replacement-table.component.css']
 })
-export class ReplacementTableComponent implements OnChanges {
+export class ReplacementTableComponent implements OnInit, OnChanges {
   private readonly PAGE_SIZE = 8;
   private readonly MAX_SIZE = 3;
 
@@ -22,6 +24,8 @@ export class ReplacementTableComponent implements OnChanges {
   @Input() replacementCounts: SubtypeCount[];
 
   filteredItems: SubtypeCount[];
+
+  user$!: Observable<User>;
 
   // Filters
   sortColumn: string;
@@ -54,6 +58,10 @@ export class ReplacementTableComponent implements OnChanges {
     this.pageValue = 1;
 
     this.pageListUrl = `${environment.apiUrl}/pages?lang=${this.userConfigService.lang}&user=${this.userService.userName}`;
+  }
+
+  ngOnInit() {
+    this.user$ = this.userService.user$;
   }
 
   ngOnChanges() {
