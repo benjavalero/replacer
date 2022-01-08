@@ -6,6 +6,7 @@ import es.bvalero.replacer.common.util.WikipediaDateUtils;
 import es.bvalero.replacer.wikipedia.*;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -18,7 +19,7 @@ import org.springframework.stereotype.Service;
 
 /** Wikipedia service implementation using classic Wikipedia API */
 @Slf4j
-@Loggable(LogLevel.TRACE)
+@Loggable(value = LogLevel.TRACE, skipResult = true, warnOver = 10, warnUnit = TimeUnit.SECONDS)
 @Service
 @Profile("!offline")
 class WikipediaApiService implements WikipediaService {
