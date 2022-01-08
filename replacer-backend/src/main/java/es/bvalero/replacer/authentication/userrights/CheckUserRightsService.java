@@ -1,4 +1,4 @@
-package es.bvalero.replacer.authentication.useradmin;
+package es.bvalero.replacer.authentication.userrights;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
@@ -15,8 +15,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
-public class CheckUserAdminService {
-
+public class CheckUserRightsService {
 
     @Autowired
     private WikipediaService wikipediaService;
@@ -32,7 +31,7 @@ public class CheckUserAdminService {
         .expireAfterWrite(1, TimeUnit.DAYS)
         .build();
 
-    public boolean isAdminUser(String username) {
+    public boolean isAdmin(String username) {
         return this.adminUser.equals(username);
     }
 

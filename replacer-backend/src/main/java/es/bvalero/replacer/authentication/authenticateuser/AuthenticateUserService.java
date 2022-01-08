@@ -3,7 +3,7 @@ package es.bvalero.replacer.authentication.authenticateuser;
 import es.bvalero.replacer.authentication.AuthenticationException;
 import es.bvalero.replacer.authentication.oauth.OAuthService;
 import es.bvalero.replacer.authentication.oauth.RequestToken;
-import es.bvalero.replacer.authentication.useradmin.CheckUserAdminService;
+import es.bvalero.replacer.authentication.userrights.CheckUserRightsService;
 import es.bvalero.replacer.common.domain.AccessToken;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.dto.AccessTokenDto;
@@ -25,7 +25,7 @@ public class AuthenticateUserService {
     private WikipediaService wikipediaService;
 
     @Autowired
-    private CheckUserAdminService checkUserAdminService;
+    private CheckUserRightsService checkUserRightsService;
 
     public AuthenticatedUser authenticateUser(WikipediaLanguage lang, RequestToken requestToken, String oAuthVerifier)
         throws AuthenticationException {
@@ -45,7 +45,7 @@ public class AuthenticateUserService {
             .name(wikipediaUser.getName())
             .hasRights(wikipediaUser.hasRights())
             .bot(wikipediaUser.isBot())
-            .admin(checkUserAdminService.isAdminUser(wikipediaUser.getName()))
+            .admin(checkUserRightsService.isAdmin(wikipediaUser.getName()))
             .accessToken(AccessTokenDto.fromDomain(accessToken))
             .build();
     }

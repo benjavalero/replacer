@@ -7,7 +7,7 @@ import static org.mockito.Mockito.when;
 import es.bvalero.replacer.authentication.AuthenticationException;
 import es.bvalero.replacer.authentication.oauth.OAuthService;
 import es.bvalero.replacer.authentication.oauth.RequestToken;
-import es.bvalero.replacer.authentication.useradmin.CheckUserAdminService;
+import es.bvalero.replacer.authentication.userrights.CheckUserRightsService;
 import es.bvalero.replacer.common.domain.AccessToken;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.dto.AccessTokenDto;
@@ -30,7 +30,7 @@ class AuthenticateUserServiceTest {
     private WikipediaService wikipediaService;
 
     @Mock
-    private CheckUserAdminService checkUserAdminService;
+    private CheckUserRightsService checkUserRightsService;
 
     @InjectMocks
     private AuthenticateUserService authenticateUserService;
@@ -59,7 +59,7 @@ class AuthenticateUserServiceTest {
         when(wikipediaService.getAuthenticatedUser(lang, accessToken)).thenReturn(wikipediaUser);
 
         String username = "C";
-        when(checkUserAdminService.isAdminUser(username)).thenReturn(true);
+        when(checkUserRightsService.isAdmin(username)).thenReturn(true);
 
         AuthenticatedUser actual = authenticateUserService.authenticateUser(lang, requestToken, oAuthVerifier);
 
@@ -75,6 +75,6 @@ class AuthenticateUserServiceTest {
 
         verify(oAuthService).getAccessToken(requestToken, oAuthVerifier);
         verify(wikipediaService).getAuthenticatedUser(lang, accessToken);
-        verify(checkUserAdminService).isAdminUser(username);
+        verify(checkUserRightsService).isAdmin(username);
     }
 }

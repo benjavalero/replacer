@@ -1,7 +1,7 @@
 package es.bvalero.replacer.dump;
 
 import com.github.rozidan.springboot.logger.Loggable;
-import es.bvalero.replacer.authentication.useradmin.CheckUserAdminService;
+import es.bvalero.replacer.authentication.userrights.CheckUserRightsService;
 import es.bvalero.replacer.common.dto.CommonQueryParameters;
 import es.bvalero.replacer.common.exception.ForbiddenException;
 import io.swagger.v3.oas.annotations.Operation;
@@ -23,7 +23,7 @@ public class DumpController {
     private DumpManager dumpManager;
 
     @Autowired
-    private CheckUserAdminService checkUserAdminService;
+    private CheckUserRightsService checkUserRightsService;
 
     @Operation(summary = "Find the status of the current (or the last) dump indexing")
     @Loggable(skipResult = true)
@@ -44,7 +44,7 @@ public class DumpController {
     }
 
     private void validateAdminUser(String user) throws ForbiddenException {
-        if (!checkUserAdminService.isAdminUser(user)) {
+        if (!checkUserRightsService.isAdmin(user)) {
             LOGGER.error("Unauthorized user: {}", user);
             throw new ForbiddenException();
         }

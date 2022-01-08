@@ -8,7 +8,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import es.bvalero.replacer.authentication.useradmin.CheckUserAdminService;
+import es.bvalero.replacer.authentication.userrights.CheckUserRightsService;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -30,7 +30,7 @@ class DumpControllerTest {
     private DumpManager dumpManager;
 
     @MockBean
-    private CheckUserAdminService checkUserAdminService;
+    private CheckUserRightsService checkUserRightsService;
 
     @Test
     void testGetDumpIndexingStatus() throws Exception {
@@ -50,7 +50,7 @@ class DumpControllerTest {
             start,
             end
         );
-        when(checkUserAdminService.isAdminUser(anyString())).thenReturn(true);
+        when(checkUserRightsService.isAdmin(anyString())).thenReturn(true);
         when(dumpManager.getDumpIndexingStatus()).thenReturn(indexingStatus);
 
         mvc
@@ -64,43 +64,43 @@ class DumpControllerTest {
             .andExpect(jsonPath("$.start", is(DumpLocalDateTimeSerializer.convertLocalDateTimeToMilliseconds(start))))
             .andExpect(jsonPath("$.end", is(DumpLocalDateTimeSerializer.convertLocalDateTimeToMilliseconds(end))));
 
-        verify(checkUserAdminService).isAdminUser(anyString());
+        verify(checkUserRightsService).isAdmin(anyString());
         verify(dumpManager).getDumpIndexingStatus();
     }
 
     @Test
     void testGetDumpIndexingStatusNotAdmin() throws Exception {
-        when(checkUserAdminService.isAdminUser(anyString())).thenReturn(false);
+        when(checkUserRightsService.isAdmin(anyString())).thenReturn(false);
 
         mvc
             .perform(get("/api/dump-indexing?user=x&lang=es").contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isForbidden());
 
-        verify(checkUserAdminService).isAdminUser(anyString());
+        verify(checkUserRightsService).isAdmin(anyString());
         verify(dumpManager, never()).indexLatestDumpFiles();
     }
 
     @Test
     void testPostStart() throws Exception {
-        when(checkUserAdminService.isAdminUser(anyString())).thenReturn(true);
+        when(checkUserRightsService.isAdmin(anyString())).thenReturn(true);
 
         mvc
             .perform(post("/api/dump-indexing?user=x&lang=es").contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isAccepted());
 
-        verify(checkUserAdminService).isAdminUser(anyString());
+        verify(checkUserRightsService).isAdmin(anyString());
         verify(dumpManager).indexLatestDumpFiles();
     }
 
     @Test
     void testPostStartNotAdmin() throws Exception {
-        when(checkUserAdminService.isAdminUser(anyString())).thenReturn(false);
+        when(checkUserRightsService.isAdmin(anyString())).thenReturn(false);
 
         mvc
             .perform(post("/api/dump-indexing?user=x&lang=es").contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isForbidden());
 
-        verify(checkUserAdminService).isAdminUser(anyString());
+        verify(checkUserRightsService).isAdmin(anyString());
         verify(dumpManager, never()).indexLatestDumpFiles();
     }
 }

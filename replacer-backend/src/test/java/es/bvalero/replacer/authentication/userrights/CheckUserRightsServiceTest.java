@@ -1,4 +1,4 @@
-package es.bvalero.replacer.authentication.useradmin;
+package es.bvalero.replacer.authentication.userrights;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -14,25 +14,25 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-class CheckUserAdminServiceTest {
+class CheckUserRightsServiceTest {
 
     @Mock
     private WikipediaService wikipediaService;
 
     @InjectMocks
-    private CheckUserAdminService checkUserAdminService;
+    private CheckUserRightsService checkUserRightsService;
 
     @BeforeEach
     public void setUp() {
-        checkUserAdminService = new CheckUserAdminService();
-        checkUserAdminService.setAdminUser("X");
+        checkUserRightsService = new CheckUserRightsService();
+        checkUserRightsService.setAdminUser("X");
         MockitoAnnotations.openMocks(this);
     }
 
     @Test
-    void testIsAdminUser() {
-        assertTrue(checkUserAdminService.isAdminUser("X"));
-        assertFalse(checkUserAdminService.isAdminUser("Z"));
+    void testIsAdmin() {
+        assertTrue(checkUserRightsService.isAdmin("X"));
+        assertFalse(checkUserRightsService.isAdmin("Z"));
     }
 
     @Test
@@ -41,7 +41,7 @@ class CheckUserAdminServiceTest {
         when(user.isBot()).thenReturn(true);
         when(wikipediaService.getWikipediaUser(any(WikipediaLanguage.class), anyString())).thenReturn(user);
 
-        assertTrue(checkUserAdminService.isBot(WikipediaLanguage.getDefault(), "X"));
+        assertTrue(checkUserRightsService.isBot(WikipediaLanguage.getDefault(), "X"));
     }
 
     @Test
@@ -50,7 +50,7 @@ class CheckUserAdminServiceTest {
         when(user.isBot()).thenReturn(false);
         when(wikipediaService.getWikipediaUser(any(WikipediaLanguage.class), anyString())).thenReturn(user);
 
-        assertFalse(checkUserAdminService.isBot(WikipediaLanguage.getDefault(), "X"));
+        assertFalse(checkUserRightsService.isBot(WikipediaLanguage.getDefault(), "X"));
     }
 
     @Test
@@ -58,6 +58,6 @@ class CheckUserAdminServiceTest {
         when(wikipediaService.getWikipediaUser(any(WikipediaLanguage.class), anyString()))
             .thenThrow(new WikipediaException());
 
-        assertFalse(checkUserAdminService.isBot(WikipediaLanguage.getDefault(), "X"));
+        assertFalse(checkUserRightsService.isBot(WikipediaLanguage.getDefault(), "X"));
     }
 }
