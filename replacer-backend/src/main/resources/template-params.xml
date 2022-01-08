@@ -20,6 +20,7 @@
         <value>caja de cita|*</value>
         <value>commons|*</value>
         <value>commonscat|*</value>
+        <value>convertir|*</value>
         <value>DEFAULTSORT|*</value>    <!-- It usually contains words without accents for the sake of sorting -->
         <value>enlace roto|*</value>
         <value>facebook|*</value>
