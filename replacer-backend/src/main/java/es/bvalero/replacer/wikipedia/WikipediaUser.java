@@ -3,9 +3,11 @@ package es.bvalero.replacer.wikipedia;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import java.util.Set;
 import lombok.*;
+import lombok.experimental.NonFinal;
 import org.springframework.lang.NonNull;
 
 /** User in Wikipedia */
+@NonFinal
 @Value
 @Builder
 public class WikipediaUser {
