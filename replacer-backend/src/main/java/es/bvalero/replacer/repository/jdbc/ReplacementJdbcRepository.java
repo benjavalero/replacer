@@ -128,10 +128,10 @@ class ReplacementJdbcRepository
     @Override
     public void updateReviewerByType(WikipediaLanguage lang, ReplacementType type, String reviewer) {
         String sql =
-            "UPDATE replacement SET reviewer=:system " +
+            "UPDATE replacement SET reviewer=:reviewer " +
             "WHERE lang = :lang AND type = :type AND subtype = :subtype AND reviewer IS NULL";
         SqlParameterSource namedParameters = new MapSqlParameterSource()
-            .addValue("system", reviewer)
+            .addValue("reviewer", reviewer)
             .addValue("lang", lang.getCode())
             .addValue("type", type.getKind().getLabel())
             .addValue("subtype", type.getSubtype());
