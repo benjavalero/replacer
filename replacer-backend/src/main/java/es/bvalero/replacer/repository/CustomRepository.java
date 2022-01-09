@@ -8,6 +8,9 @@ public interface CustomRepository {
     /** Add a custom replacement */
     void addCustom(CustomModel entity);
 
+    /** Update the reviewer of all the custom replacements of the given page and type to review */
+    void updateReviewerByPageAndType(WikipediaPageId wikipediaPageId, String replacement, boolean cs, String reviewer);
+
     /** Find the pages reviewed for the given custom replacement and return the IDs */
     Collection<Integer> findPageIdsReviewed(WikipediaLanguage lang, String replacement, boolean cs);
 

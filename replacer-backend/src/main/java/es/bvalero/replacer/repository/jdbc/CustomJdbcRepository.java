@@ -25,16 +25,40 @@ class CustomJdbcRepository implements CustomRepository {
     @Override
     public void addCustom(CustomModel entity) {
         final String sql =
-            "INSERT INTO custom (article_id, lang, replacement, cs, reviewer) " +
-            "VALUES (:pageId, :lang, :replacement, :cs, :reviewer)";
+            "INSERT INTO custom (article_id, lang, replacement, cs, position, reviewer) " +
+            "VALUES (:pageId, :lang, :replacement, :cs, :position, :reviewer)";
         SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(entity);
         jdbcTemplate.update(sql, namedParameters);
     }
 
+    @Override
+    public void updateReviewerByPageAndType(
+        WikipediaPageId wikipediaPageId,
+        String replacement,
+        boolean cs,
+        String reviewer
+    ) {
+        String from = "UPDATE custom SET reviewer=:reviewer ";
+        String where =
+            "WHERE lang = :lang AND article_id = :pageId AND replacement = :replacement AND cs = :cs AND reviewer IS NULL ";
+        MapSqlParameterSource namedParameters = new MapSqlParameterSource()
+            .addValue("reviewer", reviewer)
+            .addValue("lang", wikipediaPageId.getLang().getCode())
+            .addValue("pageId", wikipediaPageId.getPageId())
+            .addValue("replacement", replacement)
+            .addValue("cs", cs ? 1 : 0);
+
+        String sql = from + where;
+        jdbcTemplate.update(sql, namedParameters);
+    }
+
+    // TODO: Make the column reviewer nullable and check here if the reviewer is not null
     // Using DISTINCT makes the query not to use to wanted index "idx_count"
     @Override
     public Collection<Integer> findPageIdsReviewed(WikipediaLanguage lang, String replacement, boolean cs) {
-        String sql = "SELECT article_id FROM custom WHERE lang = :lang AND replacement = :replacement AND cs = :cs";
+        String sql =
+            "SELECT article_id FROM custom " +
+            "WHERE lang = :lang AND replacement = :replacement AND cs = :cs AND reviewer IS NOT NULL";
         SqlParameterSource namedParameters = new MapSqlParameterSource()
             .addValue("lang", lang.getCode())
             .addValue("replacement", replacement)

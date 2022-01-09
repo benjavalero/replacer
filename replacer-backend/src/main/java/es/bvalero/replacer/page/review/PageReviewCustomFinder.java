@@ -2,10 +2,7 @@ package es.bvalero.replacer.page.review;
 
 import es.bvalero.replacer.common.domain.*;
 import es.bvalero.replacer.page.findreplacement.FindReplacementsService;
-import es.bvalero.replacer.repository.CustomRepository;
-import es.bvalero.replacer.repository.PageIndexRepository;
-import es.bvalero.replacer.repository.PageModel;
-import es.bvalero.replacer.repository.PageRepository;
+import es.bvalero.replacer.repository.*;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.wikipedia.WikipediaSearchResult;
 import es.bvalero.replacer.wikipedia.WikipediaService;
@@ -115,9 +112,14 @@ class PageReviewCustomFinder extends PageReviewFinder {
             pageRepository.addPages(List.of(buildNewPage(page)));
         }
 
-        // We do nothing in the database in case the list is empty
+        // We add the found replacements to the database but as not reviewed
         // We want to review the page every time in case anything has changed
-        return findReplacementsService.findCustomReplacements(page, options);
+        Collection<PageReplacement> replacements = findReplacementsService.findCustomReplacements(page, options);
+        for (PageReplacement replacement : replacements) {
+            customRepository.addCustom(mapPageCustomReplacement(page, options, replacement));
+        }
+
+        return replacements;
     }
 
     private PageModel buildNewPage(WikipediaPage page) {
@@ -128,6 +130,21 @@ class PageReviewCustomFinder extends PageReviewFinder {
             .title(page.getTitle())
             .lastUpdate(page.getLastUpdate().toLocalDate())
             .replacements(Collections.emptyList())
+            .build();
+    }
+
+    private CustomModel mapPageCustomReplacement(
+        WikipediaPage page,
+        PageReviewOptions options,
+        PageReplacement replacement
+    ) {
+        return CustomModel
+            .builder()
+            .lang(page.getId().getLang().getCode())
+            .pageId(page.getId().getPageId())
+            .replacement(options.getType().getSubtype())
+            .cs((byte) (Boolean.TRUE.equals(options.getCs()) ? 1 : 0))
+            .position(replacement.getStart())
             .build();
     }
 }

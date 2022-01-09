@@ -26,5 +26,8 @@ public class CustomModel {
     Byte cs;
 
     @NonNull
+    Integer position;
+
+    @Nullable
     String reviewer;
 }

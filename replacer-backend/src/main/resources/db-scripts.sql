@@ -9,7 +9,7 @@ CREATE TABLE page (
 CREATE TABLE replacement (
     id INT NOT NULL AUTO_INCREMENT,
     article_id INT NOT NULL,
-    lang VARCHAR(2),
+    lang VARCHAR(2) NOT NULL,
     type VARCHAR(25) NOT NULL,
     subtype VARCHAR(100) COLLATE utf8mb4_bin NOT NULL,
     position INT NOT NULL DEFAULT 0,
@@ -38,7 +38,8 @@ CREATE TABLE custom (
     lang VARCHAR(2) NOT NULL,
     replacement VARCHAR(100) COLLATE utf8mb4_bin NOT NULL,
     cs TINYINT(1) NOT NULL DEFAULT 0,
-    reviewer VARCHAR(100) NOT NULL, -- In order to make the index work
+    position INT NOT NULL DEFAULT 0, -- So we can move items to the replacements table
+    reviewer VARCHAR(100), -- In order to make the index work
     PRIMARY KEY (id)
 );
 

@@ -195,7 +195,7 @@ class PageReviewCustomFinderTest {
         verify(wikipediaService).searchByText(lang, NAMESPACES, replacement, true, 0, CACHE_SIZE);
         verify(customRepository).findPageIdsReviewed(lang, replacement, true);
         verify(wikipediaService).getPageById(wikipediaPageId);
-        verify(customRepository, never()).addCustom(any(CustomModel.class));
+        verify(customRepository).addCustom(any(CustomModel.class));
     }
 
     @Test
@@ -320,7 +320,7 @@ class PageReviewCustomFinderTest {
         verify(wikipediaService).searchByText(lang, NAMESPACES, replacement, true, 0, CACHE_SIZE);
         verify(customRepository).findPageIdsReviewed(lang, replacement, true);
         verify(wikipediaService).getPageById(wikipediaPageId2);
-        verify(customRepository, never()).addCustom(any(CustomModel.class));
+        verify(customRepository).addCustom(any(CustomModel.class));
     }
 
     @Test
@@ -474,6 +474,7 @@ class PageReviewCustomFinderTest {
         verify(wikipediaService, times(2)).searchByText(lang, NAMESPACES, replacement, true, 0, CACHE_SIZE);
         verify(customRepository, times(2)).findPageIdsReviewed(lang, replacement, true);
         verify(wikipediaService, times(4)).getPageById(any(WikipediaPageId.class));
+        verify(customRepository, times(4)).addCustom(any(CustomModel.class));
     }
 
     @Test
@@ -538,5 +539,6 @@ class PageReviewCustomFinderTest {
         verify(wikipediaService).searchByText(lang, NAMESPACES, replacement, true, 2 * CACHE_SIZE, CACHE_SIZE);
         verify(customRepository, times(2)).findPageIdsReviewed(lang, replacement, true);
         verify(wikipediaService, times(4)).getPageById(any(WikipediaPageId.class));
+        verify(customRepository, never()).addCustom(any(CustomModel.class));
     }
 }

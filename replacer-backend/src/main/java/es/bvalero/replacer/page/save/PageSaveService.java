@@ -110,7 +110,7 @@ class PageSaveService {
         // Custom replacements don't exist in the database to be reviewed
         String subtype = options.getType().getSubtype();
         boolean cs = options.getCs() != null && Boolean.TRUE.equals(options.getCs());
-        customRepository.addCustom(buildCustomReviewed(pageId, subtype, cs, reviewer));
+        customRepository.updateReviewerByPageAndType(pageId, subtype, cs, reviewer);
     }
 
     private CustomModel buildCustomReviewed(
