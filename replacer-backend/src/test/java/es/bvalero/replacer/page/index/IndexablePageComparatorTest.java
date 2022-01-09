@@ -151,7 +151,7 @@ class IndexablePageComparatorTest {
 
         // Existing replacements in DB
         IndexableReplacement r1db = r1.withTouched(false); // Trick to clone and match with the one found to index
-        IndexableReplacement r2db = r2.withReviewer("");
+        IndexableReplacement r2db = r2.setSystemReviewed(); // System is just a normal user here
         IndexableReplacement r6db = IndexableReplacement
             .builder()
             .indexablePageId(pageId)
