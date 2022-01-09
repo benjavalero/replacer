@@ -62,19 +62,22 @@ public class UppercaseFinder implements ImmutableFinder, PropertyChangeListener 
 
     private static final String TIMELINE_TEXT = "text:";
 
+    private static final String PARAGRAPH_START = "\n\n";
+
     @org.intellij.lang.annotations.RegExp
     private static final String CLASS_PUNCTUATION = "[=#*.!]";
 
     @org.intellij.lang.annotations.RegExp
     private static final String REGEX_UPPERCASE_PUNCTUATION = String.format(
-        "(%s|%s|%s|%s|%s|%s|%s)<Zs>*(\\[\\[)?(%%s)(]])?",
+        "(%s|%s|%s|%s|%s|%s|%s|%s)<Zs>*(\\[\\[)?(%%s)(]])?",
         CLASS_PUNCTUATION,
         FIRST_CELL_SEPARATOR,
         CELL_SEPARATOR,
         CAPTION_SEPARATOR,
         REF_END_TAG,
         CELL_HTML_TAG,
-        TIMELINE_TEXT
+        TIMELINE_TEXT,
+        PARAGRAPH_START
     );
 
     @Autowired

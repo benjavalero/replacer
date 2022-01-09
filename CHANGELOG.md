@@ -2,6 +2,7 @@
 
 ## 2.15.0 (??)
 - Page list feature can only be used by bot users
+- Ignore uppercase misspellings when starting a paragraph
 
 ## 2.14.8 (7 Jan 2022)
 - Fix detection of duplicated replacements

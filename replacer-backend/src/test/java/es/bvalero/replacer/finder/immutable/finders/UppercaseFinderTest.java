@@ -64,6 +64,7 @@ class UppercaseFinderTest {
             "=== Febrero ===", // Header
             "=== [[Febrero]] ===", // Header with link
             "</ref> Febrero y tal", // After reference
+            "\n\nFebrero y marzo", // Start of paragraph
         }
     )
     void testUppercaseAfter(String text) {
