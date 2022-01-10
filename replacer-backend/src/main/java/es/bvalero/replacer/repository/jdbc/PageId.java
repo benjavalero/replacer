@@ -13,8 +13,6 @@ class PageId {
     @NonNull
     Integer pageId;
 
-    String system = "system";
-
     static PageId of(WikipediaPageId wikipediaPageId) {
         return of(wikipediaPageId.getLang().getCode(), wikipediaPageId.getPageId());
     }
