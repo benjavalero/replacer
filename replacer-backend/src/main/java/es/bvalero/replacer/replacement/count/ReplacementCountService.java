@@ -5,6 +5,9 @@ import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.repository.ReplacementTypeRepository;
 import es.bvalero.replacer.repository.ResultCount;
 import java.util.Collection;
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +17,17 @@ class ReplacementCountService {
     @Autowired
     private ReplacementTypeRepository replacementTypeRepository;
 
-    Collection<ResultCount<ReplacementType>> countReplacementsGroupedByType(WikipediaLanguage lang) {
-        return replacementTypeRepository.countReplacementsByType(lang);
+    Collection<TypeCount> countReplacementsGroupedByType(WikipediaLanguage lang) {
+        return toDto(replacementTypeRepository.countReplacementsByType(lang));
+    }
+
+    private Collection<TypeCount> toDto(Collection<ResultCount<ReplacementType>> counts) {
+        final Map<String, TypeCount> typeCounts = new TreeMap<>();
+        for (ResultCount<ReplacementType> count : counts) {
+            String type = count.getKey().getKind().getLabel();
+            TypeCount typeCount = typeCounts.computeIfAbsent(type, TypeCount::of);
+            typeCount.add(SubtypeCount.of(count.getKey().getSubtype(), count.getCount()));
+        }
+        return typeCounts.values().stream().sorted().collect(Collectors.toUnmodifiableList());
     }
 }
