@@ -5,7 +5,6 @@ import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.common.domain.WikipediaPageId;
 import es.bvalero.replacer.page.review.PageReviewOptions;
 import es.bvalero.replacer.page.review.PageReviewOptionsType;
-import es.bvalero.replacer.repository.CustomModel;
 import es.bvalero.replacer.repository.CustomRepository;
 import es.bvalero.replacer.repository.PageRepository;
 import es.bvalero.replacer.repository.ReplacementTypeRepository;
@@ -111,21 +110,5 @@ class PageSaveService {
         String subtype = options.getType().getSubtype();
         boolean cs = options.getCs() != null && Boolean.TRUE.equals(options.getCs());
         customRepository.updateReviewerByPageAndType(pageId, subtype, cs, reviewer);
-    }
-
-    private CustomModel buildCustomReviewed(
-        WikipediaPageId wikipediaPageId,
-        String replacement,
-        boolean cs,
-        String reviewer
-    ) {
-        return CustomModel
-            .builder()
-            .lang(wikipediaPageId.getLang().getCode())
-            .pageId(wikipediaPageId.getPageId())
-            .replacement(replacement)
-            .cs((byte) (cs ? 1 : 0))
-            .reviewer(reviewer)
-            .build();
     }
 }
