@@ -1,12 +1,9 @@
 package es.bvalero.replacer.page.review;
 
-import static es.bvalero.replacer.repository.ReplacementRepository.REVIEWER_SYSTEM;
-
 import es.bvalero.replacer.common.domain.PageReplacement;
 import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.page.index.PageIndexResult;
 import es.bvalero.replacer.repository.PageRepository;
-import es.bvalero.replacer.repository.ReplacementTypeRepository;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -18,14 +15,6 @@ class PageReviewTypeSubtypeFinder extends PageReviewFinder {
 
     @Autowired
     private PageRepository pageRepository;
-
-    @Autowired
-    private ReplacementTypeRepository replacementTypeRepository;
-
-    @Override
-    protected void markAsReviewed(PageReviewOptions options) {
-        replacementTypeRepository.updateReviewerByType(options.getLang(), options.getType(), REVIEWER_SYSTEM);
-    }
 
     @Override
     PageSearchResult findPageIdsToReview(PageReviewOptions options) {

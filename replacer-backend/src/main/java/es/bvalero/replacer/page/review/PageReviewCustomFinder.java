@@ -61,6 +61,8 @@ class PageReviewCustomFinder extends PageReviewFinder {
 
             while (totalToReview >= 0) {
                 // Discard the pages already reviewed
+                // For the moment we don't check the positions of the replacements,
+                // which means that once a custom replacement is reviewed for a page it is done for ever.
                 for (Integer reviewId : reviewedIds) {
                     if (pageIds.remove(reviewId)) {
                         totalToReview--;
@@ -103,6 +105,11 @@ class PageReviewCustomFinder extends PageReviewFinder {
             offset,
             getCacheSize()
         );
+    }
+
+    @Override
+    boolean stopWhenEmptyTotal() {
+        return true;
     }
 
     @Override

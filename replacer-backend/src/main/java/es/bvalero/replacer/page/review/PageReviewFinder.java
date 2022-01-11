@@ -53,7 +53,7 @@ abstract class PageReviewFinder {
     @Getter(AccessLevel.PROTECTED)
     private Integer offset;
 
-    protected void incrementOffset(int increment) {
+    void incrementOffset(int increment) {
         this.offset = this.offset == null ? 0 : this.offset + increment;
     }
 
@@ -120,25 +120,29 @@ abstract class PageReviewFinder {
         return result.popPageId();
     }
 
+    /** Find and cache the list of pages to review for the given options. Returns false in case of no pages to review. */
     @VisibleForTesting
     boolean loadCache(PageReviewOptions options) {
-        // In case the cached result list is empty but also the total then quit
-        // Else reload the cached result list
         String key = buildCacheKey(options);
         PageSearchResult result = cachedPageIds.getIfPresent(key);
-        if (result != null && result.isEmptyTotal()) {
-            markAsReviewed(options);
+        assert result == null || result.isEmpty(); // !cacheContainsKey
+
+        if (result != null && result.isEmptyTotal() && stopWhenEmptyTotal()) {
+            // In some cases, in particular for custom replacements found with Wikipedia search,
+            // as we are not marking the non-reviewed pages in the database,
+            // we don't want to find the pages to review in an infinite loop.
+            // It will be done again once the related cache expires.
             return false;
-        } else {
-            PageSearchResult pageIds = findPageIdsToReview(options);
-            cachedPageIds.put(key, pageIds);
-            return !pageIds.isEmpty();
         }
+
+        // Reload the cached result list
+        PageSearchResult pageIds = findPageIdsToReview(options);
+        cachedPageIds.put(key, pageIds);
+        return !pageIds.isEmpty();
     }
 
-    /** Mark as reviewed all existing replacements matching the given options */
-    protected void markAsReviewed(PageReviewOptions options) {
-        // By default, do nothing.
+    boolean stopWhenEmptyTotal() {
+        return false;
     }
 
     abstract PageSearchResult findPageIdsToReview(PageReviewOptions options);
@@ -201,7 +205,7 @@ abstract class PageReviewFinder {
 
     abstract Collection<PageReplacement> findAllReplacements(WikipediaPage page, PageReviewOptions options);
 
-    protected PageIndexResult indexReplacements(WikipediaPage page) {
+    PageIndexResult indexReplacements(WikipediaPage page) {
         LOGGER.trace("Update page replacements in database");
         return pageIndexService.indexPage(page);
     }
