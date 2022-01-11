@@ -17,7 +17,7 @@ class TitleFinderTest {
     @Test
     void testTitleFinder() {
         String title = "11 Paris, Hilton";
-        String content = "En el hotel hilton de Paris.";
+        String content = "En el hotel Hilton de Paris.";
 
         ImmutableFinder titleFinder = new TitleFinder();
         FinderPage page = FinderPage.of(WikipediaLanguage.getDefault(), content, title);

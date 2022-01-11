@@ -9,10 +9,11 @@ import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
 import es.bvalero.replacer.finder.util.LinearMatchResult;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Arrays;
 import java.util.List;
 import java.util.regex.MatchResult;
 import org.apache.commons.collections4.IterableUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
@@ -31,33 +32,13 @@ class TitleFinder extends ImmutableCheckedFinder {
         // As the titles are not very long and therefore they have few words
         // the best approach is to iterate the list of words and find them in the text
         return IterableUtils.chainedIterable(
-            findWordsInText(page.getTitle())
-                .stream()
+            Arrays
+                .stream(page.getTitle().split("\\P{L}+"))
+                .filter(StringUtils::isNotEmpty)
                 .map(TitleFinder.TitleLinearFinder::new)
                 .map(finder -> finder.find(page))
                 .toArray(Iterable[]::new)
         );
-    }
-
-    private Collection<String> findWordsInText(String text) {
-        final List<String> words = new ArrayList<>();
-        int start = -1;
-        for (int i = 0; i < text.length(); i++) {
-            if (Character.isLetter(text.charAt(i))) {
-                if (start < 0) {
-                    start = i;
-                }
-            } else {
-                if (start >= 0) {
-                    words.add(text.substring(start, i));
-                    start = -1;
-                }
-            }
-        }
-        if (start >= 0) {
-            words.add(text.substring(start));
-        }
-        return words;
     }
 
     @Override
@@ -82,18 +63,17 @@ class TitleFinder extends ImmutableCheckedFinder {
         @Nullable
         private MatchResult findResult(FinderPage page, int start) {
             final List<MatchResult> matches = new ArrayList<>();
-            final String content = FinderUtils.toLowerCase(page.getContent());
-            while (start >= 0 && start < content.length() && matches.isEmpty()) {
-                start = findTitleWord(content, start, word, matches);
+            while (start >= 0 && start < page.getContent().length() && matches.isEmpty()) {
+                start = findTitleWord(page.getContent(), start, word, matches);
             }
             return matches.isEmpty() ? null : matches.get(0);
         }
 
         private int findTitleWord(String text, int start, String word, List<MatchResult> matches) {
-            final String lowerCaseWord = FinderUtils.toLowerCase(word);
-            final int wordStart = text.indexOf(lowerCaseWord, start);
+            // Find the word case-sensitive improves the performance
+            final int wordStart = text.indexOf(word, start);
             if (wordStart >= 0) {
-                if (FinderUtils.isWordCompleteInText(wordStart, lowerCaseWord, text)) {
+                if (FinderUtils.isWordCompleteInText(wordStart, word, text)) {
                     matches.add(LinearMatchResult.of(wordStart, word));
                 }
                 return wordStart + word.length();
