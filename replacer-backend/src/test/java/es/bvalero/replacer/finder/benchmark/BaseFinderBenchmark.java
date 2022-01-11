@@ -1,6 +1,8 @@
 package es.bvalero.replacer.finder.benchmark;
 
+import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.common.exception.ReplacerException;
+import es.bvalero.replacer.finder.FinderPageMapper;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.wikipedia.api.WikipediaUtils;
 import java.util.List;
@@ -16,7 +18,7 @@ public abstract class BaseFinderBenchmark {
 
     protected void runBenchmark(List<BenchmarkFinder> finders, int warmUp, int iterations) throws ReplacerException {
         try {
-            List<String> sampleContents = WikipediaUtils.findSampleContents();
+            List<WikipediaPage> sampleContents = WikipediaUtils.findSampleContents();
 
             // Warm-up
             System.out.println("WARM-UP...");
@@ -29,16 +31,21 @@ public abstract class BaseFinderBenchmark {
         }
     }
 
-    private void run(List<BenchmarkFinder> finders, int numIterations, List<String> sampleContents, boolean print) {
+    private void run(
+        List<BenchmarkFinder> finders,
+        int numIterations,
+        List<WikipediaPage> sampleContents,
+        boolean print
+    ) {
         if (print) {
             System.out.println();
             System.out.println("FINDER\tTIME");
         }
-        sampleContents.forEach(text -> {
+        sampleContents.forEach(page -> {
             for (BenchmarkFinder finder : finders) {
                 long start = System.nanoTime();
                 for (int i = 0; i < numIterations; i++) {
-                    finder.findMatches(text);
+                    finder.findMatches(FinderPageMapper.fromDomain(page));
                 }
                 double end = (double) (System.nanoTime() - start) / 1000.0; // In µs
                 if (print) {
@@ -48,7 +55,7 @@ public abstract class BaseFinderBenchmark {
         });
     }
 
-    protected List<String> findSampleContents() throws ReplacerException {
+    protected List<WikipediaPage> findSampleContents() throws ReplacerException {
         try {
             return WikipediaUtils.findSampleContents();
         } catch (WikipediaException e) {

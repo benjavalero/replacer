@@ -2,9 +2,10 @@ package es.bvalero.replacer.finder.immutable.finders;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.config.XmlConfiguration;
-import es.bvalero.replacer.finder.FinderPage;
+import es.bvalero.replacer.finder.FinderPageMapper;
 import es.bvalero.replacer.finder.benchmark.BaseFinderBenchmark;
 import es.bvalero.replacer.finder.immutable.ImmutableFinder;
 import es.bvalero.replacer.finder.listing.find.ListingOfflineFinder;
@@ -72,7 +73,7 @@ class ImmutableFinderBenchmarkTest extends BaseFinderBenchmark {
     }
 
     private void run(List<ImmutableFinder> finders) throws ReplacerException {
-        List<String> sampleContents = findSampleContents();
+        List<WikipediaPage> sampleContents = findSampleContents();
 
         // Warm-up
         System.out.println("WARM-UP...");
@@ -82,17 +83,22 @@ class ImmutableFinderBenchmarkTest extends BaseFinderBenchmark {
         run(finders, ITERATIONS, sampleContents, true);
     }
 
-    private void run(List<ImmutableFinder> finders, int numIterations, List<String> sampleContents, boolean print) {
+    private void run(
+        List<ImmutableFinder> finders,
+        int numIterations,
+        List<WikipediaPage> sampleContents,
+        boolean print
+    ) {
         if (print) {
             System.out.println();
             System.out.println("FINDER\tTIME");
         }
-        sampleContents.forEach(text -> {
+        sampleContents.forEach(page -> {
             for (ImmutableFinder finder : finders) {
                 long start = System.nanoTime();
                 for (int i = 0; i < numIterations; i++) {
                     // Only transform the iterable without validating not to penalize the performance of the benchmark
-                    IterableUtils.toList(finder.find(FinderPage.of(text)));
+                    IterableUtils.toList(finder.find(FinderPageMapper.fromDomain(page)));
                 }
                 double end = (double) (System.nanoTime() - start) / 1000.0; // In µs
                 if (print) {

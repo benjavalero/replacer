@@ -15,6 +15,12 @@ public interface BenchmarkFinder extends Finder<BenchmarkResult> {
         return new HashSet<>(IterableUtils.toList(this.find(FinderPage.of(text))));
     }
 
+    @TestOnly
+    default Set<BenchmarkResult> findMatches(FinderPage page) {
+        // Only transform the iterable without validating not to penalize the performance of the benchmark
+        return new HashSet<>(IterableUtils.toList(this.find(page)));
+    }
+
     @Override
     default Iterable<MatchResult> findMatchResults(FinderPage page) {
         // As most benchmarks override the main method this will not be called
