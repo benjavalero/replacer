@@ -1,5 +1,8 @@
 # Versions
 
+## 2.15.1 (11 Jan 2022)
+- Consider the words in the page title as false positives
+
 ## 2.15.0 (9 Jan 2022)
 - Page list feature can only be used by bot users
 - Ignore uppercase misspellings when starting a paragraph
