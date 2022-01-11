@@ -3,7 +3,6 @@ package es.bvalero.replacer.finder.benchmark.person;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import es.bvalero.replacer.finder.benchmark.BenchmarkResult;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -18,7 +17,7 @@ class PersonFinderTest {
 
     @BeforeEach
     public void setUp() {
-        this.words = Arrays.asList("Sky", "Julio", "Los Angeles", "Tokyo");
+        this.words = Set.of("Sky", "Julio", "Los Angeles", "Tokyo");
 
         this.text = "En Sky News, Julio Álvarez, Los Angeles Lakers, Tokyo TV, José Julio García.";
 

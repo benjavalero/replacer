@@ -7,8 +7,8 @@ import es.bvalero.replacer.config.JsonMapperConfiguration;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.wikipedia.WikipediaUser;
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -44,7 +44,7 @@ class WikipediaApiServiceIT {
     void testGetPagesContent() throws WikipediaException {
         // We pass a null access token to retrieve an anonymous edit token
         Collection<WikipediaPage> pages = wikipediaService.getPagesByIds(
-            Arrays.asList(6219990, 6903884),
+            List.of(6219990, 6903884),
             WikipediaLanguage.SPANISH
         );
         assertNotNull(pages);

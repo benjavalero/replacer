@@ -3,7 +3,6 @@ package es.bvalero.replacer.finder.benchmark.uppercase;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import es.bvalero.replacer.finder.benchmark.BenchmarkResult;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -18,7 +17,7 @@ class UppercaseFinderTest {
 
     @BeforeEach
     public void setUp() {
-        this.words = Arrays.asList("Enero", "Febrero", "Lunes", "Martes");
+        this.words = Set.of("Enero", "Febrero", "Lunes", "Martes");
         this.text = "=Enero. Febrero, Lunes #  Martes.";
 
         this.expected = new HashSet<>();

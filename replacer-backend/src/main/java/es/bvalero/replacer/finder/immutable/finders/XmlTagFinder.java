@@ -4,7 +4,9 @@ import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.immutable.ImmutableCheckedFinder;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
 import es.bvalero.replacer.finder.util.LinearMatchResult;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 import java.util.regex.MatchResult;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
@@ -16,7 +18,7 @@ import org.springframework.stereotype.Component;
 class XmlTagFinder extends ImmutableCheckedFinder {
 
     // We want to avoid the XML comments to be captured by this
-    private static final Set<Character> FORBIDDEN_CHARS = new HashSet<>(Arrays.asList('#', '{', '}', '<', '>'));
+    private static final Set<Character> FORBIDDEN_CHARS = Set.of('#', '{', '}', '<', '>');
 
     @Override
     public int getMaxLength() {

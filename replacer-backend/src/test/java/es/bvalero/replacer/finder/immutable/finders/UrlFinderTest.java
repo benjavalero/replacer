@@ -4,8 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import es.bvalero.replacer.finder.immutable.Immutable;
 import es.bvalero.replacer.finder.immutable.ImmutableFinder;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -22,7 +20,7 @@ class UrlFinderTest {
         ImmutableFinder urlFinder = new UrlFinder();
         List<Immutable> matches = urlFinder.findList(text);
 
-        Set<String> expected = new HashSet<>(Arrays.asList(url1, url2));
+        Set<String> expected = Set.of(url1, url2);
         Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
         assertEquals(expected, actual);
     }

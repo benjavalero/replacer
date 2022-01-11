@@ -3,7 +3,6 @@ package es.bvalero.replacer.finder.benchmark.surname;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import es.bvalero.replacer.finder.benchmark.BenchmarkResult;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -18,7 +17,7 @@ class SurnameFinderTest {
 
     @BeforeEach
     public void setUp() {
-        this.words = Arrays.asList("Online", "Records", "de Verano", "Pinto");
+        this.words = Set.of("Online", "Records", "de Verano", "Pinto");
 
         this.text = "En News Online, Álvaro Pinto, Victor Records, Juegos Olímpicos de Verano, Juan Pintor.";
 

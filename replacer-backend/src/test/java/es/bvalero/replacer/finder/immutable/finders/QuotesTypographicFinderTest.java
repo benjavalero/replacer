@@ -4,8 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import es.bvalero.replacer.finder.immutable.Immutable;
 import es.bvalero.replacer.finder.immutable.ImmutableFinder;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -24,7 +22,7 @@ class QuotesTypographicFinderTest {
         ImmutableFinder quotesFinder = new QuotesTypographicFinder();
         List<Immutable> matches = quotesFinder.findList(text);
 
-        Set<String> expected = new HashSet<>(Arrays.asList(quotes1, quotes3));
+        Set<String> expected = Set.of(quotes1, quotes3);
         Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
         assertEquals(expected, actual);
     }

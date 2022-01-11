@@ -5,8 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import es.bvalero.replacer.config.XmlConfiguration;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
 import es.bvalero.replacer.finder.benchmark.BenchmarkResult;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.annotation.Resource;
@@ -33,7 +31,7 @@ class CompleteTagFinderTest {
         String tag6 = "<unknown>Unknown</unknown>";
         String tag7 = "<ref>Unclosed tag";
         this.text = String.format("En %s %s %s %s %s %s %s", tag1, tag2, tag3, tag4, tag5, tag6, tag7);
-        this.expected = new HashSet<>(Arrays.asList(tag1, tag2, tag3, tag5));
+        this.expected = Set.of(tag1, tag2, tag3, tag5);
     }
 
     @Test

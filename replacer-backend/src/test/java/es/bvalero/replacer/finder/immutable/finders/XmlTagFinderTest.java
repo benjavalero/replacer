@@ -5,8 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import es.bvalero.replacer.finder.immutable.Immutable;
 import es.bvalero.replacer.finder.immutable.ImmutableFinder;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -24,7 +22,7 @@ class XmlTagFinderTest {
         ImmutableFinder xmlTagFinder = new XmlTagFinder();
         List<Immutable> matches = xmlTagFinder.findList(text);
 
-        Set<String> expected = new HashSet<>(Arrays.asList(tag1, tag2, tag3));
+        Set<String> expected = Set.of(tag1, tag2, tag3);
         Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
         assertEquals(expected, actual);
     }

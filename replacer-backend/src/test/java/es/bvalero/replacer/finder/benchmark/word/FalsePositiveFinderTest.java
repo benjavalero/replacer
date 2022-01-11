@@ -3,7 +3,6 @@ package es.bvalero.replacer.finder.benchmark.word;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import es.bvalero.replacer.finder.benchmark.BenchmarkResult;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -18,7 +17,7 @@ class FalsePositiveFinderTest {
 
     @BeforeEach
     public void setUp() {
-        this.words = Arrays.asList("Aaron Carter", "Victoria Abril");
+        this.words = Set.of("Aaron Carter", "Victoria Abril");
         this.text = "En Abril Victoria Abril salió con Aaron Carter.";
 
         this.expected = new HashSet<>();

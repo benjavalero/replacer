@@ -151,7 +151,7 @@ class PageReviewNoTypeFinderTest {
     void testFindRandomPageToReviewNoTypeSecondResult() throws ReplacerException {
         // 2 results in DB
         when(pageRepository.findPageIdsToReview(any(WikipediaLanguage.class), anyInt()))
-            .thenReturn(new ArrayList<>(Arrays.asList(randomId, randomId2)));
+            .thenReturn(List.of(randomId, randomId2));
 
         // Only the page 2 exists in Wikipedia
         when(wikipediaService.getPageById(randomPageId)).thenReturn(Optional.empty());

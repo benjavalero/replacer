@@ -3,7 +3,6 @@ package es.bvalero.replacer.finder.benchmark.word;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import es.bvalero.replacer.finder.benchmark.BenchmarkResult;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -18,7 +17,7 @@ class SimpleMisspellingFinderTest {
 
     @BeforeEach
     public void setUp() {
-        this.words = Arrays.asList("Um", "um", "españa");
+        this.words = Set.of("Um", "um", "españa");
         this.text = "Um suma um, españa um.";
 
         this.expected = new HashSet<>();

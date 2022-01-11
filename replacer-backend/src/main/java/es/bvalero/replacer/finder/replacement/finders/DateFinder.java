@@ -57,8 +57,8 @@ public class DateFinder implements ReplacementFinder {
                 continue;
             }
 
-            final List<String> monthsLowerCase = Arrays.asList(monthNames.get(lang.getCode()).split(","));
-            final List<String> connectors = Arrays.asList(dateConnectors.get(lang.getCode()).split(","));
+            final List<String> monthsLowerCase = List.of(monthNames.get(lang.getCode()).split(","));
+            final List<String> connectors = List.of(dateConnectors.get(lang.getCode()).split(","));
             final List<String> monthsUpperCaseClass = monthsLowerCase
                 .stream()
                 .map(FinderUtils::setFirstUpperCaseClass)
@@ -67,7 +67,7 @@ public class DateFinder implements ReplacementFinder {
                 .stream()
                 .map(FinderUtils::setFirstUpperCaseClass)
                 .collect(Collectors.toUnmodifiableList());
-            this.langPrepositions.putAll(lang, Arrays.asList(yearPrepositions.get(lang.getCode()).split(",")));
+            this.langPrepositions.putAll(lang, List.of(yearPrepositions.get(lang.getCode()).split(",")));
             final List<String> prepositionsUpperCaseClass =
                 this.langPrepositions.get(lang)
                     .stream()

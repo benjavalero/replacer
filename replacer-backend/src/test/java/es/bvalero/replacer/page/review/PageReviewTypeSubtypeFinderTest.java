@@ -11,7 +11,9 @@ import es.bvalero.replacer.page.index.PageIndexStatus;
 import es.bvalero.replacer.repository.PageRepository;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -85,7 +87,7 @@ class PageReviewTypeSubtypeFinderTest {
         when(
             pageRepository.findPageIdsToReviewByType(any(WikipediaLanguage.class), any(ReplacementType.class), anyInt())
         )
-            .thenReturn(new ArrayList<>(Collections.singleton(randomId)))
+            .thenReturn(Collections.singletonList(randomId))
             .thenReturn(Collections.emptyList());
 
         // The page exists in Wikipedia
@@ -107,7 +109,7 @@ class PageReviewTypeSubtypeFinderTest {
         when(
             pageRepository.findPageIdsToReviewByType(any(WikipediaLanguage.class), any(ReplacementType.class), anyInt())
         )
-            .thenReturn(new ArrayList<>(Collections.singleton(randomId)));
+            .thenReturn(Collections.singletonList(randomId));
 
         // The page exists in Wikipedia
         when(wikipediaService.getPageById(randomPageId)).thenReturn(Optional.of(page));
@@ -133,11 +135,11 @@ class PageReviewTypeSubtypeFinderTest {
         when(
             pageRepository.findPageIdsToReviewByType(any(WikipediaLanguage.class), any(ReplacementType.class), anyInt())
         )
-            .thenReturn(new ArrayList<>(Arrays.asList(randomId, randomId2)))
+            .thenReturn(List.of(randomId, randomId2))
             .thenReturn(Collections.emptyList());
         // 1 result in DB by no type
         when(pageRepository.findPageIdsToReview(any(WikipediaLanguage.class), anyInt()))
-            .thenReturn(new ArrayList<>(Collections.singletonList(randomId2)));
+            .thenReturn(Collections.singletonList(randomId2));
 
         // The pages exist in Wikipedia
         when(wikipediaService.getPageById(randomPageId)).thenReturn(Optional.of(page));
