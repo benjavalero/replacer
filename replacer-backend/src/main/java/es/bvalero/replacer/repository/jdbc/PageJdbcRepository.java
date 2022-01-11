@@ -159,9 +159,9 @@ class PageJdbcRepository implements PageRepository, PageIndexRepository {
             .collect(Collectors.toUnmodifiableSet());
     }
 
-    // TODO: check if a JOIN with Page table instead of DISTINCT produces a performance improvement
     @Override
     public long countPagesToReviewByType(WikipediaLanguage lang, ReplacementType type) {
+        // This approach is slightly better than using a JOIN with the page table
         String sql =
             "SELECT COUNT (DISTINCT article_id) FROM replacement " +
             "WHERE lang = :lang AND type = :type AND subtype = :subtype AND reviewer IS NULL";

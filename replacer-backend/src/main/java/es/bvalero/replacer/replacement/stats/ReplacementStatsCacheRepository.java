@@ -58,8 +58,9 @@ class ReplacementStatsCacheRepository implements ReplacementStatsRepository {
             );
     }
 
+    // Add a delay of 1 minute so these queries don't overlap with the one to count replacement types
     @Loggable(value = LogLevel.DEBUG, skipArgs = true, skipResult = true)
-    @Scheduled(fixedDelayString = "${replacer.page.stats.delay}")
+    @Scheduled(fixedDelayString = "${replacer.page.stats.delay}", initialDelay = 60000)
     public void scheduledUpdateStatistics() {
         for (WikipediaLanguage lang : WikipediaLanguage.values()) {
             this.countReviewed.put(lang, this.replacementStatsRepository.countReplacementsReviewed(lang));

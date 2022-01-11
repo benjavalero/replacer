@@ -101,24 +101,23 @@ class ReplacementJdbcRepository
             jdbcTemplate.query(
                 sql,
                 namedParameters,
-                (resultSet, i) -> ResultCount.of(resultSet.getString("REVIEWER"), resultSet.getLong("NUM"))
+                (resultSet, rowNum) -> ResultCount.of(resultSet.getString("REVIEWER"), resultSet.getLong("NUM"))
             )
         );
     }
 
-    // TODO: split into several queries by kind and check if we get a performance improvement
-    @Loggable(value = LogLevel.TRACE, skipResult = true, warnOver = 15, warnUnit = TimeUnit.SECONDS)
     @Override
     public Collection<ResultCount<ReplacementType>> countReplacementsByType(WikipediaLanguage lang) {
+        // Using the index this approach is better than executing several queries by kind
         String sql =
             "SELECT type, subtype, COUNT(DISTINCT article_id) AS num FROM replacement " +
             "WHERE lang = :lang AND reviewer IS NULL " +
-            "GROUP BY lang, type, subtype";
+            "GROUP BY type, subtype";
         SqlParameterSource namedParameters = new MapSqlParameterSource().addValue("lang", lang.getCode());
         return jdbcTemplate.query(
             sql,
             namedParameters,
-            (resultSet, i) ->
+            (resultSet, rowNum) ->
                 ResultCount.of(
                     ReplacementType.of(resultSet.getString("TYPE"), resultSet.getString("SUBTYPE")),
                     resultSet.getLong("NUM")

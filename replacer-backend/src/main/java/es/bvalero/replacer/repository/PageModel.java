@@ -1,8 +1,8 @@
 package es.bvalero.replacer.repository;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import lombok.Builder;
 import lombok.Value;
 import org.springframework.lang.NonNull;
@@ -25,5 +25,10 @@ public class PageModel {
     LocalDate lastUpdate;
 
     @Builder.Default
-    Collection<ReplacementModel> replacements = Collections.emptyList();
+    Collection<ReplacementModel> replacements = new ArrayList<>();
+
+    // Convenience method to add replacements while reading the results from database
+    public void addReplacement(ReplacementModel replacement) {
+        this.replacements.add(replacement);
+    }
 }
