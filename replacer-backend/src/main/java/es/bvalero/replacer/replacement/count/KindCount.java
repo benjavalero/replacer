@@ -9,14 +9,14 @@ import org.springframework.lang.NonNull;
 
 @Schema(description = "Replacement kind along with the related types and the page counts")
 @Value(staticConstructor = "of")
-class TypeCount implements Comparable<TypeCount> {
+class KindCount implements Comparable<KindCount> {
 
     // We use short aliases for the JSON properties in order to try to reduce the size of the response
 
     @Schema(description = "Replacement kind", required = true, example = "Ortografía")
     @JsonProperty("t")
     @NonNull
-    String type;
+    String kind;
 
     // No need to store the list sorted
     @Schema(description = "List of page counts by type", required = true)
@@ -28,7 +28,7 @@ class TypeCount implements Comparable<TypeCount> {
     }
 
     @Override
-    public int compareTo(TypeCount typeCount) {
-        return this.type.compareTo(typeCount.type);
+    public int compareTo(KindCount kindCount) {
+        return this.kind.compareTo(kindCount.kind);
     }
 }

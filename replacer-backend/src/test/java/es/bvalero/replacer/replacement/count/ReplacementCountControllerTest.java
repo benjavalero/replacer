@@ -30,9 +30,9 @@ class ReplacementCountControllerTest {
 
     @Test
     void testFindReplacementCount() throws Exception {
-        TypeCount count = TypeCount.of("T");
+        KindCount count = KindCount.of("T");
         count.add(SubtypeCount.of("Y", 100L));
-        Collection<TypeCount> counts = Collections.singletonList(count);
+        Collection<KindCount> counts = Collections.singletonList(count);
         when(replacementCountService.countReplacementsGroupedByType(WikipediaLanguage.SPANISH)).thenReturn(counts);
 
         mvc

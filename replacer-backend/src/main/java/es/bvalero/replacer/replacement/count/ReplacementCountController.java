@@ -24,7 +24,7 @@ public class ReplacementCountController {
         summary = "List replacement types with the number of pages containing replacements of these types to review"
     )
     @GetMapping(value = "/replacement-types/count")
-    public Collection<TypeCount> countReplacementsGroupedByType(@Valid CommonQueryParameters queryParameters) {
+    public Collection<KindCount> countReplacementsGroupedByType(@Valid CommonQueryParameters queryParameters) {
         return replacementCountService.countReplacementsGroupedByType(queryParameters.getWikipediaLanguage());
     }
 }

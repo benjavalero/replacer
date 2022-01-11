@@ -17,16 +17,16 @@ class ReplacementCountService {
     @Autowired
     private ReplacementTypeRepository replacementTypeRepository;
 
-    Collection<TypeCount> countReplacementsGroupedByType(WikipediaLanguage lang) {
+    Collection<KindCount> countReplacementsGroupedByType(WikipediaLanguage lang) {
         return toDto(replacementTypeRepository.countReplacementsByType(lang));
     }
 
-    private Collection<TypeCount> toDto(Collection<ResultCount<ReplacementType>> counts) {
-        final Map<String, TypeCount> typeCounts = new TreeMap<>();
+    private Collection<KindCount> toDto(Collection<ResultCount<ReplacementType>> counts) {
+        final Map<String, KindCount> typeCounts = new TreeMap<>();
         for (ResultCount<ReplacementType> count : counts) {
             String type = count.getKey().getKind().getLabel();
-            TypeCount typeCount = typeCounts.computeIfAbsent(type, TypeCount::of);
-            typeCount.add(SubtypeCount.of(count.getKey().getSubtype(), count.getCount()));
+            KindCount kindCount = typeCounts.computeIfAbsent(type, KindCount::of);
+            kindCount.add(SubtypeCount.of(count.getKey().getSubtype(), count.getCount()));
         }
         return typeCounts.values().stream().sorted().collect(Collectors.toUnmodifiableList());
     }
