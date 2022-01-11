@@ -26,7 +26,7 @@ class ReplacementCountService {
         for (ResultCount<ReplacementType> count : counts) {
             String type = count.getKey().getKind().getLabel();
             KindCount kindCount = typeCounts.computeIfAbsent(type, KindCount::of);
-            kindCount.add(SubtypeCount.of(count.getKey().getSubtype(), count.getCount()));
+            kindCount.add(TypeCount.of(count.getKey().getSubtype(), count.getCount()));
         }
         return typeCounts.values().stream().sorted().collect(Collectors.toUnmodifiableList());
     }

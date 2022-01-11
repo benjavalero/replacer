@@ -21,10 +21,10 @@ class KindCount implements Comparable<KindCount> {
     // No need to store the list sorted
     @Schema(description = "List of page counts by type", required = true)
     @JsonProperty("l")
-    List<SubtypeCount> subtypeCounts = new ArrayList<>();
+    List<TypeCount> typeCounts = new ArrayList<>();
 
-    void add(SubtypeCount subtypeCount) {
-        this.subtypeCounts.add(subtypeCount);
+    void add(TypeCount typeCount) {
+        this.typeCounts.add(typeCount);
     }
 
     @Override

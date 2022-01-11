@@ -5,9 +5,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Value;
 import org.springframework.lang.NonNull;
 
-@Schema(description = "Page counts by replacement subtype")
+@Schema(description = "Page counts by replacement type")
 @Value(staticConstructor = "of")
-class SubtypeCount {
+class TypeCount {
 
     // We use short aliases for the JSON properties in order to try to reduce the size of the response
 
