@@ -4,6 +4,7 @@ import es.bvalero.replacer.repository.PageModel;
 import es.bvalero.replacer.repository.ReplacementModel;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -23,21 +24,13 @@ class PageResultExtractor implements ResultSetExtractor<Collection<PageModel>> {
                 lang = rs.getString("LANG");
             }
             final Integer pageId = rs.getInt("ARTICLE_ID");
-
-            if (!pageMap.containsKey(pageId)) {
-                pageMap.put(
-                    pageId,
-                    PageModel
-                        .builder()
-                        .lang(lang)
-                        .pageId(pageId)
-                        .title(rs.getString("TITLE"))
-                        .lastUpdate(rs.getDate("LAST_UPDATE").toLocalDate())
-                        .build()
-                );
-            }
-            final PageModel page = pageMap.get(pageId);
-            assert page != null;
+            final String pageLang = lang;
+            final String title = rs.getString("TITLE");
+            final LocalDate lastUpdate = rs.getDate("LAST_UPDATE").toLocalDate();
+            final PageModel page = pageMap.computeIfAbsent(
+                pageId,
+                id -> PageModel.builder().lang(pageLang).pageId(pageId).title(title).lastUpdate(lastUpdate).build()
+            );
 
             // The page might exist without replacements. We check it with the type, for instance.
             final String type = rs.getString("TYPE");
