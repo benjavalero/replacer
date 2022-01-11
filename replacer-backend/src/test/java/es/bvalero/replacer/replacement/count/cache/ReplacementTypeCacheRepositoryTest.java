@@ -46,38 +46,38 @@ class ReplacementTypeCacheRepositoryTest {
 
         replacementCacheRepository.scheduledUpdateReplacementCount();
 
-        LanguageCount langCount = replacementCacheRepository.getLanguageCount(lang);
+        LanguageCount langCount = replacementCacheRepository.getKindCount(lang);
         assertEquals(1, langCount.size());
         assertTrue(langCount.contains(kind));
         assertEquals(2, langCount.get(kind).size());
-        assertEquals(2L, langCount.get(kind).get("Y").get().getCount());
-        assertEquals(1L, langCount.get(kind).get("Z").get().getCount());
+        assertEquals(2L, langCount.get(kind).get("Y").orElse(null));
+        assertEquals(1L, langCount.get(kind).get("Z").orElse(null));
 
         // Decrease a replacement count
         replacementCacheRepository.decrementSubtypeCount(lang, type1);
 
-        langCount = replacementCacheRepository.getLanguageCount(lang);
+        langCount = replacementCacheRepository.getKindCount(lang);
         assertEquals(1, langCount.size());
         assertTrue(langCount.contains(kind));
         assertEquals(2, langCount.get(kind).size());
-        assertEquals(1L, langCount.get(kind).get("Y").get().getCount());
-        assertEquals(1L, langCount.get(kind).get("Z").get().getCount());
+        assertEquals(1L, langCount.get(kind).get("Y").orElse(null));
+        assertEquals(1L, langCount.get(kind).get("Z").orElse(null));
 
         // Decrease a replacement count emptying it
         replacementCacheRepository.decrementSubtypeCount(lang, type2);
 
-        langCount = replacementCacheRepository.getLanguageCount(lang);
+        langCount = replacementCacheRepository.getKindCount(lang);
         assertEquals(1, langCount.size());
         assertTrue(langCount.contains(kind));
         assertEquals(1, langCount.get(kind).size());
-        assertEquals(1L, langCount.get(kind).get("Y").get().getCount());
+        assertEquals(1L, langCount.get(kind).get("Y").orElse(null));
         assertTrue(langCount.get(kind).get("Z").isEmpty());
 
         // Remove a replacement count not existing in cache
         ReplacementType nonExisting = ReplacementType.of(ReplacementKind.MISSPELLING_SIMPLE, "B");
         replacementCacheRepository.removeCachedReplacementCount(lang, nonExisting);
 
-        langCount = replacementCacheRepository.getLanguageCount(lang);
+        langCount = replacementCacheRepository.getKindCount(lang);
         assertEquals(1, langCount.size());
         assertTrue(langCount.contains(kind));
         assertEquals(1, langCount.get(kind).size());
@@ -86,7 +86,7 @@ class ReplacementTypeCacheRepositoryTest {
         ReplacementType existing = ReplacementType.of(ReplacementKind.DATE, "Y");
         replacementCacheRepository.removeCachedReplacementCount(lang, existing);
 
-        langCount = replacementCacheRepository.getLanguageCount(lang);
+        langCount = replacementCacheRepository.getKindCount(lang);
         assertTrue(langCount.isEmpty());
     }
 }

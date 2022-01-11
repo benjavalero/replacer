@@ -39,14 +39,14 @@ class ReplacementTypeCacheRepository implements ReplacementTypeRepository {
     @Override
     public Collection<ResultCount<ReplacementType>> countReplacementsByType(WikipediaLanguage lang) {
         try {
-            return this.getReplacementCount().get(lang).toModel();
+            return this.getKindCount(lang).toModel();
         } catch (ReplacerException e) {
             return Collections.emptyList();
         }
     }
 
     @VisibleForTesting
-    LanguageCount getLanguageCount(WikipediaLanguage lang) throws ReplacerException {
+    LanguageCount getKindCount(WikipediaLanguage lang) throws ReplacerException {
         return this.getReplacementCount().get(lang);
     }
 

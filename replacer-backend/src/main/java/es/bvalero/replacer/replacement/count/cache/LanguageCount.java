@@ -5,31 +5,33 @@ import es.bvalero.replacer.common.domain.ReplacementType;
 import es.bvalero.replacer.repository.ResultCount;
 import java.util.*;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Value;
 import org.jetbrains.annotations.TestOnly;
 
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Value(staticConstructor = "of")
 class LanguageCount {
 
-    // Store internally the type counts in a sorted map
-    private final Map<ReplacementKind, TypeCount> typeCounts;
+    // Store internally the type counts in a map
+    @Getter(AccessLevel.NONE)
+    Map<ReplacementKind, TypeCount> typeCounts;
 
     static LanguageCount fromModel(Collection<ResultCount<ReplacementType>> counts) {
-        final Map<ReplacementKind, TypeCount> typeCounts = new TreeMap<>();
+        final Map<ReplacementKind, TypeCount> typeCounts = new EnumMap<>(ReplacementKind.class);
         for (ResultCount<ReplacementType> count : counts) {
-            ReplacementKind type = count.getKey().getKind();
-            TypeCount typeCount = typeCounts.computeIfAbsent(type, TypeCount::of);
-            typeCount.add(SubtypeCount.of(count.getKey().getSubtype(), count.getCount()));
+            ReplacementKind kind = count.getKey().getKind();
+            TypeCount typeCount = typeCounts.computeIfAbsent(kind, k -> TypeCount.of());
+            typeCount.add(count.getKey().getSubtype(), count.getCount());
         }
-        return new LanguageCount(typeCounts);
+        return LanguageCount.of(typeCounts);
     }
 
     Collection<ResultCount<ReplacementType>> toModel() {
-        List<ResultCount<ReplacementType>> counts = new ArrayList<>();
-        for (TypeCount typeCount : typeCounts.values()) {
-            for (SubtypeCount subtypeCount : typeCount.getSubtypeCounts()) {
-                ReplacementType type = ReplacementType.of(typeCount.getType(), subtypeCount.getSubtype());
-                counts.add(ResultCount.of(type, subtypeCount.getCount()));
+        final List<ResultCount<ReplacementType>> counts = new ArrayList<>();
+        for (Map.Entry<ReplacementKind, TypeCount> entry : typeCounts.entrySet()) {
+            for (Map.Entry<String, Long> subEntry : entry.getValue().getSubtypeCounts().entrySet()) {
+                ReplacementType type = ReplacementType.of(entry.getKey(), subEntry.getKey());
+                counts.add(ResultCount.of(type, subEntry.getValue()));
             }
         }
         return counts;
@@ -70,23 +72,12 @@ class LanguageCount {
     void decrementSubtypeCount(ReplacementKind type, String subtype) {
         if (this.typeCounts.containsKey(type)) {
             TypeCount typeCount = this.typeCounts.get(type);
-            typeCount
-                .get(subtype)
-                .ifPresent(subtypeCount -> {
-                    long newCount = subtypeCount.getCount() - 1;
-                    if (newCount > 0) {
-                        // Update the subtype with the new count
-                        typeCount.add(subtypeCount.withCount(newCount));
-                    } else {
-                        // Remove the subtype count as in method "removeCachedReplacementCount"
-                        typeCount.remove(subtype);
-
-                        // Empty parent if children are empty
-                        if (typeCount.isEmpty()) {
-                            this.typeCounts.remove(type);
-                        }
-                    }
-                });
+            if (!typeCount.decrementSubtypeCount(subtype)) {
+                // Empty parent if children are empty
+                if (typeCount.isEmpty()) {
+                    this.typeCounts.remove(type);
+                }
+            }
         }
     }
 }
