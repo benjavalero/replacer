@@ -39,6 +39,7 @@ import org.springframework.test.context.ActiveProfiles;
         QuotesDoubleFinder.class,
         QuotesTypographicFinder.class,
         TemplateFinder.class,
+        TitleFinder.class,
         SimpleMisspellingParser.class,
         SimpleMisspellingLoader.class,
         TableFinder.class,
