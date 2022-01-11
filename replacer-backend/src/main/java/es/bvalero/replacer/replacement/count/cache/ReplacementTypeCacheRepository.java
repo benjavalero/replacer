@@ -34,7 +34,7 @@ class ReplacementTypeCacheRepository implements ReplacementTypeRepository {
     // It's a heavy query in database (several seconds), so we load the counts on start and refresh them periodically.
     // Of course this can lead to a slight misalignment which is fixed in the next refresh.
     // We add synchronization just in case the list is requested while still loading on start.
-    private Map<WikipediaLanguage, LanguageCount> replacementCount;
+    private Map<WikipediaLanguage, KindCount> replacementCount;
 
     @Override
     public Collection<ResultCount<ReplacementType>> countReplacementsByType(WikipediaLanguage lang) {
@@ -46,7 +46,7 @@ class ReplacementTypeCacheRepository implements ReplacementTypeRepository {
     }
 
     @VisibleForTesting
-    LanguageCount getKindCount(WikipediaLanguage lang) throws ReplacerException {
+    KindCount getKindCount(WikipediaLanguage lang) throws ReplacerException {
         return this.getReplacementCount().get(lang);
     }
 
@@ -82,7 +82,7 @@ class ReplacementTypeCacheRepository implements ReplacementTypeRepository {
 
     /* SCHEDULED UPDATE OF CACHE */
 
-    private synchronized Map<WikipediaLanguage, LanguageCount> getReplacementCount() throws ReplacerException {
+    private synchronized Map<WikipediaLanguage, KindCount> getReplacementCount() throws ReplacerException {
         while (this.replacementCount == null) {
             try {
                 this.wait();
@@ -102,7 +102,7 @@ class ReplacementTypeCacheRepository implements ReplacementTypeRepository {
     }
 
     private synchronized void loadReplacementTypeCounts() {
-        Map<WikipediaLanguage, LanguageCount> map = new EnumMap<>(WikipediaLanguage.class);
+        Map<WikipediaLanguage, KindCount> map = new EnumMap<>(WikipediaLanguage.class);
         for (WikipediaLanguage lang : WikipediaLanguage.values()) {
             map.put(lang, getReplacementsTypeCountsByLang(lang));
         }
@@ -110,7 +110,7 @@ class ReplacementTypeCacheRepository implements ReplacementTypeRepository {
         this.notifyAll();
     }
 
-    private LanguageCount getReplacementsTypeCountsByLang(WikipediaLanguage lang) {
-        return LanguageCount.fromModel(this.replacementTypeRepository.countReplacementsByType(lang));
+    private KindCount getReplacementsTypeCountsByLang(WikipediaLanguage lang) {
+        return KindCount.fromModel(this.replacementTypeRepository.countReplacementsByType(lang));
     }
 }

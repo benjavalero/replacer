@@ -10,20 +10,20 @@ import lombok.Value;
 import org.jetbrains.annotations.TestOnly;
 
 @Value(staticConstructor = "of")
-class LanguageCount {
+class KindCount {
 
     // Store internally the type counts in a map
     @Getter(AccessLevel.NONE)
     Map<ReplacementKind, TypeCount> typeCounts;
 
-    static LanguageCount fromModel(Collection<ResultCount<ReplacementType>> counts) {
+    static KindCount fromModel(Collection<ResultCount<ReplacementType>> counts) {
         final Map<ReplacementKind, TypeCount> typeCounts = new EnumMap<>(ReplacementKind.class);
         for (ResultCount<ReplacementType> count : counts) {
             ReplacementKind kind = count.getKey().getKind();
             TypeCount typeCount = typeCounts.computeIfAbsent(kind, k -> TypeCount.of());
             typeCount.add(count.getKey().getSubtype(), count.getCount());
         }
-        return LanguageCount.of(typeCounts);
+        return KindCount.of(typeCounts);
     }
 
     Collection<ResultCount<ReplacementType>> toModel() {
@@ -48,34 +48,34 @@ class LanguageCount {
     }
 
     @TestOnly
-    boolean contains(ReplacementKind type) {
-        return typeCounts.containsKey(type);
+    boolean contains(ReplacementKind kind) {
+        return typeCounts.containsKey(kind);
     }
 
     @TestOnly
-    TypeCount get(ReplacementKind type) {
-        return typeCounts.get(type);
+    TypeCount get(ReplacementKind kind) {
+        return typeCounts.get(kind);
     }
 
-    void removeTypeCount(ReplacementKind type, String subtype) {
-        if (this.typeCounts.containsKey(type)) {
-            TypeCount typeCount = this.typeCounts.get(type);
+    void removeTypeCount(ReplacementKind kind, String subtype) {
+        if (this.typeCounts.containsKey(kind)) {
+            TypeCount typeCount = this.typeCounts.get(kind);
             typeCount.remove(subtype);
 
             // Empty parent if children are empty
             if (typeCount.isEmpty()) {
-                this.typeCounts.remove(type);
+                this.typeCounts.remove(kind);
             }
         }
     }
 
-    void decrementSubtypeCount(ReplacementKind type, String subtype) {
-        if (this.typeCounts.containsKey(type)) {
-            TypeCount typeCount = this.typeCounts.get(type);
+    void decrementSubtypeCount(ReplacementKind kind, String subtype) {
+        if (this.typeCounts.containsKey(kind)) {
+            TypeCount typeCount = this.typeCounts.get(kind);
             if (!typeCount.decrementSubtypeCount(subtype)) {
                 // Empty parent if children are empty
                 if (typeCount.isEmpty()) {
-                    this.typeCounts.remove(type);
+                    this.typeCounts.remove(kind);
                 }
             }
         }
