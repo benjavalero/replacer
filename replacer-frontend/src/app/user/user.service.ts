@@ -24,9 +24,6 @@ export class UserService {
   }
 
   private loadUser(): void {
-    // TODO: We clean the old user key. This line must be removed in the future.
-    localStorage.removeItem('user');
-
     let user = this.emptyUser();
     const localWikipediaUser = localStorage.getItem(this.wikipediaUserKey);
     if (localWikipediaUser) {

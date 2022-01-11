@@ -17,9 +17,6 @@ export class UserConfigService {
   }
 
   private loadConfig(): void {
-    // TODO: We clean the old lang key. This line must be removed in the future.
-    localStorage.removeItem('lang');
-
     let config = this.emptyConfig();
     const localUserConfig = localStorage.getItem(this.userConfigKey);
     if (localUserConfig) {

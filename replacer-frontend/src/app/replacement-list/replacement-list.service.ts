@@ -8,15 +8,10 @@ import { TypeCount } from './replacement-list.model';
   providedIn: 'root'
 })
 export class ReplacementListService {
-  private readonly countsKey = 'counts';
   readonly counts$ = new BehaviorSubject<TypeCount[] | null>(null);
 
   constructor(private httpClient: HttpClient) {
     // Service don't implement OnInit so all initialization must be done in the constructor
-    // TODO: "counts" property is obsolete
-    if (localStorage.getItem(this.countsKey)) {
-      localStorage.removeItem(this.countsKey);
-    }
   }
 
   loadCountsFromServer(): void {
