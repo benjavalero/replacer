@@ -106,6 +106,7 @@ class ReplacementJdbcRepository
         );
     }
 
+    // TODO: split into several queries by kind and check if we get a performance improvement
     @Loggable(value = LogLevel.TRACE, skipResult = true, warnOver = 15, warnUnit = TimeUnit.SECONDS)
     @Override
     public Collection<ResultCount<ReplacementType>> countReplacementsByType(WikipediaLanguage lang) {

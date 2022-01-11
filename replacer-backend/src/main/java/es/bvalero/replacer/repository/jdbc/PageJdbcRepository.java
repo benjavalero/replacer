@@ -159,6 +159,7 @@ class PageJdbcRepository implements PageRepository, PageIndexRepository {
             .collect(Collectors.toUnmodifiableSet());
     }
 
+    // TODO: check if a JOIN with Page table instead of DISTINCT produces a performance improvement
     @Override
     public long countPagesToReviewByType(WikipediaLanguage lang, ReplacementType type) {
         String sql =

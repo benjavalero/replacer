@@ -19,7 +19,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-/**Implementation of the replacement repository which maintains a cache of the replacement counts */
+/** Implementation of the replacement repository which maintains a cache of the replacement counts */
 @Slf4j
 @Primary
 @Transactional
@@ -32,7 +32,8 @@ class ReplacementTypeCacheRepository implements ReplacementTypeRepository {
 
     // Replacement count cache
     // It's a heavy query in database (several seconds), so we load the counts on start and refresh them periodically.
-    // Of course this can lead to a slight misalignment which is fixed in the next refresh.
+    // This may lead to a slight misalignment, which is fixed in the next refresh,
+    // as modifications in the cache may happen while the count query is in progress.
     // We add synchronization just in case the list is requested while still loading on start.
     private Map<WikipediaLanguage, KindCount> replacementCount;
 
