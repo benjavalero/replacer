@@ -23,7 +23,8 @@ class CustomReplacementFinderTest {
         assertEquals(1, replacements.size());
         assertEquals(3, replacements.get(0).getStart());
         assertEquals(replacement, replacements.get(0).getText());
-        assertEquals(suggestion, replacements.get(0).getSuggestions().get(0).getText());
+        assertEquals(replacement, replacements.get(0).getSuggestions().get(0).getText());
+        assertEquals(suggestion, replacements.get(0).getSuggestions().get(1).getText());
     }
 
     @Test
@@ -39,7 +40,8 @@ class CustomReplacementFinderTest {
 
         assertEquals(1, replacements.size());
         assertEquals(replacement, replacements.get(0).getText());
-        assertEquals(suggestion, replacements.get(0).getSuggestions().get(0).getText());
+        assertEquals(replacement, replacements.get(0).getSuggestions().get(0).getText());
+        assertEquals(suggestion, replacements.get(0).getSuggestions().get(1).getText());
     }
 
     @Test
@@ -74,7 +76,8 @@ class CustomReplacementFinderTest {
 
         assertEquals(1, replacements.size());
         assertEquals(replacement, replacements.get(0).getText());
-        assertEquals(suggestion, replacements.get(0).getSuggestions().get(0).getText());
+        assertEquals(replacement, replacements.get(0).getSuggestions().get(0).getText());
+        assertEquals(suggestion, replacements.get(0).getSuggestions().get(1).getText());
     }
 
     @Test
@@ -91,9 +94,11 @@ class CustomReplacementFinderTest {
         assertEquals(2, replacements.size());
 
         assertEquals(replacement, replacements.get(0).getText());
-        assertEquals(suggestion, replacements.get(0).getSuggestions().get(0).getText());
+        assertEquals(replacement, replacements.get(0).getSuggestions().get(0).getText());
+        assertEquals(suggestion, replacements.get(0).getSuggestions().get(1).getText());
         assertEquals(FinderUtils.setFirstUpperCase(replacement), replacements.get(1).getText());
-        assertEquals(FinderUtils.setFirstUpperCase(suggestion), replacements.get(1).getSuggestions().get(0).getText());
+        assertEquals(FinderUtils.setFirstUpperCase(replacement), replacements.get(1).getSuggestions().get(0).getText());
+        assertEquals(FinderUtils.setFirstUpperCase(suggestion), replacements.get(1).getSuggestions().get(1).getText());
     }
 
     @Test
@@ -124,7 +129,8 @@ class CustomReplacementFinderTest {
 
         assertEquals(1, replacements.size());
         assertEquals(replacement, replacements.get(0).getText());
-        assertEquals("online", replacements.get(0).getSuggestions().get(0).getText());
-        assertEquals("en línea", replacements.get(0).getSuggestions().get(1).getText());
+        assertEquals("on line", replacements.get(0).getSuggestions().get(0).getText());
+        assertEquals("online", replacements.get(0).getSuggestions().get(1).getText());
+        assertEquals("en línea", replacements.get(0).getSuggestions().get(2).getText());
     }
 }

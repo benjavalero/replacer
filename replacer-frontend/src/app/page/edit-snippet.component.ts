@@ -34,26 +34,7 @@ export class EditSnippetComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.manageOriginalWord();
-  }
-
-  private manageOriginalWord(): void {
-    // If the original word is not in the suggestions we added it at the first position
-    const posOriginalWord = this.replacement.suggestions
-      .map((sug) => sug.text)
-      .findIndex((word) => word === this.replacement.text);
-    if (posOriginalWord >= 0) {
-      let originalSuggested = this.replacement.suggestions[posOriginalWord];
-      if (!originalSuggested.comment) {
-        originalSuggested = { ...originalSuggested, comment: 'no reemplazar' };
-        this.replacement.suggestions[posOriginalWord] = originalSuggested;
-      }
-      this.suggestionSelected = originalSuggested;
-    } else {
-      const defaultSuggestion: ReviewSuggestion = { text: this.replacement.text, comment: 'no reemplazar' };
-      this.replacement.suggestions.unshift(defaultSuggestion);
-      this.suggestionSelected = this.replacement.suggestions[0];
-    }
+    this.suggestionSelected = this.replacement.suggestions[0];
   }
 
   get textLeft(): string {
