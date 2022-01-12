@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 class BreakIncorrectFinder extends CosmeticCheckedFinder {
 
     private static final String BREAK_XHTML = "<br />";
-    private static final String BREAK_HTML5 = "<br>";
+    static final String BREAK_HTML5 = "<br>";
     private static final Set<String> BREAK_VALID = Set.of(BREAK_XHTML, BREAK_HTML5);
 
     @RegExp
@@ -40,6 +40,6 @@ class BreakIncorrectFinder extends CosmeticCheckedFinder {
 
     @Override
     public String getFix(MatchResult match, FinderPage page) {
-        return BREAK_XHTML;
+        return BREAK_HTML5;
     }
 }

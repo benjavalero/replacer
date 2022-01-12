@@ -1,5 +1,6 @@
 package es.bvalero.replacer.finder.cosmetic.finders;
 
+import static es.bvalero.replacer.finder.cosmetic.finders.BreakIncorrectFinder.BREAK_HTML5;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -8,7 +9,6 @@ import es.bvalero.replacer.finder.cosmetic.checkwikipedia.CheckWikipediaService;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -29,13 +29,13 @@ class BreakIncorrectFinderTest {
     }
 
     @ParameterizedTest
-    @CsvSource(value = { "</br>, <br />", "<\\br>, <br />", "<br.>, <br />", "<br \\>, <br />", "<br/>, <br />" })
-    void testBreakIncorrectFinder(String text, String fix) {
+    @ValueSource(strings = { "</br>", "<\\br>", "<br.>", "<br \\>", "<br/>" })
+    void testBreakIncorrectFinder(String text) {
         List<Cosmetic> cosmetics = breakIncorrectFinder.findList(text);
 
         assertEquals(1, cosmetics.size());
         assertEquals(text, cosmetics.get(0).getText());
-        assertEquals(fix, cosmetics.get(0).getFix());
+        assertEquals(BREAK_HTML5, cosmetics.get(0).getFix());
     }
 
     @ParameterizedTest
