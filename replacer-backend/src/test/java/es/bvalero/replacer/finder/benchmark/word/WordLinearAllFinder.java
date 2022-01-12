@@ -1,5 +1,6 @@
 package es.bvalero.replacer.finder.benchmark.word;
 
+import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
 import es.bvalero.replacer.finder.benchmark.BenchmarkResult;
 import java.util.Collection;
@@ -15,7 +16,8 @@ class WordLinearAllFinder implements BenchmarkFinder {
     }
 
     @Override
-    public Set<BenchmarkResult> findMatches(String text) {
+    public Set<BenchmarkResult> findMatches(FinderPage page) {
+        String text = page.getContent();
         Set<BenchmarkResult> matches = new HashSet<>();
         int start = 0;
         while (start >= 0) {

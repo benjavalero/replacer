@@ -4,6 +4,7 @@ import dk.brics.automaton.AutomatonMatcher;
 import dk.brics.automaton.DatatypesAutomatonProvider;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
+import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
 import es.bvalero.replacer.finder.benchmark.BenchmarkResult;
 import java.util.Collection;
@@ -21,7 +22,8 @@ class PersonAutomatonAlternateCompleteFinder implements BenchmarkFinder {
     }
 
     @Override
-    public Set<BenchmarkResult> findMatches(String text) {
+    public Set<BenchmarkResult> findMatches(FinderPage page) {
+        String text = page.getContent();
         // Build an alternate automaton with all the complete words and match it against the text
         Set<BenchmarkResult> matches = new HashSet<>();
         AutomatonMatcher m = this.words.newMatcher(text);

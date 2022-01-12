@@ -1,5 +1,6 @@
 package es.bvalero.replacer.finder.benchmark.completetag;
 
+import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
 import es.bvalero.replacer.finder.benchmark.BenchmarkResult;
 import java.util.HashSet;
@@ -14,7 +15,8 @@ class CompleteTagLinearIteratedFinder implements BenchmarkFinder {
     }
 
     @Override
-    public Set<BenchmarkResult> findMatches(String text) {
+    public Set<BenchmarkResult> findMatches(FinderPage page) {
+        String text = page.getContent();
         Set<BenchmarkResult> matches = new HashSet<>();
         for (String tag : tags) {
             matches.addAll(findResults(text, tag));

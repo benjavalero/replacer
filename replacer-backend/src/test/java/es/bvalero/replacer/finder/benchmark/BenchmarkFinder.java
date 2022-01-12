@@ -12,7 +12,7 @@ public interface BenchmarkFinder extends Finder<BenchmarkResult> {
     @TestOnly
     default Set<BenchmarkResult> findMatches(String text) {
         // Only transform the iterable without validating not to penalize the performance of the benchmark
-        return new HashSet<>(IterableUtils.toList(this.find(FinderPage.of(text))));
+        return findMatches(FinderPage.of(text));
     }
 
     @TestOnly

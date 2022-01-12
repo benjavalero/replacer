@@ -1,5 +1,6 @@
 package es.bvalero.replacer.finder.benchmark.uppercase;
 
+import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.benchmark.BenchmarkResult;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import java.util.Collection;
@@ -15,7 +16,8 @@ class UppercaseIndexOfFinder extends UppercaseBenchmarkFinder {
     }
 
     @Override
-    public Set<BenchmarkResult> findMatches(String text) {
+    public Set<BenchmarkResult> findMatches(FinderPage page) {
+        String text = page.getContent();
         // We loop over all the words and find them in the text with the indexOf function
         Set<BenchmarkResult> matches = new HashSet<>();
         for (String word : this.words) {

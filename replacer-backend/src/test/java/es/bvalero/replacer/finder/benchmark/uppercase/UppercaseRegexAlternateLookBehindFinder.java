@@ -1,5 +1,6 @@
 package es.bvalero.replacer.finder.benchmark.uppercase;
 
+import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.benchmark.BenchmarkResult;
 import java.util.Collection;
 import java.util.HashSet;
@@ -22,7 +23,8 @@ class UppercaseRegexAlternateLookBehindFinder extends UppercaseBenchmarkFinder {
     }
 
     @Override
-    public Set<BenchmarkResult> findMatches(String text) {
+    public Set<BenchmarkResult> findMatches(FinderPage page) {
+        String text = page.getContent();
         // Build an alternate regex with all the words and match it against the text
         Set<BenchmarkResult> matches = new HashSet<>();
         Matcher m = this.words.matcher(text);

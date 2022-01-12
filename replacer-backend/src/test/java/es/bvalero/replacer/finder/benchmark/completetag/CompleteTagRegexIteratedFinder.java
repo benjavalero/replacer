@@ -1,5 +1,6 @@
 package es.bvalero.replacer.finder.benchmark.completetag;
 
+import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
 import es.bvalero.replacer.finder.benchmark.BenchmarkResult;
 import es.bvalero.replacer.finder.util.RegexMatchFinder;
@@ -25,7 +26,8 @@ class CompleteTagRegexIteratedFinder implements BenchmarkFinder {
     }
 
     @Override
-    public Set<BenchmarkResult> findMatches(String text) {
+    public Set<BenchmarkResult> findMatches(FinderPage page) {
+        String text = page.getContent();
         Set<BenchmarkResult> results = new HashSet<>();
         for (Pattern pattern : patterns) {
             for (MatchResult matchResult : RegexMatchFinder.find(text, pattern)) {

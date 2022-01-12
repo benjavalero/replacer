@@ -1,5 +1,6 @@
 package es.bvalero.replacer.finder.benchmark.word;
 
+import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
 import es.bvalero.replacer.finder.benchmark.BenchmarkResult;
 import java.util.Collection;
@@ -19,7 +20,8 @@ class WordRegexAlternateCompleteFinder implements BenchmarkFinder {
     }
 
     @Override
-    public Set<BenchmarkResult> findMatches(String text) {
+    public Set<BenchmarkResult> findMatches(FinderPage page) {
+        String text = page.getContent();
         // Build an alternate regex with all the complete words and match it against the text
         Set<BenchmarkResult> matches = new HashSet<>();
         Matcher m = this.pattern.matcher(text);

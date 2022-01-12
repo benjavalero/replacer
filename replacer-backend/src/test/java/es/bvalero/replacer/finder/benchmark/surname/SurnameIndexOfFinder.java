@@ -1,5 +1,6 @@
 package es.bvalero.replacer.finder.benchmark.surname;
 
+import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
 import es.bvalero.replacer.finder.benchmark.BenchmarkResult;
 import es.bvalero.replacer.finder.util.FinderUtils;
@@ -17,7 +18,8 @@ class SurnameIndexOfFinder implements BenchmarkFinder {
     }
 
     @Override
-    public Set<BenchmarkResult> findMatches(String text) {
+    public Set<BenchmarkResult> findMatches(FinderPage page) {
+        String text = page.getContent();
         // We loop over all the words and find them in the text with the indexOf function
         final Set<BenchmarkResult> matches = new HashSet<>();
         for (String word : this.words) {

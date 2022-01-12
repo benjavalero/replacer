@@ -1,5 +1,6 @@
 package es.bvalero.replacer.finder.benchmark.surname;
 
+import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
 import es.bvalero.replacer.finder.benchmark.BenchmarkResult;
 import es.bvalero.replacer.finder.util.FinderUtils;
@@ -21,7 +22,8 @@ class SurnameRegexFinder implements BenchmarkFinder {
     }
 
     @Override
-    public Set<BenchmarkResult> findMatches(String text) {
+    public Set<BenchmarkResult> findMatches(FinderPage page) {
+        String text = page.getContent();
         // We loop over all the words and find them in the text with a regex
         final Set<BenchmarkResult> matches = new HashSet<>();
         for (Pattern word : this.words) {
