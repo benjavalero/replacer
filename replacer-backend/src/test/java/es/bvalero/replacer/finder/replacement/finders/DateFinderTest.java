@@ -57,7 +57,8 @@ class DateFinderTest {
 
         assertEquals(1, replacements.size());
         assertEquals(date, replacements.get(0).getText());
-        assertEquals(expected, replacements.get(0).getSuggestions().get(0).getText());
+        assertEquals(date, replacements.get(0).getSuggestions().get(0).getText());
+        assertEquals(expected, replacements.get(0).getSuggestions().get(1).getText());
         assertEquals(subtype, replacements.get(0).getType().getSubtype());
     }
 
@@ -90,7 +91,8 @@ class DateFinderTest {
 
         assertEquals(1, replacements.size());
         assertEquals(date, replacements.get(0).getText());
-        assertEquals(expected, replacements.get(0).getSuggestions().get(0).getText());
+        assertEquals(date, replacements.get(0).getSuggestions().get(0).getText());
+        assertEquals(expected, replacements.get(0).getSuggestions().get(1).getText());
         assertEquals(subtype, replacements.get(0).getType().getSubtype());
     }
 
@@ -113,7 +115,8 @@ class DateFinderTest {
 
         assertEquals(1, replacements.size());
         assertEquals(date, replacements.get(0).getText());
-        assertEquals(expected, replacements.get(0).getSuggestions().get(0).getText());
+        assertEquals(date, replacements.get(0).getSuggestions().get(0).getText());
+        assertEquals(expected, replacements.get(0).getSuggestions().get(1).getText());
         assertEquals(subtype, replacements.get(0).getType().getSubtype());
     }
 }
