@@ -46,7 +46,7 @@ class ObsoleteMisspellingListenerTest {
             new PropertyChangeEvent(this, SimpleMisspellingLoader.PROPERTY_ITEMS, EMPTY_MAP, map1)
         );
 
-        verify(removeObsoleteReplacementType, times(0))
+        verify(removeObsoleteReplacementType, never())
             .removeObsoleteReplacementTypes(eq(WikipediaLanguage.getDefault()), anyCollection());
 
         SimpleMisspelling misspelling3 = SimpleMisspelling.ofCaseInsensitive("C", "D");

@@ -1,9 +1,12 @@
 package es.bvalero.replacer.page.review;
 
+import static es.bvalero.replacer.repository.ReplacementRepository.REVIEWER_SYSTEM;
+
 import es.bvalero.replacer.common.domain.PageReplacement;
 import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.page.index.PageIndexResult;
 import es.bvalero.replacer.repository.PageRepository;
+import es.bvalero.replacer.repository.ReplacementTypeRepository;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -15,6 +18,9 @@ class PageReviewTypeSubtypeFinder extends PageReviewFinder {
 
     @Autowired
     private PageRepository pageRepository;
+
+    @Autowired
+    private ReplacementTypeRepository replacementTypeRepository;
 
     @Override
     PageSearchResult findPageIdsToReview(PageReviewOptions options) {
@@ -36,7 +42,17 @@ class PageReviewTypeSubtypeFinder extends PageReviewFinder {
 
         // To build the review we are only interested in the replacements of the given type and subtype
         // We can run the filter even with an empty list
-        return filterReplacementsByTypeAndSubtype(pageIndexResult.getReplacements(), options);
+        Collection<PageReplacement> filtered = filterReplacementsByTypeAndSubtype(
+            pageIndexResult.getReplacements(),
+            options
+        );
+        if (filtered.isEmpty()) {
+            // No replacement to be reviewed for this page and type
+            // We remove it from the count cache by marking it as reviewed (it should not exist in DB any more)
+            replacementTypeRepository.updateReviewerByPageAndType(page.getId(), options.getType(), REVIEWER_SYSTEM);
+        }
+
+        return filtered;
     }
 
     private Collection<PageReplacement> filterReplacementsByTypeAndSubtype(
