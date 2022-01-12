@@ -54,5 +54,6 @@ class FinderUtilsTest {
         assertEquals("Text", FinderUtils.getFirstWord("Text"));
         assertEquals("Text", FinderUtils.getFirstWord("Text of text"));
         assertEquals("Text", FinderUtils.getFirstWord(" Text, of text"));
+        assertEquals("11", FinderUtils.getFirstWord("11 texts"));
     }
 }

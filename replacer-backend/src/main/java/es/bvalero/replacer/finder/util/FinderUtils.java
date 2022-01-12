@@ -150,8 +150,7 @@ public class FinderUtils {
     public String getFirstWord(String text) {
         int start = -1;
         for (int i = 0; i < text.length(); i++) {
-            final char ch = text.charAt(i);
-            if (Character.isLetter(ch)) {
+            if (Character.isLetterOrDigit(text.charAt(i))) {
                 if (start < 0) {
                     start = i;
                 }
