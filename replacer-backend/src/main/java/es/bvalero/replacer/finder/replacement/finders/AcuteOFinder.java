@@ -89,7 +89,7 @@ public class AcuteOFinder implements ReplacementFinder {
     }
 
     private List<Suggestion> findSuggestions() {
-        return List.of(Suggestion.ofNoReplace(ACUTE_O), Suggestion.ofNoComment(FIX_ACUTE_O));
+        return Collections.singletonList(Suggestion.ofNoComment(FIX_ACUTE_O));
     }
 
     @Nullable

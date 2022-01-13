@@ -185,7 +185,7 @@ public class DateFinder implements ReplacementFinder {
             .type(ReplacementType.of(ReplacementKind.DATE, subtype))
             .start(match.start())
             .text(date)
-            .suggestions(findSuggestions(date, fixedDate))
+            .suggestions(findSuggestions(fixedDate))
             .build();
     }
 
@@ -230,7 +230,7 @@ public class DateFinder implements ReplacementFinder {
             .type(ReplacementType.of(ReplacementKind.DATE, subtype))
             .start(match.start())
             .text(date)
-            .suggestions(findSuggestions(date, fixedDate))
+            .suggestions(findSuggestions(fixedDate))
             .build();
     }
 
@@ -250,7 +250,7 @@ public class DateFinder implements ReplacementFinder {
         return WikipediaLanguage.SPANISH.equals(lang) ? date.replace("setiembre", "septiembre") : date;
     }
 
-    private List<Suggestion> findSuggestions(String date, String fixedDate) {
-        return List.of(Suggestion.ofNoReplace(date), Suggestion.ofNoComment(fixedDate));
+    private List<Suggestion> findSuggestions(String date) {
+        return Collections.singletonList(Suggestion.ofNoComment(date));
     }
 }

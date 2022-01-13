@@ -107,7 +107,7 @@ public abstract class MisspellingFinder implements ReplacementFinder {
     }
 
     public static List<Suggestion> applyMisspellingSuggestions(String word, Misspelling misspelling) {
-        final List<Suggestion> suggestions = new LinkedList<>();
+        final List<Suggestion> suggestions = new ArrayList<>();
         for (MisspellingSuggestion misspellingSuggestion : misspelling.getSuggestions()) {
             final Suggestion suggestion = convertSuggestion(misspellingSuggestion);
             if (misspelling.isCaseSensitive()) {
@@ -131,21 +131,6 @@ public abstract class MisspellingFinder implements ReplacementFinder {
                 .filter(s -> FinderUtils.toLowerCase(word).equals(s.getText()))
                 .findAny()
                 .ifPresent(s -> suggestions.add(toUppercase(s)));
-        }
-
-        // If any of the suggestions matches the original then move it as the first suggestion
-        // If not we add it
-        boolean originalFound = false;
-        for (int i = 0; i < suggestions.size(); i++) {
-            if (suggestions.get(i).getText().equals(word)) {
-                final Suggestion original = suggestions.remove(i);
-                suggestions.add(0, original);
-                originalFound = true;
-                break;
-            }
-        }
-        if (!originalFound) {
-            suggestions.add(0, Suggestion.ofNoReplace(word));
         }
 
         return suggestions;

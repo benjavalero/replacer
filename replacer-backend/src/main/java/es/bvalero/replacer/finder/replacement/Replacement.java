@@ -3,6 +3,7 @@ package es.bvalero.replacer.finder.replacement;
 import es.bvalero.replacer.common.domain.ReplacementType;
 import es.bvalero.replacer.common.domain.Suggestion;
 import es.bvalero.replacer.finder.FinderResult;
+import java.util.LinkedList;
 import java.util.List;
 import lombok.Builder;
 import lombok.Value;
@@ -23,4 +24,27 @@ public class Replacement implements FinderResult {
     String text;
     ReplacementType type;
     List<Suggestion> suggestions;
+
+    // Overwrite the getter to include the original text as the first option
+    public List<Suggestion> getSuggestions() {
+        // Use a linked list to remove and rearrange easily
+        List<Suggestion> sorted = new LinkedList<>(suggestions);
+
+        // If any of the suggestions matches the original then move it as the first suggestion
+        // If not we add it
+        boolean originalFound = false;
+        for (int i = 0; i < sorted.size(); i++) {
+            if (sorted.get(i).getText().equals(text)) {
+                final Suggestion original = sorted.remove(i);
+                sorted.add(0, original);
+                originalFound = true;
+                break;
+            }
+        }
+        if (!originalFound) {
+            sorted.add(0, Suggestion.ofNoReplace(text));
+        }
+
+        return sorted;
+    }
 }
