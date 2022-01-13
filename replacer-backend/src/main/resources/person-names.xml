@@ -36,6 +36,7 @@
         <value>([0-9]{1,2} )?de (Enero|Febrero|Marzo|Abril|Mayo|Junio|Julio|Agosto|Septiembre|Octubre|Noviembre|Diciembre)</value>
 
         <value>Abril</value>
+        <value>Airlines</value>
         <value>Albums</value>
         <value>Basket</value>
         <value>Canada</value>
@@ -46,6 +47,7 @@
         <value>Julio</value>
         <value>Junio</value>
         <value>Latin</value>
+        <value>League</value>
         <value>Link</value>
         <value>Master</value>
         <value>Match</value>
