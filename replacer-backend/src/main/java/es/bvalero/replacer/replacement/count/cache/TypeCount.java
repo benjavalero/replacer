@@ -35,7 +35,7 @@ class TypeCount {
 
     // Return false if the decrement produces an empty subtype
     boolean decrementSubtypeCount(String subtype) {
-        long newCount = this.subtypeCounts.get(subtype) - 1;
+        long newCount = this.subtypeCounts.getOrDefault(subtype, 0L) - 1;
         if (newCount > 0) {
             // Update the subtype with the new count
             this.subtypeCounts.put(subtype, newCount);
