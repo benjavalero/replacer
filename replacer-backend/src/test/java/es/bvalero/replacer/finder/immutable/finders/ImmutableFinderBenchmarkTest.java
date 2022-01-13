@@ -31,6 +31,7 @@ import org.springframework.test.context.ActiveProfiles;
         FalsePositiveParser.class,
         FalsePositiveLoader.class,
         FalsePositiveFinder.class,
+        IgnorableSectionFinder.class,
         IgnorableTemplateFinder.class,
         LinkFinder.class,
         PersonNameFinder.class,
