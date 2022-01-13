@@ -87,7 +87,8 @@ class FalsePositiveFinder implements ImmutableFinder, PropertyChangeListener {
 
     @Override
     public ImmutableFinderPriority getPriority() {
-        return ImmutableFinderPriority.HIGH;
+        // It should be High for number of matches but it is SO slow that it is better to be the last one
+        return ImmutableFinderPriority.NONE;
     }
 
     @Override

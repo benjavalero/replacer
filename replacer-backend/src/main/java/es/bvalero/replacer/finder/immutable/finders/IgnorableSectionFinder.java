@@ -2,6 +2,7 @@ package es.bvalero.replacer.finder.immutable.finders;
 
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.immutable.ImmutableFinder;
+import es.bvalero.replacer.finder.immutable.ImmutableFinderPriority;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
 import es.bvalero.replacer.finder.util.LinearMatchResult;
 import java.util.ArrayList;
@@ -18,6 +19,11 @@ class IgnorableSectionFinder implements ImmutableFinder {
 
     @Resource
     private Set<String> ignorableSections;
+
+    @Override
+    public ImmutableFinderPriority getPriority() {
+        return ImmutableFinderPriority.HIGH;
+    }
 
     @Override
     public Iterable<MatchResult> findMatchResults(FinderPage page) {

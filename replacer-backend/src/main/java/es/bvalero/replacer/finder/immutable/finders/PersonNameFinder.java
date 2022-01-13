@@ -32,7 +32,8 @@ class PersonNameFinder implements ImmutableFinder {
 
     @Override
     public ImmutableFinderPriority getPriority() {
-        return ImmutableFinderPriority.HIGH;
+        // It should be High for number of matches but it is slow so it is better to have lower priority
+        return ImmutableFinderPriority.MEDIUM;
     }
 
     @SuppressWarnings("unchecked")

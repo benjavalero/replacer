@@ -27,6 +27,7 @@ class IgnorableTemplateFinder implements ImmutableFinder {
 
     @Override
     public ImmutableFinderPriority getPriority() {
+        // It's slow but we are interested in ignoring complete pages
         return ImmutableFinderPriority.MAX;
     }
 
