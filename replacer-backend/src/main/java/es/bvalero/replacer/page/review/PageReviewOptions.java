@@ -126,12 +126,24 @@ public class PageReviewOptions {
                 isValid = StringUtils.isEmpty(type.getSubtype()) && suggestion == null && cs == null;
                 break;
             case CUSTOM:
-                isValid = StringUtils.isNotBlank(type.getSubtype()) && StringUtils.isNotBlank(suggestion) && cs != null;
+                isValid =
+                    StringUtils.isNotBlank(type.getSubtype()) &&
+                    StringUtils.isNotBlank(suggestion) &&
+                    cs != null &&
+                    validateCustomSuggestion();
                 break;
             default:
                 isValid = StringUtils.isNotBlank(type.getSubtype()) && suggestion == null && cs == null;
                 break;
         }
         return isValid;
+    }
+
+    private boolean validateCustomSuggestion() {
+        if (Objects.requireNonNull(cs)) {
+            return !type.getSubtype().equals(suggestion);
+        } else {
+            return !type.getSubtype().equalsIgnoreCase(suggestion);
+        }
     }
 }

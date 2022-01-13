@@ -3,6 +3,7 @@ import { faCheckDouble, faList } from '@fortawesome/free-solid-svg-icons';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
+import StringUtils from '../string-utils';
 import { UserConfigService } from '../user/user-config.service';
 import { User } from '../user/user.model';
 import { UserService } from '../user/user.service';
@@ -83,14 +84,6 @@ export class ReplacementTableComponent implements OnInit, OnChanges {
     this.filteredItems = paginated;
   }
 
-  private removeDiacritics(text: string): string {
-    return text
-      .trim()
-      .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '')
-      .toLowerCase();
-  }
-
   onFilter(value: string) {
     this.filterValue = value;
     this.page = 1; // Reset page
@@ -121,7 +114,7 @@ export class ReplacementTableComponent implements OnInit, OnChanges {
     return [...items].sort((a, b) => {
       const aValue: any = a[column as keyof SubtypeCount];
       const bValue: any = b[column as keyof SubtypeCount];
-      const res = column === 's' ? this.compareString(aValue, bValue) : this.compareNumber(aValue, bValue);
+      const res = column === 's' ? StringUtils.compareString(aValue, bValue) : this.compareNumber(aValue, bValue);
       return direction === 'asc' ? res : -res;
     });
   }
@@ -136,13 +129,11 @@ export class ReplacementTableComponent implements OnInit, OnChanges {
     }
   }
 
-  private compareString(v1: string, v2: string): number {
-    return v1.localeCompare(v2, 'es', { sensitivity: 'base' });
-  }
-
   private filterCounts(items: SubtypeCount[], text: string): SubtypeCount[] {
-    const filterText = this.removeDiacritics(text);
-    return items.filter((item) => this.removeDiacritics(item.s).includes(this.removeDiacritics(filterText)));
+    const filterText = StringUtils.removeDiacritics(text);
+    return items.filter((item) =>
+      StringUtils.removeDiacritics(item.s).includes(StringUtils.removeDiacritics(filterText))
+    );
   }
 
   private paginateCounts(items: SubtypeCount[], page: number, pageSize: number): SubtypeCount[] {
