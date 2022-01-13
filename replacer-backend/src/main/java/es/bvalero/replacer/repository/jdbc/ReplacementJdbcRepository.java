@@ -106,6 +106,7 @@ class ReplacementJdbcRepository
         );
     }
 
+    @Loggable(value = LogLevel.TRACE, skipResult = true, warnOver = 15, warnUnit = TimeUnit.SECONDS)
     @Override
     public Collection<ResultCount<ReplacementType>> countReplacementsByType(WikipediaLanguage lang) {
         // Using the index this approach is better than executing several queries by kind
