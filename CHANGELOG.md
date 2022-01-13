@@ -1,5 +1,11 @@
 # Versions
 
+## 2.15.2 (13 Jan 2022)
+- Improve finding uppercase template values
+- Cosmetic change fixing line breaks now fixes into the HTML5 form
+- Add more complete templates, sections and surnames to ignore.
+- Improve indexing performance by tweaking the immutable priorities
+
 ## 2.15.1 (11 Jan 2022)
 - Consider the words in the page title as false positives
 
