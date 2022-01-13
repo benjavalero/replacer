@@ -55,7 +55,14 @@ class PageReviewSectionFinder {
 
                     // We need to check some rare cases where the byte-offset doesn't match with the section position,
                     // usually because of emojis or other strange Unicode characters
-                    validateTranslatedReplacements(sectionReplacements, pageSection.get());
+                    if (!validateTranslatedReplacements(sectionReplacements, pageSection.get())) {
+                        LOGGER.info(
+                            "Not valid byte-offset in page section: {} - {}",
+                            pageSection.get().getId(),
+                            pageSection.get().getTitle()
+                        );
+                        return Optional.empty();
+                    }
 
                     LOGGER.debug(
                         "Found section for page {} - {} => {}",
@@ -144,12 +151,11 @@ class PageReviewSectionFinder {
             .collect(Collectors.toUnmodifiableList());
     }
 
-    private void validateTranslatedReplacements(Collection<PageReplacement> replacements, WikipediaPage pageSection)
-        throws WikipediaException {
-        if (replacements.stream().anyMatch(rep -> !validatePageReplacement(rep, pageSection.getContent()))) {
-            LOGGER.warn("Not valid byte-offset in page section: {} - {}", pageSection.getId(), pageSection.getTitle());
-            throw new WikipediaException("Not valid byte-offset in page section");
-        }
+    private boolean validateTranslatedReplacements(
+        Collection<PageReplacement> replacements,
+        WikipediaPage pageSection
+    ) {
+        return replacements.stream().allMatch(rep -> validatePageReplacement(rep, pageSection.getContent()));
     }
 
     private boolean validatePageReplacement(PageReplacement replacement, String text) {
