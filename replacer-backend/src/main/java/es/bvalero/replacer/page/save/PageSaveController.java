@@ -88,7 +88,7 @@ public class PageSaveController {
 
     private ResponseEntity<Void> manageWikipediaException(WikipediaException e) {
         if (e instanceof WikipediaConflictException) {
-            LOGGER.warn(e.getMessage());
+            LOGGER.info(e.getMessage());
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         } else if (e.getMessage() != null && e.getMessage().contains("mwoauth-invalid-authorization")) {
             LOGGER.warn("Authentication error saving page content: " + e.getMessage());
