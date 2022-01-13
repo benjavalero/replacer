@@ -63,5 +63,7 @@
 
     <util:set id="ignorableSections" value-type="java.lang.String">
         <value>Bibliografía</value>
+        <value>Enlaces externos</value>
+        <value>Ligazóns externas</value>
     </util:set>
 </beans>
