@@ -9,6 +9,7 @@ import es.bvalero.replacer.finder.immutable.ImmutableFinder;
 import es.bvalero.replacer.finder.immutable.ImmutableFinderPriority;
 import es.bvalero.replacer.finder.util.AutomatonMatchFinder;
 import es.bvalero.replacer.finder.util.FinderUtils;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.MatchResult;
 import javax.annotation.PostConstruct;
@@ -28,6 +29,8 @@ class PersonSurnameFinder implements ImmutableFinder {
     @Resource
     private Set<String> personSurnames;
 
+    private final Set<String> completeSurnames = new HashSet<>();
+
     @Override
     public ImmutableFinderPriority getPriority() {
         // It should be High for number of matches but it is quite slow so it is better to have lower priority
@@ -36,7 +39,18 @@ class PersonSurnameFinder implements ImmutableFinder {
 
     @PostConstruct
     public void init() {
-        final String alternations = "<Lu><L>+ (" + StringUtils.join(personSurnames, "|") + ")";
+        final Set<String> surnames = new HashSet<>();
+        for (String personSurname : personSurnames) {
+            if (personSurname.startsWith("*")) {
+                final String surname = personSurname.substring(1);
+                surnames.add(surname);
+                completeSurnames.add(surname);
+            } else {
+                surnames.add(personSurname);
+            }
+        }
+
+        final String alternations = "<Lu><L>+ (" + StringUtils.join(surnames, "|") + ")";
         this.automaton = new RunAutomaton(new RegExp(alternations).toAutomaton(new DatatypesAutomatonProvider()));
     }
 
@@ -58,6 +72,10 @@ class PersonSurnameFinder implements ImmutableFinder {
         final int pos = match.group().indexOf(' ') + 1;
         final int start = match.start() + pos;
         final String matchText = match.group().substring(pos);
-        return Immutable.of(start, matchText);
+        if (completeSurnames.contains(matchText)) {
+            return ImmutableFinder.super.convert(match, page);
+        } else {
+            return Immutable.of(start, matchText);
+        }
     }
 }

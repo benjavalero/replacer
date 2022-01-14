@@ -7,6 +7,10 @@
            http://www.springframework.org/schema/util
    		   http://www.springframework.org/schema/util/spring-util.xsd">
 
+    <!--
+        The list contains "names" which will be ignored when followed by an uppercase word,
+        e.g. Los Angeles in Los Angeles Lakers.
+    -->
     <util:set id="personNames" value-type="java.lang.String">
         <value>Basket</value>
         <value>Canada</value>
@@ -31,12 +35,18 @@
         <value>Tokyo</value>
     </util:set>
 
+    <!--
+        The list contains "surnames" which will be ignored when preceded by an uppercase word,
+        e.g. Domingo in Plácido Domingo.
+
+        When starting with "*" the whole name-surname will be ignored.
+    -->
     <util:set id="personSurnames" value-type="java.lang.String">
         <!-- Spanish months -->
         <value>([0-9]{1,2} )?de (Enero|Febrero|Marzo|Abril|Mayo|Junio|Julio|Agosto|Septiembre|Octubre|Noviembre|Diciembre)</value>
 
         <value>Abril</value>
-        <value>Airlines</value>
+        <value>*Airlines</value>
         <value>Albums</value>
         <value>Basket</value>
         <value>Canada</value>
@@ -47,7 +57,7 @@
         <value>Julio</value>
         <value>Junio</value>
         <value>Latin</value>
-        <value>League</value>
+        <value>*League</value>
         <value>Link</value>
         <value>Master</value>
         <value>Match</value>

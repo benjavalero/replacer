@@ -50,4 +50,13 @@ class PersonSurnameFinderTest {
         assertEquals(1, matches.size());
         assertEquals(noun, matches.get(0).getText());
     }
+
+    @ParameterizedTest
+    @ValueSource(strings = { "Uzbekistan Airlines" })
+    void testFindPersonSurnamesWithNames(String text) {
+        List<Immutable> matches = personSurnameFinder.findList(text);
+
+        assertEquals(1, matches.size());
+        assertEquals(text, matches.get(0).getText());
+    }
 }
