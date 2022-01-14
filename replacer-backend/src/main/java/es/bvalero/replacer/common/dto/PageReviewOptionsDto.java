@@ -1,6 +1,7 @@
 package es.bvalero.replacer.common.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import es.bvalero.replacer.common.domain.ReplacementKind;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.ArrayList;
@@ -22,7 +23,7 @@ public class PageReviewOptionsDto {
     @Parameter(description = "Replacement kind", example = "Ortografía")
     @Schema(description = "Replacement kind", example = "Ortografía")
     @Nullable
-    private String type;
+    private Byte type;
 
     @Parameter(description = "Replacement subtype", example = "aún")
     @Schema(description = "Replacement subtype", example = "aún")
@@ -47,7 +48,7 @@ public class PageReviewOptionsDto {
         if (type == null) {
             list.add("NO TYPE");
         } else {
-            list.add(type);
+            list.add(ReplacementKind.valueOf(type).toString());
             assert subtype != null;
             list.add(subtype);
             if (suggestion != null) {

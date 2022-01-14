@@ -33,8 +33,8 @@ class PageResultExtractor implements ResultSetExtractor<Collection<PageModel>> {
             );
 
             // The page might exist without replacements. We check it with the type, for instance.
-            final String type = rs.getString("TYPE");
-            if (type != null) {
+            final byte type = rs.getByte("TYPE");
+            if (type > 0) {
                 page.addReplacement(
                     ReplacementModel
                         .builder()

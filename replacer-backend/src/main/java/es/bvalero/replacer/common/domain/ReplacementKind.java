@@ -1,6 +1,5 @@
 package es.bvalero.replacer.common.domain;
 
-import com.fasterxml.jackson.annotation.JsonValue;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.function.Function;
@@ -12,31 +11,25 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum ReplacementKind {
-    MISSPELLING_SIMPLE("Ortografía"),
-    MISSPELLING_COMPOSED("Compuestos"),
-    CUSTOM("Personalizado"),
-    DATE("Fechas"),
-    EMPTY("EMPTY"); // To be used but not meant to be serialized
+    MISSPELLING_SIMPLE((byte) 2),
+    MISSPELLING_COMPOSED((byte) 3),
+    CUSTOM((byte) 1),
+    DATE((byte) 4),
+    EMPTY((byte) 99); // To be used but not meant to be serialized
 
-    private static final Map<String, ReplacementKind> map = Arrays
+    private static final Map<Byte, ReplacementKind> map = Arrays
         .stream(ReplacementKind.values())
-        .collect(Collectors.toUnmodifiableMap(ReplacementKind::getLabel, Function.identity()));
+        .collect(Collectors.toUnmodifiableMap(ReplacementKind::getCode, Function.identity()));
 
-    @JsonValue
-    private final String label;
+    private final byte code;
 
     // We cannot override the static method "valueOf(String)"
-    // This is needed for mapping from database
-    public static ReplacementKind valueOfLabel(String label) {
-        if (map.containsKey(label)) {
-            return map.get(label);
+    // but in this case as the value is an integer we can overload the method
+    public static ReplacementKind valueOf(byte code) {
+        if (map.containsKey(code)) {
+            return map.get(code);
         } else {
-            throw new IllegalArgumentException("Wrong replacement kind label: " + label);
+            throw new IllegalArgumentException("Wrong replacement kind code: " + code);
         }
-    }
-
-    @Override
-    public String toString() {
-        return this.label;
     }
 }

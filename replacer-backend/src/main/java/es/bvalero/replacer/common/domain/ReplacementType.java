@@ -17,13 +17,13 @@ public class ReplacementType {
     @NonNull
     String subtype;
 
-    public static ReplacementType of(@Nullable String type, @Nullable String subtype) {
+    public static ReplacementType of(@Nullable Byte type, @Nullable String subtype) {
         if (type == null && subtype == null) {
             return ofEmpty();
         } else if (type == null || subtype == null) {
             throw new IllegalArgumentException();
         } else {
-            return ReplacementType.of(ReplacementKind.valueOfLabel(type), subtype);
+            return ReplacementType.of(ReplacementKind.valueOf(type), subtype);
         }
     }
 
@@ -52,6 +52,6 @@ public class ReplacementType {
 
     @Override
     public String toString() {
-        return String.format("%s - %s", kind.getLabel(), subtype);
+        return String.format("%s - %s", kind, subtype);
     }
 }

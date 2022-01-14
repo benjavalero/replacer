@@ -22,12 +22,15 @@ class ReplacementCountService {
     }
 
     private Collection<KindCount> toDto(Collection<ResultCount<ReplacementType>> counts) {
-        final Map<String, KindCount> typeCounts = new TreeMap<>();
+        final Map<Byte, KindCount> kindCounts = new TreeMap<>();
         for (ResultCount<ReplacementType> count : counts) {
-            String type = count.getKey().getKind().getLabel();
-            KindCount kindCount = typeCounts.computeIfAbsent(type, KindCount::of);
+            byte kindCode = count.getKey().getKind().getCode();
+            KindCount kindCount = kindCounts.computeIfAbsent(
+                kindCode,
+                k -> KindCount.of(count.getKey().getKind().getCode())
+            );
             kindCount.add(TypeCount.of(count.getKey().getSubtype(), count.getCount()));
         }
-        return typeCounts.values().stream().sorted().collect(Collectors.toUnmodifiableList());
+        return kindCounts.values().stream().sorted().collect(Collectors.toUnmodifiableList());
     }
 }

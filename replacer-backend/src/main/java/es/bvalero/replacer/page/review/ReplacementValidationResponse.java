@@ -14,13 +14,13 @@ class ReplacementValidationResponse {
 
     @Schema(description = "Known replacement type or empty", example = "Ortografía")
     @Nullable
-    String type;
+    Byte type;
 
     @Schema(description = "Known replacement subtype or empty", example = "aún")
     @Nullable
     String subtype;
 
     static ReplacementValidationResponse of(ReplacementType replacementType) {
-        return ReplacementValidationResponse.of(replacementType.getKind().getLabel(), replacementType.getSubtype());
+        return ReplacementValidationResponse.of(replacementType.getKind().getCode(), replacementType.getSubtype());
     }
 }

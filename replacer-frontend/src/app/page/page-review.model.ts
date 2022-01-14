@@ -2,17 +2,33 @@ import { Language } from '../user/language-model';
 import { AccessToken } from '../user/user.model';
 import { ReviewReplacement } from './page-replacement.model';
 
+export const typeLabel: { [key: number]: string } = {
+  1: 'Personalizado',
+  2: 'Ortografía',
+  3: 'Compuestos',
+  4: 'Fechas'
+};
+
 export class ReviewOptions {
-  type: string | null;
+  type: number | null;
   subtype: string | null;
   suggestion: string | null;
   cs: boolean | null;
 
-  constructor(type: string | null, subtype: string | null, suggestion: string | null, cs: boolean | null) {
+  constructor(type: number | null, subtype: string | null, suggestion: string | null, cs: boolean | null) {
     this.type = type;
     this.subtype = subtype;
     this.suggestion = suggestion;
     this.cs = cs;
+  }
+
+  // TODO: Add constants or retrieve them from backend
+  getTypeLabel(): string | null {
+    if (this.type) {
+      return typeLabel[this.type];
+    } else {
+      return null;
+    }
   }
 }
 
@@ -38,7 +54,7 @@ interface ReviewSection {
 }
 
 export interface PageReviewOptions {
-  type?: string;
+  type?: number;
   subtype?: string;
   suggestion?: string;
   cs?: boolean;

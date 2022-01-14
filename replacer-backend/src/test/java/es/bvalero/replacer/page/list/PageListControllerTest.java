@@ -39,9 +39,7 @@ class PageListControllerTest {
         when(checkUserRightsService.isBot(WikipediaLanguage.SPANISH, "A")).thenReturn(true);
 
         mvc
-            .perform(
-                get("/api/pages?type=Ortografía&subtype=Africa&lang=es&user=A").contentType(MediaType.TEXT_PLAIN_VALUE)
-            )
+            .perform(get("/api/pages?type=2&subtype=Africa&lang=es&user=A").contentType(MediaType.TEXT_PLAIN_VALUE))
             .andExpect(status().isOk());
 
         verify(checkUserRightsService).isBot(WikipediaLanguage.SPANISH, "A");
@@ -57,9 +55,7 @@ class PageListControllerTest {
         when(checkUserRightsService.isBot(WikipediaLanguage.SPANISH, "A")).thenReturn(false);
 
         mvc
-            .perform(
-                get("/api/pages?type=Ortografía&subtype=Africa&lang=es&user=A").contentType(MediaType.TEXT_PLAIN_VALUE)
-            )
+            .perform(get("/api/pages?type=2&subtype=Africa&lang=es&user=A").contentType(MediaType.TEXT_PLAIN_VALUE))
             .andExpect(status().isForbidden());
 
         verify(checkUserRightsService).isBot(WikipediaLanguage.SPANISH, "A");
@@ -76,8 +72,7 @@ class PageListControllerTest {
 
         mvc
             .perform(
-                post("/api/pages/review?type=Ortografía&subtype=Africa&lang=es&user=A")
-                    .contentType(MediaType.APPLICATION_JSON)
+                post("/api/pages/review?type=2&subtype=Africa&lang=es&user=A").contentType(MediaType.APPLICATION_JSON)
             )
             .andExpect(status().isNoContent());
 
@@ -95,8 +90,7 @@ class PageListControllerTest {
 
         mvc
             .perform(
-                post("/api/pages/review?type=Ortografía&subtype=Africa&lang=es&user=A")
-                    .contentType(MediaType.APPLICATION_JSON)
+                post("/api/pages/review?type=2&subtype=Africa&lang=es&user=A").contentType(MediaType.APPLICATION_JSON)
             )
             .andExpect(status().isForbidden());
 

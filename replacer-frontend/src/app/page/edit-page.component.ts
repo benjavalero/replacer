@@ -3,7 +3,7 @@ import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core
 import { AlertService } from '../alert/alert.service';
 import { UserService } from '../user/user.service';
 import { FixedReplacement, getReplacementEnd } from './page-replacement.model';
-import { PageReviewResponse, ReviewOptions } from './page-review.model';
+import { PageReviewResponse, ReviewOptions, typeLabel } from './page-review.model';
 import { EMPTY_CONTENT, PageService } from './page.service';
 
 @Component({
@@ -143,5 +143,9 @@ export class EditPageComponent implements OnChanges {
 
   get historyUrl(): string {
     return `https://${this.review.page.lang}.wikipedia.org/w/index.php?title=${this.review.page.title}&action=history`;
+  }
+
+  get typeLabel(): string {
+    return typeLabel[this.review.options.type!];
   }
 }

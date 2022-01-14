@@ -64,7 +64,7 @@ public class PageReviewMapper {
     private PageReviewOptionsDto toDto(PageReviewOptions options) {
         PageReviewOptionsDto dto = new PageReviewOptionsDto();
         if (options.getOptionsType() != PageReviewOptionsType.NO_TYPE) {
-            dto.setType(options.getType().getKind().getLabel());
+            dto.setType(options.getType().getKind().getCode());
             dto.setSubtype(options.getType().getSubtype());
             dto.setSuggestion(options.getSuggestion());
             dto.setCs(options.getCs());

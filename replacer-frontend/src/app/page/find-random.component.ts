@@ -4,7 +4,7 @@ import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AlertService } from '../alert/alert.service';
-import { PageReviewResponse, ReviewOptions } from './page-review.model';
+import { PageReviewResponse, ReviewOptions, typeLabel } from './page-review.model';
 import { PageService } from './page.service';
 import { ValidateCustomComponent } from './validate-custom.component';
 import { ReplacementValidationResponse } from './validate-custom.model';
@@ -35,13 +35,13 @@ export class FindRandomComponent implements OnInit {
     // Optional search options
     const pageId = this.route.snapshot.paramMap.get('id');
     const options = new ReviewOptions(
-      this.route.snapshot.paramMap.get('type'),
+      this.convertTypeParameter(this.route.snapshot.paramMap.get('type')),
       this.route.snapshot.paramMap.get('subtype'),
       this.route.snapshot.paramMap.get('suggestion'),
       this.route.snapshot.paramMap.get('cs') === 'true'
     );
     if (options.suggestion) {
-      options.type = 'Personalizado';
+      options.type = 1;
     }
 
     if (pageId) {
@@ -53,10 +53,32 @@ export class FindRandomComponent implements OnInit {
     }
   }
 
+  private convertTypeParameter(type: string | null): number | null {
+    if (type) {
+      // Just for compatibility with old use with labels
+      switch (type) {
+        case 'Personalizado': {
+          return 1;
+        }
+        case 'Ortografía': {
+          return 2;
+        }
+        case 'Compuestos': {
+          return 3;
+        }
+        default: {
+          return +type;
+        }
+      }
+    } else {
+      return null;
+    }
+  }
+
   private findRandomPage(options: ReviewOptions): void {
     const msg =
       options.type && options.subtype
-        ? `Buscando artículo aleatorio de tipo «${options.type} - ${options.subtype}»…`
+        ? `Buscando artículo aleatorio de tipo «${options.getTypeLabel()} - ${options.subtype}»…`
         : 'Buscando artículo aleatorio…';
     this.titleService.setTitle(`Replacer - ${msg}`);
 
@@ -69,7 +91,7 @@ export class FindRandomComponent implements OnInit {
         } else {
           this.alertService.addWarningMessage(
             options.type && options.subtype
-              ? `No se ha encontrado ningún artículo de tipo «${options.type} - ${options.subtype}»`
+              ? `No se ha encontrado ningún artículo de tipo «${options.getTypeLabel()} - ${options.subtype}»`
               : 'No se ha encontrado ningún artículo'
           );
         }
@@ -163,9 +185,9 @@ export class FindRandomComponent implements OnInit {
       });
   }
 
-  private openValidationModal$(type: string, subtype: string): Promise<any> {
+  private openValidationModal$(type: number, subtype: string): Promise<any> {
     const modalRef = this.modalService.open(ValidateCustomComponent);
-    modalRef.componentInstance.type = type;
+    modalRef.componentInstance.type = typeLabel[type];
     modalRef.componentInstance.subtype = subtype;
     return modalRef.result;
   }

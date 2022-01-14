@@ -151,7 +151,7 @@ class PageJdbcRepository implements PageRepository, PageIndexRepository {
             numResults;
         SqlParameterSource namedParameters = new MapSqlParameterSource()
             .addValue("lang", lang.getCode())
-            .addValue("type", type.getKind().getLabel())
+            .addValue("type", type.getKind().getCode())
             .addValue("subtype", type.getSubtype());
         return jdbcTemplate
             .queryForList(sql, namedParameters, Integer.class)
@@ -167,7 +167,7 @@ class PageJdbcRepository implements PageRepository, PageIndexRepository {
             "WHERE lang = :lang AND type = :type AND subtype = :subtype AND reviewer IS NULL";
         SqlParameterSource namedParameters = new MapSqlParameterSource()
             .addValue("lang", lang.getCode())
-            .addValue("type", type.getKind().getLabel())
+            .addValue("type", type.getKind().getCode())
             .addValue("subtype", type.getSubtype());
         Integer result = jdbcTemplate.queryForObject(sql, namedParameters, Integer.class);
         return Objects.requireNonNullElse(result, 0);
@@ -182,7 +182,7 @@ class PageJdbcRepository implements PageRepository, PageIndexRepository {
             "AND r.type = :type AND r.subtype = :subtype AND r.reviewer IS NULL)";
         SqlParameterSource namedParameters = new MapSqlParameterSource()
             .addValue("lang", lang.getCode())
-            .addValue("type", type.getKind().getLabel())
+            .addValue("type", type.getKind().getCode())
             .addValue("subtype", type.getSubtype());
         return jdbcTemplate.queryForList(sql, namedParameters, String.class);
     }

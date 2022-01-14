@@ -122,9 +122,7 @@ class PageReviewControllerTest {
         when(pageReviewTypeSubtypeFinder.findRandomPageReview(options)).thenReturn(Optional.of(review));
 
         mvc
-            .perform(
-                get("/api/pages/random?type=Fechas&subtype=Y&lang=es&user=A").contentType(MediaType.APPLICATION_JSON)
-            )
+            .perform(get("/api/pages/random?type=4&subtype=Y&lang=es&user=A").contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk());
 
         verify(pageReviewTypeSubtypeFinder).findRandomPageReview(options);
@@ -137,7 +135,7 @@ class PageReviewControllerTest {
 
         mvc
             .perform(
-                get("/api/pages/random?type=Personalizado&subtype=X&cs=false&suggestion=Y&lang=es&user=A")
+                get("/api/pages/random?type=1&subtype=X&cs=false&suggestion=Y&lang=es&user=A")
                     .contentType(MediaType.APPLICATION_JSON)
             )
             .andExpect(status().isOk());
@@ -172,7 +170,7 @@ class PageReviewControllerTest {
         when(pageReviewTypeSubtypeFinder.getPageReview(123, options)).thenReturn(Optional.of(review));
 
         mvc
-            .perform(get("/api/pages/123?type=Fechas&subtype=Y&lang=es&user=A").contentType(MediaType.APPLICATION_JSON))
+            .perform(get("/api/pages/123?type=4&subtype=Y&lang=es&user=A").contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk());
 
         verify(pageReviewTypeSubtypeFinder).getPageReview(123, options);
@@ -185,7 +183,7 @@ class PageReviewControllerTest {
 
         mvc
             .perform(
-                get("/api/pages/123?type=Personalizado&subtype=X&cs=true&suggestion=Y&lang=es&user=A")
+                get("/api/pages/123?type=1&subtype=X&cs=true&suggestion=Y&lang=es&user=A")
                     .contentType(MediaType.APPLICATION_JSON)
             )
             .andExpect(status().isOk());
@@ -205,7 +203,7 @@ class PageReviewControllerTest {
                     .contentType(MediaType.APPLICATION_JSON)
             )
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.type", is(ReplacementKind.MISSPELLING_SIMPLE.getLabel())))
+            .andExpect(jsonPath("$.type", is(Byte.valueOf(ReplacementKind.MISSPELLING_SIMPLE.getCode()).intValue())))
             .andExpect(jsonPath("$.subtype", is(replacement)));
 
         verify(replacementValidationService).findMatchingReplacementType(WikipediaLanguage.SPANISH, replacement, true);

@@ -1,5 +1,5 @@
 export interface TypeCount {
-  t: string; // Type
+  k: number; // Kind code
   l: SubtypeCount[];
 }
 

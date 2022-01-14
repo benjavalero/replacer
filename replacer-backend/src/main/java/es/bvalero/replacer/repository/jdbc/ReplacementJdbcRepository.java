@@ -120,7 +120,10 @@ class ReplacementJdbcRepository
             namedParameters,
             (resultSet, rowNum) ->
                 ResultCount.of(
-                    ReplacementType.of(resultSet.getString("TYPE"), resultSet.getString("SUBTYPE")),
+                    ReplacementType.of(
+                        ReplacementKind.valueOf(resultSet.getByte("TYPE")),
+                        resultSet.getString("SUBTYPE")
+                    ),
                     resultSet.getInt("NUM")
                 )
         );
@@ -134,7 +137,7 @@ class ReplacementJdbcRepository
         SqlParameterSource namedParameters = new MapSqlParameterSource()
             .addValue("reviewer", reviewer)
             .addValue("lang", lang.getCode())
-            .addValue("type", type.getKind().getLabel())
+            .addValue("type", type.getKind().getCode())
             .addValue("subtype", type.getSubtype());
         jdbcTemplate.update(sql, namedParameters);
     }
@@ -155,7 +158,7 @@ class ReplacementJdbcRepository
         if (Objects.nonNull(type)) {
             where += "AND type = :type AND subtype = :subtype";
             namedParameters =
-                namedParameters.addValue("type", type.getKind().getLabel()).addValue("subtype", type.getSubtype());
+                namedParameters.addValue("type", type.getKind().getCode()).addValue("subtype", type.getSubtype());
         }
         String sql = from + where;
         jdbcTemplate.update(sql, namedParameters);
@@ -176,7 +179,7 @@ class ReplacementJdbcRepository
                 .collect(Collectors.toUnmodifiableSet());
             SqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("lang", lang.getCode())
-                .addValue("type", kind.getLabel())
+                .addValue("type", kind.getCode())
                 .addValue("subtypes", subtypes);
             jdbcTemplate.update(sql, namedParameters);
         }

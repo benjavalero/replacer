@@ -39,7 +39,7 @@ class ReplacementCountServiceTest {
 
         when(replacementTypeRepository.countReplacementsByType(WikipediaLanguage.getDefault())).thenReturn(counts);
 
-        KindCount kindCount = KindCount.of(ReplacementKind.DATE.getLabel());
+        KindCount kindCount = KindCount.of(ReplacementKind.DATE.getCode());
         kindCount.add(TypeCount.of("Y", 100));
         Collection<KindCount> expected = Collections.singletonList(kindCount);
 

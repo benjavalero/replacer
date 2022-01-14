@@ -3,6 +3,7 @@ import { faCheckDouble, faList } from '@fortawesome/free-solid-svg-icons';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
+import { typeLabel } from '../page/page-review.model';
 import StringUtils from '../string-utils';
 import { UserConfigService } from '../user/user-config.service';
 import { User } from '../user/user.model';
@@ -21,12 +22,13 @@ export class ReplacementTableComponent implements OnInit, OnChanges {
   private readonly PAGE_SIZE = 8;
   private readonly MAX_SIZE = 3;
 
-  @Input() type!: string;
+  @Input() type!: number;
   @Input() replacementCounts: SubtypeCount[];
 
   filteredItems: SubtypeCount[];
 
   user$!: Observable<User>;
+  label!: string;
 
   // Filters
   sortColumn: string;
@@ -63,6 +65,7 @@ export class ReplacementTableComponent implements OnInit, OnChanges {
 
   ngOnInit() {
     this.user$ = this.userService.user$;
+    this.label = typeLabel[this.type];
   }
 
   ngOnChanges() {
@@ -150,7 +153,7 @@ export class ReplacementTableComponent implements OnInit, OnChanges {
 
   reviewPages(subtype: string): void {
     const modalRef = this.modalService.open(ReviewSubtypeComponent);
-    modalRef.componentInstance.type = this.type;
+    modalRef.componentInstance.type = this.label;
     modalRef.componentInstance.subtype = subtype;
     modalRef.result.then(
       (result) => {

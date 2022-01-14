@@ -1,4 +1,4 @@
 export interface ReplacementValidationResponse {
-  type: string;
+  type: number;
   subtype: string;
 }
