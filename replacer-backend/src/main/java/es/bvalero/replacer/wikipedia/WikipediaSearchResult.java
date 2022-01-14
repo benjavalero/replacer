@@ -3,14 +3,12 @@ package es.bvalero.replacer.wikipedia;
 import java.util.List;
 import lombok.*;
 import org.jetbrains.annotations.TestOnly;
-import org.springframework.lang.NonNull;
 
 @Value
 @Builder
 public class WikipediaSearchResult {
 
-    @NonNull
-    Integer total;
+    int total;
 
     @ToString.Exclude
     @Singular

@@ -9,6 +9,5 @@ import org.springframework.lang.NonNull;
 class ReplacementCount {
 
     @Schema(required = true, example = "1")
-    @NonNull
-    Long count;
+    int count;
 }

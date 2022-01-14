@@ -35,9 +35,9 @@ class DumpControllerTest {
     @Test
     void testGetDumpIndexingStatus() throws Exception {
         boolean running = true;
-        long numPagesRead = 1000;
-        long numPagesIndexed = 500;
-        long numPagesEstimated = 200000;
+        int numPagesRead = 1000;
+        int numPagesIndexed = 500;
+        int numPagesEstimated = 200000;
         String dumpFileName = "xxx.xml.bz2";
         LocalDateTime start = LocalDateTime.now();
         LocalDateTime end = start.plusHours(1);
@@ -57,9 +57,9 @@ class DumpControllerTest {
             .perform(get("/api/dump-indexing?user=x&lang=es").contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.running", equalTo(running)))
-            .andExpect(jsonPath("$.numPagesRead", is(Long.valueOf(numPagesRead).intValue())))
-            .andExpect(jsonPath("$.numPagesIndexed", is(Long.valueOf(numPagesIndexed).intValue())))
-            .andExpect(jsonPath("$.numPagesEstimated", is(Long.valueOf(numPagesEstimated).intValue())))
+            .andExpect(jsonPath("$.numPagesRead", is(numPagesRead)))
+            .andExpect(jsonPath("$.numPagesIndexed", is(numPagesIndexed)))
+            .andExpect(jsonPath("$.numPagesEstimated", is(numPagesEstimated)))
             .andExpect(jsonPath("$.dumpFileName", is(dumpFileName)))
             .andExpect(jsonPath("$.start", is(DumpLocalDateTimeSerializer.convertLocalDateTimeToMilliseconds(start))))
             .andExpect(jsonPath("$.end", is(DumpLocalDateTimeSerializer.convertLocalDateTimeToMilliseconds(end))));

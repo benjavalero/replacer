@@ -10,8 +10,7 @@ import org.springframework.lang.NonNull;
 class ReviewReplacement {
 
     @Schema(description = "Position of the replacement in the content", required = true, example = "1776")
-    @NonNull
-    Integer start;
+    int start;
 
     @Schema(description = "Text of the replacement", example = "aún", required = true)
     @NonNull

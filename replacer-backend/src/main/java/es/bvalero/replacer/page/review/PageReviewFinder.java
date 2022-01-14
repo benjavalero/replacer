@@ -180,7 +180,7 @@ abstract class PageReviewFinder {
         }
 
         // STEP 2.2.2: Build an initial review for the complete page with the found replacements
-        long numPending = findTotalResultsFromCache(options) + 1; // Include the current one as pending
+        int numPending = findTotalResultsFromCache(options) + 1; // Include the current one as pending
         PageReview pageReview = PageReview.of(page, null, replacements, numPending);
 
         // STEP 2.2.3: Try to reduce the review size by returning just a section of the page
@@ -210,10 +210,10 @@ abstract class PageReviewFinder {
         return pageIndexService.indexPage(page);
     }
 
-    private long findTotalResultsFromCache(PageReviewOptions options) {
+    private int findTotalResultsFromCache(PageReviewOptions options) {
         String key = buildCacheKey(options);
         // If a review is requested directly it is possible the cache doesn't exist
         PageSearchResult result = cachedPageIds.getIfPresent(key);
-        return result != null ? result.getTotal() : 0L;
+        return result != null ? result.getTotal() : 0;
     }
 }

@@ -43,10 +43,10 @@ class DumpSaxHandler extends DefaultHandler {
     private boolean running = false;
 
     @Getter
-    private long numPagesRead = 0L;
+    private int numPagesRead = 0;
 
     @Getter
-    private long numPagesIndexed = 0L;
+    private int numPagesIndexed = 0;
 
     @Getter
     private LocalDateTime start = null;

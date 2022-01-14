@@ -15,8 +15,7 @@ public class PageModel {
     @NonNull
     String lang;
 
-    @NonNull
-    Integer pageId;
+    int pageId;
 
     @NonNull
     String title;

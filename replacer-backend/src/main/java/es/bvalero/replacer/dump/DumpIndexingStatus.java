@@ -21,15 +21,15 @@ class DumpIndexingStatus {
 
     @Schema(description = "Number of indexable pages read", example = "251934")
     @Nullable
-    Long numPagesRead;
+    Integer numPagesRead;
 
     @Schema(description = "Number of indexable pages indexed", example = "5016")
     @Nullable
-    Long numPagesIndexed;
+    Integer numPagesIndexed;
 
     @Schema(description = "Estimated number of indexable pages", example = "249805")
     @Nullable
-    Long numPagesEstimated;
+    Integer numPagesEstimated;
 
     @Schema(description = "Filename of the indexed dump", example = "glwiki-20210320-pages-articles.xml.bz2")
     @Nullable

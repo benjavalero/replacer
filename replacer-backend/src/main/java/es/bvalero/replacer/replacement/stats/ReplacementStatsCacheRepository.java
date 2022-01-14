@@ -28,14 +28,14 @@ class ReplacementStatsCacheRepository implements ReplacementStatsRepository {
     // Statistics caches
     // The queries in database can be heavy, so we preload the counts on start and refresh them periodically.
     // They are not used often so for the moment it is not worth to add synchronization.
-    private final Map<WikipediaLanguage, Long> countReviewed = new EnumMap<>(WikipediaLanguage.class);
-    private final Map<WikipediaLanguage, Long> countNotReviewed = new EnumMap<>(WikipediaLanguage.class);
+    private final Map<WikipediaLanguage, Integer> countReviewed = new EnumMap<>(WikipediaLanguage.class);
+    private final Map<WikipediaLanguage, Integer> countNotReviewed = new EnumMap<>(WikipediaLanguage.class);
     private final Map<WikipediaLanguage, Collection<ResultCount<String>>> countByReviewer = new EnumMap<>(
         WikipediaLanguage.class
     );
 
     @Override
-    public long countReplacementsReviewed(WikipediaLanguage lang) {
+    public int countReplacementsReviewed(WikipediaLanguage lang) {
         return this.countReviewed.computeIfAbsent(
                 lang,
                 l -> this.replacementStatsRepository.countReplacementsReviewed(l)
@@ -43,7 +43,7 @@ class ReplacementStatsCacheRepository implements ReplacementStatsRepository {
     }
 
     @Override
-    public long countReplacementsNotReviewed(WikipediaLanguage lang) {
+    public int countReplacementsNotReviewed(WikipediaLanguage lang) {
         return this.countNotReviewed.computeIfAbsent(
                 lang,
                 l -> this.replacementStatsRepository.countReplacementsNotReviewed(l)

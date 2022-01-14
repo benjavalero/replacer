@@ -70,22 +70,22 @@ class ReplacementJdbcRepository
     }
 
     @Override
-    public long countReplacementsReviewed(WikipediaLanguage lang) {
+    public int countReplacementsReviewed(WikipediaLanguage lang) {
         String sql =
             "SELECT COUNT(*) FROM replacement WHERE lang = :lang AND reviewer IS NOT NULL AND reviewer <> :system";
         SqlParameterSource namedParameters = new MapSqlParameterSource()
             .addValue("lang", lang.getCode())
             .addValue("system", REVIEWER_SYSTEM);
-        Long result = jdbcTemplate.queryForObject(sql, namedParameters, Long.class);
-        return Objects.requireNonNullElse(result, 0L);
+        Integer result = jdbcTemplate.queryForObject(sql, namedParameters, Integer.class);
+        return Objects.requireNonNullElse(result, 0);
     }
 
     @Override
-    public long countReplacementsNotReviewed(WikipediaLanguage lang) {
+    public int countReplacementsNotReviewed(WikipediaLanguage lang) {
         String sql = "SELECT COUNT(*) FROM replacement WHERE lang = :lang AND reviewer IS NULL";
         SqlParameterSource namedParameters = new MapSqlParameterSource().addValue("lang", lang.getCode());
-        Long result = jdbcTemplate.queryForObject(sql, namedParameters, Long.class);
-        return Objects.requireNonNullElse(result, 0L);
+        Integer result = jdbcTemplate.queryForObject(sql, namedParameters, Integer.class);
+        return Objects.requireNonNullElse(result, 0);
     }
 
     @Override
@@ -101,7 +101,7 @@ class ReplacementJdbcRepository
             jdbcTemplate.query(
                 sql,
                 namedParameters,
-                (resultSet, rowNum) -> ResultCount.of(resultSet.getString("REVIEWER"), resultSet.getLong("NUM"))
+                (resultSet, rowNum) -> ResultCount.of(resultSet.getString("REVIEWER"), resultSet.getInt("NUM"))
             )
         );
     }
@@ -121,7 +121,7 @@ class ReplacementJdbcRepository
             (resultSet, rowNum) ->
                 ResultCount.of(
                     ReplacementType.of(resultSet.getString("TYPE"), resultSet.getString("SUBTYPE")),
-                    resultSet.getLong("NUM")
+                    resultSet.getInt("NUM")
                 )
         );
     }
@@ -187,7 +187,7 @@ class ReplacementJdbcRepository
     }
 
     @Override
-    public long findReplacementToReview(WikipediaLanguage lang, long chunkSize) {
+    public long findReplacementToReview(WikipediaLanguage lang, int chunkSize) {
         String sql =
             "SELECT FLOOR(MIN(id) + (MAX(id) - MIN(id) + 1 - :chunkSize) * RAND()) FROM replacement " +
             "WHERE lang = :lang AND reviewer IS NULL";

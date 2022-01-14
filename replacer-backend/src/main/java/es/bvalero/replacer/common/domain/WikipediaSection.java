@@ -11,15 +11,12 @@ import org.springframework.lang.NonNull;
 public class WikipediaSection implements Comparable<WikipediaSection> {
 
     @ToString.Exclude
-    @NonNull
-    Integer level;
+    int level;
 
-    @NonNull
-    Integer index;
+    int index;
 
     @ToString.Exclude
-    @NonNull
-    Integer byteOffset;
+    int byteOffset;
 
     @NonNull
     String anchor;

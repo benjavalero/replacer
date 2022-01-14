@@ -14,11 +14,11 @@ class ReplacementStatsService {
     @Autowired
     private ReplacementStatsRepository replacementStatsRepository;
 
-    long countReplacementsReviewed(WikipediaLanguage lang) {
+    int countReplacementsReviewed(WikipediaLanguage lang) {
         return this.replacementStatsRepository.countReplacementsReviewed(lang);
     }
 
-    long countReplacementsNotReviewed(WikipediaLanguage lang) {
+    int countReplacementsNotReviewed(WikipediaLanguage lang) {
         return this.replacementStatsRepository.countReplacementsNotReviewed(lang);
     }
 

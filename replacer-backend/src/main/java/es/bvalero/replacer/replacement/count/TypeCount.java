@@ -18,6 +18,5 @@ class TypeCount {
 
     @Schema(description = "Number of pages containing this subtype to review", required = true, example = "1")
     @JsonProperty("c")
-    @NonNull
-    Long count;
+    int count;
 }

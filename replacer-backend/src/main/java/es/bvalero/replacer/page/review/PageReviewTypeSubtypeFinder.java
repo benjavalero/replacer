@@ -30,7 +30,7 @@ class PageReviewTypeSubtypeFinder extends PageReviewFinder {
             getCacheSize()
         );
 
-        long totalResults = pageRepository.countPagesToReviewByType(options.getLang(), options.getType());
+        int totalResults = pageRepository.countPagesToReviewByType(options.getLang(), options.getType());
         return PageSearchResult.of(totalResults, pageIds);
     }
 

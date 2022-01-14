@@ -32,7 +32,7 @@ class DumpSaxParser implements DumpParser {
     private PageIndexService pageIndexService;
 
     @Resource
-    private Map<String, Long> numPagesEstimated;
+    private Map<String, Integer> numPagesEstimated;
 
     // Singleton properties to be set in each dump parsing
     // We assume we only parse one dump at a time

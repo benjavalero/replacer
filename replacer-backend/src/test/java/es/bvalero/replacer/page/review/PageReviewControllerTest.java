@@ -76,7 +76,7 @@ class PageReviewControllerTest {
         .type(ReplacementType.of(ReplacementKind.MISSPELLING_SIMPLE, rep))
         .suggestions(List.of(suggestion))
         .build();
-    private final long numPending = 100;
+    private final int numPending = 100;
     private final PageReview review = PageReview.of(page, section, List.of(replacement), numPending);
 
     @Test
@@ -99,7 +99,7 @@ class PageReviewControllerTest {
             .andExpect(jsonPath("$.replacements[0].text", is(rep)))
             .andExpect(jsonPath("$.replacements[0].suggestions[0].text", is("a")))
             .andExpect(jsonPath("$.replacements[0].suggestions[0].comment", is("b")))
-            .andExpect(jsonPath("$.numPending", is(Long.valueOf(numPending).intValue())));
+            .andExpect(jsonPath("$.numPending", is(numPending)));
 
         verify(pageReviewNoTypeFinder).findRandomPageReview(options);
     }

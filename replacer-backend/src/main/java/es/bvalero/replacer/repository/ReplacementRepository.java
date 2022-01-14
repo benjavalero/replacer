@@ -20,5 +20,5 @@ public interface ReplacementRepository {
     void removeReplacementsByPageId(Collection<WikipediaPageId> pageIds);
 
     /** Find a random replacement to review */
-    long findReplacementToReview(WikipediaLanguage lang, long chunkSize);
+    long findReplacementToReview(WikipediaLanguage lang, int chunkSize);
 }

@@ -31,9 +31,8 @@ public class ReviewPage {
     private String lang;
 
     @Schema(description = "Page ID", required = true, example = "6980716")
-    @NonNull
     @NotNull
-    private Integer id;
+    private int id;
 
     @Schema(description = "Page title", required = true, example = "Artemio Zeno")
     @NonNull

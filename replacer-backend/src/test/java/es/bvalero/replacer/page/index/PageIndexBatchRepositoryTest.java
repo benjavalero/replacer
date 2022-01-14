@@ -43,7 +43,7 @@ class PageIndexBatchRepositoryTest {
     void testFindDatabaseReplacements() {
         // In DB: replacements for page 2 (first load) and 1001 (second load)
         // We ask for the page 1 and 1001, so the page 2 will be cleaned.
-        Integer pageId1 = 2;
+        int pageId1 = 2;
         ReplacementModel replacement1 = ReplacementModel
             .builder()
             .lang(WikipediaLanguage.getDefault().getCode())
@@ -61,7 +61,7 @@ class PageIndexBatchRepositoryTest {
             .replacements(List.of(replacement1))
             .lastUpdate(LocalDate.now())
             .build();
-        Integer pageId2 = 1001;
+        int pageId2 = 1001;
         ReplacementModel replacement2 = ReplacementModel
             .builder()
             .lang(WikipediaLanguage.getDefault().getCode())
@@ -100,7 +100,7 @@ class PageIndexBatchRepositoryTest {
     void testFindDatabaseReplacementsWithEmptyLoad() {
         // In DB: replacement for page 1001
         // So the first load is enlarged
-        Integer pageId = 1001;
+        int pageId = 1001;
         ReplacementModel replacement = ReplacementModel
             .builder()
             .lang(WikipediaLanguage.getDefault().getCode())

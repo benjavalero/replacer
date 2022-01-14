@@ -25,5 +25,5 @@ class PageReviewResponse {
 
     @Schema(description = "Number of pending pages to review of the given type", required = true, example = "1704147")
     @NonNull
-    Long numPending;
+    int numPending;
 }

@@ -9,15 +9,15 @@ import lombok.Getter;
 final class PageSearchResult {
 
     private final List<Integer> pageIds;
-    private long total;
+    private int total;
 
-    private PageSearchResult(long total, Collection<Integer> pageIds) {
+    private PageSearchResult(int total, Collection<Integer> pageIds) {
         this.total = total;
         // We need a List in order to use "removeIf"
         this.pageIds = new LinkedList<>(pageIds);
     }
 
-    static PageSearchResult of(long total, Collection<Integer> pageIds) {
+    static PageSearchResult of(int total, Collection<Integer> pageIds) {
         return new PageSearchResult(total, pageIds);
     }
 

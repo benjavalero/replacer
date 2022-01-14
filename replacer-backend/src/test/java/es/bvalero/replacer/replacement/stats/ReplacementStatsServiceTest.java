@@ -33,7 +33,7 @@ class ReplacementStatsServiceTest {
 
     @Test
     void testCountReplacementsReviewed() {
-        long count = new Random().nextLong();
+        int count = new Random().nextInt();
 
         when(replacementStatsRepository.countReplacementsReviewed(any(WikipediaLanguage.class))).thenReturn(count);
 
@@ -44,7 +44,7 @@ class ReplacementStatsServiceTest {
 
     @Test
     void testCountReplacementsToReview() {
-        long count = new Random().nextLong();
+        int count = new Random().nextInt();
 
         when(replacementStatsRepository.countReplacementsNotReviewed(any(WikipediaLanguage.class))).thenReturn(count);
 
@@ -55,7 +55,7 @@ class ReplacementStatsServiceTest {
 
     @Test
     void testCountReplacementsGroupedByReviewer() {
-        Collection<ResultCount<String>> counts = List.of(ResultCount.of("A", 10L));
+        Collection<ResultCount<String>> counts = List.of(ResultCount.of("A", 10));
         when(replacementStatsRepository.countReplacementsByReviewer(any(WikipediaLanguage.class))).thenReturn(counts);
 
         assertEquals(counts, replacementStatsService.countReplacementsGroupedByReviewer(WikipediaLanguage.SPANISH));

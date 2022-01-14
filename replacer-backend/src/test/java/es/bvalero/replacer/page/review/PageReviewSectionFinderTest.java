@@ -36,7 +36,7 @@ class PageReviewSectionFinderTest {
 
         when(wikipediaService.getPageSections(any(WikipediaPageId.class))).thenReturn(Collections.emptyList());
 
-        PageReview review = PageReview.of(page, null, replacements, 1L);
+        PageReview review = PageReview.of(page, null, replacements, 1);
         Optional<PageReview> sectionReview = pageReviewSectionFinder.findPageReviewSection(review);
 
         assertFalse(sectionReview.isPresent());
@@ -63,10 +63,10 @@ class PageReviewSectionFinderTest {
             .content(content)
             .lastUpdate(LocalDateTime.now())
             .build();
-        Long numPending = 10L;
+        int numPending = 10;
         PageReview pageReview = PageReview.of(page, null, replacements, numPending);
 
-        Integer sectionId = 3;
+        int sectionId = 3;
         int offset = 5;
         WikipediaSection section = WikipediaSection
             .builder()
@@ -94,7 +94,6 @@ class PageReviewSectionFinderTest {
         sectionReview.ifPresent(review -> {
             assertEquals(page.getId(), review.getPage().getId());
             assertNotNull(review.getSection());
-            assertNotNull(review.getSection().getIndex());
             assertEquals(section, review.getSection());
             assertEquals(sectionContent, review.getPage().getContent());
             assertEquals(1, review.getReplacements().size());

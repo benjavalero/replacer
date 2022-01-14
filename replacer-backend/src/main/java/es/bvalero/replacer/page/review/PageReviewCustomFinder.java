@@ -45,8 +45,8 @@ class PageReviewCustomFinder extends PageReviewFinder {
             this.incrementOffset(getCacheSize());
 
             WikipediaSearchResult searchResult = findWikipediaResults(options);
-            final long totalWikipediaResults = searchResult.getTotal();
-            long totalToReview = searchResult.getTotal();
+            final int totalWikipediaResults = searchResult.getTotal();
+            int totalToReview = searchResult.getTotal();
             final List<Integer> pageIds = new LinkedList<>(searchResult.getPageIds());
 
             String subtype = options.getType().getSubtype();

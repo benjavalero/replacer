@@ -13,6 +13,5 @@ class ReviewerCount {
     String reviewer;
 
     @Schema(required = true, example = "1")
-    @NonNull
-    Long count;
+    int count;
 }

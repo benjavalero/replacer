@@ -15,8 +15,7 @@ class DumpPage {
     @NonNull
     WikipediaLanguage lang;
 
-    @NonNull
-    Integer id;
+    int id;
 
     @NonNull
     WikipediaNamespace namespace;

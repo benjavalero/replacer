@@ -119,17 +119,13 @@ class PageReviewSectionFinder {
 
     private boolean areAllReplacementsContainedInInterval(
         Collection<PageReplacement> replacements,
-        Integer start,
+        int start,
         @Nullable Integer end
     ) {
         return replacements.stream().allMatch(rep -> isReplacementContainedInInterval(rep, start, end));
     }
 
-    private boolean isReplacementContainedInInterval(
-        PageReplacement replacement,
-        Integer start,
-        @Nullable Integer end
-    ) {
+    private boolean isReplacementContainedInInterval(PageReplacement replacement, int start, @Nullable Integer end) {
         if (replacement.getStart() >= start) {
             if (end == null) {
                 return true;

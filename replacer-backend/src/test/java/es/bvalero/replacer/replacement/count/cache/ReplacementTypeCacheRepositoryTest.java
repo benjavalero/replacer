@@ -39,8 +39,8 @@ class ReplacementTypeCacheRepositoryTest {
         ReplacementKind kind = ReplacementKind.DATE;
         ReplacementType type1 = ReplacementType.of(kind, "Y");
         ReplacementType type2 = ReplacementType.of(kind, "Z");
-        ResultCount<ReplacementType> count1 = ResultCount.of(type1, 2L);
-        ResultCount<ReplacementType> count2 = ResultCount.of(type2, 1L);
+        ResultCount<ReplacementType> count1 = ResultCount.of(type1, 2);
+        ResultCount<ReplacementType> count2 = ResultCount.of(type2, 1);
         Collection<ResultCount<ReplacementType>> counts = List.of(count1, count2);
         when(replacementTypeRepository.countReplacementsByType(lang)).thenReturn(counts);
 
@@ -50,8 +50,8 @@ class ReplacementTypeCacheRepositoryTest {
         assertEquals(1, kindCount.size());
         assertTrue(kindCount.contains(kind));
         assertEquals(2, kindCount.get(kind).size());
-        assertEquals(2L, kindCount.get(kind).get("Y").orElse(null));
-        assertEquals(1L, kindCount.get(kind).get("Z").orElse(null));
+        assertEquals(2, kindCount.get(kind).get("Y").orElse(null));
+        assertEquals(1, kindCount.get(kind).get("Z").orElse(null));
 
         // Decrease a replacement count
         replacementCacheRepository.decrementSubtypeCount(lang, type1);
@@ -60,8 +60,8 @@ class ReplacementTypeCacheRepositoryTest {
         assertEquals(1, kindCount.size());
         assertTrue(kindCount.contains(kind));
         assertEquals(2, kindCount.get(kind).size());
-        assertEquals(1L, kindCount.get(kind).get("Y").orElse(null));
-        assertEquals(1L, kindCount.get(kind).get("Z").orElse(null));
+        assertEquals(1, kindCount.get(kind).get("Y").orElse(null));
+        assertEquals(1, kindCount.get(kind).get("Z").orElse(null));
 
         // Decrease a replacement count emptying it
         replacementCacheRepository.decrementSubtypeCount(lang, type2);
@@ -70,7 +70,7 @@ class ReplacementTypeCacheRepositoryTest {
         assertEquals(1, kindCount.size());
         assertTrue(kindCount.contains(kind));
         assertEquals(1, kindCount.get(kind).size());
-        assertEquals(1L, kindCount.get(kind).get("Y").orElse(null));
+        assertEquals(1, kindCount.get(kind).get("Y").orElse(null));
         assertTrue(kindCount.get(kind).get("Z").isEmpty());
 
         // Remove a replacement count not existing in cache

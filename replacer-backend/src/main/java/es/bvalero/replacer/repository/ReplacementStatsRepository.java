@@ -5,10 +5,10 @@ import java.util.Collection;
 
 public interface ReplacementStatsRepository {
     /** Count the number of replacements reviewed */
-    long countReplacementsReviewed(WikipediaLanguage lang);
+    int countReplacementsReviewed(WikipediaLanguage lang);
 
     /** Count the number of replacements to review */
-    long countReplacementsNotReviewed(WikipediaLanguage lang);
+    int countReplacementsNotReviewed(WikipediaLanguage lang);
 
     /** Count the number of reviewed replacements by reviewer */
     Collection<ResultCount<String>> countReplacementsByReviewer(WikipediaLanguage lang);

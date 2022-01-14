@@ -131,12 +131,12 @@ class PageJdbcRepository implements PageRepository, PageIndexRepository {
     }
 
     @Override
-    public long countPagesToReview(WikipediaLanguage lang) {
+    public int countPagesToReview(WikipediaLanguage lang) {
         // To check how this would affect to performance
         String sql = "SELECT COUNT (DISTINCT article_id) FROM replacement WHERE lang = :lang AND reviewer IS NULL";
         SqlParameterSource namedParameters = new MapSqlParameterSource().addValue("lang", lang.getCode());
-        Long result = jdbcTemplate.queryForObject(sql, namedParameters, Long.class);
-        return Objects.requireNonNullElse(result, 0L);
+        Integer result = jdbcTemplate.queryForObject(sql, namedParameters, Integer.class);
+        return Objects.requireNonNullElse(result, 0);
     }
 
     @Override
@@ -160,7 +160,7 @@ class PageJdbcRepository implements PageRepository, PageIndexRepository {
     }
 
     @Override
-    public long countPagesToReviewByType(WikipediaLanguage lang, ReplacementType type) {
+    public int countPagesToReviewByType(WikipediaLanguage lang, ReplacementType type) {
         // This approach is slightly better than using a JOIN with the page table
         String sql =
             "SELECT COUNT (DISTINCT article_id) FROM replacement " +
@@ -169,8 +169,8 @@ class PageJdbcRepository implements PageRepository, PageIndexRepository {
             .addValue("lang", lang.getCode())
             .addValue("type", type.getKind().getLabel())
             .addValue("subtype", type.getSubtype());
-        Long result = jdbcTemplate.queryForObject(sql, namedParameters, Long.class);
-        return Objects.requireNonNullElse(result, 0L);
+        Integer result = jdbcTemplate.queryForObject(sql, namedParameters, Integer.class);
+        return Objects.requireNonNullElse(result, 0);
     }
 
     @Override

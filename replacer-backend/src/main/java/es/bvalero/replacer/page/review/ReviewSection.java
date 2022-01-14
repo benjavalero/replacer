@@ -14,9 +14,8 @@ public class ReviewSection {
     // Public: it is an in/out DTO
 
     @Schema(description = "Section ID", required = true, example = "1")
-    @NonNull
     @NotNull
-    Integer id;
+    int id;
 
     @Schema(description = "Section title", required = true, example = "Biografía")
     @NonNull

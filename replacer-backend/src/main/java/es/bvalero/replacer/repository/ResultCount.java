@@ -9,11 +9,10 @@ public class ResultCount<T> implements Comparable<ResultCount<T>> {
     @NonNull
     T key;
 
-    @NonNull
-    Long count;
+    int count;
 
     @Override
     public int compareTo(ResultCount count) {
-        return count.getCount().compareTo(this.count);
+        return Integer.compare(count.getCount(), this.count);
     }
 }

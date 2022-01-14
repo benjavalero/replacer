@@ -34,13 +34,13 @@ class ReplacementCountServiceTest {
     @Test
     void testCountReplacementsGroupedByType() {
         ReplacementType type = ReplacementType.of(ReplacementKind.DATE, "Y");
-        ResultCount<ReplacementType> count = ResultCount.of(type, 100L);
+        ResultCount<ReplacementType> count = ResultCount.of(type, 100);
         Collection<ResultCount<ReplacementType>> counts = Collections.singletonList(count);
 
         when(replacementTypeRepository.countReplacementsByType(WikipediaLanguage.getDefault())).thenReturn(counts);
 
         KindCount kindCount = KindCount.of(ReplacementKind.DATE.getLabel());
-        kindCount.add(TypeCount.of("Y", 100L));
+        kindCount.add(TypeCount.of("Y", 100));
         Collection<KindCount> expected = Collections.singletonList(kindCount);
 
         assertEquals(expected, replacementCountService.countReplacementsGroupedByType(WikipediaLanguage.getDefault()));

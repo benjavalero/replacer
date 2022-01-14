@@ -10,8 +10,7 @@ public class WikipediaPageId {
     @NonNull
     WikipediaLanguage lang;
 
-    @NonNull
-    Integer pageId;
+    int pageId;
 
     @Override
     public String toString() {

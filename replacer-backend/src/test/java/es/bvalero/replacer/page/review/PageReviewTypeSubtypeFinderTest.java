@@ -185,7 +185,7 @@ class PageReviewTypeSubtypeFinderTest {
             .byteOffset(0)
             .anchor("")
             .build();
-        Long numPending = 5L;
+        int numPending = 5;
         PageReview sectionReview = PageReview.of(page, section, replacements, numPending);
         when(pageReviewSectionFinder.findPageReviewSection(any(PageReview.class)))
             .thenReturn(Optional.of(sectionReview));
@@ -197,8 +197,7 @@ class PageReviewTypeSubtypeFinderTest {
             assertEquals(randomId, rev.getPage().getId().getPageId());
             assertEquals(replacements.size(), rev.getReplacements().size());
             assertNotNull(rev.getSection());
-            assertNotNull(rev.getSection().getIndex());
-            assertEquals(sectionId, rev.getSection().getIndex().intValue());
+            assertEquals(sectionId, rev.getSection().getIndex());
             assertEquals(numPending, rev.getNumPending());
         });
     }

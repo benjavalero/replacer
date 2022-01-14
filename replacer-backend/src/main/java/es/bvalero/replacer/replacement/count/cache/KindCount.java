@@ -29,7 +29,7 @@ class KindCount {
     Collection<ResultCount<ReplacementType>> toModel() {
         final List<ResultCount<ReplacementType>> counts = new ArrayList<>();
         for (Map.Entry<ReplacementKind, TypeCount> entry : typeCounts.entrySet()) {
-            for (Map.Entry<String, Long> subEntry : entry.getValue().getSubtypeCounts().entrySet()) {
+            for (Map.Entry<String, Integer> subEntry : entry.getValue().getSubtypeCounts().entrySet()) {
                 ReplacementType type = ReplacementType.of(entry.getKey(), subEntry.getKey());
                 counts.add(ResultCount.of(type, subEntry.getValue()));
             }

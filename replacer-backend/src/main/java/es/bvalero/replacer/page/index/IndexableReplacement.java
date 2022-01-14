@@ -27,8 +27,7 @@ class IndexableReplacement {
     ReplacementType type;
 
     @With
-    @NonNull
-    Integer position;
+    int position;
 
     @With
     @NonNull
@@ -71,7 +70,7 @@ class IndexableReplacement {
         return (
             indexablePageId.equals(that.indexablePageId) &&
             type.equals(that.type) &&
-            (position.equals(that.position) || context.equals(that.context))
+            (position == that.position || context.equals(that.context))
         );
     }
 }

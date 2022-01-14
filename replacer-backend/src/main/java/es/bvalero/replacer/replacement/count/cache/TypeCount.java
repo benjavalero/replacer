@@ -10,9 +10,9 @@ import org.jetbrains.annotations.TestOnly;
 class TypeCount {
 
     // Store internally the subtype counts in a map
-    Map<String, Long> subtypeCounts = new HashMap<>();
+    Map<String, Integer> subtypeCounts = new HashMap<>();
 
-    void add(String subtype, Long count) {
+    void add(String subtype, int count) {
         this.subtypeCounts.put(subtype, count);
     }
 
@@ -29,13 +29,13 @@ class TypeCount {
         return this.subtypeCounts.size();
     }
 
-    Optional<Long> get(String subtype) {
+    Optional<Integer> get(String subtype) {
         return Optional.ofNullable(subtypeCounts.get(subtype));
     }
 
     // Return false if the decrement produces an empty subtype
     boolean decrementSubtypeCount(String subtype) {
-        long newCount = this.subtypeCounts.getOrDefault(subtype, 0L) - 1;
+        int newCount = this.subtypeCounts.getOrDefault(subtype, 0) - 1;
         if (newCount > 0) {
             // Update the subtype with the new count
             this.subtypeCounts.put(subtype, newCount);

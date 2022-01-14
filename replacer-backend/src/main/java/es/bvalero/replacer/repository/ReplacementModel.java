@@ -16,8 +16,7 @@ public class ReplacementModel {
     @NonNull
     String lang;
 
-    @NonNull
-    Integer pageId;
+    int pageId;
 
     @NonNull
     String type;
@@ -25,8 +24,7 @@ public class ReplacementModel {
     @NonNull
     String subtype;
 
-    @NonNull
-    Integer position;
+    int position;
 
     @NonNull
     String context;

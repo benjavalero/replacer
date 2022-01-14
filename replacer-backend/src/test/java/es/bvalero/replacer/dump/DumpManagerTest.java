@@ -81,9 +81,9 @@ class DumpManagerTest {
             .builder()
             .running(true)
             .dumpFileName("X")
-            .numPagesRead(1L)
-            .numPagesIndexed(2L)
-            .numPagesEstimated(3L)
+            .numPagesRead(1)
+            .numPagesIndexed(2)
+            .numPagesEstimated(3)
             .start(now)
             .end(now.plusHours(1))
             .build();

@@ -23,7 +23,7 @@ class PageResultExtractor implements ResultSetExtractor<Collection<PageModel>> {
             if (lang == null) {
                 lang = rs.getString("LANG");
             }
-            final Integer pageId = rs.getInt("ARTICLE_ID");
+            final int pageId = rs.getInt("ARTICLE_ID");
             final String pageLang = lang;
             final String title = rs.getString("TITLE");
             final LocalDate lastUpdate = rs.getDate("LAST_UPDATE").toLocalDate();

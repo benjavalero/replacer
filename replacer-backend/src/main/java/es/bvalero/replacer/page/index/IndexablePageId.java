@@ -10,6 +10,5 @@ class IndexablePageId {
     @NonNull
     WikipediaLanguage lang;
 
-    @NonNull
-    Integer pageId;
+    int pageId;
 }

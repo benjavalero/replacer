@@ -28,7 +28,7 @@ class DumpSaxParserTest {
     private PageIndexService pageIndexService;
 
     @Mock
-    private Map<String, Long> numPagesEstimated;
+    private Map<String, Integer> numPagesEstimated;
 
     @InjectMocks
     private DumpSaxParser dumpParser;

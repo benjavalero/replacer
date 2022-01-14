@@ -23,8 +23,7 @@ import org.springframework.lang.NonNull;
 public class PageReplacement implements Comparable<PageReplacement> {
 
     @With
-    @NonNull
-    Integer start;
+    int start;
 
     @NonNull
     String text;
@@ -35,7 +34,7 @@ public class PageReplacement implements Comparable<PageReplacement> {
     @NonNull
     Collection<Suggestion> suggestions;
 
-    PageReplacement(Integer start, String text, ReplacementType type, Collection<Suggestion> suggestions) {
+    PageReplacement(int start, String text, ReplacementType type, Collection<Suggestion> suggestions) {
         // Validate start
         if (start < 0) {
             throw new IllegalArgumentException("Negative replacement start: " + start);

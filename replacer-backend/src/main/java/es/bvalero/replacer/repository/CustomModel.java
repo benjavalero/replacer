@@ -16,17 +16,14 @@ public class CustomModel {
     @NonNull
     String lang;
 
-    @NonNull
-    Integer pageId;
+    int pageId;
 
     @NonNull
     String replacement;
 
-    @NonNull
-    Byte cs;
+    byte cs;
 
-    @NonNull
-    Integer position;
+    int position;
 
     @Nullable
     String reviewer;
