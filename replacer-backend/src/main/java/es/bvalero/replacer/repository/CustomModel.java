@@ -11,7 +11,7 @@ import org.springframework.lang.Nullable;
 public class CustomModel {
 
     @Nullable
-    Long id; // Nullable when still to be created in database
+    Integer id; // Nullable when still to be created in database
 
     @NonNull
     String lang;

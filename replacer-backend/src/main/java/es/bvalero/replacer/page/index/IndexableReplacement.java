@@ -18,7 +18,7 @@ class IndexableReplacement {
 
     @With
     @Nullable
-    Long id; // Nullable when still to be created in database
+    Integer id; // Nullable when still to be created in database
 
     @NonNull
     IndexablePageId indexablePageId;

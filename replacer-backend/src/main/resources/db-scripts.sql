@@ -1,18 +1,18 @@
 CREATE TABLE page (
-    lang VARCHAR(2) NOT NULL,
-    article_id INT NOT NULL,
-    title VARCHAR(255) COLLATE utf8mb4_bin NOT NULL,
+    lang CHAR(2) CHARACTER SET ascii NOT NULL,
+    article_id MEDIUMINT UNSIGNED NOT NULL,
     last_update DATE NOT NULL,
+    title VARCHAR(255) COLLATE utf8mb4_bin NOT NULL,
     PRIMARY KEY (lang, article_id)
 );
 
 CREATE TABLE replacement (
-    id INT NOT NULL AUTO_INCREMENT,
-    article_id INT NOT NULL,
-    lang VARCHAR(2) NOT NULL,
+    id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    lang CHAR(2) CHARACTER SET ascii NOT NULL,
+    article_id MEDIUMINT UNSIGNED NOT NULL,
     type VARCHAR(25) NOT NULL,
     subtype VARCHAR(100) COLLATE utf8mb4_bin NOT NULL,
-    position INT NOT NULL DEFAULT 0,
+    position MEDIUMINT UNSIGNED NOT NULL DEFAULT 0,
     context VARCHAR(255) COLLATE utf8mb4_bin NOT NULL,
     reviewer VARCHAR(100), -- In order to make the index work
     PRIMARY KEY (id)
@@ -33,12 +33,12 @@ CREATE INDEX idx_dump ON replacement (lang, article_id, reviewer);
 
 -- New table only for custom replacements
 CREATE TABLE custom (
-    id INT NOT NULL AUTO_INCREMENT,
-    article_id INT NOT NULL,
-    lang VARCHAR(2) NOT NULL,
+    id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    lang CHAR(2) CHARACTER SET ascii NOT NULL,
+    article_id MEDIUMINT UNSIGNED NOT NULL,
     replacement VARCHAR(100) COLLATE utf8mb4_bin NOT NULL,
     cs TINYINT(1) NOT NULL DEFAULT 0,
-    position INT NOT NULL DEFAULT 0, -- So we can move items to the replacements table
+    position MEDIUMINT UNSIGNED NOT NULL DEFAULT 0, -- So we can move items to the replacements table
     reviewer VARCHAR(100), -- In order to make the index work
     PRIMARY KEY (id)
 );

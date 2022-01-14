@@ -112,7 +112,7 @@ class PageJdbcRepository implements PageRepository, PageIndexRepository {
     public Collection<Integer> findPageIdsToReview(WikipediaLanguage lang, int numResults) {
         // Find a random page without filtering by type takes a lot
         // Instead we find a random replacement and then the following pages
-        long randomStart = replacementRepository.findReplacementToReview(lang, numResults);
+        int randomStart = replacementRepository.findReplacementToReview(lang, numResults);
 
         // Not worth to DISTINCT. Instead, we return the results as a set to avoid duplicates.
         String sql =

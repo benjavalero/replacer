@@ -51,7 +51,7 @@ class ReplacementJdbcRepository
     @Override
     public void removeReplacements(Collection<ReplacementModel> replacements) {
         String sql = "DELETE FROM replacement WHERE id IN (:ids)";
-        Set<Long> ids = replacements
+        Set<Integer> ids = replacements
             .stream()
             .map(r -> Objects.requireNonNull(r.getId()))
             .collect(Collectors.toUnmodifiableSet());
@@ -187,14 +187,14 @@ class ReplacementJdbcRepository
     }
 
     @Override
-    public long findReplacementToReview(WikipediaLanguage lang, int chunkSize) {
+    public int findReplacementToReview(WikipediaLanguage lang, int chunkSize) {
         String sql =
             "SELECT FLOOR(MIN(id) + (MAX(id) - MIN(id) + 1 - :chunkSize) * RAND()) FROM replacement " +
             "WHERE lang = :lang AND reviewer IS NULL";
         SqlParameterSource namedParameters = new MapSqlParameterSource()
             .addValue("chunkSize", chunkSize)
             .addValue("lang", lang.getCode());
-        Long result = jdbcTemplate.queryForObject(sql, namedParameters, Long.class);
-        return Objects.requireNonNullElse(result, 0L);
+        Integer result = jdbcTemplate.queryForObject(sql, namedParameters, Integer.class);
+        return Objects.requireNonNullElse(result, 0);
     }
 }

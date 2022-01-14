@@ -52,7 +52,6 @@ class CustomJdbcRepository implements CustomRepository {
         jdbcTemplate.update(sql, namedParameters);
     }
 
-    // TODO: Make the column reviewer nullable and check here if the reviewer is not null
     // Using DISTINCT makes the query not to use to wanted index "idx_count"
     @Override
     public Collection<Integer> findPageIdsReviewed(WikipediaLanguage lang, String replacement, boolean cs) {

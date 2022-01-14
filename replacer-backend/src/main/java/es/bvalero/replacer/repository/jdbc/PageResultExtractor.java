@@ -38,7 +38,7 @@ class PageResultExtractor implements ResultSetExtractor<Collection<PageModel>> {
                 page.addReplacement(
                     ReplacementModel
                         .builder()
-                        .id(rs.getLong("ID"))
+                        .id(rs.getInt("ID"))
                         .lang(lang)
                         .pageId(pageId)
                         .type(type)

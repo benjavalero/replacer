@@ -1,15 +1,15 @@
 CREATE TABLE IF NOT EXISTS page (
-    lang VARCHAR(2) NOT NULL,
+    lang CHAR(2) NOT NULL,
     article_id INTEGER NOT NULL,
-    title VARCHAR(255) NOT NULL,
     last_update DATE NOT NULL,
+    title VARCHAR(255) NOT NULL,
     CONSTRAINT constraint_p PRIMARY KEY (lang, article_id)
 );
 
 CREATE TABLE IF NOT EXISTS replacement (
-	id BIGINT NOT NULL AUTO_INCREMENT,
+	id INTEGER NOT NULL AUTO_INCREMENT,
+	lang CHAR(2) NOT NULL,
 	article_id INTEGER NOT NULL,
-	lang VARCHAR(2) NOT NULL,
 	type VARCHAR(25) NOT NULL,
 	subtype VARCHAR(100) NOT NULL,
 	position INTEGER NOT NULL DEFAULT 0,
@@ -27,9 +27,9 @@ CREATE INDEX IF NOT EXISTS idx_reviewer ON replacement (reviewer);
 CREATE INDEX IF NOT EXISTS idx_dump ON replacement (lang, article_id, reviewer);
 
 CREATE TABLE IF NOT EXISTS custom (
-	id BIGINT NOT NULL AUTO_INCREMENT,
+	id INTEGER NOT NULL AUTO_INCREMENT,
+	lang CHAR(2) NOT NULL,
 	article_id INTEGER NOT NULL,
-	lang VARCHAR(2) NOT NULL,
 	replacement VARCHAR(100) NOT NULL,
 	cs TINYINT NOT NULL DEFAULT 0,
 	position INTEGER NOT NULL DEFAULT 0,
