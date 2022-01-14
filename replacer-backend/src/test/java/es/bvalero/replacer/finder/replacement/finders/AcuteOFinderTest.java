@@ -33,7 +33,7 @@ class AcuteOFinderTest {
         assertEquals(1, replacements.size());
 
         Replacement rep = replacements.get(0);
-        assertEquals(ReplacementKind.MISSPELLING_COMPOSED, rep.getType().getKind());
+        assertEquals(ReplacementKind.COMPOSED, rep.getType().getKind());
         assertEquals(subtype, rep.getType().getSubtype());
         assertEquals(AcuteOFinder.ACUTE_O, rep.getText());
         assertEquals(AcuteOFinder.ACUTE_O, rep.getSuggestions().get(0).getText());
@@ -48,7 +48,7 @@ class AcuteOFinderTest {
         assertEquals(1, replacements.size());
 
         Replacement rep = replacements.get(0);
-        assertEquals(ReplacementKind.MISSPELLING_COMPOSED, rep.getType().getKind());
+        assertEquals(ReplacementKind.COMPOSED, rep.getType().getKind());
         assertEquals(AcuteOFinder.SUBTYPE_ACUTE_O_WORDS, rep.getType().getSubtype());
         assertEquals(AcuteOFinder.ACUTE_O, rep.getText());
         assertEquals(7, rep.getStart());

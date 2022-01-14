@@ -90,6 +90,6 @@ public class MisspellingSimpleFinder extends MisspellingFinder implements Proper
 
     @Override
     ReplacementKind getType() {
-        return ReplacementKind.MISSPELLING_SIMPLE;
+        return ReplacementKind.SIMPLE;
     }
 }

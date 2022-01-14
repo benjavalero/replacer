@@ -61,7 +61,7 @@ class ObsoleteMisspellingListenerTest {
         verify(removeObsoleteReplacementType)
             .removeObsoleteReplacementTypes(
                 WikipediaLanguage.getDefault(),
-                Collections.singleton(ReplacementType.of(ReplacementKind.MISSPELLING_SIMPLE, "A"))
+                Collections.singleton(ReplacementType.of(ReplacementKind.SIMPLE, "A"))
             );
     }
 }

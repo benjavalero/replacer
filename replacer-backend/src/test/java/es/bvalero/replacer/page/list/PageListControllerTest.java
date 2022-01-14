@@ -46,7 +46,7 @@ class PageListControllerTest {
         verify(pageUnreviewedTitleListService)
             .findPageTitlesToReviewByType(
                 WikipediaLanguage.SPANISH,
-                ReplacementType.of(ReplacementKind.MISSPELLING_SIMPLE, "Africa")
+                ReplacementType.of(ReplacementKind.SIMPLE, "Africa")
             );
     }
 
@@ -62,7 +62,7 @@ class PageListControllerTest {
         verify(pageUnreviewedTitleListService, never())
             .findPageTitlesToReviewByType(
                 WikipediaLanguage.SPANISH,
-                ReplacementType.of(ReplacementKind.MISSPELLING_SIMPLE, "Africa")
+                ReplacementType.of(ReplacementKind.SIMPLE, "Africa")
             );
     }
 
@@ -78,10 +78,7 @@ class PageListControllerTest {
 
         verify(checkUserRightsService).isBot(WikipediaLanguage.SPANISH, "A");
         verify(reviewByTypeService)
-            .reviewAsSystemByType(
-                WikipediaLanguage.SPANISH,
-                ReplacementType.of(ReplacementKind.MISSPELLING_SIMPLE, "Africa")
-            );
+            .reviewAsSystemByType(WikipediaLanguage.SPANISH, ReplacementType.of(ReplacementKind.SIMPLE, "Africa"));
     }
 
     @Test
@@ -96,9 +93,6 @@ class PageListControllerTest {
 
         verify(checkUserRightsService).isBot(WikipediaLanguage.SPANISH, "A");
         verify(reviewByTypeService, never())
-            .reviewAsSystemByType(
-                WikipediaLanguage.SPANISH,
-                ReplacementType.of(ReplacementKind.MISSPELLING_SIMPLE, "Africa")
-            );
+            .reviewAsSystemByType(WikipediaLanguage.SPANISH, ReplacementType.of(ReplacementKind.SIMPLE, "Africa"));
     }
 }

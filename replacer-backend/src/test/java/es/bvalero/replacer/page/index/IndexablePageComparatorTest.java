@@ -123,21 +123,21 @@ class IndexablePageComparatorTest {
         IndexableReplacement r1 = IndexableReplacement
             .builder()
             .indexablePageId(pageId)
-            .type(ReplacementType.of(ReplacementKind.MISSPELLING_SIMPLE, "1"))
+            .type(ReplacementType.of(ReplacementKind.SIMPLE, "1"))
             .position(1)
             .context("")
             .build();
         IndexableReplacement r2 = IndexableReplacement
             .builder()
             .indexablePageId(pageId)
-            .type(ReplacementType.of(ReplacementKind.MISSPELLING_SIMPLE, "2"))
+            .type(ReplacementType.of(ReplacementKind.SIMPLE, "2"))
             .position(2)
             .context("")
             .build();
         IndexableReplacement r5 = IndexableReplacement
             .builder()
             .indexablePageId(pageId)
-            .type(ReplacementType.of(ReplacementKind.MISSPELLING_SIMPLE, "5"))
+            .type(ReplacementType.of(ReplacementKind.SIMPLE, "5"))
             .position(5)
             .context("")
             .build();
@@ -155,14 +155,14 @@ class IndexablePageComparatorTest {
         IndexableReplacement r6db = IndexableReplacement
             .builder()
             .indexablePageId(pageId)
-            .type(ReplacementType.of(ReplacementKind.MISSPELLING_SIMPLE, "6"))
+            .type(ReplacementType.of(ReplacementKind.SIMPLE, "6"))
             .position(6)
             .context("")
             .build();
         IndexableReplacement r7db = IndexableReplacement
             .builder()
             .indexablePageId(pageId)
-            .type(ReplacementType.of(ReplacementKind.MISSPELLING_SIMPLE, "7"))
+            .type(ReplacementType.of(ReplacementKind.SIMPLE, "7"))
             .position(7)
             .context("")
             .reviewer("")
@@ -170,7 +170,7 @@ class IndexablePageComparatorTest {
         IndexableReplacement r8db = IndexableReplacement
             .builder()
             .indexablePageId(pageId)
-            .type(ReplacementType.of(ReplacementKind.MISSPELLING_SIMPLE, "8"))
+            .type(ReplacementType.of(ReplacementKind.SIMPLE, "8"))
             .position(8)
             .context("")
             .build()
@@ -213,21 +213,21 @@ class IndexablePageComparatorTest {
         IndexableReplacement r1 = IndexableReplacement
             .builder()
             .indexablePageId(pageId)
-            .type(ReplacementType.of(ReplacementKind.MISSPELLING_SIMPLE, "1"))
+            .type(ReplacementType.of(ReplacementKind.SIMPLE, "1"))
             .position(1)
             .context("")
             .build();
         IndexableReplacement r2 = IndexableReplacement
             .builder()
             .indexablePageId(pageId)
-            .type(ReplacementType.of(ReplacementKind.MISSPELLING_SIMPLE, "2"))
+            .type(ReplacementType.of(ReplacementKind.SIMPLE, "2"))
             .position(2)
             .context("")
             .build();
         IndexableReplacement r3 = IndexableReplacement
             .builder()
             .indexablePageId(pageId)
-            .type(ReplacementType.of(ReplacementKind.MISSPELLING_SIMPLE, "3"))
+            .type(ReplacementType.of(ReplacementKind.SIMPLE, "3"))
             .position(3)
             .context("")
             .build();
@@ -245,14 +245,14 @@ class IndexablePageComparatorTest {
         IndexableReplacement r4db = IndexableReplacement
             .builder()
             .indexablePageId(pageId)
-            .type(ReplacementType.of(ReplacementKind.MISSPELLING_SIMPLE, "4"))
+            .type(ReplacementType.of(ReplacementKind.SIMPLE, "4"))
             .position(4)
             .context("")
             .build();
         IndexableReplacement r5db = IndexableReplacement
             .builder()
             .indexablePageId(pageId)
-            .type(ReplacementType.of(ReplacementKind.MISSPELLING_SIMPLE, "5"))
+            .type(ReplacementType.of(ReplacementKind.SIMPLE, "5"))
             .position(5)
             .context("")
             .reviewer("")
@@ -260,7 +260,7 @@ class IndexablePageComparatorTest {
         IndexableReplacement r6db = IndexableReplacement
             .builder()
             .indexablePageId(pageId)
-            .type(ReplacementType.of(ReplacementKind.MISSPELLING_SIMPLE, "6"))
+            .type(ReplacementType.of(ReplacementKind.SIMPLE, "6"))
             .position(6)
             .context("")
             .build()
@@ -296,7 +296,7 @@ class IndexablePageComparatorTest {
         IndexableReplacement r1 = IndexableReplacement
             .builder()
             .indexablePageId(pageId)
-            .type(ReplacementType.of(ReplacementKind.MISSPELLING_SIMPLE, "1"))
+            .type(ReplacementType.of(ReplacementKind.SIMPLE, "1"))
             .position(1)
             .context("")
             .build();
@@ -333,14 +333,14 @@ class IndexablePageComparatorTest {
         IndexableReplacement r1 = IndexableReplacement
             .builder()
             .indexablePageId(pageId)
-            .type(ReplacementType.of(ReplacementKind.MISSPELLING_SIMPLE, "1"))
+            .type(ReplacementType.of(ReplacementKind.SIMPLE, "1"))
             .position(1)
             .context("C")
             .build();
         IndexableReplacement r2 = IndexableReplacement
             .builder()
             .indexablePageId(pageId)
-            .type(ReplacementType.of(ReplacementKind.MISSPELLING_SIMPLE, "1"))
+            .type(ReplacementType.of(ReplacementKind.SIMPLE, "1"))
             .position(5)
             .context("C")
             .build();

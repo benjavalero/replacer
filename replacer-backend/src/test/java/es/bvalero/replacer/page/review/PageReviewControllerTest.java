@@ -73,7 +73,7 @@ class PageReviewControllerTest {
         .builder()
         .start(start)
         .text(rep)
-        .type(ReplacementType.of(ReplacementKind.MISSPELLING_SIMPLE, rep))
+        .type(ReplacementType.of(ReplacementKind.SIMPLE, rep))
         .suggestions(List.of(suggestion))
         .build();
     private final int numPending = 100;
@@ -195,7 +195,7 @@ class PageReviewControllerTest {
     void testValidateCustomReplacement() throws Exception {
         final String replacement = "Africa";
         when(replacementValidationService.findMatchingReplacementType(WikipediaLanguage.SPANISH, replacement, true))
-            .thenReturn(Optional.of(ReplacementType.of(ReplacementKind.MISSPELLING_SIMPLE, replacement)));
+            .thenReturn(Optional.of(ReplacementType.of(ReplacementKind.SIMPLE, replacement)));
 
         mvc
             .perform(
@@ -203,7 +203,7 @@ class PageReviewControllerTest {
                     .contentType(MediaType.APPLICATION_JSON)
             )
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.type", is(Byte.valueOf(ReplacementKind.MISSPELLING_SIMPLE.getCode()).intValue())))
+            .andExpect(jsonPath("$.type", is(Byte.valueOf(ReplacementKind.SIMPLE.getCode()).intValue())))
             .andExpect(jsonPath("$.subtype", is(replacement)));
 
         verify(replacementValidationService).findMatchingReplacementType(WikipediaLanguage.SPANISH, replacement, true);

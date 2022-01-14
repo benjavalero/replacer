@@ -49,16 +49,14 @@ class PageReviewTypeSubtypeFinderTest {
     private final PageReplacement replacement = PageReplacement
         .builder()
         .start(offset)
-        .type(ReplacementType.of(ReplacementKind.MISSPELLING_SIMPLE, "Y"))
+        .type(ReplacementType.of(ReplacementKind.SIMPLE, "Y"))
         .text("Y")
         .suggestions(List.of(Suggestion.ofNoComment("Z")))
         .build();
     private final List<PageReplacement> replacements = Collections.singletonList(replacement);
-    private final PageReviewOptions options = PageReviewOptions.ofType(
-        ReplacementType.of(ReplacementKind.MISSPELLING_SIMPLE, "Y")
-    );
+    private final PageReviewOptions options = PageReviewOptions.ofType(ReplacementType.of(ReplacementKind.SIMPLE, "Y"));
     private final PageReviewOptions options2 = PageReviewOptions.ofType(
-        ReplacementType.of(ReplacementKind.MISSPELLING_COMPOSED, "B")
+        ReplacementType.of(ReplacementKind.COMPOSED, "B")
     );
 
     @Mock

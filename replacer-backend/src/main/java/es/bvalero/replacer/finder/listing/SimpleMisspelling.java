@@ -51,6 +51,6 @@ public class SimpleMisspelling implements Misspelling {
 
     @Override
     public ReplacementKind getReplacementKind() {
-        return ReplacementKind.MISSPELLING_SIMPLE;
+        return ReplacementKind.SIMPLE;
     }
 }

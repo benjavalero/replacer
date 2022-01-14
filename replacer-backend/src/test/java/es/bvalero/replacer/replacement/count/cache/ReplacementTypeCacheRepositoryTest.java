@@ -74,7 +74,7 @@ class ReplacementTypeCacheRepositoryTest {
         assertTrue(kindCount.get(kind).get("Z").isEmpty());
 
         // Remove a replacement count not existing in cache
-        ReplacementType nonExisting = ReplacementType.of(ReplacementKind.MISSPELLING_SIMPLE, "B");
+        ReplacementType nonExisting = ReplacementType.of(ReplacementKind.SIMPLE, "B");
         replacementCacheRepository.removeCachedReplacementCount(lang, nonExisting);
 
         kindCount = replacementCacheRepository.getKindCount(lang);

@@ -30,6 +30,6 @@ public class ComposedMisspelling implements Misspelling {
 
     @Override
     public ReplacementKind getReplacementKind() {
-        return ReplacementKind.MISSPELLING_COMPOSED;
+        return ReplacementKind.COMPOSED;
     }
 }
