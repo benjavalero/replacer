@@ -248,7 +248,7 @@ class WikipediaApiService implements WikipediaService {
         try {
             return Integer.parseInt(section.getIndex()) > 0 && section.getByteoffset() != null;
         } catch (NumberFormatException nfe) {
-            LOGGER.warn("Invalid page section: {}", section);
+            LOGGER.info("Invalid page section: {}", section);
             return false;
         }
     }
