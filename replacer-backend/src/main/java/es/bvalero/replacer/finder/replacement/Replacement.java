@@ -27,22 +27,26 @@ public class Replacement implements FinderResult {
 
     // Overwrite the getter to include the original text as the first option
     public List<Suggestion> getSuggestions() {
+        return sortSuggestions(this.suggestions, this.text);
+    }
+
+    private static List<Suggestion> sortSuggestions(List<Suggestion> suggestions, String originalText) {
         // Use a linked list to remove and rearrange easily
-        List<Suggestion> sorted = new LinkedList<>(suggestions);
+        List<Suggestion> sorted = new LinkedList<>();
 
         // If any of the suggestions matches the original then move it as the first suggestion
         // If not we add it
         boolean originalFound = false;
-        for (int i = 0; i < sorted.size(); i++) {
-            if (sorted.get(i).getText().equals(text)) {
-                final Suggestion original = sorted.remove(i);
-                sorted.add(0, original);
+        for (Suggestion suggestion : suggestions) {
+            if (suggestion.getText().equals(originalText)) {
+                sorted.add(0, suggestion);
                 originalFound = true;
-                break;
+            } else {
+                sorted.add(suggestion);
             }
         }
         if (!originalFound) {
-            sorted.add(0, Suggestion.ofNoReplace(text));
+            sorted.add(0, Suggestion.ofNoReplace(originalText));
         }
 
         return sorted;
