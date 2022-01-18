@@ -43,7 +43,7 @@ export class FindCustomComponent implements OnInit {
     } else if (replacement === suggestion) {
       this.alertService.addErrorMessage('El texto a reemplazar y el sugerido son iguales');
       return false;
-    } else if (!cs && StringUtils.compareString(replacement, suggestion) === 0) {
+    } else if (!cs && StringUtils.compareStringAccent(replacement, suggestion) === 0) {
       this.alertService.addErrorMessage('El texto a reemplazar y el sugerido son iguales');
       return false;
     }

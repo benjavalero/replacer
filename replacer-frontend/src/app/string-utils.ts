@@ -1,6 +1,13 @@
 export default class StringUtils {
-  static compareString(v1: string, v2: string): number {
+
+  /* Strings that do not have the same base letters are considered unequal */
+  static compareStringBase(v1: string, v2: string): number {
     return v1.localeCompare(v2, 'es', { sensitivity: 'base' });
+  }
+
+  /* Strings that do not have the same base letters or accents are considered unequal */
+  static compareStringAccent(v1: string, v2: string): number {
+    return v1.localeCompare(v2, 'es', { sensitivity: 'accent' });
   }
 
   static removeDiacritics(text: string): string {
