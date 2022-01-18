@@ -3,6 +3,7 @@ package es.bvalero.replacer.finder.replacement;
 import es.bvalero.replacer.common.domain.ReplacementType;
 import es.bvalero.replacer.common.domain.Suggestion;
 import es.bvalero.replacer.finder.FinderResult;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import lombok.Builder;
@@ -27,7 +28,30 @@ public class Replacement implements FinderResult {
 
     // Overwrite the getter to include the original text as the first option
     public List<Suggestion> getSuggestions() {
-        return sortSuggestions(this.suggestions, this.text);
+        List<Suggestion> merged = mergeSuggestions(this.suggestions);
+        return sortSuggestions(merged, this.text);
+    }
+
+    private static List<Suggestion> mergeSuggestions(List<Suggestion> suggestions) {
+        List<Suggestion> checked = new ArrayList<>(suggestions.size());
+
+        for (int i = 0; i < suggestions.size(); i++) {
+            Suggestion current = suggestions.get(i);
+            // Search in the previous ones if there is any item to be merged to
+            boolean duplicateFound = false;
+            for (int j = 0; j < i; j++) {
+                Suggestion previous = suggestions.get(j);
+                if (current.getText().equals(previous.getText())) {
+                    checked.set(j, previous.merge(current));
+                    duplicateFound = true;
+                }
+            }
+            if (!duplicateFound) {
+                checked.add(current);
+            }
+        }
+
+        return checked;
     }
 
     private static List<Suggestion> sortSuggestions(List<Suggestion> suggestions, String originalText) {

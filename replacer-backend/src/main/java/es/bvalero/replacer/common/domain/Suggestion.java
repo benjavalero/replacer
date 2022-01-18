@@ -35,4 +35,13 @@ public class Suggestion {
     public static Suggestion ofNoReplace(String text) {
         return of(text, NO_REPLACE);
     }
+
+    public Suggestion merge(Suggestion suggestion) {
+        if (!this.getText().equals(suggestion.getText())) {
+            throw new IllegalArgumentException();
+        }
+
+        String mergedComment = String.format("%s; %s", this.comment, suggestion.getComment());
+        return Suggestion.of(this.text, mergedComment);
+    }
 }

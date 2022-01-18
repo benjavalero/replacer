@@ -389,6 +389,30 @@ class MisspellingSimpleFinderTest {
     }
 
     @Test
+    void testMergeSuggestions() {
+        String text = "Quinto Vario.";
+
+        // There exist an alternative as a common word and the same one as a proper noun
+        // so when the original text is uppercase both alternatives become the same one
+        SimpleMisspelling misspelling = SimpleMisspelling.ofCaseInsensitive(
+            "vario",
+            "vario (adjetivo), Vario (nombre propio)"
+        );
+        this.fakeUpdateMisspellingList(List.of(misspelling));
+
+        List<Replacement> results = misspellingFinder.findList(text);
+
+        Replacement expected = Replacement
+            .builder()
+            .start(7)
+            .text("Vario")
+            .type(ReplacementType.of(ReplacementKind.MISSPELLING_SIMPLE, "vario"))
+            .suggestions(List.of(Suggestion.of("Vario", "adjetivo; nombre propio")))
+            .build();
+        assertEquals(Set.of(expected), new HashSet<>(results));
+    }
+
+    @Test
     void testFindMatchingReplacementType() {
         final WikipediaLanguage lang = WikipediaLanguage.getDefault();
         final ReplacementKind simple = ReplacementKind.MISSPELLING_SIMPLE;
