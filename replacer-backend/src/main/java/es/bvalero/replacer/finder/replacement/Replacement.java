@@ -35,12 +35,11 @@ public class Replacement implements FinderResult {
     private static List<Suggestion> mergeSuggestions(List<Suggestion> suggestions) {
         List<Suggestion> checked = new ArrayList<>(suggestions.size());
 
-        for (int i = 0; i < suggestions.size(); i++) {
-            Suggestion current = suggestions.get(i);
+        for (Suggestion current : suggestions) {
             // Search in the previous ones if there is any item to be merged to
             boolean duplicateFound = false;
-            for (int j = 0; j < i; j++) {
-                Suggestion previous = suggestions.get(j);
+            for (int j = 0; j < checked.size(); j++) {
+                Suggestion previous = checked.get(j);
                 if (current.getText().equals(previous.getText())) {
                     checked.set(j, previous.merge(current));
                     duplicateFound = true;

@@ -413,6 +413,36 @@ class MisspellingSimpleFinderTest {
     }
 
     @Test
+    void testMergeSeveralSuggestions() {
+        String text = "Santa Barbara.";
+
+        // There exist an alternative as a common word and the same one as a proper noun
+        // so when the original text is uppercase both alternatives become the same one
+        SimpleMisspelling misspelling = SimpleMisspelling.ofCaseInsensitive(
+            "barbara",
+            "bárbara (adjetivo), Bárbara (nombre en español), Barbara (nombre en inglés), barbara (verbo imperfecto), barbará (verbo futuro)"
+        );
+        this.fakeUpdateMisspellingList(List.of(misspelling));
+
+        List<Replacement> results = misspellingFinder.findList(text);
+
+        Replacement expected = Replacement
+            .builder()
+            .start(6)
+            .text("Barbara")
+            .type(ReplacementType.of(ReplacementKind.SIMPLE, "barbara"))
+            .suggestions(
+                List.of(
+                    Suggestion.of("Barbara", "nombre en inglés; verbo imperfecto"),
+                    Suggestion.of("Bárbara", "adjetivo; nombre en español"),
+                    Suggestion.of("Barbará", "verbo futuro")
+                )
+            )
+            .build();
+        assertEquals(Set.of(expected), new HashSet<>(results));
+    }
+
+    @Test
     void testFindMatchingReplacementType() {
         final WikipediaLanguage lang = WikipediaLanguage.getDefault();
         final ReplacementKind simple = ReplacementKind.SIMPLE;
