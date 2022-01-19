@@ -144,7 +144,7 @@ class WikipediaApiService implements WikipediaService {
         try {
             // Return the only value that should be in the map
             return getPagesByIds(List.of(id.getPageId()), id.getLang()).stream().findAny();
-        } catch (WikipediaException e) {
+        } catch (Exception e) {
             LOGGER.error("Error getting page by ID: {}", id, e);
             return Optional.empty();
         }
