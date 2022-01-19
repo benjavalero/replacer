@@ -1,5 +1,11 @@
 # Versions
 
+## 2.16.0 (19 Jan 2022)
+- Feature: add the possibility of ignoring the whole pair name-surname
+- Several internal optimizations
+- Fix string comparison when validating custom replacement
+- Merge replacement suggestions with the same text alternative
+
 ## 2.15.2 (13 Jan 2022)
 - Improve finding uppercase template values
 - Cosmetic change fixing line breaks now fixes into the HTML5 form
