@@ -28,7 +28,6 @@ export class ReplacementTableComponent implements OnInit, OnChanges {
   filteredItems: SubtypeCount[];
 
   user$!: Observable<User>;
-  label!: string;
 
   // Filters
   sortColumn: string;
@@ -65,7 +64,6 @@ export class ReplacementTableComponent implements OnInit, OnChanges {
 
   ngOnInit() {
     this.user$ = this.userService.user$;
-    this.label = typeLabel[this.type];
   }
 
   ngOnChanges() {
@@ -153,7 +151,7 @@ export class ReplacementTableComponent implements OnInit, OnChanges {
 
   reviewPages(subtype: string): void {
     const modalRef = this.modalService.open(ReviewSubtypeComponent);
-    modalRef.componentInstance.type = this.label;
+    modalRef.componentInstance.type = typeLabel[this.type];
     modalRef.componentInstance.subtype = subtype;
     modalRef.result.then(
       (result) => {

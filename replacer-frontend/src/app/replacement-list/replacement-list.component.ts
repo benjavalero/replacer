@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Observable } from 'rxjs';
+import { typeLabel } from '../page/page-review.model';
 import { TypeCount } from './replacement-list.model';
 import { ReplacementListService } from './replacement-list.service';
 
@@ -18,5 +19,9 @@ export class ReplacementListComponent implements OnInit {
     this.titleService.setTitle('Replacer - Lista de reemplazos');
     this.replacementService.loadCountsFromServer();
     this.typeCounts$ = this.replacementService.counts$;
+  }
+
+  getLabel(kind: number): string {
+    return typeLabel[kind];
   }
 }

@@ -5,9 +5,26 @@
     Las siguientes listas muestran potenciales errores ortográficos y de estilo sin revisar, así como el número estimado
     de páginas que los contienen.
   </p>
+  <p>
+    Los distintos reemplazos están agrupados según su tipo o complejidad.
+  </p>
 
-  <app-replacement-table *ngFor="let typeCount of typeCounts" [type]="typeCount.k" [replacementCounts]="typeCount.l">
-  </app-replacement-table>
+  <ngb-accordion [destroyOnHide]="false">
+    <ngb-panel *ngFor="let typeCount of typeCounts" title="{{ getLabel(typeCount.k) }}">
+      <ng-template ngbPanelHeader>
+        <div class="d-flex align-items-center justify-content-between">
+          <button ngbPanelToggle class="btn btn-link container-fluid text-left pl-0">
+            {{ getLabel(typeCount.k) }}
+            <span class="badge badge-light">{{ typeCount.l.length }}</span>
+          </button>
+        </div>
+      </ng-template>
+      <ng-template ngbPanelContent>
+        <app-replacement-table [type]="typeCount.k" [replacementCounts]="typeCount.l">
+        </app-replacement-table>
+      </ng-template>
+    </ngb-panel>
+  </ngb-accordion>
   <app-alert type="warning" *ngIf="typeCounts.length === 0">No se ha encontrado ningún artículo</app-alert>
 </div>
 <ng-template #loading>
