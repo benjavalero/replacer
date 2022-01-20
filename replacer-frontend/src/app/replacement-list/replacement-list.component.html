@@ -10,11 +10,11 @@
   </p>
 
   <ngb-accordion [destroyOnHide]="false">
-    <ngb-panel *ngFor="let typeCount of typeCounts" title="{{ getLabel(typeCount.k) }}">
-      <ng-template ngbPanelHeader>
+    <ngb-panel *ngFor="let typeCount of typeCounts">
+      <ng-template ngbPanelHeader *ngIf="getKind(typeCount.k); let kind">
         <div class="d-flex align-items-center justify-content-between">
-          <button ngbPanelToggle class="btn btn-link container-fluid text-left pl-0">
-            {{ getLabel(typeCount.k) }}
+          <button ngbPanelToggle class="btn btn-link container-fluid text-left pl-0" title="{{ kind.description }}">
+            {{ kind.label }}
             <span class="badge badge-light">{{ typeCount.l.length }}</span>
           </button>
         </div>
