@@ -391,6 +391,8 @@ class WikipediaApiService implements WikipediaService {
                 queryTimestamp,
                 queryTimestamp
             );
+            // This exception is always logged by the aspect-based library even when ignored
+            // See: https://github.com/rozidan/logger-spring-boot/issues/3
             throw new WikipediaConflictException(message);
         }
 
