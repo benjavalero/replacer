@@ -4,7 +4,8 @@ import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AlertService } from '../alert/alert.service';
-import { PageReviewResponse, ReviewOptions, typeLabel } from './page-review.model';
+import { COMPOSED, CUSTOM, REPLACEMENT_KINDS, SIMPLE } from '../replacement-list/replacement-kind.model';
+import { PageReviewResponse, ReviewOptions } from './page-review.model';
 import { PageService } from './page.service';
 import { ValidateCustomComponent } from './validate-custom.component';
 import { ReplacementValidationResponse } from './validate-custom.model';
@@ -58,13 +59,13 @@ export class FindRandomComponent implements OnInit {
       // Just for compatibility with old use with labels
       switch (type) {
         case 'Personalizado': {
-          return 1;
+          return CUSTOM.code;
         }
         case 'Ortografía': {
-          return 2;
+          return SIMPLE.code;
         }
         case 'Compuestos': {
-          return 3;
+          return COMPOSED.code;
         }
         default: {
           return +type;
@@ -187,7 +188,7 @@ export class FindRandomComponent implements OnInit {
 
   private openValidationModal$(type: number, subtype: string): Promise<any> {
     const modalRef = this.modalService.open(ValidateCustomComponent);
-    modalRef.componentInstance.type = typeLabel[type];
+    modalRef.componentInstance.type = REPLACEMENT_KINDS.get(type)!.label;
     modalRef.componentInstance.subtype = subtype;
     return modalRef.result;
   }

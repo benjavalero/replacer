@@ -1,9 +1,10 @@
 import { HttpStatusCode } from '@angular/common/http';
 import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { AlertService } from '../alert/alert.service';
+import { CUSTOM, REPLACEMENT_KINDS } from '../replacement-list/replacement-kind.model';
 import { UserService } from '../user/user.service';
 import { FixedReplacement, getReplacementEnd } from './page-replacement.model';
-import { PageReviewResponse, ReviewOptions, typeLabel } from './page-review.model';
+import { PageReviewResponse, ReviewOptions } from './page-review.model';
 import { EMPTY_CONTENT, PageService } from './page.service';
 
 @Component({
@@ -12,6 +13,9 @@ import { EMPTY_CONTENT, PageService } from './page.service';
   styleUrls: []
 })
 export class EditPageComponent implements OnChanges {
+  readonly NUM_PENDING = 50;
+  readonly CUSTOM_KIND = CUSTOM.code;
+
   @Input() review!: PageReviewResponse;
 
   private readonly THRESHOLD = 200; // Maximum number of characters to display around the replacements
@@ -146,6 +150,6 @@ export class EditPageComponent implements OnChanges {
   }
 
   get typeLabel(): string {
-    return typeLabel[this.review.options.type!];
+    return REPLACEMENT_KINDS.get(this.review.options.type!)!.label;
   }
 }

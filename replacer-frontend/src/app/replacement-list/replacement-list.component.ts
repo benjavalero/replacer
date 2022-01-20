@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Observable } from 'rxjs';
-import { typeLabel } from '../page/page-review.model';
+import { REPLACEMENT_KINDS } from './replacement-kind.model';
 import { TypeCount } from './replacement-list.model';
 import { ReplacementListService } from './replacement-list.service';
 
@@ -22,6 +22,6 @@ export class ReplacementListComponent implements OnInit {
   }
 
   getLabel(kind: number): string {
-    return typeLabel[kind];
+    return REPLACEMENT_KINDS.get(kind)!.label;
   }
 }

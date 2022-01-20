@@ -1,13 +1,7 @@
+import { REPLACEMENT_KINDS } from '../replacement-list/replacement-kind.model';
 import { Language } from '../user/language-model';
 import { AccessToken } from '../user/user.model';
 import { ReviewReplacement } from './page-replacement.model';
-
-export const typeLabel: { [key: number]: string } = {
-  1: 'Personalizado',
-  2: 'Ortografía',
-  3: 'Compuestos',
-  4: 'Fechas'
-};
 
 export class ReviewOptions {
   type: number | null;
@@ -22,10 +16,9 @@ export class ReviewOptions {
     this.cs = cs;
   }
 
-  // TODO: Add constants or retrieve them from backend
   getTypeLabel(): string | null {
     if (this.type) {
-      return typeLabel[this.type];
+      return REPLACEMENT_KINDS.get(this.type)!.label;
     } else {
       return null;
     }

@@ -3,11 +3,11 @@ import { faCheckDouble, faList } from '@fortawesome/free-solid-svg-icons';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { typeLabel } from '../page/page-review.model';
 import StringUtils from '../string-utils';
 import { UserConfigService } from '../user/user-config.service';
 import { User } from '../user/user.model';
 import { UserService } from '../user/user.service';
+import { REPLACEMENT_KINDS } from './replacement-kind.model';
 import { SubtypeCount } from './replacement-list.model';
 import { ReplacementListService } from './replacement-list.service';
 import { ReviewSubtypeComponent } from './review-subtype.component';
@@ -151,7 +151,7 @@ export class ReplacementTableComponent implements OnInit, OnChanges {
 
   reviewPages(subtype: string): void {
     const modalRef = this.modalService.open(ReviewSubtypeComponent);
-    modalRef.componentInstance.type = typeLabel[this.type];
+    modalRef.componentInstance.type = REPLACEMENT_KINDS.get(this.type)!.label;
     modalRef.componentInstance.subtype = subtype;
     modalRef.result.then(
       (result) => {

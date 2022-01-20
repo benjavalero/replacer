@@ -36,7 +36,7 @@
   </button>
 
   <app-alert type="warning" [icon]="true" class="alert-small"
-    *ngIf="review.options.type === 1 && review.numPending > 50">
+    *ngIf="review.options.type === CUSTOM_KIND && review.numPending > NUM_PENDING">
     <p>El reemplazo personalizado introducido tiene muchas ocurrencias. Se recomienda añadirlo a los <a
         href="https://es.wikipedia.org/wiki/Usuario:Benjavalero/Replacer#Tipos_de_reemplazos" target="_blank"
         rel="noopener noreferrer">listados generales</a> para un mantenimiento más óptimo.</p>
