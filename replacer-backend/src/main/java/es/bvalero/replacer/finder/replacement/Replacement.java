@@ -3,9 +3,12 @@ package es.bvalero.replacer.finder.replacement;
 import es.bvalero.replacer.common.domain.ReplacementType;
 import es.bvalero.replacer.common.domain.Suggestion;
 import es.bvalero.replacer.finder.FinderResult;
-import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 import lombok.Builder;
 import lombok.Value;
 
@@ -28,32 +31,19 @@ public class Replacement implements FinderResult {
 
     // Overwrite the getter to include the original text as the first option
     public List<Suggestion> getSuggestions() {
-        List<Suggestion> merged = mergeSuggestions(this.suggestions);
+        Collection<Suggestion> merged = mergeSuggestions(this.suggestions);
         return sortSuggestions(merged, this.text);
     }
 
-    private static List<Suggestion> mergeSuggestions(List<Suggestion> suggestions) {
-        List<Suggestion> checked = new ArrayList<>(suggestions.size());
-
-        for (Suggestion current : suggestions) {
-            // Search in the previous ones if there is any item to be merged to
-            boolean duplicateFound = false;
-            for (int j = 0; j < checked.size(); j++) {
-                Suggestion previous = checked.get(j);
-                if (current.getText().equals(previous.getText())) {
-                    checked.set(j, previous.merge(current));
-                    duplicateFound = true;
-                }
-            }
-            if (!duplicateFound) {
-                checked.add(current);
-            }
-        }
-
-        return checked;
+    private static Collection<Suggestion> mergeSuggestions(Collection<Suggestion> suggestions) {
+        // Use a LinkedHashMap to keep the order
+        return suggestions
+            .stream()
+            .collect(Collectors.toMap(Suggestion::getText, Function.identity(), Suggestion::merge, LinkedHashMap::new))
+            .values();
     }
 
-    private static List<Suggestion> sortSuggestions(List<Suggestion> suggestions, String originalText) {
+    private static List<Suggestion> sortSuggestions(Collection<Suggestion> suggestions, String originalText) {
         // Use a linked list to remove and rearrange easily
         List<Suggestion> sorted = new LinkedList<>();
 
