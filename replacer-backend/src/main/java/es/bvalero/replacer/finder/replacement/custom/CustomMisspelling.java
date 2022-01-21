@@ -1,6 +1,7 @@
 package es.bvalero.replacer.finder.replacement.custom;
 
 import es.bvalero.replacer.common.domain.ReplacementKind;
+import es.bvalero.replacer.common.domain.ReplacementType;
 import es.bvalero.replacer.finder.listing.Misspelling;
 import es.bvalero.replacer.finder.listing.MisspellingSuggestion;
 import java.util.List;
@@ -29,7 +30,7 @@ class CustomMisspelling implements Misspelling {
     }
 
     @Override
-    public ReplacementKind getReplacementKind() {
-        return ReplacementKind.CUSTOM;
+    public ReplacementType getReplacementType() {
+        return ReplacementType.of(ReplacementKind.CUSTOM, getWord());
     }
 }

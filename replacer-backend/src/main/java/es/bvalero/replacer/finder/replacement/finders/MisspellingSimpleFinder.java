@@ -1,6 +1,5 @@
 package es.bvalero.replacer.finder.replacement.finders;
 
-import es.bvalero.replacer.common.domain.ReplacementKind;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.listing.Misspelling;
@@ -86,10 +85,5 @@ public class MisspellingSimpleFinder extends MisspellingFinder implements Proper
 
     private boolean isLetter(char ch) {
         return Character.isLetter(ch);
-    }
-
-    @Override
-    ReplacementKind getType() {
-        return ReplacementKind.SIMPLE;
     }
 }

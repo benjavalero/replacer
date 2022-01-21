@@ -35,7 +35,7 @@ class ObsoleteMisspellingListenerTest {
     }
 
     @Test
-    void testDeleteObsoleteMisspellings() {
+    void testInitialLoad() {
         SimpleMisspelling misspelling1 = SimpleMisspelling.ofCaseInsensitive("A", "B");
         SimpleMisspelling misspelling2 = SimpleMisspelling.ofCaseInsensitive("B", "C");
         SetValuedMap<WikipediaLanguage, SimpleMisspelling> map1 = new HashSetValuedHashMap<>();
@@ -48,6 +48,14 @@ class ObsoleteMisspellingListenerTest {
 
         verify(removeObsoleteReplacementType, never())
             .removeObsoleteReplacementTypes(eq(WikipediaLanguage.getDefault()), anyCollection());
+    }
+
+    @Test
+    void testDeleteObsoleteMisspellings() {
+        SimpleMisspelling misspelling1 = SimpleMisspelling.ofCaseInsensitive("A", "B");
+        SimpleMisspelling misspelling2 = SimpleMisspelling.ofCaseInsensitive("B", "C");
+        SetValuedMap<WikipediaLanguage, SimpleMisspelling> map1 = new HashSetValuedHashMap<>();
+        map1.putAll(WikipediaLanguage.getDefault(), List.of(misspelling1, misspelling2));
 
         SimpleMisspelling misspelling3 = SimpleMisspelling.ofCaseInsensitive("C", "D");
         SetValuedMap<WikipediaLanguage, SimpleMisspelling> map2 = new HashSetValuedHashMap<>();
@@ -63,5 +71,25 @@ class ObsoleteMisspellingListenerTest {
                 WikipediaLanguage.getDefault(),
                 Collections.singleton(ReplacementType.of(ReplacementKind.SIMPLE, "A"))
             );
+    }
+
+    @Test
+    void testMisspellingsWithDifferentSuggestions() {
+        SimpleMisspelling misspelling1 = SimpleMisspelling.ofCaseInsensitive("A", "B");
+        SimpleMisspelling misspelling2 = SimpleMisspelling.ofCaseInsensitive("B", "C");
+        SetValuedMap<WikipediaLanguage, SimpleMisspelling> map1 = new HashSetValuedHashMap<>();
+        map1.putAll(WikipediaLanguage.getDefault(), List.of(misspelling1, misspelling2));
+
+        SimpleMisspelling misspelling3 = SimpleMisspelling.ofCaseInsensitive("B", "D");
+        SetValuedMap<WikipediaLanguage, SimpleMisspelling> map2 = new HashSetValuedHashMap<>();
+        map2.putAll(WikipediaLanguage.getDefault(), List.of(misspelling1, misspelling3));
+
+        // Fake the update of the list in the manager
+        obsoleteMisspellingListener.propertyChange(
+            new PropertyChangeEvent(this, SimpleMisspellingLoader.PROPERTY_ITEMS, map1, map2)
+        );
+
+        verify(removeObsoleteReplacementType, never())
+            .removeObsoleteReplacementTypes(eq(WikipediaLanguage.getDefault()), anyCollection());
     }
 }

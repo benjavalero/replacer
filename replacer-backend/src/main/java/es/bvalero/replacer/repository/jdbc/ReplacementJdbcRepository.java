@@ -43,7 +43,7 @@ class ReplacementJdbcRepository
 
     @Override
     public void updateReplacements(Collection<ReplacementModel> replacements) {
-        String sql = "UPDATE replacement SET position = :position, context = :context WHERE id = :id";
+        String sql = "UPDATE replacement SET type = :type, position = :position, context = :context WHERE id = :id";
         SqlParameterSource[] namedParameters = SqlParameterSourceUtils.createBatch(replacements.toArray());
         jdbcTemplate.batchUpdate(sql, namedParameters);
     }
@@ -166,27 +166,16 @@ class ReplacementJdbcRepository
 
     @Override
     public void removeReplacementsByType(WikipediaLanguage lang, Collection<ReplacementType> types) {
-        if (types.isEmpty() || validateTypesSameKind(types)) {
-            throw new IllegalArgumentException();
-        } else {
+        types.forEach(type -> {
             String sql =
                 "DELETE FROM replacement " +
-                "WHERE lang = :lang AND type = :type AND subtype IN (:subtypes) AND reviewer IS NULL";
-            ReplacementKind kind = types.stream().findAny().orElseThrow(IllegalStateException::new).getKind();
-            Collection<String> subtypes = types
-                .stream()
-                .map(ReplacementType::getSubtype)
-                .collect(Collectors.toUnmodifiableSet());
+                "WHERE lang = :lang AND type = :type AND subtype = :subtype AND reviewer IS NULL";
             SqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("lang", lang.getCode())
-                .addValue("type", kind.getCode())
-                .addValue("subtypes", subtypes);
+                .addValue("type", type.getKind().getCode())
+                .addValue("subtype", type.getSubtype());
             jdbcTemplate.update(sql, namedParameters);
-        }
-    }
-
-    private boolean validateTypesSameKind(Collection<ReplacementType> types) {
-        return types.stream().map(ReplacementType::getKind).distinct().count() == 1;
+        });
     }
 
     @Override

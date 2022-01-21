@@ -1,7 +1,6 @@
 package es.bvalero.replacer.finder.replacement.finders;
 
 import com.github.rozidan.springboot.logger.Loggable;
-import es.bvalero.replacer.common.domain.ReplacementKind;
 import es.bvalero.replacer.common.domain.ReplacementType;
 import es.bvalero.replacer.common.domain.Suggestion;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
@@ -79,18 +78,18 @@ public abstract class MisspellingFinder implements ReplacementFinder {
         final String text = matcher.group();
         return Replacement
             .builder()
-            .type(ReplacementType.of(getType(), getSubtype(text, page.getLang())))
+            .type(getType(text, page.getLang()))
             .start(start)
             .text(text)
             .suggestions(findSuggestions(text, page.getLang()))
             .build();
     }
 
-    abstract ReplacementKind getType();
-
-    String getSubtype(String text, WikipediaLanguage lang) {
+    private ReplacementType getType(String text, WikipediaLanguage lang) {
         // We are sure in this point that the Misspelling exists
-        return findMisspellingByWord(text, lang).map(Misspelling::getWord).orElseThrow(IllegalArgumentException::new);
+        return findMisspellingByWord(text, lang)
+            .map(Misspelling::getReplacementType)
+            .orElseThrow(IllegalArgumentException::new);
     }
 
     // Return the misspelling related to the given word, or empty if there is no such misspelling.
@@ -99,7 +98,7 @@ public abstract class MisspellingFinder implements ReplacementFinder {
     }
 
     // Transform the case of the suggestion, e.g. "Habia" -> "Había"
-    List<Suggestion> findSuggestions(String originalWord, WikipediaLanguage lang) {
+    private List<Suggestion> findSuggestions(String originalWord, WikipediaLanguage lang) {
         // We are sure in this point that the Misspelling exists
         final Misspelling misspelling = findMisspellingByWord(originalWord, lang)
             .orElseThrow(IllegalArgumentException::new);
@@ -162,7 +161,7 @@ public abstract class MisspellingFinder implements ReplacementFinder {
                 (!misspelling.get().isCaseSensitive() && !caseSensitive)
             )
         ) {
-            type = ReplacementType.of(misspelling.get().getReplacementKind(), misspelling.get().getWord());
+            type = misspelling.get().getReplacementType();
         }
 
         return Optional.ofNullable(type);

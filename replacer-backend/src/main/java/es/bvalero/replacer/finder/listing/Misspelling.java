@@ -1,6 +1,7 @@
 package es.bvalero.replacer.finder.listing;
 
 import es.bvalero.replacer.common.domain.ReplacementKind;
+import es.bvalero.replacer.common.domain.ReplacementType;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +32,10 @@ public interface Misspelling extends ListingItem {
 
     List<MisspellingSuggestion> getSuggestions();
 
-    ReplacementKind getReplacementKind();
+    default ReplacementType getReplacementType() {
+        ReplacementKind kind = getSuggestions().size() == 1 ? ReplacementKind.SIMPLE : ReplacementKind.COMPLEX;
+        return ReplacementType.of(kind, getWord());
+    }
 
     default void validateWordCase() {
         if (!isCaseSensitive() && FinderUtils.startsWithUpperCase(getWord())) {

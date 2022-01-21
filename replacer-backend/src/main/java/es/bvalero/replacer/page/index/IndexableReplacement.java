@@ -58,7 +58,7 @@ class IndexableReplacement {
 
     @Override
     public int hashCode() {
-        return Objects.hash(indexablePageId, type);
+        return Objects.hash(indexablePageId, type.getSubtype());
     }
 
     /* If two replacements have the same position or context they will be considered equal */
@@ -69,7 +69,7 @@ class IndexableReplacement {
         IndexableReplacement that = (IndexableReplacement) o;
         return (
             indexablePageId.equals(that.indexablePageId) &&
-            type.equals(that.type) &&
+            type.getSubtype().equals(that.type.getSubtype()) &&
             (position == that.position || context.equals(that.context))
         );
     }

@@ -1,11 +1,12 @@
 package es.bvalero.replacer.finder.listing;
 
-import es.bvalero.replacer.common.domain.ReplacementKind;
 import java.util.List;
+import lombok.EqualsAndHashCode;
 import lombok.Value;
 import org.jetbrains.annotations.TestOnly;
 
 @Value
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class SimpleMisspelling implements Misspelling {
 
     String word;
@@ -44,13 +45,9 @@ public class SimpleMisspelling implements Misspelling {
         return of(word, true, comment);
     }
 
+    @EqualsAndHashCode.Include
     @Override
     public String getKey() {
         return this.word;
-    }
-
-    @Override
-    public ReplacementKind getReplacementKind() {
-        return ReplacementKind.SIMPLE;
     }
 }

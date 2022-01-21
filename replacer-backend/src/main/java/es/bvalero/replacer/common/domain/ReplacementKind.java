@@ -12,7 +12,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum ReplacementKind {
     SIMPLE((byte) 2),
-    COMPOSED((byte) 3),
+    COMPLEX((byte) 3),
     CUSTOM((byte) 1),
     DATE((byte) 4),
     EMPTY((byte) 99); // To be used but not meant to be serialized

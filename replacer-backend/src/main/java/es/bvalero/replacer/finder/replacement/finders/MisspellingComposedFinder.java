@@ -3,7 +3,6 @@ package es.bvalero.replacer.finder.replacement.finders;
 import com.github.rozidan.springboot.logger.Loggable;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
-import es.bvalero.replacer.common.domain.ReplacementKind;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.listing.ComposedMisspelling;
@@ -85,10 +84,5 @@ public class MisspellingComposedFinder extends MisspellingFinder implements Prop
         } else {
             return AutomatonMatchFinder.find(page.getContent(), automaton);
         }
-    }
-
-    @Override
-    ReplacementKind getType() {
-        return ReplacementKind.COMPOSED;
     }
 }

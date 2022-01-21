@@ -262,7 +262,7 @@ class MisspellingSimpleFinderTest {
             .builder()
             .start(3)
             .text("entreno")
-            .type(ReplacementType.of(ReplacementKind.SIMPLE, "entreno"))
+            .type(ReplacementType.of(ReplacementKind.COMPLEX, "entreno"))
             .suggestions(List.of(Suggestion.of("entreno", "sustantivo"), Suggestion.of("entrenó", "verbo")))
             .build();
         assertEquals(Set.of(expected), new HashSet<>(results));
@@ -287,7 +287,7 @@ class MisspellingSimpleFinderTest {
             .builder()
             .start(3)
             .text("avion")
-            .type(ReplacementType.of(ReplacementKind.SIMPLE, "avion"))
+            .type(ReplacementType.of(ReplacementKind.COMPLEX, "avion"))
             .suggestions(
                 List.of(
                     Suggestion.ofNoReplace("avion"),
@@ -312,7 +312,7 @@ class MisspellingSimpleFinderTest {
             .builder()
             .start(3)
             .text("Avion")
-            .type(ReplacementType.of(ReplacementKind.SIMPLE, "avion"))
+            .type(ReplacementType.of(ReplacementKind.COMPLEX, "avion"))
             .suggestions(
                 List.of(
                     Suggestion.ofNoReplace("Avion"),
@@ -340,7 +340,7 @@ class MisspellingSimpleFinderTest {
             .builder()
             .start(6)
             .text("am")
-            .type(ReplacementType.of(ReplacementKind.SIMPLE, "am"))
+            .type(ReplacementType.of(ReplacementKind.COMPLEX, "am"))
             .suggestions(
                 List.of(Suggestion.of("am", "idioma"), Suggestion.of("AM", "sigla"), Suggestion.of("a. m.", "hora"))
             )
@@ -361,7 +361,7 @@ class MisspellingSimpleFinderTest {
             .builder()
             .start(3)
             .text("Julio")
-            .type(ReplacementType.of(ReplacementKind.SIMPLE, "Julio"))
+            .type(ReplacementType.of(ReplacementKind.COMPLEX, "Julio"))
             .suggestions(List.of(Suggestion.of("Julio", "nombre"), Suggestion.of("julio", "mes")))
             .build();
         assertEquals(Set.of(expected), new HashSet<>(results));
@@ -406,7 +406,7 @@ class MisspellingSimpleFinderTest {
             .builder()
             .start(7)
             .text("Vario")
-            .type(ReplacementType.of(ReplacementKind.SIMPLE, "vario"))
+            .type(ReplacementType.of(ReplacementKind.COMPLEX, "vario"))
             .suggestions(List.of(Suggestion.of("Vario", "adjetivo; nombre propio")))
             .build();
         assertEquals(Set.of(expected), new HashSet<>(results));
@@ -430,7 +430,7 @@ class MisspellingSimpleFinderTest {
             .builder()
             .start(6)
             .text("Barbara")
-            .type(ReplacementType.of(ReplacementKind.SIMPLE, "barbara"))
+            .type(ReplacementType.of(ReplacementKind.COMPLEX, "barbara"))
             .suggestions(
                 List.of(
                     Suggestion.of("Barbara", "nombre en inglés; verbo imperfecto"),
@@ -438,6 +438,28 @@ class MisspellingSimpleFinderTest {
                     Suggestion.of("Barbará", "verbo futuro")
                 )
             )
+            .build();
+        assertEquals(Set.of(expected), new HashSet<>(results));
+    }
+
+    @Test
+    void testSeveralSuggestions() {
+        String text = "Santa Barbara.";
+
+        SimpleMisspelling misspelling = SimpleMisspelling.ofCaseInsensitive(
+            "barbara",
+            "bárbara (adjetivo), barbara (verbo)"
+        );
+        this.fakeUpdateMisspellingList(List.of(misspelling));
+
+        List<Replacement> results = misspellingFinder.findList(text);
+
+        Replacement expected = Replacement
+            .builder()
+            .start(6)
+            .text("Barbara")
+            .type(ReplacementType.of(ReplacementKind.COMPLEX, "barbara"))
+            .suggestions(List.of(Suggestion.of("Barbara", "verbo"), Suggestion.of("Bárbara", "adjetivo")))
             .build();
         assertEquals(Set.of(expected), new HashSet<>(results));
     }

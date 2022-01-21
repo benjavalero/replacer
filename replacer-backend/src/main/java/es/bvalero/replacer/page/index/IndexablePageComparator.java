@@ -86,6 +86,7 @@ class IndexablePageComparator {
         return (
             dbReplacement.isToBeReviewed() &&
             (
+                !Objects.equals(replacement.getType().getKind(), dbReplacement.getType().getKind()) ||
                 !Objects.equals(replacement.getPosition(), dbReplacement.getPosition()) ||
                 !Objects.equals(replacement.getContext(), dbReplacement.getContext())
             )

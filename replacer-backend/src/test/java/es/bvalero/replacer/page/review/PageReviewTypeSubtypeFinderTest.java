@@ -56,7 +56,7 @@ class PageReviewTypeSubtypeFinderTest {
     private final List<PageReplacement> replacements = Collections.singletonList(replacement);
     private final PageReviewOptions options = PageReviewOptions.ofType(ReplacementType.of(ReplacementKind.SIMPLE, "Y"));
     private final PageReviewOptions options2 = PageReviewOptions.ofType(
-        ReplacementType.of(ReplacementKind.COMPOSED, "B")
+        ReplacementType.of(ReplacementKind.COMPLEX, "B")
     );
 
     @Mock
