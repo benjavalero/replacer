@@ -48,7 +48,13 @@ class PageIndexResultSaver {
     }
 
     private int getBatchSize() {
-        return this.batchResult.stream().mapToInt(PageIndexResult::size).sum();
+        // We use a good-old "for" loop in order to avoid a ConcurrentModificationException
+        int size = 0;
+        //noinspection ForLoopReplaceableByForEach
+        for (int i = 0; i < this.batchResult.size(); i++) {
+            size += this.batchResult.get(i).size();
+        }
+        return size;
     }
 
     private void saveBatchResult() {
