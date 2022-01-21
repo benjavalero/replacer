@@ -33,7 +33,15 @@ public interface Misspelling extends ListingItem {
     List<MisspellingSuggestion> getSuggestions();
 
     default ReplacementType getReplacementType() {
-        ReplacementKind kind = getSuggestions().size() == 1 ? ReplacementKind.SIMPLE : ReplacementKind.COMPLEX;
+        ReplacementKind kind = ReplacementKind.SIMPLE;
+        if (getSuggestions().size() > 1) {
+            // If the first suggestion is the original word we assume most of these replacements are false positives
+            if (getSuggestions().get(0).getText().equals(getWord())) {
+                kind = ReplacementKind.HARD;
+            } else {
+                kind = ReplacementKind.COMPLEX;
+            }
+        }
         return ReplacementType.of(kind, getWord());
     }
 

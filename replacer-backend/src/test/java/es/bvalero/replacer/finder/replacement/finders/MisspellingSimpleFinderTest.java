@@ -406,7 +406,7 @@ class MisspellingSimpleFinderTest {
             .builder()
             .start(7)
             .text("Vario")
-            .type(ReplacementType.of(ReplacementKind.COMPLEX, "vario"))
+            .type(ReplacementType.of(ReplacementKind.HARD, "vario"))
             .suggestions(List.of(Suggestion.of("Vario", "adjetivo; nombre propio")))
             .build();
         assertEquals(Set.of(expected), new HashSet<>(results));
@@ -460,6 +460,25 @@ class MisspellingSimpleFinderTest {
             .text("Barbara")
             .type(ReplacementType.of(ReplacementKind.COMPLEX, "barbara"))
             .suggestions(List.of(Suggestion.of("Barbara", "verbo"), Suggestion.of("Bárbara", "adjetivo")))
+            .build();
+        assertEquals(Set.of(expected), new HashSet<>(results));
+    }
+
+    @Test
+    void testFirstSuggestionAsOriginal() {
+        String text = "Con Sidney Poitier.";
+
+        SimpleMisspelling misspelling = SimpleMisspelling.ofCaseSensitive("Sidney", "Sidney (nombre), Sídney (ciudad)");
+        this.fakeUpdateMisspellingList(List.of(misspelling));
+
+        List<Replacement> results = misspellingFinder.findList(text);
+
+        Replacement expected = Replacement
+            .builder()
+            .start(4)
+            .text("Sidney")
+            .type(ReplacementType.of(ReplacementKind.HARD, "Sidney"))
+            .suggestions(List.of(Suggestion.of("Sidney", "nombre"), Suggestion.of("Sídney", "ciudad")))
             .build();
         assertEquals(Set.of(expected), new HashSet<>(results));
     }

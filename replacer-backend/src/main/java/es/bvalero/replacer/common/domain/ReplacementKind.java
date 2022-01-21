@@ -15,6 +15,7 @@ public enum ReplacementKind {
     COMPLEX((byte) 3),
     CUSTOM((byte) 1),
     DATE((byte) 4),
+    HARD((byte) 5),
     EMPTY((byte) 99); // To be used but not meant to be serialized
 
     private static final Map<Byte, ReplacementKind> map = Arrays
