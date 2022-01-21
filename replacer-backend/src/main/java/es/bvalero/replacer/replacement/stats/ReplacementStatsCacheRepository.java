@@ -2,6 +2,7 @@ package es.bvalero.replacer.replacement.stats;
 
 import com.github.rozidan.springboot.logger.Loggable;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
+import es.bvalero.replacer.repository.CustomRepository;
 import es.bvalero.replacer.repository.ReplacementStatsRepository;
 import es.bvalero.replacer.repository.ResultCount;
 import java.util.Collection;
@@ -25,6 +26,9 @@ class ReplacementStatsCacheRepository implements ReplacementStatsRepository {
     @Qualifier("replacementJdbcRepository")
     private ReplacementStatsRepository replacementStatsRepository;
 
+    @Autowired
+    private CustomRepository customRepository;
+
     // Statistics caches
     // The queries in database can be heavy, so we preload the counts on start and refresh them periodically.
     // They are not used often so for the moment it is not worth to add synchronization.
@@ -38,7 +42,9 @@ class ReplacementStatsCacheRepository implements ReplacementStatsRepository {
     public int countReplacementsReviewed(WikipediaLanguage lang) {
         return this.countReviewed.computeIfAbsent(
                 lang,
-                l -> this.replacementStatsRepository.countReplacementsReviewed(l)
+                l ->
+                    this.replacementStatsRepository.countReplacementsReviewed(l) +
+                    this.customRepository.countReplacementsReviewed(l)
             );
     }
 
@@ -52,10 +58,13 @@ class ReplacementStatsCacheRepository implements ReplacementStatsRepository {
 
     @Override
     public Collection<ResultCount<String>> countReplacementsByReviewer(WikipediaLanguage lang) {
-        return this.countByReviewer.computeIfAbsent(
-                lang,
-                l -> this.replacementStatsRepository.countReplacementsByReviewer(l)
-            );
+        return this.countByReviewer.computeIfAbsent(lang, this::countAllReplacementsByReviewer);
+    }
+
+    private Collection<ResultCount<String>> countAllReplacementsByReviewer(WikipediaLanguage lang) {
+        Collection<ResultCount<String>> counts = this.replacementStatsRepository.countReplacementsByReviewer(lang);
+        counts.addAll(this.customRepository.countReplacementsByReviewer(lang));
+        return counts;
     }
 
     // Add a delay of 1 minute so these queries don't overlap with the one to count replacement types

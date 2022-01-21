@@ -16,4 +16,10 @@ public interface CustomRepository {
 
     /** Delete a collection of custom replacements */
     void removeCustomReplacementsByPageId(Collection<WikipediaPageId> pageIds);
+
+    /** Count the number of replacements reviewed */
+    int countReplacementsReviewed(WikipediaLanguage lang);
+
+    /** Count the number of reviewed replacements by reviewer */
+    Collection<ResultCount<String>> countReplacementsByReviewer(WikipediaLanguage lang);
 }
