@@ -35,7 +35,7 @@ public enum WikipediaUserGroup {
     @Nullable
     public static WikipediaUserGroup valueOfLabel(String group) {
         if (!map.containsKey(group)) {
-            LOGGER.warn("Wrong group label: " + group);
+            LOGGER.warn("Unknown group label: " + group);
         }
         return map.get(group);
     }
