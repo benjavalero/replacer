@@ -64,6 +64,10 @@
     <util:set id="ignorableSections" value-type="java.lang.String">
         <value>Bibliografía</value>
         <value>Enlaces externos</value>
+        <value>Publicaciones</value>
+
+        <!-- Galician -->
         <value>Ligazóns externas</value>
+        <value>Publicacións</value>
     </util:set>
 </beans>
