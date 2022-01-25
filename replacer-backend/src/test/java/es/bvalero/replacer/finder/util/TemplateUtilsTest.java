@@ -100,4 +100,18 @@ class TemplateUtilsTest {
         List<String> expected = List.of(template1, template2);
         assertEquals(expected, matches.stream().map(MatchResult::group).collect(Collectors.toList()));
     }
+
+    @Test
+    void testFindFakeTemplate() {
+        String fake = "<math display=\"block\">Dw_{c,f,x}= {{\\sum(c*dw^2) \\over \\sum Dw}+10 \\over 2}</math>";
+        String template1 = "{{Template1|Text1}}";
+        String template2 = "{{Template2|Text2}}";
+        String text = String.format("%s %s %s", fake, template1, template2);
+
+        FinderPage page = FinderPage.of(text);
+        List<LinearMatchResult> matches = TemplateUtils.findAllTemplates(page);
+
+        Set<String> expected = Set.of(template1, template2);
+        assertEquals(expected, matches.stream().map(MatchResult::group).collect(Collectors.toSet()));
+    }
 }

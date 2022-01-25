@@ -38,12 +38,14 @@ public class TemplateUtils {
                 return completeMatch.end();
             } else {
                 // Template not closed. Not worth keep on searching as the next templates are considered as nested.
-                FinderUtils.logFinderResult(
-                    page,
-                    startTemplate,
-                    startTemplate + START_TEMPLATE.length(),
-                    "Template not closed"
-                );
+                if (!isFakeTemplate(text, startTemplate)) {
+                    FinderUtils.logFinderResult(
+                        page,
+                        startTemplate,
+                        startTemplate + START_TEMPLATE.length(),
+                        "Template not closed"
+                    );
+                }
                 return -1;
             }
         } else {
@@ -57,6 +59,13 @@ public class TemplateUtils {
 
     private int findEndTemplate(String text, int start) {
         return text.indexOf(END_TEMPLATE, start);
+    }
+
+    private boolean isFakeTemplate(String text, int templateStart) {
+        // There are some cases where curly braces inside a LaTeX formula may be confused with template start
+        // We want to avoid the warning in these cases
+        char nextChar = text.charAt(templateStart + START_TEMPLATE.length());
+        return nextChar == '\\';
     }
 
     /* Find the immutable of the template. It also finds nested templates and adds them to the given list. */
