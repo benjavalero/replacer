@@ -64,8 +64,9 @@ public class TemplateUtils {
     private boolean isFakeTemplate(String text, int templateStart) {
         // There are some cases where curly braces inside a LaTeX formula may be confused with template start
         // We want to avoid the warning in these cases
-        char nextChar = text.charAt(templateStart + START_TEMPLATE.length());
-        return nextChar == '\\';
+        // This method is only called in case the template is not closed
+        final char nextChar = text.charAt(templateStart + START_TEMPLATE.length());
+        return !Character.isLetterOrDigit(nextChar);
     }
 
     /* Find the immutable of the template. It also finds nested templates and adds them to the given list. */
