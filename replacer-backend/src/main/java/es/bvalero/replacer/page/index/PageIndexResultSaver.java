@@ -48,18 +48,14 @@ class PageIndexResultSaver {
     }
 
     private int getBatchSize() {
-        // We use a good-old "for" loop in order to avoid a ConcurrentModificationException
-        int size = 0;
-        //noinspection ForLoopReplaceableByForEach
-        for (int i = 0; i < this.batchResult.size(); i++) {
-            size += this.batchResult.get(i).size();
+        synchronized (batchResult) {
+            return batchResult.stream().mapToInt(PageIndexResult::size).sum();
         }
-        return size;
     }
 
     private void saveBatchResult() {
-        // We use a good-old "for" loop in order to avoid a ConcurrentModificationException
-        // See: https://medium.com/xiumeteo-labs/stream-and-concurrentmodificationexception-2d14ed8ff4b2
+        // We use a thread-safe loop in order to avoid a ConcurrentModificationException
+        // https://www.baeldung.com/java-synchronized-collections
         // Also use sets just in case to prevent duplicated insertions
         final Set<PageModel> addPages = new HashSet<>();
         final Set<PageModel> updatePages = new HashSet<>();
@@ -67,14 +63,14 @@ class PageIndexResultSaver {
         final Set<ReplacementModel> updateReplacements = new HashSet<>();
         final Set<ReplacementModel> removeReplacements = new HashSet<>();
 
-        //noinspection ForLoopReplaceableByForEach
-        for (int i = 0; i < this.batchResult.size(); i++) {
-            PageIndexResult result = this.batchResult.get(i);
-            addPages.addAll(IndexablePageMapper.toModel(result.getAddPages()));
-            updatePages.addAll(IndexablePageMapper.toModel(result.getUpdatePages()));
-            addReplacements.addAll(IndexableReplacementMapper.toModel(result.getAddReplacements()));
-            updateReplacements.addAll(IndexableReplacementMapper.toModel(result.getUpdateReplacements()));
-            removeReplacements.addAll(IndexableReplacementMapper.toModel(result.getRemoveReplacements()));
+        synchronized (batchResult) {
+            for (PageIndexResult result : batchResult) {
+                addPages.addAll(IndexablePageMapper.toModel(result.getAddPages()));
+                updatePages.addAll(IndexablePageMapper.toModel(result.getUpdatePages()));
+                addReplacements.addAll(IndexableReplacementMapper.toModel(result.getAddReplacements()));
+                updateReplacements.addAll(IndexableReplacementMapper.toModel(result.getUpdateReplacements()));
+                removeReplacements.addAll(IndexableReplacementMapper.toModel(result.getRemoveReplacements()));
+            }
         }
 
         // Pages must be added before adding the related replacements
@@ -90,7 +86,9 @@ class PageIndexResultSaver {
     }
 
     private void clearBatchResult() {
-        this.batchResult.clear();
+        synchronized (batchResult) {
+            batchResult.clear();
+        }
     }
 
     /* Force saving what is left on the batch */
