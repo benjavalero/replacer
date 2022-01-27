@@ -18,7 +18,7 @@ public enum WikipediaUserGroup {
     USER("user"), // Registered users
     AUTO_CONFIRMED("autoconfirmed"), // Low seniority or number of editions
     ROLL_BACKER("rollbacker"),
-    AUTO_VERIFIED("autopatrol"),
+    AUTO_VERIFIED("autopatrolled"),
     VERIFIER("patroller"),
     BUREAUCRAT("bureaucrat"),
     SYSOP("sysop"), // Administrator
