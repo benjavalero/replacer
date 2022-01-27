@@ -59,7 +59,7 @@ public class Replacement implements FinderResult {
             }
         }
         if (!originalFound) {
-            sorted.add(0, Suggestion.ofNoReplace(originalText));
+            sorted.add(0, Suggestion.ofNoComment(originalText));
         }
 
         return sorted;

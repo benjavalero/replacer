@@ -68,7 +68,7 @@ class MisspellingComposedFinderTest {
             .start(2)
             .text("aún así")
             .type(ReplacementType.of(ReplacementKind.COMPOSED, "aún así"))
-            .suggestions(List.of(Suggestion.ofNoReplace("aún así"), Suggestion.ofNoComment("aun así")))
+            .suggestions(List.of(Suggestion.ofNoComment("aún así"), Suggestion.ofNoComment("aun así")))
             .build();
         assertEquals(Set.of(expected), new HashSet<>(results));
     }
@@ -88,7 +88,7 @@ class MisspellingComposedFinderTest {
             .start(2)
             .text("aún así")
             .type(ReplacementType.of(ReplacementKind.COMPOSED, "aún así"))
-            .suggestions(List.of(Suggestion.ofNoReplace("aún así"), Suggestion.ofNoComment("aun así")))
+            .suggestions(List.of(Suggestion.ofNoComment("aún así"), Suggestion.ofNoComment("aun así")))
             .build();
         assertEquals(Set.of(expected), new HashSet<>(results));
     }
@@ -107,7 +107,7 @@ class MisspellingComposedFinderTest {
             .start(4)
             .text("mas.")
             .type(ReplacementType.of(ReplacementKind.COMPOSED, "mas."))
-            .suggestions(List.of(Suggestion.ofNoReplace("mas."), Suggestion.ofNoComment("más.")))
+            .suggestions(List.of(Suggestion.ofNoComment("mas."), Suggestion.ofNoComment("más.")))
             .build();
         assertEquals(Set.of(expected), new HashSet<>(results));
     }
@@ -126,7 +126,7 @@ class MisspellingComposedFinderTest {
             .start(4)
             .text("aun,")
             .type(ReplacementType.of(ReplacementKind.COMPOSED, "aun,"))
-            .suggestions(List.of(Suggestion.ofNoReplace("aun,"), Suggestion.ofNoComment("aún,")))
+            .suggestions(List.of(Suggestion.ofNoComment("aun,"), Suggestion.ofNoComment("aún,")))
             .build();
         assertEquals(Set.of(expected), new HashSet<>(results));
     }
@@ -145,7 +145,7 @@ class MisspellingComposedFinderTest {
             .start(3)
             .text("Rio 2016")
             .type(ReplacementType.of(ReplacementKind.COMPOSED, "Rio 2016"))
-            .suggestions(List.of(Suggestion.ofNoReplace("Rio 2016"), Suggestion.ofNoComment("Río 2016")))
+            .suggestions(List.of(Suggestion.ofNoComment("Rio 2016"), Suggestion.ofNoComment("Río 2016")))
             .build();
         assertEquals(Set.of(expected), new HashSet<>(results));
     }
@@ -166,7 +166,7 @@ class MisspellingComposedFinderTest {
             .type(ReplacementType.of(ReplacementKind.COMPOSED, "Parque Nacional"))
             .suggestions(
                 List.of(
-                    Suggestion.ofNoReplace("Parque Nacional"),
+                    Suggestion.ofNoComment("Parque Nacional"),
                     Suggestion.ofNoComment("parque nacional"),
                     Suggestion.ofNoComment("Parque nacional")
                 )

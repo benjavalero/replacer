@@ -34,6 +34,11 @@ export class EditSnippetComponent implements OnInit {
   }
 
   ngOnInit() {
+    // The first suggestion may match with the original text
+    if (this.replacement.text === this.replacement.suggestions[0].text && !this.replacement.suggestions[0].comment) {
+      this.replacement.suggestions[0].comment = 'no reemplazar';
+    }
+
     this.suggestionSelected = this.replacement.suggestions[0];
   }
 

@@ -10,8 +10,6 @@ import org.springframework.lang.Nullable;
 @Value(staticConstructor = "of")
 public class Suggestion {
 
-    private static final String NO_REPLACE = "no reemplazar";
-
     @NonNull
     String text;
 
@@ -30,10 +28,6 @@ public class Suggestion {
     @TestOnly
     public static Suggestion ofNoComment(String text) {
         return of(text, null);
-    }
-
-    public static Suggestion ofNoReplace(String text) {
-        return of(text, NO_REPLACE);
     }
 
     public Suggestion merge(Suggestion suggestion) {
