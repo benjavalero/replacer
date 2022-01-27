@@ -35,7 +35,7 @@ class FinderUtilsTest {
 
     @Test
     void testIsWordCompleteInText() {
-        String text = "Y hay/un amigo en_mí mismo. X";
+        String text = "Y hay/un amigo en_mí mismo. Ra'anana. X";
 
         assertTrue(FinderUtils.isWordCompleteInText(0, "Y", text));
         assertFalse(FinderUtils.isWordCompleteInText(2, "hay", text));
@@ -45,7 +45,8 @@ class FinderUtilsTest {
         assertFalse(FinderUtils.isWordCompleteInText(15, "en", text));
         assertFalse(FinderUtils.isWordCompleteInText(18, "mí", text));
         assertTrue(FinderUtils.isWordCompleteInText(21, "mismo", text));
-        assertTrue(FinderUtils.isWordCompleteInText(28, "X", text));
+        assertFalse(FinderUtils.isWordCompleteInText(31, "anana", text));
+        assertTrue(FinderUtils.isWordCompleteInText(38, "X", text));
     }
 
     @Test

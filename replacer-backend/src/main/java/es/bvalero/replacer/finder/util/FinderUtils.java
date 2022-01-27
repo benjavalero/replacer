@@ -62,14 +62,23 @@ public class FinderUtils {
         if (start == 0) {
             return end == text.length() || isValidRightSeparator(text.charAt(end));
         } else if (end == text.length()) {
-            return isValidLeftSeparator(text.charAt(start - 1));
+            return isValidLeftSeparator(text, start - 1);
         } else {
-            return isValidLeftSeparator(text.charAt(start - 1)) && isValidRightSeparator(text.charAt(end));
+            return isValidLeftSeparator(text, start - 1) && isValidRightSeparator(text.charAt(end));
         }
     }
 
-    private boolean isValidLeftSeparator(char separator) {
-        return !Character.isLetterOrDigit(separator) && !invalidLeftSeparators.contains(separator);
+    private boolean isValidLeftSeparator(String text, int position) {
+        final char separator = text.charAt(position);
+        return (
+            !Character.isLetterOrDigit(separator) &&
+            !invalidLeftSeparators.contains(separator) &&
+            !isApostrophe(text, position)
+        );
+    }
+
+    private boolean isApostrophe(String text, int position) {
+        return text.charAt(position) == '\'' && Character.isLetterOrDigit(text.charAt(position - 1));
     }
 
     private boolean isValidRightSeparator(char separator) {
