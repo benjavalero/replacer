@@ -66,11 +66,11 @@ public abstract class MisspellingFinder implements ReplacementFinder {
 
     @Override
     public boolean validate(MatchResult match, FinderPage page) {
-        return ReplacementFinder.super.validate(match, page) && isExistingWord(match.group(), page.getLang());
+        return isExistingWord(match.group(), page.getLang()) && ReplacementFinder.super.validate(match, page);
     }
 
     private boolean isExistingWord(String word, WikipediaLanguage lang) {
-        return findMisspellingByWord(word, lang).isPresent();
+        return getMisspellingMap(lang).containsKey(word);
     }
 
     @Override
