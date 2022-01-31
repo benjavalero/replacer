@@ -6,7 +6,7 @@ import { OAuthResponseComponent } from './authentication/oauth-response.componen
 import { LoginComponent } from './authentication/login.component';
 import { FindRandomComponent } from './page/find-random.component';
 import { FindCustomComponent } from './page/find-custom.component';
-import { DumpIndexingComponent } from './dump-indexing/dump-indexing.component';
+import { AdminComponent } from './admin/admin.component';
 import { ReplacementListComponent } from './replacement-list/replacement-list.component';
 import { StatsComponent } from './stats/stats.component';
 
@@ -20,7 +20,7 @@ const routes: Routes = [
   { path: 'custom', component: FindCustomComponent, canActivate: [AuthenticationGuard] },
   { path: 'custom/:subtype/:suggestion/:cs', component: FindRandomComponent, canActivate: [AuthenticationGuard] },
   { path: 'custom/:subtype/:suggestion/:cs/:id', component: FindRandomComponent, canActivate: [AuthenticationGuard] },
-  { path: 'dump', component: DumpIndexingComponent, canActivate: [AuthenticationGuard] },
+  { path: 'admin', component: AdminComponent, canActivate: [AuthenticationGuard] },
   { path: 'list', component: ReplacementListComponent, canActivate: [AuthenticationGuard] },
   { path: 'list/:type/:subtype', component: FindRandomComponent, canActivate: [AuthenticationGuard] },
   { path: 'list/:type/:subtype/:id', component: FindRandomComponent, canActivate: [AuthenticationGuard] },

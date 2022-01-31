@@ -1,6 +1,4 @@
 <div *ngIf="status$ | async as status; else loading">
-  <h3>Indexación</h3>
-
   <ul>
     <li>En ejecución: <strong>{{ status.running }}</strong></li>
     <li>Fichero en proceso: <strong>{{ status.dumpFileName }}</strong></li>
