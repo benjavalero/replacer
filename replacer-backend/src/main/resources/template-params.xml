@@ -30,6 +30,7 @@
         <value>harvnb|*</value>         <!-- Cita Harvard -->
         <value>harvnp|*</value>         <!-- Cita Harvard -->
         <value>imdb*|*</value>
+        <value>lang-*|*</value>
         <value>link|*</value>
         <value>NF|*</value>             <!-- It is converted into a category and contains person names -->
         <value>nihongo|*</value>        <!-- Japanese transcriptions -->

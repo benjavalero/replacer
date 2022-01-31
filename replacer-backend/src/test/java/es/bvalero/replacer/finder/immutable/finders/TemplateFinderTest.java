@@ -55,7 +55,16 @@ class TemplateFinderTest {
         String template3 = "{{Template3|param=value}}"; // Not captured
         String template4 = "{{IMDb nombre|1229738|Luis Posada}}";
         String template5 = "{{Enlace_roto|2=http://www.example.com}}";
-        String text = String.format("%s %s %s %s %s", template1, template2, template3, template4, template5);
+        String template6 = "{{lang-ho|Papua Niu Gini}}";
+        String text = String.format(
+            "%s %s %s %s %s %s",
+            template1,
+            template2,
+            template3,
+            template4,
+            template5,
+            template6
+        );
 
         List<Immutable> matches = templateFinder.findList(text);
 
