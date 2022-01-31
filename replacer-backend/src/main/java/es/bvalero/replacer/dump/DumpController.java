@@ -7,13 +7,11 @@ import es.bvalero.replacer.common.exception.ForbiddenException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import javax.validation.Valid;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 /** REST controller to perform actions related to the dump indexing process */
-@Slf4j
 @Tag(name = "Dump Indexing")
 @RestController
 @RequestMapping("api/dump-indexing")
@@ -30,7 +28,7 @@ public class DumpController {
     @GetMapping(value = "")
     public DumpIndexingStatus getDumpIndexingStatus(@Valid CommonQueryParameters queryParameters)
         throws ForbiddenException {
-        validateAdminUser(queryParameters.getUser());
+        checkUserRightsService.validateAdminUser(queryParameters.getUser());
         return dumpManager.getDumpIndexingStatus();
     }
 
@@ -39,14 +37,7 @@ public class DumpController {
     @ResponseStatus(HttpStatus.ACCEPTED)
     @PostMapping(value = "")
     public void manualStartDumpIndexing(@Valid CommonQueryParameters queryParameters) throws ForbiddenException {
-        validateAdminUser(queryParameters.getUser());
+        checkUserRightsService.validateAdminUser(queryParameters.getUser());
         dumpManager.indexLatestDumpFiles();
-    }
-
-    private void validateAdminUser(String user) throws ForbiddenException {
-        if (!checkUserRightsService.isAdmin(user)) {
-            LOGGER.error("Unauthorized user: {}", user);
-            throw new ForbiddenException();
-        }
     }
 }

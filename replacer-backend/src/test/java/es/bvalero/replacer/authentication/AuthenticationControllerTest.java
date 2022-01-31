@@ -18,6 +18,7 @@ import es.bvalero.replacer.authentication.userrights.CheckUserRightsService;
 import es.bvalero.replacer.common.domain.AccessToken;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.dto.AccessTokenDto;
+import es.bvalero.replacer.common.exception.ForbiddenException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -129,5 +130,16 @@ class AuthenticationControllerTest {
 
         verify(authenticateUserService, never())
             .authenticateUser(any(WikipediaLanguage.class), any(RequestToken.class), anyString());
+    }
+
+    @Test
+    void testGetPublicIpNotAdmin() throws Exception {
+        doThrow(ForbiddenException.class).when(checkUserRightsService).validateAdminUser(anyString());
+
+        mvc
+            .perform(get("/api/authentication/public-ip?user=x&lang=es").contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isForbidden());
+
+        verify(checkUserRightsService).validateAdminUser(anyString());
     }
 }

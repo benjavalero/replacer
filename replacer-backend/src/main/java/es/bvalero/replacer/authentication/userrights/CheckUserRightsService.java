@@ -3,17 +3,20 @@ package es.bvalero.replacer.authentication.userrights;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
+import es.bvalero.replacer.common.exception.ForbiddenException;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import es.bvalero.replacer.wikipedia.WikipediaUser;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.TestOnly;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 public class CheckUserRightsService {
 
@@ -31,7 +34,13 @@ public class CheckUserRightsService {
         .expireAfterWrite(1, TimeUnit.DAYS)
         .build();
 
-    // TODO: Refactor to validate, trace the error and throw the exception
+    public void validateAdminUser(String user) throws ForbiddenException {
+        if (!isAdmin(user)) {
+            LOGGER.error("Unauthorized user: {}", user);
+            throw new ForbiddenException();
+        }
+    }
+
     public boolean isAdmin(String username) {
         return this.adminUser.equals(username);
     }
