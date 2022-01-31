@@ -6,16 +6,23 @@ import es.bvalero.replacer.authentication.authenticateuser.AuthenticatedUser;
 import es.bvalero.replacer.authentication.oauth.RequestToken;
 import es.bvalero.replacer.authentication.requesttoken.GetRequestTokenResponse;
 import es.bvalero.replacer.authentication.requesttoken.GetRequestTokenService;
+import es.bvalero.replacer.authentication.userrights.CheckUserRightsService;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
+import es.bvalero.replacer.common.dto.CommonQueryParameters;
+import es.bvalero.replacer.common.exception.ForbiddenException;
+import es.bvalero.replacer.common.exception.ReplacerException;
+import es.bvalero.replacer.common.util.ReplacerUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import javax.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 /** REST controller to perform authentication operations */
+@Slf4j
 @Tag(name = "Authentication")
 @Loggable
 @RestController
@@ -27,6 +34,9 @@ public class AuthenticationController {
 
     @Autowired
     private AuthenticateUserService authenticateUserService;
+
+    @Autowired
+    private CheckUserRightsService checkUserRightsService;
 
     // Note these are the only REST endpoints which don't receive the common query parameters
 
@@ -55,5 +65,19 @@ public class AuthenticationController {
             requestToken,
             authenticateRequest.getOauthVerifier()
         );
+    }
+
+    @Operation(summary = "Find the public IP of the tool")
+    @GetMapping(value = "/public-ip")
+    public String getPublicIp(@Valid CommonQueryParameters queryParameters) throws ReplacerException {
+        validateAdminUser(queryParameters.getUser());
+        return ReplacerUtils.getPublicIp();
+    }
+
+    private void validateAdminUser(String user) throws ForbiddenException {
+        if (!checkUserRightsService.isAdmin(user)) {
+            LOGGER.error("Unauthorized user: {}", user);
+            throw new ForbiddenException();
+        }
     }
 }

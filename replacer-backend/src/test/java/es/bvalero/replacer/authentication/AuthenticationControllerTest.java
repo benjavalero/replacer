@@ -14,6 +14,7 @@ import es.bvalero.replacer.authentication.authenticateuser.AuthenticatedUser;
 import es.bvalero.replacer.authentication.oauth.RequestToken;
 import es.bvalero.replacer.authentication.requesttoken.GetRequestTokenResponse;
 import es.bvalero.replacer.authentication.requesttoken.GetRequestTokenService;
+import es.bvalero.replacer.authentication.userrights.CheckUserRightsService;
 import es.bvalero.replacer.common.domain.AccessToken;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.dto.AccessTokenDto;
@@ -41,6 +42,9 @@ class AuthenticationControllerTest {
 
     @MockBean
     private AuthenticateUserService authenticateUserService;
+
+    @MockBean
+    private CheckUserRightsService checkUserRightsService;
 
     @Test
     void testGetRequestToken() throws Exception {

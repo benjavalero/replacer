@@ -31,6 +31,7 @@ public class CheckUserRightsService {
         .expireAfterWrite(1, TimeUnit.DAYS)
         .build();
 
+    // TODO: Refactor to validate, trace the error and throw the exception
     public boolean isAdmin(String username) {
         return this.adminUser.equals(username);
     }
