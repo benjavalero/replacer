@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { interval, Observable, Subscription } from 'rxjs';
-import { sleep } from '../sleep';
+import { sleep } from '../../sleep';
 import { DumpIndexingStatus } from './dump-indexing.model';
 import { DumpIndexingService } from './dump-indexing.service';
 
