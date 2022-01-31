@@ -1,0 +1,4 @@
+<ng-template #loading>Calculando…</ng-template>
+<p>
+  <strong *ngIf="publicIp$ | async as publicIp; else loading">{{ publicIp.ip }}</strong>
+</p>

@@ -12,6 +12,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import es.bvalero.replacer.authentication.authenticateuser.AuthenticateUserService;
 import es.bvalero.replacer.authentication.authenticateuser.AuthenticatedUser;
 import es.bvalero.replacer.authentication.oauth.RequestToken;
+import es.bvalero.replacer.authentication.publicip.PublicIpService;
 import es.bvalero.replacer.authentication.requesttoken.GetRequestTokenResponse;
 import es.bvalero.replacer.authentication.requesttoken.GetRequestTokenService;
 import es.bvalero.replacer.authentication.userrights.CheckUserRightsService;
@@ -46,6 +47,9 @@ class AuthenticationControllerTest {
 
     @MockBean
     private CheckUserRightsService checkUserRightsService;
+
+    @MockBean
+    private PublicIpService publicIpService;
 
     @Test
     void testGetRequestToken() throws Exception {

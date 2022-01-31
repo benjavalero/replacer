@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
+import { PublicIp } from '../admin/public-ip/public-ip.model';
 import { User } from '../user/user.model';
 import { UserService } from '../user/user.service';
 import { AuthenticateRequest, AuthenticateResponse, RequestTokenResponse } from './authentication.model';
@@ -61,5 +62,9 @@ export class AuthenticationService {
 
   set redirectPath(path: string) {
     localStorage.setItem(this.redirectPathKey, decodeURIComponent(path));
+  }
+
+  getPublicIp$(): Observable<PublicIp> {
+    return this.httpClient.get<PublicIp>(`${this.baseUrl}/public-ip`);
   }
 }

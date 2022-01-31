@@ -4,13 +4,14 @@ import com.github.rozidan.springboot.logger.Loggable;
 import es.bvalero.replacer.authentication.authenticateuser.AuthenticateUserService;
 import es.bvalero.replacer.authentication.authenticateuser.AuthenticatedUser;
 import es.bvalero.replacer.authentication.oauth.RequestToken;
+import es.bvalero.replacer.authentication.publicip.PublicIp;
+import es.bvalero.replacer.authentication.publicip.PublicIpService;
 import es.bvalero.replacer.authentication.requesttoken.GetRequestTokenResponse;
 import es.bvalero.replacer.authentication.requesttoken.GetRequestTokenService;
 import es.bvalero.replacer.authentication.userrights.CheckUserRightsService;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.dto.CommonQueryParameters;
 import es.bvalero.replacer.common.exception.ReplacerException;
-import es.bvalero.replacer.common.util.ReplacerUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -34,6 +35,9 @@ public class AuthenticationController {
 
     @Autowired
     private CheckUserRightsService checkUserRightsService;
+
+    @Autowired
+    private PublicIpService publicIpService;
 
     // Note these are the only REST endpoints which don't receive the common query parameters
 
@@ -66,8 +70,8 @@ public class AuthenticationController {
 
     @Operation(summary = "Find the public IP of the tool")
     @GetMapping(value = "/public-ip")
-    public String getPublicIp(@Valid CommonQueryParameters queryParameters) throws ReplacerException {
+    public PublicIp getPublicIp(@Valid CommonQueryParameters queryParameters) throws ReplacerException {
         checkUserRightsService.validateAdminUser(queryParameters.getUser());
-        return ReplacerUtils.getPublicIp();
+        return publicIpService.getPublicIp();
     }
 }
