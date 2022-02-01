@@ -3,6 +3,7 @@
 ## 2.16.2 (??)
 - Detect protected pages
 - Detect redirection pages before analyzing the content
+- Cache pages to improve performance in particular on custom review
 
 ## 2.16.1 (1 Feb 2022)
 - Take into account custom replacements in statistics

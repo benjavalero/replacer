@@ -50,6 +50,7 @@ abstract class PageReviewFinder {
         .build();
 
     // Transient variable in order to keep the offset during different iterations while finding a review
+    // TODO: Concurrent custom reviews could use incorrectly the same offset value
     @Getter(AccessLevel.PROTECTED)
     private Integer offset;
 
@@ -136,9 +137,15 @@ abstract class PageReviewFinder {
         }
 
         // Reload the cached result list
-        PageSearchResult pageIds = findPageIdsToReview(options);
-        cachedPageIds.put(key, pageIds);
-        return !pageIds.isEmpty();
+        PageSearchResult searchResult = findPageIdsToReview(options);
+        // For the moment we retrieve and cache all the pages
+        // at risk of getting more edit conflicts
+        if (!searchResult.isEmpty()) {
+            assert searchResult.getPageIds().size() <= getCacheSize();
+            searchResult.addCachedPages(wikipediaService.getPagesByIds(options.getLang(), searchResult.getPageIds()));
+        }
+        cachedPageIds.put(key, searchResult);
+        return !searchResult.isEmpty();
     }
 
     boolean stopWhenEmptyTotal() {
@@ -160,7 +167,12 @@ abstract class PageReviewFinder {
 
     private Optional<WikipediaPage> getPageFromWikipedia(int pageId, PageReviewOptions options) {
         WikipediaPageId wikipediaPageId = WikipediaPageId.of(options.getLang(), pageId);
-        Optional<WikipediaPage> page = wikipediaService.getPageById(wikipediaPageId);
+
+        // Try to get first the page from the cache in particular for custom review
+        Optional<WikipediaPage> page = getCachedPage(pageId, options);
+        if (page.isEmpty()) {
+            page = wikipediaService.getPageById(wikipediaPageId);
+        }
         if (page.isPresent()) {
             return page;
         } else {
@@ -169,6 +181,12 @@ abstract class PageReviewFinder {
         }
 
         return Optional.empty();
+    }
+
+    private Optional<WikipediaPage> getCachedPage(int pageId, PageReviewOptions options) {
+        String key = buildCacheKey(options);
+        PageSearchResult result = cachedPageIds.getIfPresent(key);
+        return result == null ? Optional.empty() : result.getCachedPage(pageId);
     }
 
     private Optional<PageReview> buildPageReview(WikipediaPage page, PageReviewOptions options) {
@@ -213,6 +231,7 @@ abstract class PageReviewFinder {
     private int findTotalResultsFromCache(PageReviewOptions options) {
         String key = buildCacheKey(options);
         // If a review is requested directly it is possible the cache doesn't exist
+        // In case of custom replacements the number of pending will include pages with false positives
         PageSearchResult result = cachedPageIds.getIfPresent(key);
         return result != null ? result.getTotal() : 0;
     }

@@ -44,8 +44,8 @@ class WikipediaApiServiceIT {
     void testGetPagesContent() throws WikipediaException {
         // We pass a null access token to retrieve an anonymous edit token
         Collection<WikipediaPage> pages = wikipediaService.getPagesByIds(
-            List.of(6219990, 6903884),
-            WikipediaLanguage.SPANISH
+            WikipediaLanguage.SPANISH,
+            List.of(6219990, 6903884)
         );
         assertNotNull(pages);
         assertEquals(2, pages.size());

@@ -24,7 +24,8 @@ import org.springframework.stereotype.Service;
 @Profile("!offline")
 class WikipediaApiService implements WikipediaService {
 
-    private static final int MAX_PAGES_REQUESTED = 50;
+    private static final int MAX_PAGES_REQUESTED = 50; // MediaWiki API allows to retrieve the content of maximum 50 pages
+    private static final int MAX_SEARCH_RESULTS = 500; // MediaWiki API allows at most 500 pages in a search result
     private static final String PARAM_ACTION = "action";
     private static final String VALUE_QUERY = "query";
     private static final String PARAM_PAGE_ID = "pageid";
@@ -141,28 +142,28 @@ class WikipediaApiService implements WikipediaService {
 
     @Override
     public Optional<WikipediaPage> getPageById(WikipediaPageId id) {
-        try {
-            // Return the only value that should be in the map
-            return getPagesByIds(List.of(id.getPageId()), id.getLang()).stream().findAny();
-        } catch (Exception e) {
-            LOGGER.error("Error getting page by ID: {}", id, e);
-            return Optional.empty();
-        }
+        // Return the only value that should be in the map
+        return getPagesByIds(id.getLang(), List.of(id.getPageId())).stream().findAny();
     }
 
-    @VisibleForTesting
-    Collection<WikipediaPage> getPagesByIds(List<Integer> pageIds, WikipediaLanguage lang) throws WikipediaException {
+    @Loggable(value = LogLevel.TRACE, skipArgs = true, skipResult = true, warnOver = 10, warnUnit = TimeUnit.SECONDS)
+    @Override
+    public Collection<WikipediaPage> getPagesByIds(WikipediaLanguage lang, List<Integer> pageIds) {
         List<WikipediaPage> pages = new ArrayList<>(pageIds.size());
         // There is a maximum number of pages to request
         // We split the request in several sub-lists
-        int start = 0;
-        while (start < pageIds.size()) {
-            List<Integer> subList = pageIds.subList(
-                start,
-                start + Math.min(pageIds.size() - start, MAX_PAGES_REQUESTED)
-            );
-            pages.addAll(getPagesByIds(PARAM_PAGE_IDS, StringUtils.join(subList, "|"), lang));
-            start += subList.size();
+        try {
+            int start = 0;
+            while (start < pageIds.size()) {
+                List<Integer> subList = pageIds.subList(
+                    start,
+                    start + Math.min(pageIds.size() - start, MAX_PAGES_REQUESTED)
+                );
+                pages.addAll(getPagesByIds(PARAM_PAGE_IDS, StringUtils.join(subList, "|"), lang));
+                start += subList.size();
+            }
+        } catch (Exception e) {
+            LOGGER.error("Error getting pages by ID: {}", StringUtils.join(pageIds, " "), e);
         }
         return pages;
     }
@@ -300,6 +301,11 @@ class WikipediaApiService implements WikipediaService {
         int offset,
         int limit
     ) throws WikipediaException {
+        if (limit > MAX_SEARCH_RESULTS) {
+            LOGGER.error("Too big number of results to search: " + limit);
+            return WikipediaSearchResult.ofEmpty();
+        }
+
         // Avoid exception when reaching the maximum offset limit
         if (offset + limit >= MAX_OFFSET_LIMIT) {
             LOGGER.warn("Maximum offset reached: {} - {} - {}", lang, text, caseSensitive);

@@ -1,5 +1,6 @@
 package es.bvalero.replacer.page.review;
 
+import es.bvalero.replacer.common.domain.WikipediaPage;
 import java.util.*;
 import lombok.Getter;
 
@@ -10,11 +11,20 @@ final class PageSearchResult {
 
     private final List<Integer> pageIds;
     private int total;
+    private final Map<Integer, WikipediaPage> pageCache = new HashMap<>(); // Optional to be used on custom search
 
     private PageSearchResult(int total, Collection<Integer> pageIds) {
         this.total = total;
         // We need a List in order to use "removeIf"
         this.pageIds = new LinkedList<>(pageIds);
+    }
+
+    void addCachedPages(Collection<WikipediaPage> pages) {
+        pages.forEach(p -> this.pageCache.put(p.getId().getPageId(), p));
+    }
+
+    Optional<WikipediaPage> getCachedPage(int pageId) {
+        return Optional.ofNullable(this.pageCache.remove(pageId));
     }
 
     static PageSearchResult of(int total, Collection<Integer> pageIds) {
@@ -36,6 +46,7 @@ final class PageSearchResult {
 
     synchronized Optional<Integer> popPageId() {
         if (this.isEmpty()) {
+            this.pageCache.clear();
             return Optional.empty();
         } else {
             this.total--;

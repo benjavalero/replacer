@@ -7,6 +7,7 @@ import es.bvalero.replacer.wikipedia.*;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
@@ -66,6 +67,11 @@ class WikipediaOfflineService implements WikipediaService {
     @Override
     public Optional<WikipediaPage> getPageById(WikipediaPageId id) {
         return buildFakePage(id.getPageId());
+    }
+
+    @Override
+    public Collection<WikipediaPage> getPagesByIds(WikipediaLanguage lang, List<Integer> pageIds) {
+        return Collections.emptyList();
     }
 
     @Override

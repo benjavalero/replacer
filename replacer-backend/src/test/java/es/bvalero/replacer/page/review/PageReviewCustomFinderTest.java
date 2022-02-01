@@ -172,7 +172,7 @@ class PageReviewCustomFinderTest {
             .thenReturn(searchResult);
         when(customRepository.findPageIdsReviewed(any(WikipediaLanguage.class), anyString(), anyBoolean()))
             .thenReturn(Collections.emptyList());
-        when(wikipediaService.getPageById(any(WikipediaPageId.class))).thenReturn(Optional.of(page));
+        when(wikipediaService.getPagesByIds(eq(lang), anyList())).thenReturn(List.of(page));
         when(findReplacementsService.findCustomReplacements(any(WikipediaPage.class), any(PageReviewOptions.class)))
             .thenReturn(List.of(customRep));
 
@@ -194,7 +194,7 @@ class PageReviewCustomFinderTest {
         // Verifications
         verify(wikipediaService).searchByText(lang, NAMESPACES, replacement, true, 0, CACHE_SIZE);
         verify(customRepository).findPageIdsReviewed(lang, replacement, true);
-        verify(wikipediaService).getPageById(wikipediaPageId);
+        verify(wikipediaService).getPagesByIds(eq(lang), anyList());
         verify(customRepository).addCustom(any(CustomModel.class));
     }
 
@@ -236,7 +236,7 @@ class PageReviewCustomFinderTest {
             .thenReturn(searchResult);
         when(customRepository.findPageIdsReviewed(any(WikipediaLanguage.class), anyString(), anyBoolean()))
             .thenReturn(Collections.emptyList());
-        when(wikipediaService.getPageById(any(WikipediaPageId.class))).thenReturn(Optional.of(page));
+        when(wikipediaService.getPagesByIds(eq(lang), anyList())).thenReturn(List.of(page));
         when(findReplacementsService.findCustomReplacements(any(WikipediaPage.class), any(PageReviewOptions.class)))
             .thenReturn(Collections.emptyList());
 
@@ -248,7 +248,7 @@ class PageReviewCustomFinderTest {
         // Verifications
         verify(wikipediaService).searchByText(lang, NAMESPACES, replacement, true, 0, CACHE_SIZE);
         verify(customRepository).findPageIdsReviewed(lang, replacement, true);
-        verify(wikipediaService).getPageById(wikipediaPageId);
+        verify(wikipediaService).getPagesByIds(eq(lang), anyList());
         verify(customRepository, never()).addCustom(any(CustomModel.class));
     }
 
@@ -301,7 +301,7 @@ class PageReviewCustomFinderTest {
             .thenReturn(searchResult);
         when(customRepository.findPageIdsReviewed(any(WikipediaLanguage.class), anyString(), anyBoolean()))
             .thenReturn(List.of(pageId1));
-        when(wikipediaService.getPageById(any(WikipediaPageId.class))).thenReturn(Optional.of(page));
+        when(wikipediaService.getPagesByIds(eq(lang), anyList())).thenReturn(List.of(page));
         when(findReplacementsService.findCustomReplacements(any(WikipediaPage.class), any(PageReviewOptions.class)))
             .thenReturn(List.of(customRep));
 
@@ -319,7 +319,7 @@ class PageReviewCustomFinderTest {
         // Verifications
         verify(wikipediaService).searchByText(lang, NAMESPACES, replacement, true, 0, CACHE_SIZE);
         verify(customRepository).findPageIdsReviewed(lang, replacement, true);
-        verify(wikipediaService).getPageById(wikipediaPageId2);
+        verify(wikipediaService).getPagesByIds(eq(lang), anyList());
         verify(customRepository).addCustom(any(CustomModel.class));
     }
 
@@ -415,11 +415,9 @@ class PageReviewCustomFinderTest {
             .thenReturn(List.of(1, 2, 3)) // Call 4
             .thenReturn(List.of(1, 2, 3, 4)); // Call 5
 
-        when(wikipediaService.getPageById(any(WikipediaPageId.class)))
-            .thenReturn(Optional.of(pages.get(1))) // Call 1
-            .thenReturn(Optional.of(pages.get(2))) // Call 2
-            .thenReturn(Optional.of(pages.get(3))) // Call 3
-            .thenReturn(Optional.of(pages.get(4))); // Call 4
+        when(wikipediaService.getPagesByIds(eq(lang), anyList()))
+            .thenReturn(List.of(pages.get(1), pages.get(2), pages.get(3)))
+            .thenReturn(List.of(pages.get(2), pages.get(4)));
 
         when(findReplacementsService.findCustomReplacements(any(WikipediaPage.class), any(PageReviewOptions.class)))
             .thenReturn(List.of(customRep));
@@ -473,7 +471,7 @@ class PageReviewCustomFinderTest {
         // Verifications
         verify(wikipediaService, times(2)).searchByText(lang, NAMESPACES, replacement, true, 0, CACHE_SIZE);
         verify(customRepository, times(2)).findPageIdsReviewed(lang, replacement, true);
-        verify(wikipediaService, times(4)).getPageById(any(WikipediaPageId.class));
+        verify(wikipediaService, times(2)).getPagesByIds(eq(lang), anyList());
         verify(customRepository, times(4)).addCustom(any(CustomModel.class));
     }
 
@@ -519,11 +517,9 @@ class PageReviewCustomFinderTest {
         when(customRepository.findPageIdsReviewed(any(WikipediaLanguage.class), anyString(), anyBoolean()))
             .thenReturn(Collections.emptyList());
 
-        when(wikipediaService.getPageById(any(WikipediaPageId.class)))
-            .thenReturn(Optional.of(pages.get(1))) // Call 1
-            .thenReturn(Optional.of(pages.get(2))) // Call 2
-            .thenReturn(Optional.of(pages.get(3))) // Call 3
-            .thenReturn(Optional.of(pages.get(4))); // Call 4
+        when(wikipediaService.getPagesByIds(eq(lang), anyList()))
+            .thenReturn(List.of(pages.get(1), pages.get(2), pages.get(3)))
+            .thenReturn(List.of(pages.get(4)));
 
         when(findReplacementsService.findCustomReplacements(any(WikipediaPage.class), any(PageReviewOptions.class)))
             .thenReturn(Collections.emptyList());
@@ -538,7 +534,7 @@ class PageReviewCustomFinderTest {
         verify(wikipediaService).searchByText(lang, NAMESPACES, replacement, true, CACHE_SIZE, CACHE_SIZE);
         verify(wikipediaService).searchByText(lang, NAMESPACES, replacement, true, 2 * CACHE_SIZE, CACHE_SIZE);
         verify(customRepository, times(2)).findPageIdsReviewed(lang, replacement, true);
-        verify(wikipediaService, times(4)).getPageById(any(WikipediaPageId.class));
+        verify(wikipediaService, times(2)).getPagesByIds(eq(lang), anyList());
         verify(customRepository, never()).addCustom(any(CustomModel.class));
     }
 }
