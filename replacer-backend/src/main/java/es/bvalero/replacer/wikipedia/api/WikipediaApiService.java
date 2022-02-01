@@ -182,7 +182,8 @@ class WikipediaApiService implements WikipediaService {
     private Map<String, String> buildPageIdsRequestParams(String pagesParam, String pagesValue) {
         Map<String, String> params = new HashMap<>();
         params.put(PARAM_ACTION, VALUE_QUERY);
-        params.put("prop", "revisions");
+        params.put("prop", "info|revisions");
+        params.put("inprop", "protection");
         params.put("rvprop", "timestamp|content");
         params.put("rvslots", "main");
         params.put(pagesParam, pagesValue);
@@ -198,6 +199,7 @@ class WikipediaApiService implements WikipediaService {
             .getPages()
             .stream()
             .filter(page -> !page.isMissing())
+            .filter(page -> !page.isProtected())
             .map(page -> convert(page, lang, queryTimestamp))
             .collect(Collectors.toUnmodifiableList());
     }

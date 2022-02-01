@@ -67,12 +67,34 @@ class WikipediaApiResponse {
     @Data
     static class Page {
 
+        private String contentmodel;
+        private int lastrevid;
+        private int length;
         private int pageid;
         private int ns;
+        private String pagelanguage;
+        private String pagelanguagedir;
+        private String pagelanguagehtmlcode;
+        private List<Protection> protection;
+        private boolean redirect;
+        private List<String> restrictiontypes;
         private String title;
         private List<Revision> revisions;
         private List<Section> sections;
+        private String touched;
         private boolean missing;
+
+        boolean isProtected() {
+            return this.protection != null && !this.protection.isEmpty();
+        }
+    }
+
+    @Data
+    private static class Protection {
+
+        private String expiry;
+        private String level;
+        private String type;
     }
 
     @Data

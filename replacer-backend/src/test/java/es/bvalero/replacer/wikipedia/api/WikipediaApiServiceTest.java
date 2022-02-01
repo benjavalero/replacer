@@ -143,6 +143,17 @@ class WikipediaApiServiceTest {
     }
 
     @Test
+    void testGetProtectedPage() throws Exception {
+        // API response
+        String textResponse =
+            "{\"batchcomplete\":true,\"curtimestamp\":\"2022-02-01T12:16:34Z\",\"query\":{\"pages\":[{\"pageid\":252086,\"ns\":0,\"title\":\"Getxo\",\"contentmodel\":\"wikitext\",\"pagelanguage\":\"es\",\"pagelanguagehtmlcode\":\"es\",\"pagelanguagedir\":\"ltr\",\"touched\":\"2021-12-29T16:47:23Z\",\"lastrevid\":8726615,\"length\":20,\"redirect\":true,\"protection\":[{\"type\":\"edit\",\"level\":\"sysop\",\"expiry\":\"infinity\"},{\"type\":\"move\",\"level\":\"sysop\",\"expiry\":\"infinity\"}],\"restrictiontypes\":[\"edit\",\"move\"],\"revisions\":[{\"timestamp\":\"2007-05-12T10:06:05Z\",\"slots\":{\"main\":{\"contentmodel\":\"wikitext\",\"contentformat\":\"text/x-wiki\",\"content\":\"#REDIRECT [[Guecho]]\"}}}]}]}}";
+        WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
+        when(wikipediaApiRequestHelper.executeApiRequest(any(WikipediaApiRequest.class))).thenReturn(response);
+
+        assertFalse(wikipediaService.getPageByTitle(WikipediaLanguage.SPANISH, "Getxo").isPresent());
+    }
+
+    @Test
     void testGetPageIdsByStringMatch() throws Exception {
         // API response
         String textResponse =

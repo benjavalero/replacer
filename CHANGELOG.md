@@ -1,5 +1,8 @@
 # Versions
 
+## 2.16.2 (??)
+- Detect protected pages
+
 ## 2.16.1 (1 Feb 2022)
 - Take into account custom replacements in statistics
 - More ignorable sections
