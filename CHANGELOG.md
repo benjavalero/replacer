@@ -1,5 +1,13 @@
 # Versions
 
+## 2.16.1 (1 Feb 2022)
+- Take into account custom replacements in statistics
+- More ignorable sections
+- More ignorable names and surnames
+- Ignore words preceded by a single quote acting as apostrophe
+- Ignore language templates
+- Admin tasks in frontend
+
 ## 2.16.0 (19 Jan 2022)
 - Feature: add the possibility of ignoring the whole pair name-surname
 - Several internal optimizations
