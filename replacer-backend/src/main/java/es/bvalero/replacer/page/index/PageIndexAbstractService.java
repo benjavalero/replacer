@@ -69,8 +69,9 @@ abstract class PageIndexAbstractService {
 
     private boolean isPageIndexable(WikipediaPage page) {
         // Only check if the page is indexable by namespace
-        // Redirection pages are now considered indexable but discarded when finding immutables
-        return pageIndexValidator.isPageIndexableByNamespace(page);
+        // Redirection pages should be detected before analyzing content
+        // but just in case they are discarded when finding immutables
+        return pageIndexValidator.isPageIndexableByNamespace(page) && !page.isRedirect();
     }
 
     private void removeObsoletePage(@Nullable IndexablePage dbPage) {

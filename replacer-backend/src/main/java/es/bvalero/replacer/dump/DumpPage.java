@@ -28,4 +28,6 @@ class DumpPage {
 
     @NonNull
     LocalDateTime lastUpdate;
+
+    boolean redirect;
 }

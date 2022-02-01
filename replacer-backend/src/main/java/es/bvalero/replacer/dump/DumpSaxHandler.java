@@ -23,6 +23,7 @@ class DumpSaxHandler extends DefaultHandler {
     private static final String TIMESTAMP_TAG = "timestamp";
     private static final String TEXT_TAG = "text";
     private static final String PAGE_TAG = "page";
+    private static final String REDIRECT_TAG = "redirect";
 
     // Dump properties
     @Getter
@@ -37,6 +38,7 @@ class DumpSaxHandler extends DefaultHandler {
     private int currentId;
     private String currentTimestamp;
     private String currentContent;
+    private boolean currentRedirect;
 
     // Indexing status
     @Getter
@@ -104,12 +106,17 @@ class DumpSaxHandler extends DefaultHandler {
                     this.currentContent = this.currentChars.toString();
                 }
                 break;
+            case REDIRECT_TAG:
+                // If the tag appears it means it is a redirection page
+                this.currentRedirect = true;
+                break;
             case PAGE_TAG:
                 indexPage();
 
                 // Reset current ID and Content to avoid duplicates
                 this.currentId = 0;
                 this.currentContent = null;
+                this.currentRedirect = false;
                 break;
             default:
                 break;
@@ -130,6 +137,7 @@ class DumpSaxHandler extends DefaultHandler {
             .title(this.currentTitle)
             .content(this.currentContent)
             .lastUpdate(WikipediaDateUtils.parseWikipediaTimestamp(this.currentTimestamp))
+            .redirect(this.currentRedirect)
             .build();
 
         final WikipediaPage page = DumpPageMapper.toDomain(dumpPage);

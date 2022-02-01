@@ -213,6 +213,7 @@ class WikipediaApiService implements WikipediaService {
             .content(page.getRevisions().get(0).getSlots().getMain().getContent())
             .lastUpdate(WikipediaDateUtils.parseWikipediaTimestamp(page.getRevisions().get(0).getTimestamp()))
             .queryTimestamp(WikipediaDateUtils.parseWikipediaTimestamp(queryTimestamp))
+            .redirect(page.isRedirect())
             .build();
     }
 

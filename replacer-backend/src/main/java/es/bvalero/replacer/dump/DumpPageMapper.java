@@ -15,6 +15,7 @@ class DumpPageMapper {
             .title(dumpPage.getTitle())
             .content(dumpPage.getContent())
             .lastUpdate(dumpPage.getLastUpdate())
+            .redirect(dumpPage.isRedirect())
             .build();
     }
 }

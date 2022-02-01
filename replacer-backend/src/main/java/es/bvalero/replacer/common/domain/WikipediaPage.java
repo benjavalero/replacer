@@ -38,6 +38,10 @@ public class WikipediaPage {
     @Builder.Default
     LocalDateTime queryTimestamp = LocalDateTime.now(); // Store the timestamp when the page was queried
 
+    @ToString.Exclude
+    @Builder.Default
+    boolean redirect = false;
+
     @ToString.Include
     private String shortContent() {
         return StringUtils.abbreviate(this.getContent(), SHORT_CONTENT_LENGTH);

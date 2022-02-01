@@ -60,8 +60,32 @@ class PageIndexSingleServiceTest {
     }
 
     @Test
-    void testPageNotIndexable() {
+    void testPageNotIndexableByNamespace() {
         when(pageIndexValidator.isPageIndexableByNamespace(page)).thenReturn(false);
+
+        PageIndexResult result = pageIndexSingleService.indexPage(page);
+
+        assertEquals(PageIndexStatus.PAGE_NOT_INDEXABLE, result.getStatus());
+
+        verify(pageIndexValidator).isPageIndexableByNamespace(page);
+        verify(pageIndexValidator, never()).isIndexableByTimestamp(page, null);
+        verify(pageIndexValidator, never()).isIndexableByPageTitle(page, null);
+        verify(findReplacementsService, never()).findReplacements(any(WikipediaPage.class));
+    }
+
+    @Test
+    void testPageNotIndexableByRedirection() {
+        final WikipediaPage page = WikipediaPage
+            .builder()
+            .id(WikipediaPageId.of(WikipediaLanguage.getDefault(), 1))
+            .namespace(WikipediaNamespace.ARTICLE)
+            .title("T")
+            .content("")
+            .lastUpdate(LocalDateTime.now())
+            .redirect(true)
+            .build();
+
+        when(pageIndexValidator.isPageIndexableByNamespace(page)).thenReturn(true);
 
         PageIndexResult result = pageIndexSingleService.indexPage(page);
 
