@@ -285,14 +285,14 @@ class WikipediaApiServiceTest {
     @Test
     void testBuildSearchExpressionCaseSensitive() {
         String text = "en Abril";
-        String expected = "\"en Abril\" insource:/\"en Abril\"/";
+        String expected = "\"en Abril\" insource:/en Abril/";
         assertEquals(expected, wikipediaService.buildSearchExpression(text, true));
     }
 
     @Test
     void testBuildSearchExpressionCaseInsensitive() {
         String text = "en abril";
-        String expected = "\"en abril\"";
+        String expected = "\"en abril\" insource:\"en abril\"";
         assertEquals(expected, wikipediaService.buildSearchExpression(text, false));
     }
 

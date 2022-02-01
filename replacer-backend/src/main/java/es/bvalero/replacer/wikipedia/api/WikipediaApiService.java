@@ -353,11 +353,9 @@ class WikipediaApiService implements WikipediaService {
         // Search directly in the source is very expensive
         // Wikipedia recommends searching the term as usual
         // and then narrow the results with "insource"
-        String quoted = String.format("\"%s\"", text);
-        if (caseSensitive) {
-            // Case-sensitive search with a regex
-            quoted = String.format("%s insource:/%s/", quoted, quoted);
-        }
+        // We use a regex for the case-sensitive and a regular quote for case-insensitive
+        char delimiter = caseSensitive ? '/' : '"';
+        String quoted = String.format("\"%s\" insource:%s%s%s", text, delimiter, text, delimiter);
         LOGGER.debug("Search expression: {} - {} ==> {}", text, caseSensitive, quoted);
         return quoted;
     }
