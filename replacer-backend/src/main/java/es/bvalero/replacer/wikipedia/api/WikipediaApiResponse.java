@@ -85,7 +85,7 @@ class WikipediaApiResponse {
         private boolean missing;
 
         boolean isProtected() {
-            return this.protection != null && !this.protection.isEmpty();
+            return this.protection != null && this.protection.stream().anyMatch(Protection::isLibrarianEditProtection);
         }
     }
 
@@ -95,6 +95,10 @@ class WikipediaApiResponse {
         private String expiry;
         private String level;
         private String type;
+
+        boolean isLibrarianEditProtection() {
+            return "edit".equals(type) && "sysop".equals(level);
+        }
     }
 
     @Data
