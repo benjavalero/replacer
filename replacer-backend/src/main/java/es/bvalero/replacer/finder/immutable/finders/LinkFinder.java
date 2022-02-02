@@ -19,11 +19,11 @@ import org.springframework.stereotype.Component;
 /**
  * Find link-related immutables:
  * <ul>
- *     <li>Find categories, e.g. `[[Categoría:España]]`</li>
- *     <li>Find links with suffix, e.g. `[[brasil]]eño`</li>
- *     <li>Find the first part of aliased links, e.g. `brasil` in `[[brasil|Brasil]]`. It also finds files.</li>
- *     <li>Find inter-language links, e.g. `[[pt:Title]]`</li>
- *     <li>Find filenames, e.g. `xx.jpg` in `[[File:xx.jpg]]`</li>
+ *     <li>Categories, e.g. `[[Categoría:España]]`</li>
+ *     <li>Links with suffix, e.g. `[[brasil]]eño`</li>
+ *     <li>The first part of aliased links, e.g. `brasil` in `[[brasil|Brasil]]`. It also finds files.</li>
+ *     <li>Inter-language links, e.g. `[[pt:Title]]`</li>
+ *     <li>Filenames, e.g. `xx.jpg` in `[[File:xx.jpg]]`</li>
  * </ul>
  */
 @Component

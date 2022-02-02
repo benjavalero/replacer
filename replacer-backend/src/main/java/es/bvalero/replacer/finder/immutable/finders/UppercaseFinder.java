@@ -37,10 +37,11 @@ import org.springframework.stereotype.Component;
  * The considered punctuations are:
  * - After dot
  * - Parameter values
- * - Unordered lists (after *)
- * - Ordered lists (after #)
- * - HTML cells
- * - Wiki-table cells
+ * - Unordered and ordered list items
+ * - HTML table and wiki-table cells
+ * - After a reference
+ * - Starting a paragraph
+ * - Starting a header
  */
 @Component
 public class UppercaseFinder implements ImmutableFinder, PropertyChangeListener {

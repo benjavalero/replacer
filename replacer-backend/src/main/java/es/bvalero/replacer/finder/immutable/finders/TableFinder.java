@@ -11,10 +11,10 @@ import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
 /**
- * Find table-related immutables:
+ * Find table-related styles:
  * <ul>
- *     <li>Find table styles, i.e. lines starting with <code>{|</code</li>
- *     <li>Find row style, i.e. lines starting with <code>|-</code></li>
+ *     <li>Table styles, i.e. lines starting with <code>{|</code</li>
+ *     <li>Row style, i.e. lines starting with <code>|-</code></li>
  * </ul>
  */
 @Component

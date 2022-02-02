@@ -84,24 +84,33 @@ The replacement types are grouped in following categories:
 
 There are certain parts of the content of page where most false positives usually appear. With the risk of letting some replacement without fixing, the tool ignores all the replacements contained in these parts:
 
-- Some complete XML tags, e.g. for source code: `<math>LaTeX</math>`
-- Some complete templates, e.g. for quotes: `{{Cita|Texto}}`
-- Template names: `{{Album|...}}`
-- Template parameters: `{{...| pais = España | ...}}`
-- Values of some template parameters: `{{... | índice = españa | ...}}`
-- Texts in cursive and bold: `''online''`
-- Quoted texts: `«In Paris»`, `"In Paris"`, `“In Paris”`
-- URLs: `http://www.monografias.com`
-- XML tags: `<span style="color:salmon;">`
-- HTML comments: `<!-- españa -->`
-- Categories: `[[Categoría:Jennifer Lopez]]`
-- Suffixed links: `[[brasil]]eño`
-- Aliased links (the link is ignored, not the alias): `[[Taiwan|Taiwán]]`
-- Inter-wiki links: `[[pt:Title]]`
-- Filenames: `[[File:españa.png|España]]`
-- False positives extracted from the list in: https://es.wikipedia.org/wiki/Usuario:Benjavalero/FalsePositives. The list is refreshed every hour.
-- Some proper nouns which can also be common nouns. If they are preceded or followed by a word with uppercase then they are ignored. For instance, the tool ignores "Julio" in "Julio Verne", or "Domingo" in "Plácido Domingo".
-- Words in uppercase which are correct according to the punctuation rules, in particular after the following punctuation symbols: `! # * | = .`
+- Some XML tags and all the content within, even other tags, e.g. `<code>An <span>example</span>.</code>`
+- Template names, e.g. `Bandera` in `{{Bandera|España}}`
+- Some complete templates, even with nested templates, e.g. `{{Cite|A cite}}`
+- Template parameters, e.g. `param` in `{{Template|param=value}}`. For some specific parameters, we include in the result also the value, which is usually a taxonomy, a Commons category, etc. We also include the value if it seems like a file or a domain.
+- Text in cursive and bold, e.g. `''cursive''`
+- Quoted text, e.g. `«In Paris»`, `"In Paris"` or `“In Paris”`
+- URLs, e.g. `https://www.google.es`
+- XML tags, e.g. `<span>` or `<br />`
+- XML comments, e.g. `<!-- A comment -->`
+- Categories, e.g. `[[Categoría:España]]`
+- Links with suffix, e.g. `[[brasil]]eño`
+- The first part of aliased links, e.g. `brasil` in `[[brasil|Brasil]]`
+- Inter-language links, e.g. `[[pt:Title]]`
+- Filenames, e.g. `xx.jpg` in `[[File:xx.jpg]]`
+- Known expressions which are (almost) always false positives, extracted from the list in: https://es.wikipedia.org/wiki/Usuario:Benjavalero/FalsePositives. The list is refreshed every hour.
+- Some proper nouns which can also be common nouns. If they are preceded or followed by a word with uppercase then they are ignored. For instance, `Julio` in `Julio Verne`, or `Domingo` in `Plácido Domingo`.
+- Words in uppercase which are correct according to the punctuation, e.g. `Enero` in `{{Cite|date=Enero de 2020}}`. The considered punctuations are:
+  - After dot
+  - Parameter values
+  - Unordered and ordered list items
+  - HTML table and wiki-table cells
+  - After a reference
+  - Starting a paragraph
+  - Starting a header
+- Words in the page title
+- Table-related styles, i.e. lines starting with `{|` or `|-`
+- Some complete sections, e.g. `Bibliografía`
 
 ## Cosmetic Changes
 

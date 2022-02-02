@@ -20,13 +20,11 @@ import org.springframework.stereotype.Component;
 /**
  * Find template-related immutables:
  * <ul>
- *     <li>Find template names, e.g. `Bandera` in `{{Bandera|España}}`</li>
- *     <li>Find some complete templates, even with nested templates, e.g. `{{Cite|A cite}}`.
- *     The list of template names is configured in `template-names.xml`.</li>
- *     <li>Find template parameters, e.g. `param` in `{{Template|param=value}}`.
- *     For some specific parameters (see `template-param.xml`), we include in the result also the value,
- *     which is usually a taxonomy, a Commons category, etc.
- *     Finally, we include also the value if it seems like a file or a domain.</li>
+ *     <li>Template names, e.g. `Bandera` in `{{Bandera|España}}`</li>
+ *     <li>Some complete templates, even with nested templates, e.g. `{{Cite|A cite}}`</li>
+ *     <li>Template parameters, e.g. `param` in `{{Template|param=value}}`. For some specific parameters,
+ *     we include in the result also the value, which is usually a taxonomy, a Commons category, etc.
+ *     We also include the value if it seems like a file or a domain.</li>
  * </ul>
  */
 @Component
