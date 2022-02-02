@@ -4,13 +4,13 @@
       <li class="breadcrumb-item">{{ typeLabel }}</li>
       <ng-template [ngIf]="!review.options.suggestion">
         <li class="breadcrumb-item">{{ review.options.subtype }}
-          &nbsp;<span class="badge badge-light"><span class="align-middle">{{ review.numPending }}</span></span>
+          &nbsp;<span *ngIf="review.numPending" class="badge badge-light"><span class="align-middle">{{ review.numPending }}</span></span>
         </li>
       </ng-template>
       <ng-template [ngIf]="review.options.suggestion">
         <li class="breadcrumb-item">{{ review.options.subtype }}</li>
         <li class="breadcrumb-item">{{ review.options.suggestion }}
-          &nbsp;<span class="badge badge-light"><span class="align-middle">{{ review.numPending }}</span></span>
+          &nbsp;<span *ngIf="review.numPending" class="badge badge-light"><span class="align-middle">{{ review.numPending }}</span></span>
         </li>
       </ng-template>
     </ol>
@@ -36,7 +36,7 @@
   </button>
 
   <app-alert type="warning" [icon]="true" class="alert-small"
-    *ngIf="review.options.type === 1 && review.numPending > 50">
+    *ngIf="review.options.type === 1 && review.numPending && review.numPending > 50">
     <p>El reemplazo personalizado introducido tiene muchas ocurrencias. Se recomienda añadirlo a los <a
         href="https://es.wikipedia.org/wiki/Usuario:Benjavalero/Replacer#Tipos_de_reemplazos" target="_blank"
         rel="noopener noreferrer">listados generales</a> para un mantenimiento más óptimo.</p>

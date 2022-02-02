@@ -36,7 +36,7 @@ export interface PageReviewResponse {
   page: ReviewPage;
   replacements: ReviewReplacement[];
   options: PageReviewOptions;
-  numPending: number;
+  numPending?: number;
 }
 
 export interface ReviewPage {

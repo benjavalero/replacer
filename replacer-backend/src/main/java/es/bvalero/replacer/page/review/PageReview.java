@@ -21,5 +21,6 @@ class PageReview {
     @NonNull
     Collection<PageReplacement> replacements;
 
-    int numPending;
+    @Nullable
+    Integer numPending;
 }
