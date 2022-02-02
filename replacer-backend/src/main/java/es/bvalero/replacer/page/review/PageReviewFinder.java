@@ -46,7 +46,7 @@ abstract class PageReviewFinder {
     // This map can grow a lot. We use Caffeine cache to clean periodically the old or obsolete lists.
     private final Cache<String, PageSearchResult> cachedPageIds = Caffeine
         .newBuilder()
-        .expireAfterWrite(1, TimeUnit.DAYS)
+        .expireAfterAccess(1, TimeUnit.HOURS)
         .build();
 
     // Transient variable in order to keep the offset during different iterations while finding a review
