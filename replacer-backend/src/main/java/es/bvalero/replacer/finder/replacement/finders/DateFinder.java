@@ -108,11 +108,18 @@ public class DateFinder implements ReplacementFinder {
     private boolean isValidLongDate(String date) {
         final List<String> tokens = new LinkedList<>(Arrays.asList(date.split(" ")));
         return (
-            tokens.size() == 5 &&
-            FinderUtils.toLowerCase(date).equals(date) &&
-            !date.startsWith("0") &&
-            tokens.get(4).length() == 4
+            isFalsePositiveDate(tokens.get(0)) ||
+            (
+                tokens.size() == 5 &&
+                FinderUtils.toLowerCase(date).equals(date) &&
+                !date.startsWith("0") &&
+                tokens.get(4).length() == 4
+            )
         );
+    }
+
+    private boolean isFalsePositiveDate(String dateDay) {
+        return dateDay.chars().allMatch(ch -> ch == '0');
     }
 
     private boolean isValidMonthYear(String date) {

@@ -71,6 +71,14 @@ class DateFinderTest {
     }
 
     @ParameterizedTest
+    @ValueSource(strings = { "00 de Junio de 2020", "0 de Julio de 2020" })
+    void testFalsePositiveLongDate(String date) {
+        List<Replacement> replacements = dateFinder.findList(date);
+
+        assertTrue(replacements.isEmpty());
+    }
+
+    @ParameterizedTest
     @CsvSource(
         {
             "Desde Agosto de 2019, Desde agosto de 2019, " + DateFinder.SUBTYPE_UPPERCASE,
