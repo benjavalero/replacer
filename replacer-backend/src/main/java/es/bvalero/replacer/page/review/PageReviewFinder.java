@@ -49,19 +49,10 @@ abstract class PageReviewFinder {
         .expireAfterAccess(1, TimeUnit.HOURS)
         .build();
 
-    // Transient variable in order to keep the offset during different iterations while finding a review
-    // TODO: Concurrent custom reviews could use incorrectly the same offset value
-    @Getter(AccessLevel.PROTECTED)
-    private Integer offset;
-
-    void incrementOffset(int increment) {
-        this.offset = this.offset == null ? 0 : this.offset + increment;
-    }
-
     /** Find a page/section review for the given search options (if any) */
     Optional<PageReview> findRandomPageReview(PageReviewOptions options) {
         // Restart offset
-        this.offset = null;
+        this.getCachedResult(options).ifPresent(PageSearchResult::resetOffset);
 
         // STEP 1: Find a candidate page to review
         // We just need a page ID as the lang is already given in the options
@@ -119,6 +110,11 @@ abstract class PageReviewFinder {
         PageSearchResult result = cachedPageIds.getIfPresent(key);
         assert result != null;
         return result.popPageId();
+    }
+
+    Optional<PageSearchResult> getCachedResult(PageReviewOptions options) {
+        String key = buildCacheKey(options);
+        return Optional.ofNullable(cachedPageIds.getIfPresent(key));
     }
 
     /** Find and cache the list of pages to review for the given options. Returns false in case of no pages to review. */

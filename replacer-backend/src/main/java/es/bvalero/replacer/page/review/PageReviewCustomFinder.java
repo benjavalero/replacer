@@ -42,9 +42,9 @@ class PageReviewCustomFinder extends PageReviewFinder {
     PageSearchResult findPageIdsToReview(PageReviewOptions options) {
         try {
             // Initialize search
-            this.incrementOffset(getCacheSize());
+            int offset = getCachedResult(options).map(PageSearchResult::getOffset).orElse(0);
 
-            WikipediaSearchResult searchResult = findWikipediaResults(options);
+            WikipediaSearchResult searchResult = findWikipediaResults(options, offset);
             final int totalWikipediaResults = searchResult.getTotal();
             int totalToReview = searchResult.getTotal();
             final List<Integer> pageIds = new LinkedList<>(searchResult.getPageIds());
@@ -70,19 +70,19 @@ class PageReviewCustomFinder extends PageReviewFinder {
                 }
 
                 if (pageIds.isEmpty()) {
-                    this.incrementOffset(getCacheSize());
-                    assert this.getOffset() != null;
-                    if (this.getOffset() >= totalWikipediaResults) {
+                    offset += getCacheSize();
+                    if (offset >= totalWikipediaResults) {
                         LOGGER.debug("All results retrieved from Wikipedia are already reviewed");
                         return PageSearchResult.ofEmpty();
                     }
 
-                    searchResult = findWikipediaResults(options);
+                    searchResult = findWikipediaResults(options, offset);
                     // For simplicity's sake we assume the number of total results is the same
                     pageIds.clear();
                     pageIds.addAll(searchResult.getPageIds());
                 } else {
-                    return PageSearchResult.of(totalToReview, pageIds);
+                    int nextOffset = offset + getCacheSize();
+                    return PageSearchResult.of(totalToReview, pageIds, nextOffset);
                 }
             }
         } catch (WikipediaException e) {
@@ -92,11 +92,11 @@ class PageReviewCustomFinder extends PageReviewFinder {
         return PageSearchResult.ofEmpty();
     }
 
-    private WikipediaSearchResult findWikipediaResults(PageReviewOptions options) throws WikipediaException {
+    private WikipediaSearchResult findWikipediaResults(PageReviewOptions options, int offset)
+        throws WikipediaException {
         String subtype = options.getType().getSubtype();
         Boolean cs = options.getCs();
-        Integer offset = this.getOffset();
-        assert cs != null && offset != null;
+        assert cs != null;
         return wikipediaService.searchByText(
             options.getLang(),
             indexableNamespaces.stream().map(WikipediaNamespace::valueOf).collect(Collectors.toUnmodifiableSet()),

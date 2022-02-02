@@ -21,14 +21,24 @@ final class PageSearchResult {
     // Cached pages to review
     private final Map<Integer, WikipediaPage> pageCache = new HashMap<>();
 
-    private PageSearchResult(int total) {
+    // Offset in case there are more total results than the pagination size
+    // in order to keep the offset during different iterations while finding a review
+    @Getter(AccessLevel.PACKAGE)
+    private int offset;
+
+    private PageSearchResult(int total, int offset) {
         this.total = total;
+        this.offset = offset;
+    }
+
+    static PageSearchResult of(int total, Collection<Integer> pageIds, int offset) {
+        PageSearchResult result = new PageSearchResult(total, offset);
+        result.addPageIds(pageIds);
+        return result;
     }
 
     static PageSearchResult of(int total, Collection<Integer> pageIds) {
-        PageSearchResult result = new PageSearchResult(total);
-        result.addPageIds(pageIds);
-        return result;
+        return PageSearchResult.of(total, pageIds, 0);
     }
 
     private void addPageIds(Collection<Integer> pageIds) {
@@ -48,7 +58,7 @@ final class PageSearchResult {
     }
 
     static PageSearchResult ofEmpty() {
-        return new PageSearchResult(0);
+        return new PageSearchResult(0, 0);
     }
 
     boolean isEmptyTotal() {
@@ -63,11 +73,16 @@ final class PageSearchResult {
     synchronized Optional<Integer> popPageId() {
         if (this.isEmpty()) {
             this.pageCache.clear();
+            this.resetOffset();
             return Optional.empty();
         } else {
             this.total--;
             return Optional.of(this.pageIds.remove(0));
         }
+    }
+
+    void resetOffset() {
+        this.offset = 0;
     }
 
     Optional<WikipediaPage> getCachedPage(int pageId) {
