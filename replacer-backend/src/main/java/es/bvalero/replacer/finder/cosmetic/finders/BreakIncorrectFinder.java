@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
 import org.intellij.lang.annotations.RegExp;
 import org.springframework.stereotype.Component;
 
-/** Find break with incorrect syntax */
+/** Break with incorrect syntax, e.g. `</br> ==> <br>` */
 @Component
 class BreakIncorrectFinder extends CosmeticCheckedFinder {
 

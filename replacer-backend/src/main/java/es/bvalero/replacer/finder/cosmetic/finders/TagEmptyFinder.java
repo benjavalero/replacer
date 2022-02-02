@@ -11,7 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.intellij.lang.annotations.RegExp;
 import org.springframework.stereotype.Component;
 
-/** Find tags with no content */
+/** Tags with no content, e.g. `<div style="text-align: right; font-size: 85%;"></div>` */
 @Component
 class TagEmptyFinder extends CosmeticCheckedFinder {
 

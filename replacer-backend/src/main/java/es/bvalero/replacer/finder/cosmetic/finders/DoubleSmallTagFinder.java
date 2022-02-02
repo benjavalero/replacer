@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 import org.intellij.lang.annotations.RegExp;
 import org.springframework.stereotype.Component;
 
-/** Find double small tags which make the text too tiny and less accessible */
+/** Double small tags which make the text too tiny and less accessible, e.g. `<small><small>Text</small></small> ==> <small>Text</small>` */
 @Component
 class DoubleSmallTagFinder extends CosmeticCheckedFinder {
 

@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 import org.intellij.lang.annotations.RegExp;
 import org.springframework.stereotype.Component;
 
-/** Find wiki-links where the link and the title are the same */
+/** Links with the same link and alias, e.g. `[[Coronavirus|coronavirus]] ==> [[coronavirus]]` */
 @Component
 class SameLinkFinder extends CosmeticCheckedFinder {
 

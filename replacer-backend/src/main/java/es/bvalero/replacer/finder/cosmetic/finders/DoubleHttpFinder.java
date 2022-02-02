@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 import org.intellij.lang.annotations.RegExp;
 import org.springframework.stereotype.Component;
 
-/** Find external links with double HTTP */
+/** External links with double HTTP, e.g. `https://https://www.linkedin.com ==> https://www.linkedin.com` */
 @Component
 class DoubleHttpFinder extends CosmeticCheckedFinder {
 

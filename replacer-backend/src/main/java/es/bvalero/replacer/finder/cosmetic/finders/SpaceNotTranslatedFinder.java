@@ -18,7 +18,7 @@ import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
 import org.intellij.lang.annotations.RegExp;
 import org.springframework.stereotype.Component;
 
-/** Find space links where the space is not translated */
+/** Space links where the space is not translated, e.g. `[[File:x.jpg]] ==> [[Archivo:x.jpg]]` */
 @Component
 class SpaceNotTranslatedFinder extends CosmeticCheckedFinder {
 

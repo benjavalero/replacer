@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 import org.intellij.lang.annotations.RegExp;
 import org.springframework.stereotype.Component;
 
-/** Find unnecessary small tag in sup or ref tags */
+/** Unnecessary small tag in sup or ref tags, e.g. `<sup><small>2</small></sup> ==> <sup>2</sup>` */
 @Component
 class SmallTagUnnecessaryFinder extends CosmeticCheckedFinder {
 

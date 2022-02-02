@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 import org.intellij.lang.annotations.RegExp;
 import org.springframework.stereotype.Component;
 
-/** Find headlines with the complete text in bold */
+/** Headlines with the complete text in bold, e.g. `== '''Asia''' ==` */
 @Component
 class HeadlineBoldFinder extends CosmeticCheckedFinder {
 

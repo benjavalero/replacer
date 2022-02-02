@@ -16,7 +16,7 @@ import org.intellij.lang.annotations.RegExp;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
-/** Find categories containing unnecessary spaces */
+/** Categories containing unnecessary spaces, e.g. `[[Categoría: Animal]] ==> [[Categoría:Animal]]` */
 @Component
 class CategoryWhiteSpaceFinder extends CosmeticCheckedFinder {
 

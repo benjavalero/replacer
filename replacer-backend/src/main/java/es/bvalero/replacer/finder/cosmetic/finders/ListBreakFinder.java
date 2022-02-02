@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 import org.intellij.lang.annotations.RegExp;
 import org.springframework.stereotype.Component;
 
-/** Find list items ending with a break */
+/** List items ending with a break, e.g. `* x <br> ==> * x` */
 @Component
 class ListBreakFinder extends CosmeticCheckedFinder {
 

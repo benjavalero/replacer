@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 import org.intellij.lang.annotations.RegExp;
 import org.springframework.stereotype.Component;
 
-/** Find headlines ending with a colon */
+/** Headlines ending with a colon, e.g. `== Asia: ==` */
 @Component
 class HeadlineColonFinder extends CosmeticCheckedFinder {
 

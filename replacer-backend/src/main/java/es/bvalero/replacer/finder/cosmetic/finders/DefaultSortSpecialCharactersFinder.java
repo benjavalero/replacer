@@ -12,7 +12,7 @@ import org.intellij.lang.annotations.RegExp;
 import org.springframework.stereotype.Component;
 
 /**
- * Find template DEFAULTSORT including special characters.
+ * Template DEFAULTSORT including special characters, e.g. `{{ DEFAULTSORT : AES_Andes_2 }} ==> {{DEFAULTSORT:AES Andes 2}}`
  * We also find and fix cases with a whitespace after the colon though they are not reported (action 88).
  */
 @Component

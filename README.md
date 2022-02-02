@@ -107,8 +107,21 @@ There are certain parts of the content of page where most false positives usuall
 
 When the tool applies changes in a Wikipedia page, it takes profit to perform some cosmetic changes which usually have no effect in the page visualisation but in the internal maintenance of the wikitext:
 
-- Simplification of links with the same link and alias, e.g. `[[Coronavirus|coronavirus]] ⇒ [[coronavirus]]`
-- Fix file spaces in lowercase, e.g. `[[archivo:x.jpg]] ⇒ [[Archivo:x.jpg]]`
+- Links with the same link and alias, e.g. `[[Coronavirus|coronavirus]] ==> [[coronavirus]]`
+- Space links where the space is in lowercase, e.g. `[[archivo:x.jpg]] ==> [[Archivo:x.jpg]]`
+- Space links where the space is not translated, e.g. `[[File:x.jpg]] ==> [[Archivo:x.jpg]]`
+- Template DEFAULTSORT including special characters, e.g. `{{ DEFAULTSORT : AES_Andes_2 }} ==> {{DEFAULTSORT:AES Andes 2}}`
+- Categories containing unnecessary spaces, e.g. `[[Categoría: Animal]] ==> [[Categoría:Animal]]`
+- Unicode white-spaces, e.g. `\u2002`
+- Templates containing the useless _template_ word, e.g. `{{plantilla:DGRG}} ==> {{DGRG}}`
+- Tags with no content, e.g. `<div style="text-align: right; font-size: 85%;"></div>`
+- Break with incorrect syntax, e.g. `</br> ==> <br>`
+- List items ending with a break, e.g. `* x <br> ==> * x`
+- Headlines with the complete text in bold, e.g. `== '''Asia''' ==`
+- Headlines ending with a colon, e.g. `== Asia: ==`
+- Unnecessary small tag in sup or ref tags, e.g. `<sup><small>2</small></sup> ==> <sup>2</sup>`
+- Double small tags which make the text too tiny and less accessible, e.g. `<small><small>Text</small></small> ==> <small>Text</small>`
+- External links with double HTTP, e.g. `https://https://www.linkedin.com ==> https://www.linkedin.com`
 
 If appropriate, this changes are communicated to the wikiproject _Check Wikipedia_ to update its counters.
 

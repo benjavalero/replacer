@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 import org.intellij.lang.annotations.RegExp;
 import org.springframework.stereotype.Component;
 
-/** Find Unicode white-spaces */
+/** Unicode white-spaces, e.g. `\u2002` */
 @Component
 class UnicodeWhiteSpaceFinder extends CosmeticCheckedFinder {
 

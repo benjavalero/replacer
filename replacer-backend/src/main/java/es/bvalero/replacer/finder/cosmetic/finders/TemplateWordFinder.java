@@ -13,7 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.intellij.lang.annotations.RegExp;
 import org.springframework.stereotype.Component;
 
-/** Find templates containing the useless "template" word */
+/** Templates containing the useless "template" word, e.g. `{{plantilla:DGRG}} ==> {{DGRG}}` */
 @Component
 class TemplateWordFinder extends CosmeticCheckedFinder {
 

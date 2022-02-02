@@ -15,7 +15,7 @@ import javax.annotation.Resource;
 import org.intellij.lang.annotations.RegExp;
 import org.springframework.stereotype.Component;
 
-/** Find space links where the space is in lowercase */
+/** Space links where the space is in lowercase, e.g. `[[archivo:x.jpg]] ==> [[Archivo:x.jpg]]` */
 @Component
 class SpaceLowercaseFinder extends CosmeticCheckedFinder {
 
