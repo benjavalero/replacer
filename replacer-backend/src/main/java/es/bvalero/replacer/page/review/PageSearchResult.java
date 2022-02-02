@@ -2,37 +2,53 @@ package es.bvalero.replacer.page.review;
 
 import es.bvalero.replacer.common.domain.WikipediaPage;
 import java.util.*;
+import java.util.stream.Collectors;
+import lombok.AccessLevel;
 import lombok.Getter;
 
 // It's not worth to make this class immutable.
-// At least we encapsulate the logic to manage the internal list.
-@Getter
+// Instead we encapsulate the logic to manage the internal list.
 final class PageSearchResult {
 
-    private final List<Integer> pageIds;
+    // Total number of results no matter the size of the list or the offset
+    @Getter(AccessLevel.PACKAGE)
     private int total;
-    private final Map<Integer, WikipediaPage> pageCache = new HashMap<>(); // Optional to be used on custom search
 
-    private PageSearchResult(int total, Collection<Integer> pageIds) {
+    // Cached IDs of pages to review
+    // We need a List in order to use "removeIf"
+    private final List<Integer> pageIds = new LinkedList<>();
+
+    // Cached pages to review
+    private final Map<Integer, WikipediaPage> pageCache = new HashMap<>();
+
+    private PageSearchResult(int total) {
         this.total = total;
-        // We need a List in order to use "removeIf"
-        this.pageIds = new LinkedList<>(pageIds);
+    }
+
+    static PageSearchResult of(int total, Collection<Integer> pageIds) {
+        PageSearchResult result = new PageSearchResult(total);
+        result.addPageIds(pageIds);
+        return result;
+    }
+
+    private void addPageIds(Collection<Integer> pageIds) {
+        this.pageIds.addAll(pageIds);
+    }
+
+    Collection<Integer> getPageIds() {
+        return this.pageIds.stream().collect(Collectors.toUnmodifiableList());
+    }
+
+    int getSize() {
+        return this.pageIds.size();
     }
 
     void addCachedPages(Collection<WikipediaPage> pages) {
         pages.forEach(p -> this.pageCache.put(p.getId().getPageId(), p));
     }
 
-    Optional<WikipediaPage> getCachedPage(int pageId) {
-        return Optional.ofNullable(this.pageCache.remove(pageId));
-    }
-
-    static PageSearchResult of(int total, Collection<Integer> pageIds) {
-        return new PageSearchResult(total, pageIds);
-    }
-
     static PageSearchResult ofEmpty() {
-        return new PageSearchResult(0, Collections.emptyList());
+        return new PageSearchResult(0);
     }
 
     boolean isEmptyTotal() {
@@ -41,7 +57,7 @@ final class PageSearchResult {
 
     /** @return if the cached result list is empty. It doesn't mean the total is 0! */
     boolean isEmpty() {
-        return this.getPageIds().isEmpty();
+        return this.getSize() == 0;
     }
 
     synchronized Optional<Integer> popPageId() {
@@ -54,8 +70,12 @@ final class PageSearchResult {
         }
     }
 
+    Optional<WikipediaPage> getCachedPage(int pageId) {
+        return Optional.ofNullable(this.pageCache.remove(pageId));
+    }
+
     @Override
     public String toString() {
-        return "PageSearchResult(total=" + this.getTotal() + ", pageIds=" + this.getPageIds().size() + ")";
+        return "PageSearchResult(total=" + this.total + ", pageIds=" + this.getSize() + ")";
     }
 }

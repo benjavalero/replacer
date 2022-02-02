@@ -148,16 +148,17 @@ class WikipediaApiService implements WikipediaService {
 
     @Loggable(value = LogLevel.TRACE, skipArgs = true, skipResult = true, warnOver = 10, warnUnit = TimeUnit.SECONDS)
     @Override
-    public Collection<WikipediaPage> getPagesByIds(WikipediaLanguage lang, List<Integer> pageIds) {
+    public Collection<WikipediaPage> getPagesByIds(WikipediaLanguage lang, Collection<Integer> pageIds) {
         List<WikipediaPage> pages = new ArrayList<>(pageIds.size());
         // There is a maximum number of pages to request
         // We split the request in several sub-lists
         try {
+            List<Integer> idList = new ArrayList<>(pageIds);
             int start = 0;
-            while (start < pageIds.size()) {
-                List<Integer> subList = pageIds.subList(
+            while (start < idList.size()) {
+                List<Integer> subList = idList.subList(
                     start,
-                    start + Math.min(pageIds.size() - start, MAX_PAGES_REQUESTED)
+                    start + Math.min(idList.size() - start, MAX_PAGES_REQUESTED)
                 );
                 pages.addAll(getPagesByIds(PARAM_PAGE_IDS, StringUtils.join(subList, "|"), lang));
                 start += subList.size();
