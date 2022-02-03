@@ -1,6 +1,7 @@
 # Versions
 
-## 2.16.2 (??)
+## 2.17.0 (??)
+- Feature: new option to skip a page for later review
 - Detect protected pages
 - Detect redirection pages before analyzing the content
 - Cache pages to improve performance in particular on custom review

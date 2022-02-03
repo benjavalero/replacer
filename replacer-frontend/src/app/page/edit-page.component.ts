@@ -88,6 +88,14 @@ export class EditPageComponent implements OnChanges {
     this.saveWithNoChanges();
   }
 
+  onSkip() {
+    // Remove replacements as a trick to hide the page
+    this.review.replacements = [];
+
+    // Just move to the next page making the current one to move to the end of the queue
+    this.nextPage();
+  }
+
   private saveWithNoChanges() {
     this.alertService.addInfoMessage(`Marcando como revisado sin guardar cambios en «${this.review.page.title}»…`);
     this.saveContent(EMPTY_CONTENT);
@@ -117,16 +125,21 @@ export class EditPageComponent implements OnChanges {
         // This alert will be short as it will be cleared on redirecting to next page
         this.alertService.addSuccessMessage('Cambios guardados con éxito');
 
-        this.saved.emit(
-          new ReviewOptions(
-            this.review.options.type || null,
-            this.review.options.subtype || null,
-            this.review.options.suggestion || null,
-            this.review.options.cs || false
-          )
-        );
+        this.nextPage();
       }
     });
+  }
+
+  private nextPage(): void {
+    // This event will be called when the page is saved with or without changes, and also when skipped.
+    this.saved.emit(
+      new ReviewOptions(
+        this.review.options.type || null,
+        this.review.options.subtype || null,
+        this.review.options.suggestion || null,
+        this.review.options.cs || false
+      )
+    );
   }
 
   private replaceText(fullText: string, position: number, currentText: string, newText: string): string {

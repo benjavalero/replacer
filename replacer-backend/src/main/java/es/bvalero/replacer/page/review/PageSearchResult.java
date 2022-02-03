@@ -43,6 +43,9 @@ final class PageSearchResult {
 
     private void addPageIds(Collection<Integer> pageIds) {
         this.pageIds.addAll(pageIds);
+
+        // Sort the cached pages to keep some kind of order especially when skipping pages
+        Collections.sort(this.pageIds);
     }
 
     Collection<Integer> getPageIds() {

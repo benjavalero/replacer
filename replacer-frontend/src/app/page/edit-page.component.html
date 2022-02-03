@@ -35,6 +35,10 @@
     Marcar como revisado <span class="small">(sin cambios)</span>
   </button>
 
+  <button type="button" class="btn btn-success w-100 mb-5" (click)="onSkip()">
+    Revisar más adelante
+  </button>
+
   <app-alert type="warning" [icon]="true" class="alert-small"
     *ngIf="review.options.type === 1 && review.numPending && review.numPending > 50">
     <p>El reemplazo personalizado introducido tiene muchas ocurrencias. Se recomienda añadirlo a los <a
