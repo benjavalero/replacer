@@ -3,7 +3,7 @@ import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core
 import { AlertService } from '../alert/alert.service';
 import { UserService } from '../user/user.service';
 import { FixedReplacement, getReplacementEnd } from './page-replacement.model';
-import { PageReviewResponse, ReviewOptions, typeLabel } from './page-review.model';
+import { PageReviewOptions, PageReviewResponse, ReviewOptions, typeLabel } from './page-review.model';
 import { EMPTY_CONTENT, PageService } from './page.service';
 
 @Component({
@@ -16,6 +16,7 @@ export class EditPageComponent implements OnChanges {
 
   private readonly THRESHOLD = 200; // Maximum number of characters to display around the replacements
   private fixedReplacements!: FixedReplacement[];
+  private showAllTypes: boolean = false;
 
   @Output() saved: EventEmitter<ReviewOptions> = new EventEmitter();
 
@@ -24,6 +25,23 @@ export class EditPageComponent implements OnChanges {
   ngOnChanges() {
     // We assume the replacements are returned sorted by the back-end
     this.fixedReplacements = new Array<FixedReplacement>(this.review.replacements.length);
+
+    // Reset filter by type
+    this.showAllTypes = false;
+  }
+
+  displayReplacement(index: number): boolean {
+    if (this.showAllTypes) {
+      return true;
+    } else {
+      const options: PageReviewOptions = this.review.options;
+      if (options.type && options.subtype) {
+        const replacement = this.review.replacements[index];
+        return replacement.type === options.type && replacement.subtype === options.subtype;
+      } else {
+        return true;
+      }
+    }
   }
 
   // Calculate limits in order not to clash with other replacements
@@ -51,6 +69,25 @@ export class EditPageComponent implements OnChanges {
       limit = currentEnd + diff;
     }
     return Math.min(limit, currentEnd + this.THRESHOLD);
+  }
+
+  get countOtherTypes(): number {
+    if (this.showAllTypes) {
+      return 0;
+    } else {
+      const options: PageReviewOptions = this.review.options;
+      if (options.type && options.subtype) {
+        let count: number = 0;
+        for (let replacement of this.review.replacements) {
+          if (replacement.type !== options.type || replacement.subtype !== options.subtype) {
+            count++;
+          }
+        }
+        return count;
+      } else {
+        return 0;
+      }
+    }
   }
 
   get fixedCount(): number {
@@ -94,6 +131,13 @@ export class EditPageComponent implements OnChanges {
 
     // Just move to the next page making the current one to move to the end of the queue
     this.nextPage();
+  }
+
+  onReviewAllTypes() {
+    this.showAllTypes = true;
+
+    // Trick to scroll up to the title
+    document.querySelector('#pageTitle')!.scrollIntoView();
   }
 
   private saveWithNoChanges() {

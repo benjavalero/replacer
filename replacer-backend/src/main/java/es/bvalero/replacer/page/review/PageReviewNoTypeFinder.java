@@ -23,9 +23,12 @@ class PageReviewNoTypeFinder extends PageReviewFinder {
     }
 
     @Override
-    Collection<PageReplacement> findAllReplacements(WikipediaPage page, PageReviewOptions options) {
-        // We take profit, and we update the database with the just calculated replacements (also when empty).
-        // If the page has not been indexed (or is not indexable) the collection of replacements is empty
-        return indexReplacements(page).getReplacements();
+    Collection<PageReplacement> decorateReplacements(
+        WikipediaPage page,
+        PageReviewOptions options,
+        Collection<PageReplacement> replacements
+    ) {
+        // No decoration needed when no type
+        return replacements;
     }
 }

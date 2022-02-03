@@ -202,7 +202,15 @@ abstract class PageReviewFinder {
     }
 
     private List<PageReplacement> findReplacements(WikipediaPage page, PageReviewOptions options) {
-        List<PageReplacement> replacements = new LinkedList<>(findAllReplacements(page, options));
+        // Calculate all the standard replacements
+        // We take profit and we update the database with the just calculated replacements (also when empty)
+        // If the page has not been indexed (or is not indexable) the collection of replacements is empty
+        Collection<PageReplacement> standardReplacements = indexReplacements(page).getReplacements();
+
+        // Decorate the standard replacements
+        List<PageReplacement> replacements = new LinkedList<>(
+            decorateReplacements(page, options, standardReplacements)
+        );
 
         // Return the replacements sorted as they appear in the text
         // So there is no need to sort them in the frontend
@@ -217,7 +225,12 @@ abstract class PageReviewFinder {
         return replacements;
     }
 
-    abstract Collection<PageReplacement> findAllReplacements(WikipediaPage page, PageReviewOptions options);
+    // Apply different actions to the standard replacements depending on the type of review
+    abstract Collection<PageReplacement> decorateReplacements(
+        WikipediaPage page,
+        PageReviewOptions options,
+        Collection<PageReplacement> replacements
+    );
 
     PageIndexResult indexReplacements(WikipediaPage page) {
         LOGGER.trace("Update page replacements in database");

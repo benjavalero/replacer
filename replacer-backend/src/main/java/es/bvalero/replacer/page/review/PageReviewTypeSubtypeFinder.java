@@ -4,10 +4,10 @@ import static es.bvalero.replacer.repository.ReplacementRepository.REVIEWER_SYST
 
 import es.bvalero.replacer.common.domain.PageReplacement;
 import es.bvalero.replacer.common.domain.WikipediaPage;
-import es.bvalero.replacer.page.index.PageIndexResult;
 import es.bvalero.replacer.repository.PageRepository;
 import es.bvalero.replacer.repository.ReplacementTypeRepository;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,24 +35,22 @@ class PageReviewTypeSubtypeFinder extends PageReviewFinder {
     }
 
     @Override
-    Collection<PageReplacement> findAllReplacements(WikipediaPage page, PageReviewOptions options) {
-        // We take profit, and we update the database with the just calculated replacements (also when empty).
-        // If the page has not been indexed (or is not indexable) the collection of replacements will be empty
-        PageIndexResult pageIndexResult = indexReplacements(page);
-
-        // To build the review we are only interested in the replacements of the given type and subtype
-        // We can run the filter even with an empty list
-        Collection<PageReplacement> filtered = filterReplacementsByTypeAndSubtype(
-            pageIndexResult.getReplacements(),
-            options
-        );
+    Collection<PageReplacement> decorateReplacements(
+        WikipediaPage page,
+        PageReviewOptions options,
+        Collection<PageReplacement> replacements
+    ) {
+        // Though the whole list of replacements will be returned no matter the type
+        // we run a filter to check there is at least one replacement of the requested type
+        Collection<PageReplacement> filtered = filterReplacementsByTypeAndSubtype(replacements, options);
         if (filtered.isEmpty()) {
             // No replacement to be reviewed for this page and type
             // We remove it from the count cache by marking it as reviewed (it should not exist in DB any more)
             replacementTypeRepository.updateReviewerByPageAndType(page.getId(), options.getType(), REVIEWER_SYSTEM);
+            return Collections.emptyList();
         }
 
-        return filtered;
+        return replacements;
     }
 
     private Collection<PageReplacement> filterReplacementsByTypeAndSubtype(

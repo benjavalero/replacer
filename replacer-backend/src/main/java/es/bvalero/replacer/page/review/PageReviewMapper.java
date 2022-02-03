@@ -53,6 +53,8 @@ public class PageReviewMapper {
         return ReviewReplacement.of(
             replacement.getStart(),
             replacement.getText(),
+            replacement.getType().getKind().getCode(),
+            replacement.getType().getSubtype(),
             replacement.getSuggestions().stream().map(PageReviewMapper::toDto).collect(Collectors.toList())
         );
     }

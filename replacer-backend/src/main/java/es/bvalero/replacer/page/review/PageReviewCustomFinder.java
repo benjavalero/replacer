@@ -8,6 +8,7 @@ import es.bvalero.replacer.wikipedia.WikipediaSearchResult;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.TestOnly;
@@ -113,7 +114,13 @@ class PageReviewCustomFinder extends PageReviewFinder {
     }
 
     @Override
-    Collection<PageReplacement> findAllReplacements(WikipediaPage page, PageReviewOptions options) {
+    Collection<PageReplacement> decorateReplacements(
+        WikipediaPage page,
+        PageReviewOptions options,
+        Collection<PageReplacement> replacements
+    ) {
+        // Add the custom replacements to the standard ones
+
         // Add the page to the database in case it doesn't exist yet
         if (pageIndexRepository.findPageById(page.getId()).isEmpty()) {
             pageRepository.addPages(List.of(buildNewPage(page)));
@@ -121,12 +128,16 @@ class PageReviewCustomFinder extends PageReviewFinder {
 
         // We add the found replacements to the database but as not reviewed
         // We want to review the page every time in case anything has changed
-        Collection<PageReplacement> replacements = findReplacementsService.findCustomReplacements(page, options);
-        for (PageReplacement replacement : replacements) {
+        Collection<PageReplacement> customReplacements = findReplacementsService.findCustomReplacements(page, options);
+        for (PageReplacement replacement : customReplacements) {
             customRepository.addCustom(mapPageCustomReplacement(page, options, replacement));
         }
 
-        return replacements;
+        // Return the merged collection
+        return Stream
+            .of(replacements, customReplacements)
+            .flatMap(Collection::stream)
+            .collect(Collectors.toUnmodifiableList());
     }
 
     private PageModel buildNewPage(WikipediaPage page) {

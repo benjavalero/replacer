@@ -5,6 +5,9 @@ import static org.mockito.Mockito.*;
 
 import es.bvalero.replacer.common.domain.*;
 import es.bvalero.replacer.page.findreplacement.FindReplacementsService;
+import es.bvalero.replacer.page.index.PageIndexResult;
+import es.bvalero.replacer.page.index.PageIndexService;
+import es.bvalero.replacer.page.index.PageIndexStatus;
 import es.bvalero.replacer.repository.CustomModel;
 import es.bvalero.replacer.repository.CustomRepository;
 import es.bvalero.replacer.repository.PageIndexRepository;
@@ -45,6 +48,9 @@ class PageReviewCustomFinderTest {
 
     @Mock
     private PageReviewSectionFinder pageReviewSectionFinder;
+
+    @Mock
+    private PageIndexService pageIndexService;
 
     @InjectMocks
     private PageReviewCustomFinder pageReviewCustomService;
@@ -173,6 +179,8 @@ class PageReviewCustomFinderTest {
         when(customRepository.findPageIdsReviewed(any(WikipediaLanguage.class), anyString(), anyBoolean()))
             .thenReturn(Collections.emptyList());
         when(wikipediaService.getPagesByIds(eq(lang), anyList())).thenReturn(List.of(page));
+        when(pageIndexService.indexPage(page))
+            .thenReturn(PageIndexResult.ofEmpty(PageIndexStatus.PAGE_INDEXED, Collections.emptyList()));
         when(findReplacementsService.findCustomReplacements(any(WikipediaPage.class), any(PageReviewOptions.class)))
             .thenReturn(List.of(customRep));
 
@@ -237,6 +245,8 @@ class PageReviewCustomFinderTest {
         when(customRepository.findPageIdsReviewed(any(WikipediaLanguage.class), anyString(), anyBoolean()))
             .thenReturn(Collections.emptyList());
         when(wikipediaService.getPagesByIds(eq(lang), anyList())).thenReturn(List.of(page));
+        when(pageIndexService.indexPage(page))
+            .thenReturn(PageIndexResult.ofEmpty(PageIndexStatus.PAGE_INDEXED, Collections.emptyList()));
         when(findReplacementsService.findCustomReplacements(any(WikipediaPage.class), any(PageReviewOptions.class)))
             .thenReturn(Collections.emptyList());
 
@@ -302,6 +312,8 @@ class PageReviewCustomFinderTest {
         when(customRepository.findPageIdsReviewed(any(WikipediaLanguage.class), anyString(), anyBoolean()))
             .thenReturn(List.of(pageId1));
         when(wikipediaService.getPagesByIds(eq(lang), anyList())).thenReturn(List.of(page));
+        when(pageIndexService.indexPage(page))
+            .thenReturn(PageIndexResult.ofEmpty(PageIndexStatus.PAGE_INDEXED, Collections.emptyList()));
         when(findReplacementsService.findCustomReplacements(any(WikipediaPage.class), any(PageReviewOptions.class)))
             .thenReturn(List.of(customRep));
 
@@ -419,6 +431,9 @@ class PageReviewCustomFinderTest {
             .thenReturn(List.of(pages.get(1), pages.get(2), pages.get(3)))
             .thenReturn(List.of(pages.get(2), pages.get(4)));
 
+        when(pageIndexService.indexPage(any(WikipediaPage.class)))
+            .thenReturn(PageIndexResult.ofEmpty(PageIndexStatus.PAGE_INDEXED, Collections.emptyList()));
+
         when(findReplacementsService.findCustomReplacements(any(WikipediaPage.class), any(PageReviewOptions.class)))
             .thenReturn(List.of(customRep));
 
@@ -520,6 +535,9 @@ class PageReviewCustomFinderTest {
         when(wikipediaService.getPagesByIds(eq(lang), anyList()))
             .thenReturn(List.of(pages.get(1), pages.get(2), pages.get(3)))
             .thenReturn(List.of(pages.get(4)));
+
+        when(pageIndexService.indexPage(any(WikipediaPage.class)))
+            .thenReturn(PageIndexResult.ofEmpty(PageIndexStatus.PAGE_INDEXED, Collections.emptyList()));
 
         when(findReplacementsService.findCustomReplacements(any(WikipediaPage.class), any(PageReviewOptions.class)))
             .thenReturn(Collections.emptyList());

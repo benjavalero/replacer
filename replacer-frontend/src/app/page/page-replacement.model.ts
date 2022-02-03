@@ -1,6 +1,8 @@
 export interface ReviewReplacement {
   start: number;
   text: string;
+  type: number;
+  subtype: string;
   suggestions: ReviewSuggestion[];
 }
 

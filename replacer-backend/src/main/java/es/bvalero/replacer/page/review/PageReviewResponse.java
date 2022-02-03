@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.Collection;
 import lombok.Value;
 import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 
 @Schema(description = "Page and replacements to review")
 @Value(staticConstructor = "of")
@@ -24,6 +25,6 @@ class PageReviewResponse {
     PageReviewOptionsDto options;
 
     @Schema(description = "Number of pending pages to review of the given type", required = true, example = "1704147")
-    @NonNull
-    int numPending;
+    @Nullable
+    Integer numPending;
 }

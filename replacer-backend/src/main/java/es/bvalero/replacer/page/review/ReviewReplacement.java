@@ -16,6 +16,13 @@ class ReviewReplacement {
     @NonNull
     String text;
 
+    @Schema(description = "Kind of the replacement", example = "2", required = true)
+    byte type;
+
+    @Schema(description = "Subtype of the replacement", example = "habia", required = true)
+    @NonNull
+    String subtype;
+
     @Schema(description = "Collection of suggestions to fix the replacement", required = true)
     @NonNull
     Collection<ReviewSuggestion> suggestions;
