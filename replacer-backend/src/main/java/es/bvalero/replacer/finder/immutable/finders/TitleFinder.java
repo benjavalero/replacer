@@ -13,13 +13,14 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.regex.MatchResult;
 import org.apache.commons.collections4.IterableUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
 /** Find words in the page title */
 @Component
 class TitleFinder extends ImmutableCheckedFinder {
+
+    private static final int MIN_WORD_LENGTH = 4;
 
     @Override
     public ImmutableFinderPriority getPriority() {
@@ -34,11 +35,15 @@ class TitleFinder extends ImmutableCheckedFinder {
         return IterableUtils.chainedIterable(
             Arrays
                 .stream(page.getTitle().split("\\P{L}+"))
-                .filter(StringUtils::isNotEmpty)
+                .filter(this::isTitleWordIgnorable)
                 .map(TitleFinder.TitleLinearFinder::new)
                 .map(finder -> finder.find(page))
                 .toArray(Iterable[]::new)
         );
+    }
+
+    private boolean isTitleWordIgnorable(@Nullable String word) {
+        return word != null && word.length() >= MIN_WORD_LENGTH;
     }
 
     @Override
