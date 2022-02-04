@@ -1,6 +1,6 @@
 # Versions
 
-## 2.17.0 (??)
+## 2.17.0 (4 Feb 2022)
 - Feature: new option to skip a page for later review
 - Feature: new option to display all the potential replacements
 - Detect protected pages
