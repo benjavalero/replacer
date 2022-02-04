@@ -4,13 +4,15 @@
       <li class="breadcrumb-item">{{ typeLabel }}</li>
       <ng-template [ngIf]="!review.options.suggestion">
         <li class="breadcrumb-item">{{ review.options.subtype }}
-          &nbsp;<span *ngIf="review.numPending" class="badge badge-light"><span class="align-middle">{{ review.numPending }}</span></span>
+          &nbsp;<span *ngIf="review.numPending" class="badge badge-light">
+            <span class="align-middle">{{ review.numPending }}</span></span>
         </li>
       </ng-template>
       <ng-template [ngIf]="review.options.suggestion">
         <li class="breadcrumb-item">{{ review.options.subtype }}</li>
         <li class="breadcrumb-item">{{ review.options.suggestion }}
-          &nbsp;<span *ngIf="review.numPending" class="badge badge-light"><span class="align-middle">{{ review.numPending }}</span></span>
+          &nbsp;<span *ngIf="review.numPending" class="badge badge-light">
+            <span class="align-middle">{{ review.numPending }}</span></span>
         </li>
       </ng-template>
     </ol>
@@ -27,7 +29,9 @@
   </app-edit-snippet>
 
   <app-alert type="info" [icon]="false" class="alert-small" [hidden]="countOtherTypes === 0">
-    <p class="small">La página contiene {{ countOtherTypes }} reemplazo(s) de otros tipos.</p>
+    <p *ngIf="countOtherTypes === 1" class="small">La página contiene {{ countOtherTypes }} reemplazo de otro tipo.</p>
+    <p *ngIf="countOtherTypes !== 1" class="small">La página contiene {{ countOtherTypes }} reemplazos de otros tipos.
+    </p>
     <button type="button" class="btn btn-info w-100" (click)="onReviewAllTypes()">
       Mostrar todos los reemplazos
     </button>
@@ -43,7 +47,7 @@
   </button>
 
   <button type="button" class="btn btn-success w-100 mb-5" (click)="onSkip()">
-    Revisar más adelante
+    Revisar después
   </button>
 
   <app-alert type="warning" [icon]="true" class="alert-small"
