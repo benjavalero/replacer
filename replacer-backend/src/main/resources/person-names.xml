@@ -44,6 +44,7 @@
     -->
     <util:set id="personSurnames" value-type="java.lang.String">
         <!-- Spanish months -->
+        <!-- Note that cases like "Av. 8 de Octubre" are not captured -->
         <value>([0-9]{1,2} )?de (Enero|Febrero|Marzo|Abril|Mayo|Junio|Julio|Agosto|Septiembre|Octubre|Noviembre|Diciembre)</value>
 
         <value>Abril</value>
