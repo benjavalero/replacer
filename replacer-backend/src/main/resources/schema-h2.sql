@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS replacement (
 );
 
 ALTER TABLE replacement
-ADD CONSTRAINT fk_page_id FOREIGN KEY (lang, article_id) REFERENCES page (lang, article_id);
+ADD CONSTRAINT fk_page_id FOREIGN KEY (lang, article_id) REFERENCES page (lang, article_id) ON DELETE CASCADE;
 
 CREATE INDEX IF NOT EXISTS idx_count ON replacement (lang, reviewer, type, subtype);
 CREATE INDEX IF NOT EXISTS idx_count_no_type ON replacement (lang, reviewer);
@@ -38,4 +38,4 @@ CREATE TABLE IF NOT EXISTS custom (
 );
 
 ALTER TABLE custom
-ADD CONSTRAINT fk_custom_page_id FOREIGN KEY (lang, article_id) REFERENCES page (lang, article_id);
+ADD CONSTRAINT fk_custom_page_id FOREIGN KEY (lang, article_id) REFERENCES page (lang, article_id) ON DELETE CASCADE;

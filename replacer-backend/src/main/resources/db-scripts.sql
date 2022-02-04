@@ -19,7 +19,7 @@ CREATE TABLE replacement (
 );
 
 ALTER TABLE replacement
-ADD CONSTRAINT fk_page_id FOREIGN KEY (lang, article_id) REFERENCES page (lang, article_id);
+ADD CONSTRAINT fk_page_id FOREIGN KEY (lang, article_id) REFERENCES page (lang, article_id) ON DELETE CASCADE;
 
 -- To find random pages and count the group replacements
 CREATE INDEX idx_count ON replacement (lang, reviewer, type, subtype);
@@ -44,4 +44,4 @@ CREATE TABLE custom (
 );
 
 ALTER TABLE custom
-ADD CONSTRAINT fk_custom_page_id FOREIGN KEY (lang, article_id) REFERENCES page (lang, article_id);
+ADD CONSTRAINT fk_custom_page_id FOREIGN KEY (lang, article_id) REFERENCES page (lang, article_id) ON DELETE CASCADE;

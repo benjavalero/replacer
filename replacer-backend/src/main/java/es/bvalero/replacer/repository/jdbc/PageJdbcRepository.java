@@ -4,7 +4,10 @@ import com.github.rozidan.springboot.logger.Loggable;
 import es.bvalero.replacer.common.domain.ReplacementType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.domain.WikipediaPageId;
-import es.bvalero.replacer.repository.*;
+import es.bvalero.replacer.repository.PageIndexRepository;
+import es.bvalero.replacer.repository.PageModel;
+import es.bvalero.replacer.repository.PageRepository;
+import es.bvalero.replacer.repository.ReplacementRepository;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Objects;
@@ -34,9 +37,6 @@ class PageJdbcRepository implements PageRepository, PageIndexRepository {
 
     @Autowired
     private ReplacementRepository replacementRepository;
-
-    @Autowired
-    private CustomRepository customRepository;
 
     @Autowired
     private NamedParameterJdbcTemplate jdbcTemplate;
@@ -98,10 +98,7 @@ class PageJdbcRepository implements PageRepository, PageIndexRepository {
 
     @Override
     public void removePagesById(Collection<WikipediaPageId> wikipediaPageIds) {
-        // First delete the replacements
-        replacementRepository.removeReplacementsByPageId(wikipediaPageIds);
-        customRepository.removeCustomReplacementsByPageId(wikipediaPageIds);
-
+        // No need to delete first the replacements as they are deleted on cascade by the database
         Collection<PageId> pageIds = wikipediaPageIds.stream().map(PageId::of).collect(Collectors.toUnmodifiableSet());
         SqlParameterSource[] namedParameters = SqlParameterSourceUtils.createBatch(pageIds.toArray());
         String sqlPages = "DELETE FROM page WHERE lang = :lang AND article_id = :pageId";

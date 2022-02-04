@@ -14,9 +14,6 @@ public interface CustomRepository {
     /** Find the pages reviewed for the given custom replacement and return the IDs */
     Collection<Integer> findPageIdsReviewed(WikipediaLanguage lang, String replacement, boolean cs);
 
-    /** Delete a collection of custom replacements */
-    void removeCustomReplacementsByPageId(Collection<WikipediaPageId> pageIds);
-
     /** Count the number of replacements reviewed */
     int countReplacementsReviewed(WikipediaLanguage lang);
 
