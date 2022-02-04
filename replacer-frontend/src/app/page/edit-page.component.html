@@ -28,15 +28,6 @@
     [limitLeft]="limitLeft(i)" [limitRight]="limitRight(i)" [hidden]="!displayReplacement(i)">
   </app-edit-snippet>
 
-  <app-alert type="info" [icon]="false" class="alert-small" [hidden]="countOtherTypes === 0">
-    <p *ngIf="countOtherTypes === 1" class="small">La página contiene {{ countOtherTypes }} reemplazo de otro tipo.</p>
-    <p *ngIf="countOtherTypes !== 1" class="small">La página contiene {{ countOtherTypes }} reemplazos de otros tipos.
-    </p>
-    <button type="button" class="btn btn-info w-100" (click)="onReviewAllTypes()">
-      Mostrar todos los reemplazos
-    </button>
-  </app-alert>
-
   <button type="button" class="btn btn-success w-100 mt-3 mb-3 py-3" [disabled]="fixedCount === 0"
     (click)="onSaveChanges()">
     Guardar cambios <span class="badge badge-light">{{ fixedCount }}</span>
@@ -46,9 +37,18 @@
     Marcar como revisado <span class="small">(sin cambios)</span>
   </button>
 
-  <button type="button" class="btn btn-success w-100 mb-5" (click)="onSkip()">
+  <button type="button" class="btn btn-success w-100 mb-3" (click)="onSkip()">
     Revisar después
   </button>
+
+  <app-alert type="info" [icon]="false" class="alert-small" [hidden]="countOtherTypes === 0">
+    <p *ngIf="countOtherTypes === 1" class="small">La página contiene {{ countOtherTypes }} reemplazo de otro tipo</p>
+    <p *ngIf="countOtherTypes !== 1" class="small">La página contiene {{ countOtherTypes }} reemplazos de otros tipos
+    </p>
+    <button type="button" class="btn btn-info w-100" (click)="onReviewAllTypes()">
+      Mostrar todos los reemplazos
+    </button>
+  </app-alert>
 
   <app-alert type="warning" [icon]="true" class="alert-small"
     *ngIf="review.options.type === 1 && review.numPending && review.numPending > 50">
