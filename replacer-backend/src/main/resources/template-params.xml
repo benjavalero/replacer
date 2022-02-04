@@ -15,6 +15,7 @@
     -->
     <util:list id="templateParams" value-type="java.lang.String">
         <!-- Templates to be ignored completely -->
+        <value>bandera*|*</value>
         <value>cita*|*</value>
         <value>cite*|*</value>
         <value>caja de cita|*</value>
@@ -27,6 +28,7 @@
         <value>ficha de taxón|*</value>
         <value>Fila BIC|*</value>
         <value>Fila LIC|*</value>
+        <value>flag*|*</value>
         <value>harvnb|*</value>         <!-- Cita Harvard -->
         <value>harvnp|*</value>         <!-- Cita Harvard -->
         <value>imdb*|*</value>
