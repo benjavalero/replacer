@@ -16,7 +16,7 @@ export class EditPageComponent implements OnChanges {
 
   private readonly THRESHOLD = 200; // Maximum number of characters to display around the replacements
   private fixedReplacements!: FixedReplacement[];
-  private showAllTypes: boolean = false;
+  private reviewAllTypes: boolean = false;
 
   @Output() saved: EventEmitter<ReviewOptions> = new EventEmitter();
 
@@ -27,11 +27,11 @@ export class EditPageComponent implements OnChanges {
     this.fixedReplacements = new Array<FixedReplacement>(this.review.replacements.length);
 
     // Reset filter by type
-    this.showAllTypes = false;
+    this.reviewAllTypes = false;
   }
 
   displayReplacement(index: number): boolean {
-    if (this.showAllTypes) {
+    if (this.reviewAllTypes) {
       return true;
     } else {
       const options: PageReviewOptions = this.review.options;
@@ -72,7 +72,7 @@ export class EditPageComponent implements OnChanges {
   }
 
   get countOtherTypes(): number {
-    if (this.showAllTypes) {
+    if (this.reviewAllTypes) {
       return 0;
     } else {
       const options: PageReviewOptions = this.review.options;
@@ -134,7 +134,7 @@ export class EditPageComponent implements OnChanges {
   }
 
   onReviewAllTypes() {
-    this.showAllTypes = true;
+    this.reviewAllTypes = true;
 
     // Trick to scroll up to the title
     document.querySelector('#pageTitle')!.scrollIntoView();
@@ -150,7 +150,7 @@ export class EditPageComponent implements OnChanges {
     this.review.replacements = [];
 
     const savePage = { ...this.review.page, content: content };
-    this.pageService.savePage(savePage, this.review.options).subscribe({
+    this.pageService.savePage(savePage, this.review.options, this.reviewAllTypes).subscribe({
       error: (err) => {
         const errStatus = err.status;
         if (errStatus == HttpStatusCode.Conflict) {

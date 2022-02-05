@@ -74,7 +74,11 @@ public class PageReviewMapper {
         return dto;
     }
 
-    public PageReviewOptions fromDto(PageReviewOptionsDto options, CommonQueryParameters queryParameters) {
+    public PageReviewOptions fromDto(
+        PageReviewOptionsDto options,
+        boolean reviewAllTypes,
+        CommonQueryParameters queryParameters
+    ) {
         return PageReviewOptions
             .builder()
             .lang(WikipediaLanguage.valueOfCode(queryParameters.getLang()))
@@ -82,6 +86,7 @@ public class PageReviewMapper {
             .type(ReplacementType.of(options.getType(), options.getSubtype()))
             .suggestion(options.getSuggestion())
             .cs(options.getCs())
+            .reviewAllTypes(reviewAllTypes)
             .build();
     }
 }

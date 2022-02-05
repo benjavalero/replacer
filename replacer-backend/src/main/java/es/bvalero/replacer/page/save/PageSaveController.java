@@ -56,7 +56,11 @@ public class PageSaveController {
             LOGGER.error("Non valid empty content");
             return ResponseEntity.badRequest().build();
         }
-        PageReviewOptions options = PageReviewMapper.fromDto(request.getOptions(), queryParameters);
+        PageReviewOptions options = PageReviewMapper.fromDto(
+            request.getOptions(),
+            request.isReviewAllTypes(),
+            queryParameters
+        );
         WikipediaPageId wikipediaPageId = WikipediaPageId.of(queryParameters.getWikipediaLanguage(), pageId);
         if (EMPTY_CONTENT.equals(content)) {
             pageSaveService.savePageWithNoChanges(wikipediaPageId, options);

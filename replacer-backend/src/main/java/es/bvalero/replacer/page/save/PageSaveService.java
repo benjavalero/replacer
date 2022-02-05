@@ -69,7 +69,7 @@ class PageSaveService {
 
     private String buildEditSummary(PageReviewOptions options, boolean applyCosmetics) {
         StringBuilder summary = new StringBuilder(EDIT_SUMMARY);
-        if (options.getOptionsType() != PageReviewOptionsType.NO_TYPE) {
+        if (options.getOptionsType() != PageReviewOptionsType.NO_TYPE && !options.isReviewAllTypes()) {
             summary.append(": «").append(options.getType().getSubtype()).append('»');
         }
         if (applyCosmetics) {
@@ -82,12 +82,20 @@ class PageSaveService {
         String reviewer = options.getUser();
         switch (options.getOptionsType()) {
             case NO_TYPE:
+                // Review all types in any case
                 markAsReviewedNoType(pageId, reviewer);
                 break;
             case TYPE_SUBTYPE:
-                markAsReviewedTypeSubtype(pageId, options, reviewer);
+                if (options.isReviewAllTypes()) {
+                    markAsReviewedNoType(pageId, reviewer);
+                } else {
+                    markAsReviewedTypeSubtype(pageId, options, reviewer);
+                }
                 break;
             case CUSTOM:
+                if (options.isReviewAllTypes()) {
+                    markAsReviewedNoType(pageId, reviewer);
+                }
                 markAsReviewedCustom(pageId, options, reviewer);
                 break;
         }

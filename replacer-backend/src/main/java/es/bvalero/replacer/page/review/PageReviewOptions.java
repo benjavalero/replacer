@@ -33,6 +33,9 @@ public class PageReviewOptions {
     @Nullable
     Boolean cs;
 
+    // Mark as reviewed all page replacements despite the type in the options
+    boolean reviewAllTypes;
+
     @TestOnly
     public static PageReviewOptions ofNoType() {
         return PageReviewOptions
@@ -40,12 +43,19 @@ public class PageReviewOptions {
             .lang(WikipediaLanguage.getDefault())
             .user("A")
             .type(ReplacementType.ofEmpty())
+            .reviewAllTypes(false)
             .build();
     }
 
     @TestOnly
     public static PageReviewOptions ofType(ReplacementType type) {
-        return PageReviewOptions.builder().lang(WikipediaLanguage.getDefault()).user("A").type(type).build();
+        return PageReviewOptions
+            .builder()
+            .lang(WikipediaLanguage.getDefault())
+            .user("A")
+            .type(type)
+            .reviewAllTypes(false)
+            .build();
     }
 
     @TestOnly
@@ -62,6 +72,7 @@ public class PageReviewOptions {
             .type(ReplacementType.of(ReplacementKind.CUSTOM, replacement))
             .suggestion(suggestion)
             .cs(caseSensitive)
+            .reviewAllTypes(false)
             .build();
     }
 
@@ -106,13 +117,15 @@ public class PageReviewOptions {
         String user,
         ReplacementType type,
         @Nullable String suggestion,
-        @Nullable Boolean cs
+        @Nullable Boolean cs,
+        boolean reviewAllTypes
     ) {
         this.lang = lang;
         this.user = user;
         this.type = type;
         this.suggestion = suggestion;
         this.cs = cs;
+        this.reviewAllTypes = reviewAllTypes;
 
         if (!isValid()) {
             throw new IllegalArgumentException("Page Review Options not valid");
@@ -140,7 +153,7 @@ public class PageReviewOptions {
     }
 
     private boolean validateCustomSuggestion() {
-        if (Objects.requireNonNull(cs)) {
+        if (Boolean.TRUE.equals(cs)) {
             return !type.getSubtype().equals(suggestion);
         } else {
             return !type.getSubtype().equalsIgnoreCase(suggestion);

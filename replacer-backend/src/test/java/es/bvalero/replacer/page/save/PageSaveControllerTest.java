@@ -55,6 +55,7 @@ class PageSaveControllerTest {
         request.setPage(reviewPage);
         PageReviewOptionsDto search = new PageReviewOptionsDto();
         request.setOptions(search);
+        request.setReviewAllTypes(false);
         request.setAccessToken(AccessTokenDto.fromDomain(accessToken));
 
         mvc
@@ -95,6 +96,7 @@ class PageSaveControllerTest {
         request.setPage(reviewPage);
         PageReviewOptionsDto options = new PageReviewOptionsDto();
         request.setOptions(options);
+        request.setReviewAllTypes(false);
         request.setAccessToken(AccessTokenDto.fromDomain(accessToken));
 
         mvc

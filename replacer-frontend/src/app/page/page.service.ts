@@ -47,7 +47,7 @@ export class PageService {
     return this.httpClient.get<PageReviewResponse>(`${this.baseUrl}/${pageId}`, { params });
   }
 
-  savePage(page: ReviewPage, options: PageReviewOptions): Observable<void> {
+  savePage(page: ReviewPage, options: PageReviewOptions, reviewAllTypes: boolean): Observable<void> {
     if (!this.userService.isValidUser()) {
       return throwError(() => new Error('El usuario no está autenticado. Recargue la página para retomar la sesión.'));
     }
@@ -65,7 +65,7 @@ export class PageService {
       }
     }
 
-    const savePage = new PageSaveRequest(page, options, this.userService.accessToken);
+    const savePage = new PageSaveRequest(page, options, reviewAllTypes, this.userService.accessToken);
 
     // Store the new last save date
     if (page.content !== EMPTY_CONTENT) {

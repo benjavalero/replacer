@@ -63,11 +63,13 @@ export interface PageReviewOptions {
 export class PageSaveRequest {
   page: ReviewPage;
   options: PageReviewOptions;
+  reviewAllTypes: boolean;
   accessToken: AccessToken;
 
-  constructor(page: ReviewPage, options: PageReviewOptions, accessToken: AccessToken) {
+  constructor(page: ReviewPage, options: PageReviewOptions, reviewAllTypes: boolean, accessToken: AccessToken) {
     this.page = page;
     this.options = options;
+    this.reviewAllTypes = reviewAllTypes;
     this.accessToken = accessToken;
   }
 }
