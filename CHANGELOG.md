@@ -1,5 +1,12 @@
 # Versions
 
+## 2.17.1 (5 Feb 2022)
+- Decrease cache size in reviews to avoid memory issues
+- If the user chooses to review all page replacements then set all of them as reviewed in the database
+- Merge buttons to save changes and mark as reviewed with no changes
+- Improve style of Skip button to make it different from the Save one
+- Fix: don't review a page with no custom replacement even if it has standard ones
+
 ## 2.17.0 (4 Feb 2022)
 - Feature: new option to skip a page for later review
 - Feature: new option to display all the potential replacements
