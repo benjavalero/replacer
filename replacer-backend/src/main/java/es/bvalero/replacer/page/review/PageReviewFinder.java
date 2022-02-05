@@ -43,10 +43,11 @@ abstract class PageReviewFinder {
     private PageReviewSectionFinder pageReviewSectionFinder;
 
     // Maximum 500 as it is used as page size when searching in Wikipedia
+    // If too big it may produce out-of-memory issues with the cached page contents
     // For the sake of the tests, we implement it as a variable.
     @Getter(AccessLevel.PROTECTED)
     @Setter(onMethod_ = @TestOnly)
-    private int cacheSize = 500;
+    private int cacheSize = 50;
 
     // Cache the found pages candidates to be reviewed
     // to find faster the next one after the user reviews one.
