@@ -38,8 +38,8 @@
     Marcar como revisado <span class="small">(sin cambios)</span>
   </button>
 
-  <button type="button" class="btn btn-success w-100 mb-3" (click)="onSkip()">
-    Revisar después
+  <button type="button" class="btn btn-outline-success w-100 mb-3" (click)="onSkip()">
+    <fa-icon [icon]="ffIcon"></fa-icon> Revisar después
   </button>
 
   <app-alert type="info" [icon]="false" class="alert-small" [hidden]="countOtherTypes === 0">
