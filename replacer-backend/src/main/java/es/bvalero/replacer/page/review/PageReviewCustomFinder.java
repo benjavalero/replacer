@@ -119,20 +119,24 @@ class PageReviewCustomFinder extends PageReviewFinder {
         PageReviewOptions options,
         Collection<PageReplacement> replacements
     ) {
-        // Add the custom replacements to the standard ones
+        Collection<PageReplacement> customReplacements = findReplacementsService.findCustomReplacements(page, options);
 
+        // If no custom replacements are found then we don't want to review the page
+        if (customReplacements.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        // We add the found replacements to the database but as not reviewed
         // Add the page to the database in case it doesn't exist yet
         if (pageIndexRepository.findPageById(page.getId()).isEmpty()) {
             pageRepository.addPages(List.of(buildNewPage(page)));
         }
-
-        // We add the found replacements to the database but as not reviewed
         // We want to review the page every time in case anything has changed
-        Collection<PageReplacement> customReplacements = findReplacementsService.findCustomReplacements(page, options);
         for (PageReplacement replacement : customReplacements) {
             customRepository.addCustom(mapPageCustomReplacement(page, options, replacement));
         }
 
+        // Add the custom replacements to the standard ones
         // Return the merged collection
         return Stream
             .of(replacements, customReplacements)
