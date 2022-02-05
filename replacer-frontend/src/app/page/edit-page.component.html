@@ -28,12 +28,13 @@
     [limitLeft]="limitLeft(i)" [limitRight]="limitRight(i)" [hidden]="!displayReplacement(i)">
   </app-edit-snippet>
 
-  <button type="button" class="btn btn-success w-100 mt-3 mb-3 py-3" [disabled]="fixedCount === 0"
+  <button type="button" class="btn btn-success w-100 mt-3 mb-3 py-3" [hidden]="fixedCount === 0"
     (click)="onSaveChanges()">
     Guardar cambios <span class="badge badge-light">{{ fixedCount }}</span>
   </button>
 
-  <button type="button" class="btn btn-success w-100 mb-3" (click)="onSaveNoChanges()">
+  <button type="button" class="btn btn-success w-100 mt-3 mb-3 py-3" [hidden]="fixedCount !== 0"
+    (click)="onSaveNoChanges()">
     Marcar como revisado <span class="small">(sin cambios)</span>
   </button>
 
