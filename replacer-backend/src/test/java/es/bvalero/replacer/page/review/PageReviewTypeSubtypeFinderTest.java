@@ -8,6 +8,7 @@ import es.bvalero.replacer.common.domain.ReplacementKind;
 import es.bvalero.replacer.page.index.PageIndexResult;
 import es.bvalero.replacer.page.index.PageIndexService;
 import es.bvalero.replacer.page.index.PageIndexStatus;
+import es.bvalero.replacer.repository.PageIndexRepository;
 import es.bvalero.replacer.repository.PageRepository;
 import es.bvalero.replacer.repository.ReplacementTypeRepository;
 import es.bvalero.replacer.wikipedia.WikipediaService;
@@ -70,6 +71,9 @@ class PageReviewTypeSubtypeFinderTest {
 
     @Mock
     private PageIndexService pageIndexService;
+
+    @Mock
+    private PageIndexRepository pageIndexRepository;
 
     @Mock
     private PageReviewSectionFinder pageReviewSectionFinder;

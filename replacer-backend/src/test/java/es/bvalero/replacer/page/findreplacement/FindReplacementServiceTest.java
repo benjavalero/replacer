@@ -68,6 +68,7 @@ class FindReplacementServiceTest {
             .builder()
             .start(0)
             .text("An")
+            .type(ReplacementType.of(ReplacementKind.SIMPLE, "an"))
             .suggestions(List.of(Suggestion.ofNoComment("Un")))
             .build();
         when(replacementFinderService.find(any(FinderPage.class))).thenReturn(List.of(replacement));
@@ -86,12 +87,14 @@ class FindReplacementServiceTest {
             .builder()
             .start(0)
             .text("An")
+            .type(ReplacementType.of(ReplacementKind.SIMPLE, "an"))
             .suggestions(List.of(Suggestion.ofNoComment("Un")))
             .build();
         Replacement replacement2 = Replacement
             .builder()
             .start(3)
             .text("example")
+            .type(ReplacementType.of(ReplacementKind.SIMPLE, "example"))
             .suggestions(List.of(Suggestion.ofNoComment("ejemplo")))
             .build();
         when(replacementFinderService.find(any(FinderPage.class))).thenReturn(List.of(replacement1, replacement2));
@@ -110,12 +113,14 @@ class FindReplacementServiceTest {
             .builder()
             .start(0)
             .text("An")
+            .type(ReplacementType.of(ReplacementKind.SIMPLE, "an"))
             .suggestions(List.of(Suggestion.ofNoComment("Un")))
             .build();
         Replacement replacement2 = Replacement
             .builder()
             .start(0)
             .text("An")
+            .type(ReplacementType.of(ReplacementKind.SIMPLE, "an"))
             .suggestions(List.of(Suggestion.ofNoComment("Un")))
             .build();
         assertEquals(replacement1, replacement2);
@@ -136,12 +141,14 @@ class FindReplacementServiceTest {
             .builder()
             .start(0)
             .text("An")
+            .type(ReplacementType.of(ReplacementKind.SIMPLE, "an"))
             .suggestions(List.of(Suggestion.ofNoComment("Un")))
             .build();
         Replacement replacement2 = Replacement
             .builder()
             .start(0)
             .text("An example")
+            .type(ReplacementType.of(ReplacementKind.COMPOSED, "an example"))
             .suggestions(List.of(Suggestion.ofNoComment("Un ejemplo")))
             .build();
         assertTrue(replacement2.containsStrictly(replacement1));
@@ -162,12 +169,14 @@ class FindReplacementServiceTest {
             .builder()
             .start(0)
             .text("An")
+            .type(ReplacementType.of(ReplacementKind.SIMPLE, "an"))
             .suggestions(List.of(Suggestion.ofNoComment("Un")))
             .build();
         Replacement replacement2 = Replacement
             .builder()
             .start(3)
             .text("example")
+            .type(ReplacementType.of(ReplacementKind.SIMPLE, "example"))
             .suggestions(List.of(Suggestion.ofNoComment("ejemplo")))
             .build();
         Immutable immutable = Immutable.of(14, "two");
@@ -189,12 +198,14 @@ class FindReplacementServiceTest {
             .builder()
             .start(0)
             .text("An")
+            .type(ReplacementType.of(ReplacementKind.SIMPLE, "an"))
             .suggestions(List.of(Suggestion.ofNoComment("Un")))
             .build();
         Replacement replacement2 = Replacement
             .builder()
             .start(3)
             .text("example")
+            .type(ReplacementType.of(ReplacementKind.SIMPLE, "an"))
             .suggestions(List.of(Suggestion.ofNoComment("ejemplo")))
             .build();
         Immutable immutable = Immutable.of(0, "An");
@@ -216,12 +227,14 @@ class FindReplacementServiceTest {
             .builder()
             .start(0)
             .text("An")
+            .type(ReplacementType.of(ReplacementKind.SIMPLE, "an"))
             .suggestions(List.of(Suggestion.ofNoComment("Un")))
             .build();
         Replacement replacement2 = Replacement
             .builder()
             .start(3)
             .text("example")
+            .type(ReplacementType.of(ReplacementKind.SIMPLE, "ejemplo"))
             .suggestions(List.of(Suggestion.ofNoComment("ejemplo")))
             .build();
         Immutable immutable = Immutable.of(0, "An example");
@@ -242,6 +255,7 @@ class FindReplacementServiceTest {
             .builder()
             .start(0)
             .text("An example")
+            .type(ReplacementType.of(ReplacementKind.COMPOSED, "an example"))
             .suggestions(List.of(Suggestion.ofNoComment("Un ejemplo")))
             .build();
         Immutable immutable = Immutable.of(3, "example or");
@@ -256,12 +270,48 @@ class FindReplacementServiceTest {
 
     @Test
     void testContains() {
-        Replacement result1 = Replacement.builder().start(0).text("A").build();
-        Replacement result2 = Replacement.builder().start(1).text("BC").build();
-        Replacement result3 = Replacement.builder().start(1).text("B").build();
-        Replacement result4 = Replacement.builder().start(0).text("AB").build();
-        Replacement result5 = Replacement.builder().start(0).text("ABC").build();
-        Replacement result6 = Replacement.builder().start(2).text("C").build();
+        Replacement result1 = Replacement
+            .builder()
+            .start(0)
+            .text("A")
+            .type(ReplacementType.of(ReplacementKind.SIMPLE, "a"))
+            .suggestions(Collections.emptyList())
+            .build();
+        Replacement result2 = Replacement
+            .builder()
+            .start(1)
+            .text("BC")
+            .type(ReplacementType.of(ReplacementKind.SIMPLE, "a"))
+            .suggestions(Collections.emptyList())
+            .build();
+        Replacement result3 = Replacement
+            .builder()
+            .start(1)
+            .text("B")
+            .type(ReplacementType.of(ReplacementKind.SIMPLE, "a"))
+            .suggestions(Collections.emptyList())
+            .build();
+        Replacement result4 = Replacement
+            .builder()
+            .start(0)
+            .text("AB")
+            .type(ReplacementType.of(ReplacementKind.SIMPLE, "a"))
+            .suggestions(Collections.emptyList())
+            .build();
+        Replacement result5 = Replacement
+            .builder()
+            .start(0)
+            .text("ABC")
+            .type(ReplacementType.of(ReplacementKind.SIMPLE, "a"))
+            .suggestions(Collections.emptyList())
+            .build();
+        Replacement result6 = Replacement
+            .builder()
+            .start(2)
+            .text("C")
+            .type(ReplacementType.of(ReplacementKind.SIMPLE, "a"))
+            .suggestions(Collections.emptyList())
+            .build();
 
         assertTrue(result1.contains(result1));
         assertTrue(result1.intersects(result1));

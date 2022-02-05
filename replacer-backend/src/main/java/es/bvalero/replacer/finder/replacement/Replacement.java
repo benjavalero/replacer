@@ -11,6 +11,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import lombok.Builder;
 import lombok.Value;
+import org.springframework.lang.NonNull;
 
 /**
  * A <strong>replacement</strong> is a potential issue to be checked and fixed (replaced). For instance,
@@ -25,8 +26,14 @@ import lombok.Value;
 public class Replacement implements FinderResult {
 
     int start;
+
+    @NonNull
     String text;
+
+    @NonNull
     ReplacementType type;
+
+    @NonNull
     List<Suggestion> suggestions;
 
     // Overwrite the getter to include the original text as the first option

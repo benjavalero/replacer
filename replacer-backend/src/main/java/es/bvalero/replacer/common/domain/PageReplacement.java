@@ -66,4 +66,17 @@ public class PageReplacement implements Comparable<PageReplacement> {
         // Order descendant by start. If equals, the lower end.
         return Objects.equals(o.getStart(), getStart()) ? getEnd() - o.getEnd() : o.getStart() - getStart();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PageReplacement that = (PageReplacement) o;
+        return start == that.start && type.equals(that.type);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(start, type);
+    }
 }

@@ -8,9 +8,13 @@ import es.bvalero.replacer.common.domain.WikipediaPageId;
 import es.bvalero.replacer.page.index.PageIndexResult;
 import es.bvalero.replacer.page.index.PageIndexService;
 import es.bvalero.replacer.page.removeobsolete.RemoveObsoletePageService;
+import es.bvalero.replacer.repository.PageIndexRepository;
+import es.bvalero.replacer.repository.PageModel;
+import es.bvalero.replacer.repository.ReplacementModel;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -28,6 +32,9 @@ abstract class PageReviewFinder {
 
     @Autowired
     private PageIndexService pageIndexService;
+
+    @Autowired
+    private PageIndexRepository pageIndexRepository;
 
     @Autowired
     private RemoveObsoletePageService removeObsoletePageService;
@@ -207,10 +214,12 @@ abstract class PageReviewFinder {
         // If the page has not been indexed (or is not indexable) the collection of replacements is empty
         Collection<PageReplacement> standardReplacements = indexReplacements(page).getReplacements();
 
-        // Decorate the standard replacements
-        List<PageReplacement> replacements = new LinkedList<>(
-            decorateReplacements(page, options, standardReplacements)
-        );
+        // Decorate the standard replacements with different actions depending on the type of review
+        Collection<PageReplacement> decoratedReplacements = decorateReplacements(page, options, standardReplacements);
+
+        // Discard the replacements already reviewed in the past
+        // Create a linked list so we can sort them easily
+        List<PageReplacement> replacements = new LinkedList<>(discardReviewedReplacements(page, decoratedReplacements));
 
         // Return the replacements sorted as they appear in the text
         // So there is no need to sort them in the frontend
@@ -231,6 +240,33 @@ abstract class PageReviewFinder {
         PageReviewOptions options,
         Collection<PageReplacement> replacements
     );
+
+    private Collection<PageReplacement> discardReviewedReplacements(
+        WikipediaPage page,
+        Collection<PageReplacement> replacements
+    ) {
+        List<PageReplacement> toReview = new LinkedList<>(replacements);
+        if (!toReview.isEmpty()) {
+            Collection<ReplacementModel> reviewed = pageIndexRepository
+                .findPageById(page.getId())
+                .map(PageModel::getReplacements)
+                .orElse(Collections.emptyList())
+                .stream()
+                .filter(r -> r.getReviewer() != null)
+                .collect(Collectors.toUnmodifiableList());
+
+            toReview.removeIf(r -> reviewed.stream().anyMatch(rr -> isSameReplacement(r, rr)));
+        }
+        return toReview;
+    }
+
+    private boolean isSameReplacement(PageReplacement pageReplacement, ReplacementModel replacementModel) {
+        return (
+            pageReplacement.getStart() == replacementModel.getPosition() &&
+            pageReplacement.getType().getKind().getCode() == replacementModel.getType() &&
+            pageReplacement.getType().getSubtype().equals(replacementModel.getSubtype())
+        );
+    }
 
     PageIndexResult indexReplacements(WikipediaPage page) {
         LOGGER.trace("Update page replacements in database");

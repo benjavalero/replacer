@@ -10,6 +10,7 @@ import es.bvalero.replacer.page.index.PageIndexResult;
 import es.bvalero.replacer.page.index.PageIndexService;
 import es.bvalero.replacer.page.index.PageIndexStatus;
 import es.bvalero.replacer.page.removeobsolete.RemoveObsoletePageService;
+import es.bvalero.replacer.repository.PageIndexRepository;
 import es.bvalero.replacer.repository.PageRepository;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import java.time.LocalDateTime;
@@ -63,6 +64,9 @@ class PageReviewNoTypeFinderTest {
 
     @Mock
     private PageIndexService pageIndexService;
+
+    @Mock
+    private PageIndexRepository pageIndexRepository;
 
     @Mock
     private RemoveObsoletePageService removeObsoletePageService;
