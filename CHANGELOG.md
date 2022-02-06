@@ -2,6 +2,7 @@
 
 ## 2.17.2 (??)
 - Ignore quotes with forbidden characters only for double quotes
+- Fix parsing response from Wikipedia API
 
 ## 2.17.1 (5 Feb 2022)
 - Decrease cache size in reviews to avoid memory issues

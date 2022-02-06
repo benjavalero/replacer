@@ -1,6 +1,8 @@
 package es.bvalero.replacer.wikipedia.api;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonValue;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import java.util.List;
 import lombok.Data;
@@ -83,6 +85,9 @@ class WikipediaApiResponse {
         private List<Section> sections;
         private String touched;
         private boolean missing;
+
+        @JsonProperty("new")
+        private boolean newPage;
 
         boolean isProtected() {
             return this.protection != null && this.protection.stream().anyMatch(Protection::isLibrarianEditProtection);
