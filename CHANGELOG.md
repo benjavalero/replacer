@@ -1,6 +1,6 @@
 # Versions
 
-## 2.17.2 (??)
+## 2.17.2 (6 Feb 2022)
 - Ignore quotes with forbidden characters only for double quotes
 - Fix parsing response from Wikipedia API
 
