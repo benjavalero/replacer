@@ -124,6 +124,7 @@ class PageReviewNoTypeFinderTest {
         Optional<PageReview> review = pageReviewNoTypeService.findRandomPageReview(options);
 
         verify(pageIndexService).indexPage(page);
+        verify(wikipediaService, never()).getPagesByIds(any(WikipediaLanguage.class), anyList());
 
         assertTrue(review.isPresent());
         assertEquals(randomId, review.get().getPage().getId().getPageId());
@@ -147,6 +148,7 @@ class PageReviewNoTypeFinderTest {
         Optional<PageReview> review = pageReviewNoTypeService.findRandomPageReview(options);
 
         verify(pageIndexService).indexPage(page);
+        verify(wikipediaService, never()).getPagesByIds(any(WikipediaLanguage.class), anyList());
 
         assertFalse(review.isPresent());
     }
@@ -167,6 +169,7 @@ class PageReviewNoTypeFinderTest {
         Optional<PageReview> review = pageReviewNoTypeService.findRandomPageReview(options);
 
         verify(pageIndexService).indexPage(page2);
+        verify(wikipediaService, never()).getPagesByIds(any(WikipediaLanguage.class), anyList());
 
         assertTrue(review.isPresent());
         assertEquals(randomId2, review.get().getPage().getId().getPageId());

@@ -114,6 +114,11 @@ class PageReviewCustomFinder extends PageReviewFinder {
     }
 
     @Override
+    boolean cachePageContents() {
+        return true;
+    }
+
+    @Override
     Collection<PageReplacement> decorateReplacements(
         WikipediaPage page,
         PageReviewOptions options,

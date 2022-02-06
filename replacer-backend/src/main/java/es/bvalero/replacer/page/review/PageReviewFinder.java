@@ -45,9 +45,9 @@ abstract class PageReviewFinder {
     // Maximum 500 as it is used as page size when searching in Wikipedia
     // If too big it may produce out-of-memory issues with the cached page contents
     // For the sake of the tests, we implement it as a variable.
-    @Getter(AccessLevel.PROTECTED)
+    @Getter(AccessLevel.PACKAGE)
     @Setter(onMethod_ = @TestOnly)
-    private int cacheSize = 50;
+    private int cacheSize = 500;
 
     // Cache the found pages candidates to be reviewed
     // to find faster the next one after the user reviews one.
@@ -142,9 +142,8 @@ abstract class PageReviewFinder {
 
         // Reload the cached result list
         PageSearchResult searchResult = findPageIdsToReview(options);
-        // For the moment we retrieve and cache all the pages
-        // at risk of getting more edit conflicts
-        if (!searchResult.isEmpty()) {
+        // For the moment we retrieve and cache all the pages only for custom review
+        if (cachePageContents() && !searchResult.isEmpty()) {
             assert searchResult.getPageIds().size() <= getCacheSize();
             searchResult.addCachedPages(wikipediaService.getPagesByIds(options.getLang(), searchResult.getPageIds()));
         }
@@ -157,6 +156,10 @@ abstract class PageReviewFinder {
     }
 
     abstract PageSearchResult findPageIdsToReview(PageReviewOptions options);
+
+    boolean cachePageContents() {
+        return false;
+    }
 
     ///// STEP 2 /////
 

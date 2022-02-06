@@ -105,6 +105,7 @@ class PageReviewTypeSubtypeFinderTest {
         Optional<PageReview> review = pageReviewTypeSubtypeService.findRandomPageReview(options2);
 
         verify(pageIndexService).indexPage(page);
+        verify(wikipediaService, never()).getPagesByIds(any(WikipediaLanguage.class), anyList());
 
         assertFalse(review.isPresent());
     }
@@ -126,6 +127,7 @@ class PageReviewTypeSubtypeFinderTest {
         Optional<PageReview> review = pageReviewTypeSubtypeService.findRandomPageReview(options);
 
         verify(pageIndexService).indexPage(page);
+        verify(wikipediaService, never()).getPagesByIds(any(WikipediaLanguage.class), anyList());
 
         assertTrue(review.isPresent());
         assertEquals(randomId, review.get().getPage().getId().getPageId());
