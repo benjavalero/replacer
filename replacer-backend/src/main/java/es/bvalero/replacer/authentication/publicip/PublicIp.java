@@ -7,6 +7,6 @@ import lombok.Value;
 @Value(staticConstructor = "of")
 public class PublicIp {
 
-    @Schema(required = true, example = "192.168.1.1")
+    @Schema(required = true)
     String ip;
 }

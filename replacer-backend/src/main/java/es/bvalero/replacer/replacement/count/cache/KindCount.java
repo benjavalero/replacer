@@ -71,12 +71,10 @@ class KindCount {
 
     void decrementSubtypeCount(ReplacementKind kind, String subtype) {
         if (this.typeCounts.containsKey(kind)) {
+            // Empty parent if children are empty
             TypeCount typeCount = this.typeCounts.get(kind);
-            if (!typeCount.decrementSubtypeCount(subtype)) {
-                // Empty parent if children are empty
-                if (typeCount.isEmpty()) {
-                    this.typeCounts.remove(kind);
-                }
+            if (!typeCount.decrementSubtypeCount(subtype) && typeCount.isEmpty()) {
+                this.typeCounts.remove(kind);
             }
         }
     }

@@ -28,7 +28,7 @@ class KindCount implements Comparable<KindCount> {
 
     @Override
     public int compareTo(KindCount kindCount) {
-        // TODO: For the moment we keep sorting by the kind name
+        // For the moment we keep sorting by the kind name
         return ReplacementKind.valueOf(this.kind).name().compareTo(ReplacementKind.valueOf(kindCount.getKind()).name());
     }
 }
