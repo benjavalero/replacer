@@ -5,9 +5,7 @@ import es.bvalero.replacer.finder.immutable.ImmutableCheckedFinder;
 import es.bvalero.replacer.finder.immutable.ImmutableFinderPriority;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
 import es.bvalero.replacer.finder.util.LinearMatchResult;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.MatchResult;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.Nullable;
@@ -15,7 +13,6 @@ import org.springframework.lang.Nullable;
 abstract class QuotesFinder extends ImmutableCheckedFinder {
 
     private static final char NEW_LINE = '\n';
-    private static final Set<Character> FORBIDDEN_CHARS = Set.of('#', '{', '}', '<', '>');
     private static final Set<Character> QUOTE_CHARS = Set.of('«', '»', '"', '“', '”');
 
     @Override
@@ -111,10 +108,14 @@ abstract class QuotesFinder extends ImmutableCheckedFinder {
     /* Check if the found text contains any forbidden char */
     private boolean validateForbiddenChars(String text) {
         for (int i = 0; i < text.length(); i++) {
-            if (FORBIDDEN_CHARS.contains(text.charAt(i))) {
+            if (getForbiddenChars().contains(text.charAt(i))) {
                 return false;
             }
         }
         return true;
+    }
+
+    Collection<Character> getForbiddenChars() {
+        return Collections.emptySet();
     }
 }

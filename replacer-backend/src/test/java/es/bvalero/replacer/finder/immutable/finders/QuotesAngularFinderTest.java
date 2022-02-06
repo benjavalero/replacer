@@ -26,4 +26,16 @@ class QuotesAngularFinderTest {
         Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
         assertEquals(expected, actual);
     }
+
+    @Test
+    void testQuotesWithTemplate() {
+        String text = "«Text with {{template}}.»";
+
+        ImmutableFinder quotesFinder = new QuotesAngularFinder();
+        List<Immutable> matches = quotesFinder.findList(text);
+
+        Set<String> expected = Set.of(text);
+        Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
+        assertEquals(expected, actual);
+    }
 }

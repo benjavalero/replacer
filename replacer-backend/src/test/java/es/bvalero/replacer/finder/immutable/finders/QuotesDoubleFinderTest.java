@@ -1,6 +1,7 @@
 package es.bvalero.replacer.finder.immutable.finders;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import es.bvalero.replacer.finder.immutable.Immutable;
 import es.bvalero.replacer.finder.immutable.ImmutableFinder;
@@ -25,5 +26,15 @@ class QuotesDoubleFinderTest {
         Set<String> expected = Set.of(quotes1, quotes3);
         Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
         assertEquals(expected, actual);
+    }
+
+    @Test
+    void testQuotesWithTemplate() {
+        String text = "\"Text with {{template}}.\"";
+
+        ImmutableFinder quotesFinder = new QuotesDoubleFinder();
+        List<Immutable> matches = quotesFinder.findList(text);
+
+        assertTrue(matches.isEmpty());
     }
 }

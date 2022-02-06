@@ -1,5 +1,8 @@
 # Versions
 
+## 2.17.2 (??)
+- Ignore quotes with forbidden characters only for double quotes
+
 ## 2.17.1 (5 Feb 2022)
 - Decrease cache size in reviews to avoid memory issues
 - If the user chooses to review all page replacements then set all of them as reviewed in the database
