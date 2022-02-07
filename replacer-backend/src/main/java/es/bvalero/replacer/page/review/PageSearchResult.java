@@ -1,6 +1,5 @@
 package es.bvalero.replacer.page.review;
 
-import es.bvalero.replacer.common.domain.WikipediaPage;
 import java.util.*;
 import java.util.stream.Collectors;
 import lombok.AccessLevel;
@@ -17,9 +16,6 @@ final class PageSearchResult {
     // Cached IDs of pages to review
     // We need a List in order to use "removeIf"
     private final List<Integer> pageIds = new LinkedList<>();
-
-    // Cached pages to review
-    private final Map<Integer, WikipediaPage> pageCache = new HashMap<>();
 
     // Offset in case there are more total results than the pagination size
     // in order to keep the offset during different iterations while finding a review
@@ -56,10 +52,6 @@ final class PageSearchResult {
         return this.pageIds.size();
     }
 
-    void addCachedPages(Collection<WikipediaPage> pages) {
-        pages.forEach(p -> this.pageCache.put(p.getId().getPageId(), p));
-    }
-
     static PageSearchResult ofEmpty() {
         return new PageSearchResult(0, 0);
     }
@@ -75,7 +67,6 @@ final class PageSearchResult {
 
     synchronized Optional<Integer> popPageId() {
         if (this.isEmpty()) {
-            this.pageCache.clear();
             this.resetOffset();
             return Optional.empty();
         } else {
@@ -86,10 +77,6 @@ final class PageSearchResult {
 
     void resetOffset() {
         this.offset = 0;
-    }
-
-    Optional<WikipediaPage> getCachedPage(int pageId) {
-        return Optional.ofNullable(this.pageCache.remove(pageId));
     }
 
     @Override

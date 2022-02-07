@@ -142,11 +142,6 @@ abstract class PageReviewFinder {
 
         // Reload the cached result list
         PageSearchResult searchResult = findPageIdsToReview(options);
-        // For the moment we retrieve and cache all the pages only for custom review
-        if (cachePageContents() && !searchResult.isEmpty()) {
-            assert searchResult.getPageIds().size() <= getCacheSize();
-            searchResult.addCachedPages(wikipediaService.getPagesByIds(options.getLang(), searchResult.getPageIds()));
-        }
         cachedPageIds.put(key, searchResult);
         return !searchResult.isEmpty();
     }
@@ -156,10 +151,6 @@ abstract class PageReviewFinder {
     }
 
     abstract PageSearchResult findPageIdsToReview(PageReviewOptions options);
-
-    boolean cachePageContents() {
-        return false;
-    }
 
     ///// STEP 2 /////
 
@@ -175,11 +166,7 @@ abstract class PageReviewFinder {
     private Optional<WikipediaPage> getPageFromWikipedia(int pageId, PageReviewOptions options) {
         WikipediaPageId wikipediaPageId = WikipediaPageId.of(options.getLang(), pageId);
 
-        // Try to get first the page from the cache in particular for custom review
-        Optional<WikipediaPage> page = getCachedPage(pageId, options);
-        if (page.isEmpty()) {
-            page = wikipediaService.getPageById(wikipediaPageId);
-        }
+        Optional<WikipediaPage> page = wikipediaService.getPageById(wikipediaPageId);
         if (page.isPresent()) {
             return page;
         } else {
@@ -188,12 +175,6 @@ abstract class PageReviewFinder {
         }
 
         return Optional.empty();
-    }
-
-    private Optional<WikipediaPage> getCachedPage(int pageId, PageReviewOptions options) {
-        String key = buildCacheKey(options);
-        PageSearchResult result = cachedPageIds.getIfPresent(key);
-        return result == null ? Optional.empty() : result.getCachedPage(pageId);
     }
 
     private Optional<PageReview> buildPageReview(WikipediaPage page, PageReviewOptions options) {
