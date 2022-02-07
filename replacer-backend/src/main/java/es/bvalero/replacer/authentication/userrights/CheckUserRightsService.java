@@ -12,6 +12,7 @@ import java.util.concurrent.TimeUnit;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.TestOnly;
+import org.jetbrains.annotations.VisibleForTesting;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -45,7 +46,15 @@ public class CheckUserRightsService {
         return this.adminUser.equals(username);
     }
 
-    public boolean isBot(WikipediaLanguage lang, String username) {
+    public void validateBotUser(WikipediaLanguage lang, String user) throws ForbiddenException {
+        if (!isBot(lang, user)) {
+            LOGGER.error("Unauthorized bot user: {} - {}", lang, user);
+            throw new ForbiddenException();
+        }
+    }
+
+    @VisibleForTesting
+    boolean isBot(WikipediaLanguage lang, String username) {
         return Objects.requireNonNull(cachedUsers.get(buildCacheKey(lang, username), this::getWikipediaUser)).isBot();
     }
 

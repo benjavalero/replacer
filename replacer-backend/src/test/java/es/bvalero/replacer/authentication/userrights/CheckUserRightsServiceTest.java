@@ -1,10 +1,10 @@
 package es.bvalero.replacer.authentication.userrights;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
+import es.bvalero.replacer.common.exception.ForbiddenException;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import es.bvalero.replacer.wikipedia.WikipediaUser;
@@ -36,6 +36,12 @@ class CheckUserRightsServiceTest {
     }
 
     @Test
+    void testValidateNotAdminUser() {
+        checkUserRightsService.validateAdminUser("X");
+        assertThrows(ForbiddenException.class, () -> checkUserRightsService.validateAdminUser("Z"));
+    }
+
+    @Test
     void testIsBot() throws WikipediaException {
         WikipediaUser user = mock(WikipediaUser.class);
         when(user.isBot()).thenReturn(true);
@@ -59,5 +65,17 @@ class CheckUserRightsServiceTest {
             .thenThrow(new WikipediaException());
 
         assertFalse(checkUserRightsService.isBot(WikipediaLanguage.getDefault(), "X"));
+    }
+
+    @Test
+    void testValidateNotBot() throws WikipediaException {
+        WikipediaUser user = mock(WikipediaUser.class);
+        when(user.isBot()).thenReturn(false);
+        when(wikipediaService.getWikipediaUser(any(WikipediaLanguage.class), anyString())).thenReturn(user);
+
+        assertThrows(
+            ForbiddenException.class,
+            () -> checkUserRightsService.validateBotUser(WikipediaLanguage.SPANISH, "X")
+        );
     }
 }

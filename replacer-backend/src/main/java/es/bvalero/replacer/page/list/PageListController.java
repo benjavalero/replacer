@@ -3,9 +3,7 @@ package es.bvalero.replacer.page.list;
 import com.github.rozidan.springboot.logger.Loggable;
 import es.bvalero.replacer.authentication.userrights.CheckUserRightsService;
 import es.bvalero.replacer.common.domain.ReplacementType;
-import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.dto.CommonQueryParameters;
-import es.bvalero.replacer.common.exception.ForbiddenException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import javax.validation.Valid;
@@ -41,7 +39,7 @@ public class PageListController {
         @Valid CommonQueryParameters queryParameters,
         @Valid PageListRequest request
     ) {
-        validateBotUser(queryParameters.getWikipediaLanguage(), queryParameters.getUser());
+        checkUserRightsService.validateBotUser(queryParameters.getWikipediaLanguage(), queryParameters.getUser());
 
         String titleList = StringUtils.join(
             pageUnreviewedTitleListService.findPageTitlesToReviewByType(
@@ -57,7 +55,7 @@ public class PageListController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PostMapping(value = "/review")
     public void reviewAsSystemByType(@Valid CommonQueryParameters queryParameters, @Valid PageListRequest request) {
-        validateBotUser(queryParameters.getWikipediaLanguage(), queryParameters.getUser());
+        checkUserRightsService.validateBotUser(queryParameters.getWikipediaLanguage(), queryParameters.getUser());
 
         // Set as reviewed in the database
         reviewByTypeService.reviewAsSystemByType(queryParameters.getWikipediaLanguage(), toDomain(request));
@@ -65,12 +63,5 @@ public class PageListController {
 
     private ReplacementType toDomain(PageListRequest request) {
         return ReplacementType.of(request.getType(), request.getSubtype());
-    }
-
-    private void validateBotUser(WikipediaLanguage lang, String user) throws ForbiddenException {
-        if (!checkUserRightsService.isBot(lang, user)) {
-            LOGGER.error("Unauthorized bot user: {} - {}", lang, user);
-            throw new ForbiddenException();
-        }
     }
 }
