@@ -33,4 +33,7 @@ public interface PageRepository {
 
     /** Find the pages to review by the given type and return the titles */
     Collection<String> findPageTitlesToReviewByType(WikipediaLanguage lang, ReplacementType type);
+
+    /** Find the pages with more replacements to review */
+    Collection<ResultCount<PageModel>> countPagesWithMoreReplacementsToReview(WikipediaLanguage lang, int numResults);
 }

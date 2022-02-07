@@ -6,6 +6,7 @@ import es.bvalero.replacer.common.domain.ReplacementType;
 import es.bvalero.replacer.common.dto.CommonQueryParameters;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.Collection;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -30,6 +31,9 @@ public class PageListController {
 
     @Autowired
     private ReviewByTypeService reviewByTypeService;
+
+    @Autowired
+    private PageMostUnreviewedService pageMostUnreviewedService;
 
     @Operation(
         summary = "Produce a list in plain text with the titles of the pages containing the given replacement type to review"
@@ -63,5 +67,13 @@ public class PageListController {
 
     private ReplacementType toDomain(PageListRequest request) {
         return ReplacementType.of(request.getType(), request.getSubtype());
+    }
+
+    @Operation(summary = "Pages with more replacements to review")
+    @GetMapping(value = "/unreviewed")
+    public Collection<PageCount> countPagesWithMoreReplacementsToReview(@Valid CommonQueryParameters queryParameters) {
+        checkUserRightsService.validateAdminUser(queryParameters.getUser());
+
+        return pageMostUnreviewedService.countPagesWithMoreReplacementsToReview(queryParameters.getWikipediaLanguage());
     }
 }

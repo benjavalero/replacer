@@ -28,6 +28,7 @@ import { EditCustomSnippetComponent } from './page/edit-custom-snippet.component
 import { AdminComponent } from './admin/admin.component';
 import { PublicIpComponent } from './admin/public-ip/public-ip.component';
 import { DumpIndexingComponent } from './admin/dump-indexing/dump-indexing.component';
+import { UnreviewedComponent } from './admin/unreviewed/unreviewed.component';
 import { ReplacementListComponent } from './replacement-list/replacement-list.component';
 import { ReplacementTableComponent } from './replacement-list/replacement-table.component';
 import { ReviewSubtypeComponent } from './replacement-list/review-subtype.component';
@@ -52,6 +53,7 @@ import { StatsComponent } from './stats/stats.component';
     AdminComponent,
     PublicIpComponent,
     DumpIndexingComponent,
+    UnreviewedComponent,
     ReplacementListComponent,
     ReplacementTableComponent,
     ReviewSubtypeComponent,

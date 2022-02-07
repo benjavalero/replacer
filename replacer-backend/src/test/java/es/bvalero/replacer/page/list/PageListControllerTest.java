@@ -1,8 +1,10 @@
 package es.bvalero.replacer.page.list;
 
+import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import es.bvalero.replacer.authentication.userrights.CheckUserRightsService;
@@ -10,6 +12,7 @@ import es.bvalero.replacer.common.domain.ReplacementKind;
 import es.bvalero.replacer.common.domain.ReplacementType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.exception.ForbiddenException;
+import java.util.Collections;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +37,9 @@ class PageListControllerTest {
 
     @MockBean
     private ReviewByTypeService reviewByTypeService;
+
+    @MockBean
+    private PageMostUnreviewedService pageMostUnreviewedService;
 
     @Test
     void testFindPageTitlesToReviewByType() throws Exception {
@@ -95,5 +101,34 @@ class PageListControllerTest {
         verify(checkUserRightsService).validateBotUser(WikipediaLanguage.SPANISH, "A");
         verify(reviewByTypeService, never())
             .reviewAsSystemByType(WikipediaLanguage.SPANISH, ReplacementType.of(ReplacementKind.SIMPLE, "Africa"));
+    }
+
+    @Test
+    void testCountPagesWithMoreReplacementsToReview() throws Exception {
+        PageCount count = PageCount.of(3, "X", 100);
+        when(pageMostUnreviewedService.countPagesWithMoreReplacementsToReview(WikipediaLanguage.SPANISH))
+            .thenReturn(Collections.singletonList(count));
+
+        mvc
+            .perform(get("/api/pages/unreviewed?lang=es&user=A").contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$[0].pageId", is(3)))
+            .andExpect(jsonPath("$[0].title", is("X")))
+            .andExpect(jsonPath("$[0].count", is(100)));
+
+        verify(checkUserRightsService).validateAdminUser("A");
+        verify(pageMostUnreviewedService).countPagesWithMoreReplacementsToReview(WikipediaLanguage.SPANISH);
+    }
+
+    @Test
+    void testCountPagesWithMoreReplacementsToReviewNotAdmin() throws Exception {
+        doThrow(ForbiddenException.class).when(checkUserRightsService).validateAdminUser(anyString());
+
+        mvc
+            .perform(get("/api/pages/unreviewed?lang=es&user=A").contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isForbidden());
+
+        verify(checkUserRightsService).validateAdminUser("A");
+        verify(pageMostUnreviewedService, never()).countPagesWithMoreReplacementsToReview(WikipediaLanguage.SPANISH);
     }
 }

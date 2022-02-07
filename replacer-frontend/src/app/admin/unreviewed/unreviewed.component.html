@@ -1,0 +1,25 @@
+<ng-template #loading>Calculando…</ng-template>
+<div *ngIf="unreviewed$ | async as unreviewed; else loading">
+  <table class="table" aria-describedby="Lista de páginas con más reemplazos sin revisar">
+    <thead>
+      <tr>
+        <th scope="col">Título</th>
+        <th scope="col">#</th>
+        <th scope="col"></th>
+        <th scope="col"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of unreviewed">
+        <td>{{ item.title }}</td>
+        <td>{{ item.count }}</td>
+        <td>
+          <a href="{{ wikipediaUrl }}{{ item.title }}" target="_blank" rel="noopener noreferrer">Abrir en Wikipedia</a>
+        </td>
+        <td>
+          <a routerLink="/random/{{ item.pageId }}">Abrir en Replacer</a>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

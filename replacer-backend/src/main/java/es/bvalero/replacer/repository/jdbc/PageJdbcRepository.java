@@ -1,13 +1,12 @@
 package es.bvalero.replacer.repository.jdbc;
 
+import static es.bvalero.replacer.repository.ReplacementRepository.REVIEWER_SYSTEM;
+
 import com.github.rozidan.springboot.logger.Loggable;
 import es.bvalero.replacer.common.domain.ReplacementType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.domain.WikipediaPageId;
-import es.bvalero.replacer.repository.PageIndexRepository;
-import es.bvalero.replacer.repository.PageModel;
-import es.bvalero.replacer.repository.PageRepository;
-import es.bvalero.replacer.repository.ReplacementRepository;
+import es.bvalero.replacer.repository.*;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Objects;
@@ -182,5 +181,40 @@ class PageJdbcRepository implements PageRepository, PageIndexRepository {
             .addValue("type", type.getKind().getCode())
             .addValue("subtype", type.getSubtype());
         return jdbcTemplate.queryForList(sql, namedParameters, String.class);
+    }
+
+    @Override
+    public Collection<ResultCount<PageModel>> countPagesWithMoreReplacementsToReview(
+        WikipediaLanguage lang,
+        int numResults
+    ) {
+        String sql =
+            "SELECT p.article_id, p.title, COUNT(*) AS num " +
+            "FROM replacement r JOIN page p ON p.lang = r.lang AND p.article_id = r.article_id " +
+            "WHERE r.lang = :lang AND r.reviewer IS NULL " +
+            "GROUP BY p.article_id, p.title " +
+            "ORDER BY num DESC " +
+            "LIMIT " +
+            numResults;
+        SqlParameterSource namedParameters = new MapSqlParameterSource()
+            .addValue("lang", lang.getCode())
+            .addValue("system", REVIEWER_SYSTEM);
+        return Objects.requireNonNull(
+            jdbcTemplate.query(
+                sql,
+                namedParameters,
+                (resultSet, rowNum) ->
+                    ResultCount.of(
+                        PageModel
+                            .builder()
+                            .lang(lang.getCode())
+                            .pageId(resultSet.getInt("ARTICLE_ID"))
+                            .title(resultSet.getString("TITLE"))
+                            .lastUpdate(LocalDate.now())
+                            .build(),
+                        resultSet.getInt("NUM")
+                    )
+            )
+        );
     }
 }
