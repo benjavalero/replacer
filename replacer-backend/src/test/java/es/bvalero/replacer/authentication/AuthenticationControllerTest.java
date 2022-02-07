@@ -12,6 +12,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import es.bvalero.replacer.authentication.authenticateuser.AuthenticateUserService;
 import es.bvalero.replacer.authentication.authenticateuser.AuthenticatedUser;
 import es.bvalero.replacer.authentication.oauth.RequestToken;
+import es.bvalero.replacer.authentication.publicip.PublicIp;
 import es.bvalero.replacer.authentication.publicip.PublicIpService;
 import es.bvalero.replacer.authentication.requesttoken.GetRequestTokenResponse;
 import es.bvalero.replacer.authentication.requesttoken.GetRequestTokenService;
@@ -137,6 +138,20 @@ class AuthenticationControllerTest {
     }
 
     @Test
+    void testGetPublic() throws Exception {
+        PublicIp ip = PublicIp.of("x");
+        when(publicIpService.getPublicIp()).thenReturn(ip);
+
+        mvc
+            .perform(get("/api/authentication/public-ip?user=x&lang=es").contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.ip", is(ip.getIp())));
+
+        verify(checkUserRightsService).validateAdminUser(anyString());
+        verify(publicIpService).getPublicIp();
+    }
+
+    @Test
     void testGetPublicIpNotAdmin() throws Exception {
         doThrow(ForbiddenException.class).when(checkUserRightsService).validateAdminUser(anyString());
 
@@ -145,5 +160,6 @@ class AuthenticationControllerTest {
             .andExpect(status().isForbidden());
 
         verify(checkUserRightsService).validateAdminUser(anyString());
+        verify(publicIpService, never()).getPublicIp();
     }
 }

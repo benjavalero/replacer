@@ -1,6 +1,7 @@
 package es.bvalero.replacer.finder.immutable.finders;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import es.bvalero.replacer.finder.immutable.Immutable;
 import es.bvalero.replacer.finder.immutable.ImmutableFinder;
@@ -8,6 +9,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 class QuotesAngularFinderTest {
 
@@ -27,15 +30,22 @@ class QuotesAngularFinderTest {
         assertEquals(expected, actual);
     }
 
-    @Test
-    void testQuotesWithTemplate() {
-        String text = "«Text with {{template}}.»";
-
+    @ParameterizedTest
+    @ValueSource(strings = { "«Text with {{template}}.»", "«\"Nested quotes\"»" })
+    void testValidQuotes(String text) {
         ImmutableFinder quotesFinder = new QuotesAngularFinder();
         List<Immutable> matches = quotesFinder.findList(text);
 
-        Set<String> expected = Set.of(text);
-        Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
-        assertEquals(expected, actual);
+        assertEquals(1, matches.size());
+        assertEquals(text, matches.get(0).getText());
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = { "« »" })
+    void testInvalidQuotes(String text) {
+        ImmutableFinder quotesFinder = new QuotesAngularFinder();
+        List<Immutable> matches = quotesFinder.findList(text);
+
+        assertTrue(matches.isEmpty());
     }
 }

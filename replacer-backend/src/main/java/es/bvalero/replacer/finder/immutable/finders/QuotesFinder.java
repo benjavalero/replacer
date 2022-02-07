@@ -60,7 +60,7 @@ abstract class QuotesFinder extends ImmutableCheckedFinder {
                 }
 
                 // Check the quoted text is not empty and is not an attribute
-                if (StringUtils.isBlank(innerText) && text.charAt(startQuote - 1) != '=') {
+                if (StringUtils.isBlank(innerText) && (startQuote == 0 || text.charAt(startQuote - 1) != '=')) {
                     logImmutableCheck(page, startQuote, endQuote, "Empty quoted text");
                     return endQuote;
                 }

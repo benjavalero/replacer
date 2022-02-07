@@ -9,6 +9,7 @@ import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Value;
+import lombok.With;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.TestOnly;
 import org.springframework.lang.NonNull;
@@ -34,6 +35,7 @@ public class PageReviewOptions {
     Boolean cs;
 
     // Mark as reviewed all page replacements despite the type in the options
+    @With(onMethod_ = @TestOnly)
     boolean reviewAllTypes;
 
     @TestOnly
@@ -59,7 +61,7 @@ public class PageReviewOptions {
     }
 
     @TestOnly
-    static PageReviewOptions ofCustom(
+    public static PageReviewOptions ofCustom(
         WikipediaLanguage lang,
         String replacement,
         String suggestion,

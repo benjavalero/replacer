@@ -47,7 +47,9 @@ class SpaceLowercaseFinderTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = { "[[Archivo:x.pdf]]" })
+    @ValueSource(
+        strings = { "[[Archivo:x.pdf]]", "[[Imagen:x.png]]", "[[Anexo:Discografía de Queen]]", "[[Categoría:Animal]]" }
+    )
     void testValidSpace(String text) {
         List<Cosmetic> cosmetics = spaceLowercaseFinder.findList(text);
 

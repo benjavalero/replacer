@@ -31,12 +31,6 @@
         <entry key="gl" value="179486"/>
     </util:map>
 
-    <util:map id="annexWords" map-class="java.util.HashMap"
-              key-type="java.lang.String" value-type="java.lang.String">
-        <entry key="es" value="Anexo"/>
-        <entry key="gl" value="Anexo"/>
-    </util:map>
-
     <util:map id="templateWords" map-class="java.util.HashMap"
               key-type="java.lang.String" value-type="java.lang.String">
         <entry key="es" value="Plantilla"/>
@@ -56,6 +50,12 @@
               key-type="java.lang.String" value-type="java.lang.String">
         <entry key="es" value="Imagen,Image"/>
         <entry key="gl" value="Imaxe,Image"/>
+    </util:map>
+
+    <util:map id="annexWords" map-class="java.util.HashMap"
+              key-type="java.lang.String" value-type="java.lang.String">
+        <entry key="es" value="Anexo,Annex"/>
+        <entry key="gl" value="Anexo,Annex"/>
     </util:map>
 
     <util:map id="categoryWords" map-class="java.util.HashMap"
