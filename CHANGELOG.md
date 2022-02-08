@@ -2,6 +2,7 @@
 
 ## 2.17.4 (??)
 - Feature: admin task to list the pages with more replacements to review
+- Ignore uppercase words in table cells with styles
 
 ## 2.17.3 (8 Feb 2022)
 - Remove definitively page content caching due to out-of-memory issues

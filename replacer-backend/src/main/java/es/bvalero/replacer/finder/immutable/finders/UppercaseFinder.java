@@ -47,12 +47,6 @@ import org.springframework.stereotype.Component;
 public class UppercaseFinder implements ImmutableFinder, PropertyChangeListener {
 
     @org.intellij.lang.annotations.RegExp
-    private static final String CELL_SEPARATOR = "\\|\\|";
-
-    @org.intellij.lang.annotations.RegExp
-    private static final String FIRST_CELL_SEPARATOR = "\n\\|";
-
-    @org.intellij.lang.annotations.RegExp
     private static final String CAPTION_SEPARATOR = "\\|\\+";
 
     // Escaping is necessary for automaton
@@ -65,15 +59,14 @@ public class UppercaseFinder implements ImmutableFinder, PropertyChangeListener 
 
     private static final String PARAGRAPH_START = "\n\n";
 
+    // The pipe is not only used for tables cells, we must check is not a wiki-link!!!
     @org.intellij.lang.annotations.RegExp
-    private static final String CLASS_PUNCTUATION = "[=#*.!]";
+    private static final String CLASS_PUNCTUATION = "[=#*.!|]";
 
     @org.intellij.lang.annotations.RegExp
     private static final String REGEX_UPPERCASE_PUNCTUATION = String.format(
-        "(%s|%s|%s|%s|%s|%s|%s|%s)<Zs>*(\\[\\[)?(%%s)(]])?",
+        "(%s|%s|%s|%s|%s|%s)<Zs>*(\\[\\[)?(%%s)(]])?",
         CLASS_PUNCTUATION,
-        FIRST_CELL_SEPARATOR,
-        CELL_SEPARATOR,
         CAPTION_SEPARATOR,
         REF_END_TAG,
         CELL_HTML_TAG,
@@ -180,32 +173,65 @@ public class UppercaseFinder implements ImmutableFinder, PropertyChangeListener 
 
     @Override
     public Immutable convert(MatchResult match) {
-        // Find the first uppercase letter
-        final String text = match.group();
-        for (int i = 0; i < text.length(); i++) {
-            if (Character.isUpperCase(text.charAt(i))) {
-                String word = text.substring(i).trim();
-                if (word.endsWith("]]")) {
-                    word = word.substring(0, word.length() - 2);
-                }
-                final int startPos = match.start() + i;
-                return Immutable.of(startPos, word);
-            }
-        }
-        throw new IllegalArgumentException("Wrong match with no uppercase letter");
+        return findUppercaseWord(match);
     }
 
     @Override
     public boolean validate(MatchResult match, FinderPage page) {
-        // Find the first uppercase letter
+        final Immutable uppercaseWord = findUppercaseWord(match);
+        return (
+            FinderUtils.isWordCompleteInText(uppercaseWord.getStart(), uppercaseWord.getText(), page.getContent()) &&
+            validatePipe(page.getContent(), uppercaseWord.getStart())
+        );
+    }
+
+    private Immutable findUppercaseWord(MatchResult match) {
         final String text = match.group();
+        final int posUppercase = findFirstUppercase(text);
+        if (posUppercase < 0) {
+            throw new IllegalArgumentException("Wrong match with no uppercase letter: " + text);
+        }
+
+        String word = text.substring(posUppercase).trim();
+        if (word.endsWith("]]")) {
+            word = word.substring(0, word.length() - 2);
+        }
+        final int startPos = match.start() + posUppercase;
+        return Immutable.of(startPos, word);
+    }
+
+    private int findFirstUppercase(String text) {
         for (int i = 0; i < text.length(); i++) {
             if (Character.isUpperCase(text.charAt(i))) {
-                final String word = text.substring(i).trim();
-                final int startPos = match.start() + i;
-                return FinderUtils.isWordCompleteInText(startPos, word, page.getContent());
+                return i;
             }
         }
-        throw new IllegalArgumentException("Wrong match with no uppercase letter");
+        return -1;
+    }
+
+    private boolean validatePipe(String text, int matchPosition) {
+        if (findPreviousNonSpaceChar(text, matchPosition) == '|') {
+            return findFirstLineChar(text, matchPosition) == '|';
+        }
+        return true;
+    }
+
+    private char findPreviousNonSpaceChar(String text, int start) {
+        for (int i = start - 1; i >= 0; i--) {
+            final char ch = text.charAt(i);
+            if (!Character.isSpaceChar(ch)) {
+                return ch;
+            }
+        }
+        return text.charAt(0);
+    }
+
+    private char findFirstLineChar(String text, int start) {
+        for (int i = start - 1; i >= 0; i--) {
+            if (text.charAt(i) == '\n') {
+                return text.charAt(i + 1);
+            }
+        }
+        return text.charAt(0);
     }
 }

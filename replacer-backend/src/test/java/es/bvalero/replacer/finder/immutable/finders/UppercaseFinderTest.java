@@ -57,6 +57,7 @@ class UppercaseFinderTest {
             "{|\n" + "|-\n" + "! Junio !! Febrero\n" + "|}", // Table header
             "{|\n" + "|-\n" + "| Febrero || Junio\n" + "|}", // Table cell
             "{|\n" + "|-\n" + "| Junio || Febrero\n" + "|}", // Table cell
+            "{|\n" + "|-\n" + "| align=\"center\" | Febrero\n" + "|}", // Table cell with style
             "{|\n" + "|-\n" + "| [[Febrero]] || Texto\n" + "|}", // Table cell with link
             "<table><tr><td>Febrero</td></tr></table>", // HTML cell
             "<timeline>\n  text:Febrero\n</timeline>", // Timeline text
