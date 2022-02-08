@@ -1,5 +1,8 @@
 # Versions
 
+## 2.17.3 (8 Feb 2022)
+- Remove definitively page content caching due to out-of-memory issues
+
 ## 2.17.2 (6 Feb 2022)
 - Ignore quotes with forbidden characters only for double quotes
 - Fix parsing response from Wikipedia API
