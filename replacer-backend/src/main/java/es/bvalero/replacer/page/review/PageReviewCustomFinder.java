@@ -167,6 +167,7 @@ class PageReviewCustomFinder extends PageReviewFinder {
             .replacement(options.getType().getSubtype())
             .cs((byte) (Boolean.TRUE.equals(options.getCs()) ? 1 : 0))
             .position(replacement.getStart())
+            .context(replacement.getContext(page))
             .build();
     }
 }

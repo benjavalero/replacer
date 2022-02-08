@@ -27,8 +27,8 @@ class CustomJdbcRepository implements CustomRepository {
     @Override
     public void addCustom(CustomModel entity) {
         final String sql =
-            "INSERT INTO custom (article_id, lang, replacement, cs, position, reviewer) " +
-            "VALUES (:pageId, :lang, :replacement, :cs, :position, :reviewer)";
+            "INSERT INTO custom (article_id, lang, replacement, cs, position, context, reviewer) " +
+            "VALUES (:pageId, :lang, :replacement, :cs, :position, :context, :reviewer)";
         SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(entity);
         jdbcTemplate.update(sql, namedParameters);
     }

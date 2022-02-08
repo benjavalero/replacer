@@ -1,5 +1,6 @@
 package es.bvalero.replacer.common.domain;
 
+import es.bvalero.replacer.common.util.ReplacerUtils;
 import java.util.Collection;
 import java.util.Objects;
 import lombok.Builder;
@@ -59,6 +60,10 @@ public class PageReplacement implements Comparable<PageReplacement> {
 
     public int getEnd() {
         return this.getStart() + this.getText().length();
+    }
+
+    public String getContext(WikipediaPage page) {
+        return ReplacerUtils.getContextAroundWord(page.getContent(), this.getStart(), this.getEnd(), 20);
     }
 
     @Override
