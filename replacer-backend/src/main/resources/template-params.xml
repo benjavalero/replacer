@@ -22,6 +22,7 @@
         <value>commons|*</value>
         <value>commonscat|*</value>
         <value>convertir|*</value>
+        <value>coord|*</value>
         <value>DEFAULTSORT|*</value>    <!-- It usually contains words without accents for the sake of sorting -->
         <value>enlace roto|*</value>
         <value>facebook|*</value>
