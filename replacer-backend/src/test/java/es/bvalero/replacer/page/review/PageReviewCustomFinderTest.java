@@ -559,4 +559,46 @@ class PageReviewCustomFinderTest {
         verify(wikipediaService, times(4)).getPageById(any(WikipediaPageId.class));
         verify(customRepository, never()).addCustom(any(CustomModel.class));
     }
+
+    @Test
+    void testSameReplacementStandardAndCustom() {
+        WikipediaLanguage lang = WikipediaLanguage.getDefault();
+        int id = 123;
+        WikipediaPageId pageId = WikipediaPageId.of(lang, id);
+        WikipediaPage page = WikipediaPage
+            .builder()
+            .id(pageId)
+            .namespace(WikipediaNamespace.getDefault())
+            .title("T")
+            .content("Y lucho.")
+            .lastUpdate(LocalDateTime.now())
+            .build();
+
+        PageReviewOptions options = PageReviewOptions.ofCustom(lang, "lucho", "luchó", true);
+
+        Suggestion suggestion = Suggestion.ofNoComment("luchó");
+        PageReplacement replacement = PageReplacement
+            .builder()
+            .start(2)
+            .text("lucho")
+            .type(ReplacementType.of(ReplacementKind.SIMPLE, "lucho"))
+            .suggestions(List.of(suggestion))
+            .build();
+        Collection<PageReplacement> replacements = List.of(replacement);
+
+        PageReplacement custom = PageReplacement
+            .builder()
+            .start(2)
+            .text("lucho")
+            .type(ReplacementType.of(ReplacementKind.CUSTOM, "lucho"))
+            .suggestions(List.of(suggestion))
+            .build();
+        when(findReplacementsService.findCustomReplacements(page, options)).thenReturn(List.of(custom));
+
+        Collection<PageReplacement> result = pageReviewCustomService.decorateReplacements(page, options, replacements);
+
+        assertEquals(1, result.size());
+
+        verify(findReplacementsService).findCustomReplacements(page, options);
+    }
 }

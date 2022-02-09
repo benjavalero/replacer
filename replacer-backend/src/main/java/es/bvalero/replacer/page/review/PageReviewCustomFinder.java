@@ -141,7 +141,7 @@ class PageReviewCustomFinder extends PageReviewFinder {
         return Stream
             .of(replacements, customReplacements)
             .flatMap(Collection::stream)
-            .collect(Collectors.toUnmodifiableList());
+            .collect(Collectors.toUnmodifiableSet());
     }
 
     private PageModel buildNewPage(WikipediaPage page) {

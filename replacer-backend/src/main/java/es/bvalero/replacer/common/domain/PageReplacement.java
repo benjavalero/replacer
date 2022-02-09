@@ -77,11 +77,11 @@ public class PageReplacement implements Comparable<PageReplacement> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         PageReplacement that = (PageReplacement) o;
-        return start == that.start && type.equals(that.type);
+        return start == that.start && text.equals(that.text);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(start, type);
+        return Objects.hash(start, text);
     }
 }
