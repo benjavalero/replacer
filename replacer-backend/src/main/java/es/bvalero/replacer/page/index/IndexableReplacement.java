@@ -47,6 +47,10 @@ class IndexableReplacement {
         return this.reviewer == null;
     }
 
+    boolean isReviewed() {
+        return !isToBeReviewed();
+    }
+
     boolean isSystemReviewed() {
         return REVIEWER_SYSTEM.equals(this.reviewer);
     }

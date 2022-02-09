@@ -23,6 +23,8 @@ class IndexablePageComparator {
             ? new LinkedList<>() // The collection must be mutable
             : new LinkedList<>(dbPage.getReplacements());
 
+        result = result.add(preprocessDbReplacements(dbReplacements));
+
         // We compare each replacement found in the page to index with the ones existing in database
         // We add to the result the needed modifications to align the database with the actual replacements
         // Meanwhile we also modify the set of DB replacements to eventually contain the final result
@@ -42,7 +44,7 @@ class IndexablePageComparator {
             result = result.add(PageIndexResult.builder().updatePages(Set.of(page)).build());
         }
 
-        return result.add(cleanUpPageReplacements(dbReplacements));
+        return result.add(cleanUpDbReplacements(dbReplacements));
     }
 
     /* Check the given replacement with the ones in DB. Update the given DB list if needed. */
@@ -102,14 +104,25 @@ class IndexablePageComparator {
         }
     }
 
+    private PageIndexResult preprocessDbReplacements(Collection<IndexableReplacement> dbReplacements) {
+        // Find duplicated replacements when one is reviewed and the other not
+        final List<IndexableReplacement> repList = dbReplacements.stream().collect(Collectors.toUnmodifiableList());
+        final Collection<IndexableReplacement> duplicated = repList
+            .stream()
+            .filter(IndexableReplacement::isToBeReviewed)
+            .filter(r -> repList.stream().anyMatch(r2 -> r2.equals(r) && r2.isReviewed()))
+            .collect(Collectors.toUnmodifiableList());
+
+        duplicated.forEach(dbReplacements::remove);
+        return PageIndexResult.builder().removeReplacements(duplicated).build();
+    }
+
     /**
      * Find obsolete replacements and add a dummy one if needed.
      *
      * @return A list of replacements to be managed in DB.
      */
-    private PageIndexResult cleanUpPageReplacements(Collection<IndexableReplacement> dbReplacements) {
-        PageIndexResult result = PageIndexResult.ofEmpty();
-
+    private PageIndexResult cleanUpDbReplacements(Collection<IndexableReplacement> dbReplacements) {
         // All remaining replacements to review (or system-reviewed)
         // and not checked so far are obsolete and thus to be deleted
         final Set<IndexableReplacement> obsolete = dbReplacements
@@ -118,8 +131,6 @@ class IndexablePageComparator {
             .filter(rep -> rep.isToBeReviewed() || rep.isSystemReviewed())
             .collect(Collectors.toSet());
         obsolete.forEach(dbReplacements::remove);
-        result = result.add(PageIndexResult.builder().removeReplacements(obsolete).build());
-
-        return result;
+        return PageIndexResult.builder().removeReplacements(obsolete).build();
     }
 }

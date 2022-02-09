@@ -372,4 +372,46 @@ class IndexablePageComparatorTest {
             .build();
         assertEquals(expected, toIndex);
     }
+
+    @Test
+    void testIndexDuplicatedDbReplacements() {
+        LocalDate same = LocalDate.now();
+
+        // Replacements found to index: the same replacement found in 2 different positions with same context
+        IndexablePageId pageId = IndexablePageId.of(WikipediaLanguage.getDefault(), 1);
+        IndexableReplacement r1 = IndexableReplacement
+            .builder()
+            .indexablePageId(pageId)
+            .type(ReplacementType.of(ReplacementKind.SIMPLE, "1"))
+            .position(1)
+            .context("C")
+            .build();
+        IndexablePage page = IndexablePage
+            .builder()
+            .id(pageId)
+            .title("T")
+            .replacements(List.of(r1))
+            .lastUpdate(same)
+            .build();
+
+        // Existing replacements in DB
+        IndexableReplacement r1db = r1.withTouched(false); // Trick to clone and match with the one found to index
+        IndexableReplacement r2db = r1.withContext("").withReviewer("X");
+        IndexablePage dbPage = IndexablePage
+            .builder()
+            .id(pageId)
+            .title("T")
+            .replacements(List.of(r1db, r2db))
+            .lastUpdate(same)
+            .build();
+
+        PageIndexResult toIndex = indexablePageComparator.indexPageReplacements(page, dbPage);
+
+        PageIndexResult expected = PageIndexResult
+            .builder()
+            .status(PageIndexStatus.PAGE_INDEXED)
+            .removeReplacements(Set.of(r1db))
+            .build();
+        assertEquals(expected, toIndex);
+    }
 }
