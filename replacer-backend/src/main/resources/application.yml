@@ -5,7 +5,6 @@ spring:
     ansi.enabled: ALWAYS
   jackson:
     date-format: dd-MM-yyyy HH:mm:ss
-  resources.cache.cachecontrol.max-age: 365d
   profiles.include: @includeSpringProfile@
 
 server:
