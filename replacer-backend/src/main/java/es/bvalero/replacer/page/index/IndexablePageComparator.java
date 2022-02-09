@@ -20,8 +20,8 @@ class IndexablePageComparator {
         // Use a List for DB replacements as we want to detect possible duplicated in database
         final Set<IndexableReplacement> pageReplacements = new HashSet<>(page.getReplacements());
         final List<IndexableReplacement> dbReplacements = dbPage == null
-            ? new ArrayList<>() // The collection must be mutable
-            : new ArrayList<>(dbPage.getReplacements());
+            ? new LinkedList<>() // The collection must be mutable
+            : new LinkedList<>(dbPage.getReplacements());
 
         // We compare each replacement found in the page to index with the ones existing in database
         // We add to the result the needed modifications to align the database with the actual replacements
