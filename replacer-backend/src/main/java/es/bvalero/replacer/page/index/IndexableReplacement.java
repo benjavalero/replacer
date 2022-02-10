@@ -7,6 +7,7 @@ import java.util.Objects;
 import lombok.Builder;
 import lombok.Value;
 import lombok.With;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.TestOnly;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
@@ -47,10 +48,6 @@ class IndexableReplacement {
         return this.reviewer == null;
     }
 
-    boolean isReviewed() {
-        return !isToBeReviewed();
-    }
-
     boolean isSystemReviewed() {
         return REVIEWER_SYSTEM.equals(this.reviewer);
     }
@@ -60,21 +57,20 @@ class IndexableReplacement {
         return withReviewer(REVIEWER_SYSTEM);
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(indexablePageId, type);
-    }
-
     /* If two replacements have the same position or context they will be considered equal */
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        IndexableReplacement that = (IndexableReplacement) o;
+    boolean isSame(IndexableReplacement that) {
         return (
             indexablePageId.equals(that.indexablePageId) &&
             type.equals(that.type) &&
-            (position == that.position || context.equals(that.context))
+            (position == that.position || isSameContext(context, that.context))
         );
+    }
+
+    private boolean isSameContext(String context1, String context2) {
+        if (StringUtils.isNotBlank(context1) || StringUtils.isNotBlank(context2)) {
+            return Objects.equals(context1, context2);
+        } else {
+            return false;
+        }
     }
 }

@@ -377,41 +377,43 @@ class IndexablePageComparatorTest {
     void testIndexDuplicatedDbReplacements() {
         LocalDate same = LocalDate.now();
 
-        // Replacements found to index: the same replacement found in 2 different positions with same context
+        // Replacements found to index: the same replacement found in 2 different positions
         IndexablePageId pageId = IndexablePageId.of(WikipediaLanguage.getDefault(), 1);
         IndexableReplacement r1 = IndexableReplacement
             .builder()
             .indexablePageId(pageId)
             .type(ReplacementType.of(ReplacementKind.SIMPLE, "1"))
             .position(1)
-            .context("C")
+            .context("1")
+            .build();
+        IndexableReplacement r2 = IndexableReplacement
+            .builder()
+            .indexablePageId(pageId)
+            .type(ReplacementType.of(ReplacementKind.SIMPLE, "1"))
+            .position(5)
+            .context("5")
             .build();
         IndexablePage page = IndexablePage
             .builder()
             .id(pageId)
             .title("T")
-            .replacements(List.of(r1))
+            .replacements(List.of(r1, r2))
             .lastUpdate(same)
             .build();
 
         // Existing replacements in DB
-        IndexableReplacement r1db = r1.withTouched(false); // Trick to clone and match with the one found to index
-        IndexableReplacement r2db = r1.withContext("").withReviewer("X");
+        IndexableReplacement r1db = r1.withContext("").withReviewer("X");
+        IndexableReplacement r2db = r2.withContext("").withReviewer("X");
         IndexablePage dbPage = IndexablePage
             .builder()
             .id(pageId)
             .title("T")
-            .replacements(List.of(r1db, r2db))
+            .replacements(List.of(r2db, r1db)) // Force a different order
             .lastUpdate(same)
             .build();
 
         PageIndexResult toIndex = indexablePageComparator.indexPageReplacements(page, dbPage);
 
-        PageIndexResult expected = PageIndexResult
-            .builder()
-            .status(PageIndexStatus.PAGE_INDEXED)
-            .removeReplacements(Set.of(r1db))
-            .build();
-        assertEquals(expected, toIndex);
+        assertEquals(PageIndexResult.ofEmpty(), toIndex);
     }
 }
