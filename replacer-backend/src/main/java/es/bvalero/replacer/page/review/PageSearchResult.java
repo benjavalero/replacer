@@ -1,7 +1,6 @@
 package es.bvalero.replacer.page.review;
 
 import java.util.*;
-import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.Getter;
 
@@ -42,10 +41,6 @@ final class PageSearchResult {
 
         // Sort the cached pages to keep some kind of order especially when skipping pages
         Collections.sort(this.pageIds);
-    }
-
-    Collection<Integer> getPageIds() {
-        return this.pageIds.stream().collect(Collectors.toUnmodifiableList());
     }
 
     int getSize() {
