@@ -8,9 +8,7 @@ import es.bvalero.replacer.common.domain.ReplacementKind;
 import es.bvalero.replacer.page.index.PageIndexResult;
 import es.bvalero.replacer.page.index.PageIndexService;
 import es.bvalero.replacer.page.index.PageIndexStatus;
-import es.bvalero.replacer.repository.PageIndexRepository;
-import es.bvalero.replacer.repository.PageRepository;
-import es.bvalero.replacer.repository.ReplacementTypeRepository;
+import es.bvalero.replacer.repository.*;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -228,5 +226,56 @@ class PageReviewTypeSubtypeFinderTest {
             assertEquals(replacements.size(), rev.getReplacements().size());
             assertNull(rev.getSection());
         });
+    }
+
+    @Test
+    void testFindReplacementFilteredAndReviewed() {
+        // 1 result in DB
+        when(
+            pageRepository.findPageIdsToReviewByType(any(WikipediaLanguage.class), any(ReplacementType.class), anyInt())
+        )
+            .thenReturn(Collections.singletonList(randomId))
+            .thenReturn(Collections.emptyList());
+
+        // The page exists in Wikipedia
+        when(wikipediaService.getPageById(randomPageId)).thenReturn(Optional.of(page));
+
+        final PageReplacement replacement2 = PageReplacement
+            .builder()
+            .start(offset + 1)
+            .type(ReplacementType.of(ReplacementKind.SIMPLE, "Z"))
+            .text("Z")
+            .suggestions(List.of(Suggestion.ofNoComment("z")))
+            .build();
+        when(pageIndexService.indexPage(page))
+            .thenReturn(PageIndexResult.ofEmpty(PageIndexStatus.PAGE_INDEXED, List.of(replacement, replacement2)));
+
+        // The replacement is reviewed in DB
+        ReplacementModel replacementModel = ReplacementModel
+            .builder()
+            .lang(page.getId().getLang().getCode())
+            .pageId(page.getId().getPageId())
+            .type(replacement.getType().getKind().getCode())
+            .subtype(replacement.getType().getSubtype())
+            .position(replacement.getStart())
+            .context(replacement.getContext(page))
+            .reviewer("X")
+            .build();
+        PageModel pageModel = PageModel
+            .builder()
+            .lang(page.getId().getLang().getCode())
+            .pageId(page.getId().getPageId())
+            .title(page.getTitle())
+            .lastUpdate(page.getLastUpdate().toLocalDate())
+            .replacements(List.of(replacementModel))
+            .build();
+        when(pageIndexRepository.findPageById(randomPageId)).thenReturn(Optional.of(pageModel));
+
+        Optional<PageReview> review = pageReviewTypeSubtypeService.findRandomPageReview(options);
+
+        verify(pageIndexService).indexPage(page);
+        verify(wikipediaService, never()).getPagesByIds(any(WikipediaLanguage.class), anyList());
+
+        assertTrue(review.isEmpty());
     }
 }

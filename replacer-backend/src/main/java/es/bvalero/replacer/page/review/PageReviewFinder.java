@@ -199,12 +199,18 @@ abstract class PageReviewFinder {
         // If the page has not been indexed (or is not indexable) the collection of replacements is empty
         Collection<PageReplacement> standardReplacements = indexReplacements(page).getReplacements();
 
-        // Decorate the standard replacements with different actions depending on the type of review
-        Collection<PageReplacement> decoratedReplacements = decorateReplacements(page, options, standardReplacements);
-
         // Discard the replacements already reviewed in the past
+        Collection<PageReplacement> notReviewedReplacements = discardReviewedReplacements(page, standardReplacements);
+
+        // Decorate the standard replacements with different actions depending on the type of review
+        Collection<PageReplacement> decoratedReplacements = decorateReplacements(
+            page,
+            options,
+            notReviewedReplacements
+        );
+
         // Create a linked list so we can sort them easily
-        List<PageReplacement> replacements = new LinkedList<>(discardReviewedReplacements(page, decoratedReplacements));
+        List<PageReplacement> replacements = new LinkedList<>(decoratedReplacements);
 
         // Return the replacements sorted as they appear in the text
         // So there is no need to sort them in the frontend
