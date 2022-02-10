@@ -220,6 +220,8 @@ class TemplateFinder implements ImmutableFinder {
     }
 
     private boolean matchesFile(String text) {
+        // There are cases of files followed by the {{!}} template
+        // so they are not detected here as we are removing first all nested templates
         final String value = text.trim();
         final int dot = value.lastIndexOf('.');
         if (dot >= 0) {

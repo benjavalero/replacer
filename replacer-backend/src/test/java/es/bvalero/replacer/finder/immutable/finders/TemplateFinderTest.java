@@ -11,7 +11,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
@@ -35,61 +39,66 @@ class TemplateFinderTest {
     @Autowired
     private TemplateFinder templateFinder;
 
-    @Test
-    void testFindTemplateNames() {
-        String template1 = "{{Template1}}";
-        String template2 = "{{Template2:Text2}}";
-        String template3 = "{{Template3|param=value}}";
-        String text = String.format("%s %s %s", template1, template2, template3);
-
+    @ParameterizedTest
+    @CsvSource(
+        value = { "{{Template1}}, Template1", "{{Template2:Text2}}, Template2", "{{Template3|param=value}}, Template3" }
+    )
+    void testFindTemplateNames(String text, String templateName) {
         List<Immutable> matches = templateFinder.findList(text);
 
-        List<String> names = List.of("Template1", "Template2", "Template3");
-        assertTrue(matches.stream().map(Immutable::getText).collect(Collectors.toSet()).containsAll(names));
+        assertTrue(matches.stream().map(Immutable::getText).collect(Collectors.toSet()).contains(templateName));
     }
 
-    @Test
-    void testFindCompleteTemplates() {
-        String template1 = "{{Cita libro|param=value}}";
-        String template2 = "{{#expr:Text2}}";
-        String template3 = "{{Template3|param=value}}"; // Not captured
-        String template4 = "{{IMDb nombre|1229738|Luis Posada}}";
-        String template5 = "{{Enlace_roto|2=http://www.example.com}}";
-        String template6 = "{{lang-ho|Papua Niu Gini}}";
-        String text = String.format(
-            "%s %s %s %s %s %s",
-            template1,
-            template2,
-            template3,
-            template4,
-            template5,
-            template6
+    @ParameterizedTest
+    @ValueSource(
+        strings = {
+            "{{Cita libro|param=value}}",
+            "{{#expr:Text2}}",
+            "{{IMDb nombre|1229738|Luis Posada}}",
+            "{{Enlace_roto|2=http://www.example.com}}",
+            "{{lang-ho|Papua Niu Gini}}",
+        }
+    )
+    void testFindCompleteTemplates(String text) {
+        List<Immutable> matches = templateFinder.findList(text);
+
+        assertEquals(1, matches.size());
+        assertEquals(text, matches.get(0).getText());
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = { "{{Template3|param=value}}" })
+    void testFindCompleteTemplatesNotCaptured(String text) {
+        List<Immutable> matches = templateFinder.findList(text);
+
+        assertFalse(matches.isEmpty());
+        assertNotEquals(text, matches.get(0).getText());
+    }
+
+    @ParameterizedTest
+    @CsvSource(
+        value = {
+            "{{Template1|param1= valor1}}, param1, ", // Only param
+            "{{Template3|url= valor3 }}, url, valor3", // Param + value
+            "{{Template4|param4= xxx.jpg }}, param4, xxx.jpg", // Param + value
+            "{{Fs player|nat=Brazil}}, nat, Brazil", // Param + value
+        }
+    )
+    void testFindParamValues(String text, String param, String value) {
+        List<Immutable> matches = templateFinder.findList(text);
+
+        assertFalse(matches.isEmpty());
+        assertTrue(
+            matches.stream().map(Immutable::getText).map(String::trim).collect(Collectors.toSet()).contains(param)
         );
-
-        List<Immutable> matches = templateFinder.findList(text);
-
-        List<String> templates = List.of(template1, template2, template4, template5);
-        assertTrue(matches.stream().map(Immutable::getText).collect(Collectors.toSet()).containsAll(templates));
-        assertFalse(matches.stream().map(Immutable::getText).collect(Collectors.toSet()).contains(template3));
-    }
-
-    @Test
-    void testFindParamValues() {
-        String template1 = "{{Template1|param1= valor1}}"; // Only param
-        String template2 = "{{Taxobox|param2=valor2}}"; // Ignored complete
-        String template3 = "{{Template3|url= valor3 }}"; // Param + value
-        String template4 = "{{Template4|param4= xxx.jpg }}"; // Param + value
-        String template5 = "{{Fs player|nat=Brazil}}"; // Param + value
-        String text = String.format("%s %s %s %s %s", template1, template2, template3, template4, template5);
-
-        List<Immutable> matches = templateFinder.findList(text);
-
-        List<String> params = List.of("param1", "url", "param4", "nat");
-        List<String> values = List.of(" valor3 ", " xxx.jpg ", "Brazil");
-
-        assertTrue(matches.stream().map(Immutable::getText).collect(Collectors.toSet()).containsAll(params));
-        assertTrue(matches.stream().map(Immutable::getText).collect(Collectors.toSet()).containsAll(values));
-        assertFalse(matches.stream().map(Immutable::getText).collect(Collectors.toSet()).contains("valor1"));
+        if (StringUtils.isBlank(value)) {
+            assertEquals(2, matches.size()); // Template name + param
+        } else {
+            assertEquals(3, matches.size()); // Template name + param + value
+            assertTrue(
+                matches.stream().map(Immutable::getText).map(String::trim).collect(Collectors.toSet()).contains(value)
+            );
+        }
     }
 
     @Test
@@ -126,11 +135,26 @@ class TemplateFinderTest {
         assertEquals(expected, actual);
 
         // Check positions
-        assertEquals(2, matches.stream().filter(m -> m.getText().equals("Template1")).findAny().get().getStart());
-        assertEquals(12, matches.stream().filter(m -> m.getText().equals("param1")).findAny().get().getStart());
-        assertEquals(21, matches.stream().filter(m -> m.getText().equals("Template2")).findAny().get().getStart());
-        assertEquals(31, matches.stream().filter(m -> m.getText().equals("url")).findAny().get().getStart());
-        assertEquals(35, matches.stream().filter(m -> m.getText().equals("value2")).findAny().get().getStart());
+        assertEquals(
+            2,
+            matches.stream().filter(m -> m.getText().equals("Template1")).findAny().map(Immutable::getStart).orElse(0)
+        );
+        assertEquals(
+            12,
+            matches.stream().filter(m -> m.getText().equals("param1")).findAny().map(Immutable::getStart).orElse(0)
+        );
+        assertEquals(
+            21,
+            matches.stream().filter(m -> m.getText().equals("Template2")).findAny().map(Immutable::getStart).orElse(0)
+        );
+        assertEquals(
+            31,
+            matches.stream().filter(m -> m.getText().equals("url")).findAny().map(Immutable::getStart).orElse(0)
+        );
+        assertEquals(
+            35,
+            matches.stream().filter(m -> m.getText().equals("value2")).findAny().map(Immutable::getStart).orElse(0)
+        );
     }
 
     @Test
