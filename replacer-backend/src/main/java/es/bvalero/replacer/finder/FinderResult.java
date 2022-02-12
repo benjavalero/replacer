@@ -1,5 +1,6 @@
 package es.bvalero.replacer.finder;
 
+import java.util.Objects;
 import org.apache.commons.lang3.Range;
 import org.jetbrains.annotations.TestOnly;
 
@@ -12,8 +13,10 @@ public interface FinderResult extends Comparable<FinderResult> {
     }
 
     default int compareTo(FinderResult o) {
-        // Order descendant by start. If equals, the lower end.
-        return o.getStart() == getStart() ? getEnd() - o.getEnd() : o.getStart() - getStart();
+        // Compare by start and then by end
+        return Objects.equals(this.getStart(), o.getStart())
+            ? Integer.compare(this.getEnd(), o.getEnd())
+            : Integer.compare(this.getStart(), o.getStart());
     }
 
     private Range<Integer> getRange() {

@@ -57,7 +57,7 @@ class IndexableReplacement {
         return withReviewer(REVIEWER_SYSTEM);
     }
 
-    /* If two replacements have the same position or context they will be considered equal */
+    /* If two replacements have the same position or context they will be considered equivalent but NOT EQUAL */
     boolean isSame(IndexableReplacement that) {
         return (
             indexablePageId.equals(that.indexablePageId) &&

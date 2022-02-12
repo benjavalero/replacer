@@ -193,7 +193,7 @@ abstract class PageReviewFinder {
         return Optional.of(pageReviewSectionFinder.findPageReviewSection(pageReview).orElse(pageReview));
     }
 
-    private List<PageReplacement> findReplacements(WikipediaPage page, PageReviewOptions options) {
+    private Collection<PageReplacement> findReplacements(WikipediaPage page, PageReviewOptions options) {
         // Calculate all the standard replacements
         // We take profit and we update the database with the just calculated replacements (also when empty)
         // If the page has not been indexed (or is not indexable) the collection of replacements is empty
@@ -209,12 +209,10 @@ abstract class PageReviewFinder {
             notReviewedReplacements
         );
 
-        // Create a linked list so we can sort them easily
-        List<PageReplacement> replacements = new LinkedList<>(decoratedReplacements);
-
-        // Return the replacements sorted as they appear in the text
-        // So there is no need to sort them in the frontend
-        replacements.sort(Collections.reverseOrder());
+        // Return the replacements sorted as they appear in the text so there is no need to sort them in the frontend
+        // We assume the given replacement collection is already sorted but we sort it just in case
+        List<PageReplacement> replacements = new ArrayList<>(decoratedReplacements);
+        Collections.sort(replacements);
         LOGGER.debug(
             "Found {} replacements in page {} - {} for options {}",
             replacements.size(),

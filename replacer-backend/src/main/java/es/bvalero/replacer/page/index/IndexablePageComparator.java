@@ -16,14 +16,14 @@ class IndexablePageComparator {
     PageIndexResult indexPageReplacements(IndexablePage page, @Nullable IndexablePage dbPage) {
         PageIndexResult result = PageIndexResult.ofEmpty();
 
-        // Use ArrayList to iterate them faster to find duplicates
-        final List<IndexableReplacement> pageReplacements = new ArrayList<>(page.getReplacements());
+        final Set<IndexableReplacement> pageReplacements = new HashSet<>(page.getReplacements());
         cleanDuplicatedReplacements(pageReplacements);
 
-        // Use a List for DB replacements as we want to detect possible duplicated in database
-        final List<IndexableReplacement> dbReplacements = dbPage == null
-            ? new ArrayList<>() // The collection must be mutable
-            : new ArrayList<>(dbPage.getReplacements());
+        // Use a Set for DB replacements as we want to remove and add items with no index
+        final Set<IndexableReplacement> dbReplacements = dbPage == null
+            ? new HashSet<>() // The collection must be mutable
+            : new HashSet<>(dbPage.getReplacements());
+        // Remove possible duplicates in database
         result = result.add(cleanDuplicatedReplacements(dbReplacements));
 
         // We compare each replacement found in the page to index with the ones existing in database
@@ -48,13 +48,14 @@ class IndexablePageComparator {
         return result.add(cleanUpDbReplacements(dbReplacements));
     }
 
-    private PageIndexResult cleanDuplicatedReplacements(List<IndexableReplacement> replacements) {
-        final List<IndexableReplacement> duplicated = new ArrayList<>();
-        for (int i = 0; i < replacements.size(); i++) {
-            for (int j = i + 1; j < replacements.size(); j++) {
-                IndexableReplacement r1 = replacements.get(i);
-                IndexableReplacement r2 = replacements.get(j);
-                if (r1.isSame(r2)) {
+    private PageIndexResult cleanDuplicatedReplacements(Collection<IndexableReplacement> replacements) {
+        final Set<IndexableReplacement> duplicated = new HashSet<>();
+        for (IndexableReplacement r1 : replacements) {
+            if (duplicated.contains(r1)) {
+                continue;
+            }
+            for (IndexableReplacement r2 : replacements) {
+                if (!r1.equals(r2) && r1.isSame(r2)) {
                     // Prefer to remove the not-reviewed
                     duplicated.add(r2.isToBeReviewed() ? r2 : r1);
                 }
@@ -131,11 +132,11 @@ class IndexablePageComparator {
     private PageIndexResult cleanUpDbReplacements(Collection<IndexableReplacement> dbReplacements) {
         // All remaining replacements to review (or system-reviewed)
         // and not checked so far are obsolete and thus to be deleted
-        final Set<IndexableReplacement> obsolete = dbReplacements
+        final List<IndexableReplacement> obsolete = dbReplacements
             .stream()
             .filter(rep -> !rep.isTouched())
             .filter(rep -> rep.isToBeReviewed() || rep.isSystemReviewed())
-            .collect(Collectors.toSet());
+            .collect(Collectors.toUnmodifiableList());
         obsolete.forEach(dbReplacements::remove);
         return PageIndexResult.builder().removeReplacements(obsolete).build();
     }

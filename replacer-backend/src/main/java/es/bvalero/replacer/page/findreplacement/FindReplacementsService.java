@@ -15,7 +15,6 @@ import es.bvalero.replacer.finder.replacement.custom.CustomReplacementFinderServ
 import es.bvalero.replacer.page.review.PageReviewOptions;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.logging.LogLevel;
 import org.springframework.stereotype.Service;
@@ -68,42 +67,36 @@ public class FindReplacementsService {
     }
 
     private Collection<Replacement> filterResults(FinderPage page, Iterable<Replacement> allResults) {
-        // Remove duplicates. By the way we sort the collection.
+        // In this method we assume the Collection is a TreeSet so it has no duplicates and is sorted
+
+        // Remove duplicates and sort the collection
         Collection<Replacement> noDupes = removeDuplicates(allResults);
 
         // Remove nested. There might be replacements (strictly) contained in others.
-        Collection<Replacement> noNested = removeNested(noDupes);
+        removeNested(noDupes);
 
         // Remove the ones contained in immutables
-        return removeImmutables(page, noNested);
+        return removeImmutables(page, noDupes);
     }
 
     private Collection<Replacement> removeDuplicates(Iterable<Replacement> results) {
         // TreeSet to distinct and sort
         Set<Replacement> noDupes = new TreeSet<>();
-        for (Replacement result : results) {
-            noDupes.add(result);
-        }
+        results.forEach(noDupes::add);
         return noDupes;
     }
 
-    private Collection<Replacement> removeNested(Collection<Replacement> results) {
+    private void removeNested(Collection<Replacement> results) {
         // We need to filter the items against the collection itself, so it is not a stateless predicate.
         // We assume all the results in the iterable are distinct, in this case,
         // this means there are not two results with the same start and end,
         // so the contain function is strict.
 
         // Filter to return the results which are NOT strictly contained in any other
-        return results
-            .stream()
-            .filter(r -> results.stream().noneMatch(r2 -> r2.containsStrictly(r)))
-            .collect(Collectors.toUnmodifiableList());
+        results.removeIf(r -> results.stream().anyMatch(r2 -> r2.containsStrictly(r)));
     }
 
-    private Collection<Replacement> removeImmutables(FinderPage page, Collection<Replacement> results) {
-        // LinkedList to remove items. Order is kept.
-        List<Replacement> resultList = new LinkedList<>(results);
-
+    private Collection<Replacement> removeImmutables(FinderPage page, Collection<Replacement> resultList) {
         // No need to find the immutables if there are no results
         if (resultList.isEmpty()) {
             return Collections.emptyList();

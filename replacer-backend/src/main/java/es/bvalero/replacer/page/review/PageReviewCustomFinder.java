@@ -137,11 +137,11 @@ class PageReviewCustomFinder extends PageReviewFinder {
         }
 
         // Add the custom replacements to the standard ones
-        // Return the merged collection
+        // Return the merged collection as a TreeSet to keep the order and discard duplicates
         return Stream
-            .of(replacements, customReplacements)
+            .of(customReplacements, replacements)
             .flatMap(Collection::stream)
-            .collect(Collectors.toUnmodifiableSet());
+            .collect(Collectors.toCollection(TreeSet::new));
     }
 
     private PageModel buildNewPage(WikipediaPage page) {

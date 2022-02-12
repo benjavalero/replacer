@@ -4,6 +4,7 @@ import es.bvalero.replacer.common.util.ReplacerUtils;
 import java.util.Collection;
 import java.util.Objects;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Value;
 import lombok.With;
 import org.apache.commons.lang3.StringUtils;
@@ -19,13 +20,16 @@ import org.springframework.lang.NonNull;
  * For instance, in Spanish the word "Paris" could be misspelled if it corresponds to the French city
  * (written correctly as "París"), but it would be correct if it refers to the mythological Trojan prince.
  */
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Value
 @Builder
 public class PageReplacement implements Comparable<PageReplacement> {
 
+    @EqualsAndHashCode.Include
     @With
     int start;
 
+    @EqualsAndHashCode.Include
     @NonNull
     String text;
 
@@ -68,20 +72,9 @@ public class PageReplacement implements Comparable<PageReplacement> {
 
     @Override
     public int compareTo(PageReplacement o) {
-        // Order descendant by start. If equals, the lower end.
-        return Objects.equals(o.getStart(), getStart()) ? getEnd() - o.getEnd() : o.getStart() - getStart();
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        PageReplacement that = (PageReplacement) o;
-        return start == that.start && text.equals(that.text);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(start, text);
+        // Compare by start and then by end
+        return Objects.equals(this.getStart(), o.getStart())
+            ? Integer.compare(this.getEnd(), o.getEnd())
+            : Integer.compare(this.getStart(), o.getStart());
     }
 }
