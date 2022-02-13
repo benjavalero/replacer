@@ -24,9 +24,9 @@ class ApplyCosmeticsService {
         List<Cosmetic> cosmetics = new LinkedList<>(cosmeticFinderService.find(FinderPageMapper.fromDomain(page)));
 
         if (!cosmetics.isEmpty()) {
-            Collections.sort(cosmetics);
+            // We apply the cosmetic replacements sorted in descending order by the start
+            cosmetics.sort(Collections.reverseOrder());
 
-            // By default, the results are sorted in descending order by the start.
             for (Cosmetic cosmetic : cosmetics) {
                 fixedText = replaceInText(cosmetic, fixedText);
                 LOGGER.debug("Cosmetic applied: {}", cosmetic);
@@ -37,9 +37,9 @@ class ApplyCosmeticsService {
     }
 
     private String replaceInText(Cosmetic cosmetic, String text) {
-        int start = cosmetic.getStart();
         String oldText = cosmetic.getText();
         String newText = cosmetic.getFix();
-        return text.substring(0, start) + newText + text.substring(start + oldText.length());
+        assert text.substring(cosmetic.getStart(), cosmetic.getEnd()).equals(oldText);
+        return text.substring(0, cosmetic.getStart()) + newText + text.substring(cosmetic.getEnd());
     }
 }
