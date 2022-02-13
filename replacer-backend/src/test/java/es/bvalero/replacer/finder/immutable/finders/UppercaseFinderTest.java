@@ -65,6 +65,7 @@ class UppercaseFinderTest {
             "=== Febrero ===", // Header
             "=== [[Febrero]] ===", // Header with link
             "</ref> Febrero y tal", // After reference
+            "En <small>[[Febrero]]</small>.", // Inside HTML tags
             "\n\nFebrero y marzo", // Start of paragraph
         }
     )

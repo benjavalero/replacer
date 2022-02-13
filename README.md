@@ -104,8 +104,8 @@ There are certain parts of the content of page where most false positives usuall
   - After dot
   - Parameter values
   - Unordered and ordered list items
-  - HTML table and wiki-table cells
-  - After a reference
+  - After an HTML tag like a reference or a table cell
+  - Wiki-table cells
   - Starting a paragraph
   - Starting a header
 - Words in the page title

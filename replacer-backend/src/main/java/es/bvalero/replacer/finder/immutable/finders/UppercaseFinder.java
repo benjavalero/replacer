@@ -38,8 +38,8 @@ import org.springframework.stereotype.Component;
  * - After dot
  * - Parameter values
  * - Unordered and ordered list items
- * - HTML table and wiki-table cells
- * - After a reference
+ * - After an HTML tag like a reference or a table cell
+ * - Wiki-table cells
  * - Starting a paragraph
  * - Starting a header
  */
@@ -49,27 +49,19 @@ public class UppercaseFinder implements ImmutableFinder, PropertyChangeListener 
     @org.intellij.lang.annotations.RegExp
     private static final String CAPTION_SEPARATOR = "\\|\\+";
 
-    // Escaping is necessary for automaton
-    private static final String CELL_HTML_TAG = "\\<td\\>";
-
-    // Escaping is necessary for automaton
-    private static final String REF_END_TAG = "\\</ref\\>";
-
     private static final String TIMELINE_TEXT = "text:";
 
     private static final String PARAGRAPH_START = "\n\n";
 
     // The pipe is not only used for tables cells, we must check is not a wiki-link!!!
     @org.intellij.lang.annotations.RegExp
-    private static final String CLASS_PUNCTUATION = "[=#*.!|]";
+    private static final String CLASS_PUNCTUATION = "[=#*>.!|]";
 
     @org.intellij.lang.annotations.RegExp
     private static final String REGEX_UPPERCASE_PUNCTUATION = String.format(
-        "(%s|%s|%s|%s|%s|%s)<Zs>*(\\[\\[)?(%%s)(]])?",
+        "(%s|%s|%s|%s)<Zs>*(\\[\\[)?(%%s)(]])?",
         CLASS_PUNCTUATION,
         CAPTION_SEPARATOR,
-        REF_END_TAG,
-        CELL_HTML_TAG,
         TIMELINE_TEXT,
         PARAGRAPH_START
     );
