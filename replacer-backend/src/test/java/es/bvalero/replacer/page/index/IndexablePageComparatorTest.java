@@ -325,36 +325,28 @@ class IndexablePageComparatorTest {
     }
 
     @Test
-    void testIndexExistingPageWithDuplicatedReplacements() {
+    void testDuplicatedDbReplacements() {
         LocalDate same = LocalDate.now();
 
-        // Replacements found to index: the same replacement found in 2 different positions with same context
         IndexablePageId pageId = IndexablePageId.of(WikipediaLanguage.getDefault(), 1);
-        IndexableReplacement r1 = IndexableReplacement
+        IndexablePage page = IndexablePage
+            .builder()
+            .id(pageId)
+            .title("T")
+            .replacements(Collections.emptyList())
+            .lastUpdate(same)
+            .build();
+
+        // Existing replacements in DB: the same replacement found in 2 different positions with same context
+        IndexableReplacement r1db = IndexableReplacement
             .builder()
             .indexablePageId(pageId)
             .type(ReplacementType.of(ReplacementKind.SIMPLE, "1"))
             .position(1)
             .context("C")
+            .reviewer("X")
             .build();
-        IndexableReplacement r2 = IndexableReplacement
-            .builder()
-            .indexablePageId(pageId)
-            .type(ReplacementType.of(ReplacementKind.SIMPLE, "1"))
-            .position(5)
-            .context("C")
-            .build();
-        IndexablePage page = IndexablePage
-            .builder()
-            .id(pageId)
-            .title("T")
-            .replacements(List.of(r1, r2))
-            .lastUpdate(same)
-            .build();
-
-        // Existing replacements in DB
-        IndexableReplacement r1db = r1.withTouched(false); // Trick to clone and match with the one found to index
-        IndexableReplacement r2db = r2.withTouched(false); // Trick to clone and match with the one found to index
+        IndexableReplacement r2db = r1db.withPosition(5);
         IndexablePage dbPage = IndexablePage
             .builder()
             .id(pageId)
@@ -365,19 +357,15 @@ class IndexablePageComparatorTest {
 
         PageIndexResult toIndex = indexablePageComparator.indexPageReplacements(page, dbPage);
 
-        PageIndexResult expected = PageIndexResult
-            .builder()
-            .status(PageIndexStatus.PAGE_INDEXED)
-            .removeReplacements(Set.of(r2db))
-            .build();
-        assertEquals(expected, toIndex);
+        // In fact r1db and r2db are considered the same so any of them could be removed
+        assertEquals(PageIndexStatus.PAGE_INDEXED, toIndex.getStatus());
+        assertEquals(1, toIndex.getRemoveReplacements().size());
     }
 
     @Test
     void testIndexDuplicatedDbReplacements() {
         LocalDate same = LocalDate.now();
 
-        // Replacements found to index: the same replacement found in 2 different positions
         IndexablePageId pageId = IndexablePageId.of(WikipediaLanguage.getDefault(), 1);
         IndexableReplacement r1 = IndexableReplacement
             .builder()
@@ -386,24 +374,18 @@ class IndexablePageComparatorTest {
             .position(1)
             .context("1")
             .build();
-        IndexableReplacement r2 = IndexableReplacement
-            .builder()
-            .indexablePageId(pageId)
-            .type(ReplacementType.of(ReplacementKind.SIMPLE, "1"))
-            .position(5)
-            .context("5")
-            .build();
         IndexablePage page = IndexablePage
             .builder()
             .id(pageId)
             .title("T")
-            .replacements(List.of(r1, r2))
+            .replacements(List.of(r1))
             .lastUpdate(same)
             .build();
 
-        // Existing replacements in DB
-        IndexableReplacement r1db = r1.withContext("").withReviewer("X");
-        IndexableReplacement r2db = r2.withContext("").withReviewer("X");
+        // Existing replacements in DB: the same replacement found in the same position with different context
+        // but one is not reviewed matching with the found one in the page
+        IndexableReplacement r1db = r1.withContext("1");
+        IndexableReplacement r2db = r1db.withContext("").withReviewer("X");
         IndexablePage dbPage = IndexablePage
             .builder()
             .id(pageId)
@@ -414,6 +396,13 @@ class IndexablePageComparatorTest {
 
         PageIndexResult toIndex = indexablePageComparator.indexPageReplacements(page, dbPage);
 
-        assertEquals(PageIndexResult.ofEmpty(), toIndex);
+        PageIndexResult expected = PageIndexResult
+            .builder()
+            .status(PageIndexStatus.PAGE_INDEXED)
+            // In fact r1db and r2db are considered the same so any of them could be removed
+            // In this case we remove the first one which is not reviewed
+            .removeReplacements(Set.of(r1db))
+            .build();
+        assertEquals(expected, toIndex);
     }
 }

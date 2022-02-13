@@ -39,7 +39,7 @@ public class FindReplacementsService {
         // There will usually be much more immutables found than results.
         // Thus, it is better to obtain first all the results, and then obtain the immutables one by one,
         // aborting in case the replacement list gets empty. This way we can avoid lots of immutable calculations.
-        Collection<Replacement> allResults = replacementFinderService.find(finderPage);
+        Set<Replacement> allResults = replacementFinderService.find(finderPage);
         return ReplacementMapper.toDomain(filterResults(finderPage, allResults));
     }
 
@@ -51,11 +51,13 @@ public class FindReplacementsService {
         // There will usually be much more immutables found than results.
         // Thus, it is better to obtain first all the results, and then obtain the immutables one by one,
         // aborting in case the replacement list gets empty. This way we can avoid lots of immutable calculations.
-        Iterable<Replacement> allResults = customReplacementFinderService.findCustomReplacements(
+        Iterable<Replacement> customResults = customReplacementFinderService.findCustomReplacements(
             finderPage,
             convertOptions(options)
         );
-        return ReplacementMapper.toDomain(filterResults(finderPage, allResults));
+        Set<Replacement> sortedResults = new TreeSet<>();
+        customResults.forEach(sortedResults::add);
+        return ReplacementMapper.toDomain(filterResults(finderPage, sortedResults));
     }
 
     private CustomOptions convertOptions(PageReviewOptions options) {
@@ -66,24 +68,14 @@ public class FindReplacementsService {
         return CustomOptions.of(subtype, cs, suggestion);
     }
 
-    private Collection<Replacement> filterResults(FinderPage page, Iterable<Replacement> allResults) {
-        // In this method we assume the Collection is a TreeSet so it has no duplicates and is sorted
-
-        // Remove duplicates and sort the collection
-        Collection<Replacement> noDupes = removeDuplicates(allResults);
+    private Collection<Replacement> filterResults(FinderPage page, Collection<Replacement> allResults) {
+        // We can assume the collection of results is a mutable set sorted and of course with no duplicates
 
         // Remove nested. There might be replacements (strictly) contained in others.
-        removeNested(noDupes);
+        removeNested(allResults);
 
         // Remove the ones contained in immutables
-        return removeImmutables(page, noDupes);
-    }
-
-    private Collection<Replacement> removeDuplicates(Iterable<Replacement> results) {
-        // TreeSet to distinct and sort
-        Set<Replacement> noDupes = new TreeSet<>();
-        results.forEach(noDupes::add);
-        return noDupes;
+        return removeImmutables(page, allResults);
     }
 
     private void removeNested(Collection<Replacement> results) {

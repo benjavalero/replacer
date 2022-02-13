@@ -1,14 +1,16 @@
 package es.bvalero.replacer.finder;
 
-import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 import org.apache.commons.collections4.IterableUtils;
-import org.jetbrains.annotations.TestOnly;
 
 public interface FinderService<T extends FinderResult> {
-    /* Default service method returning a list of results */
-    default List<T> find(FinderPage page) {
-        // Build the list from the results of the more generic iterable finder
-        return IterableUtils.toList(findIterable(page));
+    /* Default service method returning a sorted set of results */
+    default Set<T> find(FinderPage page) {
+        // Build the sorted set from the results of the more generic iterable finder
+        Set<T> results = new TreeSet<>();
+        findIterable(page).forEach(results::add);
+        return results;
     }
 
     /*
@@ -30,9 +32,4 @@ public interface FinderService<T extends FinderResult> {
 
     /* Finders whose results will be included in the results  */
     Iterable<Finder<T>> getFinders();
-
-    @TestOnly
-    default List<T> find(String text) {
-        return this.find(FinderPage.of(text));
-    }
 }

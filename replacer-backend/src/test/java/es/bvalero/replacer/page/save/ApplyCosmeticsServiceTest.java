@@ -14,7 +14,7 @@ import es.bvalero.replacer.finder.cosmetic.Cosmetic;
 import es.bvalero.replacer.finder.cosmetic.CosmeticFinderService;
 import java.time.LocalDateTime;
 import java.util.Collections;
-import java.util.List;
+import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -38,7 +38,7 @@ class ApplyCosmeticsServiceTest {
     @Test
     void testApplyCosmeticChanges() {
         Cosmetic cosmetic = Cosmetic.builder().start(2).text("[[Link|link]]").fix("[[link]]").build();
-        when(cosmeticFinderService.find(any(FinderPage.class))).thenReturn(Collections.singletonList(cosmetic));
+        when(cosmeticFinderService.find(any(FinderPage.class))).thenReturn(Collections.singleton(cosmetic));
 
         String text = "A [[Link|link]] to simplify.";
         String expected = "A [[link]] to simplify.";
@@ -60,7 +60,7 @@ class ApplyCosmeticsServiceTest {
         Cosmetic cosmetic = Cosmetic.builder().start(2).text("[[Link|link]]").fix("[[link]]").build();
         Cosmetic cosmetic2 = Cosmetic.builder().start(29).text("archivo").fix("Archivo").build();
         Cosmetic cosmetic3 = Cosmetic.builder().start(19).text("</br>").fix("<br>").build();
-        when(cosmeticFinderService.find(any(FinderPage.class))).thenReturn(List.of(cosmetic, cosmetic2, cosmetic3));
+        when(cosmeticFinderService.find(any(FinderPage.class))).thenReturn(Set.of(cosmetic, cosmetic2, cosmetic3));
 
         String text = "A [[Link|link]] to </br> a [[archivo:x.jpeg]].";
         String expected = "A [[link]] to <br> a [[Archivo:x.jpeg]].";

@@ -48,7 +48,7 @@ class IndexablePageComparator {
         return result.add(cleanUpDbReplacements(dbReplacements));
     }
 
-    private PageIndexResult cleanDuplicatedReplacements(Collection<IndexableReplacement> replacements) {
+    private PageIndexResult cleanDuplicatedReplacements(Set<IndexableReplacement> replacements) {
         final Set<IndexableReplacement> duplicated = new HashSet<>();
         for (IndexableReplacement r1 : replacements) {
             if (duplicated.contains(r1)) {
@@ -57,7 +57,8 @@ class IndexablePageComparator {
             for (IndexableReplacement r2 : replacements) {
                 if (!r1.equals(r2) && r1.isSame(r2)) {
                     // Prefer to remove the not-reviewed
-                    duplicated.add(r2.isToBeReviewed() ? r2 : r1);
+                    // If not remove the second one
+                    duplicated.add(r1.isToBeReviewed() ? r1 : r2);
                 }
             }
         }

@@ -5,14 +5,14 @@ import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.FinderService;
 import es.bvalero.replacer.finder.replacement.Replacement;
 import java.util.Collections;
-import java.util.List;
+import java.util.Set;
 import org.springframework.stereotype.Service;
 
 @Service
 public class CustomReplacementFinderService implements FinderService<Replacement> {
 
     @Override
-    public List<Replacement> find(FinderPage page) {
+    public Set<Replacement> find(FinderPage page) {
         throw new IllegalCallerException();
     }
 
