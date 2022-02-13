@@ -1,8 +1,12 @@
 # Versions
 
-## 2.17.4 (??)
+## 2.17.4 (13 Feb 2022)
 - Feature: admin task to list the pages with more replacements to review
-- Ignore uppercase words in table cells with styles
+- Ignore uppercase words in wiki-table cells with styles
+- Ignore uppercase words after an HTML tag
+- Ignore more complete templates
+- Ignore more surnames
+- Fix duplicates when indexing
 
 ## 2.17.3 (8 Feb 2022)
 - Remove definitively page content caching due to out-of-memory issues
