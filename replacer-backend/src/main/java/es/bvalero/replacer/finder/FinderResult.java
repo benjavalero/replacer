@@ -1,5 +1,6 @@
 package es.bvalero.replacer.finder;
 
+import java.util.Collection;
 import java.util.Objects;
 import org.apache.commons.lang3.Range;
 import org.jetbrains.annotations.TestOnly;
@@ -47,5 +48,10 @@ public interface FinderResult extends Comparable<FinderResult> {
         } else {
             throw new IllegalArgumentException("Wrong positions in Finder Result");
         }
+    }
+
+    static void removeNested(Collection<? extends FinderResult> results) {
+        // Filter to return the results which are NOT strictly contained in any other
+        results.removeIf(r -> results.stream().anyMatch(r2 -> r2.containsStrictly(r)));
     }
 }

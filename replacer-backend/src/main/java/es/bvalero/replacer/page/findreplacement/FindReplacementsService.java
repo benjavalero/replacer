@@ -5,6 +5,7 @@ import es.bvalero.replacer.common.domain.PageReplacement;
 import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.FinderPageMapper;
+import es.bvalero.replacer.finder.FinderResult;
 import es.bvalero.replacer.finder.immutable.Immutable;
 import es.bvalero.replacer.finder.immutable.ImmutableFinderService;
 import es.bvalero.replacer.finder.replacement.Replacement;
@@ -83,9 +84,7 @@ public class FindReplacementsService {
         // We assume all the results in the iterable are distinct, in this case,
         // this means there are not two results with the same start and end,
         // so the contain function is strict.
-
-        // Filter to return the results which are NOT strictly contained in any other
-        results.removeIf(r -> results.stream().anyMatch(r2 -> r2.containsStrictly(r)));
+        FinderResult.removeNested(results);
     }
 
     private Collection<Replacement> removeImmutables(FinderPage page, Collection<Replacement> resultList) {

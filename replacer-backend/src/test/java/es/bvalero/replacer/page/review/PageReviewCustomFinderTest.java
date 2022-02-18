@@ -601,4 +601,86 @@ class PageReviewCustomFinderTest {
 
         verify(findReplacementsService).findCustomReplacements(page, options);
     }
+
+    @Test
+    void testCustomContainsStandard() {
+        WikipediaLanguage lang = WikipediaLanguage.getDefault();
+        int id = 123;
+        WikipediaPageId pageId = WikipediaPageId.of(lang, id);
+        WikipediaPage page = WikipediaPage
+            .builder()
+            .id(pageId)
+            .namespace(WikipediaNamespace.getDefault())
+            .title("T")
+            .content("Un Seat Leon.")
+            .lastUpdate(LocalDateTime.now())
+            .build();
+
+        PageReviewOptions options = PageReviewOptions.ofCustom(lang, "Seat Leon", "Seat León", true);
+
+        PageReplacement replacement = PageReplacement
+            .builder()
+            .start(8)
+            .text("Leon")
+            .type(ReplacementType.of(ReplacementKind.SIMPLE, "leon"))
+            .suggestions(List.of(Suggestion.ofNoComment("León")))
+            .build();
+        Collection<PageReplacement> replacements = List.of(replacement);
+
+        PageReplacement custom = PageReplacement
+            .builder()
+            .start(3)
+            .text("Seat Leon")
+            .type(ReplacementType.of(ReplacementKind.CUSTOM, "Seat Leon"))
+            .suggestions(List.of(Suggestion.ofNoComment("Seat León")))
+            .build();
+        when(findReplacementsService.findCustomReplacements(page, options)).thenReturn(List.of(custom));
+
+        Collection<PageReplacement> result = pageReviewCustomService.decorateReplacements(page, options, replacements);
+
+        assertEquals(Set.of(custom), new HashSet<>(result));
+
+        verify(findReplacementsService).findCustomReplacements(page, options);
+    }
+
+    @Test
+    void testStandardContainsCustom() {
+        WikipediaLanguage lang = WikipediaLanguage.getDefault();
+        int id = 123;
+        WikipediaPageId pageId = WikipediaPageId.of(lang, id);
+        WikipediaPage page = WikipediaPage
+            .builder()
+            .id(pageId)
+            .namespace(WikipediaNamespace.getDefault())
+            .title("T")
+            .content("En Septiembre de 2020.")
+            .lastUpdate(LocalDateTime.now())
+            .build();
+
+        PageReviewOptions options = PageReviewOptions.ofCustom(lang, "En Septiembre", "En septiembre", true);
+
+        PageReplacement replacement = PageReplacement
+            .builder()
+            .start(0)
+            .text("En Septiembre de 2020")
+            .type(ReplacementType.of(ReplacementKind.DATE, "Mes en mayúscula"))
+            .suggestions(List.of(Suggestion.ofNoComment("En septiembre de 2020")))
+            .build();
+        Collection<PageReplacement> replacements = List.of(replacement);
+
+        PageReplacement custom = PageReplacement
+            .builder()
+            .start(0)
+            .text("En Septiembre")
+            .type(ReplacementType.of(ReplacementKind.CUSTOM, "En Septiembre"))
+            .suggestions(List.of(Suggestion.ofNoComment("En septiembre")))
+            .build();
+        when(findReplacementsService.findCustomReplacements(page, options)).thenReturn(List.of(custom));
+
+        Collection<PageReplacement> result = pageReviewCustomService.decorateReplacements(page, options, replacements);
+
+        assertEquals(Set.of(replacement), new HashSet<>(result));
+
+        verify(findReplacementsService).findCustomReplacements(page, options);
+    }
 }

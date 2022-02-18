@@ -1,8 +1,8 @@
 package es.bvalero.replacer.common.domain;
 
 import es.bvalero.replacer.common.util.ReplacerUtils;
+import es.bvalero.replacer.finder.FinderResult;
 import java.util.Collection;
-import java.util.Objects;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
@@ -23,7 +23,7 @@ import org.springframework.lang.NonNull;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Value
 @Builder
-public class PageReplacement implements Comparable<PageReplacement> {
+public class PageReplacement implements FinderResult {
 
     @EqualsAndHashCode.Include
     @With
@@ -62,19 +62,7 @@ public class PageReplacement implements Comparable<PageReplacement> {
         this.suggestions = suggestions;
     }
 
-    public int getEnd() {
-        return this.getStart() + this.getText().length();
-    }
-
     public String getContext(WikipediaPage page) {
         return ReplacerUtils.getContextAroundWord(page.getContent(), this.getStart(), this.getEnd(), 20);
-    }
-
-    @Override
-    public int compareTo(PageReplacement o) {
-        // Compare by start and then by end
-        return Objects.equals(this.getStart(), o.getStart())
-            ? Integer.compare(this.getEnd(), o.getEnd())
-            : Integer.compare(this.getStart(), o.getStart());
     }
 }

@@ -1,6 +1,7 @@
 package es.bvalero.replacer.page.review;
 
 import es.bvalero.replacer.common.domain.*;
+import es.bvalero.replacer.finder.FinderResult;
 import es.bvalero.replacer.page.findreplacement.FindReplacementsService;
 import es.bvalero.replacer.repository.*;
 import es.bvalero.replacer.wikipedia.WikipediaException;
@@ -136,12 +137,15 @@ class PageReviewCustomFinder extends PageReviewFinder {
             customRepository.addCustom(mapPageCustomReplacement(page, options, replacement));
         }
 
-        // Add the custom replacements to the standard ones
+        // Add the custom replacements to the standard ones preferring the custom ones
         // Return the merged collection as a TreeSet to keep the order and discard duplicates
-        return Stream
+        // We also check there are no replacements containing others
+        Collection<PageReplacement> merged = Stream
             .of(customReplacements, replacements)
             .flatMap(Collection::stream)
             .collect(Collectors.toCollection(TreeSet::new));
+        FinderResult.removeNested(merged);
+        return merged;
     }
 
     private PageModel buildNewPage(WikipediaPage page) {
