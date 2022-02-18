@@ -1,5 +1,10 @@
 # Versions
 
+## 2.17.5 (18 Feb 2022)
+- Fix: cosmetic must be applied in reverse order
+- Return a set when finding replacements in a page to avoid duplicates and improve performance
+- Fix custom replacements containing common ones and vice versa
+
 ## 2.17.4 (13 Feb 2022)
 - Feature: admin task to list the pages with more replacements to review
 - Ignore uppercase words in wiki-table cells with styles
