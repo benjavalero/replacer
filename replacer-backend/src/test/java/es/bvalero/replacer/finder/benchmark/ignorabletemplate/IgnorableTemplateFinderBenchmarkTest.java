@@ -28,7 +28,7 @@ class IgnorableTemplateFinderBenchmarkTest extends BaseFinderBenchmark {
         finders.add(new IgnorableTemplateRegexInsensitiveFinder(ignorableTemplates));
         finders.add(new IgnorableTemplateAutomatonFinder(ignorableTemplates));
 
-        runBenchmark(finders);
+        runBenchmark(finders, WARM_UP / 5, ITERATIONS / 5);
 
         assertTrue(true);
     }
