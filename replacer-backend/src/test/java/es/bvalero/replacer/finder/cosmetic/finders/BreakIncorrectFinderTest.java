@@ -29,7 +29,7 @@ class BreakIncorrectFinderTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = { "</br>", "<\\br>", "<br.>", "<br \\>", "<br/>" })
+    @ValueSource(strings = { "</br>", "<\\br>", "<br.>", "<br \\>", "<br >" })
     void testBreakIncorrectFinder(String text) {
         List<Cosmetic> cosmetics = breakIncorrectFinder.findList(text);
 
@@ -39,7 +39,7 @@ class BreakIncorrectFinderTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = { "<br>", "<br />" })
+    @ValueSource(strings = { "<br>", "<br />", "<br/>" })
     void testValidBreak(String text) {
         List<Cosmetic> cosmetics = breakIncorrectFinder.findList(text);
 

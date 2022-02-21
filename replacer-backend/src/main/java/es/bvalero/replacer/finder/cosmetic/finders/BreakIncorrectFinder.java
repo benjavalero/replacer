@@ -15,8 +15,9 @@ import org.springframework.stereotype.Component;
 class BreakIncorrectFinder extends CosmeticCheckedFinder {
 
     private static final String BREAK_XHTML = "<br />";
+    private static final String BREAK_XHTML_NO_SPACE = "<br/>";
     static final String BREAK_HTML5 = "<br>";
-    private static final Set<String> BREAK_VALID = Set.of(BREAK_XHTML, BREAK_HTML5);
+    private static final Set<String> BREAK_VALID = Set.of(BREAK_XHTML, BREAK_XHTML_NO_SPACE, BREAK_HTML5);
 
     @RegExp
     private static final String REGEX_BREAK = "<[/\\s\\\\]*br[/\\s\\\\.]*>";

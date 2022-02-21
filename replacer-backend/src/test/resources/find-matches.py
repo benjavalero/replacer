@@ -13,7 +13,7 @@ class DumpHandler(xml.sax.ContentHandler):
         self.ns = ""
         self.text = ""
         # WARNING: If using groups the group number must be indicated when printing
-        self.regex = re.compile('[Hh]ab\\.?/[Kk]m\\.?([2²]|<sup>2</sup>|&sup2;)') # The ending \\b fails to find the squared 2
+        self.regex = re.compile('<br ?/?>')
 
     # Call when an element starts
     def startElement(self, tag, attributes):
@@ -28,7 +28,7 @@ class DumpHandler(xml.sax.ContentHandler):
         elif tag == "page":
             if self.ns in ['0', '104']:
                 for res in re.finditer(self.regex, self.text):
-                    print(res.group(1).strip())
+                    print(res.group(0))
 
     # Call when a character is read
     def characters(self, content):
@@ -44,4 +44,4 @@ if ( __name__ == "__main__"):
     Handler = DumpHandler()
     parser.setContentHandler(Handler)
 
-    parser.parse(bz2.BZ2File("/Users/benja/Developer/pywikibot/20190701/eswiki-20190701-pages-articles.xml.bz2", "r"))
+    parser.parse(bz2.BZ2File("/Users/benja/Developer/eswiki/20220201/eswiki-20220201-pages-articles.xml.bz2", "r"))
