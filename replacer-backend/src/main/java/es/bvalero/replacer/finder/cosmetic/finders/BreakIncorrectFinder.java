@@ -10,13 +10,13 @@ import java.util.regex.Pattern;
 import org.intellij.lang.annotations.RegExp;
 import org.springframework.stereotype.Component;
 
-/** Break with incorrect syntax, e.g. `</br> ==> <br>` */
+/** Break with incorrect syntax, e.g. `</br> ==> <br />` */
 @Component
 class BreakIncorrectFinder extends CosmeticCheckedFinder {
 
-    private static final String BREAK_XHTML = "<br />";
+    static final String BREAK_XHTML = "<br />";
     private static final String BREAK_XHTML_NO_SPACE = "<br/>";
-    static final String BREAK_HTML5 = "<br>";
+    private static final String BREAK_HTML5 = "<br>";
     private static final Set<String> BREAK_VALID = Set.of(BREAK_XHTML, BREAK_XHTML_NO_SPACE, BREAK_HTML5);
 
     @RegExp
@@ -41,6 +41,7 @@ class BreakIncorrectFinder extends CosmeticCheckedFinder {
 
     @Override
     public String getFix(MatchResult match, FinderPage page) {
-        return BREAK_HTML5;
+        // See https://es.wikipedia.org/wiki/Usuario:Benjavalero/Replacer/br
+        return BREAK_XHTML;
     }
 }

@@ -1,6 +1,6 @@
 package es.bvalero.replacer.finder.cosmetic.finders;
 
-import static es.bvalero.replacer.finder.cosmetic.finders.BreakIncorrectFinder.BREAK_HTML5;
+import static es.bvalero.replacer.finder.cosmetic.finders.BreakIncorrectFinder.BREAK_XHTML;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -35,7 +35,7 @@ class BreakIncorrectFinderTest {
 
         assertEquals(1, cosmetics.size());
         assertEquals(text, cosmetics.get(0).getText());
-        assertEquals(BREAK_HTML5, cosmetics.get(0).getFix());
+        assertEquals(BREAK_XHTML, cosmetics.get(0).getFix());
     }
 
     @ParameterizedTest
