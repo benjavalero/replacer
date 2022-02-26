@@ -141,3 +141,5 @@ Replacer indexes weekly all pages in Wikipedia trying to find new replacements, 
 - Only namespaces _Article_ and _Annex_ are indexed. For instance user or discussion pages are ignored.
 - Redirection pages are ignored.
 - The tool also ignores pages containing certain templates, for instance those tagged to be deleted or containing many issues.
+
+Project developed with <img src="https://resources.jetbrains.com/storage/products/company/brand/logos/IntelliJ_IDEA.svg" alt="IntelliJ IDEA logo." width="115" height="30"> thanks to the [JetBrains OpenSource support](https://jb.gg/OpenSourceSupport).
