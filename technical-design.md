@@ -65,18 +65,20 @@ The tool is composed by two independent modules, both in the same repository: th
 
 ### Code Organization
 
-Files are usually suffixed: service, controller, entity, etc.
+Classes are usually suffixed: service, controller, etc.
 
-For the moment the size of the project is not so big that it is worth to divide the backend in several submodules.
-Besides, the backend is quite coupled to Spring Boot framework, making more difficult to use Java 9 modules.
+The size of the project is not so big that it is worth to divide the backend in several submodules.
 Instead, packages are meant to be as independent as possible, organizing the code by feature and following the principles of Clean Architecture.
+Some architecture tests are included to check the decoupling between packages.
+
 In particular, services are created for each use case.
+The _ports_ (interfaces for the Wikipedia, OAuth and database adapters) are included in the same package of the adapter but with public visibility.
 
 In backend, we have the following packages:
 
 - `config`. Spring configuration classes with beans used in several packages.
 
-- `dump`. Helper classes to parse a dump, extract the pages, the replacements in these page, and finally add the fount replacements into the database. `DumpFinder` finds the latest dump available for a given project. `DumpManager` checks periodically the latest available dump, and indexes it, by running the job implementing `DumpJob`. Note that in the past there were two implementations: one in Spring Batch and another with SAX. Currently there is only the last one which give better performance results. When indexing we have the typical steps:
+- `dump`. Helper classes to parse a dump, extract the pages, the replacements in these page, and finally add the fount replacements into the database. `DumpFinder` finds the latest dump available for a given project. `DumpManager` checks periodically the latest available dump, and indexes it, by running the job implementing `DumpJob`. Note that in the past there were two implementations: one in Spring Batch and another with SAX. Currently, there is only the last one which give better performance results. When indexing we have the typical steps:
   - Read: the dump is read and parsed in `DumpHandler`, extracting the pages into `DumpPage`.
   - Process: `DumpPageProcessor` transforms each dump page into a list of replacements to be saved in the database. `ReplacementCache` helps to retrieve the database replacements in chunks in order to compare them to the ones obtained in the processing.
   - Write: `DumpWriter` inserts or updates in the database the resulting replacements from the processor.
@@ -85,7 +87,7 @@ In backend, we have the following packages:
 
   - `common`. Several interfaces. `Finder` will be implemented to find specific matches: URLs, templates, misspellings, etc. `FinderService` will be implemente to find all matches of a common type: replacements, custom replacements, cosmetics and immutables.
 
-    Some of the finders use a list of properties which are maintained in text files (or Wikipedia pages) which need to be parsed first. These finders retrieve the properties from a manager class extending `ParseFileManager`. All of these also implement the Observable pattern. The managers reload the properties periodically, and the observer finders are notified in case of changes. The first load is done at the start of the application and it takes few seconds, so there is a little chance that, when using the application just started, some of them is not loaded yet. Just in case we check this possibility and return no results if so.
+    Some finders use a list of properties which are maintained in text files (or Wikipedia pages) which need to be parsed first. These finders retrieve the properties from a manager class extending `ParseFileManager`. All of these also implement the Observable pattern. The managers reload the properties periodically, and the observer finders are notified in case of changes. The first load is done at the start of the application, and it takes few seconds, so there is a little chance that, when using the application just started, some of them is not loaded yet. Just in case we check this possibility and return no results if so.
 
   - `util`. Several finders are based on regular expressions. We use `RegexMatchFinder` to iterate the match results of a regex. This tool uses also a _text-based_ implementation of regular expressions in `AutomatonMatchFinder`, which builds an automaton from the regex and gives performance improvements of 1 to 2 orders of magnitude for simple expressions. However, it doesn't include advanced features implying backtracking. Finally, most finders are implemented _by hand_ with `LinearMatchFinder`. This makes the implementations quite more complex but the performance improvement is worth it.
 
@@ -125,7 +127,7 @@ On the other hand, all packages are annotated with Spring annotation `@NonNullAp
 ### Immutability
 
 All Domain Objects should be immutable, and all data structures which may be accessed by several threads should be thread-safe. To achieve object immutability, we annotate them with `@Value` and optionally with `@Builder` for simplicity in case they contain lots of fields. All of this can also be applied to Output DTOs.
- 
+
 On the other hand, Input DTOs are annotated with `@Data` and `@NoArgsConstructor` so they can be mapped by Jackson library.
 
 In case a DTO is used for input and output, we will annotate it with a mix of the annotations above.
