@@ -130,25 +130,25 @@ class WikipediaPageApiRepository implements WikipediaPageRepository {
     }
 
     @Override
-    public Optional<WikipediaPage> getPageByTitle(WikipediaLanguage lang, String pageTitle) {
+    public Optional<WikipediaPage> findByTitle(WikipediaLanguage lang, String pageTitle) {
         try {
             // Return the only value that should be in the map
             return getPagesByIds("titles", pageTitle, lang).stream().findAny();
         } catch (WikipediaException e) {
-            LOGGER.error("Error getting page by title: {} - {}", lang, pageTitle, e);
+            LOGGER.error("Error finding page by title: {} - {}", lang, pageTitle, e);
             return Optional.empty();
         }
     }
 
     @Override
-    public Optional<WikipediaPage> getPageById(WikipediaPageId id) {
+    public Optional<WikipediaPage> findById(WikipediaPageId id) {
         // Return the only value that should be in the map
-        return getPagesByIds(id.getLang(), List.of(id.getPageId())).stream().findAny();
+        return findByIds(id.getLang(), List.of(id.getPageId())).stream().findAny();
     }
 
     @Loggable(value = LogLevel.TRACE, skipArgs = true, skipResult = true, warnOver = 10, warnUnit = TimeUnit.SECONDS)
     @Override
-    public Collection<WikipediaPage> getPagesByIds(WikipediaLanguage lang, Collection<Integer> pageIds) {
+    public Collection<WikipediaPage> findByIds(WikipediaLanguage lang, Collection<Integer> pageIds) {
         List<WikipediaPage> pages = new ArrayList<>(pageIds.size());
         // There is a maximum number of pages to request
         // We split the request in several sub-lists
@@ -164,7 +164,7 @@ class WikipediaPageApiRepository implements WikipediaPageRepository {
                 start += subList.size();
             }
         } catch (Exception e) {
-            LOGGER.error("Error getting pages by ID: {}", StringUtils.join(pageIds, " "), e);
+            LOGGER.error("Error finding pages by ID: {}", StringUtils.join(pageIds, " "), e);
         }
         return pages;
     }
@@ -220,15 +220,20 @@ class WikipediaPageApiRepository implements WikipediaPageRepository {
     }
 
     @Override
-    public Collection<WikipediaSection> getPageSections(WikipediaPageId id) throws WikipediaException {
+    public Collection<WikipediaSection> findSectionsInPage(WikipediaPageId id) {
         WikipediaApiRequest apiRequest = WikipediaApiRequest
             .builder()
             .verb(WikipediaApiRequestVerb.GET)
             .lang(id.getLang())
             .params(buildPageSectionsRequestParams(id.getPageId()))
             .build();
-        WikipediaApiResponse apiResponse = wikipediaApiRequestHelper.executeApiRequest(apiRequest);
-        return extractSectionsFromJson(apiResponse);
+        try {
+            WikipediaApiResponse apiResponse = wikipediaApiRequestHelper.executeApiRequest(apiRequest);
+            return extractSectionsFromJson(apiResponse);
+        } catch (WikipediaException e) {
+            LOGGER.error("Error finding sections in page: {}", id, e);
+        }
+        return Collections.emptyList();
     }
 
     private Map<String, String> buildPageSectionsRequestParams(int pageId) {
@@ -269,7 +274,7 @@ class WikipediaPageApiRepository implements WikipediaPageRepository {
     }
 
     @Override
-    public Optional<WikipediaPage> getPageSection(WikipediaPageId id, WikipediaSection section) {
+    public Optional<WikipediaPage> findPageSection(WikipediaPageId id, WikipediaSection section) {
         try {
             WikipediaApiRequest apiRequest = WikipediaApiRequest
                 .builder()
@@ -294,14 +299,14 @@ class WikipediaPageApiRepository implements WikipediaPageRepository {
 
     @Override
     @Loggable(LogLevel.DEBUG)
-    public WikipediaSearchResult searchByText(
+    public WikipediaSearchResult findByContent(
         WikipediaLanguage lang,
         Collection<WikipediaNamespace> namespaces,
         String text,
         boolean caseSensitive,
         int offset,
         int limit
-    ) throws WikipediaException {
+    ) {
         if (limit > MAX_SEARCH_RESULTS) {
             LOGGER.error("Too big number of results to search: " + limit);
             return WikipediaSearchResult.ofEmpty();
@@ -319,8 +324,13 @@ class WikipediaPageApiRepository implements WikipediaPageRepository {
             .lang(lang)
             .params(buildPageIdsByStringMatchRequestParams(namespaces, text, caseSensitive, offset, limit))
             .build();
+        try {
         WikipediaApiResponse apiResponse = wikipediaApiRequestHelper.executeApiRequest(apiRequest);
         return extractPageIdsFromSearchJson(apiResponse);
+        } catch (WikipediaException e) {
+            LOGGER.error("Error finding pages by content", e);
+        }
+        return WikipediaSearchResult.ofEmpty();
     }
 
     private Map<String, String> buildPageIdsByStringMatchRequestParams(
@@ -382,10 +392,10 @@ class WikipediaPageApiRepository implements WikipediaPageRepository {
     }
 
     @Override
-    public void savePageContent(
+    public void save(
         WikipediaPageId id,
         @Nullable Integer section,
-        String pageContent,
+        String content,
         LocalDateTime queryTimestamp,
         String editSummary,
         AccessToken accessToken
@@ -411,7 +421,7 @@ class WikipediaPageApiRepository implements WikipediaPageRepository {
             .params(
                 buildSavePageContentRequestParams(
                     id.getPageId(),
-                    pageContent,
+                    content,
                     section,
                     queryTimestamp,
                     editSummary,

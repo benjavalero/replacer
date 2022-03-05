@@ -6,35 +6,35 @@ import java.util.Collection;
 import java.util.Optional;
 import org.springframework.lang.Nullable;
 
-/** Service to perform operations on Wikipedia */
+/** Repository to perform operations on Wikipedia pages */
 public interface WikipediaPageRepository {
     WikipediaUser getAuthenticatedUser(WikipediaLanguage lang, AccessToken accessToken) throws WikipediaException;
 
     WikipediaUser getWikipediaUser(WikipediaLanguage lang, String username) throws WikipediaException;
 
-    Optional<WikipediaPage> getPageByTitle(WikipediaLanguage lang, String pageTitle);
+    Optional<WikipediaPage> findByTitle(WikipediaLanguage lang, String pageTitle);
 
-    Optional<WikipediaPage> getPageById(WikipediaPageId id);
+    Optional<WikipediaPage> findById(WikipediaPageId id);
 
-    Collection<WikipediaPage> getPagesByIds(WikipediaLanguage lang, Collection<Integer> pageIds);
+    Collection<WikipediaPage> findByIds(WikipediaLanguage lang, Collection<Integer> pageIds);
 
-    Collection<WikipediaSection> getPageSections(WikipediaPageId id) throws WikipediaException;
+    Collection<WikipediaSection> findSectionsInPage(WikipediaPageId id);
 
-    Optional<WikipediaPage> getPageSection(WikipediaPageId id, WikipediaSection section);
+    Optional<WikipediaPage> findPageSection(WikipediaPageId id, WikipediaSection section);
 
-    WikipediaSearchResult searchByText(
+    WikipediaSearchResult findByContent(
         WikipediaLanguage lang,
         Collection<WikipediaNamespace> namespaces,
         String text,
         boolean caseSensitive,
         int offset,
         int limit
-    ) throws WikipediaException;
+    );
 
-    void savePageContent(
+    void save(
         WikipediaPageId id,
         @Nullable Integer section,
-        String pageContent,
+        String content,
         LocalDateTime queryTimestamp,
         String editSummary,
         AccessToken accessToken

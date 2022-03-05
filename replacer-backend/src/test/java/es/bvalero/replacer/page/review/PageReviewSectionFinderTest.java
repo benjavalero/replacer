@@ -34,7 +34,7 @@ class PageReviewSectionFinderTest {
         WikipediaPage page = mock(WikipediaPage.class);
         List<PageReplacement> replacements = Collections.emptyList();
 
-        when(wikipediaPageRepository.getPageSections(any(WikipediaPageId.class))).thenReturn(Collections.emptyList());
+        when(wikipediaPageRepository.findSectionsInPage(any(WikipediaPageId.class))).thenReturn(Collections.emptyList());
 
         PageReview review = PageReview.of(page, null, replacements, 1);
         Optional<PageReview> sectionReview = pageReviewSectionFinder.findPageReviewSection(review);
@@ -43,7 +43,7 @@ class PageReviewSectionFinderTest {
     }
 
     @Test
-    void testFindSectionReview() throws WikipediaException {
+    void testFindSectionReview() {
         int pageId = 1;
         String content = "This is an sample content.";
         Suggestion suggestion = Suggestion.ofNoComment("a");
@@ -75,7 +75,7 @@ class PageReviewSectionFinderTest {
             .byteOffset(offset)
             .anchor("X")
             .build();
-        when(wikipediaPageRepository.getPageSections(page.getId())).thenReturn(Collections.singletonList(section));
+        when(wikipediaPageRepository.findSectionsInPage(page.getId())).thenReturn(Collections.singletonList(section));
 
         String sectionContent = content.substring(offset, 10);
         WikipediaPage pageSection = WikipediaPage
@@ -86,7 +86,7 @@ class PageReviewSectionFinderTest {
             .content(sectionContent)
             .lastUpdate(page.getLastUpdate())
             .build();
-        when(wikipediaPageRepository.getPageSection(page.getId(), section)).thenReturn(Optional.of(pageSection));
+        when(wikipediaPageRepository.findPageSection(page.getId(), section)).thenReturn(Optional.of(pageSection));
 
         Optional<PageReview> sectionReview = pageReviewSectionFinder.findPageReviewSection(pageReview);
 

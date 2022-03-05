@@ -4,8 +4,7 @@ import es.bvalero.replacer.common.domain.*;
 import es.bvalero.replacer.finder.FinderResult;
 import es.bvalero.replacer.page.findreplacement.FindReplacementsService;
 import es.bvalero.replacer.repository.*;
-import es.bvalero.replacer.wikipedia.WikipediaException;
-import es.bvalero.replacer.wikipedia.WikipediaSearchResult;
+import es.bvalero.replacer.common.domain.WikipediaSearchResult;
 import es.bvalero.replacer.wikipedia.WikipediaPageRepository;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -42,64 +41,59 @@ class PageReviewCustomFinder extends PageReviewFinder {
 
     @Override
     PageSearchResult findPageIdsToReview(PageReviewOptions options) {
-        try {
-            // Initialize search
-            int offset = getCachedResult(options).map(PageSearchResult::getOffset).orElse(0);
+        // Initialize search
+        int offset = getCachedResult(options).map(PageSearchResult::getOffset).orElse(0);
 
-            WikipediaSearchResult searchResult = findWikipediaResults(options, offset);
-            final int totalWikipediaResults = searchResult.getTotal();
-            int totalToReview = searchResult.getTotal();
-            final List<Integer> pageIds = new LinkedList<>(searchResult.getPageIds());
+        WikipediaSearchResult searchResult = findWikipediaResults(options, offset);
+        final int totalWikipediaResults = searchResult.getTotal();
+        int totalToReview = searchResult.getTotal();
+        final List<Integer> pageIds = new LinkedList<>(searchResult.getPageIds());
 
-            String subtype = options.getType().getSubtype();
-            boolean cs = options.getCs() != null && Boolean.TRUE.equals(options.getCs());
-            assert options.getType().getKind() == ReplacementKind.CUSTOM;
+        String subtype = options.getType().getSubtype();
+        boolean cs = options.getCs() != null && Boolean.TRUE.equals(options.getCs());
+        assert options.getType().getKind() == ReplacementKind.CUSTOM;
 
-            // Calculate this out of the loop only if needed the first time
-            List<Integer> reviewedIds = new ArrayList<>();
-            if (!pageIds.isEmpty()) {
-                reviewedIds.addAll(customRepository.findPageIdsReviewed(options.getLang(), subtype, cs));
-            }
+        // Calculate this out of the loop only if needed the first time
+        List<Integer> reviewedIds = new ArrayList<>();
+        if (!pageIds.isEmpty()) {
+            reviewedIds.addAll(customRepository.findPageIdsReviewed(options.getLang(), subtype, cs));
+        }
 
-            while (totalToReview >= 0) {
-                // Discard the pages already reviewed
-                // For the moment we don't check the positions of the replacements,
-                // which means that once a custom replacement is reviewed for a page it is done for ever.
-                for (Integer reviewId : reviewedIds) {
-                    if (pageIds.remove(reviewId)) {
-                        totalToReview--;
-                    }
-                }
-
-                if (pageIds.isEmpty()) {
-                    offset += getCacheSize();
-                    if (offset >= totalWikipediaResults) {
-                        LOGGER.debug("All results retrieved from Wikipedia are already reviewed");
-                        return PageSearchResult.ofEmpty();
-                    }
-
-                    searchResult = findWikipediaResults(options, offset);
-                    // For simplicity's sake we assume the number of total results is the same
-                    pageIds.clear();
-                    pageIds.addAll(searchResult.getPageIds());
-                } else {
-                    int nextOffset = offset + getCacheSize();
-                    return PageSearchResult.of(totalToReview, pageIds, nextOffset);
+        while (totalToReview >= 0) {
+            // Discard the pages already reviewed
+            // For the moment we don't check the positions of the replacements,
+            // which means that once a custom replacement is reviewed for a page it is done for ever.
+            for (Integer reviewId : reviewedIds) {
+                if (pageIds.remove(reviewId)) {
+                    totalToReview--;
                 }
             }
-        } catch (WikipediaException e) {
-            LOGGER.error("Error finding page IDs in Wikipedia for options: {}", options, e);
+
+            if (pageIds.isEmpty()) {
+                offset += getCacheSize();
+                if (offset >= totalWikipediaResults) {
+                    LOGGER.debug("All results retrieved from Wikipedia are already reviewed");
+                    return PageSearchResult.ofEmpty();
+                }
+
+                searchResult = findWikipediaResults(options, offset);
+                // For simplicity's sake we assume the number of total results is the same
+                pageIds.clear();
+                pageIds.addAll(searchResult.getPageIds());
+            } else {
+                int nextOffset = offset + getCacheSize();
+                return PageSearchResult.of(totalToReview, pageIds, nextOffset);
+            }
         }
 
         return PageSearchResult.ofEmpty();
     }
 
-    private WikipediaSearchResult findWikipediaResults(PageReviewOptions options, int offset)
-        throws WikipediaException {
+    private WikipediaSearchResult findWikipediaResults(PageReviewOptions options, int offset) {
         String subtype = options.getType().getSubtype();
         Boolean cs = options.getCs();
         assert cs != null;
-        return wikipediaPageRepository.searchByText(
+        return wikipediaPageRepository.findByContent(
             options.getLang(),
             indexableNamespaces.stream().map(WikipediaNamespace::valueOf).collect(Collectors.toUnmodifiableSet()),
             subtype,

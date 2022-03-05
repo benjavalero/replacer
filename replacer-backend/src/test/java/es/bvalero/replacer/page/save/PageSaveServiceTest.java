@@ -65,7 +65,7 @@ class PageSaveServiceTest {
 
         verify(applyCosmeticsService).applyCosmeticChanges(page);
         verify(wikipediaPageRepository)
-            .savePageContent(
+            .save(
                 eq(page.getId()),
                 isNull(),
                 eq(contentAfterCosmetics),
@@ -85,7 +85,7 @@ class PageSaveServiceTest {
 
         verify(applyCosmeticsService, never()).applyCosmeticChanges(any(WikipediaPage.class));
         verify(wikipediaPageRepository, never())
-            .savePageContent(
+            .save(
                 any(WikipediaPageId.class),
                 anyInt(),
                 anyString(),
@@ -106,7 +106,7 @@ class PageSaveServiceTest {
 
         verify(applyCosmeticsService, never()).applyCosmeticChanges(any(WikipediaPage.class));
         verify(wikipediaPageRepository, never())
-            .savePageContent(
+            .save(
                 any(WikipediaPageId.class),
                 anyInt(),
                 anyString(),
@@ -130,7 +130,7 @@ class PageSaveServiceTest {
 
         verify(applyCosmeticsService, never()).applyCosmeticChanges(any(WikipediaPage.class));
         verify(wikipediaPageRepository, never())
-            .savePageContent(
+            .save(
                 any(WikipediaPageId.class),
                 anyInt(),
                 anyString(),
@@ -152,7 +152,7 @@ class PageSaveServiceTest {
 
         verify(applyCosmeticsService, never()).applyCosmeticChanges(any(WikipediaPage.class));
         verify(wikipediaPageRepository, never())
-            .savePageContent(
+            .save(
                 any(WikipediaPageId.class),
                 anyInt(),
                 anyString(),
@@ -176,7 +176,7 @@ class PageSaveServiceTest {
 
         verify(applyCosmeticsService, never()).applyCosmeticChanges(any(WikipediaPage.class));
         verify(wikipediaPageRepository, never())
-            .savePageContent(
+            .save(
                 any(WikipediaPageId.class),
                 anyInt(),
                 anyString(),

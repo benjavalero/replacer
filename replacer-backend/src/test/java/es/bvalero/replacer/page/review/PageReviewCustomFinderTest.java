@@ -12,8 +12,7 @@ import es.bvalero.replacer.repository.CustomModel;
 import es.bvalero.replacer.repository.CustomRepository;
 import es.bvalero.replacer.repository.PageIndexRepository;
 import es.bvalero.replacer.repository.PageRepository;
-import es.bvalero.replacer.wikipedia.WikipediaException;
-import es.bvalero.replacer.wikipedia.WikipediaSearchResult;
+import es.bvalero.replacer.common.domain.WikipediaSearchResult;
 import es.bvalero.replacer.wikipedia.WikipediaPageRepository;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -66,7 +65,7 @@ class PageReviewCustomFinderTest {
     }
 
     @Test
-    void testNoResults() throws WikipediaException {
+    void testNoResults() {
         final WikipediaLanguage lang = WikipediaLanguage.getDefault();
         final String replacement = "R";
         final String suggestion = "S";
@@ -74,7 +73,7 @@ class PageReviewCustomFinderTest {
         // No results in Wikipedia Search ==> Return an empty review
 
         when(
-            wikipediaPageRepository.searchByText(
+            wikipediaPageRepository.findByContent(
                 any(WikipediaLanguage.class),
                 anyCollection(),
                 anyString(),
@@ -90,13 +89,13 @@ class PageReviewCustomFinderTest {
 
         assertTrue(review.isEmpty());
 
-        verify(wikipediaPageRepository).searchByText(lang, NAMESPACES, replacement, true, 0, CACHE_SIZE);
+        verify(wikipediaPageRepository).findByContent(lang, NAMESPACES, replacement, true, 0, CACHE_SIZE);
         verify(customRepository, never()).findPageIdsReviewed(any(WikipediaLanguage.class), anyString(), anyBoolean());
         verify(customRepository, never()).addCustom(any(CustomModel.class));
     }
 
     @Test
-    void testResultAlreadyReviewed() throws WikipediaException {
+    void testResultAlreadyReviewed() {
         final WikipediaLanguage lang = WikipediaLanguage.getDefault();
         final String replacement = "R";
         final String suggestion = "S";
@@ -109,7 +108,7 @@ class PageReviewCustomFinderTest {
 
         // Mocks
         when(
-            wikipediaPageRepository.searchByText(
+            wikipediaPageRepository.findByContent(
                 any(WikipediaLanguage.class),
                 anyCollection(),
                 anyString(),
@@ -128,13 +127,13 @@ class PageReviewCustomFinderTest {
         assertTrue(review.isEmpty());
 
         // Verifications
-        verify(wikipediaPageRepository).searchByText(lang, NAMESPACES, replacement, true, 0, CACHE_SIZE);
+        verify(wikipediaPageRepository).findByContent(lang, NAMESPACES, replacement, true, 0, CACHE_SIZE);
         verify(customRepository).findPageIdsReviewed(lang, replacement, true);
         verify(customRepository, never()).addCustom(any(CustomModel.class));
     }
 
     @Test
-    void testResultWithReview() throws WikipediaException {
+    void testResultWithReview() {
         final WikipediaLanguage lang = WikipediaLanguage.getDefault();
         final String replacement = "R";
         final String suggestion = "S";
@@ -166,7 +165,7 @@ class PageReviewCustomFinderTest {
 
         // Mocks
         when(
-            wikipediaPageRepository.searchByText(
+            wikipediaPageRepository.findByContent(
                 any(WikipediaLanguage.class),
                 anyCollection(),
                 anyString(),
@@ -178,7 +177,7 @@ class PageReviewCustomFinderTest {
             .thenReturn(searchResult);
         when(customRepository.findPageIdsReviewed(any(WikipediaLanguage.class), anyString(), anyBoolean()))
             .thenReturn(Collections.emptyList());
-        when(wikipediaPageRepository.getPageById(any(WikipediaPageId.class))).thenReturn(Optional.of(page));
+        when(wikipediaPageRepository.findById(any(WikipediaPageId.class))).thenReturn(Optional.of(page));
         when(pageIndexService.indexPage(page))
             .thenReturn(PageIndexResult.ofEmpty(PageIndexStatus.PAGE_INDEXED, Collections.emptyList()));
         when(findReplacementsService.findCustomReplacements(any(WikipediaPage.class), any(PageReviewOptions.class)))
@@ -200,14 +199,14 @@ class PageReviewCustomFinderTest {
         assertTrue(review2.isEmpty());
 
         // Verifications
-        verify(wikipediaPageRepository).searchByText(lang, NAMESPACES, replacement, true, 0, CACHE_SIZE);
+        verify(wikipediaPageRepository).findByContent(lang, NAMESPACES, replacement, true, 0, CACHE_SIZE);
         verify(customRepository).findPageIdsReviewed(lang, replacement, true);
-        verify(wikipediaPageRepository).getPageById(wikipediaPageId);
+        verify(wikipediaPageRepository).findById(wikipediaPageId);
         verify(customRepository).addCustom(any(CustomModel.class));
     }
 
     @Test
-    void testResultWithNoReplacements() throws WikipediaException {
+    void testResultWithNoReplacements() {
         final WikipediaLanguage lang = WikipediaLanguage.getDefault();
         final String replacement = "R";
         final String suggestion = "S";
@@ -232,7 +231,7 @@ class PageReviewCustomFinderTest {
 
         // Mocks
         when(
-            wikipediaPageRepository.searchByText(
+            wikipediaPageRepository.findByContent(
                 any(WikipediaLanguage.class),
                 anyCollection(),
                 anyString(),
@@ -244,7 +243,7 @@ class PageReviewCustomFinderTest {
             .thenReturn(searchResult);
         when(customRepository.findPageIdsReviewed(any(WikipediaLanguage.class), anyString(), anyBoolean()))
             .thenReturn(Collections.emptyList());
-        when(wikipediaPageRepository.getPageById(any(WikipediaPageId.class))).thenReturn(Optional.of(page));
+        when(wikipediaPageRepository.findById(any(WikipediaPageId.class))).thenReturn(Optional.of(page));
         when(pageIndexService.indexPage(page))
             .thenReturn(PageIndexResult.ofEmpty(PageIndexStatus.PAGE_INDEXED, Collections.emptyList()));
         when(findReplacementsService.findCustomReplacements(any(WikipediaPage.class), any(PageReviewOptions.class)))
@@ -256,14 +255,14 @@ class PageReviewCustomFinderTest {
         assertTrue(review.isEmpty());
 
         // Verifications
-        verify(wikipediaPageRepository).searchByText(lang, NAMESPACES, replacement, true, 0, CACHE_SIZE);
+        verify(wikipediaPageRepository).findByContent(lang, NAMESPACES, replacement, true, 0, CACHE_SIZE);
         verify(customRepository).findPageIdsReviewed(lang, replacement, true);
-        verify(wikipediaPageRepository).getPageById(wikipediaPageId);
+        verify(wikipediaPageRepository).findById(wikipediaPageId);
         verify(customRepository, never()).addCustom(any(CustomModel.class));
     }
 
     @Test
-    void testTwoResultsFirstReviewed() throws WikipediaException {
+    void testTwoResultsFirstReviewed() {
         final WikipediaLanguage lang = WikipediaLanguage.getDefault();
         final String replacement = "R";
         final String suggestion = "S";
@@ -299,7 +298,7 @@ class PageReviewCustomFinderTest {
 
         // Mocks
         when(
-            wikipediaPageRepository.searchByText(
+            wikipediaPageRepository.findByContent(
                 any(WikipediaLanguage.class),
                 anyCollection(),
                 anyString(),
@@ -311,7 +310,7 @@ class PageReviewCustomFinderTest {
             .thenReturn(searchResult);
         when(customRepository.findPageIdsReviewed(any(WikipediaLanguage.class), anyString(), anyBoolean()))
             .thenReturn(List.of(pageId1));
-        when(wikipediaPageRepository.getPageById(any(WikipediaPageId.class))).thenReturn(Optional.of(page));
+        when(wikipediaPageRepository.findById(any(WikipediaPageId.class))).thenReturn(Optional.of(page));
         when(pageIndexService.indexPage(page))
             .thenReturn(PageIndexResult.ofEmpty(PageIndexStatus.PAGE_INDEXED, Collections.emptyList()));
         when(findReplacementsService.findCustomReplacements(any(WikipediaPage.class), any(PageReviewOptions.class)))
@@ -329,14 +328,14 @@ class PageReviewCustomFinderTest {
         });
 
         // Verifications
-        verify(wikipediaPageRepository).searchByText(lang, NAMESPACES, replacement, true, 0, CACHE_SIZE);
+        verify(wikipediaPageRepository).findByContent(lang, NAMESPACES, replacement, true, 0, CACHE_SIZE);
         verify(customRepository).findPageIdsReviewed(lang, replacement, true);
-        verify(wikipediaPageRepository).getPageById(wikipediaPageId2);
+        verify(wikipediaPageRepository).findById(wikipediaPageId2);
         verify(customRepository).addCustom(any(CustomModel.class));
     }
 
     @Test
-    void testSeveralResultsAllReviewed() throws WikipediaException {
+    void testSeveralResultsAllReviewed() {
         final WikipediaLanguage lang = WikipediaLanguage.getDefault();
         final String replacement = "R";
         final String suggestion = "S";
@@ -347,7 +346,7 @@ class PageReviewCustomFinderTest {
 
         // Mocks
         when(
-            wikipediaPageRepository.searchByText(
+            wikipediaPageRepository.findByContent(
                 any(WikipediaLanguage.class),
                 anyCollection(),
                 anyString(),
@@ -367,15 +366,15 @@ class PageReviewCustomFinderTest {
         assertTrue(review.isEmpty());
 
         // Verifications
-        verify(wikipediaPageRepository).searchByText(lang, NAMESPACES, replacement, true, 0, CACHE_SIZE);
-        verify(wikipediaPageRepository).searchByText(lang, NAMESPACES, replacement, true, 3, CACHE_SIZE);
+        verify(wikipediaPageRepository).findByContent(lang, NAMESPACES, replacement, true, 0, CACHE_SIZE);
+        verify(wikipediaPageRepository).findByContent(lang, NAMESPACES, replacement, true, 3, CACHE_SIZE);
         verify(customRepository).findPageIdsReviewed(lang, replacement, true);
-        verify(wikipediaPageRepository, never()).getPageById(any(WikipediaPageId.class));
+        verify(wikipediaPageRepository, never()).findById(any(WikipediaPageId.class));
         verify(customRepository, never()).addCustom(any(CustomModel.class));
     }
 
     @Test
-    void testSeveralResults() throws WikipediaException {
+    void testSeveralResults() {
         final WikipediaLanguage lang = WikipediaLanguage.getDefault();
         final String replacement = "R";
         final String suggestion = "S";
@@ -409,7 +408,7 @@ class PageReviewCustomFinderTest {
 
         // Mocks
         when(
-            wikipediaPageRepository.searchByText(
+            wikipediaPageRepository.findByContent(
                 any(WikipediaLanguage.class),
                 anyCollection(),
                 anyString(),
@@ -427,7 +426,7 @@ class PageReviewCustomFinderTest {
             .thenReturn(List.of(1, 2, 3)) // Call 4
             .thenReturn(List.of(1, 2, 3, 4)); // Call 5
 
-        when(wikipediaPageRepository.getPageById(any(WikipediaPageId.class)))
+        when(wikipediaPageRepository.findById(any(WikipediaPageId.class)))
             .thenReturn(Optional.of(pages.get(1))) // Call 1
             .thenReturn(Optional.of(pages.get(2))) // Call 2
             .thenReturn(Optional.of(pages.get(3))) // Call 3
@@ -486,14 +485,14 @@ class PageReviewCustomFinderTest {
         assertTrue(review.isEmpty());
 
         // Verifications
-        verify(wikipediaPageRepository, times(2)).searchByText(lang, NAMESPACES, replacement, true, 0, CACHE_SIZE);
+        verify(wikipediaPageRepository, times(2)).findByContent(lang, NAMESPACES, replacement, true, 0, CACHE_SIZE);
         verify(customRepository, times(2)).findPageIdsReviewed(lang, replacement, true);
-        verify(wikipediaPageRepository, times(4)).getPageById(any(WikipediaPageId.class));
+        verify(wikipediaPageRepository, times(4)).findById(any(WikipediaPageId.class));
         verify(customRepository, times(4)).addCustom(any(CustomModel.class));
     }
 
     @Test
-    void testAllResultsWithoutReplacements() throws WikipediaException {
+    void testAllResultsWithoutReplacements() {
         final WikipediaLanguage lang = WikipediaLanguage.getDefault();
         final String replacement = "R";
         final String suggestion = "S";
@@ -518,7 +517,7 @@ class PageReviewCustomFinderTest {
 
         // Mocks
         when(
-            wikipediaPageRepository.searchByText(
+            wikipediaPageRepository.findByContent(
                 any(WikipediaLanguage.class),
                 anyCollection(),
                 anyString(),
@@ -534,7 +533,7 @@ class PageReviewCustomFinderTest {
         when(customRepository.findPageIdsReviewed(any(WikipediaLanguage.class), anyString(), anyBoolean()))
             .thenReturn(Collections.emptyList());
 
-        when(wikipediaPageRepository.getPageById(any(WikipediaPageId.class)))
+        when(wikipediaPageRepository.findById(any(WikipediaPageId.class)))
             .thenReturn(Optional.of(pages.get(1))) // Call 1
             .thenReturn(Optional.of(pages.get(2))) // Call 2
             .thenReturn(Optional.of(pages.get(3))) // Call 3
@@ -552,11 +551,11 @@ class PageReviewCustomFinderTest {
         assertTrue(review.isEmpty());
 
         // Verifications
-        verify(wikipediaPageRepository).searchByText(lang, NAMESPACES, replacement, true, 0, CACHE_SIZE);
-        verify(wikipediaPageRepository).searchByText(lang, NAMESPACES, replacement, true, CACHE_SIZE, CACHE_SIZE);
-        verify(wikipediaPageRepository).searchByText(lang, NAMESPACES, replacement, true, 2 * CACHE_SIZE, CACHE_SIZE);
+        verify(wikipediaPageRepository).findByContent(lang, NAMESPACES, replacement, true, 0, CACHE_SIZE);
+        verify(wikipediaPageRepository).findByContent(lang, NAMESPACES, replacement, true, CACHE_SIZE, CACHE_SIZE);
+        verify(wikipediaPageRepository).findByContent(lang, NAMESPACES, replacement, true, 2 * CACHE_SIZE, CACHE_SIZE);
         verify(customRepository, times(2)).findPageIdsReviewed(lang, replacement, true);
-        verify(wikipediaPageRepository, times(4)).getPageById(any(WikipediaPageId.class));
+        verify(wikipediaPageRepository, times(4)).findById(any(WikipediaPageId.class));
         verify(customRepository, never()).addCustom(any(CustomModel.class));
     }
 

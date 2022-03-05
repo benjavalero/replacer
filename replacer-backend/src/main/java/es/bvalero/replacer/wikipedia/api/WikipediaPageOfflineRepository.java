@@ -39,7 +39,7 @@ class WikipediaPageOfflineRepository implements WikipediaPageRepository {
     }
 
     @Override
-    public Optional<WikipediaPage> getPageByTitle(WikipediaLanguage lang, String pageTitle) {
+    public Optional<WikipediaPage> findByTitle(WikipediaLanguage lang, String pageTitle) {
         return buildFakePage(1);
     }
 
@@ -64,27 +64,27 @@ class WikipediaPageOfflineRepository implements WikipediaPageRepository {
     }
 
     @Override
-    public Optional<WikipediaPage> getPageById(WikipediaPageId id) {
+    public Optional<WikipediaPage> findById(WikipediaPageId id) {
         return buildFakePage(id.getPageId());
     }
 
     @Override
-    public Collection<WikipediaPage> getPagesByIds(WikipediaLanguage lang, Collection<Integer> pageIds) {
+    public Collection<WikipediaPage> findByIds(WikipediaLanguage lang, Collection<Integer> pageIds) {
         return Collections.emptyList();
     }
 
     @Override
-    public Collection<WikipediaSection> getPageSections(WikipediaPageId id) {
+    public Collection<WikipediaSection> findSectionsInPage(WikipediaPageId id) {
         return Collections.emptyList();
     }
 
     @Override
-    public Optional<WikipediaPage> getPageSection(WikipediaPageId id, WikipediaSection section) {
+    public Optional<WikipediaPage> findPageSection(WikipediaPageId id, WikipediaSection section) {
         return buildFakePage(id.getPageId());
     }
 
     @Override
-    public WikipediaSearchResult searchByText(
+    public WikipediaSearchResult findByContent(
         WikipediaLanguage lang,
         Collection<WikipediaNamespace> namespaces,
         String text,
@@ -96,10 +96,10 @@ class WikipediaPageOfflineRepository implements WikipediaPageRepository {
     }
 
     @Override
-    public void savePageContent(
+    public void save(
         WikipediaPageId id,
         @Nullable Integer section,
-        String pageContent,
+        String content,
         LocalDateTime queryTimestamp,
         String editSummary,
         AccessToken accessToken

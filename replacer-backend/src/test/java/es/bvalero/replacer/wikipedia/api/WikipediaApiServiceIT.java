@@ -30,7 +30,7 @@ class WikipediaApiServiceIT {
     void testGetPageContent() throws WikipediaException {
         String title = "Usuario:Benjavalero";
         WikipediaPage page = wikipediaService
-            .getPageByTitle(WikipediaLanguage.SPANISH, title)
+            .findByTitle(WikipediaLanguage.SPANISH, title)
             .orElseThrow(WikipediaException::new);
         assertNotNull(page);
         assertEquals(6219990, page.getId().getPageId());
@@ -43,7 +43,7 @@ class WikipediaApiServiceIT {
     @Test
     void testGetPagesContent() throws WikipediaException {
         // We pass a null access token to retrieve an anonymous edit token
-        Collection<WikipediaPage> pages = wikipediaService.getPagesByIds(
+        Collection<WikipediaPage> pages = wikipediaService.findByIds(
             WikipediaLanguage.SPANISH,
             List.of(6219990, 6903884)
         );
@@ -73,7 +73,7 @@ class WikipediaApiServiceIT {
 
     @Test
     void testGetPageContentUnavailable() {
-        assertFalse(wikipediaService.getPageByTitle(WikipediaLanguage.SPANISH, "Usuario:Benjavaleroxx").isPresent());
+        assertFalse(wikipediaService.findByTitle(WikipediaLanguage.SPANISH, "Usuario:Benjavaleroxx").isPresent());
     }
 
     @Test
@@ -89,7 +89,7 @@ class WikipediaApiServiceIT {
     @Test
     void testSavePageWithConflicts() throws WikipediaException {
         WikipediaPage page = wikipediaService
-            .getPageByTitle(WikipediaLanguage.SPANISH, "Wikipedia:Zona de pruebas/5")
+            .findByTitle(WikipediaLanguage.SPANISH, "Wikipedia:Zona de pruebas/5")
             .orElseThrow(WikipediaException::new);
 
         String originalContent = page.getContent();
@@ -97,7 +97,7 @@ class WikipediaApiServiceIT {
         String conflictContent = originalContent + "\nOtra edición sencilla para probar conflictos de edición.";
 
         // Save the new content
-        wikipediaService.savePageContent(
+        wikipediaService.save(
             page.getId(),
             0,
             newContent,
@@ -112,7 +112,7 @@ class WikipediaApiServiceIT {
         assertThrows(
             WikipediaException.class,
             () ->
-                wikipediaService.savePageContent(
+                wikipediaService.save(
                     page.getId(),
                     0,
                     conflictContent,

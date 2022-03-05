@@ -3,12 +3,9 @@ package es.bvalero.replacer.page.review;
 import es.bvalero.replacer.common.domain.PageReplacement;
 import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.common.domain.WikipediaSection;
-import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.wikipedia.WikipediaPageRepository;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+
+import java.util.*;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,9 +28,8 @@ class PageReviewSectionFinder {
     Optional<PageReview> findPageReviewSection(PageReview review) {
         assert review.getSection() == null;
 
-        try {
-            // Get the sections from the Wikipedia API (better than calculating them by ourselves)
-            Collection<WikipediaSection> sections = wikipediaPageRepository.getPageSections(review.getPage().getId());
+            // Find the sections from the Wikipedia API (better than calculating them by ourselves)
+            Collection<WikipediaSection> sections = wikipediaPageRepository.findSectionsInPage(review.getPage().getId());
 
             // Find the smallest section containing all the replacements
             Optional<WikipediaSection> smallestSection = getSmallestSectionContainingAllReplacements(
@@ -41,8 +37,8 @@ class PageReviewSectionFinder {
                 review.getReplacements()
             );
             if (smallestSection.isPresent()) {
-                // Get the section from Wikipedia API (better than calculating it by ourselves)
-                Optional<WikipediaPage> pageSection = wikipediaPageRepository.getPageSection(
+                // Find the section from Wikipedia API (better than calculating it by ourselves)
+                Optional<WikipediaPage> pageSection = wikipediaPageRepository.findPageSection(
                     review.getPage().getId(),
                     smallestSection.get()
                 );
@@ -81,10 +77,6 @@ class PageReviewSectionFinder {
                     return Optional.of(sectionReview);
                 }
             }
-        } catch (WikipediaException e) {
-            // No need to log the details as they are logged at the end of the method
-            LOGGER.warn("Error finding section", e);
-        }
 
         LOGGER.debug("No section found in page: {} - {}", review.getPage().getId(), review.getPage().getTitle());
         return Optional.empty();
@@ -98,6 +90,7 @@ class PageReviewSectionFinder {
         // In theory they are already sorted as returned from Wikipedia API,
         // so we use an ArrayList assuming there will not be actually sorting.
         List<WikipediaSection> sortedSections = new ArrayList<>(sections);
+        Collections.sort(sortedSections);
         WikipediaSection smallest = null;
         for (int i = 0; i < sortedSections.size(); i++) {
             WikipediaSection section = sortedSections.get(i);

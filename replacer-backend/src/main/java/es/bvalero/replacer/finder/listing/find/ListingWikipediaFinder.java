@@ -28,7 +28,7 @@ class ListingWikipediaFinder implements ListingFinder {
     @Override
     public String getSimpleMisspellingListing(WikipediaLanguage lang) throws ReplacerException {
         return wikipediaPageRepository
-            .getPageByTitle(lang, simpleMisspellingPages.get(lang.getCode()))
+            .findByTitle(lang, simpleMisspellingPages.get(lang.getCode()))
             .orElseThrow(ReplacerException::new)
             .getContent();
     }
@@ -36,7 +36,7 @@ class ListingWikipediaFinder implements ListingFinder {
     @Override
     public String getFalsePositiveListing(WikipediaLanguage lang) throws ReplacerException {
         return wikipediaPageRepository
-            .getPageByTitle(lang, falsePositivePages.get(lang.getCode()))
+            .findByTitle(lang, falsePositivePages.get(lang.getCode()))
             .orElseThrow(ReplacerException::new)
             .getContent();
     }
@@ -44,7 +44,7 @@ class ListingWikipediaFinder implements ListingFinder {
     @Override
     public String getComposedMisspellingListing(WikipediaLanguage lang) throws ReplacerException {
         return wikipediaPageRepository
-            .getPageByTitle(lang, composedMisspellingPages.get(lang.getCode()))
+            .findByTitle(lang, composedMisspellingPages.get(lang.getCode()))
             .orElseThrow(ReplacerException::new)
             .getContent();
     }

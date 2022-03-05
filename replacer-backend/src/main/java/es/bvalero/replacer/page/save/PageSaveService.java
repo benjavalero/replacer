@@ -49,7 +49,7 @@ class PageSaveService {
         boolean applyCosmetics = !textToSave.equals(page.getContent());
 
         // Upload new content to Wikipedia
-        wikipediaPageRepository.savePageContent(
+        wikipediaPageRepository.save(
             page.getId(),
             sectionId,
             textToSave,

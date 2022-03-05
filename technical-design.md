@@ -18,6 +18,7 @@ The following concepts are used:
   - **Last update**. The date and time of the last update of the page.
   - **Query timestamp**. The date and time when the page was queried and retrieved.
   - **Redirect**. If the page is considered a redirection page.
+  - **Sections**. A Wikipedia page is usually divided in sections in different levels identified by its anchor (header title). Note that Wikipedia allows editing sections instead of the whole page.
 - **Dump**. A huge XML file, generated monthly, containing all the current Wikipedia pages for a language.
 - **Replacement**. A potential issue to be checked and fixed (replaced). For instance, the word _aproximated_ is misspelled and therefore could be proposed to be replaced with _approximated_.
 

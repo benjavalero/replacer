@@ -95,7 +95,7 @@ class PageReviewTypeSubtypeFinderTest {
             .thenReturn(Collections.emptyList());
 
         // The page exists in Wikipedia
-        when(wikipediaPageRepository.getPageById(randomPageId)).thenReturn(Optional.of(page));
+        when(wikipediaPageRepository.findById(randomPageId)).thenReturn(Optional.of(page));
 
         when(pageIndexService.indexPage(page))
             .thenReturn(PageIndexResult.ofEmpty(PageIndexStatus.PAGE_INDEXED, replacements));
@@ -103,7 +103,7 @@ class PageReviewTypeSubtypeFinderTest {
         Optional<PageReview> review = pageReviewTypeSubtypeService.findRandomPageReview(options2);
 
         verify(pageIndexService).indexPage(page);
-        verify(wikipediaPageRepository, never()).getPagesByIds(any(WikipediaLanguage.class), anyList());
+        verify(wikipediaPageRepository, never()).findByIds(any(WikipediaLanguage.class), anyList());
 
         assertFalse(review.isPresent());
     }
@@ -117,7 +117,7 @@ class PageReviewTypeSubtypeFinderTest {
             .thenReturn(Collections.singletonList(randomId));
 
         // The page exists in Wikipedia
-        when(wikipediaPageRepository.getPageById(randomPageId)).thenReturn(Optional.of(page));
+        when(wikipediaPageRepository.findById(randomPageId)).thenReturn(Optional.of(page));
 
         when(pageIndexService.indexPage(page))
             .thenReturn(PageIndexResult.ofEmpty(PageIndexStatus.PAGE_INDEXED, replacements));
@@ -125,7 +125,7 @@ class PageReviewTypeSubtypeFinderTest {
         Optional<PageReview> review = pageReviewTypeSubtypeService.findRandomPageReview(options);
 
         verify(pageIndexService).indexPage(page);
-        verify(wikipediaPageRepository, never()).getPagesByIds(any(WikipediaLanguage.class), anyList());
+        verify(wikipediaPageRepository, never()).findByIds(any(WikipediaLanguage.class), anyList());
 
         assertTrue(review.isPresent());
         assertEquals(randomId, review.get().getPage().getId().getPageId());
@@ -148,8 +148,8 @@ class PageReviewTypeSubtypeFinderTest {
             .thenReturn(Collections.singletonList(randomId2));
 
         // The pages exist in Wikipedia
-        when(wikipediaPageRepository.getPageById(randomPageId)).thenReturn(Optional.of(page));
-        when(wikipediaPageRepository.getPageById(randomPageId2)).thenReturn(Optional.of(page2));
+        when(wikipediaPageRepository.findById(randomPageId)).thenReturn(Optional.of(page));
+        when(wikipediaPageRepository.findById(randomPageId2)).thenReturn(Optional.of(page2));
 
         when(pageIndexService.indexPage(any(WikipediaPage.class)))
             .thenReturn(PageIndexResult.ofEmpty(PageIndexStatus.PAGE_INDEXED, replacements));
@@ -171,7 +171,7 @@ class PageReviewTypeSubtypeFinderTest {
         final int sectionId = 1;
 
         // The page exists in Wikipedia
-        when(wikipediaPageRepository.getPageById(randomPageId)).thenReturn(Optional.of(page));
+        when(wikipediaPageRepository.findById(randomPageId)).thenReturn(Optional.of(page));
 
         when(pageIndexService.indexPage(page))
             .thenReturn(PageIndexResult.ofEmpty(PageIndexStatus.PAGE_INDEXED, replacements));
@@ -207,7 +207,7 @@ class PageReviewTypeSubtypeFinderTest {
     @Test
     void testPageReviewWithNoSection() {
         // The page exists in Wikipedia
-        when(wikipediaPageRepository.getPageById(randomPageId)).thenReturn(Optional.of(page));
+        when(wikipediaPageRepository.findById(randomPageId)).thenReturn(Optional.of(page));
 
         when(pageIndexService.indexPage(page))
             .thenReturn(PageIndexResult.ofEmpty(PageIndexStatus.PAGE_INDEXED, replacements));
@@ -238,7 +238,7 @@ class PageReviewTypeSubtypeFinderTest {
             .thenReturn(Collections.emptyList());
 
         // The page exists in Wikipedia
-        when(wikipediaPageRepository.getPageById(randomPageId)).thenReturn(Optional.of(page));
+        when(wikipediaPageRepository.findById(randomPageId)).thenReturn(Optional.of(page));
 
         final PageReplacement replacement2 = PageReplacement
             .builder()
@@ -274,7 +274,7 @@ class PageReviewTypeSubtypeFinderTest {
         Optional<PageReview> review = pageReviewTypeSubtypeService.findRandomPageReview(options);
 
         verify(pageIndexService).indexPage(page);
-        verify(wikipediaPageRepository, never()).getPagesByIds(any(WikipediaLanguage.class), anyList());
+        verify(wikipediaPageRepository, never()).findByIds(any(WikipediaLanguage.class), anyList());
 
         assertTrue(review.isEmpty());
     }

@@ -166,15 +166,13 @@ abstract class PageReviewFinder {
     private Optional<WikipediaPage> getPageFromWikipedia(int pageId, PageReviewOptions options) {
         WikipediaPageId wikipediaPageId = WikipediaPageId.of(options.getLang(), pageId);
 
-        Optional<WikipediaPage> page = wikipediaPageRepository.getPageById(wikipediaPageId);
-        if (page.isPresent()) {
-            return page;
-        } else {
+        Optional<WikipediaPage> page = wikipediaPageRepository.findById(wikipediaPageId);
+        if (page.isEmpty()) {
             LOGGER.warn("No page found in Wikipedia for {}", wikipediaPageId);
             removeObsoletePageService.removeObsoletePages(Collections.singleton(wikipediaPageId));
         }
 
-        return Optional.empty();
+        return page;
     }
 
     private Optional<PageReview> buildPageReview(WikipediaPage page, PageReviewOptions options) {
