@@ -15,7 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest(
     classes = {
-        WikipediaApiService.class,
+        WikipediaPageApiRepository.class,
         WikipediaApiRequestHelper.class,
         MediaWikiApiConfiguration.class,
         JsonMapperConfiguration.class,
@@ -24,7 +24,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 class WikipediaApiServiceIT {
 
     @Autowired
-    private WikipediaApiService wikipediaService;
+    private WikipediaPageApiRepository wikipediaService;
 
     @Test
     void testGetPageContent() throws WikipediaException {

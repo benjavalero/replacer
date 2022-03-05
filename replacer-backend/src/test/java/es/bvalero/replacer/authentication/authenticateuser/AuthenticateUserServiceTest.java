@@ -12,7 +12,7 @@ import es.bvalero.replacer.common.domain.AccessToken;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.dto.AccessTokenDto;
 import es.bvalero.replacer.wikipedia.WikipediaException;
-import es.bvalero.replacer.wikipedia.WikipediaService;
+import es.bvalero.replacer.wikipedia.WikipediaPageRepository;
 import es.bvalero.replacer.wikipedia.WikipediaUser;
 import es.bvalero.replacer.wikipedia.WikipediaUserGroup;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,7 +27,7 @@ class AuthenticateUserServiceTest {
     private OAuthService oAuthService;
 
     @Mock
-    private WikipediaService wikipediaService;
+    private WikipediaPageRepository wikipediaPageRepository;
 
     @Mock
     private CheckUserRightsService checkUserRightsService;
@@ -56,7 +56,7 @@ class AuthenticateUserServiceTest {
             .name("C")
             .group(WikipediaUserGroup.AUTO_CONFIRMED)
             .build();
-        when(wikipediaService.getAuthenticatedUser(lang, accessToken)).thenReturn(wikipediaUser);
+        when(wikipediaPageRepository.getAuthenticatedUser(lang, accessToken)).thenReturn(wikipediaUser);
 
         String username = "C";
         when(checkUserRightsService.isAdmin(username)).thenReturn(true);
@@ -74,7 +74,7 @@ class AuthenticateUserServiceTest {
         assertEquals(expected, actual);
 
         verify(oAuthService).getAccessToken(requestToken, oAuthVerifier);
-        verify(wikipediaService).getAuthenticatedUser(lang, accessToken);
+        verify(wikipediaPageRepository).getAuthenticatedUser(lang, accessToken);
         verify(checkUserRightsService).isAdmin(username);
     }
 }

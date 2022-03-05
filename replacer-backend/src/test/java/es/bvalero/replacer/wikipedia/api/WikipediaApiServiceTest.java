@@ -27,14 +27,14 @@ class WikipediaApiServiceTest {
     private WikipediaApiRequestHelper wikipediaApiRequestHelper;
 
     @InjectMocks
-    private WikipediaApiService wikipediaService;
+    private WikipediaPageApiRepository wikipediaService;
 
-    private WikipediaService wikipediaServiceOffline;
+    private WikipediaPageRepository wikipediaPageOfflineRepository;
 
     @BeforeEach
     void setUp() {
-        wikipediaService = new WikipediaApiService();
-        wikipediaServiceOffline = new WikipediaOfflineService();
+        wikipediaService = new WikipediaPageApiRepository();
+        wikipediaPageOfflineRepository = new WikipediaPageOfflineRepository();
         MockitoAnnotations.openMocks(this);
     }
 
@@ -393,13 +393,13 @@ class WikipediaApiServiceTest {
     void testWikipediaServiceOffline() throws WikipediaException {
         assertEquals(
             Integer.valueOf(1),
-            wikipediaServiceOffline
+            wikipediaPageOfflineRepository
                 .getPageByTitle(WikipediaLanguage.getDefault(), "")
                 .map(page -> page.getId().getPageId())
                 .orElse(0)
         );
         assertFalse(
-            wikipediaServiceOffline
+            wikipediaPageOfflineRepository
                 .searchByText(
                     WikipediaLanguage.getDefault(),
                     List.of(WikipediaNamespace.getDefault()),
@@ -411,7 +411,7 @@ class WikipediaApiServiceTest {
                 .isEmpty()
         );
         assertTrue(
-            wikipediaServiceOffline.getPageSections(WikipediaPageId.of(WikipediaLanguage.getDefault(), 1)).isEmpty()
+            wikipediaPageOfflineRepository.getPageSections(WikipediaPageId.of(WikipediaLanguage.getDefault(), 1)).isEmpty()
         );
     }
 }

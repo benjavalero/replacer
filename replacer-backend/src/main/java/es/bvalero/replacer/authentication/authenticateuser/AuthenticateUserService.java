@@ -8,7 +8,7 @@ import es.bvalero.replacer.common.domain.AccessToken;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.dto.AccessTokenDto;
 import es.bvalero.replacer.wikipedia.WikipediaException;
-import es.bvalero.replacer.wikipedia.WikipediaService;
+import es.bvalero.replacer.wikipedia.WikipediaPageRepository;
 import es.bvalero.replacer.wikipedia.WikipediaUser;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +22,7 @@ public class AuthenticateUserService {
     private OAuthService oAuthService;
 
     @Autowired
-    private WikipediaService wikipediaService;
+    private WikipediaPageRepository wikipediaPageRepository;
 
     @Autowired
     private CheckUserRightsService checkUserRightsService;
@@ -31,7 +31,7 @@ public class AuthenticateUserService {
         throws AuthenticationException {
         try {
             AccessToken accessToken = oAuthService.getAccessToken(requestToken, oAuthVerifier);
-            WikipediaUser wikipediaUser = wikipediaService.getAuthenticatedUser(lang, accessToken);
+            WikipediaUser wikipediaUser = wikipediaPageRepository.getAuthenticatedUser(lang, accessToken);
             return toDto(wikipediaUser, accessToken);
         } catch (WikipediaException e) {
             LOGGER.error("Error authenticating the user");

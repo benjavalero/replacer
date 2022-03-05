@@ -4,7 +4,7 @@ import es.bvalero.replacer.common.domain.PageReplacement;
 import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.common.domain.WikipediaSection;
 import es.bvalero.replacer.wikipedia.WikipediaException;
-import es.bvalero.replacer.wikipedia.WikipediaService;
+import es.bvalero.replacer.wikipedia.WikipediaPageRepository;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -20,7 +20,7 @@ import org.springframework.stereotype.Component;
 class PageReviewSectionFinder {
 
     @Autowired
-    private WikipediaService wikipediaService;
+    private WikipediaPageRepository wikipediaPageRepository;
 
     /**
      * Find (if any) the smallest section in a page containing the given replacements.
@@ -33,7 +33,7 @@ class PageReviewSectionFinder {
 
         try {
             // Get the sections from the Wikipedia API (better than calculating them by ourselves)
-            Collection<WikipediaSection> sections = wikipediaService.getPageSections(review.getPage().getId());
+            Collection<WikipediaSection> sections = wikipediaPageRepository.getPageSections(review.getPage().getId());
 
             // Find the smallest section containing all the replacements
             Optional<WikipediaSection> smallestSection = getSmallestSectionContainingAllReplacements(
@@ -42,7 +42,7 @@ class PageReviewSectionFinder {
             );
             if (smallestSection.isPresent()) {
                 // Get the section from Wikipedia API (better than calculating it by ourselves)
-                Optional<WikipediaPage> pageSection = wikipediaService.getPageSection(
+                Optional<WikipediaPage> pageSection = wikipediaPageRepository.getPageSection(
                     review.getPage().getId(),
                     smallestSection.get()
                 );

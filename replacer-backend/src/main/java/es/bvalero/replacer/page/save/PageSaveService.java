@@ -9,7 +9,7 @@ import es.bvalero.replacer.repository.CustomRepository;
 import es.bvalero.replacer.repository.PageRepository;
 import es.bvalero.replacer.repository.ReplacementTypeRepository;
 import es.bvalero.replacer.wikipedia.WikipediaException;
-import es.bvalero.replacer.wikipedia.WikipediaService;
+import es.bvalero.replacer.wikipedia.WikipediaPageRepository;
 import java.time.LocalDate;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +33,7 @@ class PageSaveService {
     private CustomRepository customRepository;
 
     @Autowired
-    private WikipediaService wikipediaService;
+    private WikipediaPageRepository wikipediaPageRepository;
 
     @Autowired
     private ApplyCosmeticsService applyCosmeticChanges;
@@ -49,7 +49,7 @@ class PageSaveService {
         boolean applyCosmetics = !textToSave.equals(page.getContent());
 
         // Upload new content to Wikipedia
-        wikipediaService.savePageContent(
+        wikipediaPageRepository.savePageContent(
             page.getId(),
             sectionId,
             textToSave,

@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 @Profile("offline")
-class WikipediaOfflineService implements WikipediaService {
+class WikipediaPageOfflineRepository implements WikipediaPageRepository {
 
     @Override
     public WikipediaUser getAuthenticatedUser(WikipediaLanguage lang, AccessToken accessToken) {

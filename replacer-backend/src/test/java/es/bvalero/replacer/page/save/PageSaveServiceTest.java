@@ -8,7 +8,7 @@ import es.bvalero.replacer.repository.CustomRepository;
 import es.bvalero.replacer.repository.PageRepository;
 import es.bvalero.replacer.repository.ReplacementTypeRepository;
 import es.bvalero.replacer.wikipedia.WikipediaException;
-import es.bvalero.replacer.wikipedia.WikipediaService;
+import es.bvalero.replacer.wikipedia.WikipediaPageRepository;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,7 +29,7 @@ class PageSaveServiceTest {
     private CustomRepository customRepository;
 
     @Mock
-    private WikipediaService wikipediaService;
+    private WikipediaPageRepository wikipediaPageRepository;
 
     @Mock
     private ApplyCosmeticsService applyCosmeticsService;
@@ -64,7 +64,7 @@ class PageSaveServiceTest {
         pageSaveService.savePageContent(page, null, PageReviewOptions.ofNoType(), accessToken);
 
         verify(applyCosmeticsService).applyCosmeticChanges(page);
-        verify(wikipediaService)
+        verify(wikipediaPageRepository)
             .savePageContent(
                 eq(page.getId()),
                 isNull(),
@@ -84,7 +84,7 @@ class PageSaveServiceTest {
         pageSaveService.savePageWithNoChanges(wikipediaPageId, options);
 
         verify(applyCosmeticsService, never()).applyCosmeticChanges(any(WikipediaPage.class));
-        verify(wikipediaService, never())
+        verify(wikipediaPageRepository, never())
             .savePageContent(
                 any(WikipediaPageId.class),
                 anyInt(),
@@ -105,7 +105,7 @@ class PageSaveServiceTest {
         pageSaveService.savePageWithNoChanges(wikipediaPageId, options);
 
         verify(applyCosmeticsService, never()).applyCosmeticChanges(any(WikipediaPage.class));
-        verify(wikipediaService, never())
+        verify(wikipediaPageRepository, never())
             .savePageContent(
                 any(WikipediaPageId.class),
                 anyInt(),
@@ -129,7 +129,7 @@ class PageSaveServiceTest {
         pageSaveService.savePageWithNoChanges(wikipediaPageId, options);
 
         verify(applyCosmeticsService, never()).applyCosmeticChanges(any(WikipediaPage.class));
-        verify(wikipediaService, never())
+        verify(wikipediaPageRepository, never())
             .savePageContent(
                 any(WikipediaPageId.class),
                 anyInt(),
@@ -151,7 +151,7 @@ class PageSaveServiceTest {
         pageSaveService.savePageWithNoChanges(wikipediaPageId, options);
 
         verify(applyCosmeticsService, never()).applyCosmeticChanges(any(WikipediaPage.class));
-        verify(wikipediaService, never())
+        verify(wikipediaPageRepository, never())
             .savePageContent(
                 any(WikipediaPageId.class),
                 anyInt(),
@@ -175,7 +175,7 @@ class PageSaveServiceTest {
         pageSaveService.savePageWithNoChanges(wikipediaPageId, options);
 
         verify(applyCosmeticsService, never()).applyCosmeticChanges(any(WikipediaPage.class));
-        verify(wikipediaService, never())
+        verify(wikipediaPageRepository, never())
             .savePageContent(
                 any(WikipediaPageId.class),
                 anyInt(),

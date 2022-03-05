@@ -7,7 +7,7 @@ import java.util.Optional;
 import org.springframework.lang.Nullable;
 
 /** Service to perform operations on Wikipedia */
-public interface WikipediaService {
+public interface WikipediaPageRepository {
     WikipediaUser getAuthenticatedUser(WikipediaLanguage lang, AccessToken accessToken) throws WikipediaException;
 
     WikipediaUser getWikipediaUser(WikipediaLanguage lang, String username) throws WikipediaException;

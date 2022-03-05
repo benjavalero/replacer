@@ -11,7 +11,7 @@ import es.bvalero.replacer.page.removeobsolete.RemoveObsoletePageService;
 import es.bvalero.replacer.repository.PageIndexRepository;
 import es.bvalero.replacer.repository.PageModel;
 import es.bvalero.replacer.repository.ReplacementModel;
-import es.bvalero.replacer.wikipedia.WikipediaService;
+import es.bvalero.replacer.wikipedia.WikipediaPageRepository;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -28,7 +28,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 abstract class PageReviewFinder {
 
     @Autowired
-    private WikipediaService wikipediaService;
+    private WikipediaPageRepository wikipediaPageRepository;
 
     @Autowired
     private PageIndexService pageIndexService;
@@ -166,7 +166,7 @@ abstract class PageReviewFinder {
     private Optional<WikipediaPage> getPageFromWikipedia(int pageId, PageReviewOptions options) {
         WikipediaPageId wikipediaPageId = WikipediaPageId.of(options.getLang(), pageId);
 
-        Optional<WikipediaPage> page = wikipediaService.getPageById(wikipediaPageId);
+        Optional<WikipediaPage> page = wikipediaPageRepository.getPageById(wikipediaPageId);
         if (page.isPresent()) {
             return page;
         } else {

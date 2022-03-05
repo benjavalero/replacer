@@ -5,7 +5,7 @@ import com.github.benmanes.caffeine.cache.Caffeine;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.exception.ForbiddenException;
 import es.bvalero.replacer.wikipedia.WikipediaException;
-import es.bvalero.replacer.wikipedia.WikipediaService;
+import es.bvalero.replacer.wikipedia.WikipediaPageRepository;
 import es.bvalero.replacer.wikipedia.WikipediaUser;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
@@ -22,7 +22,7 @@ import org.springframework.stereotype.Service;
 public class CheckUserRightsService {
 
     @Autowired
-    private WikipediaService wikipediaService;
+    private WikipediaPageRepository wikipediaPageRepository;
 
     @Setter(onMethod_ = @TestOnly)
     @Value("${replacer.admin.user}")
@@ -67,7 +67,7 @@ public class CheckUserRightsService {
         WikipediaLanguage lang = WikipediaLanguage.valueOfCode(tokens[0]);
         String username = tokens[1];
         try {
-            return wikipediaService.getWikipediaUser(lang, username);
+            return wikipediaPageRepository.getWikipediaUser(lang, username);
         } catch (WikipediaException e) {
             // Return a fake user with no groups
             return WikipediaUser.builder().lang(lang).name(username).build();

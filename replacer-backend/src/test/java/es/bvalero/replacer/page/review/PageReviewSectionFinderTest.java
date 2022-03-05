@@ -6,7 +6,7 @@ import static org.mockito.Mockito.*;
 import es.bvalero.replacer.common.domain.*;
 import es.bvalero.replacer.common.domain.ReplacementKind;
 import es.bvalero.replacer.wikipedia.WikipediaException;
-import es.bvalero.replacer.wikipedia.WikipediaService;
+import es.bvalero.replacer.wikipedia.WikipediaPageRepository;
 import java.time.LocalDateTime;
 import java.util.*;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,7 +18,7 @@ import org.mockito.MockitoAnnotations;
 class PageReviewSectionFinderTest {
 
     @Mock
-    private WikipediaService wikipediaService;
+    private WikipediaPageRepository wikipediaPageRepository;
 
     @InjectMocks
     private PageReviewSectionFinder pageReviewSectionFinder;
@@ -34,7 +34,7 @@ class PageReviewSectionFinderTest {
         WikipediaPage page = mock(WikipediaPage.class);
         List<PageReplacement> replacements = Collections.emptyList();
 
-        when(wikipediaService.getPageSections(any(WikipediaPageId.class))).thenReturn(Collections.emptyList());
+        when(wikipediaPageRepository.getPageSections(any(WikipediaPageId.class))).thenReturn(Collections.emptyList());
 
         PageReview review = PageReview.of(page, null, replacements, 1);
         Optional<PageReview> sectionReview = pageReviewSectionFinder.findPageReviewSection(review);
@@ -75,7 +75,7 @@ class PageReviewSectionFinderTest {
             .byteOffset(offset)
             .anchor("X")
             .build();
-        when(wikipediaService.getPageSections(page.getId())).thenReturn(Collections.singletonList(section));
+        when(wikipediaPageRepository.getPageSections(page.getId())).thenReturn(Collections.singletonList(section));
 
         String sectionContent = content.substring(offset, 10);
         WikipediaPage pageSection = WikipediaPage
@@ -86,7 +86,7 @@ class PageReviewSectionFinderTest {
             .content(sectionContent)
             .lastUpdate(page.getLastUpdate())
             .build();
-        when(wikipediaService.getPageSection(page.getId(), section)).thenReturn(Optional.of(pageSection));
+        when(wikipediaPageRepository.getPageSection(page.getId(), section)).thenReturn(Optional.of(pageSection));
 
         Optional<PageReview> sectionReview = pageReviewSectionFinder.findPageReviewSection(pageReview);
 

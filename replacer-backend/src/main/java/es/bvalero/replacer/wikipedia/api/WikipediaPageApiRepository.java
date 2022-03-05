@@ -22,7 +22,7 @@ import org.springframework.stereotype.Service;
 @Loggable(value = LogLevel.TRACE, skipResult = true, warnOver = 10, warnUnit = TimeUnit.SECONDS)
 @Service
 @Profile("!offline")
-class WikipediaApiService implements WikipediaService {
+class WikipediaPageApiRepository implements WikipediaPageRepository {
 
     private static final int MAX_PAGES_REQUESTED = 50; // MediaWiki API allows to retrieve the content of maximum 50 pages
     private static final int MAX_SEARCH_RESULTS = 500; // MediaWiki API allows at most 500 pages in a search result

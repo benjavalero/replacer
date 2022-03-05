@@ -6,7 +6,7 @@ import static org.mockito.Mockito.*;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.exception.ForbiddenException;
 import es.bvalero.replacer.wikipedia.WikipediaException;
-import es.bvalero.replacer.wikipedia.WikipediaService;
+import es.bvalero.replacer.wikipedia.WikipediaPageRepository;
 import es.bvalero.replacer.wikipedia.WikipediaUser;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,7 +17,7 @@ import org.mockito.MockitoAnnotations;
 class CheckUserRightsServiceTest {
 
     @Mock
-    private WikipediaService wikipediaService;
+    private WikipediaPageRepository wikipediaPageRepository;
 
     @InjectMocks
     private CheckUserRightsService checkUserRightsService;
@@ -45,7 +45,7 @@ class CheckUserRightsServiceTest {
     void testIsBot() throws WikipediaException {
         WikipediaUser user = mock(WikipediaUser.class);
         when(user.isBot()).thenReturn(true);
-        when(wikipediaService.getWikipediaUser(any(WikipediaLanguage.class), anyString())).thenReturn(user);
+        when(wikipediaPageRepository.getWikipediaUser(any(WikipediaLanguage.class), anyString())).thenReturn(user);
 
         assertTrue(checkUserRightsService.isBot(WikipediaLanguage.getDefault(), "X"));
     }
@@ -54,14 +54,14 @@ class CheckUserRightsServiceTest {
     void testIsNotBot() throws WikipediaException {
         WikipediaUser user = mock(WikipediaUser.class);
         when(user.isBot()).thenReturn(false);
-        when(wikipediaService.getWikipediaUser(any(WikipediaLanguage.class), anyString())).thenReturn(user);
+        when(wikipediaPageRepository.getWikipediaUser(any(WikipediaLanguage.class), anyString())).thenReturn(user);
 
         assertFalse(checkUserRightsService.isBot(WikipediaLanguage.getDefault(), "X"));
     }
 
     @Test
     void testIsNotBotWithException() throws WikipediaException {
-        when(wikipediaService.getWikipediaUser(any(WikipediaLanguage.class), anyString()))
+        when(wikipediaPageRepository.getWikipediaUser(any(WikipediaLanguage.class), anyString()))
             .thenThrow(new WikipediaException());
 
         assertFalse(checkUserRightsService.isBot(WikipediaLanguage.getDefault(), "X"));
@@ -71,7 +71,7 @@ class CheckUserRightsServiceTest {
     void testValidateNotBot() throws WikipediaException {
         WikipediaUser user = mock(WikipediaUser.class);
         when(user.isBot()).thenReturn(false);
-        when(wikipediaService.getWikipediaUser(any(WikipediaLanguage.class), anyString())).thenReturn(user);
+        when(wikipediaPageRepository.getWikipediaUser(any(WikipediaLanguage.class), anyString())).thenReturn(user);
 
         assertThrows(
             ForbiddenException.class,

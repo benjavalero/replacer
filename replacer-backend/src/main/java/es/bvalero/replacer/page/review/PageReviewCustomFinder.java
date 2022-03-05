@@ -6,7 +6,7 @@ import es.bvalero.replacer.page.findreplacement.FindReplacementsService;
 import es.bvalero.replacer.repository.*;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.wikipedia.WikipediaSearchResult;
-import es.bvalero.replacer.wikipedia.WikipediaService;
+import es.bvalero.replacer.wikipedia.WikipediaPageRepository;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -31,7 +31,7 @@ class PageReviewCustomFinder extends PageReviewFinder {
     private CustomRepository customRepository;
 
     @Autowired
-    private WikipediaService wikipediaService;
+    private WikipediaPageRepository wikipediaPageRepository;
 
     @Autowired
     private FindReplacementsService findReplacementsService;
@@ -99,7 +99,7 @@ class PageReviewCustomFinder extends PageReviewFinder {
         String subtype = options.getType().getSubtype();
         Boolean cs = options.getCs();
         assert cs != null;
-        return wikipediaService.searchByText(
+        return wikipediaPageRepository.searchByText(
             options.getLang(),
             indexableNamespaces.stream().map(WikipediaNamespace::valueOf).collect(Collectors.toUnmodifiableSet()),
             subtype,
