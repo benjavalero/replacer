@@ -14,7 +14,7 @@ import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.*;
 @AnalyzeClasses(packages = "es.bvalero.replacer")
 public class ArchitectureTest {
 
-    private static final String[] COMMON_PACKAGES = {"java..", "lombok..", "org.apache.commons.."};
+    private static final String[] COMMON_PACKAGES = {"java..", "lombok..", "org.apache.commons..", "org.slf4j.."};
 
     private static String[] commonPackagesAnd(String... packages) {
         return ArrayUtils.addAll(packages, COMMON_PACKAGES);

@@ -1,9 +1,9 @@
-package es.bvalero.replacer.wikipedia;
+package es.bvalero.replacer.common.domain;
 
-import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import java.util.Set;
 import lombok.*;
 import lombok.experimental.NonFinal;
+import org.jetbrains.annotations.TestOnly;
 import org.springframework.lang.NonNull;
 
 /** User in Wikipedia */
@@ -18,7 +18,7 @@ public class WikipediaUser {
     @NonNull
     String name;
 
-    @Getter(AccessLevel.NONE)
+    @Getter(onMethod_ = @TestOnly)
     @Singular
     Set<WikipediaUserGroup> groups;
 

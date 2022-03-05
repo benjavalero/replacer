@@ -1,17 +1,14 @@
 package es.bvalero.replacer.wikipedia;
 
 import es.bvalero.replacer.common.domain.*;
+import org.springframework.lang.Nullable;
+
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Optional;
-import org.springframework.lang.Nullable;
 
 /** Repository to perform operations on Wikipedia pages */
 public interface WikipediaPageRepository {
-    WikipediaUser getAuthenticatedUser(WikipediaLanguage lang, AccessToken accessToken) throws WikipediaException;
-
-    WikipediaUser getWikipediaUser(WikipediaLanguage lang, String username) throws WikipediaException;
-
     Optional<WikipediaPage> findByTitle(WikipediaLanguage lang, String pageTitle);
 
     Optional<WikipediaPage> findById(WikipediaPageId id);

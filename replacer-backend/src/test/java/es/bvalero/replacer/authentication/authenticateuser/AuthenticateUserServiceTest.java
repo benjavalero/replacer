@@ -10,16 +10,17 @@ import es.bvalero.replacer.authentication.oauth.RequestToken;
 import es.bvalero.replacer.authentication.userrights.CheckUserRightsService;
 import es.bvalero.replacer.common.domain.AccessToken;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
+import es.bvalero.replacer.common.domain.WikipediaUser;
+import es.bvalero.replacer.common.domain.WikipediaUserGroup;
 import es.bvalero.replacer.common.dto.AccessTokenDto;
-import es.bvalero.replacer.wikipedia.WikipediaException;
-import es.bvalero.replacer.wikipedia.WikipediaPageRepository;
-import es.bvalero.replacer.wikipedia.WikipediaUser;
-import es.bvalero.replacer.wikipedia.WikipediaUserGroup;
+import es.bvalero.replacer.wikipedia.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+
+import java.util.Optional;
 
 class AuthenticateUserServiceTest {
 
@@ -27,7 +28,7 @@ class AuthenticateUserServiceTest {
     private OAuthService oAuthService;
 
     @Mock
-    private WikipediaPageRepository wikipediaPageRepository;
+    private WikipediaUserRepository wikipediaUserRepository;
 
     @Mock
     private CheckUserRightsService checkUserRightsService;
@@ -42,7 +43,7 @@ class AuthenticateUserServiceTest {
     }
 
     @Test
-    void testGetAuthenticatedUser() throws AuthenticationException, WikipediaException {
+    void testGetAuthenticatedUser() throws AuthenticationException {
         WikipediaLanguage lang = WikipediaLanguage.getDefault();
         RequestToken requestToken = RequestToken.of("R", "S");
         String oAuthVerifier = "Z";
@@ -56,7 +57,7 @@ class AuthenticateUserServiceTest {
             .name("C")
             .group(WikipediaUserGroup.AUTO_CONFIRMED)
             .build();
-        when(wikipediaPageRepository.getAuthenticatedUser(lang, accessToken)).thenReturn(wikipediaUser);
+        when(wikipediaUserRepository.findAuthenticatedUser(lang, accessToken)).thenReturn(Optional.of(wikipediaUser));
 
         String username = "C";
         when(checkUserRightsService.isAdmin(username)).thenReturn(true);
@@ -74,7 +75,7 @@ class AuthenticateUserServiceTest {
         assertEquals(expected, actual);
 
         verify(oAuthService).getAccessToken(requestToken, oAuthVerifier);
-        verify(wikipediaPageRepository).getAuthenticatedUser(lang, accessToken);
+        verify(wikipediaUserRepository).findAuthenticatedUser(lang, accessToken);
         verify(checkUserRightsService).isAdmin(username);
     }
 }

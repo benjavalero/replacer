@@ -22,7 +22,7 @@ import org.springframework.stereotype.Service;
 @Loggable(value = LogLevel.TRACE, skipResult = true, warnOver = 10, warnUnit = TimeUnit.SECONDS)
 @Service
 @Profile("!offline")
-class WikipediaPageApiRepository implements WikipediaPageRepository {
+class WikipediaPageApiRepository implements WikipediaPageRepository, WikipediaUserRepository {
 
     private static final int MAX_PAGES_REQUESTED = 50; // MediaWiki API allows to retrieve the content of maximum 50 pages
     private static final int MAX_SEARCH_RESULTS = 500; // MediaWiki API allows at most 500 pages in a search result
@@ -36,9 +36,21 @@ class WikipediaPageApiRepository implements WikipediaPageRepository {
     private WikipediaApiRequestHelper wikipediaApiRequestHelper;
 
     @Override
-    public WikipediaUser getAuthenticatedUser(WikipediaLanguage lang, AccessToken accessToken)
-        throws WikipediaException {
-        return convertUserInfo(lang, getLoggedUserInfo(lang, accessToken));
+    public Optional<WikipediaUser> findAuthenticatedUser(WikipediaLanguage lang, AccessToken accessToken) {
+        WikipediaApiRequest apiRequest = WikipediaApiRequest
+            .builder()
+            .verb(WikipediaApiRequestVerb.GET)
+            .lang(lang)
+            .params(buildUserInfoRequestParams())
+            .accessToken(accessToken)
+            .build();
+        try {
+            WikipediaApiResponse apiResponse = wikipediaApiRequestHelper.executeApiRequest(apiRequest);
+            return extractUserInfoFromJson(apiResponse, lang);
+        } catch (WikipediaException e) {
+            LOGGER.error("Error finding authenticated user", e);
+        }
+        return Optional.empty();
     }
 
     private WikipediaUser convertUserInfo(WikipediaLanguage lang, WikipediaApiResponse.UserInfo userInfo) {
@@ -57,20 +69,6 @@ class WikipediaPageApiRepository implements WikipediaPageRepository {
             .build();
     }
 
-    @VisibleForTesting
-    WikipediaApiResponse.UserInfo getLoggedUserInfo(WikipediaLanguage lang, AccessToken accessToken)
-        throws WikipediaException {
-        WikipediaApiRequest apiRequest = WikipediaApiRequest
-            .builder()
-            .verb(WikipediaApiRequestVerb.GET)
-            .lang(lang)
-            .params(buildUserInfoRequestParams())
-            .accessToken(accessToken)
-            .build();
-        WikipediaApiResponse apiResponse = wikipediaApiRequestHelper.executeApiRequest(apiRequest);
-        return extractUserInfoFromJson(apiResponse);
-    }
-
     private Map<String, String> buildUserInfoRequestParams() {
         Map<String, String> params = new HashMap<>();
         params.put(PARAM_ACTION, VALUE_QUERY);
@@ -79,13 +77,25 @@ class WikipediaPageApiRepository implements WikipediaPageRepository {
         return params;
     }
 
-    private WikipediaApiResponse.UserInfo extractUserInfoFromJson(WikipediaApiResponse response) {
-        return response.getQuery().getUserinfo();
+    private Optional<WikipediaUser> extractUserInfoFromJson(WikipediaApiResponse response, WikipediaLanguage lang) {
+        return Optional.of(convertUserInfo(lang, response.getQuery().getUserinfo()));
     }
 
     @Override
-    public WikipediaUser getWikipediaUser(WikipediaLanguage lang, String username) throws WikipediaException {
-        return convertUser(lang, getLoggedUser(lang, username));
+    public Optional<WikipediaUser> findByUsername(WikipediaLanguage lang, String username) {
+        WikipediaApiRequest apiRequest = WikipediaApiRequest
+            .builder()
+            .verb(WikipediaApiRequestVerb.GET)
+            .lang(lang)
+            .params(buildUserRequestParams(username))
+            .build();
+        try {
+            WikipediaApiResponse apiResponse = wikipediaApiRequestHelper.executeApiRequest(apiRequest);
+            return extractUserFromJson(apiResponse, lang);
+        } catch (WikipediaException e) {
+            LOGGER.error("Error finding user by username: {}", username, e);
+        }
+        return Optional.empty();
     }
 
     private WikipediaUser convertUser(WikipediaLanguage lang, WikipediaApiResponse.User user) {
@@ -104,18 +114,6 @@ class WikipediaPageApiRepository implements WikipediaPageRepository {
             .build();
     }
 
-    @VisibleForTesting
-    WikipediaApiResponse.User getLoggedUser(WikipediaLanguage lang, String username) throws WikipediaException {
-        WikipediaApiRequest apiRequest = WikipediaApiRequest
-            .builder()
-            .verb(WikipediaApiRequestVerb.GET)
-            .lang(lang)
-            .params(buildUserRequestParams(username))
-            .build();
-        WikipediaApiResponse apiResponse = wikipediaApiRequestHelper.executeApiRequest(apiRequest);
-        return extractUserFromJson(apiResponse);
-    }
-
     private Map<String, String> buildUserRequestParams(String username) {
         Map<String, String> params = new HashMap<>();
         params.put(PARAM_ACTION, VALUE_QUERY);
@@ -125,8 +123,8 @@ class WikipediaPageApiRepository implements WikipediaPageRepository {
         return params;
     }
 
-    private WikipediaApiResponse.User extractUserFromJson(WikipediaApiResponse response) {
-        return response.getQuery().getUsers().get(0);
+    private Optional<WikipediaUser> extractUserFromJson(WikipediaApiResponse response, WikipediaLanguage lang) {
+        return response.getQuery().getUsers().stream().findFirst().map(user -> convertUser(lang, user));
     }
 
     @Override

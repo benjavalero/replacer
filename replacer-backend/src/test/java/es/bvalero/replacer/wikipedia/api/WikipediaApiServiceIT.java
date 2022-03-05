@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import es.bvalero.replacer.common.domain.*;
 import es.bvalero.replacer.config.JsonMapperConfiguration;
 import es.bvalero.replacer.wikipedia.WikipediaException;
-import es.bvalero.replacer.wikipedia.WikipediaUser;
+import es.bvalero.replacer.common.domain.WikipediaUser;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
@@ -124,9 +124,9 @@ class WikipediaApiServiceIT {
     }
 
     @Test
-    void testGetUser() throws WikipediaException {
+    void testGetUser() {
         String username = "Benjavalero";
-        WikipediaUser user = wikipediaService.getWikipediaUser(WikipediaLanguage.SPANISH, username);
+        WikipediaUser user = wikipediaService.findByUsername(WikipediaLanguage.SPANISH, username).orElse(null);
         assertNotNull(user);
         assertEquals(WikipediaLanguage.SPANISH, user.getLang());
         assertEquals(username, user.getName());

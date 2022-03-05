@@ -16,16 +16,16 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 @Profile("offline")
-class WikipediaPageOfflineRepository implements WikipediaPageRepository {
+class WikipediaPageOfflineRepository implements WikipediaPageRepository, WikipediaUserRepository {
 
     @Override
-    public WikipediaUser getAuthenticatedUser(WikipediaLanguage lang, AccessToken accessToken) {
-        return getOfflineUser(lang);
+    public Optional<WikipediaUser> findAuthenticatedUser(WikipediaLanguage lang, AccessToken accessToken) {
+        return Optional.of(getOfflineUser(lang));
     }
 
     @Override
-    public WikipediaUser getWikipediaUser(WikipediaLanguage lang, String username) {
-        return getOfflineUser(lang);
+    public Optional<WikipediaUser> findByUsername(WikipediaLanguage lang, String username) {
+        return Optional.of(getOfflineUser(lang));
     }
 
     private WikipediaUser getOfflineUser(WikipediaLanguage lang) {

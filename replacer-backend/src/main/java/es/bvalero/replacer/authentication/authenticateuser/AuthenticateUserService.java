@@ -7,9 +7,8 @@ import es.bvalero.replacer.authentication.userrights.CheckUserRightsService;
 import es.bvalero.replacer.common.domain.AccessToken;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.dto.AccessTokenDto;
-import es.bvalero.replacer.wikipedia.WikipediaException;
-import es.bvalero.replacer.wikipedia.WikipediaPageRepository;
-import es.bvalero.replacer.wikipedia.WikipediaUser;
+import es.bvalero.replacer.common.domain.WikipediaUser;
+import es.bvalero.replacer.wikipedia.WikipediaUserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,21 +21,17 @@ public class AuthenticateUserService {
     private OAuthService oAuthService;
 
     @Autowired
-    private WikipediaPageRepository wikipediaPageRepository;
+    private WikipediaUserRepository wikipediaUserRepository;
 
     @Autowired
     private CheckUserRightsService checkUserRightsService;
 
     public AuthenticatedUser authenticateUser(WikipediaLanguage lang, RequestToken requestToken, String oAuthVerifier)
         throws AuthenticationException {
-        try {
             AccessToken accessToken = oAuthService.getAccessToken(requestToken, oAuthVerifier);
-            WikipediaUser wikipediaUser = wikipediaPageRepository.getAuthenticatedUser(lang, accessToken);
+            WikipediaUser wikipediaUser = wikipediaUserRepository.findAuthenticatedUser(lang, accessToken)
+                .orElseThrow(AuthenticationException::new);
             return toDto(wikipediaUser, accessToken);
-        } catch (WikipediaException e) {
-            LOGGER.error("Error authenticating the user");
-            throw new AuthenticationException();
-        }
     }
 
     private AuthenticatedUser toDto(WikipediaUser wikipediaUser, AccessToken accessToken) {

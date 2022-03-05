@@ -4,11 +4,11 @@ import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.exception.ForbiddenException;
-import es.bvalero.replacer.wikipedia.WikipediaException;
-import es.bvalero.replacer.wikipedia.WikipediaPageRepository;
-import es.bvalero.replacer.wikipedia.WikipediaUser;
+import es.bvalero.replacer.common.domain.WikipediaUser;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
+
+import es.bvalero.replacer.wikipedia.WikipediaUserRepository;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.TestOnly;
@@ -22,7 +22,7 @@ import org.springframework.stereotype.Service;
 public class CheckUserRightsService {
 
     @Autowired
-    private WikipediaPageRepository wikipediaPageRepository;
+    private WikipediaUserRepository wikipediaUserRepository;
 
     @Setter(onMethod_ = @TestOnly)
     @Value("${replacer.admin.user}")
@@ -66,11 +66,9 @@ public class CheckUserRightsService {
         String[] tokens = cacheKey.split("-");
         WikipediaLanguage lang = WikipediaLanguage.valueOfCode(tokens[0]);
         String username = tokens[1];
-        try {
-            return wikipediaPageRepository.getWikipediaUser(lang, username);
-        } catch (WikipediaException e) {
-            // Return a fake user with no groups
-            return WikipediaUser.builder().lang(lang).name(username).build();
-        }
+        // In case of empty result return a fake user with no groups
+        return wikipediaUserRepository.findByUsername(lang, username).orElse(
+            WikipediaUser.builder().lang(lang).name(username).build()
+        );
     }
 }

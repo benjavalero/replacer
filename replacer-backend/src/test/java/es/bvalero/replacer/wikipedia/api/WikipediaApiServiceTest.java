@@ -10,6 +10,9 @@ import es.bvalero.replacer.wikipedia.*;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -198,12 +201,13 @@ class WikipediaApiServiceTest {
         WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
         when(wikipediaApiRequestHelper.executeApiRequest(any(WikipediaApiRequest.class))).thenReturn(response);
 
-        WikipediaApiResponse.UserInfo userInfo = wikipediaService.getLoggedUserInfo(
+        WikipediaUser user = wikipediaService.findAuthenticatedUser(
             WikipediaLanguage.getDefault(),
             AccessToken.empty()
-        );
-        assertEquals("Benjavalero", userInfo.getName());
-        assertEquals(List.of("*", "user", "autoconfirmed"), userInfo.getGroups());
+        ).orElse(null);
+        assertNotNull(user);
+        assertEquals("Benjavalero", user.getName());
+        assertEquals(Set.of("*", "user", "autoconfirmed"), user.getGroups().stream().map(WikipediaUserGroup::getGroup).collect(Collectors.toSet()));
     }
 
     @Test
@@ -214,9 +218,10 @@ class WikipediaApiServiceTest {
         WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
         when(wikipediaApiRequestHelper.executeApiRequest(any(WikipediaApiRequest.class))).thenReturn(response);
 
-        WikipediaApiResponse.User user = wikipediaService.getLoggedUser(WikipediaLanguage.getDefault(), "Benjavalero");
+        WikipediaUser user = wikipediaService.findByUsername(WikipediaLanguage.getDefault(), "Benjavalero").orElse(null);
+        assertNotNull(user);
         assertEquals("Benjavalero", user.getName());
-        assertEquals(List.of("*", "user", "autoconfirmed"), user.getGroups());
+        assertEquals(Set.of("*", "user", "autoconfirmed"), user.getGroups().stream().map(WikipediaUserGroup::getGroup).collect(Collectors.toSet()));
     }
 
     @Test
@@ -390,7 +395,7 @@ class WikipediaApiServiceTest {
     }
 
     @Test
-    void testWikipediaServiceOffline() throws WikipediaException {
+    void testWikipediaServiceOffline() {
         assertEquals(
             Integer.valueOf(1),
             wikipediaPageOfflineRepository
