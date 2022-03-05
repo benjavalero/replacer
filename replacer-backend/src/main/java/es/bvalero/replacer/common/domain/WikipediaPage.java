@@ -40,8 +40,9 @@ public class WikipediaPage {
 
     @ToString.Exclude
     @Builder.Default
-    boolean redirect = false;
+    boolean redirect = false; // If the page is considered a redirection page
 
+    // Lombok trick to print only a fragment of the page content
     @ToString.Include
     private String shortContent() {
         return StringUtils.abbreviate(this.getContent(), SHORT_CONTENT_LENGTH);

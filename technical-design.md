@@ -13,9 +13,11 @@ The following concepts are used:
   - **Namespace**. The category of the page in Wikipedia: article, annex, user page, etc. Note that, although an article is a specific type of page, it is usually used as a synonym of page, but in this application we try not to do it.
   - **Language**. The language of the Wikipedia where the page exists.
   - **Title**. The title of the page which identifies it uniquely.
-  - **ID**. The identifier of the page, a number for internal use that can also be used to identify it uniquely in a specific Wikipedia.
-  - **Contents**. The current text contents of the page, also known as _wiki-text_.
-  - **Timestamp**. The date and time of the last update of the page.
+  - **ID**. The identifier of the page, a number for internal use that can also be used to identify it uniquely in a specific Wikipedia. Note that, used along with the language, it identifies a page completely in the tool.
+  - **Content**. The current text of the page, also known as _wiki-text_.
+  - **Last update**. The date and time of the last update of the page.
+  - **Query timestamp**. The date and time when the page was queried and retrieved.
+  - **Redirect**. If the page is considered a redirection page.
 - **Dump**. A huge XML file, generated monthly, containing all the current Wikipedia pages for a language.
 - **Replacement**. A potential issue to be checked and fixed (replaced). For instance, the word _aproximated_ is misspelled and therefore could be proposed to be replaced with _approximated_.
 
