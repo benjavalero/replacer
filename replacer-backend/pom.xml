@@ -18,6 +18,8 @@
         <!-- Don't analyze unit tests -->
         <sonar.sources>src/main/java</sonar.sources>
         <sonar.java.source>${java.version}</sonar.java.source>
+        <sonar.exclusions>**/config/*.java</sonar.exclusions>
+        <sonar.exclusions>**/repository/jdbc/*.java</sonar.exclusions>
 
         <!-- https://stackoverflow.com/questions/51556593/multiple-maven-profiles-activate-multiple-spring-profiles -->
         <includeSpringProfile/>
