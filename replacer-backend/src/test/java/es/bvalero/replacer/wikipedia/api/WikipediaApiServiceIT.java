@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import es.bvalero.replacer.common.domain.*;
 import es.bvalero.replacer.config.JsonMapperConfiguration;
+import es.bvalero.replacer.config.MediaWikiApiConfiguration;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.common.domain.WikipediaUser;
 import java.time.LocalDateTime;

@@ -13,7 +13,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  */
 @Profile("!default")
 @Configuration
-public class WebConfig {
+public class WebConfiguration {
 
     @Value("${replacer.cors.allowed.origins}")
     private String corsAllowedOrigins;

@@ -1,5 +1,6 @@
 package es.bvalero.replacer;
 
+import com.tngtech.archunit.core.domain.JavaModifier;
 import com.tngtech.archunit.junit.AnalyzeClasses;
 import com.tngtech.archunit.junit.ArchTest;
 import com.tngtech.archunit.lang.ArchRule;
@@ -7,6 +8,7 @@ import es.bvalero.replacer.finder.Finder;
 import es.bvalero.replacer.finder.FinderService;
 import org.apache.commons.lang3.ArrayUtils;
 import org.junit.jupiter.api.Test;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.web.bind.annotation.RestController;
 
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.*;
@@ -54,4 +56,13 @@ public class ArchitectureTest {
     public static final ArchRule testMethods = methods()
         .that().areAnnotatedWith(Test.class)
         .should().haveNameStartingWith("test");
+
+    // Configuration
+
+    @ArchTest
+    public static final ArchRule configurationClasses = classes()
+        .that().areAnnotatedWith(Configuration.class)
+        .should().haveSimpleNameEndingWith("Configuration")
+        .andShould().resideInAPackage("es.bvalero.replacer.config")
+        .andShould().haveModifier(JavaModifier.PUBLIC);
 }
