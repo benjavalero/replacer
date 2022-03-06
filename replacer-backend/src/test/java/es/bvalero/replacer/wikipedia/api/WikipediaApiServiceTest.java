@@ -8,9 +8,7 @@ import es.bvalero.replacer.common.domain.*;
 import es.bvalero.replacer.common.util.WikipediaDateUtils;
 import es.bvalero.replacer.wikipedia.*;
 import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
@@ -30,14 +28,16 @@ class WikipediaApiServiceTest {
     private WikipediaApiRequestHelper wikipediaApiRequestHelper;
 
     @InjectMocks
-    private WikipediaPageApiRepository wikipediaService;
+    private WikipediaPageApiRepository wikipediaPageRepository;
 
     private WikipediaPageRepository wikipediaPageOfflineRepository;
+    private WikipediaUserRepository wikipediaUserOfflineRepository;
 
     @BeforeEach
     void setUp() {
-        wikipediaService = new WikipediaPageApiRepository();
-        wikipediaPageOfflineRepository = new WikipediaPageOfflineRepository();
+        wikipediaPageRepository = new WikipediaPageApiRepository();
+        wikipediaPageOfflineRepository = new WikipediaOfflineRepository();
+        wikipediaUserOfflineRepository = new WikipediaOfflineRepository();
         MockitoAnnotations.openMocks(this);
     }
 
@@ -52,7 +52,7 @@ class WikipediaApiServiceTest {
 
         // We pass an empty access token to retrieve an anonymous edit token
         WikipediaPageId pageId = WikipediaPageId.of(WikipediaLanguage.SPANISH, 2209245);
-        EditToken editToken = wikipediaService.getEditToken(pageId, AccessToken.empty());
+        EditToken editToken = wikipediaPageRepository.getEditToken(pageId, AccessToken.empty());
         assertNotNull(editToken.getCsrfToken());
         assertEquals("+\\", editToken.getCsrfToken());
         assertEquals("2019-06-24T21:24:09Z", WikipediaDateUtils.formatWikipediaTimestamp(editToken.getTimestamp()));
@@ -68,7 +68,7 @@ class WikipediaApiServiceTest {
 
         int pageId = 6219990;
         String title = "Usuario:Benjavalero";
-        WikipediaPage page = wikipediaService
+        WikipediaPage page = wikipediaPageRepository
             .findByTitle(WikipediaLanguage.SPANISH, title)
             .orElseThrow(WikipediaException::new);
         assertNotNull(page);
@@ -89,7 +89,7 @@ class WikipediaApiServiceTest {
 
         WikipediaPageId pageId = WikipediaPageId.of(WikipediaLanguage.SPANISH, 6219990);
         String title = "Usuario:Benjavalero";
-        WikipediaPage page = wikipediaService.findById(pageId).orElseThrow(WikipediaException::new);
+        WikipediaPage page = wikipediaPageRepository.findById(pageId).orElseThrow(WikipediaException::new);
         assertNotNull(page);
         assertEquals(pageId, page.getId());
         assertEquals(title, page.getTitle());
@@ -106,7 +106,7 @@ class WikipediaApiServiceTest {
         WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
         when(wikipediaApiRequestHelper.executeApiRequest(any(WikipediaApiRequest.class))).thenReturn(response);
 
-        Collection<WikipediaPage> pages = wikipediaService.findByIds(
+        Collection<WikipediaPage> pages = wikipediaPageRepository.findByIds(
             WikipediaLanguage.SPANISH,
             List.of(6219990, 6903884)
         );
@@ -142,7 +142,7 @@ class WikipediaApiServiceTest {
         WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
         when(wikipediaApiRequestHelper.executeApiRequest(any(WikipediaApiRequest.class))).thenReturn(response);
 
-        assertFalse(wikipediaService.findByTitle(WikipediaLanguage.SPANISH, "Usuario:Benjavaleroxx").isPresent());
+        assertFalse(wikipediaPageRepository.findByTitle(WikipediaLanguage.SPANISH, "Usuario:Benjavaleroxx").isPresent());
     }
 
     @Test
@@ -153,7 +153,7 @@ class WikipediaApiServiceTest {
         WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
         when(wikipediaApiRequestHelper.executeApiRequest(any(WikipediaApiRequest.class))).thenReturn(response);
 
-        assertFalse(wikipediaService.findByTitle(WikipediaLanguage.SPANISH, "Getxo").isPresent());
+        assertFalse(wikipediaPageRepository.findByTitle(WikipediaLanguage.SPANISH, "Getxo").isPresent());
     }
 
     @Test
@@ -164,7 +164,7 @@ class WikipediaApiServiceTest {
         WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
         when(wikipediaApiRequestHelper.executeApiRequest(any(WikipediaApiRequest.class))).thenReturn(response);
 
-        WikipediaSearchResult pageIds = wikipediaService.findByContent(
+        WikipediaSearchResult pageIds = wikipediaPageRepository.findByContent(
             WikipediaLanguage.SPANISH,
             List.of(WikipediaNamespace.getDefault()),
             "",
@@ -182,7 +182,7 @@ class WikipediaApiServiceTest {
         WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
         when(wikipediaApiRequestHelper.executeApiRequest(any(WikipediaApiRequest.class))).thenReturn(response);
 
-        WikipediaSearchResult pageIds = wikipediaService.findByContent(
+        WikipediaSearchResult pageIds = wikipediaPageRepository.findByContent(
             WikipediaLanguage.SPANISH,
             List.of(WikipediaNamespace.getDefault()),
             "",
@@ -201,7 +201,7 @@ class WikipediaApiServiceTest {
         WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
         when(wikipediaApiRequestHelper.executeApiRequest(any(WikipediaApiRequest.class))).thenReturn(response);
 
-        WikipediaUser user = wikipediaService.findAuthenticatedUser(
+        WikipediaUser user = wikipediaPageRepository.findAuthenticatedUser(
             WikipediaLanguage.getDefault(),
             AccessToken.empty()
         ).orElse(null);
@@ -218,7 +218,7 @@ class WikipediaApiServiceTest {
         WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
         when(wikipediaApiRequestHelper.executeApiRequest(any(WikipediaApiRequest.class))).thenReturn(response);
 
-        WikipediaUser user = wikipediaService.findByUsername(WikipediaLanguage.getDefault(), "Benjavalero").orElse(null);
+        WikipediaUser user = wikipediaPageRepository.findByUsername(WikipediaLanguage.getDefault(), "Benjavalero").orElse(null);
         assertNotNull(user);
         assertEquals("Benjavalero", user.getName());
         assertEquals(Set.of("*", "user", "autoconfirmed"), user.getGroups().stream().map(WikipediaUserGroup::getGroup).collect(Collectors.toSet()));
@@ -238,7 +238,7 @@ class WikipediaApiServiceTest {
         assertThrows(
             WikipediaException.class,
             () ->
-                wikipediaService.save(
+                wikipediaPageRepository.save(
                     WikipediaPageId.of(WikipediaLanguage.SPANISH, 1),
                     0,
                     "",
@@ -259,7 +259,7 @@ class WikipediaApiServiceTest {
 
         // We use a timestamp AFTER the timestamp of the last edition (from the edit token)
         LocalDateTime currentTimestamp = WikipediaDateUtils.parseWikipediaTimestamp("2019-06-25T21:24:09Z");
-        wikipediaService.save(
+        wikipediaPageRepository.save(
             WikipediaPageId.of(WikipediaLanguage.SPANISH, 1),
             null,
             "",
@@ -274,7 +274,7 @@ class WikipediaApiServiceTest {
         // Save a section
         // We use a timestamp AFTER the timestamp of the last edition (from the edit token)
         currentTimestamp = WikipediaDateUtils.parseWikipediaTimestamp("2019-06-26T21:24:09Z");
-        wikipediaService.save(
+        wikipediaPageRepository.save(
             WikipediaPageId.of(WikipediaLanguage.SPANISH, 1),
             2,
             "",
@@ -291,14 +291,14 @@ class WikipediaApiServiceTest {
     void testBuildSearchExpressionCaseSensitive() {
         String text = "en Abril";
         String expected = "\"en Abril\" insource:/en Abril/";
-        assertEquals(expected, wikipediaService.buildSearchExpression(text, true));
+        assertEquals(expected, wikipediaPageRepository.buildSearchExpression(text, true));
     }
 
     @Test
     void testBuildSearchExpressionCaseInsensitive() {
         String text = "en abril";
         String expected = "\"en abril\" insource:\"en abril\"";
-        assertEquals(expected, wikipediaService.buildSearchExpression(text, false));
+        assertEquals(expected, wikipediaPageRepository.buildSearchExpression(text, false));
     }
 
     @Test
@@ -309,7 +309,7 @@ class WikipediaApiServiceTest {
         WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
         when(wikipediaApiRequestHelper.executeApiRequest(any(WikipediaApiRequest.class))).thenReturn(response);
 
-        Collection<WikipediaSection> sections = wikipediaService.findSectionsInPage(
+        Collection<WikipediaSection> sections = wikipediaPageRepository.findSectionsInPage(
             WikipediaPageId.of(WikipediaLanguage.SPANISH, 6903884)
         );
         assertNotNull(sections);
@@ -359,7 +359,7 @@ class WikipediaApiServiceTest {
         WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
         when(wikipediaApiRequestHelper.executeApiRequest(any(WikipediaApiRequest.class))).thenReturn(response);
 
-        Collection<WikipediaSection> sections = wikipediaService.findSectionsInPage(
+        Collection<WikipediaSection> sections = wikipediaPageRepository.findSectionsInPage(
             WikipediaPageId.of(WikipediaLanguage.SPANISH, 6633556)
         );
         assertNotNull(sections);
@@ -384,7 +384,7 @@ class WikipediaApiServiceTest {
             .anchor("X")
             .build();
         String title = "Usuario:Benjavalero/Taller";
-        WikipediaPage page = wikipediaService.findPageSection(pageId, section).orElseThrow(WikipediaException::new);
+        WikipediaPage page = wikipediaPageRepository.findPageSection(pageId, section).orElseThrow(WikipediaException::new);
         assertNotNull(page);
         assertEquals(WikipediaLanguage.getDefault(), page.getId().getLang());
         assertEquals(pageId, page.getId());
@@ -396,13 +396,48 @@ class WikipediaApiServiceTest {
 
     @Test
     void testWikipediaServiceOffline() {
-        assertEquals(
-            Integer.valueOf(1),
-            wikipediaPageOfflineRepository
-                .findByTitle(WikipediaLanguage.getDefault(), "")
-                .map(page -> page.getId().getPageId())
-                .orElse(0)
-        );
+        // Offline user
+        Optional<WikipediaUser> user = wikipediaUserOfflineRepository.findAuthenticatedUser(WikipediaLanguage.getDefault(), AccessToken.empty());
+        assertTrue(user.isPresent());
+        user.ifPresent(u -> {
+            assertEquals(WikipediaLanguage.getDefault(), u.getLang());
+            assertEquals("offline", u.getName());
+            assertTrue(u.hasRights());
+            assertTrue(u.isBot());
+
+            Optional<WikipediaUser> user2 = wikipediaUserOfflineRepository.findByUsername(WikipediaLanguage.getDefault(), "x");
+            assertEquals(u, user2.orElse(null));
+        });
+
+        // Offline page
+        Optional<WikipediaPage> page = wikipediaPageOfflineRepository
+            .findByTitle(WikipediaLanguage.getDefault(), "");
+        assertTrue(page.isPresent());
+        int pageId = 1;
+        page.ifPresent(p -> {
+            assertEquals(pageId, p.getId().getPageId());
+            assertEquals(WikipediaNamespace.getDefault(), p.getNamespace());
+            assertEquals("América del Norte", p.getTitle());
+            assertFalse(p.isRedirect());
+
+            Optional<WikipediaPage> page2 = wikipediaPageOfflineRepository.findById(
+                WikipediaPageId.of(WikipediaLanguage.getDefault(), pageId)
+            );
+            assertEquals(p, page2.orElse(null));
+
+            Optional<WikipediaPage> pageSection = wikipediaPageOfflineRepository.findPageSection(
+                WikipediaPageId.of(WikipediaLanguage.getDefault(), pageId),
+                WikipediaSection.builder().anchor("").build()
+            );
+            assertEquals(p, pageSection.orElse(null));
+
+            Collection<WikipediaPage> pages = wikipediaPageOfflineRepository.findByIds(
+                WikipediaLanguage.getDefault(), Collections.singleton(pageId)
+            );
+            assertTrue(pages.isEmpty());
+        });
+
+
         assertFalse(
             wikipediaPageOfflineRepository
                 .findByContent(

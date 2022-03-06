@@ -2,7 +2,6 @@ package es.bvalero.replacer.wikipedia.api;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonValue;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import java.util.List;
 import lombok.Data;

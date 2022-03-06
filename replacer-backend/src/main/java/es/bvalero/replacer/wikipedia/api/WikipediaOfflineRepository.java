@@ -5,6 +5,7 @@ import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.common.util.FileOfflineUtils;
 import es.bvalero.replacer.wikipedia.*;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Optional;
@@ -16,7 +17,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 @Profile("offline")
-class WikipediaPageOfflineRepository implements WikipediaPageRepository, WikipediaUserRepository {
+class WikipediaOfflineRepository implements WikipediaPageRepository, WikipediaUserRepository {
 
     @Override
     public Optional<WikipediaUser> findAuthenticatedUser(WikipediaLanguage lang, AccessToken accessToken) {
@@ -45,7 +46,7 @@ class WikipediaPageOfflineRepository implements WikipediaPageRepository, Wikiped
 
     private Optional<WikipediaPage> buildFakePage(int pageId) {
         try {
-            LocalDateTime now = LocalDateTime.now();
+            LocalDateTime now = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
             return Optional.of(
                 WikipediaPage
                     .builder()
