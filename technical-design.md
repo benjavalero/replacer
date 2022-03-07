@@ -68,18 +68,22 @@ The tool is composed by two independent modules, both in the same repository: th
 
 ### Code Organization
 
-Classes are usually suffixed: service, controller, etc.
-
 The size of the project is not so big that it is worth to divide the backend in several submodules.
 Instead, packages are meant to be as independent as possible, organizing the code by feature and following the principles of Clean Architecture.
 Some architecture tests are included to check the decoupling between packages.
 
-In particular, services are created for each use case.
+In general, services are created for each use case.
 The _ports_ (interfaces for the Wikipedia, OAuth and database adapters) are included in the same package of the adapter but with public visibility.
+
+Classes are usually suffixed: `Service`, `Controller`, `Repository`, etc.
+
+DTO objects are used to communicate the different layers. The suffixes `Request` and `Response` are preferred to `Dto` for the objects used to communicate the controllers with the view.
 
 In backend, we have the following packages:
 
-- `config`. Spring configuration classes with beans used in several packages.
+- `common.domain`. Domain entities.
+
+- `config`. Spring configuration classes, some of them with beans used in several packages.
 
 - `dump`. Helper classes to parse a dump, extract the pages, the replacements in these page, and finally add the fount replacements into the database. `DumpFinder` finds the latest dump available for a given project. `DumpManager` checks periodically the latest available dump, and indexes it, by running the job implementing `DumpJob`. Note that in the past there were two implementations: one in Spring Batch and another with SAX. Currently, there is only the last one which give better performance results. When indexing we have the typical steps:
   - Read: the dump is read and parsed in `DumpHandler`, extracting the pages into `DumpPage`.
@@ -108,9 +112,9 @@ In backend, we have the following packages:
 
   When a new page is indexed, or there have been any modifications, the replacements in the database must be updated. `ReplacementIndexService` offers a method, receiving the list of the new page replacements, which adds the new replacements and marks as obsolete the ones not found in the new list.
 
-- `wikipedia`. Helper class `WikipediaService` to authenticate in Wikipedia to perform requests against the [Wikipedia API](https://www.mediawiki.org/wiki/API:Main_page).
+- `wikipedia`. Repository to perform requests against the [Wikipedia API](https://www.mediawiki.org/wiki/API:Main_page) regarding Wikipedia pages and users.
 
-  The authentication is performed by the Oauth 1.0a protocol, the authentication is implemented in the backend, and the frontend only contains the last access token. Note there are different OAuth tokens to develop locally (see `replacer.wikipedia.api.*` properties). The Production ones, once logged in, redirect to https://replacer.toolforge.org, while the Development ones redirect to http://localhost:8080.
+- `authentication`. The authentication is performed by the Oauth 1.0a protocol, the authentication is implemented in the backend, and the frontend only contains the last access token. Note there are different OAuth tokens to develop locally (see `replacer.wikipedia.api.*` properties). The Production ones, once logged in, redirect to https://replacer.toolforge.org, while the Development ones redirect to http://localhost:8080.
 
 
 ### Formatting
