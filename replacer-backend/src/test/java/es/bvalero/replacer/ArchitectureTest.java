@@ -29,6 +29,11 @@ public class ArchitectureTest {
         .that().resideInAPackage("..domain..")
         .should().onlyAccessClassesThat().resideInAnyPackage(commonPackagesAnd("..common.."));
 
+    @ArchTest
+    public static final ArchRule authenticationAccess = classes()
+        .that().resideInAPackage("..authentication..")
+        .should().onlyBeAccessed().byClassesThat().resideInAnyPackage("..authentication..");
+
     // Naming classes
 
     @ArchTest

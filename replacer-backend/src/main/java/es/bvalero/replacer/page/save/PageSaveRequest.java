@@ -26,11 +26,11 @@ class PageSaveRequest {
     private PageReviewOptionsDto options;
 
     @Schema(description = "Mark as reviewed all page replacements despite the type in the options", required = true)
-    @Valid
     private boolean reviewAllTypes;
 
     @Schema(description = "Access token authenticating the user to save the page", required = true)
     @ToString.Exclude
+    @Valid
     @NotNull
     private AccessTokenDto accessToken;
 }

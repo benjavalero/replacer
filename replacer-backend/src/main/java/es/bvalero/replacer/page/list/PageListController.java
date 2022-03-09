@@ -1,7 +1,7 @@
 package es.bvalero.replacer.page.list;
 
 import com.github.rozidan.springboot.logger.Loggable;
-import es.bvalero.replacer.authentication.userrights.CheckUserRightsService;
+import es.bvalero.replacer.user.UserRightsService;
 import es.bvalero.replacer.common.domain.ReplacementType;
 import es.bvalero.replacer.common.dto.CommonQueryParameters;
 import io.swagger.v3.oas.annotations.Operation;
@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.*;
 public class PageListController {
 
     @Autowired
-    private CheckUserRightsService checkUserRightsService;
+    private UserRightsService userRightsService;
 
     @Autowired
     private PageUnreviewedTitleListService pageUnreviewedTitleListService;
@@ -43,7 +43,7 @@ public class PageListController {
         @Valid CommonQueryParameters queryParameters,
         @Valid PageListRequest request
     ) {
-        checkUserRightsService.validateBotUser(queryParameters.getWikipediaLanguage(), queryParameters.getUser());
+        userRightsService.validateBotUser(queryParameters.getWikipediaLanguage(), queryParameters.getUser());
 
         String titleList = StringUtils.join(
             pageUnreviewedTitleListService.findPageTitlesToReviewByType(
@@ -59,7 +59,7 @@ public class PageListController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PostMapping(value = "/review")
     public void reviewAsSystemByType(@Valid CommonQueryParameters queryParameters, @Valid PageListRequest request) {
-        checkUserRightsService.validateBotUser(queryParameters.getWikipediaLanguage(), queryParameters.getUser());
+        userRightsService.validateBotUser(queryParameters.getWikipediaLanguage(), queryParameters.getUser());
 
         // Set as reviewed in the database
         reviewByTypeService.reviewAsSystemByType(queryParameters.getWikipediaLanguage(), toDomain(request));
@@ -72,7 +72,7 @@ public class PageListController {
     @Operation(summary = "Pages with more replacements to review")
     @GetMapping(value = "/unreviewed")
     public Collection<PageCount> countPagesWithMoreReplacementsToReview(@Valid CommonQueryParameters queryParameters) {
-        checkUserRightsService.validateAdminUser(queryParameters.getUser());
+        userRightsService.validateAdminUser(queryParameters.getWikipediaLanguage(), queryParameters.getUser());
 
         return pageMostUnreviewedService.countPagesWithMoreReplacementsToReview(queryParameters.getWikipediaLanguage());
     }

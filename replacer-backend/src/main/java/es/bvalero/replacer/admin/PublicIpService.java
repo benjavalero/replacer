@@ -1,4 +1,4 @@
-package es.bvalero.replacer.authentication.publicip;
+package es.bvalero.replacer.admin;
 
 import es.bvalero.replacer.common.exception.ReplacerException;
 import java.io.BufferedReader;

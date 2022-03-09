@@ -1,20 +1,16 @@
-package es.bvalero.replacer.authentication.requesttoken;
+package es.bvalero.replacer.authentication.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Value;
 import org.springframework.lang.NonNull;
 
-@Schema
+@Schema(description = "Request token and authorization URL to initiate an authorization process")
 @Value(staticConstructor = "of")
-public class GetRequestTokenResponse {
+public class InitiateAuthenticationResponse {
 
-    @Schema(required = true, example = "b3cecd4b16ecde45d9fd1a0ce68a4091")
+    @Schema
     @NonNull
-    String token;
-
-    @Schema(required = true, example = "23391110732a791d94321559c784c85c")
-    @NonNull
-    String tokenSecret;
+    RequestTokenDto requestToken;
 
     @Schema(
         required = true,

@@ -5,16 +5,19 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import javax.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.lang.NonNull;
 
 @Data
 @NoArgsConstructor
 public class AccessTokenDto {
 
     @Schema(required = true, example = "f8e520e8669a2d65e094d649a96427ff")
+    @NonNull
     @NotNull
     private String token;
 
     @Schema(required = true, example = "36dd90e87c59acc138ee0c38487e975af6da141e")
+    @NonNull
     @NotNull
     private String tokenSecret;
 

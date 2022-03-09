@@ -3,10 +3,14 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
-import { PublicIp } from '../admin/public-ip/public-ip.model';
 import { User } from '../user/user.model';
 import { UserService } from '../user/user.service';
-import { AuthenticateRequest, AuthenticateResponse, RequestTokenResponse } from './authentication.model';
+import {
+  VerifyAuthenticationRequest,
+  VerifyAuthenticationResponse,
+  InitiateAuthenticationResponse,
+  RequestToken
+} from './authentication.model';
 
 @Injectable({
   providedIn: 'root'
@@ -19,23 +23,23 @@ export class AuthenticationService {
   constructor(private httpClient: HttpClient, private userService: UserService) {}
 
   getAuthenticationUrl$(): Observable<string> {
-    return this.getRequestToken$().pipe(
-      map((token: RequestTokenResponse) => {
+    return this.initiateAuthentication$().pipe(
+      map((token: InitiateAuthenticationResponse) => {
         // We keep the request token for further use on verification
-        localStorage.setItem(this.requestTokenKey, JSON.stringify(token));
+        localStorage.setItem(this.requestTokenKey, JSON.stringify(token.requestToken));
 
         return token.authorizationUrl;
       })
     );
   }
 
-  private getRequestToken$(): Observable<RequestTokenResponse> {
-    return this.httpClient.get<RequestTokenResponse>(`${this.baseUrl}/request-token`);
+  private initiateAuthentication$(): Observable<InitiateAuthenticationResponse> {
+    return this.httpClient.get<InitiateAuthenticationResponse>(`${this.baseUrl}/initiate`);
   }
 
   loginUser$(oauthVerifier: string): Observable<User> {
     return this.authenticate$(oauthVerifier).pipe(
-      map((response: AuthenticateResponse) => {
+      map((response: VerifyAuthenticationResponse) => {
         // Remove request token as it is no longer needed
         localStorage.removeItem(this.requestTokenKey);
 
@@ -47,11 +51,11 @@ export class AuthenticationService {
     );
   }
 
-  private authenticate$(oauthVerifier: string): Observable<AuthenticateResponse> {
+  private authenticate$(oauthVerifier: string): Observable<VerifyAuthenticationResponse> {
     // At this point we can assert that the request token exists
-    const requestToken: RequestTokenResponse = JSON.parse(localStorage.getItem(this.requestTokenKey)!);
-    const body = new AuthenticateRequest(requestToken, oauthVerifier);
-    return this.httpClient.post<AuthenticateResponse>(`${this.baseUrl}/authenticate`, body);
+    const requestToken: RequestToken = JSON.parse(localStorage.getItem(this.requestTokenKey)!);
+    const body = new VerifyAuthenticationRequest(requestToken, oauthVerifier);
+    return this.httpClient.post<VerifyAuthenticationResponse>(`${this.baseUrl}/verify`, body);
   }
 
   get redirectPath(): string {
@@ -62,9 +66,5 @@ export class AuthenticationService {
 
   set redirectPath(path: string) {
     localStorage.setItem(this.redirectPathKey, decodeURIComponent(path));
-  }
-
-  getPublicIp$(): Observable<PublicIp> {
-    return this.httpClient.get<PublicIp>(`${this.baseUrl}/public-ip`);
   }
 }

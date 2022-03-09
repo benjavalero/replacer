@@ -1,17 +1,17 @@
 package es.bvalero.replacer.authentication;
 
 import com.github.rozidan.springboot.logger.Loggable;
-import es.bvalero.replacer.authentication.authenticateuser.AuthenticateUserService;
-import es.bvalero.replacer.authentication.authenticateuser.AuthenticatedUser;
+import es.bvalero.replacer.authentication.dto.InitiateAuthenticationResponse;
+import es.bvalero.replacer.authentication.dto.RequestTokenDto;
+import es.bvalero.replacer.authentication.dto.VerifyAuthenticationRequest;
+import es.bvalero.replacer.authentication.dto.VerifyAuthenticationResponse;
+import es.bvalero.replacer.authentication.oauth.OAuthService;
 import es.bvalero.replacer.authentication.oauth.RequestToken;
-import es.bvalero.replacer.authentication.publicip.PublicIp;
-import es.bvalero.replacer.authentication.publicip.PublicIpService;
-import es.bvalero.replacer.authentication.requesttoken.GetRequestTokenResponse;
-import es.bvalero.replacer.authentication.requesttoken.GetRequestTokenService;
-import es.bvalero.replacer.authentication.userrights.CheckUserRightsService;
+import es.bvalero.replacer.common.domain.AccessToken;
+import es.bvalero.replacer.common.domain.ReplacerUser;
+import es.bvalero.replacer.common.dto.AccessTokenDto;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import es.bvalero.replacer.common.dto.CommonQueryParameters;
-import es.bvalero.replacer.common.exception.ReplacerException;
+import es.bvalero.replacer.user.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -28,50 +28,58 @@ import org.springframework.web.bind.annotation.*;
 public class AuthenticationController {
 
     @Autowired
-    private GetRequestTokenService getRequestTokenService;
+    private OAuthService oAuthService;
 
     @Autowired
-    private AuthenticateUserService authenticateUserService;
+    private UserService userService;
 
-    @Autowired
-    private CheckUserRightsService checkUserRightsService;
+    // The usual OAuth1 workflow consists in 3 steps:
+    // See: https://oauth1.wp-api.org/docs/basics/Auth-Flow.html
+    // 1. Obtain temporary credentials for the initial authorization process (Request Token)
+    // 2. Redirect to the Authorization URL where the client actually logs in
+    // 3. Exchange the temporary credentials for long-lived ones (Access Token)
+    //    including a verifier token from the previous authorization step
+    // We include an additional step:
+    // 4. Retrieve the details of the user from Wikipedia
 
-    @Autowired
-    private PublicIpService publicIpService;
+    // For the sake of simplicity, and to reduce the amount of calls, we only serve 2 endpoints/steps:
+    // A. Initiate (steps 1 and 2)
+    // B. Verify (steps 3 and 4)
+    // We also orchestrate the steps in the controller, it is too simple to create dedicated services.
 
     // Note these are the only REST endpoints which don't receive the common query parameters
 
-    @Operation(summary = "Generate a request token, along with the authorization URL, to start authentication.")
-    @GetMapping(value = "/request-token")
-    public GetRequestTokenResponse getRequestToken() throws AuthenticationException {
-        return getRequestTokenService.get();
+    @Operation(summary = "Initiate an authorization process")
+    @GetMapping(value = "/initiate")
+    public InitiateAuthenticationResponse initiateAuthentication() throws AuthenticationException {
+        RequestToken requestToken = oAuthService.getRequestToken();
+        String authorizationUrl = oAuthService.getAuthorizationUrl(requestToken);
+        return InitiateAuthenticationResponse.of(RequestTokenDto.fromDomain(requestToken), authorizationUrl);
     }
 
-    @Operation(summary = "Verify the OAuth authentication and return the authenticated user details")
-    @PostMapping(value = "/authenticate")
-    public AuthenticatedUser authenticateUser(
+    @Operation(summary = "Verify the authorization process")
+    @PostMapping(value = "/verify")
+    public VerifyAuthenticationResponse verifyAuthentication(
         @Parameter(
             description = "Language of the Wikipedia in use",
             schema = @Schema(type = "string", allowableValues = { "es", "gl" }),
             required = true
         ) @RequestParam String lang,
-        @Valid @RequestBody AuthenticateRequest authenticateRequest
+        @Valid @RequestBody VerifyAuthenticationRequest verifyAuthenticationRequest
     ) throws AuthenticationException {
-        RequestToken requestToken = RequestToken.of(
-            authenticateRequest.getToken(),
-            authenticateRequest.getTokenSecret()
-        );
-        return authenticateUserService.authenticateUser(
-            WikipediaLanguage.valueOfCode(lang),
-            requestToken,
-            authenticateRequest.getOauthVerifier()
-        );
-    }
+        RequestToken requestToken = RequestTokenDto.toDomain(verifyAuthenticationRequest.getRequestToken());
+        String oAuthVerifier = verifyAuthenticationRequest.getOauthVerifier();
+        AccessToken accessToken = oAuthService.getAccessToken(requestToken, oAuthVerifier);
+        ReplacerUser user = userService.findUser(WikipediaLanguage.valueOfCode(lang), accessToken)
+            .orElseThrow(AuthenticationException::new);
 
-    @Operation(summary = "Find the public IP of the tool")
-    @GetMapping(value = "/public-ip")
-    public PublicIp getPublicIp(@Valid CommonQueryParameters queryParameters) throws ReplacerException {
-        checkUserRightsService.validateAdminUser(queryParameters.getUser());
-        return publicIpService.getPublicIp();
+        return VerifyAuthenticationResponse
+            .builder()
+            .name(user.getName())
+            .hasRights(user.hasRights())
+            .bot(user.isBot())
+            .admin(user.isAdmin())
+            .accessToken(AccessTokenDto.fromDomain(accessToken))
+            .build();
     }
 }

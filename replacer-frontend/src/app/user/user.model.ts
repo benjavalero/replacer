@@ -1,4 +1,4 @@
-import { AuthenticateResponse } from '../authentication/authentication.model';
+import { VerifyAuthenticationResponse } from '../authentication/authentication.model';
 
 export class User {
   name: string;
@@ -7,7 +7,7 @@ export class User {
   admin: boolean;
   accessToken: AccessToken;
 
-  constructor(response: AuthenticateResponse) {
+  constructor(response: VerifyAuthenticationResponse) {
     this.name = response.name;
     this.hasRights = response.hasRights;
     this.bot = response.bot;

@@ -1,7 +1,7 @@
 package es.bvalero.replacer.dump;
 
 import com.github.rozidan.springboot.logger.Loggable;
-import es.bvalero.replacer.authentication.userrights.CheckUserRightsService;
+import es.bvalero.replacer.user.UserRightsService;
 import es.bvalero.replacer.common.dto.CommonQueryParameters;
 import es.bvalero.replacer.common.exception.ForbiddenException;
 import io.swagger.v3.oas.annotations.Operation;
@@ -21,14 +21,14 @@ public class DumpController {
     private DumpManager dumpManager;
 
     @Autowired
-    private CheckUserRightsService checkUserRightsService;
+    private UserRightsService userRightsService;
 
     @Operation(summary = "Find the status of the current (or the last) dump indexing")
     @Loggable(skipResult = true)
     @GetMapping(value = "")
     public DumpIndexingStatus getDumpIndexingStatus(@Valid CommonQueryParameters queryParameters)
         throws ForbiddenException {
-        checkUserRightsService.validateAdminUser(queryParameters.getUser());
+        userRightsService.validateAdminUser(queryParameters.getWikipediaLanguage(), queryParameters.getUser());
         return dumpManager.getDumpIndexingStatus();
     }
 
@@ -37,7 +37,7 @@ public class DumpController {
     @ResponseStatus(HttpStatus.ACCEPTED)
     @PostMapping(value = "")
     public void manualStartDumpIndexing(@Valid CommonQueryParameters queryParameters) throws ForbiddenException {
-        checkUserRightsService.validateAdminUser(queryParameters.getUser());
+        userRightsService.validateAdminUser(queryParameters.getWikipediaLanguage(), queryParameters.getUser());
         dumpManager.indexLatestDumpFiles();
     }
 }

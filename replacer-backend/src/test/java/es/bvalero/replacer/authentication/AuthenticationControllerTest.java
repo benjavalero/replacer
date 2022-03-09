@@ -9,18 +9,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import es.bvalero.replacer.authentication.authenticateuser.AuthenticateUserService;
-import es.bvalero.replacer.authentication.authenticateuser.AuthenticatedUser;
+import es.bvalero.replacer.authentication.dto.RequestTokenDto;
+import es.bvalero.replacer.authentication.dto.VerifyAuthenticationRequest;
+import es.bvalero.replacer.authentication.oauth.OAuthService;
 import es.bvalero.replacer.authentication.oauth.RequestToken;
-import es.bvalero.replacer.authentication.publicip.PublicIp;
-import es.bvalero.replacer.authentication.publicip.PublicIpService;
-import es.bvalero.replacer.authentication.requesttoken.GetRequestTokenResponse;
-import es.bvalero.replacer.authentication.requesttoken.GetRequestTokenService;
-import es.bvalero.replacer.authentication.userrights.CheckUserRightsService;
+import es.bvalero.replacer.common.domain.ReplacerUser;
 import es.bvalero.replacer.common.domain.AccessToken;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import es.bvalero.replacer.common.dto.AccessTokenDto;
-import es.bvalero.replacer.common.exception.ForbiddenException;
+import es.bvalero.replacer.user.UserService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +25,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+
+import java.util.Optional;
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(controllers = AuthenticationController.class)
@@ -41,125 +39,95 @@ class AuthenticationControllerTest {
     private ObjectMapper objectMapper;
 
     @MockBean
-    private GetRequestTokenService getRequestTokenService;
+    private OAuthService oAuthService;
 
     @MockBean
-    private AuthenticateUserService authenticateUserService;
-
-    @MockBean
-    private CheckUserRightsService checkUserRightsService;
-
-    @MockBean
-    private PublicIpService publicIpService;
+    private UserService userService;
 
     @Test
-    void testGetRequestToken() throws Exception {
-        GetRequestTokenResponse response = GetRequestTokenResponse.of("R", "S", "Z");
-        when(getRequestTokenService.get()).thenReturn(response);
+    void testInitiateAuthentication() throws Exception {
+        RequestToken requestToken = RequestToken.of("R", "S");
+        String authorizationUrl = "Z";
+        when(oAuthService.getRequestToken()).thenReturn(requestToken);
+        when(oAuthService.getAuthorizationUrl(requestToken)).thenReturn(authorizationUrl);
 
         mvc
-            .perform(get("/api/authentication/request-token").contentType(MediaType.APPLICATION_JSON))
+            .perform(get("/api/authentication/initiate").contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.token", is(response.getToken())))
-            .andExpect(jsonPath("$.tokenSecret", is(response.getTokenSecret())))
-            .andExpect(jsonPath("$.authorizationUrl", is(response.getAuthorizationUrl())));
+            .andExpect(jsonPath("$.requestToken.token", is(requestToken.getToken())))
+            .andExpect(jsonPath("$.requestToken.tokenSecret", is(requestToken.getTokenSecret())))
+            .andExpect(jsonPath("$.authorizationUrl", is(authorizationUrl)));
 
-        verify(getRequestTokenService).get();
+        verify(oAuthService).getRequestToken();
+        verify(oAuthService).getAuthorizationUrl(requestToken);
     }
 
     @Test
-    void testGetRequestTokenWithException() throws Exception {
-        when(getRequestTokenService.get()).thenThrow(new AuthenticationException());
+    void testInitiateAuthenticationWithException() throws Exception {
+        when(oAuthService.getRequestToken()).thenThrow(new AuthenticationException());
 
         mvc
-            .perform(get("/api/authentication/request-token").contentType(MediaType.APPLICATION_JSON))
+            .perform(get("/api/authentication/initiate").contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isUnauthorized());
 
-        verify(getRequestTokenService).get();
+        verify(oAuthService).getRequestToken();
     }
 
     @Test
-    void testAuthenticateUser() throws Exception {
+    void testVerifyAuthentication() throws Exception {
         RequestToken requestToken = RequestToken.of("R", "S");
         AccessToken accessToken = AccessToken.of("A", "B");
         String oAuthVerifier = "V";
 
-        AuthenticatedUser authenticatedUser = AuthenticatedUser
-            .builder()
+        WikipediaLanguage lang = WikipediaLanguage.SPANISH;
+        ReplacerUser user = ReplacerUser.builder()
+            .lang(lang)
             .name("C")
             .hasRights(true)
             .bot(false)
             .admin(true)
-            .accessToken(AccessTokenDto.fromDomain(accessToken))
             .build();
-        when(authenticateUserService.authenticateUser(WikipediaLanguage.getDefault(), requestToken, oAuthVerifier))
-            .thenReturn(authenticatedUser);
+        when(oAuthService.getAccessToken(requestToken, oAuthVerifier)).thenReturn(accessToken);
+        when(userService.findUser(lang, accessToken)).thenReturn(Optional.of(user));
 
-        AuthenticateRequest authenticateRequest = new AuthenticateRequest();
-        authenticateRequest.setToken(requestToken.getToken());
-        authenticateRequest.setTokenSecret(requestToken.getTokenSecret());
-        authenticateRequest.setOauthVerifier(oAuthVerifier);
+        VerifyAuthenticationRequest verifyAuthenticationRequest = new VerifyAuthenticationRequest();
+        verifyAuthenticationRequest.setRequestToken(RequestTokenDto.fromDomain(requestToken));
+        verifyAuthenticationRequest.setOauthVerifier(oAuthVerifier);
+
         mvc
             .perform(
-                post("/api/authentication/authenticate?lang=es")
+                post("/api/authentication/verify?lang=es")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(authenticateRequest))
+                    .content(objectMapper.writeValueAsString(verifyAuthenticationRequest))
             )
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.name", is(authenticatedUser.getName())))
-            .andExpect(jsonPath("$.hasRights", equalTo(authenticatedUser.getHasRights())))
-            .andExpect(jsonPath("$.bot", equalTo(authenticatedUser.getBot())))
-            .andExpect(jsonPath("$.admin", equalTo(authenticatedUser.getAdmin())))
+            .andExpect(jsonPath("$.name", is(user.getName())))
+            .andExpect(jsonPath("$.hasRights", equalTo(user.hasRights())))
+            .andExpect(jsonPath("$.bot", equalTo(user.isBot())))
+            .andExpect(jsonPath("$.admin", equalTo(user.isAdmin())))
             .andExpect(jsonPath("$.accessToken.token", is(accessToken.getToken())))
             .andExpect(jsonPath("$.accessToken.tokenSecret", is(accessToken.getTokenSecret())));
 
-        verify(authenticateUserService).authenticateUser(WikipediaLanguage.getDefault(), requestToken, oAuthVerifier);
+        verify(oAuthService).getAccessToken(requestToken, oAuthVerifier);
+        verify(userService).findUser(lang, accessToken);
     }
 
     @Test
-    void testAuthenticateUserEmptyVerifier() throws Exception {
+    void testVerifyAuthenticationWithEmptyVerifier() throws Exception {
         RequestToken requestToken = RequestToken.of("R", "S");
         String oAuthVerifier = "";
 
-        AuthenticateRequest authenticateRequest = new AuthenticateRequest();
-        authenticateRequest.setToken(requestToken.getToken());
-        authenticateRequest.setTokenSecret(requestToken.getTokenSecret());
-        authenticateRequest.setOauthVerifier(oAuthVerifier);
+        VerifyAuthenticationRequest verifyAuthenticationRequest = new VerifyAuthenticationRequest();
+        verifyAuthenticationRequest.setRequestToken(RequestTokenDto.fromDomain(requestToken));
+        verifyAuthenticationRequest.setOauthVerifier(oAuthVerifier);
         mvc
             .perform(
-                post("/api/authentication/authenticate?lang=es")
+                post("/api/authentication/verify?lang=es")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(authenticateRequest))
+                    .content(objectMapper.writeValueAsString(verifyAuthenticationRequest))
             )
             .andExpect(status().isBadRequest());
 
-        verify(authenticateUserService, never())
-            .authenticateUser(any(WikipediaLanguage.class), any(RequestToken.class), anyString());
-    }
-
-    @Test
-    void testGetPublic() throws Exception {
-        PublicIp ip = PublicIp.of("x");
-        when(publicIpService.getPublicIp()).thenReturn(ip);
-
-        mvc
-            .perform(get("/api/authentication/public-ip?user=x&lang=es").contentType(MediaType.APPLICATION_JSON))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.ip", is(ip.getIp())));
-
-        verify(checkUserRightsService).validateAdminUser(anyString());
-        verify(publicIpService).getPublicIp();
-    }
-
-    @Test
-    void testGetPublicIpNotAdmin() throws Exception {
-        doThrow(ForbiddenException.class).when(checkUserRightsService).validateAdminUser(anyString());
-
-        mvc
-            .perform(get("/api/authentication/public-ip?user=x&lang=es").contentType(MediaType.APPLICATION_JSON))
-            .andExpect(status().isForbidden());
-
-        verify(checkUserRightsService).validateAdminUser(anyString());
-        verify(publicIpService, never()).getPublicIp();
+        verify(oAuthService, never()).getAccessToken(requestToken, oAuthVerifier);
     }
 }

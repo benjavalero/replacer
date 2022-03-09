@@ -22,11 +22,14 @@ class OAuthMediaWikiServiceTest {
     private OAuth10aService oAuth10aService;
 
     @InjectMocks
-    private OAuthMediaWikiService oAuthMediaWikiService;
+    private OAuthService oAuthMediaWikiService;
+
+    private OAuthService oAuthOfflineService;
 
     @BeforeEach
     public void setUp() {
         oAuthMediaWikiService = new OAuthMediaWikiService();
+        oAuthOfflineService = new OAuthOfflineService();
         MockitoAnnotations.openMocks(this);
     }
 
@@ -90,5 +93,14 @@ class OAuthMediaWikiServiceTest {
             AuthenticationException.class,
             () -> oAuthMediaWikiService.getAccessToken(requestToken, oAuthVerifier)
         );
+    }
+
+    @Test
+    void testOAuthServiceOffline() throws AuthenticationException {
+        RequestToken requestToken = oAuthOfflineService.getRequestToken();
+        assertNotNull(requestToken);
+        assertFalse(oAuthOfflineService.getAuthorizationUrl(requestToken).isEmpty());
+        String authorizationUrl = "Z";
+        assertNotNull(oAuthOfflineService.getAccessToken(requestToken, authorizationUrl));
     }
 }

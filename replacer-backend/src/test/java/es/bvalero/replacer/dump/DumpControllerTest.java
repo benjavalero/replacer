@@ -8,7 +8,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import es.bvalero.replacer.authentication.userrights.CheckUserRightsService;
+import es.bvalero.replacer.common.domain.WikipediaLanguage;
+import es.bvalero.replacer.user.UserRightsService;
 import es.bvalero.replacer.common.exception.ForbiddenException;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.Test;
@@ -31,7 +32,7 @@ class DumpControllerTest {
     private DumpManager dumpManager;
 
     @MockBean
-    private CheckUserRightsService checkUserRightsService;
+    private UserRightsService userRightsService;
 
     @Test
     void testGetDumpIndexingStatus() throws Exception {
@@ -69,13 +70,15 @@ class DumpControllerTest {
 
     @Test
     void testGetDumpIndexingStatusNotAdmin() throws Exception {
-        doThrow(ForbiddenException.class).when(checkUserRightsService).validateAdminUser(anyString());
+        doThrow(ForbiddenException.class).when(userRightsService).validateAdminUser(
+            any(WikipediaLanguage.class),
+            anyString());
 
         mvc
             .perform(get("/api/dump-indexing?user=x&lang=es").contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isForbidden());
 
-        verify(checkUserRightsService).validateAdminUser(anyString());
+        verify(userRightsService).validateAdminUser(any(WikipediaLanguage.class),anyString());
         verify(dumpManager, never()).indexLatestDumpFiles();
     }
 
@@ -90,13 +93,13 @@ class DumpControllerTest {
 
     @Test
     void testPostStartNotAdmin() throws Exception {
-        doThrow(ForbiddenException.class).when(checkUserRightsService).validateAdminUser(anyString());
+        doThrow(ForbiddenException.class).when(userRightsService).validateAdminUser(any(WikipediaLanguage.class),anyString());
 
         mvc
             .perform(post("/api/dump-indexing?user=x&lang=es").contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isForbidden());
 
-        verify(checkUserRightsService).validateAdminUser(anyString());
+        verify(userRightsService).validateAdminUser(any(WikipediaLanguage.class),anyString());
         verify(dumpManager, never()).indexLatestDumpFiles();
     }
 }

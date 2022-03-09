@@ -7,7 +7,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import es.bvalero.replacer.authentication.userrights.CheckUserRightsService;
+import es.bvalero.replacer.user.UserRightsService;
 import es.bvalero.replacer.common.domain.ReplacementKind;
 import es.bvalero.replacer.common.domain.ReplacementType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
@@ -30,7 +30,7 @@ class PageListControllerTest {
     private MockMvc mvc;
 
     @MockBean
-    private CheckUserRightsService checkUserRightsService;
+    private UserRightsService userRightsService;
 
     @MockBean
     private PageUnreviewedTitleListService pageUnreviewedTitleListService;
@@ -47,7 +47,7 @@ class PageListControllerTest {
             .perform(get("/api/pages?type=2&subtype=Africa&lang=es&user=A").contentType(MediaType.TEXT_PLAIN_VALUE))
             .andExpect(status().isOk());
 
-        verify(checkUserRightsService).validateBotUser(WikipediaLanguage.SPANISH, "A");
+        verify(userRightsService).validateBotUser(WikipediaLanguage.SPANISH, "A");
         verify(pageUnreviewedTitleListService)
             .findPageTitlesToReviewByType(
                 WikipediaLanguage.SPANISH,
@@ -58,14 +58,14 @@ class PageListControllerTest {
     @Test
     void testFindPageTitlesToReviewByTypeNotBot() throws Exception {
         doThrow(ForbiddenException.class)
-            .when(checkUserRightsService)
+            .when(userRightsService)
             .validateBotUser(any(WikipediaLanguage.class), anyString());
 
         mvc
             .perform(get("/api/pages?type=2&subtype=Africa&lang=es&user=A").contentType(MediaType.TEXT_PLAIN_VALUE))
             .andExpect(status().isForbidden());
 
-        verify(checkUserRightsService).validateBotUser(WikipediaLanguage.SPANISH, "A");
+        verify(userRightsService).validateBotUser(WikipediaLanguage.SPANISH, "A");
         verify(pageUnreviewedTitleListService, never())
             .findPageTitlesToReviewByType(
                 WikipediaLanguage.SPANISH,
@@ -81,7 +81,7 @@ class PageListControllerTest {
             )
             .andExpect(status().isNoContent());
 
-        verify(checkUserRightsService).validateBotUser(WikipediaLanguage.SPANISH, "A");
+        verify(userRightsService).validateBotUser(WikipediaLanguage.SPANISH, "A");
         verify(reviewByTypeService)
             .reviewAsSystemByType(WikipediaLanguage.SPANISH, ReplacementType.of(ReplacementKind.SIMPLE, "Africa"));
     }
@@ -89,7 +89,7 @@ class PageListControllerTest {
     @Test
     void testReviewAsSystemByTypeNotBot() throws Exception {
         doThrow(ForbiddenException.class)
-            .when(checkUserRightsService)
+            .when(userRightsService)
             .validateBotUser(any(WikipediaLanguage.class), anyString());
 
         mvc
@@ -98,7 +98,7 @@ class PageListControllerTest {
             )
             .andExpect(status().isForbidden());
 
-        verify(checkUserRightsService).validateBotUser(WikipediaLanguage.SPANISH, "A");
+        verify(userRightsService).validateBotUser(WikipediaLanguage.SPANISH, "A");
         verify(reviewByTypeService, never())
             .reviewAsSystemByType(WikipediaLanguage.SPANISH, ReplacementType.of(ReplacementKind.SIMPLE, "Africa"));
     }
@@ -116,19 +116,19 @@ class PageListControllerTest {
             .andExpect(jsonPath("$[0].title", is("X")))
             .andExpect(jsonPath("$[0].count", is(100)));
 
-        verify(checkUserRightsService).validateAdminUser("A");
+        verify(userRightsService).validateAdminUser(WikipediaLanguage.SPANISH,"A");
         verify(pageMostUnreviewedService).countPagesWithMoreReplacementsToReview(WikipediaLanguage.SPANISH);
     }
 
     @Test
     void testCountPagesWithMoreReplacementsToReviewNotAdmin() throws Exception {
-        doThrow(ForbiddenException.class).when(checkUserRightsService).validateAdminUser(anyString());
+        doThrow(ForbiddenException.class).when(userRightsService).validateAdminUser(any(WikipediaLanguage.class),anyString());
 
         mvc
             .perform(get("/api/pages/unreviewed?lang=es&user=A").contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isForbidden());
 
-        verify(checkUserRightsService).validateAdminUser("A");
+        verify(userRightsService).validateAdminUser(WikipediaLanguage.SPANISH,"A");
         verify(pageMostUnreviewedService, never()).countPagesWithMoreReplacementsToReview(WikipediaLanguage.SPANISH);
     }
 }

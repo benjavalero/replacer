@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { AuthenticationService } from 'src/app/authentication/authentication.service';
+import {AdminService} from "../admin.service";
 import { PublicIp } from './public-ip.model';
 
 @Component({
@@ -11,9 +11,9 @@ import { PublicIp } from './public-ip.model';
 export class PublicIpComponent implements OnInit {
   publicIp$!: Observable<PublicIp>;
 
-  constructor(private authenticationService: AuthenticationService) {}
+  constructor(private adminService: AdminService) {}
 
   ngOnInit(): void {
-    this.publicIp$ = this.authenticationService.getPublicIp$();
+    this.publicIp$ = this.adminService.getPublicIp$();
   }
 }

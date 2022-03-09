@@ -1,24 +1,26 @@
 import { AccessToken } from '../user/user.model';
 
-export interface RequestTokenResponse {
-  token: string;
-  tokenSecret: string;
+export interface InitiateAuthenticationResponse {
+  requestToken: RequestToken;
   authorizationUrl: string;
 }
 
-export class AuthenticateRequest {
+export interface RequestToken {
   token: string;
   tokenSecret: string;
+}
+
+export class VerifyAuthenticationRequest {
+  requestToken: RequestToken;
   oauthVerifier: string;
 
-  constructor(requestToken: RequestTokenResponse, oauthVerifier: string) {
-    this.token = requestToken.token;
-    this.tokenSecret = requestToken.tokenSecret;
+  constructor(requestToken: RequestToken, oauthVerifier: string) {
+    this.requestToken = requestToken;
     this.oauthVerifier = oauthVerifier;
   }
 }
 
-export interface AuthenticateResponse {
+export interface VerifyAuthenticationResponse {
   name: string;
   hasRights: boolean;
   bot: boolean;
