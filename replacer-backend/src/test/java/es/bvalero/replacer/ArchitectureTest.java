@@ -34,6 +34,11 @@ public class ArchitectureTest {
         .that().resideInAPackage("..authentication..")
         .should().onlyBeAccessed().byClassesThat().resideInAnyPackage("..authentication..");
 
+    @ArchTest
+    public static final ArchRule adminAccess = classes()
+        .that().resideInAPackage("..admin..")
+        .should().onlyBeAccessed().byClassesThat().resideInAnyPackage("..admin..");
+
     // Naming classes
 
     @ArchTest

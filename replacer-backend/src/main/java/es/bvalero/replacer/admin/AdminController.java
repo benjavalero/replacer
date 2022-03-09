@@ -1,6 +1,8 @@
 package es.bvalero.replacer.admin;
 
 import com.github.rozidan.springboot.logger.Loggable;
+import es.bvalero.replacer.admin.dto.PublicIpDto;
+import es.bvalero.replacer.admin.publicip.PublicIpService;
 import es.bvalero.replacer.common.dto.CommonQueryParameters;
 import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.user.validate.ValidateAdminUser;
@@ -21,10 +23,10 @@ public class AdminController {
     @Autowired
     private PublicIpService publicIpService;
 
-    @Operation(summary = "Find the public IP of the tool")
+    @Operation(summary = "Find the public IP of the application used to perform the editions in Wikipedia")
     @ValidateAdminUser
     @GetMapping(value = "/public-ip")
-    public PublicIp getPublicIp(@Valid CommonQueryParameters queryParameters) throws ReplacerException {
-        return publicIpService.getPublicIp();
+    public PublicIpDto getPublicIp(@Valid CommonQueryParameters queryParameters) throws ReplacerException {
+        return PublicIpDto.of(publicIpService.getPublicIp());
     }
 }

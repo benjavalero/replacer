@@ -1,5 +1,6 @@
 package es.bvalero.replacer.admin;
 
+import es.bvalero.replacer.admin.publicip.PublicIpService;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.exception.ForbiddenException;
 import es.bvalero.replacer.user.validate.UserRightsService;
@@ -39,13 +40,13 @@ class AdminControllerTest {
 
     @Test
     void testGetPublic() throws Exception {
-        PublicIp ip = PublicIp.of("x");
+        String ip = "x";
         when(publicIpService.getPublicIp()).thenReturn(ip);
 
         mvc
             .perform(get("/api/admin/public-ip?user=x&lang=es").contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.ip", is(ip.getIp())));
+            .andExpect(jsonPath("$.ip", is(ip)));
 
         verify(userRightsService).validateAdminUser(any(WikipediaLanguage.class),anyString());
         verify(publicIpService).getPublicIp();
