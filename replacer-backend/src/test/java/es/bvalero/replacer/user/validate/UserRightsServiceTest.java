@@ -1,4 +1,4 @@
-package es.bvalero.replacer.user;
+package es.bvalero.replacer.user.validate;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -6,6 +6,7 @@ import static org.mockito.Mockito.*;
 import es.bvalero.replacer.common.domain.ReplacerUser;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.exception.ForbiddenException;
+import es.bvalero.replacer.user.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

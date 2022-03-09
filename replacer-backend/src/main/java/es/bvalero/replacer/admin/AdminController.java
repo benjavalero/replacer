@@ -3,7 +3,7 @@ package es.bvalero.replacer.admin;
 import com.github.rozidan.springboot.logger.Loggable;
 import es.bvalero.replacer.common.dto.CommonQueryParameters;
 import es.bvalero.replacer.common.exception.ReplacerException;
-import es.bvalero.replacer.user.UserRightsService;
+import es.bvalero.replacer.user.validate.ValidateAdminUser;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,15 +19,12 @@ import javax.validation.Valid;
 public class AdminController {
 
     @Autowired
-    private UserRightsService userRightsService;
-
-    @Autowired
     private PublicIpService publicIpService;
 
     @Operation(summary = "Find the public IP of the tool")
+    @ValidateAdminUser
     @GetMapping(value = "/public-ip")
     public PublicIp getPublicIp(@Valid CommonQueryParameters queryParameters) throws ReplacerException {
-        userRightsService.validateAdminUser(queryParameters.getWikipediaLanguage(), queryParameters.getUser());
         return publicIpService.getPublicIp();
     }
 }
