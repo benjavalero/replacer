@@ -8,7 +8,7 @@ import org.springframework.lang.NonNull;
 @Value(staticConstructor = "of")
 public class PublicIpDto {
 
-    @Schema(required = true, example = "185.15.56.1")
+    @Schema(required = true)
     @NonNull
     String ip;
 }
