@@ -1,6 +1,6 @@
 package es.bvalero.replacer.finder.benchmark.ignorabletemplate;
 
-import es.bvalero.replacer.finder.FinderPage;
+import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
 import es.bvalero.replacer.finder.benchmark.BenchmarkResult;
 import es.bvalero.replacer.finder.util.FinderUtils;
@@ -25,7 +25,7 @@ class IgnorableTemplateRegexFinder implements BenchmarkFinder {
     }
 
     @Override
-    public Set<BenchmarkResult> findMatches(FinderPage page) {
+    public Set<BenchmarkResult> findMatches(WikipediaPage page) {
         String text = page.getContent();
         Set<BenchmarkResult> matches = new HashSet<>();
         String lowerCaseText = FinderUtils.toLowerCase(text);

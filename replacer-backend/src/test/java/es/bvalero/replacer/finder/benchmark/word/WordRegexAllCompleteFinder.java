@@ -1,6 +1,6 @@
 package es.bvalero.replacer.finder.benchmark.word;
 
-import es.bvalero.replacer.finder.FinderPage;
+import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
 import es.bvalero.replacer.finder.benchmark.BenchmarkResult;
 import java.util.Collection;
@@ -20,7 +20,7 @@ class WordRegexAllCompleteFinder implements BenchmarkFinder {
     }
 
     @Override
-    public Set<BenchmarkResult> findMatches(FinderPage page) {
+    public Set<BenchmarkResult> findMatches(WikipediaPage page) {
         String text = page.getContent();
         // Find all complete words in the text with a regex and check if they are in the list
         Set<BenchmarkResult> matches = new HashSet<>();

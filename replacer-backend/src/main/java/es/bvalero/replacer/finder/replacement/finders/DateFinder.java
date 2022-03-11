@@ -6,7 +6,7 @@ import es.bvalero.replacer.common.domain.ReplacementKind;
 import es.bvalero.replacer.common.domain.ReplacementType;
 import es.bvalero.replacer.common.domain.Suggestion;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import es.bvalero.replacer.finder.FinderPage;
+import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.common.domain.Replacement;
 import es.bvalero.replacer.finder.replacement.ReplacementFinder;
 import es.bvalero.replacer.finder.util.AutomatonMatchFinder;
@@ -89,15 +89,15 @@ public class DateFinder implements ReplacementFinder {
     }
 
     @Override
-    public Iterable<MatchResult> findMatchResults(FinderPage page) {
-        final RunAutomaton dateAutomaton = dateAutomata.get(page.getLang());
+    public Iterable<MatchResult> findMatchResults(WikipediaPage page) {
+        final RunAutomaton dateAutomaton = dateAutomata.get(page.getId().getLang());
         return dateAutomaton != null
             ? AutomatonMatchFinder.find(page.getContent(), dateAutomaton)
             : Collections.emptyList();
     }
 
     @Override
-    public boolean validate(MatchResult match, FinderPage page) {
+    public boolean validate(MatchResult match, WikipediaPage page) {
         return ReplacementFinder.super.validate(match, page) && !isValidDate(match.group());
     }
 
@@ -132,8 +132,8 @@ public class DateFinder implements ReplacementFinder {
     }
 
     @Override
-    public Replacement convert(MatchResult matcher, FinderPage page) {
-        final WikipediaLanguage lang = page.getLang();
+    public Replacement convert(MatchResult matcher, WikipediaPage page) {
+        final WikipediaLanguage lang = page.getId().getLang();
         return startsWithNumber(matcher.group()) ? convertLongDate(matcher, lang) : convertMonthYear(matcher, lang);
     }
 

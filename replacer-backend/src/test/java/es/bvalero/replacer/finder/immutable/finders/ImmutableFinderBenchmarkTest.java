@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.config.XmlConfiguration;
-import es.bvalero.replacer.finder.FinderPageMapper;
 import es.bvalero.replacer.finder.benchmark.BaseFinderBenchmark;
 import es.bvalero.replacer.finder.immutable.ImmutableFinder;
 import es.bvalero.replacer.finder.listing.find.ListingOfflineFinder;
@@ -100,7 +99,7 @@ class ImmutableFinderBenchmarkTest extends BaseFinderBenchmark {
                 long start = System.nanoTime();
                 for (int i = 0; i < numIterations; i++) {
                     // Only transform the iterable without validating not to penalize the performance of the benchmark
-                    IterableUtils.toList(finder.find(FinderPageMapper.fromDomain(page)));
+                    IterableUtils.toList(finder.find(page));
                 }
                 double end = (double) (System.nanoTime() - start) / 1000.0; // In µs
                 if (print) {

@@ -3,7 +3,7 @@ package es.bvalero.replacer.finder.util;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import es.bvalero.replacer.finder.FinderPage;
+import es.bvalero.replacer.common.domain.WikipediaPage;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.MatchResult;
@@ -16,7 +16,7 @@ class LinkUtilsTest {
     void testFindLink() {
         String link = "[[Link|Text]]";
 
-        FinderPage page = FinderPage.of(link);
+        WikipediaPage page = WikipediaPage.of(link);
         List<LinearMatchResult> matches = LinkUtils.findAllLinks(page);
 
         assertEquals(1, matches.size());
@@ -27,7 +27,7 @@ class LinkUtilsTest {
     void testFindLinkTruncated() {
         String link = "[[Link|Text";
 
-        FinderPage page = FinderPage.of(link);
+        WikipediaPage page = WikipediaPage.of(link);
         List<LinearMatchResult> matches = LinkUtils.findAllLinks(page);
 
         assertTrue(matches.isEmpty());
@@ -38,7 +38,7 @@ class LinkUtilsTest {
         String link2 = "[[Link2|Text2]]";
         String link = String.format("[[Link|Text %s Text]]", link2);
 
-        FinderPage page = FinderPage.of(link);
+        WikipediaPage page = WikipediaPage.of(link);
         List<LinearMatchResult> matches = LinkUtils.findAllLinks(page);
 
         assertEquals(2, matches.size());
@@ -52,7 +52,7 @@ class LinkUtilsTest {
         String link2 = "[[Link2|Text2]]";
         String link = String.format("[[Link|Text %s Text %s Text]]", link2, link3);
 
-        FinderPage page = FinderPage.of(link);
+        WikipediaPage page = WikipediaPage.of(link);
         List<LinearMatchResult> matches = LinkUtils.findAllLinks(page);
 
         Set<String> links = Set.of(link, link2, link3);
@@ -65,7 +65,7 @@ class LinkUtilsTest {
         String link2 = String.format("[[Link2|Text2 %s Text2]]", link3);
         String link = String.format("[[Link|Text %s Text]]", link2);
 
-        FinderPage page = FinderPage.of(link);
+        WikipediaPage page = WikipediaPage.of(link);
         List<LinearMatchResult> matches = LinkUtils.findAllLinks(page);
 
         assertEquals(3, matches.size());
@@ -80,7 +80,7 @@ class LinkUtilsTest {
         String link2 = String.format("[[Link2|Text2 %s Text2]]", link3);
         String link = String.format("[[Link|Text %s Text", link2);
 
-        FinderPage page = FinderPage.of(link);
+        WikipediaPage page = WikipediaPage.of(link);
         List<LinearMatchResult> matches = LinkUtils.findAllLinks(page);
 
         assertEquals(2, matches.size());
@@ -94,7 +94,7 @@ class LinkUtilsTest {
         String link2 = "[[Link2|Text2]]";
         String text = String.format("%s %s", link1, link2);
 
-        FinderPage page = FinderPage.of(text);
+        WikipediaPage page = WikipediaPage.of(text);
         List<LinearMatchResult> matches = LinkUtils.findAllLinks(page);
 
         List<String> expected = List.of(link1, link2);

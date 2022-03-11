@@ -2,7 +2,7 @@ package es.bvalero.replacer.finder.immutable.finders;
 
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
-import es.bvalero.replacer.finder.FinderPage;
+import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.common.domain.Immutable;
 import es.bvalero.replacer.finder.immutable.ImmutableFinder;
 import es.bvalero.replacer.finder.immutable.ImmutableFinderPriority;
@@ -44,17 +44,17 @@ class IgnorableTemplateFinder implements ImmutableFinder {
     }
 
     @Override
-    public Iterable<MatchResult> findMatchResults(FinderPage page) {
+    public Iterable<MatchResult> findMatchResults(WikipediaPage page) {
         return AutomatonMatchFinder.find(FinderUtils.toLowerCase(page.getContent()), automaton);
     }
 
     @Override
-    public boolean validate(MatchResult match, FinderPage page) {
+    public boolean validate(MatchResult match, WikipediaPage page) {
         return FinderUtils.isWordCompleteInText(match.start(), match.group(), page.getContent());
     }
 
     @Override
-    public Immutable convert(MatchResult match, FinderPage page) {
+    public Immutable convert(MatchResult match, WikipediaPage page) {
         return Immutable.of(0, page.getContent());
     }
 }

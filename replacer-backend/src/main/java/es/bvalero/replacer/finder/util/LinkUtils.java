@@ -1,6 +1,6 @@
 package es.bvalero.replacer.finder.util;
 
-import es.bvalero.replacer.finder.FinderPage;
+import es.bvalero.replacer.common.domain.WikipediaPage;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -13,7 +13,7 @@ public class LinkUtils {
     public static final String START_LINK = "[[";
     public static final String END_LINK = "]]";
 
-    public List<LinearMatchResult> findAllLinks(FinderPage page) {
+    public List<LinearMatchResult> findAllLinks(WikipediaPage page) {
         final List<LinearMatchResult> matches = new ArrayList<>(100);
         // Each link found may contain nested links which are added after
         int start = 0;
@@ -26,7 +26,7 @@ public class LinkUtils {
         return matches;
     }
 
-    private int findLink(FinderPage page, int start, List<LinearMatchResult> matches) {
+    private int findLink(WikipediaPage page, int start, List<LinearMatchResult> matches) {
         final String text = page.getContent();
         final int startLink = findStartLink(text, start);
         if (startLink >= 0) {

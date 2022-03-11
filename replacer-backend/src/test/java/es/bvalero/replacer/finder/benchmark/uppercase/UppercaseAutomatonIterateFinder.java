@@ -4,7 +4,7 @@ import dk.brics.automaton.AutomatonMatcher;
 import dk.brics.automaton.DatatypesAutomatonProvider;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
-import es.bvalero.replacer.finder.FinderPage;
+import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.finder.benchmark.BenchmarkResult;
 import java.util.*;
 import org.apache.commons.lang3.StringUtils;
@@ -22,7 +22,7 @@ class UppercaseAutomatonIterateFinder extends UppercaseBenchmarkFinder {
     }
 
     @Override
-    public Set<BenchmarkResult> findMatches(FinderPage page) {
+    public Set<BenchmarkResult> findMatches(WikipediaPage page) {
         String text = page.getContent();
         // We loop over all the words and find them in the text with an automaton
         Set<BenchmarkResult> matches = new HashSet<>();

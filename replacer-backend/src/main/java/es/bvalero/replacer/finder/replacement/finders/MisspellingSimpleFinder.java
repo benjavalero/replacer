@@ -2,7 +2,7 @@ package es.bvalero.replacer.finder.replacement.finders;
 
 import es.bvalero.replacer.common.domain.ReplacementKind;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import es.bvalero.replacer.finder.FinderPage;
+import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.finder.listing.Misspelling;
 import es.bvalero.replacer.finder.listing.load.SimpleMisspellingLoader;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
@@ -42,14 +42,14 @@ public class MisspellingSimpleFinder extends MisspellingFinder implements Proper
     }
 
     @Override
-    public Iterable<MatchResult> findMatchResults(FinderPage page) {
+    public Iterable<MatchResult> findMatchResults(WikipediaPage page) {
         // There are thousands of simple misspellings
         // The best approach is to find all words in the text and check if they are in the list
         return LinearMatchFinder.find(page, this::findResult);
     }
 
     @Nullable
-    private MatchResult findResult(FinderPage page, int start) {
+    private MatchResult findResult(WikipediaPage page, int start) {
         final List<MatchResult> matches = new ArrayList<>();
         while (start >= 0 && start < page.getContent().length() && matches.isEmpty()) {
             start = findWord(page.getContent(), start, matches);

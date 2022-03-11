@@ -1,6 +1,6 @@
 package es.bvalero.replacer.finder.cosmetic.finders;
 
-import es.bvalero.replacer.finder.FinderPage;
+import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.finder.cosmetic.CosmeticCheckedFinder;
 import es.bvalero.replacer.common.domain.CheckWikipediaAction;
 import es.bvalero.replacer.finder.util.RegexMatchFinder;
@@ -19,7 +19,7 @@ class DoubleHttpFinder implements CosmeticCheckedFinder {
     private static final Pattern PATTERN_DOUBLE_HTTP = Pattern.compile(REGEX_DOUBLE_HTTP);
 
     @Override
-    public Iterable<MatchResult> findMatchResults(FinderPage page) {
+    public Iterable<MatchResult> findMatchResults(WikipediaPage page) {
         return RegexMatchFinder.find(page.getContent(), PATTERN_DOUBLE_HTTP);
     }
 
@@ -29,7 +29,7 @@ class DoubleHttpFinder implements CosmeticCheckedFinder {
     }
 
     @Override
-    public String getFix(MatchResult match, FinderPage page) {
+    public String getFix(MatchResult match, WikipediaPage page) {
         return match.group(1) + match.group(2);
     }
 }

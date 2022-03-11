@@ -26,7 +26,7 @@ class CustomReplacementFinderServiceTest {
 
     @Test
     void testFindCustomReplacements() {
-        WikipediaPage page = WikipediaPage.ofContent("A X C");
+        WikipediaPage page = WikipediaPage.of("A X C");
         PageReviewOptions options = PageReviewOptions.ofCustom(
             page.getId().getLang(),
             "X", "Y", true
@@ -43,7 +43,7 @@ class CustomReplacementFinderServiceTest {
 
     @Test
     void testFindCustomReplacementsWithNoResults() {
-        WikipediaPage page = WikipediaPage.ofContent("AXC");
+        WikipediaPage page = WikipediaPage.of("AXC");
         PageReviewOptions options = PageReviewOptions.ofCustom(
             page.getId().getLang(),
             "X", "Y", true

@@ -1,6 +1,6 @@
 package es.bvalero.replacer.finder.immutable.finders;
 
-import es.bvalero.replacer.finder.FinderPage;
+import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.common.domain.Immutable;
 import es.bvalero.replacer.finder.immutable.ImmutableCheckedFinder;
 import es.bvalero.replacer.finder.immutable.ImmutableFinder;
@@ -29,7 +29,7 @@ class TitleFinder extends ImmutableCheckedFinder {
 
     @SuppressWarnings("unchecked")
     @Override
-    public Iterable<Immutable> find(FinderPage page) {
+    public Iterable<Immutable> find(WikipediaPage page) {
         // As the titles are not very long and therefore they have few words
         // the best approach is to iterate the list of words and find them in the text
         return IterableUtils.chainedIterable(
@@ -47,7 +47,7 @@ class TitleFinder extends ImmutableCheckedFinder {
     }
 
     @Override
-    public Iterable<MatchResult> findMatchResults(FinderPage page) {
+    public Iterable<MatchResult> findMatchResults(WikipediaPage page) {
         // We are overriding the more general find method
         throw new IllegalCallerException();
     }
@@ -61,12 +61,12 @@ class TitleFinder extends ImmutableCheckedFinder {
         }
 
         @Override
-        public Iterable<MatchResult> findMatchResults(FinderPage page) {
+        public Iterable<MatchResult> findMatchResults(WikipediaPage page) {
             return LinearMatchFinder.find(page, this::findResult);
         }
 
         @Nullable
-        private MatchResult findResult(FinderPage page, int start) {
+        private MatchResult findResult(WikipediaPage page, int start) {
             final List<MatchResult> matches = new ArrayList<>();
             while (start >= 0 && start < page.getContent().length() && matches.isEmpty()) {
                 start = findTitleWord(page.getContent(), start, word, matches);

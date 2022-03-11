@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.config.XmlConfiguration;
-import es.bvalero.replacer.finder.FinderPage;
+import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.common.domain.Cosmetic;
 
 
@@ -64,7 +64,7 @@ class SpaceNotTranslatedFinderTest {
         }
     )
     void testNotTranslatedSpaceInGalician(String text, String fix) {
-        FinderPage page = FinderPage.of(WikipediaLanguage.GALICIAN, text, "");
+        WikipediaPage page = WikipediaPage.of(WikipediaLanguage.GALICIAN, text, "");
         List<Cosmetic> cosmetics = IterableUtils.toList(spaceNotTranslatedFinder.find(page));
 
         assertEquals(1, cosmetics.size());

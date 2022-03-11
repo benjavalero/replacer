@@ -1,7 +1,7 @@
 package es.bvalero.replacer.finder.immutable;
 
 import es.bvalero.replacer.common.domain.Immutable;
-import es.bvalero.replacer.finder.FinderPage;
+import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import org.apache.commons.collections4.IterableUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,7 +20,7 @@ public abstract class ImmutableCheckedFinder implements ImmutableFinder {
 
     // NOTE this will not be applied if overridden by an Immutable Finder
     @Override
-    public Iterable<Immutable> find(FinderPage page) {
+    public Iterable<Immutable> find(WikipediaPage page) {
         if (showImmutableWarning) {
             // Trick: use iterable converter with no conversion at all but decoration
             return IterableUtils.transformedIterable(
@@ -32,7 +32,7 @@ public abstract class ImmutableCheckedFinder implements ImmutableFinder {
         }
     }
 
-    private Immutable check(Immutable immutable, FinderPage page) {
+    private Immutable check(Immutable immutable, WikipediaPage page) {
         this.checkMaxLength(immutable, page);
         return immutable;
     }
@@ -41,7 +41,7 @@ public abstract class ImmutableCheckedFinder implements ImmutableFinder {
         return Integer.MAX_VALUE;
     }
 
-    private void checkMaxLength(Immutable immutable, FinderPage page) {
+    private void checkMaxLength(Immutable immutable, WikipediaPage page) {
         if (immutable.getText().length() > getMaxLength()) {
             final String message = String.format("%s too long", getImmutableType());
             logImmutableCheck(page, immutable, message);
@@ -53,11 +53,11 @@ public abstract class ImmutableCheckedFinder implements ImmutableFinder {
         return className.substring(className.length() - SUFFIX_FINDER_CLASS.length());
     }
 
-    private void logImmutableCheck(FinderPage page, Immutable immutable, String message) {
+    private void logImmutableCheck(WikipediaPage page, Immutable immutable, String message) {
         logImmutableCheck(page, immutable.getStart(), immutable.getEnd(), message);
     }
 
-    protected void logImmutableCheck(FinderPage page, int start, int end, String message) {
+    protected void logImmutableCheck(WikipediaPage page, int start, int end, String message) {
         if (showImmutableWarning) {
             FinderUtils.logFinderResult(page, start, end, message);
         }

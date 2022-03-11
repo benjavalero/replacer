@@ -1,6 +1,6 @@
 package es.bvalero.replacer.finder.benchmark.person;
 
-import es.bvalero.replacer.finder.FinderPage;
+import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
 import es.bvalero.replacer.finder.benchmark.BenchmarkResult;
 import es.bvalero.replacer.finder.util.FinderUtils;
@@ -17,7 +17,7 @@ class PersonIndexOfFinder implements BenchmarkFinder {
     }
 
     @Override
-    public Set<BenchmarkResult> findMatches(FinderPage page) {
+    public Set<BenchmarkResult> findMatches(WikipediaPage page) {
         String text = page.getContent();
         // We loop over all the words and find them in the text with the indexOf function
         Set<BenchmarkResult> matches = new HashSet<>();

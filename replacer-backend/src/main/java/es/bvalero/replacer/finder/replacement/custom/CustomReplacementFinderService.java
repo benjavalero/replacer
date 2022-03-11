@@ -3,7 +3,6 @@ package es.bvalero.replacer.finder.replacement.custom;
 import es.bvalero.replacer.common.domain.ReplacementKind;
 import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.finder.Finder;
-import es.bvalero.replacer.finder.FinderPageMapper;
 import es.bvalero.replacer.finder.FinderService;
 import es.bvalero.replacer.common.domain.Replacement;
 import java.util.Collections;

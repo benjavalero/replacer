@@ -4,7 +4,7 @@ import es.bvalero.replacer.common.domain.ReplacementKind;
 import es.bvalero.replacer.common.domain.ReplacementType;
 import es.bvalero.replacer.common.domain.Suggestion;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import es.bvalero.replacer.finder.FinderPage;
+import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.common.domain.Replacement;
 import es.bvalero.replacer.finder.replacement.ReplacementFinder;
 import es.bvalero.replacer.finder.util.FinderUtils;
@@ -31,8 +31,8 @@ public class AcuteOFinder implements ReplacementFinder {
     static final String FIX_ACUTE_O = "o";
 
     @Override
-    public Iterable<MatchResult> findMatchResults(FinderPage page) {
-        if (WikipediaLanguage.SPANISH == page.getLang()) {
+    public Iterable<MatchResult> findMatchResults(WikipediaPage page) {
+        if (WikipediaLanguage.SPANISH == page.getId().getLang()) {
             return LinearMatchFinder.find(page, this::findResult);
         } else {
             return Collections.emptyList();
@@ -40,7 +40,7 @@ public class AcuteOFinder implements ReplacementFinder {
     }
 
     @Nullable
-    private MatchResult findResult(FinderPage page, int start) {
+    private MatchResult findResult(WikipediaPage page, int start) {
         final List<MatchResult> matches = new ArrayList<>();
         while (start >= 0 && start < page.getContent().length() && matches.isEmpty()) {
             start = findAcuteO(page.getContent(), start, matches);
@@ -68,7 +68,7 @@ public class AcuteOFinder implements ReplacementFinder {
     }
 
     @Override
-    public Replacement convert(MatchResult match, FinderPage page) {
+    public Replacement convert(MatchResult match, WikipediaPage page) {
         return Replacement
             .builder()
             .type(ReplacementType.of(ReplacementKind.COMPOSED, findSubtype(match.group())))

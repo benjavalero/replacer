@@ -2,7 +2,6 @@ package es.bvalero.replacer.finder.benchmark;
 
 import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.common.exception.ReplacerException;
-import es.bvalero.replacer.finder.FinderPageMapper;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.wikipedia.api.WikipediaUtils;
 import java.util.List;
@@ -45,7 +44,7 @@ public abstract class BaseFinderBenchmark {
             for (BenchmarkFinder finder : finders) {
                 long start = System.nanoTime();
                 for (int i = 0; i < numIterations; i++) {
-                    finder.findMatches(FinderPageMapper.fromDomain(page));
+                    finder.findMatches(page);
                 }
                 double end = (double) (System.nanoTime() - start) / 1000.0; // In µs
                 if (print) {

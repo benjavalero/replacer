@@ -4,7 +4,7 @@ import dk.brics.automaton.AutomatonMatcher;
 import dk.brics.automaton.DatatypesAutomatonProvider;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
-import es.bvalero.replacer.finder.FinderPage;
+import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
 import es.bvalero.replacer.finder.benchmark.BenchmarkResult;
 import java.util.Collection;
@@ -22,7 +22,7 @@ class WordAutomatonAllFinder implements BenchmarkFinder {
     }
 
     @Override
-    public Set<BenchmarkResult> findMatches(FinderPage page) {
+    public Set<BenchmarkResult> findMatches(WikipediaPage page) {
         String text = page.getContent();
         // Find all words in the text with an automaton and check if they are in the list
         Set<BenchmarkResult> matches = new HashSet<>();

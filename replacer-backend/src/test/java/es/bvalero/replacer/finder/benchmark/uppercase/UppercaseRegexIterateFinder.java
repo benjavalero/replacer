@@ -1,6 +1,6 @@
 package es.bvalero.replacer.finder.benchmark.uppercase;
 
-import es.bvalero.replacer.finder.FinderPage;
+import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.finder.benchmark.BenchmarkResult;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -20,7 +20,7 @@ class UppercaseRegexIterateFinder extends UppercaseBenchmarkFinder {
     }
 
     @Override
-    public Set<BenchmarkResult> findMatches(FinderPage page) {
+    public Set<BenchmarkResult> findMatches(WikipediaPage page) {
         String text = page.getContent();
         // We loop over all the words and find them in the text with a regex
         Set<BenchmarkResult> matches = new HashSet<>();

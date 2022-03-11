@@ -3,7 +3,7 @@ package es.bvalero.replacer.finder.util;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import es.bvalero.replacer.finder.FinderPage;
+import es.bvalero.replacer.common.domain.WikipediaPage;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.MatchResult;
@@ -16,7 +16,7 @@ class TemplateUtilsTest {
     void testFindTemplate() {
         String template = "{{Template|Text}}";
 
-        FinderPage page = FinderPage.of(template);
+        WikipediaPage page = WikipediaPage.of(template);
         List<LinearMatchResult> matches = TemplateUtils.findAllTemplates(page);
 
         assertEquals(1, matches.size());
@@ -27,7 +27,7 @@ class TemplateUtilsTest {
     void testFindTemplateTruncated() {
         String template = "{{Template|Text";
 
-        FinderPage page = FinderPage.of(template);
+        WikipediaPage page = WikipediaPage.of(template);
         List<LinearMatchResult> matches = TemplateUtils.findAllTemplates(page);
 
         assertTrue(matches.isEmpty());
@@ -38,7 +38,7 @@ class TemplateUtilsTest {
         String template2 = "{{Template2|Text2}}";
         String template = String.format("{{Template|Text %s Text}}", template2);
 
-        FinderPage page = FinderPage.of(template);
+        WikipediaPage page = WikipediaPage.of(template);
         List<LinearMatchResult> matches = TemplateUtils.findAllTemplates(page);
 
         assertEquals(2, matches.size());
@@ -52,7 +52,7 @@ class TemplateUtilsTest {
         String template2 = "{{Template2|Text2}}";
         String template = String.format("{{Template|Text %s Text %s Text}}", template2, template3);
 
-        FinderPage page = FinderPage.of(template);
+        WikipediaPage page = WikipediaPage.of(template);
         List<LinearMatchResult> matches = TemplateUtils.findAllTemplates(page);
 
         Set<String> templates = Set.of(template, template2, template3);
@@ -65,7 +65,7 @@ class TemplateUtilsTest {
         String template2 = String.format("{{Template2|Text2 %s Text2}}", template3);
         String template = String.format("{{Template|Text %s Text}}", template2);
 
-        FinderPage page = FinderPage.of(template);
+        WikipediaPage page = WikipediaPage.of(template);
         List<LinearMatchResult> matches = TemplateUtils.findAllTemplates(page);
 
         assertEquals(3, matches.size());
@@ -80,7 +80,7 @@ class TemplateUtilsTest {
         String template2 = String.format("{{Template2|Text2 %s Text2}}", template3);
         String template = String.format("{{Template|Text %s Text", template2);
 
-        FinderPage page = FinderPage.of(template);
+        WikipediaPage page = WikipediaPage.of(template);
         List<LinearMatchResult> matches = TemplateUtils.findAllTemplates(page);
 
         assertEquals(2, matches.size());
@@ -94,7 +94,7 @@ class TemplateUtilsTest {
         String template2 = "{{Template2|Text2}}";
         String text = String.format("%s %s", template1, template2);
 
-        FinderPage page = FinderPage.of(text);
+        WikipediaPage page = WikipediaPage.of(text);
         List<LinearMatchResult> matches = TemplateUtils.findAllTemplates(page);
 
         List<String> expected = List.of(template1, template2);
@@ -108,7 +108,7 @@ class TemplateUtilsTest {
         String template2 = "{{Template2|Text2}}";
         String text = String.format("%s %s %s", fake, template1, template2);
 
-        FinderPage page = FinderPage.of(text);
+        WikipediaPage page = WikipediaPage.of(text);
         List<LinearMatchResult> matches = TemplateUtils.findAllTemplates(page);
 
         Set<String> expected = Set.of(template1, template2);

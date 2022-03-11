@@ -1,6 +1,6 @@
 package es.bvalero.replacer.finder.cosmetic.finders;
 
-import es.bvalero.replacer.finder.FinderPage;
+import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.finder.cosmetic.CosmeticCheckedFinder;
 import es.bvalero.replacer.common.domain.CheckWikipediaAction;
 import es.bvalero.replacer.finder.util.RegexMatchFinder;
@@ -25,12 +25,12 @@ class BreakIncorrectFinder implements CosmeticCheckedFinder {
     private static final Pattern PATTERN_BREAK = Pattern.compile(REGEX_BREAK);
 
     @Override
-    public Iterable<MatchResult> findMatchResults(FinderPage page) {
+    public Iterable<MatchResult> findMatchResults(WikipediaPage page) {
         return RegexMatchFinder.find(page.getContent(), PATTERN_BREAK);
     }
 
     @Override
-    public boolean validate(MatchResult match, FinderPage page) {
+    public boolean validate(MatchResult match, WikipediaPage page) {
         return !BREAK_VALID.contains(match.group());
     }
 
@@ -40,7 +40,7 @@ class BreakIncorrectFinder implements CosmeticCheckedFinder {
     }
 
     @Override
-    public String getFix(MatchResult match, FinderPage page) {
+    public String getFix(MatchResult match, WikipediaPage page) {
         // See https://es.wikipedia.org/wiki/Usuario:Benjavalero/Replacer/br
         return BREAK_XHTML;
     }

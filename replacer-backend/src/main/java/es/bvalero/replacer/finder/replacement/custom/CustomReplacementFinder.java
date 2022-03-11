@@ -3,7 +3,7 @@ package es.bvalero.replacer.finder.replacement.custom;
 import es.bvalero.replacer.common.domain.ReplacementKind;
 import es.bvalero.replacer.common.domain.ReplacementType;
 import es.bvalero.replacer.common.domain.Suggestion;
-import es.bvalero.replacer.finder.FinderPage;
+import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.common.domain.Replacement;
 import es.bvalero.replacer.finder.replacement.ReplacementFinder;
 import es.bvalero.replacer.finder.replacement.finders.MisspellingFinder;
@@ -33,7 +33,7 @@ class CustomReplacementFinder implements ReplacementFinder {
     }
 
     @Override
-    public Iterable<MatchResult> findMatchResults(FinderPage page) {
+    public Iterable<MatchResult> findMatchResults(WikipediaPage page) {
         return RegexMatchFinder.find(page.getContent(), pattern);
     }
 
@@ -46,7 +46,7 @@ class CustomReplacementFinder implements ReplacementFinder {
     }
 
     @Override
-    public Replacement convert(MatchResult matcher, FinderPage page) {
+    public Replacement convert(MatchResult matcher, WikipediaPage page) {
         final int start = matcher.start();
         final String text = matcher.group();
         return Replacement

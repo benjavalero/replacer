@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.config.XmlConfiguration;
-import es.bvalero.replacer.finder.FinderPage;
+import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.common.domain.Cosmetic;
 
 
@@ -59,7 +59,7 @@ class SpaceLowercaseFinderTest {
         String fix = "[[Arquivo:xxx.jpg]]";
 
         List<Cosmetic> cosmetics = IterableUtils.toList(
-            spaceLowercaseFinder.find(FinderPage.of(WikipediaLanguage.GALICIAN, text, "X"))
+            spaceLowercaseFinder.find(WikipediaPage.of(WikipediaLanguage.GALICIAN, text, "X"))
         );
 
         assertEquals(1, cosmetics.size());

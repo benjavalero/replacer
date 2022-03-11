@@ -4,7 +4,7 @@ import dk.brics.automaton.AutomatonMatcher;
 import dk.brics.automaton.DatatypesAutomatonProvider;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
-import es.bvalero.replacer.finder.FinderPage;
+import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
 import es.bvalero.replacer.finder.benchmark.BenchmarkResult;
 import es.bvalero.replacer.finder.util.FinderUtils;
@@ -23,7 +23,7 @@ class SurnameAutomatonAlternateCompleteFinder implements BenchmarkFinder {
     }
 
     @Override
-    public Set<BenchmarkResult> findMatches(FinderPage page) {
+    public Set<BenchmarkResult> findMatches(WikipediaPage page) {
         String text = page.getContent();
         // Build an alternate automaton with all the complete words and match it against the text
         final Set<BenchmarkResult> matches = new HashSet<>();

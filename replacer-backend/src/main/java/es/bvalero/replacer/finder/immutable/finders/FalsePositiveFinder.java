@@ -5,7 +5,7 @@ import dk.brics.automaton.DatatypesAutomatonProvider;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import es.bvalero.replacer.finder.FinderPage;
+import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.finder.immutable.ImmutableFinder;
 import es.bvalero.replacer.finder.immutable.ImmutableFinderPriority;
 import es.bvalero.replacer.finder.listing.FalsePositive;
@@ -92,13 +92,13 @@ class FalsePositiveFinder implements ImmutableFinder, PropertyChangeListener {
     }
 
     @Override
-    public Iterable<MatchResult> findMatchResults(FinderPage page) {
-        final RunAutomaton automaton = this.falsePositivesAutomata.get(page.getLang());
+    public Iterable<MatchResult> findMatchResults(WikipediaPage page) {
+        final RunAutomaton automaton = this.falsePositivesAutomata.get(page.getId().getLang());
         return automaton == null ? Collections.emptyList() : AutomatonMatchFinder.find(page.getContent(), automaton);
     }
 
     @Override
-    public boolean validate(MatchResult match, FinderPage page) {
+    public boolean validate(MatchResult match, WikipediaPage page) {
         // Benchmarks show similar performance with and without validation
         return FinderUtils.isWordCompleteInText(match.start(), match.group(), page.getContent());
     }

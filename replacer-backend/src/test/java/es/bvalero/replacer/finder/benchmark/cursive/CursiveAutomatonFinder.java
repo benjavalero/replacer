@@ -2,7 +2,7 @@ package es.bvalero.replacer.finder.benchmark.cursive;
 
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
-import es.bvalero.replacer.finder.FinderPage;
+import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
 import es.bvalero.replacer.finder.benchmark.BenchmarkResult;
 import es.bvalero.replacer.finder.util.AutomatonMatchFinder;
@@ -17,7 +17,7 @@ class CursiveAutomatonFinder implements BenchmarkFinder {
     );
 
     @Override
-    public Iterable<MatchResult> findMatchResults(FinderPage page) {
+    public Iterable<MatchResult> findMatchResults(WikipediaPage page) {
         return AutomatonMatchFinder.find(page.getContent(), CURSIVE_AUTOMATON);
     }
 

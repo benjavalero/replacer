@@ -50,11 +50,16 @@ public class WikipediaPage {
     }
 
     @TestOnly
-    public static WikipediaPage ofContent(String content) {
+    public static WikipediaPage of(String content) {
+        return of(WikipediaLanguage.getDefault(), content, "");
+    }
+
+    @TestOnly
+    public static WikipediaPage of(WikipediaLanguage lang, String content, String title) {
         return WikipediaPage.builder()
-            .id(WikipediaPageId.of(WikipediaLanguage.getDefault(), 1))
+            .id(WikipediaPageId.of(lang, 1))
             .namespace(WikipediaNamespace.getDefault())
-            .title("")
+            .title(title)
             .content(content)
             .lastUpdate(LocalDateTime.now())
             .build();

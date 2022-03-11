@@ -1,7 +1,7 @@
 package es.bvalero.replacer.finder.benchmark;
 
 import es.bvalero.replacer.finder.Finder;
-import es.bvalero.replacer.finder.FinderPage;
+import es.bvalero.replacer.common.domain.WikipediaPage;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.MatchResult;
@@ -12,23 +12,23 @@ public interface BenchmarkFinder extends Finder<BenchmarkResult> {
     @TestOnly
     default Set<BenchmarkResult> findMatches(String text) {
         // Only transform the iterable without validating not to penalize the performance of the benchmark
-        return findMatches(FinderPage.of(text));
+        return findMatches(WikipediaPage.of(text));
     }
 
     @TestOnly
-    default Set<BenchmarkResult> findMatches(FinderPage page) {
+    default Set<BenchmarkResult> findMatches(WikipediaPage page) {
         // Only transform the iterable without validating not to penalize the performance of the benchmark
         return new HashSet<>(IterableUtils.toList(this.find(page)));
     }
 
     @Override
-    default Iterable<MatchResult> findMatchResults(FinderPage page) {
+    default Iterable<MatchResult> findMatchResults(WikipediaPage page) {
         // As most benchmarks override the main method this will not be called
         throw new IllegalCallerException();
     }
 
     @Override
-    default BenchmarkResult convert(MatchResult match, FinderPage page) {
+    default BenchmarkResult convert(MatchResult match, WikipediaPage page) {
         return convert(match);
     }
 

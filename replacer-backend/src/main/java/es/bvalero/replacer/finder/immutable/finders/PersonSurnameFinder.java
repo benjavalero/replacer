@@ -3,7 +3,7 @@ package es.bvalero.replacer.finder.immutable.finders;
 import dk.brics.automaton.DatatypesAutomatonProvider;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
-import es.bvalero.replacer.finder.FinderPage;
+import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.common.domain.Immutable;
 import es.bvalero.replacer.finder.immutable.ImmutableFinder;
 import es.bvalero.replacer.finder.immutable.ImmutableFinderPriority;
@@ -55,7 +55,7 @@ class PersonSurnameFinder implements ImmutableFinder {
     }
 
     @Override
-    public Iterable<MatchResult> findMatchResults(FinderPage page) {
+    public Iterable<MatchResult> findMatchResults(WikipediaPage page) {
         // The list will keep on growing
         // The best approach is to iterate the list of words and find them in the text but we choose
         // the automaton because it allows regular expressions and the performance is quite good too
@@ -63,12 +63,12 @@ class PersonSurnameFinder implements ImmutableFinder {
     }
 
     @Override
-    public boolean validate(MatchResult match, FinderPage page) {
+    public boolean validate(MatchResult match, WikipediaPage page) {
         return FinderUtils.isWordCompleteInText(match.start(), match.group(), page.getContent());
     }
 
     @Override
-    public Immutable convert(MatchResult match, FinderPage page) {
+    public Immutable convert(MatchResult match, WikipediaPage page) {
         final int pos = match.group().indexOf(' ') + 1;
         final int start = match.start() + pos;
         final String matchText = match.group().substring(pos);

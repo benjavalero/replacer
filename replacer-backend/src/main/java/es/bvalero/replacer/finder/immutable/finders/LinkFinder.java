@@ -3,7 +3,7 @@ package es.bvalero.replacer.finder.immutable.finders;
 import static es.bvalero.replacer.finder.util.LinkUtils.END_LINK;
 import static es.bvalero.replacer.finder.util.LinkUtils.START_LINK;
 
-import es.bvalero.replacer.finder.FinderPage;
+import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.finder.immutable.ImmutableCheckedFinder;
 import es.bvalero.replacer.finder.immutable.ImmutableFinderPriority;
 import es.bvalero.replacer.finder.util.FinderUtils;
@@ -60,7 +60,7 @@ class LinkFinder extends ImmutableCheckedFinder {
     }
 
     @Override
-    public Iterable<MatchResult> findMatchResults(FinderPage page) {
+    public Iterable<MatchResult> findMatchResults(WikipediaPage page) {
         final List<MatchResult> immutables = new ArrayList<>(100);
         for (LinearMatchResult template : LinkUtils.findAllLinks(page)) {
             immutables.addAll(findImmutables(template, page));
@@ -68,7 +68,7 @@ class LinkFinder extends ImmutableCheckedFinder {
         return immutables;
     }
 
-    private List<MatchResult> findImmutables(LinearMatchResult link, FinderPage page) {
+    private List<MatchResult> findImmutables(LinearMatchResult link, WikipediaPage page) {
         // If the link is suffixed then return the complete link
         final String text = page.getContent();
         final int endSuffix = findEndSuffix(text, link.end());

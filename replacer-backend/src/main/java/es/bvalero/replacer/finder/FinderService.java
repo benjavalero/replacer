@@ -29,7 +29,7 @@ public interface FinderService<T extends FinderResult> {
     @SuppressWarnings("unchecked")
     default Iterable<T> findIterable(WikipediaPage page, Iterable<Finder<T>> finders) {
         return IterableUtils.chainedIterable(
-            IterableUtils.toList(finders).stream().map(finder -> finder.find(FinderPageMapper.fromDomain(page))).toArray(Iterable[]::new)
+            IterableUtils.toList(finders).stream().map(finder -> finder.find(page)).toArray(Iterable[]::new)
         );
     }
 

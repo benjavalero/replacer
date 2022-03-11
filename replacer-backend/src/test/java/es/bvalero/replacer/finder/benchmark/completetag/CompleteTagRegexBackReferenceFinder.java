@@ -1,6 +1,6 @@
 package es.bvalero.replacer.finder.benchmark.completetag;
 
-import es.bvalero.replacer.finder.FinderPage;
+import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
 import es.bvalero.replacer.finder.util.RegexMatchFinder;
 import java.util.Set;
@@ -18,7 +18,7 @@ class CompleteTagRegexBackReferenceFinder implements BenchmarkFinder {
     }
 
     @Override
-    public Iterable<MatchResult> findMatchResults(FinderPage page) {
+    public Iterable<MatchResult> findMatchResults(WikipediaPage page) {
         return RegexMatchFinder.find(page.getContent(), pattern);
     }
 }

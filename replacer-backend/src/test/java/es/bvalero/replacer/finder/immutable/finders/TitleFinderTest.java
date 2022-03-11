@@ -3,7 +3,7 @@ package es.bvalero.replacer.finder.immutable.finders;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import es.bvalero.replacer.finder.FinderPage;
+import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.common.domain.Immutable;
 import es.bvalero.replacer.finder.immutable.ImmutableFinder;
 import java.util.List;
@@ -20,7 +20,7 @@ class TitleFinderTest {
         String content = "En el hotel Hilton de Paris.";
 
         ImmutableFinder titleFinder = new TitleFinder();
-        FinderPage page = FinderPage.of(WikipediaLanguage.getDefault(), content, title);
+        WikipediaPage page = WikipediaPage.of(WikipediaLanguage.getDefault(), content, title);
         List<Immutable> matches = IterableUtils.toList(titleFinder.find(page));
 
         Set<String> expected = Set.of("Hilton", "Paris");

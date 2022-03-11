@@ -1,6 +1,6 @@
 package es.bvalero.replacer.finder.immutable.finders;
 
-import es.bvalero.replacer.finder.FinderPage;
+import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.finder.immutable.ImmutableFinder;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
 import es.bvalero.replacer.finder.util.LinearMatchResult;
@@ -24,12 +24,12 @@ class TableFinder implements ImmutableFinder {
     private static final String ROW_START = "|-";
 
     @Override
-    public Iterable<MatchResult> findMatchResults(FinderPage page) {
+    public Iterable<MatchResult> findMatchResults(WikipediaPage page) {
         return LinearMatchFinder.find(page, this::findResult);
     }
 
     @Nullable
-    private MatchResult findResult(FinderPage page, int start) {
+    private MatchResult findResult(WikipediaPage page, int start) {
         final List<MatchResult> matches = new ArrayList<>();
         while (start >= 0 && start < page.getContent().length() && matches.isEmpty()) {
             start = findLine(page, start, matches);
@@ -37,7 +37,7 @@ class TableFinder implements ImmutableFinder {
         return matches.isEmpty() ? null : matches.get(0);
     }
 
-    private int findLine(FinderPage page, int start, List<MatchResult> matches) {
+    private int findLine(WikipediaPage page, int start, List<MatchResult> matches) {
         final String text = page.getContent();
         final int startLine = findStartLine(text, start);
         if (startLine >= 0) {

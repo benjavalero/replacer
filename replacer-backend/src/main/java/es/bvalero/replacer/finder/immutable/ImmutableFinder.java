@@ -2,12 +2,12 @@ package es.bvalero.replacer.finder.immutable;
 
 import es.bvalero.replacer.common.domain.Immutable;
 import es.bvalero.replacer.finder.Finder;
-import es.bvalero.replacer.finder.FinderPage;
+import es.bvalero.replacer.common.domain.WikipediaPage;
 import java.util.regex.MatchResult;
 
 public interface ImmutableFinder extends Finder<Immutable>, Comparable<ImmutableFinder> {
     @Override
-    default Immutable convert(MatchResult match, FinderPage page) {
+    default Immutable convert(MatchResult match, WikipediaPage page) {
         return convert(match);
     }
 

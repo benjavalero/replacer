@@ -1,6 +1,6 @@
 package es.bvalero.replacer.finder.util;
 
-import es.bvalero.replacer.finder.FinderPage;
+import es.bvalero.replacer.common.domain.WikipediaPage;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -13,7 +13,7 @@ public class TemplateUtils {
     public static final String START_TEMPLATE = "{{";
     public static final String END_TEMPLATE = "}}";
 
-    public List<LinearMatchResult> findAllTemplates(FinderPage page) {
+    public List<LinearMatchResult> findAllTemplates(WikipediaPage page) {
         final List<LinearMatchResult> matches = new ArrayList<>(100);
 
         // Each template found may contain nested templates which are added after
@@ -28,7 +28,7 @@ public class TemplateUtils {
         return matches;
     }
 
-    private int findTemplate(FinderPage page, int start, List<LinearMatchResult> matches) {
+    private int findTemplate(WikipediaPage page, int start, List<LinearMatchResult> matches) {
         final String text = page.getContent();
         final int startTemplate = findStartTemplate(text, start);
         if (startTemplate >= 0) {

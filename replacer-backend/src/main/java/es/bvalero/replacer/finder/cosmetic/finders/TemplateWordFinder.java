@@ -1,6 +1,6 @@
 package es.bvalero.replacer.finder.cosmetic.finders;
 
-import es.bvalero.replacer.finder.FinderPage;
+import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.finder.cosmetic.CosmeticCheckedFinder;
 import es.bvalero.replacer.common.domain.CheckWikipediaAction;
 import es.bvalero.replacer.finder.util.RegexMatchFinder;
@@ -33,7 +33,7 @@ class TemplateWordFinder implements CosmeticCheckedFinder {
     }
 
     @Override
-    public Iterable<MatchResult> findMatchResults(FinderPage page) {
+    public Iterable<MatchResult> findMatchResults(WikipediaPage page) {
         return RegexMatchFinder.find(page.getContent(), patternTemplateWord);
     }
 
@@ -43,7 +43,7 @@ class TemplateWordFinder implements CosmeticCheckedFinder {
     }
 
     @Override
-    public String getFix(MatchResult match, FinderPage page) {
+    public String getFix(MatchResult match, WikipediaPage page) {
         return String.format("{{%s}}", match.group(2));
     }
 }

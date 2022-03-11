@@ -1,6 +1,6 @@
 package es.bvalero.replacer.finder.cosmetic.finders;
 
-import es.bvalero.replacer.finder.FinderPage;
+import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.finder.cosmetic.CosmeticCheckedFinder;
 import es.bvalero.replacer.common.domain.CheckWikipediaAction;
 import es.bvalero.replacer.finder.util.FinderUtils;
@@ -50,7 +50,7 @@ class SpaceLowercaseFinder implements CosmeticCheckedFinder {
     }
 
     @Override
-    public Iterable<MatchResult> findMatchResults(FinderPage page) {
+    public Iterable<MatchResult> findMatchResults(WikipediaPage page) {
         return RegexMatchFinder.find(page.getContent(), patternLowercaseSpace);
     }
 
@@ -61,7 +61,7 @@ class SpaceLowercaseFinder implements CosmeticCheckedFinder {
     }
 
     @Override
-    public String getFix(MatchResult match, FinderPage page) {
+    public String getFix(MatchResult match, WikipediaPage page) {
         return String.format("[[%s:%s]]", FinderUtils.setFirstUpperCase(match.group(1)), match.group(2));
     }
 }

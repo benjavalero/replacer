@@ -1,6 +1,6 @@
 package es.bvalero.replacer.finder.immutable.finders;
 
-import es.bvalero.replacer.finder.FinderPage;
+import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.finder.immutable.ImmutableFinder;
 import es.bvalero.replacer.finder.immutable.ImmutableFinderPriority;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
@@ -26,12 +26,12 @@ class IgnorableSectionFinder implements ImmutableFinder {
     }
 
     @Override
-    public Iterable<MatchResult> findMatchResults(FinderPage page) {
+    public Iterable<MatchResult> findMatchResults(WikipediaPage page) {
         return LinearMatchFinder.find(page, this::findResult);
     }
 
     @Nullable
-    private MatchResult findResult(FinderPage page, int start) {
+    private MatchResult findResult(WikipediaPage page, int start) {
         final List<MatchResult> matches = new ArrayList<>();
         while (start >= 0 && start < page.getContent().length() && matches.isEmpty()) {
             start = findSection(page.getContent(), start, matches);

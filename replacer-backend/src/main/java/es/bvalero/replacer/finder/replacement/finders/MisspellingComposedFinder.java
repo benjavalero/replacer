@@ -5,7 +5,7 @@ import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.common.domain.ReplacementKind;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import es.bvalero.replacer.finder.FinderPage;
+import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.finder.listing.ComposedMisspelling;
 import es.bvalero.replacer.finder.listing.Misspelling;
 import es.bvalero.replacer.finder.listing.load.ComposedMisspellingLoader;
@@ -76,10 +76,10 @@ public class MisspellingComposedFinder extends MisspellingFinder implements Prop
     }
 
     @Override
-    public Iterable<MatchResult> findMatchResults(FinderPage page) {
+    public Iterable<MatchResult> findMatchResults(WikipediaPage page) {
         // With more than 400 composed misspellings
         // the best approach is an automaton of oll the terms alternated
-        final RunAutomaton automaton = this.automata.get(page.getLang());
+        final RunAutomaton automaton = this.automata.get(page.getId().getLang());
         if (automaton == null) {
             return Collections.emptyList();
         } else {

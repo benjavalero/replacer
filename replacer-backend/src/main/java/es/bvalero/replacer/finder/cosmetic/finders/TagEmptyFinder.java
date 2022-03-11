@@ -1,6 +1,6 @@
 package es.bvalero.replacer.finder.cosmetic.finders;
 
-import es.bvalero.replacer.finder.FinderPage;
+import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.finder.cosmetic.CosmeticCheckedFinder;
 import es.bvalero.replacer.common.domain.CheckWikipediaAction;
 import es.bvalero.replacer.finder.util.RegexMatchFinder;
@@ -35,12 +35,12 @@ class TagEmptyFinder implements CosmeticCheckedFinder {
     );
 
     @Override
-    public Iterable<MatchResult> findMatchResults(FinderPage page) {
+    public Iterable<MatchResult> findMatchResults(WikipediaPage page) {
         return RegexMatchFinder.find(page.getContent(), PATTERN_TAG_EMPTY);
     }
 
     @Override
-    public boolean validate(MatchResult matchResult, FinderPage page) {
+    public boolean validate(MatchResult matchResult, WikipediaPage page) {
         final String tag = matchResult.group(1);
         if (TAGS_SIMPLE.contains(tag)) {
             final String expectedSimpleTag = String.format("<%s></%s>", tag, tag);
@@ -55,7 +55,7 @@ class TagEmptyFinder implements CosmeticCheckedFinder {
     }
 
     @Override
-    public String getFix(MatchResult match, FinderPage page) {
+    public String getFix(MatchResult match, WikipediaPage page) {
         return "";
     }
 }

@@ -1,6 +1,6 @@
 package es.bvalero.replacer.finder.cosmetic.finders;
 
-import es.bvalero.replacer.finder.FinderPage;
+import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.finder.cosmetic.CosmeticCheckedFinder;
 import es.bvalero.replacer.common.domain.CheckWikipediaAction;
 import es.bvalero.replacer.finder.util.RegexMatchFinder;
@@ -28,12 +28,12 @@ class DefaultSortSpecialCharactersFinder implements CosmeticCheckedFinder {
     );
 
     @Override
-    public Iterable<MatchResult> findMatchResults(FinderPage page) {
+    public Iterable<MatchResult> findMatchResults(WikipediaPage page) {
         return RegexMatchFinder.find(page.getContent(), PATTERN_DEFAULTSORT_TEMPLATE);
     }
 
     @Override
-    public boolean validate(MatchResult match, FinderPage page) {
+    public boolean validate(MatchResult match, WikipediaPage page) {
         return match.group(2).chars().anyMatch(this::isNotValidCharacter);
     }
 
@@ -47,7 +47,7 @@ class DefaultSortSpecialCharactersFinder implements CosmeticCheckedFinder {
     }
 
     @Override
-    public String getFix(MatchResult match, FinderPage page) {
+    public String getFix(MatchResult match, WikipediaPage page) {
         String templateName = match.group(1).trim();
         String templateContent = match.group(2).replace("_", " ").trim();
         return String.format("{{%s:%s}}", templateName, templateContent);

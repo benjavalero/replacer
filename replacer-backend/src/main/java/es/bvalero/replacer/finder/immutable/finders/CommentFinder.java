@@ -1,6 +1,6 @@
 package es.bvalero.replacer.finder.immutable.finders;
 
-import es.bvalero.replacer.finder.FinderPage;
+import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.finder.immutable.ImmutableCheckedFinder;
 import es.bvalero.replacer.finder.immutable.ImmutableFinderPriority;
 import es.bvalero.replacer.finder.util.FinderUtils;
@@ -32,12 +32,12 @@ class CommentFinder extends ImmutableCheckedFinder {
     }
 
     @Override
-    public Iterable<MatchResult> findMatchResults(FinderPage page) {
+    public Iterable<MatchResult> findMatchResults(WikipediaPage page) {
         return LinearMatchFinder.find(page, this::findResult);
     }
 
     @Nullable
-    private MatchResult findResult(FinderPage page, int start) {
+    private MatchResult findResult(WikipediaPage page, int start) {
         final List<MatchResult> matches = new ArrayList<>();
         while (start >= 0 && start < page.getContent().length() && matches.isEmpty()) {
             start = findComment(page, start, matches);
@@ -45,7 +45,7 @@ class CommentFinder extends ImmutableCheckedFinder {
         return matches.isEmpty() ? null : matches.get(0);
     }
 
-    private int findComment(FinderPage page, int start, List<MatchResult> matches) {
+    private int findComment(WikipediaPage page, int start, List<MatchResult> matches) {
         final String text = page.getContent();
         final int startComment = findStartComment(text, start);
         if (startComment >= 0) {

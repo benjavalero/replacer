@@ -1,6 +1,6 @@
 package es.bvalero.replacer.finder.cosmetic.finders;
 
-import es.bvalero.replacer.finder.FinderPage;
+import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.finder.cosmetic.CosmeticCheckedFinder;
 import es.bvalero.replacer.common.domain.CheckWikipediaAction;
 import es.bvalero.replacer.finder.util.FinderUtils;
@@ -37,12 +37,12 @@ class CategoryWhiteSpaceFinder implements CosmeticCheckedFinder {
     }
 
     @Override
-    public Iterable<MatchResult> findMatchResults(FinderPage page) {
+    public Iterable<MatchResult> findMatchResults(WikipediaPage page) {
         return RegexMatchFinder.find(page.getContent(), patternCategorySpace);
     }
 
     @Override
-    public boolean validate(MatchResult match, FinderPage page) {
+    public boolean validate(MatchResult match, WikipediaPage page) {
         String categoryWord = match.group(1);
         String categoryName = match.group(2);
         String categoryAlias = match.group(3);
@@ -77,8 +77,8 @@ class CategoryWhiteSpaceFinder implements CosmeticCheckedFinder {
     }
 
     @Override
-    public String getFix(MatchResult match, FinderPage page) {
-        String categoryWord = FinderUtils.getFirstItemInList(categoryWords.get(page.getLang().getCode()));
+    public String getFix(MatchResult match, WikipediaPage page) {
+        String categoryWord = FinderUtils.getFirstItemInList(categoryWords.get(page.getId().getLang().getCode()));
         return String.format(
             "[[%s:%s%s]]",
             categoryWord,

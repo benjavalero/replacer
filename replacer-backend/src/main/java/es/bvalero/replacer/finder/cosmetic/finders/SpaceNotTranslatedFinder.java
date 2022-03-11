@@ -1,7 +1,7 @@
 package es.bvalero.replacer.finder.cosmetic.finders;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import es.bvalero.replacer.finder.FinderPage;
+import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.finder.cosmetic.CosmeticCheckedFinder;
 import es.bvalero.replacer.common.domain.CheckWikipediaAction;
 import es.bvalero.replacer.finder.util.FinderUtils;
@@ -62,14 +62,14 @@ class SpaceNotTranslatedFinder implements CosmeticCheckedFinder {
     }
 
     @Override
-    public Iterable<MatchResult> findMatchResults(FinderPage page) {
+    public Iterable<MatchResult> findMatchResults(WikipediaPage page) {
         return RegexMatchFinder.find(page.getContent(), patternLowercaseSpace);
     }
 
     @Override
-    public boolean validate(MatchResult match, FinderPage page) {
+    public boolean validate(MatchResult match, WikipediaPage page) {
         String spaceWord = FinderUtils.setFirstUpperCase(match.group(1));
-        return !this.firstWords.get(page.getLang()).contains(spaceWord);
+        return !this.firstWords.get(page.getId().getLang()).contains(spaceWord);
     }
 
     @Override
@@ -79,17 +79,17 @@ class SpaceNotTranslatedFinder implements CosmeticCheckedFinder {
     }
 
     @Override
-    public String getFix(MatchResult match, FinderPage page) {
+    public String getFix(MatchResult match, WikipediaPage page) {
         String spaceWord = FinderUtils.setFirstUpperCase(match.group(1));
         String spaceWordTranslated;
         if (FinderUtils.getItemsInCollection(fileWords.values()).contains(spaceWord)) {
-            spaceWordTranslated = FinderUtils.getFirstItemInList(fileWords.get(page.getLang().getCode()));
+            spaceWordTranslated = FinderUtils.getFirstItemInList(fileWords.get(page.getId().getLang().getCode()));
         } else if (FinderUtils.getItemsInCollection(imageWords.values()).contains(spaceWord)) {
-            spaceWordTranslated = FinderUtils.getFirstItemInList(imageWords.get(page.getLang().getCode()));
+            spaceWordTranslated = FinderUtils.getFirstItemInList(imageWords.get(page.getId().getLang().getCode()));
         } else if (FinderUtils.getItemsInCollection(annexWords.values()).contains(spaceWord)) {
-            spaceWordTranslated = FinderUtils.getFirstItemInList(annexWords.get(page.getLang().getCode()));
+            spaceWordTranslated = FinderUtils.getFirstItemInList(annexWords.get(page.getId().getLang().getCode()));
         } else if (FinderUtils.getItemsInCollection(categoryWords.values()).contains(spaceWord)) {
-            spaceWordTranslated = FinderUtils.getFirstItemInList(categoryWords.get(page.getLang().getCode()));
+            spaceWordTranslated = FinderUtils.getFirstItemInList(categoryWords.get(page.getId().getLang().getCode()));
         } else {
             throw new IllegalStateException("Unexpected value: " + spaceWord);
         }

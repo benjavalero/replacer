@@ -5,7 +5,7 @@ import es.bvalero.replacer.common.domain.ReplacementKind;
 import es.bvalero.replacer.common.domain.ReplacementType;
 import es.bvalero.replacer.common.domain.Suggestion;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import es.bvalero.replacer.finder.FinderPage;
+import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.finder.listing.Misspelling;
 import es.bvalero.replacer.finder.listing.MisspellingSuggestion;
 import es.bvalero.replacer.common.domain.Replacement;
@@ -65,8 +65,8 @@ public abstract class MisspellingFinder implements ReplacementFinder {
     }
 
     @Override
-    public boolean validate(MatchResult match, FinderPage page) {
-        return isExistingWord(match.group(), page.getLang()) && ReplacementFinder.super.validate(match, page);
+    public boolean validate(MatchResult match, WikipediaPage page) {
+        return isExistingWord(match.group(), page.getId().getLang()) && ReplacementFinder.super.validate(match, page);
     }
 
     private boolean isExistingWord(String word, WikipediaLanguage lang) {
@@ -74,15 +74,15 @@ public abstract class MisspellingFinder implements ReplacementFinder {
     }
 
     @Override
-    public Replacement convert(MatchResult matcher, FinderPage page) {
+    public Replacement convert(MatchResult matcher, WikipediaPage page) {
         final int start = matcher.start();
         final String text = matcher.group();
         return Replacement
             .builder()
-            .type(ReplacementType.of(getType(), getSubtype(text, page.getLang())))
+            .type(ReplacementType.of(getType(), getSubtype(text, page.getId().getLang())))
             .start(start)
             .text(text)
-            .suggestions(findSuggestions(text, page.getLang()))
+            .suggestions(findSuggestions(text, page.getId().getLang()))
             .build();
     }
 

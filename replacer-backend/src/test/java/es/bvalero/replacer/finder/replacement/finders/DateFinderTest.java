@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.config.XmlConfiguration;
-import es.bvalero.replacer.finder.FinderPage;
+import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.common.domain.Replacement;
 import java.util.List;
 import org.apache.commons.collections4.IterableUtils;
@@ -118,7 +118,7 @@ class DateFinderTest {
         String expected = "30 de decembro do 1591";
         String subtype = DateFinder.SUBTYPE_INCOMPLETE;
 
-        FinderPage page = FinderPage.of(WikipediaLanguage.GALICIAN, date, "");
+        WikipediaPage page = WikipediaPage.of(WikipediaLanguage.GALICIAN, date, "");
         List<Replacement> replacements = IterableUtils.toList(dateFinder.find(page));
 
         assertEquals(1, replacements.size());

@@ -5,7 +5,7 @@ import dk.brics.automaton.DatatypesAutomatonProvider;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import es.bvalero.replacer.finder.FinderPage;
+import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.common.domain.Immutable;
 import es.bvalero.replacer.finder.immutable.ImmutableFinder;
 import es.bvalero.replacer.finder.immutable.ImmutableFinderPriority;
@@ -153,8 +153,8 @@ public class UppercaseFinder implements ImmutableFinder, PropertyChangeListener 
     }
 
     @Override
-    public Iterable<MatchResult> findMatchResults(FinderPage page) {
-        final RunAutomaton automaton = this.uppercaseAutomata.get(page.getLang());
+    public Iterable<MatchResult> findMatchResults(WikipediaPage page) {
+        final RunAutomaton automaton = this.uppercaseAutomata.get(page.getId().getLang());
         if (automaton == null) {
             return Collections.emptyList();
         } else {
@@ -169,7 +169,7 @@ public class UppercaseFinder implements ImmutableFinder, PropertyChangeListener 
     }
 
     @Override
-    public boolean validate(MatchResult match, FinderPage page) {
+    public boolean validate(MatchResult match, WikipediaPage page) {
         final Immutable uppercaseWord = findUppercaseWord(match);
         return (
             FinderUtils.isWordCompleteInText(uppercaseWord.getStart(), uppercaseWord.getText(), page.getContent()) &&

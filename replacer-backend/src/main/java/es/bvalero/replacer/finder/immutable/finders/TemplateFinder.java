@@ -1,7 +1,7 @@
 package es.bvalero.replacer.finder.immutable.finders;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import es.bvalero.replacer.finder.FinderPage;
+import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.finder.immutable.ImmutableFinder;
 import es.bvalero.replacer.finder.immutable.ImmutableFinderPriority;
 import es.bvalero.replacer.finder.util.FinderUtils;
@@ -79,10 +79,10 @@ class TemplateFinder implements ImmutableFinder {
     }
 
     @Override
-    public Iterable<MatchResult> findMatchResults(FinderPage page) {
+    public Iterable<MatchResult> findMatchResults(WikipediaPage page) {
         final List<MatchResult> immutables = new ArrayList<>(100);
         for (LinearMatchResult template : TemplateUtils.findAllTemplates(page)) {
-            immutables.addAll(findImmutables(page.getLang(), template));
+            immutables.addAll(findImmutables(page.getId().getLang(), template));
         }
         return immutables;
     }

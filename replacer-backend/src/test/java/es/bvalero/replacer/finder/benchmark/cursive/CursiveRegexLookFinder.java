@@ -1,6 +1,6 @@
 package es.bvalero.replacer.finder.benchmark.cursive;
 
-import es.bvalero.replacer.finder.FinderPage;
+import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
 import es.bvalero.replacer.finder.util.RegexMatchFinder;
 import java.util.regex.MatchResult;
@@ -15,7 +15,7 @@ class CursiveRegexLookFinder implements BenchmarkFinder {
     );
 
     @Override
-    public Iterable<MatchResult> findMatchResults(FinderPage page) {
+    public Iterable<MatchResult> findMatchResults(WikipediaPage page) {
         return RegexMatchFinder.find(page.getContent(), CURSIVE_PATTERN);
     }
 }

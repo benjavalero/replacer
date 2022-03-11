@@ -1,6 +1,6 @@
 package es.bvalero.replacer.finder.benchmark.person;
 
-import es.bvalero.replacer.finder.FinderPage;
+import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
 import es.bvalero.replacer.finder.benchmark.BenchmarkResult;
 import java.util.Collection;
@@ -20,7 +20,7 @@ class PersonRegexAlternateCompleteFinder implements BenchmarkFinder {
     }
 
     @Override
-    public Set<BenchmarkResult> findMatches(FinderPage page) {
+    public Set<BenchmarkResult> findMatches(WikipediaPage page) {
         String text = page.getContent();
         // Build an alternate regex with all the complete words and match it against the text
         Set<BenchmarkResult> matches = new HashSet<>();

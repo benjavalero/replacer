@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.config.XmlConfiguration;
-import es.bvalero.replacer.finder.FinderPage;
+import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.common.domain.Immutable;
 import java.util.List;
 import java.util.Set;
@@ -146,7 +146,7 @@ class LinkFinderTest {
     @ValueSource(strings = { "[[Arquivo:xxx.jpg]]", "[[Ficheiro:y.pdf]]", "[[File:z.png]]", "[[imaxe:a.jpeg]]" })
     void testGalicianFile(String text) {
         List<Immutable> matches = IterableUtils.toList(
-            linkFinder.find(FinderPage.of(WikipediaLanguage.GALICIAN, text, "X"))
+            linkFinder.find(WikipediaPage.of(WikipediaLanguage.GALICIAN, text, "X"))
         );
 
         assertEquals(1, matches.size());
