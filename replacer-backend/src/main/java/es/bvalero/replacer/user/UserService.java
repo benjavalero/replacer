@@ -26,7 +26,7 @@ public class UserService {
         return wikipediaUserRepository.findAuthenticatedUser(lang, accessToken).map(this::convert);
     }
 
-    public Optional<ReplacerUser> findUser(WikipediaLanguage lang, String username) {
+    Optional<ReplacerUser> findUser(WikipediaLanguage lang, String username) {
         return wikipediaUserRepository.findByUsername(lang, username).map(this::convert);
     }
 

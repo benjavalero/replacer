@@ -3,7 +3,7 @@ package es.bvalero.replacer.dump;
 import com.github.rozidan.springboot.logger.Loggable;
 import es.bvalero.replacer.common.dto.CommonQueryParameters;
 import es.bvalero.replacer.common.exception.ForbiddenException;
-import es.bvalero.replacer.user.validate.ValidateAdminUser;
+import es.bvalero.replacer.user.ValidateAdminUser;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import javax.validation.Valid;

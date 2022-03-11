@@ -5,7 +5,7 @@ import es.bvalero.replacer.admin.dto.PublicIpDto;
 import es.bvalero.replacer.admin.publicip.PublicIpService;
 import es.bvalero.replacer.common.dto.CommonQueryParameters;
 import es.bvalero.replacer.common.exception.ReplacerException;
-import es.bvalero.replacer.user.validate.ValidateAdminUser;
+import es.bvalero.replacer.user.ValidateAdminUser;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,4 +1,4 @@
-package es.bvalero.replacer.user.validate;
+package es.bvalero.replacer.user;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;

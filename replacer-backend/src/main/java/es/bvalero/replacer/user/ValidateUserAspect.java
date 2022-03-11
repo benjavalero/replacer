@@ -1,4 +1,4 @@
-package es.bvalero.replacer.user.validate;
+package es.bvalero.replacer.user;
 
 import es.bvalero.replacer.common.dto.CommonQueryParameters;
 import org.aspectj.lang.ProceedingJoinPoint;
