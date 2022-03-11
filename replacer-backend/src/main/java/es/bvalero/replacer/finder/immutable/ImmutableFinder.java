@@ -1,5 +1,6 @@
 package es.bvalero.replacer.finder.immutable;
 
+import es.bvalero.replacer.common.domain.Immutable;
 import es.bvalero.replacer.finder.Finder;
 import es.bvalero.replacer.finder.FinderPage;
 import java.util.regex.MatchResult;

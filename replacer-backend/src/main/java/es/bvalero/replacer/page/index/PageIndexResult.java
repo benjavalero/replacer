@@ -1,6 +1,6 @@
 package es.bvalero.replacer.page.index;
 
-import es.bvalero.replacer.common.domain.PageReplacement;
+import es.bvalero.replacer.common.domain.Replacement;
 import java.util.Collection;
 import java.util.Set;
 import lombok.AccessLevel;
@@ -23,7 +23,7 @@ public class PageIndexResult {
 
     /* Replacements resolved from the page content */
     @Singular
-    Collection<PageReplacement> replacements;
+    Collection<Replacement> replacements;
 
     /* Changes to be applied in the database */
 
@@ -79,7 +79,7 @@ public class PageIndexResult {
     }
 
     @TestOnly
-    public static PageIndexResult ofEmpty(PageIndexStatus status, Collection<PageReplacement> replacements) {
+    public static PageIndexResult ofEmpty(PageIndexStatus status, Collection<Replacement> replacements) {
         return PageIndexResult.builder().status(status).replacements(replacements).build();
     }
 }

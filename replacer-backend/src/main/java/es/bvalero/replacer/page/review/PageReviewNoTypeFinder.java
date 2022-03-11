@@ -1,6 +1,6 @@
 package es.bvalero.replacer.page.review;
 
-import es.bvalero.replacer.common.domain.PageReplacement;
+import es.bvalero.replacer.common.domain.Replacement;
 import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.repository.PageRepository;
 import java.util.Collection;
@@ -23,10 +23,10 @@ class PageReviewNoTypeFinder extends PageReviewFinder {
     }
 
     @Override
-    Collection<PageReplacement> decorateReplacements(
+    Collection<Replacement> decorateReplacements(
         WikipediaPage page,
         PageReviewOptions options,
-        Collection<PageReplacement> replacements
+        Collection<Replacement> replacements
     ) {
         // No decoration needed when no type
         return replacements;

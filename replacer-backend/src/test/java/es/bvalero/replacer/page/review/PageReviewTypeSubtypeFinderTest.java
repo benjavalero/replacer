@@ -45,14 +45,14 @@ class PageReviewTypeSubtypeFinderTest {
         .lastUpdate(LocalDateTime.now())
         .build();
     private final int offset = 1;
-    private final PageReplacement replacement = PageReplacement
+    private final Replacement replacement = Replacement
         .builder()
         .start(offset)
         .type(ReplacementType.of(ReplacementKind.SIMPLE, "Y"))
         .text("Y")
         .suggestions(List.of(Suggestion.ofNoComment("Z")))
         .build();
-    private final List<PageReplacement> replacements = Collections.singletonList(replacement);
+    private final List<Replacement> replacements = Collections.singletonList(replacement);
     private final PageReviewOptions options = PageReviewOptions.ofType(ReplacementType.of(ReplacementKind.SIMPLE, "Y"));
     private final PageReviewOptions options2 = PageReviewOptions.ofType(
         ReplacementType.of(ReplacementKind.COMPOSED, "B")
@@ -240,7 +240,7 @@ class PageReviewTypeSubtypeFinderTest {
         // The page exists in Wikipedia
         when(wikipediaPageRepository.findById(randomPageId)).thenReturn(Optional.of(page));
 
-        final PageReplacement replacement2 = PageReplacement
+        final Replacement replacement2 = Replacement
             .builder()
             .start(offset + 1)
             .type(ReplacementType.of(ReplacementKind.SIMPLE, "Z"))

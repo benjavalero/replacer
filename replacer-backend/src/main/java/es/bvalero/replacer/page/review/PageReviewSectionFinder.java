@@ -1,6 +1,6 @@
 package es.bvalero.replacer.page.review;
 
-import es.bvalero.replacer.common.domain.PageReplacement;
+import es.bvalero.replacer.common.domain.Replacement;
 import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.common.domain.WikipediaSection;
 import es.bvalero.replacer.wikipedia.WikipediaPageRepository;
@@ -44,7 +44,7 @@ class PageReviewSectionFinder {
                 );
                 if (pageSection.isPresent()) {
                     // We need to modify the start position of the replacements according to the section start
-                    Collection<PageReplacement> sectionReplacements = translateReplacementsByOffset(
+                    Collection<Replacement> sectionReplacements = translateReplacementsByOffset(
                         review.getReplacements(),
                         smallestSection.get().getByteOffset()
                     );
@@ -84,7 +84,7 @@ class PageReviewSectionFinder {
 
     private Optional<WikipediaSection> getSmallestSectionContainingAllReplacements(
         Collection<WikipediaSection> sections,
-        Collection<PageReplacement> replacements
+        Collection<Replacement> replacements
     ) {
         // We sort the collection of sections
         // In theory they are already sorted as returned from Wikipedia API,
@@ -111,14 +111,14 @@ class PageReviewSectionFinder {
     }
 
     private boolean areAllReplacementsContainedInInterval(
-        Collection<PageReplacement> replacements,
+        Collection<Replacement> replacements,
         int start,
         @Nullable Integer end
     ) {
         return replacements.stream().allMatch(rep -> isReplacementContainedInInterval(rep, start, end));
     }
 
-    private boolean isReplacementContainedInInterval(PageReplacement replacement, int start, @Nullable Integer end) {
+    private boolean isReplacementContainedInInterval(Replacement replacement, int start, @Nullable Integer end) {
         if (replacement.getStart() >= start) {
             if (end == null) {
                 return true;
@@ -130,8 +130,8 @@ class PageReviewSectionFinder {
         }
     }
 
-    private Collection<PageReplacement> translateReplacementsByOffset(
-        Collection<PageReplacement> replacements,
+    private Collection<Replacement> translateReplacementsByOffset(
+        Collection<Replacement> replacements,
         int sectionOffset
     ) {
         return replacements
@@ -141,13 +141,13 @@ class PageReviewSectionFinder {
     }
 
     private boolean validateTranslatedReplacements(
-        Collection<PageReplacement> replacements,
+        Collection<Replacement> replacements,
         WikipediaPage pageSection
     ) {
-        return replacements.stream().allMatch(rep -> validatePageReplacement(rep, pageSection.getContent()));
+        return replacements.stream().allMatch(rep -> validateReplacement(rep, pageSection.getContent()));
     }
 
-    private boolean validatePageReplacement(PageReplacement replacement, String text) {
+    private boolean validateReplacement(Replacement replacement, String text) {
         if (replacement.getEnd() > text.length()) {
             return false;
         }

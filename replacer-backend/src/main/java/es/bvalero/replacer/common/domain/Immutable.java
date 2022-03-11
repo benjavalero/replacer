@@ -1,7 +1,7 @@
-package es.bvalero.replacer.finder.immutable;
+package es.bvalero.replacer.common.domain;
 
-import es.bvalero.replacer.finder.FinderResult;
 import lombok.Value;
+import org.springframework.lang.NonNull;
 
 /**
  * An <strong>immutable</strong> is a section in the page contents to be left untouched,
@@ -12,5 +12,7 @@ import lombok.Value;
 public class Immutable implements FinderResult {
 
     int start;
+
+    @NonNull
     String text;
 }

@@ -2,8 +2,8 @@ package es.bvalero.replacer.finder.cosmetic.finders;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import es.bvalero.replacer.finder.cosmetic.Cosmetic;
-import es.bvalero.replacer.finder.cosmetic.checkwikipedia.CheckWikipediaService;
+import es.bvalero.replacer.common.domain.Cosmetic;
+
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,8 +15,7 @@ import org.mockito.MockitoAnnotations;
 
 class ListBreakFinderTest {
 
-    @Mock
-    private CheckWikipediaService checkWikipediaService;
+
 
     @InjectMocks
     private ListBreakFinder listBreakFinder;

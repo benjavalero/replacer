@@ -2,7 +2,7 @@ package es.bvalero.replacer.page.review;
 
 import static es.bvalero.replacer.repository.ReplacementRepository.REVIEWER_SYSTEM;
 
-import es.bvalero.replacer.common.domain.PageReplacement;
+import es.bvalero.replacer.common.domain.Replacement;
 import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.repository.PageRepository;
 import es.bvalero.replacer.repository.ReplacementTypeRepository;
@@ -35,14 +35,14 @@ class PageReviewTypeSubtypeFinder extends PageReviewFinder {
     }
 
     @Override
-    Collection<PageReplacement> decorateReplacements(
+    Collection<Replacement> decorateReplacements(
         WikipediaPage page,
         PageReviewOptions options,
-        Collection<PageReplacement> replacements
+        Collection<Replacement> replacements
     ) {
         // Though the whole list of replacements will be returned no matter the type
         // we run a filter to check there is at least one replacement of the requested type
-        Collection<PageReplacement> filtered = filterReplacementsByTypeAndSubtype(replacements, options);
+        Collection<Replacement> filtered = filterReplacementsByTypeAndSubtype(replacements, options);
         if (filtered.isEmpty()) {
             // No replacement to be reviewed for this page and type
             // We remove it from the count cache by marking it as reviewed (it should not exist in DB any more)
@@ -53,8 +53,8 @@ class PageReviewTypeSubtypeFinder extends PageReviewFinder {
         return replacements;
     }
 
-    private Collection<PageReplacement> filterReplacementsByTypeAndSubtype(
-        Collection<PageReplacement> replacements,
+    private Collection<Replacement> filterReplacementsByTypeAndSubtype(
+        Collection<Replacement> replacements,
         PageReviewOptions options
     ) {
         return replacements

@@ -3,8 +3,8 @@ package es.bvalero.replacer.finder.cosmetic.finders;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import es.bvalero.replacer.finder.cosmetic.Cosmetic;
-import es.bvalero.replacer.finder.cosmetic.checkwikipedia.CheckWikipediaService;
+import es.bvalero.replacer.common.domain.Cosmetic;
+
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -15,8 +15,7 @@ import org.mockito.MockitoAnnotations;
 
 class TagEmptyFinderTest {
 
-    @Mock
-    private CheckWikipediaService checkWikipediaService;
+
 
     @InjectMocks
     private TagEmptyFinder tagEmptyFinder;

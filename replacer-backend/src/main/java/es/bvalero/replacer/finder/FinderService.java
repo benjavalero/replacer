@@ -2,6 +2,8 @@ package es.bvalero.replacer.finder;
 
 import java.util.Set;
 import java.util.TreeSet;
+
+import es.bvalero.replacer.common.domain.FinderResult;
 import org.apache.commons.collections4.IterableUtils;
 
 public interface FinderService<T extends FinderResult> {

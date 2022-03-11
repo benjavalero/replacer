@@ -1,6 +1,6 @@
 package es.bvalero.replacer.page.index;
 
-import es.bvalero.replacer.common.domain.PageReplacement;
+import es.bvalero.replacer.common.domain.Replacement;
 import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.common.domain.WikipediaPageId;
 import es.bvalero.replacer.page.findreplacement.FindReplacementsService;
@@ -56,7 +56,7 @@ abstract class PageIndexAbstractService {
 
     // This method can be overridden in case we want to avoid calculating the replacements under some circumstances
     PageIndexResult indexPage(WikipediaPage page, @Nullable IndexablePage dbPage) {
-        final Collection<PageReplacement> replacements = findPageReplacements(page);
+        final Collection<Replacement> replacements = findReplacements(page);
         final IndexablePage indexablePage = IndexablePageMapper.fromDomain(page, replacements);
 
         final PageIndexResult result = indexablePageComparator.indexPageReplacements(indexablePage, dbPage);
@@ -86,7 +86,7 @@ abstract class PageIndexAbstractService {
 
     abstract void saveResult(PageIndexResult result);
 
-    private Collection<PageReplacement> findPageReplacements(WikipediaPage page) {
+    private Collection<Replacement> findReplacements(WikipediaPage page) {
         return findReplacementsService.findReplacements(page);
     }
 }

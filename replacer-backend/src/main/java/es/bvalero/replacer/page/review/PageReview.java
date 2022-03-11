@@ -1,6 +1,6 @@
 package es.bvalero.replacer.page.review;
 
-import es.bvalero.replacer.common.domain.PageReplacement;
+import es.bvalero.replacer.common.domain.Replacement;
 import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.common.domain.WikipediaSection;
 import java.util.Collection;
@@ -19,7 +19,7 @@ class PageReview {
     WikipediaSection section;
 
     @NonNull
-    Collection<PageReplacement> replacements;
+    Collection<Replacement> replacements;
 
     @Nullable
     Integer numPending;

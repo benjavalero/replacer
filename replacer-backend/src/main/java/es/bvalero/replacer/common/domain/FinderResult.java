@@ -1,4 +1,4 @@
-package es.bvalero.replacer.finder;
+package es.bvalero.replacer.common.domain;
 
 import java.util.Collection;
 import java.util.Objects;

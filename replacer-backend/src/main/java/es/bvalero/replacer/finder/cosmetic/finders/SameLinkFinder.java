@@ -2,7 +2,7 @@ package es.bvalero.replacer.finder.cosmetic.finders;
 
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.cosmetic.CosmeticCheckedFinder;
-import es.bvalero.replacer.finder.cosmetic.checkwikipedia.CheckWikipediaAction;
+import es.bvalero.replacer.common.domain.CheckWikipediaAction;
 import es.bvalero.replacer.finder.util.RegexMatchFinder;
 import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 /** Links with the same link and alias, e.g. `[[Coronavirus|coronavirus]] ==> [[coronavirus]]` */
 @Component
-class SameLinkFinder extends CosmeticCheckedFinder {
+class SameLinkFinder implements CosmeticCheckedFinder {
 
     @RegExp
     private static final String REGEX_SAME_LINK = "\\[\\[(.+?)\\|(\\1)]]";

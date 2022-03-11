@@ -2,7 +2,7 @@ package es.bvalero.replacer.finder.cosmetic.finders;
 
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.cosmetic.CosmeticCheckedFinder;
-import es.bvalero.replacer.finder.cosmetic.checkwikipedia.CheckWikipediaAction;
+import es.bvalero.replacer.common.domain.CheckWikipediaAction;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.RegexMatchFinder;
 import java.util.Map;
@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
 
 /** Categories containing unnecessary spaces, e.g. `[[Categoría: Animal]] ==> [[Categoría:Animal]]` */
 @Component
-class CategoryWhiteSpaceFinder extends CosmeticCheckedFinder {
+class CategoryWhiteSpaceFinder implements CosmeticCheckedFinder {
 
     @Resource
     private Map<String, String> categoryWords;
@@ -72,7 +72,7 @@ class CategoryWhiteSpaceFinder extends CosmeticCheckedFinder {
     }
 
     @Override
-    protected CheckWikipediaAction getCheckWikipediaAction() {
+    public CheckWikipediaAction getCheckWikipediaAction() {
         return CheckWikipediaAction.CATEGORY_WITH_WHITESPACE;
     }
 

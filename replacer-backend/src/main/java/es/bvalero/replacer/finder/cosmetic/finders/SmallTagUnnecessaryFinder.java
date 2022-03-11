@@ -2,7 +2,7 @@ package es.bvalero.replacer.finder.cosmetic.finders;
 
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.cosmetic.CosmeticCheckedFinder;
-import es.bvalero.replacer.finder.cosmetic.checkwikipedia.CheckWikipediaAction;
+import es.bvalero.replacer.common.domain.CheckWikipediaAction;
 import es.bvalero.replacer.finder.util.RegexMatchFinder;
 import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 /** Unnecessary small tag in sup or ref tags, e.g. `<sup><small>2</small></sup> ==> <sup>2</sup>` */
 @Component
-class SmallTagUnnecessaryFinder extends CosmeticCheckedFinder {
+class SmallTagUnnecessaryFinder implements CosmeticCheckedFinder {
 
     @RegExp
     private static final String REGEX_SUP_SMALL_TAG = "<sup><small>.+?</small></sup>";
@@ -32,7 +32,7 @@ class SmallTagUnnecessaryFinder extends CosmeticCheckedFinder {
     }
 
     @Override
-    protected CheckWikipediaAction getCheckWikipediaAction() {
+    public CheckWikipediaAction getCheckWikipediaAction() {
         return CheckWikipediaAction.SMALL_TAG_UNNECESSARY;
     }
 

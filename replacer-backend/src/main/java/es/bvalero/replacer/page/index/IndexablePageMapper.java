@@ -1,6 +1,6 @@
 package es.bvalero.replacer.page.index;
 
-import es.bvalero.replacer.common.domain.PageReplacement;
+import es.bvalero.replacer.common.domain.Replacement;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.common.domain.WikipediaPageId;
@@ -37,7 +37,7 @@ class IndexablePageMapper {
             .build();
     }
 
-    IndexablePage fromDomain(WikipediaPage page, Collection<PageReplacement> replacements) {
+    IndexablePage fromDomain(WikipediaPage page, Collection<Replacement> replacements) {
         return IndexablePage
             .builder()
             .id(fromDomain(page.getId()))

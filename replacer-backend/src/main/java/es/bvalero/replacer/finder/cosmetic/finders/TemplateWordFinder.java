@@ -2,7 +2,7 @@ package es.bvalero.replacer.finder.cosmetic.finders;
 
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.cosmetic.CosmeticCheckedFinder;
-import es.bvalero.replacer.finder.cosmetic.checkwikipedia.CheckWikipediaAction;
+import es.bvalero.replacer.common.domain.CheckWikipediaAction;
 import es.bvalero.replacer.finder.util.RegexMatchFinder;
 import java.util.Map;
 import java.util.regex.MatchResult;
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 
 /** Templates containing the useless "template" word, e.g. `{{plantilla:DGRG}} ==> {{DGRG}}` */
 @Component
-class TemplateWordFinder extends CosmeticCheckedFinder {
+class TemplateWordFinder implements CosmeticCheckedFinder {
 
     @Resource
     private Map<String, String> templateWords;
@@ -38,7 +38,7 @@ class TemplateWordFinder extends CosmeticCheckedFinder {
     }
 
     @Override
-    protected CheckWikipediaAction getCheckWikipediaAction() {
+    public CheckWikipediaAction getCheckWikipediaAction() {
         return CheckWikipediaAction.TEMPLATE_WORD_USELESS;
     }
 

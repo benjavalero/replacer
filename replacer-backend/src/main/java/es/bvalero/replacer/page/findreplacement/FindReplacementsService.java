@@ -1,16 +1,14 @@
 package es.bvalero.replacer.page.findreplacement;
 
 import com.github.rozidan.springboot.logger.Loggable;
-import es.bvalero.replacer.common.domain.PageReplacement;
+import es.bvalero.replacer.common.domain.Replacement;
 import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.FinderPageMapper;
-import es.bvalero.replacer.finder.FinderResult;
-import es.bvalero.replacer.finder.immutable.Immutable;
+import es.bvalero.replacer.common.domain.FinderResult;
+import es.bvalero.replacer.common.domain.Immutable;
 import es.bvalero.replacer.finder.immutable.ImmutableFinderService;
-import es.bvalero.replacer.finder.replacement.Replacement;
 import es.bvalero.replacer.finder.replacement.ReplacementFinderService;
-import es.bvalero.replacer.finder.replacement.ReplacementMapper;
 import es.bvalero.replacer.finder.replacement.custom.CustomOptions;
 import es.bvalero.replacer.finder.replacement.custom.CustomReplacementFinderService;
 import es.bvalero.replacer.page.review.PageReviewOptions;
@@ -34,19 +32,19 @@ public class FindReplacementsService {
 
     /** Find all replacements in the page content ignoring the ones contained in immutables */
     @Loggable(value = LogLevel.TRACE, skipResult = true, warnOver = 1, warnUnit = TimeUnit.SECONDS)
-    public Collection<PageReplacement> findReplacements(WikipediaPage page) {
+    public Collection<Replacement> findReplacements(WikipediaPage page) {
         FinderPage finderPage = FinderPageMapper.fromDomain(page);
 
         // There will usually be much more immutables found than results.
         // Thus, it is better to obtain first all the results, and then obtain the immutables one by one,
         // aborting in case the replacement list gets empty. This way we can avoid lots of immutable calculations.
         Set<Replacement> allResults = replacementFinderService.find(finderPage);
-        return ReplacementMapper.toDomain(filterResults(finderPage, allResults));
+        return filterResults(finderPage, allResults);
     }
 
     /** Find all replacements in the page content ignoring the ones contained in immutables */
     @Loggable(value = LogLevel.TRACE, skipResult = true, warnOver = 1, warnUnit = TimeUnit.SECONDS)
-    public Collection<PageReplacement> findCustomReplacements(WikipediaPage page, PageReviewOptions options) {
+    public Collection<Replacement> findCustomReplacements(WikipediaPage page, PageReviewOptions options) {
         FinderPage finderPage = FinderPageMapper.fromDomain(page);
 
         // There will usually be much more immutables found than results.
@@ -58,7 +56,7 @@ public class FindReplacementsService {
         );
         Set<Replacement> sortedResults = new TreeSet<>();
         customResults.forEach(sortedResults::add);
-        return ReplacementMapper.toDomain(filterResults(finderPage, sortedResults));
+        return filterResults(finderPage, sortedResults);
     }
 
     private CustomOptions convertOptions(PageReviewOptions options) {

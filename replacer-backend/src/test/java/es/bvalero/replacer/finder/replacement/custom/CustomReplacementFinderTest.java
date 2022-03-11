@@ -2,7 +2,7 @@ package es.bvalero.replacer.finder.replacement.custom;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import es.bvalero.replacer.finder.replacement.Replacement;
+import es.bvalero.replacer.common.domain.Replacement;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import java.util.List;
 import org.junit.jupiter.api.Test;

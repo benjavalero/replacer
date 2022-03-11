@@ -1,8 +1,8 @@
-package es.bvalero.replacer.finder.cosmetic;
+package es.bvalero.replacer.common.domain;
 
-import es.bvalero.replacer.finder.FinderResult;
 import lombok.Builder;
 import lombok.Value;
+import org.springframework.lang.NonNull;
 
 /**
  * A <strong>cosmetic</strong> is a special type of replacement which can be applied automatically,
@@ -14,6 +14,13 @@ import lombok.Value;
 public class Cosmetic implements FinderResult {
 
     int start;
+
+    @NonNull
     String text;
+
+    @NonNull
     String fix;
+
+    @Builder.Default
+    CheckWikipediaAction checkWikipediaAction = CheckWikipediaAction.NO_ACTION;
 }

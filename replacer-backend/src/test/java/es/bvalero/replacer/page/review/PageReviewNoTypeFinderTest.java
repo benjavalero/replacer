@@ -46,14 +46,14 @@ class PageReviewNoTypeFinderTest {
         .lastUpdate(LocalDateTime.now())
         .build();
     private final int offset = 1;
-    private final PageReplacement replacement = PageReplacement
+    private final Replacement replacement = Replacement
         .builder()
         .start(offset)
         .text("Y")
         .type(ReplacementType.of(ReplacementKind.DATE, "Año con punto"))
         .suggestions(List.of(Suggestion.ofNoComment("Z")))
         .build();
-    private final List<PageReplacement> replacements = Collections.singletonList(replacement);
+    private final List<Replacement> replacements = Collections.singletonList(replacement);
     private final PageReviewOptions options = PageReviewOptions.ofNoType();
 
     @Mock
@@ -141,9 +141,9 @@ class PageReviewNoTypeFinderTest {
         when(wikipediaPageRepository.findById(randomPageId)).thenReturn(Optional.of(page));
 
         // The page doesn't contain replacements
-        List<PageReplacement> noPageReplacements = Collections.emptyList();
+        List<Replacement> noReplacements = Collections.emptyList();
         when(pageIndexService.indexPage(page))
-            .thenReturn(PageIndexResult.ofEmpty(PageIndexStatus.PAGE_INDEXED, noPageReplacements));
+            .thenReturn(PageIndexResult.ofEmpty(PageIndexStatus.PAGE_INDEXED, noReplacements));
 
         Optional<PageReview> review = pageReviewNoTypeService.findRandomPageReview(options);
 

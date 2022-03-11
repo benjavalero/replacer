@@ -1,11 +1,14 @@
-package es.bvalero.replacer.finder.cosmetic.checkwikipedia;
+package es.bvalero.replacer.common.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+/** Enumerates all actions on Check Wikipedia supported by the application */
 @Getter
 @AllArgsConstructor
 public enum CheckWikipediaAction {
+    NO_ACTION(0),
+
     TEMPLATE_WORD_USELESS(1),
     BREAK_INCORRECT_SYNTAX(2),
     DEFAULT_SORT_SPECIAL_CHARACTERS(6),

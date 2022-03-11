@@ -1,7 +1,7 @@
 package es.bvalero.replacer.page.review;
 
 import es.bvalero.replacer.common.domain.*;
-import es.bvalero.replacer.finder.FinderResult;
+import es.bvalero.replacer.common.domain.FinderResult;
 import es.bvalero.replacer.page.findreplacement.FindReplacementsService;
 import es.bvalero.replacer.repository.*;
 import es.bvalero.replacer.common.domain.WikipediaSearchResult;
@@ -109,12 +109,12 @@ class PageReviewCustomFinder extends PageReviewFinder {
     }
 
     @Override
-    Collection<PageReplacement> decorateReplacements(
+    Collection<Replacement> decorateReplacements(
         WikipediaPage page,
         PageReviewOptions options,
-        Collection<PageReplacement> replacements
+        Collection<Replacement> replacements
     ) {
-        Collection<PageReplacement> customReplacements = findReplacementsService.findCustomReplacements(page, options);
+        Collection<Replacement> customReplacements = findReplacementsService.findCustomReplacements(page, options);
 
         // If no custom replacements are found then we don't want to review the page
         if (customReplacements.isEmpty()) {
@@ -127,14 +127,14 @@ class PageReviewCustomFinder extends PageReviewFinder {
             pageRepository.addPages(List.of(buildNewPage(page)));
         }
         // We want to review the page every time in case anything has changed
-        for (PageReplacement replacement : customReplacements) {
+        for (Replacement replacement : customReplacements) {
             customRepository.addCustom(mapPageCustomReplacement(page, options, replacement));
         }
 
         // Add the custom replacements to the standard ones preferring the custom ones
         // Return the merged collection as a TreeSet to keep the order and discard duplicates
         // We also check there are no replacements containing others
-        Collection<PageReplacement> merged = Stream
+        Collection<Replacement> merged = Stream
             .of(customReplacements, replacements)
             .flatMap(Collection::stream)
             .collect(Collectors.toCollection(TreeSet::new));
@@ -156,7 +156,7 @@ class PageReviewCustomFinder extends PageReviewFinder {
     private CustomModel mapPageCustomReplacement(
         WikipediaPage page,
         PageReviewOptions options,
-        PageReplacement replacement
+        Replacement replacement
     ) {
         return CustomModel
             .builder()

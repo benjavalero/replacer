@@ -5,7 +5,6 @@ import static org.mockito.Mockito.*;
 
 import es.bvalero.replacer.common.domain.*;
 import es.bvalero.replacer.common.domain.ReplacementKind;
-import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.wikipedia.WikipediaPageRepository;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -30,9 +29,9 @@ class PageReviewSectionFinderTest {
     }
 
     @Test
-    void testFindSectionReviewNoSections() throws WikipediaException {
+    void testFindSectionReviewNoSections() {
         WikipediaPage page = mock(WikipediaPage.class);
-        List<PageReplacement> replacements = Collections.emptyList();
+        List<Replacement> replacements = Collections.emptyList();
 
         when(wikipediaPageRepository.findSectionsInPage(any(WikipediaPageId.class))).thenReturn(Collections.emptyList());
 
@@ -47,14 +46,14 @@ class PageReviewSectionFinderTest {
         int pageId = 1;
         String content = "This is an sample content.";
         Suggestion suggestion = Suggestion.ofNoComment("a");
-        PageReplacement replacement = PageReplacement
+        Replacement replacement = Replacement
             .builder()
             .start(8)
             .text("an")
             .type(ReplacementType.of(ReplacementKind.SIMPLE, "an"))
             .suggestions(Collections.singletonList(suggestion))
             .build();
-        List<PageReplacement> replacements = Collections.singletonList(replacement);
+        List<Replacement> replacements = Collections.singletonList(replacement);
         WikipediaPage page = WikipediaPage
             .builder()
             .id(WikipediaPageId.of(WikipediaLanguage.getDefault(), pageId))

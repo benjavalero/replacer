@@ -9,7 +9,7 @@ import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.listing.SimpleMisspelling;
 import es.bvalero.replacer.finder.listing.load.SimpleMisspellingLoader;
 import es.bvalero.replacer.finder.listing.parse.SimpleMisspellingParser;
-import es.bvalero.replacer.finder.replacement.Replacement;
+import es.bvalero.replacer.common.domain.Replacement;
 import java.beans.PropertyChangeEvent;
 import java.util.HashSet;
 import java.util.List;
@@ -396,7 +396,7 @@ class MisspellingSimpleFinderTest {
         // so when the original text is uppercase both alternatives become the same one
         SimpleMisspelling misspelling = SimpleMisspelling.ofCaseInsensitive(
             "vario",
-            "vario (adjetivo), Vario (nombre propio)"
+            "vario (adjetivo), Vario (nombre propio), varío (verbo)"
         );
         this.fakeUpdateMisspellingList(List.of(misspelling));
 
@@ -407,7 +407,8 @@ class MisspellingSimpleFinderTest {
             .start(7)
             .text("Vario")
             .type(ReplacementType.of(ReplacementKind.SIMPLE, "vario"))
-            .suggestions(List.of(Suggestion.of("Vario", "adjetivo; nombre propio")))
+            .suggestions(List.of(Suggestion.of("Vario", "adjetivo; nombre propio"),
+                Suggestion.of("Varío", "verbo")))
             .build();
         assertEquals(Set.of(expected), new HashSet<>(results));
     }

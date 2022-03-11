@@ -3,7 +3,7 @@ package es.bvalero.replacer.finder.immutable.finders;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import es.bvalero.replacer.config.XmlConfiguration;
-import es.bvalero.replacer.finder.immutable.Immutable;
+import es.bvalero.replacer.common.domain.Immutable;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;

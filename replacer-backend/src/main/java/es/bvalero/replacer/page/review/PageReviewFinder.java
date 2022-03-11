@@ -2,7 +2,7 @@ package es.bvalero.replacer.page.review;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
-import es.bvalero.replacer.common.domain.PageReplacement;
+import es.bvalero.replacer.common.domain.Replacement;
 import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.common.domain.WikipediaPageId;
 import es.bvalero.replacer.page.index.PageIndexResult;
@@ -177,7 +177,7 @@ abstract class PageReviewFinder {
 
     private Optional<PageReview> buildPageReview(WikipediaPage page, PageReviewOptions options) {
         // STEP 2.2.1: Find the replacements in the page
-        Collection<PageReplacement> replacements = findReplacements(page, options);
+        Collection<Replacement> replacements = findReplacements(page, options);
 
         if (replacements.isEmpty()) {
             return Optional.empty();
@@ -191,17 +191,17 @@ abstract class PageReviewFinder {
         return Optional.of(pageReviewSectionFinder.findPageReviewSection(pageReview).orElse(pageReview));
     }
 
-    private Collection<PageReplacement> findReplacements(WikipediaPage page, PageReviewOptions options) {
+    private Collection<Replacement> findReplacements(WikipediaPage page, PageReviewOptions options) {
         // Calculate all the standard replacements
         // We take profit and we update the database with the just calculated replacements (also when empty)
         // If the page has not been indexed (or is not indexable) the collection of replacements is empty
-        Collection<PageReplacement> standardReplacements = indexReplacements(page).getReplacements();
+        Collection<Replacement> standardReplacements = indexReplacements(page).getReplacements();
 
         // Discard the replacements already reviewed in the past
-        Collection<PageReplacement> notReviewedReplacements = discardReviewedReplacements(page, standardReplacements);
+        Collection<Replacement> notReviewedReplacements = discardReviewedReplacements(page, standardReplacements);
 
         // Decorate the standard replacements with different actions depending on the type of review
-        Collection<PageReplacement> decoratedReplacements = decorateReplacements(
+        Collection<Replacement> decoratedReplacements = decorateReplacements(
             page,
             options,
             notReviewedReplacements
@@ -209,7 +209,7 @@ abstract class PageReviewFinder {
 
         // Return the replacements sorted as they appear in the text so there is no need to sort them in the frontend
         // We assume the given replacement collection is already sorted but we sort it just in case
-        List<PageReplacement> replacements = new ArrayList<>(decoratedReplacements);
+        List<Replacement> replacements = new ArrayList<>(decoratedReplacements);
         Collections.sort(replacements);
         LOGGER.debug(
             "Found {} replacements in page {} - {} for options {}",
@@ -222,17 +222,17 @@ abstract class PageReviewFinder {
     }
 
     // Apply different actions to the standard replacements depending on the type of review
-    abstract Collection<PageReplacement> decorateReplacements(
+    abstract Collection<Replacement> decorateReplacements(
         WikipediaPage page,
         PageReviewOptions options,
-        Collection<PageReplacement> replacements
+        Collection<Replacement> replacements
     );
 
-    private Collection<PageReplacement> discardReviewedReplacements(
+    private Collection<Replacement> discardReviewedReplacements(
         WikipediaPage page,
-        Collection<PageReplacement> replacements
+        Collection<Replacement> replacements
     ) {
-        List<PageReplacement> toReview = new LinkedList<>(replacements);
+        List<Replacement> toReview = new LinkedList<>(replacements);
         if (!toReview.isEmpty()) {
             Collection<ReplacementModel> reviewed = pageIndexRepository
                 .findPageById(page.getId())
@@ -247,11 +247,11 @@ abstract class PageReviewFinder {
         return toReview;
     }
 
-    private boolean isSameReplacement(PageReplacement pageReplacement, ReplacementModel replacementModel) {
+    private boolean isSameReplacement(Replacement Replacement, ReplacementModel replacementModel) {
         return (
-            pageReplacement.getStart() == replacementModel.getPosition() &&
-            pageReplacement.getType().getKind().getCode() == replacementModel.getType() &&
-            pageReplacement.getType().getSubtype().equals(replacementModel.getSubtype())
+            Replacement.getStart() == replacementModel.getPosition() &&
+            Replacement.getType().getKind().getCode() == replacementModel.getType() &&
+            Replacement.getType().getSubtype().equals(replacementModel.getSubtype())
         );
     }
 

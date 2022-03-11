@@ -2,7 +2,7 @@ package es.bvalero.replacer.finder.cosmetic.finders;
 
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.cosmetic.CosmeticCheckedFinder;
-import es.bvalero.replacer.finder.cosmetic.checkwikipedia.CheckWikipediaAction;
+import es.bvalero.replacer.common.domain.CheckWikipediaAction;
 import es.bvalero.replacer.finder.util.RegexMatchFinder;
 import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 /** Unicode white-spaces, e.g. `\u2002` */
 @Component
-class UnicodeWhiteSpaceFinder extends CosmeticCheckedFinder {
+class UnicodeWhiteSpaceFinder implements CosmeticCheckedFinder {
 
     private static final String COMMON_WHITE_SPACE = "\u0020";
 
@@ -34,7 +34,7 @@ class UnicodeWhiteSpaceFinder extends CosmeticCheckedFinder {
     }
 
     @Override
-    protected CheckWikipediaAction getCheckWikipediaAction() {
+    public CheckWikipediaAction getCheckWikipediaAction() {
         return CheckWikipediaAction.UNICODE_CONTROL_CHARACTERS;
     }
 

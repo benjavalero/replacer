@@ -2,7 +2,7 @@ package es.bvalero.replacer.finder.cosmetic.finders;
 
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.cosmetic.CosmeticCheckedFinder;
-import es.bvalero.replacer.finder.cosmetic.checkwikipedia.CheckWikipediaAction;
+import es.bvalero.replacer.common.domain.CheckWikipediaAction;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.RegexMatchFinder;
 import java.util.HashSet;
@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 
 /** Space links where the space is in lowercase, e.g. `[[archivo:x.jpg]] ==> [[Archivo:x.jpg]]` */
 @Component
-class SpaceLowercaseFinder extends CosmeticCheckedFinder {
+class SpaceLowercaseFinder implements CosmeticCheckedFinder {
 
     @RegExp
     private static final String REGEX_SPACE = "\\[\\[(%s):(.+?)]]";
@@ -55,7 +55,7 @@ class SpaceLowercaseFinder extends CosmeticCheckedFinder {
     }
 
     @Override
-    protected CheckWikipediaAction getCheckWikipediaAction() {
+    public CheckWikipediaAction getCheckWikipediaAction() {
         // We return this action if the space fixed is not a Category
         return CheckWikipediaAction.CATEGORY_IN_LOWERCASE;
     }

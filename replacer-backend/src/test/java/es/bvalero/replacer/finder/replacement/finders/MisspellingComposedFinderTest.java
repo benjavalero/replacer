@@ -9,7 +9,7 @@ import es.bvalero.replacer.common.domain.Suggestion;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.listing.ComposedMisspelling;
 import es.bvalero.replacer.finder.listing.load.ComposedMisspellingLoader;
-import es.bvalero.replacer.finder.replacement.Replacement;
+import es.bvalero.replacer.common.domain.Replacement;
 import java.beans.PropertyChangeEvent;
 import java.util.HashSet;
 import java.util.List;

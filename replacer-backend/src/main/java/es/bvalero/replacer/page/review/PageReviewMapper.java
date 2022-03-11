@@ -45,11 +45,11 @@ public class PageReviewMapper {
         }
     }
 
-    private Collection<ReviewReplacement> toDto(Collection<PageReplacement> replacements) {
+    private Collection<ReviewReplacement> toDto(Collection<Replacement> replacements) {
         return replacements.stream().map(PageReviewMapper::toDto).collect(Collectors.toUnmodifiableList());
     }
 
-    private ReviewReplacement toDto(PageReplacement replacement) {
+    private ReviewReplacement toDto(Replacement replacement) {
         return ReviewReplacement.of(
             replacement.getStart(),
             replacement.getText(),

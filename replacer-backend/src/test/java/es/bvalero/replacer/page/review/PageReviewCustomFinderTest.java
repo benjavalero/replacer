@@ -145,7 +145,7 @@ class PageReviewCustomFinderTest {
 
         final int pageId = 123;
         final String content = "A R";
-        final PageReplacement customRep = PageReplacement
+        final Replacement customRep = Replacement
             .builder()
             .start(2)
             .type(ReplacementType.of(ReplacementKind.CUSTOM, "R"))
@@ -273,7 +273,7 @@ class PageReviewCustomFinderTest {
         final int pageId1 = 123;
         final int pageId2 = 456;
         final String content = "A R";
-        final PageReplacement customRep = PageReplacement
+        final Replacement customRep = Replacement
             .builder()
             .start(2)
             .type(ReplacementType.of(ReplacementKind.CUSTOM, "R"))
@@ -384,7 +384,7 @@ class PageReviewCustomFinderTest {
         // The user will review with no changes the rest, i.e. 2, 4
 
         final String content = "A R";
-        final PageReplacement customRep = PageReplacement
+        final Replacement customRep = Replacement
             .builder()
             .start(2)
             .type(ReplacementType.of(ReplacementKind.CUSTOM, "R"))
@@ -576,16 +576,16 @@ class PageReviewCustomFinderTest {
         PageReviewOptions options = PageReviewOptions.ofCustom(lang, "lucho", "luchó", true);
 
         Suggestion suggestion = Suggestion.ofNoComment("luchó");
-        PageReplacement replacement = PageReplacement
+        Replacement replacement = Replacement
             .builder()
             .start(2)
             .text("lucho")
             .type(ReplacementType.of(ReplacementKind.SIMPLE, "lucho"))
             .suggestions(List.of(suggestion))
             .build();
-        Collection<PageReplacement> replacements = List.of(replacement);
+        Collection<Replacement> replacements = List.of(replacement);
 
-        PageReplacement custom = PageReplacement
+        Replacement custom = Replacement
             .builder()
             .start(2)
             .text("lucho")
@@ -594,7 +594,7 @@ class PageReviewCustomFinderTest {
             .build();
         when(findReplacementsService.findCustomReplacements(page, options)).thenReturn(List.of(custom));
 
-        Collection<PageReplacement> result = pageReviewCustomService.decorateReplacements(page, options, replacements);
+        Collection<Replacement> result = pageReviewCustomService.decorateReplacements(page, options, replacements);
 
         assertEquals(1, result.size());
 
@@ -617,16 +617,16 @@ class PageReviewCustomFinderTest {
 
         PageReviewOptions options = PageReviewOptions.ofCustom(lang, "Seat Leon", "Seat León", true);
 
-        PageReplacement replacement = PageReplacement
+        Replacement replacement = Replacement
             .builder()
             .start(8)
             .text("Leon")
             .type(ReplacementType.of(ReplacementKind.SIMPLE, "leon"))
             .suggestions(List.of(Suggestion.ofNoComment("León")))
             .build();
-        Collection<PageReplacement> replacements = List.of(replacement);
+        Collection<Replacement> replacements = List.of(replacement);
 
-        PageReplacement custom = PageReplacement
+        Replacement custom = Replacement
             .builder()
             .start(3)
             .text("Seat Leon")
@@ -635,7 +635,7 @@ class PageReviewCustomFinderTest {
             .build();
         when(findReplacementsService.findCustomReplacements(page, options)).thenReturn(List.of(custom));
 
-        Collection<PageReplacement> result = pageReviewCustomService.decorateReplacements(page, options, replacements);
+        Collection<Replacement> result = pageReviewCustomService.decorateReplacements(page, options, replacements);
 
         assertEquals(Set.of(custom), new HashSet<>(result));
 
@@ -658,16 +658,16 @@ class PageReviewCustomFinderTest {
 
         PageReviewOptions options = PageReviewOptions.ofCustom(lang, "En Septiembre", "En septiembre", true);
 
-        PageReplacement replacement = PageReplacement
+        Replacement replacement = Replacement
             .builder()
             .start(0)
             .text("En Septiembre de 2020")
             .type(ReplacementType.of(ReplacementKind.DATE, "Mes en mayúscula"))
             .suggestions(List.of(Suggestion.ofNoComment("En septiembre de 2020")))
             .build();
-        Collection<PageReplacement> replacements = List.of(replacement);
+        Collection<Replacement> replacements = List.of(replacement);
 
-        PageReplacement custom = PageReplacement
+        Replacement custom = Replacement
             .builder()
             .start(0)
             .text("En Septiembre")
@@ -676,7 +676,7 @@ class PageReviewCustomFinderTest {
             .build();
         when(findReplacementsService.findCustomReplacements(page, options)).thenReturn(List.of(custom));
 
-        Collection<PageReplacement> result = pageReviewCustomService.decorateReplacements(page, options, replacements);
+        Collection<Replacement> result = pageReviewCustomService.decorateReplacements(page, options, replacements);
 
         assertEquals(Set.of(replacement), new HashSet<>(result));
 

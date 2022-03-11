@@ -5,11 +5,10 @@ import static org.mockito.Mockito.*;
 
 import es.bvalero.replacer.common.domain.*;
 import es.bvalero.replacer.finder.FinderPage;
-import es.bvalero.replacer.finder.immutable.Immutable;
+import es.bvalero.replacer.common.domain.Immutable;
 import es.bvalero.replacer.finder.immutable.ImmutableFinderService;
-import es.bvalero.replacer.finder.replacement.Replacement;
+import es.bvalero.replacer.common.domain.Replacement;
 import es.bvalero.replacer.finder.replacement.ReplacementFinderService;
-import es.bvalero.replacer.finder.replacement.ReplacementMapper;
 import java.time.LocalDateTime;
 import java.util.*;
 import org.junit.jupiter.api.BeforeEach;
@@ -52,7 +51,7 @@ class FindReplacementServiceTest {
 
         when(replacementFinderService.find(any(FinderPage.class))).thenReturn(Collections.emptySet());
 
-        Collection<PageReplacement> replacements = findReplacementsService.findReplacements(buildFakePage(text));
+        Collection<Replacement> replacements = findReplacementsService.findReplacements(buildFakePage(text));
 
         assertTrue(replacements.isEmpty());
     }
@@ -70,9 +69,9 @@ class FindReplacementServiceTest {
             .build();
         when(replacementFinderService.find(any(FinderPage.class))).thenReturn(new HashSet<>(List.of(replacement)));
 
-        Collection<PageReplacement> replacements = findReplacementsService.findReplacements(buildFakePage(text));
+        Collection<Replacement> replacements = findReplacementsService.findReplacements(buildFakePage(text));
 
-        Collection<PageReplacement> expected = ReplacementMapper.toDomain(List.of(replacement));
+        Collection<Replacement> expected = List.of(replacement);
         assertEquals(new HashSet<>(expected), new HashSet<>(replacements));
     }
 
@@ -97,9 +96,9 @@ class FindReplacementServiceTest {
         when(replacementFinderService.find(any(FinderPage.class)))
             .thenReturn(new HashSet<>(List.of(replacement1, replacement2)));
 
-        Collection<PageReplacement> replacements = findReplacementsService.findReplacements(buildFakePage(text));
+        Collection<Replacement> replacements = findReplacementsService.findReplacements(buildFakePage(text));
 
-        Collection<PageReplacement> expected = ReplacementMapper.toDomain(List.of(replacement1, replacement2));
+        Collection<Replacement> expected = List.of(replacement1, replacement2);
         assertEquals(new HashSet<>(expected), new HashSet<>(replacements));
     }
 
@@ -130,10 +129,9 @@ class FindReplacementServiceTest {
 
         when(replacementFinderService.find(any(FinderPage.class))).thenReturn(found);
 
-        Collection<PageReplacement> replacements = findReplacementsService.findReplacements(buildFakePage(text));
+        Collection<Replacement> replacements = findReplacementsService.findReplacements(buildFakePage(text));
 
-        Collection<PageReplacement> expected = ReplacementMapper.toDomain(found);
-        assertEquals(new HashSet<>(expected), new HashSet<>(replacements));
+        assertEquals(new HashSet<>(found), new HashSet<>(replacements));
     }
 
     @Test
@@ -159,9 +157,9 @@ class FindReplacementServiceTest {
         when(replacementFinderService.find(any(FinderPage.class)))
             .thenReturn(new HashSet<>(List.of(replacement1, replacement2)));
 
-        Collection<PageReplacement> replacements = findReplacementsService.findReplacements(buildFakePage(text));
+        Collection<Replacement> replacements = findReplacementsService.findReplacements(buildFakePage(text));
 
-        Collection<PageReplacement> expected = ReplacementMapper.toDomain(List.of(replacement2));
+        Collection<Replacement> expected = List.of(replacement2);
         assertEquals(new HashSet<>(expected), new HashSet<>(replacements));
     }
 
@@ -189,9 +187,9 @@ class FindReplacementServiceTest {
             .thenReturn(new HashSet<>(List.of(replacement1, replacement2)));
         when(immutableFinderService.findIterable(any(FinderPage.class))).thenReturn(List.of(immutable));
 
-        Collection<PageReplacement> replacements = findReplacementsService.findReplacements(buildFakePage(text));
+        Collection<Replacement> replacements = findReplacementsService.findReplacements(buildFakePage(text));
 
-        Collection<PageReplacement> expected = ReplacementMapper.toDomain(List.of(replacement1, replacement2));
+        Collection<Replacement> expected = List.of(replacement1, replacement2);
         assertEquals(new HashSet<>(expected), new HashSet<>(replacements));
     }
 
@@ -219,9 +217,9 @@ class FindReplacementServiceTest {
             .thenReturn(new HashSet<>(List.of(replacement1, replacement2)));
         when(immutableFinderService.findIterable(any(FinderPage.class))).thenReturn(List.of(immutable));
 
-        Collection<PageReplacement> replacements = findReplacementsService.findReplacements(buildFakePage(text));
+        Collection<Replacement> replacements = findReplacementsService.findReplacements(buildFakePage(text));
 
-        Collection<PageReplacement> expected = ReplacementMapper.toDomain(List.of(replacement2));
+        Collection<Replacement> expected = List.of(replacement2);
         assertEquals(new HashSet<>(expected), new HashSet<>(replacements));
     }
 
@@ -249,7 +247,7 @@ class FindReplacementServiceTest {
             .thenReturn(new HashSet<>(List.of(replacement1, replacement2)));
         when(immutableFinderService.findIterable(any(FinderPage.class))).thenReturn(List.of(immutable));
 
-        Collection<PageReplacement> replacements = findReplacementsService.findReplacements(buildFakePage(text));
+        Collection<Replacement> replacements = findReplacementsService.findReplacements(buildFakePage(text));
 
         assertEquals(Collections.emptySet(), new HashSet<>(replacements));
     }
@@ -270,7 +268,7 @@ class FindReplacementServiceTest {
         when(replacementFinderService.find(any(FinderPage.class))).thenReturn(new HashSet<>(List.of(replacement)));
         when(immutableFinderService.findIterable(any(FinderPage.class))).thenReturn(List.of(immutable));
 
-        Collection<PageReplacement> replacements = findReplacementsService.findReplacements(buildFakePage(text));
+        Collection<Replacement> replacements = findReplacementsService.findReplacements(buildFakePage(text));
 
         assertEquals(Collections.emptySet(), new HashSet<>(replacements));
     }
@@ -282,42 +280,42 @@ class FindReplacementServiceTest {
             .start(0)
             .text("A")
             .type(ReplacementType.of(ReplacementKind.SIMPLE, "a"))
-            .suggestions(Collections.emptyList())
+            .suggestions(List.of(Suggestion.ofNoComment("x")))
             .build();
         Replacement result2 = Replacement
             .builder()
             .start(1)
             .text("BC")
             .type(ReplacementType.of(ReplacementKind.SIMPLE, "a"))
-            .suggestions(Collections.emptyList())
+            .suggestions(List.of(Suggestion.ofNoComment("x")))
             .build();
         Replacement result3 = Replacement
             .builder()
             .start(1)
             .text("B")
             .type(ReplacementType.of(ReplacementKind.SIMPLE, "a"))
-            .suggestions(Collections.emptyList())
+            .suggestions(List.of(Suggestion.ofNoComment("x")))
             .build();
         Replacement result4 = Replacement
             .builder()
             .start(0)
             .text("AB")
             .type(ReplacementType.of(ReplacementKind.SIMPLE, "a"))
-            .suggestions(Collections.emptyList())
+            .suggestions(List.of(Suggestion.ofNoComment("x")))
             .build();
         Replacement result5 = Replacement
             .builder()
             .start(0)
             .text("ABC")
             .type(ReplacementType.of(ReplacementKind.SIMPLE, "a"))
-            .suggestions(Collections.emptyList())
+            .suggestions(List.of(Suggestion.ofNoComment("x")))
             .build();
         Replacement result6 = Replacement
             .builder()
             .start(2)
             .text("C")
             .type(ReplacementType.of(ReplacementKind.SIMPLE, "a"))
-            .suggestions(Collections.emptyList())
+            .suggestions(List.of(Suggestion.ofNoComment("x")))
             .build();
 
         assertTrue(result1.contains(result1));

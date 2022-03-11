@@ -3,7 +3,7 @@ package es.bvalero.replacer.finder.immutable.finders;
 import static org.junit.jupiter.api.Assertions.*;
 
 import es.bvalero.replacer.config.XmlConfiguration;
-import es.bvalero.replacer.finder.immutable.Immutable;
+import es.bvalero.replacer.common.domain.Immutable;
 import es.bvalero.replacer.finder.listing.find.ListingOfflineFinder;
 import es.bvalero.replacer.finder.listing.load.SimpleMisspellingLoader;
 import es.bvalero.replacer.finder.listing.parse.SimpleMisspellingParser;

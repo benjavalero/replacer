@@ -3,7 +3,7 @@ package es.bvalero.replacer.finder.replacement.custom;
 import es.bvalero.replacer.finder.Finder;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.FinderService;
-import es.bvalero.replacer.finder.replacement.Replacement;
+import es.bvalero.replacer.common.domain.Replacement;
 import java.util.Collections;
 import java.util.Set;
 import org.springframework.stereotype.Service;

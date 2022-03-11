@@ -50,7 +50,7 @@ class IndexableReplacementMapper {
             .build();
     }
 
-    IndexableReplacement fromDomain(PageReplacement replacement, WikipediaPage page) {
+    IndexableReplacement fromDomain(Replacement replacement, WikipediaPage page) {
         return IndexableReplacement
             .builder()
             .indexablePageId(IndexablePageMapper.fromDomain(page.getId()))

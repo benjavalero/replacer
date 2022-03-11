@@ -6,9 +6,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.config.XmlConfiguration;
 import es.bvalero.replacer.finder.FinderPage;
-import es.bvalero.replacer.finder.cosmetic.Cosmetic;
-import es.bvalero.replacer.finder.cosmetic.checkwikipedia.CheckWikipediaOfflineService;
-import es.bvalero.replacer.finder.cosmetic.checkwikipedia.CheckWikipediaService;
+import es.bvalero.replacer.common.domain.Cosmetic;
+
+
 import java.util.List;
 import org.apache.commons.collections4.IterableUtils;
 import org.junit.jupiter.api.Test;
@@ -20,11 +20,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
 @ActiveProfiles("offline")
-@SpringBootTest(classes = { SpaceLowercaseFinder.class, XmlConfiguration.class, CheckWikipediaOfflineService.class })
+@SpringBootTest(classes = { SpaceLowercaseFinder.class, XmlConfiguration.class})
 class SpaceLowercaseFinderTest {
-
-    @Autowired
-    private CheckWikipediaService checkWikipediaService;
 
     @Autowired
     private SpaceLowercaseFinder spaceLowercaseFinder;

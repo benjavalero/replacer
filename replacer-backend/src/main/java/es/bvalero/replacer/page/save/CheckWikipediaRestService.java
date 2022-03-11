@@ -1,10 +1,13 @@
-package es.bvalero.replacer.finder.cosmetic.checkwikipedia;
+package es.bvalero.replacer.page.save;
 
+import es.bvalero.replacer.common.domain.CheckWikipediaAction;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.Objects;
 
 @Profile("!offline")
 @Service
@@ -16,6 +19,10 @@ class CheckWikipediaRestService implements CheckWikipediaService {
     RestTemplate restTemplate;
 
     public void reportFix(WikipediaLanguage lang, String pageTitle, CheckWikipediaAction action) {
+        if (Objects.equals(action, CheckWikipediaAction.NO_ACTION)) {
+            return;
+        }
+
         String project = String.format("%swiki", lang.getCode());
 
         String url = String.format(

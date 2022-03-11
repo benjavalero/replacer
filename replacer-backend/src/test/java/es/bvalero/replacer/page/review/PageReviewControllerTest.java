@@ -69,7 +69,7 @@ class PageReviewControllerTest {
     private final int start = 5;
     private final String rep = "A";
     private final Suggestion suggestion = Suggestion.of("a", "b");
-    private final PageReplacement replacement = PageReplacement
+    private final Replacement replacement = Replacement
         .builder()
         .start(start)
         .text(rep)
@@ -97,8 +97,10 @@ class PageReviewControllerTest {
             )
             .andExpect(jsonPath("$.replacements[0].start", is(start)))
             .andExpect(jsonPath("$.replacements[0].text", is(rep)))
-            .andExpect(jsonPath("$.replacements[0].suggestions[0].text", is("a")))
-            .andExpect(jsonPath("$.replacements[0].suggestions[0].comment", is("b")))
+            .andExpect(jsonPath("$.replacements[0].suggestions[0].text", is(rep)))
+            .andExpect(jsonPath("$.replacements[0].suggestions[0].comment").doesNotExist())
+            .andExpect(jsonPath("$.replacements[0].suggestions[1].text", is(suggestion.getText())))
+            .andExpect(jsonPath("$.replacements[0].suggestions[1].comment", is(suggestion.getComment())))
             .andExpect(jsonPath("$.numPending", is(numPending)));
 
         verify(pageReviewNoTypeFinder).findRandomPageReview(options);

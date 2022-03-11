@@ -1,5 +1,6 @@
 package es.bvalero.replacer.finder.immutable;
 
+import es.bvalero.replacer.common.domain.Immutable;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import org.apache.commons.collections4.IterableUtils;

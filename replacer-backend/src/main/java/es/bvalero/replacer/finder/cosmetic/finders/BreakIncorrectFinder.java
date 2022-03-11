@@ -2,7 +2,7 @@ package es.bvalero.replacer.finder.cosmetic.finders;
 
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.cosmetic.CosmeticCheckedFinder;
-import es.bvalero.replacer.finder.cosmetic.checkwikipedia.CheckWikipediaAction;
+import es.bvalero.replacer.common.domain.CheckWikipediaAction;
 import es.bvalero.replacer.finder.util.RegexMatchFinder;
 import java.util.Set;
 import java.util.regex.MatchResult;
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 
 /** Break with incorrect syntax, e.g. `</br> ==> <br />` */
 @Component
-class BreakIncorrectFinder extends CosmeticCheckedFinder {
+class BreakIncorrectFinder implements CosmeticCheckedFinder {
 
     static final String BREAK_XHTML = "<br />";
     private static final String BREAK_XHTML_NO_SPACE = "<br/>";

@@ -1,8 +1,9 @@
 package es.bvalero.replacer.common.domain;
 
-import es.bvalero.replacer.common.util.ReplacerUtils;
-import es.bvalero.replacer.finder.FinderResult;
 import java.util.Collection;
+import java.util.List;
+
+import es.bvalero.replacer.common.util.ReplacerUtils;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
@@ -11,8 +12,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.NonNull;
 
 /**
- * Replacement found in the content of a page.
- *
  * A <strong>replacement</strong> is a potential issue to be checked and fixed (replaced). For instance,
  * the word "aproximated" is misspelled and therefore could be proposed to be replaced with "approximated".
  *
@@ -23,7 +22,7 @@ import org.springframework.lang.NonNull;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Value
 @Builder
-public class PageReplacement implements FinderResult {
+public class Replacement implements FinderResult {
 
     @EqualsAndHashCode.Include
     @With
@@ -39,7 +38,7 @@ public class PageReplacement implements FinderResult {
     @NonNull
     Collection<Suggestion> suggestions;
 
-    PageReplacement(int start, String text, ReplacementType type, Collection<Suggestion> suggestions) {
+    Replacement(int start, String text, ReplacementType type, Collection<Suggestion> suggestions) {
         // Validate start
         if (start < 0) {
             throw new IllegalArgumentException("Negative replacement start: " + start);
@@ -64,5 +63,11 @@ public class PageReplacement implements FinderResult {
 
     public String getContext(WikipediaPage page) {
         return ReplacerUtils.getContextAroundWord(page.getContent(), this.getStart(), this.getEnd(), 20);
+    }
+
+    // Overwrite the getter to include the original text as the first option
+    public List<Suggestion> getSuggestions() {
+        Collection<Suggestion> merged = Suggestion.mergeSuggestions(this.suggestions);
+        return Suggestion.sortSuggestions(merged, this.text);
     }
 }

@@ -2,15 +2,14 @@ package es.bvalero.replacer.page.save;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.domain.WikipediaNamespace;
 import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.common.domain.WikipediaPageId;
 import es.bvalero.replacer.finder.FinderPage;
-import es.bvalero.replacer.finder.cosmetic.Cosmetic;
+import es.bvalero.replacer.common.domain.Cosmetic;
 import es.bvalero.replacer.finder.cosmetic.CosmeticFinderService;
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -25,6 +24,9 @@ class ApplyCosmeticsServiceTest {
 
     @Mock
     private CosmeticFinderService cosmeticFinderService;
+
+    @Mock
+    private CheckWikipediaService checkWikipediaService;
 
     @InjectMocks
     private ApplyCosmeticsService applyCosmeticsService;
@@ -53,6 +55,7 @@ class ApplyCosmeticsServiceTest {
         assertEquals(expected, applyCosmeticsService.applyCosmeticChanges(page));
 
         verify(cosmeticFinderService).find(any(FinderPage.class));
+        verify(checkWikipediaService).reportFix(page.getId().getLang(), page.getTitle(), cosmetic.getCheckWikipediaAction());
     }
 
     @Test
@@ -75,5 +78,6 @@ class ApplyCosmeticsServiceTest {
         assertEquals(expected, applyCosmeticsService.applyCosmeticChanges(page));
 
         verify(cosmeticFinderService).find(any(FinderPage.class));
+        verify(checkWikipediaService, times(3)).reportFix(page.getId().getLang(), page.getTitle(), cosmetic.getCheckWikipediaAction());
     }
 }

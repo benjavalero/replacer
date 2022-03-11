@@ -2,7 +2,7 @@ package es.bvalero.replacer.finder.cosmetic.finders;
 
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.cosmetic.CosmeticCheckedFinder;
-import es.bvalero.replacer.finder.cosmetic.checkwikipedia.CheckWikipediaAction;
+import es.bvalero.replacer.common.domain.CheckWikipediaAction;
 import es.bvalero.replacer.finder.util.RegexMatchFinder;
 import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 /** External links with double HTTP, e.g. `https://https://www.linkedin.com ==> https://www.linkedin.com` */
 @Component
-class DoubleHttpFinder extends CosmeticCheckedFinder {
+class DoubleHttpFinder implements CosmeticCheckedFinder {
 
     @RegExp
     private static final String REGEX_DOUBLE_HTTP = "(https?://)\\1(\\S*)";
