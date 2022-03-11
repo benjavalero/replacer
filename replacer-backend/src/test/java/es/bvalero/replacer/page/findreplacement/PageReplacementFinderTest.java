@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import es.bvalero.replacer.common.domain.*;
-import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.common.domain.Immutable;
 import es.bvalero.replacer.finder.immutable.ImmutableFinderService;
 import es.bvalero.replacer.common.domain.Replacement;
@@ -49,7 +48,7 @@ class PageReplacementFinderTest {
     void testEmpty() {
         String text = "An example.";
 
-        when(replacementFinderService.find(any(FinderPage.class))).thenReturn(Collections.emptySet());
+        when(replacementFinderService.find(any(WikipediaPage.class))).thenReturn(Collections.emptySet());
 
         Collection<Replacement> replacements = pageReplacementFinder.findReplacements(buildFakePage(text));
 
@@ -67,7 +66,7 @@ class PageReplacementFinderTest {
             .type(ReplacementType.of(ReplacementKind.SIMPLE, "an"))
             .suggestions(List.of(Suggestion.ofNoComment("Un")))
             .build();
-        when(replacementFinderService.find(any(FinderPage.class))).thenReturn(new HashSet<>(List.of(replacement)));
+        when(replacementFinderService.find(any(WikipediaPage.class))).thenReturn(new HashSet<>(List.of(replacement)));
 
         Collection<Replacement> replacements = pageReplacementFinder.findReplacements(buildFakePage(text));
 
@@ -93,7 +92,7 @@ class PageReplacementFinderTest {
             .type(ReplacementType.of(ReplacementKind.SIMPLE, "example"))
             .suggestions(List.of(Suggestion.ofNoComment("ejemplo")))
             .build();
-        when(replacementFinderService.find(any(FinderPage.class)))
+        when(replacementFinderService.find(any(WikipediaPage.class)))
             .thenReturn(new HashSet<>(List.of(replacement1, replacement2)));
 
         Collection<Replacement> replacements = pageReplacementFinder.findReplacements(buildFakePage(text));
@@ -127,7 +126,7 @@ class PageReplacementFinderTest {
         assertEquals(1, found.size());
         assertEquals(Set.of(replacement1), found);
 
-        when(replacementFinderService.find(any(FinderPage.class))).thenReturn(found);
+        when(replacementFinderService.find(any(WikipediaPage.class))).thenReturn(found);
 
         Collection<Replacement> replacements = pageReplacementFinder.findReplacements(buildFakePage(text));
 
@@ -154,7 +153,7 @@ class PageReplacementFinderTest {
             .build();
         assertTrue(replacement2.containsStrictly(replacement1));
 
-        when(replacementFinderService.find(any(FinderPage.class)))
+        when(replacementFinderService.find(any(WikipediaPage.class)))
             .thenReturn(new HashSet<>(List.of(replacement1, replacement2)));
 
         Collection<Replacement> replacements = pageReplacementFinder.findReplacements(buildFakePage(text));
@@ -183,9 +182,9 @@ class PageReplacementFinderTest {
             .build();
         Immutable immutable = Immutable.of(14, "two");
 
-        when(replacementFinderService.find(any(FinderPage.class)))
+        when(replacementFinderService.find(any(WikipediaPage.class)))
             .thenReturn(new HashSet<>(List.of(replacement1, replacement2)));
-        when(immutableFinderService.findIterable(any(FinderPage.class))).thenReturn(List.of(immutable));
+        when(immutableFinderService.findIterable(any(WikipediaPage.class))).thenReturn(List.of(immutable));
 
         Collection<Replacement> replacements = pageReplacementFinder.findReplacements(buildFakePage(text));
 
@@ -213,9 +212,9 @@ class PageReplacementFinderTest {
             .build();
         Immutable immutable = Immutable.of(0, "An");
 
-        when(replacementFinderService.find(any(FinderPage.class)))
+        when(replacementFinderService.find(any(WikipediaPage.class)))
             .thenReturn(new HashSet<>(List.of(replacement1, replacement2)));
-        when(immutableFinderService.findIterable(any(FinderPage.class))).thenReturn(List.of(immutable));
+        when(immutableFinderService.findIterable(any(WikipediaPage.class))).thenReturn(List.of(immutable));
 
         Collection<Replacement> replacements = pageReplacementFinder.findReplacements(buildFakePage(text));
 
@@ -243,9 +242,9 @@ class PageReplacementFinderTest {
             .build();
         Immutable immutable = Immutable.of(0, "An example");
 
-        when(replacementFinderService.find(any(FinderPage.class)))
+        when(replacementFinderService.find(any(WikipediaPage.class)))
             .thenReturn(new HashSet<>(List.of(replacement1, replacement2)));
-        when(immutableFinderService.findIterable(any(FinderPage.class))).thenReturn(List.of(immutable));
+        when(immutableFinderService.findIterable(any(WikipediaPage.class))).thenReturn(List.of(immutable));
 
         Collection<Replacement> replacements = pageReplacementFinder.findReplacements(buildFakePage(text));
 
@@ -265,8 +264,8 @@ class PageReplacementFinderTest {
             .build();
         Immutable immutable = Immutable.of(3, "example or");
 
-        when(replacementFinderService.find(any(FinderPage.class))).thenReturn(new HashSet<>(List.of(replacement)));
-        when(immutableFinderService.findIterable(any(FinderPage.class))).thenReturn(List.of(immutable));
+        when(replacementFinderService.find(any(WikipediaPage.class))).thenReturn(new HashSet<>(List.of(replacement)));
+        when(immutableFinderService.findIterable(any(WikipediaPage.class))).thenReturn(List.of(immutable));
 
         Collection<Replacement> replacements = pageReplacementFinder.findReplacements(buildFakePage(text));
 

@@ -1,11 +1,13 @@
 package es.bvalero.replacer;
 
+import com.tngtech.archunit.core.domain.JavaClass;
 import com.tngtech.archunit.core.domain.JavaModifier;
 import com.tngtech.archunit.junit.AnalyzeClasses;
 import com.tngtech.archunit.junit.ArchTest;
 import com.tngtech.archunit.lang.ArchRule;
 import es.bvalero.replacer.finder.Finder;
 import es.bvalero.replacer.finder.FinderService;
+import es.bvalero.replacer.finder.replacement.RemoveObsoleteReplacementType;
 import org.apache.commons.lang3.ArrayUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.annotation.Configuration;
@@ -25,7 +27,7 @@ class ArchitectureTest {
     // Package dependency checks
 
     @ArchTest
-    static final ArchRule domainAccessesOnlyCommon = classes()
+    static final ArchRule domainAccess = classes()
         .that().resideInAPackage("..domain..")
         .should().onlyAccessClassesThat().resideInAnyPackage(commonPackagesAnd("..common.."));
 
@@ -38,6 +40,16 @@ class ArchitectureTest {
     static final ArchRule adminAccess = classes()
         .that().resideInAPackage("..admin..")
         .should().onlyBeAccessed().byClassesThat().resideInAnyPackage("..admin..");
+
+    @ArchTest
+    static final ArchRule finderAccess = classes()
+        .that().resideInAPackage("..finder..")
+        .and().doNotImplement(FinderService.class)
+        .and().doNotHaveSimpleName(RemoveObsoleteReplacementType.class.getSimpleName())
+        .should().onlyHaveDependentClassesThat(
+            JavaClass.Predicates.resideInAnyPackage("..finder..")
+                .or(JavaClass.Predicates.simpleName(ArchitectureTest.class.getSimpleName()))
+        );
 
     // Naming classes
 

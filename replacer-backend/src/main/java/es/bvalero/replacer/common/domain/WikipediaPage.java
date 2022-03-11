@@ -6,6 +6,7 @@ import lombok.ToString;
 import lombok.Value;
 import lombok.experimental.NonFinal;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.TestOnly;
 import org.springframework.lang.NonNull;
 
 /** Page in Wikipedia */
@@ -46,5 +47,16 @@ public class WikipediaPage {
     @ToString.Include
     private String shortContent() {
         return StringUtils.abbreviate(this.getContent(), SHORT_CONTENT_LENGTH);
+    }
+
+    @TestOnly
+    public static WikipediaPage ofContent(String content) {
+        return WikipediaPage.builder()
+            .id(WikipediaPageId.of(WikipediaLanguage.getDefault(), 1))
+            .namespace(WikipediaNamespace.getDefault())
+            .title("")
+            .content(content)
+            .lastUpdate(LocalDateTime.now())
+            .build();
     }
 }

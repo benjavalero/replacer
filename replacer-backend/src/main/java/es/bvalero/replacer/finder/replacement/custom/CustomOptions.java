@@ -4,7 +4,7 @@ import lombok.Value;
 import org.springframework.lang.NonNull;
 
 @Value(staticConstructor = "of")
-public class CustomOptions {
+class CustomOptions {
 
     @NonNull
     String replacement;

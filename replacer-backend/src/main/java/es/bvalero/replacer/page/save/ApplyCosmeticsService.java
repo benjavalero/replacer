@@ -1,7 +1,6 @@
 package es.bvalero.replacer.page.save;
 
 import es.bvalero.replacer.common.domain.WikipediaPage;
-import es.bvalero.replacer.finder.FinderPageMapper;
 import es.bvalero.replacer.common.domain.Cosmetic;
 import es.bvalero.replacer.finder.cosmetic.CosmeticFinderService;
 import java.util.Collections;
@@ -25,7 +24,7 @@ class ApplyCosmeticsService {
     /** Return the new content of the page after applying all the cosmetic changes */
     String applyCosmeticChanges(WikipediaPage page) {
         String fixedText = page.getContent();
-        Set<Cosmetic> cosmeticFound = cosmeticFinderService.find(FinderPageMapper.fromDomain(page));
+        Set<Cosmetic> cosmeticFound = cosmeticFinderService.find(page);
 
         if (!cosmeticFound.isEmpty()) {
             // We can assume the found set is sorted and of course with no duplicates

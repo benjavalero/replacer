@@ -8,7 +8,6 @@ import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.domain.WikipediaNamespace;
 import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.common.domain.WikipediaPageId;
-import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.common.domain.Cosmetic;
 import es.bvalero.replacer.finder.cosmetic.CosmeticFinderService;
 import java.time.LocalDateTime;
@@ -40,7 +39,7 @@ class ApplyCosmeticsServiceTest {
     @Test
     void testApplyCosmeticChanges() {
         Cosmetic cosmetic = Cosmetic.builder().start(2).text("[[Link|link]]").fix("[[link]]").build();
-        when(cosmeticFinderService.find(any(FinderPage.class))).thenReturn(Collections.singleton(cosmetic));
+        when(cosmeticFinderService.find(any(WikipediaPage.class))).thenReturn(Collections.singleton(cosmetic));
 
         String text = "A [[Link|link]] to simplify.";
         String expected = "A [[link]] to simplify.";
@@ -54,7 +53,7 @@ class ApplyCosmeticsServiceTest {
             .build();
         assertEquals(expected, applyCosmeticsService.applyCosmeticChanges(page));
 
-        verify(cosmeticFinderService).find(any(FinderPage.class));
+        verify(cosmeticFinderService).find(any(WikipediaPage.class));
         verify(checkWikipediaService).reportFix(page.getId().getLang(), page.getTitle(), cosmetic.getCheckWikipediaAction());
     }
 
@@ -63,7 +62,7 @@ class ApplyCosmeticsServiceTest {
         Cosmetic cosmetic = Cosmetic.builder().start(2).text("[[Link|link]]").fix("[[link]]").build();
         Cosmetic cosmetic2 = Cosmetic.builder().start(29).text("archivo").fix("Archivo").build();
         Cosmetic cosmetic3 = Cosmetic.builder().start(19).text("</br>").fix("<br>").build();
-        when(cosmeticFinderService.find(any(FinderPage.class))).thenReturn(Set.of(cosmetic, cosmetic2, cosmetic3));
+        when(cosmeticFinderService.find(any(WikipediaPage.class))).thenReturn(Set.of(cosmetic, cosmetic2, cosmetic3));
 
         String text = "A [[Link|link]] to </br> a [[archivo:x.jpeg]].";
         String expected = "A [[link]] to <br> a [[Archivo:x.jpeg]].";
@@ -77,7 +76,7 @@ class ApplyCosmeticsServiceTest {
             .build();
         assertEquals(expected, applyCosmeticsService.applyCosmeticChanges(page));
 
-        verify(cosmeticFinderService).find(any(FinderPage.class));
+        verify(cosmeticFinderService).find(any(WikipediaPage.class));
         verify(checkWikipediaService, times(3)).reportFix(page.getId().getLang(), page.getTitle(), cosmetic.getCheckWikipediaAction());
     }
 }

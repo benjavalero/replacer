@@ -2,9 +2,11 @@ package es.bvalero.replacer.finder.replacement.custom;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import es.bvalero.replacer.finder.FinderPage;
+import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.common.domain.Replacement;
 import java.util.List;
+
+import es.bvalero.replacer.page.review.PageReviewOptions;
 import org.apache.commons.collections4.IterableUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,10 +26,14 @@ class CustomReplacementFinderServiceTest {
 
     @Test
     void testFindCustomReplacements() {
-        FinderPage page = FinderPage.of("A X C");
+        WikipediaPage page = WikipediaPage.ofContent("A X C");
+        PageReviewOptions options = PageReviewOptions.ofCustom(
+            page.getId().getLang(),
+            "X", "Y", true
+        );
 
         List<Replacement> replacements = IterableUtils.toList(
-            customReplacementFinderService.findCustomReplacements(page, CustomOptions.of("X", true, "Y"))
+            customReplacementFinderService.findCustomReplacements(page, options)
         );
 
         assertFalse(replacements.isEmpty());
@@ -37,10 +43,14 @@ class CustomReplacementFinderServiceTest {
 
     @Test
     void testFindCustomReplacementsWithNoResults() {
-        FinderPage page = FinderPage.of("AXC");
+        WikipediaPage page = WikipediaPage.ofContent("AXC");
+        PageReviewOptions options = PageReviewOptions.ofCustom(
+            page.getId().getLang(),
+            "X", "Y", true
+        );
 
         List<Replacement> replacements = IterableUtils.toList(
-            customReplacementFinderService.findCustomReplacements(page, CustomOptions.of("X", true, "Y"))
+            customReplacementFinderService.findCustomReplacements(page, options)
         );
 
         assertTrue(replacements.isEmpty());

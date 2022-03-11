@@ -3,13 +3,10 @@ package es.bvalero.replacer.page.findreplacement;
 import com.github.rozidan.springboot.logger.Loggable;
 import es.bvalero.replacer.common.domain.Replacement;
 import es.bvalero.replacer.common.domain.WikipediaPage;
-import es.bvalero.replacer.finder.FinderPage;
-import es.bvalero.replacer.finder.FinderPageMapper;
 import es.bvalero.replacer.common.domain.FinderResult;
 import es.bvalero.replacer.common.domain.Immutable;
 import es.bvalero.replacer.finder.immutable.ImmutableFinderService;
 import es.bvalero.replacer.finder.replacement.ReplacementFinderService;
-import es.bvalero.replacer.finder.replacement.custom.CustomOptions;
 import es.bvalero.replacer.finder.replacement.custom.CustomReplacementFinderService;
 import es.bvalero.replacer.page.review.PageReviewOptions;
 import java.util.*;
@@ -33,41 +30,28 @@ public class PageReplacementFinder {
     /** Find all replacements in the page content ignoring the ones contained in immutables */
     @Loggable(value = LogLevel.TRACE, skipResult = true, warnOver = 1, warnUnit = TimeUnit.SECONDS)
     public Collection<Replacement> findReplacements(WikipediaPage page) {
-        FinderPage finderPage = FinderPageMapper.fromDomain(page);
-
         // There will usually be much more immutables found than results.
         // Thus, it is better to obtain first all the results, and then obtain the immutables one by one,
         // aborting in case the replacement list gets empty. This way we can avoid lots of immutable calculations.
-        Set<Replacement> allResults = replacementFinderService.find(finderPage);
-        return filterResults(finderPage, allResults);
+        Set<Replacement> allResults = replacementFinderService.find(page);
+        return filterResults(page, allResults);
     }
 
     /** Find all replacements in the page content ignoring the ones contained in immutables */
     @Loggable(value = LogLevel.TRACE, skipResult = true, warnOver = 1, warnUnit = TimeUnit.SECONDS)
     public Collection<Replacement> findCustomReplacements(WikipediaPage page, PageReviewOptions options) {
-        FinderPage finderPage = FinderPageMapper.fromDomain(page);
-
         // There will usually be much more immutables found than results.
         // Thus, it is better to obtain first all the results, and then obtain the immutables one by one,
         // aborting in case the replacement list gets empty. This way we can avoid lots of immutable calculations.
         Iterable<Replacement> customResults = customReplacementFinderService.findCustomReplacements(
-            finderPage,
-            convertOptions(options)
+            page ,options
         );
         Set<Replacement> sortedResults = new TreeSet<>();
         customResults.forEach(sortedResults::add);
-        return filterResults(finderPage, sortedResults);
+        return filterResults(page, sortedResults);
     }
 
-    private CustomOptions convertOptions(PageReviewOptions options) {
-        String subtype = options.getType().getSubtype();
-        Boolean cs = options.getCs();
-        String suggestion = options.getSuggestion();
-        assert cs != null && suggestion != null;
-        return CustomOptions.of(subtype, cs, suggestion);
-    }
-
-    private Collection<Replacement> filterResults(FinderPage page, Collection<Replacement> allResults) {
+    private Collection<Replacement> filterResults(WikipediaPage page, Collection<Replacement> allResults) {
         // We can assume the collection of results is a mutable set sorted and of course with no duplicates
 
         // Remove nested. There might be replacements (strictly) contained in others.
@@ -85,7 +69,7 @@ public class PageReplacementFinder {
         FinderResult.removeNested(results);
     }
 
-    private Collection<Replacement> removeImmutables(FinderPage page, Collection<Replacement> resultList) {
+    private Collection<Replacement> removeImmutables(WikipediaPage page, Collection<Replacement> resultList) {
         // No need to find the immutables if there are no results
         if (resultList.isEmpty()) {
             return Collections.emptyList();
