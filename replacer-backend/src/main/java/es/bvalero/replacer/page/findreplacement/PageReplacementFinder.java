@@ -19,7 +19,7 @@ import org.springframework.boot.logging.LogLevel;
 import org.springframework.stereotype.Service;
 
 @Service
-public class FindReplacementsService {
+public class PageReplacementFinder {
 
     @Autowired
     private ReplacementFinderService replacementFinderService;

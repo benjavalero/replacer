@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import es.bvalero.replacer.common.domain.*;
-import es.bvalero.replacer.page.findreplacement.FindReplacementsService;
+import es.bvalero.replacer.page.findreplacement.PageReplacementFinder;
 import es.bvalero.replacer.page.index.PageIndexResult;
 import es.bvalero.replacer.page.index.PageIndexService;
 import es.bvalero.replacer.page.index.PageIndexStatus;
@@ -43,7 +43,7 @@ class PageReviewCustomFinderTest {
     private WikipediaPageRepository wikipediaPageRepository;
 
     @Mock
-    private FindReplacementsService findReplacementsService;
+    private PageReplacementFinder pageReplacementFinder;
 
     @Mock
     private PageReviewSectionFinder pageReviewSectionFinder;
@@ -180,7 +180,7 @@ class PageReviewCustomFinderTest {
         when(wikipediaPageRepository.findById(any(WikipediaPageId.class))).thenReturn(Optional.of(page));
         when(pageIndexService.indexPage(page))
             .thenReturn(PageIndexResult.ofEmpty(PageIndexStatus.PAGE_INDEXED, Collections.emptyList()));
-        when(findReplacementsService.findCustomReplacements(any(WikipediaPage.class), any(PageReviewOptions.class)))
+        when(pageReplacementFinder.findCustomReplacements(any(WikipediaPage.class), any(PageReviewOptions.class)))
             .thenReturn(List.of(customRep));
 
         // First call
@@ -246,7 +246,7 @@ class PageReviewCustomFinderTest {
         when(wikipediaPageRepository.findById(any(WikipediaPageId.class))).thenReturn(Optional.of(page));
         when(pageIndexService.indexPage(page))
             .thenReturn(PageIndexResult.ofEmpty(PageIndexStatus.PAGE_INDEXED, Collections.emptyList()));
-        when(findReplacementsService.findCustomReplacements(any(WikipediaPage.class), any(PageReviewOptions.class)))
+        when(pageReplacementFinder.findCustomReplacements(any(WikipediaPage.class), any(PageReviewOptions.class)))
             .thenReturn(Collections.emptyList());
 
         // Only call
@@ -313,7 +313,7 @@ class PageReviewCustomFinderTest {
         when(wikipediaPageRepository.findById(any(WikipediaPageId.class))).thenReturn(Optional.of(page));
         when(pageIndexService.indexPage(page))
             .thenReturn(PageIndexResult.ofEmpty(PageIndexStatus.PAGE_INDEXED, Collections.emptyList()));
-        when(findReplacementsService.findCustomReplacements(any(WikipediaPage.class), any(PageReviewOptions.class)))
+        when(pageReplacementFinder.findCustomReplacements(any(WikipediaPage.class), any(PageReviewOptions.class)))
             .thenReturn(List.of(customRep));
 
         // Only call
@@ -435,7 +435,7 @@ class PageReviewCustomFinderTest {
         when(pageIndexService.indexPage(any(WikipediaPage.class)))
             .thenReturn(PageIndexResult.ofEmpty(PageIndexStatus.PAGE_INDEXED, Collections.emptyList()));
 
-        when(findReplacementsService.findCustomReplacements(any(WikipediaPage.class), any(PageReviewOptions.class)))
+        when(pageReplacementFinder.findCustomReplacements(any(WikipediaPage.class), any(PageReviewOptions.class)))
             .thenReturn(List.of(customRep));
 
         // We cannot use the same options object for all calls as it is mutable (and mutated)
@@ -542,7 +542,7 @@ class PageReviewCustomFinderTest {
         when(pageIndexService.indexPage(any(WikipediaPage.class)))
             .thenReturn(PageIndexResult.ofEmpty(PageIndexStatus.PAGE_INDEXED, Collections.emptyList()));
 
-        when(findReplacementsService.findCustomReplacements(any(WikipediaPage.class), any(PageReviewOptions.class)))
+        when(pageReplacementFinder.findCustomReplacements(any(WikipediaPage.class), any(PageReviewOptions.class)))
             .thenReturn(Collections.emptyList());
 
         // Only Call
@@ -592,13 +592,13 @@ class PageReviewCustomFinderTest {
             .type(ReplacementType.of(ReplacementKind.CUSTOM, "lucho"))
             .suggestions(List.of(suggestion))
             .build();
-        when(findReplacementsService.findCustomReplacements(page, options)).thenReturn(List.of(custom));
+        when(pageReplacementFinder.findCustomReplacements(page, options)).thenReturn(List.of(custom));
 
         Collection<Replacement> result = pageReviewCustomService.decorateReplacements(page, options, replacements);
 
         assertEquals(1, result.size());
 
-        verify(findReplacementsService).findCustomReplacements(page, options);
+        verify(pageReplacementFinder).findCustomReplacements(page, options);
     }
 
     @Test
@@ -633,13 +633,13 @@ class PageReviewCustomFinderTest {
             .type(ReplacementType.of(ReplacementKind.CUSTOM, "Seat Leon"))
             .suggestions(List.of(Suggestion.ofNoComment("Seat León")))
             .build();
-        when(findReplacementsService.findCustomReplacements(page, options)).thenReturn(List.of(custom));
+        when(pageReplacementFinder.findCustomReplacements(page, options)).thenReturn(List.of(custom));
 
         Collection<Replacement> result = pageReviewCustomService.decorateReplacements(page, options, replacements);
 
         assertEquals(Set.of(custom), new HashSet<>(result));
 
-        verify(findReplacementsService).findCustomReplacements(page, options);
+        verify(pageReplacementFinder).findCustomReplacements(page, options);
     }
 
     @Test
@@ -674,12 +674,12 @@ class PageReviewCustomFinderTest {
             .type(ReplacementType.of(ReplacementKind.CUSTOM, "En Septiembre"))
             .suggestions(List.of(Suggestion.ofNoComment("En septiembre")))
             .build();
-        when(findReplacementsService.findCustomReplacements(page, options)).thenReturn(List.of(custom));
+        when(pageReplacementFinder.findCustomReplacements(page, options)).thenReturn(List.of(custom));
 
         Collection<Replacement> result = pageReviewCustomService.decorateReplacements(page, options, replacements);
 
         assertEquals(Set.of(replacement), new HashSet<>(result));
 
-        verify(findReplacementsService).findCustomReplacements(page, options);
+        verify(pageReplacementFinder).findCustomReplacements(page, options);
     }
 }

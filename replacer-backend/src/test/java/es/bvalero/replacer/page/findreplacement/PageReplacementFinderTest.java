@@ -17,7 +17,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-class FindReplacementServiceTest {
+class PageReplacementFinderTest {
 
     @Mock
     private ReplacementFinderService replacementFinderService;
@@ -26,11 +26,11 @@ class FindReplacementServiceTest {
     private ImmutableFinderService immutableFinderService;
 
     @InjectMocks
-    private FindReplacementsService findReplacementsService;
+    private PageReplacementFinder pageReplacementFinder;
 
     @BeforeEach
     public void setUp() {
-        findReplacementsService = new FindReplacementsService();
+        pageReplacementFinder = new PageReplacementFinder();
         MockitoAnnotations.openMocks(this);
     }
 
@@ -51,7 +51,7 @@ class FindReplacementServiceTest {
 
         when(replacementFinderService.find(any(FinderPage.class))).thenReturn(Collections.emptySet());
 
-        Collection<Replacement> replacements = findReplacementsService.findReplacements(buildFakePage(text));
+        Collection<Replacement> replacements = pageReplacementFinder.findReplacements(buildFakePage(text));
 
         assertTrue(replacements.isEmpty());
     }
@@ -69,7 +69,7 @@ class FindReplacementServiceTest {
             .build();
         when(replacementFinderService.find(any(FinderPage.class))).thenReturn(new HashSet<>(List.of(replacement)));
 
-        Collection<Replacement> replacements = findReplacementsService.findReplacements(buildFakePage(text));
+        Collection<Replacement> replacements = pageReplacementFinder.findReplacements(buildFakePage(text));
 
         Collection<Replacement> expected = List.of(replacement);
         assertEquals(new HashSet<>(expected), new HashSet<>(replacements));
@@ -96,7 +96,7 @@ class FindReplacementServiceTest {
         when(replacementFinderService.find(any(FinderPage.class)))
             .thenReturn(new HashSet<>(List.of(replacement1, replacement2)));
 
-        Collection<Replacement> replacements = findReplacementsService.findReplacements(buildFakePage(text));
+        Collection<Replacement> replacements = pageReplacementFinder.findReplacements(buildFakePage(text));
 
         Collection<Replacement> expected = List.of(replacement1, replacement2);
         assertEquals(new HashSet<>(expected), new HashSet<>(replacements));
@@ -129,7 +129,7 @@ class FindReplacementServiceTest {
 
         when(replacementFinderService.find(any(FinderPage.class))).thenReturn(found);
 
-        Collection<Replacement> replacements = findReplacementsService.findReplacements(buildFakePage(text));
+        Collection<Replacement> replacements = pageReplacementFinder.findReplacements(buildFakePage(text));
 
         assertEquals(new HashSet<>(found), new HashSet<>(replacements));
     }
@@ -157,7 +157,7 @@ class FindReplacementServiceTest {
         when(replacementFinderService.find(any(FinderPage.class)))
             .thenReturn(new HashSet<>(List.of(replacement1, replacement2)));
 
-        Collection<Replacement> replacements = findReplacementsService.findReplacements(buildFakePage(text));
+        Collection<Replacement> replacements = pageReplacementFinder.findReplacements(buildFakePage(text));
 
         Collection<Replacement> expected = List.of(replacement2);
         assertEquals(new HashSet<>(expected), new HashSet<>(replacements));
@@ -187,7 +187,7 @@ class FindReplacementServiceTest {
             .thenReturn(new HashSet<>(List.of(replacement1, replacement2)));
         when(immutableFinderService.findIterable(any(FinderPage.class))).thenReturn(List.of(immutable));
 
-        Collection<Replacement> replacements = findReplacementsService.findReplacements(buildFakePage(text));
+        Collection<Replacement> replacements = pageReplacementFinder.findReplacements(buildFakePage(text));
 
         Collection<Replacement> expected = List.of(replacement1, replacement2);
         assertEquals(new HashSet<>(expected), new HashSet<>(replacements));
@@ -217,7 +217,7 @@ class FindReplacementServiceTest {
             .thenReturn(new HashSet<>(List.of(replacement1, replacement2)));
         when(immutableFinderService.findIterable(any(FinderPage.class))).thenReturn(List.of(immutable));
 
-        Collection<Replacement> replacements = findReplacementsService.findReplacements(buildFakePage(text));
+        Collection<Replacement> replacements = pageReplacementFinder.findReplacements(buildFakePage(text));
 
         Collection<Replacement> expected = List.of(replacement2);
         assertEquals(new HashSet<>(expected), new HashSet<>(replacements));
@@ -247,7 +247,7 @@ class FindReplacementServiceTest {
             .thenReturn(new HashSet<>(List.of(replacement1, replacement2)));
         when(immutableFinderService.findIterable(any(FinderPage.class))).thenReturn(List.of(immutable));
 
-        Collection<Replacement> replacements = findReplacementsService.findReplacements(buildFakePage(text));
+        Collection<Replacement> replacements = pageReplacementFinder.findReplacements(buildFakePage(text));
 
         assertEquals(Collections.emptySet(), new HashSet<>(replacements));
     }
@@ -268,7 +268,7 @@ class FindReplacementServiceTest {
         when(replacementFinderService.find(any(FinderPage.class))).thenReturn(new HashSet<>(List.of(replacement)));
         when(immutableFinderService.findIterable(any(FinderPage.class))).thenReturn(List.of(immutable));
 
-        Collection<Replacement> replacements = findReplacementsService.findReplacements(buildFakePage(text));
+        Collection<Replacement> replacements = pageReplacementFinder.findReplacements(buildFakePage(text));
 
         assertEquals(Collections.emptySet(), new HashSet<>(replacements));
     }

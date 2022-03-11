@@ -7,7 +7,7 @@ import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.domain.WikipediaNamespace;
 import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.common.domain.WikipediaPageId;
-import es.bvalero.replacer.page.findreplacement.FindReplacementsService;
+import es.bvalero.replacer.page.findreplacement.PageReplacementFinder;
 import es.bvalero.replacer.page.removeobsolete.RemoveObsoletePageService;
 import es.bvalero.replacer.repository.PageIndexRepository;
 import java.time.LocalDateTime;
@@ -29,7 +29,7 @@ class PageIndexBatchServiceTest {
     private PageIndexValidator pageIndexValidator;
 
     @Mock
-    private FindReplacementsService findReplacementsService;
+    private PageReplacementFinder pageReplacementFinder;
 
     @Mock
     private IndexablePageComparator indexablePageComparator;
@@ -71,7 +71,7 @@ class PageIndexBatchServiceTest {
         verify(pageIndexValidator).isPageIndexableByNamespace(page);
         verify(pageIndexValidator).isIndexableByTimestamp(page, null);
         verify(pageIndexValidator).isIndexableByPageTitle(page, null);
-        verify(findReplacementsService).findReplacements(page);
+        verify(pageReplacementFinder).findReplacements(page);
         verify(indexablePageComparator).indexPageReplacements(any(IndexablePage.class), isNull());
     }
 
@@ -91,7 +91,7 @@ class PageIndexBatchServiceTest {
         verify(pageIndexValidator).isPageIndexableByNamespace(page);
         verify(pageIndexValidator).isIndexableByTimestamp(page, null);
         verify(pageIndexValidator, never()).isIndexableByPageTitle(page, null);
-        verify(findReplacementsService).findReplacements(page);
+        verify(pageReplacementFinder).findReplacements(page);
         verify(indexablePageComparator).indexPageReplacements(any(IndexablePage.class), isNull());
     }
 
@@ -108,7 +108,7 @@ class PageIndexBatchServiceTest {
         verify(pageIndexValidator).isPageIndexableByNamespace(page);
         verify(pageIndexValidator).isIndexableByTimestamp(page, null);
         verify(pageIndexValidator).isIndexableByPageTitle(page, null);
-        verify(findReplacementsService, never()).findReplacements(any(WikipediaPage.class));
+        verify(pageReplacementFinder, never()).findReplacements(any(WikipediaPage.class));
         verify(indexablePageComparator, never())
             .indexPageReplacements(any(IndexablePage.class), any(IndexablePage.class));
     }

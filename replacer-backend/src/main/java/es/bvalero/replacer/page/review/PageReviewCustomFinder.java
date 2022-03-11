@@ -2,7 +2,7 @@ package es.bvalero.replacer.page.review;
 
 import es.bvalero.replacer.common.domain.*;
 import es.bvalero.replacer.common.domain.FinderResult;
-import es.bvalero.replacer.page.findreplacement.FindReplacementsService;
+import es.bvalero.replacer.page.findreplacement.PageReplacementFinder;
 import es.bvalero.replacer.repository.*;
 import es.bvalero.replacer.common.domain.WikipediaSearchResult;
 import es.bvalero.replacer.wikipedia.WikipediaPageRepository;
@@ -33,7 +33,7 @@ class PageReviewCustomFinder extends PageReviewFinder {
     private WikipediaPageRepository wikipediaPageRepository;
 
     @Autowired
-    private FindReplacementsService findReplacementsService;
+    private PageReplacementFinder pageReplacementFinder;
 
     @Setter(onMethod_ = @TestOnly)
     @Value("${replacer.indexable.namespaces}")
@@ -114,7 +114,7 @@ class PageReviewCustomFinder extends PageReviewFinder {
         PageReviewOptions options,
         Collection<Replacement> replacements
     ) {
-        Collection<Replacement> customReplacements = findReplacementsService.findCustomReplacements(page, options);
+        Collection<Replacement> customReplacements = pageReplacementFinder.findCustomReplacements(page, options);
 
         // If no custom replacements are found then we don't want to review the page
         if (customReplacements.isEmpty()) {
