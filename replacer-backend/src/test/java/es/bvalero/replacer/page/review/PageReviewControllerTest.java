@@ -210,4 +210,22 @@ class PageReviewControllerTest {
 
         verify(replacementValidationService).findMatchingReplacementType(WikipediaLanguage.SPANISH, replacement, true);
     }
+
+    @Test
+    void testValidateCustomReplacementEmpty() throws Exception {
+        final String replacement = "African";
+        when(replacementValidationService.findMatchingReplacementType(WikipediaLanguage.SPANISH, replacement, true))
+            .thenReturn(Optional.empty());
+
+        mvc
+            .perform(
+                get("/api/pages/validate?replacement=African&cs=true&lang=es&user=A")
+                    .contentType(MediaType.APPLICATION_JSON)
+            )
+            .andExpect(status().isNoContent())
+            .andExpect(jsonPath("$.kind").doesNotExist())
+            .andExpect(jsonPath("$.subtype").doesNotExist());
+
+        verify(replacementValidationService).findMatchingReplacementType(WikipediaLanguage.SPANISH, replacement, true);
+    }
 }

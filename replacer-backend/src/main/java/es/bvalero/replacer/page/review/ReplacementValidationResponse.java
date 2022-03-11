@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import es.bvalero.replacer.common.domain.ReplacementType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Value;
-import org.springframework.lang.Nullable;
+import org.springframework.lang.NonNull;
 
 @Schema
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -12,11 +12,10 @@ import org.springframework.lang.Nullable;
 class ReplacementValidationResponse {
 
     @Schema(description = "Known replacement kind or empty", example = "Ortografía")
-    @Nullable
-    Byte kind;
+    byte kind;
 
     @Schema(description = "Known replacement subtype or empty", example = "aún")
-    @Nullable
+    @NonNull
     String subtype;
 
     static ReplacementValidationResponse of(ReplacementType replacementType) {
