@@ -2,11 +2,10 @@ package es.bvalero.replacer.authentication.dto;
 
 import es.bvalero.replacer.authentication.oauth.RequestToken;
 import io.swagger.v3.oas.annotations.media.Schema;
+import javax.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.lang.NonNull;
-
-import javax.validation.constraints.NotBlank;
 
 @Schema(description = "Request token to initiate an authorization process")
 @Data(staticConstructor = "of")

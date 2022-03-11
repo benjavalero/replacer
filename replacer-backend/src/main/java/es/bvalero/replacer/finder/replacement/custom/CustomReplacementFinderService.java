@@ -1,14 +1,13 @@
 package es.bvalero.replacer.finder.replacement.custom;
 
+import es.bvalero.replacer.common.domain.Replacement;
 import es.bvalero.replacer.common.domain.ReplacementKind;
 import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.finder.Finder;
 import es.bvalero.replacer.finder.FinderService;
-import es.bvalero.replacer.common.domain.Replacement;
+import es.bvalero.replacer.page.review.PageReviewOptions;
 import java.util.Collections;
 import java.util.Set;
-
-import es.bvalero.replacer.page.review.PageReviewOptions;
 import org.springframework.stereotype.Service;
 
 @Service

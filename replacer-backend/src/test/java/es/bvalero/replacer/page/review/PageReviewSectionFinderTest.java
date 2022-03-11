@@ -33,7 +33,8 @@ class PageReviewSectionFinderTest {
         WikipediaPage page = mock(WikipediaPage.class);
         List<Replacement> replacements = Collections.emptyList();
 
-        when(wikipediaPageRepository.findSectionsInPage(any(WikipediaPageId.class))).thenReturn(Collections.emptyList());
+        when(wikipediaPageRepository.findSectionsInPage(any(WikipediaPageId.class)))
+            .thenReturn(Collections.emptyList());
 
         PageReview review = PageReview.of(page, null, replacements, 1);
         Optional<PageReview> sectionReview = pageReviewSectionFinder.findPageReviewSection(review);

@@ -2,8 +2,8 @@ package es.bvalero.replacer.finder.util;
 
 import static es.bvalero.replacer.common.util.ReplacerUtils.LOCALE_ES;
 
-import es.bvalero.replacer.common.util.ReplacerUtils;
 import es.bvalero.replacer.common.domain.WikipediaPage;
+import es.bvalero.replacer.common.util.ReplacerUtils;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -138,7 +138,13 @@ public class FinderUtils {
     }
 
     public void logFinderResult(WikipediaPage page, int start, int end, String message) {
-        LOGGER.warn("{}: {} - {} - {}", message, page.getId().getLang(), page.getTitle(), getPageSnippet(page, start, end));
+        LOGGER.warn(
+            "{}: {} - {} - {}",
+            message,
+            page.getId().getLang(),
+            page.getTitle(),
+            getPageSnippet(page, start, end)
+        );
     }
 
     /** Get the items in a collection of strings where each string is a comma-separated list itself */

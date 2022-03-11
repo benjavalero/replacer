@@ -1,8 +1,8 @@
 package es.bvalero.replacer.finder.cosmetic;
 
 import es.bvalero.replacer.common.domain.Cosmetic;
-import es.bvalero.replacer.finder.Finder;
 import es.bvalero.replacer.common.domain.WikipediaPage;
+import es.bvalero.replacer.finder.Finder;
 import java.util.regex.MatchResult;
 
 public interface CosmeticFinder extends Finder<Cosmetic> {

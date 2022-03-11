@@ -8,10 +8,9 @@ import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.user.ValidateAdminUser;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
 
 /** REST controller to perform administration operations */
 @Tag(name = "Administration")

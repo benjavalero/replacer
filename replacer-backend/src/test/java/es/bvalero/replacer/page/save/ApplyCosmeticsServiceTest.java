@@ -4,11 +4,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+import es.bvalero.replacer.common.domain.Cosmetic;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.domain.WikipediaNamespace;
 import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.common.domain.WikipediaPageId;
-import es.bvalero.replacer.common.domain.Cosmetic;
 import es.bvalero.replacer.finder.cosmetic.CosmeticFinderService;
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -54,7 +54,8 @@ class ApplyCosmeticsServiceTest {
         assertEquals(expected, applyCosmeticsService.applyCosmeticChanges(page));
 
         verify(cosmeticFinderService).find(any(WikipediaPage.class));
-        verify(checkWikipediaService).reportFix(page.getId().getLang(), page.getTitle(), cosmetic.getCheckWikipediaAction());
+        verify(checkWikipediaService)
+            .reportFix(page.getId().getLang(), page.getTitle(), cosmetic.getCheckWikipediaAction());
     }
 
     @Test
@@ -77,6 +78,7 @@ class ApplyCosmeticsServiceTest {
         assertEquals(expected, applyCosmeticsService.applyCosmeticChanges(page));
 
         verify(cosmeticFinderService).find(any(WikipediaPage.class));
-        verify(checkWikipediaService, times(3)).reportFix(page.getId().getLang(), page.getTitle(), cosmetic.getCheckWikipediaAction());
+        verify(checkWikipediaService, times(3))
+            .reportFix(page.getId().getLang(), page.getTitle(), cosmetic.getCheckWikipediaAction());
     }
 }

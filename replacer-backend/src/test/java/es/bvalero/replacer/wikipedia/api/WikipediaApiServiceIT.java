@@ -3,10 +3,10 @@ package es.bvalero.replacer.wikipedia.api;
 import static org.junit.jupiter.api.Assertions.*;
 
 import es.bvalero.replacer.common.domain.*;
+import es.bvalero.replacer.common.domain.WikipediaUser;
 import es.bvalero.replacer.config.JsonMapperConfiguration;
 import es.bvalero.replacer.config.MediaWikiApiConfiguration;
 import es.bvalero.replacer.wikipedia.WikipediaException;
-import es.bvalero.replacer.common.domain.WikipediaUser;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;

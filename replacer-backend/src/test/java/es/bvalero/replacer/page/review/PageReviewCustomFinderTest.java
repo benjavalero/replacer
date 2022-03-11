@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import es.bvalero.replacer.common.domain.*;
+import es.bvalero.replacer.common.domain.WikipediaSearchResult;
 import es.bvalero.replacer.page.findreplacement.PageReplacementFinder;
 import es.bvalero.replacer.page.index.PageIndexResult;
 import es.bvalero.replacer.page.index.PageIndexService;
@@ -12,7 +13,6 @@ import es.bvalero.replacer.repository.CustomModel;
 import es.bvalero.replacer.repository.CustomRepository;
 import es.bvalero.replacer.repository.PageIndexRepository;
 import es.bvalero.replacer.repository.PageRepository;
-import es.bvalero.replacer.common.domain.WikipediaSearchResult;
 import es.bvalero.replacer.wikipedia.WikipediaPageRepository;
 import java.time.LocalDateTime;
 import java.util.*;

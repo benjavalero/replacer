@@ -10,7 +10,6 @@ import es.bvalero.replacer.wikipedia.*;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
-
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -142,7 +141,9 @@ class WikipediaApiServiceTest {
         WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
         when(wikipediaApiRequestHelper.executeApiRequest(any(WikipediaApiRequest.class))).thenReturn(response);
 
-        assertFalse(wikipediaPageRepository.findByTitle(WikipediaLanguage.SPANISH, "Usuario:Benjavaleroxx").isPresent());
+        assertFalse(
+            wikipediaPageRepository.findByTitle(WikipediaLanguage.SPANISH, "Usuario:Benjavaleroxx").isPresent()
+        );
     }
 
     @Test
@@ -201,13 +202,15 @@ class WikipediaApiServiceTest {
         WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
         when(wikipediaApiRequestHelper.executeApiRequest(any(WikipediaApiRequest.class))).thenReturn(response);
 
-        WikipediaUser user = wikipediaPageRepository.findAuthenticatedUser(
-            WikipediaLanguage.getDefault(),
-            AccessToken.empty()
-        ).orElse(null);
+        WikipediaUser user = wikipediaPageRepository
+            .findAuthenticatedUser(WikipediaLanguage.getDefault(), AccessToken.empty())
+            .orElse(null);
         assertNotNull(user);
         assertEquals("Benjavalero", user.getName());
-        assertEquals(Set.of("*", "user", "autoconfirmed"), user.getGroups().stream().map(WikipediaUserGroup::getGroup).collect(Collectors.toSet()));
+        assertEquals(
+            Set.of("*", "user", "autoconfirmed"),
+            user.getGroups().stream().map(WikipediaUserGroup::getGroup).collect(Collectors.toSet())
+        );
     }
 
     @Test
@@ -218,10 +221,15 @@ class WikipediaApiServiceTest {
         WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
         when(wikipediaApiRequestHelper.executeApiRequest(any(WikipediaApiRequest.class))).thenReturn(response);
 
-        WikipediaUser user = wikipediaPageRepository.findByUsername(WikipediaLanguage.getDefault(), "Benjavalero").orElse(null);
+        WikipediaUser user = wikipediaPageRepository
+            .findByUsername(WikipediaLanguage.getDefault(), "Benjavalero")
+            .orElse(null);
         assertNotNull(user);
         assertEquals("Benjavalero", user.getName());
-        assertEquals(Set.of("*", "user", "autoconfirmed"), user.getGroups().stream().map(WikipediaUserGroup::getGroup).collect(Collectors.toSet()));
+        assertEquals(
+            Set.of("*", "user", "autoconfirmed"),
+            user.getGroups().stream().map(WikipediaUserGroup::getGroup).collect(Collectors.toSet())
+        );
     }
 
     @Test
@@ -384,7 +392,9 @@ class WikipediaApiServiceTest {
             .anchor("X")
             .build();
         String title = "Usuario:Benjavalero/Taller";
-        WikipediaPage page = wikipediaPageRepository.findPageSection(pageId, section).orElseThrow(WikipediaException::new);
+        WikipediaPage page = wikipediaPageRepository
+            .findPageSection(pageId, section)
+            .orElseThrow(WikipediaException::new);
         assertNotNull(page);
         assertEquals(WikipediaLanguage.getDefault(), page.getId().getLang());
         assertEquals(pageId, page.getId());
@@ -397,7 +407,10 @@ class WikipediaApiServiceTest {
     @Test
     void testWikipediaServiceOffline() {
         // Offline user
-        Optional<WikipediaUser> user = wikipediaUserOfflineRepository.findAuthenticatedUser(WikipediaLanguage.getDefault(), AccessToken.empty());
+        Optional<WikipediaUser> user = wikipediaUserOfflineRepository.findAuthenticatedUser(
+            WikipediaLanguage.getDefault(),
+            AccessToken.empty()
+        );
         assertTrue(user.isPresent());
         user.ifPresent(u -> {
             assertEquals(WikipediaLanguage.getDefault(), u.getLang());
@@ -405,13 +418,15 @@ class WikipediaApiServiceTest {
             assertTrue(u.hasRights());
             assertTrue(u.isBot());
 
-            Optional<WikipediaUser> user2 = wikipediaUserOfflineRepository.findByUsername(WikipediaLanguage.getDefault(), "x");
+            Optional<WikipediaUser> user2 = wikipediaUserOfflineRepository.findByUsername(
+                WikipediaLanguage.getDefault(),
+                "x"
+            );
             assertEquals(u, user2.orElse(null));
         });
 
         // Offline page
-        Optional<WikipediaPage> page = wikipediaPageOfflineRepository
-            .findByTitle(WikipediaLanguage.getDefault(), "");
+        Optional<WikipediaPage> page = wikipediaPageOfflineRepository.findByTitle(WikipediaLanguage.getDefault(), "");
         assertTrue(page.isPresent());
         int pageId = 1;
         page.ifPresent(p -> {
@@ -432,11 +447,11 @@ class WikipediaApiServiceTest {
             assertEquals(p, pageSection.orElse(null));
 
             Collection<WikipediaPage> pages = wikipediaPageOfflineRepository.findByIds(
-                WikipediaLanguage.getDefault(), Collections.singleton(pageId)
+                WikipediaLanguage.getDefault(),
+                Collections.singleton(pageId)
             );
             assertTrue(pages.isEmpty());
         });
-
 
         assertFalse(
             wikipediaPageOfflineRepository
@@ -451,7 +466,9 @@ class WikipediaApiServiceTest {
                 .isEmpty()
         );
         assertTrue(
-            wikipediaPageOfflineRepository.findSectionsInPage(WikipediaPageId.of(WikipediaLanguage.getDefault(), 1)).isEmpty()
+            wikipediaPageOfflineRepository
+                .findSectionsInPage(WikipediaPageId.of(WikipediaLanguage.getDefault(), 1))
+                .isEmpty()
         );
     }
 }

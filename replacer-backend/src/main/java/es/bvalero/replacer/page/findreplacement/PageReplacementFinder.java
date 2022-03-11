@@ -1,10 +1,10 @@
 package es.bvalero.replacer.page.findreplacement;
 
 import com.github.rozidan.springboot.logger.Loggable;
-import es.bvalero.replacer.common.domain.Replacement;
-import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.common.domain.FinderResult;
 import es.bvalero.replacer.common.domain.Immutable;
+import es.bvalero.replacer.common.domain.Replacement;
+import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.finder.immutable.ImmutableFinderService;
 import es.bvalero.replacer.finder.replacement.ReplacementFinderService;
 import es.bvalero.replacer.finder.replacement.custom.CustomReplacementFinderService;
@@ -43,9 +43,7 @@ public class PageReplacementFinder {
         // There will usually be much more immutables found than results.
         // Thus, it is better to obtain first all the results, and then obtain the immutables one by one,
         // aborting in case the replacement list gets empty. This way we can avoid lots of immutable calculations.
-        Iterable<Replacement> customResults = customReplacementFinderService.findCustomReplacements(
-            page ,options
-        );
+        Iterable<Replacement> customResults = customReplacementFinderService.findCustomReplacements(page, options);
         Set<Replacement> sortedResults = new TreeSet<>();
         customResults.forEach(sortedResults::add);
         return filterResults(page, sortedResults);

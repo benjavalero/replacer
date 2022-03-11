@@ -1,17 +1,16 @@
 package es.bvalero.replacer.common.domain;
 
-import lombok.Value;
-import org.apache.commons.lang3.StringUtils;
-import org.jetbrains.annotations.TestOnly;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
-
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import lombok.Value;
+import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.TestOnly;
+import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 
 /** Suggestion for a replacement found in the content of a page */
 @Value(staticConstructor = "of")

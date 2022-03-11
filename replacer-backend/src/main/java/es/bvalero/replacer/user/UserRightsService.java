@@ -7,7 +7,6 @@ import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.exception.ForbiddenException;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
-
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.VisibleForTesting;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,8 +64,6 @@ public class UserRightsService {
         WikipediaLanguage lang = WikipediaLanguage.valueOfCode(tokens[0]);
         String username = tokens[1];
         // In case of empty result return a fake user with no groups
-        return userService.findUser(lang, username).orElse(
-            ReplacerUser.builder().lang(lang).name(username).build()
-        );
+        return userService.findUser(lang, username).orElse(ReplacerUser.builder().lang(lang).name(username).build());
     }
 }

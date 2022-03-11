@@ -13,10 +13,11 @@ import es.bvalero.replacer.authentication.dto.RequestTokenDto;
 import es.bvalero.replacer.authentication.dto.VerifyAuthenticationRequest;
 import es.bvalero.replacer.authentication.oauth.OAuthService;
 import es.bvalero.replacer.authentication.oauth.RequestToken;
-import es.bvalero.replacer.common.domain.ReplacerUser;
 import es.bvalero.replacer.common.domain.AccessToken;
+import es.bvalero.replacer.common.domain.ReplacerUser;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.user.UserService;
+import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,8 +26,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
-
-import java.util.Optional;
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(controllers = AuthenticationController.class)
@@ -80,13 +79,7 @@ class AuthenticationControllerTest {
         String oAuthVerifier = "V";
 
         WikipediaLanguage lang = WikipediaLanguage.SPANISH;
-        ReplacerUser user = ReplacerUser.builder()
-            .lang(lang)
-            .name("C")
-            .hasRights(true)
-            .bot(false)
-            .admin(true)
-            .build();
+        ReplacerUser user = ReplacerUser.builder().lang(lang).name("C").hasRights(true).bot(false).admin(true).build();
         when(oAuthService.getAccessToken(requestToken, oAuthVerifier)).thenReturn(accessToken);
         when(userService.findUser(lang, accessToken)).thenReturn(Optional.of(user));
 

@@ -2,9 +2,9 @@ package es.bvalero.replacer.page.review;
 
 import es.bvalero.replacer.common.domain.*;
 import es.bvalero.replacer.common.domain.FinderResult;
+import es.bvalero.replacer.common.domain.WikipediaSearchResult;
 import es.bvalero.replacer.page.findreplacement.PageReplacementFinder;
 import es.bvalero.replacer.repository.*;
-import es.bvalero.replacer.common.domain.WikipediaSearchResult;
 import es.bvalero.replacer.wikipedia.WikipediaPageRepository;
 import java.util.*;
 import java.util.stream.Collectors;

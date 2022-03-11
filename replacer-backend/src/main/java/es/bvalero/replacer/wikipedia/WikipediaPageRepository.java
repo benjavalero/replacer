@@ -1,11 +1,10 @@
 package es.bvalero.replacer.wikipedia;
 
 import es.bvalero.replacer.common.domain.*;
-import org.springframework.lang.Nullable;
-
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Optional;
+import org.springframework.lang.Nullable;
 
 /** Repository to perform operations on Wikipedia pages */
 public interface WikipediaPageRepository {

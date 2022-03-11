@@ -1,7 +1,7 @@
 package es.bvalero.replacer.page.save;
 
-import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.common.domain.Cosmetic;
+import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.finder.cosmetic.CosmeticFinderService;
 import java.util.Collections;
 import java.util.LinkedList;

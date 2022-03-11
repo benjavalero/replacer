@@ -1,7 +1,7 @@
 package es.bvalero.replacer.finder.benchmark;
 
-import es.bvalero.replacer.finder.Finder;
 import es.bvalero.replacer.common.domain.WikipediaPage;
+import es.bvalero.replacer.finder.Finder;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.MatchResult;

@@ -56,7 +56,8 @@ public class WikipediaPage {
 
     @TestOnly
     public static WikipediaPage of(WikipediaLanguage lang, String content, String title) {
-        return WikipediaPage.builder()
+        return WikipediaPage
+            .builder()
             .id(WikipediaPageId.of(lang, 1))
             .namespace(WikipediaNamespace.getDefault())
             .title(title)

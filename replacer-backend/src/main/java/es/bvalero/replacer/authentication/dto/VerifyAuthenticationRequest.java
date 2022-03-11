@@ -1,11 +1,9 @@
 package es.bvalero.replacer.authentication.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

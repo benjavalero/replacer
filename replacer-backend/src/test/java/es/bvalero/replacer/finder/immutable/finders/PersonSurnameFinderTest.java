@@ -3,8 +3,8 @@ package es.bvalero.replacer.finder.immutable.finders;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import es.bvalero.replacer.config.XmlConfiguration;
 import es.bvalero.replacer.common.domain.Immutable;
+import es.bvalero.replacer.config.XmlConfiguration;
 import java.util.List;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;

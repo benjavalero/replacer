@@ -65,14 +65,7 @@ class PageSaveServiceTest {
 
         verify(applyCosmeticsService).applyCosmeticChanges(page);
         verify(wikipediaPageRepository)
-            .save(
-                eq(page.getId()),
-                isNull(),
-                eq(contentAfterCosmetics),
-                eq(timestamp),
-                anyString(),
-                eq(accessToken)
-            );
+            .save(eq(page.getId()), isNull(), eq(contentAfterCosmetics), eq(timestamp), anyString(), eq(accessToken));
         verify(replacementTypeRepository).updateReviewerByPageAndType(page.getId(), null, "A");
     }
 

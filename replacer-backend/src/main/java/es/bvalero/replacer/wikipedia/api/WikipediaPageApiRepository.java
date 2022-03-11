@@ -323,8 +323,8 @@ class WikipediaPageApiRepository implements WikipediaPageRepository, WikipediaUs
             .params(buildPageIdsByStringMatchRequestParams(namespaces, text, caseSensitive, offset, limit))
             .build();
         try {
-        WikipediaApiResponse apiResponse = wikipediaApiRequestHelper.executeApiRequest(apiRequest);
-        return extractPageIdsFromSearchJson(apiResponse);
+            WikipediaApiResponse apiResponse = wikipediaApiRequestHelper.executeApiRequest(apiRequest);
+            return extractPageIdsFromSearchJson(apiResponse);
         } catch (WikipediaException e) {
             LOGGER.error("Error finding pages by content", e);
         }

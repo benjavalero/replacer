@@ -1,5 +1,7 @@
 package es.bvalero.replacer;
 
+import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.*;
+
 import com.tngtech.archunit.core.domain.JavaClass;
 import com.tngtech.archunit.core.domain.JavaModifier;
 import com.tngtech.archunit.junit.AnalyzeClasses;
@@ -13,12 +15,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.bind.annotation.RestController;
 
-import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.*;
-
 @AnalyzeClasses(packages = "es.bvalero.replacer")
 class ArchitectureTest {
 
-    private static final String[] COMMON_PACKAGES = {"java..", "lombok..", "org.apache.commons..", "org.slf4j.."};
+    private static final String[] COMMON_PACKAGES = { "java..", "lombok..", "org.apache.commons..", "org.slf4j.." };
 
     private static String[] commonPackagesAnd(String... packages) {
         return ArrayUtils.addAll(packages, COMMON_PACKAGES);
@@ -28,26 +28,42 @@ class ArchitectureTest {
 
     @ArchTest
     static final ArchRule domainAccess = classes()
-        .that().resideInAPackage("..domain..")
-        .should().onlyAccessClassesThat().resideInAnyPackage(commonPackagesAnd("..common.."));
+        .that()
+        .resideInAPackage("..domain..")
+        .should()
+        .onlyAccessClassesThat()
+        .resideInAnyPackage(commonPackagesAnd("..common.."));
 
     @ArchTest
     static final ArchRule authenticationAccess = classes()
-        .that().resideInAPackage("..authentication..")
-        .should().onlyBeAccessed().byClassesThat().resideInAnyPackage("..authentication..");
+        .that()
+        .resideInAPackage("..authentication..")
+        .should()
+        .onlyBeAccessed()
+        .byClassesThat()
+        .resideInAnyPackage("..authentication..");
 
     @ArchTest
     static final ArchRule adminAccess = classes()
-        .that().resideInAPackage("..admin..")
-        .should().onlyBeAccessed().byClassesThat().resideInAnyPackage("..admin..");
+        .that()
+        .resideInAPackage("..admin..")
+        .should()
+        .onlyBeAccessed()
+        .byClassesThat()
+        .resideInAnyPackage("..admin..");
 
     @ArchTest
     static final ArchRule finderAccess = classes()
-        .that().resideInAPackage("..finder..")
-        .and().doNotImplement(FinderService.class)
-        .and().doNotHaveSimpleName(RemoveObsoleteReplacementType.class.getSimpleName())
-        .should().onlyHaveDependentClassesThat(
-            JavaClass.Predicates.resideInAnyPackage("..finder..")
+        .that()
+        .resideInAPackage("..finder..")
+        .and()
+        .doNotImplement(FinderService.class)
+        .and()
+        .doNotHaveSimpleName(RemoveObsoleteReplacementType.class.getSimpleName())
+        .should()
+        .onlyHaveDependentClassesThat(
+            JavaClass.Predicates
+                .resideInAnyPackage("..finder..")
                 .or(JavaClass.Predicates.simpleName(ArchitectureTest.class.getSimpleName()))
         );
 
@@ -55,44 +71,58 @@ class ArchitectureTest {
 
     @ArchTest
     static final ArchRule finderSuffix = classes()
-        .that().implement(Finder.class)
-        .should().haveSimpleNameEndingWith("Finder");
+        .that()
+        .implement(Finder.class)
+        .should()
+        .haveSimpleNameEndingWith("Finder");
 
     @ArchTest
     static final ArchRule finderServiceSuffix = classes()
-        .that().implement(FinderService.class)
-        .should().haveSimpleNameEndingWith("FinderService");
+        .that()
+        .implement(FinderService.class)
+        .should()
+        .haveSimpleNameEndingWith("FinderService");
 
     @ArchTest
     static final ArchRule restControllerSuffix = classes()
-        .that().areAnnotatedWith(RestController.class)
-        .should().haveSimpleNameEndingWith("Controller");
+        .that()
+        .areAnnotatedWith(RestController.class)
+        .should()
+        .haveSimpleNameEndingWith("Controller");
 
     // Naming methods
 
     @ArchTest
-    static final ArchRule noRetrieveMethods = noMethods()
-        .should().haveNameStartingWith("retrieve");
+    static final ArchRule noRetrieveMethods = noMethods().should().haveNameStartingWith("retrieve");
 
     // Tests
 
     @ArchTest
     static final ArchRule testMethods = methods()
-        .that().areAnnotatedWith(Test.class)
-        .should().haveNameStartingWith("test")
-        .andShould().notHaveModifier(JavaModifier.PUBLIC);
+        .that()
+        .areAnnotatedWith(Test.class)
+        .should()
+        .haveNameStartingWith("test")
+        .andShould()
+        .notHaveModifier(JavaModifier.PUBLIC);
 
     @ArchTest
     static final ArchRule testClasses = classes()
-        .that().haveSimpleNameEndingWith("Test")
-        .should().notHaveModifier(JavaModifier.PUBLIC);
+        .that()
+        .haveSimpleNameEndingWith("Test")
+        .should()
+        .notHaveModifier(JavaModifier.PUBLIC);
 
     // Configuration
 
     @ArchTest
     static final ArchRule configurationClasses = classes()
-        .that().areAnnotatedWith(Configuration.class)
-        .should().haveSimpleNameEndingWith("Configuration")
-        .andShould().resideInAPackage("es.bvalero.replacer.config")
-        .andShould().haveModifier(JavaModifier.PUBLIC);
+        .that()
+        .areAnnotatedWith(Configuration.class)
+        .should()
+        .haveSimpleNameEndingWith("Configuration")
+        .andShould()
+        .resideInAPackage("es.bvalero.replacer.config")
+        .andShould()
+        .haveModifier(JavaModifier.PUBLIC);
 }

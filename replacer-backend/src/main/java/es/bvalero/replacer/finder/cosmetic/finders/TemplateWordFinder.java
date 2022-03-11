@@ -1,8 +1,8 @@
 package es.bvalero.replacer.finder.cosmetic.finders;
 
+import es.bvalero.replacer.common.domain.CheckWikipediaAction;
 import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.finder.cosmetic.CosmeticCheckedFinder;
-import es.bvalero.replacer.common.domain.CheckWikipediaAction;
 import es.bvalero.replacer.finder.util.RegexMatchFinder;
 import java.util.Map;
 import java.util.regex.MatchResult;

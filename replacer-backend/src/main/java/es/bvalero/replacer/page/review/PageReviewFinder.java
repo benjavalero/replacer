@@ -201,11 +201,7 @@ abstract class PageReviewFinder {
         Collection<Replacement> notReviewedReplacements = discardReviewedReplacements(page, standardReplacements);
 
         // Decorate the standard replacements with different actions depending on the type of review
-        Collection<Replacement> decoratedReplacements = decorateReplacements(
-            page,
-            options,
-            notReviewedReplacements
-        );
+        Collection<Replacement> decoratedReplacements = decorateReplacements(page, options, notReviewedReplacements);
 
         // Return the replacements sorted as they appear in the text so there is no need to sort them in the frontend
         // We assume the given replacement collection is already sorted but we sort it just in case

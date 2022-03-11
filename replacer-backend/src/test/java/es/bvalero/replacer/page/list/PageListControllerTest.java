@@ -11,10 +11,9 @@ import es.bvalero.replacer.common.domain.ReplacementKind;
 import es.bvalero.replacer.common.domain.ReplacementType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.exception.ForbiddenException;
-import java.util.Collections;
-
 import es.bvalero.replacer.user.UserRightsService;
 import es.bvalero.replacer.user.ValidateUserAspect;
+import java.util.Collections;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +27,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(controllers = PageListController.class)
-@Import({AopAutoConfiguration.class, ValidateUserAspect.class})
+@Import({ AopAutoConfiguration.class, ValidateUserAspect.class })
 class PageListControllerTest {
 
     @Autowired
@@ -121,19 +120,21 @@ class PageListControllerTest {
             .andExpect(jsonPath("$[0].title", is("X")))
             .andExpect(jsonPath("$[0].count", is(100)));
 
-        verify(userRightsService).validateAdminUser(WikipediaLanguage.SPANISH,"A");
+        verify(userRightsService).validateAdminUser(WikipediaLanguage.SPANISH, "A");
         verify(pageMostUnreviewedService).countPagesWithMoreReplacementsToReview(WikipediaLanguage.SPANISH);
     }
 
     @Test
     void testCountPagesWithMoreReplacementsToReviewNotAdmin() throws Exception {
-        doThrow(ForbiddenException.class).when(userRightsService).validateAdminUser(any(WikipediaLanguage.class),anyString());
+        doThrow(ForbiddenException.class)
+            .when(userRightsService)
+            .validateAdminUser(any(WikipediaLanguage.class), anyString());
 
         mvc
             .perform(get("/api/pages/unreviewed?lang=es&user=A").contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isForbidden());
 
-        verify(userRightsService).validateAdminUser(WikipediaLanguage.SPANISH,"A");
+        verify(userRightsService).validateAdminUser(WikipediaLanguage.SPANISH, "A");
         verify(pageMostUnreviewedService, never()).countPagesWithMoreReplacementsToReview(WikipediaLanguage.SPANISH);
     }
 }

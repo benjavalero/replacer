@@ -2,8 +2,8 @@ package es.bvalero.replacer.finder.immutable.finders;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import es.bvalero.replacer.config.XmlConfiguration;
 import es.bvalero.replacer.common.domain.Immutable;
+import es.bvalero.replacer.config.XmlConfiguration;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

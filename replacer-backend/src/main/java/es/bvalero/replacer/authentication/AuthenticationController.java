@@ -9,8 +9,8 @@ import es.bvalero.replacer.authentication.oauth.OAuthService;
 import es.bvalero.replacer.authentication.oauth.RequestToken;
 import es.bvalero.replacer.common.domain.AccessToken;
 import es.bvalero.replacer.common.domain.ReplacerUser;
-import es.bvalero.replacer.common.dto.AccessTokenDto;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
+import es.bvalero.replacer.common.dto.AccessTokenDto;
 import es.bvalero.replacer.user.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -70,7 +70,8 @@ public class AuthenticationController {
         RequestToken requestToken = RequestTokenDto.toDomain(verifyAuthenticationRequest.getRequestToken());
         String oAuthVerifier = verifyAuthenticationRequest.getOauthVerifier();
         AccessToken accessToken = oAuthService.getAccessToken(requestToken, oAuthVerifier);
-        ReplacerUser user = userService.findUser(WikipediaLanguage.valueOfCode(lang), accessToken)
+        ReplacerUser user = userService
+            .findUser(WikipediaLanguage.valueOfCode(lang), accessToken)
             .orElseThrow(AuthenticationException::new);
 
         return VerifyAuthenticationResponse

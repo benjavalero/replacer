@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import es.bvalero.replacer.common.domain.Cosmetic;
-
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -15,8 +14,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 class DefaultSortSpecialCharactersFinderTest {
-
-
 
     @InjectMocks
     private DefaultSortSpecialCharactersFinder defaultSortSpecialCharactersFinder;

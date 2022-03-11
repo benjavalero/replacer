@@ -2,6 +2,7 @@ package es.bvalero.replacer.finder.replacement.finders;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import es.bvalero.replacer.common.domain.Replacement;
 import es.bvalero.replacer.common.domain.ReplacementKind;
 import es.bvalero.replacer.common.domain.ReplacementType;
 import es.bvalero.replacer.common.domain.Suggestion;
@@ -9,7 +10,6 @@ import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.listing.SimpleMisspelling;
 import es.bvalero.replacer.finder.listing.load.SimpleMisspellingLoader;
 import es.bvalero.replacer.finder.listing.parse.SimpleMisspellingParser;
-import es.bvalero.replacer.common.domain.Replacement;
 import java.beans.PropertyChangeEvent;
 import java.util.HashSet;
 import java.util.List;
@@ -407,8 +407,7 @@ class MisspellingSimpleFinderTest {
             .start(7)
             .text("Vario")
             .type(ReplacementType.of(ReplacementKind.SIMPLE, "vario"))
-            .suggestions(List.of(Suggestion.of("Vario", "adjetivo; nombre propio"),
-                Suggestion.of("Varío", "verbo")))
+            .suggestions(List.of(Suggestion.of("Vario", "adjetivo; nombre propio"), Suggestion.of("Varío", "verbo")))
             .build();
         assertEquals(Set.of(expected), new HashSet<>(results));
     }

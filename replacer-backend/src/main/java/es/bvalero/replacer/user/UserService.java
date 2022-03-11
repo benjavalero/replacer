@@ -2,14 +2,13 @@ package es.bvalero.replacer.user;
 
 import es.bvalero.replacer.common.domain.*;
 import es.bvalero.replacer.wikipedia.WikipediaUserRepository;
+import java.util.Objects;
+import java.util.Optional;
 import lombok.Setter;
 import org.jetbrains.annotations.TestOnly;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
-import java.util.Objects;
-import java.util.Optional;
 
 /** Service to retrieve details about the users of the application */
 @Service
@@ -31,7 +30,8 @@ public class UserService {
     }
 
     private ReplacerUser convert(WikipediaUser wikipediaUser) {
-        return ReplacerUser.builder()
+        return ReplacerUser
+            .builder()
             .lang(wikipediaUser.getLang())
             .name(wikipediaUser.getName())
             .hasRights(wikipediaUser.getGroups().contains(WikipediaUserGroup.AUTO_CONFIRMED))

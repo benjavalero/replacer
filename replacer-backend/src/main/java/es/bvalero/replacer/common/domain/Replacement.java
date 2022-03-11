@@ -1,9 +1,8 @@
 package es.bvalero.replacer.common.domain;
 
+import es.bvalero.replacer.common.util.ReplacerUtils;
 import java.util.Collection;
 import java.util.List;
-
-import es.bvalero.replacer.common.util.ReplacerUtils;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Value;

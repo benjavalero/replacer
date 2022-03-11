@@ -1,10 +1,9 @@
 package es.bvalero.replacer.finder;
 
-import java.util.List;
-import java.util.regex.MatchResult;
-
 import es.bvalero.replacer.common.domain.FinderResult;
 import es.bvalero.replacer.common.domain.WikipediaPage;
+import java.util.List;
+import java.util.regex.MatchResult;
 import org.apache.commons.collections4.IterableUtils;
 import org.jetbrains.annotations.TestOnly;
 
