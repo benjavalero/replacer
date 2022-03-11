@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.*;
 
 @AnalyzeClasses(packages = "es.bvalero.replacer")
-public class ArchitectureTest {
+class ArchitectureTest {
 
     private static final String[] COMMON_PACKAGES = {"java..", "lombok..", "org.apache.commons..", "org.slf4j.."};
 
@@ -25,52 +25,60 @@ public class ArchitectureTest {
     // Package dependency checks
 
     @ArchTest
-    public static final ArchRule domainAccessesOnlyCommon = classes()
+    static final ArchRule domainAccessesOnlyCommon = classes()
         .that().resideInAPackage("..domain..")
         .should().onlyAccessClassesThat().resideInAnyPackage(commonPackagesAnd("..common.."));
 
     @ArchTest
-    public static final ArchRule authenticationAccess = classes()
+    static final ArchRule authenticationAccess = classes()
         .that().resideInAPackage("..authentication..")
         .should().onlyBeAccessed().byClassesThat().resideInAnyPackage("..authentication..");
 
     @ArchTest
-    public static final ArchRule adminAccess = classes()
+    static final ArchRule adminAccess = classes()
         .that().resideInAPackage("..admin..")
         .should().onlyBeAccessed().byClassesThat().resideInAnyPackage("..admin..");
 
     // Naming classes
 
     @ArchTest
-    public static final ArchRule finderSuffix = classes()
+    static final ArchRule finderSuffix = classes()
         .that().implement(Finder.class)
         .should().haveSimpleNameEndingWith("Finder");
 
     @ArchTest
-    public static final ArchRule finderServiceSuffix = classes()
+    static final ArchRule finderServiceSuffix = classes()
         .that().implement(FinderService.class)
         .should().haveSimpleNameEndingWith("FinderService");
 
     @ArchTest
-    public static final ArchRule restControllerSuffix = classes()
+    static final ArchRule restControllerSuffix = classes()
         .that().areAnnotatedWith(RestController.class)
         .should().haveSimpleNameEndingWith("Controller");
 
     // Naming methods
 
     @ArchTest
-    public static final ArchRule noRetrieveMethods = noMethods()
+    static final ArchRule noRetrieveMethods = noMethods()
         .should().haveNameStartingWith("retrieve");
 
+    // Tests
+
     @ArchTest
-    public static final ArchRule testMethods = methods()
+    static final ArchRule testMethods = methods()
         .that().areAnnotatedWith(Test.class)
-        .should().haveNameStartingWith("test");
+        .should().haveNameStartingWith("test")
+        .andShould().notHaveModifier(JavaModifier.PUBLIC);
+
+    @ArchTest
+    static final ArchRule testClasses = classes()
+        .that().haveSimpleNameEndingWith("Test")
+        .should().notHaveModifier(JavaModifier.PUBLIC);
 
     // Configuration
 
     @ArchTest
-    public static final ArchRule configurationClasses = classes()
+    static final ArchRule configurationClasses = classes()
         .that().areAnnotatedWith(Configuration.class)
         .should().haveSimpleNameEndingWith("Configuration")
         .andShould().resideInAPackage("es.bvalero.replacer.config")
