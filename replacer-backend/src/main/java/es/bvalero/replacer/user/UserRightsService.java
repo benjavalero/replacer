@@ -8,14 +8,12 @@ import es.bvalero.replacer.common.exception.ForbiddenException;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
-import es.bvalero.replacer.user.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.VisibleForTesting;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /** Service to check the rights of a user to use some services of the application */
-@VisibleForTesting
 @Slf4j
 @Service
 public class UserRightsService {
@@ -30,7 +28,6 @@ public class UserRightsService {
         .expireAfterWrite(1, TimeUnit.DAYS)
         .build();
 
-    @VisibleForTesting
     public void validateAdminUser(WikipediaLanguage lang, String user) throws ForbiddenException {
         if (!isAdmin(lang, user)) {
             LOGGER.error("Unauthorized admin user: {} - {}", lang, user);
@@ -43,7 +40,6 @@ public class UserRightsService {
         return getCachedUser(lang, username).isAdmin();
     }
 
-    @VisibleForTesting
     public void validateBotUser(WikipediaLanguage lang, String user) throws ForbiddenException {
         if (!isBot(lang, user)) {
             LOGGER.error("Unauthorized bot user: {} - {}", lang, user);

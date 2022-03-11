@@ -247,11 +247,11 @@ abstract class PageReviewFinder {
         return toReview;
     }
 
-    private boolean isSameReplacement(Replacement Replacement, ReplacementModel replacementModel) {
+    private boolean isSameReplacement(Replacement replacement, ReplacementModel replacementModel) {
         return (
-            Replacement.getStart() == replacementModel.getPosition() &&
-            Replacement.getType().getKind().getCode() == replacementModel.getType() &&
-            Replacement.getType().getSubtype().equals(replacementModel.getSubtype())
+            replacement.getStart() == replacementModel.getPosition() &&
+            replacement.getType().getKind().getCode() == replacementModel.getType() &&
+            replacement.getType().getSubtype().equals(replacementModel.getSubtype())
         );
     }
 
