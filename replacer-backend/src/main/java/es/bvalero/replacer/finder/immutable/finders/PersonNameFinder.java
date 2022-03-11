@@ -7,13 +7,11 @@ import es.bvalero.replacer.finder.immutable.ImmutableFinderPriority;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
 import es.bvalero.replacer.finder.util.LinearMatchResult;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.MatchResult;
 import javax.annotation.Resource;
 import org.apache.commons.collections4.IterableUtils;
-import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
 /**
@@ -66,19 +64,10 @@ class PersonNameFinder implements ImmutableFinder {
 
         @Override
         public Iterable<MatchResult> findMatchResults(WikipediaPage page) {
-            return LinearMatchFinder.find(page, this::findResult);
+            return LinearMatchFinder.find(page, this::findPersonName);
         }
 
-        @Nullable
-        private MatchResult findResult(WikipediaPage page, int start) {
-            final List<MatchResult> matches = new ArrayList<>();
-            while (start >= 0 && start < page.getContent().length() && matches.isEmpty()) {
-                start = findPersonName(page, start, personName, matches);
-            }
-            return matches.isEmpty() ? null : matches.get(0);
-        }
-
-        private int findPersonName(WikipediaPage page, int start, String personName, List<MatchResult> matches) {
+        private int findPersonName(WikipediaPage page, int start, List<MatchResult> matches) {
             final String text = page.getContent();
             final int personNameStart = text.indexOf(personName, start);
             if (personNameStart >= 0) {

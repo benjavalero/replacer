@@ -4,7 +4,6 @@ import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
 import es.bvalero.replacer.finder.util.LinearMatchResult;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.MatchResult;
 
@@ -12,18 +11,11 @@ class CursiveLinearFinder implements BenchmarkFinder {
 
     @Override
     public Iterable<MatchResult> findMatchResults(WikipediaPage page) {
-        return LinearMatchFinder.find(page, (page1, start) -> findResult(page1, start));
+        return LinearMatchFinder.find(page, this::findCursive);
     }
 
-    private MatchResult findResult(WikipediaPage page, int start) {
-        List<MatchResult> matches = new ArrayList<>();
-        while (start >= 0 && start < page.getContent().length() && matches.isEmpty()) {
-            start = findCursive(page.getContent(), start, matches);
-        }
-        return matches.isEmpty() ? null : matches.get(0);
-    }
-
-    private int findCursive(String text, int start, List<MatchResult> matches) {
+    private int findCursive(WikipediaPage page, int start, List<MatchResult> matches) {
+        final String text = page.getContent();
         int startCursive = findStartCursive(text, start);
         if (startCursive >= 0) {
             int numQuotes = findNumQuotes(text, startCursive);

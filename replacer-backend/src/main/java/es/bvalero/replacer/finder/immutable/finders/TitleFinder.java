@@ -8,7 +8,6 @@ import es.bvalero.replacer.finder.immutable.ImmutableFinderPriority;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
 import es.bvalero.replacer.finder.util.LinearMatchResult;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.MatchResult;
@@ -62,19 +61,11 @@ class TitleFinder extends ImmutableCheckedFinder {
 
         @Override
         public Iterable<MatchResult> findMatchResults(WikipediaPage page) {
-            return LinearMatchFinder.find(page, this::findResult);
+            return LinearMatchFinder.find(page, this::findTitleWord);
         }
 
-        @Nullable
-        private MatchResult findResult(WikipediaPage page, int start) {
-            final List<MatchResult> matches = new ArrayList<>();
-            while (start >= 0 && start < page.getContent().length() && matches.isEmpty()) {
-                start = findTitleWord(page.getContent(), start, word, matches);
-            }
-            return matches.isEmpty() ? null : matches.get(0);
-        }
-
-        private int findTitleWord(String text, int start, String word, List<MatchResult> matches) {
+        private int findTitleWord(WikipediaPage page, int start, List<MatchResult> matches) {
+            final String text = page.getContent();
             // Find the word case-sensitive improves the performance
             final int wordStart = text.indexOf(word, start);
             if (wordStart >= 0) {

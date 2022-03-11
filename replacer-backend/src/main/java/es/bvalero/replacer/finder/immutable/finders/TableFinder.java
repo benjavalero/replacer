@@ -4,10 +4,8 @@ import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.finder.immutable.ImmutableFinder;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
 import es.bvalero.replacer.finder.util.LinearMatchResult;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.MatchResult;
-import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
 /**
@@ -25,16 +23,7 @@ class TableFinder implements ImmutableFinder {
 
     @Override
     public Iterable<MatchResult> findMatchResults(WikipediaPage page) {
-        return LinearMatchFinder.find(page, this::findResult);
-    }
-
-    @Nullable
-    private MatchResult findResult(WikipediaPage page, int start) {
-        final List<MatchResult> matches = new ArrayList<>();
-        while (start >= 0 && start < page.getContent().length() && matches.isEmpty()) {
-            start = findLine(page, start, matches);
-        }
-        return matches.isEmpty() ? null : matches.get(0);
+        return LinearMatchFinder.find(page, this::findLine);
     }
 
     private int findLine(WikipediaPage page, int start, List<MatchResult> matches) {

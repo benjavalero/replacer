@@ -5,12 +5,10 @@ import es.bvalero.replacer.finder.immutable.ImmutableFinder;
 import es.bvalero.replacer.finder.immutable.ImmutableFinderPriority;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
 import es.bvalero.replacer.finder.util.LinearMatchResult;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.MatchResult;
 import javax.annotation.Resource;
-import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
 /** Find ignorable sections in a page content */
@@ -27,19 +25,11 @@ class IgnorableSectionFinder implements ImmutableFinder {
 
     @Override
     public Iterable<MatchResult> findMatchResults(WikipediaPage page) {
-        return LinearMatchFinder.find(page, this::findResult);
+        return LinearMatchFinder.find(page, this::findSection);
     }
 
-    @Nullable
-    private MatchResult findResult(WikipediaPage page, int start) {
-        final List<MatchResult> matches = new ArrayList<>();
-        while (start >= 0 && start < page.getContent().length() && matches.isEmpty()) {
-            start = findSection(page.getContent(), start, matches);
-        }
-        return matches.isEmpty() ? null : matches.get(0);
-    }
-
-    private int findSection(String text, int start, List<MatchResult> matches) {
+    private int findSection(WikipediaPage page, int start, List<MatchResult> matches) {
+        final String text = page.getContent();
         final int startHeader = findStartHeader(text, start);
         if (startHeader >= 0) {
             final int endHeader = findEndHeader(text, startHeader);

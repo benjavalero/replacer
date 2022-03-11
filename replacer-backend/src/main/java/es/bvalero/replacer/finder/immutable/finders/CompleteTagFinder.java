@@ -6,7 +6,6 @@ import es.bvalero.replacer.finder.immutable.ImmutableFinderPriority;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
 import es.bvalero.replacer.finder.util.LinearMatchResult;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.MatchResult;
@@ -36,16 +35,7 @@ class CompleteTagFinder extends ImmutableCheckedFinder {
     @Override
     public Iterable<MatchResult> findMatchResults(WikipediaPage page) {
         // Even with more than 10 tags, the faster approach with difference is the linear search in one-pass.
-        return LinearMatchFinder.find(page, this::findResult);
-    }
-
-    @Nullable
-    private MatchResult findResult(WikipediaPage page, int start) {
-        final List<MatchResult> matches = new ArrayList<>();
-        while (start >= 0 && start < page.getContent().length() && matches.isEmpty()) {
-            start = findCompleteTag(page, start, matches);
-        }
-        return matches.isEmpty() ? null : matches.get(0);
+        return LinearMatchFinder.find(page, this::findCompleteTag);
     }
 
     private int findCompleteTag(WikipediaPage page, int start, List<MatchResult> matches) {

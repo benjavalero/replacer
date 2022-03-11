@@ -5,7 +5,6 @@ import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
 import es.bvalero.replacer.finder.util.LinearMatchResult;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -22,19 +21,11 @@ class CompleteTagLinearFinder implements BenchmarkFinder {
 
     @Override
     public Iterable<MatchResult> findMatchResults(WikipediaPage page) {
-        return LinearMatchFinder.find(page, this::findResult);
+        return LinearMatchFinder.find(page, this::findCompleteTag);
     }
 
-    @Nullable
-    private MatchResult findResult(WikipediaPage page, int start) {
-        List<MatchResult> matches = new ArrayList<>();
-        while (start >= 0 && start < page.getContent().length() && matches.isEmpty()) {
-            start = findCompleteTag(page.getContent(), start, matches);
-        }
-        return matches.isEmpty() ? null : matches.get(0);
-    }
-
-    private int findCompleteTag(String text, int start, List<MatchResult> matches) {
+    private int findCompleteTag(WikipediaPage page, int start, List<MatchResult> matches) {
+        final String text = page.getContent();
         int startCompleteTag = findStartCompleteTag(text, start);
         if (startCompleteTag >= 0) {
             String tag = findSupportedTag(text, startCompleteTag + 1);

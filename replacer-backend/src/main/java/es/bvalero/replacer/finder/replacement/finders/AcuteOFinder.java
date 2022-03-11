@@ -10,7 +10,6 @@ import es.bvalero.replacer.finder.replacement.ReplacementFinder;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
 import es.bvalero.replacer.finder.util.LinearMatchResult;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.regex.MatchResult;
@@ -33,22 +32,14 @@ public class AcuteOFinder implements ReplacementFinder {
     @Override
     public Iterable<MatchResult> findMatchResults(WikipediaPage page) {
         if (WikipediaLanguage.SPANISH == page.getId().getLang()) {
-            return LinearMatchFinder.find(page, this::findResult);
+            return LinearMatchFinder.find(page, this::findAcuteO);
         } else {
             return Collections.emptyList();
         }
     }
 
-    @Nullable
-    private MatchResult findResult(WikipediaPage page, int start) {
-        final List<MatchResult> matches = new ArrayList<>();
-        while (start >= 0 && start < page.getContent().length() && matches.isEmpty()) {
-            start = findAcuteO(page.getContent(), start, matches);
-        }
-        return matches.isEmpty() ? null : matches.get(0);
-    }
-
-    private int findAcuteO(String text, int start, List<MatchResult> matches) {
+    private int findAcuteO(WikipediaPage page, int start, List<MatchResult> matches) {
+        final String text = page.getContent();
         final int startAcuteO = text.indexOf(SEARCH_ACUTE_O, start);
         if (startAcuteO >= 0) {
             final int endAcuteO = startAcuteO + SEARCH_ACUTE_O.length();
