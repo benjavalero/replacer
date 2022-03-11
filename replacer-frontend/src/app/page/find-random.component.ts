@@ -4,7 +4,7 @@ import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AlertService } from '../alert/alert.service';
-import { PageReviewResponse, ReviewOptions, typeLabel } from './page-review.model';
+import { PageReviewResponse, ReviewOptions, kindLabel } from './page-review.model';
 import { PageService } from './page.service';
 import { ValidateCustomComponent } from './validate-custom.component';
 import { ReplacementValidationResponse } from './validate-custom.model';
@@ -41,7 +41,7 @@ export class FindRandomComponent implements OnInit {
       this.route.snapshot.paramMap.get('cs') === 'true'
     );
     if (options.suggestion) {
-      options.type = 1;
+      options.kind = 1;
     }
 
     if (pageId) {
@@ -77,8 +77,8 @@ export class FindRandomComponent implements OnInit {
 
   private findRandomPage(options: ReviewOptions): void {
     const msg =
-      options.type && options.subtype
-        ? `Buscando artículo aleatorio de tipo «${options.getTypeLabel()} - ${options.subtype}»…`
+      options.kind && options.subtype
+        ? `Buscando artículo aleatorio de tipo «${options.getKindLabel()} - ${options.subtype}»…`
         : 'Buscando artículo aleatorio…';
     this.titleService.setTitle(`Replacer - ${msg}`);
 
@@ -90,8 +90,8 @@ export class FindRandomComponent implements OnInit {
           this.manageReview(review, options);
         } else {
           this.alertService.addWarningMessage(
-            options.type && options.subtype
-              ? `No se ha encontrado ningún artículo de tipo «${options.getTypeLabel()} - ${options.subtype}»`
+            options.kind && options.subtype
+              ? `No se ha encontrado ningún artículo de tipo «${options.getKindLabel()} - ${options.subtype}»`
               : 'No se ha encontrado ningún artículo'
           );
         }
@@ -132,7 +132,7 @@ export class FindRandomComponent implements OnInit {
 
     // Modify title
     let htmlTitle = 'Replacer - ';
-    if (options.type && options.subtype) {
+    if (options.kind && options.subtype) {
       htmlTitle += `${options.subtype} - `;
     }
     htmlTitle += review.page.title;
@@ -147,11 +147,11 @@ export class FindRandomComponent implements OnInit {
 
   private getReviewUrl(options: ReviewOptions, pageId: number | null): string {
     let path: string;
-    if (options.type && options.subtype) {
+    if (options.kind && options.subtype) {
       if (options.suggestion) {
         path = `/custom/${options.subtype}/${options.suggestion}/${options.cs}`;
       } else {
-        path = `/list/${options.type}/${options.subtype}`;
+        path = `/list/${options.kind}/${options.subtype}`;
       }
     } else {
       path = '/random';
@@ -175,8 +175,8 @@ export class FindRandomComponent implements OnInit {
       .validateCustomReplacement(replacement, options.cs!)
       .subscribe((validateType: ReplacementValidationResponse) => {
         if (validateType) {
-          this.openValidationModal$(validateType.type, validateType.subtype).then((result) => {
-            const knownTypeOptions = new ReviewOptions(validateType.type, validateType.subtype, null, null);
+          this.openValidationModal$(validateType.kind, validateType.subtype).then((result) => {
+            const knownTypeOptions = new ReviewOptions(validateType.kind, validateType.subtype, null, null);
             this.router.navigate([this.getReviewUrl(knownTypeOptions, null)]);
           });
         } else {
@@ -187,7 +187,7 @@ export class FindRandomComponent implements OnInit {
 
   private openValidationModal$(type: number, subtype: string): Promise<any> {
     const modalRef = this.modalService.open(ValidateCustomComponent);
-    modalRef.componentInstance.type = typeLabel[type];
+    modalRef.componentInstance.type = kindLabel[type];
     modalRef.componentInstance.subtype = subtype;
     return modalRef.result;
   }

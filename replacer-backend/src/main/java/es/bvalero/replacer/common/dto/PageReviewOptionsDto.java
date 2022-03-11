@@ -23,7 +23,7 @@ public class PageReviewOptionsDto {
     @Parameter(description = "Replacement kind", example = "Ortografía")
     @Schema(description = "Replacement kind", example = "Ortografía")
     @Nullable
-    private Byte type;
+    private Byte kind;
 
     @Parameter(description = "Replacement subtype", example = "aún")
     @Schema(description = "Replacement subtype", example = "aún")
@@ -45,10 +45,10 @@ public class PageReviewOptionsDto {
     public String toString() {
         List<String> list = new ArrayList<>();
 
-        if (type == null) {
+        if (kind == null) {
             list.add("NO TYPE");
         } else {
-            list.add(ReplacementKind.valueOf(type).toString());
+            list.add(ReplacementKind.valueOf(kind).toString());
             assert subtype != null;
             list.add(subtype);
             if (suggestion != null) {

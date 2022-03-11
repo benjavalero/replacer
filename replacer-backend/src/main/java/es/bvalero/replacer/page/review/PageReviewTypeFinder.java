@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-class PageReviewTypeSubtypeFinder extends PageReviewFinder {
+class PageReviewTypeFinder extends PageReviewFinder {
 
     @Autowired
     private PageRepository pageRepository;
@@ -42,7 +42,7 @@ class PageReviewTypeSubtypeFinder extends PageReviewFinder {
     ) {
         // Though the whole list of replacements will be returned no matter the type
         // we run a filter to check there is at least one replacement of the requested type
-        Collection<Replacement> filtered = filterReplacementsByTypeAndSubtype(replacements, options);
+        Collection<Replacement> filtered = filterReplacementsByType(replacements, options);
         if (filtered.isEmpty()) {
             // No replacement to be reviewed for this page and type
             // We remove it from the count cache by marking it as reviewed (it should not exist in DB any more)
@@ -53,7 +53,7 @@ class PageReviewTypeSubtypeFinder extends PageReviewFinder {
         return replacements;
     }
 
-    private Collection<Replacement> filterReplacementsByTypeAndSubtype(
+    private Collection<Replacement> filterReplacementsByType(
         Collection<Replacement> replacements,
         PageReviewOptions options
     ) {

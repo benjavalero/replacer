@@ -66,7 +66,7 @@ public class PageReviewMapper {
     private PageReviewOptionsDto toDto(PageReviewOptions options) {
         PageReviewOptionsDto dto = new PageReviewOptionsDto();
         if (options.getOptionsType() != PageReviewOptionsType.NO_TYPE) {
-            dto.setType(options.getType().getKind().getCode());
+            dto.setKind(options.getType().getKind().getCode());
             dto.setSubtype(options.getType().getSubtype());
             dto.setSuggestion(options.getSuggestion());
             dto.setCs(options.getCs());
@@ -83,7 +83,7 @@ public class PageReviewMapper {
             .builder()
             .lang(WikipediaLanguage.valueOfCode(queryParameters.getLang()))
             .user(queryParameters.getUser())
-            .type(ReplacementType.of(options.getType(), options.getSubtype()))
+            .type(ReplacementType.of(options.getKind(), options.getSubtype()))
             .suggestion(options.getSuggestion())
             .cs(options.getCs())
             .reviewAllTypes(reviewAllTypes)

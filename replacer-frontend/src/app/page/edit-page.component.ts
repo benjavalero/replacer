@@ -4,7 +4,7 @@ import { faFastForward } from '@fortawesome/free-solid-svg-icons';
 import { AlertService } from '../alert/alert.service';
 import { UserService } from '../user/user.service';
 import { FixedReplacement, getReplacementEnd } from './page-replacement.model';
-import { PageReviewOptions, PageReviewResponse, ReviewOptions, typeLabel } from './page-review.model';
+import { PageReviewOptions, PageReviewResponse, ReviewOptions, kindLabel } from './page-review.model';
 import { EMPTY_CONTENT, PageService } from './page.service';
 
 @Component({
@@ -37,9 +37,9 @@ export class EditPageComponent implements OnChanges {
       return true;
     } else {
       const options: PageReviewOptions = this.review.options;
-      if (options.type && options.subtype) {
+      if (options.kind && options.subtype) {
         const replacement = this.review.replacements[index];
-        return replacement.type === options.type && replacement.subtype === options.subtype;
+        return replacement.kind === options.kind && replacement.subtype === options.subtype;
       } else {
         return true;
       }
@@ -78,10 +78,10 @@ export class EditPageComponent implements OnChanges {
       return 0;
     } else {
       const options: PageReviewOptions = this.review.options;
-      if (options.type && options.subtype) {
+      if (options.kind && options.subtype) {
         let count: number = 0;
         for (let replacement of this.review.replacements) {
-          if (replacement.type !== options.type || replacement.subtype !== options.subtype) {
+          if (replacement.kind !== options.kind || replacement.subtype !== options.subtype) {
             count++;
           }
         }
@@ -180,7 +180,7 @@ export class EditPageComponent implements OnChanges {
     // This event will be called when the page is saved with or without changes, and also when skipped.
     this.saved.emit(
       new ReviewOptions(
-        this.review.options.type || null,
+        this.review.options.kind || null,
         this.review.options.subtype || null,
         this.review.options.suggestion || null,
         this.review.options.cs || false
@@ -205,6 +205,6 @@ export class EditPageComponent implements OnChanges {
   }
 
   get typeLabel(): string {
-    return typeLabel[this.review.options.type!];
+    return kindLabel[this.review.options.kind!];
   }
 }

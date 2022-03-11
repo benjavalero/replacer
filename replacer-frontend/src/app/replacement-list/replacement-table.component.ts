@@ -3,7 +3,7 @@ import { faCheckDouble, faList } from '@fortawesome/free-solid-svg-icons';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { typeLabel } from '../page/page-review.model';
+import { kindLabel } from '../page/page-review.model';
 import StringUtils from '../string-utils';
 import { UserConfigService } from '../user/user-config.service';
 import { User } from '../user/user.model';
@@ -65,7 +65,7 @@ export class ReplacementTableComponent implements OnInit, OnChanges {
 
   ngOnInit() {
     this.user$ = this.userService.user$;
-    this.label = typeLabel[this.type];
+    this.label = kindLabel[this.type];
   }
 
   ngOnChanges() {

@@ -21,8 +21,8 @@ export class PageService {
 
   findRandomPage(options: ReviewOptions): Observable<PageReviewResponse> {
     let params: HttpParams = new HttpParams();
-    if (options.type && options.subtype) {
-      params = params.append('type', options.type).append('subtype', options.subtype);
+    if (options.kind && options.subtype) {
+      params = params.append('kind', options.kind).append('subtype', options.subtype);
       if (options.suggestion) {
         params = params.append('suggestion', options.suggestion).append('cs', String(options.cs));
       }
@@ -38,8 +38,8 @@ export class PageService {
 
   findPageReviewById(pageId: number, options: ReviewOptions): Observable<PageReviewResponse> {
     let params: HttpParams = new HttpParams();
-    if (options.type && options.subtype) {
-      params = params.append('type', options.type).append('subtype', options.subtype);
+    if (options.kind && options.subtype) {
+      params = params.append('kind', options.kind).append('subtype', options.subtype);
       if (options.suggestion) {
         params = params.append('suggestion', options.suggestion).append('cs', String(options.cs));
       }

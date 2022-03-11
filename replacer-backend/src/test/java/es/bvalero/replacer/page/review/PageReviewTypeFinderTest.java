@@ -20,7 +20,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-class PageReviewTypeSubtypeFinderTest {
+class PageReviewTypeFinderTest {
 
     private final int randomId = 1;
     private final int randomId2 = 2;
@@ -77,11 +77,11 @@ class PageReviewTypeSubtypeFinderTest {
     private PageReviewSectionFinder pageReviewSectionFinder;
 
     @InjectMocks
-    private PageReviewTypeSubtypeFinder pageReviewTypeSubtypeService;
+    private PageReviewTypeFinder pageReviewTypeSubtypeService;
 
     @BeforeEach
     public void setUp() {
-        pageReviewTypeSubtypeService = new PageReviewTypeSubtypeFinder();
+        pageReviewTypeSubtypeService = new PageReviewTypeFinder();
         MockitoAnnotations.openMocks(this);
     }
 

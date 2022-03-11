@@ -28,14 +28,11 @@ The following concepts are used:
 
   - **Text**. The text to be checked and fixed. It can be a word or an expression.
   - **Start**. A number corresponding to the position in the page contents where the text is found. Take into account that the first position is 0.
-  - **Type**. The category of the replacement: misspelling, date format, etc. It may include several **subtypes**.
+  - **Type**. The category of the replacement. It is composed by a parent **kind** (misspelling, date format, etc.) and a child **subtype**.
   - **Suggestions**. A list with at least one suggestion to replace the text. Each suggestion is composed by:
     - **Text**. The new text after the replacement.
     - **Comment**. An optional description to explain the motivation of the fix.
-- **Immutable**. A section in the page contents to be left untouched, for instance a literal quote, so any replacement found within it must be ignored and not offered to the user for revision. It is composed by:
-  - **Start**. The start position of the section in the page contents
-  - **End**. The end position of the section in the page contents
-  - **Text**. Optionally, the text in the section, especially for debugging purposes, i.e. the text between the start and end position of the section.
+- **Immutable**. A section in the page contents to be left untouched, for instance a literal quote, so any replacement found within it must be ignored and not offered to the user for revision.
 - **Cosmetic**. A special type of replacement which can be applied automatically, concerning cosmetic modifications, visible or not, e.g. replacing `[[Asia|Asia]]` by `[[Asia]]`.
 - **PageReview**. A summary of a page (or page section) with replacements to be reviewed.
 

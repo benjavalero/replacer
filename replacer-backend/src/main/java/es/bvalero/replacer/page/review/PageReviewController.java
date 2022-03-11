@@ -23,7 +23,7 @@ public class PageReviewController {
     private PageReviewNoTypeFinder pageReviewNoTypeFinder;
 
     @Autowired
-    private PageReviewTypeSubtypeFinder pageReviewTypeSubtypeFinder;
+    private PageReviewTypeFinder pageReviewTypeFinder;
 
     @Autowired
     private PageReviewCustomFinder pageReviewCustomFinder;
@@ -44,7 +44,7 @@ public class PageReviewController {
                 review = pageReviewNoTypeFinder.findRandomPageReview(options);
                 break;
             case TYPE_SUBTYPE:
-                review = pageReviewTypeSubtypeFinder.findRandomPageReview(options);
+                review = pageReviewTypeFinder.findRandomPageReview(options);
                 break;
             case CUSTOM:
                 review = pageReviewCustomFinder.findRandomPageReview(options);
@@ -67,7 +67,7 @@ public class PageReviewController {
                 review = pageReviewNoTypeFinder.getPageReview(pageId, options);
                 break;
             case TYPE_SUBTYPE:
-                review = pageReviewTypeSubtypeFinder.getPageReview(pageId, options);
+                review = pageReviewTypeFinder.getPageReview(pageId, options);
                 break;
             case CUSTOM:
                 review = pageReviewCustomFinder.getPageReview(pageId, options);

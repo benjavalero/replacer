@@ -36,7 +36,7 @@ class PageReviewControllerTest {
     private PageReviewNoTypeFinder pageReviewNoTypeFinder;
 
     @MockBean
-    private PageReviewTypeSubtypeFinder pageReviewTypeSubtypeFinder;
+    private PageReviewTypeFinder pageReviewTypeFinder;
 
     @MockBean
     private PageReviewCustomFinder pageReviewCustomFinder;
@@ -121,13 +121,13 @@ class PageReviewControllerTest {
     @Test
     void testFindRandomPageByTypeAndSubtype() throws Exception {
         PageReviewOptions options = PageReviewOptions.ofType(ReplacementType.of(ReplacementKind.DATE, "Y"));
-        when(pageReviewTypeSubtypeFinder.findRandomPageReview(options)).thenReturn(Optional.of(review));
+        when(pageReviewTypeFinder.findRandomPageReview(options)).thenReturn(Optional.of(review));
 
         mvc
-            .perform(get("/api/pages/random?type=4&subtype=Y&lang=es&user=A").contentType(MediaType.APPLICATION_JSON))
+            .perform(get("/api/pages/random?kind=4&subtype=Y&lang=es&user=A").contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk());
 
-        verify(pageReviewTypeSubtypeFinder).findRandomPageReview(options);
+        verify(pageReviewTypeFinder).findRandomPageReview(options);
     }
 
     @Test
@@ -137,7 +137,7 @@ class PageReviewControllerTest {
 
         mvc
             .perform(
-                get("/api/pages/random?type=1&subtype=X&cs=false&suggestion=Y&lang=es&user=A")
+                get("/api/pages/random?kind=1&subtype=X&cs=false&suggestion=Y&lang=es&user=A")
                     .contentType(MediaType.APPLICATION_JSON)
             )
             .andExpect(status().isOk());
@@ -148,7 +148,7 @@ class PageReviewControllerTest {
     @Test
     void testFindPageReviewByIdWithWrongOptions() throws Exception {
         mvc
-            .perform(get("/api/pages/123?type=X&lang=es&user=A").contentType(MediaType.APPLICATION_JSON))
+            .perform(get("/api/pages/123?kind=X&lang=es&user=A").contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isBadRequest());
 
         verify(pageReviewNoTypeFinder, never()).getPageReview(anyInt(), any(PageReviewOptions.class));
@@ -169,13 +169,13 @@ class PageReviewControllerTest {
     @Test
     void testFindPageReviewByIdByTypeAndSubtype() throws Exception {
         PageReviewOptions options = PageReviewOptions.ofType(ReplacementType.of(ReplacementKind.DATE, "Y"));
-        when(pageReviewTypeSubtypeFinder.getPageReview(123, options)).thenReturn(Optional.of(review));
+        when(pageReviewTypeFinder.getPageReview(123, options)).thenReturn(Optional.of(review));
 
         mvc
-            .perform(get("/api/pages/123?type=4&subtype=Y&lang=es&user=A").contentType(MediaType.APPLICATION_JSON))
+            .perform(get("/api/pages/123?kind=4&subtype=Y&lang=es&user=A").contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk());
 
-        verify(pageReviewTypeSubtypeFinder).getPageReview(123, options);
+        verify(pageReviewTypeFinder).getPageReview(123, options);
     }
 
     @Test
@@ -185,7 +185,7 @@ class PageReviewControllerTest {
 
         mvc
             .perform(
-                get("/api/pages/123?type=1&subtype=X&cs=true&suggestion=Y&lang=es&user=A")
+                get("/api/pages/123?kind=1&subtype=X&cs=true&suggestion=Y&lang=es&user=A")
                     .contentType(MediaType.APPLICATION_JSON)
             )
             .andExpect(status().isOk());
@@ -205,7 +205,7 @@ class PageReviewControllerTest {
                     .contentType(MediaType.APPLICATION_JSON)
             )
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.type", is(Byte.valueOf(ReplacementKind.SIMPLE.getCode()).intValue())))
+            .andExpect(jsonPath("$.kind", is(Byte.valueOf(ReplacementKind.SIMPLE.getCode()).intValue())))
             .andExpect(jsonPath("$.subtype", is(replacement)));
 
         verify(replacementValidationService).findMatchingReplacementType(WikipediaLanguage.SPANISH, replacement, true);

@@ -1,5 +1,5 @@
 <div *ngIf="review.replacements.length" class="container">
-  <nav *ngIf="review.options.type && review.options.subtype" aria-label="breadcrumb">
+  <nav *ngIf="review.options.kind && review.options.subtype" aria-label="breadcrumb">
     <ol class="breadcrumb">
       <li class="breadcrumb-item">{{ typeLabel }}</li>
       <ng-template [ngIf]="!review.options.suggestion">
@@ -52,7 +52,7 @@
   </app-alert>
 
   <app-alert type="warning" [icon]="true" class="alert-small"
-    *ngIf="review.options.type === 1 && review.numPending && review.numPending > 50">
+    *ngIf="review.options.kind === 1 && review.numPending && review.numPending > 50">
     <p>El reemplazo personalizado introducido tiene muchas ocurrencias. Se recomienda añadirlo a los <a
         href="https://es.wikipedia.org/wiki/Usuario:Benjavalero/Replacer#Tipos_de_reemplazos" target="_blank"
         rel="noopener noreferrer">listados generales</a> para un mantenimiento más óptimo.</p>
