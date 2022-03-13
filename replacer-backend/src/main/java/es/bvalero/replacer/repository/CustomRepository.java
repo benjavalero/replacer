@@ -13,10 +13,4 @@ public interface CustomRepository {
 
     /** Find the pages reviewed for the given custom replacement and return the IDs */
     Collection<Integer> findPageIdsReviewed(WikipediaLanguage lang, String replacement, boolean cs);
-
-    /** Count the number of replacements reviewed */
-    int countReplacementsReviewed(WikipediaLanguage lang);
-
-    /** Count the number of reviewed replacements by reviewer */
-    Collection<ResultCount<String>> countReplacementsByReviewer(WikipediaLanguage lang);
 }

@@ -10,6 +10,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.repository.ResultCount;
 import java.util.Collections;
+import java.util.Random;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,11 +32,13 @@ class ReplacementStatsControllerTest {
 
     @Test
     void testCountReplacementsToReview() throws Exception {
-        int count = 100;
+        int count = new Random().nextInt();
         when(replacementStatsService.countReplacementsNotReviewed(WikipediaLanguage.SPANISH)).thenReturn(count);
 
         mvc
-            .perform(get("/api/replacements/count?reviewed=false&lang=es&user=A"))
+            .perform(
+                get("/api/replacement/count?reviewed=false&lang=es&user=A").contentType(MediaType.APPLICATION_JSON)
+            )
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.count", is(count)));
 
@@ -44,13 +47,11 @@ class ReplacementStatsControllerTest {
 
     @Test
     void testCountReplacementsReviewed() throws Exception {
-        int count = 100;
+        int count = new Random().nextInt();
         when(replacementStatsService.countReplacementsReviewed(WikipediaLanguage.SPANISH)).thenReturn(count);
 
         mvc
-            .perform(
-                get("/api/replacements/count?reviewed=true&lang=es&user=A").contentType(MediaType.APPLICATION_JSON)
-            )
+            .perform(get("/api/replacement/count?reviewed=true&lang=es&user=A").contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.count", is(count)));
 
@@ -64,7 +65,7 @@ class ReplacementStatsControllerTest {
             .thenReturn(Collections.singletonList(count));
 
         mvc
-            .perform(get("/api/users/count?lang=es&user=A").contentType(MediaType.APPLICATION_JSON))
+            .perform(get("/api/replacement/user/count?lang=es&user=A").contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$[0].reviewer", is("X")))
             .andExpect(jsonPath("$[0].count", is(100)));

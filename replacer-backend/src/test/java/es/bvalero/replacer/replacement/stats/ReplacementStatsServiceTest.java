@@ -33,24 +33,26 @@ class ReplacementStatsServiceTest {
 
     @Test
     void testCountReplacementsReviewed() {
+        WikipediaLanguage lang = WikipediaLanguage.getDefault();
         int count = new Random().nextInt();
 
-        when(replacementStatsRepository.countReplacementsReviewed(any(WikipediaLanguage.class))).thenReturn(count);
+        when(replacementStatsRepository.countReplacementsReviewed(lang)).thenReturn(count);
 
-        assertEquals(count, replacementStatsService.countReplacementsReviewed(WikipediaLanguage.SPANISH));
+        assertEquals(count, replacementStatsService.countReplacementsReviewed(lang));
 
-        verify(replacementStatsRepository).countReplacementsReviewed(any(WikipediaLanguage.class));
+        verify(replacementStatsRepository).countReplacementsReviewed(lang);
     }
 
     @Test
     void testCountReplacementsToReview() {
+        WikipediaLanguage lang = WikipediaLanguage.getDefault();
         int count = new Random().nextInt();
 
-        when(replacementStatsRepository.countReplacementsNotReviewed(any(WikipediaLanguage.class))).thenReturn(count);
+        when(replacementStatsRepository.countReplacementsNotReviewed(lang)).thenReturn(count);
 
-        assertEquals(count, replacementStatsService.countReplacementsNotReviewed(WikipediaLanguage.SPANISH));
+        assertEquals(count, replacementStatsService.countReplacementsNotReviewed(lang));
 
-        verify(replacementStatsRepository).countReplacementsNotReviewed(any(WikipediaLanguage.class));
+        verify(replacementStatsRepository).countReplacementsNotReviewed(lang);
     }
 
     @Test

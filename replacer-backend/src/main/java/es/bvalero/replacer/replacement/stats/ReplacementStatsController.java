@@ -8,8 +8,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,14 +19,14 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "Replacements")
 @Loggable(skipResult = true)
 @RestController
-@RequestMapping("api")
+@RequestMapping("api/replacement")
 public class ReplacementStatsController {
 
     @Autowired
     private ReplacementStatsService replacementStatsService;
 
     @Operation(summary = "Count the reviewed or unreviewed replacements")
-    @GetMapping(value = "/replacements/count")
+    @GetMapping(value = "/count")
     public ReplacementCount countReplacementsReviewed(
         @Valid CommonQueryParameters queryParameters,
         @Parameter(
@@ -45,8 +43,8 @@ public class ReplacementStatsController {
         );
     }
 
-    @Operation(summary = "Number of reviewed replacements grouped by reviewer")
-    @GetMapping(value = "/users/count")
+    @Operation(summary = "Count the reviewed replacements grouped by reviewer user")
+    @GetMapping(value = "/user/count")
     public Collection<ReviewerCount> countReplacementsGroupedByReviewer(@Valid CommonQueryParameters queryParameters) {
         return toDto(
             replacementStatsService.countReplacementsGroupedByReviewer(queryParameters.getWikipediaLanguage())
@@ -54,18 +52,10 @@ public class ReplacementStatsController {
     }
 
     private Collection<ReviewerCount> toDto(Collection<ResultCount<String>> counts) {
-        return mergeDuplicates(counts)
+        return counts
             .stream()
             .sorted()
             .map(count -> ReviewerCount.of(count.getKey(), count.getCount()))
             .collect(Collectors.toUnmodifiableList());
-    }
-
-    private Collection<ResultCount<String>> mergeDuplicates(Collection<ResultCount<String>> counts) {
-        // Use a LinkedHashMap to keep the order
-        return counts
-            .stream()
-            .collect(Collectors.toMap(ResultCount::getKey, Function.identity(), ResultCount::merge, LinkedHashMap::new))
-            .values();
     }
 }

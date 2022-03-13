@@ -63,8 +63,12 @@ class ReplacementJdbcRepository
 
     @Override
     public int countReplacementsReviewed(WikipediaLanguage lang) {
-        String sql =
-            "SELECT COUNT(*) FROM replacement WHERE lang = :lang AND reviewer IS NOT NULL AND reviewer <> :system";
+        String sqlReplacement =
+            "SELECT COUNT(*) AS num FROM replacement WHERE lang = :lang AND reviewer IS NOT NULL AND reviewer <> :system";
+        String sqlCustom = "SELECT COUNT(*) AS num FROM custom WHERE lang = :lang AND reviewer IS NOT NULL";
+        String sqlUnion = String.format("(%s UNION %s) AS sqlUnion", sqlReplacement, sqlCustom);
+        String sql = String.format("SELECT SUM(num) FROM %s GROUP BY NULL", sqlUnion);
+
         SqlParameterSource namedParameters = new MapSqlParameterSource()
             .addValue("lang", lang.getCode())
             .addValue("system", REVIEWER_SYSTEM);
@@ -82,10 +86,19 @@ class ReplacementJdbcRepository
 
     @Override
     public Collection<ResultCount<String>> countReplacementsByReviewer(WikipediaLanguage lang) {
-        String sql =
+        String sqlReplacement =
             "SELECT reviewer, COUNT(*) AS num FROM replacement " +
             "WHERE lang = :lang AND reviewer IS NOT NULL AND reviewer <> :system " +
             "GROUP BY reviewer";
+        String sqlCustom =
+            "SELECT reviewer, COUNT(*) AS num FROM custom " +
+            "WHERE lang = :lang AND reviewer IS NOT NULL " +
+            "GROUP BY reviewer";
+        String sqlUnion = String.format("(%s UNION %s) AS sqlUnion", sqlReplacement, sqlCustom);
+        String sql =
+            String.format("SELECT reviewer, SUM(num) AS numSum FROM %s ", sqlUnion) +
+            "GROUP BY reviewer ORDER BY SUM(num) DESC";
+
         SqlParameterSource namedParameters = new MapSqlParameterSource()
             .addValue("lang", lang.getCode())
             .addValue("system", REVIEWER_SYSTEM);
@@ -93,7 +106,7 @@ class ReplacementJdbcRepository
             jdbcTemplate.query(
                 sql,
                 namedParameters,
-                (resultSet, rowNum) -> ResultCount.of(resultSet.getString("REVIEWER"), resultSet.getInt("NUM"))
+                (resultSet, rowNum) -> ResultCount.of(resultSet.getString("REVIEWER"), resultSet.getInt("NUMSUM"))
             )
         );
     }

@@ -9,17 +9,19 @@ import { ReviewerCount } from './reviewer-count.model';
   providedIn: 'root'
 })
 export class StatsService {
+  private readonly baseUrl = `${environment.apiUrl}/replacement`;
+
   constructor(private httpClient: HttpClient) {}
 
   findNumReviewed$(): Observable<ReplacementCount> {
-    return this.httpClient.get<ReplacementCount>(`${environment.apiUrl}/replacements/count?reviewed=true`);
+    return this.httpClient.get<ReplacementCount>(`${this.baseUrl}/count?reviewed=true`);
   }
 
   findNumNotReviewed$(): Observable<ReplacementCount> {
-    return this.httpClient.get<ReplacementCount>(`${environment.apiUrl}/replacements/count?reviewed=false`);
+    return this.httpClient.get<ReplacementCount>(`${this.baseUrl}/count?reviewed=false`);
   }
 
   findNumReviewedByReviewer$(): Observable<ReviewerCount[]> {
-    return this.httpClient.get<ReviewerCount[]>(`${environment.apiUrl}/users/count`);
+    return this.httpClient.get<ReviewerCount[]>(`${this.baseUrl}/user/count`);
   }
 }

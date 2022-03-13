@@ -5,9 +5,7 @@ import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.domain.WikipediaPageId;
 import es.bvalero.replacer.repository.CustomModel;
 import es.bvalero.replacer.repository.CustomRepository;
-import es.bvalero.replacer.repository.ResultCount;
 import java.util.Collection;
-import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,29 +66,5 @@ class CustomJdbcRepository implements CustomRepository {
             .queryForList(sql, namedParameters, Integer.class)
             .stream()
             .collect(Collectors.toUnmodifiableSet());
-    }
-
-    @Override
-    public int countReplacementsReviewed(WikipediaLanguage lang) {
-        String sql = "SELECT COUNT(*) FROM replacement WHERE lang = :lang AND reviewer IS NOT NULL";
-        SqlParameterSource namedParameters = new MapSqlParameterSource().addValue("lang", lang.getCode());
-        Integer result = jdbcTemplate.queryForObject(sql, namedParameters, Integer.class);
-        return Objects.requireNonNullElse(result, 0);
-    }
-
-    @Override
-    public Collection<ResultCount<String>> countReplacementsByReviewer(WikipediaLanguage lang) {
-        String sql =
-            "SELECT reviewer, COUNT(*) AS num FROM replacement " +
-            "WHERE lang = :lang AND reviewer IS NOT NULL " +
-            "GROUP BY reviewer";
-        SqlParameterSource namedParameters = new MapSqlParameterSource().addValue("lang", lang.getCode());
-        return Objects.requireNonNull(
-            jdbcTemplate.query(
-                sql,
-                namedParameters,
-                (resultSet, rowNum) -> ResultCount.of(resultSet.getString("REVIEWER"), resultSet.getInt("NUM"))
-            )
-        );
     }
 }
