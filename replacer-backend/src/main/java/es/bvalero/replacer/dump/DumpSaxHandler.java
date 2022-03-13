@@ -3,6 +3,7 @@ package es.bvalero.replacer.dump;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.domain.WikipediaNamespace;
 import es.bvalero.replacer.common.domain.WikipediaPage;
+import es.bvalero.replacer.common.domain.WikipediaPageId;
 import es.bvalero.replacer.common.util.WikipediaDateUtils;
 import es.bvalero.replacer.page.index.PageIndexService;
 import es.bvalero.replacer.page.index.PageIndexStatus;
@@ -129,10 +130,9 @@ class DumpSaxHandler extends DefaultHandler {
     }
 
     private void indexPage() {
-        final DumpPage dumpPage = DumpPage
+        final WikipediaPage page = WikipediaPage
             .builder()
-            .lang(this.lang)
-            .id(this.currentId)
+            .id(WikipediaPageId.of(this.lang, this.currentId))
             .namespace(WikipediaNamespace.valueOf(this.currentNamespace))
             .title(this.currentTitle)
             .content(this.currentContent)
@@ -140,7 +140,6 @@ class DumpSaxHandler extends DefaultHandler {
             .redirect(this.currentRedirect)
             .build();
 
-        final WikipediaPage page = DumpPageMapper.toDomain(dumpPage);
         final PageIndexStatus result = pageIndexService.indexPage(page).getStatus();
         switch (result) {
             case PAGE_NOT_INDEXABLE:
