@@ -47,7 +47,7 @@ class DumpSaxParser implements DumpParser {
     @Override
     @Loggable(value = LogLevel.DEBUG, entered = true, skipResult = true)
     public void parseDumpFile(WikipediaLanguage lang, DumpFile dumpFile) throws ReplacerException {
-        assert !getDumpIndexingStatus().getRunning();
+        assert !getDumpIndexingStatus().isRunning();
 
         try (InputStream xmlInput = new BZip2CompressorInputStream(Files.newInputStream(dumpFile.getPath()), true)) {
             SAXParserFactory factory = SAXParserFactory.newInstance();

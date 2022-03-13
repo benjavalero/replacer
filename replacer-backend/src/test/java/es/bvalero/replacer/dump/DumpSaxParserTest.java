@@ -53,7 +53,7 @@ class DumpSaxParserTest {
         assertTrue(Files.exists(dumpFile));
 
         DumpIndexingStatus status = dumpParser.getDumpIndexingStatus();
-        assertFalse(status.getRunning());
+        assertFalse(status.isRunning());
         assertNull(status.getDumpFileName());
         assertNull(status.getStart());
         assertNull(status.getEnd());
@@ -68,12 +68,12 @@ class DumpSaxParserTest {
 
         dumpParser.parseDumpFile(WikipediaLanguage.SPANISH, DumpFile.of(dumpFile));
 
-        assertFalse(dumpParser.getDumpIndexingStatus().getRunning());
+        assertFalse(dumpParser.getDumpIndexingStatus().isRunning());
         verify(pageIndexService, times(4)).indexPage(any(WikipediaPage.class));
         verify(pageIndexService).finish();
 
         status = dumpParser.getDumpIndexingStatus();
-        assertFalse(status.getRunning());
+        assertFalse(status.isRunning());
         assertEquals("eswiki-20170101-pages-articles.xml.bz2", status.getDumpFileName());
         assertNotNull(status.getStart());
         assertNotNull(status.getEnd());

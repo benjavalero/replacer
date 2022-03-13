@@ -10,6 +10,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.exception.ForbiddenException;
+import es.bvalero.replacer.common.util.ReplacerUtils;
 import es.bvalero.replacer.user.UserRightsService;
 import es.bvalero.replacer.user.ValidateUserAspect;
 import java.time.LocalDateTime;
@@ -66,8 +67,8 @@ class DumpControllerTest {
             .andExpect(jsonPath("$.numPagesIndexed", is(numPagesIndexed)))
             .andExpect(jsonPath("$.numPagesEstimated", is(numPagesEstimated)))
             .andExpect(jsonPath("$.dumpFileName", is(dumpFileName)))
-            .andExpect(jsonPath("$.start", is(DumpLocalDateTimeSerializer.convertLocalDateTimeToMilliseconds(start))))
-            .andExpect(jsonPath("$.end", is(DumpLocalDateTimeSerializer.convertLocalDateTimeToMilliseconds(end))));
+            .andExpect(jsonPath("$.start", is(ReplacerUtils.convertLocalDateTimeToMilliseconds(start))))
+            .andExpect(jsonPath("$.end", is(ReplacerUtils.convertLocalDateTimeToMilliseconds(end))));
 
         verify(dumpManager).getDumpIndexingStatus();
     }
