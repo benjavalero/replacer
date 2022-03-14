@@ -125,10 +125,7 @@ class ReplacementJdbcRepository
             namedParameters,
             (resultSet, rowNum) ->
                 ResultCount.of(
-                    ReplacementType.of(
-                        ReplacementKind.valueOf(resultSet.getByte("TYPE")),
-                        resultSet.getString("SUBTYPE")
-                    ),
+                    ReplacementType.of(resultSet.getByte("TYPE"), resultSet.getString("SUBTYPE")),
                     resultSet.getInt("NUM")
                 )
         );

@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import lombok.Value;
 
-@Schema(description = "Replacement kind along with the related types and the page counts")
+@Schema(description = "Count the pages to review grouped by kind")
 @Value(staticConstructor = "of")
 class KindCount implements Comparable<KindCount> {
 
@@ -18,12 +18,12 @@ class KindCount implements Comparable<KindCount> {
     byte kind;
 
     // No need to store the list sorted
-    @Schema(description = "List of page counts by type", required = true)
+    @Schema(description = "Count the pages to review grouped by subtype for a given kind", required = true)
     @JsonProperty("l")
-    List<TypeCount> typeCounts = new ArrayList<>();
+    List<SubtypeCount> subtypeCounts = new ArrayList<>();
 
-    void add(TypeCount typeCount) {
-        this.typeCounts.add(typeCount);
+    void add(SubtypeCount subtypeCount) {
+        this.subtypeCounts.add(subtypeCount);
     }
 
     @Override

@@ -2,27 +2,27 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { TypeCount } from './replacement-list.model';
+import { KindCount } from './replacement-list.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ReplacementListService {
-  readonly counts$ = new BehaviorSubject<TypeCount[] | null>(null);
+  readonly counts$ = new BehaviorSubject<KindCount[] | null>(null);
 
   constructor(private httpClient: HttpClient) {
     // Service don't implement OnInit so all initialization must be done in the constructor
   }
 
   loadCountsFromServer(): void {
-    this.findReplacementCounts$().subscribe((typeCounts: TypeCount[]) => this.updateCounts(typeCounts));
+    this.findReplacementCounts$().subscribe((typeCounts: KindCount[]) => this.updateCounts(typeCounts));
   }
 
-  private findReplacementCounts$(): Observable<TypeCount[]> {
-    return this.httpClient.get<TypeCount[]>(`${environment.apiUrl}/replacement-types/count`);
+  private findReplacementCounts$(): Observable<KindCount[]> {
+    return this.httpClient.get<KindCount[]>(`${environment.apiUrl}/page/type/count`);
   }
 
-  private updateCounts(counts: TypeCount[]): void {
+  private updateCounts(counts: KindCount[]): void {
     this.counts$.next(counts);
   }
 

@@ -21,6 +21,8 @@ class ReplacementCountService {
         return toDto(replacementTypeRepository.countReplacementsByType(lang));
     }
 
+    // This mapping from domain to DTO could be done in the Controller instead
+    // We do it here to keep the Controller simpler
     private Collection<KindCount> toDto(Collection<ResultCount<ReplacementType>> counts) {
         final Map<Byte, KindCount> kindCounts = new TreeMap<>();
         for (ResultCount<ReplacementType> count : counts) {
@@ -29,8 +31,10 @@ class ReplacementCountService {
                 kindCode,
                 k -> KindCount.of(count.getKey().getKind().getCode())
             );
-            kindCount.add(TypeCount.of(count.getKey().getSubtype(), count.getCount()));
+            kindCount.add(SubtypeCount.of(count.getKey().getSubtype(), count.getCount()));
         }
+
+        // Sort the collection by kind
         return kindCounts.values().stream().sorted().collect(Collectors.toUnmodifiableList());
     }
 }

@@ -1,4 +1,4 @@
-export interface TypeCount {
+export interface KindCount {
   k: number; // Kind code
   l: SubtypeCount[];
 }

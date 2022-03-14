@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "Replacements")
+@Tag(name = "Pages")
 @Loggable(skipResult = true)
 @RestController
 @RequestMapping("api")
@@ -20,10 +20,8 @@ public class ReplacementCountController {
     @Autowired
     private ReplacementCountService replacementCountService;
 
-    @Operation(
-        summary = "List replacement types with the number of pages containing replacements of these types to review"
-    )
-    @GetMapping(value = "/replacement-types/count")
+    @Operation(summary = "Count the pages to review grouped by type (kind-subtype)")
+    @GetMapping(value = "/page/type/count")
     public Collection<KindCount> countReplacementsGroupedByType(@Valid CommonQueryParameters queryParameters) {
         return replacementCountService.countReplacementsGroupedByType(queryParameters.getWikipediaLanguage());
     }

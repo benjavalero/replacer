@@ -31,12 +31,12 @@ class ReplacementCountControllerTest {
     @Test
     void testFindReplacementCount() throws Exception {
         KindCount count = KindCount.of((byte) 10);
-        count.add(TypeCount.of("Y", 100));
+        count.add(SubtypeCount.of("Y", 100));
         Collection<KindCount> counts = Collections.singletonList(count);
         when(replacementCountService.countReplacementsGroupedByType(WikipediaLanguage.SPANISH)).thenReturn(counts);
 
         mvc
-            .perform(get("/api/replacement-types/count?lang=es&user=A").contentType(MediaType.APPLICATION_JSON))
+            .perform(get("/api/page/type/count?lang=es&user=A").contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$[0].k", is(10)))
             .andExpect(jsonPath("$[0].l[0].s", is("Y")))

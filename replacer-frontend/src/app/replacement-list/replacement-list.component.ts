@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Observable } from 'rxjs';
-import { TypeCount } from './replacement-list.model';
+import { KindCount } from './replacement-list.model';
 import { ReplacementListService } from './replacement-list.service';
 
 @Component({
@@ -10,7 +10,7 @@ import { ReplacementListService } from './replacement-list.service';
   styleUrls: []
 })
 export class ReplacementListComponent implements OnInit {
-  typeCounts$!: Observable<TypeCount[] | null>;
+  typeCounts$!: Observable<KindCount[] | null>;
 
   constructor(private titleService: Title, private replacementService: ReplacementListService) {}
 
