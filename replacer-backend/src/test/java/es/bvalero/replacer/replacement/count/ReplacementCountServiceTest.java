@@ -1,4 +1,4 @@
-package es.bvalero.replacer.replacement.stats;
+package es.bvalero.replacer.replacement.count;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
@@ -6,7 +6,7 @@ import static org.mockito.Mockito.when;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.repository.PageModel;
-import es.bvalero.replacer.repository.ReplacementStatsRepository;
+import es.bvalero.replacer.repository.ReplacementCountRepository;
 import es.bvalero.replacer.repository.ResultCount;
 import java.time.LocalDate;
 import java.util.Collection;
@@ -18,17 +18,17 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-class ReplacementStatsServiceTest {
+class ReplacementCountServiceTest {
 
     @Mock
-    private ReplacementStatsRepository replacementStatsRepository;
+    private ReplacementCountRepository replacementCountRepository;
 
     @InjectMocks
-    private ReplacementStatsService replacementStatsService;
+    private ReplacementCountService replacementCountService;
 
     @BeforeEach
     public void setUp() {
-        replacementStatsService = new ReplacementStatsService();
+        replacementCountService = new ReplacementCountService();
         MockitoAnnotations.openMocks(this);
     }
 
@@ -37,11 +37,11 @@ class ReplacementStatsServiceTest {
         WikipediaLanguage lang = WikipediaLanguage.getDefault();
         int count = new Random().nextInt();
 
-        when(replacementStatsRepository.countReplacementsReviewed(lang)).thenReturn(count);
+        when(replacementCountRepository.countReplacementsReviewed(lang)).thenReturn(count);
 
-        assertEquals(count, replacementStatsService.countReplacementsReviewed(lang));
+        assertEquals(count, replacementCountService.countReplacementsReviewed(lang));
 
-        verify(replacementStatsRepository).countReplacementsReviewed(lang);
+        verify(replacementCountRepository).countReplacementsReviewed(lang);
     }
 
     @Test
@@ -49,22 +49,22 @@ class ReplacementStatsServiceTest {
         WikipediaLanguage lang = WikipediaLanguage.getDefault();
         int count = new Random().nextInt();
 
-        when(replacementStatsRepository.countReplacementsNotReviewed(lang)).thenReturn(count);
+        when(replacementCountRepository.countReplacementsNotReviewed(lang)).thenReturn(count);
 
-        assertEquals(count, replacementStatsService.countReplacementsNotReviewed(lang));
+        assertEquals(count, replacementCountService.countReplacementsNotReviewed(lang));
 
-        verify(replacementStatsRepository).countReplacementsNotReviewed(lang);
+        verify(replacementCountRepository).countReplacementsNotReviewed(lang);
     }
 
     @Test
     void testCountReplacementsGroupedByReviewer() {
         WikipediaLanguage lang = WikipediaLanguage.getDefault();
         Collection<ResultCount<String>> counts = List.of(ResultCount.of("A", 10));
-        when(replacementStatsRepository.countReplacementsByReviewer(lang)).thenReturn(counts);
+        when(replacementCountRepository.countReplacementsByReviewer(lang)).thenReturn(counts);
 
-        assertEquals(counts, replacementStatsService.countReplacementsGroupedByReviewer(lang));
+        assertEquals(counts, replacementCountService.countReplacementsGroupedByReviewer(lang));
 
-        verify(replacementStatsRepository).countReplacementsByReviewer(lang);
+        verify(replacementCountRepository).countReplacementsByReviewer(lang);
     }
 
     @Test
@@ -78,11 +78,11 @@ class ReplacementStatsServiceTest {
             .lastUpdate(LocalDate.now())
             .build();
         Collection<ResultCount<PageModel>> counts = List.of(ResultCount.of(page, 10));
-        when(replacementStatsRepository.countReplacementsByPage(lang, ReplacementStatsService.NUM_RESULTS))
+        when(replacementCountRepository.countReplacementsByPage(lang, ReplacementCountService.NUM_RESULTS))
             .thenReturn(counts);
 
-        assertEquals(counts, replacementStatsService.countReplacementsGroupedByPage(lang));
+        assertEquals(counts, replacementCountService.countReplacementsGroupedByPage(lang));
 
-        verify(replacementStatsRepository).countReplacementsByPage(lang, ReplacementStatsService.NUM_RESULTS);
+        verify(replacementCountRepository).countReplacementsByPage(lang, ReplacementCountService.NUM_RESULTS);
     }
 }

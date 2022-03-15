@@ -1,9 +1,9 @@
-package es.bvalero.replacer.replacement.stats;
+package es.bvalero.replacer.replacement.count;
 
 import com.github.rozidan.springboot.logger.Loggable;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.repository.PageModel;
-import es.bvalero.replacer.repository.ReplacementStatsRepository;
+import es.bvalero.replacer.repository.ReplacementCountRepository;
 import es.bvalero.replacer.repository.ResultCount;
 import java.util.Collection;
 import java.util.EnumMap;
@@ -20,11 +20,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Primary
 @Transactional
 @Repository
-class ReplacementStatsCacheRepository implements ReplacementStatsRepository {
+class ReplacementCountCacheRepository implements ReplacementCountRepository {
 
     @Autowired
     @Qualifier("replacementJdbcRepository")
-    private ReplacementStatsRepository replacementStatsRepository;
+    private ReplacementCountRepository replacementCountRepository;
 
     // Statistics caches
     // The queries in database can be heavy, so we preload the counts on start and refresh them periodically.
@@ -39,7 +39,7 @@ class ReplacementStatsCacheRepository implements ReplacementStatsRepository {
     public int countReplacementsReviewed(WikipediaLanguage lang) {
         return this.countReviewed.computeIfAbsent(
                 lang,
-                l -> this.replacementStatsRepository.countReplacementsReviewed(l)
+                l -> this.replacementCountRepository.countReplacementsReviewed(l)
             );
     }
 
@@ -47,7 +47,7 @@ class ReplacementStatsCacheRepository implements ReplacementStatsRepository {
     public int countReplacementsNotReviewed(WikipediaLanguage lang) {
         return this.countNotReviewed.computeIfAbsent(
                 lang,
-                l -> this.replacementStatsRepository.countReplacementsNotReviewed(l)
+                l -> this.replacementCountRepository.countReplacementsNotReviewed(l)
             );
     }
 
@@ -55,14 +55,14 @@ class ReplacementStatsCacheRepository implements ReplacementStatsRepository {
     public Collection<ResultCount<String>> countReplacementsByReviewer(WikipediaLanguage lang) {
         return this.countByReviewer.computeIfAbsent(
                 lang,
-                l -> this.replacementStatsRepository.countReplacementsByReviewer(l)
+                l -> this.replacementCountRepository.countReplacementsByReviewer(l)
             );
     }
 
     @Override
     public Collection<ResultCount<PageModel>> countReplacementsByPage(WikipediaLanguage lang, int numResults) {
         // For the moment we are not going to cache it as it is used only by admins
-        return this.replacementStatsRepository.countReplacementsByPage(lang, numResults);
+        return this.replacementCountRepository.countReplacementsByPage(lang, numResults);
     }
 
     // Add a delay of 1 minute so these queries don't overlap with the one to count replacement types
@@ -70,9 +70,9 @@ class ReplacementStatsCacheRepository implements ReplacementStatsRepository {
     @Scheduled(fixedDelayString = "${replacer.page.stats.delay}", initialDelay = 60000)
     public void scheduledUpdateStatistics() {
         for (WikipediaLanguage lang : WikipediaLanguage.values()) {
-            this.countReviewed.put(lang, this.replacementStatsRepository.countReplacementsReviewed(lang));
-            this.countNotReviewed.put(lang, this.replacementStatsRepository.countReplacementsNotReviewed(lang));
-            this.countByReviewer.put(lang, this.replacementStatsRepository.countReplacementsByReviewer(lang));
+            this.countReviewed.put(lang, this.replacementCountRepository.countReplacementsReviewed(lang));
+            this.countNotReviewed.put(lang, this.replacementCountRepository.countReplacementsNotReviewed(lang));
+            this.countByReviewer.put(lang, this.replacementCountRepository.countReplacementsByReviewer(lang));
         }
     }
 }

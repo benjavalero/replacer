@@ -3,7 +3,7 @@ package es.bvalero.replacer.repository;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import java.util.Collection;
 
-public interface ReplacementStatsRepository {
+public interface ReplacementCountRepository {
     /** Count the number of replacements reviewed */
     int countReplacementsReviewed(WikipediaLanguage lang);
 

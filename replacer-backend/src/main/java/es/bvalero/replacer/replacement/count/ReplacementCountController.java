@@ -1,4 +1,4 @@
-package es.bvalero.replacer.replacement.stats;
+package es.bvalero.replacer.replacement.count;
 
 import com.github.rozidan.springboot.logger.Loggable;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
@@ -22,10 +22,10 @@ import org.springframework.web.bind.annotation.RestController;
 @Loggable(skipResult = true)
 @RestController
 @RequestMapping("api/replacement")
-public class ReplacementStatsController {
+public class ReplacementCountController {
 
     @Autowired
-    private ReplacementStatsService replacementStatsService;
+    private ReplacementCountService replacementCountService;
 
     @Operation(summary = "Count the reviewed or unreviewed replacements")
     @GetMapping(value = "/count")
@@ -40,8 +40,8 @@ public class ReplacementStatsController {
         WikipediaLanguage lang = queryParameters.getWikipediaLanguage();
         return ReplacementCount.of(
             reviewed
-                ? replacementStatsService.countReplacementsReviewed(lang)
-                : replacementStatsService.countReplacementsNotReviewed(lang)
+                ? replacementCountService.countReplacementsReviewed(lang)
+                : replacementCountService.countReplacementsNotReviewed(lang)
         );
     }
 
@@ -49,7 +49,7 @@ public class ReplacementStatsController {
     @GetMapping(value = "/user/count")
     public Collection<ReviewerCount> countReplacementsGroupedByReviewer(@Valid CommonQueryParameters queryParameters) {
         return toReviewerCountDto(
-            replacementStatsService.countReplacementsGroupedByReviewer(queryParameters.getWikipediaLanguage())
+            replacementCountService.countReplacementsGroupedByReviewer(queryParameters.getWikipediaLanguage())
         );
     }
 
@@ -66,7 +66,7 @@ public class ReplacementStatsController {
     @GetMapping(value = "/page/count")
     public Collection<PageCount> countReplacementsGroupedByPage(@Valid CommonQueryParameters queryParameters) {
         return toPageCountDto(
-            replacementStatsService.countReplacementsGroupedByPage(queryParameters.getWikipediaLanguage())
+            replacementCountService.countReplacementsGroupedByPage(queryParameters.getWikipediaLanguage())
         );
     }
 

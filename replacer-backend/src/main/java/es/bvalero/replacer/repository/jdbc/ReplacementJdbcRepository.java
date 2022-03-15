@@ -28,7 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @Repository
 class ReplacementJdbcRepository
-    implements ReplacementRepository, ReplacementTypeRepository, ReplacementStatsRepository {
+    implements ReplacementRepository, ReplacementTypeRepository, ReplacementCountRepository {
 
     @Autowired
     private NamedParameterJdbcTemplate jdbcTemplate;
