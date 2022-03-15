@@ -3,7 +3,9 @@ package es.bvalero.replacer.replacement.stats;
 import com.github.rozidan.springboot.logger.Loggable;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.dto.CommonQueryParameters;
+import es.bvalero.replacer.repository.PageModel;
 import es.bvalero.replacer.repository.ResultCount;
+import es.bvalero.replacer.user.ValidateAdminUser;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -46,16 +48,32 @@ public class ReplacementStatsController {
     @Operation(summary = "Count the reviewed replacements grouped by reviewer user")
     @GetMapping(value = "/user/count")
     public Collection<ReviewerCount> countReplacementsGroupedByReviewer(@Valid CommonQueryParameters queryParameters) {
-        return toDto(
+        return toReviewerCountDto(
             replacementStatsService.countReplacementsGroupedByReviewer(queryParameters.getWikipediaLanguage())
         );
     }
 
-    private Collection<ReviewerCount> toDto(Collection<ResultCount<String>> counts) {
+    private Collection<ReviewerCount> toReviewerCountDto(Collection<ResultCount<String>> counts) {
         return counts
             .stream()
             .sorted()
             .map(count -> ReviewerCount.of(count.getKey(), count.getCount()))
+            .collect(Collectors.toUnmodifiableList());
+    }
+
+    @Operation(summary = "Count the replacements to review grouped by page")
+    @ValidateAdminUser
+    @GetMapping(value = "/page/count")
+    public Collection<PageCount> countReplacementsGroupedByPage(@Valid CommonQueryParameters queryParameters) {
+        return toPageCountDto(
+            replacementStatsService.countReplacementsGroupedByPage(queryParameters.getWikipediaLanguage())
+        );
+    }
+
+    private Collection<PageCount> toPageCountDto(Collection<ResultCount<PageModel>> counts) {
+        return counts
+            .stream()
+            .map(count -> PageCount.of(count.getKey().getPageId(), count.getKey().getTitle(), count.getCount()))
             .collect(Collectors.toUnmodifiableList());
     }
 }

@@ -1,4 +1,4 @@
-package es.bvalero.replacer.page.list;
+package es.bvalero.replacer.replacement.stats;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Value;

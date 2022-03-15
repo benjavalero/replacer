@@ -11,6 +11,6 @@ export class UnreviewedService {
   constructor(private httpClient: HttpClient) {}
 
   findPagesWithMostUnreviewedReplacements$(): Observable<PageCount[]> {
-    return this.httpClient.get<PageCount[]>(`${environment.apiUrl}/pages/unreviewed`);
+    return this.httpClient.get<PageCount[]>(`${environment.apiUrl}/replacement/page/count`);
   }
 }

@@ -26,14 +26,11 @@ public interface PageRepository {
     int countPagesToReview(WikipediaLanguage lang);
 
     /** Find a random batch of pages to review for a given type and return the IDs */
-    Collection<Integer> findPageIdsToReviewByType(WikipediaLanguage lang, ReplacementType type, int numResult);
+    Collection<Integer> findPageIdsToReviewByType(WikipediaLanguage lang, ReplacementType type, int numResults);
 
     /** Count the number of pages to review by type */
     int countPagesToReviewByType(WikipediaLanguage lang, ReplacementType type);
 
     /** Find the pages to review by the given type and return the titles */
     Collection<String> findPageTitlesToReviewByType(WikipediaLanguage lang, ReplacementType type);
-
-    /** Find the pages with more replacements to review */
-    Collection<ResultCount<PageModel>> countPagesWithMoreReplacementsToReview(WikipediaLanguage lang, int numResults);
 }

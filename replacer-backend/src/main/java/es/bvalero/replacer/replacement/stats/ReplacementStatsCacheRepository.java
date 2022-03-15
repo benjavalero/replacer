@@ -2,6 +2,7 @@ package es.bvalero.replacer.replacement.stats;
 
 import com.github.rozidan.springboot.logger.Loggable;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
+import es.bvalero.replacer.repository.PageModel;
 import es.bvalero.replacer.repository.ReplacementStatsRepository;
 import es.bvalero.replacer.repository.ResultCount;
 import java.util.Collection;
@@ -56,6 +57,12 @@ class ReplacementStatsCacheRepository implements ReplacementStatsRepository {
                 lang,
                 l -> this.replacementStatsRepository.countReplacementsByReviewer(l)
             );
+    }
+
+    @Override
+    public Collection<ResultCount<PageModel>> countReplacementsByPage(WikipediaLanguage lang, int numResults) {
+        // For the moment we are not going to cache it as it is used only by admins
+        return this.replacementStatsRepository.countReplacementsByPage(lang, numResults);
     }
 
     // Add a delay of 1 minute so these queries don't overlap with the one to count replacement types

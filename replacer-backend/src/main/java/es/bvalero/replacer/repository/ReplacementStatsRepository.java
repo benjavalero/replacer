@@ -10,6 +10,9 @@ public interface ReplacementStatsRepository {
     /** Count the number of replacements to review */
     int countReplacementsNotReviewed(WikipediaLanguage lang);
 
-    /** Count the number of reviewed replacements by reviewer */
+    /** Count the number of reviewed replacements grouped by reviewer */
     Collection<ResultCount<String>> countReplacementsByReviewer(WikipediaLanguage lang);
+
+    /** Count the number of replacements to review grouped by page */
+    Collection<ResultCount<PageModel>> countReplacementsByPage(WikipediaLanguage lang, int numResults);
 }
