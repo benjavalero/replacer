@@ -2,47 +2,48 @@ package es.bvalero.replacer.replacement.count.cache;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 import lombok.Value;
 import org.jetbrains.annotations.TestOnly;
 
+/** Class to store and access efficiently the page counts by subtype */
 @Value(staticConstructor = "of")
-class TypeCount {
+class SubtypeCounts {
 
-    // Store internally the subtype counts in a map
-    Map<String, Integer> subtypeCounts = new HashMap<>();
+    // Store internally the subtype counts in a map for faster access
+    Map<String, Integer> counts = new HashMap<>();
 
     void add(String subtype, int count) {
-        this.subtypeCounts.put(subtype, count);
+        this.counts.put(subtype, count);
     }
 
     void remove(String subtype) {
-        this.subtypeCounts.remove(subtype);
+        this.counts.remove(subtype);
     }
 
     boolean isEmpty() {
-        return this.subtypeCounts.isEmpty();
+        return this.counts.isEmpty();
     }
 
     @TestOnly
     int size() {
-        return this.subtypeCounts.size();
+        return this.counts.size();
     }
 
-    Optional<Integer> get(String subtype) {
-        return Optional.ofNullable(subtypeCounts.get(subtype));
+    @TestOnly
+    int get(String subtype) {
+        return this.counts.getOrDefault(subtype, 0);
     }
 
     // Return false if the decrement produces an empty subtype
     boolean decrementSubtypeCount(String subtype) {
-        int newCount = this.subtypeCounts.getOrDefault(subtype, 0) - 1;
+        int newCount = this.counts.getOrDefault(subtype, 0) - 1;
         if (newCount > 0) {
             // Update the subtype with the new count
-            this.subtypeCounts.put(subtype, newCount);
+            this.counts.put(subtype, newCount);
             return true;
         } else {
             // Remove the subtype count as in method "removeCachedReplacementCount"
-            this.subtypeCounts.remove(subtype);
+            this.counts.remove(subtype);
             return false;
         }
     }

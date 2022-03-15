@@ -30,25 +30,25 @@ class ReplacementTypeCacheRepository implements ReplacementTypeRepository {
     @Qualifier("replacementJdbcRepository")
     private ReplacementTypeRepository replacementTypeRepository;
 
-    // Replacement count cache
+    // Counts cache
     // It's a heavy query in database (several seconds), so we load the counts on start and refresh them periodically.
     // This may lead to a slight misalignment, which is fixed in the next refresh,
     // as modifications in the cache may happen while the count query is in progress.
     // We add synchronization just in case the list is requested while still loading on start.
-    private Map<WikipediaLanguage, KindCount> replacementCount;
+    private Map<WikipediaLanguage, KindCounts> counts;
 
     @Override
     public Collection<ResultCount<ReplacementType>> countReplacementsByType(WikipediaLanguage lang) {
         try {
-            return this.getKindCount(lang).toModel();
+            return this.getKindCounts(lang).toModel();
         } catch (ReplacerException e) {
             return Collections.emptyList();
         }
     }
 
     @VisibleForTesting
-    KindCount getKindCount(WikipediaLanguage lang) throws ReplacerException {
-        return this.getReplacementCount().get(lang);
+    KindCounts getKindCounts(WikipediaLanguage lang) throws ReplacerException {
+        return this.getCounts().get(lang);
     }
 
     @Override
@@ -59,7 +59,7 @@ class ReplacementTypeCacheRepository implements ReplacementTypeRepository {
 
     @VisibleForTesting
     void removeCachedReplacementCount(WikipediaLanguage lang, ReplacementType type) {
-        this.replacementCount.get(lang).removeTypeCount(type.getKind(), type.getSubtype());
+        this.counts.get(lang).removeTypeCount(type.getKind(), type.getSubtype());
     }
 
     @Override
@@ -72,7 +72,7 @@ class ReplacementTypeCacheRepository implements ReplacementTypeRepository {
 
     @VisibleForTesting
     void decrementSubtypeCount(WikipediaLanguage lang, ReplacementType type) {
-        this.replacementCount.get(lang).decrementSubtypeCount(type.getKind(), type.getSubtype());
+        this.counts.get(lang).decrementSubtypeCount(type.getKind(), type.getSubtype());
     }
 
     @Override
@@ -83,17 +83,17 @@ class ReplacementTypeCacheRepository implements ReplacementTypeRepository {
 
     /* SCHEDULED UPDATE OF CACHE */
 
-    private synchronized Map<WikipediaLanguage, KindCount> getReplacementCount() throws ReplacerException {
-        while (this.replacementCount == null) {
+    private synchronized Map<WikipediaLanguage, KindCounts> getCounts() throws ReplacerException {
+        while (this.counts == null) {
             try {
                 this.wait();
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
-                LOGGER.error("Error getting the synchronized replacement count");
+                LOGGER.error("Error getting the synchronized counts");
                 throw new ReplacerException(e);
             }
         }
-        return this.replacementCount;
+        return this.counts;
     }
 
     @Loggable(value = LogLevel.DEBUG, skipArgs = true, skipResult = true)
@@ -103,15 +103,15 @@ class ReplacementTypeCacheRepository implements ReplacementTypeRepository {
     }
 
     private synchronized void loadReplacementTypeCounts() {
-        Map<WikipediaLanguage, KindCount> map = new EnumMap<>(WikipediaLanguage.class);
+        Map<WikipediaLanguage, KindCounts> map = new EnumMap<>(WikipediaLanguage.class);
         for (WikipediaLanguage lang : WikipediaLanguage.values()) {
             map.put(lang, getReplacementsTypeCountsByLang(lang));
         }
-        this.replacementCount = map;
+        this.counts = map;
         this.notifyAll();
     }
 
-    private KindCount getReplacementsTypeCountsByLang(WikipediaLanguage lang) {
-        return KindCount.fromModel(this.replacementTypeRepository.countReplacementsByType(lang));
+    private KindCounts getReplacementsTypeCountsByLang(WikipediaLanguage lang) {
+        return KindCounts.fromModel(this.replacementTypeRepository.countReplacementsByType(lang));
     }
 }
