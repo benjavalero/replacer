@@ -1,4 +1,4 @@
-package es.bvalero.replacer.replacement.count;
+package es.bvalero.replacer.page.count;
 
 import com.github.rozidan.springboot.logger.Loggable;
 import es.bvalero.replacer.common.dto.CommonQueryParameters;
@@ -15,14 +15,14 @@ import org.springframework.web.bind.annotation.RestController;
 @Loggable(skipResult = true)
 @RestController
 @RequestMapping("api")
-public class ReplacementCountController {
+public class PageCountController {
 
     @Autowired
-    private ReplacementCountService replacementCountService;
+    private PageCountService pageCountService;
 
     @Operation(summary = "Count the pages to review grouped by type (kind-subtype)")
     @GetMapping(value = "/page/type/count")
     public Collection<KindCount> countReplacementsGroupedByType(@Valid CommonQueryParameters queryParameters) {
-        return replacementCountService.countReplacementsGroupedByType(queryParameters.getWikipediaLanguage());
+        return pageCountService.countReplacementsGroupedByType(queryParameters.getWikipediaLanguage());
     }
 }

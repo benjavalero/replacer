@@ -1,4 +1,4 @@
-package es.bvalero.replacer.replacement.count;
+package es.bvalero.replacer.page.count;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
@@ -17,17 +17,17 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-class ReplacementCountServiceTest {
+class PageCountServiceTest {
 
     @Mock
     private ReplacementTypeRepository replacementTypeRepository;
 
     @InjectMocks
-    private ReplacementCountService replacementCountService;
+    private PageCountService pageCountService;
 
     @BeforeEach
     public void setUp() {
-        replacementCountService = new ReplacementCountService();
+        pageCountService = new PageCountService();
         MockitoAnnotations.openMocks(this);
     }
 
@@ -43,7 +43,7 @@ class ReplacementCountServiceTest {
         kindCount.add(SubtypeCount.of("Y", 100));
         Collection<KindCount> expected = Collections.singletonList(kindCount);
 
-        assertEquals(expected, replacementCountService.countReplacementsGroupedByType(WikipediaLanguage.getDefault()));
+        assertEquals(expected, pageCountService.countReplacementsGroupedByType(WikipediaLanguage.getDefault()));
 
         verify(replacementTypeRepository).countReplacementsByType(WikipediaLanguage.getDefault());
     }

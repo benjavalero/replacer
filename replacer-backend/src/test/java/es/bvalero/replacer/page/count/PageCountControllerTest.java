@@ -1,4 +1,4 @@
-package es.bvalero.replacer.replacement.count;
+package es.bvalero.replacer.page.count;
 
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.*;
@@ -19,21 +19,21 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
 @ExtendWith(SpringExtension.class)
-@WebMvcTest(controllers = ReplacementCountController.class)
-class ReplacementCountControllerTest {
+@WebMvcTest(controllers = PageCountController.class)
+class PageCountControllerTest {
 
     @Autowired
     private MockMvc mvc;
 
     @MockBean
-    private ReplacementCountService replacementCountService;
+    private PageCountService pageCountService;
 
     @Test
     void testFindReplacementCount() throws Exception {
         KindCount count = KindCount.of((byte) 10);
         count.add(SubtypeCount.of("Y", 100));
         Collection<KindCount> counts = Collections.singletonList(count);
-        when(replacementCountService.countReplacementsGroupedByType(WikipediaLanguage.SPANISH)).thenReturn(counts);
+        when(pageCountService.countReplacementsGroupedByType(WikipediaLanguage.SPANISH)).thenReturn(counts);
 
         mvc
             .perform(get("/api/page/type/count?lang=es&user=A").contentType(MediaType.APPLICATION_JSON))
@@ -42,6 +42,6 @@ class ReplacementCountControllerTest {
             .andExpect(jsonPath("$[0].l[0].s", is("Y")))
             .andExpect(jsonPath("$[0].l[0].c", is(100)));
 
-        verify(replacementCountService).countReplacementsGroupedByType(WikipediaLanguage.SPANISH);
+        verify(pageCountService).countReplacementsGroupedByType(WikipediaLanguage.SPANISH);
     }
 }

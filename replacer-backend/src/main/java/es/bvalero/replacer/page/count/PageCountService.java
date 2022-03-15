@@ -1,4 +1,4 @@
-package es.bvalero.replacer.replacement.count;
+package es.bvalero.replacer.page.count;
 
 import es.bvalero.replacer.common.domain.ReplacementType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-class ReplacementCountService {
+class PageCountService {
 
     @Autowired
     private ReplacementTypeRepository replacementTypeRepository;

@@ -1,4 +1,4 @@
-package es.bvalero.replacer.replacement.count;
+package es.bvalero.replacer.page.count;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import es.bvalero.replacer.common.domain.ReplacementKind;
