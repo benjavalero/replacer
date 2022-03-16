@@ -27,7 +27,7 @@ export class ReplacementListService {
   }
 
   reviewSubtype$(kind: number, subtype: string): Observable<void> {
-    // Remove the type/subtype from the cache
+    // Remove the kind/subtype from the cache
     this.updateSubtypeCount(kind, subtype, 0);
 
     let params: HttpParams = new HttpParams();
@@ -35,7 +35,7 @@ export class ReplacementListService {
     return this.httpClient.post<void>(`${environment.apiUrl}/page/review`, null, { params });
   }
 
-  private updateSubtypeCount(type: number, subtype: string, count: number): void {
+  private updateSubtypeCount(kind: number, subtype: string, count: number): void {
     const currentCounts = this.counts$.getValue();
     if (!currentCounts) {
       console.warn('No replacement counts initialized yet');
@@ -43,7 +43,7 @@ export class ReplacementListService {
     }
 
     for (let typeCount of currentCounts) {
-      if (typeCount.k === type) {
+      if (typeCount.k === kind) {
         for (let subtypeCount of typeCount.l) {
           if (subtypeCount.s === subtype) {
             subtypeCount.c = count;

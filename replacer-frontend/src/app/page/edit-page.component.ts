@@ -204,7 +204,7 @@ export class EditPageComponent implements OnChanges {
     return `https://${this.review.page.lang}.wikipedia.org/w/index.php?title=${this.review.page.title}&action=history`;
   }
 
-  get typeLabel(): string {
+  get kindLabel(): string {
     return kindLabel[this.review.options.kind!];
   }
 }

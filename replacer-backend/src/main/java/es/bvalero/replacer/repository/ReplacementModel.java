@@ -18,7 +18,7 @@ public class ReplacementModel {
 
     int pageId;
 
-    byte type;
+    byte kind;
 
     @NonNull
     String subtype;

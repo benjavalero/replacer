@@ -35,7 +35,7 @@ export class FindRandomComponent implements OnInit {
     // Optional search options
     const pageId = this.route.snapshot.paramMap.get('id');
     const options = new ReviewOptions(
-      this.convertTypeParameter(this.route.snapshot.paramMap.get('type')),
+      this.convertKindParameter(this.route.snapshot.paramMap.get('kind')),
       this.route.snapshot.paramMap.get('subtype'),
       this.route.snapshot.paramMap.get('suggestion'),
       this.route.snapshot.paramMap.get('cs') === 'true'
@@ -53,10 +53,10 @@ export class FindRandomComponent implements OnInit {
     }
   }
 
-  private convertTypeParameter(type: string | null): number | null {
-    if (type) {
+  private convertKindParameter(kind: string | null): number | null {
+    if (kind) {
       // Just for compatibility with old use with labels
-      switch (type) {
+      switch (kind) {
         case 'Personalizado': {
           return 1;
         }
@@ -67,7 +67,7 @@ export class FindRandomComponent implements OnInit {
           return 3;
         }
         default: {
-          return +type;
+          return +kind;
         }
       }
     } else {
@@ -185,9 +185,9 @@ export class FindRandomComponent implements OnInit {
       });
   }
 
-  private openValidationModal$(type: number, subtype: string): Promise<any> {
+  private openValidationModal$(kind: number, subtype: string): Promise<any> {
     const modalRef = this.modalService.open(ValidateCustomComponent);
-    modalRef.componentInstance.type = kindLabel[type];
+    modalRef.componentInstance.kind = kindLabel[kind];
     modalRef.componentInstance.subtype = subtype;
     return modalRef.result;
   }

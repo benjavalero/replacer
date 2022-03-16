@@ -37,7 +37,7 @@ class ReplacementJdbcRepository
     public void addReplacements(Collection<ReplacementModel> replacements) {
         String sql =
             "INSERT INTO replacement (article_id, lang, type, subtype, position, context, reviewer) " +
-            "VALUES (:pageId, :lang, :type, :subtype, :position, :context, :reviewer)";
+            "VALUES (:pageId, :lang, :kind, :subtype, :position, :context, :reviewer)";
         SqlParameterSource[] namedParameters = SqlParameterSourceUtils.createBatch(replacements.toArray());
         jdbcTemplate.batchUpdate(sql, namedParameters);
     }
@@ -168,11 +168,11 @@ class ReplacementJdbcRepository
     public void updateReviewerByType(WikipediaLanguage lang, ReplacementType type, String reviewer) {
         String sql =
             "UPDATE replacement SET reviewer=:reviewer " +
-            "WHERE lang = :lang AND type = :type AND subtype = :subtype AND reviewer IS NULL";
+            "WHERE lang = :lang AND type = :kind AND subtype = :subtype AND reviewer IS NULL";
         SqlParameterSource namedParameters = new MapSqlParameterSource()
             .addValue("reviewer", reviewer)
             .addValue("lang", lang.getCode())
-            .addValue("type", type.getKind().getCode())
+            .addValue("kind", type.getKind().getCode())
             .addValue("subtype", type.getSubtype());
         jdbcTemplate.update(sql, namedParameters);
     }
@@ -191,9 +191,9 @@ class ReplacementJdbcRepository
             .addValue("pageId", wikipediaPageId.getPageId());
 
         if (Objects.nonNull(type)) {
-            where += "AND type = :type AND subtype = :subtype";
+            where += "AND type = :kinid AND subtype = :subtype";
             namedParameters =
-                namedParameters.addValue("type", type.getKind().getCode()).addValue("subtype", type.getSubtype());
+                namedParameters.addValue("kind", type.getKind().getCode()).addValue("subtype", type.getSubtype());
         }
         String sql = from + where;
         jdbcTemplate.update(sql, namedParameters);
@@ -206,7 +206,7 @@ class ReplacementJdbcRepository
         } else {
             String sql =
                 "DELETE FROM replacement " +
-                "WHERE lang = :lang AND type = :type AND subtype IN (:subtypes) AND reviewer IS NULL";
+                "WHERE lang = :lang AND type = :kind AND subtype IN (:subtypes) AND reviewer IS NULL";
             ReplacementKind kind = types.stream().findAny().orElseThrow(IllegalStateException::new).getKind();
             Collection<String> subtypes = types
                 .stream()
@@ -214,7 +214,7 @@ class ReplacementJdbcRepository
                 .collect(Collectors.toUnmodifiableSet());
             SqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("lang", lang.getCode())
-                .addValue("type", kind.getCode())
+                .addValue("kind", kind.getCode())
                 .addValue("subtypes", subtypes);
             jdbcTemplate.update(sql, namedParameters);
         }

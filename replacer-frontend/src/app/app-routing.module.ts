@@ -16,14 +16,14 @@ const routes: Routes = [
   { path: 'dashboard', component: DashboardComponent, canActivate: [AuthenticationGuard] },
   { path: 'random', component: FindRandomComponent, canActivate: [AuthenticationGuard] },
   { path: 'random/:id', component: FindRandomComponent, canActivate: [AuthenticationGuard] },
-  { path: 'random/:type/:subtype/:suggestion', component: FindRandomComponent, canActivate: [AuthenticationGuard] }, // Backward-compatibility
+  { path: 'random/:kind/:subtype/:suggestion', component: FindRandomComponent, canActivate: [AuthenticationGuard] }, // Backward-compatibility
   { path: 'custom', component: FindCustomComponent, canActivate: [AuthenticationGuard] },
   { path: 'custom/:subtype/:suggestion/:cs', component: FindRandomComponent, canActivate: [AuthenticationGuard] },
   { path: 'custom/:subtype/:suggestion/:cs/:id', component: FindRandomComponent, canActivate: [AuthenticationGuard] },
   { path: 'admin', component: AdminComponent, canActivate: [AuthenticationGuard] },
   { path: 'list', component: ReplacementListComponent, canActivate: [AuthenticationGuard] },
-  { path: 'list/:type/:subtype', component: FindRandomComponent, canActivate: [AuthenticationGuard] },
-  { path: 'list/:type/:subtype/:id', component: FindRandomComponent, canActivate: [AuthenticationGuard] },
+  { path: 'list/:kind/:subtype', component: FindRandomComponent, canActivate: [AuthenticationGuard] },
+  { path: 'list/:kind/:subtype/:id', component: FindRandomComponent, canActivate: [AuthenticationGuard] },
   { path: 'stats', component: StatsComponent, canActivate: [AuthenticationGuard] },
   { path: '**', redirectTo: '/dashboard', pathMatch: 'full' }
 ];

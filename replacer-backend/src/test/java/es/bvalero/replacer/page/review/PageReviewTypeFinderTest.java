@@ -255,7 +255,7 @@ class PageReviewTypeFinderTest {
             .builder()
             .lang(page.getId().getLang().getCode())
             .pageId(page.getId().getPageId())
-            .type(replacement.getType().getKind().getCode())
+            .kind(replacement.getType().getKind().getCode())
             .subtype(replacement.getType().getSubtype())
             .position(replacement.getStart())
             .context(replacement.getContext(page))

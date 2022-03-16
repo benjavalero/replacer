@@ -7,7 +7,7 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
   styles: []
 })
 export class ReviewSubtypeComponent {
-  @Input() type!: string;
+  @Input() kind!: string;
   @Input() subtype!: string;
 
   constructor(public activeModal: NgbActiveModal) {}

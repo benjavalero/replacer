@@ -246,7 +246,7 @@ abstract class PageReviewFinder {
     private boolean isSameReplacement(Replacement replacement, ReplacementModel replacementModel) {
         return (
             replacement.getStart() == replacementModel.getPosition() &&
-            replacement.getType().getKind().getCode() == replacementModel.getType() &&
+            replacement.getType().getKind().getCode() == replacementModel.getKind() &&
             replacement.getType().getSubtype().equals(replacementModel.getSubtype())
         );
     }

@@ -153,7 +153,7 @@ export class ReplacementTableComponent implements OnInit, OnChanges {
 
   reviewPages(subtype: string): void {
     const modalRef = this.modalService.open(ReviewSubtypeComponent);
-    modalRef.componentInstance.type = this.label;
+    modalRef.componentInstance.kind = this.label;
     modalRef.componentInstance.subtype = subtype;
     modalRef.result.then(
       (result) => {
