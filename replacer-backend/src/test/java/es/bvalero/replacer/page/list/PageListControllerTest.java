@@ -34,48 +34,42 @@ class PageListControllerTest {
     private UserRightsService userRightsService;
 
     @MockBean
-    private PageUnreviewedTitleListService pageUnreviewedTitleListService;
+    private PageFindByTypeService pageFindByTypeService;
 
     @MockBean
     private ReviewByTypeService reviewByTypeService;
 
     @Test
-    void testFindPageTitlesToReviewByType() throws Exception {
+    void testFindPagesToReviewByType() throws Exception {
         mvc
-            .perform(get("/api/pages?type=2&subtype=Africa&lang=es&user=A").contentType(MediaType.TEXT_PLAIN_VALUE))
+            .perform(get("/api/page/type?lang=es&user=A&kind=2&subtype=Africa").contentType(MediaType.TEXT_PLAIN_VALUE))
             .andExpect(status().isOk());
 
         verify(userRightsService).validateBotUser(WikipediaLanguage.SPANISH, "A");
-        verify(pageUnreviewedTitleListService)
-            .findPageTitlesToReviewByType(
-                WikipediaLanguage.SPANISH,
-                ReplacementType.of(ReplacementKind.SIMPLE, "Africa")
-            );
+        verify(pageFindByTypeService)
+            .findPagesToReviewByType(WikipediaLanguage.SPANISH, ReplacementType.of(ReplacementKind.SIMPLE, "Africa"));
     }
 
     @Test
-    void testFindPageTitlesToReviewByTypeNotBot() throws Exception {
+    void testFindPagesToReviewByTypeNotBot() throws Exception {
         doThrow(ForbiddenException.class)
             .when(userRightsService)
             .validateBotUser(any(WikipediaLanguage.class), anyString());
 
         mvc
-            .perform(get("/api/pages?type=2&subtype=Africa&lang=es&user=A").contentType(MediaType.TEXT_PLAIN_VALUE))
+            .perform(get("/api/page/type?lang=es&user=A&kind=2&subtype=Africa").contentType(MediaType.TEXT_PLAIN_VALUE))
             .andExpect(status().isForbidden());
 
         verify(userRightsService).validateBotUser(WikipediaLanguage.SPANISH, "A");
-        verify(pageUnreviewedTitleListService, never())
-            .findPageTitlesToReviewByType(
-                WikipediaLanguage.SPANISH,
-                ReplacementType.of(ReplacementKind.SIMPLE, "Africa")
-            );
+        verify(pageFindByTypeService, never())
+            .findPagesToReviewByType(WikipediaLanguage.SPANISH, ReplacementType.of(ReplacementKind.SIMPLE, "Africa"));
     }
 
     @Test
     void testReviewAsSystemByType() throws Exception {
         mvc
             .perform(
-                post("/api/pages/review?type=2&subtype=Africa&lang=es&user=A").contentType(MediaType.APPLICATION_JSON)
+                post("/api/page/review?kind=2&subtype=Africa&lang=es&user=A").contentType(MediaType.APPLICATION_JSON)
             )
             .andExpect(status().isNoContent());
 
@@ -92,7 +86,7 @@ class PageListControllerTest {
 
         mvc
             .perform(
-                post("/api/pages/review?type=2&subtype=Africa&lang=es&user=A").contentType(MediaType.APPLICATION_JSON)
+                post("/api/page/review?kind=2&subtype=Africa&lang=es&user=A").contentType(MediaType.APPLICATION_JSON)
             )
             .andExpect(status().isForbidden());
 

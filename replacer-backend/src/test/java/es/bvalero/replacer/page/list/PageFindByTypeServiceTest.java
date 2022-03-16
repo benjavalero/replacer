@@ -17,17 +17,17 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-class PageUnreviewedTitleListServiceTest {
+class PageFindByTypeServiceTest {
 
     @Mock
     private PageRepository pageRepository;
 
     @InjectMocks
-    private PageUnreviewedTitleListService pageUnreviewedTitleListService;
+    private PageFindByTypeService pageFindByTypeService;
 
     @BeforeEach
     public void setUp() {
-        pageUnreviewedTitleListService = new PageUnreviewedTitleListService();
+        pageFindByTypeService = new PageFindByTypeService();
         MockitoAnnotations.openMocks(this);
     }
 
@@ -40,10 +40,7 @@ class PageUnreviewedTitleListServiceTest {
         ReplacementType type = ReplacementType.of(ReplacementKind.DATE, "Y");
         when(pageRepository.findPageTitlesToReviewByType(WikipediaLanguage.getDefault(), type)).thenReturn(list);
 
-        Collection<String> result = pageUnreviewedTitleListService.findPageTitlesToReviewByType(
-            WikipediaLanguage.getDefault(),
-            type
-        );
+        Collection<String> result = pageFindByTypeService.findPagesToReviewByType(WikipediaLanguage.getDefault(), type);
         assertEquals(sorted, result);
 
         verify(pageRepository).findPageTitlesToReviewByType(WikipediaLanguage.getDefault(), type);

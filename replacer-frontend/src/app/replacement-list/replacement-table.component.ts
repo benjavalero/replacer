@@ -22,7 +22,7 @@ export class ReplacementTableComponent implements OnInit, OnChanges {
   private readonly PAGE_SIZE = 8;
   private readonly MAX_SIZE = 3;
 
-  @Input() type!: number;
+  @Input() kind!: number;
   @Input() replacementCounts: SubtypeCount[];
 
   filteredItems: SubtypeCount[];
@@ -60,12 +60,12 @@ export class ReplacementTableComponent implements OnInit, OnChanges {
     this.collectionSize = this.replacementCounts.length;
     this.pageValue = 1;
 
-    this.pageListUrl = `${environment.apiUrl}/pages?lang=${this.userConfigService.lang}&user=${this.userService.userName}`;
+    this.pageListUrl = `${environment.apiUrl}/page/type?lang=${this.userConfigService.lang}&user=${this.userService.userName}`;
   }
 
   ngOnInit() {
     this.user$ = this.userService.user$;
-    this.label = kindLabel[this.type];
+    this.label = kindLabel[this.kind];
   }
 
   ngOnChanges() {
@@ -157,7 +157,7 @@ export class ReplacementTableComponent implements OnInit, OnChanges {
     modalRef.componentInstance.subtype = subtype;
     modalRef.result.then(
       (result) => {
-        this.replacementListService.reviewSubtype$(this.type, subtype).subscribe(() => {
+        this.replacementListService.reviewSubtype$(this.kind, subtype).subscribe(() => {
           // Nothing to do
         });
       },

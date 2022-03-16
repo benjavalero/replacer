@@ -6,7 +6,7 @@
     de páginas que los contienen.
   </p>
 
-  <app-replacement-table *ngFor="let typeCount of typeCounts" [type]="typeCount.k" [replacementCounts]="typeCount.l">
+  <app-replacement-table *ngFor="let typeCount of typeCounts" [kind]="typeCount.k" [replacementCounts]="typeCount.l">
   </app-replacement-table>
   <app-alert type="warning" *ngIf="typeCounts.length === 0">No se ha encontrado ningún artículo</app-alert>
 </div>

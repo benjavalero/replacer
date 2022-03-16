@@ -1,7 +1,6 @@
 package es.bvalero.replacer.page.list;
 
 import com.github.rozidan.springboot.logger.Loggable;
-import es.bvalero.replacer.common.domain.ReplacementType;
 import es.bvalero.replacer.common.dto.CommonQueryParameters;
 import es.bvalero.replacer.user.ValidateBotUser;
 import io.swagger.v3.oas.annotations.Operation;
@@ -19,29 +18,24 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "Pages")
 @Loggable(skipResult = true)
 @RestController
-@RequestMapping("api/pages")
+@RequestMapping("api/page")
 public class PageListController {
 
     @Autowired
-    private PageUnreviewedTitleListService pageUnreviewedTitleListService;
+    private PageFindByTypeService pageFindByTypeService;
 
     @Autowired
     private ReviewByTypeService reviewByTypeService;
 
-    @Operation(
-        summary = "Produce a list in plain text with the titles of the pages containing the given replacement type to review"
-    )
+    @Operation(summary = "List the pages to review containing the given replacement type")
     @ValidateBotUser
-    @GetMapping(value = "", produces = MediaType.TEXT_PLAIN_VALUE)
-    public ResponseEntity<String> findPageTitlesToReviewByType(
+    @GetMapping(value = "/type", produces = MediaType.TEXT_PLAIN_VALUE)
+    public ResponseEntity<String> findPagesToReviewByType(
         @Valid CommonQueryParameters queryParameters,
-        @Valid PageListRequest request
+        @Valid ReplacementTypeDto request
     ) {
         String titleList = StringUtils.join(
-            pageUnreviewedTitleListService.findPageTitlesToReviewByType(
-                queryParameters.getWikipediaLanguage(),
-                toDomain(request)
-            ),
+            pageFindByTypeService.findPagesToReviewByType(queryParameters.getWikipediaLanguage(), request.toDomain()),
             "\n"
         );
         return new ResponseEntity<>(titleList, HttpStatus.OK);
@@ -51,12 +45,8 @@ public class PageListController {
     @ValidateBotUser
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PostMapping(value = "/review")
-    public void reviewAsSystemByType(@Valid CommonQueryParameters queryParameters, @Valid PageListRequest request) {
+    public void reviewAsSystemByType(@Valid CommonQueryParameters queryParameters, @Valid ReplacementTypeDto request) {
         // Set as reviewed in the database
-        reviewByTypeService.reviewAsSystemByType(queryParameters.getWikipediaLanguage(), toDomain(request));
-    }
-
-    private ReplacementType toDomain(PageListRequest request) {
-        return ReplacementType.of(request.getType(), request.getSubtype());
+        reviewByTypeService.reviewAsSystemByType(queryParameters.getWikipediaLanguage(), request.toDomain());
     }
 }

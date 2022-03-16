@@ -26,13 +26,13 @@ export class ReplacementListService {
     this.counts$.next(counts);
   }
 
-  reviewSubtype$(type: number, subtype: string): Observable<void> {
+  reviewSubtype$(kind: number, subtype: string): Observable<void> {
     // Remove the type/subtype from the cache
-    this.updateSubtypeCount(type, subtype, 0);
+    this.updateSubtypeCount(kind, subtype, 0);
 
     let params: HttpParams = new HttpParams();
-    params = params.append('type', type).append('subtype', subtype);
-    return this.httpClient.post<void>(`${environment.apiUrl}/pages/review`, null, { params });
+    params = params.append('kind', kind).append('subtype', subtype);
+    return this.httpClient.post<void>(`${environment.apiUrl}/page/review`, null, { params });
   }
 
   private updateSubtypeCount(type: number, subtype: string, count: number): void {

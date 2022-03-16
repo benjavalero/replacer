@@ -13,12 +13,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-class PageUnreviewedTitleListService {
+class PageFindByTypeService {
 
     @Autowired
     private PageRepository pageRepository;
 
-    Collection<String> findPageTitlesToReviewByType(WikipediaLanguage lang, ReplacementType type) {
+    Collection<String> findPagesToReviewByType(WikipediaLanguage lang, ReplacementType type) {
         return pageRepository
             .findPageTitlesToReviewByType(lang, type)
             .stream()
