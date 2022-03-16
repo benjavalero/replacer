@@ -9,12 +9,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-class ReviewByTypeService {
+class PageReviewByTypeService {
 
     @Autowired
     private ReplacementTypeRepository replacementTypeRepository;
 
-    void reviewAsSystemByType(WikipediaLanguage lang, ReplacementType type) {
+    void reviewPagesByType(WikipediaLanguage lang, ReplacementType type) {
         // These reviewed replacements will be cleaned up in the next dump indexing
         replacementTypeRepository.updateReviewerByType(lang, type, REVIEWER_SYSTEM);
     }

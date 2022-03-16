@@ -32,7 +32,7 @@ export class ReplacementListService {
 
     let params: HttpParams = new HttpParams();
     params = params.append('kind', kind).append('subtype', subtype);
-    return this.httpClient.post<void>(`${environment.apiUrl}/page/review`, null, { params });
+    return this.httpClient.post<void>(`${environment.apiUrl}/page/type/review`, null, { params });
   }
 
   private updateSubtypeCount(kind: number, subtype: string, count: number): void {

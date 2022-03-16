@@ -37,7 +37,7 @@ class PageListControllerTest {
     private PageFindByTypeService pageFindByTypeService;
 
     @MockBean
-    private ReviewByTypeService reviewByTypeService;
+    private PageReviewByTypeService pageReviewByTypeService;
 
     @Test
     void testFindPagesToReviewByType() throws Exception {
@@ -66,32 +66,32 @@ class PageListControllerTest {
     }
 
     @Test
-    void testReviewAsSystemByType() throws Exception {
+    void testReviewPagesByType() throws Exception {
         mvc
             .perform(
-                post("/api/page/review?kind=2&subtype=Africa&lang=es&user=A").contentType(MediaType.APPLICATION_JSON)
+                post("/api/page/type/review?kind=2&subtype=Africa&lang=es&user=A").contentType(MediaType.APPLICATION_JSON)
             )
             .andExpect(status().isNoContent());
 
         verify(userRightsService).validateBotUser(WikipediaLanguage.SPANISH, "A");
-        verify(reviewByTypeService)
-            .reviewAsSystemByType(WikipediaLanguage.SPANISH, ReplacementType.of(ReplacementKind.SIMPLE, "Africa"));
+        verify(pageReviewByTypeService)
+            .reviewPagesByType(WikipediaLanguage.SPANISH, ReplacementType.of(ReplacementKind.SIMPLE, "Africa"));
     }
 
     @Test
-    void testReviewAsSystemByTypeNotBot() throws Exception {
+    void testReviewPagesByTypeNotBot() throws Exception {
         doThrow(ForbiddenException.class)
             .when(userRightsService)
             .validateBotUser(any(WikipediaLanguage.class), anyString());
 
         mvc
             .perform(
-                post("/api/page/review?kind=2&subtype=Africa&lang=es&user=A").contentType(MediaType.APPLICATION_JSON)
+                post("/api/page/type/review?kind=2&subtype=Africa&lang=es&user=A").contentType(MediaType.APPLICATION_JSON)
             )
             .andExpect(status().isForbidden());
 
         verify(userRightsService).validateBotUser(WikipediaLanguage.SPANISH, "A");
-        verify(reviewByTypeService, never())
-            .reviewAsSystemByType(WikipediaLanguage.SPANISH, ReplacementType.of(ReplacementKind.SIMPLE, "Africa"));
+        verify(pageReviewByTypeService, never())
+            .reviewPagesByType(WikipediaLanguage.SPANISH, ReplacementType.of(ReplacementKind.SIMPLE, "Africa"));
     }
 }

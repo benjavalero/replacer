@@ -13,17 +13,17 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-class ReviewByTypeServiceTest {
+class PageReviewByTypeServiceTest {
 
     @Mock
     private ReplacementTypeRepository replacementTypeRepository;
 
     @InjectMocks
-    private ReviewByTypeService reviewByTypeService;
+    private PageReviewByTypeService pageReviewByTypeService;
 
     @BeforeEach
     public void setUp() {
-        reviewByTypeService = new ReviewByTypeService();
+        pageReviewByTypeService = new PageReviewByTypeService();
         MockitoAnnotations.openMocks(this);
     }
 
@@ -31,7 +31,7 @@ class ReviewByTypeServiceTest {
     void testReviewAsSystemByType() {
         ReplacementType type = ReplacementType.of(ReplacementKind.DATE, "Y");
 
-        reviewByTypeService.reviewAsSystemByType(WikipediaLanguage.getDefault(), type);
+        pageReviewByTypeService.reviewPagesByType(WikipediaLanguage.getDefault(), type);
 
         verify(replacementTypeRepository).updateReviewerByType(WikipediaLanguage.getDefault(), type, REVIEWER_SYSTEM);
     }

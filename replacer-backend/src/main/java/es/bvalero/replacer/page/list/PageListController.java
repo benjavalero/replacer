@@ -25,7 +25,7 @@ public class PageListController {
     private PageFindByTypeService pageFindByTypeService;
 
     @Autowired
-    private ReviewByTypeService reviewByTypeService;
+    private PageReviewByTypeService pageReviewByTypeService;
 
     @Operation(summary = "List the pages to review containing the given replacement type")
     @ValidateBotUser
@@ -41,12 +41,11 @@ public class PageListController {
         return new ResponseEntity<>(titleList, HttpStatus.OK);
     }
 
-    @Operation(summary = "Mark as reviewed by the system all pages pages containing the given replacement type")
+    @Operation(summary = "Mark as reviewed the pages containing the given replacement type")
     @ValidateBotUser
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PostMapping(value = "/review")
-    public void reviewAsSystemByType(@Valid CommonQueryParameters queryParameters, @Valid ReplacementTypeDto request) {
-        // Set as reviewed in the database
-        reviewByTypeService.reviewAsSystemByType(queryParameters.getWikipediaLanguage(), request.toDomain());
+    @PostMapping(value = "/type/review")
+    public void reviewPagesByType(@Valid CommonQueryParameters queryParameters, @Valid ReplacementTypeDto request) {
+        pageReviewByTypeService.reviewPagesByType(queryParameters.getWikipediaLanguage(), request.toDomain());
     }
 }
