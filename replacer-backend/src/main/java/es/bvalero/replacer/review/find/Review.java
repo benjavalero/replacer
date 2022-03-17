@@ -8,9 +8,9 @@ import lombok.Value;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
-/** Page to review in the front-end */
+/** Review of a page */
 @Value(staticConstructor = "of")
-class PageReview {
+class Review {
 
     @NonNull
     WikipediaPage page;

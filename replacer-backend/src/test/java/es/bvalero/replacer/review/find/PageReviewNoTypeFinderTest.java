@@ -89,7 +89,7 @@ class PageReviewNoTypeFinderTest {
         when(pageRepository.findPageIdsToReview(any(WikipediaLanguage.class), anyInt()))
             .thenReturn(Collections.emptyList());
 
-        Optional<PageReview> review = pageReviewNoTypeService.findRandomPageReview(options);
+        Optional<Review> review = pageReviewNoTypeService.findRandomPageReview(options);
 
         assertFalse(review.isPresent());
     }
@@ -104,7 +104,7 @@ class PageReviewNoTypeFinderTest {
         // The page doesn't exist in Wikipedia
         when(wikipediaPageRepository.findById(randomPageId)).thenReturn(Optional.empty());
 
-        Optional<PageReview> review = pageReviewNoTypeService.findRandomPageReview(options);
+        Optional<Review> review = pageReviewNoTypeService.findRandomPageReview(options);
 
         assertFalse(review.isPresent());
     }
@@ -121,7 +121,7 @@ class PageReviewNoTypeFinderTest {
         when(pageIndexService.indexPage(page))
             .thenReturn(PageIndexResult.ofEmpty(PageIndexStatus.PAGE_INDEXED, replacements));
 
-        Optional<PageReview> review = pageReviewNoTypeService.findRandomPageReview(options);
+        Optional<Review> review = pageReviewNoTypeService.findRandomPageReview(options);
 
         verify(pageIndexService).indexPage(page);
         verify(wikipediaPageRepository, never()).findByIds(any(WikipediaLanguage.class), anyList());
@@ -145,7 +145,7 @@ class PageReviewNoTypeFinderTest {
         when(pageIndexService.indexPage(page))
             .thenReturn(PageIndexResult.ofEmpty(PageIndexStatus.PAGE_INDEXED, noReplacements));
 
-        Optional<PageReview> review = pageReviewNoTypeService.findRandomPageReview(options);
+        Optional<Review> review = pageReviewNoTypeService.findRandomPageReview(options);
 
         verify(pageIndexService).indexPage(page);
         verify(wikipediaPageRepository, never()).findByIds(any(WikipediaLanguage.class), anyList());
@@ -166,7 +166,7 @@ class PageReviewNoTypeFinderTest {
         when(pageIndexService.indexPage(page2))
             .thenReturn(PageIndexResult.ofEmpty(PageIndexStatus.PAGE_INDEXED, replacements));
 
-        Optional<PageReview> review = pageReviewNoTypeService.findRandomPageReview(options);
+        Optional<Review> review = pageReviewNoTypeService.findRandomPageReview(options);
 
         verify(pageIndexService).indexPage(page2);
         verify(wikipediaPageRepository, never()).findByIds(any(WikipediaLanguage.class), anyList());

@@ -24,7 +24,7 @@ class PageReviewSectionFinder {
      * In case such a section is found, then return a review containing the page fragment corresponding to the section
      * with the replacements translated accordingly.
      */
-    Optional<PageReview> findPageReviewSection(PageReview review) {
+    Optional<Review> findPageReviewSection(Review review) {
         assert review.getSection() == null;
 
         // Find the sections from the Wikipedia API (better than calculating them by ourselves)
@@ -67,7 +67,7 @@ class PageReviewSectionFinder {
                 );
 
                 // Finally, we build the section review based on the page review.
-                PageReview sectionReview = PageReview.of(
+                Review sectionReview = Review.of(
                     pageSection.get(),
                     smallestSection.get(),
                     sectionReplacements,

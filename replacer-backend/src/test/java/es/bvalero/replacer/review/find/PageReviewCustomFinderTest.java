@@ -85,7 +85,7 @@ class PageReviewCustomFinderTest {
             .thenReturn(WikipediaSearchResult.ofEmpty());
 
         PageReviewOptions options = PageReviewOptions.ofCustom(lang, replacement, suggestion, true);
-        Optional<PageReview> review = pageReviewCustomService.findRandomPageReview(options);
+        Optional<Review> review = pageReviewCustomService.findRandomPageReview(options);
 
         assertTrue(review.isEmpty());
 
@@ -123,7 +123,7 @@ class PageReviewCustomFinderTest {
 
         // Only one call
         PageReviewOptions options = PageReviewOptions.ofCustom(lang, replacement, suggestion, true);
-        Optional<PageReview> review = pageReviewCustomService.findRandomPageReview(options);
+        Optional<Review> review = pageReviewCustomService.findRandomPageReview(options);
         assertTrue(review.isEmpty());
 
         // Verifications
@@ -185,7 +185,7 @@ class PageReviewCustomFinderTest {
 
         // First call
         PageReviewOptions options = PageReviewOptions.ofCustom(lang, replacement, suggestion, true);
-        Optional<PageReview> review1 = pageReviewCustomService.findRandomPageReview(options);
+        Optional<Review> review1 = pageReviewCustomService.findRandomPageReview(options);
         assertFalse(review1.isEmpty());
         review1.ifPresent(r -> {
             assertEquals(lang, r.getPage().getId().getLang());
@@ -195,7 +195,7 @@ class PageReviewCustomFinderTest {
         });
 
         // Second call
-        Optional<PageReview> review2 = pageReviewCustomService.findRandomPageReview(options);
+        Optional<Review> review2 = pageReviewCustomService.findRandomPageReview(options);
         assertTrue(review2.isEmpty());
 
         // Verifications
@@ -251,7 +251,7 @@ class PageReviewCustomFinderTest {
 
         // Only call
         PageReviewOptions options = PageReviewOptions.ofCustom(lang, replacement, suggestion, true);
-        Optional<PageReview> review = pageReviewCustomService.findRandomPageReview(options);
+        Optional<Review> review = pageReviewCustomService.findRandomPageReview(options);
         assertTrue(review.isEmpty());
 
         // Verifications
@@ -318,7 +318,7 @@ class PageReviewCustomFinderTest {
 
         // Only call
         PageReviewOptions options = PageReviewOptions.ofCustom(lang, replacement, suggestion, true);
-        Optional<PageReview> review = pageReviewCustomService.findRandomPageReview(options);
+        Optional<Review> review = pageReviewCustomService.findRandomPageReview(options);
         assertFalse(review.isEmpty());
         review.ifPresent(r -> {
             assertEquals(lang, r.getPage().getId().getLang());
@@ -362,7 +362,7 @@ class PageReviewCustomFinderTest {
 
         // Only call
         PageReviewOptions options = PageReviewOptions.ofCustom(lang, replacement, suggestion, true);
-        Optional<PageReview> review = pageReviewCustomService.findRandomPageReview(options);
+        Optional<Review> review = pageReviewCustomService.findRandomPageReview(options);
         assertTrue(review.isEmpty());
 
         // Verifications
@@ -441,7 +441,7 @@ class PageReviewCustomFinderTest {
         // We cannot use the same options object for all calls as it is mutable (and mutated)
         // Call 1
         PageReviewOptions options1 = PageReviewOptions.ofCustom(lang, replacement, suggestion, true);
-        Optional<PageReview> review = pageReviewCustomService.findRandomPageReview(options1);
+        Optional<Review> review = pageReviewCustomService.findRandomPageReview(options1);
         assertFalse(review.isEmpty());
         review.ifPresent(r -> {
             assertEquals(1, r.getPage().getId().getPageId());
@@ -547,7 +547,7 @@ class PageReviewCustomFinderTest {
 
         // Only Call
         PageReviewOptions options = PageReviewOptions.ofCustom(lang, replacement, suggestion, true);
-        Optional<PageReview> review = pageReviewCustomService.findRandomPageReview(options);
+        Optional<Review> review = pageReviewCustomService.findRandomPageReview(options);
         assertTrue(review.isEmpty());
 
         // Verifications

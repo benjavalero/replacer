@@ -100,7 +100,7 @@ class PageReviewTypeFinderTest {
         when(pageIndexService.indexPage(page))
             .thenReturn(PageIndexResult.ofEmpty(PageIndexStatus.PAGE_INDEXED, replacements));
 
-        Optional<PageReview> review = pageReviewTypeSubtypeService.findRandomPageReview(options2);
+        Optional<Review> review = pageReviewTypeSubtypeService.findRandomPageReview(options2);
 
         verify(pageIndexService).indexPage(page);
         verify(wikipediaPageRepository, never()).findByIds(any(WikipediaLanguage.class), anyList());
@@ -122,7 +122,7 @@ class PageReviewTypeFinderTest {
         when(pageIndexService.indexPage(page))
             .thenReturn(PageIndexResult.ofEmpty(PageIndexStatus.PAGE_INDEXED, replacements));
 
-        Optional<PageReview> review = pageReviewTypeSubtypeService.findRandomPageReview(options);
+        Optional<Review> review = pageReviewTypeSubtypeService.findRandomPageReview(options);
 
         verify(pageIndexService).indexPage(page);
         verify(wikipediaPageRepository, never()).findByIds(any(WikipediaLanguage.class), anyList());
@@ -154,7 +154,7 @@ class PageReviewTypeFinderTest {
         when(pageIndexService.indexPage(any(WikipediaPage.class)))
             .thenReturn(PageIndexResult.ofEmpty(PageIndexStatus.PAGE_INDEXED, replacements));
 
-        Optional<PageReview> review = pageReviewTypeSubtypeService.findRandomPageReview(options);
+        Optional<Review> review = pageReviewTypeSubtypeService.findRandomPageReview(options);
         assertTrue(review.isPresent());
         assertEquals(randomId, review.get().getPage().getId().getPageId());
 
@@ -188,11 +188,11 @@ class PageReviewTypeFinderTest {
             .anchor("")
             .build();
         int numPending = 5;
-        PageReview sectionReview = PageReview.of(page, section, replacements, numPending);
-        when(pageReviewSectionFinder.findPageReviewSection(any(PageReview.class)))
+        Review sectionReview = Review.of(page, section, replacements, numPending);
+        when(pageReviewSectionFinder.findPageReviewSection(any(Review.class)))
             .thenReturn(Optional.of(sectionReview));
 
-        Optional<PageReview> review = pageReviewTypeSubtypeService.getPageReview(randomId, options);
+        Optional<Review> review = pageReviewTypeSubtypeService.getPageReview(randomId, options);
 
         assertTrue(review.isPresent());
         review.ifPresent(rev -> {
@@ -213,12 +213,12 @@ class PageReviewTypeFinderTest {
             .thenReturn(PageIndexResult.ofEmpty(PageIndexStatus.PAGE_INDEXED, replacements));
 
         // The page has no sections
-        when(pageReviewSectionFinder.findPageReviewSection(any(PageReview.class))).thenReturn(Optional.empty());
+        when(pageReviewSectionFinder.findPageReviewSection(any(Review.class))).thenReturn(Optional.empty());
 
         // Load the cache in order to find the total results
         pageReviewTypeSubtypeService.loadCache(options);
 
-        Optional<PageReview> review = pageReviewTypeSubtypeService.getPageReview(randomId, options);
+        Optional<Review> review = pageReviewTypeSubtypeService.getPageReview(randomId, options);
 
         assertTrue(review.isPresent());
         review.ifPresent(rev -> {
@@ -271,7 +271,7 @@ class PageReviewTypeFinderTest {
             .build();
         when(pageIndexRepository.findPageById(randomPageId)).thenReturn(Optional.of(pageModel));
 
-        Optional<PageReview> review = pageReviewTypeSubtypeService.findRandomPageReview(options);
+        Optional<Review> review = pageReviewTypeSubtypeService.findRandomPageReview(options);
 
         verify(pageIndexService).indexPage(page);
         verify(wikipediaPageRepository, never()).findByIds(any(WikipediaLanguage.class), anyList());

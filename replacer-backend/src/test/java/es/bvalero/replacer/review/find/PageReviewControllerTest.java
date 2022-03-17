@@ -75,7 +75,7 @@ class PageReviewControllerTest {
         .suggestions(List.of(suggestion))
         .build();
     private final int numPending = 100;
-    private final PageReview review = PageReview.of(page, section, List.of(replacement), numPending);
+    private final Review review = Review.of(page, section, List.of(replacement), numPending);
 
     @Test
     void testFindRandomPageWithReplacements() throws Exception {

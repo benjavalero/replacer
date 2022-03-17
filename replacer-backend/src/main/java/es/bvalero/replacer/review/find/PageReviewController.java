@@ -32,7 +32,7 @@ public class PageReviewController {
         @Valid CommonQueryParameters queryParameters,
         @Valid PageReviewOptionsDto optionsDto
     ) {
-        Optional<PageReview> review = Optional.empty();
+        Optional<Review> review = Optional.empty();
         PageReviewOptions options = PageReviewMapper.fromDto(optionsDto, false, queryParameters);
         switch (options.getOptionsType()) {
             case NO_TYPE:
@@ -55,7 +55,7 @@ public class PageReviewController {
         @Valid CommonQueryParameters queryParameters,
         @Valid PageReviewOptionsDto optionsDto
     ) {
-        Optional<PageReview> review = Optional.empty();
+        Optional<Review> review = Optional.empty();
         PageReviewOptions options = PageReviewMapper.fromDto(optionsDto, false, queryParameters);
         switch (options.getOptionsType()) {
             case NO_TYPE:

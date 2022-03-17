@@ -58,7 +58,7 @@ abstract class PageReviewFinder {
         .build();
 
     /** Find a page/section review for the given search options (if any) */
-    Optional<PageReview> findRandomPageReview(PageReviewOptions options) {
+    Optional<Review> findRandomPageReview(PageReviewOptions options) {
         // Restart offset
         this.getCachedResult(options).ifPresent(PageSearchResult::resetOffset);
 
@@ -74,7 +74,7 @@ abstract class PageReviewFinder {
 
             // We assume that, while getting the review, in case the page is not valid and review is eventually empty,
             // the page will be marked somehow in order not to be retrieved again.
-            Optional<PageReview> review = getPageReview(randomPageId.get(), options);
+            Optional<Review> review = getPageReview(randomPageId.get(), options);
             if (review.isPresent()) {
                 return review;
             }
@@ -155,7 +155,7 @@ abstract class PageReviewFinder {
     ///// STEP 2 /////
 
     /** This step can be called independently in case we already know the ID of the page to review */
-    Optional<PageReview> getPageReview(int pageId, PageReviewOptions options) {
+    Optional<Review> getPageReview(int pageId, PageReviewOptions options) {
         // STEP 2.1: Load the page from Wikipedia
         Optional<WikipediaPage> wikipediaPage = getPageFromWikipedia(pageId, options);
 
@@ -175,7 +175,7 @@ abstract class PageReviewFinder {
         return page;
     }
 
-    private Optional<PageReview> buildPageReview(WikipediaPage page, PageReviewOptions options) {
+    private Optional<Review> buildPageReview(WikipediaPage page, PageReviewOptions options) {
         // STEP 2.2.1: Find the replacements in the page
         Collection<Replacement> replacements = findReplacements(page, options);
 
@@ -185,10 +185,10 @@ abstract class PageReviewFinder {
 
         // STEP 2.2.2: Build an initial review for the complete page with the found replacements
         Integer numPending = findTotalResultsFromCache(options).orElse(null);
-        PageReview pageReview = PageReview.of(page, null, replacements, numPending);
+        Review review = Review.of(page, null, replacements, numPending);
 
         // STEP 2.2.3: Try to reduce the review size by returning just a section of the page
-        return Optional.of(pageReviewSectionFinder.findPageReviewSection(pageReview).orElse(pageReview));
+        return Optional.of(pageReviewSectionFinder.findPageReviewSection(review).orElse(review));
     }
 
     private Collection<Replacement> findReplacements(WikipediaPage page, PageReviewOptions options) {
