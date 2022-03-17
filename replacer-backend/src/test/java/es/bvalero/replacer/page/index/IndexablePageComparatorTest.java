@@ -7,6 +7,7 @@ import es.bvalero.replacer.common.domain.ReplacementType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import java.time.LocalDate;
 import java.util.*;
+import es.bvalero.replacer.common.domain.WikipediaPageId;
 import org.junit.jupiter.api.Test;
 
 class IndexablePageComparatorTest {
@@ -18,7 +19,7 @@ class IndexablePageComparatorTest {
         int pageId = new Random().nextInt();
         IndexablePage page = IndexablePage
             .builder()
-            .id(IndexablePageId.of(WikipediaLanguage.getDefault(), pageId))
+            .id(WikipediaPageId.of(WikipediaLanguage.getDefault(), pageId))
             .title("T")
             .replacements(Collections.emptyList())
             .lastUpdate(LocalDate.now())
@@ -36,10 +37,10 @@ class IndexablePageComparatorTest {
 
     @Test
     void testIndexNewPage() {
-        IndexablePageId pageId = IndexablePageId.of(WikipediaLanguage.getDefault(), 100);
+        WikipediaPageId pageId = WikipediaPageId.of(WikipediaLanguage.getDefault(), 100);
         IndexableReplacement rep1 = IndexableReplacement
             .builder()
-            .indexablePageId(pageId)
+            .pageId(pageId)
             .type(ReplacementType.ofEmpty())
             .position(0)
             .context("")
@@ -65,7 +66,7 @@ class IndexablePageComparatorTest {
 
     @Test
     void testIndexObsoleteReplacements() {
-        IndexablePageId pageId = IndexablePageId.of(WikipediaLanguage.getDefault(), 1);
+        WikipediaPageId pageId = WikipediaPageId.of(WikipediaLanguage.getDefault(), 1);
         IndexablePage page = IndexablePage
             .builder()
             .id(pageId)
@@ -77,14 +78,14 @@ class IndexablePageComparatorTest {
         // Both obsolete to review or reviewed by system ==> Delete
         IndexableReplacement rep2 = IndexableReplacement
             .builder()
-            .indexablePageId(pageId)
+            .pageId(pageId)
             .type(ReplacementType.ofEmpty())
             .position(2)
             .context("2")
             .build();
         IndexableReplacement rep3 = IndexableReplacement
             .builder()
-            .indexablePageId(pageId)
+            .pageId(pageId)
             .type(ReplacementType.ofEmpty())
             .position(3)
             .context("3")
@@ -119,24 +120,24 @@ class IndexablePageComparatorTest {
         // R8 : Only in DB reviewed by system => Delete
 
         // Replacements found to index
-        IndexablePageId pageId = IndexablePageId.of(WikipediaLanguage.getDefault(), 1);
+        WikipediaPageId pageId = WikipediaPageId.of(WikipediaLanguage.getDefault(), 1);
         IndexableReplacement r1 = IndexableReplacement
             .builder()
-            .indexablePageId(pageId)
+            .pageId(pageId)
             .type(ReplacementType.of(ReplacementKind.SIMPLE, "1"))
             .position(1)
             .context("")
             .build();
         IndexableReplacement r2 = IndexableReplacement
             .builder()
-            .indexablePageId(pageId)
+            .pageId(pageId)
             .type(ReplacementType.of(ReplacementKind.SIMPLE, "2"))
             .position(2)
             .context("")
             .build();
         IndexableReplacement r5 = IndexableReplacement
             .builder()
-            .indexablePageId(pageId)
+            .pageId(pageId)
             .type(ReplacementType.of(ReplacementKind.SIMPLE, "5"))
             .position(5)
             .context("")
@@ -154,14 +155,14 @@ class IndexablePageComparatorTest {
         IndexableReplacement r2db = r2.setSystemReviewed(); // System is just a normal user here
         IndexableReplacement r6db = IndexableReplacement
             .builder()
-            .indexablePageId(pageId)
+            .pageId(pageId)
             .type(ReplacementType.of(ReplacementKind.SIMPLE, "6"))
             .position(6)
             .context("")
             .build();
         IndexableReplacement r7db = IndexableReplacement
             .builder()
-            .indexablePageId(pageId)
+            .pageId(pageId)
             .type(ReplacementType.of(ReplacementKind.SIMPLE, "7"))
             .position(7)
             .context("")
@@ -169,7 +170,7 @@ class IndexablePageComparatorTest {
             .build();
         IndexableReplacement r8db = IndexableReplacement
             .builder()
-            .indexablePageId(pageId)
+            .pageId(pageId)
             .type(ReplacementType.of(ReplacementKind.SIMPLE, "8"))
             .position(8)
             .context("")
@@ -209,24 +210,24 @@ class IndexablePageComparatorTest {
         // R6 : Only in DB reviewed by system => Delete
 
         // Replacements found to index
-        IndexablePageId pageId = IndexablePageId.of(WikipediaLanguage.getDefault(), 1);
+        WikipediaPageId pageId = WikipediaPageId.of(WikipediaLanguage.getDefault(), 1);
         IndexableReplacement r1 = IndexableReplacement
             .builder()
-            .indexablePageId(pageId)
+            .pageId(pageId)
             .type(ReplacementType.of(ReplacementKind.SIMPLE, "1"))
             .position(1)
             .context("")
             .build();
         IndexableReplacement r2 = IndexableReplacement
             .builder()
-            .indexablePageId(pageId)
+            .pageId(pageId)
             .type(ReplacementType.of(ReplacementKind.SIMPLE, "2"))
             .position(2)
             .context("")
             .build();
         IndexableReplacement r3 = IndexableReplacement
             .builder()
-            .indexablePageId(pageId)
+            .pageId(pageId)
             .type(ReplacementType.of(ReplacementKind.SIMPLE, "3"))
             .position(3)
             .context("")
@@ -244,14 +245,14 @@ class IndexablePageComparatorTest {
         IndexableReplacement r2db = r2.withReviewer("");
         IndexableReplacement r4db = IndexableReplacement
             .builder()
-            .indexablePageId(pageId)
+            .pageId(pageId)
             .type(ReplacementType.of(ReplacementKind.SIMPLE, "4"))
             .position(4)
             .context("")
             .build();
         IndexableReplacement r5db = IndexableReplacement
             .builder()
-            .indexablePageId(pageId)
+            .pageId(pageId)
             .type(ReplacementType.of(ReplacementKind.SIMPLE, "5"))
             .position(5)
             .context("")
@@ -259,7 +260,7 @@ class IndexablePageComparatorTest {
             .build();
         IndexableReplacement r6db = IndexableReplacement
             .builder()
-            .indexablePageId(pageId)
+            .pageId(pageId)
             .type(ReplacementType.of(ReplacementKind.SIMPLE, "6"))
             .position(6)
             .context("")
@@ -292,10 +293,10 @@ class IndexablePageComparatorTest {
         // R1 : In DB not reviewed => Do nothing
 
         // Replacements found to index
-        IndexablePageId pageId = IndexablePageId.of(WikipediaLanguage.getDefault(), 1);
+        WikipediaPageId pageId = WikipediaPageId.of(WikipediaLanguage.getDefault(), 1);
         IndexableReplacement r1 = IndexableReplacement
             .builder()
-            .indexablePageId(pageId)
+            .pageId(pageId)
             .type(ReplacementType.of(ReplacementKind.SIMPLE, "1"))
             .position(1)
             .context("")
@@ -328,7 +329,7 @@ class IndexablePageComparatorTest {
     void testDuplicatedDbReplacements() {
         LocalDate same = LocalDate.now();
 
-        IndexablePageId pageId = IndexablePageId.of(WikipediaLanguage.getDefault(), 1);
+        WikipediaPageId pageId = WikipediaPageId.of(WikipediaLanguage.getDefault(), 1);
         IndexablePage page = IndexablePage
             .builder()
             .id(pageId)
@@ -340,7 +341,7 @@ class IndexablePageComparatorTest {
         // Existing replacements in DB: the same replacement found in 2 different positions with same context
         IndexableReplacement r1db = IndexableReplacement
             .builder()
-            .indexablePageId(pageId)
+            .pageId(pageId)
             .type(ReplacementType.of(ReplacementKind.SIMPLE, "1"))
             .position(1)
             .context("C")
@@ -366,10 +367,10 @@ class IndexablePageComparatorTest {
     void testIndexDuplicatedDbReplacements() {
         LocalDate same = LocalDate.now();
 
-        IndexablePageId pageId = IndexablePageId.of(WikipediaLanguage.getDefault(), 1);
+        WikipediaPageId pageId = WikipediaPageId.of(WikipediaLanguage.getDefault(), 1);
         IndexableReplacement r1 = IndexableReplacement
             .builder()
-            .indexablePageId(pageId)
+            .pageId(pageId)
             .type(ReplacementType.of(ReplacementKind.SIMPLE, "1"))
             .position(1)
             .context("1")

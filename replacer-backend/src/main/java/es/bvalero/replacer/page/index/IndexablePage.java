@@ -2,6 +2,8 @@ package es.bvalero.replacer.page.index;
 
 import java.time.LocalDate;
 import java.util.Collection;
+
+import es.bvalero.replacer.common.domain.WikipediaPageId;
 import lombok.Builder;
 import lombok.Value;
 import lombok.experimental.NonFinal;
@@ -14,7 +16,7 @@ import org.springframework.lang.NonNull;
 class IndexablePage {
 
     @NonNull
-    IndexablePageId id;
+    WikipediaPageId id;
 
     @NonNull
     String title;

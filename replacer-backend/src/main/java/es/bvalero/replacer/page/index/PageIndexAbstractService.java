@@ -79,7 +79,7 @@ abstract class PageIndexAbstractService {
         if (dbPage != null) {
             LOGGER.warn("Unexpected page in DB not indexable: {} - {}", dbPage.getId().getLang(), dbPage.getTitle());
             removeObsoletePageService.removeObsoletePages(
-                Collections.singleton(IndexablePageMapper.toDomain(dbPage.getId()))
+                Collections.singleton(dbPage.getId())
             );
         }
     }

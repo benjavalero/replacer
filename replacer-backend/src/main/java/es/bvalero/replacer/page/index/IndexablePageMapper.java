@@ -30,7 +30,7 @@ class IndexablePageMapper {
     IndexablePage fromModel(PageModel page) {
         return IndexablePage
             .builder()
-            .id(IndexablePageId.of(WikipediaLanguage.valueOfCode(page.getLang()), page.getPageId()))
+            .id(WikipediaPageId.of(WikipediaLanguage.valueOfCode(page.getLang()), page.getPageId()))
             .title(page.getTitle())
             .lastUpdate(page.getLastUpdate())
             .replacements(IndexableReplacementMapper.fromModel(page.getReplacements()))
@@ -40,7 +40,7 @@ class IndexablePageMapper {
     IndexablePage fromDomain(WikipediaPage page, Collection<Replacement> replacements) {
         return IndexablePage
             .builder()
-            .id(fromDomain(page.getId()))
+            .id(page.getId())
             .title(page.getTitle())
             .lastUpdate(page.getLastUpdate().toLocalDate())
             .replacements(
@@ -50,13 +50,5 @@ class IndexablePageMapper {
                     .collect(Collectors.toUnmodifiableList())
             )
             .build();
-    }
-
-    IndexablePageId fromDomain(WikipediaPageId id) {
-        return IndexablePageId.of(id.getLang(), id.getPageId());
-    }
-
-    WikipediaPageId toDomain(IndexablePageId id) {
-        return WikipediaPageId.of(id.getLang(), id.getPageId());
     }
 }

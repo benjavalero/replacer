@@ -17,8 +17,8 @@ class IndexableReplacementMapper {
         return ReplacementModel
             .builder()
             .id(replacement.getId())
-            .lang(replacement.getIndexablePageId().getLang().getCode())
-            .pageId(replacement.getIndexablePageId().getPageId())
+            .lang(replacement.getPageId().getLang().getCode())
+            .pageId(replacement.getPageId().getPageId())
             .kind(replacement.getType().getKind().getCode())
             .subtype(replacement.getType().getSubtype())
             .position(replacement.getPosition())
@@ -40,8 +40,8 @@ class IndexableReplacementMapper {
         return IndexableReplacement
             .builder()
             .id(replacement.getId())
-            .indexablePageId(
-                IndexablePageId.of(WikipediaLanguage.valueOfCode(replacement.getLang()), replacement.getPageId())
+            .pageId(
+                WikipediaPageId.of(WikipediaLanguage.valueOfCode(replacement.getLang()), replacement.getPageId())
             )
             .type(ReplacementType.of(replacement.getKind(), replacement.getSubtype()))
             .position(replacement.getPosition())
@@ -53,7 +53,7 @@ class IndexableReplacementMapper {
     IndexableReplacement fromDomain(Replacement replacement, WikipediaPage page) {
         return IndexableReplacement
             .builder()
-            .indexablePageId(IndexablePageMapper.fromDomain(page.getId()))
+            .pageId(page.getId())
             .type(replacement.getType())
             .position(replacement.getStart())
             .context(replacement.getContext(page))

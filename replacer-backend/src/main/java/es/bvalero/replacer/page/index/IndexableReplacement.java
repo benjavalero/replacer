@@ -4,6 +4,8 @@ import static es.bvalero.replacer.repository.ReplacementRepository.REVIEWER_SYST
 
 import es.bvalero.replacer.common.domain.ReplacementType;
 import java.util.Objects;
+
+import es.bvalero.replacer.common.domain.WikipediaPageId;
 import lombok.Builder;
 import lombok.Value;
 import lombok.With;
@@ -22,7 +24,7 @@ class IndexableReplacement {
     Integer id; // Nullable when still to be created in database
 
     @NonNull
-    IndexablePageId indexablePageId;
+    WikipediaPageId pageId;
 
     @NonNull
     ReplacementType type;
@@ -60,7 +62,7 @@ class IndexableReplacement {
     /* If two replacements have the same position or context they will be considered equivalent but NOT EQUAL */
     boolean isSame(IndexableReplacement that) {
         return (
-            indexablePageId.equals(that.indexablePageId) &&
+            pageId.equals(that.pageId) &&
             type.equals(that.type) &&
             (position == that.position || isSameContext(context, that.context))
         );
