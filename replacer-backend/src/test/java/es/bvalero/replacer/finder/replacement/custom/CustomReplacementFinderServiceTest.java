@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import es.bvalero.replacer.common.domain.Replacement;
 import es.bvalero.replacer.common.domain.WikipediaPage;
-import es.bvalero.replacer.page.review.PageReviewOptions;
+import es.bvalero.replacer.review.find.PageReviewOptions;
 import java.util.List;
 import org.apache.commons.collections4.IterableUtils;
 import org.junit.jupiter.api.BeforeEach;

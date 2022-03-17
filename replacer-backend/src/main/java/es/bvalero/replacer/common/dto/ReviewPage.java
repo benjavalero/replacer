@@ -1,7 +1,7 @@
 package es.bvalero.replacer.common.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import es.bvalero.replacer.page.review.ReviewSection;
+import es.bvalero.replacer.review.find.ReviewSection;
 import io.swagger.v3.oas.annotations.media.Schema;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;

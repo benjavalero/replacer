@@ -5,7 +5,7 @@ import es.bvalero.replacer.common.domain.ReplacementKind;
 import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.finder.Finder;
 import es.bvalero.replacer.finder.FinderService;
-import es.bvalero.replacer.page.review.PageReviewOptions;
+import es.bvalero.replacer.review.find.PageReviewOptions;
 import java.util.Collections;
 import java.util.Set;
 import org.springframework.stereotype.Service;
