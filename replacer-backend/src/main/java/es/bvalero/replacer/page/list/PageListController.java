@@ -2,6 +2,7 @@ package es.bvalero.replacer.page.list;
 
 import com.github.rozidan.springboot.logger.Loggable;
 import es.bvalero.replacer.common.dto.CommonQueryParameters;
+import es.bvalero.replacer.common.dto.ReplacementTypeDto;
 import es.bvalero.replacer.user.ValidateBotUser;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

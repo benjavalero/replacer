@@ -13,6 +13,7 @@ import es.bvalero.replacer.common.util.WikipediaDateUtils;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,9 +41,6 @@ class PageReviewControllerTest {
 
     @MockBean
     private PageReviewCustomFinder pageReviewCustomFinder;
-
-    @MockBean
-    private ReplacementValidationService replacementValidationService;
 
     private final int pageId = 3;
     private final String title = "T";
@@ -191,41 +189,5 @@ class PageReviewControllerTest {
             .andExpect(status().isOk());
 
         verify(pageReviewCustomFinder).getPageReview(123, options);
-    }
-
-    @Test
-    void testValidateCustomReplacement() throws Exception {
-        final String replacement = "Africa";
-        when(replacementValidationService.findMatchingReplacementType(WikipediaLanguage.SPANISH, replacement, true))
-            .thenReturn(Optional.of(ReplacementType.of(ReplacementKind.SIMPLE, replacement)));
-
-        mvc
-            .perform(
-                get("/api/pages/validate?replacement=Africa&cs=true&lang=es&user=A")
-                    .contentType(MediaType.APPLICATION_JSON)
-            )
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.kind", is(Byte.valueOf(ReplacementKind.SIMPLE.getCode()).intValue())))
-            .andExpect(jsonPath("$.subtype", is(replacement)));
-
-        verify(replacementValidationService).findMatchingReplacementType(WikipediaLanguage.SPANISH, replacement, true);
-    }
-
-    @Test
-    void testValidateCustomReplacementEmpty() throws Exception {
-        final String replacement = "African";
-        when(replacementValidationService.findMatchingReplacementType(WikipediaLanguage.SPANISH, replacement, true))
-            .thenReturn(Optional.empty());
-
-        mvc
-            .perform(
-                get("/api/pages/validate?replacement=African&cs=true&lang=es&user=A")
-                    .contentType(MediaType.APPLICATION_JSON)
-            )
-            .andExpect(status().isNoContent())
-            .andExpect(jsonPath("$.kind").doesNotExist())
-            .andExpect(jsonPath("$.subtype").doesNotExist());
-
-        verify(replacementValidationService).findMatchingReplacementType(WikipediaLanguage.SPANISH, replacement, true);
     }
 }

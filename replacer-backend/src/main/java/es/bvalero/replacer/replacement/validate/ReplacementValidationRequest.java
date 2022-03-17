@@ -1,4 +1,4 @@
-package es.bvalero.replacer.page.review;
+package es.bvalero.replacer.replacement.validate;
 
 import io.swagger.v3.oas.annotations.Parameter;
 import javax.validation.constraints.NotBlank;

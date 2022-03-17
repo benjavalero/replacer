@@ -33,7 +33,7 @@ export class PageService {
   validateCustomReplacement(replacement: string, caseSensitive: boolean): Observable<ReplacementValidationResponse> {
     let params: HttpParams = new HttpParams();
     params = params.append('replacement', replacement).append('cs', String(caseSensitive));
-    return this.httpClient.get<ReplacementValidationResponse>(`${this.baseUrl}/validate`, { params });
+    return this.httpClient.get<ReplacementValidationResponse>(`${environment.apiUrl}/replacement/type/validate`, { params });
   }
 
   findPageReviewById(pageId: number, options: ReviewOptions): Observable<PageReviewResponse> {

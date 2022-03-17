@@ -3,11 +3,15 @@ package es.bvalero.replacer.common.dto;
 import es.bvalero.replacer.common.domain.AccessToken;
 import io.swagger.v3.oas.annotations.media.Schema;
 import javax.validation.constraints.NotNull;
+
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.lang.NonNull;
 
 @Data
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor
 public class AccessTokenDto {
 
@@ -22,10 +26,7 @@ public class AccessTokenDto {
     private String tokenSecret;
 
     public static AccessTokenDto fromDomain(AccessToken accessToken) {
-        AccessTokenDto dto = new AccessTokenDto();
-        dto.setToken(accessToken.getToken());
-        dto.setTokenSecret(accessToken.getTokenSecret());
-        return dto;
+        return new AccessTokenDto(accessToken.getToken(), accessToken.getTokenSecret());
     }
 
     public static AccessToken toDomain(AccessTokenDto dto) {
