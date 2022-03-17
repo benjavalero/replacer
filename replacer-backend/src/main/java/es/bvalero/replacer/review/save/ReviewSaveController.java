@@ -23,11 +23,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@Tag(name = "Pages")
+@Tag(name = "Review")
 @Slf4j
 @RestController
-@RequestMapping("api/pages")
-public class PageSaveController {
+@RequestMapping("api/review")
+public class ReviewSaveController {
 
     static final String EMPTY_CONTENT = " ";
 
@@ -35,12 +35,12 @@ public class PageSaveController {
     private PageSaveService pageSaveService;
 
     @Loggable(skipResult = true)
-    @Operation(summary = "Update page contents and mark as reviewed")
+    @Operation(summary = "Save a review: update page contents and mark as reviewed")
     @PostMapping(value = "/{id}")
-    public ResponseEntity<Void> save(
+    public ResponseEntity<Void> saveReview(
         @Parameter(description = "Page ID", example = "1") @PathVariable("id") int pageId,
         @Valid CommonQueryParameters queryParameters,
-        @Valid @RequestBody PageSaveRequest request
+        @Valid @RequestBody SaveReviewRequest request
     ) {
         if (!Objects.equals(pageId, request.getPage().getId())) {
             LOGGER.error("Page ID mismatch");

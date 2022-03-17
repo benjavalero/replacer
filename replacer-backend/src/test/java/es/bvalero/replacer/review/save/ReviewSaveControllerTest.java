@@ -1,6 +1,6 @@
 package es.bvalero.replacer.review.save;
 
-import static es.bvalero.replacer.review.save.PageSaveController.EMPTY_CONTENT;
+import static es.bvalero.replacer.review.save.ReviewSaveController.EMPTY_CONTENT;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -27,8 +27,8 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
 @ExtendWith(SpringExtension.class)
-@WebMvcTest(controllers = PageSaveController.class)
-class PageSaveControllerTest {
+@WebMvcTest(controllers = ReviewSaveController.class)
+class ReviewSaveControllerTest {
 
     private static final int pageId = 123;
     private static final String title = "Q";
@@ -54,11 +54,11 @@ class PageSaveControllerTest {
     @MockBean
     private PageSaveService pageSaveService;
 
-    private PageSaveRequest request;
+    private SaveReviewRequest request;
 
     @BeforeEach
     public void setUp() {
-        this.request = new PageSaveRequest();
+        this.request = new SaveReviewRequest();
         ReviewPage reviewPage = new ReviewPage();
         reviewPage.setLang(WikipediaLanguage.SPANISH.getCode());
         reviewPage.setId(pageId);
@@ -76,7 +76,7 @@ class PageSaveControllerTest {
     void testSaveWithChanges() throws Exception {
         mvc
             .perform(
-                post("/api/pages/123?lang=es&user=A")
+                post("/api/review/123?lang=es&user=A")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(request))
             )
@@ -91,7 +91,7 @@ class PageSaveControllerTest {
 
         mvc
             .perform(
-                post("/api/pages/123?lang=es&user=A")
+                post("/api/review/123?lang=es&user=A")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(request))
             )
@@ -105,7 +105,7 @@ class PageSaveControllerTest {
     void testPageIdMismatch() throws Exception {
         mvc
             .perform(
-                post("/api/pages/321?lang=es&user=A")
+                post("/api/review/321?lang=es&user=A")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(request))
             )
@@ -119,7 +119,7 @@ class PageSaveControllerTest {
     void testPageLanguageMismatch() throws Exception {
         mvc
             .perform(
-                post("/api/pages/123?lang=en&user=A")
+                post("/api/review/123?lang=en&user=A")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(request))
             )
@@ -135,7 +135,7 @@ class PageSaveControllerTest {
 
         mvc
             .perform(
-                post("/api/pages/123?lang=es&user=A")
+                post("/api/review/123?lang=es&user=A")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(request))
             )
@@ -153,7 +153,7 @@ class PageSaveControllerTest {
 
         mvc
             .perform(
-                post("/api/pages/123?lang=es&user=A")
+                post("/api/review/123?lang=es&user=A")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(request))
             )
@@ -170,7 +170,7 @@ class PageSaveControllerTest {
 
         mvc
             .perform(
-                post("/api/pages/123?lang=es&user=A")
+                post("/api/review/123?lang=es&user=A")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(request))
             )
@@ -187,7 +187,7 @@ class PageSaveControllerTest {
 
         mvc
             .perform(
-                post("/api/pages/123?lang=es&user=A")
+                post("/api/review/123?lang=es&user=A")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(request))
             )

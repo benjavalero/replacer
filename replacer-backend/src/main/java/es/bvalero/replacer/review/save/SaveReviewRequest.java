@@ -13,7 +13,7 @@ import lombok.ToString;
 @Schema(description = "Page to update and mark as reviewed. Empty content is equivalent to review with no changes.")
 @Data
 @NoArgsConstructor
-class PageSaveRequest {
+class SaveReviewRequest {
 
     @Schema(description = "Page to review", required = true)
     @Valid

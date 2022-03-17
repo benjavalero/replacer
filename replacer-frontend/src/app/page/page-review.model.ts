@@ -60,7 +60,7 @@ export interface PageReviewOptions {
   cs?: boolean;
 }
 
-export class PageSaveRequest {
+export class SaveReviewRequest {
   page: ReviewPage;
   options: PageReviewOptions;
   reviewAllTypes: boolean;

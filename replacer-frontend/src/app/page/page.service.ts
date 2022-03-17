@@ -4,7 +4,7 @@ import { Observable, throwError } from 'rxjs';
 import { delay } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { UserService } from '../user/user.service';
-import { PageReviewOptions, PageReviewResponse, PageSaveRequest, ReviewOptions, ReviewPage } from './page-review.model';
+import { PageReviewOptions, PageReviewResponse, SaveReviewRequest, ReviewOptions, ReviewPage } from './page-review.model';
 import { ReplacementValidationResponse } from './validate-custom.model';
 
 export const EMPTY_CONTENT = ' ';
@@ -47,7 +47,7 @@ export class PageService {
     return this.httpClient.get<PageReviewResponse>(`${this.baseUrl}/${pageId}`, { params });
   }
 
-  savePage(page: ReviewPage, options: PageReviewOptions, reviewAllTypes: boolean): Observable<void> {
+  saveReview(page: ReviewPage, options: PageReviewOptions, reviewAllTypes: boolean): Observable<void> {
     if (!this.userService.isValidUser()) {
       return throwError(() => new Error('El usuario no está autenticado. Recargue la página para retomar la sesión.'));
     }
@@ -65,7 +65,7 @@ export class PageService {
       }
     }
 
-    const savePage = new PageSaveRequest(page, options, reviewAllTypes, this.userService.accessToken);
+    const saveReview = new SaveReviewRequest(page, options, reviewAllTypes, this.userService.accessToken);
 
     // Store the new last save date
     if (page.content !== EMPTY_CONTENT) {
@@ -73,6 +73,6 @@ export class PageService {
     }
 
     // Call backend and delay the observable response
-    return this.httpClient.post<void>(`${this.baseUrl}/${page.id}`, savePage).pipe(delay(sleepTime));
+    return this.httpClient.post<void>(`${environment.apiUrl}/review/${page.id}`, saveReview).pipe(delay(sleepTime));
   }
 }
