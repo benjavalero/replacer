@@ -143,8 +143,7 @@ class ReplacementJdbcRepository
             "LIMIT " +
             numResults;
         SqlParameterSource namedParameters = new MapSqlParameterSource()
-            .addValue("lang", lang.getCode())
-            .addValue("system", REVIEWER_SYSTEM);
+            .addValue("lang", lang.getCode());
         return Objects.requireNonNull(
             jdbcTemplate.query(
                 sql,
