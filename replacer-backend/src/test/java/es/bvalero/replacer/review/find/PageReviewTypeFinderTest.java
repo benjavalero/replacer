@@ -189,8 +189,7 @@ class PageReviewTypeFinderTest {
             .build();
         int numPending = 5;
         Review sectionReview = Review.of(page, section, replacements, numPending);
-        when(pageReviewSectionFinder.findPageReviewSection(any(Review.class)))
-            .thenReturn(Optional.of(sectionReview));
+        when(pageReviewSectionFinder.findPageReviewSection(any(Review.class))).thenReturn(Optional.of(sectionReview));
 
         Optional<Review> review = pageReviewTypeSubtypeService.getPageReview(randomId, options);
 

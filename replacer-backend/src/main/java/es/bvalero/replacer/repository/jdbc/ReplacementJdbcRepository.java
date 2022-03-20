@@ -142,8 +142,7 @@ class ReplacementJdbcRepository
             "ORDER BY num DESC " +
             "LIMIT " +
             numResults;
-        SqlParameterSource namedParameters = new MapSqlParameterSource()
-            .addValue("lang", lang.getCode());
+        SqlParameterSource namedParameters = new MapSqlParameterSource().addValue("lang", lang.getCode());
         return Objects.requireNonNull(
             jdbcTemplate.query(
                 sql,

@@ -1,9 +1,8 @@
 package es.bvalero.replacer.page.index;
 
+import es.bvalero.replacer.common.domain.WikipediaPageId;
 import java.time.LocalDate;
 import java.util.Collection;
-
-import es.bvalero.replacer.common.domain.WikipediaPageId;
 import lombok.Builder;
 import lombok.Value;
 import lombok.experimental.NonFinal;

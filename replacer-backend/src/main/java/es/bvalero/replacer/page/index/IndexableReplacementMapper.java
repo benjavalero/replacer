@@ -40,9 +40,7 @@ class IndexableReplacementMapper {
         return IndexableReplacement
             .builder()
             .id(replacement.getId())
-            .pageId(
-                WikipediaPageId.of(WikipediaLanguage.valueOfCode(replacement.getLang()), replacement.getPageId())
-            )
+            .pageId(WikipediaPageId.of(WikipediaLanguage.valueOfCode(replacement.getLang()), replacement.getPageId()))
             .type(ReplacementType.of(replacement.getKind(), replacement.getSubtype()))
             .position(replacement.getPosition())
             .context(replacement.getContext())

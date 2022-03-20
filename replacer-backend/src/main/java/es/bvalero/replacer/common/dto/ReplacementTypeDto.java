@@ -3,7 +3,6 @@ package es.bvalero.replacer.common.dto;
 import es.bvalero.replacer.common.domain.ReplacementType;
 import io.swagger.v3.oas.annotations.Parameter;
 import javax.validation.constraints.NotBlank;
-
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;

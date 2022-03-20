@@ -69,7 +69,8 @@ class PageListControllerTest {
     void testReviewPagesByType() throws Exception {
         mvc
             .perform(
-                post("/api/page/type/review?kind=2&subtype=Africa&lang=es&user=A").contentType(MediaType.APPLICATION_JSON)
+                post("/api/page/type/review?kind=2&subtype=Africa&lang=es&user=A")
+                    .contentType(MediaType.APPLICATION_JSON)
             )
             .andExpect(status().isNoContent());
 
@@ -86,7 +87,8 @@ class PageListControllerTest {
 
         mvc
             .perform(
-                post("/api/page/type/review?kind=2&subtype=Africa&lang=es&user=A").contentType(MediaType.APPLICATION_JSON)
+                post("/api/page/type/review?kind=2&subtype=Africa&lang=es&user=A")
+                    .contentType(MediaType.APPLICATION_JSON)
             )
             .andExpect(status().isForbidden());
 

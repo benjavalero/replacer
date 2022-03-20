@@ -3,9 +3,8 @@ package es.bvalero.replacer.page.index;
 import static es.bvalero.replacer.repository.ReplacementRepository.REVIEWER_SYSTEM;
 
 import es.bvalero.replacer.common.domain.ReplacementType;
-import java.util.Objects;
-
 import es.bvalero.replacer.common.domain.WikipediaPageId;
+import java.util.Objects;
 import lombok.Builder;
 import lombok.Value;
 import lombok.With;

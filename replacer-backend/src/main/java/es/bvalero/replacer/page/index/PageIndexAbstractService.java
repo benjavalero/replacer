@@ -78,9 +78,7 @@ abstract class PageIndexAbstractService {
         // Just in case the page already exists in database but is not indexable anymore
         if (dbPage != null) {
             LOGGER.warn("Unexpected page in DB not indexable: {} - {}", dbPage.getId().getLang(), dbPage.getTitle());
-            removeObsoletePageService.removeObsoletePages(
-                Collections.singleton(dbPage.getId())
-            );
+            removeObsoletePageService.removeObsoletePages(Collections.singleton(dbPage.getId()));
         }
     }
 
