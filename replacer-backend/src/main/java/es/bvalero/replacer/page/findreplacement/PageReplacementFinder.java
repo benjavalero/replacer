@@ -4,11 +4,11 @@ import com.github.rozidan.springboot.logger.Loggable;
 import es.bvalero.replacer.common.domain.FinderResult;
 import es.bvalero.replacer.common.domain.Immutable;
 import es.bvalero.replacer.common.domain.Replacement;
+import es.bvalero.replacer.common.domain.ReviewOptions;
 import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.finder.immutable.ImmutableFinderService;
 import es.bvalero.replacer.finder.replacement.ReplacementFinderService;
 import es.bvalero.replacer.finder.replacement.custom.CustomReplacementFinderService;
-import es.bvalero.replacer.review.find.PageReviewOptions;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +39,7 @@ public class PageReplacementFinder {
 
     /** Find all replacements in the page content ignoring the ones contained in immutables */
     @Loggable(value = LogLevel.TRACE, skipResult = true, warnOver = 1, warnUnit = TimeUnit.SECONDS)
-    public Collection<Replacement> findCustomReplacements(WikipediaPage page, PageReviewOptions options) {
+    public Collection<Replacement> findCustomReplacements(WikipediaPage page, ReviewOptions options) {
         // There will usually be much more immutables found than results.
         // Thus, it is better to obtain first all the results, and then obtain the immutables one by one,
         // aborting in case the replacement list gets empty. This way we can avoid lots of immutable calculations.

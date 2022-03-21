@@ -1,7 +1,5 @@
-package es.bvalero.replacer.review.find;
+package es.bvalero.replacer.review.dto;
 
-import es.bvalero.replacer.common.dto.PageReviewOptionsDto;
-import es.bvalero.replacer.common.dto.ReviewPage;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.Collection;
 import lombok.Value;
@@ -10,11 +8,11 @@ import org.springframework.lang.Nullable;
 
 @Schema(description = "Page and replacements to review")
 @Value(staticConstructor = "of")
-class PageReviewResponse {
+public class PageReviewResponse {
 
     @Schema(required = true)
     @NonNull
-    ReviewPage page;
+    ReviewPageDto page;
 
     @Schema(description = "Collection of replacements to review", required = true)
     @NonNull
@@ -22,7 +20,7 @@ class PageReviewResponse {
 
     @Schema(required = true)
     @NonNull
-    PageReviewOptionsDto options;
+    ReviewOptionsDto options;
 
     @Schema(description = "Number of pending pages to review of the given type", required = true, example = "1704147")
     @Nullable

@@ -54,7 +54,7 @@ class PageReviewNoTypeFinderTest {
         .suggestions(List.of(Suggestion.ofNoComment("Z")))
         .build();
     private final List<Replacement> replacements = Collections.singletonList(replacement);
-    private final PageReviewOptions options = PageReviewOptions.ofNoType();
+    private final ReviewOptions options = ReviewOptions.ofNoType();
 
     @Mock
     private PageRepository pageRepository;

@@ -1,6 +1,7 @@
 package es.bvalero.replacer.review.find;
 
 import es.bvalero.replacer.common.domain.Replacement;
+import es.bvalero.replacer.common.domain.Review;
 import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.common.domain.WikipediaSection;
 import es.bvalero.replacer.wikipedia.WikipediaPageRepository;

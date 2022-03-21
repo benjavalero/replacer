@@ -1,9 +1,7 @@
-package es.bvalero.replacer.review.find;
+package es.bvalero.replacer.review.dto;
 
 import es.bvalero.replacer.common.domain.*;
 import es.bvalero.replacer.common.dto.CommonQueryParameters;
-import es.bvalero.replacer.common.dto.PageReviewOptionsDto;
-import es.bvalero.replacer.common.dto.ReviewPage;
 import es.bvalero.replacer.common.util.WikipediaDateUtils;
 import java.util.Collection;
 import java.util.stream.Collectors;
@@ -11,9 +9,9 @@ import lombok.experimental.UtilityClass;
 import org.springframework.lang.Nullable;
 
 @UtilityClass
-public class PageReviewMapper {
+public class ReviewMapper {
 
-    PageReviewResponse toDto(Review review, PageReviewOptions options) {
+    public PageReviewResponse toDto(Review review, ReviewOptions options) {
         return PageReviewResponse.of(
             toDto(review.getPage(), review.getSection()),
             toDto(review.getReplacements()),
@@ -22,8 +20,8 @@ public class PageReviewMapper {
         );
     }
 
-    private ReviewPage toDto(WikipediaPage page, @Nullable WikipediaSection section) {
-        ReviewPage reviewPage = new ReviewPage();
+    private ReviewPageDto toDto(WikipediaPage page, @Nullable WikipediaSection section) {
+        ReviewPageDto reviewPage = new ReviewPageDto();
         reviewPage.setLang(page.getId().getLang().getCode());
         reviewPage.setId(page.getId().getPageId());
         reviewPage.setTitle(page.getTitle());
@@ -34,11 +32,11 @@ public class PageReviewMapper {
     }
 
     @Nullable
-    private ReviewSection toDto(@Nullable WikipediaSection section) {
+    private ReviewSectionDto toDto(@Nullable WikipediaSection section) {
         if (section == null) {
             return null;
         } else {
-            ReviewSection reviewSection = new ReviewSection();
+            ReviewSectionDto reviewSection = new ReviewSectionDto();
             reviewSection.setId(section.getIndex());
             reviewSection.setTitle(section.getAnchor());
             return reviewSection;
@@ -46,7 +44,7 @@ public class PageReviewMapper {
     }
 
     private Collection<ReviewReplacement> toDto(Collection<Replacement> replacements) {
-        return replacements.stream().map(PageReviewMapper::toDto).collect(Collectors.toUnmodifiableList());
+        return replacements.stream().map(ReviewMapper::toDto).collect(Collectors.toUnmodifiableList());
     }
 
     private ReviewReplacement toDto(Replacement replacement) {
@@ -55,7 +53,7 @@ public class PageReviewMapper {
             replacement.getText(),
             replacement.getType().getKind().getCode(),
             replacement.getType().getSubtype(),
-            replacement.getSuggestions().stream().map(PageReviewMapper::toDto).collect(Collectors.toList())
+            replacement.getSuggestions().stream().map(ReviewMapper::toDto).collect(Collectors.toList())
         );
     }
 
@@ -63,9 +61,9 @@ public class PageReviewMapper {
         return ReviewSuggestion.of(suggestion.getText(), suggestion.getComment());
     }
 
-    private PageReviewOptionsDto toDto(PageReviewOptions options) {
-        PageReviewOptionsDto dto = new PageReviewOptionsDto();
-        if (options.getOptionsType() != PageReviewOptionsType.NO_TYPE) {
+    private ReviewOptionsDto toDto(ReviewOptions options) {
+        ReviewOptionsDto dto = new ReviewOptionsDto();
+        if (options.getOptionsType() != ReviewOptionsType.NO_TYPE) {
             dto.setKind(options.getType().getKind().getCode());
             dto.setSubtype(options.getType().getSubtype());
             dto.setSuggestion(options.getSuggestion());
@@ -74,12 +72,12 @@ public class PageReviewMapper {
         return dto;
     }
 
-    public PageReviewOptions fromDto(
-        PageReviewOptionsDto options,
+    public ReviewOptions fromDto(
+        ReviewOptionsDto options,
         boolean reviewAllTypes,
         CommonQueryParameters queryParameters
     ) {
-        return PageReviewOptions
+        return ReviewOptions
             .builder()
             .lang(WikipediaLanguage.valueOfCode(queryParameters.getLang()))
             .user(queryParameters.getUser())

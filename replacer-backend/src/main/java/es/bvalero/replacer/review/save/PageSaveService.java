@@ -1,13 +1,13 @@
 package es.bvalero.replacer.review.save;
 
 import es.bvalero.replacer.common.domain.AccessToken;
+import es.bvalero.replacer.common.domain.ReviewOptions;
+import es.bvalero.replacer.common.domain.ReviewOptionsType;
 import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.common.domain.WikipediaPageId;
 import es.bvalero.replacer.repository.CustomRepository;
 import es.bvalero.replacer.repository.PageRepository;
 import es.bvalero.replacer.repository.ReplacementTypeRepository;
-import es.bvalero.replacer.review.find.PageReviewOptions;
-import es.bvalero.replacer.review.find.PageReviewOptionsType;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.wikipedia.WikipediaPageRepository;
 import java.time.LocalDate;
@@ -41,7 +41,7 @@ class PageSaveService {
     void savePageContent(
         WikipediaPage page,
         @Nullable Integer sectionId,
-        PageReviewOptions options,
+        ReviewOptions options,
         AccessToken accessToken
     ) throws WikipediaException {
         // Apply cosmetic changes
@@ -62,14 +62,14 @@ class PageSaveService {
         this.markAsReviewed(page.getId(), options, true);
     }
 
-    void savePageWithNoChanges(WikipediaPageId pageId, PageReviewOptions options) {
+    void savePageWithNoChanges(WikipediaPageId pageId, ReviewOptions options) {
         // Mark page as reviewed in the database
         this.markAsReviewed(pageId, options, false);
     }
 
-    private String buildEditSummary(PageReviewOptions options, boolean applyCosmetics) {
+    private String buildEditSummary(ReviewOptions options, boolean applyCosmetics) {
         StringBuilder summary = new StringBuilder(EDIT_SUMMARY);
-        if (options.getOptionsType() != PageReviewOptionsType.NO_TYPE && !options.isReviewAllTypes()) {
+        if (options.getOptionsType() != ReviewOptionsType.NO_TYPE && !options.isReviewAllTypes()) {
             summary.append(": «").append(options.getType().getSubtype()).append('»');
         }
         if (applyCosmetics) {
@@ -78,7 +78,7 @@ class PageSaveService {
         return summary.toString();
     }
 
-    private void markAsReviewed(WikipediaPageId pageId, PageReviewOptions options, boolean updateDate) {
+    private void markAsReviewed(WikipediaPageId pageId, ReviewOptions options, boolean updateDate) {
         String reviewer = options.getUser();
         switch (options.getOptionsType()) {
             case NO_TYPE:
@@ -109,11 +109,11 @@ class PageSaveService {
         replacementTypeRepository.updateReviewerByPageAndType(pageId, null, reviewer);
     }
 
-    private void markAsReviewedTypeSubtype(WikipediaPageId pageId, PageReviewOptions options, String reviewer) {
+    private void markAsReviewedTypeSubtype(WikipediaPageId pageId, ReviewOptions options, String reviewer) {
         replacementTypeRepository.updateReviewerByPageAndType(pageId, options.getType(), reviewer);
     }
 
-    private void markAsReviewedCustom(WikipediaPageId pageId, PageReviewOptions options, String reviewer) {
+    private void markAsReviewedCustom(WikipediaPageId pageId, ReviewOptions options, String reviewer) {
         // Custom replacements don't exist in the database to be reviewed
         String subtype = options.getType().getSubtype();
         boolean cs = options.getCs() != null && Boolean.TRUE.equals(options.getCs());

@@ -2,12 +2,13 @@ package es.bvalero.replacer.review.save;
 
 import com.github.rozidan.springboot.logger.Loggable;
 import es.bvalero.replacer.common.domain.*;
+import es.bvalero.replacer.common.domain.ReviewOptions;
 import es.bvalero.replacer.common.dto.AccessTokenDto;
 import es.bvalero.replacer.common.dto.CommonQueryParameters;
 import es.bvalero.replacer.common.util.WikipediaDateUtils;
-import es.bvalero.replacer.review.find.PageReviewMapper;
-import es.bvalero.replacer.review.find.PageReviewOptions;
-import es.bvalero.replacer.review.find.ReviewSection;
+import es.bvalero.replacer.review.dto.ReviewMapper;
+import es.bvalero.replacer.review.dto.ReviewSectionDto;
+import es.bvalero.replacer.review.dto.SaveReviewRequest;
 import es.bvalero.replacer.wikipedia.WikipediaConflictException;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import io.swagger.v3.oas.annotations.Operation;
@@ -56,23 +57,19 @@ public class ReviewSaveController {
             LOGGER.error("Non valid empty content");
             return ResponseEntity.badRequest().build();
         }
-        PageReviewOptions options = PageReviewMapper.fromDto(
-            request.getOptions(),
-            request.isReviewAllTypes(),
-            queryParameters
-        );
+        ReviewOptions options = ReviewMapper.fromDto(request.getOptions(), request.isReviewAllTypes(), queryParameters);
         WikipediaPageId wikipediaPageId = WikipediaPageId.of(queryParameters.getWikipediaLanguage(), pageId);
         if (EMPTY_CONTENT.equals(content)) {
             pageSaveService.savePageWithNoChanges(wikipediaPageId, options);
         } else {
-            ReviewSection section = request.getPage().getSection();
+            ReviewSectionDto section = request.getPage().getSection();
             Integer sectionId = section == null ? null : section.getId();
             LocalDateTime saveTimestamp = WikipediaDateUtils.parseWikipediaTimestamp(
                 request.getPage().getQueryTimestamp()
             );
             WikipediaPage page = WikipediaPage
                 .builder()
-                .id(WikipediaPageId.of(queryParameters.getWikipediaLanguage(), pageId))
+                .id(wikipediaPageId)
                 .namespace(WikipediaNamespace.getDefault()) // Not relevant for saving
                 .title(request.getPage().getTitle())
                 .content(request.getPage().getContent())

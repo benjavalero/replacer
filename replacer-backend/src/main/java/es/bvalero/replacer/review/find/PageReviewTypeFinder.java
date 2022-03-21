@@ -3,6 +3,7 @@ package es.bvalero.replacer.review.find;
 import static es.bvalero.replacer.repository.ReplacementRepository.REVIEWER_SYSTEM;
 
 import es.bvalero.replacer.common.domain.Replacement;
+import es.bvalero.replacer.common.domain.ReviewOptions;
 import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.repository.PageRepository;
 import es.bvalero.replacer.repository.ReplacementTypeRepository;
@@ -23,7 +24,7 @@ class PageReviewTypeFinder extends PageReviewFinder {
     private ReplacementTypeRepository replacementTypeRepository;
 
     @Override
-    PageSearchResult findPageIdsToReview(PageReviewOptions options) {
+    PageSearchResult findPageIdsToReview(ReviewOptions options) {
         Collection<Integer> pageIds = pageRepository.findPageIdsToReviewByType(
             options.getLang(),
             options.getType(),
@@ -37,7 +38,7 @@ class PageReviewTypeFinder extends PageReviewFinder {
     @Override
     Collection<Replacement> decorateReplacements(
         WikipediaPage page,
-        PageReviewOptions options,
+        ReviewOptions options,
         Collection<Replacement> replacements
     ) {
         // Though the whole list of replacements will be returned no matter the type
@@ -55,7 +56,7 @@ class PageReviewTypeFinder extends PageReviewFinder {
 
     private Collection<Replacement> filterReplacementsByType(
         Collection<Replacement> replacements,
-        PageReviewOptions options
+        ReviewOptions options
     ) {
         return replacements
             .stream()

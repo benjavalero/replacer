@@ -7,11 +7,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import es.bvalero.replacer.common.domain.*;
+import es.bvalero.replacer.common.domain.ReviewOptions;
 import es.bvalero.replacer.common.dto.AccessTokenDto;
-import es.bvalero.replacer.common.dto.PageReviewOptionsDto;
-import es.bvalero.replacer.common.dto.ReviewPage;
 import es.bvalero.replacer.common.util.WikipediaDateUtils;
-import es.bvalero.replacer.review.find.PageReviewOptions;
+import es.bvalero.replacer.review.dto.ReviewOptionsDto;
+import es.bvalero.replacer.review.dto.ReviewPageDto;
+import es.bvalero.replacer.review.dto.SaveReviewRequest;
 import es.bvalero.replacer.wikipedia.WikipediaConflictException;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import java.time.LocalDateTime;
@@ -59,14 +60,14 @@ class ReviewSaveControllerTest {
     @BeforeEach
     public void setUp() {
         this.request = new SaveReviewRequest();
-        ReviewPage reviewPage = new ReviewPage();
+        ReviewPageDto reviewPage = new ReviewPageDto();
         reviewPage.setLang(WikipediaLanguage.SPANISH.getCode());
         reviewPage.setId(pageId);
         reviewPage.setTitle(title);
         reviewPage.setContent(content);
         reviewPage.setQueryTimestamp(WikipediaDateUtils.formatWikipediaTimestamp(timestamp));
         request.setPage(reviewPage);
-        PageReviewOptionsDto options = new PageReviewOptionsDto();
+        ReviewOptionsDto options = new ReviewOptionsDto();
         request.setOptions(options);
         request.setReviewAllTypes(false);
         request.setAccessToken(AccessTokenDto.fromDomain(accessToken));
@@ -82,7 +83,7 @@ class ReviewSaveControllerTest {
             )
             .andExpect(status().isNoContent());
 
-        verify(pageSaveService).savePageContent(page, null, PageReviewOptions.ofNoType(), accessToken);
+        verify(pageSaveService).savePageContent(page, null, ReviewOptions.ofNoType(), accessToken);
     }
 
     @Test
@@ -98,7 +99,7 @@ class ReviewSaveControllerTest {
             .andExpect(status().isNoContent());
 
         WikipediaPageId wikipediaPageId = WikipediaPageId.of(WikipediaLanguage.SPANISH, pageId);
-        verify(pageSaveService).savePageWithNoChanges(wikipediaPageId, PageReviewOptions.ofNoType());
+        verify(pageSaveService).savePageWithNoChanges(wikipediaPageId, ReviewOptions.ofNoType());
     }
 
     @Test
@@ -112,7 +113,7 @@ class ReviewSaveControllerTest {
             .andExpect(status().isBadRequest());
 
         WikipediaPageId wikipediaPageId = WikipediaPageId.of(WikipediaLanguage.SPANISH, pageId);
-        verify(pageSaveService, never()).savePageWithNoChanges(wikipediaPageId, PageReviewOptions.ofNoType());
+        verify(pageSaveService, never()).savePageWithNoChanges(wikipediaPageId, ReviewOptions.ofNoType());
     }
 
     @Test
@@ -126,7 +127,7 @@ class ReviewSaveControllerTest {
             .andExpect(status().isBadRequest());
 
         WikipediaPageId wikipediaPageId = WikipediaPageId.of(WikipediaLanguage.SPANISH, pageId);
-        verify(pageSaveService, never()).savePageWithNoChanges(wikipediaPageId, PageReviewOptions.ofNoType());
+        verify(pageSaveService, never()).savePageWithNoChanges(wikipediaPageId, ReviewOptions.ofNoType());
     }
 
     @Test
@@ -142,14 +143,14 @@ class ReviewSaveControllerTest {
             .andExpect(status().isBadRequest());
 
         WikipediaPageId wikipediaPageId = WikipediaPageId.of(WikipediaLanguage.SPANISH, pageId);
-        verify(pageSaveService, never()).savePageWithNoChanges(wikipediaPageId, PageReviewOptions.ofNoType());
+        verify(pageSaveService, never()).savePageWithNoChanges(wikipediaPageId, ReviewOptions.ofNoType());
     }
 
     @Test
     void testSaveWithChangesWithConflict() throws Exception {
         doThrow(WikipediaConflictException.class)
             .when(pageSaveService)
-            .savePageContent(page, null, PageReviewOptions.ofNoType(), accessToken);
+            .savePageContent(page, null, ReviewOptions.ofNoType(), accessToken);
 
         mvc
             .perform(
@@ -159,14 +160,14 @@ class ReviewSaveControllerTest {
             )
             .andExpect(status().isConflict());
 
-        verify(pageSaveService).savePageContent(page, null, PageReviewOptions.ofNoType(), accessToken);
+        verify(pageSaveService).savePageContent(page, null, ReviewOptions.ofNoType(), accessToken);
     }
 
     @Test
     void testSaveWithChangesNotAuthorizedWikipedia() throws Exception {
         doThrow(new WikipediaException("mwoauth-invalid-authorization"))
             .when(pageSaveService)
-            .savePageContent(page, null, PageReviewOptions.ofNoType(), accessToken);
+            .savePageContent(page, null, ReviewOptions.ofNoType(), accessToken);
 
         mvc
             .perform(
@@ -176,14 +177,14 @@ class ReviewSaveControllerTest {
             )
             .andExpect(status().isUnauthorized());
 
-        verify(pageSaveService).savePageContent(page, null, PageReviewOptions.ofNoType(), accessToken);
+        verify(pageSaveService).savePageContent(page, null, ReviewOptions.ofNoType(), accessToken);
     }
 
     @Test
     void testSaveWithChangesWikipediaException() throws Exception {
         doThrow(WikipediaException.class)
             .when(pageSaveService)
-            .savePageContent(page, null, PageReviewOptions.ofNoType(), accessToken);
+            .savePageContent(page, null, ReviewOptions.ofNoType(), accessToken);
 
         mvc
             .perform(
@@ -193,6 +194,6 @@ class ReviewSaveControllerTest {
             )
             .andExpect(status().isInternalServerError());
 
-        verify(pageSaveService).savePageContent(page, null, PageReviewOptions.ofNoType(), accessToken);
+        verify(pageSaveService).savePageContent(page, null, ReviewOptions.ofNoType(), accessToken);
     }
 }

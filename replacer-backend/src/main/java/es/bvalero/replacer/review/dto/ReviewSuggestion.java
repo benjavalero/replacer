@@ -1,4 +1,4 @@
-package es.bvalero.replacer.review.find;
+package es.bvalero.replacer.review.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;

@@ -3,10 +3,10 @@ package es.bvalero.replacer.review.save;
 import static org.mockito.Mockito.*;
 
 import es.bvalero.replacer.common.domain.*;
+import es.bvalero.replacer.common.domain.ReviewOptions;
 import es.bvalero.replacer.repository.CustomRepository;
 import es.bvalero.replacer.repository.PageRepository;
 import es.bvalero.replacer.repository.ReplacementTypeRepository;
-import es.bvalero.replacer.review.find.PageReviewOptions;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.wikipedia.WikipediaPageRepository;
 import java.time.LocalDateTime;
@@ -61,7 +61,7 @@ class PageSaveServiceTest {
         when(applyCosmeticsService.applyCosmeticChanges(page)).thenReturn(contentAfterCosmetics);
 
         AccessToken accessToken = AccessToken.of("A", "B");
-        pageSaveService.savePageContent(page, null, PageReviewOptions.ofNoType(), accessToken);
+        pageSaveService.savePageContent(page, null, ReviewOptions.ofNoType(), accessToken);
 
         verify(applyCosmeticsService).applyCosmeticChanges(page);
         verify(wikipediaPageRepository)
@@ -72,7 +72,7 @@ class PageSaveServiceTest {
     @Test
     void testSaveWithNoChangesNoType() throws WikipediaException {
         int pageId = 123;
-        PageReviewOptions options = PageReviewOptions.ofNoType();
+        ReviewOptions options = ReviewOptions.ofNoType();
         WikipediaPageId wikipediaPageId = WikipediaPageId.of(WikipediaLanguage.getDefault(), pageId);
         pageSaveService.savePageWithNoChanges(wikipediaPageId, options);
 
@@ -93,7 +93,7 @@ class PageSaveServiceTest {
     void testSaveWithNoChangesByType() throws WikipediaException {
         int pageId = 123;
         ReplacementType type = ReplacementType.of(ReplacementKind.DATE, "S");
-        PageReviewOptions options = PageReviewOptions.ofType(type);
+        ReviewOptions options = ReviewOptions.ofType(type);
         WikipediaPageId wikipediaPageId = WikipediaPageId.of(WikipediaLanguage.getDefault(), pageId);
         pageSaveService.savePageWithNoChanges(wikipediaPageId, options);
 
@@ -117,7 +117,7 @@ class PageSaveServiceTest {
     void testSaveWithNoChangesByTypeReviewAll() throws WikipediaException {
         int pageId = 123;
         ReplacementType type = ReplacementType.of(ReplacementKind.DATE, "S");
-        PageReviewOptions options = PageReviewOptions.ofType(type).withReviewAllTypes(true);
+        ReviewOptions options = ReviewOptions.ofType(type).withReviewAllTypes(true);
         WikipediaPageId wikipediaPageId = WikipediaPageId.of(WikipediaLanguage.getDefault(), pageId);
         pageSaveService.savePageWithNoChanges(wikipediaPageId, options);
 
@@ -139,7 +139,7 @@ class PageSaveServiceTest {
     @Test
     void testSaveWithNoChangesByCustom() throws WikipediaException {
         int pageId = 123;
-        PageReviewOptions options = PageReviewOptions.ofCustom(WikipediaLanguage.getDefault(), "S", "S2", true);
+        ReviewOptions options = ReviewOptions.ofCustom(WikipediaLanguage.getDefault(), "S", "S2", true);
         WikipediaPageId wikipediaPageId = WikipediaPageId.of(WikipediaLanguage.getDefault(), pageId);
         pageSaveService.savePageWithNoChanges(wikipediaPageId, options);
 
@@ -161,7 +161,7 @@ class PageSaveServiceTest {
     @Test
     void testSaveWithNoChangesByCustomReviewAll() throws WikipediaException {
         int pageId = 123;
-        PageReviewOptions options = PageReviewOptions
+        ReviewOptions options = ReviewOptions
             .ofCustom(WikipediaLanguage.getDefault(), "S", "S2", true)
             .withReviewAllTypes(true);
         WikipediaPageId wikipediaPageId = WikipediaPageId.of(WikipediaLanguage.getDefault(), pageId);

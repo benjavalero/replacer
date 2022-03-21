@@ -1,4 +1,4 @@
-package es.bvalero.replacer.review.find;
+package es.bvalero.replacer.review.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.Collection;

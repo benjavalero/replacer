@@ -1,6 +1,7 @@
 package es.bvalero.replacer.review.find;
 
 import es.bvalero.replacer.common.domain.Replacement;
+import es.bvalero.replacer.common.domain.ReviewOptions;
 import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.repository.PageRepository;
 import java.util.Collection;
@@ -14,7 +15,7 @@ class PageReviewNoTypeFinder extends PageReviewFinder {
     private PageRepository pageRepository;
 
     @Override
-    PageSearchResult findPageIdsToReview(PageReviewOptions options) {
+    PageSearchResult findPageIdsToReview(ReviewOptions options) {
         // Find a random page without filtering by type takes a lot
         // Instead find a random replacement and then the following pages
         int totalResults = pageRepository.countPagesToReview(options.getLang());
@@ -25,7 +26,7 @@ class PageReviewNoTypeFinder extends PageReviewFinder {
     @Override
     Collection<Replacement> decorateReplacements(
         WikipediaPage page,
-        PageReviewOptions options,
+        ReviewOptions options,
         Collection<Replacement> replacements
     ) {
         // No decoration needed when no type

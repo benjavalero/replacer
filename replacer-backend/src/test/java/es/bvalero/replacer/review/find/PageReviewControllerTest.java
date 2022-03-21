@@ -78,7 +78,7 @@ class PageReviewControllerTest {
 
     @Test
     void testFindRandomPageWithReplacements() throws Exception {
-        PageReviewOptions options = PageReviewOptions.ofNoType();
+        ReviewOptions options = ReviewOptions.ofNoType();
         when(pageReviewNoTypeFinder.findRandomPageReview(options)).thenReturn(Optional.of(review));
 
         mvc
@@ -105,7 +105,7 @@ class PageReviewControllerTest {
 
     @Test
     void testFindRandomPageByNoType() throws Exception {
-        PageReviewOptions options = PageReviewOptions.ofNoType();
+        ReviewOptions options = ReviewOptions.ofNoType();
         when(pageReviewNoTypeFinder.findRandomPageReview(options)).thenReturn(Optional.of(review));
 
         mvc
@@ -117,7 +117,7 @@ class PageReviewControllerTest {
 
     @Test
     void testFindRandomPageByTypeAndSubtype() throws Exception {
-        PageReviewOptions options = PageReviewOptions.ofType(ReplacementType.of(ReplacementKind.DATE, "Y"));
+        ReviewOptions options = ReviewOptions.ofType(ReplacementType.of(ReplacementKind.DATE, "Y"));
         when(pageReviewTypeFinder.findRandomPageReview(options)).thenReturn(Optional.of(review));
 
         mvc
@@ -129,7 +129,7 @@ class PageReviewControllerTest {
 
     @Test
     void testFindRandomPageByCustomReplacement() throws Exception {
-        PageReviewOptions options = PageReviewOptions.ofCustom(WikipediaLanguage.SPANISH, "X", "Y", false);
+        ReviewOptions options = ReviewOptions.ofCustom(WikipediaLanguage.SPANISH, "X", "Y", false);
         when(pageReviewCustomFinder.findRandomPageReview(options)).thenReturn(Optional.of(review));
 
         mvc
@@ -148,12 +148,12 @@ class PageReviewControllerTest {
             .perform(get("/api/pages/123?kind=X&lang=es&user=A").contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isBadRequest());
 
-        verify(pageReviewNoTypeFinder, never()).getPageReview(anyInt(), any(PageReviewOptions.class));
+        verify(pageReviewNoTypeFinder, never()).getPageReview(anyInt(), any(ReviewOptions.class));
     }
 
     @Test
     void testFindPageReviewById() throws Exception {
-        PageReviewOptions options = PageReviewOptions.ofNoType();
+        ReviewOptions options = ReviewOptions.ofNoType();
         when(pageReviewNoTypeFinder.getPageReview(123, options)).thenReturn(Optional.of(review));
 
         mvc
@@ -165,7 +165,7 @@ class PageReviewControllerTest {
 
     @Test
     void testFindPageReviewByIdByTypeAndSubtype() throws Exception {
-        PageReviewOptions options = PageReviewOptions.ofType(ReplacementType.of(ReplacementKind.DATE, "Y"));
+        ReviewOptions options = ReviewOptions.ofType(ReplacementType.of(ReplacementKind.DATE, "Y"));
         when(pageReviewTypeFinder.getPageReview(123, options)).thenReturn(Optional.of(review));
 
         mvc
@@ -177,7 +177,7 @@ class PageReviewControllerTest {
 
     @Test
     void testFindPageReviewByIdAndCustomReplacement() throws Exception {
-        PageReviewOptions options = PageReviewOptions.ofCustom(WikipediaLanguage.SPANISH, "X", "Y", true);
+        ReviewOptions options = ReviewOptions.ofCustom(WikipediaLanguage.SPANISH, "X", "Y", true);
         when(pageReviewCustomFinder.getPageReview(123, options)).thenReturn(Optional.of(review));
 
         mvc

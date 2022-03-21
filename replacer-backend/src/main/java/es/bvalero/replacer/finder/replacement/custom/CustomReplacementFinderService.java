@@ -2,10 +2,10 @@ package es.bvalero.replacer.finder.replacement.custom;
 
 import es.bvalero.replacer.common.domain.Replacement;
 import es.bvalero.replacer.common.domain.ReplacementKind;
+import es.bvalero.replacer.common.domain.ReviewOptions;
 import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.finder.Finder;
 import es.bvalero.replacer.finder.FinderService;
-import es.bvalero.replacer.review.find.PageReviewOptions;
 import java.util.Collections;
 import java.util.Set;
 import org.springframework.stereotype.Service;
@@ -28,12 +28,12 @@ public class CustomReplacementFinderService implements FinderService<Replacement
         throw new IllegalCallerException();
     }
 
-    public Iterable<Replacement> findCustomReplacements(WikipediaPage page, PageReviewOptions customOptions) {
+    public Iterable<Replacement> findCustomReplacements(WikipediaPage page, ReviewOptions customOptions) {
         final CustomReplacementFinder finder = CustomReplacementFinder.of(convertOptions(customOptions));
         return findIterable(page, Collections.singleton(finder));
     }
 
-    private CustomOptions convertOptions(PageReviewOptions options) {
+    private CustomOptions convertOptions(ReviewOptions options) {
         assert options.getType().getKind() == ReplacementKind.CUSTOM;
         String subtype = options.getType().getSubtype();
         Boolean cs = options.getCs();

@@ -53,10 +53,8 @@ class PageReviewTypeFinderTest {
         .suggestions(List.of(Suggestion.ofNoComment("Z")))
         .build();
     private final List<Replacement> replacements = Collections.singletonList(replacement);
-    private final PageReviewOptions options = PageReviewOptions.ofType(ReplacementType.of(ReplacementKind.SIMPLE, "Y"));
-    private final PageReviewOptions options2 = PageReviewOptions.ofType(
-        ReplacementType.of(ReplacementKind.COMPOSED, "B")
-    );
+    private final ReviewOptions options = ReviewOptions.ofType(ReplacementType.of(ReplacementKind.SIMPLE, "Y"));
+    private final ReviewOptions options2 = ReviewOptions.ofType(ReplacementType.of(ReplacementKind.COMPOSED, "B"));
 
     @Mock
     private PageRepository pageRepository;

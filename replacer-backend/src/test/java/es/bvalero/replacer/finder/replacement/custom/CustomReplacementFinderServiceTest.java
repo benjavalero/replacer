@@ -3,8 +3,8 @@ package es.bvalero.replacer.finder.replacement.custom;
 import static org.junit.jupiter.api.Assertions.*;
 
 import es.bvalero.replacer.common.domain.Replacement;
+import es.bvalero.replacer.common.domain.ReviewOptions;
 import es.bvalero.replacer.common.domain.WikipediaPage;
-import es.bvalero.replacer.review.find.PageReviewOptions;
 import java.util.List;
 import org.apache.commons.collections4.IterableUtils;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,7 +26,7 @@ class CustomReplacementFinderServiceTest {
     @Test
     void testFindCustomReplacements() {
         WikipediaPage page = WikipediaPage.of("A X C");
-        PageReviewOptions options = PageReviewOptions.ofCustom(page.getId().getLang(), "X", "Y", true);
+        ReviewOptions options = ReviewOptions.ofCustom(page.getId().getLang(), "X", "Y", true);
 
         List<Replacement> replacements = IterableUtils.toList(
             customReplacementFinderService.findCustomReplacements(page, options)
@@ -40,7 +40,7 @@ class CustomReplacementFinderServiceTest {
     @Test
     void testFindCustomReplacementsWithNoResults() {
         WikipediaPage page = WikipediaPage.of("AXC");
-        PageReviewOptions options = PageReviewOptions.ofCustom(page.getId().getLang(), "X", "Y", true);
+        ReviewOptions options = ReviewOptions.ofCustom(page.getId().getLang(), "X", "Y", true);
 
         List<Replacement> replacements = IterableUtils.toList(
             customReplacementFinderService.findCustomReplacements(page, options)

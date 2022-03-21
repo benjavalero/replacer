@@ -1,12 +1,8 @@
-package es.bvalero.replacer.review.find;
+package es.bvalero.replacer.common.domain;
 
-import es.bvalero.replacer.common.domain.ReplacementKind;
-import es.bvalero.replacer.common.domain.ReplacementType;
-import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Value;
 import lombok.With;
@@ -16,8 +12,8 @@ import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
 @Value
-@Builder(access = AccessLevel.PACKAGE)
-public class PageReviewOptions {
+@Builder
+public class ReviewOptions {
 
     @NonNull
     WikipediaLanguage lang;
@@ -39,8 +35,8 @@ public class PageReviewOptions {
     boolean reviewAllTypes;
 
     @TestOnly
-    public static PageReviewOptions ofNoType() {
-        return PageReviewOptions
+    public static ReviewOptions ofNoType() {
+        return ReviewOptions
             .builder()
             .lang(WikipediaLanguage.getDefault())
             .user("A")
@@ -50,8 +46,8 @@ public class PageReviewOptions {
     }
 
     @TestOnly
-    public static PageReviewOptions ofType(ReplacementType type) {
-        return PageReviewOptions
+    public static ReviewOptions ofType(ReplacementType type) {
+        return ReviewOptions
             .builder()
             .lang(WikipediaLanguage.getDefault())
             .user("A")
@@ -61,13 +57,13 @@ public class PageReviewOptions {
     }
 
     @TestOnly
-    public static PageReviewOptions ofCustom(
+    public static ReviewOptions ofCustom(
         WikipediaLanguage lang,
         String replacement,
         String suggestion,
         boolean caseSensitive
     ) {
-        return PageReviewOptions
+        return ReviewOptions
             .builder()
             .lang(lang)
             .user("A")
@@ -78,14 +74,14 @@ public class PageReviewOptions {
             .build();
     }
 
-    public PageReviewOptionsType getOptionsType() {
+    public ReviewOptionsType getOptionsType() {
         switch (type.getKind()) {
             case EMPTY:
-                return PageReviewOptionsType.NO_TYPE;
+                return ReviewOptionsType.NO_TYPE;
             case CUSTOM:
-                return PageReviewOptionsType.CUSTOM;
+                return ReviewOptionsType.CUSTOM;
             default:
-                return PageReviewOptionsType.TYPE_SUBTYPE;
+                return ReviewOptionsType.TYPE_SUBTYPE;
         }
     }
 
@@ -94,7 +90,7 @@ public class PageReviewOptions {
         return String.format("%s - %s - %s", user, lang, toStringSearchType());
     }
 
-    String toStringSearchType() {
+    public String toStringSearchType() {
         List<String> list = new ArrayList<>();
         switch (getOptionsType()) {
             case NO_TYPE:
@@ -114,7 +110,7 @@ public class PageReviewOptions {
     }
 
     // Used by the builder
-    PageReviewOptions(
+    ReviewOptions(
         WikipediaLanguage lang,
         String user,
         ReplacementType type,

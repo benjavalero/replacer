@@ -1,7 +1,6 @@
-package es.bvalero.replacer.common.dto;
+package es.bvalero.replacer.review.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import es.bvalero.replacer.review.find.ReviewSection;
 import io.swagger.v3.oas.annotations.media.Schema;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -12,11 +11,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
-@Schema(description = "Page to review")
+@Schema
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Data
 @NoArgsConstructor
-public class ReviewPage {
+public class ReviewPageDto {
 
     private static final int SHORT_CONTENT_LENGTH = 50;
 
@@ -52,7 +51,7 @@ public class ReviewPage {
     @Schema
     @Valid
     @Nullable
-    private ReviewSection section;
+    private ReviewSectionDto section;
 
     @Schema(
         description = "Timestamp when the page content was retrieved from Wikipedia",

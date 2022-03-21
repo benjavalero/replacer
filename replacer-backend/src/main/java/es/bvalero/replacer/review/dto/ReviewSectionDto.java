@@ -1,4 +1,4 @@
-package es.bvalero.replacer.review.find;
+package es.bvalero.replacer.review.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import javax.validation.constraints.NotNull;
@@ -9,9 +9,7 @@ import org.springframework.lang.NonNull;
 @Schema(description = "Section of a page to review")
 @Data
 @NoArgsConstructor
-public class ReviewSection {
-
-    // Public: it is an in/out DTO
+public class ReviewSectionDto {
 
     @Schema(description = "Section ID", required = true, example = "1")
     @NotNull

@@ -2,9 +2,7 @@ package es.bvalero.replacer.review.find;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
-import es.bvalero.replacer.common.domain.Replacement;
-import es.bvalero.replacer.common.domain.WikipediaPage;
-import es.bvalero.replacer.common.domain.WikipediaPageId;
+import es.bvalero.replacer.common.domain.*;
 import es.bvalero.replacer.page.index.PageIndexResult;
 import es.bvalero.replacer.page.index.PageIndexService;
 import es.bvalero.replacer.page.removeobsolete.RemoveObsoletePageService;
@@ -58,7 +56,7 @@ abstract class PageReviewFinder {
         .build();
 
     /** Find a page/section review for the given search options (if any) */
-    Optional<Review> findRandomPageReview(PageReviewOptions options) {
+    Optional<Review> findRandomPageReview(ReviewOptions options) {
         // Restart offset
         this.getCachedResult(options).ifPresent(PageSearchResult::resetOffset);
 
@@ -91,7 +89,7 @@ abstract class PageReviewFinder {
     // As it is quite common to keep on reviewing pages for the same search options,
     // instead of finding candidates one by one, we find a list of them and cache them.
 
-    private Optional<Integer> findPageIdToReview(PageReviewOptions options) {
+    private Optional<Integer> findPageIdToReview(ReviewOptions options) {
         Optional<Integer> pageId;
         String key = buildCacheKey(options);
         if (cacheContainsKey(key)) {
@@ -105,7 +103,7 @@ abstract class PageReviewFinder {
         return pageId;
     }
 
-    private String buildCacheKey(PageReviewOptions options) {
+    private String buildCacheKey(ReviewOptions options) {
         return options.toStringSearchType();
     }
 
@@ -120,14 +118,14 @@ abstract class PageReviewFinder {
         return result.popPageId();
     }
 
-    Optional<PageSearchResult> getCachedResult(PageReviewOptions options) {
+    Optional<PageSearchResult> getCachedResult(ReviewOptions options) {
         String key = buildCacheKey(options);
         return Optional.ofNullable(cachedPageIds.getIfPresent(key));
     }
 
     /** Find and cache the list of pages to review for the given options. Returns false in case of no pages to review. */
     @VisibleForTesting
-    boolean loadCache(PageReviewOptions options) {
+    boolean loadCache(ReviewOptions options) {
         String key = buildCacheKey(options);
         PageSearchResult result = cachedPageIds.getIfPresent(key);
         assert result == null || result.isEmpty(); // !cacheContainsKey
@@ -150,12 +148,12 @@ abstract class PageReviewFinder {
         return false;
     }
 
-    abstract PageSearchResult findPageIdsToReview(PageReviewOptions options);
+    abstract PageSearchResult findPageIdsToReview(ReviewOptions options);
 
     ///// STEP 2 /////
 
     /** This step can be called independently in case we already know the ID of the page to review */
-    Optional<Review> getPageReview(int pageId, PageReviewOptions options) {
+    Optional<Review> getPageReview(int pageId, ReviewOptions options) {
         // STEP 2.1: Load the page from Wikipedia
         Optional<WikipediaPage> wikipediaPage = getPageFromWikipedia(pageId, options);
 
@@ -163,7 +161,7 @@ abstract class PageReviewFinder {
         return wikipediaPage.flatMap(page -> buildPageReview(page, options));
     }
 
-    private Optional<WikipediaPage> getPageFromWikipedia(int pageId, PageReviewOptions options) {
+    private Optional<WikipediaPage> getPageFromWikipedia(int pageId, ReviewOptions options) {
         WikipediaPageId wikipediaPageId = WikipediaPageId.of(options.getLang(), pageId);
 
         Optional<WikipediaPage> page = wikipediaPageRepository.findById(wikipediaPageId);
@@ -175,7 +173,7 @@ abstract class PageReviewFinder {
         return page;
     }
 
-    private Optional<Review> buildPageReview(WikipediaPage page, PageReviewOptions options) {
+    private Optional<Review> buildPageReview(WikipediaPage page, ReviewOptions options) {
         // STEP 2.2.1: Find the replacements in the page
         Collection<Replacement> replacements = findReplacements(page, options);
 
@@ -191,7 +189,7 @@ abstract class PageReviewFinder {
         return Optional.of(pageReviewSectionFinder.findPageReviewSection(review).orElse(review));
     }
 
-    private Collection<Replacement> findReplacements(WikipediaPage page, PageReviewOptions options) {
+    private Collection<Replacement> findReplacements(WikipediaPage page, ReviewOptions options) {
         // Calculate all the standard replacements
         // We take profit and we update the database with the just calculated replacements (also when empty)
         // If the page has not been indexed (or is not indexable) the collection of replacements is empty
@@ -220,7 +218,7 @@ abstract class PageReviewFinder {
     // Apply different actions to the standard replacements depending on the type of review
     abstract Collection<Replacement> decorateReplacements(
         WikipediaPage page,
-        PageReviewOptions options,
+        ReviewOptions options,
         Collection<Replacement> replacements
     );
 
@@ -256,7 +254,7 @@ abstract class PageReviewFinder {
         return pageIndexService.indexPage(page);
     }
 
-    private Optional<Integer> findTotalResultsFromCache(PageReviewOptions options) {
+    private Optional<Integer> findTotalResultsFromCache(ReviewOptions options) {
         String key = buildCacheKey(options);
         // If a review is requested directly it is possible the cache doesn't exist
         // In case of custom replacements the number of pending will include pages with false positives

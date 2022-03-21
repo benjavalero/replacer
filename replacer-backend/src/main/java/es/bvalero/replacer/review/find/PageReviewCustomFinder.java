@@ -40,7 +40,7 @@ class PageReviewCustomFinder extends PageReviewFinder {
     private Set<Integer> indexableNamespaces;
 
     @Override
-    PageSearchResult findPageIdsToReview(PageReviewOptions options) {
+    PageSearchResult findPageIdsToReview(ReviewOptions options) {
         // Initialize search
         int offset = getCachedResult(options).map(PageSearchResult::getOffset).orElse(0);
 
@@ -89,7 +89,7 @@ class PageReviewCustomFinder extends PageReviewFinder {
         return PageSearchResult.ofEmpty();
     }
 
-    private WikipediaSearchResult findWikipediaResults(PageReviewOptions options, int offset) {
+    private WikipediaSearchResult findWikipediaResults(ReviewOptions options, int offset) {
         String subtype = options.getType().getSubtype();
         Boolean cs = options.getCs();
         assert cs != null;
@@ -111,7 +111,7 @@ class PageReviewCustomFinder extends PageReviewFinder {
     @Override
     Collection<Replacement> decorateReplacements(
         WikipediaPage page,
-        PageReviewOptions options,
+        ReviewOptions options,
         Collection<Replacement> replacements
     ) {
         Collection<Replacement> customReplacements = pageReplacementFinder.findCustomReplacements(page, options);
@@ -153,11 +153,7 @@ class PageReviewCustomFinder extends PageReviewFinder {
             .build();
     }
 
-    private CustomModel mapPageCustomReplacement(
-        WikipediaPage page,
-        PageReviewOptions options,
-        Replacement replacement
-    ) {
+    private CustomModel mapPageCustomReplacement(WikipediaPage page, ReviewOptions options, Replacement replacement) {
         return CustomModel
             .builder()
             .lang(page.getId().getLang().getCode())

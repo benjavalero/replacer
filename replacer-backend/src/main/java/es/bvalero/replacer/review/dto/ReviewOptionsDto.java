@@ -1,4 +1,4 @@
-package es.bvalero.replacer.common.dto;
+package es.bvalero.replacer.review.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import es.bvalero.replacer.common.domain.ReplacementKind;
@@ -18,7 +18,7 @@ import org.springframework.lang.Nullable;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Data
 @NoArgsConstructor
-public class PageReviewOptionsDto {
+public class ReviewOptionsDto {
 
     @Parameter(description = "Replacement kind", example = "Ortografía")
     @Schema(description = "Replacement kind", example = "Ortografía")

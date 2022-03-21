@@ -1,8 +1,12 @@
 package es.bvalero.replacer.review.find;
 
 import com.github.rozidan.springboot.logger.Loggable;
+import es.bvalero.replacer.common.domain.Review;
+import es.bvalero.replacer.common.domain.ReviewOptions;
 import es.bvalero.replacer.common.dto.CommonQueryParameters;
-import es.bvalero.replacer.common.dto.PageReviewOptionsDto;
+import es.bvalero.replacer.review.dto.PageReviewResponse;
+import es.bvalero.replacer.review.dto.ReviewMapper;
+import es.bvalero.replacer.review.dto.ReviewOptionsDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -30,10 +34,10 @@ public class PageReviewController {
     @GetMapping(value = "/random")
     public Optional<PageReviewResponse> findRandomPageWithReplacements(
         @Valid CommonQueryParameters queryParameters,
-        @Valid PageReviewOptionsDto optionsDto
+        @Valid ReviewOptionsDto optionsDto
     ) {
         Optional<Review> review = Optional.empty();
-        PageReviewOptions options = PageReviewMapper.fromDto(optionsDto, false, queryParameters);
+        ReviewOptions options = ReviewMapper.fromDto(optionsDto, false, queryParameters);
         switch (options.getOptionsType()) {
             case NO_TYPE:
                 review = pageReviewNoTypeFinder.findRandomPageReview(options);
@@ -45,7 +49,7 @@ public class PageReviewController {
                 review = pageReviewCustomFinder.findRandomPageReview(options);
                 break;
         }
-        return review.map(r -> PageReviewMapper.toDto(r, options));
+        return review.map(r -> ReviewMapper.toDto(r, options));
     }
 
     @Operation(summary = "Find a page and the replacements to review")
@@ -53,10 +57,10 @@ public class PageReviewController {
     public Optional<PageReviewResponse> findPageReviewById(
         @Parameter(description = "Page ID", example = "6980716") @PathVariable("id") int pageId,
         @Valid CommonQueryParameters queryParameters,
-        @Valid PageReviewOptionsDto optionsDto
+        @Valid ReviewOptionsDto optionsDto
     ) {
         Optional<Review> review = Optional.empty();
-        PageReviewOptions options = PageReviewMapper.fromDto(optionsDto, false, queryParameters);
+        ReviewOptions options = ReviewMapper.fromDto(optionsDto, false, queryParameters);
         switch (options.getOptionsType()) {
             case NO_TYPE:
                 review = pageReviewNoTypeFinder.getPageReview(pageId, options);
@@ -68,6 +72,6 @@ public class PageReviewController {
                 review = pageReviewCustomFinder.getPageReview(pageId, options);
                 break;
         }
-        return review.map(r -> PageReviewMapper.toDto(r, options));
+        return review.map(r -> ReviewMapper.toDto(r, options));
     }
 }
