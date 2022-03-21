@@ -33,7 +33,7 @@ public class ReviewSaveController {
     static final String EMPTY_CONTENT = " ";
 
     @Autowired
-    private PageSaveService pageSaveService;
+    private ReviewSaveService reviewSaveService;
 
     @Loggable(skipResult = true)
     @Operation(summary = "Save a review: update page contents and mark as reviewed")
@@ -60,7 +60,7 @@ public class ReviewSaveController {
         ReviewOptions options = ReviewMapper.fromDto(request.getOptions(), request.isReviewAllTypes(), queryParameters);
         WikipediaPageId wikipediaPageId = WikipediaPageId.of(queryParameters.getWikipediaLanguage(), pageId);
         if (EMPTY_CONTENT.equals(content)) {
-            pageSaveService.savePageWithNoChanges(wikipediaPageId, options);
+            reviewSaveService.saveReviewWithNoChanges(wikipediaPageId, options);
         } else {
             ReviewSectionDto section = request.getPage().getSection();
             Integer sectionId = section == null ? null : section.getId();
@@ -78,7 +78,7 @@ public class ReviewSaveController {
                 .build();
             AccessToken accessToken = AccessTokenDto.toDomain(request.getAccessToken());
             try {
-                pageSaveService.savePageContent(page, sectionId, options, accessToken);
+                reviewSaveService.saveReviewContent(page, sectionId, options, accessToken);
             } catch (WikipediaException e) {
                 return manageWikipediaException(e);
             }

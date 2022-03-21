@@ -53,7 +53,7 @@ class ReviewSaveControllerTest {
     private ObjectMapper objectMapper;
 
     @MockBean
-    private PageSaveService pageSaveService;
+    private ReviewSaveService reviewSaveService;
 
     private SaveReviewRequest request;
 
@@ -83,7 +83,7 @@ class ReviewSaveControllerTest {
             )
             .andExpect(status().isNoContent());
 
-        verify(pageSaveService).savePageContent(page, null, ReviewOptions.ofNoType(), accessToken);
+        verify(reviewSaveService).saveReviewContent(page, null, ReviewOptions.ofNoType(), accessToken);
     }
 
     @Test
@@ -99,7 +99,7 @@ class ReviewSaveControllerTest {
             .andExpect(status().isNoContent());
 
         WikipediaPageId wikipediaPageId = WikipediaPageId.of(WikipediaLanguage.SPANISH, pageId);
-        verify(pageSaveService).savePageWithNoChanges(wikipediaPageId, ReviewOptions.ofNoType());
+        verify(reviewSaveService).saveReviewWithNoChanges(wikipediaPageId, ReviewOptions.ofNoType());
     }
 
     @Test
@@ -113,7 +113,7 @@ class ReviewSaveControllerTest {
             .andExpect(status().isBadRequest());
 
         WikipediaPageId wikipediaPageId = WikipediaPageId.of(WikipediaLanguage.SPANISH, pageId);
-        verify(pageSaveService, never()).savePageWithNoChanges(wikipediaPageId, ReviewOptions.ofNoType());
+        verify(reviewSaveService, never()).saveReviewWithNoChanges(wikipediaPageId, ReviewOptions.ofNoType());
     }
 
     @Test
@@ -127,7 +127,7 @@ class ReviewSaveControllerTest {
             .andExpect(status().isBadRequest());
 
         WikipediaPageId wikipediaPageId = WikipediaPageId.of(WikipediaLanguage.SPANISH, pageId);
-        verify(pageSaveService, never()).savePageWithNoChanges(wikipediaPageId, ReviewOptions.ofNoType());
+        verify(reviewSaveService, never()).saveReviewWithNoChanges(wikipediaPageId, ReviewOptions.ofNoType());
     }
 
     @Test
@@ -143,14 +143,14 @@ class ReviewSaveControllerTest {
             .andExpect(status().isBadRequest());
 
         WikipediaPageId wikipediaPageId = WikipediaPageId.of(WikipediaLanguage.SPANISH, pageId);
-        verify(pageSaveService, never()).savePageWithNoChanges(wikipediaPageId, ReviewOptions.ofNoType());
+        verify(reviewSaveService, never()).saveReviewWithNoChanges(wikipediaPageId, ReviewOptions.ofNoType());
     }
 
     @Test
     void testSaveWithChangesWithConflict() throws Exception {
         doThrow(WikipediaConflictException.class)
-            .when(pageSaveService)
-            .savePageContent(page, null, ReviewOptions.ofNoType(), accessToken);
+            .when(reviewSaveService)
+            .saveReviewContent(page, null, ReviewOptions.ofNoType(), accessToken);
 
         mvc
             .perform(
@@ -160,14 +160,14 @@ class ReviewSaveControllerTest {
             )
             .andExpect(status().isConflict());
 
-        verify(pageSaveService).savePageContent(page, null, ReviewOptions.ofNoType(), accessToken);
+        verify(reviewSaveService).saveReviewContent(page, null, ReviewOptions.ofNoType(), accessToken);
     }
 
     @Test
     void testSaveWithChangesNotAuthorizedWikipedia() throws Exception {
         doThrow(new WikipediaException("mwoauth-invalid-authorization"))
-            .when(pageSaveService)
-            .savePageContent(page, null, ReviewOptions.ofNoType(), accessToken);
+            .when(reviewSaveService)
+            .saveReviewContent(page, null, ReviewOptions.ofNoType(), accessToken);
 
         mvc
             .perform(
@@ -177,14 +177,14 @@ class ReviewSaveControllerTest {
             )
             .andExpect(status().isUnauthorized());
 
-        verify(pageSaveService).savePageContent(page, null, ReviewOptions.ofNoType(), accessToken);
+        verify(reviewSaveService).saveReviewContent(page, null, ReviewOptions.ofNoType(), accessToken);
     }
 
     @Test
     void testSaveWithChangesWikipediaException() throws Exception {
         doThrow(WikipediaException.class)
-            .when(pageSaveService)
-            .savePageContent(page, null, ReviewOptions.ofNoType(), accessToken);
+            .when(reviewSaveService)
+            .saveReviewContent(page, null, ReviewOptions.ofNoType(), accessToken);
 
         mvc
             .perform(
@@ -194,6 +194,6 @@ class ReviewSaveControllerTest {
             )
             .andExpect(status().isInternalServerError());
 
-        verify(pageSaveService).savePageContent(page, null, ReviewOptions.ofNoType(), accessToken);
+        verify(reviewSaveService).saveReviewContent(page, null, ReviewOptions.ofNoType(), accessToken);
     }
 }

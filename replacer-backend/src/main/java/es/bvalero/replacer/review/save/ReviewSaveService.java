@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
-class PageSaveService {
+class ReviewSaveService {
 
     private static final String EDIT_SUMMARY = "Reemplazos con [[Usuario:Benjavalero/Replacer|Replacer]]";
     private static final String COSMETIC_CHANGES = "mejoras cosméticas";
@@ -38,7 +38,7 @@ class PageSaveService {
     @Autowired
     private ApplyCosmeticsService applyCosmeticChanges;
 
-    void savePageContent(
+    void saveReviewContent(
         WikipediaPage page,
         @Nullable Integer sectionId,
         ReviewOptions options,
@@ -62,7 +62,7 @@ class PageSaveService {
         this.markAsReviewed(page.getId(), options, true);
     }
 
-    void savePageWithNoChanges(WikipediaPageId pageId, ReviewOptions options) {
+    void saveReviewWithNoChanges(WikipediaPageId pageId, ReviewOptions options) {
         // Mark page as reviewed in the database
         this.markAsReviewed(pageId, options, false);
     }

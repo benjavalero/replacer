@@ -17,7 +17,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-class PageSaveServiceTest {
+class ReviewSaveServiceTest {
 
     @Mock
     private ReplacementTypeRepository replacementTypeRepository;
@@ -35,11 +35,11 @@ class PageSaveServiceTest {
     private ApplyCosmeticsService applyCosmeticsService;
 
     @InjectMocks
-    private PageSaveService pageSaveService;
+    private ReviewSaveService reviewSaveService;
 
     @BeforeEach
     public void setUp() {
-        pageSaveService = new PageSaveService();
+        reviewSaveService = new ReviewSaveService();
         MockitoAnnotations.openMocks(this);
     }
 
@@ -61,7 +61,7 @@ class PageSaveServiceTest {
         when(applyCosmeticsService.applyCosmeticChanges(page)).thenReturn(contentAfterCosmetics);
 
         AccessToken accessToken = AccessToken.of("A", "B");
-        pageSaveService.savePageContent(page, null, ReviewOptions.ofNoType(), accessToken);
+        reviewSaveService.saveReviewContent(page, null, ReviewOptions.ofNoType(), accessToken);
 
         verify(applyCosmeticsService).applyCosmeticChanges(page);
         verify(wikipediaPageRepository)
@@ -74,7 +74,7 @@ class PageSaveServiceTest {
         int pageId = 123;
         ReviewOptions options = ReviewOptions.ofNoType();
         WikipediaPageId wikipediaPageId = WikipediaPageId.of(WikipediaLanguage.getDefault(), pageId);
-        pageSaveService.savePageWithNoChanges(wikipediaPageId, options);
+        reviewSaveService.saveReviewWithNoChanges(wikipediaPageId, options);
 
         verify(applyCosmeticsService, never()).applyCosmeticChanges(any(WikipediaPage.class));
         verify(wikipediaPageRepository, never())
@@ -95,7 +95,7 @@ class PageSaveServiceTest {
         ReplacementType type = ReplacementType.of(ReplacementKind.DATE, "S");
         ReviewOptions options = ReviewOptions.ofType(type);
         WikipediaPageId wikipediaPageId = WikipediaPageId.of(WikipediaLanguage.getDefault(), pageId);
-        pageSaveService.savePageWithNoChanges(wikipediaPageId, options);
+        reviewSaveService.saveReviewWithNoChanges(wikipediaPageId, options);
 
         verify(applyCosmeticsService, never()).applyCosmeticChanges(any(WikipediaPage.class));
         verify(wikipediaPageRepository, never())
@@ -119,7 +119,7 @@ class PageSaveServiceTest {
         ReplacementType type = ReplacementType.of(ReplacementKind.DATE, "S");
         ReviewOptions options = ReviewOptions.ofType(type).withReviewAllTypes(true);
         WikipediaPageId wikipediaPageId = WikipediaPageId.of(WikipediaLanguage.getDefault(), pageId);
-        pageSaveService.savePageWithNoChanges(wikipediaPageId, options);
+        reviewSaveService.saveReviewWithNoChanges(wikipediaPageId, options);
 
         verify(applyCosmeticsService, never()).applyCosmeticChanges(any(WikipediaPage.class));
         verify(wikipediaPageRepository, never())
@@ -141,7 +141,7 @@ class PageSaveServiceTest {
         int pageId = 123;
         ReviewOptions options = ReviewOptions.ofCustom(WikipediaLanguage.getDefault(), "S", "S2", true);
         WikipediaPageId wikipediaPageId = WikipediaPageId.of(WikipediaLanguage.getDefault(), pageId);
-        pageSaveService.savePageWithNoChanges(wikipediaPageId, options);
+        reviewSaveService.saveReviewWithNoChanges(wikipediaPageId, options);
 
         verify(applyCosmeticsService, never()).applyCosmeticChanges(any(WikipediaPage.class));
         verify(wikipediaPageRepository, never())
@@ -165,7 +165,7 @@ class PageSaveServiceTest {
             .ofCustom(WikipediaLanguage.getDefault(), "S", "S2", true)
             .withReviewAllTypes(true);
         WikipediaPageId wikipediaPageId = WikipediaPageId.of(WikipediaLanguage.getDefault(), pageId);
-        pageSaveService.savePageWithNoChanges(wikipediaPageId, options);
+        reviewSaveService.saveReviewWithNoChanges(wikipediaPageId, options);
 
         verify(applyCosmeticsService, never()).applyCosmeticChanges(any(WikipediaPage.class));
         verify(wikipediaPageRepository, never())
