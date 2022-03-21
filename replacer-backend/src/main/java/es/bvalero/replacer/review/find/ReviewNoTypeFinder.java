@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-class PageReviewNoTypeFinder extends PageReviewFinder {
+class ReviewNoTypeFinder extends ReviewFinder {
 
     @Autowired
     private PageRepository pageRepository;

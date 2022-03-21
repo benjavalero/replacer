@@ -23,7 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 /** Template class to find a review. There are different implementations according to the different search options. */
 @Slf4j
-abstract class PageReviewFinder {
+abstract class ReviewFinder {
 
     @Autowired
     private WikipediaPageRepository wikipediaPageRepository;
@@ -38,7 +38,7 @@ abstract class PageReviewFinder {
     private RemoveObsoletePageService removeObsoletePageService;
 
     @Autowired
-    private PageReviewSectionFinder pageReviewSectionFinder;
+    private ReviewSectionFinder reviewSectionFinder;
 
     // Maximum 500 as it is used as page size when searching in Wikipedia
     // If too big it may produce out-of-memory issues with the cached page contents
@@ -186,7 +186,7 @@ abstract class PageReviewFinder {
         Review review = Review.of(page, null, replacements, numPending);
 
         // STEP 2.2.3: Try to reduce the review size by returning just a section of the page
-        return Optional.of(pageReviewSectionFinder.findPageReviewSection(review).orElse(review));
+        return Optional.of(reviewSectionFinder.findPageReviewSection(review).orElse(review));
     }
 
     private Collection<Replacement> findReplacements(WikipediaPage page, ReviewOptions options) {

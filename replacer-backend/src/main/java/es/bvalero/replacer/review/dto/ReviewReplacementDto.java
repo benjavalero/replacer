@@ -7,7 +7,7 @@ import org.springframework.lang.NonNull;
 
 @Schema(description = "Replacement to review")
 @Value(staticConstructor = "of")
-class ReviewReplacement {
+class ReviewReplacementDto {
 
     @Schema(description = "Position of the replacement in the content", required = true, example = "1776")
     int start;
@@ -25,5 +25,5 @@ class ReviewReplacement {
 
     @Schema(description = "Collection of suggestions to fix the replacement", required = true)
     @NonNull
-    Collection<ReviewSuggestion> suggestions;
+    Collection<ReviewSuggestionDto> suggestions;
 }

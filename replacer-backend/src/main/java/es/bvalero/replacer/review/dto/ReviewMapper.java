@@ -11,8 +11,8 @@ import org.springframework.lang.Nullable;
 @UtilityClass
 public class ReviewMapper {
 
-    public PageReviewResponse toDto(Review review, ReviewOptions options) {
-        return PageReviewResponse.of(
+    public FindReviewResponse toDto(Review review, ReviewOptions options) {
+        return FindReviewResponse.of(
             toDto(review.getPage(), review.getSection()),
             toDto(review.getReplacements()),
             toDto(options),
@@ -43,12 +43,12 @@ public class ReviewMapper {
         }
     }
 
-    private Collection<ReviewReplacement> toDto(Collection<Replacement> replacements) {
+    private Collection<ReviewReplacementDto> toDto(Collection<Replacement> replacements) {
         return replacements.stream().map(ReviewMapper::toDto).collect(Collectors.toUnmodifiableList());
     }
 
-    private ReviewReplacement toDto(Replacement replacement) {
-        return ReviewReplacement.of(
+    private ReviewReplacementDto toDto(Replacement replacement) {
+        return ReviewReplacementDto.of(
             replacement.getStart(),
             replacement.getText(),
             replacement.getType().getKind().getCode(),
@@ -57,8 +57,8 @@ public class ReviewMapper {
         );
     }
 
-    private ReviewSuggestion toDto(Suggestion suggestion) {
-        return ReviewSuggestion.of(suggestion.getText(), suggestion.getComment());
+    private ReviewSuggestionDto toDto(Suggestion suggestion) {
+        return ReviewSuggestionDto.of(suggestion.getText(), suggestion.getComment());
     }
 
     private ReviewOptionsDto toDto(ReviewOptions options) {

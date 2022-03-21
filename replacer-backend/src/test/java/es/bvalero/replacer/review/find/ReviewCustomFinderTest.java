@@ -23,7 +23,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-class PageReviewCustomFinderTest {
+class ReviewCustomFinderTest {
 
     private static final int CACHE_SIZE = 3;
     private static final Collection<WikipediaNamespace> NAMESPACES = Collections.singleton(
@@ -46,17 +46,17 @@ class PageReviewCustomFinderTest {
     private PageReplacementFinder pageReplacementFinder;
 
     @Mock
-    private PageReviewSectionFinder pageReviewSectionFinder;
+    private ReviewSectionFinder reviewSectionFinder;
 
     @Mock
     private PageIndexService pageIndexService;
 
     @InjectMocks
-    private PageReviewCustomFinder pageReviewCustomService;
+    private ReviewCustomFinder pageReviewCustomService;
 
     @BeforeEach
     public void setUp() {
-        pageReviewCustomService = new PageReviewCustomFinder();
+        pageReviewCustomService = new ReviewCustomFinder();
         pageReviewCustomService.setCacheSize(CACHE_SIZE);
         pageReviewCustomService.setIndexableNamespaces(
             NAMESPACES.stream().map(WikipediaNamespace::getValue).collect(Collectors.toUnmodifiableSet())

@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-class PageReviewSectionFinder {
+class ReviewSectionFinder {
 
     @Autowired
     private WikipediaPageRepository wikipediaPageRepository;

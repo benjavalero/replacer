@@ -4,7 +4,7 @@ import com.github.rozidan.springboot.logger.Loggable;
 import es.bvalero.replacer.common.domain.Review;
 import es.bvalero.replacer.common.domain.ReviewOptions;
 import es.bvalero.replacer.common.dto.CommonQueryParameters;
-import es.bvalero.replacer.review.dto.PageReviewResponse;
+import es.bvalero.replacer.review.dto.FindReviewResponse;
 import es.bvalero.replacer.review.dto.ReviewMapper;
 import es.bvalero.replacer.review.dto.ReviewOptionsDto;
 import io.swagger.v3.oas.annotations.Operation;
@@ -15,24 +15,24 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-@Tag(name = "Pages")
+@Tag(name = "Review")
 @Loggable(entered = true)
 @RestController
-@RequestMapping("api/pages")
-public class PageReviewController {
+@RequestMapping("api/review")
+public class ReviewFindController {
 
     @Autowired
-    private PageReviewNoTypeFinder pageReviewNoTypeFinder;
+    private ReviewNoTypeFinder reviewNoTypeFinder;
 
     @Autowired
-    private PageReviewTypeFinder pageReviewTypeFinder;
+    private ReviewTypeFinder reviewTypeFinder;
 
     @Autowired
-    private PageReviewCustomFinder pageReviewCustomFinder;
+    private ReviewCustomFinder reviewCustomFinder;
 
     @Operation(summary = "Find a random page and the replacements to review")
     @GetMapping(value = "/random")
-    public Optional<PageReviewResponse> findRandomPageWithReplacements(
+    public Optional<FindReviewResponse> findRandomPageWithReplacements(
         @Valid CommonQueryParameters queryParameters,
         @Valid ReviewOptionsDto optionsDto
     ) {
@@ -40,13 +40,13 @@ public class PageReviewController {
         ReviewOptions options = ReviewMapper.fromDto(optionsDto, false, queryParameters);
         switch (options.getOptionsType()) {
             case NO_TYPE:
-                review = pageReviewNoTypeFinder.findRandomPageReview(options);
+                review = reviewNoTypeFinder.findRandomPageReview(options);
                 break;
             case TYPE_SUBTYPE:
-                review = pageReviewTypeFinder.findRandomPageReview(options);
+                review = reviewTypeFinder.findRandomPageReview(options);
                 break;
             case CUSTOM:
-                review = pageReviewCustomFinder.findRandomPageReview(options);
+                review = reviewCustomFinder.findRandomPageReview(options);
                 break;
         }
         return review.map(r -> ReviewMapper.toDto(r, options));
@@ -54,7 +54,7 @@ public class PageReviewController {
 
     @Operation(summary = "Find a page and the replacements to review")
     @GetMapping(value = "/{id}")
-    public Optional<PageReviewResponse> findPageReviewById(
+    public Optional<FindReviewResponse> findPageReviewById(
         @Parameter(description = "Page ID", example = "6980716") @PathVariable("id") int pageId,
         @Valid CommonQueryParameters queryParameters,
         @Valid ReviewOptionsDto optionsDto
@@ -63,13 +63,13 @@ public class PageReviewController {
         ReviewOptions options = ReviewMapper.fromDto(optionsDto, false, queryParameters);
         switch (options.getOptionsType()) {
             case NO_TYPE:
-                review = pageReviewNoTypeFinder.getPageReview(pageId, options);
+                review = reviewNoTypeFinder.getPageReview(pageId, options);
                 break;
             case TYPE_SUBTYPE:
-                review = pageReviewTypeFinder.getPageReview(pageId, options);
+                review = reviewTypeFinder.getPageReview(pageId, options);
                 break;
             case CUSTOM:
-                review = pageReviewCustomFinder.getPageReview(pageId, options);
+                review = reviewCustomFinder.getPageReview(pageId, options);
                 break;
         }
         return review.map(r -> ReviewMapper.toDto(r, options));

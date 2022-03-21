@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-class PageReviewCustomFinder extends PageReviewFinder {
+class ReviewCustomFinder extends ReviewFinder {
 
     @Autowired
     private PageIndexRepository pageIndexRepository;

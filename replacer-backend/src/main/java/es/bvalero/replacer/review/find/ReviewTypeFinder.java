@@ -15,7 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-class PageReviewTypeFinder extends PageReviewFinder {
+class ReviewTypeFinder extends ReviewFinder {
 
     @Autowired
     private PageRepository pageRepository;

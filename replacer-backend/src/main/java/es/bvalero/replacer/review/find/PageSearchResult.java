@@ -5,7 +5,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 
 // It's not worth to make this class immutable.
-// Instead we encapsulate the logic to manage the internal list.
+// Instead, we encapsulate the logic to manage the internal list.
 final class PageSearchResult {
 
     // Total number of results no matter the size of the list or the offset

@@ -15,7 +15,7 @@ export const EMPTY_CONTENT = ' ';
 export class PageService {
   private readonly lastSaveKey = 'lastSave';
   private readonly editionsPerMinute = 5;
-  private readonly baseUrl = `${environment.apiUrl}/pages`;
+  private readonly baseUrl = `${environment.apiUrl}/review`;
 
   constructor(private httpClient: HttpClient, private userService: UserService) {}
 
@@ -73,6 +73,6 @@ export class PageService {
     }
 
     // Call backend and delay the observable response
-    return this.httpClient.post<void>(`${environment.apiUrl}/review/${page.id}`, saveReview).pipe(delay(sleepTime));
+    return this.httpClient.post<void>(`${this.baseUrl}/${page.id}`, saveReview).pipe(delay(sleepTime));
   }
 }

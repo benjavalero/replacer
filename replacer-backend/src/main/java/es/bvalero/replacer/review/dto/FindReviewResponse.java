@@ -8,7 +8,7 @@ import org.springframework.lang.Nullable;
 
 @Schema(description = "Page and replacements to review")
 @Value(staticConstructor = "of")
-public class PageReviewResponse {
+public class FindReviewResponse {
 
     @Schema(required = true)
     @NonNull
@@ -16,7 +16,7 @@ public class PageReviewResponse {
 
     @Schema(description = "Collection of replacements to review", required = true)
     @NonNull
-    Collection<ReviewReplacement> replacements;
+    Collection<ReviewReplacementDto> replacements;
 
     @Schema(required = true)
     @NonNull

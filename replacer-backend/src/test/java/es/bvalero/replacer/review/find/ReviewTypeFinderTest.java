@@ -20,7 +20,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-class PageReviewTypeFinderTest {
+class ReviewTypeFinderTest {
 
     private final int randomId = 1;
     private final int randomId2 = 2;
@@ -72,14 +72,14 @@ class PageReviewTypeFinderTest {
     private PageIndexRepository pageIndexRepository;
 
     @Mock
-    private PageReviewSectionFinder pageReviewSectionFinder;
+    private ReviewSectionFinder reviewSectionFinder;
 
     @InjectMocks
-    private PageReviewTypeFinder pageReviewTypeSubtypeService;
+    private ReviewTypeFinder pageReviewTypeSubtypeService;
 
     @BeforeEach
     public void setUp() {
-        pageReviewTypeSubtypeService = new PageReviewTypeFinder();
+        pageReviewTypeSubtypeService = new ReviewTypeFinder();
         MockitoAnnotations.openMocks(this);
     }
 
@@ -187,7 +187,7 @@ class PageReviewTypeFinderTest {
             .build();
         int numPending = 5;
         Review sectionReview = Review.of(page, section, replacements, numPending);
-        when(pageReviewSectionFinder.findPageReviewSection(any(Review.class))).thenReturn(Optional.of(sectionReview));
+        when(reviewSectionFinder.findPageReviewSection(any(Review.class))).thenReturn(Optional.of(sectionReview));
 
         Optional<Review> review = pageReviewTypeSubtypeService.getPageReview(randomId, options);
 
@@ -210,7 +210,7 @@ class PageReviewTypeFinderTest {
             .thenReturn(PageIndexResult.ofEmpty(PageIndexStatus.PAGE_INDEXED, replacements));
 
         // The page has no sections
-        when(pageReviewSectionFinder.findPageReviewSection(any(Review.class))).thenReturn(Optional.empty());
+        when(reviewSectionFinder.findPageReviewSection(any(Review.class))).thenReturn(Optional.empty());
 
         // Load the cache in order to find the total results
         pageReviewTypeSubtypeService.loadCache(options);

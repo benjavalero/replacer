@@ -21,7 +21,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-class PageReviewNoTypeFinderTest {
+class ReviewNoTypeFinderTest {
 
     private final int randomId = 1;
     private final int randomId2 = 2;
@@ -72,14 +72,14 @@ class PageReviewNoTypeFinderTest {
     private RemoveObsoletePageService removeObsoletePageService;
 
     @Mock
-    private PageReviewSectionFinder pageReviewSectionFinder;
+    private ReviewSectionFinder reviewSectionFinder;
 
     @InjectMocks
-    private PageReviewNoTypeFinder pageReviewNoTypeService;
+    private ReviewNoTypeFinder pageReviewNoTypeService;
 
     @BeforeEach
     public void setUp() {
-        pageReviewNoTypeService = new PageReviewNoTypeFinder();
+        pageReviewNoTypeService = new ReviewNoTypeFinder();
         MockitoAnnotations.openMocks(this);
     }
 

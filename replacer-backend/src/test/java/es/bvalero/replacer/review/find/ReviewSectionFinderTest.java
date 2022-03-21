@@ -14,17 +14,17 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-class PageReviewSectionFinderTest {
+class ReviewSectionFinderTest {
 
     @Mock
     private WikipediaPageRepository wikipediaPageRepository;
 
     @InjectMocks
-    private PageReviewSectionFinder pageReviewSectionFinder;
+    private ReviewSectionFinder reviewSectionFinder;
 
     @BeforeEach
     public void setUp() {
-        pageReviewSectionFinder = new PageReviewSectionFinder();
+        reviewSectionFinder = new ReviewSectionFinder();
         MockitoAnnotations.openMocks(this);
     }
 
@@ -37,7 +37,7 @@ class PageReviewSectionFinderTest {
             .thenReturn(Collections.emptyList());
 
         Review review = Review.of(page, null, replacements, 1);
-        Optional<Review> sectionReview = pageReviewSectionFinder.findPageReviewSection(review);
+        Optional<Review> sectionReview = reviewSectionFinder.findPageReviewSection(review);
 
         assertFalse(sectionReview.isPresent());
     }
@@ -88,7 +88,7 @@ class PageReviewSectionFinderTest {
             .build();
         when(wikipediaPageRepository.findPageSection(page.getId(), section)).thenReturn(Optional.of(pageSection));
 
-        Optional<Review> sectionReview = pageReviewSectionFinder.findPageReviewSection(pageReview);
+        Optional<Review> sectionReview = reviewSectionFinder.findPageReviewSection(pageReview);
 
         assertTrue(sectionReview.isPresent());
         sectionReview.ifPresent(review -> {

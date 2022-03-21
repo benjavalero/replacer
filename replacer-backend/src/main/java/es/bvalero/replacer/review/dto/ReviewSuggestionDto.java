@@ -9,7 +9,7 @@ import org.springframework.lang.Nullable;
 @Schema(description = "Suggestion for a replacement to review")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Value(staticConstructor = "of")
-class ReviewSuggestion {
+class ReviewSuggestionDto {
 
     @Schema(description = "Fix proposed for a replacement", required = true, example = "aun")
     @NonNull
