@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Observable } from 'rxjs';
-import { UserConfigService } from '../user/user-config.service';
+import { UserConfigService } from '../core/user/user-config.service';
 import { ReplacementCount } from './count.model';
 import { ReviewerCount } from './reviewer-count.model';
 import { StatsService } from './stats.service';

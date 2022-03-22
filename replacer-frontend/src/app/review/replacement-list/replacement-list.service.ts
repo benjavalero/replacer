@@ -1,12 +1,10 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { environment } from '../../environments/environment';
+import { environment } from '../../../environments/environment';
 import { KindCount } from './replacement-list.model';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class ReplacementListService {
   readonly counts$ = new BehaviorSubject<KindCount[] | null>(null);
 

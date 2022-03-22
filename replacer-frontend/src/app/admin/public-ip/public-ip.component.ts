@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import {AdminService} from "../admin.service";
+import { AdminService } from '../admin.service';
 import { PublicIp } from './public-ip.model';
 
 @Component({

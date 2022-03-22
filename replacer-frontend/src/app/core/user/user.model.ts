@@ -7,6 +7,7 @@ export class User {
   admin: boolean;
   accessToken: AccessToken;
 
+  // TODO: Decouple this from Authentication feature
   constructor(response: VerifyAuthenticationResponse) {
     this.name = response.name;
     this.hasRights = response.hasRights;

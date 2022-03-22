@@ -4,9 +4,7 @@ import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { PageCount } from './page-count.model';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class UnreviewedService {
   constructor(private httpClient: HttpClient) {}
 

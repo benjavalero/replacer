@@ -4,9 +4,7 @@ import { Observable, Subject } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { DumpIndexingStatus } from './dump-indexing.model';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class DumpIndexingService {
   private readonly baseUrl = `${environment.apiUrl}/dump-indexing`;
 

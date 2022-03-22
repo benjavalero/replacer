@@ -1,10 +1,10 @@
 import { HttpStatusCode } from '@angular/common/http';
 import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { faFastForward } from '@fortawesome/free-solid-svg-icons';
-import { AlertService } from '../alert/alert.service';
-import { UserService } from '../user/user.service';
+import { UserService } from '../../core/user/user.service';
+import { AlertService } from '../../shared/alert/alert.service';
 import { FixedReplacement, getReplacementEnd } from './page-replacement.model';
-import { PageReviewOptions, PageReviewResponse, ReviewOptions, kindLabel } from './page-review.model';
+import { kindLabel, PageReviewOptions, PageReviewResponse, ReviewOptions } from './page-review.model';
 import { EMPTY_CONTENT, PageService } from './page.service';
 
 @Component({

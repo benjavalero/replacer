@@ -4,9 +4,7 @@ import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { PublicIp } from './public-ip/public-ip.model';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class AdminService {
   private readonly baseUrl = `${environment.apiUrl}/admin`;
 

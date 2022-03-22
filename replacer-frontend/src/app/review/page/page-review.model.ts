@@ -1,5 +1,5 @@
-import { Language } from '../user/language-model';
-import { AccessToken } from '../user/user.model';
+import { Language } from '../../core/user/language-model';
+import { AccessToken } from '../../core/user/user.model';
 import { ReviewReplacement } from './page-replacement.model';
 
 export const kindLabel: { [key: number]: string } = {

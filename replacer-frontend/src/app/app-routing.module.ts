@@ -1,13 +1,13 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
-import { AuthenticationGuard } from './guard/authentication.guard';
-import { DashboardComponent } from './dashboard/dashboard.component';
-import { OAuthResponseComponent } from './authentication/oauth-response.component';
-import { LoginComponent } from './authentication/login.component';
-import { FindRandomComponent } from './page/find-random.component';
-import { FindCustomComponent } from './page/find-custom.component';
+import { RouterModule, Routes } from '@angular/router';
 import { AdminComponent } from './admin/admin.component';
-import { ReplacementListComponent } from './replacement-list/replacement-list.component';
+import { LoginComponent } from './core/authentication/login.component';
+import { OAuthResponseComponent } from './core/authentication/oauth-response.component';
+import { DashboardComponent } from './core/dashboard/dashboard.component';
+import { AuthenticationGuard } from './core/guard/authentication.guard';
+import { FindCustomComponent } from './review/page/find-custom.component';
+import { FindRandomComponent } from './review/page/find-random.component';
+import { ReplacementListComponent } from './review/replacement-list/replacement-list.component';
 import { StatsComponent } from './stats/stats.component';
 
 const routes: Routes = [
@@ -29,10 +29,12 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, {
-    onSameUrlNavigation: 'reload',
-    relativeLinkResolution: 'legacy'
-})],
+  imports: [
+    RouterModule.forRoot(routes, {
+      onSameUrlNavigation: 'reload',
+      relativeLinkResolution: 'legacy'
+    })
+  ],
   exports: [RouterModule]
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

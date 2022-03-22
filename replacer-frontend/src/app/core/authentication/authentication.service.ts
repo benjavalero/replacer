@@ -2,19 +2,17 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { environment } from '../../environments/environment';
+import { environment } from '../../../environments/environment';
 import { User } from '../user/user.model';
 import { UserService } from '../user/user.service';
 import {
-  VerifyAuthenticationRequest,
-  VerifyAuthenticationResponse,
   InitiateAuthenticationResponse,
-  RequestToken
+  RequestToken,
+  VerifyAuthenticationRequest,
+  VerifyAuthenticationResponse
 } from './authentication.model';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class AuthenticationService {
   private readonly requestTokenKey = 'requestToken';
   private readonly redirectPathKey = 'redirectPath';

@@ -4,9 +4,7 @@ import { AccessToken, User } from './user.model';
 
 export const USER_PARAM = 'user';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class UserService {
   private readonly wikipediaUserKey = 'wikipediaUser';
   readonly user$ = new BehaviorSubject<User>(this.emptyUser());

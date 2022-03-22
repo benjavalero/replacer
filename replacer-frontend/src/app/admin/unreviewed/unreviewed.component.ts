@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { UserConfigService } from 'src/app/user/user-config.service';
+import { UserConfigService } from 'src/app/core/user/user-config.service';
 import { PageCount } from './page-count.model';
 import { UnreviewedService } from './unreviewed.service';
 

@@ -2,16 +2,20 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { delay } from 'rxjs/operators';
-import { environment } from '../../environments/environment';
-import { UserService } from '../user/user.service';
-import { PageReviewOptions, PageReviewResponse, SaveReviewRequest, ReviewOptions, ReviewPage } from './page-review.model';
+import { environment } from '../../../environments/environment';
+import { UserService } from '../../core/user/user.service';
+import {
+  PageReviewOptions,
+  PageReviewResponse,
+  ReviewOptions,
+  ReviewPage,
+  SaveReviewRequest
+} from './page-review.model';
 import { ReplacementValidationResponse } from './validate-custom.model';
 
 export const EMPTY_CONTENT = ' ';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class PageService {
   private readonly lastSaveKey = 'lastSave';
   private readonly editionsPerMinute = 5;
@@ -33,7 +37,9 @@ export class PageService {
   validateCustomReplacement(replacement: string, caseSensitive: boolean): Observable<ReplacementValidationResponse> {
     let params: HttpParams = new HttpParams();
     params = params.append('replacement', replacement).append('cs', String(caseSensitive));
-    return this.httpClient.get<ReplacementValidationResponse>(`${environment.apiUrl}/replacement/type/validate`, { params });
+    return this.httpClient.get<ReplacementValidationResponse>(`${environment.apiUrl}/replacement/type/validate`, {
+      params
+    });
   }
 
   findPageReviewById(pageId: number, options: ReviewOptions): Observable<PageReviewResponse> {

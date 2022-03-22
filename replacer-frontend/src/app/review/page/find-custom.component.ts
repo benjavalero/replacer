@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
-import { AlertService } from '../alert/alert.service';
-import StringUtils from '../string-utils';
+import { AlertService } from '../../shared/alert/alert.service';
+import StringUtils from '../../shared/util/string-utils';
 
 @Component({
   selector: 'app-find-custom',

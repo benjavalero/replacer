@@ -5,9 +5,7 @@ import { environment } from '../../environments/environment';
 import { ReplacementCount } from './count.model';
 import { ReviewerCount } from './reviewer-count.model';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class StatsService {
   private readonly baseUrl = `${environment.apiUrl}/replacement`;
 
