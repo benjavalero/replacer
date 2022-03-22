@@ -104,7 +104,9 @@ class ArchitectureTest {
         .should()
         .haveNameStartingWith("test")
         .andShould()
-        .notHaveModifier(JavaModifier.PUBLIC);
+        .notHaveModifier(JavaModifier.PUBLIC)
+        .andShould()
+        .haveRawReturnType("void");
 
     @ArchTest
     static final ArchRule testClasses = classes()
