@@ -32,7 +32,7 @@ class ReviewSectionFinder {
         Collection<WikipediaSection> sections = wikipediaPageRepository.findSectionsInPage(review.getPage().getId());
 
         // Find the smallest section containing all the replacements
-        Optional<WikipediaSection> smallestSection = getSmallestSectionContainingAllReplacements(
+        Optional<WikipediaSection> smallestSection = findSmallestSectionContainingAllReplacements(
             sections,
             review.getReplacements()
         );
@@ -82,7 +82,7 @@ class ReviewSectionFinder {
         return Optional.empty();
     }
 
-    private Optional<WikipediaSection> getSmallestSectionContainingAllReplacements(
+    private Optional<WikipediaSection> findSmallestSectionContainingAllReplacements(
         Collection<WikipediaSection> sections,
         Collection<Replacement> replacements
     ) {

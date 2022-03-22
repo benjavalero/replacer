@@ -10,6 +10,7 @@ import com.tngtech.archunit.lang.ArchRule;
 import es.bvalero.replacer.finder.Finder;
 import es.bvalero.replacer.finder.FinderService;
 import es.bvalero.replacer.finder.replacement.RemoveObsoleteReplacementType;
+import java.util.Optional;
 import org.apache.commons.lang3.ArrayUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.annotation.Configuration;
@@ -94,6 +95,13 @@ class ArchitectureTest {
 
     @ArchTest
     static final ArchRule noRetrieveMethods = noMethods().should().haveNameStartingWith("retrieve");
+
+    @ArchTest
+    static final ArchRule optionalReturn = methods()
+        .that()
+        .haveNameStartingWith("get")
+        .should()
+        .notHaveRawReturnType(Optional.class);
 
     // Tests
 

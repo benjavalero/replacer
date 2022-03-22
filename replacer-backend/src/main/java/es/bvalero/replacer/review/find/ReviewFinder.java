@@ -58,7 +58,7 @@ abstract class ReviewFinder {
     /** Find a page/section review for the given search options (if any) */
     Optional<Review> findRandomPageReview(ReviewOptions options) {
         // Restart offset
-        this.getCachedResult(options).ifPresent(PageSearchResult::resetOffset);
+        this.findCachedResult(options).ifPresent(PageSearchResult::resetOffset);
 
         // STEP 1: Find a candidate page to review
         // We just need a page ID as the lang is already given in the options
@@ -72,7 +72,7 @@ abstract class ReviewFinder {
 
             // We assume that, while getting the review, in case the page is not valid and review is eventually empty,
             // the page will be marked somehow in order not to be retrieved again.
-            Optional<Review> review = getPageReview(randomPageId.get(), options);
+            Optional<Review> review = findPageReview(randomPageId.get(), options);
             if (review.isPresent()) {
                 return review;
             }
@@ -118,7 +118,7 @@ abstract class ReviewFinder {
         return result.popPageId();
     }
 
-    Optional<PageSearchResult> getCachedResult(ReviewOptions options) {
+    Optional<PageSearchResult> findCachedResult(ReviewOptions options) {
         String key = buildCacheKey(options);
         return Optional.ofNullable(cachedPageIds.getIfPresent(key));
     }
@@ -153,15 +153,15 @@ abstract class ReviewFinder {
     ///// STEP 2 /////
 
     /** This step can be called independently in case we already know the ID of the page to review */
-    Optional<Review> getPageReview(int pageId, ReviewOptions options) {
+    Optional<Review> findPageReview(int pageId, ReviewOptions options) {
         // STEP 2.1: Load the page from Wikipedia
-        Optional<WikipediaPage> wikipediaPage = getPageFromWikipedia(pageId, options);
+        Optional<WikipediaPage> wikipediaPage = findPageFromWikipedia(pageId, options);
 
         // STEP 2.2: Build the review for the page, or return an empty review in case the page doesn't exist.
         return wikipediaPage.flatMap(page -> buildPageReview(page, options));
     }
 
-    private Optional<WikipediaPage> getPageFromWikipedia(int pageId, ReviewOptions options) {
+    private Optional<WikipediaPage> findPageFromWikipedia(int pageId, ReviewOptions options) {
         WikipediaPageId wikipediaPageId = WikipediaPageId.of(options.getLang(), pageId);
 
         Optional<WikipediaPage> page = wikipediaPageRepository.findById(wikipediaPageId);

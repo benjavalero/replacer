@@ -63,13 +63,13 @@ public class ReviewFindController {
         ReviewOptions options = ReviewMapper.fromDto(optionsDto, false, queryParameters);
         switch (options.getOptionsType()) {
             case NO_TYPE:
-                review = reviewNoTypeFinder.getPageReview(pageId, options);
+                review = reviewNoTypeFinder.findPageReview(pageId, options);
                 break;
             case TYPE_SUBTYPE:
-                review = reviewTypeFinder.getPageReview(pageId, options);
+                review = reviewTypeFinder.findPageReview(pageId, options);
                 break;
             case CUSTOM:
-                review = reviewCustomFinder.getPageReview(pageId, options);
+                review = reviewCustomFinder.findPageReview(pageId, options);
                 break;
         }
         return review.map(r -> ReviewMapper.toDto(r, options));

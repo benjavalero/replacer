@@ -42,7 +42,7 @@ class ReviewCustomFinder extends ReviewFinder {
     @Override
     PageSearchResult findPageIdsToReview(ReviewOptions options) {
         // Initialize search
-        int offset = getCachedResult(options).map(PageSearchResult::getOffset).orElse(0);
+        int offset = findCachedResult(options).map(PageSearchResult::getOffset).orElse(0);
 
         WikipediaSearchResult searchResult = findWikipediaResults(options, offset);
         final int totalWikipediaResults = searchResult.getTotal();

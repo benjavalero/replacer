@@ -148,37 +148,37 @@ class ReviewFindControllerTest {
             .perform(get("/api/review/123?kind=X&lang=es&user=A").contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isBadRequest());
 
-        verify(reviewNoTypeFinder, never()).getPageReview(anyInt(), any(ReviewOptions.class));
+        verify(reviewNoTypeFinder, never()).findPageReview(anyInt(), any(ReviewOptions.class));
     }
 
     @Test
     void testFindPageReviewById() throws Exception {
         ReviewOptions options = ReviewOptions.ofNoType();
-        when(reviewNoTypeFinder.getPageReview(123, options)).thenReturn(Optional.of(review));
+        when(reviewNoTypeFinder.findPageReview(123, options)).thenReturn(Optional.of(review));
 
         mvc
             .perform(get("/api/review/123?lang=es&user=A").contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk());
 
-        verify(reviewNoTypeFinder).getPageReview(123, options);
+        verify(reviewNoTypeFinder).findPageReview(123, options);
     }
 
     @Test
     void testFindPageReviewByIdByTypeAndSubtype() throws Exception {
         ReviewOptions options = ReviewOptions.ofType(ReplacementType.of(ReplacementKind.DATE, "Y"));
-        when(reviewTypeFinder.getPageReview(123, options)).thenReturn(Optional.of(review));
+        when(reviewTypeFinder.findPageReview(123, options)).thenReturn(Optional.of(review));
 
         mvc
             .perform(get("/api/review/123?kind=4&subtype=Y&lang=es&user=A").contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk());
 
-        verify(reviewTypeFinder).getPageReview(123, options);
+        verify(reviewTypeFinder).findPageReview(123, options);
     }
 
     @Test
     void testFindPageReviewByIdAndCustomReplacement() throws Exception {
         ReviewOptions options = ReviewOptions.ofCustom(WikipediaLanguage.SPANISH, "X", "Y", true);
-        when(reviewCustomFinder.getPageReview(123, options)).thenReturn(Optional.of(review));
+        when(reviewCustomFinder.findPageReview(123, options)).thenReturn(Optional.of(review));
 
         mvc
             .perform(
@@ -187,6 +187,6 @@ class ReviewFindControllerTest {
             )
             .andExpect(status().isOk());
 
-        verify(reviewCustomFinder).getPageReview(123, options);
+        verify(reviewCustomFinder).findPageReview(123, options);
     }
 }

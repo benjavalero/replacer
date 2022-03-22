@@ -189,7 +189,7 @@ class ReviewTypeFinderTest {
         Review sectionReview = Review.of(page, section, replacements, numPending);
         when(reviewSectionFinder.findPageReviewSection(any(Review.class))).thenReturn(Optional.of(sectionReview));
 
-        Optional<Review> review = pageReviewTypeSubtypeService.getPageReview(randomId, options);
+        Optional<Review> review = pageReviewTypeSubtypeService.findPageReview(randomId, options);
 
         assertTrue(review.isPresent());
         review.ifPresent(rev -> {
@@ -215,7 +215,7 @@ class ReviewTypeFinderTest {
         // Load the cache in order to find the total results
         pageReviewTypeSubtypeService.loadCache(options);
 
-        Optional<Review> review = pageReviewTypeSubtypeService.getPageReview(randomId, options);
+        Optional<Review> review = pageReviewTypeSubtypeService.findPageReview(randomId, options);
 
         assertTrue(review.isPresent());
         review.ifPresent(rev -> {
