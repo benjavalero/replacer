@@ -1,5 +1,4 @@
 import { CommonModule } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
@@ -14,7 +13,7 @@ import { UnreviewedService } from './unreviewed/unreviewed.service';
 
 @NgModule({
   declarations: [AdminComponent, DumpIndexingComponent, PublicIpComponent, UnreviewedComponent],
-  imports: [CommonModule, RouterModule, FormsModule, HttpClientModule, SharedModule],
+  imports: [CommonModule, RouterModule, FormsModule, SharedModule],
   providers: [AdminService, DumpIndexingService, UnreviewedService]
 })
 export class AdminModule {}

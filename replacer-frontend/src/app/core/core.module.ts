@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { NgbCollapseModule, NgbDropdownModule, NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbCollapseModule, NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { SharedModule } from '../shared/shared.module';
 import { AuthenticationService } from './authentication/authentication.service';
 import { LoginComponent } from './authentication/login.component';
@@ -19,15 +19,7 @@ import { UserService } from './user/user.service';
 @NgModule({
   declarations: [DashboardComponent, HeaderComponent, ChangeLanguageComponent, LoginComponent, OAuthResponseComponent],
   exports: [HeaderComponent],
-  imports: [
-    CommonModule,
-    RouterModule,
-    HttpClientModule,
-    SharedModule,
-    NgbCollapseModule,
-    NgbDropdownModule,
-    NgbModalModule
-  ],
+  imports: [CommonModule, RouterModule, SharedModule, NgbCollapseModule, NgbDropdownModule],
   providers: [
     UserService,
     UserConfigService,

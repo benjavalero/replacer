@@ -1,3 +1,4 @@
+import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AdminModule } from './admin/admin.module';
@@ -10,7 +11,16 @@ import { StatsModule } from './stats/stats.module';
 
 @NgModule({
   declarations: [AppComponent],
-  imports: [BrowserModule, AppRoutingModule, CoreModule, SharedModule, StatsModule, AdminModule, ReviewModule],
+  imports: [
+    BrowserModule,
+    HttpClientModule,
+    AppRoutingModule,
+    CoreModule,
+    SharedModule,
+    StatsModule,
+    AdminModule,
+    ReviewModule
+  ],
   providers: [],
   bootstrap: [AppComponent]
 })

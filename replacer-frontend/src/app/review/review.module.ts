@@ -1,9 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 import { SharedModule } from '../shared/shared.module';
 import { EditCustomSnippetComponent } from './page/edit-custom-snippet.component';
@@ -30,15 +28,7 @@ import { ReviewSubtypeComponent } from './replacement-list/review-subtype.compon
     EditCustomSnippetComponent,
     ValidateCustomComponent
   ],
-  imports: [
-    CommonModule,
-    RouterModule,
-    FormsModule,
-    HttpClientModule,
-    SharedModule,
-    FontAwesomeModule,
-    NgbPaginationModule
-  ],
+  imports: [CommonModule, RouterModule, FormsModule, SharedModule, NgbPaginationModule],
   providers: [ReplacementListService, PageService]
 })
 export class ReviewModule {}
