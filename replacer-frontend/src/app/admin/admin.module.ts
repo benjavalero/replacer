@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { SharedModule } from '../shared/shared.module';
+import { AdminRoutingModule } from './admin-routing.module';
 import { AdminComponent } from './admin.component';
 import { AdminService } from './admin.service';
 import { DumpIndexingComponent } from './dump-indexing/dump-indexing.component';
@@ -13,7 +14,7 @@ import { UnreviewedService } from './unreviewed/unreviewed.service';
 
 @NgModule({
   declarations: [AdminComponent, DumpIndexingComponent, PublicIpComponent, UnreviewedComponent],
-  imports: [CommonModule, RouterModule, FormsModule, SharedModule],
+  imports: [CommonModule, RouterModule, FormsModule, AdminRoutingModule, SharedModule],
   providers: [AdminService, DumpIndexingService, UnreviewedService]
 })
 export class AdminModule {}
