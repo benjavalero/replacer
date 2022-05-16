@@ -1,5 +1,9 @@
 # Versions
 
+## 2.17.6 (??)
+- Allow templates in the suggestion of composed misspellings
+- Fix non-valid break tags with the XHTML form. Consider `<br/>` as a valid tag.
+
 ## 2.17.5 (18 Feb 2022)
 - Fix: cosmetic must be applied in reverse order
 - Return a set when finding replacements in a page to avoid duplicates and improve performance

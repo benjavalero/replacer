@@ -2,7 +2,11 @@ package es.bvalero.replacer.finder.listing.parse;
 
 import es.bvalero.replacer.finder.listing.Misspelling;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.Nullable;
+
+import java.util.Arrays;
+import java.util.List;
 
 interface MisspellingParser<T extends Misspelling> extends ListingParser<T> {
     String CASE_SENSITIVE_VALUE = "cs";
@@ -17,11 +21,12 @@ interface MisspellingParser<T extends Misspelling> extends ListingParser<T> {
     default T parseItemLine(String itemLine) {
         T misspelling = null;
 
-        String[] tokens = itemLine.split("\\|");
-        if (tokens.length == 3) {
-            String word = tokens[0].trim();
-            boolean cs = CASE_SENSITIVE_VALUE.equalsIgnoreCase(tokens[1].trim());
-            String comment = tokens[2].trim();
+        List<String> tokens = Arrays.asList(itemLine.split("\\|"));
+        if (tokens.size() >= 3) {
+            String word = tokens.get(0).trim();
+            boolean cs = CASE_SENSITIVE_VALUE.equalsIgnoreCase(tokens.get(1).trim());
+            // If the comment contains a pipe then we need to re-join it
+            String comment = StringUtils.join(tokens.subList(2, tokens.size()), '|').trim();
             try {
                 misspelling = buildMisspelling(word, cs, comment);
             } catch (IllegalArgumentException e) {
