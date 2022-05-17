@@ -1,12 +1,11 @@
 package es.bvalero.replacer.finder.listing.parse;
 
 import es.bvalero.replacer.finder.listing.Misspelling;
+import java.util.Arrays;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.Nullable;
-
-import java.util.Arrays;
-import java.util.List;
 
 interface MisspellingParser<T extends Misspelling> extends ListingParser<T> {
     String CASE_SENSITIVE_VALUE = "cs";

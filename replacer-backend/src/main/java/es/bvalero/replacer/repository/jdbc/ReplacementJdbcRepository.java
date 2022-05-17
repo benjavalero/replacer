@@ -189,7 +189,7 @@ class ReplacementJdbcRepository
             .addValue("pageId", wikipediaPageId.getPageId());
 
         if (Objects.nonNull(type)) {
-            where += "AND type = :kinid AND subtype = :subtype";
+            where += "AND type = :kind AND subtype = :subtype";
             namedParameters =
                 namedParameters.addValue("kind", type.getKind().getCode()).addValue("subtype", type.getSubtype());
         }
