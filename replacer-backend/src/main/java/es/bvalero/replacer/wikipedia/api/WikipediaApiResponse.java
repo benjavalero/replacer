@@ -84,6 +84,7 @@ class WikipediaApiResponse {
         private List<Section> sections;
         private String touched;
         private boolean missing;
+        private boolean hidetoc;
 
         @JsonProperty("new")
         private boolean newPage;
