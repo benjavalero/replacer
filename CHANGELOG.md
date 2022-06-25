@@ -1,5 +1,8 @@
 # Versions
 
+## 2.17.7 (25 Jun 2022)
+- Fix parsing response from Wikipedia API
+
 ## 2.17.6 (17 May 2022)
 - Allow templates in the suggestion of composed misspellings
 - Fix non-valid break tags with the XHTML form. Consider `<br/>` as a valid tag.
