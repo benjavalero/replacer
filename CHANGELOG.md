@@ -1,5 +1,8 @@
 # Versions
 
+## 2.x.x (??)
+- Fix routing on admin section in frontend
+
 ## 2.17.7 (25 Jun 2022)
 - Fix parsing response from Wikipedia API
 
