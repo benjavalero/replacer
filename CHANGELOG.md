@@ -1,6 +1,6 @@
 # Versions
 
-## 2.x.x (??)
+## 2.17.8 (2 Aug 2022)
 - Fix routing on admin section in frontend
 - Support composed misspelling containing brackets
 
