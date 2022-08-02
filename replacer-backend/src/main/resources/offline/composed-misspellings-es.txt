@@ -1,30 +1,228 @@
 En esta lista se detallan los «términos compuestos» que la herramienta [[Usuario:Benjavalero/Replacer|Replacer]] detecta como potencialmente erróneos.
 
 El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|listado de términos simples]], con la salvedad de que este listado extiende al anterior con términos o expresiones que contienen caracteres no alfabéticos: espacios, números, etc. Las recomendaciones aplican igualmente.
+<!-- Procurar el orden alfabético -->
 
  1 sólo||un solo, Un solo, 1 solamente, uno solamente
  1º de Agosto|cs|1.º de Agosto, Primero de Agosto
  1º de Mayo|cs|1.º de Mayo, Primero de Mayo
  1° de Mayo|cs|1.º de Mayo, Primero de Mayo
  1ro de Mayo|cs|1.º de Mayo, Primero de Mayo
+ 1er||{{ord|1.|er}} (va con punto y letras voladitas), primer
+ 1ero||1.º (va con punto y letra voladita de indicación ordinal), primero
+ 1ro||1.º (va con punto y letra voladita de indicación ordinal), primero
+ 1º||1.º (va con punto entre el dígito y la letra voladita de indicación ordinal), {{ord|1.|er}}, primero, primer, 1° (un grado)
+ 2do||2.º (va con punto y letra voladita de indicación ordinal), segundo
+ 2ndo||2.º (va con punto y letra voladita de indicación ordinal), segundo
+ 2º||2.º (va con punto entre el dígito y la letra voladita de indicación ordinal), segundo, 2° (dos grados)
+ 3er||{{ord|3.|er}} (va con punto y letras voladitas), tercer
+ 3ero||3.º (va con punto y letra voladita de indicación ordinal), tercero
+ 3ro||3.º (va con punto y letra voladita de indicación ordinal), tercero
+ 3º||3.º (va con punto entre el dígito y la letra voladita de indicación ordinal), {{ord|3.|er}}, tercero, tercer, 3° (tres grados)
+ 4to||4.º (va con punto y letra voladita de indicación ordinal), cuarto
+ 4º||4.º (va con punto entre el dígito y la letra voladita de indicación ordinal), cuarto, 4° (cuatro grados)
+ 5to||5.º (va con punto y letra voladita de indicación ordinal), quinto
+ 5º||5.º (va con punto entre el dígito y la letra voladita de indicación ordinal), quinto, 5° (cinco grados)
+ 6to||6.º (va con punto y letra voladita de indicación ordinal), sexto
+ 6º||6.º (va con punto entre el dígito y la letra voladita de indicación ordinal), sexto, 6° (seis grados)
+ 7mo||7.º (va con punto y letra voladita de indicación ordinal), séptimo
+ 7º||7.º (va con punto entre el dígito y la letra voladita de indicación ordinal), séptimo, 7° (siete grados)
+ 8vo||8.º (va con punto y letra voladita de indicación ordinal), octavo
+ 8º||8.º (va con punto entre el dígito y la letra voladita de indicación ordinal), octavo, 8° (ocho grados)
+ 9no||9.º (va con punto y letra voladita de indicación ordinal), noveno
+ 9º||9.º (va con punto entre el dígito y la letra voladita de indicación ordinal), noveno, 9° (nueve grados)
+ 10mo||10.º (va con punto y letra voladita de indicación ordinal), décimo
+ 10º||10.º (va con punto entre el dígito y la letra voladita de indicación ordinal), décimo, 10° (diez grados)
+ 11mo||11.º (va con punto y letra voladita de indicación ordinal), decimoprimero (ordinal), undécimo (ordinal o fraccionario), onceavo (fraccionario)
+ 11vo||11.º (va con punto y letra voladita de indicación ordinal), decimoprimero (ordinal), undécimo (ordinal o fraccionario), onceavo (fraccionario)
+ 11avo||11.º (va con punto y letra voladita de indicación ordinal), decimoprimero (ordinal), undécimo (ordinal o fraccionario), onceavo (fraccionario)
+ 11º||11.º (va con punto entre el dígito y la letra voladita de indicación ordinal), decimoprimero (ordinal), undécimo (ordinal o fraccionario), onceavo (fraccionario), 11° (once grados)
+ 12mo||12.º (va con punto y letra voladita de indicación ordinal), decimosegundo (ordinal), duodécimo (ordinal o fraccionario), doceavo (fraccionario)
+ 12vo||12.º (va con punto y letra voladita de indicación ordinal), decimosegundo (ordinal), duodécimo (ordinal o fraccionario), doceavo (fraccionario)
+ 12avo||12.º (va con punto y letra voladita de indicación ordinal), decimosegundo (ordinal), duodécimo (ordinal o fraccionario), doceavo (fraccionario)
+ 12º||12.º (va con punto entre el dígito y la letra voladita de indicación ordinal), decimosegundo (ordinal), duodécimo (ordinal o fraccionario), doceavo (fraccionario), 12° (doce grados)
+ 13ro||13.º (va con punto y letra voladita de indicación ordinal), decimotercero (ordinal), treceavo (fraccionario)
+ 13vo||13.º (va con punto y letra voladita de indicación ordinal), decimotercero (ordinal), treceavo (fraccionario)
+ 13avo||13.º (va con punto y letra voladita de indicación ordinal), decimotercero (ordinal), treceavo (fraccionario)
+ 13º||13.º (va con punto entre el dígito y la letra voladita de indicación ordinal), decimotercero (ordinal), treceavo (fraccionario), 13° (trece grados)
+ 14to||14.º (va con punto y letra voladita de indicación ordinal), decimocuarto (ordinal), catorceavo (fraccionario)
+ 14vo||14.º (va con punto y letra voladita de indicación ordinal), decimocuarto (ordinal), catorceavo (fraccionario)
+ 14avo||14.º (va con punto y letra voladita de indicación ordinal), decimocuarto (ordinal), catorceavo (fraccionario)
+ 14º||14.º (va con punto entre el dígito y la letra voladita de indicación ordinal), decimocuarto (ordinal), catorceavo (fraccionario), 14° (catorce grados)
+ 15to||15.º (va con punto y letra voladita de indicación ordinal), decimoquinto (ordinal), quinceavo (fraccionario)
+ 15vo||15.º (va con punto y letra voladita de indicación ordinal), decimoquinto (ordinal), quinceavo (fraccionario)
+ 15avo||15.º (va con punto y letra voladita de indicación ordinal), decimoquinto (ordinal), quinceavo (fraccionario)
+ 15º||15.º (va con punto entre el dígito y la letra voladita de indicación ordinal), decimoquinto (ordinal), quinceavo (fraccionario), 15° (quince grados)
+ 16to||16.º (va con punto y letra voladita de indicación ordinal), decimosexto (ordinal), dieciseisavo (fraccionario)
+ 16vo||16.º (va con punto y letra voladita de indicación ordinal), decimosexto (ordinal), dieciseisavo (fraccionario)
+ 16avo||16.º (va con punto y letra voladita de indicación ordinal), decimosexto (ordinal), dieciseisavo (fraccionario)
+ 16º||16.º (va con punto entre el dígito y la letra voladita de indicación ordinal), decimosexto (ordinal), dieciseisavo (fraccionario), 16° (dieciséis grados)
+ 17mo||17.º (va con punto y letra voladita de indicación ordinal), decimoséptimo (ordinal), diecisieteavo (fraccionario)
+ 17vo||17.º (va con punto y letra voladita de indicación ordinal), decimoséptimo (ordinal), diecisieteavo (fraccionario)
+ 17avo||17.º (va con punto y letra voladita de indicación ordinal), decimoséptimo (ordinal), diecisieteavo (fraccionario)
+ 17º||17.º (va con punto entre el dígito y la letra voladita de indicación ordinal), decimoséptimo (ordinal), diecisieteavo (fraccionario), 17° (diecisiete grados)
+ 18vo||18.º (va con punto y letra voladita de indicación ordinal), decimoctavo (ordinal), dieciochavo (fraccionario), dieciochoavo (fraccionario)
+ 18avo||18.º (va con punto y letra voladita de indicación ordinal), decimoctavo (ordinal), dieciochavo (fraccionario), dieciochoavo (fraccionario)
+ 18º||18.º (va con punto entre el dígito y la letra voladita de indicación ordinal), decimoctavo (ordinal), dieciochavo (fraccionario), dieciochoavo (fraccionario), 18° (dieciocho grados)
+ 19no||19.º (va con punto y letra voladita de indicación ordinal), decimonoveno (ordinal), decimonono (ordinal), diecinueveavo (fraccionario)
+ 19vo||19.º (va con punto y letra voladita de indicación ordinal), decimonoveno (ordinal), decimonono (ordinal), diecinueveavo (fraccionario)
+ 19avo||19.º (va con punto y letra voladita de indicación ordinal), decimonoveno (ordinal), decimonono (ordinal), diecinueveavo (fraccionario)
+ 19º||19.º (va con punto entre el dígito y la letra voladita de indicación ordinal), decimonoveno (ordinal), decimonono (ordinal), diecinueveavo (fraccionario), 19° (diecinueve grados)
+ 20mo||20.º (va con punto y letra voladita de indicación ordinal), vigésimo (ordinal o fraccionario), veinteavo (fraccionario)
+ 20º||20.º (va con punto entre el dígito y la letra voladita de indicación ordinal), vigésimo (ordinal o fraccionario), veinteavo (fraccionario), 20° (veinte grados)
+ 20vo||20.º (va con punto y letra voladita de indicación ordinal), vigésimo (ordinal o fraccionario), veinteavo (fraccionario)
+ 20avo||20.º (va con punto y letra voladita de indicación ordinal), vigésimo (ordinal o fraccionario), veinteavo (fraccionario)
+ 1era||1.ª (va con punto y letra voladita de indicación ordinal), primera
+ 1ra||1.ª (va con punto y letra voladita de indicación ordinal), primera
+ 1ª||1.ª (va con punto entre el dígito y la letra voladita de indicación ordinal), primera
+ 2da||2.ª (va con punto y letra voladita de indicación ordinal), segunda
+ 2nda||2.ª (va con punto y letra voladita de indicación ordinal), segunda
+ 2ª||2.ª (va con punto entre el dígito y la letra voladita de indicación ordinal), segunda
+ 3era||3.ª (va con punto y letra voladita de indicación ordinal), tercera
+ 3ra||3.ª (va con punto y letra voladita de indicación ordinal), tercera
+ 3ª||3.ª (va con punto entre el dígito y la letra voladita de indicación ordinal), tercera
+ 4ta||4.ª (va con punto y letra voladita de indicación ordinal), cuarta
+ 4ª||4.ª (va con punto entre el dígito y la letra voladita de indicación ordinal), cuarta
+ 5ta||5.ª (va con punto y letra voladita de indicación ordinal), quinta
+ 5ª||5.ª (va con punto entre el dígito y la letra voladita de indicación ordinal), quinta
+ 6ta||6.ª (va con punto y letra voladita de indicación ordinal), sexta
+ 6ª||6.ª (va con punto entre el dígito y la letra voladita de indicación ordinal), sexta
+ 7ma||7.ª (va con punto y letra voladita de indicación ordinal), séptima
+ 7ª||7.ª (va con punto entre el dígito y la letra voladita de indicación ordinal), séptima
+ 8va||8.ª (va con punto y letra voladita de indicación ordinal), octava
+ 8ª||8.ª (va con punto entre el dígito y la letra voladita de indicación ordinal), octava
+ 9na||9.ª (va con punto y letra voladita de indicación ordinal), novena
+ 9ª||9.ª (va con punto entre el dígito y la letra voladita de indicación ordinal), novena
+ 10ma||10.ª (va con punto y letra voladita de indicación ordinal), décima
+ 10ª||10.ª (va con punto entre el dígito y la letra voladita de indicación ordinal), décima
+ 11ma||11.ª (va con punto y letra voladita de indicación ordinal), decimoprimera (ordinal), undécima (ordinal o fraccionario), onceava (fraccionario)
+ 11va||11.ª (va con punto y letra voladita de indicación ordinal), decimoprimera (ordinal), undécima (ordinal o fraccionario), onceava (fraccionario)
+ 11ava||11.ª (va con punto y letra voladita de indicación ordinal), decimoprimera (ordinal), undécima (ordinal o fraccionario), onceava (fraccionario)
+ 11ª||11.ª (va con punto entre el dígito y la letra voladita de indicación ordinal), decimoprimera (ordinal), undécima (ordinal o fraccionario), onceava (fraccionario)
+ 12ma||12.ª (va con punto y letra voladita de indicación ordinal), decimosegunda (ordinal), duodécima (ordinal o fraccionario), doceava (fraccionario)
+ 12va||12.ª (va con punto y letra voladita de indicación ordinal), decimosegunda (ordinal), duodécima (ordinal o fraccionario), doceava (fraccionario)
+ 12ava||12.ª (va con punto y letra voladita de indicación ordinal), decimosegunda (ordinal), duodécima (ordinal o fraccionario), doceava (fraccionario)
+ 12ª||12.ª (va con punto entre el dígito y la letra voladita de indicación ordinal), decimosegunda (ordinal), duodécima (ordinal o fraccionario), doceava (fraccionario)
+ 13ra||13.ª (va con punto y letra voladita de indicación ordinal), decimotercera (ordinal), treceava (fraccionario)
+ 13va||13.ª (va con punto y letra voladita de indicación ordinal), decimotercera (ordinal), treceava (fraccionario)
+ 13ava||13.ª (va con punto y letra voladita de indicación ordinal), decimotercera (ordinal), treceava (fraccionario)
+ 13ª||13.ª (va con punto entre el dígito y la letra voladita de indicación ordinal), decimotercera (ordinal), treceava (fraccionario)
+ 14ta||14.ª (va con punto y letra voladita de indicación ordinal), decimocuarta (ordinal), catorceava (fraccionario)
+ 14va||14.ª (va con punto y letra voladita de indicación ordinal), decimocuarta (ordinal), catorceava (fraccionario)
+ 14ava||14.ª (va con punto y letra voladita de indicación ordinal), decimocuarta (ordinal), catorceava (fraccionario)
+ 14ª||14.ª (va con punto entre el dígito y la letra voladita de indicación ordinal), decimocuarta (ordinal), catorceava (fraccionario)
+ 15ta||15.ª (va con punto y letra voladita de indicación ordinal), decimoquinta (ordinal), quinceava (fraccionario)
+ 15va||15.ª (va con punto y letra voladita de indicación ordinal), decimoquinta (ordinal), quinceava (fraccionario)
+ 15ava||15.ª (va con punto y letra voladita de indicación ordinal), decimoquinta (ordinal), quinceava (fraccionario)
+ 15ª||15.ª (va con punto entre el dígito y la letra voladita de indicación ordinal), decimoquinta (ordinal), quinceava (fraccionario)
+ 16ta||16.ª (va con punto y letra voladita de indicación ordinal), decimosexta (ordinal), dieciseisava (fraccionario)
+ 16va||16.ª (va con punto y letra voladita de indicación ordinal), decimosexta (ordinal), dieciseisava (fraccionario)
+ 16ava||16.ª (va con punto y letra voladita de indicación ordinal), decimosexta (ordinal), dieciseisava (fraccionario)
+ 16ª||16.ª (va con punto entre el dígito y la letra voladita de indicación ordinal), decimosexta (ordinal), dieciseisava (fraccionario)
+ 17ma||17.ª (va con punto y letra voladita de indicación ordinal), decimoséptima (ordinal), diecisieteava (fraccionario)
+ 17va||17.ª (va con punto y letra voladita de indicación ordinal), decimoséptima (ordinal), diecisieteava (fraccionario)
+ 17ava||17.ª (va con punto y letra voladita de indicación ordinal), decimoséptima (ordinal), diecisieteava (fraccionario)
+ 17ª||17.ª (va con punto entre el dígito y la letra voladita de indicación ordinal), decimoséptima (ordinal), diecisieteava (fraccionario)
+ 18va||18.ª (va con punto y letra voladita de indicación ordinal), decimoctava (ordinal), dieciochava (fraccionario), dieciochoava (fraccionario)
+ 18ava||18.ª (va con punto y letra voladita de indicación ordinal), decimoctava (ordinal), dieciochava (fraccionario), dieciochoava (fraccionario)
+ 18ª||18.ª (va con punto entre el dígito y la letra voladita de indicación ordinal), decimoctava (ordinal), dieciochava (fraccionario), dieciochoava (fraccionario)
+ 19na||19.ª (va con punto y letra voladita de indicación ordinal), decimonovena (ordinal), decimonona (ordinal), diecinueveava (fraccionario)
+ 19va||19.ª (va con punto y letra voladita de indicación ordinal), decimonovena (ordinal), decimonona (ordinal), diecinueveava (fraccionario)
+ 19ava||19.ª (va con punto y letra voladita de indicación ordinal), decimonovena (ordinal), decimonona (ordinal), diecinueveava (fraccionario)
+ 19ª||19.ª (va con punto entre el dígito y la letra voladita de indicación ordinal), decimonovena (ordinal), decimonona (ordinal), diecinueveava (fraccionario)
+ 20ma||20.ª (va con punto y letra voladita de indicación ordinal), vigésima (ordinal o fraccionario), veinteava (fraccionario)
+ 20ª||20.ª (va con punto entre el dígito y la letra voladita de indicación ordinal), vigésima (ordinal o fraccionario), veinteava (fraccionario)
+ 20va||20.ª (va con punto y letra voladita de indicación ordinal), vigésima (ordinal o fraccionario), veinteava (fraccionario)
+ 20ava||20.ª (va con punto y letra voladita de indicación ordinal), vigésima (ordinal o fraccionario), veinteava (fraccionario)
+ 1eros||{{ord|1.|os}} (va con punto y letras voladitas de indicación ordinal), primeros
+ 1ros||{{ord|1.|os}} (va con punto y letras voladitas de indicación ordinal), primeros
+ 2dos||{{ord|2.|os}} (va con punto y letras voladitas de indicación ordinal), segundos
+ 3eros||{{ord|3.|os}} (va con punto y letras voladitas de indicación ordinal), terceros
+ 3ros||{{ord|3.|os}} (va con punto y letras voladitas de indicación ordinal), terceros
+ 4tos||{{ord|4.|os}} (va con punto y letras voladitas de indicación ordinal), cuartos
+ 5tos||{{ord|5.|os}} (va con punto y letras voladitas de indicación ordinal), quintos
+ 6tos||{{ord|6.|os}} (va con punto y letras voladitas de indicación ordinal), sextos
+ 7mos||{{ord|7.|os}}(va con punto y letras voladitas de indicación ordinal), séptimos
+ 8vos||{{ord|8.|os}} (va con punto y letras voladitas de indicación ordinal), octavos
+ 9nos||{{ord|9.|os}} (va con punto y letras voladitas de indicación ordinal), novenos
+ 10mos||{{ord|10.|os}} (va con punto y letras voladitas de indicación ordinal), décimos
+ 11mos||{{ord|11.|os}} (va con punto y letras voladitas de indicación ordinal), decimoprimeros (ordinal), undécimos (ordinal o fraccionario), onceavos (fraccionario)
+ 11vos||{{ord|11.|os}} (va con punto y letras voladitas de indicación ordinal), decimoprimeros (ordinal), undécimos (ordinal o fraccionario), onceavos (fraccionario)
+ 12mos||{{ord|12.|os}} (va con punto y letras voladitas de indicación ordinal), decimosegundos (ordinal), duodécimos (ordinal o fraccionario), doceavos (fraccionario)
+ 12vos||{{ord|12.|os}} (va con punto y letras voladitas de indicación ordinal), decimosegundos (ordinal), duodécimos (ordinal o fraccionario), doceavos (fraccionario)
+ 13ros||{{ord|13.|os}} (va con punto y letras voladitas de indicación ordinal), decimoterceros (ordinal), treceavos (fraccionario)
+ 13vos||{{ord|13.|os}} (va con punto y letras voladitas de indicación ordinal), decimoterceros (ordinal), treceavos (fraccionario)
+ 14tos||{{ord|14.|os}} (va con punto y letras voladitas de indicación ordinal), decimocuartos (ordinal), catorceavos (fraccionario)
+ 14vos||{{ord|14.|os}} (va con punto y letras voladitas de indicación ordinal), decimocuartos (ordinal), catorceavos (fraccionario)
+ 15tos||{{ord|15.|os}} (va con punto y letras voladitas de indicación ordinal), decimoquintos (ordinal), quinceavos (fraccionario)
+ 15vos||{{ord|15.|os}} (va con punto y letras voladitas de indicación ordinal), decimoquintos (ordinal), quinceavos (fraccionario)
+ 16tos||{{ord|16.|os}} (va con punto y letras voladitas de indicación ordinal), decimosextos (ordinal), dieciseisavos (fraccionario)
+ 16vos||{{ord|16.|os}} (va con punto y letras voladitas de indicación ordinal), decimosextos (ordinal), dieciseisavos (fraccionario)
+ 17mos||{{ord|17.|os}} (va con punto y letras voladitas de indicación ordinal), decimoséptimos (ordinal), diecisieteavos (fraccionario)
+ 17vos||{{ord|17.|os}} (va con punto y letras voladitas de indicación ordinal), decimoséptimos (ordinal), diecisieteavos (fraccionario)
+ 18vos||{{ord|18.|os}} (va con punto y letras voladitas de indicación ordinal), decimoctavos (ordinal), dieciochavos (fraccionario), dieciochoavos (fraccionario)
+ 19nos||{{ord|19.|os}} (va con punto y letras voladitas de indicación ordinal), decimonovenos (ordinal), decimononos (ordinal), diecinueveavos (fraccionario)
+ 19vos||{{ord|19.|os}} (va con punto y letras voladitas de indicación ordinal), decimonovenos (ordinal), decimononos (ordinal), diecinueveavos (fraccionario)
+ 20mos||{{ord|20.|os}} (va con punto y letras voladitas de indicación ordinal), vigésimos (ordinal o fraccionario), veinteavos (fraccionario)
+ 1eras||{{ord|1.|as}} (va con punto y letras voladitas de indicación ordinal), primeras
+ 1ras||{{ord|1.|as}} (va con punto y letras voladitas de indicación ordinal), primeras
+ 2das||{{ord|2.|as}} (va con punto y letras voladitas de indicación ordinal), segundas
+ 3eras||{{ord|3.|as}} (va con punto y letras voladitas de indicación ordinal), terceras
+ 3ras||{{ord|3.|as}} (va con punto y letras voladitas de indicación ordinal), terceras
+ 4tas||{{ord|4.|as}} (va con punto y letras voladitas de indicación ordinal), cuartas
+ 5tas||{{ord|5.|as}} (va con punto y letras voladitas de indicación ordinal), quintas
+ 6tas||{{ord|6.|as}} (va con punto y letras voladitas de indicación ordinal), sextas
+ 7mas||{{ord|7.|as}} (va con punto y letras voladitas de indicación ordinal), séptimas
+ 8vas||{{ord|8.|as}} (va con punto y letras voladitas de indicación ordinal), octavas
+ 9nas||{{ord|9.|as}} (va con punto y letras voladitas de indicación ordinal), novenas
+ 10mas||{{ord|10.|as}} (va con punto y letras voladitas de indicación ordinal), décimas
+ 11mas||{{ord|11.|as}} (va con punto y letras voladitas de indicación ordinal), decimoprimeras (ordinal), undécimas (ordinal o fraccionario), onceavas (fraccionario)
+ 11vas||{{ord|11.|as}} (va con punto y letras voladitas de indicación ordinal), decimoprimeras (ordinal), undécimas (ordinal o fraccionario), onceavas (fraccionario)
+ 12mas||{{ord|12.|as}} (va con punto y letras voladitas de indicación ordinal), decimosegundas (ordinal), duodécimas (ordinal o fraccionario), doceavas (fraccionario)
+ 12vas||{{ord|12.|as}} (va con punto y letras voladitas de indicación ordinal), decimosegundas (ordinal), duodécimas (ordinal o fraccionario), doceavas (fraccionario)
+ 13ras||{{ord|13.|as}} (va con punto y letras voladitas de indicación ordinal), decimoterceras (ordinal), treceavas (fraccionario)
+ 13vas||{{ord|13.|as}} (va con punto y letras voladitas de indicación ordinal), decimoterceras (ordinal), treceavas (fraccionario)
+ 14tas||{{ord|14.|as}} (va con punto y letras voladitas de indicación ordinal), decimocuartas (ordinal), catorceavas (fraccionario)
+ 14vas||{{ord|14.|as}} (va con punto y letras voladitas de indicación ordinal), decimocuartas (ordinal), catorceavas (fraccionario)
+ 15tas||{{ord|15.|as}} (va con punto y letras voladitas de indicación ordinal), decimoquintas (ordinal), quinceavas (fraccionario)
+ 15vas||{{ord|15.|as}} (va con punto y letras voladitas de indicación ordinal), decimoquintas (ordinal), quinceavas (fraccionario)
+ 16tas||{{ord|16.|as}} (va con punto y letras voladitas de indicación ordinal), decimosextas (ordinal), dieciseisavas (fraccionario)
+ 16vas||{{ord|16.|as}} (va con punto y letras voladitas de indicación ordinal), decimosextas (ordinal), dieciseisavas (fraccionario)
+ 17mas||{{ord|17.|as}} (va con punto y letras voladitas de indicación ordinal), decimoséptimas (ordinal), diecisieteavas (fraccionario)
+ 17vas||{{ord|17.|as}} (va con punto y letras voladitas de indicación ordinal), decimoséptimas (ordinal), diecisieteavas (fraccionario)
+ 18vas||{{ord|18.|as}} (va con punto y letras voladitas de indicación ordinal), decimoctavas (ordinal), dieciochavas (fraccionario), dieciochoavas (fraccionario)
+ 19nas||{{ord|19.|as}} (va con punto y letras voladitas de indicación ordinal), decimonovenas (ordinal), decimononas (ordinal), diecinueveavas (fraccionario)
+ 19vas||{{ord|19.|as}} (va con punto y letras voladitas de indicación ordinal), decimonovenas (ordinal), decimononas (ordinal), diecinueveavas (fraccionario)
+ 20mas||{{ord|20.|as}} (va con punto y letras voladitas de indicación ordinal), vigésimas (ordinal o fraccionario), veinteavas (fraccionario)
+ anti-ruso||antirruso
+ a.C.||a.{{esd}}C. (con espacio duro)
+ a.C||a.{{esd}}C. (con espacio duro)
+ a.m.||a.{{esd}}m. (con espacio duro)
+ p.m.||p.{{esd}}m. (con espacio duro)
+ a.m||a.{{esd}}m. (con espacio duro)
+ p.m||p.{{esd}}m. (con espacio duro)
+ a.n.e.||a.{{esd}}e.{{esd}}c. (con espacios duros; abreviatura de «antes de la era común»), a.{{esd}}n.{{esd}}e. (con espacios duros; abreviatura de «antes de nuestra era»)
  a demás||además (adverbio)
  Administración Publica|cs|Administración Pública
  a el||al, a él, a El
  Alberto Del Río|cs|Alberto Del Rio (nombre comercial del luchador, sin tilde)
+ al top ten||a la lista de los diez primeros, a la lista de las diez primeras, a la lista de los diez mejores, a la lista de las diez mejores, a la lista de los diez más populares, a la lista de las diez más populares, entre los diez primeros, entre las diez primeras, entre los diez mejores, entre las diez mejores, entre los diez más populares, entre las diez más populares
  a mas||a más
+ America Latina|cs|América Latina
  Angel Nieto|cs|Ángel Nieto (piloto español)
+ anti ruido||antirruido
+ anti-ruido||antirruido
+ anti ruso||antirruso
  anuncio su||anunció su
+ arriba a abajo||arriba abajo
  a parte||a parte (locución), aparte (adjetivo, sustantivo, adverbio o verbo)
  a pesar que||a pesar de que
- aun,|cs|aún,
- aun.|cs|aún.
- aún así||aun así, aún así (todavía así)
- aún cuando||aun cuando (incluso), aún cuando (todavía)
- aún estando||aun estando (incluso), aún estando (todavía)
- aún no siendo||aun no siendo (incluso), aún no siendo (todavía)
- aún no teniendo||aun no teniendo (incluso), aún no teniendo (todavía)
- aún siendo||aun siendo (incluso), aún siendo (todavía)
- aún teniendo||aun teniendo (incluso), aún teniendo (todavía)
+ apenas sí||apenas si
+ bajo la base de||sobre la base de
+ bajo la base del||sobre la base del
+ beauty addict||adicto a la belleza, adicta a la belleza,
+ big five||los 5 grandes, los cinco grandes
+ C's|cs|Cs (Ciudadanos, partido político español)
  Carlos Ménem|cs|Carlos Menem
  Castilla la Mancha|cs|Castilla-La Mancha
  Castilla La Mancha|cs|Castilla-La Mancha
@@ -33,42 +231,69 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  Castilla León|cs|Castilla y León
  Castilla Leon|cs|Castilla y León
  Castilla y Leon|cs|Castilla y León
- cm2||cm² (centímetro cuadrado)
- cm3||cm³ (centímetro cúbico)
+ call||llamada, conversación telefónica, teleconferencia, videoconferencia
+ caza recompensa||cazarrecompensas
+ caza recompensas||cazarrecompensas
+ cazarrecompensa||cazarrecompensas
+ cm2||cm{{Exp|2}} (centímetro cuadrado), centímetro cuadrado, centímetros cuadrados
+ cm3||cm{{Exp|3}} (centímetro cúbico), centímetro cúbico, centímetros cúbicos
  con mas||con más
  continua estando||continúa estando
  continua siendo||continúa siendo
  continuo su||continuó su
  continuo sus||continuó sus
- dam2||dam² (decámetro cuadrado)
- dam3||dam³ (decámetro cúbico)
+ convencer que||convencer de que
+ convencida que||convencida de que
+ convencidas que||convencidas de que
+ convencido que||convencido de que
+ convencidos que||convencidos de que
+ convencieron que||convencieron de que
+ convenció que||convenció de que
+ dam2||dam{{Exp|2}} (decámetro cuadrado), decámetro cuadrado, decámetros cuadrados
+ dam3||dam{{Exp|3}} (decámetro cúbico), decámetro cúbico, decámetros cúbicos
  darse cuenta que||darse cuenta de que
  de Cordoba||de Córdoba
  de el||del, de él, de El, dé el, dé él
  de estás||de estas
  dejo el||dejó el
  del genero||del género
+ del top ten||de la lista de los diez primeros, de la lista de las diez primeras, de la lista de los diez mejores, de la lista de las diez mejores, de la lista de los diez más populares, de la lista de las diez más populares, entre los diez primeros, entre las diez primeras, entre los diez mejores, entre las diez mejores, entre los diez más populares, entre las diez más populares
  de mas||de más
  de Mexico||de México
  desarrollo un||desarrolló un (verbo)
+ delante suyo||delante de él, delante de ella, delante de sí
+ detrás suyo||detrás de él, detrás de ella, detrás de sí
+ discrepar con||discrepar de, discrepar sobre, discrepar en, discrepar con (no censurable en Argentina, úsese solamente en artículos relacionados con este)
+ discrepa con||discrepa de, discrepa sobre, discrepa en, discrepa con (no censurable en Argentina, úsese solamente en artículos relacionados con este)
+ discrepó con||discrepó de, discrepó sobre, discrepó en, discrepó con (no censurable en Argentina, úsese solamente en artículos relacionados con este)
  distrito de Verdun||distrito de Verdún
- dm2||dm² (decímetro cuadrado)
- dm3||dm³ (decímetro cúbico)
+ dm2||dm{{Exp|2}} (decímetro cuadrado), decímetro cuadrado, decímetros cuadrados
+ dm3||dm{{Exp|3}} (decímetro cúbico), decímetro cúbico, decímetros cúbicos
  donde paso||donde pasó
  drop shot||dejada (tenis)
  Educación Publica|cs|Educación Pública
  el mas||el más
  el proximo||el próximo
- el sólo||el solo (adjetivo), él solamente (para evitar ambigüedad)
+ el sólo||el solo (adjetivo), él solo (sin ninguna compañía), él solamente (para evitar ambigüedad)
  el titulo||el título
- enel||en el, Enel (compañía eléctrica)
+ el top ten||la lista de los diez primeros, la lista de las diez primeras, la lista de los diez mejores, la lista de las diez mejores, la lista de los diez más populares, la lista de las diez más populares, entre los diez primeros, entre las diez primeras, entre los diez mejores, entre las diez mejores, entre los diez más populares, entre las diez más populares
+ en caso que||en caso de que
+ en el caso que||en el caso de que
  en el qué||en el que
  en estás||en estas
  en la qué||en la que
  en perdida||en pérdida
+ en relación a||en relación con, con relación a
+ en relación al||en relación con el, con relación al
  entorno a||en torno a (locución adverbial)
  entre si||entre sí (pronombre), entre si (conjunción)
  es mas||es más
+ ex presidente||expresidente
+ ex-presidente||expresidente
+ ex militar||exmilitar
+ ex-militar||exmilitar
+ ex preso||ex-preso
+ ex-preso||expreso (para referirse a una vía de transporte o la rapidez de algo), ex-preso (para referirse a alguien que ya no es preso)
  ésta área||esta área
  ésta canción||esta canción
  ésta ciudad||esta ciudad
@@ -104,6 +329,7 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  ésta versión||esta versión
  ésta vez||esta vez
  ésta zona||esta zona
+ estado sionista de Israel||[[Estado de Israel]]
  éste álbum||este álbum
  éste año||este año
  éste caso||este caso
@@ -125,13 +351,16 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  éste último|| este último
  éstos dos||estos dos
  éstos últimos||estos últimos
+ ex ministro||exministro
+ ex-ministro||exministro
  grandes perdidas||grandes pérdidas
  han habido||ha habido
  hawk-eye||ojo de halcón
  hay mas||hay más
- hm2||hm² (hectómetro cuadrado)
- hm3||hm³ (hectómetro cúbico)
+ hm2||hm{{Exp|2}} (hectómetro cuadrado), hectómetro cuadrado, hectómetros cuadrados
+ hm3||hm{{Exp|3}} (hectómetro cúbico), hectómetro cúbico, hectómetros cúbicos
  Hugo Chavez|cs|Hugo Chávez
+ in media res||''in medias res''
  Jose Antonio|cs|José Antonio (nombre propio español)
  Jose Manuel|cs|José Manuel (nombre propio español y portugués)
  Jose Maria|cs|José María (nombre propio español)
@@ -141,23 +370,29 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  km. al||km al
  km. de||km de
  km. del||km del
- km2||km² (kilómetro cuadrado)
- km3||km³ (kilómetro cúbico)
+ km2||km{{Exp|2}} (kilómetro cuadrado), kilómetro cuadrado, kilómetros cuadrados
+ km3||km{{Exp|3}} (kilómetro cúbico), kilómetro cúbico, kilómetros cúbicos
  la mas||la más
  laminas de||láminas de
  la perdida||la pérdida
  la practica||la practica (verbo), la práctica (sustantivo)
- la primer||la primera, el primero, lo primero
+ la primer||la primera, el primero, lo primero, el primer
+ lanza-misiles||lanzamisiles
+ lanza misiles||lanzamisiles
+ lanza-cohetes||lanzacohetes
+ lanza cohetes||lanzacohetes
  las mas||las más
+ las miles||los miles, los millares
+ la tercer||la tercera, el tercero, el tercer
  Latino América|cs|Latinoamérica
  la version||la versión
  logro ganar||logró ganar
  lo mas||lo más
  los mas||los más
- lucky loser||perdedor afortunado (deporte)
+ lucky loser||perdedor afortunado (deporte), perdedores afortunados (deporte), perdedora afortunada (deporte), perdedoras afortunadas (deporte)
  luego paso||luego pasó
- m2|cs|m² (metro cuadrado), m2 (variable, nombre propio o para plantilla convertir)
- m3|cs|m³ (metro cúbico), m3 (variable, nombre propio o para plantilla convertir)
+ m2|cs|m{{Exp|2}} (metro cuadrado), m2 (variable, nombre propio o para plantilla convertir), metro cuadrado, metros cuadrados
+ m3|cs|m{{Exp|3}} (metro cúbico), m3 (variable, nombre propio o para plantilla convertir), metro cúbico, metros cúbicos
  main draw||cuadro principal
  mal entendido||mal entendido (adjetivo), malentendido (sustantivo)
  Maria Antonia|cs|María Antonia (nombre propio español)
@@ -173,10 +408,10 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  Maria Rosa|cs|María Rosa (nombre propio español), Maria Rosa (nombre propio catalán y portugués)
  Maria Teresa|cs|María Teresa (nombre propio español), Maria Teresa (nombre propio catalán e italiano)
  mas.|cs|más.
+ master class||clase magistral, clases magistrales
  mas adelante||más adelante
  mas allá||más allá
  mas alta||más alta
- más aun||más aún
  mas bien||más bien
  mas conocida||más conocida
  mas conocido||más conocido
@@ -195,20 +430,20 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  match point||punto de partido
  Metro de Paris|cs|Metro de París (en español), Métro de Paris (en francés)
  Miguel Angel|cs|Miguel Ángel (nombre propio, en particular castellanización del artista italiano)
- mm2|cs|mm² (milímetro cuadrado)
- mm3|cs|mm³ (milímetro cúbico)
+ mm2|cs|mm{{Exp|2}} (milímetro cuadrado), milímetro cuadrado, milímetros cuadrados
+ mm3|cs|mm{{Exp|3}} (milímetro cúbico), milímetro cúbico, milímetros cúbicos
  mucho mas||mucho más
+ №||N.º (abreviatura de «número» con mayúscula inicial), n.º (abreviatura de «número» sin mayúscula inicial)
  nada mas||nada más
  Nicolas de Bari|cs|Nicolás de Bari
  Nicolas Maduro|cs|Nicolás Maduro
+ noche buena||Nochebuena (forma recomendada), Noche Buena (forma tradicional y aceptada)
+ noche vieja||Nochevieja (forma recomendada), Noche Vieja (forma tradicional y aceptada)
  norte americano||norteamericano (gentilicio)
  o mas||o más
  opera prima|cs|ópera prima (en español)
  opinión publica||opinión pública
- Parque Nacional|cs|parque nacional
- Parque Natural|cs|parque natural
  paso a ser||pasó a ser
- passing shot||golpe pasado, golpe pasante
  por que||por que (preposición + relativo o conjunción), porque (conjunción causal), por qué (interrogación o exclamación), porqué (sustantivo, causa)
  Primera Division|cs|Primera División
  punto de break||punto de rotura
@@ -220,6 +455,7 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  que tenia||que tenía
  que venia de||que venía de
  Ramón Llull|cs|Ramon Llull
+ red carpet||alfombra roja, alfombras rojas
  relacionada a||relacionada con
  relacionadas a||relacionadas con
  relacionado a||relacionado con
@@ -228,15 +464,15 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  Rio 2016|cs|Río 2016 (Juegos Olímpicos de Verano)
  Rio Claro|cs|Río Claro (región o río en varios países de lengua española y Brasil), Rio Claro (en portugués)
  Rio de Janeiro|cs|Río de Janeiro (en español), Rio de Janeiro (en portugués y otros idiomas)
- Rio Negro|cs|Río Negro (región o río en varios países de lengua española, EE. UU. y Brasil), Rio Negro (en portugués e inglés)
+ Rio Negro|cs|Río Negro (región o río en varios países de lengua española, Estados Unidos y Brasil), Rio Negro (en portugués e inglés)
  round robin||todos contra todos, fase de liguilla
  S. D. Éibar|cs|S. D. Eibar
  S.D. Éibar|cs|S. D. Eibar
  Salud Publica|cs|Salud Pública
  salud publica|cs|salud pública
  San Sebastian|cs|San Sebastián
- Santa Barbara|cs|Santa Bárbara (localidad o región en varios países de lengua española y EE. UU.), Santa Barbara (en inglés)
- Santa Monica|cs|Santa Mónica (localidad o región en varios países de lengua española y EE. UU.), Santa Monica (en inglés)
+ Santa Barbara|cs|Santa Bárbara (localidad o región en varios países de lengua española y Estados Unidos), Santa Barbara (en inglés)
+ Santa Monica|cs|Santa Mónica (localidad o región en varios países de lengua española y Estados Unidos), Santa Monica (en inglés)
  SD Éibar|cs|SD Eibar
  se anuncio||se anunció
  se cambio||se cambió
@@ -250,6 +486,7 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  se dio cuenta que||se dio cuenta de que
  se encuentro||se encuentra (presente), se encontró (pretérito)
  se entero||se enteró
+ se esta||se está
  se fundo||se fundó
  Segunda Division|cs|Segunda División
  Seguridad Publica|cs|Seguridad Pública
@@ -272,22 +509,113 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  Simon Bolivar|cs|Simón Bolívar
  Simon Bolívar|cs|Simón Bolívar
  Sociedad Deportiva Éibar|cs|Sociedad Deportiva Eibar
+ sold out||agotado, agotada, agotados, agotadas
  son mas||son más
  super tiebreak||superdesempate
  tener mas||tener más
  Tercera Division|cs|Tercera División
  tomo el||tomó el
  top spin||golpe liftado
- top ten||los diez primeros, los diez mejores
+ trade deadline||cierre del mercado de traspasos (deportes)
  TV Publica|cs|TV Pública
  una perdida||una pérdida
+ unas miles||unos miles
+ una tercer||una tercera, un tercer, un tercero
  una version||una versión
  Universidad de Paris|cs|Universidad de París
  un sin fin||un sinfín
  un sólo||un solo
  vez mas||vez más
  vía publica||vía pública
+ vice ministro||viceministro
+ vice-ministro||viceministro
  Victor Manuel|cs|Víctor Manuel (entre otros, nombre en español de varios monarcas italianos)
  Victor Pecci|cs|Víctor Pecci (tenista paraguayo)
- wild card||invitación, tenista invitado
+ video clip||videoclip
+ siglo I|cs|{{siglo|I||s}} (el número romano, al referirse a un siglo o milenio, debe ir en versalillas)
+ Siglo I|cs|{{Siglo|I||S}} (el número romano, al referirse a un siglo o milenio, debe ir en versalillas)
+ siglo II|cs|{{siglo|II||s}} (el número romano, al referirse a un siglo o milenio, debe ir en versalillas)
+ Siglo II|cs|{{Siglo|II||S}} (el número romano, al referirse a un siglo o milenio, debe ir en versalillas)
+ siglo III|cs|{{siglo|III||s}} (el número romano, al referirse a un siglo o milenio, debe ir en versalillas)
+ Siglo III|cs|{{Siglo|III||S}} (el número romano, al referirse a un siglo o milenio, debe ir en versalillas)
+ siglo IV|cs|{{siglo|IV||s}} (el número romano, al referirse a un siglo o milenio, debe ir en versalillas)
+ Siglo IV|cs|{{Siglo|IV||S}} (el número romano, al referirse a un siglo o milenio, debe ir en versalillas)
+ siglo V|cs|{{siglo|V||s}} (el número romano, al referirse a un siglo o milenio, debe ir en versalillas)
+ Siglo V|cs|{{Siglo|V||S}} (el número romano, al referirse a un siglo o milenio, debe ir en versalillas)
+ siglo VI|cs|{{siglo|VI||s}} (el número romano, al referirse a un siglo o milenio, debe ir en versalillas)
+ Siglo VI|cs|{{Siglo|VI||S}} (el número romano, al referirse a un siglo o milenio, debe ir en versalillas)
+ siglo VII|cs|{{siglo|VII||s}} (el número romano, al referirse a un siglo o milenio, debe ir en versalillas)
+ Siglo VII|cs|{{Siglo|VII||S}} (el número romano, al referirse a un siglo o milenio, debe ir en versalillas)
+ siglo VIII|cs|{{siglo|VIII||s}} (el número romano, al referirse a un siglo o milenio, debe ir en versalillas)
+ Siglo VIII|cs|{{Siglo|VIII||S}} (el número romano, al referirse a un siglo o milenio, debe ir en versalillas)
+ siglo IX|cs|{{siglo|IX||s}} (el número romano, al referirse a un siglo o milenio, debe ir en versalillas)
+ Siglo IX|cs|{{Siglo|IX||S}} (el número romano, al referirse a un siglo o milenio, debe ir en versalillas)
+ siglo X|cs|{{siglo|X||s}} (el número romano, al referirse a un siglo o milenio, debe ir en versalillas)
+ Siglo X|cs|{{Siglo|X||S}} (el número romano, al referirse a un siglo o milenio, debe ir en versalillas)
+ siglo XI|cs|{{siglo|XI||s}} (el número romano, al referirse a un siglo o milenio, debe ir en versalillas)
+ Siglo XI|cs|{{Siglo|XI||S}} (el número romano, al referirse a un siglo o milenio, debe ir en versalillas)
+ siglo XII|cs|{{siglo|XII||s}} (el número romano, al referirse a un siglo o milenio, debe ir en versalillas)
+ Siglo XII|cs|{{Siglo|XII||S}} (el número romano, al referirse a un siglo o milenio, debe ir en versalillas)
+ siglo XIII|cs|{{siglo|XIII||s}} (el número romano, al referirse a un siglo o milenio, debe ir en versalillas)
+ Siglo XIII|cs|{{Siglo|XIII||S}} (el número romano, al referirse a un siglo o milenio, debe ir en versalillas)
+ siglo XIV|cs|{{siglo|XIV||s}} (el número romano, al referirse a un siglo o milenio, debe ir en versalillas)
+ Siglo XIV|cs|{{Siglo|XIV||S}} (el número romano, al referirse a un siglo o milenio, debe ir en versalillas)
+ siglo XV|cs|{{siglo|XV||s}} (el número romano, al referirse a un siglo o milenio, debe ir en versalillas)
+ Siglo XV|cs|{{Siglo|XV||S}} (el número romano, al referirse a un siglo o milenio, debe ir en versalillas)
+ siglo XVI|cs|{{siglo|XVI||s}} (el número romano, al referirse a un siglo o milenio, debe ir en versalillas)
+ Siglo XVI|cs|{{Siglo|XVI||S}} (el número romano, al referirse a un siglo o milenio, debe ir en versalillas)
+ siglo XVII|cs|{{siglo|XVII||s}} (el número romano, al referirse a un siglo o milenio, debe ir en versalillas)
+ Siglo XVII|cs|{{Siglo|XVII||S}} (el número romano, al referirse a un siglo o milenio, debe ir en versalillas)
+ siglo XVIII|cs|{{siglo|XVIII||s}} (el número romano, al referirse a un siglo o milenio, debe ir en versalillas)
+ Siglo XVIII|cs|{{Siglo|XVIII||S}} (el número romano, al referirse a un siglo o milenio, debe ir en versalillas)
+ siglo XIX|cs|{{siglo|XIX||s}} (el número romano, al referirse a un siglo o milenio, debe ir en versalillas)
+ Siglo XIX|cs|{{Siglo|XIX||S}} (el número romano, al referirse a un siglo o milenio, debe ir en versalillas)
+ siglo XX|cs|{{siglo|XX||s}} (el número romano, al referirse a un siglo o milenio, debe ir en versalillas)
+ Siglo XX|cs|{{Siglo|XX||S}} (el número romano, al referirse a un siglo o milenio, debe ir en versalillas)
+ siglo XXI|cs|{{siglo|XXI||s}} (el número romano, al referirse a un siglo o milenio, debe ir en versalillas)
+ Siglo XXI|cs|{{Siglo|XXI||S}} (el número romano, al referirse a un siglo o milenio, debe ir en versalillas)
+ [[siglo I]]|cs|{{siglo|I||s|1}} (el número romano, al referirse a un siglo o milenio, debe ir en versalillas)
+ [[Siglo I]]|cs|{{Siglo|I||S|1}} (el número romano, al referirse a un siglo o milenio, debe ir en versalillas)
+ [[siglo II]]|cs|{{siglo|II||s|1}} (el número romano, al referirse a un siglo o milenio, debe ir en versalillas)
+ [[Siglo II]]|cs|{{Siglo|II||S|1}} (el número romano, al referirse a un siglo o milenio, debe ir en versalillas)
+ [[siglo III]]|cs|{{siglo|III||s|1}} (el número romano, al referirse a un siglo o milenio, debe ir en versalillas)
+ [[Siglo III]]|cs|{{Siglo|III||S|1}} (el número romano, al referirse a un siglo o milenio, debe ir en versalillas)
+ [[siglo IV]]|cs|{{siglo|IV||s|1}} (el número romano, al referirse a un siglo o milenio, debe ir en versalillas)
+ [[Siglo IV]]|cs|{{Siglo|IV||S|1}} (el número romano, al referirse a un siglo o milenio, debe ir en versalillas)
+ [[siglo V]]|cs|{{siglo|V||s|1}} (el número romano, al referirse a un siglo o milenio, debe ir en versalillas)
+ [[Siglo V]]|cs|{{Siglo|V||S|1}} (el número romano, al referirse a un siglo o milenio, debe ir en versalillas)
+ [[siglo VI]]|cs|{{siglo|VI||s|1}} (el número romano, al referirse a un siglo o milenio, debe ir en versalillas)
+ [[Siglo VI]]|cs|{{Siglo|VI||S|1}} (el número romano, al referirse a un siglo o milenio, debe ir en versalillas)
+ [[siglo VII]]|cs|{{siglo|VII||s|1}} (el número romano, al referirse a un siglo o milenio, debe ir en versalillas)
+ [[Siglo VII]]|cs|{{Siglo|VII||S|1}} (el número romano, al referirse a un siglo o milenio, debe ir en versalillas)
+ [[siglo VIII]]|cs|{{siglo|VIII||s|1}} (el número romano, al referirse a un siglo o milenio, debe ir en versalillas)
+ [[Siglo VIII]]|cs|{{Siglo|VIII||S|1}} (el número romano, al referirse a un siglo o milenio, debe ir en versalillas)
+ [[siglo IX]]|cs|{{siglo|IX||s|1}} (el número romano, al referirse a un siglo o milenio, debe ir en versalillas)
+ [[Siglo IX]]|cs|{{Siglo|IX||S|1}} (el número romano, al referirse a un siglo o milenio, debe ir en versalillas)
+ [[siglo X]]|cs|{{siglo|X||s|1}} (el número romano, al referirse a un siglo o milenio, debe ir en versalillas)
+ [[Siglo X]]|cs|{{Siglo|X||S|1}} (el número romano, al referirse a un siglo o milenio, debe ir en versalillas)
+ [[siglo XI]]|cs|{{siglo|XI||s|1}} (el número romano, al referirse a un siglo o milenio, debe ir en versalillas)
+ [[Siglo XI]]|cs|{{Siglo|XI||S|1}} (el número romano, al referirse a un siglo o milenio, debe ir en versalillas)
+ [[siglo XII]]|cs|{{siglo|XII||s|1}} (el número romano, al referirse a un siglo o milenio, debe ir en versalillas)
+ [[Siglo XII]]|cs|{{Siglo|XII||S|1}} (el número romano, al referirse a un siglo o milenio, debe ir en versalillas)
+ [[siglo XIII]]|cs|{{siglo|XIII||s|1}} (el número romano, al referirse a un siglo o milenio, debe ir en versalillas)
+ [[Siglo XIII]]|cs|{{Siglo|XIII||S|1}} (el número romano, al referirse a un siglo o milenio, debe ir en versalillas)
+ [[siglo XIV]]|cs|{{siglo|XIV||s|1}} (el número romano, al referirse a un siglo o milenio, debe ir en versalillas)
+ [[Siglo XIV]]|cs|{{Siglo|XIV||S|1}} (el número romano, al referirse a un siglo o milenio, debe ir en versalillas)
+ [[siglo XV]]|cs|{{siglo|XV||s|1}} (el número romano, al referirse a un siglo o milenio, debe ir en versalillas)
+ [[Siglo XV]]|cs|{{Siglo|XV||S|1}} (el número romano, al referirse a un siglo o milenio, debe ir en versalillas)
+ [[siglo XVI]]|cs|{{siglo|XVI||s|1}} (el número romano, al referirse a un siglo o milenio, debe ir en versalillas)
+ [[Siglo XVI]]|cs|{{Siglo|XVI||S|1}} (el número romano, al referirse a un siglo o milenio, debe ir en versalillas)
+ [[siglo XVII]]|cs|{{siglo|XVII||s|1}} (el número romano, al referirse a un siglo o milenio, debe ir en versalillas)
+ [[Siglo XVII]]|cs|{{Siglo|XVII||S|1}} (el número romano, al referirse a un siglo o milenio, debe ir en versalillas)
+ [[siglo XVIII]]|cs|{{siglo|XVIII||s|1}} (el número romano, al referirse a un siglo o milenio, debe ir en versalillas)
+ [[Siglo XVIII]]|cs|{{Siglo|XVIII||S|1}} (el número romano, al referirse a un siglo o milenio, debe ir en versalillas)
+ [[siglo XIX]]|cs|{{siglo|XIX||s|1}} (el número romano, al referirse a un siglo o milenio, debe ir en versalillas)
+ [[Siglo XIX]]|cs|{{Siglo|XIX||S|1}} (el número romano, al referirse a un siglo o milenio, debe ir en versalillas)
+ [[siglo XX]]|cs|{{siglo|XX||s|1}} (el número romano, al referirse a un siglo o milenio, debe ir en versalillas)
+ [[Siglo XX]]|cs|{{Siglo|XX||S|1}} (el número romano, al referirse a un siglo o milenio, debe ir en versalillas)
+ [[siglo XXI]]|cs|{{siglo|XXI||s|1}} (el número romano, al referirse a un siglo o milenio, debe ir en versalillas)
+ [[Siglo XXI]]|cs|{{Siglo|XXI||S|1}} (el número romano, al referirse a un siglo o milenio, debe ir en versalillas)
+ wild card||comodín, comodines, invitación, invitaciones, tarjeta de invitación, tarjetas de invitación, tenista invitado, tenistas invitados, tenista invitada, tenistas invitadas
+ wedding planner||organizador de bodas, organizadora de bodas, experto en bodas, experta en bodas
  y mas||y más

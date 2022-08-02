@@ -11,7 +11,7 @@ Pódense incluír comentarios, comezando por <code>#</code>, en particular para 
 Para calcular o número de ocorrencias, cando non distingue entre maiúsculas e minúsculas, recoméndase buscar a expresión na caixa de busca de Wikipedia pero incluída entre comiñas dobres. Para distinguir entre maiúsculas e minúsculas, pode engadir a opción ''fonte'' que busca o texto tal cal. Por exemplo:
 * <code>"aínda así"</code> busca aparicións de "aínda así" sen distinción entre maiúsculas e minúsculas.
 * <code>"Aínda así" insource:/"Aínda así"/</code> busca aparicións de "Aínda así" distinguindo entre maiúsculas e minúsculas. Debe introducir a expresión dúas veces para optimizar o tempo de resposta á busca.
-Tamén tem que filtrar polos espazos ''Principal'' e ''Anexo'', que son os espazos que usa Replacer actualmente.
+Tamén ten que filtrar polos espazos ''Principal'' e ''Anexo'', que son os espazos que usa Replacer actualmente.
 
 {{Aviso
 | tipo = contido
@@ -130,6 +130,8 @@ Tamén tem que filtrar polos espazos ''Principal'' e ''Anexo'', que son os espaz
  Lynx [Ee]dicions
  Estrella Castrillón
  [Ee]l mesmo
+ [Áá]lbum de estudio
+ [Áá]lbums de estudio
 
  # ---------I
  # Ivan
@@ -316,6 +318,11 @@ Tamén tem que filtrar polos espazos ''Principal'' e ''Anexo'', que son os espaz
  Sebastian Ingrosso
  Ford Sierra
  de la Sierra
+ Terra de Soneira
+ paneis solares
+ células solares
+ [Ss]istema [Ss]olar
+ entre si
 
  # ---------V
  # version

@@ -903,6 +903,10 @@
  apófisis||apófise
  apofisis||apófise
  apolillar||trazar
+ apoteósico||apoteótico
+ apoteósica||apoteótica
+ apoteósicos||apoteóticos
+ apoteósicas||apoteóticas
  apostilla||apostila
  aposento||apousento, aposento (é correcto se é "Regalía de aposento")
  aposentos||apousentos
@@ -1496,8 +1500,8 @@
  bostezos||bocexos
  botellon||botellón
  botellons||botellóns
- botiquín||caixa de urxencias
- botiquíns||caixas de urxencias
+ botiquín||botica de primeiros auxilios
+ botiquíns||boticas de primeiros auxilios
  botixo||porrón
  botixos||porróns
  botswana|cs|Botswana
@@ -9316,6 +9320,9 @@
  ke||que
  kenia||Kenya
  kermesse||quermese
+ kharkiv||Khárkiv
+ kherson||Khersón
+ kiev||Kíiv
  kilo||quilo
  kilocaloria||quilocaloría
  kilocaloría||quilocaloría
@@ -9779,10 +9786,10 @@
  mamutes||mamuts
  manada||manda
  manadas||mandas
- manager||preparador, director
- managers||preparadores, directores
- mánager||preparador, director
- mánagers||preparadores, directores
+ manager||preparador, director, representante
+ managers||preparadores, directores, representantes
+ mánager||preparador, director, representante
+ mánagers||preparadores, directores, representantes
  managua|cs|Managua
  manantial||manancial
  manantiais||mananciais
@@ -10432,8 +10439,6 @@
  mónica|cs|Mónica
  monitorizacion||monitorización
  monitorizacions||monitorizacións
- mono||funda (se é a peza de roupa), mono (é correcto se é o animal)
- monos||fundas (se é a pezas de roupa), monos (é correcto se é o animal)
  monolito||monólito
  monolitos||monólitos
  monosilaba||monosílaba
@@ -10799,6 +10804,7 @@
  october||outubro
  octubre||outubro
  ocurrir||ocorrer
+ odessa||Odesa
  odometria||hodometría
  odometría||hodometría
  odometrias||hodometrías
@@ -11540,11 +11546,11 @@
  prescolar||preescolar
  presencia||presenza (substantivo), presencia (é correcto se é do verbo presenciar)
  presencias||presenzas
- presiona||aperta, preme, pulsa
- presionan||apertan, premen, pulsan
- presionar||apertar, premer, pulsar
- presionaron||apertaron, premeron, pulsaron
- presionou||apertou, premeu, pulsou
+ presiona||aperta, preme, pulsa, mete presión
+ presionan||apertan, premen, pulsan, meten presión
+ presionar||apertar, premer, pulsar, meter presión
+ presionaron||apertaron, premeron, pulsaron, meteron presión
+ presionou||apertou, premeu, pulsou, meteu presión
  prevenida||previda
  prevenidas||previdas
  prevenido||prevido
@@ -12030,6 +12036,33 @@
  reír||rir
  remite||remitente, remite (é correcto se é do verbo remitir)
  remites||remitentes
+ remprazaba||substituía
+ remprazaban||substituían
+ remprace||substitúa
+ rempracen||substitúan
+ rempraza||substitúe
+ remprazada||substituída
+ remprazadas||substituídas
+ remprazado||substituído
+ remprazados||substituídos
+ remprazan||substitúen
+ remprazando||substituíndo
+ remprazandose||substituíndose
+ remprazándose||substituíndose
+ remprazar||substituír
+ remprazara||substituíra
+ remprazará||substituirá
+ remprazaran||substituíran
+ remprazarán||substituirán
+ remprazaren||substituíren
+ remprazaria||substituiría
+ remprazaría||substituiría
+ remprazarian||substituirían
+ remprazarían||substituirían
+ remprazaron||substituíron
+ remprazase||substituíse
+ remprazasen||substituísen
+ remprazou||substituíu
  renacencia||renacenza
  renacencias||renacenzas
  renglón||liña
@@ -12552,8 +12585,8 @@
  soamentes||soamente, só
  solana||solaina
  solanas||solainas
- solar||terreo edificable, soar (substantivo), solar (adx. relativo ó Sol 'sistema solar', 'mancha solar', verbo)
- solares||terreos edificables, soares (substantivo), solares (adx. 'manchas solares')
+ solar||terreo, patrucial, soar (substantivo), solar (adx. relativo ó Sol 'sistema solar', 'mancha solar', verbo)
+ solares||terreos, patruciais, soares (substantivo), solares (adx. 'manchas solares')
  soluzar||saloucar
  soluzo||salouco
  soluzos||saloucos
@@ -13601,6 +13634,10 @@
  viruela||varíola
  viruta||labra
  virutas||labras
+ visconde||vizconde
+ viscondes||vizcondes
+ viscondesa||vizcondesa
+ viscondesas||vizcondesa
  visillo||cortina
  visillos||cortinas
  víspera||véspera

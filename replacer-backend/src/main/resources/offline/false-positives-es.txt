@@ -10,7 +10,7 @@ Se pueden incluir comentarios, comenzando por <code>#</code>, en particular para
 === Número de ocurrencias ===
 Para calcular el número de ocurrencias, cuando no haya que distinguir mayúsculas y minúsculas, se recomienda buscar la expresión en la caja de búsqueda de Wikipedia pero encerrada entre comillas dobles. Para distinguir entre mayúsculas y minúsculas, se puede añadir la opción ''insource'' que busca el texto tal cual. Por ejemplo:
 * <code>"aún así"</code> busca ocurrencias de «aún así» sin distinguir mayúsculas y minúsculas.
-* <code>"Aún así" insource:/"Aún así"/</code> busca ocurrencias de «Aún así» distinguiendo mayúsculas y minúsculas. Hay que indicar la expresión dos veces para optimizar el tiempo de respuesta de la búsqueda.
+* <code>"Aún así" insource:/Aún así/</code> busca ocurrencias de «Aún así» distinguiendo mayúsculas y minúsculas. Hay que indicar la expresión dos veces para optimizar el tiempo de respuesta de la búsqueda.
 También hay que filtrar por los espacios ''Principal'' y ''Anexo'', que son los espacios que actualmente utiliza Replacer.
 
 {{Aviso
@@ -36,7 +36,9 @@ También hay que filtrar por los espacios ''Principal'' y ''Anexo'', que son los
  Africa Sports
 
  # Albums
+ # Se ignora también precedido de nombre propio
  Albums Chart
+ Top Latin Albums
 
  # Alex
  Alex Barros         # 340
@@ -62,24 +64,20 @@ También hay que filtrar por los espacios ''Principal'' y ''Anexo'', que son los
  Alla Kudryavtseva
 
  # america
- # North America Editorial  # Cubierto por North America
- America Tour
- Captain America
- Central America
- Latin America
- North America
- Road America
- Skate America
- South America
- # UCI America Tour         # Cubierto por America Tour
- [Ii]n America
- of America
+ # Se ignora también precedido de nombre propio
+ of America              # 12800
+ America's               # 3700
+ [Ii]n America           # 3700
+ All-America             # 750
+ America Tour            # 730
+ America West            # 120
+ America East            # 110
 
  # angel
  Evil Angel
 
  # angeles
- # Se encuentra también como inmutable en PersonNameFinder
+ # Los Angeles se ignora también seguido de nombre propio
  of Los Angeles
 
  # Astana
@@ -91,19 +89,28 @@ También hay que filtrar por los espacios ''Principal'' y ''Anexo'', que son los
  Barbara Schett
  Barbara Potter
  Barbara Rittner
+ Barbara Haas
+
+ # bigas
+ Bigas Luna
 
  # canada
+ # Se ignora también seguido o precedido de nombre propio
  of Canada
  in Canada
  and Canada
  du Canada
 
  # catalunya
+ # "de Catalunya" se ignora también precedido de nombre propio
  Catalunya Ràdio
  Catalunya [Rr]omànica
  Catalunya Sí
  Iniciativa per Catalunya
  Junts per Catalunya
+
+ # darian
+ Darian King
 
  # disparo
  # La inmensa mayoría se refieren al sustantivo y por tanto son correctos
@@ -112,6 +119,7 @@ También hay que filtrar por los espacios ''Principal'' y ''Anexo'', que son los
  el disparo
 
  # division
+ # Se ignora también seguido de nombre propio
  Division 1
  Division 2
  Division of
@@ -126,7 +134,7 @@ También hay que filtrar por los espacios ''Principal'' y ''Anexo'', que son los
  X Division
 
  # Domingo
- # Se encuentra también como inmutable en SurnameFinder y en PersonNameFinder
+ # Se ignora también seguido o precedido de nombre propio
  Domingo de Guzmán
  Domingo de Ramos
  Domingo de Resurrección
@@ -139,9 +147,27 @@ También hay que filtrar por los espacios ''Principal'' y ''Anexo'', que son los
  S. ?D. Eibar
  Sociedad Deportiva Eibar
 
+ # Elias
+ Gastão Elias
+ Elias Ymer
+
+ # entrego
+ El Entrego              # 150
+
  # Febrero
  3 de Febrero FBC        # 150
  3 de Febrero CDE        # 100
+
+ # Garcia
+ Caroline Garcia
+
+ # Gómez
+ Selena Gomez
+ Ian Gomez
+ Nick Gomez
+
+ # ito
+ Tatsuma Ito
 
  # Ivan
  Ivan Lendl
@@ -158,6 +184,11 @@ También hay que filtrar por los espacios ''Principal'' y ''Anexo'', que son los
  Julian Assange
  Julian Casablancas
 
+ #Jueves
+ Jueves Santo
+ El Jueves
+ Jueves Negro
+
  # junior
  Junior de Barranquilla # 690 Equipo de fútbol colombiano
  Atlético Junior        # 430 Se refiere también al equipo de fútbol
@@ -171,6 +202,9 @@ También hay que filtrar por los espacios ''Principal'' y ''Anexo'', que son los
  Top Race Junior        # 150
  Junior Championship    # 90
 
+ # linea
+ Fiat Linea             # 450
+
  # logro
  [Ee]l logro
  [Aa]l logro
@@ -178,6 +212,12 @@ También hay que filtrar por los espacios ''Principal'' y ''Anexo'', que son los
  gran logro
  mayor logro
  su logro
+
+ # Lunes
+ Lunes Santo
+
+ # lt
+ &lt;
 
  # M2
  Browning M2
@@ -216,7 +256,7 @@ También hay que filtrar por los espacios ''Principal'' y ''Anexo'', que son los
  Magazine
 
  # Manchester
- # Cubierto por PersonNameFinder
+ # Se ignora también seguido de nombre propio
 
  # Maria
  # Añado aquí los casos que claramente se corresponden a italiano, catalán, portugués, etc.
@@ -231,11 +271,11 @@ También hay que filtrar por los espacios ''Principal'' y ''Anexo'', que son los
  Giuseppe Maria          # 280
  Giovanni Maria          # 275
  Rainer Maria            # 275
+ Tatjana Maria           # 260
  Maria Rilke             # 250
  Maria Anna              # 250
  di Maria                # 240
  Maria Kirilenko         # 240 Aunque se romaniza como María Kirilenko
- Tatjana Maria           # 220
  Santa Maria di          # 210
  Carl Maria von Weber    # 210
  Maria Grazia            # 190
@@ -263,6 +303,11 @@ También hay que filtrar por los espacios ''Principal'' y ''Anexo'', que son los
  Anna-Maria              # 100
  Maria Bueno             # 100
 
+ #Martes
+ Martes de Carnaval
+ Martes Negro
+ Martes Santo
+
  # Marzo
  1.º de Marzo            # 120
 
@@ -270,17 +315,16 @@ También hay que filtrar por los espacios ''Principal'' y ''Anexo'', que son los
  mas no
 
  # Master
+ # Se ignora también seguido o precedido de nombre propio
  Master of
  Master and
 
  # masters
  # La gran mayoría son falsos positivos correspondientes a los torneos de tenis
- Masters 1000
- Masters Cup
- Masters de
- Masters of
- Masters Series
- Geoff Masters
+ # Se ignora también seguido o precedido de nombre propio
+ Masters de              # 2600
+ Masters of              # 1100
+ Masters 1000            # 950
 
  # Mayo
  # Los casos como Iban Mayo o Revolución de Mayo los cubrimos con Mayo como apellido
@@ -295,14 +339,26 @@ También hay que filtrar por los espacios ''Principal'' y ''Anexo'', que son los
  condado de Mayo         # 80
  Gran Premio del 1 de Mayo # 50
 
+ #Miércoles
+ Miércoles de Ceniza
+ Miércoles Santo
+
  # Milan
  # La mayoría son del equipo de fútbol que se escribe sin tilde
+ # Se ignora también seguido de nombre propio
  Calcio Milan
  AC Milan
  el Milan
 
  # Missouri
+ # Se ignora también seguido de nombre propio
  of Missouri
+
+ # Monica
+ Monica Niculescu
+
+ # Nestor
+ Daniel Nestor
 
  # Nicolas
  Nicolas Mahut
@@ -314,6 +370,7 @@ También hay que filtrar por los espacios ''Principal'' y ''Anexo'', que son los
  Nicolas Poussin
 
  # Octubre
+ # Se ignora también seguido de nombre propio
  Grupo Octubre           # 70
 
  # Paris
@@ -334,26 +391,35 @@ También hay que filtrar por los espacios ''Principal'' y ''Anexo'', que son los
  Paris-Levallois         # 100
  Théâtre de Paris        # 100
 
+ # Perez
+ Ellen Perez
+
  # Pidio
+ # Se ignora también precedido de nombre propio
  Quintana del Pidio      # municipio español
 
  # publica
- publica el
- publica en
- publica la
- publica su
- publica una?
+ [Pp]ublica el              # 2500
+ [Pp]ublica en              # 2500
+ [Pp]ublica las?            # 1700
+ [Pp]ublica sus?            # 2600
+ [Pp]ublica una?            # 2500
+ [Pp]ublica los             # 250
+ [Pp]ublica artículos       # 300
 
- que publica
- [Ss]e publica
- [Tt]ambién publica
- y publica
+ que publica                # 1400
+ [Ss]e publica              # 4700
+ [Tt]ambién publica         # 500
+ y publica                  # 1600
+ donde publica              # 200
+ [Rr]es [Pp]ublica          # 170
+ [Ee]n [0-9]{4},? publica   # 800
 
  # Ramon
  Ramon Llull
 
  # records
- # Se encuentra también como inmutable en SurnameFinder
+ # Se ignora también precedido de nombre propio
  [Rr]ecords of
 
  # reference
@@ -398,6 +464,17 @@ También hay que filtrar por los espacios ''Principal'' y ''Anexo'', que son los
 
  # round
  [Rr]ound [Rr]obin
+
+ # Ruben
+ Ruben Bemelmans
+
+ # Sábado
+ Sábado de Pasión
+ Sábado de Gloria
+ Sábado Santo
+ Sábado Gigante
+ Sábado Genial
+ Sábado Sensacional
 
  # sebastian
  Sebastian Bach
@@ -444,7 +521,7 @@ También hay que filtrar por los espacios ''Principal'' y ''Anexo'', que son los
  Anna Simon            # 80  Nombre catalán, no se tilda.
 
  # sky
- # Se encuentra también como inmutable en PersonNameFinder y SurnameFinder
+ # Se ignora también seguido o precedido de nombre propio
  [Tt]he [Ss]ky
 
  # Sofia
@@ -457,8 +534,14 @@ También hay que filtrar por los espacios ''Principal'' y ''Anexo'', que son los
  TV Tokyo
  FC Tokyo
 
+ # Tristan
+ Tristan-Samuel Weissborn
+
+ # Tunes
+ Looney Tunes
+
  # Union
- # Se añade a la lista de "apellidos"
+ # Se ignora también precedido de nombre propio
  [Mm]unicipio de Union
  [Cc]ondado de Union
  Union Olimpija
@@ -467,14 +550,31 @@ También hay que filtrar por los espacios ''Principal'' y ''Anexo'', que son los
  Union of
 
  # version
+ # Se ignora también precedido de nombre propio
  [Vv]ersion of
 
  # Victor
- Victor Amaya
- Victor Entertainment
- Victor Hănescu
- Victor Hugo
- RCA Victor
+ Victor Amaya            # 160
+ Victor Entertainment    # 210
+ Victor H[aă]nescu       # 230
+ Victor Hugo             # 1500
+ Victor Fleming          # 160
+ Victor Garber           # 130
+ Victor Young            # 110
+ Victor Sjöström         # 90
+ Victor Schertzinger     # 80
+ Victor Gollancz         # 140
+ RCA Victor              # 1000
+ Saint-Victor            # 200
+ Charles Victor          # 100
+ Jean[ -]Victor          # 150
+
+ #Viernes
+ Viernes Santo
+ Viernes de Dolores
+
+ # wild card
+ (wild card)
 
  # zombie
  Rob Zombie
