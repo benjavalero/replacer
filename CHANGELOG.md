@@ -2,6 +2,7 @@
 
 ## 2.x.x (??)
 - Fix routing on admin section in frontend
+- Support composed misspelling containing brackets
 
 ## 2.17.7 (25 Jun 2022)
 - Fix parsing response from Wikipedia API

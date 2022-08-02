@@ -71,8 +71,8 @@ public class MisspellingComposedFinder extends MisspellingFinder implements Prop
     }
 
     private String processComposedMisspelling(ComposedMisspelling misspelling) {
-        final String words = misspelling.getWord();
-        return misspelling.isCaseSensitive() ? words : FinderUtils.setFirstUpperCaseClass(words);
+        final String word = misspelling.getWord().replace("[", "\\[").replace("]", "\\]");
+        return misspelling.isCaseSensitive() ? word : FinderUtils.setFirstUpperCaseClass(word);
     }
 
     @Override

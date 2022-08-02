@@ -174,4 +174,124 @@ class MisspellingComposedFinderTest {
             .build();
         assertEquals(Set.of(expected), new HashSet<>(results));
     }
+
+    @Test
+    void testMisspellingWithSuperIndex() {
+        String text = "El 1º.";
+
+        ComposedMisspelling misspelling = ComposedMisspelling.of("1º", false, "1.º");
+        this.fakeUpdateMisspellingList(List.of(misspelling));
+
+        List<Replacement> results = misspellingComposedFinder.findList(text);
+
+        Replacement expected = Replacement
+            .builder()
+            .start(3)
+            .text("1º")
+            .type(ReplacementType.of(ReplacementKind.COMPOSED, "1º"))
+            .suggestions(List.of(Suggestion.ofNoComment("1º"), Suggestion.ofNoComment("1.º")))
+            .build();
+        assertEquals(Set.of(expected), new HashSet<>(results));
+    }
+
+    @Test
+    void testMisspellingWithDegree() {
+        String text = "El 1°.";
+
+        ComposedMisspelling misspelling = ComposedMisspelling.of("1°", false, "1.º");
+        this.fakeUpdateMisspellingList(List.of(misspelling));
+
+        List<Replacement> results = misspellingComposedFinder.findList(text);
+
+        Replacement expected = Replacement
+            .builder()
+            .start(3)
+            .text("1°")
+            .type(ReplacementType.of(ReplacementKind.COMPOSED, "1°"))
+            .suggestions(List.of(Suggestion.ofNoComment("1°"), Suggestion.ofNoComment("1.º")))
+            .build();
+        assertEquals(Set.of(expected), new HashSet<>(results));
+    }
+
+    @Test
+    void testMisspellingWithDash() {
+        String text = "El anti-ruso.";
+
+        ComposedMisspelling misspelling = ComposedMisspelling.of("anti-ruso", false, "antirruso");
+        this.fakeUpdateMisspellingList(List.of(misspelling));
+
+        List<Replacement> results = misspellingComposedFinder.findList(text);
+
+        Replacement expected = Replacement
+            .builder()
+            .start(3)
+            .text("anti-ruso")
+            .type(ReplacementType.of(ReplacementKind.COMPOSED, "anti-ruso"))
+            .suggestions(List.of(Suggestion.ofNoComment("anti-ruso"), Suggestion.ofNoComment("antirruso")))
+            .build();
+        assertEquals(Set.of(expected), new HashSet<>(results));
+    }
+
+    @Test
+    void testMisspellingWithApostrophe() {
+        String text = "En C's.";
+
+        ComposedMisspelling misspelling = ComposedMisspelling.of("C's", true, "Cs");
+        this.fakeUpdateMisspellingList(List.of(misspelling));
+
+        List<Replacement> results = misspellingComposedFinder.findList(text);
+
+        Replacement expected = Replacement
+            .builder()
+            .start(3)
+            .text("C's")
+            .type(ReplacementType.of(ReplacementKind.COMPOSED, "C's"))
+            .suggestions(List.of(Suggestion.ofNoComment("C's"), Suggestion.ofNoComment("Cs")))
+            .build();
+        assertEquals(Set.of(expected), new HashSet<>(results));
+    }
+
+    @Test
+    void testMisspellingWithBrackets() {
+        String text = "El [[siglo X]].";
+
+        ComposedMisspelling misspelling = ComposedMisspelling.of("[[siglo X]]", true, "{{siglo|X||s|1}}");
+        this.fakeUpdateMisspellingList(List.of(misspelling));
+
+        List<Replacement> results = misspellingComposedFinder.findList(text);
+
+        Replacement expected = Replacement
+            .builder()
+            .start(3)
+            .text("[[siglo X]]")
+            .type(ReplacementType.of(ReplacementKind.COMPOSED, "[[siglo X]]"))
+            .suggestions(List.of(Suggestion.ofNoComment("[[siglo X]]"), Suggestion.ofNoComment("{{siglo|X||s|1}}")))
+            .build();
+        assertEquals(Set.of(expected), new HashSet<>(results));
+    }
+
+    @Test
+    void testNestedWithLink() {
+        String text = "El [[siglo XXI]].";
+
+        ComposedMisspelling cm1 = ComposedMisspelling.of("siglo XXI", true, "{{siglo|XXI||s}}");
+        ComposedMisspelling cm2 = ComposedMisspelling.of("[[siglo XXI]]", true, "{{siglo|XXI||s|1}}");
+        this.fakeUpdateMisspellingList(List.of(cm1, cm2));
+
+        List<Replacement> results = misspellingComposedFinder.findList(text);
+
+        Replacement expected = Replacement
+            .builder()
+            .start(3)
+            .text(cm2.getWord())
+            .type(ReplacementType.of(ReplacementKind.COMPOSED, cm2.getWord()))
+            .suggestions(
+                List.of(
+                    Suggestion.ofNoComment(cm2.getWord()),
+                    Suggestion.ofNoComment(cm2.getSuggestions().get(0).getText())
+                )
+            )
+            .build();
+        assertEquals(Set.of(expected), new HashSet<>(results));
+    }
 }
