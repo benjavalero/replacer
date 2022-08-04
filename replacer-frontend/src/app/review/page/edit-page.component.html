@@ -4,14 +4,14 @@
       <li class="breadcrumb-item">{{ kindLabel }}</li>
       <ng-template [ngIf]="!review.options.suggestion">
         <li class="breadcrumb-item">{{ review.options.subtype }}
-          &nbsp;<span *ngIf="review.numPending" class="badge badge-light">
+          &nbsp;<span *ngIf="review.numPending" class="badge text-bg-light">
             <span class="align-middle">{{ review.numPending }}</span></span>
         </li>
       </ng-template>
       <ng-template [ngIf]="review.options.suggestion">
         <li class="breadcrumb-item">{{ review.options.subtype }}</li>
         <li class="breadcrumb-item">{{ review.options.suggestion }}
-          &nbsp;<span *ngIf="review.numPending" class="badge badge-light">
+          &nbsp;<span *ngIf="review.numPending" class="badge text-bg-light">
             <span class="align-middle">{{ review.numPending }}</span></span>
         </li>
       </ng-template>
@@ -19,8 +19,8 @@
   </nav>
 
   <h3 id="pageTitle">{{ review.page.title }}
-    <a href="{{ url }}" target="_blank" rel="noopener noreferrer" class="small">[Abrir en Wikipedia]</a>
-    <a href="{{ historyUrl }}" target="_blank" rel="noopener noreferrer" class="small">[Historial]</a>
+    <a href="{{ url }}" target="_blank" rel="noopener noreferrer" class="small no-underline">[Abrir en Wikipedia]</a>
+    <a href="{{ historyUrl }}" target="_blank" rel="noopener noreferrer" class="small no-underline">[Historial]</a>
   </h3>
 
   <app-edit-snippet *ngFor="let replacement of review.replacements; let i = index; let first = first; let last = last"
@@ -30,7 +30,7 @@
 
   <button type="button" class="btn btn-success w-100 mt-3 mb-3 py-3" [hidden]="fixedCount === 0"
     (click)="onSaveChanges()">
-    Guardar cambios <span class="badge badge-light">{{ fixedCount }}</span>
+    Guardar cambios <span class="badge text-bg-light">{{ fixedCount }}</span>
   </button>
 
   <button type="button" class="btn btn-success w-100 mt-3 mb-3 py-3" [hidden]="fixedCount !== 0"

@@ -8,3 +8,12 @@ body {
 .pre hr {
   border-top: medium double black;
 }
+
+/* Simple links are underlined in Bootstrap 5 */
+.no-underline {
+  text-decoration: none;
+}
+
+.no-underline:hover {
+  text-decoration: underline;
+}

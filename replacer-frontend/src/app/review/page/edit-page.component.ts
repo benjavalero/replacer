@@ -10,7 +10,7 @@ import { EMPTY_CONTENT, PageService } from './page.service';
 @Component({
   selector: 'app-edit-page',
   templateUrl: './edit-page.component.html',
-  styleUrls: []
+  styleUrls: ['./edit-page.component.css']
 })
 export class EditPageComponent implements OnChanges {
   @Input() review!: PageReviewResponse;

@@ -15,7 +15,7 @@
   <div class="container mt-3">
     <div class="row" *ngIf="suggestionSelected">
       <div *ngFor="let suggestion of replacement.suggestions; let i = index; let first = first; let last = last"
-        class="btn text-left col-sm" [ngClass]="{ 'btn-primary': suggestion === suggestionSelected,
+        class="btn text-start col-sm" [ngClass]="{ 'btn-primary': suggestion === suggestionSelected,
          'btn-outline-primary': suggestion !== suggestionSelected,
          'first-suggestion': first, 'middle-suggestion': !first && !last, 'last-suggestion': last }"
         (click)="onSelectSuggestion(i)">

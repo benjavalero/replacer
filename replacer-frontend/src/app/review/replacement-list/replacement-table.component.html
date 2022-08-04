@@ -24,7 +24,7 @@
         <tr *ngFor="let item of filteredItems">
           <td class="w-75">
             <!-- No link in case of zero count after reviewing a subtype -->
-            <a *ngIf="item.c" routerLink="/list/{{ kind }}/{{ item.s }}">{{ item.s }}</a>
+            <a *ngIf="item.c" routerLink="/list/{{ kind }}/{{ item.s }}" class="no-underline">{{ item.s }}</a>
             <span *ngIf="!item.c">{{ item.s }}</span>
           </td>
           <td class="w-25">{{ item.c }}</td>

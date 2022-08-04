@@ -1,5 +1,8 @@
 # Versions
 
+## 2.18.0 (??)
+- Upgrade dependencies, in particular to Angular 14 + Bootstrap 5.
+
 ## 2.17.8 (2 Aug 2022)
 - Fix routing on admin section in frontend
 - Support composed misspelling containing brackets
