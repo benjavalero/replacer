@@ -2,6 +2,7 @@
 
 ## 2.18.0 (??)
 - Upgrade dependencies, in particular to Angular 14 + Bootstrap 5.
+- Fix parsing response from Wikipedia API
 
 ## 2.17.8 (2 Aug 2022)
 - Fix routing on admin section in frontend
