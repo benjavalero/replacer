@@ -11,7 +11,7 @@ import org.springframework.lang.NonNull;
 /** Page (to be) indexed in the database */
 @NonFinal
 @Value
-@Builder
+@Builder(toBuilder = true)
 class IndexablePage {
 
     @NonNull

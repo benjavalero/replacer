@@ -2,19 +2,35 @@ package es.bvalero.replacer.page.index;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
 /**
  * Helper class to compare an indexable and an indexed page and return a set of changes to align them.
- *
  * It could be a Utility class, but we implement it as a Component to mock it more easily.
  */
+@Slf4j
 @Component
 class IndexablePageComparator {
 
     PageIndexResult indexPageReplacements(IndexablePage page, @Nullable IndexablePage dbPage) {
         PageIndexResult result = PageIndexResult.ofEmpty();
+
+        // Precondition: the page to index cannot be previous to the indexed one
+        if (dbPage != null && page.getLastUpdate().isBefore(dbPage.getLastUpdate())) {
+            LOGGER.error("Page to index previous to the indexed one");
+            return PageIndexResult.builder().status(PageIndexStatus.PAGE_NOT_INDEXABLE).build();
+        }
+
+        // Check changes in the page
+        if (dbPage == null) {
+            // New page
+            result = result.add(PageIndexResult.builder().addPages(Set.of(page)).build());
+        } else if (isUpdatePage(page, dbPage)) {
+            // Update page if needed
+            result = result.add(PageIndexResult.builder().updatePages(Set.of(page)).build());
+        }
 
         final Set<IndexableReplacement> pageReplacements = new HashSet<>(page.getReplacements());
         cleanDuplicatedReplacements(pageReplacements);
@@ -34,15 +50,6 @@ class IndexablePageComparator {
         // Replacements with the same position or context are considered equal and only one will be indexed
         for (IndexableReplacement replacement : pageReplacements) {
             result = result.add(handleReplacement(replacement, dbReplacements));
-        }
-
-        // Check changes in the page
-        if (dbPage == null) {
-            // New page
-            result = result.add(PageIndexResult.builder().addPages(Set.of(page)).build());
-        } else if (isUpdatePage(page, dbPage)) {
-            // Update page if needed
-            result = result.add(PageIndexResult.builder().updatePages(Set.of(page)).build());
         }
 
         return result.add(cleanUpDbReplacements(dbReplacements));

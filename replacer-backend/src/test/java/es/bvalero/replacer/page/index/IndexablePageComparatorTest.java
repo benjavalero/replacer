@@ -13,44 +13,43 @@ import org.junit.jupiter.api.Test;
 class IndexablePageComparatorTest {
 
     private final IndexablePageComparator indexablePageComparator = new IndexablePageComparator();
+    private final LocalDate now = LocalDate.now();
+    private final LocalDate before = now.minusDays(1);
 
     @Test
-    void testIndexNewPageWitNoReplacements() {
+    void testNewPageWithNoReplacements() {
         int pageId = new Random().nextInt();
         IndexablePage page = IndexablePage
             .builder()
             .id(WikipediaPageId.of(WikipediaLanguage.getDefault(), pageId))
             .title("T")
             .replacements(Collections.emptyList())
-            .lastUpdate(LocalDate.now())
+            .lastUpdate(now)
             .build();
 
         PageIndexResult result = indexablePageComparator.indexPageReplacements(page, null);
 
-        PageIndexResult expected = PageIndexResult
-            .builder()
-            .status(PageIndexStatus.PAGE_INDEXED)
-            .addPages(Set.of(page))
-            .build();
+        PageIndexResult expected = PageIndexResult.builder().status(PageIndexStatus.PAGE_INDEXED).addPage(page).build();
         assertEquals(expected, result);
     }
 
     @Test
-    void testIndexNewPage() {
-        WikipediaPageId pageId = WikipediaPageId.of(WikipediaLanguage.getDefault(), 100);
-        IndexableReplacement rep1 = IndexableReplacement
+    void testNewPageWithReplacements() {
+        int id = new Random().nextInt();
+        WikipediaPageId pageId = WikipediaPageId.of(WikipediaLanguage.getDefault(), id);
+        IndexableReplacement r1 = IndexableReplacement
             .builder()
             .pageId(pageId)
-            .type(ReplacementType.ofEmpty())
-            .position(0)
-            .context("")
+            .type(ReplacementType.of(ReplacementKind.SIMPLE, "1"))
+            .position(1)
+            .context("1")
             .build(); // New => ADD
         IndexablePage page = IndexablePage
             .builder()
             .id(pageId)
             .title("T")
-            .replacements(List.of(rep1))
-            .lastUpdate(LocalDate.now())
+            .replacements(List.of(r1))
+            .lastUpdate(now)
             .build();
 
         PageIndexResult toIndex = indexablePageComparator.indexPageReplacements(page, null);
@@ -58,255 +57,243 @@ class IndexablePageComparatorTest {
         PageIndexResult expected = PageIndexResult
             .builder()
             .status(PageIndexStatus.PAGE_INDEXED)
-            .addPages(Set.of(page))
-            .addReplacements(Set.of(rep1))
+            .addPage(page)
+            .addReplacement(r1)
             .build();
         assertEquals(expected, toIndex);
     }
 
     @Test
-    void testIndexObsoleteReplacements() {
-        WikipediaPageId pageId = WikipediaPageId.of(WikipediaLanguage.getDefault(), 1);
+    void testExistingPageWithSameDetails() {
+        int pageId = new Random().nextInt();
         IndexablePage page = IndexablePage
             .builder()
-            .id(pageId)
+            .id(WikipediaPageId.of(WikipediaLanguage.getDefault(), pageId))
             .title("T")
             .replacements(Collections.emptyList())
-            .lastUpdate(LocalDate.now())
+            .lastUpdate(now)
             .build();
+        IndexablePage dbPage = page.toBuilder().build();
 
-        // Both obsolete to review or reviewed by system ==> Delete
-        IndexableReplacement rep2 = IndexableReplacement
-            .builder()
-            .pageId(pageId)
-            .type(ReplacementType.ofEmpty())
-            .position(2)
-            .context("2")
-            .build();
-        IndexableReplacement rep3 = IndexableReplacement
-            .builder()
-            .pageId(pageId)
-            .type(ReplacementType.ofEmpty())
-            .position(3)
-            .context("3")
-            .build()
-            .setSystemReviewed();
-        IndexablePage dbPage = IndexablePage
-            .builder()
-            .id(pageId)
-            .title("T")
-            .replacements(List.of(rep2, rep3))
-            .lastUpdate(LocalDate.now())
-            .build();
+        PageIndexResult result = indexablePageComparator.indexPageReplacements(page, dbPage);
 
-        PageIndexResult toIndex = indexablePageComparator.indexPageReplacements(page, dbPage);
-
-        PageIndexResult expected = PageIndexResult
-            .builder()
-            .status(PageIndexStatus.PAGE_INDEXED)
-            .removeReplacements(Set.of(rep2, rep3))
-            .build();
-
-        assertEquals(expected, toIndex);
+        PageIndexResult expected = PageIndexResult.ofEmpty();
+        assertEquals(expected, result);
     }
 
     @Test
-    void testIndexExistingPageSameDate() {
-        // R1 : In DB not reviewed => Do nothing
-        // R2 : In DB reviewed => Do nothing
-        // R5 : Not in DB => Add
-        // R6 : Only in DB not reviewed => Delete
-        // R7 : Only in DB reviewed by user => Do nothing
-        // R8 : Only in DB reviewed by system => Delete
-
-        // Replacements found to index
-        WikipediaPageId pageId = WikipediaPageId.of(WikipediaLanguage.getDefault(), 1);
-        IndexableReplacement r1 = IndexableReplacement
-            .builder()
-            .pageId(pageId)
-            .type(ReplacementType.of(ReplacementKind.SIMPLE, "1"))
-            .position(1)
-            .context("")
-            .build();
-        IndexableReplacement r2 = IndexableReplacement
-            .builder()
-            .pageId(pageId)
-            .type(ReplacementType.of(ReplacementKind.SIMPLE, "2"))
-            .position(2)
-            .context("")
-            .build();
-        IndexableReplacement r5 = IndexableReplacement
-            .builder()
-            .pageId(pageId)
-            .type(ReplacementType.of(ReplacementKind.SIMPLE, "5"))
-            .position(5)
-            .context("")
-            .build();
+    void testExistingPageWithDateBefore() {
+        int pageId = new Random().nextInt();
         IndexablePage page = IndexablePage
             .builder()
-            .id(pageId)
+            .id(WikipediaPageId.of(WikipediaLanguage.getDefault(), pageId))
             .title("T")
-            .replacements(List.of(r1, r2, r5))
-            .lastUpdate(LocalDate.now())
+            .replacements(Collections.emptyList())
+            .lastUpdate(now)
             .build();
+        IndexablePage dbPage = page.toBuilder().lastUpdate(before).build();
 
-        // Existing replacements in DB
-        IndexableReplacement r1db = r1.withTouched(false); // Trick to clone and match with the one found to index
-        IndexableReplacement r2db = r2.setSystemReviewed(); // System is just a normal user here
-        IndexableReplacement r6db = IndexableReplacement
-            .builder()
-            .pageId(pageId)
-            .type(ReplacementType.of(ReplacementKind.SIMPLE, "6"))
-            .position(6)
-            .context("")
-            .build();
-        IndexableReplacement r7db = IndexableReplacement
-            .builder()
-            .pageId(pageId)
-            .type(ReplacementType.of(ReplacementKind.SIMPLE, "7"))
-            .position(7)
-            .context("")
-            .reviewer("")
-            .build();
-        IndexableReplacement r8db = IndexableReplacement
-            .builder()
-            .pageId(pageId)
-            .type(ReplacementType.of(ReplacementKind.SIMPLE, "8"))
-            .position(8)
-            .context("")
-            .build()
-            .setSystemReviewed();
-        IndexablePage dbPage = IndexablePage
-            .builder()
-            .id(pageId)
-            .title("T")
-            .replacements(List.of(r1db, r2db, r6db, r7db, r8db))
-            .lastUpdate(LocalDate.now())
-            .build();
-
-        PageIndexResult toIndex = indexablePageComparator.indexPageReplacements(page, dbPage);
+        PageIndexResult result = indexablePageComparator.indexPageReplacements(page, dbPage);
 
         PageIndexResult expected = PageIndexResult
             .builder()
             .status(PageIndexStatus.PAGE_INDEXED)
-            .addReplacements(Set.of(r5))
-            .removeReplacements(Set.of(r6db, r8db))
+            .updatePage(page)
             .build();
-        assertEquals(expected, toIndex);
+        assertEquals(expected, result);
     }
 
     @Test
-    void testIndexExistingPageDateAfter() {
-        LocalDate same = LocalDate.now();
-        LocalDate before = same.minusDays(1);
-
-        // Page: In DB older ==> Update
-
-        // R1 : In DB older not reviewed => Do nothing
-        // R2 : In DB older reviewed => Do nothing
-        // R3 : Not in DB => Add
-        // R4 : Only in DB not reviewed => Delete
-        // R5 : Only in DB reviewed by user => Do nothing
-        // R6 : Only in DB reviewed by system => Delete
-
-        // Replacements found to index
-        WikipediaPageId pageId = WikipediaPageId.of(WikipediaLanguage.getDefault(), 1);
+    void testExistingPageWithDateAfter() {
+        int id = new Random().nextInt();
+        WikipediaPageId pageId = WikipediaPageId.of(WikipediaLanguage.getDefault(), id);
         IndexableReplacement r1 = IndexableReplacement
             .builder()
             .pageId(pageId)
             .type(ReplacementType.of(ReplacementKind.SIMPLE, "1"))
             .position(1)
-            .context("")
-            .build();
-        IndexableReplacement r2 = IndexableReplacement
-            .builder()
-            .pageId(pageId)
-            .type(ReplacementType.of(ReplacementKind.SIMPLE, "2"))
-            .position(2)
-            .context("")
-            .build();
-        IndexableReplacement r3 = IndexableReplacement
-            .builder()
-            .pageId(pageId)
-            .type(ReplacementType.of(ReplacementKind.SIMPLE, "3"))
-            .position(3)
-            .context("")
-            .build();
-        IndexablePage page = IndexablePage
-            .builder()
-            .id(pageId)
-            .title("T")
-            .replacements(List.of(r1, r2, r3))
-            .lastUpdate(same)
-            .build();
-
-        // Existing replacements in DB
-        IndexableReplacement r1db = r1.withTouched(false); // Trick to clone and match with the one found to index
-        IndexableReplacement r2db = r2.withReviewer("");
-        IndexableReplacement r4db = IndexableReplacement
-            .builder()
-            .pageId(pageId)
-            .type(ReplacementType.of(ReplacementKind.SIMPLE, "4"))
-            .position(4)
-            .context("")
-            .build();
-        IndexableReplacement r5db = IndexableReplacement
-            .builder()
-            .pageId(pageId)
-            .type(ReplacementType.of(ReplacementKind.SIMPLE, "5"))
-            .position(5)
-            .context("")
-            .reviewer("")
-            .build();
-        IndexableReplacement r6db = IndexableReplacement
-            .builder()
-            .pageId(pageId)
-            .type(ReplacementType.of(ReplacementKind.SIMPLE, "6"))
-            .position(6)
-            .context("")
-            .build()
-            .setSystemReviewed();
-        IndexablePage dbPage = IndexablePage
-            .builder()
-            .id(pageId)
-            .title("T")
-            .replacements(List.of(r1db, r2db, r4db, r5db, r6db))
-            .lastUpdate(before)
-            .build();
-
-        PageIndexResult toIndex = indexablePageComparator.indexPageReplacements(page, dbPage);
-
-        PageIndexResult expected = PageIndexResult
-            .builder()
-            .status(PageIndexStatus.PAGE_INDEXED)
-            .updatePages(Set.of(page))
-            .addReplacements(Set.of(r3))
-            .removeReplacements(Set.of(r4db, r6db))
-            .build();
-        assertEquals(expected, toIndex);
-    }
-
-    @Test
-    void testIndexExistingPageWithNoChanges() {
-        LocalDate same = LocalDate.now();
-
-        // R1 : In DB not reviewed => Do nothing
-
-        // Replacements found to index
-        WikipediaPageId pageId = WikipediaPageId.of(WikipediaLanguage.getDefault(), 1);
-        IndexableReplacement r1 = IndexableReplacement
-            .builder()
-            .pageId(pageId)
-            .type(ReplacementType.of(ReplacementKind.SIMPLE, "1"))
-            .position(1)
-            .context("")
+            .context("1")
             .build();
         IndexablePage page = IndexablePage
             .builder()
             .id(pageId)
             .title("T")
             .replacements(List.of(r1))
-            .lastUpdate(same)
+            .lastUpdate(before)
+            .build();
+        // We force a difference in the replacements and title to be sure the page is not indexed at all
+        IndexablePage dbPage = page
+            .toBuilder()
+            .title("T2")
+            .replacements(Collections.emptyList())
+            .lastUpdate(now)
+            .build();
+
+        PageIndexResult result = indexablePageComparator.indexPageReplacements(page, dbPage);
+
+        PageIndexResult expected = PageIndexResult.builder().status(PageIndexStatus.PAGE_NOT_INDEXABLE).build();
+        assertEquals(expected, result);
+    }
+
+    @Test
+    void testExistingPageWithDifferentTitle() {
+        int pageId = new Random().nextInt();
+        IndexablePage page = IndexablePage
+            .builder()
+            .id(WikipediaPageId.of(WikipediaLanguage.getDefault(), pageId))
+            .title("T")
+            .replacements(Collections.emptyList())
+            .lastUpdate(now)
+            .build();
+        IndexablePage dbPage = page.toBuilder().title("T2").build();
+
+        PageIndexResult result = indexablePageComparator.indexPageReplacements(page, dbPage);
+
+        PageIndexResult expected = PageIndexResult
+            .builder()
+            .status(PageIndexStatus.PAGE_INDEXED)
+            .updatePage(page)
+            .build();
+        assertEquals(expected, result);
+    }
+
+    @Test
+    void testExistingPageWithDifferentReplacements() {
+        // Existing
+        // R1 : In DB not reviewed with same details => Do nothing
+        // R2 : In DB reviewed by a user => Do nothing
+        // R3 : In DB reviewed by system => Do nothing
+        // R4 : In DB not reviewed with different position => Update
+        // R5 : In DB not reviewed with different context => Update
+
+        // Only in DB
+        // R6 : Only in DB not reviewed => Delete
+        // R7 : Only in DB reviewed by user => Do nothing
+        // R8 : Only in DB reviewed by system => Delete
+
+        // New
+        // R9 : Not in DB => Add
+
+        int id = new Random().nextInt();
+        WikipediaPageId pageId = WikipediaPageId.of(WikipediaLanguage.getDefault(), id);
+        IndexableReplacement r1 = IndexableReplacement
+            .builder()
+            .pageId(pageId)
+            .type(ReplacementType.of(ReplacementKind.SIMPLE, "1"))
+            .position(1)
+            .context("1")
+            .build();
+        IndexableReplacement r2 = IndexableReplacement
+            .builder()
+            .pageId(pageId)
+            .type(ReplacementType.of(ReplacementKind.SIMPLE, "2"))
+            .position(2)
+            .context("2")
+            .build();
+        IndexableReplacement r3 = IndexableReplacement
+            .builder()
+            .pageId(pageId)
+            .type(ReplacementType.of(ReplacementKind.SIMPLE, "3"))
+            .position(3)
+            .context("3")
+            .build();
+        IndexableReplacement r4 = IndexableReplacement
+            .builder()
+            .pageId(pageId)
+            .type(ReplacementType.of(ReplacementKind.SIMPLE, "4"))
+            .position(4)
+            .context("4")
+            .build();
+        IndexableReplacement r5 = IndexableReplacement
+            .builder()
+            .pageId(pageId)
+            .type(ReplacementType.of(ReplacementKind.SIMPLE, "5"))
+            .position(5)
+            .context("5")
+            .build();
+        IndexableReplacement r9 = IndexableReplacement
+            .builder()
+            .pageId(pageId)
+            .type(ReplacementType.of(ReplacementKind.SIMPLE, "9"))
+            .position(9)
+            .context("9")
+            .build();
+        IndexablePage page = IndexablePage
+            .builder()
+            .id(pageId)
+            .title("T")
+            .replacements(List.of(r1, r2, r3, r4, r5, r9))
+            .lastUpdate(now)
+            .build();
+
+        // Existing replacements in DB
+        IndexableReplacement r1db = r1.withTouched(false); // Trick to clone and match with the one found to index
+        IndexableReplacement r2db = r2.withReviewer("User");
+        IndexableReplacement r3db = r3.setSystemReviewed();
+        IndexableReplacement r4db = r4.withPosition(40);
+        IndexableReplacement r5db = r5.withContext("50");
+        IndexableReplacement r6db = IndexableReplacement
+            .builder()
+            .pageId(pageId)
+            .type(ReplacementType.of(ReplacementKind.SIMPLE, "6"))
+            .position(6)
+            .context("6")
+            .build();
+        IndexableReplacement r7db = IndexableReplacement
+            .builder()
+            .pageId(pageId)
+            .type(ReplacementType.of(ReplacementKind.SIMPLE, "7"))
+            .position(7)
+            .context("7")
+            .reviewer("User")
+            .build();
+        IndexableReplacement r8db = IndexableReplacement
+            .builder()
+            .pageId(pageId)
+            .type(ReplacementType.of(ReplacementKind.SIMPLE, "8"))
+            .position(8)
+            .context("8")
+            .build()
+            .setSystemReviewed();
+        IndexablePage dbPage = IndexablePage
+            .builder()
+            .id(pageId)
+            .title("T")
+            .replacements(List.of(r1db, r2db, r3db, r4db, r5db, r6db, r7db, r8db))
+            .lastUpdate(now)
+            .build();
+
+        PageIndexResult toIndex = indexablePageComparator.indexPageReplacements(page, dbPage);
+
+        PageIndexResult expected = PageIndexResult
+            .builder()
+            .status(PageIndexStatus.PAGE_INDEXED)
+            .addReplacements(Set.of(r9))
+            .updateReplacements(Set.of(r4, r5))
+            .removeReplacements(Set.of(r6db, r8db))
+            .build();
+        assertEquals(expected, toIndex);
+    }
+
+    @Test
+    void testIndexExistingPageWithNoChanges() {
+        // R1 : In DB not reviewed => Do nothing
+
+        // Replacements found to index
+        WikipediaPageId pageId = WikipediaPageId.of(WikipediaLanguage.getDefault(), 1);
+        IndexableReplacement r1 = IndexableReplacement
+            .builder()
+            .pageId(pageId)
+            .type(ReplacementType.of(ReplacementKind.SIMPLE, "1"))
+            .position(1)
+            .context("1")
+            .build();
+        IndexablePage page = IndexablePage
+            .builder()
+            .id(pageId)
+            .title("T")
+            .replacements(List.of(r1))
+            .lastUpdate(now)
             .build();
 
         // Existing replacements in DB
@@ -316,7 +303,7 @@ class IndexablePageComparatorTest {
             .id(pageId)
             .title("T")
             .replacements(List.of(r1db))
-            .lastUpdate(same)
+            .lastUpdate(now)
             .build();
 
         PageIndexResult toIndex = indexablePageComparator.indexPageReplacements(page, dbPage);
@@ -326,16 +313,14 @@ class IndexablePageComparatorTest {
     }
 
     @Test
-    void testDuplicatedDbReplacements() {
-        LocalDate same = LocalDate.now();
-
+    void testDuplicatedDbReplacementsWithDifferentPosition() {
         WikipediaPageId pageId = WikipediaPageId.of(WikipediaLanguage.getDefault(), 1);
         IndexablePage page = IndexablePage
             .builder()
             .id(pageId)
             .title("T")
             .replacements(Collections.emptyList())
-            .lastUpdate(same)
+            .lastUpdate(now)
             .build();
 
         // Existing replacements in DB: the same replacement found in 2 different positions with same context
@@ -353,7 +338,7 @@ class IndexablePageComparatorTest {
             .id(pageId)
             .title("T")
             .replacements(List.of(r1db, r2db))
-            .lastUpdate(same)
+            .lastUpdate(now)
             .build();
 
         PageIndexResult toIndex = indexablePageComparator.indexPageReplacements(page, dbPage);
@@ -364,9 +349,7 @@ class IndexablePageComparatorTest {
     }
 
     @Test
-    void testIndexDuplicatedDbReplacements() {
-        LocalDate same = LocalDate.now();
-
+    void testDuplicatedDbReplacementsWithDifferentContext() {
         WikipediaPageId pageId = WikipediaPageId.of(WikipediaLanguage.getDefault(), 1);
         IndexableReplacement r1 = IndexableReplacement
             .builder()
@@ -380,7 +363,7 @@ class IndexablePageComparatorTest {
             .id(pageId)
             .title("T")
             .replacements(List.of(r1))
-            .lastUpdate(same)
+            .lastUpdate(now)
             .build();
 
         // Existing replacements in DB: the same replacement found in the same position with different context
@@ -392,7 +375,7 @@ class IndexablePageComparatorTest {
             .id(pageId)
             .title("T")
             .replacements(List.of(r2db, r1db)) // Force a different order
-            .lastUpdate(same)
+            .lastUpdate(now)
             .build();
 
         PageIndexResult toIndex = indexablePageComparator.indexPageReplacements(page, dbPage);

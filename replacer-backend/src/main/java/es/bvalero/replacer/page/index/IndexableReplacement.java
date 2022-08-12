@@ -6,6 +6,7 @@ import es.bvalero.replacer.common.domain.ReplacementType;
 import es.bvalero.replacer.common.domain.WikipediaPageId;
 import java.util.Objects;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Value;
 import lombok.With;
 import org.apache.commons.lang3.StringUtils;
@@ -40,6 +41,7 @@ class IndexableReplacement {
     String reviewer;
 
     /* To mark the replacements already "touched" while comparing indexable pages */
+    @EqualsAndHashCode.Exclude
     @With
     boolean touched;
 
