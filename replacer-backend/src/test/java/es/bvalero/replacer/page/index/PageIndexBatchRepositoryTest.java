@@ -50,7 +50,7 @@ class PageIndexBatchRepositoryTest {
             .pageId(pageId1)
             .kind((byte) 0)
             .subtype("")
-            .position(0)
+            .start(0)
             .context("")
             .build();
         PageModel page1 = PageModel
@@ -68,7 +68,7 @@ class PageIndexBatchRepositoryTest {
             .pageId(pageId2)
             .kind((byte) 0)
             .subtype("")
-            .position(0)
+            .start(0)
             .context("")
             .build();
         PageModel page2 = PageModel
@@ -107,7 +107,7 @@ class PageIndexBatchRepositoryTest {
             .pageId(pageId)
             .kind((byte) 0)
             .subtype("")
-            .position(0)
+            .start(0)
             .context("")
             .build();
         PageModel page = PageModel

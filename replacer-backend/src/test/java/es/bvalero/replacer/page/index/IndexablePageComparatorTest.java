@@ -41,7 +41,7 @@ class IndexablePageComparatorTest {
             .builder()
             .pageId(pageId)
             .type(ReplacementType.of(ReplacementKind.SIMPLE, "1"))
-            .position(1)
+            .start(1)
             .context("1")
             .build(); // New => ADD
         IndexablePage page = IndexablePage
@@ -111,7 +111,7 @@ class IndexablePageComparatorTest {
             .builder()
             .pageId(pageId)
             .type(ReplacementType.of(ReplacementKind.SIMPLE, "1"))
-            .position(1)
+            .start(1)
             .context("1")
             .build();
         IndexablePage page = IndexablePage
@@ -180,42 +180,42 @@ class IndexablePageComparatorTest {
             .builder()
             .pageId(pageId)
             .type(ReplacementType.of(ReplacementKind.SIMPLE, "1"))
-            .position(1)
+            .start(1)
             .context("1")
             .build();
         IndexableReplacement r2 = IndexableReplacement
             .builder()
             .pageId(pageId)
             .type(ReplacementType.of(ReplacementKind.SIMPLE, "2"))
-            .position(2)
+            .start(2)
             .context("2")
             .build();
         IndexableReplacement r3 = IndexableReplacement
             .builder()
             .pageId(pageId)
             .type(ReplacementType.of(ReplacementKind.SIMPLE, "3"))
-            .position(3)
+            .start(3)
             .context("3")
             .build();
         IndexableReplacement r4 = IndexableReplacement
             .builder()
             .pageId(pageId)
             .type(ReplacementType.of(ReplacementKind.SIMPLE, "4"))
-            .position(4)
+            .start(4)
             .context("4")
             .build();
         IndexableReplacement r5 = IndexableReplacement
             .builder()
             .pageId(pageId)
             .type(ReplacementType.of(ReplacementKind.SIMPLE, "5"))
-            .position(5)
+            .start(5)
             .context("5")
             .build();
         IndexableReplacement r9 = IndexableReplacement
             .builder()
             .pageId(pageId)
             .type(ReplacementType.of(ReplacementKind.SIMPLE, "9"))
-            .position(9)
+            .start(9)
             .context("9")
             .build();
         IndexablePage page = IndexablePage
@@ -230,20 +230,20 @@ class IndexablePageComparatorTest {
         IndexableReplacement r1db = r1.withTouched(false); // Trick to clone and match with the one found to index
         IndexableReplacement r2db = r2.withReviewer("User");
         IndexableReplacement r3db = r3.setSystemReviewed();
-        IndexableReplacement r4db = r4.withPosition(40);
+        IndexableReplacement r4db = r4.withStart(40);
         IndexableReplacement r5db = r5.withContext("50");
         IndexableReplacement r6db = IndexableReplacement
             .builder()
             .pageId(pageId)
             .type(ReplacementType.of(ReplacementKind.SIMPLE, "6"))
-            .position(6)
+            .start(6)
             .context("6")
             .build();
         IndexableReplacement r7db = IndexableReplacement
             .builder()
             .pageId(pageId)
             .type(ReplacementType.of(ReplacementKind.SIMPLE, "7"))
-            .position(7)
+            .start(7)
             .context("7")
             .reviewer("User")
             .build();
@@ -251,7 +251,7 @@ class IndexablePageComparatorTest {
             .builder()
             .pageId(pageId)
             .type(ReplacementType.of(ReplacementKind.SIMPLE, "8"))
-            .position(8)
+            .start(8)
             .context("8")
             .build()
             .setSystemReviewed();
@@ -285,7 +285,7 @@ class IndexablePageComparatorTest {
             .builder()
             .pageId(pageId)
             .type(ReplacementType.of(ReplacementKind.SIMPLE, "1"))
-            .position(1)
+            .start(1)
             .context("1")
             .build();
         IndexablePage page = IndexablePage
@@ -328,11 +328,11 @@ class IndexablePageComparatorTest {
             .builder()
             .pageId(pageId)
             .type(ReplacementType.of(ReplacementKind.SIMPLE, "1"))
-            .position(1)
+            .start(1)
             .context("C")
             .reviewer("X")
             .build();
-        IndexableReplacement r2db = r1db.withPosition(5);
+        IndexableReplacement r2db = r1db.withStart(5);
         IndexablePage dbPage = IndexablePage
             .builder()
             .id(pageId)
@@ -355,7 +355,7 @@ class IndexablePageComparatorTest {
             .builder()
             .pageId(pageId)
             .type(ReplacementType.of(ReplacementKind.SIMPLE, "1"))
-            .position(1)
+            .start(1)
             .context("1")
             .build();
         IndexablePage page = IndexablePage

@@ -23,7 +23,7 @@ public class CustomModel {
 
     byte cs;
 
-    int position;
+    int start;
 
     @NonNull
     String context;

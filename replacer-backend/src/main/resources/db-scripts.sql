@@ -35,7 +35,7 @@ CREATE TABLE replacement (
     page_id MEDIUMINT UNSIGNED NOT NULL,
     kind TINYINT NOT NULL,
     subtype VARCHAR(100) COLLATE utf8mb4_bin NOT NULL,
-    position MEDIUMINT UNSIGNED NOT NULL,
+    start MEDIUMINT UNSIGNED NOT NULL,
     context VARCHAR(255) COLLATE utf8mb4_bin NOT NULL,
     reviewer VARCHAR(100), -- In order to make the index work
     PRIMARY KEY (id)
@@ -66,7 +66,7 @@ CREATE TABLE custom (
     page_id MEDIUMINT UNSIGNED NOT NULL,
     replacement VARCHAR(100) COLLATE utf8mb4_bin NOT NULL,
     cs TINYINT(1) NOT NULL,
-    position MEDIUMINT UNSIGNED NOT NULL, -- So we can move items to the replacements table
+    start MEDIUMINT UNSIGNED NOT NULL, -- So we can move items to the replacements table
     context VARCHAR(255) COLLATE utf8mb4_bin NOT NULL,
     reviewer VARCHAR(100), -- In order to make the index work
     PRIMARY KEY (id)

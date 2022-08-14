@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS replacement (
 	page_id INTEGER NOT NULL,
 	kind TINYINT NOT NULL,
 	subtype VARCHAR(100) NOT NULL,
-	position INTEGER NOT NULL,
+	start INTEGER NOT NULL,
 	context VARCHAR(255) NOT NULL,
 	reviewer VARCHAR(100),
 	CONSTRAINT constraint_r PRIMARY KEY (id)
@@ -60,7 +60,7 @@ CREATE TABLE IF NOT EXISTS custom (
 	page_id INTEGER NOT NULL,
 	replacement VARCHAR(100) NOT NULL,
 	cs TINYINT NOT NULL,
-	position INTEGER NOT NULL,
+	start INTEGER NOT NULL,
 	context VARCHAR(255) NOT NULL,
 	reviewer VARCHAR(100),
 	CONSTRAINT constraint_c PRIMARY KEY (id)

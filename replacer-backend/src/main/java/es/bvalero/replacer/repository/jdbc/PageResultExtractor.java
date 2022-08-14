@@ -43,7 +43,7 @@ class PageResultExtractor implements ResultSetExtractor<Collection<PageModel>> {
                         .pageId(pageId)
                         .kind(kind)
                         .subtype(rs.getString("SUBTYPE"))
-                        .position(rs.getInt("POSITION"))
+                        .start(rs.getInt("START"))
                         .context(rs.getString("CONTEXT"))
                         .reviewer(rs.getString("REVIEWER"))
                         .build()

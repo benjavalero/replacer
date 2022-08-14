@@ -160,7 +160,7 @@ class ReviewCustomFinder extends ReviewFinder {
             .pageId(page.getId().getPageId())
             .replacement(options.getType().getSubtype())
             .cs((byte) (Boolean.TRUE.equals(options.getCs()) ? 1 : 0))
-            .position(replacement.getStart())
+            .start(replacement.getStart())
             .context(replacement.getContext(page))
             .build();
     }

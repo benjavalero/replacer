@@ -243,7 +243,7 @@ abstract class ReviewFinder {
 
     private boolean isSameReplacement(Replacement replacement, ReplacementModel replacementModel) {
         return (
-            replacement.getStart() == replacementModel.getPosition() &&
+            replacement.getStart() == replacementModel.getStart() &&
             replacement.getType().getKind().getCode() == replacementModel.getKind() &&
             replacement.getType().getSubtype().equals(replacementModel.getSubtype())
         );

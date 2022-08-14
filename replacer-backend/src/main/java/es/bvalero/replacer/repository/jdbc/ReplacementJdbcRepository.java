@@ -36,15 +36,15 @@ class ReplacementJdbcRepository
     @Override
     public void addReplacements(Collection<ReplacementModel> replacements) {
         String sql =
-            "INSERT INTO replacement (page_id, lang, kind, subtype, position, context, reviewer) " +
-            "VALUES (:pageId, :lang, :kind, :subtype, :position, :context, :reviewer)";
+            "INSERT INTO replacement (page_id, lang, kind, subtype, start, context, reviewer) " +
+            "VALUES (:pageId, :lang, :kind, :subtype, :start, :context, :reviewer)";
         SqlParameterSource[] namedParameters = SqlParameterSourceUtils.createBatch(replacements.toArray());
         jdbcTemplate.batchUpdate(sql, namedParameters);
     }
 
     @Override
     public void updateReplacements(Collection<ReplacementModel> replacements) {
-        String sql = "UPDATE replacement SET position = :position, context = :context WHERE id = :id";
+        String sql = "UPDATE replacement SET start = :start, context = :context WHERE id = :id";
         SqlParameterSource[] namedParameters = SqlParameterSourceUtils.createBatch(replacements.toArray());
         jdbcTemplate.batchUpdate(sql, namedParameters);
     }

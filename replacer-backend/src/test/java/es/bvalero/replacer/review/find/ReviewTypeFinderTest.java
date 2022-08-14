@@ -254,7 +254,7 @@ class ReviewTypeFinderTest {
             .pageId(page.getId().getPageId())
             .kind(replacement.getType().getKind().getCode())
             .subtype(replacement.getType().getSubtype())
-            .position(replacement.getStart())
+            .start(replacement.getStart())
             .context(replacement.getContext(page))
             .reviewer("X")
             .build();

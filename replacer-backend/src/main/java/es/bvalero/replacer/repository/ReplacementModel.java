@@ -23,7 +23,7 @@ public class ReplacementModel {
     @NonNull
     String subtype;
 
-    int position;
+    int start;
 
     @NonNull
     String context;
