@@ -33,7 +33,7 @@ CREATE TABLE replacement (
     id INT UNSIGNED NOT NULL AUTO_INCREMENT,
     lang CHAR(2) CHARACTER SET ascii NOT NULL,
     page_id MEDIUMINT UNSIGNED NOT NULL,
-    type TINYINT NOT NULL,
+    kind TINYINT NOT NULL,
     subtype VARCHAR(100) COLLATE utf8mb4_bin NOT NULL,
     position MEDIUMINT UNSIGNED NOT NULL,
     context VARCHAR(255) COLLATE utf8mb4_bin NOT NULL,
@@ -47,10 +47,10 @@ ADD CONSTRAINT fk_page_id FOREIGN KEY (lang, page_id) REFERENCES page (lang, pag
 
 -- FK replacement --> kind
 ALTER TABLE replacement
-ADD CONSTRAINT fk_replacement_kind FOREIGN KEY (type) REFERENCES replacement_kind (code);
+ADD CONSTRAINT fk_replacement_kind FOREIGN KEY (kind) REFERENCES replacement_kind (code);
 
 -- To find random pages and count the group replacements
-CREATE INDEX idx_count ON replacement (lang, reviewer, type, subtype);
+CREATE INDEX idx_count ON replacement (lang, reviewer, kind, subtype);
 CREATE INDEX idx_count_no_type ON replacement (lang, reviewer);
 
 -- Statistics

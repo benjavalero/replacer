@@ -43,7 +43,7 @@ class PageJdbcRepository implements PageRepository, PageIndexRepository {
     public Optional<PageModel> findPageById(WikipediaPageId id) {
         String sql =
             "SELECT p.lang, p.page_id, p.title, p.last_update, " +
-            "r.id, r.type AS kind, r.subtype, r.position, r.context, r.reviewer " +
+            "r.id, r.kind, r.subtype, r.position, r.context, r.reviewer " +
             FROM_REPLACEMENT_JOIN_PAGE +
             "WHERE p.lang = :lang AND p.page_id = :pageId";
         SqlParameterSource namedParameters = new MapSqlParameterSource()
@@ -57,7 +57,7 @@ class PageJdbcRepository implements PageRepository, PageIndexRepository {
     public Collection<PageModel> findPagesByIdInterval(WikipediaLanguage lang, int minPageId, int maxPageId) {
         String sql =
             "SELECT p.lang, p.page_id, p.title, p.last_update, " +
-            "r.id, r.type AS kind, r.subtype, r.position, r.context, r.reviewer " +
+            "r.id, r.kind, r.subtype, r.position, r.context, r.reviewer " +
             FROM_REPLACEMENT_JOIN_PAGE +
             "WHERE p.lang = :lang AND p.page_id BETWEEN :minPageId AND :maxPageId";
         SqlParameterSource namedParameters = new MapSqlParameterSource()
@@ -139,7 +139,7 @@ class PageJdbcRepository implements PageRepository, PageIndexRepository {
         // Not worth to DISTINCT. Instead, we return the results as a set to avoid duplicates.
         String sql =
             "SELECT page_id FROM replacement " +
-            "WHERE lang = :lang AND type = :kind AND subtype = :subtype AND reviewer IS NULL " +
+            "WHERE lang = :lang AND kind = :kind AND subtype = :subtype AND reviewer IS NULL " +
             "ORDER BY RAND() " +
             "LIMIT " +
             numResults;
@@ -158,7 +158,7 @@ class PageJdbcRepository implements PageRepository, PageIndexRepository {
         // This approach is slightly better than using a JOIN with the page table
         String sql =
             "SELECT COUNT (DISTINCT page_id) FROM replacement " +
-            "WHERE lang = :lang AND type = :kind AND subtype = :subtype AND reviewer IS NULL";
+            "WHERE lang = :lang AND kind = :kind AND subtype = :subtype AND reviewer IS NULL";
         SqlParameterSource namedParameters = new MapSqlParameterSource()
             .addValue("lang", lang.getCode())
             .addValue("kind", type.getKind().getCode())
@@ -173,7 +173,7 @@ class PageJdbcRepository implements PageRepository, PageIndexRepository {
             "SELECT p.title FROM page p " +
             "WHERE p.lang = :lang AND EXISTS " +
             "(SELECT NULL FROM replacement r WHERE p.lang = r.lang AND p.page_id = r.page_id " +
-            "AND r.type = :kind AND r.subtype = :subtype AND r.reviewer IS NULL)";
+            "AND r.kind = :kind AND r.subtype = :subtype AND r.reviewer IS NULL)";
         SqlParameterSource namedParameters = new MapSqlParameterSource()
             .addValue("lang", lang.getCode())
             .addValue("kind", type.getKind().getCode())

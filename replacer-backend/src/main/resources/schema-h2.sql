@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS replacement (
 	id INTEGER NOT NULL AUTO_INCREMENT,
 	lang CHAR(2) NOT NULL,
 	page_id INTEGER NOT NULL,
-	type TINYINT NOT NULL,
+	kind TINYINT NOT NULL,
 	subtype VARCHAR(100) NOT NULL,
 	position INTEGER NOT NULL,
 	context VARCHAR(255) NOT NULL,
@@ -47,9 +47,9 @@ ADD CONSTRAINT fk_page_id FOREIGN KEY (lang, page_id) REFERENCES page (lang, pag
 
 -- FK replacement --> kind
 ALTER TABLE replacement
-ADD CONSTRAINT fk_replacement_kind FOREIGN KEY (type) REFERENCES replacement_kind (code);
+ADD CONSTRAINT fk_replacement_kind FOREIGN KEY (kind) REFERENCES replacement_kind (code);
 
-CREATE INDEX IF NOT EXISTS idx_count ON replacement (lang, reviewer, type, subtype);
+CREATE INDEX IF NOT EXISTS idx_count ON replacement (lang, reviewer, kind, subtype);
 CREATE INDEX IF NOT EXISTS idx_count_no_type ON replacement (lang, reviewer);
 CREATE INDEX IF NOT EXISTS idx_reviewer ON replacement (reviewer);
 CREATE INDEX IF NOT EXISTS idx_dump ON replacement (lang, page_id, reviewer);
