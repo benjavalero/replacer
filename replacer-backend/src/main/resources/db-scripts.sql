@@ -1,3 +1,12 @@
+CREATE TABLE IF NOT EXISTS lang (
+    code CHAR(2) CHARACTER SET ascii NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    PRIMARY KEY (code)
+);
+
+INSERT INTO lang (code, name) VALUES ('es', 'SPANISH');
+INSERT INTO lang (code, name) VALUES ('gl', 'GALICIAN');
+
 CREATE TABLE page (
     lang CHAR(2) CHARACTER SET ascii NOT NULL,
     article_id MEDIUMINT UNSIGNED NOT NULL,
@@ -5,6 +14,20 @@ CREATE TABLE page (
     title VARCHAR(255) COLLATE utf8mb4_bin NOT NULL,
     PRIMARY KEY (lang, article_id)
 );
+
+-- FK page --> lang
+ALTER TABLE page
+ADD CONSTRAINT fk_page_lang FOREIGN KEY (lang) REFERENCES lang (code);
+
+CREATE TABLE IF NOT EXISTS replacement_kind (
+    code TINYINT NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    PRIMARY KEY (code)
+);
+
+INSERT INTO replacement_kind (code, name) VALUES (2, 'SIMPLE');
+INSERT INTO replacement_kind (code, name) VALUES (3, 'COMPOSED');
+INSERT INTO replacement_kind (code, name) VALUES (4, 'DATE');
 
 CREATE TABLE replacement (
     id INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -18,8 +41,13 @@ CREATE TABLE replacement (
     PRIMARY KEY (id)
 );
 
+-- FK replacement --> page
 ALTER TABLE replacement
 ADD CONSTRAINT fk_page_id FOREIGN KEY (lang, article_id) REFERENCES page (lang, article_id) ON DELETE CASCADE;
+
+-- FK replacement --> kind
+ALTER TABLE replacement
+ADD CONSTRAINT fk_replacement_kind FOREIGN KEY (type) REFERENCES replacement_kind (code);
 
 -- To find random pages and count the group replacements
 CREATE INDEX idx_count ON replacement (lang, reviewer, type, subtype);
@@ -44,5 +72,6 @@ CREATE TABLE custom (
     PRIMARY KEY (id)
 );
 
+-- FK custom --> page
 ALTER TABLE custom
 ADD CONSTRAINT fk_custom_page_id FOREIGN KEY (lang, article_id) REFERENCES page (lang, article_id) ON DELETE CASCADE;

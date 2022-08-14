@@ -1,3 +1,12 @@
+CREATE TABLE IF NOT EXISTS lang (
+    code CHAR(2) NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    CONSTRAINT constraint_l PRIMARY KEY (code)
+);
+
+INSERT INTO lang (code, name) VALUES ('es', 'SPANISH');
+INSERT INTO lang (code, name) VALUES ('gl', 'GALICIAN');
+
 CREATE TABLE IF NOT EXISTS page (
     lang CHAR(2) NOT NULL,
     article_id INTEGER NOT NULL,
@@ -5,6 +14,20 @@ CREATE TABLE IF NOT EXISTS page (
     title VARCHAR(255) NOT NULL,
     CONSTRAINT constraint_p PRIMARY KEY (lang, article_id)
 );
+
+-- FK page --> lang
+ALTER TABLE page
+ADD CONSTRAINT fk_page_lang FOREIGN KEY (lang) REFERENCES lang (code);
+
+CREATE TABLE IF NOT EXISTS replacement_kind (
+    code TINYINT NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    CONSTRAINT constraint_k PRIMARY KEY (code)
+);
+
+INSERT INTO replacement_kind (code, name) VALUES (2, 'SIMPLE');
+INSERT INTO replacement_kind (code, name) VALUES (3, 'COMPOSED');
+INSERT INTO replacement_kind (code, name) VALUES (4, 'DATE');
 
 CREATE TABLE IF NOT EXISTS replacement (
 	id INTEGER NOT NULL AUTO_INCREMENT,
@@ -18,8 +41,13 @@ CREATE TABLE IF NOT EXISTS replacement (
 	CONSTRAINT constraint_r PRIMARY KEY (id)
 );
 
+-- FK replacement --> page
 ALTER TABLE replacement
 ADD CONSTRAINT fk_page_id FOREIGN KEY (lang, article_id) REFERENCES page (lang, article_id) ON DELETE CASCADE;
+
+-- FK replacement --> kind
+ALTER TABLE replacement
+ADD CONSTRAINT fk_replacement_kind FOREIGN KEY (type) REFERENCES replacement_kind (code);
 
 CREATE INDEX IF NOT EXISTS idx_count ON replacement (lang, reviewer, type, subtype);
 CREATE INDEX IF NOT EXISTS idx_count_no_type ON replacement (lang, reviewer);
@@ -38,5 +66,6 @@ CREATE TABLE IF NOT EXISTS custom (
 	CONSTRAINT constraint_c PRIMARY KEY (id)
 );
 
+-- FK custom --> page
 ALTER TABLE custom
 ADD CONSTRAINT fk_custom_page_id FOREIGN KEY (lang, article_id) REFERENCES page (lang, article_id) ON DELETE CASCADE;
