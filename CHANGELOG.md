@@ -1,5 +1,8 @@
 # Versions
 
+## 2.18.1 (14 Aug 2022)
+- Improve entity names in database
+
 ## 2.18.0 (6 Aug 2022)
 - Upgrade dependencies, in particular to Angular 14 + Bootstrap 5.
 - Fix parsing response from Wikipedia API
