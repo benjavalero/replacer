@@ -9,10 +9,10 @@ INSERT INTO lang (code, name) VALUES ('gl', 'GALICIAN');
 
 CREATE TABLE page (
     lang CHAR(2) CHARACTER SET ascii NOT NULL,
-    article_id MEDIUMINT UNSIGNED NOT NULL,
+    page_id MEDIUMINT UNSIGNED NOT NULL,
     last_update DATE NOT NULL,
     title VARCHAR(255) COLLATE utf8mb4_bin NOT NULL,
-    PRIMARY KEY (lang, article_id)
+    PRIMARY KEY (lang, page_id)
 );
 
 -- FK page --> lang
@@ -32,7 +32,7 @@ INSERT INTO replacement_kind (code, name) VALUES (4, 'DATE');
 CREATE TABLE replacement (
     id INT UNSIGNED NOT NULL AUTO_INCREMENT,
     lang CHAR(2) CHARACTER SET ascii NOT NULL,
-    article_id MEDIUMINT UNSIGNED NOT NULL,
+    page_id MEDIUMINT UNSIGNED NOT NULL,
     type TINYINT NOT NULL,
     subtype VARCHAR(100) COLLATE utf8mb4_bin NOT NULL,
     position MEDIUMINT UNSIGNED NOT NULL,
@@ -43,7 +43,7 @@ CREATE TABLE replacement (
 
 -- FK replacement --> page
 ALTER TABLE replacement
-ADD CONSTRAINT fk_page_id FOREIGN KEY (lang, article_id) REFERENCES page (lang, article_id) ON DELETE CASCADE;
+ADD CONSTRAINT fk_page_id FOREIGN KEY (lang, page_id) REFERENCES page (lang, page_id) ON DELETE CASCADE;
 
 -- FK replacement --> kind
 ALTER TABLE replacement
@@ -57,13 +57,13 @@ CREATE INDEX idx_count_no_type ON replacement (lang, reviewer);
 CREATE INDEX idx_reviewer ON replacement (reviewer);
 
 -- Dump index
-CREATE INDEX idx_dump ON replacement (lang, article_id, reviewer);
+CREATE INDEX idx_dump ON replacement (lang, page_id, reviewer);
 
 -- New table only for custom replacements
 CREATE TABLE custom (
     id INT UNSIGNED NOT NULL AUTO_INCREMENT,
     lang CHAR(2) CHARACTER SET ascii NOT NULL,
-    article_id MEDIUMINT UNSIGNED NOT NULL,
+    page_id MEDIUMINT UNSIGNED NOT NULL,
     replacement VARCHAR(100) COLLATE utf8mb4_bin NOT NULL,
     cs TINYINT(1) NOT NULL,
     position MEDIUMINT UNSIGNED NOT NULL, -- So we can move items to the replacements table
@@ -74,4 +74,4 @@ CREATE TABLE custom (
 
 -- FK custom --> page
 ALTER TABLE custom
-ADD CONSTRAINT fk_custom_page_id FOREIGN KEY (lang, article_id) REFERENCES page (lang, article_id) ON DELETE CASCADE;
+ADD CONSTRAINT fk_custom_page_id FOREIGN KEY (lang, page_id) REFERENCES page (lang, page_id) ON DELETE CASCADE;

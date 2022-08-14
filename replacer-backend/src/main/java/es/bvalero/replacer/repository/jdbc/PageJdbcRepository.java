@@ -31,7 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 class PageJdbcRepository implements PageRepository, PageIndexRepository {
 
     private static final String FROM_REPLACEMENT_JOIN_PAGE =
-        "FROM page p LEFT JOIN replacement r ON p.lang = r.lang AND p.article_id = r.article_id ";
+        "FROM page p LEFT JOIN replacement r ON p.lang = r.lang AND p.page_id = r.page_id ";
 
     @Autowired
     private ReplacementRepository replacementRepository;
@@ -42,10 +42,10 @@ class PageJdbcRepository implements PageRepository, PageIndexRepository {
     @Override
     public Optional<PageModel> findPageById(WikipediaPageId id) {
         String sql =
-            "SELECT p.lang, p.article_id, p.title, p.last_update, " +
+            "SELECT p.lang, p.page_id, p.title, p.last_update, " +
             "r.id, r.type AS kind, r.subtype, r.position, r.context, r.reviewer " +
             FROM_REPLACEMENT_JOIN_PAGE +
-            "WHERE p.lang = :lang AND p.article_id = :pageId";
+            "WHERE p.lang = :lang AND p.page_id = :pageId";
         SqlParameterSource namedParameters = new MapSqlParameterSource()
             .addValue("lang", id.getLang().getCode())
             .addValue("pageId", id.getPageId());
@@ -56,10 +56,10 @@ class PageJdbcRepository implements PageRepository, PageIndexRepository {
     @Override
     public Collection<PageModel> findPagesByIdInterval(WikipediaLanguage lang, int minPageId, int maxPageId) {
         String sql =
-            "SELECT p.lang, p.article_id, p.title, p.last_update, " +
+            "SELECT p.lang, p.page_id, p.title, p.last_update, " +
             "r.id, r.type AS kind, r.subtype, r.position, r.context, r.reviewer " +
             FROM_REPLACEMENT_JOIN_PAGE +
-            "WHERE p.lang = :lang AND p.article_id BETWEEN :minPageId AND :maxPageId";
+            "WHERE p.lang = :lang AND p.page_id BETWEEN :minPageId AND :maxPageId";
         SqlParameterSource namedParameters = new MapSqlParameterSource()
             .addValue("lang", lang.getCode())
             .addValue("minPageId", minPageId)
@@ -70,7 +70,7 @@ class PageJdbcRepository implements PageRepository, PageIndexRepository {
     @Override
     public void addPages(Collection<PageModel> pages) {
         String sql =
-            "INSERT INTO page (lang, article_id, title, last_update) VALUES (:lang, :pageId, :title, :lastUpdate)";
+            "INSERT INTO page (lang, page_id, title, last_update) VALUES (:lang, :pageId, :title, :lastUpdate)";
         SqlParameterSource[] namedParameters = SqlParameterSourceUtils.createBatch(pages.toArray());
         jdbcTemplate.batchUpdate(sql, namedParameters);
     }
@@ -78,15 +78,14 @@ class PageJdbcRepository implements PageRepository, PageIndexRepository {
     @Override
     public void updatePages(Collection<PageModel> pages) {
         String sql =
-            "UPDATE page SET title = :title, last_update = :lastUpdate " +
-            "WHERE lang = :lang AND article_id = :pageId";
+            "UPDATE page SET title = :title, last_update = :lastUpdate WHERE lang = :lang AND page_id = :pageId";
         SqlParameterSource[] namedParameters = SqlParameterSourceUtils.createBatch(pages.toArray());
         jdbcTemplate.batchUpdate(sql, namedParameters);
     }
 
     @Override
     public void updatePageLastUpdate(WikipediaPageId id, LocalDate lastUpdate) {
-        String sql = "UPDATE page SET last_update = :now WHERE lang = :lang AND article_id = :pageId";
+        String sql = "UPDATE page SET last_update = :now WHERE lang = :lang AND page_id = :pageId";
         SqlParameterSource namedParameters = new MapSqlParameterSource()
             .addValue("now", lastUpdate)
             .addValue("lang", id.getLang().getCode())
@@ -99,7 +98,7 @@ class PageJdbcRepository implements PageRepository, PageIndexRepository {
         // No need to delete first the replacements as they are deleted on cascade by the database
         Collection<PageId> pageIds = wikipediaPageIds.stream().map(PageId::of).collect(Collectors.toUnmodifiableSet());
         SqlParameterSource[] namedParameters = SqlParameterSourceUtils.createBatch(pageIds.toArray());
-        String sqlPages = "DELETE FROM page WHERE lang = :lang AND article_id = :pageId";
+        String sqlPages = "DELETE FROM page WHERE lang = :lang AND page_id = :pageId";
         jdbcTemplate.batchUpdate(sqlPages, namedParameters);
     }
 
@@ -111,7 +110,7 @@ class PageJdbcRepository implements PageRepository, PageIndexRepository {
 
         // Not worth to DISTINCT. Instead, we return the results as a set to avoid duplicates.
         String sql =
-            "SELECT article_id FROM replacement " +
+            "SELECT page_id FROM replacement " +
             "WHERE lang = :lang AND reviewer IS NULL AND id > :start " +
             "ORDER BY id " +
             "LIMIT " +
@@ -128,7 +127,7 @@ class PageJdbcRepository implements PageRepository, PageIndexRepository {
     @Override
     public int countPagesToReview(WikipediaLanguage lang) {
         // To check how this would affect to performance
-        String sql = "SELECT COUNT (DISTINCT article_id) FROM replacement WHERE lang = :lang AND reviewer IS NULL";
+        String sql = "SELECT COUNT (DISTINCT page_id) FROM replacement WHERE lang = :lang AND reviewer IS NULL";
         SqlParameterSource namedParameters = new MapSqlParameterSource().addValue("lang", lang.getCode());
         Integer result = jdbcTemplate.queryForObject(sql, namedParameters, Integer.class);
         return Objects.requireNonNullElse(result, 0);
@@ -139,7 +138,7 @@ class PageJdbcRepository implements PageRepository, PageIndexRepository {
         // When filtering by type/subtype ORDER BY RAND() still takes a while, but it is admissible.
         // Not worth to DISTINCT. Instead, we return the results as a set to avoid duplicates.
         String sql =
-            "SELECT article_id FROM replacement " +
+            "SELECT page_id FROM replacement " +
             "WHERE lang = :lang AND type = :kind AND subtype = :subtype AND reviewer IS NULL " +
             "ORDER BY RAND() " +
             "LIMIT " +
@@ -158,7 +157,7 @@ class PageJdbcRepository implements PageRepository, PageIndexRepository {
     public int countPagesToReviewByType(WikipediaLanguage lang, ReplacementType type) {
         // This approach is slightly better than using a JOIN with the page table
         String sql =
-            "SELECT COUNT (DISTINCT article_id) FROM replacement " +
+            "SELECT COUNT (DISTINCT page_id) FROM replacement " +
             "WHERE lang = :lang AND type = :kind AND subtype = :subtype AND reviewer IS NULL";
         SqlParameterSource namedParameters = new MapSqlParameterSource()
             .addValue("lang", lang.getCode())
@@ -173,7 +172,7 @@ class PageJdbcRepository implements PageRepository, PageIndexRepository {
         String sql =
             "SELECT p.title FROM page p " +
             "WHERE p.lang = :lang AND EXISTS " +
-            "(SELECT NULL FROM replacement r WHERE p.lang = r.lang AND p.article_id = r.article_id " +
+            "(SELECT NULL FROM replacement r WHERE p.lang = r.lang AND p.page_id = r.page_id " +
             "AND r.type = :kind AND r.subtype = :subtype AND r.reviewer IS NULL)";
         SqlParameterSource namedParameters = new MapSqlParameterSource()
             .addValue("lang", lang.getCode())

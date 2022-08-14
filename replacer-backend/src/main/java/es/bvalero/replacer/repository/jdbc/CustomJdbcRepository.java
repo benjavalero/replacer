@@ -25,7 +25,7 @@ class CustomJdbcRepository implements CustomRepository {
     @Override
     public void addCustom(CustomModel entity) {
         final String sql =
-            "INSERT INTO custom (article_id, lang, replacement, cs, position, context, reviewer) " +
+            "INSERT INTO custom (page_id, lang, replacement, cs, position, context, reviewer) " +
             "VALUES (:pageId, :lang, :replacement, :cs, :position, :context, :reviewer)";
         SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(entity);
         jdbcTemplate.update(sql, namedParameters);
@@ -40,7 +40,7 @@ class CustomJdbcRepository implements CustomRepository {
     ) {
         String from = "UPDATE custom SET reviewer=:reviewer ";
         String where =
-            "WHERE lang = :lang AND article_id = :pageId AND replacement = :replacement AND cs = :cs AND reviewer IS NULL ";
+            "WHERE lang = :lang AND page_id = :pageId AND replacement = :replacement AND cs = :cs AND reviewer IS NULL ";
         MapSqlParameterSource namedParameters = new MapSqlParameterSource()
             .addValue("reviewer", reviewer)
             .addValue("lang", wikipediaPageId.getLang().getCode())
@@ -56,7 +56,7 @@ class CustomJdbcRepository implements CustomRepository {
     @Override
     public Collection<Integer> findPageIdsReviewed(WikipediaLanguage lang, String replacement, boolean cs) {
         String sql =
-            "SELECT article_id FROM custom " +
+            "SELECT page_id FROM custom " +
             "WHERE lang = :lang AND replacement = :replacement AND cs = :cs AND reviewer IS NOT NULL";
         SqlParameterSource namedParameters = new MapSqlParameterSource()
             .addValue("lang", lang.getCode())

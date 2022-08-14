@@ -36,7 +36,7 @@ class ReplacementJdbcRepository
     @Override
     public void addReplacements(Collection<ReplacementModel> replacements) {
         String sql =
-            "INSERT INTO replacement (article_id, lang, type, subtype, position, context, reviewer) " +
+            "INSERT INTO replacement (page_id, lang, type, subtype, position, context, reviewer) " +
             "VALUES (:pageId, :lang, :kind, :subtype, :position, :context, :reviewer)";
         SqlParameterSource[] namedParameters = SqlParameterSourceUtils.createBatch(replacements.toArray());
         jdbcTemplate.batchUpdate(sql, namedParameters);
@@ -117,7 +117,7 @@ class ReplacementJdbcRepository
     public Collection<ResultCount<ReplacementType>> countReplacementsByType(WikipediaLanguage lang) {
         // Using the index this approach is better than executing several queries by kind
         String sql =
-            "SELECT type, subtype, COUNT(DISTINCT article_id) AS num FROM replacement " +
+            "SELECT type, subtype, COUNT(DISTINCT page_id) AS num FROM replacement " +
             "WHERE lang = :lang AND reviewer IS NULL " +
             "GROUP BY type, subtype";
         SqlParameterSource namedParameters = new MapSqlParameterSource().addValue("lang", lang.getCode());
@@ -135,10 +135,10 @@ class ReplacementJdbcRepository
     @Override
     public Collection<ResultCount<PageModel>> countReplacementsByPage(WikipediaLanguage lang, int numResults) {
         String sql =
-            "SELECT p.article_id, p.title, COUNT(*) AS num " +
-            "FROM replacement r JOIN page p ON p.lang = r.lang AND p.article_id = r.article_id " +
+            "SELECT p.page_id, p.title, COUNT(*) AS num " +
+            "FROM replacement r JOIN page p ON p.lang = r.lang AND p.page_id = r.page_id " +
             "WHERE r.lang = :lang AND r.reviewer IS NULL " +
-            "GROUP BY p.article_id, p.title " +
+            "GROUP BY p.page_id, p.title " +
             "ORDER BY num DESC " +
             "LIMIT " +
             numResults;
@@ -152,7 +152,7 @@ class ReplacementJdbcRepository
                         PageModel
                             .builder()
                             .lang(lang.getCode())
-                            .pageId(resultSet.getInt("ARTICLE_ID"))
+                            .pageId(resultSet.getInt("PAGE_ID"))
                             .title(resultSet.getString("TITLE"))
                             .lastUpdate(LocalDate.now())
                             .build(),
@@ -182,7 +182,7 @@ class ReplacementJdbcRepository
         String reviewer
     ) {
         String from = "UPDATE replacement SET reviewer=:reviewer ";
-        String where = "WHERE lang = :lang AND article_id = :pageId AND reviewer IS NULL ";
+        String where = "WHERE lang = :lang AND page_id = :pageId AND reviewer IS NULL ";
         MapSqlParameterSource namedParameters = new MapSqlParameterSource()
             .addValue("reviewer", reviewer)
             .addValue("lang", wikipediaPageId.getLang().getCode())
