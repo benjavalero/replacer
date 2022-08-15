@@ -47,7 +47,7 @@ class ReviewCustomFinder extends ReviewFinder {
         WikipediaSearchResult searchResult = findWikipediaResults(options, offset);
         final int totalWikipediaResults = searchResult.getTotal();
         int totalToReview = searchResult.getTotal();
-        final List<Integer> pageIds = new LinkedList<>(searchResult.getPageIds());
+        final Set<Integer> pageIds = new HashSet<>(searchResult.getPageIds());
 
         String subtype = options.getType().getSubtype();
         boolean cs = options.getCs() != null && Boolean.TRUE.equals(options.getCs());
@@ -62,7 +62,7 @@ class ReviewCustomFinder extends ReviewFinder {
         while (totalToReview >= 0) {
             // Discard the pages already reviewed
             // For the moment we don't check the positions of the replacements,
-            // which means that once a custom replacement is reviewed for a page it is done for ever.
+            // which means that once a custom replacement is reviewed for a page it is done forever.
             for (Integer reviewId : reviewedIds) {
                 if (pageIds.remove(reviewId)) {
                     totalToReview--;

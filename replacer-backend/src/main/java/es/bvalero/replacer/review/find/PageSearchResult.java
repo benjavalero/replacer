@@ -1,6 +1,9 @@
 package es.bvalero.replacer.review.find;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.NavigableSet;
+import java.util.Optional;
+import java.util.TreeSet;
 import lombok.AccessLevel;
 import lombok.Getter;
 
@@ -13,8 +16,8 @@ final class PageSearchResult {
     private int total;
 
     // Cached IDs of pages to review
-    // We need a List in order to use "removeIf"
-    private final List<Integer> pageIds = new LinkedList<>();
+    // Sort the cached pages to keep some kind of order especially when skipping pages
+    private final NavigableSet<Integer> pageIds = new TreeSet<>();
 
     // Offset in case there are more total results than the pagination size
     // in order to keep the offset during different iterations while finding a review
@@ -38,9 +41,6 @@ final class PageSearchResult {
 
     private void addPageIds(Collection<Integer> pageIds) {
         this.pageIds.addAll(pageIds);
-
-        // Sort the cached pages to keep some kind of order especially when skipping pages
-        Collections.sort(this.pageIds);
     }
 
     int getSize() {
@@ -66,7 +66,7 @@ final class PageSearchResult {
             return Optional.empty();
         } else {
             this.total--;
-            return Optional.of(this.pageIds.remove(0));
+            return Optional.ofNullable(this.pageIds.pollFirst());
         }
     }
 
