@@ -1,5 +1,8 @@
 # Versions
 
+## 2.18.2 (??)
+- Make the call to Check Wikipedia non-blocking
+
 ## 2.18.1 (14 Aug 2022)
 - Improve entity names in database
 

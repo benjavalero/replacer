@@ -5,6 +5,7 @@ import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import java.util.Objects;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -17,6 +18,7 @@ class CheckWikipediaRestService implements CheckWikipediaService {
     @Autowired
     RestTemplate restTemplate;
 
+    @Async
     public void reportFix(WikipediaLanguage lang, String pageTitle, CheckWikipediaAction action) {
         if (Objects.equals(action, CheckWikipediaAction.NO_ACTION)) {
             return;
