@@ -27,6 +27,10 @@ export class FixedReplacement {
     this.oldText = oldText;
     this.newText = newText;
   }
+
+  isFixed(): boolean {
+    return !!this.newText;
+  }
 }
 
 export class Snippet {

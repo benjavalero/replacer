@@ -10,13 +10,12 @@ import es.bvalero.replacer.common.domain.*;
 import es.bvalero.replacer.common.domain.ReviewOptions;
 import es.bvalero.replacer.common.dto.AccessTokenDto;
 import es.bvalero.replacer.common.util.WikipediaDateUtils;
-import es.bvalero.replacer.review.dto.ReviewOptionsDto;
-import es.bvalero.replacer.review.dto.ReviewPageDto;
-import es.bvalero.replacer.review.dto.SaveReviewRequest;
+import es.bvalero.replacer.review.dto.*;
 import es.bvalero.replacer.wikipedia.WikipediaConflictException;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -45,6 +44,13 @@ class ReviewSaveControllerTest {
         .lastUpdate(timestamp)
         .queryTimestamp(timestamp)
         .build();
+    ReviewedReplacement reviewed = ReviewedReplacement
+        .builder()
+        .pageId(page.getId())
+        .type(ReplacementType.of(ReplacementKind.SIMPLE, "1"))
+        .start(1)
+        .reviewer("A")
+        .build();
 
     @Autowired
     private MockMvc mvc;
@@ -69,7 +75,11 @@ class ReviewSaveControllerTest {
         request.setPage(reviewPage);
         ReviewOptionsDto options = new ReviewOptionsDto();
         request.setOptions(options);
-        request.setReviewAllTypes(false);
+        ReviewedReplacementDto reviewedDto = new ReviewedReplacementDto();
+        reviewedDto.setKind(reviewed.getType().getKind().getCode());
+        reviewedDto.setSubtype(reviewed.getType().getSubtype());
+        reviewedDto.setStart(reviewed.getStart());
+        request.setReviewedReplacements(List.of(reviewedDto));
         request.setAccessToken(AccessTokenDto.fromDomain(accessToken));
     }
 
@@ -84,6 +94,7 @@ class ReviewSaveControllerTest {
             .andExpect(status().isNoContent());
 
         verify(reviewSaveService).saveReviewContent(page, null, ReviewOptions.ofNoType(), accessToken);
+        verify(reviewSaveService).markAsReviewed(List.of(reviewed), true);
     }
 
     @Test
@@ -98,8 +109,9 @@ class ReviewSaveControllerTest {
             )
             .andExpect(status().isNoContent());
 
-        WikipediaPageId wikipediaPageId = WikipediaPageId.of(WikipediaLanguage.SPANISH, pageId);
-        verify(reviewSaveService).saveReviewWithNoChanges(wikipediaPageId, ReviewOptions.ofNoType());
+        verify(reviewSaveService, never())
+            .saveReviewContent(any(WikipediaPage.class), anyInt(), any(ReviewOptions.class), any(AccessToken.class));
+        verify(reviewSaveService).markAsReviewed(List.of(reviewed), false);
     }
 
     @Test
@@ -112,8 +124,7 @@ class ReviewSaveControllerTest {
             )
             .andExpect(status().isBadRequest());
 
-        WikipediaPageId wikipediaPageId = WikipediaPageId.of(WikipediaLanguage.SPANISH, pageId);
-        verify(reviewSaveService, never()).saveReviewWithNoChanges(wikipediaPageId, ReviewOptions.ofNoType());
+        verify(reviewSaveService, never()).markAsReviewed(anyCollection(), anyBoolean());
     }
 
     @Test
@@ -126,8 +137,7 @@ class ReviewSaveControllerTest {
             )
             .andExpect(status().isBadRequest());
 
-        WikipediaPageId wikipediaPageId = WikipediaPageId.of(WikipediaLanguage.SPANISH, pageId);
-        verify(reviewSaveService, never()).saveReviewWithNoChanges(wikipediaPageId, ReviewOptions.ofNoType());
+        verify(reviewSaveService, never()).markAsReviewed(anyCollection(), anyBoolean());
     }
 
     @Test
@@ -142,8 +152,7 @@ class ReviewSaveControllerTest {
             )
             .andExpect(status().isBadRequest());
 
-        WikipediaPageId wikipediaPageId = WikipediaPageId.of(WikipediaLanguage.SPANISH, pageId);
-        verify(reviewSaveService, never()).saveReviewWithNoChanges(wikipediaPageId, ReviewOptions.ofNoType());
+        verify(reviewSaveService, never()).markAsReviewed(anyCollection(), anyBoolean());
     }
 
     @Test
@@ -161,6 +170,7 @@ class ReviewSaveControllerTest {
             .andExpect(status().isConflict());
 
         verify(reviewSaveService).saveReviewContent(page, null, ReviewOptions.ofNoType(), accessToken);
+        verify(reviewSaveService, never()).markAsReviewed(anyCollection(), anyBoolean());
     }
 
     @Test
@@ -178,6 +188,7 @@ class ReviewSaveControllerTest {
             .andExpect(status().isUnauthorized());
 
         verify(reviewSaveService).saveReviewContent(page, null, ReviewOptions.ofNoType(), accessToken);
+        verify(reviewSaveService, never()).markAsReviewed(anyCollection(), anyBoolean());
     }
 
     @Test
@@ -195,5 +206,6 @@ class ReviewSaveControllerTest {
             .andExpect(status().isInternalServerError());
 
         verify(reviewSaveService).saveReviewContent(page, null, ReviewOptions.ofNoType(), accessToken);
+        verify(reviewSaveService, never()).markAsReviewed(anyCollection(), anyBoolean());
     }
 }

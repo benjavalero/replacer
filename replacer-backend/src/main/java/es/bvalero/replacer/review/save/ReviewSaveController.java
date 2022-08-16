@@ -15,6 +15,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.Objects;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -57,11 +58,16 @@ public class ReviewSaveController {
             LOGGER.error("Non valid empty content");
             return ResponseEntity.badRequest().build();
         }
-        ReviewOptions options = ReviewMapper.fromDto(request.getOptions(), request.isReviewAllTypes(), queryParameters);
-        WikipediaPageId wikipediaPageId = WikipediaPageId.of(queryParameters.getWikipediaLanguage(), pageId);
+        Collection<ReviewedReplacement> reviewed = ReviewMapper.fromDto(
+            pageId,
+            request.getReviewedReplacements(),
+            request.getOptions(),
+            queryParameters
+        );
         if (EMPTY_CONTENT.equals(content)) {
-            reviewSaveService.saveReviewWithNoChanges(wikipediaPageId, options);
+            reviewSaveService.markAsReviewed(reviewed, false);
         } else {
+            WikipediaPageId wikipediaPageId = WikipediaPageId.of(queryParameters.getWikipediaLanguage(), pageId);
             ReviewSectionDto section = request.getPage().getSection();
             Integer sectionId = section == null ? null : section.getId();
             LocalDateTime saveTimestamp = WikipediaDateUtils.parseWikipediaTimestamp(
@@ -76,9 +82,11 @@ public class ReviewSaveController {
                 .lastUpdate(saveTimestamp)
                 .queryTimestamp(saveTimestamp)
                 .build();
+            ReviewOptions options = ReviewMapper.fromDto(request.getOptions(), queryParameters);
             AccessToken accessToken = AccessTokenDto.toDomain(request.getAccessToken());
             try {
                 reviewSaveService.saveReviewContent(page, sectionId, options, accessToken);
+                reviewSaveService.markAsReviewed(reviewed, true);
             } catch (WikipediaException e) {
                 return manageWikipediaException(e);
             }

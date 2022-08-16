@@ -1,16 +1,11 @@
 package es.bvalero.replacer.review.save;
 
-import es.bvalero.replacer.common.domain.AccessToken;
-import es.bvalero.replacer.common.domain.ReviewOptions;
-import es.bvalero.replacer.common.domain.ReviewOptionsType;
-import es.bvalero.replacer.common.domain.WikipediaPage;
-import es.bvalero.replacer.common.domain.WikipediaPageId;
-import es.bvalero.replacer.repository.CustomRepository;
-import es.bvalero.replacer.repository.PageRepository;
-import es.bvalero.replacer.repository.ReplacementTypeRepository;
+import es.bvalero.replacer.common.domain.*;
+import es.bvalero.replacer.repository.*;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.wikipedia.WikipediaPageRepository;
 import java.time.LocalDate;
+import java.util.Collection;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
@@ -57,19 +52,11 @@ class ReviewSaveService {
             buildEditSummary(options, applyCosmetics),
             accessToken
         );
-
-        // Mark page as reviewed in the database
-        this.markAsReviewed(page.getId(), options, true);
-    }
-
-    void saveReviewWithNoChanges(WikipediaPageId pageId, ReviewOptions options) {
-        // Mark page as reviewed in the database
-        this.markAsReviewed(pageId, options, false);
     }
 
     private String buildEditSummary(ReviewOptions options, boolean applyCosmetics) {
         StringBuilder summary = new StringBuilder(EDIT_SUMMARY);
-        if (options.getOptionsType() != ReviewOptionsType.NO_TYPE && !options.isReviewAllTypes()) {
+        if (options.getOptionsType() != ReviewOptionsType.NO_TYPE) {
             summary.append(": «").append(options.getType().getSubtype()).append('»');
         }
         if (applyCosmetics) {
@@ -78,45 +65,57 @@ class ReviewSaveService {
         return summary.toString();
     }
 
-    private void markAsReviewed(WikipediaPageId pageId, ReviewOptions options, boolean updateDate) {
-        String reviewer = options.getUser();
-        switch (options.getOptionsType()) {
-            case NO_TYPE:
-                // Review all types in any case
-                markAsReviewedNoType(pageId, reviewer);
-                break;
-            case TYPE_SUBTYPE:
-                if (options.isReviewAllTypes()) {
-                    markAsReviewedNoType(pageId, reviewer);
-                } else {
-                    markAsReviewedTypeSubtype(pageId, options, reviewer);
-                }
-                break;
-            case CUSTOM:
-                if (options.isReviewAllTypes()) {
-                    markAsReviewedNoType(pageId, reviewer);
-                }
-                markAsReviewedCustom(pageId, options, reviewer);
-                break;
-        }
-
+    void markAsReviewed(Collection<ReviewedReplacement> reviewedReplacements, boolean updateDate) {
         if (updateDate) {
+            WikipediaPageId pageId = reviewedReplacements
+                .stream()
+                .findAny()
+                .orElseThrow(IllegalArgumentException::new)
+                .getPageId();
             pageRepository.updatePageLastUpdate(pageId, LocalDate.now());
         }
+
+        reviewedReplacements.forEach(this::markAsReviewed);
     }
 
-    private void markAsReviewedNoType(WikipediaPageId pageId, String reviewer) {
-        replacementTypeRepository.updateReviewerByPageAndType(pageId, null, reviewer);
+    private void markAsReviewed(ReviewedReplacement reviewed) {
+        switch (reviewed.getType().getKind()) {
+            case EMPTY:
+                throw new IllegalArgumentException("Unexpected empty replacement kind on saving review");
+            case CUSTOM:
+                customRepository.updateReviewer(mapReviewedCustom(reviewed));
+                break;
+            default:
+                replacementTypeRepository.updateReviewer(mapReviewedReplacement(reviewed));
+                break;
+        }
     }
 
-    private void markAsReviewedTypeSubtype(WikipediaPageId pageId, ReviewOptions options, String reviewer) {
-        replacementTypeRepository.updateReviewerByPageAndType(pageId, options.getType(), reviewer);
+    private CustomModel mapReviewedCustom(ReviewedReplacement reviewed) {
+        assert reviewed.getCs() != null;
+        return CustomModel
+            .builder()
+            .lang(reviewed.getPageId().getLang().getCode())
+            .pageId(reviewed.getPageId().getPageId())
+            .replacement(reviewed.getType().getSubtype())
+            .cs((byte) (Boolean.TRUE.equals(reviewed.getCs()) ? 1 : 0))
+            .start(reviewed.getStart())
+            .context("") // It is not important in this action
+            .reviewer(reviewed.getReviewer())
+            .build();
     }
 
-    private void markAsReviewedCustom(WikipediaPageId pageId, ReviewOptions options, String reviewer) {
-        // Custom replacements don't exist in the database to be reviewed
-        String subtype = options.getType().getSubtype();
-        boolean cs = options.getCs() != null && Boolean.TRUE.equals(options.getCs());
-        customRepository.updateReviewerByPageAndType(pageId, subtype, cs, reviewer);
+    private ReplacementModel mapReviewedReplacement(ReviewedReplacement reviewed) {
+        assert reviewed.getCs() == null;
+        return ReplacementModel
+            .builder()
+            .lang(reviewed.getPageId().getLang().getCode())
+            .pageId(reviewed.getPageId().getPageId())
+            .kind(reviewed.getType().getKind().getCode())
+            .subtype(reviewed.getType().getSubtype())
+            .start(reviewed.getStart())
+            .context("") // It is not important in this action
+            .reviewer(reviewed.getReviewer())
+            .build();
     }
 }

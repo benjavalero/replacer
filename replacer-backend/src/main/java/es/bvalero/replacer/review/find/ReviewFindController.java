@@ -37,7 +37,7 @@ public class ReviewFindController {
         @Valid ReviewOptionsDto optionsDto
     ) {
         Optional<Review> review = Optional.empty();
-        ReviewOptions options = ReviewMapper.fromDto(optionsDto, false, queryParameters);
+        ReviewOptions options = ReviewMapper.fromDto(optionsDto, queryParameters);
         switch (options.getOptionsType()) {
             case NO_TYPE:
                 review = reviewNoTypeFinder.findRandomPageReview(options);
@@ -60,7 +60,7 @@ public class ReviewFindController {
         @Valid ReviewOptionsDto optionsDto
     ) {
         Optional<Review> review = Optional.empty();
-        ReviewOptions options = ReviewMapper.fromDto(optionsDto, false, queryParameters);
+        ReviewOptions options = ReviewMapper.fromDto(optionsDto, queryParameters);
         switch (options.getOptionsType()) {
             case NO_TYPE:
                 review = reviewNoTypeFinder.findPageReview(pageId, options);

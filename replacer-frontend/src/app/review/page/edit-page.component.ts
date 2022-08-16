@@ -4,7 +4,13 @@ import { faFastForward } from '@fortawesome/free-solid-svg-icons';
 import { UserService } from '../../core/user/user.service';
 import { AlertService } from '../../shared/alert/alert.service';
 import { FixedReplacement, getReplacementEnd } from './page-replacement.model';
-import { kindLabel, PageReviewOptions, PageReviewResponse, ReviewOptions } from './page-review.model';
+import {
+  kindLabel,
+  PageReviewOptions,
+  PageReviewResponse,
+  ReviewedReplacement,
+  ReviewOptions
+} from './page-review.model';
 import { EMPTY_CONTENT, PageService } from './page.service';
 
 @Component({
@@ -97,7 +103,7 @@ export class EditPageComponent implements OnChanges {
   }
 
   private filterFixedReplacements(): FixedReplacement[] {
-    return this.fixedReplacements.filter((f) => !!f.newText);
+    return this.fixedReplacements.filter((f) => f.isFixed());
   }
 
   onFixed(fixed: FixedReplacement) {
@@ -148,11 +154,13 @@ export class EditPageComponent implements OnChanges {
   }
 
   private saveContent(content: string) {
+    const reviewedReplacements = this.getReviewedReplacements();
+
     // Remove replacements as a trick to hide the page
     this.review.replacements = [];
 
     const savePage = { ...this.review.page, content: content };
-    this.pageService.saveReview(savePage, this.review.options, this.reviewAllTypes).subscribe({
+    this.pageService.saveReview(savePage, this.review.options, reviewedReplacements).subscribe({
       error: (err) => {
         const errStatus = err.status;
         if (errStatus == HttpStatusCode.Conflict) {
@@ -174,6 +182,20 @@ export class EditPageComponent implements OnChanges {
         this.nextPage();
       }
     });
+  }
+
+  private getReviewedReplacements(): ReviewedReplacement[] {
+    const reviewedReplacements: ReviewedReplacement[] = [];
+    for (let i = 0; i < this.review.replacements.length; i++) {
+      const displayed: boolean = this.displayReplacement(i);
+      if (displayed) {
+        const replacement = this.review.replacements[i];
+        const fixed: boolean = this.fixedReplacements[i]?.isFixed() || false;
+        const reviewed = new ReviewedReplacement(replacement.kind, replacement.subtype, replacement.start, fixed);
+        reviewedReplacements.push(reviewed);
+      }
+    }
+    return reviewedReplacements;
   }
 
   private nextPage(): void {

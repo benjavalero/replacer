@@ -3,6 +3,7 @@ package es.bvalero.replacer.review.dto;
 import es.bvalero.replacer.common.domain.*;
 import es.bvalero.replacer.common.dto.CommonQueryParameters;
 import es.bvalero.replacer.common.util.WikipediaDateUtils;
+import es.bvalero.replacer.review.save.ReviewedReplacement;
 import java.util.Collection;
 import java.util.stream.Collectors;
 import lombok.experimental.UtilityClass;
@@ -72,19 +73,41 @@ public class ReviewMapper {
         return dto;
     }
 
-    public ReviewOptions fromDto(
-        ReviewOptionsDto options,
-        boolean reviewAllTypes,
-        CommonQueryParameters queryParameters
-    ) {
+    public ReviewOptions fromDto(ReviewOptionsDto options, CommonQueryParameters queryParameters) {
         return ReviewOptions
             .builder()
             .lang(WikipediaLanguage.valueOfCode(queryParameters.getLang()))
-            .user(queryParameters.getUser())
             .type(ReplacementType.of(options.getKind(), options.getSubtype()))
             .suggestion(options.getSuggestion())
             .cs(options.getCs())
-            .reviewAllTypes(reviewAllTypes)
+            .build();
+    }
+
+    public Collection<ReviewedReplacement> fromDto(
+        int pageId,
+        Collection<ReviewedReplacementDto> reviewed,
+        ReviewOptionsDto options,
+        CommonQueryParameters queryParameters
+    ) {
+        return reviewed
+            .stream()
+            .map(r -> fromDto(pageId, r, options, queryParameters))
+            .collect(Collectors.toUnmodifiableList());
+    }
+
+    private ReviewedReplacement fromDto(
+        int pageId,
+        ReviewedReplacementDto reviewed,
+        ReviewOptionsDto options,
+        CommonQueryParameters queryParameters
+    ) {
+        return ReviewedReplacement
+            .builder()
+            .pageId(WikipediaPageId.of(queryParameters.getWikipediaLanguage(), pageId))
+            .type(ReplacementType.of(reviewed.getKind(), reviewed.getSubtype()))
+            .cs(options.getCs())
+            .start(reviewed.getStart())
+            .reviewer(queryParameters.getUser())
             .build();
     }
 }

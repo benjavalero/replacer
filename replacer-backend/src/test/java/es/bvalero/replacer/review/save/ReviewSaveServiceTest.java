@@ -4,13 +4,13 @@ import static org.mockito.Mockito.*;
 
 import es.bvalero.replacer.common.domain.*;
 import es.bvalero.replacer.common.domain.ReviewOptions;
-import es.bvalero.replacer.repository.CustomRepository;
-import es.bvalero.replacer.repository.PageRepository;
-import es.bvalero.replacer.repository.ReplacementTypeRepository;
+import es.bvalero.replacer.repository.*;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.wikipedia.WikipediaPageRepository;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -66,118 +66,42 @@ class ReviewSaveServiceTest {
         verify(applyCosmeticsService).applyCosmeticChanges(page);
         verify(wikipediaPageRepository)
             .save(eq(page.getId()), isNull(), eq(contentAfterCosmetics), eq(timestamp), anyString(), eq(accessToken));
-        verify(replacementTypeRepository).updateReviewerByPageAndType(page.getId(), null, "A");
     }
 
     @Test
-    void testSaveWithNoChangesNoType() throws WikipediaException {
+    void testMarkAsReviewed() {
         int pageId = 123;
-        ReviewOptions options = ReviewOptions.ofNoType();
         WikipediaPageId wikipediaPageId = WikipediaPageId.of(WikipediaLanguage.getDefault(), pageId);
-        reviewSaveService.saveReviewWithNoChanges(wikipediaPageId, options);
+        String reviewer = "X";
 
-        verify(applyCosmeticsService, never()).applyCosmeticChanges(any(WikipediaPage.class));
-        verify(wikipediaPageRepository, never())
-            .save(
-                any(WikipediaPageId.class),
-                anyInt(),
-                anyString(),
-                any(LocalDateTime.class),
-                anyString(),
-                any(AccessToken.class)
-            );
-        verify(replacementTypeRepository).updateReviewerByPageAndType(wikipediaPageId, null, options.getUser());
-    }
+        ReviewedReplacement r1 = ReviewedReplacement
+            .builder()
+            .pageId(wikipediaPageId)
+            .type(ReplacementType.of(ReplacementKind.SIMPLE, "1"))
+            .start(1)
+            .reviewer(reviewer)
+            .build();
+        ReviewedReplacement r2 = ReviewedReplacement
+            .builder()
+            .pageId(wikipediaPageId)
+            .type(ReplacementType.of(ReplacementKind.COMPOSED, "2"))
+            .start(2)
+            .reviewer(reviewer)
+            .build();
+        ReviewedReplacement r3 = ReviewedReplacement
+            .builder()
+            .pageId(wikipediaPageId)
+            .type(ReplacementType.of(ReplacementKind.CUSTOM, "3"))
+            .start(3)
+            .cs(false)
+            .reviewer(reviewer)
+            .build();
+        List<ReviewedReplacement> reviewedReplacements = List.of(r1, r2, r3);
 
-    @Test
-    void testSaveWithNoChangesByType() throws WikipediaException {
-        int pageId = 123;
-        ReplacementType type = ReplacementType.of(ReplacementKind.DATE, "S");
-        ReviewOptions options = ReviewOptions.ofType(type);
-        WikipediaPageId wikipediaPageId = WikipediaPageId.of(WikipediaLanguage.getDefault(), pageId);
-        reviewSaveService.saveReviewWithNoChanges(wikipediaPageId, options);
+        reviewSaveService.markAsReviewed(reviewedReplacements, true);
 
-        verify(applyCosmeticsService, never()).applyCosmeticChanges(any(WikipediaPage.class));
-        verify(wikipediaPageRepository, never())
-            .save(
-                any(WikipediaPageId.class),
-                anyInt(),
-                anyString(),
-                any(LocalDateTime.class),
-                anyString(),
-                any(AccessToken.class)
-            );
-        verify(replacementTypeRepository, never())
-            .updateReviewerByPageAndType(wikipediaPageId, null, options.getUser());
-        verify(replacementTypeRepository)
-            .updateReviewerByPageAndType(wikipediaPageId, options.getType(), options.getUser());
-    }
-
-    @Test
-    void testSaveWithNoChangesByTypeReviewAll() throws WikipediaException {
-        int pageId = 123;
-        ReplacementType type = ReplacementType.of(ReplacementKind.DATE, "S");
-        ReviewOptions options = ReviewOptions.ofType(type).withReviewAllTypes(true);
-        WikipediaPageId wikipediaPageId = WikipediaPageId.of(WikipediaLanguage.getDefault(), pageId);
-        reviewSaveService.saveReviewWithNoChanges(wikipediaPageId, options);
-
-        verify(applyCosmeticsService, never()).applyCosmeticChanges(any(WikipediaPage.class));
-        verify(wikipediaPageRepository, never())
-            .save(
-                any(WikipediaPageId.class),
-                anyInt(),
-                anyString(),
-                any(LocalDateTime.class),
-                anyString(),
-                any(AccessToken.class)
-            );
-        verify(replacementTypeRepository, never())
-            .updateReviewerByPageAndType(wikipediaPageId, options.getType(), options.getUser());
-        verify(replacementTypeRepository).updateReviewerByPageAndType(wikipediaPageId, null, options.getUser());
-    }
-
-    @Test
-    void testSaveWithNoChangesByCustom() throws WikipediaException {
-        int pageId = 123;
-        ReviewOptions options = ReviewOptions.ofCustom(WikipediaLanguage.getDefault(), "S", "S2", true);
-        WikipediaPageId wikipediaPageId = WikipediaPageId.of(WikipediaLanguage.getDefault(), pageId);
-        reviewSaveService.saveReviewWithNoChanges(wikipediaPageId, options);
-
-        verify(applyCosmeticsService, never()).applyCosmeticChanges(any(WikipediaPage.class));
-        verify(wikipediaPageRepository, never())
-            .save(
-                any(WikipediaPageId.class),
-                anyInt(),
-                anyString(),
-                any(LocalDateTime.class),
-                anyString(),
-                any(AccessToken.class)
-            );
-        verify(replacementTypeRepository, never())
-            .updateReviewerByPageAndType(wikipediaPageId, null, options.getUser());
-        verify(customRepository).updateReviewerByPageAndType(wikipediaPageId, "S", true, options.getUser());
-    }
-
-    @Test
-    void testSaveWithNoChangesByCustomReviewAll() throws WikipediaException {
-        int pageId = 123;
-        ReviewOptions options = ReviewOptions
-            .ofCustom(WikipediaLanguage.getDefault(), "S", "S2", true)
-            .withReviewAllTypes(true);
-        WikipediaPageId wikipediaPageId = WikipediaPageId.of(WikipediaLanguage.getDefault(), pageId);
-        reviewSaveService.saveReviewWithNoChanges(wikipediaPageId, options);
-
-        verify(applyCosmeticsService, never()).applyCosmeticChanges(any(WikipediaPage.class));
-        verify(wikipediaPageRepository, never())
-            .save(
-                any(WikipediaPageId.class),
-                anyInt(),
-                anyString(),
-                any(LocalDateTime.class),
-                anyString(),
-                any(AccessToken.class)
-            );
-        verify(replacementTypeRepository).updateReviewerByPageAndType(wikipediaPageId, null, options.getUser());
-        verify(customRepository).updateReviewerByPageAndType(wikipediaPageId, "S", true, options.getUser());
+        verify(pageRepository).updatePageLastUpdate(wikipediaPageId, LocalDate.now());
+        verify(replacementTypeRepository, times(2)).updateReviewer(any(ReplacementModel.class));
+        verify(customRepository, times(1)).updateReviewer(any(CustomModel.class));
     }
 }

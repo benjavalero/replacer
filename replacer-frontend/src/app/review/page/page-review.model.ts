@@ -60,16 +60,35 @@ export interface PageReviewOptions {
   cs?: boolean;
 }
 
+export class ReviewedReplacement {
+  kind: number;
+  subtype: string;
+  start: number;
+  fixed: boolean;
+
+  constructor(kind: number, subtype: string, start: number, fixed: boolean) {
+    this.kind = kind;
+    this.subtype = subtype;
+    this.start = start;
+    this.fixed = fixed;
+  }
+}
+
 export class SaveReviewRequest {
   page: ReviewPage;
   options: PageReviewOptions;
-  reviewAllTypes: boolean;
+  reviewedReplacements: ReviewedReplacement[];
   accessToken: AccessToken;
 
-  constructor(page: ReviewPage, options: PageReviewOptions, reviewAllTypes: boolean, accessToken: AccessToken) {
+  constructor(
+    page: ReviewPage,
+    options: PageReviewOptions,
+    reviewedReplacements: ReviewedReplacement[],
+    accessToken: AccessToken
+  ) {
     this.page = page;
     this.options = options;
-    this.reviewAllTypes = reviewAllTypes;
+    this.reviewedReplacements = reviewedReplacements;
     this.accessToken = accessToken;
   }
 }

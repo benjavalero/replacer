@@ -198,6 +198,22 @@ class ReplacementJdbcRepository
     }
 
     @Override
+    public void updateReviewer(ReplacementModel replacement) {
+        String sql =
+            "UPDATE replacement SET reviewer = :reviewer " +
+            "WHERE lang = :lang AND page_id = :pageId AND kind = :kind AND subtype = :subtype " +
+            "AND start = :start AND reviewer IS NULL";
+        SqlParameterSource namedParameters = new MapSqlParameterSource()
+            .addValue("reviewer", replacement.getReviewer())
+            .addValue("lang", replacement.getLang())
+            .addValue("pageId", replacement.getPageId())
+            .addValue("kind", replacement.getKind())
+            .addValue("subtype", replacement.getSubtype())
+            .addValue("start", replacement.getStart());
+        jdbcTemplate.update(sql, namedParameters);
+    }
+
+    @Override
     public void removeReplacementsByType(WikipediaLanguage lang, Collection<ReplacementType> types) {
         if (types.isEmpty() || validateTypesSameKind(types)) {
             throw new IllegalArgumentException();

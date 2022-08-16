@@ -2,7 +2,6 @@ package es.bvalero.replacer.repository.jdbc;
 
 import com.github.rozidan.springboot.logger.Loggable;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import es.bvalero.replacer.common.domain.WikipediaPageId;
 import es.bvalero.replacer.repository.CustomModel;
 import es.bvalero.replacer.repository.CustomRepository;
 import java.util.Collection;
@@ -32,23 +31,19 @@ class CustomJdbcRepository implements CustomRepository {
     }
 
     @Override
-    public void updateReviewerByPageAndType(
-        WikipediaPageId wikipediaPageId,
-        String replacement,
-        boolean cs,
-        String reviewer
-    ) {
-        String from = "UPDATE custom SET reviewer=:reviewer ";
-        String where =
-            "WHERE lang = :lang AND page_id = :pageId AND replacement = :replacement AND cs = :cs AND reviewer IS NULL ";
+    public void updateReviewer(CustomModel custom) {
+        String sql =
+            "UPDATE custom SET reviewer = :reviewer " +
+            "WHERE lang = :lang AND page_id = :pageId AND replacement = :replacement AND cs = :cs " +
+            "AND start = :start AND reviewer IS NULL ";
         MapSqlParameterSource namedParameters = new MapSqlParameterSource()
-            .addValue("reviewer", reviewer)
-            .addValue("lang", wikipediaPageId.getLang().getCode())
-            .addValue("pageId", wikipediaPageId.getPageId())
-            .addValue("replacement", replacement)
-            .addValue("cs", cs ? 1 : 0);
+            .addValue("reviewer", custom.getReviewer())
+            .addValue("lang", custom.getLang())
+            .addValue("pageId", custom.getPageId())
+            .addValue("replacement", custom.getReplacement())
+            .addValue("cs", custom.getCs())
+            .addValue("start", custom.getStart());
 
-        String sql = from + where;
         jdbcTemplate.update(sql, namedParameters);
     }
 

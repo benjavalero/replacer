@@ -5,6 +5,7 @@ import es.bvalero.replacer.common.domain.ReplacementType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.domain.WikipediaPageId;
 import es.bvalero.replacer.common.exception.ReplacerException;
+import es.bvalero.replacer.repository.ReplacementModel;
 import es.bvalero.replacer.repository.ReplacementTypeRepository;
 import es.bvalero.replacer.repository.ResultCount;
 import java.util.*;
@@ -68,6 +69,15 @@ class ReplacementTypeCacheRepository implements ReplacementTypeRepository {
             this.decrementSubtypeCount(pageId.getLang(), type);
         }
         this.replacementTypeRepository.updateReviewerByPageAndType(pageId, type, reviewer);
+    }
+
+    @Override
+    public void updateReviewer(ReplacementModel replacement) {
+        this.decrementSubtypeCount(
+                WikipediaLanguage.valueOfCode(replacement.getLang()),
+                ReplacementType.of(replacement.getKind(), replacement.getSubtype())
+            );
+        this.replacementTypeRepository.updateReviewer(replacement);
     }
 
     @VisibleForTesting

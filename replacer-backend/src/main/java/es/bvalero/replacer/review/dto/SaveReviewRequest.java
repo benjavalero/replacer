@@ -2,7 +2,9 @@ package es.bvalero.replacer.review.dto;
 
 import es.bvalero.replacer.common.dto.AccessTokenDto;
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.util.Collection;
 import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,8 +25,11 @@ public class SaveReviewRequest {
     @NotNull
     private ReviewOptionsDto options;
 
-    @Schema(description = "Mark as reviewed all page replacements despite the type in the options", required = true)
-    private boolean reviewAllTypes;
+    @Schema(description = "Reviewed replacements", required = true)
+    @Valid
+    @NotNull
+    @NotEmpty
+    private Collection<ReviewedReplacementDto> reviewedReplacements;
 
     @Schema(description = "Access token authenticating the user to save the page", required = true)
     @ToString.Exclude

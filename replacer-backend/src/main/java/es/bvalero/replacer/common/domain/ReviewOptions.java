@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Objects;
 import lombok.Builder;
 import lombok.Value;
-import lombok.With;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.TestOnly;
 import org.springframework.lang.NonNull;
@@ -19,9 +18,6 @@ public class ReviewOptions {
     WikipediaLanguage lang;
 
     @NonNull
-    String user;
-
-    @NonNull
     ReplacementType type;
 
     @Nullable
@@ -30,30 +26,14 @@ public class ReviewOptions {
     @Nullable
     Boolean cs;
 
-    // Mark as reviewed all page replacements despite the type in the options
-    @With(onMethod_ = @TestOnly)
-    boolean reviewAllTypes;
-
     @TestOnly
     public static ReviewOptions ofNoType() {
-        return ReviewOptions
-            .builder()
-            .lang(WikipediaLanguage.getDefault())
-            .user("A")
-            .type(ReplacementType.ofEmpty())
-            .reviewAllTypes(false)
-            .build();
+        return ReviewOptions.builder().lang(WikipediaLanguage.getDefault()).type(ReplacementType.ofEmpty()).build();
     }
 
     @TestOnly
     public static ReviewOptions ofType(ReplacementType type) {
-        return ReviewOptions
-            .builder()
-            .lang(WikipediaLanguage.getDefault())
-            .user("A")
-            .type(type)
-            .reviewAllTypes(false)
-            .build();
+        return ReviewOptions.builder().lang(WikipediaLanguage.getDefault()).type(type).build();
     }
 
     @TestOnly
@@ -66,11 +46,9 @@ public class ReviewOptions {
         return ReviewOptions
             .builder()
             .lang(lang)
-            .user("A")
             .type(ReplacementType.of(ReplacementKind.CUSTOM, replacement))
             .suggestion(suggestion)
             .cs(caseSensitive)
-            .reviewAllTypes(false)
             .build();
     }
 
@@ -87,7 +65,7 @@ public class ReviewOptions {
 
     @Override
     public String toString() {
-        return String.format("%s - %s - %s", user, lang, toStringSearchType());
+        return String.format("%s - %s", lang, toStringSearchType());
     }
 
     public String toStringSearchType() {
@@ -110,20 +88,11 @@ public class ReviewOptions {
     }
 
     // Used by the builder
-    ReviewOptions(
-        WikipediaLanguage lang,
-        String user,
-        ReplacementType type,
-        @Nullable String suggestion,
-        @Nullable Boolean cs,
-        boolean reviewAllTypes
-    ) {
+    ReviewOptions(WikipediaLanguage lang, ReplacementType type, @Nullable String suggestion, @Nullable Boolean cs) {
         this.lang = lang;
-        this.user = user;
         this.type = type;
         this.suggestion = suggestion;
         this.cs = cs;
-        this.reviewAllTypes = reviewAllTypes;
 
         if (!isValid()) {
             throw new IllegalArgumentException("Page Review Options not valid");
