@@ -3,7 +3,7 @@ import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core
 import { faFastForward } from '@fortawesome/free-solid-svg-icons';
 import { UserService } from '../../core/user/user.service';
 import { AlertService } from '../../shared/alert/alert.service';
-import { FixedReplacement, getReplacementEnd } from './page-replacement.model';
+import { FixedReplacement, getReplacementEnd, ReviewReplacement } from './page-replacement.model';
 import {
   kindLabel,
   PageReviewOptions,
@@ -189,9 +189,15 @@ export class EditPageComponent implements OnChanges {
     for (let i = 0; i < this.review.replacements.length; i++) {
       const displayed: boolean = this.displayReplacement(i);
       if (displayed) {
-        const replacement = this.review.replacements[i];
+        const replacement: ReviewReplacement = this.review.replacements[i];
         const fixed: boolean = this.fixedReplacements[i]?.isFixed() || false;
-        const reviewed = new ReviewedReplacement(replacement.kind, replacement.subtype, replacement.start, fixed);
+        const reviewed = new ReviewedReplacement(
+          replacement.kind,
+          replacement.subtype,
+          replacement.cs,
+          replacement.start,
+          fixed
+        );
         reviewedReplacements.push(reviewed);
       }
     }

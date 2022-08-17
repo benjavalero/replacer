@@ -15,7 +15,7 @@ public class ReviewMapper {
     public FindReviewResponse toDto(Review review, ReviewOptions options) {
         return FindReviewResponse.of(
             toDto(review.getPage(), review.getSection()),
-            toDto(review.getReplacements()),
+            toDto(review.getReplacements(), options),
             toDto(options),
             review.getNumPending()
         );
@@ -44,16 +44,17 @@ public class ReviewMapper {
         }
     }
 
-    private Collection<ReviewReplacementDto> toDto(Collection<Replacement> replacements) {
-        return replacements.stream().map(ReviewMapper::toDto).collect(Collectors.toUnmodifiableList());
+    private Collection<ReviewReplacementDto> toDto(Collection<Replacement> replacements, ReviewOptions options) {
+        return replacements.stream().map(r -> toDto(r, options)).collect(Collectors.toUnmodifiableList());
     }
 
-    private ReviewReplacementDto toDto(Replacement replacement) {
+    private ReviewReplacementDto toDto(Replacement replacement, ReviewOptions options) {
         return ReviewReplacementDto.of(
             replacement.getStart(),
             replacement.getText(),
             replacement.getType().getKind().getCode(),
             replacement.getType().getSubtype(),
+            replacement.getType().getKind() == ReplacementKind.CUSTOM ? options.getCs() : null,
             replacement.getSuggestions().stream().map(ReviewMapper::toDto).collect(Collectors.toList())
         );
     }
@@ -86,26 +87,21 @@ public class ReviewMapper {
     public Collection<ReviewedReplacement> fromDto(
         int pageId,
         Collection<ReviewedReplacementDto> reviewed,
-        ReviewOptionsDto options,
         CommonQueryParameters queryParameters
     ) {
-        return reviewed
-            .stream()
-            .map(r -> fromDto(pageId, r, options, queryParameters))
-            .collect(Collectors.toUnmodifiableList());
+        return reviewed.stream().map(r -> fromDto(pageId, r, queryParameters)).collect(Collectors.toUnmodifiableList());
     }
 
     private ReviewedReplacement fromDto(
         int pageId,
         ReviewedReplacementDto reviewed,
-        ReviewOptionsDto options,
         CommonQueryParameters queryParameters
     ) {
         return ReviewedReplacement
             .builder()
             .pageId(WikipediaPageId.of(queryParameters.getWikipediaLanguage(), pageId))
             .type(ReplacementType.of(reviewed.getKind(), reviewed.getSubtype()))
-            .cs(options.getCs())
+            .cs(reviewed.getCs())
             .start(reviewed.getStart())
             .reviewer(queryParameters.getUser())
             .build();

@@ -61,7 +61,6 @@ public class ReviewSaveController {
         Collection<ReviewedReplacement> reviewed = ReviewMapper.fromDto(
             pageId,
             request.getReviewedReplacements(),
-            request.getOptions(),
             queryParameters
         );
         if (EMPTY_CONTENT.equals(content)) {

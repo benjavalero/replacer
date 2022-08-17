@@ -3,6 +3,7 @@ export interface ReviewReplacement {
   text: string;
   kind: number;
   subtype: string;
+  cs: boolean | null;
   suggestions: ReviewSuggestion[];
 }
 

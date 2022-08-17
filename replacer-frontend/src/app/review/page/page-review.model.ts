@@ -63,12 +63,14 @@ export interface PageReviewOptions {
 export class ReviewedReplacement {
   kind: number;
   subtype: string;
+  cs: boolean | null;
   start: number;
   fixed: boolean;
 
-  constructor(kind: number, subtype: string, start: number, fixed: boolean) {
+  constructor(kind: number, subtype: string, cs: boolean | null, start: number, fixed: boolean) {
     this.kind = kind;
     this.subtype = subtype;
+    this.cs = cs;
     this.start = start;
     this.fixed = fixed;
   }
