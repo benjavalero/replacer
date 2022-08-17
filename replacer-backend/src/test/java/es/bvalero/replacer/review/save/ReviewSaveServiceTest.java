@@ -3,7 +3,6 @@ package es.bvalero.replacer.review.save;
 import static org.mockito.Mockito.*;
 
 import es.bvalero.replacer.common.domain.*;
-import es.bvalero.replacer.common.domain.ReviewOptions;
 import es.bvalero.replacer.repository.*;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.wikipedia.WikipediaPageRepository;
@@ -45,23 +44,32 @@ class ReviewSaveServiceTest {
 
     @Test
     void testSaveWithChanges() throws WikipediaException {
-        int pageId = 123;
+        int id = 123;
+        WikipediaPageId pageId = WikipediaPageId.of(WikipediaLanguage.getDefault(), id);
         LocalDateTime timestamp = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
         WikipediaPage page = WikipediaPage
             .builder()
-            .id(WikipediaPageId.of(WikipediaLanguage.getDefault(), pageId))
+            .id(pageId)
             .namespace(WikipediaNamespace.getDefault()) // Not relevant for saving
             .title("T")
             .content("X")
             .lastUpdate(timestamp)
             .queryTimestamp(timestamp)
             .build();
+        ReviewedReplacement reviewed = ReviewedReplacement
+            .builder()
+            .pageId(pageId)
+            .type(ReplacementType.of(ReplacementKind.SIMPLE, "1"))
+            .start(1)
+            .reviewer("A")
+            .fixed(true)
+            .build();
 
         String contentAfterCosmetics = "C";
         when(applyCosmeticsService.applyCosmeticChanges(page)).thenReturn(contentAfterCosmetics);
 
         AccessToken accessToken = AccessToken.of("A", "B");
-        reviewSaveService.saveReviewContent(page, null, ReviewOptions.ofNoType(), accessToken);
+        reviewSaveService.saveReviewContent(page, null, List.of(reviewed), accessToken);
 
         verify(applyCosmeticsService).applyCosmeticChanges(page);
         verify(wikipediaPageRepository)

@@ -160,7 +160,7 @@ export class EditPageComponent implements OnChanges {
     this.review.replacements = [];
 
     const savePage = { ...this.review.page, content: content };
-    this.pageService.saveReview(savePage, this.review.options, reviewedReplacements).subscribe({
+    this.pageService.saveReview(savePage, reviewedReplacements).subscribe({
       error: (err) => {
         const errStatus = err.status;
         if (errStatus == HttpStatusCode.Conflict) {

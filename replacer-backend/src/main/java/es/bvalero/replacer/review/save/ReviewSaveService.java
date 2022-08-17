@@ -6,7 +6,9 @@ import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.wikipedia.WikipediaPageRepository;
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
@@ -36,7 +38,7 @@ class ReviewSaveService {
     void saveReviewContent(
         WikipediaPage page,
         @Nullable Integer sectionId,
-        ReviewOptions options,
+        Collection<ReviewedReplacement> reviewedReplacements,
         AccessToken accessToken
     ) throws WikipediaException {
         // Apply cosmetic changes
@@ -49,16 +51,25 @@ class ReviewSaveService {
             sectionId,
             textToSave,
             page.getQueryTimestamp(),
-            buildEditSummary(options, applyCosmetics),
+            buildEditSummary(reviewedReplacements, applyCosmetics),
             accessToken
         );
     }
 
-    private String buildEditSummary(ReviewOptions options, boolean applyCosmetics) {
-        StringBuilder summary = new StringBuilder(EDIT_SUMMARY);
-        if (options.getOptionsType() != ReviewOptionsType.NO_TYPE) {
-            summary.append(": «").append(options.getType().getSubtype()).append('»');
+    private String buildEditSummary(Collection<ReviewedReplacement> reviewedReplacements, boolean applyCosmetics) {
+        Collection<String> fixed = reviewedReplacements
+            .stream()
+            .filter(ReviewedReplacement::isFixed)
+            .map(r -> "«" + r.getType().getSubtype() + "»")
+            .collect(Collectors.toUnmodifiableSet());
+        if (fixed.isEmpty()) {
+            throw new IllegalArgumentException("No fixed replacements when building edit summary");
         }
+
+        // The summary is truncated to 500 codepoints when the page is published
+        // https://en.wikipedia.org/wiki/Help:Edit_summary#The_500-character_limit
+        StringBuilder summary = new StringBuilder(EDIT_SUMMARY).append(": ").append(StringUtils.join(fixed, ", "));
+
         if (applyCosmetics) {
             summary.append(" + ").append(COSMETIC_CHANGES);
         }

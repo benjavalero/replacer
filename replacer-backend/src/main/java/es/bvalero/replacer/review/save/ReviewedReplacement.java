@@ -24,4 +24,6 @@ public class ReviewedReplacement {
 
     @NonNull
     String reviewer;
+
+    boolean fixed;
 }

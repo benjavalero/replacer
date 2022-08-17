@@ -5,7 +5,6 @@ import { delay } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { UserService } from '../../core/user/user.service';
 import {
-  PageReviewOptions,
   PageReviewResponse,
   ReviewedReplacement,
   ReviewOptions,
@@ -54,11 +53,7 @@ export class PageService {
     return this.httpClient.get<PageReviewResponse>(`${this.baseUrl}/${pageId}`, { params });
   }
 
-  saveReview(
-    page: ReviewPage,
-    options: PageReviewOptions,
-    reviewedReplacements: ReviewedReplacement[]
-  ): Observable<void> {
+  saveReview(page: ReviewPage, reviewedReplacements: ReviewedReplacement[]): Observable<void> {
     if (!this.userService.isValidUser()) {
       return throwError(() => new Error('El usuario no está autenticado. Recargue la página para retomar la sesión.'));
     }
@@ -76,7 +71,7 @@ export class PageService {
       }
     }
 
-    const saveReview = new SaveReviewRequest(page, options, reviewedReplacements, this.userService.accessToken);
+    const saveReview = new SaveReviewRequest(page, reviewedReplacements, this.userService.accessToken);
 
     // Store the new last save date
     if (page.content !== EMPTY_CONTENT) {

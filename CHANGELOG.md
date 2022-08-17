@@ -2,6 +2,7 @@
 
 ## 2.18.2 (??)
 - Make the call to Check Wikipedia non-blocking
+- Include in the edit summary all the applied replacements
 
 ## 2.18.1 (14 Aug 2022)
 - Improve entity names in database

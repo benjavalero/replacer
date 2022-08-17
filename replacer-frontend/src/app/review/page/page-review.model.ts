@@ -78,18 +78,11 @@ export class ReviewedReplacement {
 
 export class SaveReviewRequest {
   page: ReviewPage;
-  options: PageReviewOptions;
   reviewedReplacements: ReviewedReplacement[];
   accessToken: AccessToken;
 
-  constructor(
-    page: ReviewPage,
-    options: PageReviewOptions,
-    reviewedReplacements: ReviewedReplacement[],
-    accessToken: AccessToken
-  ) {
+  constructor(page: ReviewPage, reviewedReplacements: ReviewedReplacement[], accessToken: AccessToken) {
     this.page = page;
-    this.options = options;
     this.reviewedReplacements = reviewedReplacements;
     this.accessToken = accessToken;
   }

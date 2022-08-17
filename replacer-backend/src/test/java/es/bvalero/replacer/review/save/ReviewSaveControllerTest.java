@@ -7,7 +7,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import es.bvalero.replacer.common.domain.*;
-import es.bvalero.replacer.common.domain.ReviewOptions;
 import es.bvalero.replacer.common.dto.AccessTokenDto;
 import es.bvalero.replacer.common.util.WikipediaDateUtils;
 import es.bvalero.replacer.review.dto.*;
@@ -73,8 +72,6 @@ class ReviewSaveControllerTest {
         reviewPage.setContent(content);
         reviewPage.setQueryTimestamp(WikipediaDateUtils.formatWikipediaTimestamp(timestamp));
         request.setPage(reviewPage);
-        ReviewOptionsDto options = new ReviewOptionsDto();
-        request.setOptions(options);
         ReviewedReplacementDto reviewedDto = new ReviewedReplacementDto();
         reviewedDto.setKind(reviewed.getType().getKind().getCode());
         reviewedDto.setSubtype(reviewed.getType().getSubtype());
@@ -93,7 +90,7 @@ class ReviewSaveControllerTest {
             )
             .andExpect(status().isNoContent());
 
-        verify(reviewSaveService).saveReviewContent(page, null, ReviewOptions.ofNoType(), accessToken);
+        verify(reviewSaveService).saveReviewContent(page, null, List.of(reviewed), accessToken);
         verify(reviewSaveService).markAsReviewed(List.of(reviewed), true);
     }
 
@@ -110,7 +107,7 @@ class ReviewSaveControllerTest {
             .andExpect(status().isNoContent());
 
         verify(reviewSaveService, never())
-            .saveReviewContent(any(WikipediaPage.class), anyInt(), any(ReviewOptions.class), any(AccessToken.class));
+            .saveReviewContent(any(WikipediaPage.class), anyInt(), anyCollection(), any(AccessToken.class));
         verify(reviewSaveService).markAsReviewed(List.of(reviewed), false);
     }
 
@@ -159,7 +156,7 @@ class ReviewSaveControllerTest {
     void testSaveWithChangesWithConflict() throws Exception {
         doThrow(WikipediaConflictException.class)
             .when(reviewSaveService)
-            .saveReviewContent(page, null, ReviewOptions.ofNoType(), accessToken);
+            .saveReviewContent(page, null, List.of(reviewed), accessToken);
 
         mvc
             .perform(
@@ -169,7 +166,7 @@ class ReviewSaveControllerTest {
             )
             .andExpect(status().isConflict());
 
-        verify(reviewSaveService).saveReviewContent(page, null, ReviewOptions.ofNoType(), accessToken);
+        verify(reviewSaveService).saveReviewContent(page, null, List.of(reviewed), accessToken);
         verify(reviewSaveService, never()).markAsReviewed(anyCollection(), anyBoolean());
     }
 
@@ -177,7 +174,7 @@ class ReviewSaveControllerTest {
     void testSaveWithChangesNotAuthorizedWikipedia() throws Exception {
         doThrow(new WikipediaException("mwoauth-invalid-authorization"))
             .when(reviewSaveService)
-            .saveReviewContent(page, null, ReviewOptions.ofNoType(), accessToken);
+            .saveReviewContent(page, null, List.of(reviewed), accessToken);
 
         mvc
             .perform(
@@ -187,7 +184,7 @@ class ReviewSaveControllerTest {
             )
             .andExpect(status().isUnauthorized());
 
-        verify(reviewSaveService).saveReviewContent(page, null, ReviewOptions.ofNoType(), accessToken);
+        verify(reviewSaveService).saveReviewContent(page, null, List.of(reviewed), accessToken);
         verify(reviewSaveService, never()).markAsReviewed(anyCollection(), anyBoolean());
     }
 
@@ -195,7 +192,7 @@ class ReviewSaveControllerTest {
     void testSaveWithChangesWikipediaException() throws Exception {
         doThrow(WikipediaException.class)
             .when(reviewSaveService)
-            .saveReviewContent(page, null, ReviewOptions.ofNoType(), accessToken);
+            .saveReviewContent(page, null, List.of(reviewed), accessToken);
 
         mvc
             .perform(
@@ -205,7 +202,7 @@ class ReviewSaveControllerTest {
             )
             .andExpect(status().isInternalServerError());
 
-        verify(reviewSaveService).saveReviewContent(page, null, ReviewOptions.ofNoType(), accessToken);
+        verify(reviewSaveService).saveReviewContent(page, null, List.of(reviewed), accessToken);
         verify(reviewSaveService, never()).markAsReviewed(anyCollection(), anyBoolean());
     }
 }

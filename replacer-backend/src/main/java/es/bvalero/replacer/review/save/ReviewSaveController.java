@@ -81,10 +81,9 @@ public class ReviewSaveController {
                 .lastUpdate(saveTimestamp)
                 .queryTimestamp(saveTimestamp)
                 .build();
-            ReviewOptions options = ReviewMapper.fromDto(request.getOptions(), queryParameters);
             AccessToken accessToken = AccessTokenDto.toDomain(request.getAccessToken());
             try {
-                reviewSaveService.saveReviewContent(page, sectionId, options, accessToken);
+                reviewSaveService.saveReviewContent(page, sectionId, reviewed, accessToken);
                 reviewSaveService.markAsReviewed(reviewed, true);
             } catch (WikipediaException e) {
                 return manageWikipediaException(e);

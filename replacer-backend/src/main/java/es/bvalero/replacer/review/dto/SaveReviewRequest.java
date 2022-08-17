@@ -20,11 +20,6 @@ public class SaveReviewRequest {
     @NotNull
     private ReviewPageDto page;
 
-    @Schema(description = "Review options", required = true)
-    @Valid
-    @NotNull
-    private ReviewOptionsDto options;
-
     @Schema(description = "Reviewed replacements", required = true)
     @Valid
     @NotNull

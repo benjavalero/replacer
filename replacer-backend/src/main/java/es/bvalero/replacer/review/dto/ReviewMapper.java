@@ -104,6 +104,7 @@ public class ReviewMapper {
             .cs(reviewed.getCs())
             .start(reviewed.getStart())
             .reviewer(queryParameters.getUser())
+            .fixed(reviewed.isFixed())
             .build();
     }
 }
