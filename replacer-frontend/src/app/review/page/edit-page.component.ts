@@ -128,11 +128,6 @@ export class EditPageComponent implements OnChanges {
     }
   }
 
-  onSaveNoChanges() {
-    // Save with no changes => Mark page as reviewed
-    this.saveWithNoChanges();
-  }
-
   onSkip() {
     // Remove replacements as a trick to hide the page
     this.review.replacements = [];
