@@ -35,7 +35,7 @@ Don't mistake this language with the one used in the common texts of the applica
 The tool contains several sections which help to find pages with replacements:
 
 - Random Page. It opens the editor with a random page and all its potential replacements.
-- Replacement List. It shows a list with all the replacement types and the approximated amount of pages having replacements of these types. Each replacement type contains a link to open the editor with a random page and the occurrences of the chosen replacement.
+- Replacement List. It shows a list with all the replacement types to review and the approximated amount of ocurrences of each type. Each replacement type contains a link to open the editor with a random page and the occurrences of the chosen replacement.
 - Custom Replacement. It allows to introduce a replacement not existing in the tool. It opens the editor with a random page and the occurrences of the chosen replacement. The purpose of this section is to make easier those corrections with few occurrences and thus not appearing in the general listings. If a replacement has lots of occurrences it's recommended to include it in the general listings for an optimal maintenance.
 
 Once Replacer finds a page to be reviewed, in the top is displayed the title of the page.

@@ -125,4 +125,21 @@ class ReplacementCountControllerTest {
         verify(userRightsService).validateAdminUser(WikipediaLanguage.SPANISH, "A");
         verify(replacementCountService, never()).countReplacementsGroupedByPage(WikipediaLanguage.SPANISH);
     }
+
+    @Test
+    void testFindReplacementCount() throws Exception {
+        KindCount count = KindCount.of((byte) 10);
+        count.add(SubtypeCount.of("Y", 100));
+        Collection<KindCount> counts = Collections.singletonList(count);
+        when(replacementCountService.countReplacementsGroupedByType(WikipediaLanguage.SPANISH)).thenReturn(counts);
+
+        mvc
+            .perform(get("/api/replacement/type/count?lang=es&user=A").contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$[0].k", is(10)))
+            .andExpect(jsonPath("$[0].l[0].s", is("Y")))
+            .andExpect(jsonPath("$[0].l[0].c", is(100)));
+
+        verify(replacementCountService).countReplacementsGroupedByType(WikipediaLanguage.SPANISH);
+    }
 }

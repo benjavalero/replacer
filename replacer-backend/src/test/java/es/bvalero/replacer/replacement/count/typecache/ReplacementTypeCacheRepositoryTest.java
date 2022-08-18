@@ -1,4 +1,4 @@
-package es.bvalero.replacer.page.count.cache;
+package es.bvalero.replacer.replacement.count.typecache;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;

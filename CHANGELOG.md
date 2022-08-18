@@ -3,6 +3,7 @@
 ## 2.18.2 (??)
 - Make the call to Check Wikipedia non-blocking
 - Include in the edit summary all the applied replacements
+- Count replacements by type without grouping by page
 
 ## 2.18.1 (14 Aug 2022)
 - Improve entity names in database

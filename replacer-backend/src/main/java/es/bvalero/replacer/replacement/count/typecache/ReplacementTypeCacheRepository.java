@@ -1,4 +1,4 @@
-package es.bvalero.replacer.page.count.cache;
+package es.bvalero.replacer.replacement.count.typecache;
 
 import com.github.rozidan.springboot.logger.Loggable;
 import es.bvalero.replacer.common.domain.ReplacementType;

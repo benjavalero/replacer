@@ -126,7 +126,7 @@ class PageJdbcRepository implements PageRepository, PageIndexRepository {
 
     @Override
     public int countPagesToReview(WikipediaLanguage lang) {
-        // To check how this would affect to performance
+        // This approach is slightly better than using a JOIN with the page table
         String sql = "SELECT COUNT (DISTINCT page_id) FROM replacement WHERE lang = :lang AND reviewer IS NULL";
         SqlParameterSource namedParameters = new MapSqlParameterSource().addValue("lang", lang.getCode());
         Integer result = jdbcTemplate.queryForObject(sql, namedParameters, Integer.class);

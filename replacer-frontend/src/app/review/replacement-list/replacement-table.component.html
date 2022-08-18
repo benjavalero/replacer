@@ -8,7 +8,7 @@
 
   <div *ngIf="filteredItems.length">
     <table class="table" *ngIf="user$ | async as user"
-      aria-describedby="Lista de potenciales reemplazos sin revisar y la cantidad estimada de páginas que los contienen">
+      aria-describedby="Lista de potenciales reemplazos sin revisar y el número estimado de ocurrencias por tipo">
       <thead>
         <tr>
           <th scope="col" class="{{ columnDirection('s') }}" (click)="sort('s')">Subtipo</th>
