@@ -66,7 +66,7 @@ class ReplacementJdbcRepository
     public int countReplacementsReviewed(WikipediaLanguage lang) {
         String sqlReplacement =
             "SELECT COUNT(*) AS num FROM replacement WHERE lang = :lang AND reviewer IS NOT NULL AND reviewer <> :system";
-        String sqlCustom = "SELECT COUNT(*) AS num FROM custom WHERE lang = :lang AND reviewer IS NOT NULL";
+        String sqlCustom = "SELECT COUNT(*) AS num FROM custom WHERE lang = :lang";
         String sqlUnion = String.format("(%s UNION %s) AS sqlUnion", sqlReplacement, sqlCustom);
         String sql = String.format("SELECT SUM(num) FROM %s GROUP BY NULL", sqlUnion);
 
@@ -91,10 +91,7 @@ class ReplacementJdbcRepository
             "SELECT reviewer, COUNT(*) AS num FROM replacement " +
             "WHERE lang = :lang AND reviewer IS NOT NULL AND reviewer <> :system " +
             "GROUP BY reviewer";
-        String sqlCustom =
-            "SELECT reviewer, COUNT(*) AS num FROM custom " +
-            "WHERE lang = :lang AND reviewer IS NOT NULL " +
-            "GROUP BY reviewer";
+        String sqlCustom = "SELECT reviewer, COUNT(*) AS num FROM custom WHERE lang = :lang GROUP BY reviewer";
         String sqlUnion = String.format("(%s UNION %s) AS sqlUnion", sqlReplacement, sqlCustom);
         String sql =
             String.format("SELECT reviewer, SUM(num) AS numSum FROM %s ", sqlUnion) +

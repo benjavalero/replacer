@@ -9,10 +9,7 @@ import es.bvalero.replacer.page.findreplacement.PageReplacementFinder;
 import es.bvalero.replacer.page.index.PageIndexResult;
 import es.bvalero.replacer.page.index.PageIndexService;
 import es.bvalero.replacer.page.index.PageIndexStatus;
-import es.bvalero.replacer.repository.CustomModel;
 import es.bvalero.replacer.repository.CustomRepository;
-import es.bvalero.replacer.repository.PageIndexRepository;
-import es.bvalero.replacer.repository.PageRepository;
 import es.bvalero.replacer.wikipedia.WikipediaPageRepository;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -29,12 +26,6 @@ class ReviewCustomFinderTest {
     private static final Collection<WikipediaNamespace> NAMESPACES = Collections.singleton(
         WikipediaNamespace.getDefault()
     );
-
-    @Mock
-    private PageIndexRepository pageIndexRepository;
-
-    @Mock
-    private PageRepository pageRepository;
 
     @Mock
     private CustomRepository customRepository;
@@ -91,7 +82,6 @@ class ReviewCustomFinderTest {
 
         verify(wikipediaPageRepository).findByContent(lang, NAMESPACES, replacement, true, 0, CACHE_SIZE);
         verify(customRepository, never()).findPageIdsReviewed(any(WikipediaLanguage.class), anyString(), anyBoolean());
-        verify(customRepository, never()).addCustom(any(CustomModel.class));
     }
 
     @Test
@@ -129,7 +119,6 @@ class ReviewCustomFinderTest {
         // Verifications
         verify(wikipediaPageRepository).findByContent(lang, NAMESPACES, replacement, true, 0, CACHE_SIZE);
         verify(customRepository).findPageIdsReviewed(lang, replacement, true);
-        verify(customRepository, never()).addCustom(any(CustomModel.class));
     }
 
     @Test
@@ -202,7 +191,6 @@ class ReviewCustomFinderTest {
         verify(wikipediaPageRepository).findByContent(lang, NAMESPACES, replacement, true, 0, CACHE_SIZE);
         verify(customRepository).findPageIdsReviewed(lang, replacement, true);
         verify(wikipediaPageRepository).findById(wikipediaPageId);
-        verify(customRepository).addCustom(any(CustomModel.class));
     }
 
     @Test
@@ -258,7 +246,6 @@ class ReviewCustomFinderTest {
         verify(wikipediaPageRepository).findByContent(lang, NAMESPACES, replacement, true, 0, CACHE_SIZE);
         verify(customRepository).findPageIdsReviewed(lang, replacement, true);
         verify(wikipediaPageRepository).findById(wikipediaPageId);
-        verify(customRepository, never()).addCustom(any(CustomModel.class));
     }
 
     @Test
@@ -331,7 +318,6 @@ class ReviewCustomFinderTest {
         verify(wikipediaPageRepository).findByContent(lang, NAMESPACES, replacement, true, 0, CACHE_SIZE);
         verify(customRepository).findPageIdsReviewed(lang, replacement, true);
         verify(wikipediaPageRepository).findById(wikipediaPageId2);
-        verify(customRepository).addCustom(any(CustomModel.class));
     }
 
     @Test
@@ -370,7 +356,6 @@ class ReviewCustomFinderTest {
         verify(wikipediaPageRepository).findByContent(lang, NAMESPACES, replacement, true, 3, CACHE_SIZE);
         verify(customRepository).findPageIdsReviewed(lang, replacement, true);
         verify(wikipediaPageRepository, never()).findById(any(WikipediaPageId.class));
-        verify(customRepository, never()).addCustom(any(CustomModel.class));
     }
 
     @Test
@@ -488,7 +473,6 @@ class ReviewCustomFinderTest {
         verify(wikipediaPageRepository, times(2)).findByContent(lang, NAMESPACES, replacement, true, 0, CACHE_SIZE);
         verify(customRepository, times(2)).findPageIdsReviewed(lang, replacement, true);
         verify(wikipediaPageRepository, times(4)).findById(any(WikipediaPageId.class));
-        verify(customRepository, times(4)).addCustom(any(CustomModel.class));
     }
 
     @Test
@@ -556,7 +540,6 @@ class ReviewCustomFinderTest {
         verify(wikipediaPageRepository).findByContent(lang, NAMESPACES, replacement, true, 2 * CACHE_SIZE, CACHE_SIZE);
         verify(customRepository, times(2)).findPageIdsReviewed(lang, replacement, true);
         verify(wikipediaPageRepository, times(4)).findById(any(WikipediaPageId.class));
-        verify(customRepository, never()).addCustom(any(CustomModel.class));
     }
 
     @Test

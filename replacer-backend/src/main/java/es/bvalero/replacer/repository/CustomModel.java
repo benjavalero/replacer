@@ -26,8 +26,5 @@ public class CustomModel {
     int start;
 
     @NonNull
-    String context;
-
-    @Nullable
     String reviewer;
 }

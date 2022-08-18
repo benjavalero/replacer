@@ -24,26 +24,9 @@ class CustomJdbcRepository implements CustomRepository {
     @Override
     public void addCustom(CustomModel entity) {
         final String sql =
-            "INSERT INTO custom (page_id, lang, replacement, cs, start, context, reviewer) " +
-            "VALUES (:pageId, :lang, :replacement, :cs, :start, :context, :reviewer)";
+            "INSERT INTO custom (lang, page_id, replacement, cs, start, reviewer) " +
+            "VALUES (:lang, :pageId, :replacement, :cs, :start, :reviewer)";
         SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(entity);
-        jdbcTemplate.update(sql, namedParameters);
-    }
-
-    @Override
-    public void updateReviewer(CustomModel custom) {
-        String sql =
-            "UPDATE custom SET reviewer = :reviewer " +
-            "WHERE lang = :lang AND page_id = :pageId AND replacement = :replacement AND cs = :cs " +
-            "AND start = :start AND reviewer IS NULL ";
-        MapSqlParameterSource namedParameters = new MapSqlParameterSource()
-            .addValue("reviewer", custom.getReviewer())
-            .addValue("lang", custom.getLang())
-            .addValue("pageId", custom.getPageId())
-            .addValue("replacement", custom.getReplacement())
-            .addValue("cs", custom.getCs())
-            .addValue("start", custom.getStart());
-
         jdbcTemplate.update(sql, namedParameters);
     }
 

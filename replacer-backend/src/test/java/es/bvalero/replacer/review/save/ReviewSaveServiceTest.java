@@ -19,10 +19,13 @@ import org.mockito.MockitoAnnotations;
 class ReviewSaveServiceTest {
 
     @Mock
+    private PageRepository pageRepository;
+
+    @Mock
     private ReplacementTypeRepository replacementTypeRepository;
 
     @Mock
-    private PageRepository pageRepository;
+    private PageIndexRepository pageIndexRepository;
 
     @Mock
     private CustomRepository customRepository;
@@ -110,6 +113,6 @@ class ReviewSaveServiceTest {
 
         verify(pageRepository).updatePageLastUpdate(wikipediaPageId, LocalDate.now());
         verify(replacementTypeRepository, times(2)).updateReviewer(any(ReplacementModel.class));
-        verify(customRepository, times(1)).updateReviewer(any(CustomModel.class));
+        verify(customRepository, times(1)).addCustom(any(CustomModel.class));
     }
 }

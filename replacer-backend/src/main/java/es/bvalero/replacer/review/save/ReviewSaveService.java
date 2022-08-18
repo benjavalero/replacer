@@ -6,6 +6,8 @@ import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.wikipedia.WikipediaPageRepository;
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -25,6 +27,9 @@ class ReviewSaveService {
 
     @Autowired
     private ReplacementTypeRepository replacementTypeRepository;
+
+    @Autowired
+    private PageIndexRepository pageIndexRepository;
 
     @Autowired
     private CustomRepository customRepository;
@@ -94,12 +99,27 @@ class ReviewSaveService {
             case EMPTY:
                 throw new IllegalArgumentException("Unexpected empty replacement kind on saving review");
             case CUSTOM:
-                customRepository.updateReviewer(mapReviewedCustom(reviewed));
+                // Add the page to the database in case it doesn't exist yet
+                if (pageIndexRepository.findPageById(reviewed.getPageId()).isEmpty()) {
+                    pageRepository.addPages(List.of(buildNewPage(reviewed)));
+                }
+                customRepository.addCustom(mapReviewedCustom(reviewed));
                 break;
             default:
                 replacementTypeRepository.updateReviewer(mapReviewedReplacement(reviewed));
                 break;
         }
+    }
+
+    private PageModel buildNewPage(ReviewedReplacement reviewed) {
+        return PageModel
+            .builder()
+            .lang(reviewed.getPageId().getLang().getCode())
+            .pageId(reviewed.getPageId().getPageId())
+            .title("")
+            .lastUpdate(LocalDate.now())
+            .replacements(Collections.emptyList())
+            .build();
     }
 
     private CustomModel mapReviewedCustom(ReviewedReplacement reviewed) {
@@ -111,7 +131,6 @@ class ReviewSaveService {
             .replacement(reviewed.getType().getSubtype())
             .cs((byte) (Boolean.TRUE.equals(reviewed.getCs()) ? 1 : 0))
             .start(reviewed.getStart())
-            .context("") // It is not important in this action
             .reviewer(reviewed.getReviewer())
             .build();
     }

@@ -21,12 +21,6 @@ import org.springframework.stereotype.Component;
 class ReviewCustomFinder extends ReviewFinder {
 
     @Autowired
-    private PageIndexRepository pageIndexRepository;
-
-    @Autowired
-    private PageRepository pageRepository;
-
-    @Autowired
     private CustomRepository customRepository;
 
     @Autowired
@@ -53,7 +47,8 @@ class ReviewCustomFinder extends ReviewFinder {
         boolean cs = options.getCs() != null && Boolean.TRUE.equals(options.getCs());
         assert options.getType().getKind() == ReplacementKind.CUSTOM;
 
-        // Calculate this out of the loop only if needed the first time
+        // Find all the pages already reviewed for this custom replacement
+        // Make it out of the loop as we are not taking into account the offset for this
         List<Integer> reviewedIds = new ArrayList<>();
         if (!pageIds.isEmpty()) {
             reviewedIds.addAll(customRepository.findPageIdsReviewed(options.getLang(), subtype, cs));
@@ -121,16 +116,6 @@ class ReviewCustomFinder extends ReviewFinder {
             return Collections.emptyList();
         }
 
-        // We add the found replacements to the database but as not reviewed
-        // Add the page to the database in case it doesn't exist yet
-        if (pageIndexRepository.findPageById(page.getId()).isEmpty()) {
-            pageRepository.addPages(List.of(buildNewPage(page)));
-        }
-        // We want to review the page every time in case anything has changed
-        for (Replacement replacement : customReplacements) {
-            customRepository.addCustom(mapPageCustomReplacement(page, options, replacement));
-        }
-
         // Add the custom replacements to the standard ones preferring the custom ones
         // Return the merged collection as a TreeSet to keep the order and discard duplicates
         // We also check there are no replacements containing others
@@ -140,28 +125,5 @@ class ReviewCustomFinder extends ReviewFinder {
             .collect(Collectors.toCollection(TreeSet::new));
         FinderResult.removeNested(merged);
         return merged;
-    }
-
-    private PageModel buildNewPage(WikipediaPage page) {
-        return PageModel
-            .builder()
-            .lang(page.getId().getLang().getCode())
-            .pageId(page.getId().getPageId())
-            .title(page.getTitle())
-            .lastUpdate(page.getLastUpdate().toLocalDate())
-            .replacements(Collections.emptyList())
-            .build();
-    }
-
-    private CustomModel mapPageCustomReplacement(WikipediaPage page, ReviewOptions options, Replacement replacement) {
-        return CustomModel
-            .builder()
-            .lang(page.getId().getLang().getCode())
-            .pageId(page.getId().getPageId())
-            .replacement(options.getType().getSubtype())
-            .cs((byte) (Boolean.TRUE.equals(options.getCs()) ? 1 : 0))
-            .start(replacement.getStart())
-            .context(replacement.getContext(page))
-            .build();
     }
 }

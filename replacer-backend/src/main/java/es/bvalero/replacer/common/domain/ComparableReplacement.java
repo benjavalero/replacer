@@ -26,7 +26,7 @@ public interface ComparableReplacement {
     }
 
     private boolean isSameContext(String context1, String context2) {
-        // An empty string is the default context for legacy replacements
+        // An empty string is the default context for legacy or migrated replacements
         if (StringUtils.isNotBlank(context1) || StringUtils.isNotBlank(context2)) {
             return Objects.equals(context1, context2);
         } else {
