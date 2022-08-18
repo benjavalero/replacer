@@ -236,17 +236,9 @@ abstract class ReviewFinder {
                 .filter(r -> r.getReviewer() != null)
                 .collect(Collectors.toUnmodifiableList());
 
-            toReview.removeIf(r -> reviewed.stream().anyMatch(rr -> isSameReplacement(r, rr)));
+            toReview.removeIf(r -> reviewed.stream().anyMatch(r::isSame));
         }
         return toReview;
-    }
-
-    private boolean isSameReplacement(Replacement replacement, ReplacementModel replacementModel) {
-        return (
-            replacement.getStart() == replacementModel.getStart() &&
-            replacement.getType().getKind().getCode() == replacementModel.getKind() &&
-            replacement.getType().getSubtype().equals(replacementModel.getSubtype())
-        );
     }
 
     PageIndexResult indexReplacements(WikipediaPage page) {

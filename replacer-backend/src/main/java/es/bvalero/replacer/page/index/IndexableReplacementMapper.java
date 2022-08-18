@@ -41,7 +41,7 @@ class IndexableReplacementMapper {
             .builder()
             .id(replacement.getId())
             .pageId(WikipediaPageId.of(WikipediaLanguage.valueOfCode(replacement.getLang()), replacement.getPageId()))
-            .type(ReplacementType.of(replacement.getKind(), replacement.getSubtype()))
+            .type(replacement.getType())
             .start(replacement.getStart())
             .context(replacement.getContext())
             .reviewer(replacement.getReviewer())

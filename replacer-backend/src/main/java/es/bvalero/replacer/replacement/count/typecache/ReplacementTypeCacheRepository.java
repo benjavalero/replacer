@@ -73,10 +73,7 @@ class ReplacementTypeCacheRepository implements ReplacementTypeRepository {
 
     @Override
     public void updateReviewer(ReplacementModel replacement) {
-        this.decrementSubtypeCount(
-                WikipediaLanguage.valueOfCode(replacement.getLang()),
-                ReplacementType.of(replacement.getKind(), replacement.getSubtype())
-            );
+        this.decrementSubtypeCount(WikipediaLanguage.valueOfCode(replacement.getLang()), replacement.getType());
         this.replacementTypeRepository.updateReviewer(replacement);
     }
 

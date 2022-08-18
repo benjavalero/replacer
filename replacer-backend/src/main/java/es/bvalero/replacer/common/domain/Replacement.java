@@ -21,7 +21,7 @@ import org.springframework.lang.NonNull;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Value
 @Builder
-public class Replacement implements FinderResult {
+public class Replacement implements FinderResult, ComparableReplacement {
 
     @EqualsAndHashCode.Include
     @With
@@ -68,5 +68,10 @@ public class Replacement implements FinderResult {
     public List<Suggestion> getSuggestions() {
         Collection<Suggestion> merged = Suggestion.mergeSuggestions(this.suggestions);
         return Suggestion.sortSuggestions(merged, this.text);
+    }
+
+    @Override
+    public String getContext() {
+        return "";
     }
 }
