@@ -1,6 +1,7 @@
 package es.bvalero.replacer.page.index;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import es.bvalero.replacer.common.domain.ReplacementKind;
 import es.bvalero.replacer.common.domain.ReplacementType;
@@ -129,10 +130,7 @@ class IndexablePageComparatorTest {
             .lastUpdate(now)
             .build();
 
-        PageIndexResult result = indexablePageComparator.indexPageReplacements(page, dbPage);
-
-        PageIndexResult expected = PageIndexResult.builder().status(PageIndexStatus.PAGE_NOT_INDEXABLE).build();
-        assertEquals(expected, result);
+        assertThrows(IllegalArgumentException.class, () -> indexablePageComparator.indexPageReplacements(page, dbPage));
     }
 
     @Test

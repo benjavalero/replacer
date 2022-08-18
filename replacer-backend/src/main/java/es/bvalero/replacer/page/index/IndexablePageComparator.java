@@ -19,8 +19,12 @@ class IndexablePageComparator {
 
         // Precondition: the page to index cannot be previous to the indexed one
         if (dbPage != null && page.getLastUpdate().isBefore(dbPage.getLastUpdate())) {
-            LOGGER.error("Page to index previous to the indexed one");
-            return PageIndexResult.builder().status(PageIndexStatus.PAGE_NOT_INDEXABLE).build();
+            String msg = String.format(
+                "Page to index previous to the indexed one: %s - %s",
+                page.getLastUpdate(),
+                dbPage.getLastUpdate()
+            );
+            throw new IllegalArgumentException(msg);
         }
 
         // Check changes in the page
