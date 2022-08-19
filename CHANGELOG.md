@@ -1,5 +1,8 @@
 # Versions
 
+## 2.18.3 (19 Aug 2022)
+- Fix: apply the delay on saving *before* performing the request
+
 ## 2.18.2 (18 Aug 2022)
 - Make the call to Check Wikipedia non-blocking
 - Include in the edit summary all the applied replacements

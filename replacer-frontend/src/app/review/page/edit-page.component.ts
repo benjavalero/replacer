@@ -3,13 +3,15 @@ import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core
 import { faFastForward } from '@fortawesome/free-solid-svg-icons';
 import { UserService } from '../../core/user/user.service';
 import { AlertService } from '../../shared/alert/alert.service';
+import { sleep } from '../../shared/util/sleep';
 import { FixedReplacement, getReplacementEnd, ReviewReplacement } from './page-replacement.model';
 import {
   kindLabel,
   PageReviewOptions,
   PageReviewResponse,
   ReviewedReplacement,
-  ReviewOptions
+  ReviewOptions,
+  ReviewPage
 } from './page-review.model';
 import { EMPTY_CONTENT, PageService } from './page.service';
 
@@ -27,6 +29,9 @@ export class EditPageComponent implements OnChanges {
   private reviewAllTypes: boolean = false;
 
   @Output() saved: EventEmitter<ReviewOptions> = new EventEmitter();
+
+  private readonly lastSaveKey = 'lastSave';
+  private readonly editionsPerMinute = 5;
 
   constructor(private alertService: AlertService, private pageService: PageService, private userService: UserService) {}
 
@@ -149,12 +154,24 @@ export class EditPageComponent implements OnChanges {
   }
 
   private saveContent(content: string) {
-    const reviewedReplacements = this.getReviewedReplacements();
+    const reviewedReplacements: ReviewedReplacement[] = this.getReviewedReplacements();
 
     // Remove replacements as a trick to hide the page
     this.review.replacements = [];
 
-    const savePage = { ...this.review.page, content: content };
+    const savePage: ReviewPage = { ...this.review.page, content: content };
+
+    // Delay the saving in case there are other saving too recent
+    let sleepTime = 0;
+    const isBotUser: boolean = this.userService.isBotUser();
+    if (!isBotUser && savePage.content !== EMPTY_CONTENT) {
+      sleepTime = this.calculateSleepTime();
+    }
+
+    sleep(sleepTime).then(() => this.saveReview(savePage, reviewedReplacements));
+  }
+
+  private saveReview(savePage: ReviewPage, reviewedReplacements: ReviewedReplacement[]): void {
     this.pageService.saveReview(savePage, reviewedReplacements).subscribe({
       error: (err) => {
         const errStatus = err.status;
@@ -177,6 +194,28 @@ export class EditPageComponent implements OnChanges {
         this.nextPage();
       }
     });
+  }
+
+  private calculateSleepTime(): number {
+    // Store the date of the last save to check there are at least 12 s between savings (5 editions/min)
+    // with an extra second of delay just in case
+    let sleepTime = 0;
+    const lastSave = localStorage.getItem(this.lastSaveKey);
+    const now: number = Date.now();
+    if (lastSave) {
+      const minGap: number = (60 * 1000) / this.editionsPerMinute + 1000;
+      const lastSaveDate: number = +lastSave;
+      const gap: number = now - lastSaveDate;
+      if (gap < minGap) {
+        sleepTime = minGap - gap;
+      }
+    }
+
+    // Store the new last save date
+    const newSaveDate: number = now + sleepTime;
+    localStorage.setItem(this.lastSaveKey, String(newSaveDate));
+
+    return sleepTime;
   }
 
   private getReviewedReplacements(): ReviewedReplacement[] {
