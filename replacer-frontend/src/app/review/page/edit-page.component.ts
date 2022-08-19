@@ -118,7 +118,7 @@ export class EditPageComponent implements OnChanges {
   onSaveChanges() {
     // Sort the fixed replacements in reverse to start by the end
     const fixedReplacements = this.filterFixedReplacements().sort((a, b): number => b.start - a.start);
-    if (fixedReplacements) {
+    if (fixedReplacements.length > 0) {
       // Apply the fixes in the original text
       let contentToSave = this.review.page.content;
       fixedReplacements.forEach((fix) => {
