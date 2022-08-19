@@ -24,6 +24,11 @@ export class PageService {
   constructor(private httpClient: HttpClient, private userService: UserService) {}
 
   findRandomPage(options: ReviewOptions): Observable<PageReviewResponse> {
+    const params: HttpParams = this.mapReviewOptionsToHttpParams(options);
+    return this.httpClient.get<PageReviewResponse>(`${this.baseUrl}/random`, { params });
+  }
+
+  private mapReviewOptionsToHttpParams(options: ReviewOptions): HttpParams {
     let params: HttpParams = new HttpParams();
     if (options.kind && options.subtype) {
       params = params.append('kind', options.kind).append('subtype', options.subtype);
@@ -31,7 +36,7 @@ export class PageService {
         params = params.append('suggestion', options.suggestion).append('cs', String(options.cs));
       }
     }
-    return this.httpClient.get<PageReviewResponse>(`${this.baseUrl}/random`, { params });
+    return params;
   }
 
   validateCustomReplacement(replacement: string, caseSensitive: boolean): Observable<ReplacementValidationResponse> {
@@ -43,13 +48,7 @@ export class PageService {
   }
 
   findPageReviewById(pageId: number, options: ReviewOptions): Observable<PageReviewResponse> {
-    let params: HttpParams = new HttpParams();
-    if (options.kind && options.subtype) {
-      params = params.append('kind', options.kind).append('subtype', options.subtype);
-      if (options.suggestion) {
-        params = params.append('suggestion', options.suggestion).append('cs', String(options.cs));
-      }
-    }
+    const params: HttpParams = this.mapReviewOptionsToHttpParams(options);
     return this.httpClient.get<PageReviewResponse>(`${this.baseUrl}/${pageId}`, { params });
   }
 
