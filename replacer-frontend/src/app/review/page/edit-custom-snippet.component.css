@@ -3,9 +3,3 @@
   font-family: monospace;
   overflow: auto;
 }
-
-@media (max-width: 320px) {
-  .pre {
-    max-height: 60vh;
-  }
-}

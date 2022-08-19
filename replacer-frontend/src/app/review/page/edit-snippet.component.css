@@ -30,9 +30,3 @@
     border-bottom-left-radius: 0;
   }
 }
-
-@media (max-width: 320px) {
-  .snippet-modal .modal-content {
-    max-width: 80vw;
-  }
-}
