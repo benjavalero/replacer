@@ -2,7 +2,6 @@ package es.bvalero.replacer.review.save;
 
 import com.github.rozidan.springboot.logger.Loggable;
 import es.bvalero.replacer.common.domain.*;
-import es.bvalero.replacer.common.domain.ReviewOptions;
 import es.bvalero.replacer.common.dto.AccessTokenDto;
 import es.bvalero.replacer.common.dto.CommonQueryParameters;
 import es.bvalero.replacer.common.util.WikipediaDateUtils;
