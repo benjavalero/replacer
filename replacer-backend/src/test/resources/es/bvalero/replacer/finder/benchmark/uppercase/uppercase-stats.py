@@ -6,8 +6,6 @@ import matplotlib
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-matplotlib.use("TkAgg")
-
 # Import data
 words = pd.read_csv('uppercase-benchmark.csv', sep='\t')
 
