@@ -438,6 +438,7 @@ class WikipediaApiServiceTest {
             Optional<WikipediaPage> page2 = wikipediaPageOfflineRepository.findById(
                 WikipediaPageId.of(WikipediaLanguage.getDefault(), pageId)
             );
+            // This test may fail sometimes if both fake offline pages have been built in different seconds
             assertEquals(p, page2.orElse(null));
 
             Optional<WikipediaPage> pageSection = wikipediaPageOfflineRepository.findPageSection(
