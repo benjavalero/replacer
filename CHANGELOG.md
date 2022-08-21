@@ -1,6 +1,7 @@
 # Versions
 
-## 2.18.4 (??)
+## 2.19.0 (??)
+- Feature: new replacement type for unordered dates
 - Fix: check there actually are fixed replacements before saving the review
 - Fix: remove autofocus on editing custom snippet to improve the size of the frame on mobile devices
 

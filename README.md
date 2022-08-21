@@ -76,7 +76,8 @@ The replacement types are grouped in following categories:
   - **Month in uppercase**. Dates with the month in uppercase: `2 de Septiembre de 2019`
   - **Day with zero**. Dates with the day starting with zero: `02 de septiembre de 2019`
   - **Year with dot**. Dates with the year containing a dot: `2 de septiembre de 2.019`
-  - **Incomplete Date**. Dates with missing prepositions: `2 de septiembre 2019`
+  - **Incomplete date**. Dates with missing prepositions: `2 de septiembre 2019`
+  - **Unordered date**. Dates with wrong order: `Mayo 3, 2020`
   - Note: In Spanish it's recommended the cultivated use of «septiembre» instead of «setiembre». Nevertheless this replacement is only offered along with another fix in the same fix. For instance the date «2 de setiembre de 2019» is not offered to be reviewed.
   - Dates in format of month and year are also offered to review when preceded by certain connectors: `Desde Septiembre de 2019`
 

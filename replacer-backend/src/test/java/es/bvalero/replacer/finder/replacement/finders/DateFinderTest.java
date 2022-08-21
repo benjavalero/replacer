@@ -71,14 +71,6 @@ class DateFinderTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = { "00 de Junio de 2020", "0 de Julio de 2020" })
-    void testFalsePositiveLongDate(String date) {
-        List<Replacement> replacements = dateFinder.findList(date);
-
-        assertTrue(replacements.isEmpty());
-    }
-
-    @ParameterizedTest
     @CsvSource(
         {
             "Desde Agosto de 2019, Desde agosto de 2019, " + DateFinder.SUBTYPE_UPPERCASE,
@@ -120,6 +112,51 @@ class DateFinderTest {
 
         WikipediaPage page = WikipediaPage.of(WikipediaLanguage.GALICIAN, date, "");
         List<Replacement> replacements = IterableUtils.toList(dateFinder.find(page));
+
+        assertEquals(1, replacements.size());
+        assertEquals(date, replacements.get(0).getText());
+        assertEquals(date, replacements.get(0).getSuggestions().get(0).getText());
+        assertEquals(expected, replacements.get(0).getSuggestions().get(1).getText());
+        assertEquals(subtype, replacements.get(0).getType().getSubtype());
+    }
+
+    @ParameterizedTest
+    @CsvSource(
+        delimiter = '|',
+        value = {
+            "Mayo 3, 1999|3 de mayo de 1999|" + DateFinder.SUBTYPE_UNORDERED,
+            "Mayo 3 1999|3 de mayo de 1999|" + DateFinder.SUBTYPE_UNORDERED,
+            "Octubre 14 de 2006|14 de octubre de 2006|" + DateFinder.SUBTYPE_UNORDERED,
+            "Octubre 14 del 2006|14 de octubre del 2006|" + DateFinder.SUBTYPE_UNORDERED,
+            "Mayo 03, 1999|3 de mayo de 1999|" + DateFinder.SUBTYPE_UNORDERED,
+            "Mayo 3, 1.999|3 de mayo de 1999|" + DateFinder.SUBTYPE_UNORDERED,
+            "mayo 3, 1999|3 de mayo de 1999|" + DateFinder.SUBTYPE_UNORDERED,
+        }
+    )
+    void testUnorderedDateMonthDayYear(String date, String expected, String subtype) {
+        List<Replacement> replacements = dateFinder.findList(date);
+
+        assertEquals(1, replacements.size());
+        assertEquals(date, replacements.get(0).getText());
+        assertEquals(date, replacements.get(0).getSuggestions().get(0).getText());
+        assertEquals(expected, replacements.get(0).getSuggestions().get(1).getText());
+        assertEquals(subtype, replacements.get(0).getType().getSubtype());
+    }
+
+    @ParameterizedTest
+    @CsvSource(
+        delimiter = '|',
+        value = {
+            "2013, Octubre 30|30 de octubre de 2013|" + DateFinder.SUBTYPE_UNORDERED,
+            "2013 Octubre 30|30 de octubre de 2013|" + DateFinder.SUBTYPE_UNORDERED,
+            "2013, octubre 30|30 de octubre de 2013|" + DateFinder.SUBTYPE_UNORDERED,
+            "2013, Mayo 4|4 de mayo de 2013|" + DateFinder.SUBTYPE_UNORDERED,
+            "2013, Mayo 04|4 de mayo de 2013|" + DateFinder.SUBTYPE_UNORDERED,
+            "2.013, Mayo 4|4 de mayo de 2013|" + DateFinder.SUBTYPE_UNORDERED,
+        }
+    )
+    void testUnorderedDateYearMonthDay(String date, String expected, String subtype) {
+        List<Replacement> replacements = dateFinder.findList(date);
 
         assertEquals(1, replacements.size());
         assertEquals(date, replacements.get(0).getText());
