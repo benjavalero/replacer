@@ -16,8 +16,8 @@ import java.util.regex.MatchResult;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
-import org.apache.commons.collections4.SetValuedMap;
-import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
+import org.apache.commons.collections4.ListValuedMap;
+import org.apache.commons.collections4.multimap.ArrayListValuedHashMap;
 import org.apache.commons.lang3.StringUtils;
 import org.intellij.lang.annotations.RegExp;
 import org.springframework.stereotype.Component;
@@ -45,7 +45,7 @@ public class DateFinder implements ReplacementFinder {
     @Resource
     private Map<String, String> yearPrepositions;
 
-    private final SetValuedMap<WikipediaLanguage, String> langPrepositions = new HashSetValuedHashMap<>();
+    private final ListValuedMap<WikipediaLanguage, String> yearPrepositionsPerLang = new ArrayListValuedHashMap<>();
 
     private final Map<WikipediaLanguage, RunAutomaton> dateAutomata = new EnumMap<>(WikipediaLanguage.class);
 
@@ -67,9 +67,9 @@ public class DateFinder implements ReplacementFinder {
                 .stream()
                 .map(FinderUtils::setFirstUpperCaseClass)
                 .collect(Collectors.toUnmodifiableList());
-            this.langPrepositions.putAll(lang, List.of(yearPrepositions.get(lang.getCode()).split(",")));
+            this.yearPrepositionsPerLang.putAll(lang, List.of(yearPrepositions.get(lang.getCode()).split(",")));
             final List<String> prepositionsUpperCaseClass =
-                this.langPrepositions.get(lang)
+                this.yearPrepositionsPerLang.get(lang)
                     .stream()
                     .map(FinderUtils::setFirstUpperCaseClass)
                     .collect(Collectors.toUnmodifiableList());
@@ -155,12 +155,13 @@ public class DateFinder implements ReplacementFinder {
         }
 
         // Add missing prepositions
+        final String yearPreposition = this.getDefaultYearPreposition(lang);
         if (isNotPreposition(tokens.get(1), lang)) {
-            tokens.add(1, "de");
+            tokens.add(1, yearPreposition);
             subtype = SUBTYPE_INCOMPLETE;
         }
         if (isNotPreposition(tokens.get(3), lang)) {
-            tokens.add(3, "de");
+            tokens.add(3, yearPreposition);
             subtype = SUBTYPE_INCOMPLETE;
         }
 
@@ -210,8 +211,9 @@ public class DateFinder implements ReplacementFinder {
         }
 
         // Add missing prepositions
+        final String yearPreposition = this.getDefaultYearPreposition(lang);
         if (isNotPreposition(tokens.get(2), lang)) {
-            tokens.add(2, "de");
+            tokens.add(2, yearPreposition);
             subtype = SUBTYPE_INCOMPLETE;
         }
 
@@ -246,7 +248,11 @@ public class DateFinder implements ReplacementFinder {
     }
 
     private boolean isNotPreposition(String word, WikipediaLanguage lang) {
-        return !this.langPrepositions.get(lang).contains(FinderUtils.toLowerCase(word));
+        return !this.yearPrepositionsPerLang.get(lang).contains(FinderUtils.toLowerCase(word));
+    }
+
+    private String getDefaultYearPreposition(WikipediaLanguage lang) {
+        return this.yearPrepositionsPerLang.get(lang).get(0);
     }
 
     private String fixLeadingZero(String day) {

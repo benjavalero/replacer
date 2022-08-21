@@ -20,9 +20,10 @@
         <entry key="gl" value="a,desde,dende,de,durante,o,entre,en,cara,ata,para,e"/>
     </util:map>
 
+    <!-- The first preposition is the default one that will be added when missing -->
     <util:map id="yearPrepositions" map-class="java.util.HashMap"
               key-type="java.lang.String" value-type="java.lang.String">
-        <entry key="es" value="del,de"/>
+        <entry key="es" value="de,del"/>
         <entry key="gl" value="de,do"/>
     </util:map>
 
