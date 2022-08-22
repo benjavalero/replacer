@@ -17,7 +17,7 @@ export class ReplacementListService {
   }
 
   private findReplacementCounts$(): Observable<KindCount[]> {
-    return this.httpClient.get<KindCount[]>(`${environment.apiUrl}/replacement/type/count`);
+    return this.httpClient.get<KindCount[]>(`${environment.apiUrl}/page/type/count`);
   }
 
   private updateCounts(counts: KindCount[]): void {

@@ -4,16 +4,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import es.bvalero.replacer.common.domain.ReplacementKind;
-import es.bvalero.replacer.common.domain.ReplacementType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.repository.PageModel;
 import es.bvalero.replacer.repository.ReplacementCountRepository;
-import es.bvalero.replacer.repository.ReplacementTypeRepository;
 import es.bvalero.replacer.repository.ResultCount;
 import java.time.LocalDate;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,9 +22,6 @@ class ReplacementCountServiceTest {
 
     @Mock
     private ReplacementCountRepository replacementCountRepository;
-
-    @Mock
-    private ReplacementTypeRepository replacementTypeRepository;
 
     @InjectMocks
     private ReplacementCountService replacementCountService;
@@ -91,22 +84,5 @@ class ReplacementCountServiceTest {
         assertEquals(counts, replacementCountService.countReplacementsGroupedByPage(lang));
 
         verify(replacementCountRepository).countReplacementsByPage(lang, ReplacementCountService.NUM_RESULTS);
-    }
-
-    @Test
-    void testCountReplacementsGroupedByType() {
-        ReplacementType type = ReplacementType.of(ReplacementKind.DATE, "Y");
-        ResultCount<ReplacementType> count = ResultCount.of(type, 100);
-        Collection<ResultCount<ReplacementType>> counts = Collections.singletonList(count);
-
-        when(replacementTypeRepository.countReplacementsByType(WikipediaLanguage.getDefault())).thenReturn(counts);
-
-        KindCount kindCount = KindCount.of(ReplacementKind.DATE.getCode());
-        kindCount.add(SubtypeCount.of("Y", 100));
-        Collection<KindCount> expected = Collections.singletonList(kindCount);
-
-        assertEquals(expected, replacementCountService.countReplacementsGroupedByType(WikipediaLanguage.getDefault()));
-
-        verify(replacementTypeRepository).countReplacementsByType(WikipediaLanguage.getDefault());
     }
 }

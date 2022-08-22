@@ -1,4 +1,4 @@
-package es.bvalero.replacer.replacement.count.typecache;
+package es.bvalero.replacer.page.count.cache;
 
 import java.util.HashMap;
 import java.util.Map;

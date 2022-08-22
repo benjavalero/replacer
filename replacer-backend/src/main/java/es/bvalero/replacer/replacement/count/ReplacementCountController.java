@@ -76,10 +76,4 @@ public class ReplacementCountController {
             .map(count -> PageCount.of(count.getKey().getPageId(), count.getKey().getTitle(), count.getCount()))
             .collect(Collectors.toUnmodifiableList());
     }
-
-    @Operation(summary = "Count the pages to review grouped by type (kind-subtype)")
-    @GetMapping(value = "/type/count")
-    public Collection<KindCount> countReplacementsGroupedByType(@Valid CommonQueryParameters queryParameters) {
-        return replacementCountService.countReplacementsGroupedByType(queryParameters.getWikipediaLanguage());
-    }
 }

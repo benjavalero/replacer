@@ -114,7 +114,7 @@ class ReplacementJdbcRepository
     public Collection<ResultCount<ReplacementType>> countReplacementsByType(WikipediaLanguage lang) {
         // Using the index this approach is better than executing several queries by kind
         String sql =
-            "SELECT kind, subtype, COUNT(*) AS num FROM replacement " +
+            "SELECT kind, subtype, COUNT(DISTINCT page_id) AS num FROM replacement " +
             "WHERE lang = :lang AND reviewer IS NULL " +
             "GROUP BY kind, subtype";
         SqlParameterSource namedParameters = new MapSqlParameterSource().addValue("lang", lang.getCode());
