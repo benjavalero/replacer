@@ -17,6 +17,7 @@ import org.apache.commons.collections4.multimap.ArrayListValuedHashMap;
 import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
 import org.apache.commons.lang3.StringUtils;
 import org.intellij.lang.annotations.RegExp;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
 /**
@@ -30,6 +31,7 @@ public class DateFinder implements ReplacementFinder {
     static final String SUBTYPE_LEADING_ZERO = "Día con cero";
     static final String SUBTYPE_UPPERCASE = "Mes en mayúscula";
     static final String SUBTYPE_UNORDERED = "Fecha desordenada";
+    static final String SUBTYPE_NO_ARTICLE = "Fecha sin artículo";
 
     @Resource
     private Map<String, String> monthNames;
@@ -143,14 +145,16 @@ public class DateFinder implements ReplacementFinder {
 
     @Override
     public boolean validate(MatchResult match, WikipediaPage page) {
-        return ReplacementFinder.super.validate(match, page) && validateDate(match.group(), page.getId().getLang());
+        return ReplacementFinder.super.validate(match, page) && validateDate(match, page);
     }
 
-    private boolean validateDate(String date, WikipediaLanguage lang) {
+    private boolean validateDate(MatchResult match, WikipediaPage page) {
+        final WikipediaLanguage lang = page.getId().getLang();
+        final String date = match.group();
         final String token1 = Arrays.stream(date.split(" ")).findFirst().orElseThrow(IllegalArgumentException::new);
         if (isDay(token1)) {
             // Long date: DMY
-            return !isValidLongDate(date, lang);
+            return !isValidLongDate(match, page);
         } else if (isConnector(token1, lang)) {
             // Connector + MY
             return !isValidMonthYear(date, lang);
@@ -190,16 +194,26 @@ public class DateFinder implements ReplacementFinder {
         return this.langPrepositions.get(lang).get(0);
     }
 
-    private boolean isValidLongDate(String date, WikipediaLanguage lang) {
+    private boolean isPrecededByPreposition(WikipediaPage page, int start) {
+        return (
+            WikipediaLanguage.SPANISH.equals(page.getId().getLang()) &&
+            start >= 3 &&
+            "en ".equalsIgnoreCase(page.getContent().substring(start - 3, start))
+        );
+    }
+
+    private boolean isValidLongDate(MatchResult match, WikipediaPage page) {
         // We can assume at this point that the core tokens are day-month-year
-        final String[] tokens = date.split(" ");
+        final WikipediaLanguage lang = page.getId().getLang();
+        final String[] tokens = match.group().split(" ");
         return (
             tokens.length == 5 &&
             !tokens[0].startsWith("0") &&
             isPrepositionDefault(tokens[1], lang) &&
             FinderUtils.startsWithLowerCase(tokens[2]) &&
             isPreposition(tokens[3], lang) &&
-            tokens[4].length() == 4
+            tokens[4].length() == 4 &&
+            !isPrecededByPreposition(page, match.start())
         );
     }
 
@@ -215,28 +229,29 @@ public class DateFinder implements ReplacementFinder {
     }
 
     @Override
-    public Replacement convert(MatchResult matcher, WikipediaPage page) {
+    public Replacement convert(MatchResult match, WikipediaPage page) {
         final WikipediaLanguage lang = page.getId().getLang();
-        final String[] tokens = matcher.group().split(" ");
+        final String[] tokens = match.group().split(" ");
         final String token1 = tokens[0];
         if (isDay(token1)) {
             // Long date: DMY
-            return convertLongDate(matcher, lang);
+            return convertLongDate(match, page);
         } else if (isConnector(token1, lang)) {
             // Connector + MY
-            return convertMonthYear(matcher, lang);
+            return convertMonthYear(match, lang);
         } else if (isMonth(token1, lang)) {
             // Unordered MDY
-            return convertMonthDayYear(matcher, lang);
+            return convertMonthDayYear(match, page);
         } else if (isYear(token1)) {
             // Unordered YMD
-            return convertYearMonthDay(matcher, lang);
+            return convertYearMonthDay(match, page);
         } else {
             throw new IllegalArgumentException();
         }
     }
 
-    private Replacement convertLongDate(MatchResult match, WikipediaLanguage lang) {
+    private Replacement convertLongDate(MatchResult match, WikipediaPage page) {
+        final WikipediaLanguage lang = page.getId().getLang();
         final String date = match.group();
         final List<String> tokens = Arrays.stream(date.split(" ")).collect(Collectors.toCollection(LinkedList::new));
         String subtype = null;
@@ -283,18 +298,25 @@ public class DateFinder implements ReplacementFinder {
         // Fix september
         tokens.set(2, fixSeptember(tokens.get(2), lang));
 
+        // Fix article
+        int start = match.start();
+        String replacementText = date;
+        String article = getFixArticle(page, start);
+        if (article != null) {
+            start -= 3;
+            replacementText = page.getContent().substring(start, date.length() + 3);
+            tokens.add(0, article);
+            if (subtype == null) {
+                subtype = SUBTYPE_NO_ARTICLE;
+            }
+        }
+
         if (subtype == null) {
             throw new IllegalArgumentException(String.format("Not valid date to convert: %s", date));
         }
 
         final String fixedDate = StringUtils.join(tokens, " ");
-        return Replacement
-            .builder()
-            .type(ReplacementType.of(ReplacementKind.DATE, subtype))
-            .start(match.start())
-            .text(date)
-            .suggestions(findSuggestions(fixedDate))
-            .build();
+        return buildDateReplacement(subtype, start, replacementText, fixedDate);
     }
 
     private Replacement convertMonthYear(MatchResult match, WikipediaLanguage lang) {
@@ -333,16 +355,11 @@ public class DateFinder implements ReplacementFinder {
         }
 
         final String fixedDate = StringUtils.join(tokens, " ");
-        return Replacement
-            .builder()
-            .type(ReplacementType.of(ReplacementKind.DATE, subtype))
-            .start(match.start())
-            .text(date)
-            .suggestions(findSuggestions(fixedDate))
-            .build();
+        return buildDateReplacement(subtype, match.start(), date, fixedDate);
     }
 
-    private Replacement convertMonthDayYear(MatchResult match, WikipediaLanguage lang) {
+    private Replacement convertMonthDayYear(MatchResult match, WikipediaPage page) {
+        final WikipediaLanguage lang = page.getId().getLang();
         final String date = match.group();
         final List<String> tokens = Arrays.stream(date.split(" ")).collect(Collectors.toCollection(LinkedList::new));
 
@@ -382,17 +399,22 @@ public class DateFinder implements ReplacementFinder {
         // Reorder the tokens
         Collections.swap(tokens, 0, 2);
 
+        // Fix article
+        int start = match.start();
+        String replacementText = date;
+        String article = getFixArticle(page, start);
+        if (article != null) {
+            start -= 3;
+            replacementText = page.getContent().substring(start, date.length() + 3);
+            tokens.add(0, article);
+        }
+
         final String fixedDate = StringUtils.join(tokens, " ");
-        return Replacement
-            .builder()
-            .type(ReplacementType.of(ReplacementKind.DATE, SUBTYPE_UNORDERED))
-            .start(match.start())
-            .text(date)
-            .suggestions(findSuggestions(fixedDate))
-            .build();
+        return buildDateReplacement(SUBTYPE_UNORDERED, start, replacementText, fixedDate);
     }
 
-    private Replacement convertYearMonthDay(MatchResult match, WikipediaLanguage lang) {
+    private Replacement convertYearMonthDay(MatchResult match, WikipediaPage page) {
+        final WikipediaLanguage lang = page.getId().getLang();
         final String date = match.group();
         final List<String> tokens = Arrays.stream(date.split(" ")).collect(Collectors.toCollection(LinkedList::new));
 
@@ -429,14 +451,18 @@ public class DateFinder implements ReplacementFinder {
         // Reorder the tokens
         Collections.swap(tokens, 0, 4);
 
+        // Fix article
+        int start = match.start();
+        String replacementText = date;
+        String article = getFixArticle(page, start);
+        if (article != null) {
+            start -= 3;
+            replacementText = page.getContent().substring(start, date.length() + 3);
+            tokens.add(0, article);
+        }
+
         final String fixedDate = StringUtils.join(tokens, " ");
-        return Replacement
-            .builder()
-            .type(ReplacementType.of(ReplacementKind.DATE, SUBTYPE_UNORDERED))
-            .start(match.start())
-            .text(date)
-            .suggestions(findSuggestions(fixedDate))
-            .build();
+        return buildDateReplacement(SUBTYPE_UNORDERED, start, replacementText, fixedDate);
     }
 
     private String fixYearWithDot(String year) {
@@ -455,6 +481,26 @@ public class DateFinder implements ReplacementFinder {
 
     private String removeTrailingComma(String token) {
         return token.endsWith(",") ? token.substring(0, token.length() - 1) : token;
+    }
+
+    // Return the appropriate article for the date
+    @Nullable
+    private String getFixArticle(WikipediaPage page, int start) {
+        if (isPrecededByPreposition(page, start)) {
+            return Character.isUpperCase(page.getContent().charAt(start - 3)) ? "El" : "el";
+        } else {
+            return null;
+        }
+    }
+
+    private Replacement buildDateReplacement(String subtype, int start, String originalDate, String fixedDate) {
+        return Replacement
+            .builder()
+            .type(ReplacementType.of(ReplacementKind.DATE, subtype))
+            .start(start)
+            .text(originalDate)
+            .suggestions(findSuggestions(fixedDate))
+            .build();
     }
 
     private List<Suggestion> findSuggestions(String date) {

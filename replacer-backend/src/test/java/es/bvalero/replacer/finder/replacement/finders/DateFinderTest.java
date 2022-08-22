@@ -50,6 +50,8 @@ class DateFinderTest {
             "17 de agosto de 2.019, 17 de agosto de 2019, " + DateFinder.SUBTYPE_DOT_YEAR,
             "17 de agosto del 2.019, 17 de agosto del 2019, " + DateFinder.SUBTYPE_DOT_YEAR,
             "17 de setiembre de 2.019, 17 de septiembre de 2019, " + DateFinder.SUBTYPE_DOT_YEAR,
+            "en 22 de agosto de 2022, el 22 de agosto de 2022, " + DateFinder.SUBTYPE_NO_ARTICLE,
+            "En 22 de agosto de 2022, El 22 de agosto de 2022, " + DateFinder.SUBTYPE_NO_ARTICLE,
         }
     )
     void testLongDate(String date, String expected, String subtype) {
@@ -63,7 +65,7 @@ class DateFinderTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = { "15 de agosto del 2019", "15 de setiembre de 2020" })
+    @ValueSource(strings = { "15 de agosto del 2019", "15 de setiembre de 2020", "el 22 de agosto de 2022" })
     void testValidLongDate(String date) {
         List<Replacement> replacements = dateFinder.findList(date);
 
@@ -83,7 +85,7 @@ class DateFinderTest {
             "Desde agosto 2019, Desde agosto de 2019, " + DateFinder.SUBTYPE_INCOMPLETE,
             "desde agosto 2.019, desde agosto de 2019, " + DateFinder.SUBTYPE_INCOMPLETE,
             "Desde agosto de 2.019, Desde agosto de 2019, " + DateFinder.SUBTYPE_DOT_YEAR,
-            "Desde agosto del 2.019, Desde agosto del 2019, " + DateFinder.SUBTYPE_DOT_YEAR,
+            "En agosto del 2.019, En agosto del 2019, " + DateFinder.SUBTYPE_DOT_YEAR,
         }
     )
     void testMonthYear(String date, String expected, String subtype) {
@@ -97,7 +99,15 @@ class DateFinderTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = { "Desde agosto del 2019", "desde setiembre de 2020", "de agosto de 2000" })
+    @ValueSource(
+        strings = {
+            "Desde agosto del 2019",
+            "desde setiembre de 2020",
+            "de agosto de 2000",
+            "En agosto de 2000",
+            "en agosto de 2000",
+        }
+    )
     void testValidMonthYear(String date) {
         List<Replacement> replacements = dateFinder.findList(date);
 
@@ -131,6 +141,7 @@ class DateFinderTest {
             "Mayo 03, 1999|3 de mayo de 1999|" + DateFinder.SUBTYPE_UNORDERED,
             "Mayo 3, 1.999|3 de mayo de 1999|" + DateFinder.SUBTYPE_UNORDERED,
             "mayo 3, 1999|3 de mayo de 1999|" + DateFinder.SUBTYPE_UNORDERED,
+            "En mayo 3, 1999|El 3 de mayo de 1999|" + DateFinder.SUBTYPE_UNORDERED,
         }
     )
     void testUnorderedDateMonthDayYear(String date, String expected, String subtype) {
@@ -153,6 +164,7 @@ class DateFinderTest {
             "2013, Mayo 4|4 de mayo de 2013|" + DateFinder.SUBTYPE_UNORDERED,
             "2013, Mayo 04|4 de mayo de 2013|" + DateFinder.SUBTYPE_UNORDERED,
             "2.013, Mayo 4|4 de mayo de 2013|" + DateFinder.SUBTYPE_UNORDERED,
+            "en 2013, Mayo 4|el 4 de mayo de 2013|" + DateFinder.SUBTYPE_UNORDERED,
         }
     )
     void testUnorderedDateYearMonthDay(String date, String expected, String subtype) {
