@@ -17,7 +17,7 @@ public interface ReplacementTypeRepository {
     void updateReviewerByPageAndType(WikipediaPageId pageId, @Nullable ReplacementType type, String reviewer);
 
     /** Update the reviewer of a replacement */
-    void updateReviewer(ReplacementModel replacement);
+    void updateReviewer(Collection<ReplacementModel> replacements);
 
     /** Delete all the replacements to review by the given types. We assume all the types are of the same kind. */
     void removeReplacementsByType(WikipediaLanguage lang, Collection<ReplacementType> types);

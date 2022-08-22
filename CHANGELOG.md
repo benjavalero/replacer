@@ -1,5 +1,8 @@
 # Versions
 
+## 2.19.1 (??)
+- Revert "Count replacements by type without grouping by page"
+
 ## 2.19.0 (22 Aug 2022)
 - Feature: new replacement for unordered dates
 - Feature: new replacement for dates with the wrong article

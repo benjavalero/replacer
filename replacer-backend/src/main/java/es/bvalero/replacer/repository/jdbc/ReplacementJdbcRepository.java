@@ -195,7 +195,11 @@ class ReplacementJdbcRepository
     }
 
     @Override
-    public void updateReviewer(ReplacementModel replacement) {
+    public void updateReviewer(Collection<ReplacementModel> replacements) {
+        replacements.forEach(this::updateReviewer);
+    }
+
+    private void updateReviewer(ReplacementModel replacement) {
         String sql =
             "UPDATE replacement SET reviewer = :reviewer " +
             "WHERE lang = :lang AND page_id = :pageId AND kind = :kind AND subtype = :subtype " +

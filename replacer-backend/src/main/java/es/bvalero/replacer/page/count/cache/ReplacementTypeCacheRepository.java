@@ -72,9 +72,18 @@ class ReplacementTypeCacheRepository implements ReplacementTypeRepository {
     }
 
     @Override
-    public void updateReviewer(ReplacementModel replacement) {
-        this.decrementSubtypeCount(WikipediaLanguage.valueOfCode(replacement.getLang()), replacement.getType());
-        this.replacementTypeRepository.updateReviewer(replacement);
+    public void updateReviewer(Collection<ReplacementModel> replacements) {
+        // We can assume all replacements have the same language
+        final WikipediaLanguage lang = WikipediaLanguage.valueOfCode(
+            replacements.stream().findAny().orElseThrow(IllegalArgumentException::new).getLang()
+        );
+        replacements
+            .stream()
+            .map(ReplacementModel::getType)
+            .distinct()
+            .forEach(t -> this.decrementSubtypeCount(lang, t));
+
+        this.replacementTypeRepository.updateReviewer(replacements);
     }
 
     @VisibleForTesting

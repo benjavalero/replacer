@@ -112,7 +112,7 @@ class ReviewSaveServiceTest {
         reviewSaveService.markAsReviewed(reviewedReplacements, true);
 
         verify(pageRepository).updatePageLastUpdate(wikipediaPageId, LocalDate.now());
-        verify(replacementTypeRepository, times(2)).updateReviewer(any(ReplacementModel.class));
+        verify(replacementTypeRepository, times(1)).updateReviewer(anyCollection());
         verify(customRepository, times(1)).addCustom(any(CustomModel.class));
     }
 }

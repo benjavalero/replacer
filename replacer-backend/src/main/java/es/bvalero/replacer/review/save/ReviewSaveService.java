@@ -91,24 +91,27 @@ class ReviewSaveService {
             pageRepository.updatePageLastUpdate(pageId, LocalDate.now());
         }
 
-        reviewedReplacements.forEach(this::markAsReviewed);
+        // Mark the custom replacements as reviewed
+        reviewedReplacements
+            .stream()
+            .filter(r -> r.getType().getKind() == ReplacementKind.CUSTOM)
+            .forEach(this::markCustomAsReviewed);
+
+        // Mark the usual replacements as reviewed
+        List<ReplacementModel> usualToReview = reviewedReplacements
+            .stream()
+            .filter(r -> r.getType().getKind() != ReplacementKind.CUSTOM)
+            .map(this::mapReviewedReplacement)
+            .collect(Collectors.toUnmodifiableList());
+        replacementTypeRepository.updateReviewer(usualToReview);
     }
 
-    private void markAsReviewed(ReviewedReplacement reviewed) {
-        switch (reviewed.getType().getKind()) {
-            case EMPTY:
-                throw new IllegalArgumentException("Unexpected empty replacement kind on saving review");
-            case CUSTOM:
-                // Add the page to the database in case it doesn't exist yet
-                if (pageIndexRepository.findPageById(reviewed.getPageId()).isEmpty()) {
-                    pageRepository.addPages(List.of(buildNewPage(reviewed)));
-                }
-                customRepository.addCustom(mapReviewedCustom(reviewed));
-                break;
-            default:
-                replacementTypeRepository.updateReviewer(mapReviewedReplacement(reviewed));
-                break;
+    private void markCustomAsReviewed(ReviewedReplacement reviewed) {
+        // Add the page to the database in case it doesn't exist yet
+        if (pageIndexRepository.findPageById(reviewed.getPageId()).isEmpty()) {
+            pageRepository.addPages(List.of(buildNewPage(reviewed)));
         }
+        customRepository.addCustom(mapReviewedCustom(reviewed));
     }
 
     private PageModel buildNewPage(ReviewedReplacement reviewed) {
