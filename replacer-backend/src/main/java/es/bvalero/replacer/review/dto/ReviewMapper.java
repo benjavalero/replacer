@@ -40,6 +40,7 @@ public class ReviewMapper {
             ReviewSectionDto reviewSection = new ReviewSectionDto();
             reviewSection.setId(section.getIndex());
             reviewSection.setTitle(section.getAnchor());
+            reviewSection.setOffset(section.getByteOffset());
             return reviewSection;
         }
     }
@@ -87,14 +88,19 @@ public class ReviewMapper {
     public Collection<ReviewedReplacement> fromDto(
         int pageId,
         Collection<ReviewedReplacementDto> reviewed,
+        int offset,
         CommonQueryParameters queryParameters
     ) {
-        return reviewed.stream().map(r -> fromDto(pageId, r, queryParameters)).collect(Collectors.toUnmodifiableList());
+        return reviewed
+            .stream()
+            .map(r -> fromDto(pageId, r, offset, queryParameters))
+            .collect(Collectors.toUnmodifiableList());
     }
 
     private ReviewedReplacement fromDto(
         int pageId,
         ReviewedReplacementDto reviewed,
+        int offset,
         CommonQueryParameters queryParameters
     ) {
         return ReviewedReplacement
@@ -102,7 +108,7 @@ public class ReviewMapper {
             .pageId(WikipediaPageId.of(queryParameters.getWikipediaLanguage(), pageId))
             .type(ReplacementType.of(reviewed.getKind(), reviewed.getSubtype()))
             .cs(reviewed.getCs())
-            .start(reviewed.getStart())
+            .start(offset + reviewed.getStart())
             .reviewer(queryParameters.getUser())
             .fixed(reviewed.isFixed())
             .build();

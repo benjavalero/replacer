@@ -19,4 +19,8 @@ public class ReviewSectionDto {
     @NonNull
     @NotNull
     String title;
+
+    @Schema(description = "Offset of the section with the page content", required = true, example = "1014")
+    @NotNull
+    int offset;
 }

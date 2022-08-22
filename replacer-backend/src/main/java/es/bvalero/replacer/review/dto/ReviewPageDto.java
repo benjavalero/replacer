@@ -1,5 +1,6 @@
 package es.bvalero.replacer.review.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
 import javax.validation.Valid;
@@ -65,5 +66,10 @@ public class ReviewPageDto {
     @ToString.Include
     private String shortContent() {
         return StringUtils.abbreviate(this.getContent(), SHORT_CONTENT_LENGTH);
+    }
+
+    @JsonIgnore
+    public int getSectionOffset() {
+        return section != null ? section.getOffset() : 0;
     }
 }

@@ -51,6 +51,7 @@ export interface ReviewPage {
 interface ReviewSection {
   id: number;
   title: string;
+  offset: number;
 }
 
 export interface PageReviewOptions {

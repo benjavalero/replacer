@@ -5,6 +5,7 @@
 - Feature: new replacement for dates with the wrong article
 - Fix: check there actually are fixed replacements before saving the review
 - Fix: remove autofocus on editing custom snippet to improve the size of the frame on mobile devices
+- Fix: apply offset when saving the reviewer a section review
 
 ## 2.18.3 (19 Aug 2022)
 - Fix: apply the delay on saving *before* performing the request
