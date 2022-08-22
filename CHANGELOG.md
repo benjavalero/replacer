@@ -1,6 +1,6 @@
 # Versions
 
-## 2.19.0 (??)
+## 2.19.0 (22 Aug 2022)
 - Feature: new replacement for unordered dates
 - Feature: new replacement for dates with the wrong article
 - Fix: check there actually are fixed replacements before saving the review
