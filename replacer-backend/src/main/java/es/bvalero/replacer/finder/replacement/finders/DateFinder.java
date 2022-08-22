@@ -80,38 +80,52 @@ public class DateFinder implements ReplacementFinder {
                     this.langPrepositions.put(lang, FinderUtils.setFirstUpperCase(preposition));
                 });
 
-            // The regex consists in 5 tokens for the 4 date formats:
+            // Date formats:
             // 1) Day + Prep? + Month + Prep? + Year
             // 2) Connector + Ø + Month + Prep? + Year
             // 3) Month + Ø + Day + Prep? + Year
-            // 4) Year + Prep? + Month + Ø + Day
+            // 4) Year + Comma? + Month + Ø + Day
 
-            final String regexConnectors = StringUtils.join(this.langConnectors.get(lang), "|");
-            final String regexMonths = StringUtils.join(this.langMonths.get(lang), "|");
-
-            // Add the comma as a preposition and a space before the prepositions
-            final List<String> prepositions =
-                this.langPrepositions.get(lang).stream().map(p -> " " + p).collect(Collectors.toList());
-            prepositions.add(",");
-            final String regexPrepositions = String.format("(%s)?", StringUtils.join(prepositions, "|"));
+            final String regexConnectors = String.format("(%s)", StringUtils.join(this.langConnectors.get(lang), "|"));
+            final String regexMonths = String.format("(%s)", StringUtils.join(this.langMonths.get(lang), "|"));
+            final String regexPrepositions = String.format(
+                "( (%s))?",
+                StringUtils.join(this.langPrepositions.get(lang), "|")
+            );
 
             @RegExp
             final String regexDay = "(0?[1-9]|[12]<N>|3[01])";
             @RegExp
             final String regexYear = "[12]\\.?<N>{3}";
+            @RegExp
+            final String regexComma = ",?";
 
-            final String regex1 = String.format("(%s|%s|%s|%s)", regexYear, regexDay, regexConnectors, regexMonths);
-            final String regex3 = String.format("(%s|%s)", regexDay, regexMonths);
-            final String regex5 = String.format("(%s|%s)", regexYear, regexDay);
-
-            final String regexDate = String.format(
+            final String regex1 = String.format(
                 "%s%s %s%s %s",
-                regex1,
+                regexDay,
                 regexPrepositions,
-                regex3,
+                regexMonths,
                 regexPrepositions,
-                regex5
+                regexYear
             );
+            final String regex2 = String.format(
+                "%s %s%s %s",
+                regexConnectors,
+                regexMonths,
+                regexPrepositions,
+                regexYear
+            );
+            final String regex3 = String.format(
+                "%s %s(%s|%s) %s",
+                regexMonths,
+                regexDay,
+                regexComma,
+                regexPrepositions,
+                regexYear
+            );
+            final String regex4 = String.format("%s%s %s %s", regexYear, regexComma, regexMonths, regexDay);
+
+            final String regexDate = String.format("(%s|%s|%s|%s)", regex1, regex2, regex3, regex4);
             final RunAutomaton dateAutomaton = new RunAutomaton(
                 new dk.brics.automaton.RegExp(regexDate).toAutomaton(new DatatypesAutomatonProvider())
             );
@@ -133,38 +147,15 @@ public class DateFinder implements ReplacementFinder {
     }
 
     private boolean validateDate(String date, WikipediaLanguage lang) {
-        List<String> tokens = Arrays.stream(date.split(" ")).collect(Collectors.toCollection(LinkedList::new));
-
-        // Remove the prepositions
-        if (isPreposition(tokens.get(1), lang)) {
-            tokens.remove(1);
-        }
-        if (isPreposition(tokens.get(2), lang)) {
-            tokens.remove(2);
-        }
-        if (tokens.size() != 3) {
-            return false;
-        }
-
-        final String token1 = tokens.get(0);
-        final String token3 = tokens.get(1);
-        final String token5 = tokens.get(2);
+        final String token1 = Arrays.stream(date.split(" ")).findFirst().orElseThrow(IllegalArgumentException::new);
         if (isDay(token1)) {
             // Long date: DMY
-            return isMonth(token3, lang) && isYear(token5) && !isValidLongDate(date, lang);
+            return !isValidLongDate(date, lang);
         } else if (isConnector(token1, lang)) {
             // Connector + MY
-            return isMonth(token3, lang) && isYear(token5) && !isValidMonthYear(date, lang);
-        } else if (isMonth(token1, lang)) {
-            final String normalizedToken3 = token3.replace(",", "");
-            // Unordered MDY
-            return isDay(normalizedToken3) && isYear(token5);
-        } else if (isYear(token1)) {
-            // Unordered YMD
-            return isMonth(token3, lang) && isDay(token5);
-        } else {
-            return false;
+            return !isValidMonthYear(date, lang);
         }
+        return true;
     }
 
     private boolean isDay(String token) {
@@ -260,7 +251,7 @@ public class DateFinder implements ReplacementFinder {
 
         // Add/fix missing prepositions
         final String defaultPreposition = getPrepositionDefault(lang);
-        if (isMonth(tokens.get(1), lang)) {
+        if (!isPreposition(tokens.get(1), lang)) {
             tokens.add(1, defaultPreposition);
             subtype = SUBTYPE_INCOMPLETE;
         } else if (!isPrepositionDefault(tokens.get(1), lang)) {
@@ -268,11 +259,8 @@ public class DateFinder implements ReplacementFinder {
             subtype = SUBTYPE_INCOMPLETE;
         }
 
-        if (isYear(tokens.get(3))) {
+        if (!isPreposition(tokens.get(3), lang)) {
             tokens.add(3, defaultPreposition);
-            subtype = SUBTYPE_INCOMPLETE;
-        } else if (!isPreposition(tokens.get(3), lang)) {
-            tokens.set(3, defaultPreposition);
             subtype = SUBTYPE_INCOMPLETE;
         }
 
@@ -324,11 +312,8 @@ public class DateFinder implements ReplacementFinder {
 
         // Add/fix missing prepositions
         final String defaultPreposition = getPrepositionDefault(lang);
-        if (isYear(tokens.get(2))) {
+        if (!isPreposition(tokens.get(2), lang)) {
             tokens.add(2, defaultPreposition);
-            subtype = SUBTYPE_INCOMPLETE;
-        } else if (!isPreposition(tokens.get(2), lang)) {
-            tokens.set(2, defaultPreposition);
             subtype = SUBTYPE_INCOMPLETE;
         }
 
@@ -370,25 +355,17 @@ public class DateFinder implements ReplacementFinder {
 
         // Add/fix missing prepositions
         final String defaultPreposition = getPrepositionDefault(lang);
-        if (isDay(tokens.get(1).replace(",", ""))) {
-            tokens.add(1, defaultPreposition);
-        } else if (!isPrepositionDefault(tokens.get(1), lang)) {
-            tokens.set(1, defaultPreposition);
-        }
+        tokens.add(1, defaultPreposition);
 
-        if (isYear(tokens.get(3))) {
+        if (!isPreposition(tokens.get(3), lang)) {
             tokens.add(3, defaultPreposition);
-        } else if (!isPreposition(tokens.get(3), lang)) {
-            tokens.set(3, defaultPreposition);
         }
 
         // Fix leading zero
-        String day = tokens.get(2);
+        // Note: in this date format the day might be followed by a comma
+        String day = removeTrailingComma(tokens.get(2));
         if (day.startsWith("0")) {
             day = fixLeadingZero(day);
-        }
-        if (day.endsWith(",")) {
-            day = day.substring(0, day.length() - 1);
         }
         tokens.set(2, day);
 
@@ -403,9 +380,7 @@ public class DateFinder implements ReplacementFinder {
         tokens.set(0, fixSeptember(tokens.get(0), lang));
 
         // Reorder the tokens
-        final String swap = tokens.get(0);
-        tokens.set(0, tokens.get(2));
-        tokens.set(2, swap);
+        Collections.swap(tokens, 0, 2);
 
         final String fixedDate = StringUtils.join(tokens, " ");
         return Replacement
@@ -422,28 +397,17 @@ public class DateFinder implements ReplacementFinder {
         final List<String> tokens = Arrays.stream(date.split(" ")).collect(Collectors.toCollection(LinkedList::new));
 
         // Fix year with dot
-        String year = tokens.get(0);
+        // Note: in this date format the day might be followed by a comma
+        String year = removeTrailingComma(tokens.get(0));
         if (year.contains(".")) {
             year = fixYearWithDot(year);
-        }
-        if (year.endsWith(",")) {
-            year = year.substring(0, year.length() - 1);
         }
         tokens.set(0, year);
 
         // Add/fix missing prepositions
         final String defaultPreposition = getPrepositionDefault(lang);
-        if (isMonth(tokens.get(1), lang)) {
-            tokens.add(1, defaultPreposition);
-        } else if (!isPrepositionDefault(tokens.get(1), lang)) {
-            tokens.set(1, defaultPreposition);
-        }
-
-        if (isDay(tokens.get(3))) {
-            tokens.add(3, defaultPreposition);
-        } else if (!isPreposition(tokens.get(3), lang)) {
-            tokens.set(3, defaultPreposition);
-        }
+        tokens.add(1, defaultPreposition);
+        tokens.add(3, defaultPreposition);
 
         // Fix leading zero
         final String day = tokens.get(4);
@@ -463,9 +427,7 @@ public class DateFinder implements ReplacementFinder {
         tokens.set(2, fixSeptember(tokens.get(2), lang));
 
         // Reorder the tokens
-        final String swap = tokens.get(0);
-        tokens.set(0, tokens.get(4));
-        tokens.set(4, swap);
+        Collections.swap(tokens, 0, 4);
 
         final String fixedDate = StringUtils.join(tokens, " ");
         return Replacement
@@ -489,6 +451,10 @@ public class DateFinder implements ReplacementFinder {
 
     private String fixSeptember(String month, WikipediaLanguage lang) {
         return WikipediaLanguage.SPANISH.equals(lang) && "setiembre".equals(month) ? "septiembre" : month;
+    }
+
+    private String removeTrailingComma(String token) {
+        return token.endsWith(",") ? token.substring(0, token.length() - 1) : token;
     }
 
     private List<Suggestion> findSuggestions(String date) {
