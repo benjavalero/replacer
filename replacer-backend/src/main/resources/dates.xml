@@ -27,4 +27,11 @@
         <entry key="gl" value="de,do"/>
     </util:map>
 
+    <!-- Words preceding a date to be added an article between.
+         The list is actually a list of pairs with the word and the particle + article,
+         so we can take apply contractions or replacements. -->
+    <util:map id="dateArticles" map-class="java.util.HashMap"
+              key-type="java.lang.String" value-type="java.lang.String">
+        <entry key="es" value="a-al,desde-desde el,de-del,durante-durante el,entre-entre el,en-el,hacia-hacia-el,hasta-hasta el,y-y el"/>
+    </util:map>
 </beans>

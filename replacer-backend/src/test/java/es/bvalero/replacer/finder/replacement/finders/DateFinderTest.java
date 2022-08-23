@@ -50,8 +50,6 @@ class DateFinderTest {
             "17 de agosto de 2.019, 17 de agosto de 2019, " + DateFinder.SUBTYPE_DOT_YEAR,
             "17 de agosto del 2.019, 17 de agosto del 2019, " + DateFinder.SUBTYPE_DOT_YEAR,
             "17 de setiembre de 2.019, 17 de septiembre de 2019, " + DateFinder.SUBTYPE_DOT_YEAR,
-            "en 22 de agosto de 2022, el 22 de agosto de 2022, " + DateFinder.SUBTYPE_NO_ARTICLE,
-            "En 22 de agosto de 2022, El 22 de agosto de 2022, " + DateFinder.SUBTYPE_NO_ARTICLE,
         }
     )
     void testLongDate(String date, String expected, String subtype) {
@@ -141,7 +139,6 @@ class DateFinderTest {
             "Mayo 03, 1999|3 de mayo de 1999|" + DateFinder.SUBTYPE_UNORDERED,
             "Mayo 3, 1.999|3 de mayo de 1999|" + DateFinder.SUBTYPE_UNORDERED,
             "mayo 3, 1999|3 de mayo de 1999|" + DateFinder.SUBTYPE_UNORDERED,
-            "En mayo 3, 1999|El 3 de mayo de 1999|" + DateFinder.SUBTYPE_UNORDERED,
         }
     )
     void testUnorderedDateMonthDayYear(String date, String expected, String subtype) {
@@ -164,7 +161,6 @@ class DateFinderTest {
             "2013, Mayo 4|4 de mayo de 2013|" + DateFinder.SUBTYPE_UNORDERED,
             "2013, Mayo 04|4 de mayo de 2013|" + DateFinder.SUBTYPE_UNORDERED,
             "2.013, Mayo 4|4 de mayo de 2013|" + DateFinder.SUBTYPE_UNORDERED,
-            "en 2013, Mayo 4|el 4 de mayo de 2013|" + DateFinder.SUBTYPE_UNORDERED,
         }
     )
     void testUnorderedDateYearMonthDay(String date, String expected, String subtype) {
@@ -174,6 +170,54 @@ class DateFinderTest {
         assertEquals(date, replacements.get(0).getText());
         assertEquals(date, replacements.get(0).getSuggestions().get(0).getText());
         assertEquals(expected, replacements.get(0).getSuggestions().get(1).getText());
+        assertEquals(subtype, replacements.get(0).getType().getSubtype());
+    }
+
+    @ParameterizedTest
+    @CsvSource(
+        {
+            "en 22 de agosto de 2022, el 22 de agosto de 2022, " + DateFinder.SUBTYPE_INCOMPLETE,
+            "En 22 de agosto de 2022, El 22 de agosto de 2022, " + DateFinder.SUBTYPE_INCOMPLETE,
+        }
+    )
+    void testValidDateWithWrongArticle(String date, String expected, String subtype) {
+        List<Replacement> replacements = dateFinder.findList(date);
+
+        assertEquals(1, replacements.size());
+        assertEquals(date, replacements.get(0).getText());
+        // For valid dates with offer the alternative with article and the original one
+        assertEquals(2, replacements.get(0).getSuggestions().size());
+        assertEquals(date, replacements.get(0).getSuggestions().get(0).getText());
+        assertEquals(expected, replacements.get(0).getSuggestions().get(1).getText());
+        assertEquals(subtype, replacements.get(0).getType().getSubtype());
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = { "el 15 de agosto del 2019", "El 15 de setiembre de 2020", "por 22 de agosto de 2022" })
+    void testValidDateWithValidArticle(String date) {
+        List<Replacement> replacements = dateFinder.findList(date);
+
+        assertTrue(replacements.isEmpty());
+    }
+
+    @ParameterizedTest
+    @CsvSource(
+        delimiter = '|',
+        value = {
+            "en 22 de Agosto de 2022|en 22 de agosto de 2022|el 22 de agosto de 2022|" + DateFinder.SUBTYPE_UPPERCASE,
+            "En Agosto 22, 2022|En 22 de agosto de 2022|El 22 de agosto de 2022|" + DateFinder.SUBTYPE_UNORDERED,
+            "A 2022, Agosto 22|A 22 de agosto de 2022|Al 22 de agosto de 2022|" + DateFinder.SUBTYPE_UNORDERED,
+        }
+    )
+    void testNotValidDateWithWrongArticle(String date, String expected1, String expected2, String subtype) {
+        List<Replacement> replacements = dateFinder.findList(date);
+
+        assertEquals(1, replacements.size());
+        assertEquals(date, replacements.get(0).getText());
+        assertEquals(3, replacements.get(0).getSuggestions().size());
+        assertEquals(date, replacements.get(0).getSuggestions().get(0).getText());
+        assertEquals(expected1, replacements.get(0).getSuggestions().get(1).getText());
+        assertEquals(expected2, replacements.get(0).getSuggestions().get(2).getText());
         assertEquals(subtype, replacements.get(0).getType().getSubtype());
     }
 }

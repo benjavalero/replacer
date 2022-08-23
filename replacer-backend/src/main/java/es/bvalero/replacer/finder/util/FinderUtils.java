@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.lang.Nullable;
 
 @Slf4j
 @UtilityClass
@@ -36,6 +37,10 @@ public class FinderUtils {
 
     public boolean startsWithUpperCase(CharSequence word) {
         return Character.isUpperCase(word.charAt(0));
+    }
+
+    public boolean startsWithNumber(CharSequence word) {
+        return Character.isDigit(word.charAt(0));
     }
 
     public String setFirstLowerCase(String word) {
@@ -131,6 +136,24 @@ public class FinderUtils {
             }
         }
         return false;
+    }
+
+    // Find the preceding word
+    @Nullable
+    public String findPrecedingWord(String text, int start) {
+        if (start >= 2) {
+            int firstLetter = -1;
+            for (int i = start - 2; i >= 0; i--) {
+                final char ch = text.charAt(i);
+                if (Character.isLetter(ch)) {
+                    firstLetter = i;
+                } else {
+                    break;
+                }
+            }
+            return firstLetter >= 0 ? text.substring(firstLetter, start - 1) : null;
+        }
+        return null;
     }
 
     private String getPageSnippet(WikipediaPage page, int start, int end) {

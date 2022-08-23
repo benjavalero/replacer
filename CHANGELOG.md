@@ -2,6 +2,7 @@
 
 ## 2.19.1 (??)
 - Revert "Count replacements by type without grouping by page"
+- Instead of a date subtype we add the dates with the article fixed as a new suggestion
 
 ## 2.19.0 (22 Aug 2022)
 - Feature: new replacement for unordered dates
