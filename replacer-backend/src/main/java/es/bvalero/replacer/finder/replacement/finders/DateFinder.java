@@ -304,7 +304,7 @@ public class DateFinder implements ReplacementFinder {
         String article = getFixArticle(page, start);
         if (article != null) {
             start -= 3;
-            replacementText = page.getContent().substring(start, date.length() + 3);
+            replacementText = page.getContent().substring(start, start + date.length() + 3);
             tokens.add(0, article);
             if (subtype == null) {
                 subtype = SUBTYPE_NO_ARTICLE;
@@ -405,7 +405,7 @@ public class DateFinder implements ReplacementFinder {
         String article = getFixArticle(page, start);
         if (article != null) {
             start -= 3;
-            replacementText = page.getContent().substring(start, date.length() + 3);
+            replacementText = page.getContent().substring(start, start + date.length() + 3);
             tokens.add(0, article);
         }
 
@@ -457,7 +457,7 @@ public class DateFinder implements ReplacementFinder {
         String article = getFixArticle(page, start);
         if (article != null) {
             start -= 3;
-            replacementText = page.getContent().substring(start, date.length() + 3);
+            replacementText = page.getContent().substring(start, start + date.length() + 3);
             tokens.add(0, article);
         }
 
