@@ -79,6 +79,7 @@ public class ReviewMapper {
         return ReviewOptions
             .builder()
             .lang(WikipediaLanguage.valueOfCode(queryParameters.getLang()))
+            .user(queryParameters.getUser())
             .type(ReplacementType.of(options.getKind(), options.getSubtype()))
             .suggestion(options.getSuggestion())
             .cs(options.getCs())

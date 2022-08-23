@@ -46,8 +46,7 @@ public class UserRightsService {
         }
     }
 
-    @VisibleForTesting
-    boolean isBot(WikipediaLanguage lang, String username) {
+    public boolean isBot(WikipediaLanguage lang, String username) {
         return getCachedUser(lang, username).isBot();
     }
 

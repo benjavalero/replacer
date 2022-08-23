@@ -1,11 +1,14 @@
 package es.bvalero.replacer.common.domain;
 
+import java.util.Objects;
 import lombok.Value;
+import lombok.experimental.NonFinal;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
 /** Type of replacement found in the content of a page */
+@NonFinal
 @Value(staticConstructor = "of")
 public class ReplacementType {
 
@@ -48,6 +51,11 @@ public class ReplacementType {
 
         this.kind = kind;
         this.subtype = subtype;
+    }
+
+    public boolean isForBots() {
+        // For the moment we hardcode this property in the very domain entity
+        return false;
     }
 
     @Override

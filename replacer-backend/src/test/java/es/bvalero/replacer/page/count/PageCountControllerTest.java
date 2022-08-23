@@ -33,7 +33,7 @@ class PageCountControllerTest {
         KindCount count = KindCount.of((byte) 10);
         count.add(SubtypeCount.of("Y", 100));
         Collection<KindCount> counts = Collections.singletonList(count);
-        when(pageCountService.countReplacementsGroupedByType(WikipediaLanguage.SPANISH)).thenReturn(counts);
+        when(pageCountService.countReplacementsGroupedByType(WikipediaLanguage.SPANISH, "A")).thenReturn(counts);
 
         mvc
             .perform(get("/api/page/type/count?lang=es&user=A").contentType(MediaType.APPLICATION_JSON))
@@ -42,6 +42,6 @@ class PageCountControllerTest {
             .andExpect(jsonPath("$[0].l[0].s", is("Y")))
             .andExpect(jsonPath("$[0].l[0].c", is(100)));
 
-        verify(pageCountService).countReplacementsGroupedByType(WikipediaLanguage.SPANISH);
+        verify(pageCountService).countReplacementsGroupedByType(WikipediaLanguage.SPANISH, "A");
     }
 }

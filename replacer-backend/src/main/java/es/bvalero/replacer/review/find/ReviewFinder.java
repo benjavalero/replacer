@@ -9,6 +9,7 @@ import es.bvalero.replacer.page.removeobsolete.RemoveObsoletePageService;
 import es.bvalero.replacer.repository.PageIndexRepository;
 import es.bvalero.replacer.repository.PageModel;
 import es.bvalero.replacer.repository.ReplacementModel;
+import es.bvalero.replacer.user.UserRightsService;
 import es.bvalero.replacer.wikipedia.WikipediaPageRepository;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -39,6 +40,9 @@ abstract class ReviewFinder {
 
     @Autowired
     private ReviewSectionFinder reviewSectionFinder;
+
+    @Autowired
+    private UserRightsService userRightsService;
 
     // Maximum 500 as it is used as page size when searching in Wikipedia
     // If too big it may produce out-of-memory issues with the cached page contents
@@ -201,6 +205,11 @@ abstract class ReviewFinder {
         // Decorate the standard replacements with different actions depending on the type of review
         Collection<Replacement> decoratedReplacements = decorateReplacements(page, options, notReviewedReplacements);
 
+        // Discard the replacements only available for bots (if applicable)
+        if (!userRightsService.isBot(options.getLang(), options.getUser())) {
+            decoratedReplacements = discardBotReplacements(decoratedReplacements);
+        }
+
         // Return the replacements sorted as they appear in the text so there is no need to sort them in the frontend
         // We assume the given replacement collection is already sorted but we sort it just in case
         List<Replacement> replacements = new ArrayList<>(decoratedReplacements);
@@ -221,6 +230,12 @@ abstract class ReviewFinder {
         ReviewOptions options,
         Collection<Replacement> replacements
     );
+
+    private Collection<Replacement> discardBotReplacements(Collection<Replacement> replacements) {
+        List<Replacement> toReview = new LinkedList<>(replacements);
+        toReview.removeIf(r -> r.getType().isForBots());
+        return toReview;
+    }
 
     private Collection<Replacement> discardReviewedReplacements(
         WikipediaPage page,

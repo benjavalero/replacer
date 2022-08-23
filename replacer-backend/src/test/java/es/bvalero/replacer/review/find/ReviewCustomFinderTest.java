@@ -10,6 +10,7 @@ import es.bvalero.replacer.page.index.PageIndexResult;
 import es.bvalero.replacer.page.index.PageIndexService;
 import es.bvalero.replacer.page.index.PageIndexStatus;
 import es.bvalero.replacer.repository.CustomRepository;
+import es.bvalero.replacer.user.UserRightsService;
 import es.bvalero.replacer.wikipedia.WikipediaPageRepository;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -41,6 +42,9 @@ class ReviewCustomFinderTest {
 
     @Mock
     private PageIndexService pageIndexService;
+
+    @Mock
+    private UserRightsService userRightsService;
 
     @InjectMocks
     private ReviewCustomFinder pageReviewCustomService;

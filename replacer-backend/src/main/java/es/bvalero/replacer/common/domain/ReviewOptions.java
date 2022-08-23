@@ -18,6 +18,9 @@ public class ReviewOptions {
     WikipediaLanguage lang;
 
     @NonNull
+    String user;
+
+    @NonNull
     ReplacementType type;
 
     @Nullable
@@ -28,12 +31,17 @@ public class ReviewOptions {
 
     @TestOnly
     public static ReviewOptions ofNoType() {
-        return ReviewOptions.builder().lang(WikipediaLanguage.getDefault()).type(ReplacementType.ofEmpty()).build();
+        return ReviewOptions
+            .builder()
+            .lang(WikipediaLanguage.getDefault())
+            .user("A")
+            .type(ReplacementType.ofEmpty())
+            .build();
     }
 
     @TestOnly
     public static ReviewOptions ofType(ReplacementType type) {
-        return ReviewOptions.builder().lang(WikipediaLanguage.getDefault()).type(type).build();
+        return ReviewOptions.builder().lang(WikipediaLanguage.getDefault()).user("A").type(type).build();
     }
 
     @TestOnly
@@ -46,6 +54,7 @@ public class ReviewOptions {
         return ReviewOptions
             .builder()
             .lang(lang)
+            .user("A")
             .type(ReplacementType.of(ReplacementKind.CUSTOM, replacement))
             .suggestion(suggestion)
             .cs(caseSensitive)
@@ -65,7 +74,7 @@ public class ReviewOptions {
 
     @Override
     public String toString() {
-        return String.format("%s - %s", lang, toStringSearchType());
+        return String.format("%s - %s - %s", lang, user, toStringSearchType());
     }
 
     public String toStringSearchType() {
@@ -88,8 +97,15 @@ public class ReviewOptions {
     }
 
     // Used by the builder
-    ReviewOptions(WikipediaLanguage lang, ReplacementType type, @Nullable String suggestion, @Nullable Boolean cs) {
+    ReviewOptions(
+        WikipediaLanguage lang,
+        String user,
+        ReplacementType type,
+        @Nullable String suggestion,
+        @Nullable Boolean cs
+    ) {
         this.lang = lang;
+        this.user = user;
         this.type = type;
         this.suggestion = suggestion;
         this.cs = cs;

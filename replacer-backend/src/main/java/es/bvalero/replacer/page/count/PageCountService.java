@@ -4,6 +4,7 @@ import es.bvalero.replacer.common.domain.ReplacementType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.repository.ReplacementTypeRepository;
 import es.bvalero.replacer.repository.ResultCount;
+import es.bvalero.replacer.user.UserRightsService;
 import java.util.Collection;
 import java.util.Map;
 import java.util.TreeMap;
@@ -15,17 +16,24 @@ import org.springframework.stereotype.Service;
 class PageCountService {
 
     @Autowired
+    private UserRightsService userRightsService;
+
+    @Autowired
     private ReplacementTypeRepository replacementTypeRepository;
 
-    Collection<KindCount> countReplacementsGroupedByType(WikipediaLanguage lang) {
-        return toDto(replacementTypeRepository.countReplacementsByType(lang));
+    Collection<KindCount> countReplacementsGroupedByType(WikipediaLanguage lang, String user) {
+        boolean isBot = userRightsService.isBot(lang, user);
+        return toDto(replacementTypeRepository.countReplacementsByType(lang), isBot);
     }
 
     // This mapping from domain to DTO could be done in the Controller instead
     // We do it here to keep the Controller simpler
-    private Collection<KindCount> toDto(Collection<ResultCount<ReplacementType>> counts) {
+    private Collection<KindCount> toDto(Collection<ResultCount<ReplacementType>> counts, boolean isBot) {
         final Map<Byte, KindCount> kindCounts = new TreeMap<>();
         for (ResultCount<ReplacementType> count : counts) {
+            if (!isBot && count.getKey().isForBots()) {
+                continue;
+            }
             byte kindCode = count.getKey().getKind().getCode();
             KindCount kindCount = kindCounts.computeIfAbsent(
                 kindCode,

@@ -23,6 +23,9 @@ public class PageCountController {
     @Operation(summary = "Count the pages to review grouped by type (kind-subtype)")
     @GetMapping(value = "/page/type/count")
     public Collection<KindCount> countReplacementsGroupedByType(@Valid CommonQueryParameters queryParameters) {
-        return pageCountService.countReplacementsGroupedByType(queryParameters.getWikipediaLanguage());
+        return pageCountService.countReplacementsGroupedByType(
+            queryParameters.getWikipediaLanguage(),
+            queryParameters.getUser()
+        );
     }
 }

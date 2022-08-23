@@ -12,6 +12,7 @@ import es.bvalero.replacer.page.index.PageIndexStatus;
 import es.bvalero.replacer.page.removeobsolete.RemoveObsoletePageService;
 import es.bvalero.replacer.repository.PageIndexRepository;
 import es.bvalero.replacer.repository.PageRepository;
+import es.bvalero.replacer.user.UserRightsService;
 import es.bvalero.replacer.wikipedia.WikipediaPageRepository;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -73,6 +74,9 @@ class ReviewNoTypeFinderTest {
 
     @Mock
     private ReviewSectionFinder reviewSectionFinder;
+
+    @Mock
+    private UserRightsService userRightsService;
 
     @InjectMocks
     private ReviewNoTypeFinder pageReviewNoTypeService;

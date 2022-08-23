@@ -9,6 +9,7 @@ import es.bvalero.replacer.page.index.PageIndexResult;
 import es.bvalero.replacer.page.index.PageIndexService;
 import es.bvalero.replacer.page.index.PageIndexStatus;
 import es.bvalero.replacer.repository.*;
+import es.bvalero.replacer.user.UserRightsService;
 import es.bvalero.replacer.wikipedia.WikipediaPageRepository;
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -73,6 +74,9 @@ class ReviewTypeFinderTest {
 
     @Mock
     private ReviewSectionFinder reviewSectionFinder;
+
+    @Mock
+    private UserRightsService userRightsService;
 
     @InjectMocks
     private ReviewTypeFinder pageReviewTypeSubtypeService;
