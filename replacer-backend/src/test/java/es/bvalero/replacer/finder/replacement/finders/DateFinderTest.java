@@ -204,9 +204,9 @@ class DateFinderTest {
     @CsvSource(
         delimiter = '|',
         value = {
-            "en 22 de Agosto de 2022|en 22 de agosto de 2022|el 22 de agosto de 2022|" + DateFinder.SUBTYPE_UPPERCASE,
-            "En Agosto 22, 2022|En 22 de agosto de 2022|El 22 de agosto de 2022|" + DateFinder.SUBTYPE_UNORDERED,
-            "A 2022, Agosto 22|A 22 de agosto de 2022|Al 22 de agosto de 2022|" + DateFinder.SUBTYPE_UNORDERED,
+            "en 22 de Agosto de 2022|el 22 de agosto de 2022|en 22 de agosto de 2022|" + DateFinder.SUBTYPE_UPPERCASE,
+            "En Agosto 22, 2022|El 22 de agosto de 2022|En 22 de agosto de 2022|" + DateFinder.SUBTYPE_UNORDERED,
+            "A 2022, Agosto 22|Al 22 de agosto de 2022|A 22 de agosto de 2022|" + DateFinder.SUBTYPE_UNORDERED,
         }
     )
     void testNotValidDateWithWrongArticle(String date, String expected1, String expected2, String subtype) {

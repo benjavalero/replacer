@@ -478,8 +478,8 @@ public class DateFinder implements ReplacementFinder {
                 final String fixedDateWithArticle = String.format("%s %s", alternative, fixedDate);
                 suggestions =
                     List.of(
-                        Suggestion.ofNoComment(fixedDateWithoutArticle),
-                        Suggestion.of(fixedDateWithArticle, "con artículo")
+                        Suggestion.of(fixedDateWithArticle, "con artículo"),
+                        Suggestion.of(fixedDateWithoutArticle, "sin artículo")
                     );
             }
         }
