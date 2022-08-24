@@ -483,7 +483,7 @@ public class DateFinder implements ReplacementFinder {
 
     // Return the appropriate article for the date
     private List<String> getFixArticle(WikipediaPage page, int start) {
-        final String preceding = FinderUtils.findPrecedingWord(page.getContent(), start);
+        final String preceding = FinderUtils.findWordBefore(page.getContent(), start);
         final WikipediaLanguage lang = page.getId().getLang();
         if (preceding != null) {
             final String precedingAlternative = this.langArticles.get(lang).get(preceding);

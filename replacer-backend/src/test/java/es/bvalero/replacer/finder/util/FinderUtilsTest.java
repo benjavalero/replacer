@@ -57,4 +57,20 @@ class FinderUtilsTest {
         assertEquals("Text", FinderUtils.getFirstWord(" Text, of text"));
         assertEquals("11", FinderUtils.getFirstWord("11 texts"));
     }
+
+    @Test
+    void testFindWordBefore() {
+        assertEquals("Hola", FinderUtils.findWordBefore("Hola mundo", 5));
+        assertNull(FinderUtils.findWordBefore("Hola", 0));
+        assertNull(FinderUtils.findWordBefore("HolaXmundo", 5));
+        assertNull(FinderUtils.findWordBefore("Hola  mundo", 6));
+    }
+
+    @Test
+    void testFindWordAfter() {
+        assertEquals("mundo", FinderUtils.findWordAfter("Hola mundo", 4));
+        assertNull(FinderUtils.findWordAfter("Hola", 4));
+        assertNull(FinderUtils.findWordAfter("HolaXmundo", 4));
+        assertNull(FinderUtils.findWordAfter("Hola  mundo", 4));
+    }
 }

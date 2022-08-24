@@ -138,22 +138,40 @@ public class FinderUtils {
         return false;
     }
 
-    // Find the preceding word
     @Nullable
-    public String findPrecedingWord(String text, int start) {
-        if (start >= 2) {
-            int firstLetter = -1;
-            for (int i = start - 2; i >= 0; i--) {
-                final char ch = text.charAt(i);
-                if (Character.isLetter(ch)) {
-                    firstLetter = i;
-                } else {
-                    break;
-                }
-            }
-            return firstLetter >= 0 ? text.substring(firstLetter, start - 1) : null;
+    public String findWordAfter(String text, int start) {
+        if (text.length() - start < 2 || Character.isLetterOrDigit(text.charAt(start))) {
+            return null;
         }
-        return null;
+
+        int lastLetter = -1;
+        for (int i = start + 1; i < text.length(); i++) {
+            final char ch = text.charAt(i);
+            if (Character.isLetterOrDigit(ch)) {
+                lastLetter = i;
+            } else {
+                break;
+            }
+        }
+        return lastLetter >= 0 ? text.substring(start + 1, lastLetter + 1) : null;
+    }
+
+    @Nullable
+    public String findWordBefore(String text, int start) {
+        if (start < 2 || Character.isLetterOrDigit(text.charAt(start - 1))) {
+            return null;
+        }
+
+        int firstLetter = -1;
+        for (int i = start - 2; i >= 0; i--) {
+            final char ch = text.charAt(i);
+            if (Character.isLetterOrDigit(ch)) {
+                firstLetter = i;
+            } else {
+                break;
+            }
+        }
+        return firstLetter >= 0 ? text.substring(firstLetter, start - 1) : null;
     }
 
     private String getPageSnippet(WikipediaPage page, int start, int end) {

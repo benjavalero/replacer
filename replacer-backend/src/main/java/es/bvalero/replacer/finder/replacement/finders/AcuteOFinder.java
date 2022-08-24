@@ -12,8 +12,6 @@ import es.bvalero.replacer.finder.util.LinearMatchResult;
 import java.util.Collections;
 import java.util.List;
 import java.util.regex.MatchResult;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
 /**
@@ -40,8 +38,8 @@ public class AcuteOFinder implements ReplacementFinder {
         final int startAcuteO = text.indexOf(SEARCH_ACUTE_O, start);
         if (startAcuteO >= 0) {
             final int endAcuteO = startAcuteO + SEARCH_ACUTE_O.length();
-            final String wordBefore = findWordBefore(text, startAcuteO);
-            final String wordAfter = findWordAfter(text, endAcuteO);
+            final String wordBefore = FinderUtils.findWordBefore(text, startAcuteO + 1);
+            final String wordAfter = FinderUtils.findWordAfter(text, endAcuteO - 1);
             if (wordBefore == null || wordAfter == null) {
                 return endAcuteO;
             } else {
@@ -78,31 +76,5 @@ public class AcuteOFinder implements ReplacementFinder {
 
     private List<Suggestion> findSuggestions() {
         return Collections.singletonList(Suggestion.ofNoComment(FIX_ACUTE_O));
-    }
-
-    @Nullable
-    private String findWordAfter(String text, int start) {
-        int end;
-        for (end = start; end < text.length(); end++) {
-            final char ch = text.charAt(end);
-            if (!Character.isLetterOrDigit(ch)) {
-                break;
-            }
-        }
-        final String word = text.substring(start, end);
-        return StringUtils.isBlank(word) ? null : word.trim();
-    }
-
-    @Nullable
-    private String findWordBefore(String text, int start) {
-        int end;
-        for (end = start - 1; end >= 0; end--) {
-            final char ch = text.charAt(end);
-            if (!Character.isLetterOrDigit(ch)) {
-                break;
-            }
-        }
-        final String word = text.substring(Math.max(0, end), start);
-        return StringUtils.isBlank(word) ? null : word.trim();
     }
 }
