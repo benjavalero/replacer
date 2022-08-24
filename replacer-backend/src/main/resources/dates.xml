@@ -32,6 +32,6 @@
          so we can take apply contractions or replacements. -->
     <util:map id="dateArticles" map-class="java.util.HashMap"
               key-type="java.lang.String" value-type="java.lang.String">
-        <entry key="es" value="a-al,desde-desde el,de-del,durante-durante el,entre-entre el,en-el,hacia-hacia-el,hasta-hasta el,y-y el"/>
+        <entry key="es" value="a-al,desde-desde el,de-del,durante-durante el,entre-entre el,en-el,hacia-hacia el,hasta-hasta el,y-y el"/>
     </util:map>
 </beans>
