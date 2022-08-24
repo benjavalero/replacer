@@ -2,9 +2,9 @@ package es.bvalero.replacer.finder.immutable.finders;
 
 import es.bvalero.replacer.common.domain.Immutable;
 import es.bvalero.replacer.common.domain.WikipediaPage;
+import es.bvalero.replacer.finder.FinderPriority;
 import es.bvalero.replacer.finder.immutable.ImmutableCheckedFinder;
 import es.bvalero.replacer.finder.immutable.ImmutableFinder;
-import es.bvalero.replacer.finder.immutable.ImmutableFinderPriority;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
 import es.bvalero.replacer.finder.util.LinearMatchResult;
@@ -22,8 +22,8 @@ class TitleFinder extends ImmutableCheckedFinder {
     private static final int MIN_WORD_LENGTH = 4;
 
     @Override
-    public ImmutableFinderPriority getPriority() {
-        return ImmutableFinderPriority.HIGH;
+    public FinderPriority getPriority() {
+        return FinderPriority.HIGH;
     }
 
     @SuppressWarnings("unchecked")

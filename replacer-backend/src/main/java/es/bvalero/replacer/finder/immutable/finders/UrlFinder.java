@@ -4,8 +4,8 @@ import dk.brics.automaton.DatatypesAutomatonProvider;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.common.domain.WikipediaPage;
+import es.bvalero.replacer.finder.FinderPriority;
 import es.bvalero.replacer.finder.immutable.ImmutableFinder;
-import es.bvalero.replacer.finder.immutable.ImmutableFinderPriority;
 import es.bvalero.replacer.finder.util.AutomatonMatchFinder;
 import java.util.regex.MatchResult;
 import org.springframework.stereotype.Component;
@@ -30,7 +30,7 @@ class UrlFinder implements ImmutableFinder {
     }
 
     @Override
-    public ImmutableFinderPriority getPriority() {
-        return ImmutableFinderPriority.MEDIUM;
+    public FinderPriority getPriority() {
+        return FinderPriority.MEDIUM;
     }
 }

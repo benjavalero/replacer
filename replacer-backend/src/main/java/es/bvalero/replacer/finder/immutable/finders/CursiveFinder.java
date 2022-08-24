@@ -1,8 +1,8 @@
 package es.bvalero.replacer.finder.immutable.finders;
 
 import es.bvalero.replacer.common.domain.WikipediaPage;
+import es.bvalero.replacer.finder.FinderPriority;
 import es.bvalero.replacer.finder.immutable.ImmutableCheckedFinder;
-import es.bvalero.replacer.finder.immutable.ImmutableFinderPriority;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
 import es.bvalero.replacer.finder.util.LinearMatchResult;
 import java.util.List;
@@ -18,8 +18,8 @@ import org.springframework.stereotype.Component;
 class CursiveFinder extends ImmutableCheckedFinder {
 
     @Override
-    public ImmutableFinderPriority getPriority() {
-        return ImmutableFinderPriority.LOW;
+    public FinderPriority getPriority() {
+        return FinderPriority.LOW;
     }
 
     @Override

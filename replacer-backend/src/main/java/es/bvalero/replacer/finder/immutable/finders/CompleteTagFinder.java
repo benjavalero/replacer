@@ -1,8 +1,8 @@
 package es.bvalero.replacer.finder.immutable.finders;
 
 import es.bvalero.replacer.common.domain.WikipediaPage;
+import es.bvalero.replacer.finder.FinderPriority;
 import es.bvalero.replacer.finder.immutable.ImmutableCheckedFinder;
-import es.bvalero.replacer.finder.immutable.ImmutableFinderPriority;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
 import es.bvalero.replacer.finder.util.LinearMatchResult;
@@ -23,8 +23,8 @@ class CompleteTagFinder extends ImmutableCheckedFinder {
     private Set<String> completeTags;
 
     @Override
-    public ImmutableFinderPriority getPriority() {
-        return ImmutableFinderPriority.VERY_HIGH;
+    public FinderPriority getPriority() {
+        return FinderPriority.VERY_HIGH;
     }
 
     @Override

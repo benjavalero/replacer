@@ -7,8 +7,8 @@ import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.common.domain.Immutable;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.domain.WikipediaPage;
+import es.bvalero.replacer.finder.FinderPriority;
 import es.bvalero.replacer.finder.immutable.ImmutableFinder;
-import es.bvalero.replacer.finder.immutable.ImmutableFinderPriority;
 import es.bvalero.replacer.finder.listing.MisspellingSuggestion;
 import es.bvalero.replacer.finder.listing.SimpleMisspelling;
 import es.bvalero.replacer.finder.listing.load.SimpleMisspellingLoader;
@@ -148,8 +148,8 @@ public class UppercaseFinder implements ImmutableFinder, PropertyChangeListener 
     }
 
     @Override
-    public ImmutableFinderPriority getPriority() {
-        return ImmutableFinderPriority.MEDIUM;
+    public FinderPriority getPriority() {
+        return FinderPriority.MEDIUM;
     }
 
     @Override

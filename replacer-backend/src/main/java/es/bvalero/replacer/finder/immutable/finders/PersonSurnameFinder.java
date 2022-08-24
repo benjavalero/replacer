@@ -5,8 +5,8 @@ import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.common.domain.Immutable;
 import es.bvalero.replacer.common.domain.WikipediaPage;
+import es.bvalero.replacer.finder.FinderPriority;
 import es.bvalero.replacer.finder.immutable.ImmutableFinder;
-import es.bvalero.replacer.finder.immutable.ImmutableFinderPriority;
 import es.bvalero.replacer.finder.util.AutomatonMatchFinder;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import java.util.HashSet;
@@ -32,9 +32,9 @@ class PersonSurnameFinder implements ImmutableFinder {
     private final Set<String> completeSurnames = new HashSet<>();
 
     @Override
-    public ImmutableFinderPriority getPriority() {
+    public FinderPriority getPriority() {
         // It should be High for number of matches but it is quite slow so it is better to have lower priority
-        return ImmutableFinderPriority.LOW;
+        return FinderPriority.LOW;
     }
 
     @PostConstruct

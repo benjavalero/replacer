@@ -4,8 +4,8 @@ import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.common.domain.Immutable;
 import es.bvalero.replacer.common.domain.WikipediaPage;
+import es.bvalero.replacer.finder.FinderPriority;
 import es.bvalero.replacer.finder.immutable.ImmutableFinder;
-import es.bvalero.replacer.finder.immutable.ImmutableFinderPriority;
 import es.bvalero.replacer.finder.util.AutomatonMatchFinder;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import java.util.List;
@@ -26,9 +26,9 @@ class IgnorableTemplateFinder implements ImmutableFinder {
     private List<String> ignorableTemplates;
 
     @Override
-    public ImmutableFinderPriority getPriority() {
+    public FinderPriority getPriority() {
         // It's slow but we are interested in ignoring complete pages
-        return ImmutableFinderPriority.MAX;
+        return FinderPriority.MAX;
     }
 
     @PostConstruct

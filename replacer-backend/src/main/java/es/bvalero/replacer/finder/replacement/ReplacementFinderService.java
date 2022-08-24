@@ -6,8 +6,10 @@ import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.Finder;
 import es.bvalero.replacer.finder.FinderService;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +24,11 @@ public class ReplacementFinderService implements FinderService<Replacement> {
 
     @Autowired
     private List<ReplacementFinder> replacementFinders;
+
+    @PostConstruct
+    public void sortReplacementFinders() {
+        Collections.sort(replacementFinders);
+    }
 
     @Override
     public Iterable<Finder<Replacement>> getFinders() {

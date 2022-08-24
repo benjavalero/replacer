@@ -4,8 +4,8 @@ import static es.bvalero.replacer.finder.util.LinkUtils.END_LINK;
 import static es.bvalero.replacer.finder.util.LinkUtils.START_LINK;
 
 import es.bvalero.replacer.common.domain.WikipediaPage;
+import es.bvalero.replacer.finder.FinderPriority;
 import es.bvalero.replacer.finder.immutable.ImmutableCheckedFinder;
-import es.bvalero.replacer.finder.immutable.ImmutableFinderPriority;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.LinearMatchResult;
 import es.bvalero.replacer.finder.util.LinkUtils;
@@ -50,8 +50,8 @@ class LinkFinder extends ImmutableCheckedFinder {
     }
 
     @Override
-    public ImmutableFinderPriority getPriority() {
-        return ImmutableFinderPriority.LOW;
+    public FinderPriority getPriority() {
+        return FinderPriority.LOW;
     }
 
     @Override

@@ -1,11 +1,11 @@
-package es.bvalero.replacer.finder.immutable;
+package es.bvalero.replacer.finder;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum ImmutableFinderPriority {
+public enum FinderPriority {
     NONE(0),
     LOW(2),
     MEDIUM(5),

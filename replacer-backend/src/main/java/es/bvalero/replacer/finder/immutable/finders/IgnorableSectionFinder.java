@@ -1,8 +1,8 @@
 package es.bvalero.replacer.finder.immutable.finders;
 
 import es.bvalero.replacer.common.domain.WikipediaPage;
+import es.bvalero.replacer.finder.FinderPriority;
 import es.bvalero.replacer.finder.immutable.ImmutableFinder;
-import es.bvalero.replacer.finder.immutable.ImmutableFinderPriority;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
 import es.bvalero.replacer.finder.util.LinearMatchResult;
 import java.util.List;
@@ -19,8 +19,8 @@ class IgnorableSectionFinder implements ImmutableFinder {
     private Set<String> ignorableSections;
 
     @Override
-    public ImmutableFinderPriority getPriority() {
-        return ImmutableFinderPriority.HIGH;
+    public FinderPriority getPriority() {
+        return FinderPriority.HIGH;
     }
 
     @Override

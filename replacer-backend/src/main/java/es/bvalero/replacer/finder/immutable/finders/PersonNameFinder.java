@@ -2,8 +2,8 @@ package es.bvalero.replacer.finder.immutable.finders;
 
 import es.bvalero.replacer.common.domain.Immutable;
 import es.bvalero.replacer.common.domain.WikipediaPage;
+import es.bvalero.replacer.finder.FinderPriority;
 import es.bvalero.replacer.finder.immutable.ImmutableFinder;
-import es.bvalero.replacer.finder.immutable.ImmutableFinderPriority;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
 import es.bvalero.replacer.finder.util.LinearMatchResult;
@@ -29,9 +29,9 @@ class PersonNameFinder implements ImmutableFinder {
     private Set<String> personNames;
 
     @Override
-    public ImmutableFinderPriority getPriority() {
+    public FinderPriority getPriority() {
         // It should be High for number of matches but it is slow so it is better to have lower priority
-        return ImmutableFinderPriority.MEDIUM;
+        return FinderPriority.MEDIUM;
     }
 
     @SuppressWarnings("unchecked")

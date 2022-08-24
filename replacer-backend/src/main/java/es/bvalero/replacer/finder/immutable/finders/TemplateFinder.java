@@ -2,8 +2,8 @@ package es.bvalero.replacer.finder.immutable.finders;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.domain.WikipediaPage;
+import es.bvalero.replacer.finder.FinderPriority;
 import es.bvalero.replacer.finder.immutable.ImmutableFinder;
-import es.bvalero.replacer.finder.immutable.ImmutableFinderPriority;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.LinearMatchResult;
 import es.bvalero.replacer.finder.util.TemplateUtils;
@@ -74,8 +74,8 @@ class TemplateFinder implements ImmutableFinder {
     }
 
     @Override
-    public ImmutableFinderPriority getPriority() {
-        return ImmutableFinderPriority.VERY_HIGH;
+    public FinderPriority getPriority() {
+        return FinderPriority.VERY_HIGH;
     }
 
     @Override

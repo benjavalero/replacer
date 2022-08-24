@@ -7,7 +7,7 @@ import java.util.regex.MatchResult;
 import org.apache.commons.collections4.IterableUtils;
 import org.jetbrains.annotations.TestOnly;
 
-public interface Finder<T extends FinderResult> {
+public interface Finder<T extends FinderResult> extends Comparable<Finder<T>> {
     // This method returns an Iterable in case we want to retrieve the results one-by-one,
     // for instance to improve performance.
     default Iterable<T> find(WikipediaPage page) {
@@ -45,5 +45,13 @@ public interface Finder<T extends FinderResult> {
         return IterableUtils.toList(
             IterableUtils.filteredIterable(this.find(WikipediaPage.of(text)), m -> m.validate(text))
         );
+    }
+
+    default FinderPriority getPriority() {
+        return FinderPriority.NONE;
+    }
+
+    default int compareTo(Finder finder) {
+        return Integer.compare(finder.getPriority().getValue(), this.getPriority().getValue());
     }
 }

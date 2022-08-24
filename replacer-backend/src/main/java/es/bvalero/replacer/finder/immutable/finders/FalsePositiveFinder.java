@@ -6,8 +6,8 @@ import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.domain.WikipediaPage;
+import es.bvalero.replacer.finder.FinderPriority;
 import es.bvalero.replacer.finder.immutable.ImmutableFinder;
-import es.bvalero.replacer.finder.immutable.ImmutableFinderPriority;
 import es.bvalero.replacer.finder.listing.FalsePositive;
 import es.bvalero.replacer.finder.listing.load.FalsePositiveLoader;
 import es.bvalero.replacer.finder.util.AutomatonMatchFinder;
@@ -86,9 +86,9 @@ class FalsePositiveFinder implements ImmutableFinder, PropertyChangeListener {
     }
 
     @Override
-    public ImmutableFinderPriority getPriority() {
+    public FinderPriority getPriority() {
         // It should be High for number of matches but it is SO slow that it is better to be the last one
-        return ImmutableFinderPriority.NONE;
+        return FinderPriority.NONE;
     }
 
     @Override
