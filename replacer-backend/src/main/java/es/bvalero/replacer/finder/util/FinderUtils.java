@@ -27,7 +27,7 @@ public class FinderUtils {
         return str.toLowerCase(LOCALE_ES);
     }
 
-    private String toUpperCase(String str) {
+    public String toUpperCase(String str) {
         return str.toUpperCase(LOCALE_ES);
     }
 

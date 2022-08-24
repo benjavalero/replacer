@@ -26,6 +26,8 @@ public class ReplacementType {
         "ó entre palabras"
     );
 
+    public static final ReplacementType CENTURY = ReplacementType.of(ReplacementKind.COMPOSED, "Siglo sin versalitas");
+
     private static final int MAX_SUBTYPE_LENGTH = 100; // Constrained by the database
 
     @NonNull
