@@ -25,12 +25,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class DateFinder implements ReplacementFinder {
 
-    static final String SUBTYPE_DOT_YEAR = "Año con punto";
-    static final String SUBTYPE_INCOMPLETE = "Fecha incompleta";
-    static final String SUBTYPE_LEADING_ZERO = "Día con cero";
-    static final String SUBTYPE_UPPERCASE = "Mes en mayúscula";
-    static final String SUBTYPE_UNORDERED = "Fecha desordenada";
-
     @Resource
     private Map<String, String> monthNames;
 
@@ -264,29 +258,29 @@ public class DateFinder implements ReplacementFinder {
         final WikipediaLanguage lang = page.getId().getLang();
         final String date = match.group();
         final List<String> tokens = Arrays.stream(date.split(" ")).collect(Collectors.toCollection(LinkedList::new));
-        String subtype = SUBTYPE_INCOMPLETE; // Default value
+        ReplacementType type = ReplacementType.DATE_INCOMPLETE; // Default value
 
         // Fix year with dot
         final String year = tokens.get(tokens.size() - 1);
         if (year.contains(".")) {
             final String fixedYear = fixYearWithDot(year);
             tokens.set(tokens.size() - 1, fixedYear);
-            subtype = SUBTYPE_DOT_YEAR;
+            type = ReplacementType.DATE_DOT_YEAR;
         }
 
         // Add/fix missing prepositions
         final String defaultPreposition = getPrepositionDefault(lang);
         if (!isPreposition(tokens.get(1), lang)) {
             tokens.add(1, defaultPreposition);
-            subtype = SUBTYPE_INCOMPLETE;
+            type = ReplacementType.DATE_INCOMPLETE;
         } else if (!isPrepositionDefault(tokens.get(1), lang)) {
             tokens.set(1, defaultPreposition);
-            subtype = SUBTYPE_INCOMPLETE;
+            type = ReplacementType.DATE_INCOMPLETE;
         }
 
         if (!isPreposition(tokens.get(3), lang)) {
             tokens.add(3, defaultPreposition);
-            subtype = SUBTYPE_INCOMPLETE;
+            type = ReplacementType.DATE_INCOMPLETE;
         }
 
         // Fix leading zero
@@ -294,7 +288,7 @@ public class DateFinder implements ReplacementFinder {
         if (day.startsWith("0")) {
             final String fixedDay = fixLeadingZero(day);
             tokens.set(0, fixedDay);
-            subtype = SUBTYPE_LEADING_ZERO;
+            type = ReplacementType.DATE_LEADING_ZERO;
         }
 
         // Fix uppercase
@@ -302,35 +296,35 @@ public class DateFinder implements ReplacementFinder {
         if (FinderUtils.startsWithUpperCase(month)) {
             final String fixedMonth = FinderUtils.setFirstLowerCase(month);
             tokens.set(2, fixedMonth);
-            subtype = SUBTYPE_UPPERCASE;
+            type = ReplacementType.DATE_UPPERCASE;
         }
 
         // Fix september
         tokens.set(2, fixSeptember(tokens.get(2), lang));
 
         final String fixedDate = StringUtils.join(tokens, " ");
-        return buildDateReplacement(page, subtype, match.start(), date, fixedDate);
+        return buildDateReplacement(page, type, match.start(), date, fixedDate);
     }
 
     private Replacement convertMonthYear(MatchResult match, WikipediaPage page) {
         final String date = match.group();
         final WikipediaLanguage lang = page.getId().getLang();
         final List<String> tokens = Arrays.stream(date.split(" ")).collect(Collectors.toCollection(LinkedList::new));
-        String subtype = SUBTYPE_INCOMPLETE; // Default value
+        ReplacementType type = ReplacementType.DATE_INCOMPLETE; // Default value
 
         // Fix year with dot
         final String year = tokens.get(tokens.size() - 1);
         if (year.contains(".")) {
             final String fixedYear = fixYearWithDot(year);
             tokens.set(tokens.size() - 1, fixedYear);
-            subtype = SUBTYPE_DOT_YEAR;
+            type = ReplacementType.DATE_DOT_YEAR;
         }
 
         // Add/fix missing prepositions
         final String defaultPreposition = getPrepositionDefault(lang);
         if (!isPreposition(tokens.get(2), lang)) {
             tokens.add(2, defaultPreposition);
-            subtype = SUBTYPE_INCOMPLETE;
+            type = ReplacementType.DATE_INCOMPLETE;
         }
 
         // Fix uppercase
@@ -338,14 +332,14 @@ public class DateFinder implements ReplacementFinder {
         if (FinderUtils.startsWithUpperCase(month)) {
             final String fixedMonth = FinderUtils.setFirstLowerCase(month);
             tokens.set(1, fixedMonth);
-            subtype = SUBTYPE_UPPERCASE;
+            type = ReplacementType.DATE_UPPERCASE;
         }
 
         // Fix september
         tokens.set(1, fixSeptember(tokens.get(1), lang));
 
         final String fixedDate = StringUtils.join(tokens, " ");
-        return buildDateReplacement(page, subtype, match.start(), date, fixedDate);
+        return buildDateReplacement(page, type, match.start(), date, fixedDate);
     }
 
     private Replacement convertMonthDayYear(MatchResult match, WikipediaPage page) {
@@ -390,7 +384,7 @@ public class DateFinder implements ReplacementFinder {
         Collections.swap(tokens, 0, 2);
 
         final String fixedDate = StringUtils.join(tokens, " ");
-        return buildDateReplacement(page, SUBTYPE_UNORDERED, match.start(), date, fixedDate);
+        return buildDateReplacement(page, ReplacementType.DATE_UNORDERED, match.start(), date, fixedDate);
     }
 
     private Replacement convertYearMonthDay(MatchResult match, WikipediaPage page) {
@@ -432,7 +426,7 @@ public class DateFinder implements ReplacementFinder {
         Collections.swap(tokens, 0, 4);
 
         final String fixedDate = StringUtils.join(tokens, " ");
-        return buildDateReplacement(page, SUBTYPE_UNORDERED, match.start(), date, fixedDate);
+        return buildDateReplacement(page, ReplacementType.DATE_UNORDERED, match.start(), date, fixedDate);
     }
 
     private String fixYearWithDot(String year) {
@@ -455,7 +449,7 @@ public class DateFinder implements ReplacementFinder {
 
     private Replacement buildDateReplacement(
         WikipediaPage page,
-        String subtype,
+        ReplacementType type,
         int originalStart,
         String originalDate,
         String fixedDate
@@ -484,13 +478,7 @@ public class DateFinder implements ReplacementFinder {
             }
         }
 
-        return Replacement
-            .builder()
-            .type(ReplacementType.of(ReplacementKind.DATE, subtype))
-            .start(start)
-            .text(text)
-            .suggestions(suggestions)
-            .build();
+        return Replacement.builder().type(type).start(start).text(text).suggestions(suggestions).build();
     }
 
     // Return the appropriate article for the date

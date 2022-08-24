@@ -1,6 +1,5 @@
 package es.bvalero.replacer.common.domain;
 
-import java.util.Objects;
 import lombok.Value;
 import lombok.experimental.NonFinal;
 import org.apache.commons.lang3.StringUtils;
@@ -11,6 +10,21 @@ import org.springframework.lang.Nullable;
 @NonFinal
 @Value(staticConstructor = "of")
 public class ReplacementType {
+
+    public static final ReplacementType DATE_DOT_YEAR = ReplacementType.of(ReplacementKind.DATE, "Año con punto");
+    public static final ReplacementType DATE_INCOMPLETE = ReplacementType.of(ReplacementKind.DATE, "Fecha incompleta");
+    public static final ReplacementType DATE_LEADING_ZERO = ReplacementType.of(ReplacementKind.DATE, "Día con cero");
+    public static final ReplacementType DATE_UPPERCASE = ReplacementType.of(ReplacementKind.DATE, "Mes en mayúscula");
+    public static final ReplacementType DATE_UNORDERED = ReplacementType.of(ReplacementKind.DATE, "Fecha desordenada");
+
+    public static final ReplacementType ACUTE_O_NUMBERS = ReplacementType.of(
+        ReplacementKind.COMPOSED,
+        "ó entre números"
+    );
+    public static final ReplacementType ACUTE_O_WORDS = ReplacementType.of(
+        ReplacementKind.COMPOSED,
+        "ó entre palabras"
+    );
 
     private static final int MAX_SUBTYPE_LENGTH = 100; // Constrained by the database
 

@@ -13,19 +13,24 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 class AcuteOFinderTest {
 
+    // The CSV source doesn't allow the value to be non-constant
+    // even if we take the subtype from the replacement type constants
+    private static final String SUBTYPE_ACUTE_O_NUMBERS = "ó entre números";
+    private static final String SUBTYPE_ACUTE_O_WORDS = "ó entre palabras";
+
     private final AcuteOFinder acuteOFinder = new AcuteOFinder();
 
     @ParameterizedTest
     @CsvSource(
         value = {
-            "1 ó 2," + AcuteOFinder.SUBTYPE_ACUTE_O_NUMBERS,
-            "12 ó 3," + AcuteOFinder.SUBTYPE_ACUTE_O_NUMBERS,
-            "1 ó 23," + AcuteOFinder.SUBTYPE_ACUTE_O_NUMBERS,
-            "uno ó 2," + AcuteOFinder.SUBTYPE_ACUTE_O_WORDS,
-            "1 ó dos," + AcuteOFinder.SUBTYPE_ACUTE_O_WORDS,
-            "uno ó dos," + AcuteOFinder.SUBTYPE_ACUTE_O_WORDS,
-            "m2 ó 23," + AcuteOFinder.SUBTYPE_ACUTE_O_WORDS,
-            "En una ó dos veces," + AcuteOFinder.SUBTYPE_ACUTE_O_WORDS,
+            "1 ó 2," + SUBTYPE_ACUTE_O_NUMBERS,
+            "12 ó 3," + SUBTYPE_ACUTE_O_NUMBERS,
+            "1 ó 23," + SUBTYPE_ACUTE_O_NUMBERS,
+            "uno ó 2," + SUBTYPE_ACUTE_O_WORDS,
+            "1 ó dos," + SUBTYPE_ACUTE_O_WORDS,
+            "uno ó dos," + SUBTYPE_ACUTE_O_WORDS,
+            "m2 ó 23," + SUBTYPE_ACUTE_O_WORDS,
+            "En una ó dos veces," + SUBTYPE_ACUTE_O_WORDS,
         }
     )
     void testAcuteO(String text, String subtype) {
@@ -49,7 +54,7 @@ class AcuteOFinderTest {
 
         Replacement rep = replacements.get(0);
         assertEquals(ReplacementKind.COMPOSED, rep.getType().getKind());
-        assertEquals(AcuteOFinder.SUBTYPE_ACUTE_O_WORDS, rep.getType().getSubtype());
+        assertEquals(SUBTYPE_ACUTE_O_WORDS, rep.getType().getSubtype());
         assertEquals(AcuteOFinder.ACUTE_O, rep.getText());
         assertEquals(7, rep.getStart());
         assertEquals(AcuteOFinder.ACUTE_O, rep.getSuggestions().get(0).getText());

@@ -1,7 +1,6 @@
 package es.bvalero.replacer.finder.replacement.finders;
 
 import es.bvalero.replacer.common.domain.Replacement;
-import es.bvalero.replacer.common.domain.ReplacementKind;
 import es.bvalero.replacer.common.domain.ReplacementType;
 import es.bvalero.replacer.common.domain.Suggestion;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
@@ -23,8 +22,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class AcuteOFinder implements ReplacementFinder {
 
-    static final String SUBTYPE_ACUTE_O_NUMBERS = "ó entre números";
-    static final String SUBTYPE_ACUTE_O_WORDS = "ó entre palabras";
     static final String SEARCH_ACUTE_O = " ó ";
     static final String ACUTE_O = "ó";
     static final String FIX_ACUTE_O = "o";
@@ -62,21 +59,21 @@ public class AcuteOFinder implements ReplacementFinder {
     public Replacement convert(MatchResult match, WikipediaPage page) {
         return Replacement
             .builder()
-            .type(ReplacementType.of(ReplacementKind.COMPOSED, findSubtype(match.group())))
+            .type(findReplacementType(match.group()))
             .start(match.start() + match.group().indexOf(SEARCH_ACUTE_O) + 1)
             .text(ACUTE_O)
             .suggestions(findSuggestions())
             .build();
     }
 
-    private String findSubtype(String text) {
+    private ReplacementType findReplacementType(String text) {
         final int pos = text.indexOf(SEARCH_ACUTE_O);
         return (
                 FinderUtils.isNumber(text.substring(0, pos)) &&
                 FinderUtils.isNumber(text.substring(pos + SEARCH_ACUTE_O.length()))
             )
-            ? SUBTYPE_ACUTE_O_NUMBERS
-            : SUBTYPE_ACUTE_O_WORDS;
+            ? ReplacementType.ACUTE_O_NUMBERS
+            : ReplacementType.ACUTE_O_WORDS;
     }
 
     private List<Suggestion> findSuggestions() {
