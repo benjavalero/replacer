@@ -33,5 +33,6 @@
     <util:map id="dateArticles" map-class="java.util.HashMap"
               key-type="java.lang.String" value-type="java.lang.String">
         <entry key="es" value="a-al,desde-desde el,de-del,durante-durante el,entre-entre el,en-el,hacia-hacia el,hasta-hasta el,y-y el"/>
+        <entry key="gl" value="a-ó,desde-dende o,de-do,durante-durante o,entre-entre o,en-o,cara-cara o,ata-ata o,e-e o" />
     </util:map>
 </beans>
