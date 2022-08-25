@@ -1,5 +1,8 @@
 # Versions
 
+## 2.20.1 (??)
+- Fix: only apply an immutable if it contains the replacement (not intersects)
+
 ## 2.20.0 (25 Aug 2022)
 - Revert "Count replacements by type without grouping by page"
 - Instead of a date subtype we add the dates with the article fixed as a new suggestion

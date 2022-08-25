@@ -269,7 +269,8 @@ class PageReplacementFinderTest {
 
         Collection<Replacement> replacements = pageReplacementFinder.findReplacements(buildFakePage(text));
 
-        assertEquals(Collections.emptySet(), new HashSet<>(replacements));
+        Collection<Replacement> expected = List.of(replacement);
+        assertEquals(new HashSet<>(expected), new HashSet<>(replacements));
     }
 
     @Test

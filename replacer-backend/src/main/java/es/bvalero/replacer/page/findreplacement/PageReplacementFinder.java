@@ -74,7 +74,7 @@ public class PageReplacementFinder {
         }
 
         for (Immutable immutable : immutableFinderService.findIterable(page)) {
-            resultList.removeIf(immutable::intersects);
+            resultList.removeIf(immutable::contains);
 
             // No need to continue finding the immutables if there are no results
             if (resultList.isEmpty()) {
