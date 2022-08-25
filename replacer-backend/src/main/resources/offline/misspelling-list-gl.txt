@@ -13492,8 +13492,6 @@
  venas||veas
  venada||arroutada
  venadas||arroutadas
- vencello||birrio ou cirrio (se é a ave), vencello (é correcto se equivale a 'vínculo')
- vencellos||birrios o cirrios (se son aves), vencellos (é correcto se equivale a 'vínculo')
  veneno||veleno
  venenos||velenos
  venga||vinga

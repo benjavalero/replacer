@@ -775,8 +775,8 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  alrrededor||alrededor
  alrrededores||alrededores
  als||las, alas
- altai||Altái
- altái|cs|Altái
+ altai||altái (idioma; grupo étnico), Altái (sujeto federal de Rusia)
+ altái|cs|Altái (sujeto federal de Rusia), altái (idioma; grupo étnico)
  áltamente||altamente
  altepetl||altépetl
  alteracion||alteración
@@ -10223,7 +10223,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  hibridizó||hibridó
  hibrido||híbrido (adjetivo), hibridó (verbo, 3.ª persona), hibrido (verbo, 1.ª persona)
  hibridos||híbridos (adjetivo)
- hicistes||hiciste
+ hicistes||hiciste (tú), hicisteis (vosotros/as)
  hidalguia||hidalguía
  hidratacion||hidratación
  hidraulica||hidráulica
@@ -12532,7 +12532,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  maritimo||marítimo
  maritimos||marítimos
  mariuana||marihuana, mariguana
- marketing||márquetin (adaptación del anglicismo; se puede usar en reemplazo siempre), mercadotecnia (depende del contexto), mercadeo (depende del contexto)
+ márketing||''marketing'' (en cursivas y sin tilde)
  marmarica||marmárica
  marmaricas||marmáricas
  marmarico||marmárico
@@ -13748,7 +13748,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  nordoeste||noroeste
  normacion||normación
  normalizacion||normalización
- nororeste||noreste
+ nororeste||noreste, noroeste
  norteamerica||Norteamérica
  norteamérica|cs|Norteamérica
  nosografia||nosografía
@@ -13930,8 +13930,6 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  oceános||océanos
  ochenton||ochentón
  ochentas||ochenta (las décadas nunca van en plural)
- ochío||hochío
- ochíos||hochíos
  ochos||ocho (número, normalmente en singular), ochos (uso extraño del número, en plural)
  ocila||oscila
  ocilaba||oscilaba
@@ -15785,7 +15783,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  prevensión||prevención
  preveyendo||previendo
  preveyéndose||previéndose
- preveyó||previó
+ preveyó||previó (conjugación del verbo «prever»), proveyó (conjugación del verbo «proveer»)
  previ||preví
  pricionera||prisionera
  pricioneras||prisioneras
@@ -16496,6 +16494,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  ràpidos||rápidos
  rappel||rapel, rápel
  rappels||rapeles, rápeles
+ rascacielo||rascacielos (es igual en singular y en plural)
  rascon||rascón
  ratafia||ratafía
  ratafias||ratafías
@@ -19458,6 +19457,8 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  tuviesemos||tuviésemos
  tuvó||tuvo
  tuxpam||Túxpam
+ tv|cs|TV (abreviatura de «televisión»)
+ Tv|cs|TV (abreviatura de «televisión»)
  tw|cs|TW
  tweet||tuit, tuitear
  tweetera||tuitera
