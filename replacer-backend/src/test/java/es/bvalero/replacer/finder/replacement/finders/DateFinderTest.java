@@ -181,26 +181,15 @@ class DateFinderTest {
     }
 
     @ParameterizedTest
-    @CsvSource(
-        {
-            "en 22 de agosto de 2022, el 22 de agosto de 2022, " + SUBTYPE_INCOMPLETE,
-            "En 22 de agosto de 2022, El 22 de agosto de 2022, " + SUBTYPE_INCOMPLETE,
+    @ValueSource(
+        strings = {
+            "el 15 de agosto del 2019",
+            "El 15 de setiembre de 2020",
+            "por 22 de agosto de 2022",
+            "en 22 de agosto de 2022",
+            "En 22 de agosto de 2022",
         }
     )
-    void testValidDateWithWrongArticle(String date, String expected, String subtype) {
-        List<Replacement> replacements = dateFinder.findList(date);
-
-        assertEquals(1, replacements.size());
-        assertEquals(date, replacements.get(0).getText());
-        // For valid dates with offer the alternative with article and the original one
-        assertEquals(2, replacements.get(0).getSuggestions().size());
-        assertEquals(date, replacements.get(0).getSuggestions().get(0).getText());
-        assertEquals(expected, replacements.get(0).getSuggestions().get(1).getText());
-        assertEquals(subtype, replacements.get(0).getType().getSubtype());
-    }
-
-    @ParameterizedTest
-    @ValueSource(strings = { "el 15 de agosto del 2019", "El 15 de setiembre de 2020", "por 22 de agosto de 2022" })
     void testValidDateWithValidArticle(String date) {
         List<Replacement> replacements = dateFinder.findList(date);
 

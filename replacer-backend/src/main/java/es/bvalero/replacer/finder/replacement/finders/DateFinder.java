@@ -216,8 +216,7 @@ public class DateFinder implements ReplacementFinder {
             isPrepositionDefault(tokens[1], lang) &&
             FinderUtils.startsWithLowerCase(tokens[2]) &&
             isPreposition(tokens[3], lang) &&
-            tokens[4].length() == 4 &&
-            !isPrecededByArticleToBeFixed(page, match.start())
+            tokens[4].length() == 4
         );
     }
 
