@@ -103,7 +103,9 @@ class ReviewSaveService {
             .filter(r -> r.getType().getKind() != ReplacementKind.CUSTOM)
             .map(this::mapReviewedReplacement)
             .collect(Collectors.toUnmodifiableList());
-        replacementTypeRepository.updateReviewer(usualToReview);
+        if (!usualToReview.isEmpty()) {
+            replacementTypeRepository.updateReviewer(usualToReview);
+        }
     }
 
     private void markCustomAsReviewed(ReviewedReplacement reviewed) {
