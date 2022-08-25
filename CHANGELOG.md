@@ -4,7 +4,9 @@
 - Revert "Count replacements by type without grouping by page"
 - Instead of a date subtype we add the dates with the article fixed as a new suggestion
 - Prepare the replacement types so some could be only available for bot users
-- Feature: new replacement for centuries without small caps
+- New replacement kind for style replacements
+- Move _o acute_ replacements from composed to style kind
+- Feature: new style replacement for centuries without small caps
 
 ## 2.19.0 (22 Aug 2022)
 - Feature: new replacement for unordered dates

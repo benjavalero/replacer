@@ -69,8 +69,7 @@ The replacement types are grouped in following categories:
   - Terms with non-alphabetic characters (dots, spaces or digits) are not taken into account. Terms included in the false positive list (detailed further) are ignored too.
 
 - **Composed**. Expressions, with more than one word, potentially misspelled, or terms not fitting in the Orthography category.
-  - Most subtypes are extracted from the list in https://es.wikipedia.org/wiki/Usuario:Benjavalero/ComposedMisspellings. The list is refreshed every hour.
-  - Subtypes **ó between numbers** and **ó between words** for unnecessary uses of conjunction "ó" containing a diacritic (only in Spanish).
+  - They are extracted from the list in https://es.wikipedia.org/wiki/Usuario:Benjavalero/ComposedMisspellings. The list is refreshed every hour.
 
 - **Dates**. Dates with wrong format.
   - **Month in uppercase**. Dates with the month in uppercase: `2 de Septiembre de 2019`
@@ -80,6 +79,10 @@ The replacement types are grouped in following categories:
   - **Unordered date**. Dates with wrong order: `Mayo 3, 2020`
   - Note: In Spanish it's recommended the cultivated use of «septiembre» instead of «setiembre». Nevertheless this replacement is only offered along with another fix in the same fix. For instance the date «2 de setiembre de 2019» is not offered to be reviewed.
   - Dates in format of month and year are also offered to review when preceded by certain connectors: `Desde Septiembre de 2019`
+
+- **Style**
+  - **ó between numbers** and **ó between words** for unnecessary uses of conjunction "ó" containing a diacritic (only in Spanish).
+  - **Century with no small caps** helps replacing centuries with the appropriate template which displays the century Roman number with small caps.
 
 ## False positives
 
