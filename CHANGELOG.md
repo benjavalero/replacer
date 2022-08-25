@@ -1,6 +1,6 @@
 # Versions
 
-## 2.19.1 (??)
+## 2.20.0 (25 Aug 2022)
 - Revert "Count replacements by type without grouping by page"
 - Instead of a date subtype we add the dates with the article fixed as a new suggestion
 - Prepare the replacement types so some could be only available for bot users
