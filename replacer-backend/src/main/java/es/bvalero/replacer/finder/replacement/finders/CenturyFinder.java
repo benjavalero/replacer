@@ -132,11 +132,6 @@ public class CenturyFinder implements ReplacementFinder {
     }
 
     @Override
-    public boolean validate(MatchResult match, WikipediaPage page) {
-        return ReplacementFinder.super.validate(match, page);
-    }
-
-    @Override
     public Replacement convert(MatchResult match, WikipediaPage page) {
         final String century = match.group();
         String normalized = century.replace(NON_BREAKING_SPACE, " ");
