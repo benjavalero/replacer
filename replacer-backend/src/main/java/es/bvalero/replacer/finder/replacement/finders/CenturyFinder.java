@@ -19,17 +19,18 @@ import org.springframework.stereotype.Component;
 @Component
 public class CenturyFinder implements ReplacementFinder {
 
-    private static final String NON_BREAKING_SPACE = "&nbsp;";
     private static final Set<Character> CENTURY_LETTERS = Set.of('I', 'i', 'V', 'v', 'X', 'x');
     private static final List<String> ERA_WORDS = List.of(
         "aC",
         "a.C.",
         "a. C.",
         "a.&nbsp;C.",
+        "a.{{esd}}C.",
         "dC",
         "d.C.",
         "d. C.",
-        "d.&nbsp;C."
+        "d.&nbsp;C.",
+        "d.{{esd}}C."
     );
 
     @Override
@@ -96,13 +97,8 @@ public class CenturyFinder implements ReplacementFinder {
     // Return, if exists, the era after the century, including the space between; or an empty string.
     private String findEraAfter(String text, String century, int start) {
         int endCentury = start + century.length();
-        String eraSpace = null;
         final String postCentury = text.substring(endCentury, Math.min(endCentury + 6, text.length())); // 6 = &nbsp; length
-        if (postCentury.startsWith(" ")) {
-            eraSpace = " ";
-        } else if (postCentury.startsWith(NON_BREAKING_SPACE)) {
-            eraSpace = NON_BREAKING_SPACE;
-        }
+        String eraSpace = FinderUtils.SPACES.stream().filter(postCentury::startsWith).findAny().orElse(null);
         if (eraSpace != null) {
             endCentury += eraSpace.length();
             final String eraText = text.substring(endCentury, Math.min(endCentury + 10, text.length())); // 10 is the maximum length of an era
@@ -134,7 +130,12 @@ public class CenturyFinder implements ReplacementFinder {
     @Override
     public Replacement convert(MatchResult match, WikipediaPage page) {
         final String century = match.group();
-        String normalized = century.replace(NON_BREAKING_SPACE, " ");
+        String normalized = century;
+        for (String space : FinderUtils.SPACES) {
+            if (!" ".equals(space)) {
+                normalized = normalized.replace(space, " ");
+            }
+        }
         boolean linked = false;
         if (century.startsWith("[[")) {
             linked = true;

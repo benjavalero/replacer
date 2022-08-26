@@ -21,6 +21,7 @@ public class ReplacementType {
     public static final ReplacementType ACUTE_O_WORDS = ReplacementType.of(ReplacementKind.STYLE, "ó entre palabras");
 
     public static final ReplacementType CENTURY = ReplacementType.of(ReplacementKind.STYLE, "Siglo sin versalitas");
+    public static final ReplacementType COORDINATES = ReplacementType.of(ReplacementKind.STYLE, "Coordenadas");
 
     private static final int MAX_SUBTYPE_LENGTH = 100; // Constrained by the database
 

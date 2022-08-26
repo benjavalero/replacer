@@ -25,6 +25,7 @@ import org.springframework.test.context.ActiveProfiles;
         XmlConfiguration.class,
         AcuteOFinder.class,
         CenturyFinder.class,
+        CoordinatesFinder.class,
         DateFinder.class,
         ListingOfflineFinder.class,
         ComposedMisspellingParser.class,

@@ -22,6 +22,10 @@ public class FinderUtils {
     private static final Set<Character> invalidLeftSeparators = Set.of('_', '/', '.');
     private static final Set<Character> invalidRightSeparators = Set.of('_', '/');
     private static final int CONTEXT_THRESHOLD = 50;
+    private static final String WHITE_SPACE = " ";
+    private static final String NON_BREAKING_SPACE = "&nbsp;";
+    private static final String NON_BREAKING_SPACE_TEMPLATE = "{{esd}}";
+    public static final Set<String> SPACES = Set.of(WHITE_SPACE, NON_BREAKING_SPACE, NON_BREAKING_SPACE_TEMPLATE);
 
     public String toLowerCase(String str) {
         return str.toLowerCase(LOCALE_ES);

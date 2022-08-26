@@ -1,7 +1,8 @@
 # Versions
 
-## 2.20.1 (??)
+## 2.21.0 (??)
 - Fix: only apply an immutable if it contains the replacement (not intersects)
+- Feature: new replacement types for coordinates with wrong symbols
 
 ## 2.20.0 (25 Aug 2022)
 - Revert "Count replacements by type without grouping by page"
