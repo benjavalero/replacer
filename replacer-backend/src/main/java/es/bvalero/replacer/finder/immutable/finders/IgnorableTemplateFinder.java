@@ -13,7 +13,6 @@ import java.util.regex.MatchResult;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 /** Find some ignorable templates. In case they are found the complete text must be ignored. */
@@ -27,7 +26,7 @@ class IgnorableTemplateFinder implements ImmutableFinder {
 
     @Override
     public FinderPriority getPriority() {
-        // It's slow but we are interested in ignoring complete pages
+        // It's slow, but we are interested in ignoring complete pages.
         return FinderPriority.MAX;
     }
 
@@ -38,8 +37,8 @@ class IgnorableTemplateFinder implements ImmutableFinder {
             .map(s -> s.replace("{", "\\{"))
             .map(s -> s.replace("#", "\\#"))
             .map(FinderUtils::toLowerCase)
-            .collect(Collectors.toList());
-        final String alternations = '(' + StringUtils.join(fixedTemplates, "|") + ')';
+            .collect(Collectors.toUnmodifiableList());
+        final String alternations = String.format("(%s)", FinderUtils.joinAlternate(fixedTemplates));
         this.automaton = new RunAutomaton(new RegExp(alternations).toAutomaton());
     }
 

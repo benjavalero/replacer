@@ -15,12 +15,12 @@ class QuotesDoubleFinder extends QuotesFinder implements ImmutableFinder {
 
     @Override
     char getStartChar() {
-        return '"';
+        return DOUBLE_QUOTES;
     }
 
     @Override
     char getEndChar() {
-        return '"';
+        return DOUBLE_QUOTES;
     }
 
     @Override

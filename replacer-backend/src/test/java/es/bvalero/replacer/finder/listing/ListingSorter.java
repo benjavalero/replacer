@@ -1,6 +1,7 @@
 package es.bvalero.replacer.finder.listing;
 
 import static es.bvalero.replacer.common.util.ReplacerUtils.LOCALE_ES;
+import static org.apache.commons.lang3.StringUtils.SPACE;
 
 import es.bvalero.replacer.common.util.FileOfflineUtils;
 import java.io.IOException;
@@ -20,7 +21,7 @@ public class ListingSorter {
             Files
                 .readAllLines(Paths.get(Objects.requireNonNull(FileOfflineUtils.class.getResource(fileName)).toURI()))
                 .stream()
-                .filter(line -> line.startsWith(" "))
+                .filter(line -> line.startsWith(SPACE))
                 .sorted(collator::compare)
                 .forEach(System.out::println);
         } catch (IOException | URISyntaxException e) {

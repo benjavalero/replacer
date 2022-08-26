@@ -26,7 +26,7 @@ class PersonIndexOfFinder implements BenchmarkFinder {
             while (start >= 0) {
                 start = text.indexOf(word, start);
                 if (start >= 0) {
-                    if (FinderUtils.isWordFollowedByUppercase(start, word, text)) {
+                    if (FinderUtils.isWordFollowedByUpperCase(start, word, text)) {
                         matches.add(BenchmarkResult.of(start, word));
                     }
                     start++;

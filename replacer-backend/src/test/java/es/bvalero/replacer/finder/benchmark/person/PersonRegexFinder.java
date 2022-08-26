@@ -27,7 +27,7 @@ class PersonRegexFinder implements BenchmarkFinder {
         for (Pattern word : this.words) {
             Matcher m = word.matcher(text);
             while (m.find()) {
-                if (FinderUtils.isWordFollowedByUppercase(m.start(), m.group(), text)) {
+                if (FinderUtils.isWordFollowedByUpperCase(m.start(), m.group(), text)) {
                     matches.add(BenchmarkResult.of(m.start(), m.group()));
                 }
             }

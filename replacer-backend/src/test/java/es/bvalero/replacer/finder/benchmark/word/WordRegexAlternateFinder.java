@@ -16,7 +16,7 @@ class WordRegexAlternateFinder implements BenchmarkFinder {
     private final Pattern pattern;
 
     WordRegexAlternateFinder(Collection<String> words) {
-        String alternations = '(' + StringUtils.join(words, "|") + ')';
+        String alternations = '(' + FinderUtils.joinAlternate(words) + ')';
         this.pattern = Pattern.compile(alternations);
     }
 

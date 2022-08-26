@@ -3,6 +3,7 @@ package es.bvalero.replacer.finder.cosmetic.finders;
 import es.bvalero.replacer.common.domain.CheckWikipediaAction;
 import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.finder.cosmetic.CosmeticCheckedFinder;
+import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.RegexMatchFinder;
 import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
@@ -35,7 +36,7 @@ class SameLinkFinder implements CosmeticCheckedFinder {
         // The first letter can be different if link is uppercase and the title is lowercase
         return (
             link.substring(1).equals(title.substring(1)) &&
-            (Character.isLowerCase(title.charAt(0)) || Character.isUpperCase(link.charAt(0)))
+            (FinderUtils.startsWithLowerCase(title) || FinderUtils.startsWithUpperCase(link))
         );
     }
 

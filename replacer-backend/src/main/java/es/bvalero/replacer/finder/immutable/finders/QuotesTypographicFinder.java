@@ -11,11 +11,11 @@ class QuotesTypographicFinder extends QuotesFinder implements ImmutableFinder {
 
     @Override
     char getStartChar() {
-        return '“';
+        return START_QUOTE_TYPOGRAPHIC;
     }
 
     @Override
     char getEndChar() {
-        return '”';
+        return END_QUOTE_TYPOGRAPHIC;
     }
 }

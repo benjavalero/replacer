@@ -19,6 +19,11 @@ import org.springframework.stereotype.Component;
 @Component
 class CompleteTagFinder extends ImmutableCheckedFinder {
 
+    private static final char START_TAG = '<';
+    private static final char END_TAG = '>';
+    private static final String END_SELF_CLOSING_TAG = "/>";
+    private static final String START_CLOSING_TAG = "</";
+
     @Resource
     private Set<String> completeTags;
 
@@ -40,24 +45,23 @@ class CompleteTagFinder extends ImmutableCheckedFinder {
 
     private int findCompleteTag(WikipediaPage page, int start, List<MatchResult> matches) {
         final String text = page.getContent();
-        final int startCompleteTag = findStartCompleteTag(text, start);
+        final int startCompleteTag = findStartTag(text, start);
         if (startCompleteTag >= 0) {
-            final int startOpenTag = startCompleteTag + 1;
-            final String tag = findSupportedTag(text, startOpenTag);
-            if (tag == null) {
-                // The tag found is not in the list. Continue.
-                return startOpenTag;
+            final int startTagName = startCompleteTag + 1; // 1 = start tag length
+            final String tagName = findSupportedTag(text, startTagName);
+            if (tagName == null) {
+                // The tag name (if found) is not in the list. Continue.
+                return startTagName;
             } else {
-                int endOpenTag = findEndOpenTag(text, startOpenTag + tag.length());
+                int endTagName = startTagName + tagName.length();
+                int endOpenTag = findEndTag(text, endTagName);
                 if (endOpenTag >= 0) {
-                    endOpenTag++; // Move to the position next to the end of the open tag
-
-                    // Check self-closing tags
-                    if (text.substring(startOpenTag, endOpenTag).endsWith("/>")) {
+                    final String openTag = text.substring(startCompleteTag, endOpenTag);
+                    if (isSelfClosingTag(openTag)) {
                         return endOpenTag;
                     }
 
-                    final int endCompleteTag = findEndCompleteTag(text, endOpenTag, tag);
+                    final int endCompleteTag = findEndCompleteTag(text, endOpenTag, tagName);
                     if (endCompleteTag >= 0) {
                         matches.add(
                             LinearMatchResult.of(startCompleteTag, text.substring(startCompleteTag, endCompleteTag))
@@ -65,15 +69,15 @@ class CompleteTagFinder extends ImmutableCheckedFinder {
                         return endCompleteTag;
                     } else {
                         // Tag not closed. Trace warning and continue.
-                        final String message = String.format("Tag %s not closed", tag);
+                        final String message = String.format("Tag %s not closed", tagName);
                         FinderUtils.logFinderResult(page, startCompleteTag, endOpenTag, message);
                         return endOpenTag;
                     }
                 } else {
                     // Open tag not closed. Trace warning and continue.
-                    final String message = String.format("Open tag %s not closed", tag);
-                    FinderUtils.logFinderResult(page, startCompleteTag, startOpenTag + tag.length(), message);
-                    return startOpenTag + tag.length();
+                    final String message = String.format("Open tag %s not closed", tagName);
+                    FinderUtils.logFinderResult(page, startCompleteTag, endTagName, message);
+                    return endTagName;
                 }
             }
         } else {
@@ -81,37 +85,34 @@ class CompleteTagFinder extends ImmutableCheckedFinder {
         }
     }
 
-    private int findStartCompleteTag(String text, int start) {
-        return text.indexOf('<', start);
+    private int findStartTag(String text, int start) {
+        return text.indexOf(START_TAG, start);
     }
 
     @Nullable
     private String findSupportedTag(String text, int start) {
-        final StringBuilder tagBuilder = new StringBuilder();
-        for (int i = start; i < text.length(); i++) {
-            final char ch = text.charAt(i);
-            if (FinderUtils.isAscii(ch)) {
-                tagBuilder.append(ch);
-            } else {
+        int i = start;
+        for (; i < text.length(); i++) {
+            if (!FinderUtils.isAscii(text.charAt(i))) {
                 break;
             }
         }
-        final String tag = tagBuilder.toString();
+        final String tag = text.substring(start, i);
         return completeTags.contains(tag) ? tag : null;
     }
 
-    private int findEndOpenTag(String text, int start) {
-        return text.indexOf('>', start);
+    private int findEndTag(String text, int start) {
+        int endTag = text.indexOf(END_TAG, start);
+        return endTag >= 0 ? endTag + 1 : -1; // 1 = end tag length
+    }
+
+    private boolean isSelfClosingTag(String tag) {
+        return tag.endsWith(END_SELF_CLOSING_TAG);
     }
 
     private int findEndCompleteTag(String text, int start, String tag) {
-        final String closeTag = "</" + tag + '>';
+        final String closeTag = START_CLOSING_TAG + tag + END_TAG;
         final int startCloseTag = text.indexOf(closeTag, start);
-        if (startCloseTag >= 0) {
-            // Returns the position next to the end of the complete tag
-            return startCloseTag + closeTag.length();
-        } else {
-            return -1;
-        }
+        return startCloseTag >= 0 ? startCloseTag + closeTag.length() : -1;
     }
 }

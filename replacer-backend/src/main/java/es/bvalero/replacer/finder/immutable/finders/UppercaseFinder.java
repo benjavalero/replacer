@@ -1,10 +1,8 @@
 package es.bvalero.replacer.finder.immutable.finders;
 
 import com.github.rozidan.springboot.logger.Loggable;
-import dk.brics.automaton.DatatypesAutomatonProvider;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
-import es.bvalero.replacer.common.domain.Immutable;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.finder.FinderPriority;
@@ -16,7 +14,10 @@ import es.bvalero.replacer.finder.util.AutomatonMatchFinder;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.*;
+import java.util.Collections;
+import java.util.EnumMap;
+import java.util.Map;
+import java.util.Set;
 import java.util.regex.MatchResult;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
@@ -33,7 +34,7 @@ import org.springframework.stereotype.Component;
 /**
  * Find words in uppercase which are correct according to the punctuation,
  * e.g. `Enero` in `{{Cite|date=Enero de 2020}}`
- *
+ * <br />
  * The considered punctuations are:
  * - After dot
  * - Parameter values
@@ -46,25 +47,18 @@ import org.springframework.stereotype.Component;
 @Component
 public class UppercaseFinder implements ImmutableFinder, PropertyChangeListener {
 
-    @org.intellij.lang.annotations.RegExp
-    private static final String CAPTION_SEPARATOR = "\\|\\+";
+    private static final String START_LINK = "[[";
+
+    private static final String CAPTION_SEPARATOR = "|+";
 
     private static final String TIMELINE_TEXT = "text:";
 
     private static final String PARAGRAPH_START = "\n\n";
 
     // The pipe is not only used for tables cells, we must check is not a wiki-link!!!
-    @org.intellij.lang.annotations.RegExp
-    private static final String CLASS_PUNCTUATION = "[=#*>.!|]";
-
-    @org.intellij.lang.annotations.RegExp
-    private static final String REGEX_UPPERCASE_PUNCTUATION = String.format(
-        "(%s|%s|%s|%s)<Zs>*(\\[\\[)?(%%s)(]])?",
-        CLASS_PUNCTUATION,
-        CAPTION_SEPARATOR,
-        TIMELINE_TEXT,
-        PARAGRAPH_START
-    );
+    private static final Set<Character> PUNCTUATIONS = Set.of('=', '#', '*', '>', '.', '!');
+    private static final String PIPE = "|";
+    private static final char NEW_LINE = '\n';
 
     @Autowired
     private SimpleMisspellingLoader simpleMisspellingLoader;
@@ -140,8 +134,8 @@ public class UppercaseFinder implements ImmutableFinder, PropertyChangeListener 
         // Currently, there are about 60 uppercase case-sensitive misspellings,
         // so the best approach is an automaton of oll the terms alternated.
         if (words != null && !words.isEmpty()) {
-            final String alternations = String.format(REGEX_UPPERCASE_PUNCTUATION, StringUtils.join(words, "|"));
-            return new RunAutomaton(new RegExp(alternations).toAutomaton(new DatatypesAutomatonProvider()));
+            final String alternations = String.format("(%s)", FinderUtils.joinAlternate(words));
+            return new RunAutomaton(new RegExp(alternations).toAutomaton());
         } else {
             return null;
         }
@@ -155,75 +149,59 @@ public class UppercaseFinder implements ImmutableFinder, PropertyChangeListener 
     @Override
     public Iterable<MatchResult> findMatchResults(WikipediaPage page) {
         final RunAutomaton automaton = this.uppercaseAutomata.get(page.getId().getLang());
-        if (automaton == null) {
-            return Collections.emptyList();
-        } else {
-            // Benchmarks show similar performance with and without validation
-            return AutomatonMatchFinder.find(page.getContent(), automaton);
-        }
-    }
-
-    @Override
-    public Immutable convert(MatchResult match) {
-        return findUppercaseWord(match);
+        // Benchmarks show similar performance with and without validation
+        return automaton == null ? Collections.emptyList() : AutomatonMatchFinder.find(page.getContent(), automaton);
     }
 
     @Override
     public boolean validate(MatchResult match, WikipediaPage page) {
-        final Immutable uppercaseWord = findUppercaseWord(match);
+        final String text = page.getContent();
+        final int startUpperCase = match.start();
+        final String leftTextNotTrimmed = text.substring(0, startUpperCase);
+        final String leftText = StringUtils.strip(StringUtils.removeEnd(leftTextNotTrimmed, START_LINK));
+        final String upperCase = match.group();
+
         return (
-            FinderUtils.isWordCompleteInText(uppercaseWord.getStart(), uppercaseWord.getText(), page.getContent()) &&
-            validatePipe(page.getContent(), uppercaseWord.getStart())
+            FinderUtils.isWordCompleteInText(startUpperCase, upperCase, text) &&
+            (
+                isPrecededByPunctuation(leftText) ||
+                isPrecededByPipe(leftText) ||
+                isPrecededByCaptionSeparator(leftText) ||
+                isPrecededByTimeLineText(leftText) ||
+                isPrecededByParagraphStart(leftTextNotTrimmed)
+            )
         );
     }
 
-    private Immutable findUppercaseWord(MatchResult match) {
-        final String text = match.group();
-        final int posUppercase = findFirstUppercase(text);
-        if (posUppercase < 0) {
-            throw new IllegalArgumentException("Wrong match with no uppercase letter: " + text);
+    private boolean isPrecededByPunctuation(String leftText) {
+        if (leftText.length() == 0) {
+            return false;
+        } else {
+            final char lastChar = leftText.charAt(leftText.length() - 1);
+            return PUNCTUATIONS.contains(lastChar);
         }
-
-        String word = text.substring(posUppercase).trim();
-        if (word.endsWith("]]")) {
-            word = word.substring(0, word.length() - 2);
-        }
-        final int startPos = match.start() + posUppercase;
-        return Immutable.of(startPos, word);
     }
 
-    private int findFirstUppercase(String text) {
-        for (int i = 0; i < text.length(); i++) {
-            if (Character.isUpperCase(text.charAt(i))) {
-                return i;
-            }
-        }
-        return -1;
+    private boolean isPrecededByPipe(String leftText) {
+        final boolean isPrecededByPipe = leftText.endsWith(PIPE);
+        // Check the first char of the line is also a pipe
+        return isPrecededByPipe && PIPE.equals(String.valueOf(findFirstLineChar(leftText)));
     }
 
-    private boolean validatePipe(String text, int matchPosition) {
-        if (findPreviousNonSpaceChar(text, matchPosition) == '|') {
-            return findFirstLineChar(text, matchPosition) == '|';
-        }
-        return true;
+    private boolean isPrecededByCaptionSeparator(String leftText) {
+        return leftText.endsWith(CAPTION_SEPARATOR);
     }
 
-    private char findPreviousNonSpaceChar(String text, int start) {
-        for (int i = start - 1; i >= 0; i--) {
-            final char ch = text.charAt(i);
-            if (!Character.isSpaceChar(ch)) {
-                return ch;
-            }
-        }
-        return text.charAt(0);
+    private boolean isPrecededByTimeLineText(String leftText) {
+        return leftText.endsWith(TIMELINE_TEXT);
     }
 
-    private char findFirstLineChar(String text, int start) {
-        for (int i = start - 1; i >= 0; i--) {
-            if (text.charAt(i) == '\n') {
-                return text.charAt(i + 1);
-            }
-        }
-        return text.charAt(0);
+    private boolean isPrecededByParagraphStart(String leftText) {
+        return leftText.endsWith(PARAGRAPH_START);
+    }
+
+    private char findFirstLineChar(String text) {
+        final int newLinePos = text.lastIndexOf(NEW_LINE);
+        return newLinePos >= 0 ? text.charAt(newLinePos + 1) : 0;
     }
 }

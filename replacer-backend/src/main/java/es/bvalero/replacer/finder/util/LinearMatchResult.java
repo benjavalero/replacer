@@ -61,4 +61,16 @@ public class LinearMatchResult implements MatchResult {
     public int groupCount() {
         return this.groups.size();
     }
+
+    public String getTextWithoutNested() {
+        String content = this.group();
+
+        // Remove the content of the nested templates
+        for (int i = this.groupCount() - 1; i >= 0; i--) {
+            content =
+                content.substring(0, this.start(i) - this.start()) + content.substring(this.end(i) - this.start());
+        }
+
+        return content;
+    }
 }

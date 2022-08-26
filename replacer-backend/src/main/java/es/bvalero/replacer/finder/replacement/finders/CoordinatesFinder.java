@@ -31,7 +31,7 @@ public class CoordinatesFinder implements ReplacementFinder {
     private static final String REGEX_DEGREE = String.format("[%s%s]", DEGREE, MASCULINE_ORDINAL);
     private static final String REGEX_SPACE = String.format(
         "(%s)?",
-        StringUtils.join(FinderUtils.SPACES, "|").replace("{", "\\{")
+        FinderUtils.joinAlternate(FinderUtils.SPACES).replace("{", "\\{")
     );
     private static final String REGEX_PRIME = String.format(
         "[%s%s%s%s]",
@@ -101,15 +101,7 @@ public class CoordinatesFinder implements ReplacementFinder {
             .filter(StringUtils::isNotEmpty)
             .collect(Collectors.toUnmodifiableList());
 
-        String fixedCoordinates = String.format(
-            "%s%s%s%s%s%s",
-            tokens.get(0),
-            DEGREE,
-            tokens.get(1),
-            PRIME,
-            tokens.get(2),
-            DOUBLE_PRIME
-        );
+        String fixedCoordinates = tokens.get(0) + DEGREE + tokens.get(1) + PRIME + tokens.get(2) + DOUBLE_PRIME;
 
         return Replacement
             .builder()

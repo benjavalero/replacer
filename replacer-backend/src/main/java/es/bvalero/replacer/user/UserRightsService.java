@@ -8,6 +8,7 @@ import es.bvalero.replacer.common.exception.ForbiddenException;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.VisibleForTesting;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -59,7 +60,7 @@ public class UserRightsService {
     }
 
     private ReplacerUser getUser(String cacheKey) {
-        String[] tokens = cacheKey.split("-");
+        String[] tokens = StringUtils.split(cacheKey, "-");
         WikipediaLanguage lang = WikipediaLanguage.valueOfCode(tokens[0]);
         String username = tokens[1];
         // In case of empty result return a fake user with no groups

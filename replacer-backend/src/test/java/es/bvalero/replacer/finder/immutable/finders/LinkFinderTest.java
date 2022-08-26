@@ -44,7 +44,7 @@ class LinkFinderTest {
     void testLinkSuffixed() {
         String suffixed1 = "[[brasil]]eño";
         String suffixed2 = "[[reacción química|reaccion]]es";
-        String noSuffixed = "[[Text]]";
+        String noSuffixed = "[[Text]] ";
         String inLink = "[[totem]]s";
         String nested = String.format("[[Los %s]]", inLink);
         String text = String.format("%s, %s, %s y %s", suffixed1, nested, suffixed2, noSuffixed);

@@ -9,14 +9,13 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.apache.commons.lang3.StringUtils;
 
 class SurnameRegexAlternateFinder implements BenchmarkFinder {
 
     private final Pattern words;
 
     SurnameRegexAlternateFinder(Collection<String> words) {
-        final String alternations = '(' + StringUtils.join(words, "|") + ')';
+        final String alternations = '(' + FinderUtils.joinAlternate(words) + ')';
         this.words = Pattern.compile(alternations);
     }
 
@@ -28,7 +27,7 @@ class SurnameRegexAlternateFinder implements BenchmarkFinder {
         final Matcher m = this.words.matcher(text);
         while (m.find()) {
             final BenchmarkResult match = BenchmarkResult.of(m.start(), m.group());
-            if (FinderUtils.isWordPrecededByUppercase(m.start(), m.group(), text)) {
+            if (FinderUtils.isWordPrecededByUpperCase(m.start(), text)) {
                 matches.add(match);
             }
         }

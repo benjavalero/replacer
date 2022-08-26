@@ -3,7 +3,9 @@ package es.bvalero.replacer.finder.cosmetic.finders;
 import es.bvalero.replacer.common.domain.CheckWikipediaAction;
 import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.finder.cosmetic.CosmeticCheckedFinder;
+import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.RegexMatchFinder;
+import java.util.List;
 import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
 import org.intellij.lang.annotations.RegExp;
@@ -23,7 +25,7 @@ class SmallTagUnnecessaryFinder implements CosmeticCheckedFinder {
     private static final String REGEX_REF_SMALL_TAG = "<ref.+?><small>.+?</small></ref>";
 
     private static final Pattern PATTERN_SMALL_TAG_UNNECESSARY = Pattern.compile(
-        String.format("%s|%s|%s", REGEX_SUP_SMALL_TAG, REGEX_SMALL_REF_TAG, REGEX_REF_SMALL_TAG)
+        FinderUtils.joinAlternate(List.of(REGEX_SUP_SMALL_TAG, REGEX_SMALL_REF_TAG, REGEX_REF_SMALL_TAG))
     );
 
     @Override

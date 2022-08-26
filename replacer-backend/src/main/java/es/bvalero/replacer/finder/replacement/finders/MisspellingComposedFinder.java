@@ -21,7 +21,6 @@ import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import lombok.Setter;
 import org.apache.commons.collections4.SetValuedMap;
-import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.TestOnly;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.logging.LogLevel;
@@ -60,9 +59,8 @@ public class MisspellingComposedFinder extends MisspellingFinder implements Prop
         for (WikipediaLanguage lang : misspellings.keySet()) {
             final String alternations = String.format(
                 "(%s)",
-                StringUtils.join(
-                    misspellings.get(lang).stream().map(this::processComposedMisspelling).collect(Collectors.toList()),
-                    "|"
+                FinderUtils.joinAlternate(
+                    misspellings.get(lang).stream().map(this::processComposedMisspelling).collect(Collectors.toList())
                 )
             );
             map.put(lang, new RunAutomaton(new RegExp(alternations).toAutomaton()));
@@ -71,7 +69,7 @@ public class MisspellingComposedFinder extends MisspellingFinder implements Prop
     }
 
     private String processComposedMisspelling(ComposedMisspelling misspelling) {
-        final String word = misspelling.getWord().replace("[", "\\[").replace("]", "\\]");
+        final String word = misspelling.getWord().replace("[", "\\[").replace("]", "\\]").replace(".", "\\.");
         return misspelling.isCaseSensitive() ? word : FinderUtils.setFirstUpperCaseClass(word);
     }
 
@@ -80,11 +78,7 @@ public class MisspellingComposedFinder extends MisspellingFinder implements Prop
         // With more than 400 composed misspellings
         // the best approach is an automaton of oll the terms alternated
         final RunAutomaton automaton = this.automata.get(page.getId().getLang());
-        if (automaton == null) {
-            return Collections.emptyList();
-        } else {
-            return AutomatonMatchFinder.find(page.getContent(), automaton);
-        }
+        return automaton == null ? Collections.emptyList() : AutomatonMatchFinder.find(page.getContent(), automaton);
     }
 
     @Override

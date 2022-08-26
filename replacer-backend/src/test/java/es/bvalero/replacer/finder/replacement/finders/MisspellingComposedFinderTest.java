@@ -151,6 +151,18 @@ class MisspellingComposedFinderTest {
     }
 
     @Test
+    void testMisspellingIncomplete() {
+        String text = "En Rio 2016.";
+
+        ComposedMisspelling misspelling = ComposedMisspelling.of("Rio 20", false, "Río 20");
+        this.fakeUpdateMisspellingList(List.of(misspelling));
+
+        List<Replacement> results = misspellingComposedFinder.findList(text);
+
+        assertTrue(results.isEmpty());
+    }
+
+    @Test
     void testCaseSensitiveUppercaseToLowercase() {
         String text = "Parque Nacional de Doñana";
 

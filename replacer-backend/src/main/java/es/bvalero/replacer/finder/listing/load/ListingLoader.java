@@ -1,5 +1,7 @@
 package es.bvalero.replacer.finder.listing.load;
 
+import static org.apache.commons.lang3.StringUtils.EMPTY;
+
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.finder.listing.ListingItem;
@@ -70,7 +72,7 @@ abstract class ListingLoader<T extends ListingItem> {
             return findListingByLang(lang);
         } catch (ReplacerException e) {
             LOGGER.error("Error finding {} items in {} Wikipedia", getLabel(), lang, e);
-            return FinderUtils.STRING_EMPTY;
+            return EMPTY;
         }
     }
 

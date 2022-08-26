@@ -6,10 +6,10 @@ import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.finder.benchmark.BenchmarkResult;
+import es.bvalero.replacer.finder.util.FinderUtils;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
-import org.apache.commons.lang3.StringUtils;
 
 class UppercaseAutomatonAlternateFinder extends UppercaseBenchmarkFinder {
 
@@ -18,8 +18,8 @@ class UppercaseAutomatonAlternateFinder extends UppercaseBenchmarkFinder {
     UppercaseAutomatonAlternateFinder(Collection<String> words) {
         String alternations = String.format(
             "(%s)<Zs>*(%s)",
-            StringUtils.join(PUNCTUATIONS, "|"),
-            StringUtils.join(words, "|")
+            FinderUtils.joinAlternate(PUNCTUATIONS),
+            FinderUtils.joinAlternate(words)
         );
         this.words = new RunAutomaton(new RegExp(alternations).toAutomaton(new DatatypesAutomatonProvider()));
     }

@@ -23,7 +23,7 @@ class IgnorableTemplateAutomatonFinder implements BenchmarkFinder {
             .map(s -> s.replace("#", "\\#"))
             .map(FinderUtils::toLowerCase)
             .collect(Collectors.toSet());
-        String alternations = '(' + StringUtils.join(fixedTemplates, "|") + ')';
+        String alternations = '(' + FinderUtils.joinAlternate(fixedTemplates) + ')';
         this.automaton = new RunAutomaton(new RegExp(alternations).toAutomaton());
     }
 

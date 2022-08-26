@@ -14,11 +14,10 @@ import java.util.Set;
 import java.util.regex.MatchResult;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 /**
- * Find person surnames. Also usual nouns preceded by a word starting in uppercase,
+ * Find person surnames. Also, usual nouns preceded by a word starting in uppercase,
  * e.g. in Spanish `RCA Records`, as "records" is also a noun to be written with an accent.
  */
 @Component
@@ -33,7 +32,7 @@ class PersonSurnameFinder implements ImmutableFinder {
 
     @Override
     public FinderPriority getPriority() {
-        // It should be High for number of matches but it is quite slow so it is better to have lower priority
+        // It should be High for number of matches, but it is quite slow, so it is better to have lower priority.
         return FinderPriority.LOW;
     }
 
@@ -50,15 +49,15 @@ class PersonSurnameFinder implements ImmutableFinder {
             }
         }
 
-        final String alternations = "<Lu><L>+ (" + StringUtils.join(surnames, "|") + ")";
+        final String alternations = "<Lu><L>+ (" + FinderUtils.joinAlternate(surnames) + ")";
         this.automaton = new RunAutomaton(new RegExp(alternations).toAutomaton(new DatatypesAutomatonProvider()));
     }
 
     @Override
     public Iterable<MatchResult> findMatchResults(WikipediaPage page) {
         // The list will keep on growing
-        // The best approach is to iterate the list of words and find them in the text but we choose
-        // the automaton because it allows regular expressions and the performance is quite good too
+        // The best approach is to iterate the list of words and find them in the text, but we choose
+        // the automaton because it allows regular expressions and the performance is quite good too.
         return AutomatonMatchFinder.find(page.getContent(), automaton);
     }
 
@@ -70,11 +69,11 @@ class PersonSurnameFinder implements ImmutableFinder {
     @Override
     public Immutable convert(MatchResult match, WikipediaPage page) {
         final int pos = match.group().indexOf(' ') + 1;
-        final int start = match.start() + pos;
         final String matchText = match.group().substring(pos);
         if (completeSurnames.contains(matchText)) {
             return ImmutableFinder.super.convert(match, page);
         } else {
+            final int start = match.start() + pos;
             return Immutable.of(start, matchText);
         }
     }

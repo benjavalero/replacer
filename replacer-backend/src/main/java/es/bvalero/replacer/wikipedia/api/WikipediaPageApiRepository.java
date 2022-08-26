@@ -1,5 +1,7 @@
 package es.bvalero.replacer.wikipedia.api;
 
+import static org.apache.commons.lang3.StringUtils.SPACE;
+
 import com.github.rozidan.springboot.logger.Loggable;
 import es.bvalero.replacer.common.domain.*;
 import es.bvalero.replacer.common.util.WikipediaDateUtils;
@@ -158,11 +160,11 @@ class WikipediaPageApiRepository implements WikipediaPageRepository, WikipediaUs
                     start,
                     start + Math.min(idList.size() - start, MAX_PAGES_REQUESTED)
                 );
-                pages.addAll(getPagesByIds(PARAM_PAGE_IDS, StringUtils.join(subList, "|"), lang));
+                pages.addAll(getPagesByIds(PARAM_PAGE_IDS, StringUtils.join(subList, '|'), lang));
                 start += subList.size();
             }
         } catch (Exception e) {
-            LOGGER.error("Error finding pages by ID: {}", StringUtils.join(pageIds, " "), e);
+            LOGGER.error("Error finding pages by ID: {}", StringUtils.join(pageIds, SPACE), e);
         }
         return pages;
     }
@@ -350,7 +352,7 @@ class WikipediaPageApiRepository implements WikipediaPageRepository, WikipediaUs
             .stream()
             .map(WikipediaNamespace::getValue)
             .collect(Collectors.toUnmodifiableSet());
-        params.put("srnamespace", StringUtils.join(namespaceIds, "|"));
+        params.put("srnamespace", StringUtils.join(namespaceIds, '|'));
         params.put("srwhat", "text");
         params.put("srinfo", "totalhits");
         params.put("srprop", "");

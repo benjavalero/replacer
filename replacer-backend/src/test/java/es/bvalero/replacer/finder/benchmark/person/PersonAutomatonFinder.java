@@ -28,7 +28,7 @@ class PersonAutomatonFinder implements BenchmarkFinder {
         for (RunAutomaton word : this.words) {
             AutomatonMatcher m = word.newMatcher(text);
             while (m.find()) {
-                if (FinderUtils.isWordFollowedByUppercase(m.start(), m.group(), text)) {
+                if (FinderUtils.isWordFollowedByUpperCase(m.start(), m.group(), text)) {
                     matches.add(BenchmarkResult.of(m.start(), m.group()));
                 }
             }

@@ -66,10 +66,12 @@ public abstract class MisspellingFinder implements ReplacementFinder {
 
     @Override
     public boolean validate(MatchResult match, WikipediaPage page) {
-        return isExistingWord(match.group(), page.getId().getLang()) && ReplacementFinder.super.validate(match, page);
+        // For simple misspellings, the word is complete, but we need to validate the separators.
+        // For composed misspellings, the word might not even be complete.
+        return ReplacementFinder.super.validate(match, page);
     }
 
-    private boolean isExistingWord(String word, WikipediaLanguage lang) {
+    boolean isExistingWord(String word, WikipediaLanguage lang) {
         return getMisspellingMap(lang).containsKey(word);
     }
 
@@ -123,7 +125,7 @@ public abstract class MisspellingFinder implements ReplacementFinder {
         if (
             misspelling.isCaseSensitive() &&
             FinderUtils.startsWithUpperCase(word) &&
-            !FinderUtils.isUppercase(word) &&
+            !FinderUtils.isUpperCase(word) &&
             suggestions.stream().map(Suggestion::getText).noneMatch(word::equals)
         ) {
             suggestions

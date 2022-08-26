@@ -30,7 +30,7 @@ class QuotesDoubleFinderTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = { "\"«Nested quotes»\"", "param=\" \"" })
+    @ValueSource(strings = { "\"«Nested quotes»\"" })
     void testValidQuotes(String text) {
         ImmutableFinder quotesFinder = new QuotesDoubleFinder();
         List<Immutable> matches = quotesFinder.findList(text);
@@ -39,7 +39,7 @@ class QuotesDoubleFinderTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = { "En \" \".", "\"Text with {{template}}.\"" })
+    @ValueSource(strings = { "En \" \".", "\"Text with {{template}}.\"", "param=\" \"" })
     void testInvalidQuotes(String text) {
         ImmutableFinder quotesFinder = new QuotesDoubleFinder();
         List<Immutable> matches = quotesFinder.findList(text);

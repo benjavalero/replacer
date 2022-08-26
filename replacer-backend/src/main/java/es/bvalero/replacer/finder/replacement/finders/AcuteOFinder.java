@@ -35,22 +35,26 @@ public class AcuteOFinder implements ReplacementFinder {
 
     private int findAcuteO(WikipediaPage page, int start, List<MatchResult> matches) {
         final String text = page.getContent();
-        final int startAcuteO = text.indexOf(SEARCH_ACUTE_O, start);
+        final int startAcuteO = findStartAcuteO(text, start);
         if (startAcuteO >= 0) {
             final int endAcuteO = startAcuteO + SEARCH_ACUTE_O.length();
             final String wordBefore = FinderUtils.findWordBefore(text, startAcuteO + 1);
-            final String wordAfter = FinderUtils.findWordAfter(text, endAcuteO - 1);
+            final String wordAfter = FinderUtils.findWordAfter(startAcuteO + 1, ACUTE_O, text);
             if (wordBefore == null || wordAfter == null) {
                 return endAcuteO;
             } else {
                 matches.add(
                     LinearMatchResult.of(startAcuteO - wordBefore.length(), wordBefore + SEARCH_ACUTE_O + wordAfter)
                 );
-                return startAcuteO + SEARCH_ACUTE_O.length();
+                return endAcuteO;
             }
         } else {
             return -1;
         }
+    }
+
+    private int findStartAcuteO(String text, int start) {
+        return text.indexOf(SEARCH_ACUTE_O, start);
     }
 
     @Override

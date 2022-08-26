@@ -11,11 +11,11 @@ class QuotesAngularFinder extends QuotesFinder implements ImmutableFinder {
 
     @Override
     char getStartChar() {
-        return '«';
+        return START_QUOTE_ANGULAR;
     }
 
     @Override
     char getEndChar() {
-        return '»';
+        return END_QUOTE_ANGULAR;
     }
 }

@@ -18,7 +18,7 @@ class SurnameAutomatonAlternateCompleteFinder implements BenchmarkFinder {
     private final RunAutomaton words;
 
     SurnameAutomatonAlternateCompleteFinder(Collection<String> words) {
-        final String alternations = "<Lu><L>+ (" + StringUtils.join(words, "|") + ")";
+        final String alternations = "<Lu><L>+ (" + FinderUtils.joinAlternate(words) + ")";
         this.words = new RunAutomaton(new RegExp(alternations).toAutomaton(new DatatypesAutomatonProvider()));
     }
 

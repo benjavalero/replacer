@@ -17,6 +17,10 @@ import org.springframework.stereotype.Component;
 @Component
 class CursiveFinder extends ImmutableCheckedFinder {
 
+    private static final String START_CURSIVE = "''";
+    private static final char QUOTE = '\'';
+    private static final char NEW_LINE = '\n';
+
     @Override
     public FinderPriority getPriority() {
         return FinderPriority.LOW;
@@ -38,22 +42,19 @@ class CursiveFinder extends ImmutableCheckedFinder {
         if (startCursive >= 0) {
             final int numQuotes = findNumQuotes(text, startCursive);
             assert numQuotes >= 2;
-            final int endQuotes = findEndQuotes(text, startCursive + numQuotes, numQuotes);
-            if (endQuotes >= 0) {
-                // Check if the content of the cursive is empty. Notify and continue in such a case.
-                final int endCursiveText = text.length() == endQuotes || text.charAt(endQuotes) == '\n'
-                    ? endQuotes
-                    : endQuotes - numQuotes;
-                if (StringUtils.isBlank(text.substring(startCursive + numQuotes, endCursiveText))) {
-                    logImmutableCheck(page, startCursive, endQuotes, "Empty cursive");
+            final int startCursiveText = startCursive + numQuotes;
+            final int endCursive = findEndCursive(text, startCursiveText, numQuotes);
+            if (endCursive >= 0) {
+                if (isEmptyCursiveText(text, startCursive, endCursive, numQuotes)) {
+                    logImmutableCheck(page, startCursive, endCursive, "Empty cursive");
                 } else {
-                    matches.add(LinearMatchResult.of(startCursive, text.substring(startCursive, endQuotes)));
+                    matches.add(LinearMatchResult.of(startCursive, text.substring(startCursive, endCursive)));
                 }
-                return endQuotes;
+                return endCursive;
             } else {
                 // No cursive ending found. Notify and continue.
-                logImmutableCheck(page, startCursive, startCursive + numQuotes, "Truncated cursive");
-                return startCursive + numQuotes;
+                logImmutableCheck(page, startCursive, startCursiveText, "Truncated cursive");
+                return startCursiveText;
             }
         } else {
             return -1;
@@ -61,44 +62,50 @@ class CursiveFinder extends ImmutableCheckedFinder {
     }
 
     private int findStartCursive(String text, int start) {
-        return text.indexOf("''", start);
+        return text.indexOf(START_CURSIVE, start);
     }
 
     private int findNumQuotes(String text, int start) {
-        final StringBuilder quotesBuilder = new StringBuilder();
         for (int i = start; i < text.length(); i++) {
-            final char ch = text.charAt(i);
-            if (ch == '\'') {
-                quotesBuilder.append(ch);
-            } else {
-                break;
+            if (text.charAt(i) != QUOTE) {
+                return i - start;
             }
         }
-        return quotesBuilder.length();
+        // It shouldn't get here
+        return 0;
     }
 
-    private int findEndQuotes(String text, int start, int numQuotes) {
-        StringBuilder tagBuilder = new StringBuilder();
+    private int findEndCursive(String text, int start, int numQuotes) {
+        int numQuotesFound = 0;
         int i = start;
         for (; i < text.length(); i++) {
             final char ch = text.charAt(i);
-            if (ch == '\n') {
+            if (ch == NEW_LINE) {
                 // New lines are considered as an ending for cursive
                 return i;
-            } else if (ch == '\'') {
-                tagBuilder.append(ch);
+            } else if (ch == QUOTE) {
+                numQuotesFound++;
             } else {
-                if (tagBuilder.length() > numQuotes) {
-                    tagBuilder = new StringBuilder(); // Reset and keep on searching
-                } else if (tagBuilder.length() == numQuotes) {
+                if (numQuotesFound > numQuotes) {
+                    numQuotesFound = 0; // Reset and keep on searching
+                } else if (numQuotesFound == numQuotes) {
                     return i;
-                } else if (tagBuilder.length() > 0) {
-                    tagBuilder = new StringBuilder(); // Reset and keep on searching
-                } // else (tabBuilder.length == 0) ==> continue
+                } else if (numQuotesFound > 0) {
+                    numQuotesFound = 0; // Reset and keep on searching
+                } // else (numQuotesFound == 0) ==> continue
             }
         }
 
         // In case we arrive at the end of the text
-        return tagBuilder.length() == numQuotes ? i : -1;
+        return numQuotesFound == numQuotes ? i : -1;
+    }
+
+    private boolean isEmptyCursiveText(String text, int startCursive, int endCursive, int numQuotes) {
+        // The cursive may end with the text end or with a new line
+        final int endCursiveText = text.length() == endCursive || text.charAt(endCursive) == NEW_LINE
+            ? endCursive
+            : endCursive - numQuotes;
+        final String cursiveText = text.substring(startCursive + numQuotes, endCursiveText);
+        return StringUtils.isBlank(cursiveText);
     }
 }

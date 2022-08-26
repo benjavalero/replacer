@@ -49,7 +49,7 @@ class SpaceNotTranslatedFinder implements CosmeticCheckedFinder {
         spaceWords.addAll(FinderUtils.getItemsInCollection(annexWords.values()));
         spaceWords.addAll(FinderUtils.getItemsInCollection(categoryWords.values()));
 
-        String concat = String.join("|", spaceWords);
+        String concat = FinderUtils.joinAlternate(spaceWords);
         String regex = String.format(REGEX_SPACE, FinderUtils.toLowerCase(concat));
         patternLowercaseSpace = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
 

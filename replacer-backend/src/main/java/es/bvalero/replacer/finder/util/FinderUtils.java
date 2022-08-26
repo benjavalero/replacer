@@ -1,14 +1,13 @@
 package es.bvalero.replacer.finder.util;
 
 import static es.bvalero.replacer.common.util.ReplacerUtils.LOCALE_ES;
+import static org.apache.commons.lang3.StringUtils.SPACE;
 
 import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.common.util.ReplacerUtils;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -18,55 +17,85 @@ import org.springframework.lang.Nullable;
 @UtilityClass
 public class FinderUtils {
 
-    public static final String STRING_EMPTY = "";
-    private static final Set<Character> invalidLeftSeparators = Set.of('_', '/', '.');
-    private static final Set<Character> invalidRightSeparators = Set.of('_', '/');
-    private static final int CONTEXT_THRESHOLD = 50;
-    private static final String WHITE_SPACE = " ";
+    private static final Set<Character> INVALID_LEFT_SEPARATORS = Set.of('_', '/', '.');
+    private static final Set<Character> INVALID_RIGHT_SEPARATORS = Set.of('_', '/');
+    private static final String ALTERNATE_SEPARATOR = "|";
     private static final String NON_BREAKING_SPACE = "&nbsp;";
     private static final String NON_BREAKING_SPACE_TEMPLATE = "{{esd}}";
-    public static final Set<String> SPACES = Set.of(WHITE_SPACE, NON_BREAKING_SPACE, NON_BREAKING_SPACE_TEMPLATE);
+    public static final Set<String> SPACES = Set.of(SPACE, NON_BREAKING_SPACE, NON_BREAKING_SPACE_TEMPLATE);
 
-    public String toLowerCase(String str) {
-        return str.toLowerCase(LOCALE_ES);
+    /***** STRING UTILS *****/
+
+    public String toLowerCase(String text) {
+        return text.toLowerCase(LOCALE_ES);
     }
 
-    public String toUpperCase(String str) {
-        return str.toUpperCase(LOCALE_ES);
+    public String toUpperCase(String text) {
+        return text.toUpperCase(LOCALE_ES);
     }
 
-    public boolean startsWithLowerCase(CharSequence word) {
+    public boolean startsWithLowerCase(String word) {
         return Character.isLowerCase(word.charAt(0));
     }
 
-    public boolean startsWithUpperCase(CharSequence word) {
+    public boolean startsWithUpperCase(String word) {
         return Character.isUpperCase(word.charAt(0));
     }
 
-    public boolean startsWithNumber(CharSequence word) {
+    public boolean startsWithNumber(String word) {
         return Character.isDigit(word.charAt(0));
     }
 
-    public String setFirstLowerCase(String word) {
-        return StringUtils.isBlank(word) ? STRING_EMPTY : toLowerCase(word.substring(0, 1)) + word.substring(1);
+    public String setFirstUpperCase(String word) {
+        return StringUtils.capitalize(word);
     }
 
-    public String setFirstUpperCase(String word) {
-        return StringUtils.isBlank(word) ? STRING_EMPTY : toUpperCase(word.substring(0, 1)) + word.substring(1);
+    public String setFirstLowerCase(String word) {
+        return StringUtils.uncapitalize(word);
     }
 
     public String setFirstUpperCaseClass(String word) {
-        final String first = word.substring(0, 1);
-        return Character.isLetter(first.charAt(0))
-            ? String.format("[%s%s]%s", toUpperCase(first), toLowerCase(first), word.substring(1))
-            : word;
+        if (word.length() >= 1) {
+            final char first = word.charAt(0);
+            if (Character.isLetter(first)) {
+                return String.format(
+                    "[%s%s]%s",
+                    Character.toUpperCase(first),
+                    Character.toLowerCase(first),
+                    word.substring(1)
+                );
+            }
+        }
+        return word;
     }
 
-    public boolean isWordCompleteInText(int start, String word, String text) {
-        if (StringUtils.isBlank(word)) {
-            return false;
-        }
+    public boolean isUpperCase(String word) {
+        return word.chars().allMatch(Character::isUpperCase);
+    }
 
+    public boolean isAscii(char ch) {
+        return (ch >= 'A' && ch <= 'Z') || (ch >= 'a' && ch <= 'z');
+    }
+
+    public boolean isAsciiLowerCase(String word) {
+        return word.chars().allMatch(FinderUtils::isAsciiLowerCase);
+    }
+
+    private boolean isAsciiLowerCase(int ch) {
+        return (ch >= 'a' && ch <= 'z');
+    }
+
+    public boolean isWord(String word) {
+        return word.chars().allMatch(Character::isLetter);
+    }
+
+    public boolean isNumber(String word) {
+        return word.chars().allMatch(Character::isDigit);
+    }
+
+    /***** TEXT UTILS *****/
+
+    public boolean isWordCompleteInText(int start, String word, String text) {
         final int end = start + word.length();
         if (start == 0) {
             return end == text.length() || isValidRightSeparator(text.charAt(end));
@@ -81,7 +110,7 @@ public class FinderUtils {
         final char separator = text.charAt(position);
         return (
             !Character.isLetterOrDigit(separator) &&
-            !invalidLeftSeparators.contains(separator) &&
+            !INVALID_LEFT_SEPARATORS.contains(separator) &&
             !isApostrophe(text, position)
         );
     }
@@ -91,65 +120,27 @@ public class FinderUtils {
     }
 
     private boolean isValidRightSeparator(char separator) {
-        return !Character.isLetterOrDigit(separator) && !invalidRightSeparators.contains(separator);
+        return !Character.isLetterOrDigit(separator) && !INVALID_RIGHT_SEPARATORS.contains(separator);
     }
 
-    public boolean isUppercase(String text) {
-        return text.chars().allMatch(Character::isUpperCase);
-    }
-
-    public boolean isAscii(char ch) {
-        return (ch >= 'A' && ch <= 'Z') || (ch >= 'a' && ch <= 'z');
-    }
-
-    public boolean isAsciiLowercase(String text) {
-        return text.chars().allMatch(FinderUtils::isAsciiLowercase);
-    }
-
-    private boolean isAsciiLowercase(int ch) {
-        return (ch >= 'a' && ch <= 'z');
-    }
-
-    public boolean isWord(String text) {
-        return text.chars().allMatch(Character::isLetter);
-    }
-
-    public boolean isNumber(String text) {
-        return text.chars().allMatch(Character::isDigit);
-    }
-
-    public boolean isWordFollowedByUppercase(int start, String word, String text) {
-        final int upperCasePos = start + word.length() + 1;
+    public boolean isWordFollowedByUpperCase(int start, String word, String text) {
+        final int end = start + word.length();
         return (
-            upperCasePos < text.length() &&
-            isWordCompleteInText(start, word, text) &&
-            Character.isUpperCase(text.charAt(upperCasePos))
+            end + 1 < text.length() &&
+            Character.isWhitespace(text.charAt(end)) &&
+            Character.isUpperCase(text.charAt(end + 1))
         );
     }
 
-    public boolean isWordPrecededByUppercase(int start, String word, String text) {
-        if (isWordCompleteInText(start, word, text) && start >= 2) {
-            char lastLetter = text.charAt(start - 1);
-            for (int i = start - 2; i >= 0; i--) {
-                final char ch = text.charAt(i);
-                if (Character.isLetter(ch)) {
-                    lastLetter = ch;
-                } else {
-                    return Character.isUpperCase(lastLetter);
-                }
-            }
-        }
-        return false;
-    }
-
     @Nullable
-    public String findWordAfter(String text, int start) {
-        if (text.length() - start < 2 || Character.isLetterOrDigit(text.charAt(start))) {
+    public String findWordAfter(int start, String word, String text) {
+        final int end = start + word.length();
+        if (end + 1 >= text.length() || !Character.isWhitespace(text.charAt(end))) {
             return null;
         }
 
         int lastLetter = -1;
-        for (int i = start + 1; i < text.length(); i++) {
+        for (int i = end + 1; i < text.length(); i++) {
             final char ch = text.charAt(i);
             if (Character.isLetterOrDigit(ch)) {
                 lastLetter = i;
@@ -157,12 +148,17 @@ public class FinderUtils {
                 break;
             }
         }
-        return lastLetter >= 0 ? text.substring(start + 1, lastLetter + 1) : null;
+        return lastLetter >= 0 ? text.substring(end + 1, lastLetter + 1) : null;
+    }
+
+    public boolean isWordPrecededByUpperCase(int start, String text) {
+        final String wordBefore = findWordBefore(text, start);
+        return wordBefore != null && startsWithUpperCase(wordBefore);
     }
 
     @Nullable
     public String findWordBefore(String text, int start) {
-        if (start < 2 || Character.isLetterOrDigit(text.charAt(start - 1))) {
+        if (start < 2 || !Character.isWhitespace(text.charAt(start - 1))) {
             return null;
         }
 
@@ -178,36 +174,8 @@ public class FinderUtils {
         return firstLetter >= 0 ? text.substring(firstLetter, start - 1) : null;
     }
 
-    private String getPageSnippet(WikipediaPage page, int start, int end) {
-        return ReplacerUtils.getContextAroundWord(page.getContent(), start, end, CONTEXT_THRESHOLD);
-    }
-
-    public void logFinderResult(WikipediaPage page, int start, int end, String message) {
-        LOGGER.warn(
-            "{}: {} - {} - {}",
-            message,
-            page.getId().getLang(),
-            page.getTitle(),
-            getPageSnippet(page, start, end)
-        );
-    }
-
-    /** Get the items in a collection of strings where each string is a comma-separated list itself */
-    public Set<String> getItemsInCollection(Collection<String> collection) {
-        return collection.stream().flatMap(val -> splitList(val).stream()).collect(Collectors.toSet());
-    }
-
-    private List<String> splitList(String list) {
-        return Arrays.stream(StringUtils.split(list, ",")).collect(Collectors.toList());
-    }
-
-    public String getFirstItemInList(String list) {
-        final List<String> actualList = splitList(list);
-        assert !actualList.isEmpty();
-        return actualList.get(0);
-    }
-
-    public String getFirstWord(String text) {
+    @Nullable
+    public String findFirstWord(String text) {
         int start = -1;
         for (int i = 0; i < text.length(); i++) {
             if (Character.isLetterOrDigit(text.charAt(i))) {
@@ -218,6 +186,58 @@ public class FinderUtils {
                 return text.substring(start, i);
             }
         }
-        return start >= 0 ? text : "";
+        return start >= 0 ? text.substring(start) : null;
+    }
+
+    private String getTextSnippet(String text, int start, int end) {
+        return ReplacerUtils.getContextAroundWord(text, start, end, 50);
+    }
+
+    /***** COLLECTION UTILS *****/
+
+    public String joinAlternate(Iterable<String> items) {
+        return String.join(ALTERNATE_SEPARATOR, items);
+    }
+
+    // Get the items in a collection of strings where each string is a comma-separated list itself
+    public Set<String> getItemsInCollection(Collection<String> collection) {
+        return collection.stream().flatMap(val -> splitList(val).stream()).collect(Collectors.toUnmodifiableSet());
+    }
+
+    public Stream<String> splitListAsStream(String list) {
+        return Arrays.stream(StringUtils.split(list, ","));
+    }
+
+    // Get items in a comma-separated list
+    private List<String> splitList(String list) {
+        return splitListAsStream(list).collect(Collectors.toUnmodifiableList());
+    }
+
+    public String getFirstItemInList(String list) {
+        return splitList(list).get(0);
+    }
+
+    public String[] splitAsArray(String text) {
+        return StringUtils.split(text);
+    }
+
+    public Stream<String> splitAsStream(String text) {
+        return Arrays.stream(splitAsArray(text));
+    }
+
+    public List<String> splitAsLinkedList(String text) {
+        return splitAsStream(text).collect(Collectors.toCollection(LinkedList::new));
+    }
+
+    /***** LOGGING UTILS *****/
+
+    public void logFinderResult(WikipediaPage page, int start, int end, String message) {
+        LOGGER.warn(
+            "{}: {} - {} - {}",
+            message,
+            page.getId().getLang(),
+            page.getTitle(),
+            getTextSnippet(page.getContent(), start, end)
+        );
     }
 }

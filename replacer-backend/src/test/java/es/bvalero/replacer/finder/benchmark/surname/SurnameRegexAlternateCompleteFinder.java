@@ -16,7 +16,7 @@ class SurnameRegexAlternateCompleteFinder implements BenchmarkFinder {
     private final Pattern words;
 
     SurnameRegexAlternateCompleteFinder(Collection<String> words) {
-        String alternations = "\\p{Lu}\\p{L}+ (" + StringUtils.join(words, "|") + ")";
+        String alternations = "\\p{Lu}\\p{L}+ (" + FinderUtils.joinAlternate(words) + ")";
         this.words = Pattern.compile(alternations);
     }
 

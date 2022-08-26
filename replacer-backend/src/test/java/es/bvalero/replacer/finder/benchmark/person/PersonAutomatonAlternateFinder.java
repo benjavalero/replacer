@@ -10,14 +10,13 @@ import es.bvalero.replacer.finder.util.FinderUtils;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
-import org.apache.commons.lang3.StringUtils;
 
 class PersonAutomatonAlternateFinder implements BenchmarkFinder {
 
     private final RunAutomaton words;
 
     PersonAutomatonAlternateFinder(Collection<String> words) {
-        String alternations = '(' + StringUtils.join(words, "|") + ')';
+        String alternations = '(' + FinderUtils.joinAlternate(words) + ')';
         this.words = new RunAutomaton(new RegExp(alternations).toAutomaton());
     }
 
@@ -28,7 +27,7 @@ class PersonAutomatonAlternateFinder implements BenchmarkFinder {
         Set<BenchmarkResult> matches = new HashSet<>();
         AutomatonMatcher m = this.words.newMatcher(text);
         while (m.find()) {
-            if (FinderUtils.isWordFollowedByUppercase(m.start(), m.group(), text)) {
+            if (FinderUtils.isWordFollowedByUpperCase(m.start(), m.group(), text)) {
                 matches.add(BenchmarkResult.of(m.start(), m.group()));
             }
         }

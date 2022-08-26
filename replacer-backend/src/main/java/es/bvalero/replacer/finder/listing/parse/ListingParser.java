@@ -1,5 +1,7 @@
 package es.bvalero.replacer.finder.listing.parse;
 
+import static org.apache.commons.lang3.StringUtils.SPACE;
+
 import es.bvalero.replacer.finder.listing.ListingItem;
 import java.io.BufferedReader;
 import java.io.StringReader;
@@ -42,7 +44,7 @@ interface ListingParser<T extends ListingItem> {
     }
 
     private boolean isItemLineValid(String itemLine) {
-        return itemLine.startsWith(" ") && StringUtils.isNotBlank(itemLine) && !itemLine.trim().startsWith("#");
+        return itemLine.startsWith(SPACE) && StringUtils.isNotBlank(itemLine) && !itemLine.trim().startsWith("#");
     }
 
     private String trimItemLine(String itemLine) {

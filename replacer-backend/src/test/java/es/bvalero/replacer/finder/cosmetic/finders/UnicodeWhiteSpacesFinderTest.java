@@ -1,5 +1,6 @@
 package es.bvalero.replacer.finder.cosmetic.finders;
 
+import static org.apache.commons.lang3.StringUtils.SPACE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -10,7 +11,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 class UnicodeWhiteSpacesFinderTest {
@@ -35,7 +35,7 @@ class UnicodeWhiteSpacesFinderTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = { " " })
+    @ValueSource(strings = { SPACE })
     void testNormalWhiteSpace(String text) {
         List<Cosmetic> cosmetics = unicodeWhiteSpaceFinder.findList(text);
 

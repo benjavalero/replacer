@@ -1,5 +1,7 @@
 package es.bvalero.replacer.finder.replacement.finders;
 
+import static org.apache.commons.lang3.StringUtils.SPACE;
+
 import es.bvalero.replacer.common.domain.*;
 import es.bvalero.replacer.finder.replacement.ReplacementFinder;
 import es.bvalero.replacer.finder.util.FinderUtils;
@@ -19,6 +21,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class CenturyFinder implements ReplacementFinder {
 
+    private static final String CENTURY_WORD = "siglo";
+    private static final String CENTURY_SEARCH = CENTURY_WORD.substring(1);
     private static final Set<Character> CENTURY_LETTERS = Set.of('I', 'i', 'V', 'v', 'X', 'x');
     private static final List<String> ERA_WORDS = List.of(
         "aC",
@@ -44,24 +48,21 @@ public class CenturyFinder implements ReplacementFinder {
 
     private int findCentury(WikipediaPage page, int start, List<MatchResult> matches) {
         final String text = page.getContent();
-        int startCentury = text.indexOf("iglo", start) - 1;
+        int startCentury = findStartCentury(text, start);
         if (startCentury >= 0) {
-            int endCentury = startCentury + "siglo".length();
-            final char firstLetter = text.charAt(startCentury);
-            if ((firstLetter != 'S' && firstLetter != 's') || text.charAt(endCentury) != ' ') {
+            int endCentury = startCentury + CENTURY_WORD.length();
+            String century = findCenturyWord(text, startCentury);
+            if (century == null) {
                 return endCentury;
             }
-            String century = firstLetter + "iglo";
 
             // Check the century number
-            final String centuryNumber = FinderUtils.findWordAfter(text, endCentury);
+            final String centuryNumber = findCenturyNumber(text, startCentury);
             if (centuryNumber == null) {
                 return endCentury;
-            } else if (isCenturyNumber(centuryNumber)) {
-                endCentury += 1 + centuryNumber.length();
-                century += (" " + centuryNumber);
             } else {
-                return endCentury + 1 + centuryNumber.length();
+                endCentury += 1 + centuryNumber.length();
+                century += (SPACE + centuryNumber);
             }
 
             // Check the era
@@ -83,6 +84,32 @@ public class CenturyFinder implements ReplacementFinder {
             return endCentury;
         } else {
             return -1;
+        }
+    }
+
+    private int findStartCentury(String text, int start) {
+        final int pos = text.indexOf(CENTURY_SEARCH, start);
+        return pos >= 1 ? pos - 1 : -1;
+    }
+
+    @Nullable
+    private String findCenturyWord(String text, int start) {
+        final char firstLetter = text.charAt(start);
+        final int endCentury = start + CENTURY_WORD.length();
+        if ((firstLetter == 'S' || firstLetter == 's') && text.charAt(endCentury) == ' ') {
+            return firstLetter + CENTURY_SEARCH;
+        } else {
+            return null;
+        }
+    }
+
+    @Nullable
+    private String findCenturyNumber(String text, int start) {
+        final String centuryNumber = FinderUtils.findWordAfter(start, CENTURY_WORD, text);
+        if (centuryNumber == null) {
+            return null;
+        } else {
+            return isCenturyNumber(centuryNumber) ? centuryNumber : null;
         }
     }
 
@@ -132,7 +159,7 @@ public class CenturyFinder implements ReplacementFinder {
         final String century = match.group();
         String normalized = century;
         for (String space : FinderUtils.SPACES) {
-            if (!" ".equals(space)) {
+            if (!SPACE.equals(space)) {
                 normalized = normalized.replace(space, " ");
             }
         }
@@ -141,15 +168,15 @@ public class CenturyFinder implements ReplacementFinder {
             linked = true;
             normalized = normalized.substring(2, normalized.length() - 2);
         }
-        final String[] tokens = normalized.split(" ");
+        final String[] tokens = FinderUtils.splitAsArray(normalized);
         final String centuryWord = tokens[0]; // We keep the original case for the template name to improve the edition diff
         final String centuryNumber = FinderUtils.toUpperCase(tokens[1]);
         String era = tokens.length >= 3 ? tokens[2].substring(0, 1) : "";
 
-        final String templateUpperLink = String.format("{{%s|%s|%s|S|1}}", centuryWord, centuryNumber, era);
-        final String templateUpperNoLink = String.format("{{%s|%s|%s|S}}", centuryWord, centuryNumber, era);
-        final String templateLowerLink = String.format("{{%s|%s|%s|s|1}}", centuryWord, centuryNumber, era);
-        final String templateLowerNoLink = String.format("{{%s|%s|%s|s}}", centuryWord, centuryNumber, era);
+        final String templateUpperLink = "{{" + centuryWord + "|" + centuryNumber + "|" + era + "|S|1}}";
+        final String templateUpperNoLink = "{{" + centuryWord + "|" + centuryNumber + "|" + era + "|S}}";
+        final String templateLowerLink = "{{" + centuryWord + "|" + centuryNumber + "|" + era + "|s|1}}";
+        final String templateLowerNoLink = "{{" + centuryWord + "|" + centuryNumber + "|" + era + "|s}}";
 
         final List<Suggestion> suggestions = new ArrayList<>(4);
         // Not linked centuries are recommended

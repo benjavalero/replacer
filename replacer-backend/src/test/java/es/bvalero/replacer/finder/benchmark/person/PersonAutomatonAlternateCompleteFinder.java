@@ -7,17 +7,17 @@ import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
 import es.bvalero.replacer.finder.benchmark.BenchmarkResult;
+import es.bvalero.replacer.finder.util.FinderUtils;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
-import org.apache.commons.lang3.StringUtils;
 
 class PersonAutomatonAlternateCompleteFinder implements BenchmarkFinder {
 
     private final RunAutomaton words;
 
     PersonAutomatonAlternateCompleteFinder(Collection<String> words) {
-        String alternations = "(" + StringUtils.join(words, "|") + ")<Z><Lu>";
+        String alternations = "(" + FinderUtils.joinAlternate(words) + ")<Z><Lu>";
         this.words = new RunAutomaton(new RegExp(alternations).toAutomaton(new DatatypesAutomatonProvider()));
     }
 

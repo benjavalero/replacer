@@ -3,13 +3,13 @@ package es.bvalero.replacer.finder.cosmetic.finders;
 import es.bvalero.replacer.common.domain.CheckWikipediaAction;
 import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.finder.cosmetic.CosmeticCheckedFinder;
+import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.RegexMatchFinder;
 import java.util.Map;
 import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
-import org.apache.commons.lang3.StringUtils;
 import org.intellij.lang.annotations.RegExp;
 import org.springframework.stereotype.Component;
 
@@ -27,7 +27,7 @@ class TemplateWordFinder implements CosmeticCheckedFinder {
 
     @PostConstruct
     public void init() {
-        String alternate = StringUtils.join(templateWords.values(), "|");
+        String alternate = FinderUtils.joinAlternate(templateWords.values());
         String regex = String.format(REGEX_TEMPLATE_WORD, alternate);
         patternTemplateWord = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
     }

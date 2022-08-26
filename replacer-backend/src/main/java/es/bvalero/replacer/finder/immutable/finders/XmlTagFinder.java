@@ -15,8 +15,12 @@ import org.springframework.stereotype.Component;
 @Component
 class XmlTagFinder extends ImmutableCheckedFinder {
 
+    private static final char START_TAG = '<';
+    private static final char END_TAG = '>';
+    private static final char END_TAG_SLASH = '/';
+
     // We want to avoid the XML comments to be captured by this
-    private static final Set<Character> FORBIDDEN_CHARS = Set.of('#', '{', '}', '<', '>');
+    private static final Set<Character> FORBIDDEN_CHARS = Set.of('#', '{', '}', START_TAG, END_TAG);
 
     @Override
     public int getMaxLength() {
@@ -32,22 +36,24 @@ class XmlTagFinder extends ImmutableCheckedFinder {
         final String text = page.getContent();
         final int startTag = findStartTag(text, start);
         if (startTag >= 0) {
-            final char first = text.charAt(startTag + 1);
-            if (Character.isLetter(first) || first == '/') {
-                final int endTag = findEndTag(text, startTag + 1);
-                if (endTag >= 0) {
-                    final String tag = text.substring(startTag + 1, endTag);
-                    if (validateTagChars(tag)) {
-                        matches.add(LinearMatchResult.of(startTag, text.substring(startTag, endTag + 1)));
+            final int startTagContent = startTag + 1; // 1 = start tag length
+            final char firstChar = text.charAt(startTagContent);
+            if (Character.isLetter(firstChar) || firstChar == END_TAG_SLASH) {
+                final int endTagContent = findEndTag(text, startTagContent);
+                if (endTagContent >= 0) {
+                    final int endTag = endTagContent + 1; // 1 = end tag length
+                    final String tagContent = text.substring(startTagContent, endTagContent);
+                    if (isValidTagContent(tagContent)) {
+                        matches.add(LinearMatchResult.of(startTag, text.substring(startTag, endTag)));
                     }
-                    return endTag + 1;
+                    return endTag;
                 } else {
                     // Not an XML tag
-                    return startTag + 1;
+                    return startTagContent;
                 }
             } else {
                 // Not an XML tag
-                return startTag + 1;
+                return startTagContent;
             }
         } else {
             return -1;
@@ -55,19 +61,18 @@ class XmlTagFinder extends ImmutableCheckedFinder {
     }
 
     private int findStartTag(String text, int start) {
-        return text.indexOf('<', start);
+        return text.indexOf(START_TAG, start);
     }
 
     private int findEndTag(String text, int start) {
-        return text.indexOf('>', start);
+        return text.indexOf(END_TAG, start);
     }
 
-    private boolean validateTagChars(String tag) {
-        for (int i = 0; i < tag.length(); i++) {
-            if (FORBIDDEN_CHARS.contains(tag.charAt(i))) {
-                return false;
-            }
-        }
-        return true;
+    private boolean isValidTagContent(String tagContent) {
+        return tagContent.chars().mapToObj(c -> (char) c).noneMatch(this::isForbiddenChar);
+    }
+
+    private boolean isForbiddenChar(char ch) {
+        return FORBIDDEN_CHARS.contains(ch);
     }
 }

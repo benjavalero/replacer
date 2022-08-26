@@ -30,7 +30,7 @@ class SurnameAutomatonFinder implements BenchmarkFinder {
         for (RunAutomaton word : this.words) {
             final AutomatonMatcher m = word.newMatcher(text);
             while (m.find()) {
-                if (FinderUtils.isWordPrecededByUppercase(m.start(), m.group(), text)) {
+                if (FinderUtils.isWordPrecededByUpperCase(m.start(), text)) {
                     matches.add(BenchmarkResult.of(m.start(), m.group()));
                 }
             }

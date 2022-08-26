@@ -3,11 +3,11 @@ package es.bvalero.replacer.finder.cosmetic.finders;
 import es.bvalero.replacer.common.domain.CheckWikipediaAction;
 import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.finder.cosmetic.CosmeticCheckedFinder;
+import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.RegexMatchFinder;
 import java.util.Set;
 import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
-import org.apache.commons.lang3.StringUtils;
 import org.intellij.lang.annotations.RegExp;
 import org.springframework.stereotype.Component;
 
@@ -31,7 +31,7 @@ class TagEmptyFinder implements CosmeticCheckedFinder {
     private static final String REGEX_TAG_EMPTY = "<(%s)[^>]*></\\1>";
 
     private static final Pattern PATTERN_TAG_EMPTY = Pattern.compile(
-        String.format(REGEX_TAG_EMPTY, StringUtils.join(TAGS, "|"))
+        String.format(REGEX_TAG_EMPTY, FinderUtils.joinAlternate(TAGS))
     );
 
     @Override

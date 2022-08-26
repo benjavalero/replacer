@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
  * Find person names which are used also as nouns and thus are false positives,
  * e.g. in Spanish `Julio` in `Julio Verne`, as "julio" is also the name of a month
  * to be written in lowercase.
- *
+ * <br />
  * It also finds words used commonly in titles, as `Sky` in `Sky News`.
  * Or compound words, as `Los Angeles`.
  */
@@ -30,7 +30,7 @@ class PersonNameFinder implements ImmutableFinder {
 
     @Override
     public FinderPriority getPriority() {
-        // It should be High for number of matches but it is slow so it is better to have lower priority
+        // It should be High for number of matches, but it is slow, so it is better to have lower priority.
         return FinderPriority.MEDIUM;
     }
 
@@ -71,7 +71,7 @@ class PersonNameFinder implements ImmutableFinder {
             final String text = page.getContent();
             final int personNameStart = text.indexOf(personName, start);
             if (personNameStart >= 0) {
-                if (FinderUtils.isWordFollowedByUppercase(personNameStart, personName, text)) {
+                if (FinderUtils.isWordFollowedByUpperCase(personNameStart, personName, text)) {
                     matches.add(LinearMatchResult.of(personNameStart, personName));
                 }
                 return personNameStart + personName.length();

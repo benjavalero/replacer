@@ -13,6 +13,7 @@ import java.util.*;
 import java.util.regex.MatchResult;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
@@ -28,6 +29,9 @@ import org.springframework.stereotype.Component;
  */
 @Component
 class LinkFinder extends ImmutableCheckedFinder {
+
+    private static final char PIPE = '|';
+    private static final char COLON = ':';
 
     @Resource
     private Map<String, String> fileWords;
@@ -78,13 +82,17 @@ class LinkFinder extends ImmutableCheckedFinder {
             );
         }
 
-        final String content = link.group().substring(START_LINK.length(), link.group().length() - END_LINK.length());
+        final String linkContent = link
+            .group()
+            .substring(START_LINK.length(), link.group().length() - END_LINK.length());
 
-        final int posPipe = content.lastIndexOf('|');
-        final String linkTitle = posPipe >= 0 ? content.substring(0, posPipe) : content;
-        final String linkAlias = posPipe >= 0 ? content.substring(posPipe + 1) : null;
+        // Link title and alias (optional) depend on the link pipe
+        final int posLastPipe = linkContent.lastIndexOf(PIPE);
+        final String linkTitle = posLastPipe >= 0 ? linkContent.substring(0, posLastPipe) : linkContent;
+        final String linkAlias = posLastPipe >= 0 ? linkContent.substring(posLastPipe + 1) : null;
 
-        final int posColon = linkTitle.indexOf(':');
+        // There could be a link "wikispace" e.g. for interwiki links or categories
+        final int posColon = linkTitle.indexOf(COLON);
         final String linkSpace = posColon >= 0 ? linkTitle.substring(0, posColon) : null;
 
         // If the link space is in the list then return an immutable of the complete link
@@ -100,7 +108,7 @@ class LinkFinder extends ImmutableCheckedFinder {
         // If the link alias exists then return the link title
         // In case the alias exists but is a parameter then return the complete link
         if (linkAlias != null) {
-            if (linkAlias.contains("=")) {
+            if (isAliasParameter(linkAlias)) {
                 return Collections.singletonList(link);
             } else {
                 return Collections.singletonList(LinearMatchResult.of(link.start() + START_LINK.length(), linkTitle));
@@ -111,6 +119,8 @@ class LinkFinder extends ImmutableCheckedFinder {
         return Collections.emptyList();
     }
 
+    // Find the end of the link suffix, i.e. lowercase chars appended to the link
+    // In case of a usual link followed by a space the suffix end will be the link end
     private int findEndSuffix(String text, int start) {
         for (int i = start; i < text.length(); i++) {
             if (!Character.isLowerCase(text.charAt(i))) {
@@ -130,10 +140,19 @@ class LinkFinder extends ImmutableCheckedFinder {
     }
 
     private boolean isLangSpace(@Nullable String space) {
-        return space != null && space.trim().length() == 2 && FinderUtils.isAsciiLowercase(space.trim());
+        if (space == null) {
+            return false;
+        } else {
+            final String trimmed = space.trim();
+            return trimmed.length() == 2 && FinderUtils.isAsciiLowerCase(trimmed);
+        }
     }
 
     private boolean isInterWikiSpace(@Nullable String space) {
-        return space != null && space.trim().length() == 0;
+        return space != null && StringUtils.isBlank(space);
+    }
+
+    private boolean isAliasParameter(String alias) {
+        return alias.contains("=");
     }
 }

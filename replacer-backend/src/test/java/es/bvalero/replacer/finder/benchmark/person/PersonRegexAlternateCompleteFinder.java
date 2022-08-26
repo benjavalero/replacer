@@ -3,19 +3,19 @@ package es.bvalero.replacer.finder.benchmark.person;
 import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
 import es.bvalero.replacer.finder.benchmark.BenchmarkResult;
+import es.bvalero.replacer.finder.util.FinderUtils;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.apache.commons.lang3.StringUtils;
 
 class PersonRegexAlternateCompleteFinder implements BenchmarkFinder {
 
     private final Pattern words;
 
     PersonRegexAlternateCompleteFinder(Collection<String> words) {
-        String alternations = "(" + StringUtils.join(words, "|") + ")\\s\\p{Lu}";
+        String alternations = "(" + FinderUtils.joinAlternate(words) + ")\\s\\p{Lu}";
         this.words = Pattern.compile(alternations);
     }
 

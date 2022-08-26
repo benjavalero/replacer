@@ -29,7 +29,7 @@ class SurnameRegexFinder implements BenchmarkFinder {
         for (Pattern word : this.words) {
             final Matcher m = word.matcher(text);
             while (m.find()) {
-                if (FinderUtils.isWordPrecededByUppercase(m.start(), m.group(), text)) {
+                if (FinderUtils.isWordPrecededByUpperCase(m.start(), text)) {
                     matches.add(BenchmarkResult.of(m.start(), m.group()));
                 }
             }

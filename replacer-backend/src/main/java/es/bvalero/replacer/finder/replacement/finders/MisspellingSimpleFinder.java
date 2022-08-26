@@ -83,4 +83,10 @@ public class MisspellingSimpleFinder extends MisspellingFinder implements Proper
     ReplacementKind getType() {
         return ReplacementKind.SIMPLE;
     }
+
+    @Override
+    public boolean validate(MatchResult match, WikipediaPage page) {
+        // For simple misspellings, we also need to check it the word is a misspelling.
+        return isExistingWord(match.group(), page.getId().getLang()) && super.validate(match, page);
+    }
 }

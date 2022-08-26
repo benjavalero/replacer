@@ -1,5 +1,7 @@
 package es.bvalero.replacer.finder.cosmetic.finders;
 
+import static org.apache.commons.lang3.StringUtils.SPACE;
+
 import es.bvalero.replacer.common.domain.CheckWikipediaAction;
 import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.finder.cosmetic.CosmeticCheckedFinder;
@@ -12,8 +14,6 @@ import org.springframework.stereotype.Component;
 /** Unicode white-spaces, e.g. `\u2002` */
 @Component
 class UnicodeWhiteSpaceFinder implements CosmeticCheckedFinder {
-
-    private static final String COMMON_WHITE_SPACE = "\u0020";
 
     @RegExp
     private static final String REGEX_UNICODE_WHITE_SPACE = "\\p{Zs}";
@@ -40,6 +40,6 @@ class UnicodeWhiteSpaceFinder implements CosmeticCheckedFinder {
 
     @Override
     public String getFix(MatchResult match, WikipediaPage page) {
-        return COMMON_WHITE_SPACE;
+        return SPACE;
     }
 }

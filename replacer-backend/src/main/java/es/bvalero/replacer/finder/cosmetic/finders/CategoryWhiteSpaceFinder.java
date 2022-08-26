@@ -31,7 +31,7 @@ class CategoryWhiteSpaceFinder implements CosmeticCheckedFinder {
     @PostConstruct
     public void init() {
         Set<String> words = FinderUtils.getItemsInCollection(categoryWords.values());
-        String alternate = String.format("(?:%s)", StringUtils.join(words, "|"));
+        String alternate = String.format("(?:%s)", FinderUtils.joinAlternate(words));
         String regex = String.format(REGEX_CATEGORY_SPACE, alternate);
         patternCategorySpace = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
     }
@@ -54,21 +54,34 @@ class CategoryWhiteSpaceFinder implements CosmeticCheckedFinder {
     }
 
     private boolean validateCategoryWord(String word) {
-        return !word.equals(word.trim());
+        return hasSpacesAround(word);
     }
 
     private boolean validateCategoryName(String name) {
-        return !name.equals(name.trim());
+        return hasSpacesAround(name);
     }
 
     private boolean validateCategoryAlias(@Nullable String alias) {
         // We trim also the alias except if it is an empty whitespace which has a special meaning
-        assert alias == null || alias.startsWith("|");
-        if (alias == null || StringUtils.isBlank(alias.substring(1))) {
+        if (alias == null) {
             return false;
         } else {
-            return !alias.substring(1).equals(alias.substring(1).trim());
+            assert alias.startsWith("|");
+            final String aliasValue = alias.substring(1);
+            if (isEmptyAlias(aliasValue)) {
+                return false;
+            } else {
+                return hasSpacesAround(aliasValue);
+            }
         }
+    }
+
+    private boolean hasSpacesAround(String text) {
+        return !text.equals(text.trim());
+    }
+
+    private boolean isEmptyAlias(String alias) {
+        return StringUtils.isBlank(alias);
     }
 
     @Override
@@ -78,12 +91,11 @@ class CategoryWhiteSpaceFinder implements CosmeticCheckedFinder {
 
     @Override
     public String getFix(MatchResult match, WikipediaPage page) {
-        String categoryWord = FinderUtils.getFirstItemInList(categoryWords.get(page.getId().getLang().getCode()));
-        return String.format(
-            "[[%s:%s%s]]",
-            categoryWord,
-            match.group(2).trim(),
-            match.group(3) == null ? "" : "|" + match.group(3).substring(1).trim()
+        String defaultCategoryWord = FinderUtils.getFirstItemInList(
+            categoryWords.get(page.getId().getLang().getCode())
         );
+        String fixedCategoryName = match.group(2).trim();
+        String fixedCategoryAlias = match.group(3) == null ? "" : "|" + match.group(3).substring(1).trim();
+        return String.format("[[%s:%s%s]]", defaultCategoryWord, fixedCategoryName, fixedCategoryAlias);
     }
 }

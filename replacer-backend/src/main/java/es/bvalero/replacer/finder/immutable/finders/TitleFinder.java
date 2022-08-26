@@ -29,19 +29,19 @@ class TitleFinder extends ImmutableCheckedFinder {
     @SuppressWarnings("unchecked")
     @Override
     public Iterable<Immutable> find(WikipediaPage page) {
-        // As the titles are not very long and therefore they have few words
-        // the best approach is to iterate the list of words and find them in the text
+        // As the titles are not very long, and therefore they have few words,
+        // the best approach is to iterate the list of words and find them in the text.
         return IterableUtils.chainedIterable(
             Arrays
                 .stream(page.getTitle().split("\\P{L}+"))
-                .filter(this::isTitleWordIgnorable)
+                .filter(this::isTitleWordImmutable)
                 .map(TitleFinder.TitleLinearFinder::new)
                 .map(finder -> finder.find(page))
                 .toArray(Iterable[]::new)
         );
     }
 
-    private boolean isTitleWordIgnorable(@Nullable String word) {
+    private boolean isTitleWordImmutable(@Nullable String word) {
         return word != null && word.length() >= MIN_WORD_LENGTH;
     }
 

@@ -14,15 +14,11 @@ import es.bvalero.replacer.finder.util.AutomatonMatchFinder;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.Collections;
-import java.util.EnumMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.MatchResult;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import org.apache.commons.collections4.SetValuedMap;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.logging.LogLevel;
 import org.springframework.lang.Nullable;
@@ -72,13 +68,11 @@ class FalsePositiveFinder implements ImmutableFinder, PropertyChangeListener {
         // For instance, in "ratones aún son", the false positive "es aún" is matched but not valid,
         // and it makes that the next one "aún son" is not matched.
         if (falsePositives != null && !falsePositives.isEmpty()) {
-            final String alternations = String.format(
-                "(%s)",
-                StringUtils.join(
-                    falsePositives.stream().map(FalsePositive::getExpression).collect(Collectors.toList()),
-                    "|"
-                )
-            );
+            final List<String> falsePositiveExpressions = falsePositives
+                .stream()
+                .map(FalsePositive::getExpression)
+                .collect(Collectors.toUnmodifiableList());
+            final String alternations = String.format("(%s)", FinderUtils.joinAlternate(falsePositiveExpressions));
             return new RunAutomaton(new RegExp(alternations).toAutomaton(new DatatypesAutomatonProvider()));
         } else {
             return null;

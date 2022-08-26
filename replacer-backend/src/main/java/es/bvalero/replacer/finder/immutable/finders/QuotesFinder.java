@@ -14,8 +14,19 @@ import org.apache.commons.lang3.StringUtils;
 
 abstract class QuotesFinder extends ImmutableCheckedFinder {
 
+    protected static final char DOUBLE_QUOTES = '\"';
+    protected static final char START_QUOTE_ANGULAR = '«';
+    protected static final char END_QUOTE_ANGULAR = '»';
+    protected static final char START_QUOTE_TYPOGRAPHIC = '“';
+    protected static final char END_QUOTE_TYPOGRAPHIC = '”';
     private static final char NEW_LINE = '\n';
-    private static final Set<Character> QUOTE_CHARS = Set.of('«', '»', '"', '“', '”');
+    private static final Set<Character> QUOTE_CHARS = Set.of(
+        DOUBLE_QUOTES,
+        START_QUOTE_ANGULAR,
+        END_QUOTE_ANGULAR,
+        START_QUOTE_TYPOGRAPHIC,
+        END_QUOTE_TYPOGRAPHIC
+    );
 
     @Override
     public FinderPriority getPriority() {
@@ -40,41 +51,29 @@ abstract class QuotesFinder extends ImmutableCheckedFinder {
         final String text = page.getContent();
         final int startQuote = findStartQuote(text, start);
         if (startQuote >= 0) {
-            int endQuote = findEndQuote(text, startQuote + 1);
-            if (endQuote >= 0) {
-                endQuote++; // Move to the position next to the end of the quote
+            final int startQuoteText = startQuote + 1; // 1 = start quote length
+            final int endQuoteText = findEndQuote(text, startQuoteText);
+            if (endQuoteText >= 0) {
+                final String quoteText = text.substring(startQuoteText, endQuoteText);
+                if (!isValidQuoteText(quoteText)) {
+                    return endQuoteText;
+                }
 
-                final String quotedText = text.substring(startQuote, endQuote);
-                final String innerText = quotedText.substring(1, quotedText.length() - 1);
-
-                if (!validateForbiddenChars(quotedText)) {
-                    // Quote containing forbidden chars. Continue.
+                final int endQuote = endQuoteText + 1; // 1 = end quote length
+                if (isEmptyQuote(quoteText, startQuote, text, page)) {
                     return endQuote;
                 }
 
-                // Check the quoted text is not empty and is not an attribute
-                if (StringUtils.isBlank(innerText) && (startQuote == 0 || text.charAt(startQuote - 1) != '=')) {
-                    logImmutableCheck(page, startQuote, endQuote, "Empty quoted text");
-                    return endQuote;
-                }
+                checkRedundantQuote(quoteText, startQuote, page);
 
-                // Check the quoted text is not quoted again
-                if (
-                    StringUtils.isNotBlank(innerText) &&
-                    QUOTE_CHARS.contains(innerText.charAt(0)) &&
-                    QUOTE_CHARS.contains(innerText.charAt(innerText.length() - 1))
-                ) {
-                    logImmutableCheck(page, startQuote, endQuote, "Redundant quotes");
-                    // Continue
-                }
-
-                matches.add(LinearMatchResult.of(startQuote, quotedText));
+                final String quote = text.substring(startQuote, endQuote);
+                matches.add(LinearMatchResult.of(startQuote, quote));
                 return endQuote;
             } else {
                 // No quote ending found
                 // It's possible that the quote start was a false positive or the quote contains new lines
-                logImmutableCheck(page, startQuote, startQuote + 1, "Truncated quotes");
-                return startQuote + 1;
+                logImmutableCheck(page, startQuote, startQuoteText, "Truncated quotes");
+                return startQuoteText;
             }
         } else {
             return -1;
@@ -98,17 +97,49 @@ abstract class QuotesFinder extends ImmutableCheckedFinder {
         return -1;
     }
 
-    /* Check if the found text contains any forbidden char */
-    private boolean validateForbiddenChars(String text) {
-        for (int i = 0; i < text.length(); i++) {
-            if (getForbiddenChars().contains(text.charAt(i))) {
-                return false;
-            }
-        }
-        return true;
+    private boolean isValidQuoteText(String text) {
+        return !containsForbiddenChars(text);
+    }
+
+    private boolean containsForbiddenChars(String text) {
+        return text.chars().mapToObj(c -> (char) c).anyMatch(this::isForbiddenChar);
+    }
+
+    private boolean isForbiddenChar(char ch) {
+        return getForbiddenChars().contains(ch);
     }
 
     Collection<Character> getForbiddenChars() {
         return Collections.emptySet();
+    }
+
+    private boolean isEmptyQuote(String quoteText, int startQuote, String text, WikipediaPage page) {
+        // Warning when empty but when it is an attribute
+        final boolean isEmpty = StringUtils.isBlank(quoteText);
+        if (isEmpty && !isAttribute(startQuote, text)) {
+            final int endQuote = startQuote + quoteText.length() + 2; // 2 = start + end quote length
+            logImmutableCheck(page, startQuote, endQuote, "Empty quoted text");
+        }
+        return isEmpty;
+    }
+
+    private boolean isAttribute(int startQuote, String text) {
+        return startQuote > 0 && text.charAt(startQuote - 1) == '=';
+    }
+
+    private void checkRedundantQuote(String quoteText, int startQuote, WikipediaPage page) {
+        // Check the quote text is not quoted again by checking the first and last characters are not quote characters
+        if (
+            StringUtils.isNotBlank(quoteText) &&
+            isQuoteChar(quoteText.charAt(0)) &&
+            isQuoteChar(quoteText.charAt(quoteText.length() - 1))
+        ) {
+            final int endQuote = startQuote + quoteText.length() + 2; // 2 = start + end quote length
+            logImmutableCheck(page, startQuote, endQuote, "Redundant quotes");
+        }
+    }
+
+    private boolean isQuoteChar(char ch) {
+        return QUOTE_CHARS.contains(ch);
     }
 }

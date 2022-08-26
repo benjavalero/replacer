@@ -9,14 +9,13 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.apache.commons.lang3.StringUtils;
 
 class PersonRegexAlternateFinder implements BenchmarkFinder {
 
     private final Pattern words;
 
     PersonRegexAlternateFinder(Collection<String> words) {
-        String alternations = '(' + StringUtils.join(words, "|") + ')';
+        String alternations = '(' + FinderUtils.joinAlternate(words) + ')';
         this.words = Pattern.compile(alternations);
     }
 
@@ -28,7 +27,7 @@ class PersonRegexAlternateFinder implements BenchmarkFinder {
         Matcher m = this.words.matcher(text);
         while (m.find()) {
             BenchmarkResult match = BenchmarkResult.of(m.start(), m.group());
-            if (FinderUtils.isWordFollowedByUppercase(m.start(), m.group(), text)) {
+            if (FinderUtils.isWordFollowedByUpperCase(m.start(), m.group(), text)) {
                 matches.add(match);
             }
         }

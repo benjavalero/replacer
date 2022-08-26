@@ -18,6 +18,7 @@ import org.springframework.stereotype.Component;
 @Component
 class TableFinder implements ImmutableFinder {
 
+    private static final char NEW_LINE = '\n';
     private static final String TABLE_START = "{|";
     private static final String ROW_START = "|-";
 
@@ -31,13 +32,8 @@ class TableFinder implements ImmutableFinder {
         final int startLine = findStartLine(text, start);
         if (startLine >= 0) {
             final int endLine = findEndLine(text, startLine);
-            final String line;
-            if (endLine >= 0) {
-                line = text.substring(startLine, endLine);
-            } else {
-                // End of file
-                line = text.substring(startLine);
-            }
+            // Take into account the end of file
+            final String line = endLine >= 0 ? text.substring(startLine, endLine) : text.substring(startLine);
 
             if (isImmutableLine(line)) {
                 matches.add(LinearMatchResult.of(startLine, line));
@@ -50,7 +46,7 @@ class TableFinder implements ImmutableFinder {
 
     private int findStartLine(String text, int start) {
         for (int i = start; i < text.length(); i++) {
-            if (text.charAt(i) != '\n') {
+            if (text.charAt(i) != NEW_LINE) {
                 return i;
             }
         }
@@ -58,7 +54,7 @@ class TableFinder implements ImmutableFinder {
     }
 
     private int findEndLine(String text, int start) {
-        return text.indexOf('\n', start);
+        return text.indexOf(NEW_LINE, start);
     }
 
     private boolean isImmutableLine(String line) {
