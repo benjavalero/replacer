@@ -8,7 +8,6 @@ import es.bvalero.replacer.finder.util.AutomatonMatchFinder;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import java.util.*;
 import java.util.regex.MatchResult;
-import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import org.apache.commons.collections4.ListValuedMap;
@@ -491,9 +490,5 @@ public class DateFinder implements ReplacementFinder {
             }
         }
         return Collections.emptyList();
-    }
-
-    private boolean isPrecededByArticleToBeFixed(WikipediaPage page, int start) {
-        return !getFixArticle(page, start).isEmpty();
     }
 }
