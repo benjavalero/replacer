@@ -6,6 +6,7 @@ import static org.apache.commons.lang3.StringUtils.SPACE;
 import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.common.util.ReplacerUtils;
 import java.util.*;
+import java.util.regex.MatchResult;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.experimental.UtilityClass;
@@ -73,6 +74,10 @@ public class FinderUtils {
         return word.chars().allMatch(Character::isUpperCase);
     }
 
+    public boolean isLowerCase(String word) {
+        return word.chars().allMatch(Character::isLowerCase);
+    }
+
     public boolean isAscii(char ch) {
         return (ch >= 'A' && ch <= 'Z') || (ch >= 'a' && ch <= 'z');
     }
@@ -133,45 +138,67 @@ public class FinderUtils {
     }
 
     @Nullable
-    public String findWordAfter(int start, String word, String text) {
-        final int end = start + word.length();
-        if (end + 1 >= text.length() || !Character.isWhitespace(text.charAt(end))) {
-            return null;
-        }
-
-        int lastLetter = -1;
-        for (int i = end + 1; i < text.length(); i++) {
-            final char ch = text.charAt(i);
-            if (Character.isLetterOrDigit(ch)) {
-                lastLetter = i;
-            } else {
-                break;
-            }
-        }
-        return lastLetter >= 0 ? text.substring(end + 1, lastLetter + 1) : null;
-    }
-
-    public boolean isWordPrecededByUpperCase(int start, String text) {
-        final String wordBefore = findWordBefore(text, start);
-        return wordBefore != null && startsWithUpperCase(wordBefore);
+    public MatchResult findWordAfter(String text, int endWord) {
+        return findWordAfter(text, endWord, false);
     }
 
     @Nullable
-    public String findWordBefore(String text, int start) {
+    public MatchResult findWordAfter(String text, int endWord, boolean onlyWhiteSpaceDelimiter) {
+        if (endWord + 1 >= text.length() || !Character.isWhitespace(text.charAt(endWord))) {
+            return null;
+        }
+
+        int firstLetter = -1;
+        int lastLetter = -1;
+        for (int i = endWord + 1; i < text.length(); i++) {
+            final char ch = text.charAt(i);
+            if (isWordDelimiter(ch, onlyWhiteSpaceDelimiter)) {
+                if (firstLetter >= 0) {
+                    break;
+                }
+            } else {
+                if (firstLetter < 0) {
+                    firstLetter = i;
+                }
+                lastLetter = i;
+            }
+        }
+        return firstLetter >= 0 ? LinearMatchResult.of(firstLetter, text.substring(firstLetter, lastLetter + 1)) : null;
+    }
+
+    public boolean isWordPrecededByUpperCase(int start, String text) {
+        final MatchResult wordBefore = findWordBefore(text, start);
+        return wordBefore != null && startsWithUpperCase(wordBefore.group());
+    }
+
+    @Nullable
+    public MatchResult findWordBefore(String text, int start) {
+        return findWordBefore(text, start, false);
+    }
+
+    @Nullable
+    public MatchResult findWordBefore(String text, int start, boolean onlyWhiteSpaceDelimiter) {
         if (start < 2 || !Character.isWhitespace(text.charAt(start - 1))) {
             return null;
         }
 
         int firstLetter = -1;
+        int lastLetter = -1;
         for (int i = start - 2; i >= 0; i--) {
             final char ch = text.charAt(i);
-            if (Character.isLetterOrDigit(ch)) {
-                firstLetter = i;
+            if (isWordDelimiter(ch, onlyWhiteSpaceDelimiter)) {
+                // If white-space we continue if no word found yet
+                if (!Character.isWhitespace(ch) || lastLetter >= 0) {
+                    break;
+                }
             } else {
-                break;
+                firstLetter = i;
+                if (lastLetter < 0) {
+                    lastLetter = i;
+                }
             }
         }
-        return firstLetter >= 0 ? text.substring(firstLetter, start - 1) : null;
+        return lastLetter >= 0 ? LinearMatchResult.of(firstLetter, text.substring(firstLetter, lastLetter + 1)) : null;
     }
 
     @Nullable
@@ -187,6 +214,14 @@ public class FinderUtils {
             }
         }
         return start >= 0 ? text.substring(start) : null;
+    }
+
+    private boolean isWordDelimiter(char ch, boolean onlyWhiteSpaceDelimiter) {
+        if (onlyWhiteSpaceDelimiter) {
+            return Character.isWhitespace(ch);
+        } else {
+            return !Character.isLetterOrDigit(ch);
+        }
     }
 
     private String getTextSnippet(String text, int start, int end) {

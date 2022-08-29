@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import es.bvalero.replacer.common.domain.Replacement;
+import es.bvalero.replacer.common.domain.ReplacementType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.config.XmlConfiguration;
@@ -53,7 +54,7 @@ class DateFinderTest {
             "17 agosto de 2019, 17 de agosto de 2019, " + SUBTYPE_INCOMPLETE,
             "17 agosto del 2019, 17 de agosto del 2019, " + SUBTYPE_INCOMPLETE,
             "17 agosto 2019, 17 de agosto de 2019, " + SUBTYPE_INCOMPLETE,
-            "17 agosto 2.019, 17 de agosto de 2019, " + SUBTYPE_INCOMPLETE,
+            "17 agosto 2.019, 17 de agosto de 2019, " + SUBTYPE_DOT_YEAR,
             "17 setiembre 2019, 17 de septiembre de 2019, " + SUBTYPE_INCOMPLETE,
             "17 de agosto de 2.019, 17 de agosto de 2019, " + SUBTYPE_DOT_YEAR,
             "17 de agosto del 2.019, 17 de agosto del 2019, " + SUBTYPE_DOT_YEAR,
@@ -89,7 +90,7 @@ class DateFinderTest {
             "desde Agosto 2019, desde agosto de 2019, " + SUBTYPE_UPPERCASE,
             "de Setiembre de 2019, de septiembre de 2019, " + SUBTYPE_UPPERCASE,
             "Desde agosto 2019, Desde agosto de 2019, " + SUBTYPE_INCOMPLETE,
-            "desde agosto 2.019, desde agosto de 2019, " + SUBTYPE_INCOMPLETE,
+            "desde agosto 2.019, desde agosto de 2019, " + SUBTYPE_DOT_YEAR,
             "Desde agosto de 2.019, Desde agosto de 2019, " + SUBTYPE_DOT_YEAR,
             "En agosto del 2.019, En agosto del 2019, " + SUBTYPE_DOT_YEAR,
         }
@@ -156,6 +157,19 @@ class DateFinderTest {
         assertEquals(date, replacements.get(0).getSuggestions().get(0).getText());
         assertEquals(expected, replacements.get(0).getSuggestions().get(1).getText());
         assertEquals(subtype, replacements.get(0).getType().getSubtype());
+    }
+
+    void testUnorderedDateMonthDayYearWithText() {
+        String text = "Siendo mayo 3, 1999.";
+        String match = "mayo 3, 1999";
+        String fix = "3 de mayo de 1999";
+        List<Replacement> replacements = dateFinder.findList(text);
+
+        assertEquals(1, replacements.size());
+        assertEquals(match, replacements.get(0).getText());
+        assertEquals(match, replacements.get(0).getSuggestions().get(0).getText());
+        assertEquals(fix, replacements.get(0).getSuggestions().get(1).getText());
+        assertEquals(ReplacementType.DATE_UNORDERED, replacements.get(0).getType());
     }
 
     @ParameterizedTest

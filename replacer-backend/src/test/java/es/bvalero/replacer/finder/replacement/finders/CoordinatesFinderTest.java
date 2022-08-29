@@ -30,7 +30,20 @@ class CoordinatesFinderTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = { "38°05′08″", "38° 05′ 08″", "38°05′08″", "38°{{esd}}05′{{esd}}08″" })
+    @ValueSource(
+        strings = {
+            "38°05′08″",
+            "38° 05′ 08″",
+            "38°05′08″",
+            "38°{{esd}}05′{{esd}}08″",
+            "38",
+            "38°",
+            "38°05",
+            "38°05′",
+            "38°05′08",
+            "38°  05′08″",
+        }
+    )
     void testValidCoordinates(String text) {
         List<Replacement> replacements = coordinatesFinder.findList(text);
         assertTrue(replacements.isEmpty());

@@ -57,7 +57,7 @@ public class CenturyFinder implements ReplacementFinder {
             }
 
             // Check the century number
-            final String centuryNumber = findCenturyNumber(text, startCentury);
+            final String centuryNumber = findCenturyNumber(text, endCentury);
             if (centuryNumber == null) {
                 return endCentury;
             } else {
@@ -104,12 +104,13 @@ public class CenturyFinder implements ReplacementFinder {
     }
 
     @Nullable
-    private String findCenturyNumber(String text, int start) {
-        final String centuryNumber = FinderUtils.findWordAfter(start, CENTURY_WORD, text);
+    private String findCenturyNumber(String text, int endCentury) {
+        final MatchResult centuryNumber = FinderUtils.findWordAfter(text, endCentury);
         if (centuryNumber == null) {
             return null;
         } else {
-            return isCenturyNumber(centuryNumber) ? centuryNumber : null;
+            final String number = centuryNumber.group();
+            return isCenturyNumber(number) ? number : null;
         }
     }
 

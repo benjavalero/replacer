@@ -38,13 +38,16 @@ public class AcuteOFinder implements ReplacementFinder {
         final int startAcuteO = findStartAcuteO(text, start);
         if (startAcuteO >= 0) {
             final int endAcuteO = startAcuteO + SEARCH_ACUTE_O.length();
-            final String wordBefore = FinderUtils.findWordBefore(text, startAcuteO + 1);
-            final String wordAfter = FinderUtils.findWordAfter(startAcuteO + 1, ACUTE_O, text);
-            if (wordBefore == null || wordAfter == null) {
+            final MatchResult matchBefore = FinderUtils.findWordBefore(text, startAcuteO + 1);
+            final MatchResult matchAfter = FinderUtils.findWordAfter(text, endAcuteO - 1);
+            if (matchBefore == null || matchAfter == null) {
                 return endAcuteO;
             } else {
                 matches.add(
-                    LinearMatchResult.of(startAcuteO - wordBefore.length(), wordBefore + SEARCH_ACUTE_O + wordAfter)
+                    LinearMatchResult.of(
+                        startAcuteO - matchBefore.group().length(),
+                        matchBefore.group() + SEARCH_ACUTE_O + matchAfter.group()
+                    )
                 );
                 return endAcuteO;
             }

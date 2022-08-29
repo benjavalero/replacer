@@ -3,15 +3,18 @@ package es.bvalero.replacer.finder.util;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.MatchResult;
+import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 @ToString
+@EqualsAndHashCode
 public class LinearMatchResult implements MatchResult {
 
     private final String text;
     private final int start;
 
     // Use groups to implement nested matches
+    @EqualsAndHashCode.Exclude
     private final List<LinearMatchResult> groups = new ArrayList<>();
 
     private LinearMatchResult(String text, int start) {

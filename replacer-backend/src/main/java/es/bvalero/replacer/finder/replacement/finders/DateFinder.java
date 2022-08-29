@@ -2,22 +2,23 @@ package es.bvalero.replacer.finder.replacement.finders;
 
 import static org.apache.commons.lang3.StringUtils.SPACE;
 
-import dk.brics.automaton.DatatypesAutomatonProvider;
-import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.common.domain.*;
 import es.bvalero.replacer.finder.replacement.ReplacementFinder;
-import es.bvalero.replacer.finder.util.AutomatonMatchFinder;
 import es.bvalero.replacer.finder.util.FinderUtils;
+import es.bvalero.replacer.finder.util.LinearMatchFinder;
+import es.bvalero.replacer.finder.util.LinearMatchResult;
 import java.util.*;
 import java.util.regex.MatchResult;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
+import lombok.Data;
+import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.collections4.ListValuedMap;
 import org.apache.commons.collections4.SetValuedMap;
 import org.apache.commons.collections4.multimap.ArrayListValuedHashMap;
 import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
 import org.apache.commons.lang3.StringUtils;
-import org.intellij.lang.annotations.RegExp;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
 /**
@@ -38,12 +39,13 @@ public class DateFinder implements ReplacementFinder {
     @Resource
     private Map<String, String> dateArticles;
 
-    private final SetValuedMap<WikipediaLanguage, String> langMonths = new HashSetValuedHashMap<>();
-    private final SetValuedMap<WikipediaLanguage, String> langConnectors = new HashSetValuedHashMap<>();
-    private final ListValuedMap<WikipediaLanguage, String> langPrepositions = new ArrayListValuedHashMap<>();
-    private final Map<WikipediaLanguage, Map<String, String>> langArticles = new EnumMap<>(WikipediaLanguage.class);
-
-    private final Map<WikipediaLanguage, RunAutomaton> dateAutomata = new EnumMap<>(WikipediaLanguage.class);
+    private static final SetValuedMap<WikipediaLanguage, String> langMonths = new HashSetValuedHashMap<>();
+    private static final SetValuedMap<WikipediaLanguage, String> langMonthsLowerCase = new HashSetValuedHashMap<>();
+    private static final SetValuedMap<WikipediaLanguage, String> langConnectors = new HashSetValuedHashMap<>();
+    private static final ListValuedMap<WikipediaLanguage, String> langPrepositions = new ArrayListValuedHashMap<>();
+    private static final Map<WikipediaLanguage, Map<String, String>> langArticles = new EnumMap<>(
+        WikipediaLanguage.class
+    );
 
     @PostConstruct
     public void init() {
@@ -61,84 +63,31 @@ public class DateFinder implements ReplacementFinder {
             FinderUtils
                 .splitListAsStream(monthNames.get(lang.getCode()))
                 .forEach(month -> {
-                    this.langMonths.put(lang, month);
-                    this.langMonths.put(lang, FinderUtils.setFirstUpperCase(month));
+                    langMonths.put(lang, month);
+                    langMonths.put(lang, FinderUtils.setFirstUpperCase(month));
+                    langMonthsLowerCase.put(lang, month);
                 });
 
             FinderUtils
                 .splitListAsStream(dateConnectors.get(lang.getCode()))
                 .forEach(connector -> {
-                    this.langConnectors.put(lang, connector);
-                    this.langConnectors.put(lang, FinderUtils.setFirstUpperCase(connector));
+                    langConnectors.put(lang, connector);
+                    langConnectors.put(lang, FinderUtils.setFirstUpperCase(connector));
                 });
 
             FinderUtils
                 .splitListAsStream(yearPrepositions.get(lang.getCode()))
                 .forEach(preposition -> {
-                    this.langPrepositions.put(lang, preposition);
-                    this.langPrepositions.put(lang, FinderUtils.setFirstUpperCase(preposition));
+                    langPrepositions.put(lang, preposition);
+                    langPrepositions.put(lang, FinderUtils.setFirstUpperCase(preposition));
                 });
-
-            // Date formats:
-            // 1) Day + Prep? + Month + Prep? + Year
-            // 2) Connector + Ø + Month + Prep? + Year
-            // 3) Month + Ø + Day + Prep? + Year
-            // 4) Year + Comma? + Month + Ø + Day
-
-            final String regexConnectors = String.format(
-                "(%s)",
-                FinderUtils.joinAlternate(this.langConnectors.get(lang))
-            );
-            final String regexMonths = String.format("(%s)", FinderUtils.joinAlternate(this.langMonths.get(lang)));
-            final String regexPrepositions = String.format(
-                "( (%s))?",
-                FinderUtils.joinAlternate(this.langPrepositions.get(lang))
-            );
-
-            @RegExp
-            final String regexDay = "(0?[1-9]|[12]<N>|3[01])";
-            @RegExp
-            final String regexYear = "[12]\\.?<N>{3}";
-            @RegExp
-            final String regexComma = ",?";
-
-            final String regex1 = String.format(
-                "%s%s %s%s %s",
-                regexDay,
-                regexPrepositions,
-                regexMonths,
-                regexPrepositions,
-                regexYear
-            );
-            final String regex2 = String.format(
-                "%s %s%s %s",
-                regexConnectors,
-                regexMonths,
-                regexPrepositions,
-                regexYear
-            );
-            final String regex3 = String.format(
-                "%s %s(%s|%s) %s",
-                regexMonths,
-                regexDay,
-                regexComma,
-                regexPrepositions,
-                regexYear
-            );
-            final String regex4 = String.format("%s%s %s %s", regexYear, regexComma, regexMonths, regexDay);
-
-            final String regexDate = String.format("(%s|%s|%s|%s)", regex1, regex2, regex3, regex4);
-            final RunAutomaton dateAutomaton = new RunAutomaton(
-                new dk.brics.automaton.RegExp(regexDate).toAutomaton(new DatatypesAutomatonProvider())
-            );
-            dateAutomata.put(lang, dateAutomaton);
 
             // Finally configure the date articles
             if (dateArticles.containsKey(lang.getCode())) {
-                this.langArticles.put(lang, new HashMap<>());
+                langArticles.put(lang, new HashMap<>());
                 FinderUtils
                     .splitListAsStream(dateArticles.get(lang.getCode()))
-                    .forEach(pair -> this.langArticles.get(lang).putAll(buildArticleMap(pair)));
+                    .forEach(pair -> langArticles.get(lang).putAll(buildArticleMap(pair)));
             }
         }
     }
@@ -152,302 +101,375 @@ public class DateFinder implements ReplacementFinder {
     }
 
     @Override
-    public Iterable<MatchResult> findMatchResults(WikipediaPage page) {
-        final RunAutomaton dateAutomaton = dateAutomata.get(page.getId().getLang());
-        return dateAutomaton != null
-            ? AutomatonMatchFinder.find(page.getContent(), dateAutomaton)
-            : Collections.emptyList();
+    public Iterable<Replacement> find(WikipediaPage page) {
+        final Iterable<MatchResult> months = findAllMonths(page);
+        final Iterable<Replacement> replacements = IterableUtils.transformedIterable(
+            months,
+            m -> convertMonth(m, page)
+        );
+        return IterableUtils.filteredIterable(replacements, Objects::nonNull);
+    }
+
+    @SuppressWarnings("unchecked")
+    private Iterable<MatchResult> findAllMonths(WikipediaPage page) {
+        final WikipediaLanguage lang = page.getId().getLang();
+        return IterableUtils.chainedIterable(
+            langMonthsLowerCase
+                .get(lang)
+                .stream()
+                .map(MonthFinder::new)
+                .map(finder -> finder.find(page))
+                .toArray(Iterable[]::new)
+        );
     }
 
     @Override
-    public boolean validate(MatchResult match, WikipediaPage page) {
-        return ReplacementFinder.super.validate(match, page) && validateDate(match, page);
+    public Iterable<MatchResult> findMatchResults(WikipediaPage page) {
+        // We are overriding the more general find method
+        throw new IllegalCallerException();
     }
 
-    private boolean validateDate(MatchResult match, WikipediaPage page) {
+    @Override
+    public Replacement convert(MatchResult matchResult, WikipediaPage page) {
+        // We are overriding the more general find method
+        throw new IllegalCallerException();
+    }
+
+    @Nullable
+    private Replacement convertMonth(MatchResult match, WikipediaPage page) {
+        // We use a specific method to convert the result as it might return a null replacement
+        // if the month found is not a date one or the date is not to be fixed
+
+        // Date formats:
+        // 1) Day + Prep? + Month + Prep? + Year (long date)
+        // 2) Connector + Ø + Month + Prep? + Year (month-year)
+        // 3) Month + Ø + Day + Prep? + Year (month-day-year)
+        // 4) Year,? + Month + Ø + Day (year-month-day)
         final WikipediaLanguage lang = page.getId().getLang();
-        final String date = match.group();
-        final String token1 = FinderUtils.splitAsStream(date).findFirst().orElseThrow(IllegalArgumentException::new);
-        if (isDay(token1)) {
-            // Long date: DMY
-            return !isValidLongDate(match, page);
-        } else if (isConnector(token1, lang)) {
-            // Connector + MY
-            return !isValidMonthYear(date, lang);
+        final String text = page.getContent();
+
+        final int startMonth = match.start();
+        final MatchResult matchBefore = FinderUtils.findWordBefore(text, startMonth, true);
+        if (matchBefore == null) {
+            return convertMonthDayYear(match, page);
+        } else {
+            final String wordBefore = matchBefore.group();
+            if (isDay(wordBefore)) {
+                return convertLongDate(match, matchBefore, page);
+            } else if (isYear(wordBefore)) {
+                return convertYearMonthDay(match, matchBefore, page);
+            } else if (isConnector(wordBefore, lang)) {
+                return convertMonthYear(match, matchBefore, page);
+            } else if (isPreposition(wordBefore, lang)) {
+                // We have checked it is not a preposition which is also a connector
+                return convertLongDate(match, matchBefore, page);
+            } else {
+                return convertMonthDayYear(match, page);
+            }
+        }
+    }
+
+    @Nullable
+    private Replacement convertLongDate(MatchResult matchMonth, MatchResult matchBefore, WikipediaPage page) {
+        final WikipediaLanguage lang = page.getId().getLang();
+        final String text = page.getContent();
+        final TokenizedDate tokenizedDate = new TokenizedDate(matchMonth);
+        tokenizedDate.setType(1);
+
+        // Find the day in case the word before is a preposition
+        final String wordBefore = matchBefore.group();
+        final int startBefore = matchBefore.start();
+        if (isPreposition(wordBefore, lang)) {
+            tokenizedDate.setPrepBefore(wordBefore);
+
+            final MatchResult matchBefore2 = FinderUtils.findWordBefore(text, startBefore, true);
+            if (matchBefore2 == null) {
+                return null;
+            } else {
+                final String wordBefore2 = matchBefore2.group();
+                if (isDay(wordBefore2)) {
+                    tokenizedDate.setDay(wordBefore2);
+                    tokenizedDate.setStart(matchBefore2.start());
+                } else {
+                    return null;
+                }
+            }
+        } else {
+            tokenizedDate.setDay(wordBefore);
+            tokenizedDate.setStart(startBefore);
+        }
+
+        if (!findPrepositionAfterAndYear(tokenizedDate, page, matchMonth)) {
+            return null;
+        }
+
+        final String date = text.substring(tokenizedDate.getStart(), tokenizedDate.getEnd());
+        return findDateReplacement(date, tokenizedDate, page);
+    }
+
+    @Nullable
+    private Replacement convertMonthYear(MatchResult matchMonth, MatchResult matchBefore, WikipediaPage page) {
+        final WikipediaLanguage lang = page.getId().getLang();
+        final String text = page.getContent();
+        final TokenizedDate tokenizedDate = new TokenizedDate(matchMonth);
+        tokenizedDate.setType(2);
+
+        final String wordBefore = matchBefore.group();
+        if (isConnector(wordBefore, lang)) {
+            tokenizedDate.setConnector(wordBefore);
+            tokenizedDate.setStart(matchBefore.start());
+        } else {
+            return null;
+        }
+
+        // Special case: the connector can be a preposition, so we actually want to convert a long date.
+        final MatchResult matchBefore2 = FinderUtils.findWordBefore(text, matchBefore.start(), true);
+        if (matchBefore2 != null && isDay(matchBefore2.group())) {
+            return convertLongDate(matchMonth, matchBefore, page);
+        }
+
+        if (!findPrepositionAfterAndYear(tokenizedDate, page, matchMonth)) {
+            // Special case: the date after the connector is unordered of type month-day-year
+            final MatchResult matchAfter = FinderUtils.findWordAfter(text, matchMonth.end(), true);
+            if (matchAfter != null && isDay(matchAfter.group())) {
+                return convertMonthDayYear(matchMonth, page);
+            } else {
+                return null;
+            }
+        }
+
+        final String date = text.substring(tokenizedDate.getStart(), tokenizedDate.getEnd());
+        return findDateReplacement(date, tokenizedDate, page);
+    }
+
+    private boolean findPrepositionAfterAndYear(
+        TokenizedDate tokenizedDate,
+        WikipediaPage page,
+        MatchResult matchMonth
+    ) {
+        // Impure function!!
+        final WikipediaLanguage lang = page.getId().getLang();
+        final String text = page.getContent();
+
+        // Find the year with a possible preposition in the middle
+        final MatchResult matchAfter = FinderUtils.findWordAfter(text, matchMonth.end(), true);
+        if (matchAfter == null) {
+            return false;
+        } else {
+            final String wordAfter = matchAfter.group();
+            final int endAfter = matchAfter.end();
+            if (isPreposition(wordAfter, lang)) {
+                tokenizedDate.setPrepAfter(wordAfter);
+
+                final MatchResult matchAfter2 = FinderUtils.findWordAfter(text, endAfter, true);
+                if (matchAfter2 == null) {
+                    return false;
+                } else {
+                    final String wordAfter2 = matchAfter2.group();
+                    if (isYear(wordAfter2)) {
+                        tokenizedDate.setYear(wordAfter2);
+                        tokenizedDate.setEnd(matchAfter2.end());
+                    } else {
+                        return false;
+                    }
+                }
+            } else if (isYear(wordAfter)) {
+                tokenizedDate.setYear(wordAfter);
+                tokenizedDate.setEnd(endAfter);
+            } else {
+                return false;
+            }
         }
         return true;
     }
 
-    private boolean isDay(String token) {
-        return token.length() <= 2 && startsWithNumber(token);
-    }
+    @Nullable
+    private Replacement convertMonthDayYear(MatchResult matchMonth, WikipediaPage page) {
+        final String text = page.getContent();
+        final TokenizedDate tokenizedDate = new TokenizedDate(matchMonth);
+        tokenizedDate.setType(3);
 
-    private boolean isYear(String token) {
-        return token.length() > 2 && startsWithNumber(token);
-    }
-
-    private boolean startsWithNumber(String token) {
-        return Character.isDigit(token.charAt(0));
-    }
-
-    private boolean isMonth(String token, WikipediaLanguage lang) {
-        return this.langMonths.containsMapping(lang, token);
-    }
-
-    private boolean isConnector(String token, WikipediaLanguage lang) {
-        return this.langConnectors.containsMapping(lang, token);
-    }
-
-    private boolean isPreposition(String token, WikipediaLanguage lang) {
-        return this.langPrepositions.containsMapping(lang, token);
-    }
-
-    private boolean isPrepositionDefault(String token, WikipediaLanguage lang) {
-        return token.equals(getPrepositionDefault(lang));
-    }
-
-    private String getPrepositionDefault(WikipediaLanguage lang) {
-        return this.langPrepositions.get(lang).get(0);
-    }
-
-    private boolean isValidLongDate(MatchResult match, WikipediaPage page) {
-        // We can assume at this point that the core tokens are day-month-year
-        final WikipediaLanguage lang = page.getId().getLang();
-        final String[] tokens = FinderUtils.splitAsArray(match.group());
-        return (
-            tokens.length == 5 &&
-            !tokens[0].startsWith("0") &&
-            isPrepositionDefault(tokens[1], lang) &&
-            FinderUtils.startsWithLowerCase(tokens[2]) &&
-            isPreposition(tokens[3], lang) &&
-            tokens[4].length() == 4
-        );
-    }
-
-    private boolean isValidMonthYear(String date, WikipediaLanguage lang) {
-        // We can assume at this point that the core tokens are connector-month-year
-        final String[] tokens = FinderUtils.splitAsArray(date);
-        return (
-            tokens.length == 4 &&
-            FinderUtils.startsWithLowerCase(tokens[1]) &&
-            isPreposition(tokens[2], lang) &&
-            tokens[3].length() == 4
-        );
-    }
-
-    @Override
-    public Replacement convert(MatchResult match, WikipediaPage page) {
-        final WikipediaLanguage lang = page.getId().getLang();
-        final String[] tokens = FinderUtils.splitAsArray(match.group());
-        final String token1 = tokens[0];
-        if (isDay(token1)) {
-            // Long date: DMY
-            return convertLongDate(match, page);
-        } else if (isConnector(token1, lang)) {
-            // Connector + MY
-            return convertMonthYear(match, page);
-        } else if (isMonth(token1, lang)) {
-            // Unordered MDY
-            return convertMonthDayYear(match, page);
-        } else if (isYear(token1)) {
-            // Unordered YMD
-            return convertYearMonthDay(match, page);
+        final MatchResult matchAfter = FinderUtils.findWordAfter(text, matchMonth.end(), true);
+        if (matchAfter == null) {
+            return null;
         } else {
-            throw new IllegalArgumentException();
+            final String wordAfter = matchAfter.group();
+            final int endAfter = matchAfter.end();
+            if (isDay(wordAfter)) {
+                tokenizedDate.setDay(removeTrailingComma(wordAfter));
+                tokenizedDate.setEnd(endAfter);
+            } else {
+                return null;
+            }
         }
+
+        if (!findPrepositionAfterAndYear(tokenizedDate, page, matchAfter)) {
+            return null;
+        }
+
+        final String date = text.substring(tokenizedDate.getStart(), tokenizedDate.getEnd());
+        return findDateReplacement(date, tokenizedDate, page);
     }
 
-    private Replacement convertLongDate(MatchResult match, WikipediaPage page) {
-        final WikipediaLanguage lang = page.getId().getLang();
-        final String date = match.group();
-        final List<String> tokens = FinderUtils.splitAsLinkedList(date);
-        ReplacementType type = ReplacementType.DATE_INCOMPLETE; // Default value
+    @Nullable
+    private Replacement convertYearMonthDay(MatchResult matchMonth, MatchResult matchBefore, WikipediaPage page) {
+        final String text = page.getContent();
+        final TokenizedDate tokenizedDate = new TokenizedDate(matchMonth);
+        tokenizedDate.setType(4);
 
-        // Fix year with dot
-        final String year = tokens.get(tokens.size() - 1);
-        if (year.contains(".")) {
-            final String fixedYear = fixYearWithDot(year);
-            tokens.set(tokens.size() - 1, fixedYear);
+        tokenizedDate.setYear(removeTrailingComma(matchBefore.group()));
+        tokenizedDate.setStart(matchBefore.start());
+
+        final MatchResult matchAfter = FinderUtils.findWordAfter(text, matchMonth.end(), true);
+        if (matchAfter == null) {
+            return null;
+        } else {
+            final String wordAfter = matchAfter.group();
+            if (isDay(wordAfter)) {
+                tokenizedDate.setDay(wordAfter);
+                tokenizedDate.setEnd(matchAfter.end());
+            } else {
+                return null;
+            }
+        }
+
+        final String date = text.substring(tokenizedDate.getStart(), tokenizedDate.getEnd());
+        return findDateReplacement(date, tokenizedDate, page);
+    }
+
+    @Nullable
+    private Replacement findDateReplacement(String dateText, TokenizedDate date, WikipediaPage page) {
+        final WikipediaLanguage lang = page.getId().getLang();
+
+        // The last checks are the replacement types we want as a result
+        ReplacementType type = null;
+
+        // Preposition Before
+        String prepBefore = date.getPrepBefore();
+        if (date.getType() != 2 && !isValidPrepositionBefore(prepBefore, lang)) {
+            prepBefore = getPrepositionDefault(lang);
+            type = ReplacementType.DATE_INCOMPLETE;
+        }
+
+        // Preposition After
+        String prepAfter = date.getPrepAfter();
+        if (!isValidPrepositionAfter(prepAfter)) {
+            prepAfter = getPrepositionDefault(lang);
+            type = ReplacementType.DATE_INCOMPLETE;
+        }
+
+        // Year
+        String year = date.getYear();
+        if (!isValidYear(year)) {
+            year = fixYearWithDot(year);
             type = ReplacementType.DATE_DOT_YEAR;
         }
 
-        // Add/fix missing prepositions
-        final String defaultPreposition = getPrepositionDefault(lang);
-        if (!isPreposition(tokens.get(1), lang)) {
-            tokens.add(1, defaultPreposition);
-            type = ReplacementType.DATE_INCOMPLETE;
-        } else if (!isPrepositionDefault(tokens.get(1), lang)) {
-            tokens.set(1, defaultPreposition);
-            type = ReplacementType.DATE_INCOMPLETE;
-        }
-
-        if (!isPreposition(tokens.get(3), lang)) {
-            tokens.add(3, defaultPreposition);
-            type = ReplacementType.DATE_INCOMPLETE;
-        }
-
-        // Fix leading zero
-        final String day = tokens.get(0);
-        if (day.startsWith("0")) {
-            final String fixedDay = fixLeadingZero(day);
-            tokens.set(0, fixedDay);
+        // Day
+        String day = date.getDay();
+        if (date.getType() != 2 && !isValidDay(day)) {
+            day = fixLeadingZero(day);
             type = ReplacementType.DATE_LEADING_ZERO;
         }
 
-        // Fix uppercase
-        final String month = tokens.get(2);
-        if (FinderUtils.startsWithUpperCase(month)) {
-            final String fixedMonth = FinderUtils.setFirstLowerCase(month);
-            tokens.set(2, fixedMonth);
+        // Month
+        String month = date.getMonth();
+        if (!isValidMonth(month)) {
+            month = fixUpperCaseMonth(month);
             type = ReplacementType.DATE_UPPERCASE;
         }
 
         // Fix september
-        tokens.set(2, fixSeptember(tokens.get(2), lang));
+        month = fixSeptember(month, lang);
 
-        final String fixedDate = StringUtils.join(tokens, SPACE);
-        return buildDateReplacement(page, type, match.start(), date, fixedDate);
+        if (date.getType() == 3 || date.getType() == 4) {
+            type = ReplacementType.DATE_UNORDERED;
+        } else if (type == null) {
+            // Date not to be fixed
+            return null;
+        }
+
+        final String fixedDate;
+        if (date.getType() == 2) {
+            fixedDate = date.getConnector() + SPACE + month + SPACE + prepAfter + SPACE + year;
+        } else {
+            fixedDate = day + SPACE + prepBefore + SPACE + month + SPACE + prepAfter + SPACE + year;
+        }
+
+        return buildDateReplacement(page, type, date.getStart(), dateText, fixedDate);
     }
 
-    private Replacement convertMonthYear(MatchResult match, WikipediaPage page) {
-        final String date = match.group();
-        final WikipediaLanguage lang = page.getId().getLang();
-        final List<String> tokens = FinderUtils.splitAsLinkedList(date);
-        ReplacementType type = ReplacementType.DATE_INCOMPLETE; // Default value
-
-        // Fix year with dot
-        final String year = tokens.get(tokens.size() - 1);
-        if (year.contains(".")) {
-            final String fixedYear = fixYearWithDot(year);
-            tokens.set(tokens.size() - 1, fixedYear);
-            type = ReplacementType.DATE_DOT_YEAR;
-        }
-
-        // Add/fix missing prepositions
-        final String defaultPreposition = getPrepositionDefault(lang);
-        if (!isPreposition(tokens.get(2), lang)) {
-            tokens.add(2, defaultPreposition);
-            type = ReplacementType.DATE_INCOMPLETE;
-        }
-
-        // Fix uppercase
-        final String month = tokens.get(1);
-        if (FinderUtils.startsWithUpperCase(month)) {
-            final String fixedMonth = FinderUtils.setFirstLowerCase(month);
-            tokens.set(1, fixedMonth);
-            type = ReplacementType.DATE_UPPERCASE;
-        }
-
-        // Fix september
-        tokens.set(1, fixSeptember(tokens.get(1), lang));
-
-        final String fixedDate = StringUtils.join(tokens, SPACE);
-        return buildDateReplacement(page, type, match.start(), date, fixedDate);
+    private boolean isDay(String token) {
+        // It could be ended with a comma in case of month-day-year
+        final String day = removeTrailingComma(token);
+        return day.length() <= 2 && FinderUtils.isNumber(day) && Integer.parseInt(day) < 31;
     }
 
-    private Replacement convertMonthDayYear(MatchResult match, WikipediaPage page) {
-        final WikipediaLanguage lang = page.getId().getLang();
-        final String date = match.group();
-        final List<String> tokens = FinderUtils.splitAsLinkedList(date);
-
-        // Fix year with dot
-        final String year = tokens.get(tokens.size() - 1);
-        if (year.contains(".")) {
-            final String fixedYear = fixYearWithDot(year);
-            tokens.set(tokens.size() - 1, fixedYear);
-        }
-
-        // Add/fix missing prepositions
-        final String defaultPreposition = getPrepositionDefault(lang);
-        tokens.add(1, defaultPreposition);
-
-        if (!isPreposition(tokens.get(3), lang)) {
-            tokens.add(3, defaultPreposition);
-        }
-
-        // Fix leading zero
-        // Note: in this date format the day might be followed by a comma
-        String day = removeTrailingComma(tokens.get(2));
-        if (day.startsWith("0")) {
-            day = fixLeadingZero(day);
-        }
-        tokens.set(2, day);
-
-        // Fix uppercase
-        final String month = tokens.get(0);
-        if (FinderUtils.startsWithUpperCase(month)) {
-            final String fixedMonth = FinderUtils.setFirstLowerCase(month);
-            tokens.set(0, fixedMonth);
-        }
-
-        // Fix september
-        tokens.set(0, fixSeptember(tokens.get(0), lang));
-
-        // Reorder the tokens
-        Collections.swap(tokens, 0, 2);
-
-        final String fixedDate = StringUtils.join(tokens, SPACE);
-        return buildDateReplacement(page, ReplacementType.DATE_UNORDERED, match.start(), date, fixedDate);
+    private boolean isPreposition(String token, WikipediaLanguage lang) {
+        return langPrepositions.containsMapping(lang, token);
     }
 
-    private Replacement convertYearMonthDay(MatchResult match, WikipediaPage page) {
-        final WikipediaLanguage lang = page.getId().getLang();
-        final String date = match.group();
-        final List<String> tokens = FinderUtils.splitAsLinkedList(date);
-
-        // Fix year with dot
-        // Note: in this date format the day might be followed by a comma
-        String year = removeTrailingComma(tokens.get(0));
-        if (year.contains(".")) {
-            year = fixYearWithDot(year);
-        }
-        tokens.set(0, year);
-
-        // Add/fix missing prepositions
-        final String defaultPreposition = getPrepositionDefault(lang);
-        tokens.add(1, defaultPreposition);
-        tokens.add(3, defaultPreposition);
-
-        // Fix leading zero
-        final String day = tokens.get(4);
-        if (day.startsWith("0")) {
-            final String fixedDay = fixLeadingZero(day);
-            tokens.set(4, fixedDay);
-        }
-
-        // Fix uppercase
-        final String month = tokens.get(2);
-        if (FinderUtils.startsWithUpperCase(month)) {
-            final String fixedMonth = FinderUtils.setFirstLowerCase(month);
-            tokens.set(2, fixedMonth);
-        }
-
-        // Fix september
-        tokens.set(2, fixSeptember(tokens.get(2), lang));
-
-        // Reorder the tokens
-        Collections.swap(tokens, 0, 4);
-
-        final String fixedDate = StringUtils.join(tokens, SPACE);
-        return buildDateReplacement(page, ReplacementType.DATE_UNORDERED, match.start(), date, fixedDate);
+    private boolean isConnector(String token, WikipediaLanguage lang) {
+        return langConnectors.containsMapping(lang, token);
     }
 
-    private String fixYearWithDot(String year) {
-        // We assume the year has a dot in the expected place
-        return year.charAt(0) + year.substring(2);
+    private boolean isYear(String token) {
+        // It could be ended with a comma in case of year-month-day
+        final String year = removeTrailingComma(token);
+        if (year.length() == 4) {
+            return FinderUtils.isNumber(year);
+        } else if (year.length() == 5) {
+            return (
+                FinderUtils.startsWithNumber(year) && year.charAt(1) == '.' && FinderUtils.isNumber(year.substring(2))
+            );
+        } else {
+            return false;
+        }
+    }
+
+    private String removeTrailingComma(String token) {
+        return StringUtils.removeEnd(token, ",");
+    }
+
+    private boolean isValidDay(String day) {
+        return !day.startsWith("0");
     }
 
     private String fixLeadingZero(String day) {
-        // We assume the day starts with 0
         return day.substring(1);
+    }
+
+    private boolean isValidPrepositionBefore(@Nullable String prepBefore, WikipediaLanguage lang) {
+        return getPrepositionDefault(lang).equals(prepBefore);
+    }
+
+    private String getPrepositionDefault(WikipediaLanguage lang) {
+        return langPrepositions.get(lang).get(0);
+    }
+
+    private boolean isValidMonth(String month) {
+        return FinderUtils.startsWithLowerCase(month);
+    }
+
+    private String fixUpperCaseMonth(String month) {
+        return FinderUtils.setFirstLowerCase(month);
     }
 
     private String fixSeptember(String month, WikipediaLanguage lang) {
         return WikipediaLanguage.SPANISH.equals(lang) && "setiembre".equals(month) ? "septiembre" : month;
     }
 
-    private String removeTrailingComma(String token) {
-        return StringUtils.removeEnd(token, ",");
+    private boolean isValidPrepositionAfter(@Nullable String prepAfter) {
+        return prepAfter != null && FinderUtils.isLowerCase(prepAfter);
+    }
+
+    private boolean isValidYear(String year) {
+        return year.length() == 4;
+    }
+
+    private String fixYearWithDot(String year) {
+        // We assume the year has a dot in the expected place
+        return year.charAt(0) + year.substring(2);
     }
 
     private Replacement buildDateReplacement(
@@ -486,14 +508,72 @@ public class DateFinder implements ReplacementFinder {
 
     // Return the appropriate article for the date
     private List<String> getFixArticle(WikipediaPage page, int start) {
-        final String preceding = FinderUtils.findWordBefore(page.getContent(), start);
+        final MatchResult preceding = FinderUtils.findWordBefore(page.getContent(), start, true);
         final WikipediaLanguage lang = page.getId().getLang();
         if (preceding != null) {
-            final String precedingAlternative = this.langArticles.get(lang).get(preceding);
+            final String precedingArticle = preceding.group();
+            final String precedingAlternative = langArticles.get(lang).get(precedingArticle);
             if (precedingAlternative != null) {
-                return List.of(preceding, precedingAlternative);
+                return List.of(precedingArticle, precedingAlternative);
             }
         }
         return Collections.emptyList();
+    }
+
+    private static class MonthFinder {
+
+        private final String monthSearch;
+
+        MonthFinder(String month) {
+            this.monthSearch = month.substring(1);
+        }
+
+        public List<MatchResult> find(WikipediaPage page) {
+            return IterableUtils.toList(LinearMatchFinder.find(page, this::findMonth));
+        }
+
+        private int findMonth(WikipediaPage page, int start, List<MatchResult> matches) {
+            final WikipediaLanguage lang = page.getId().getLang();
+            final String text = page.getContent();
+            final int startMonth = findStartMonth(text, start);
+            if (startMonth >= 0) {
+                final String month = text.charAt(startMonth) + monthSearch;
+                if (isMonth(month, lang)) {
+                    matches.add(LinearMatchResult.of(startMonth, month));
+                }
+                return startMonth + month.length();
+            } else {
+                return -1;
+            }
+        }
+
+        private int findStartMonth(String text, int start) {
+            final int startMonthSearch = text.indexOf(monthSearch, start);
+            return startMonthSearch >= 1 ? startMonthSearch - 1 : -1;
+        }
+
+        private boolean isMonth(String token, WikipediaLanguage lang) {
+            return langMonths.containsMapping(lang, token);
+        }
+    }
+
+    @Data
+    private static class TokenizedDate {
+
+        int type;
+        int start;
+        int end;
+        String connector;
+        String day;
+        String prepBefore;
+        String month;
+        String prepAfter;
+        String year;
+
+        TokenizedDate(MatchResult matchMonth) {
+            this.start = matchMonth.start();
+            this.end = matchMonth.end();
+            this.month = matchMonth.group();
+        }
     }
 }
