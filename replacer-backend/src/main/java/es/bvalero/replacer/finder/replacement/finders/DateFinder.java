@@ -402,7 +402,9 @@ public class DateFinder implements ReplacementFinder {
     private boolean isDay(String token) {
         // It could be ended with a comma in case of month-day-year
         final String day = removeTrailingComma(token);
-        return day.length() <= 2 && FinderUtils.isNumber(day) && Integer.parseInt(day) < 31;
+        return (
+            StringUtils.isNotEmpty(day) && day.length() <= 2 && FinderUtils.isNumber(day) && Integer.parseInt(day) < 31
+        );
     }
 
     private boolean isPreposition(String token, WikipediaLanguage lang) {

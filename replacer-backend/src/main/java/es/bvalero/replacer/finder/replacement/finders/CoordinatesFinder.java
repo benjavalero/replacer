@@ -144,7 +144,7 @@ public class CoordinatesFinder implements ReplacementFinder {
     }
 
     private boolean isDegreeNumber(String number) {
-        return Integer.parseInt(number) < 180;
+        return StringUtils.isNotEmpty(number) && number.length() <= 3 && Integer.parseInt(number) < 180;
     }
 
     @Nullable
@@ -179,7 +179,7 @@ public class CoordinatesFinder implements ReplacementFinder {
     }
 
     private boolean isMinuteSecondNumber(String number) {
-        return Integer.parseInt(number) < 60;
+        return StringUtils.isNotEmpty(number) && number.length() <= 2 && Integer.parseInt(number) < 60;
     }
 
     private boolean isPrimeChar(char ch) {

@@ -71,8 +71,8 @@ class CursiveFinder extends ImmutableCheckedFinder {
                 return i - start;
             }
         }
-        // It shouldn't get here
-        return 0;
+        // It shouldn't get here except if the quotes are at the end of the page
+        return text.length() - start;
     }
 
     private int findEndCursive(String text, int start, int numQuotes) {
