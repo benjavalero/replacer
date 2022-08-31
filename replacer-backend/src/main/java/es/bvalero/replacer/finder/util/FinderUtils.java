@@ -164,20 +164,7 @@ public class FinderUtils {
                 lastLetter = i;
             }
         }
-        if (firstLetter >= 0) {
-            if (!allowedChars.isEmpty()) {
-                // Remove leading and trailing allowed chars
-                while (allowedChars.contains(text.charAt(firstLetter))) {
-                    firstLetter++;
-                }
-                while (allowedChars.contains(text.charAt(lastLetter))) {
-                    lastLetter--;
-                }
-            }
-            return LinearMatchResult.of(firstLetter, text.substring(firstLetter, lastLetter + 1));
-        } else {
-            return null;
-        }
+        return firstLetter >= 0 ? buildMatchResult(text, firstLetter, lastLetter, allowedChars) : null;
     }
 
     public boolean isWordPrecededByUpperCase(int start, String text) {
@@ -211,20 +198,25 @@ public class FinderUtils {
                 }
             }
         }
-        if (lastLetter >= 0) {
-            if (!allowedChars.isEmpty()) {
-                // Remove leading and trailing allowed chars
-                while (allowedChars.contains(text.charAt(firstLetter))) {
-                    firstLetter++;
-                }
-                while (allowedChars.contains(text.charAt(lastLetter))) {
-                    lastLetter--;
-                }
+        return lastLetter >= 0 ? buildMatchResult(text, firstLetter, lastLetter, allowedChars) : null;
+    }
+
+    private LinearMatchResult buildMatchResult(
+        String text,
+        int firstLetter,
+        int lastLetter,
+        Collection<Character> allowedChars
+    ) {
+        if (!allowedChars.isEmpty()) {
+            // Remove leading and trailing allowed chars
+            while (allowedChars.contains(text.charAt(firstLetter))) {
+                firstLetter++;
             }
-            return LinearMatchResult.of(firstLetter, text.substring(firstLetter, lastLetter + 1));
-        } else {
-            return null;
+            while (allowedChars.contains(text.charAt(lastLetter))) {
+                lastLetter--;
+            }
         }
+        return LinearMatchResult.of(firstLetter, text.substring(firstLetter, lastLetter + 1));
     }
 
     @Nullable
