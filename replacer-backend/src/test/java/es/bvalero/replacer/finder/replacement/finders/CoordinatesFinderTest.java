@@ -24,6 +24,8 @@ class CoordinatesFinderTest {
             "38°05'08''|38°05′08″",
             "38º05′08.325″|38°05′08.325″",
             "38º05′08,325″|38°05′08,325″",
+            "38º05′08″N|38°05′08″{{esd}}N",
+            "38º05′08″ W|38°05′08″{{esd}}O",
         }
     )
     void testNotValidCoordinates(String text, String expected) {
@@ -44,6 +46,7 @@ class CoordinatesFinderTest {
             "38° 05′ 08″",
             "38°05′08″",
             "38°{{esd}}05′{{esd}}08″",
+            "38°{{esd}}05′{{esd}}08″{{esd}}N",
             "38",
             "38°",
             "38°05",

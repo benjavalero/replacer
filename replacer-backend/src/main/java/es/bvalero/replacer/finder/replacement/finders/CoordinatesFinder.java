@@ -1,10 +1,13 @@
 package es.bvalero.replacer.finder.replacement.finders;
 
+import static es.bvalero.replacer.finder.util.FinderUtils.NON_BREAKING_SPACE_TEMPLATE;
+
 import es.bvalero.replacer.common.domain.*;
 import es.bvalero.replacer.finder.replacement.ReplacementFinder;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
 import es.bvalero.replacer.finder.util.LinearMatchResult;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.MatchResult;
@@ -30,6 +33,7 @@ public class CoordinatesFinder implements ReplacementFinder {
     private static final char DOUBLE_QUOTE = '\"';
     private static final Set<Character> DOUBLE_PRIME_CHARS = Set.of(DOUBLE_PRIME, DOUBLE_QUOTE);
     private static final Set<Character> DECIMAL_SEPARATORS = Set.of('.', ',');
+    private static final char[] CARDINAL_DIRECTIONS = new char[] { 'N', 'S', 'W', 'O', 'E' };
 
     @Override
     public Iterable<MatchResult> findMatchResults(WikipediaPage page) {
@@ -91,13 +95,24 @@ public class CoordinatesFinder implements ReplacementFinder {
             return -1;
         }
 
+        // Tokens
+        final List<LinearMatchResult> coordTokens = new ArrayList<>(List.of(matchDegrees, matchMinutes, matchSeconds));
+
+        // Find if there is a cardinal direction
+        int endCoordinates = startDoublePrime + doublePrime.length();
+        final LinearMatchResult matchDirection = findDirectionMatch(text, endCoordinates);
+        if (matchDirection != null) {
+            endCoordinates = matchDirection.end();
+            coordTokens.add(matchDirection);
+        }
+
         final int startCoordinates = matchDegrees.start();
-        final int endCoordinates = startDoublePrime + doublePrime.length();
+
         LinearMatchResult coordinatesMatch = LinearMatchResult.of(
             startCoordinates,
             text.substring(startCoordinates, endCoordinates)
         );
-        coordinatesMatch.addGroups(List.of(matchDegrees, matchMinutes, matchSeconds));
+        coordinatesMatch.addGroups(coordTokens);
         matches.add(coordinatesMatch);
         return endCoordinates;
     }
@@ -133,8 +148,13 @@ public class CoordinatesFinder implements ReplacementFinder {
         LinearMatchResult match = (LinearMatchResult) matchResult;
 
         final String coordinates = page.getContent().substring(match.start(), match.end());
-        final String fixedCoordinates =
-            match.group(0) + DEGREE + match.group(1) + PRIME + match.group(2) + DOUBLE_PRIME;
+        String fixedCoordinates = match.group(0) + DEGREE + match.group(1) + PRIME + match.group(2) + DOUBLE_PRIME;
+
+        // Optional cardinal direction
+        if (match.groupCount() > 3) {
+            fixedCoordinates += NON_BREAKING_SPACE_TEMPLATE + fixDirection(match.group(3));
+        }
+
         return Replacement
             .builder()
             .type(ReplacementType.COORDINATES)
@@ -174,8 +194,8 @@ public class CoordinatesFinder implements ReplacementFinder {
             return null;
         } else {
             if (isSecondNumber(matchMinutes.group())) {
-                final String space1 = text.substring(endMinutes + 1, matchMinutes.start());
-                if (isSpace(space1)) {
+                final String space2 = text.substring(endMinutes + 1, matchMinutes.start());
+                if (isSpace(space2)) {
                     return LinearMatchResult.of(matchMinutes);
                 } else {
                     return null;
@@ -183,6 +203,25 @@ public class CoordinatesFinder implements ReplacementFinder {
             } else {
                 return null;
             }
+        }
+    }
+
+    @Nullable
+    private LinearMatchResult findDirectionMatch(String text, int endCoordinates) {
+        final String textRight = text.substring(endCoordinates);
+        final int startDirection = StringUtils.indexOfAny(textRight, CARDINAL_DIRECTIONS);
+        if (startDirection >= 0) {
+            final String space = textRight.substring(0, startDirection);
+            if (isSpace(space)) {
+                return LinearMatchResult.of(
+                    endCoordinates + startDirection,
+                    String.valueOf(textRight.charAt(startDirection))
+                );
+            } else {
+                return null;
+            }
+        } else {
+            return null;
         }
     }
 
@@ -226,5 +265,9 @@ public class CoordinatesFinder implements ReplacementFinder {
 
     private boolean isValidDoublePrimeChar(String str) {
         return String.valueOf(DOUBLE_PRIME).equals(str);
+    }
+
+    private String fixDirection(String str) {
+        return "W".equals(str) ? "O" : str;
     }
 }
