@@ -29,6 +29,7 @@ public class CoordinatesFinder implements ReplacementFinder {
     private static final char DOUBLE_PRIME = '\u2033'; // ″
     private static final char DOUBLE_QUOTE = '\"';
     private static final Set<Character> DOUBLE_PRIME_CHARS = Set.of(DOUBLE_PRIME, DOUBLE_QUOTE);
+    private static final Set<Character> DECIMAL_SEPARATORS = Set.of('.', ',');
 
     @Override
     public Iterable<MatchResult> findMatchResults(WikipediaPage page) {
@@ -43,27 +44,27 @@ public class CoordinatesFinder implements ReplacementFinder {
         if (matchDegrees == null) {
             return -1;
         }
-        final int startDegreeChar = matchDegrees.end();
-        final char degreeChar = text.charAt(startDegreeChar);
+        final int endDegrees = matchDegrees.end();
+        final char degreeChar = text.charAt(endDegrees);
         if (!isDegreeChar(degreeChar)) {
             return -1;
         }
 
         // Minutes
-        final LinearMatchResult matchMinutes = findMinuteSecondMatch(text, startDegreeChar + 1);
+        final LinearMatchResult matchMinutes = findMinuteMatch(text, endDegrees);
         if (matchMinutes == null) {
             return -1;
         }
 
         // Prime
-        final int startPrime = matchMinutes.end();
-        final char primeChar = text.charAt(startPrime);
+        final int endMinutes = matchMinutes.end();
+        final char primeChar = text.charAt(endMinutes);
         if (!isPrimeChar(primeChar)) {
             return -1;
         }
 
         // Seconds
-        final LinearMatchResult matchSeconds = findMinuteSecondMatch(text, startPrime + 1);
+        final LinearMatchResult matchSeconds = findSecondMatch(text, endMinutes);
         if (matchSeconds == null) {
             return -1;
         }
@@ -148,15 +149,34 @@ public class CoordinatesFinder implements ReplacementFinder {
     }
 
     @Nullable
-    private LinearMatchResult findMinuteSecondMatch(String text, int start) {
-        final LinearMatchResult matchMinutes = findNumberMatch(text, start);
+    private LinearMatchResult findMinuteMatch(String text, int endDegrees) {
+        final MatchResult matchMinutes = FinderUtils.findWordAfter(text, endDegrees);
         if (matchMinutes == null) {
             return null;
         } else {
-            if (isMinuteSecondNumber(matchMinutes.group())) {
-                final String space1 = text.substring(start, matchMinutes.start());
+            if (isMinuteNumber(matchMinutes.group())) {
+                final String space1 = text.substring(endDegrees + 1, matchMinutes.start());
                 if (isSpace(space1)) {
-                    return matchMinutes;
+                    return LinearMatchResult.of(matchMinutes);
+                } else {
+                    return null;
+                }
+            } else {
+                return null;
+            }
+        }
+    }
+
+    @Nullable
+    private LinearMatchResult findSecondMatch(String text, int endMinutes) {
+        final MatchResult matchMinutes = FinderUtils.findWordAfter(text, endMinutes, DECIMAL_SEPARATORS);
+        if (matchMinutes == null) {
+            return null;
+        } else {
+            if (isSecondNumber(matchMinutes.group())) {
+                final String space1 = text.substring(endMinutes + 1, matchMinutes.start());
+                if (isSpace(space1)) {
+                    return LinearMatchResult.of(matchMinutes);
                 } else {
                     return null;
                 }
@@ -178,8 +198,14 @@ public class CoordinatesFinder implements ReplacementFinder {
         return StringUtils.isEmpty(str) || FinderUtils.SPACES.contains(str);
     }
 
-    private boolean isMinuteSecondNumber(String number) {
+    private boolean isMinuteNumber(String number) {
         return StringUtils.isNotEmpty(number) && number.length() <= 2 && Integer.parseInt(number) < 60;
+    }
+
+    private boolean isSecondNumber(String number) {
+        return (
+            StringUtils.isNotEmpty(number) && number.length() <= 6 && Double.parseDouble(number.replace(',', '.')) < 60
+        );
     }
 
     private boolean isPrimeChar(char ch) {

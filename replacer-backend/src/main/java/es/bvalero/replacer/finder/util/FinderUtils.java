@@ -18,6 +18,7 @@ import org.springframework.lang.Nullable;
 @UtilityClass
 public class FinderUtils {
 
+    private static final char MASCULINE_ORDINAL = '\u00ba'; // º
     private static final Set<Character> INVALID_LEFT_SEPARATORS = Set.of('_', '/', '.');
     private static final Set<Character> INVALID_RIGHT_SEPARATORS = Set.of('_', '/');
     private static final String ALTERNATE_SEPARATOR = "|";
@@ -242,7 +243,8 @@ public class FinderUtils {
     }
 
     private boolean isWordDelimiter(char ch) {
-        return !Character.isLetterOrDigit(ch);
+        // Unicode considers the masculine ordinal as a letter
+        return !Character.isLetterOrDigit(ch) || ch == MASCULINE_ORDINAL;
     }
 
     private String getTextSnippet(String text, int start, int end) {

@@ -16,7 +16,15 @@ class CoordinatesFinderTest {
 
     @ParameterizedTest
     @CsvSource(
-        value = { "38º05′08″, 38°05′08″", "38°05'08″, 38°05′08″", "38°05′08\", 38°05′08″", "38°05'08'', 38°05′08″" }
+        delimiter = '|',
+        value = {
+            "38º05′08″|38°05′08″",
+            "38°05'08″|38°05′08″",
+            "38°05′08\"|38°05′08″",
+            "38°05'08''|38°05′08″",
+            "38º05′08.325″|38°05′08.325″",
+            "38º05′08,325″|38°05′08,325″",
+        }
     )
     void testNotValidCoordinates(String text, String expected) {
         List<Replacement> replacements = coordinatesFinder.findList(text);
