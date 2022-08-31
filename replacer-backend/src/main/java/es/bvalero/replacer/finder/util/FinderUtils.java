@@ -25,6 +25,9 @@ public class FinderUtils {
     private static final String NON_BREAKING_SPACE = "&nbsp;";
     public static final String NON_BREAKING_SPACE_TEMPLATE = "{{esd}}";
     public static final Set<String> SPACES = Set.of(SPACE, NON_BREAKING_SPACE, NON_BREAKING_SPACE_TEMPLATE);
+    private static final char DECIMAL_COMMA = ',';
+    private static final char DECIMAL_DOT = '.';
+    public static final Set<Character> DECIMAL_SEPARATORS = Set.of(DECIMAL_COMMA, DECIMAL_DOT);
 
     /***** STRING UTILS *****/
 
@@ -97,6 +100,18 @@ public class FinderUtils {
 
     public boolean isNumber(String word) {
         return word.chars().allMatch(Character::isDigit);
+    }
+
+    public boolean isDecimalNumber(String word) {
+        return word.chars().mapToObj(c -> (char) c).allMatch(FinderUtils::isDecimalNumber);
+    }
+
+    private boolean isDecimalNumber(char ch) {
+        return Character.isDigit(ch) || ch == DECIMAL_DOT;
+    }
+
+    public String normalizeDecimalNumber(String number) {
+        return number.replace(DECIMAL_COMMA, DECIMAL_DOT);
     }
 
     /***** TEXT UTILS *****/

@@ -1,5 +1,6 @@
 package es.bvalero.replacer.finder.replacement.finders;
 
+import static es.bvalero.replacer.finder.util.FinderUtils.DECIMAL_SEPARATORS;
 import static es.bvalero.replacer.finder.util.FinderUtils.NON_BREAKING_SPACE_TEMPLATE;
 
 import es.bvalero.replacer.common.domain.*;
@@ -32,7 +33,6 @@ public class CoordinatesFinder implements ReplacementFinder {
     private static final char DOUBLE_PRIME = '\u2033'; // ″
     private static final char DOUBLE_QUOTE = '\"';
     private static final Set<Character> DOUBLE_PRIME_CHARS = Set.of(DOUBLE_PRIME, DOUBLE_QUOTE);
-    private static final Set<Character> DECIMAL_SEPARATORS = Set.of('.', ',');
     private static final char[] CARDINAL_DIRECTIONS = new char[] { 'N', 'S', 'W', 'O', 'E' };
 
     @Override
@@ -238,12 +238,20 @@ public class CoordinatesFinder implements ReplacementFinder {
     }
 
     private boolean isMinuteNumber(String number) {
-        return StringUtils.isNotEmpty(number) && number.length() <= 2 && Integer.parseInt(number) < 60;
+        return (
+            StringUtils.isNotEmpty(number) &&
+            number.length() <= 2 &&
+            FinderUtils.isNumber(number) &&
+            Integer.parseInt(number) < 60
+        );
     }
 
     private boolean isSecondNumber(String number) {
         return (
-            StringUtils.isNotEmpty(number) && number.length() <= 6 && Double.parseDouble(number.replace(',', '.')) < 60
+            StringUtils.isNotEmpty(number) &&
+            number.length() <= 6 &&
+            FinderUtils.isDecimalNumber(number) &&
+            Double.parseDouble(FinderUtils.normalizeDecimalNumber(number)) < 60
         );
     }
 

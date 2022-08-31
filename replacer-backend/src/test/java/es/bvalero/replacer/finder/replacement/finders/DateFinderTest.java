@@ -59,7 +59,6 @@ class DateFinderTest {
             "17 de agosto de 2.019, 17 de agosto de 2019, " + SUBTYPE_DOT_YEAR,
             "17 de agosto del 2.019, 17 de agosto del 2019, " + SUBTYPE_DOT_YEAR,
             "17 de setiembre de 2.019, 17 de septiembre de 2019, " + SUBTYPE_DOT_YEAR,
-            "7-Agosto-2019, 7 de agosto de 2019, " + SUBTYPE_UPPERCASE,
         }
     )
     void testLongDate(String date, String expected, String subtype) {
@@ -96,6 +95,9 @@ class DateFinderTest {
             "la “Revolución de Noviembre”.\n",
             "Feria de Abril ...",
             "Feria de Mayo ... ",
+            "0 de septiembre de 2020",
+            "7-Agosto-2019",
+            "7 Agosto\n2019",
         }
     )
     void testNotDate(String date) {

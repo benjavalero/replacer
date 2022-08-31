@@ -146,7 +146,7 @@ public class DateFinder implements ReplacementFinder {
         // 1) Day + Prep? + Month + Prep? + Year (long date)
         // 2) Connector + Month + Prep? + Year (month-year)
         // 3) Month + Day + Prep? + Year (month-day-year)
-        // 4) Year + Month + Day (year-month-day)
+        // 4) Year,? + Month + Day (year-month-day)
         final WikipediaLanguage lang = page.getId().getLang();
         final String text = page.getContent();
 
@@ -157,6 +157,9 @@ public class DateFinder implements ReplacementFinder {
         if (matchBefore == null) {
             return convertMonthDayYear(match, page);
         } else {
+            if (!isSpace(text, matchBefore.end(), startMonth)) {
+                return null;
+            }
             final String wordBefore = matchBefore.group();
             if (isDay(wordBefore)) {
                 return convertLongDate(match, matchBefore, page);
@@ -190,6 +193,9 @@ public class DateFinder implements ReplacementFinder {
             if (matchBefore2 == null) {
                 return null;
             } else {
+                if (!isSpace(text, matchBefore2.end(), startBefore)) {
+                    return null;
+                }
                 final String wordBefore2 = matchBefore2.group();
                 if (isDay(wordBefore2)) {
                     tokenizedDate.setDay(wordBefore2);
@@ -246,6 +252,12 @@ public class DateFinder implements ReplacementFinder {
         return findDateReplacement(date, tokenizedDate, page);
     }
 
+    private boolean isSpace(String text, int start, int end) {
+        // Allow commas before
+        final String space = StringUtils.removeStart(text.substring(start, end), ",");
+        return SPACE.equals(space);
+    }
+
     private boolean findPrepositionAfterAndYear(
         TokenizedDate tokenizedDate,
         WikipediaPage page,
@@ -258,10 +270,14 @@ public class DateFinder implements ReplacementFinder {
         // Find the year with a possible preposition in the middle
         // We allow the dot to find years with a dot as a separator
         Set<Character> allowedChars = Set.of(YEAR_DOT);
-        final MatchResult matchAfter = FinderUtils.findWordAfter(text, matchMonth.end(), allowedChars);
+        int endMonth = matchMonth.end();
+        final MatchResult matchAfter = FinderUtils.findWordAfter(text, endMonth, allowedChars);
         if (matchAfter == null) {
             return false;
         } else {
+            if (!isSpace(text, endMonth, matchAfter.start())) {
+                return false;
+            }
             final String wordAfter = matchAfter.group();
             final int endAfter = matchAfter.end();
             if (isPreposition(wordAfter, lang)) {
@@ -271,6 +287,9 @@ public class DateFinder implements ReplacementFinder {
                 if (matchAfter2 == null) {
                     return false;
                 } else {
+                    if (!isSpace(text, endAfter, matchAfter2.start())) {
+                        return false;
+                    }
                     final String wordAfter2 = matchAfter2.group();
                     if (isYear(wordAfter2)) {
                         tokenizedDate.setYear(wordAfter2);
@@ -295,10 +314,14 @@ public class DateFinder implements ReplacementFinder {
         final TokenizedDate tokenizedDate = new TokenizedDate(matchMonth);
         tokenizedDate.setType(3);
 
-        final MatchResult matchAfter = FinderUtils.findWordAfter(text, matchMonth.end());
+        final int endMonth = matchMonth.end();
+        final MatchResult matchAfter = FinderUtils.findWordAfter(text, endMonth);
         if (matchAfter == null) {
             return null;
         } else {
+            if (!isSpace(text, endMonth, matchAfter.start())) {
+                return null;
+            }
             final String wordAfter = matchAfter.group();
             final int endAfter = matchAfter.end();
             if (isDay(wordAfter)) {
@@ -326,10 +349,14 @@ public class DateFinder implements ReplacementFinder {
         tokenizedDate.setYear(matchBefore.group());
         tokenizedDate.setStart(matchBefore.start());
 
-        final MatchResult matchAfter = FinderUtils.findWordAfter(text, matchMonth.end());
+        final int endMonth = matchMonth.end();
+        final MatchResult matchAfter = FinderUtils.findWordAfter(text, endMonth);
         if (matchAfter == null) {
             return null;
         } else {
+            if (!isSpace(text, endMonth, matchAfter.start())) {
+                return null;
+            }
             final String wordAfter = matchAfter.group();
             if (isDay(wordAfter)) {
                 tokenizedDate.setDay(wordAfter);
@@ -411,7 +438,8 @@ public class DateFinder implements ReplacementFinder {
             StringUtils.isNotEmpty(token) &&
             token.length() <= 2 &&
             FinderUtils.isNumber(token) &&
-            Integer.parseInt(token) <= 31
+            Integer.parseInt(token) <= 31 &&
+            Integer.parseInt(token) > 0
         );
     }
 
