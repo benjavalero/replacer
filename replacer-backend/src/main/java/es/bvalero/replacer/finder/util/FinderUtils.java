@@ -201,6 +201,7 @@ public class FinderUtils {
         return lastLetter >= 0 ? buildMatchResult(text, firstLetter, lastLetter, allowedChars) : null;
     }
 
+    @Nullable
     private LinearMatchResult buildMatchResult(
         String text,
         int firstLetter,
@@ -211,6 +212,9 @@ public class FinderUtils {
             // Remove leading and trailing allowed chars
             while (allowedChars.contains(text.charAt(firstLetter))) {
                 firstLetter++;
+                if (firstLetter >= text.length()) { // Corner case where the allowed char is the last character
+                    return null;
+                }
             }
             while (allowedChars.contains(text.charAt(lastLetter))) {
                 lastLetter--;

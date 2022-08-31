@@ -78,12 +78,19 @@ class DateFinderTest {
             "15 de agosto del 2019",
             "15 de setiembre de 2020",
             "el 22 de agosto de 2022",
-            "el 22 de agostos de 2022",
             "Siendo el 31 de agosto de 2022,",
             "siendo el 31 de agosto de 2022.",
         }
     )
     void testValidLongDate(String date) {
+        List<Replacement> replacements = dateFinder.findList(date);
+
+        assertTrue(replacements.isEmpty());
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = { "el 22 de agostos de 2022", "([[Condado de Mayo]])." })
+    void testNotDate(String date) {
         List<Replacement> replacements = dateFinder.findList(date);
 
         assertTrue(replacements.isEmpty());
