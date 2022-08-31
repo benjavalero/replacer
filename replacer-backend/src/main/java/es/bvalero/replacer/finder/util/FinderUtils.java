@@ -210,16 +210,19 @@ public class FinderUtils {
     ) {
         if (!allowedChars.isEmpty()) {
             // Remove leading and trailing allowed chars
-            while (allowedChars.contains(text.charAt(firstLetter))) {
+            while (firstLetter < text.length() && allowedChars.contains(text.charAt(firstLetter))) {
                 firstLetter++;
-                if (firstLetter >= text.length()) { // Corner case where the allowed char is the last character
-                    return null;
-                }
             }
-            while (allowedChars.contains(text.charAt(lastLetter))) {
+            while (lastLetter >= 0 && allowedChars.contains(text.charAt(lastLetter))) {
                 lastLetter--;
             }
         }
+
+        if (firstLetter > lastLetter) {
+            // Corner cases where the word is composed by allowed chars
+            return null;
+        }
+
         return LinearMatchResult.of(firstLetter, text.substring(firstLetter, lastLetter + 1));
     }
 

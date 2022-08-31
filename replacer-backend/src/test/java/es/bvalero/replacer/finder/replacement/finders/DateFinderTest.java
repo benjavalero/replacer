@@ -89,7 +89,15 @@ class DateFinderTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = { "el 22 de agostos de 2022", "([[Condado de Mayo]])." })
+    @ValueSource(
+        strings = {
+            "el 22 de agostos de 2022",
+            "([[Condado de Mayo]]).",
+            "la “Revolución de Noviembre”.\n",
+            "Feria de Abril ...",
+            "Feria de Mayo ... ",
+        }
+    )
     void testNotDate(String date) {
         List<Replacement> replacements = dateFinder.findList(date);
 
