@@ -59,6 +59,7 @@ class DateFinderTest {
             "17 de agosto de 2.019, 17 de agosto de 2019, " + SUBTYPE_DOT_YEAR,
             "17 de agosto del 2.019, 17 de agosto del 2019, " + SUBTYPE_DOT_YEAR,
             "17 de setiembre de 2.019, 17 de septiembre de 2019, " + SUBTYPE_DOT_YEAR,
+            "7-Agosto-2019, 7 de agosto de 2019, " + SUBTYPE_UPPERCASE,
         }
     )
     void testLongDate(String date, String expected, String subtype) {
@@ -72,7 +73,16 @@ class DateFinderTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = { "15 de agosto del 2019", "15 de setiembre de 2020", "el 22 de agosto de 2022" })
+    @ValueSource(
+        strings = {
+            "15 de agosto del 2019",
+            "15 de setiembre de 2020",
+            "el 22 de agosto de 2022",
+            "el 22 de agostos de 2022",
+            "Siendo el 31 de agosto de 2022,",
+            "siendo el 31 de agosto de 2022.",
+        }
+    )
     void testValidLongDate(String date) {
         List<Replacement> replacements = dateFinder.findList(date);
 
@@ -159,6 +169,7 @@ class DateFinderTest {
         assertEquals(subtype, replacements.get(0).getType().getSubtype());
     }
 
+    @Test
     void testUnorderedDateMonthDayYearWithText() {
         String text = "Siendo mayo 3, 1999.";
         String match = "mayo 3, 1999";

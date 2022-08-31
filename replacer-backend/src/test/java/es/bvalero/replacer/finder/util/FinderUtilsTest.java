@@ -137,9 +137,9 @@ class FinderUtilsTest {
         assertEquals(LinearMatchResult.of(5, "Mundo"), FinderUtils.findWordAfter("Hola Mundo", 4));
         assertEquals(LinearMatchResult.of(8, "Mundo"), FinderUtils.findWordAfter("Un Hola Mundo", 7));
         assertEquals(LinearMatchResult.of(5, "mundo"), FinderUtils.findWordAfter("Hola mundo", 4));
-        assertNull(FinderUtils.findWordAfter("Hola, Mundo", 4));
+        assertEquals(LinearMatchResult.of(6, "Mundo"), FinderUtils.findWordAfter("Hola, Mundo", 4));
         assertEquals(LinearMatchResult.of(6, "Mundo"), FinderUtils.findWordAfter("Hola, Mundo", 5));
-        assertNull(FinderUtils.findWordAfter("Hola-Mundo", 4));
+        assertEquals(LinearMatchResult.of(5, "Mundo"), FinderUtils.findWordAfter("Hola-Mundo", 4));
         assertNull(FinderUtils.findWordAfter("Hola", 4));
         assertNull(FinderUtils.findWordAfter("Hola ", 4));
         assertEquals(LinearMatchResult.of(5, "A"), FinderUtils.findWordAfter("Hola A", 4));
@@ -161,12 +161,11 @@ class FinderUtilsTest {
     @Test
     void testFindWordBefore() {
         assertEquals(LinearMatchResult.of(0, "Hola"), FinderUtils.findWordBefore("Hola mundo", 5));
-        assertNull(FinderUtils.findWordBefore("Hola-mundo", 5));
+        assertEquals(LinearMatchResult.of(0, "Hola"), FinderUtils.findWordBefore("Hola-mundo", 5));
         assertNull(FinderUtils.findWordBefore("Hola", 0));
         assertNull(FinderUtils.findWordBefore("HolaXmundo", 5));
         assertEquals(LinearMatchResult.of(0, "Hola"), FinderUtils.findWordBefore("Hola  mundo", 6));
-        assertEquals(LinearMatchResult.of(3, "Hola,"), FinderUtils.findWordBefore("Un Hola, mundo", 9, true));
-        assertNull(FinderUtils.findWordBefore("Un Hola, mundo", 9));
+        assertEquals(LinearMatchResult.of(3, "Hola"), FinderUtils.findWordBefore("Un Hola, mundo", 9));
     }
 
     @Test

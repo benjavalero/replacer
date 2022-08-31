@@ -139,12 +139,12 @@ public class FinderUtils {
 
     @Nullable
     public MatchResult findWordAfter(String text, int endWord) {
-        return findWordAfter(text, endWord, false);
+        return findWordAfter(text, endWord, Collections.emptyList());
     }
 
     @Nullable
-    public MatchResult findWordAfter(String text, int endWord, boolean onlyWhiteSpaceDelimiter) {
-        if (endWord + 1 >= text.length() || !Character.isWhitespace(text.charAt(endWord))) {
+    public MatchResult findWordAfter(String text, int endWord, Collection<Character> allowedChars) {
+        if (endWord >= text.length() || !isWordDelimiter(text.charAt(endWord))) {
             return null;
         }
 
@@ -152,7 +152,7 @@ public class FinderUtils {
         int lastLetter = -1;
         for (int i = endWord + 1; i < text.length(); i++) {
             final char ch = text.charAt(i);
-            if (isWordDelimiter(ch, onlyWhiteSpaceDelimiter)) {
+            if (isWordDelimiter(ch) && !allowedChars.contains(ch)) {
                 if (firstLetter >= 0) {
                     break;
                 }
@@ -163,7 +163,20 @@ public class FinderUtils {
                 lastLetter = i;
             }
         }
-        return firstLetter >= 0 ? LinearMatchResult.of(firstLetter, text.substring(firstLetter, lastLetter + 1)) : null;
+        if (firstLetter >= 0) {
+            if (!allowedChars.isEmpty()) {
+                // Remove leading and trailing allowed chars
+                while (allowedChars.contains(text.charAt(firstLetter))) {
+                    firstLetter++;
+                }
+                while (allowedChars.contains(text.charAt(lastLetter))) {
+                    lastLetter--;
+                }
+            }
+            return LinearMatchResult.of(firstLetter, text.substring(firstLetter, lastLetter + 1));
+        } else {
+            return null;
+        }
     }
 
     public boolean isWordPrecededByUpperCase(int start, String text) {
@@ -173,12 +186,12 @@ public class FinderUtils {
 
     @Nullable
     public MatchResult findWordBefore(String text, int start) {
-        return findWordBefore(text, start, false);
+        return findWordBefore(text, start, Collections.emptyList());
     }
 
     @Nullable
-    public MatchResult findWordBefore(String text, int start, boolean onlyWhiteSpaceDelimiter) {
-        if (start < 2 || !Character.isWhitespace(text.charAt(start - 1))) {
+    public MatchResult findWordBefore(String text, int start, Collection<Character> allowedChars) {
+        if (start < 1 || !isWordDelimiter(text.charAt(start - 1))) {
             return null;
         }
 
@@ -186,9 +199,8 @@ public class FinderUtils {
         int lastLetter = -1;
         for (int i = start - 2; i >= 0; i--) {
             final char ch = text.charAt(i);
-            if (isWordDelimiter(ch, onlyWhiteSpaceDelimiter)) {
-                // If white-space we continue if no word found yet
-                if (!Character.isWhitespace(ch) || lastLetter >= 0) {
+            if (isWordDelimiter(ch) && !allowedChars.contains(ch)) {
+                if (lastLetter >= 0) {
                     break;
                 }
             } else {
@@ -198,7 +210,20 @@ public class FinderUtils {
                 }
             }
         }
-        return lastLetter >= 0 ? LinearMatchResult.of(firstLetter, text.substring(firstLetter, lastLetter + 1)) : null;
+        if (lastLetter >= 0) {
+            if (!allowedChars.isEmpty()) {
+                // Remove leading and trailing allowed chars
+                while (allowedChars.contains(text.charAt(firstLetter))) {
+                    firstLetter++;
+                }
+                while (allowedChars.contains(text.charAt(lastLetter))) {
+                    lastLetter--;
+                }
+            }
+            return LinearMatchResult.of(firstLetter, text.substring(firstLetter, lastLetter + 1));
+        } else {
+            return null;
+        }
     }
 
     @Nullable
@@ -216,12 +241,8 @@ public class FinderUtils {
         return start >= 0 ? text.substring(start) : null;
     }
 
-    private boolean isWordDelimiter(char ch, boolean onlyWhiteSpaceDelimiter) {
-        if (onlyWhiteSpaceDelimiter) {
-            return Character.isWhitespace(ch);
-        } else {
-            return !Character.isLetterOrDigit(ch);
-        }
+    private boolean isWordDelimiter(char ch) {
+        return !Character.isLetterOrDigit(ch);
     }
 
     private String getTextSnippet(String text, int start, int end) {
@@ -254,14 +275,6 @@ public class FinderUtils {
 
     public String[] splitAsArray(String text) {
         return StringUtils.split(text);
-    }
-
-    public Stream<String> splitAsStream(String text) {
-        return Arrays.stream(splitAsArray(text));
-    }
-
-    public List<String> splitAsLinkedList(String text) {
-        return splitAsStream(text).collect(Collectors.toCollection(LinkedList::new));
     }
 
     /***** LOGGING UTILS *****/
