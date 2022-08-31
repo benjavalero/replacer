@@ -46,13 +46,8 @@ class PageIndexBatchService extends PageIndexAbstractService implements PageInde
     }
 
     private boolean isPageToBeIndexed(WikipediaPage page, @Nullable IndexablePage dbPage) {
-        // We assume at this point that the page is indexable
-        // Check if the page will be re-indexed (by timestamp)
-        // Page will also be indexed in case the title is not aligned
-        return (
-            pageIndexValidator.isIndexableByTimestamp(page, dbPage) ||
-            pageIndexValidator.isIndexableByPageTitle(page, dbPage)
-        );
+        // We assume at this point that the page is indexable by itself
+        return pageIndexValidator.isIndexableByTimestamp(page, dbPage);
     }
 
     @Override

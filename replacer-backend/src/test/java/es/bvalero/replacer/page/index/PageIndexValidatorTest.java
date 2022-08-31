@@ -31,25 +31,6 @@ class PageIndexValidatorTest {
     }
 
     @Test
-    void testIsPageNotIndexableByTitle() {
-        WikipediaPage page1 = mock(WikipediaPage.class);
-        when(page1.getTitle()).thenReturn("T");
-        assertTrue(pageIndexValidator.isIndexableByPageTitle(page1, null));
-
-        WikipediaPage page2 = mock(WikipediaPage.class);
-        when(page2.getTitle()).thenReturn("T");
-        IndexablePage dbPage2 = mock(IndexablePage.class);
-        when(dbPage2.getTitle()).thenReturn("Z");
-        assertTrue(pageIndexValidator.isIndexableByPageTitle(page2, dbPage2));
-
-        WikipediaPage page3 = mock(WikipediaPage.class);
-        when(page3.getTitle()).thenReturn("T");
-        IndexablePage dbPage3 = mock(IndexablePage.class);
-        when(dbPage3.getTitle()).thenReturn("T");
-        assertFalse(pageIndexValidator.isIndexableByPageTitle(page3, dbPage3));
-    }
-
-    @Test
     void testIsPageNotIndexableByTimestamp() {
         LocalDateTime today = LocalDateTime.now();
         LocalDateTime yesterday = today.minusDays(1);

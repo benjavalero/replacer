@@ -69,7 +69,6 @@ class PageIndexSingleServiceTest {
 
         verify(pageIndexValidator).isPageIndexableByNamespace(page);
         verify(pageIndexValidator, never()).isIndexableByTimestamp(page, null);
-        verify(pageIndexValidator, never()).isIndexableByPageTitle(page, null);
         verify(pageReplacementFinder, never()).findReplacements(any(WikipediaPage.class));
     }
 
@@ -93,7 +92,6 @@ class PageIndexSingleServiceTest {
 
         verify(pageIndexValidator).isPageIndexableByNamespace(page);
         verify(pageIndexValidator, never()).isIndexableByTimestamp(page, null);
-        verify(pageIndexValidator, never()).isIndexableByPageTitle(page, null);
         verify(pageReplacementFinder, never()).findReplacements(any(WikipediaPage.class));
     }
 
@@ -117,7 +115,6 @@ class PageIndexSingleServiceTest {
 
         verify(pageIndexValidator).isPageIndexableByNamespace(page);
         verify(pageIndexValidator, never()).isIndexableByTimestamp(page, null);
-        verify(pageIndexValidator, never()).isIndexableByPageTitle(page, null);
         verify(pageReplacementFinder, never()).findReplacements(any(WikipediaPage.class));
         verify(pageIndexResultSaver, never()).save(any(PageIndexResult.class));
         verify(removeObsoletePageService).removeObsoletePages(anyCollection());
