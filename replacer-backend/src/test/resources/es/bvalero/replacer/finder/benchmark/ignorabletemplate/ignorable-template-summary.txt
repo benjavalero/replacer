@@ -1,0 +1,6 @@
+                  FINDER                   |  Median [TIME]  |  Min [TIME]  |  Mean [TIME]  |  Max [TIME]   |
+-------------------------------------------------------------------------------------------------------------
+ IgnorableTemplateLowercaseContainsFinder  |       5640,860  |     578,990  |    16965,116  |   154509,620  |
+             IgnorableTemplateRegexFinder  |     242340,346  |   22382,949  |   516164,669  |  3902628,995  |
+  IgnorableTemplateRegexInsensitiveFinder  |     319086,141  |   32245,930  |   676707,828  |  5118626,973  |
+         IgnorableTemplateAutomatonFinder  |       3644,640  |     472,771  |    10124,313  |    86513,007  |

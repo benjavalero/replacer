@@ -13,6 +13,7 @@ import es.bvalero.replacer.finder.listing.find.ListingOfflineFinder;
 import es.bvalero.replacer.finder.listing.load.ComposedMisspellingLoader;
 import es.bvalero.replacer.finder.listing.parse.ComposedMisspellingParser;
 import es.bvalero.replacer.finder.replacement.finders.MisspellingComposedFinder;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -64,5 +65,9 @@ class ComposedMisspellingFinderBenchmarkTest extends BaseFinderBenchmark {
         runBenchmark(finders);
 
         assertTrue(true);
+    }
+
+    public static void main(String[] args) throws URISyntaxException {
+        generateBoxplot("word/composed-misspelling-benchmark.csv", "Composed Misspelling");
     }
 }

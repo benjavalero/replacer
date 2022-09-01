@@ -1,0 +1,5 @@
+              FINDER                |  Median [TIME]  |  Min [TIME]  |  Mean [TIME]  |  Max [TIME]  |
+-----------------------------------------------------------------------------------------------------
+            UppercaseIndexOfFinder  |      36814,891  |    4353,928  |   108036,109  |  878536,706  |
+           UppercaseAllWordsFinder  |      20905,525  |    1332,939  |    55271,179  |  479725,496  |
+ UppercaseAutomatonAlternateFinder  |      12039,093  |    1124,576  |    28415,351  |  207560,628  |

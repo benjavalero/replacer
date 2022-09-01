@@ -12,6 +12,7 @@ import es.bvalero.replacer.finder.listing.find.ListingFinder;
 import es.bvalero.replacer.finder.listing.find.ListingOfflineFinder;
 import es.bvalero.replacer.finder.listing.load.SimpleMisspellingLoader;
 import es.bvalero.replacer.finder.listing.parse.SimpleMisspellingParser;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -53,5 +54,9 @@ class UppercaseFinderBenchmarkTest extends BaseFinderBenchmark {
         runBenchmark(finders);
 
         assertTrue(true);
+    }
+
+    public static void main(String[] args) throws URISyntaxException {
+        generateBoxplot("uppercase/uppercase-benchmark.csv", "Uppercase");
     }
 }

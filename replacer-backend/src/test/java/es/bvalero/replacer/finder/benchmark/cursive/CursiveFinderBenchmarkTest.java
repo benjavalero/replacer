@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.finder.benchmark.BaseFinderBenchmark;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -25,5 +26,9 @@ class CursiveFinderBenchmarkTest extends BaseFinderBenchmark {
         runBenchmark(finders);
 
         assertTrue(true);
+    }
+
+    public static void main(String[] args) throws URISyntaxException {
+        generateBoxplot("cursive/cursive-benchmark.csv", "Cursive");
     }
 }

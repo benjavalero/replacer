@@ -6,6 +6,7 @@ import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.config.XmlConfiguration;
 import es.bvalero.replacer.finder.benchmark.BaseFinderBenchmark;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -32,5 +33,9 @@ class CompleteTagFinderBenchmarkTest extends BaseFinderBenchmark {
         runBenchmark(finders);
 
         assertTrue(true);
+    }
+
+    public static void main(String[] args) throws URISyntaxException {
+        generateBoxplot("completetag/complete-tag-benchmark.csv", "Complete Tag");
     }
 }

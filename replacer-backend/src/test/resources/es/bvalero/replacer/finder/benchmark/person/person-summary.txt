@@ -1,0 +1,5 @@
+                 FINDER                  |  Median [TIME]  |  Min [TIME]  |  Mean [TIME]  |  Max [TIME]  |
+----------------------------------------------------------------------------------------------------------
+                    PersonIndexOfFinder  |      11049,036  |    1098,615  |    30038,466  |  259315,481  |
+         PersonAutomatonAlternateFinder  |      18611,872  |    1636,571  |    43216,788  |  367042,037  |
+ PersonAutomatonAlternateCompleteFinder  |      12477,972  |    1294,143  |    30421,518  |  237914,491  |

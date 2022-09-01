@@ -12,6 +12,7 @@ import es.bvalero.replacer.finder.listing.load.SimpleMisspellingLoader;
 import es.bvalero.replacer.finder.listing.parse.ComposedMisspellingParser;
 import es.bvalero.replacer.finder.listing.parse.SimpleMisspellingParser;
 import es.bvalero.replacer.finder.replacement.ReplacementFinder;
+import java.net.URISyntaxException;
 import java.util.List;
 import org.apache.commons.collections4.IterableUtils;
 import org.junit.jupiter.api.Test;
@@ -95,5 +96,9 @@ class ReplacementFinderBenchmarkTest extends BaseFinderBenchmark {
                 }
             }
         });
+    }
+
+    public static void main(String[] args) throws URISyntaxException {
+        generateBoxplot("../replacement/finders/replacement-benchmark.csv", "Replacements");
     }
 }

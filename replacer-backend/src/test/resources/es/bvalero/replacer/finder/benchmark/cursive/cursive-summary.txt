@@ -1,0 +1,8 @@
+            FINDER             |  Median [TIME]  |  Min [TIME]  |  Mean [TIME]  |  Max [TIME]  |
+------------------------------------------------------------------------------------------------
+    CursiveRegexDotLazyFinder  |         45,500  |       4,000  |       94,900  |     690,000  |
+           CursiveRegexFinder  |         51,500  |       4,000  |      105,280  |     714,000  |
+ CursiveRegexDotAllLookFinder  |         72,500  |       7,000  |      150,240  |    1098,000  |
+       CursiveRegexLookFinder  |         82,000  |       6,000  |      160,780  |    1147,000  |
+       CursiveAutomatonFinder  |         20,000  |       2,000  |       42,720  |     331,000  |
+          CursiveLinearFinder  |          2,000  |       0,000  |        6,760  |      43,000  |

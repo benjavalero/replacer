@@ -1,0 +1,5 @@
+                 FINDER                   |  Median [TIME]  |  Min [TIME]  |  Mean [TIME]  |  Max [TIME]  |
+-----------------------------------------------------------------------------------------------------------
+                    SurnameIndexOfFinder  |      17927,418  |    1609,340  |    50591,048  |  442403,197  |
+         SurnameAutomatonAlternateFinder  |      27035,288  |    2307,312  |    57563,231  |  427008,634  |
+ SurnameAutomatonAlternateCompleteFinder  |      25064,585  |    2229,890  |    53710,483  |  400921,093  |

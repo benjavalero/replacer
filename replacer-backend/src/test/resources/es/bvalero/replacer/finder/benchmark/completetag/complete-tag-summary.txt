@@ -1,0 +1,6 @@
+               FINDER                 |  Median [TIME]  |  Min [TIME]  |  Mean [TIME]  |  Max [TIME]   |
+--------------------------------------------------------------------------------------------------------
+      CompleteTagRegexIteratedFinder  |      96725,897  |    7974,455  |   188958,070  |  1552497,235  |
+ CompleteTagRegexBackReferenceFinder  |      27376,931  |    1980,416  |    53149,033  |   485900,785  |
+     CompleteTagLinearIteratedFinder  |      26809,459  |   19784,486  |    41587,211  |   232772,408  |
+             CompleteTagLinearFinder  |       1730,415  |     284,572  |     3799,018  |    44649,857  |

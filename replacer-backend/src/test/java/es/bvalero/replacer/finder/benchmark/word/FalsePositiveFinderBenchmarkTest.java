@@ -11,6 +11,7 @@ import es.bvalero.replacer.finder.listing.find.ListingFinder;
 import es.bvalero.replacer.finder.listing.find.ListingOfflineFinder;
 import es.bvalero.replacer.finder.listing.load.FalsePositiveLoader;
 import es.bvalero.replacer.finder.listing.parse.FalsePositiveParser;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -51,5 +52,9 @@ class FalsePositiveFinderBenchmarkTest extends BaseFinderBenchmark {
         runBenchmark(finders, WARM_UP / 10, ITERATIONS / 10);
 
         assertTrue(true);
+    }
+
+    public static void main(String[] args) throws URISyntaxException {
+        generateBoxplot("word/false-positive-benchmark.csv", "False Positive");
     }
 }

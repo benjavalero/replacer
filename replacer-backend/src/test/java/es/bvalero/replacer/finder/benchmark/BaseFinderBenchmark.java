@@ -1,10 +1,24 @@
 package es.bvalero.replacer.finder.benchmark;
 
+import static tech.tablesaw.aggregate.AggregateFunctions.*;
+import static tech.tablesaw.aggregate.AggregateFunctions.max;
+
 import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.wikipedia.api.WikipediaUtils;
+import java.net.URISyntaxException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.text.DecimalFormat;
 import java.util.List;
+import java.util.Objects;
+import tech.tablesaw.api.Table;
+import tech.tablesaw.columns.numbers.NumberColumnFormatter;
+import tech.tablesaw.io.csv.CsvReadOptions;
+import tech.tablesaw.plotly.Plot;
+import tech.tablesaw.plotly.api.BoxPlot;
+import tech.tablesaw.plotly.components.Figure;
 
 public abstract class BaseFinderBenchmark {
 
@@ -60,5 +74,24 @@ public abstract class BaseFinderBenchmark {
         } catch (WikipediaException e) {
             throw new ReplacerException(e);
         }
+    }
+
+    protected static void generateBoxplot(String fileName, String title) throws URISyntaxException {
+        // Generate boxplot
+        final Path csvPath = Paths.get(Objects.requireNonNull(BaseFinderBenchmark.class.getResource(fileName)).toURI());
+        CsvReadOptions options = CsvReadOptions.builder(csvPath.toFile()).separator('\t').build();
+        Table table = Table.read().usingOptions(options);
+
+        Table summary = table.summarize("TIME", median, min, mean, max).by("FINDER");
+        DecimalFormat df = new DecimalFormat("0.000");
+        NumberColumnFormatter ncf = new NumberColumnFormatter(df);
+        summary.doubleColumn(1).setPrintFormatter(ncf);
+        summary.doubleColumn(2).setPrintFormatter(ncf);
+        summary.doubleColumn(3).setPrintFormatter(ncf);
+        summary.doubleColumn(4).setPrintFormatter(ncf);
+        System.out.println(summary);
+
+        Figure boxplot = BoxPlot.create(title, table, "FINDER", "TIME");
+        Plot.show(boxplot);
     }
 }

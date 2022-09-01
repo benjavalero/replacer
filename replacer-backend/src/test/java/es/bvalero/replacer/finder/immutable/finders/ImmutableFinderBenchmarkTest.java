@@ -12,6 +12,7 @@ import es.bvalero.replacer.finder.listing.load.FalsePositiveLoader;
 import es.bvalero.replacer.finder.listing.load.SimpleMisspellingLoader;
 import es.bvalero.replacer.finder.listing.parse.FalsePositiveParser;
 import es.bvalero.replacer.finder.listing.parse.SimpleMisspellingParser;
+import java.net.URISyntaxException;
 import java.util.List;
 import org.apache.commons.collections4.IterableUtils;
 import org.junit.jupiter.api.Test;
@@ -107,5 +108,9 @@ class ImmutableFinderBenchmarkTest extends BaseFinderBenchmark {
                 }
             }
         });
+    }
+
+    public static void main(String[] args) throws URISyntaxException {
+        generateBoxplot("../immutable/finders/immutable-benchmark.csv", "Immutables");
     }
 }
