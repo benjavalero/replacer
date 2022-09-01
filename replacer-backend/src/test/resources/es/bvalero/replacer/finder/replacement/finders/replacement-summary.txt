@@ -1,8 +1,9 @@
-          FINDER            |  Median [TIME]  |  Min [TIME]  |  Mean [TIME]  |  Max [TIME]   |
-----------------------------------------------------------------------------------------------
-              AcuteOFinder  |        975,110  |     273,517  |     2954,030  |    32001,776  |
-             CenturyFinder  |       1278,084  |     358,001  |     3379,746  |    23528,233  |
-         CoordinatesFinder  |        491,185  |     253,518  |     7373,114  |    76595,081  |
-                DateFinder  |      14251,302  |    2740,837  |    40156,782  |   350447,483  |
- MisspellingComposedFinder  |      38734,311  |    2575,056  |    90830,041  |   720963,970  |
-   MisspellingSimpleFinder  |      64122,762  |    3777,621  |   150811,962  |  1246690,493  |
+                              replacement-benchmark.csv summary                              
+          FINDER            |  Median [TIME]  |  Min [TIME]  |  Mean [TIME]  |  Max [TIME]  |
+---------------------------------------------------------------------------------------------
+              AcuteOFinder  |        642,750  |     137,100  |     1527,202  |   13092,600  |
+             CenturyFinder  |        720,000  |     211,900  |     2225,714  |   11655,100  |
+         CoordinatesFinder  |        273,350  |     147,700  |      446,582  |    2338,300  |
+                DateFinder  |       9877,200  |    1938,100  |    26430,590  |  256782,100  |
+ MisspellingComposedFinder  |      28979,500  |    2749,500  |    75295,880  |  647589,500  |
+   MisspellingSimpleFinder  |      27037,500  |    2530,700  |    69511,266  |  628810,400  |

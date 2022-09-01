@@ -47,13 +47,16 @@ public class MisspellingSimpleFinder extends MisspellingFinder implements Proper
     }
 
     private int findWord(WikipediaPage page, int start, List<MatchResult> matches) {
+        final WikipediaLanguage lang = page.getId().getLang();
         final String text = page.getContent();
 
         int startWord = findStartWord(text, start);
         if (startWord >= 0) {
             int endWord = findEndWord(text, startWord);
             String word = text.substring(startWord, endWord);
-            matches.add(LinearMatchResult.of(startWord, word));
+            if (isExistingWord(word, lang)) {
+                matches.add(LinearMatchResult.of(startWord, word));
+            }
             return endWord;
         } else {
             return -1;
@@ -85,11 +88,5 @@ public class MisspellingSimpleFinder extends MisspellingFinder implements Proper
     @Override
     ReplacementKind getType() {
         return ReplacementKind.SIMPLE;
-    }
-
-    @Override
-    public boolean validate(MatchResult match, WikipediaPage page) {
-        // For simple misspellings, we also need to check it the word is a misspelling.
-        return isExistingWord(match.group(), page.getId().getLang()) && super.validate(match, page);
     }
 }
