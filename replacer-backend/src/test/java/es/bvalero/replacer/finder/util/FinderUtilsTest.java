@@ -69,13 +69,6 @@ class FinderUtilsTest {
     }
 
     @Test
-    void testIsUpperCase() {
-        assertTrue(FinderUtils.isUpperCase("ESPAÑA"));
-        assertFalse(FinderUtils.isUpperCase("España"));
-        assertFalse(FinderUtils.isUpperCase("1234"));
-    }
-
-    @Test
     void testIsAscii() {
         assertTrue(FinderUtils.isAscii('A'));
         assertFalse(FinderUtils.isAscii('ñ'));
@@ -88,20 +81,6 @@ class FinderUtilsTest {
         assertFalse(FinderUtils.isAsciiLowerCase("Amigo"));
         assertFalse(FinderUtils.isAsciiLowerCase("úlcera"));
         assertFalse(FinderUtils.isAsciiLowerCase("1234"));
-    }
-
-    @Test
-    void testIsWord() {
-        assertTrue(FinderUtils.isWord("España"));
-        assertFalse(FinderUtils.isWord("Hola Mundo"));
-        assertFalse(FinderUtils.isWord("word1234"));
-    }
-
-    @Test
-    void testIsNumber() {
-        assertTrue(FinderUtils.isNumber("1234"));
-        assertFalse(FinderUtils.isNumber("12 34"));
-        assertFalse(FinderUtils.isNumber("word1234"));
     }
 
     @Test

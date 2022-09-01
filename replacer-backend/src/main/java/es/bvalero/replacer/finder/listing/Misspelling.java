@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.intellij.lang.annotations.RegExp;
 
 public interface Misspelling extends ListingItem {
@@ -44,7 +45,7 @@ public interface Misspelling extends ListingItem {
 
         try {
             // EXCEPTION: Composed misspellings with one word finished with comma, e.g. "mas."
-            if (comment.endsWith(",") && FinderUtils.isWord(comment.substring(0, comment.length() - 2))) {
+            if (comment.endsWith(",") && StringUtils.isAlpha(comment.substring(0, comment.length() - 2))) {
                 suggestionList.add(MisspellingSuggestion.ofNoComment(comment));
                 return suggestionList;
             }

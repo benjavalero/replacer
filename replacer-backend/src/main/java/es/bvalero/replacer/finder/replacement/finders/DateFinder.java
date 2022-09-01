@@ -437,7 +437,7 @@ public class DateFinder implements ReplacementFinder {
         return (
             StringUtils.isNotEmpty(token) &&
             token.length() <= 2 &&
-            FinderUtils.isNumber(token) &&
+            StringUtils.isNumeric(token) &&
             Integer.parseInt(token) <= 31 &&
             Integer.parseInt(token) > 0
         );
@@ -454,12 +454,12 @@ public class DateFinder implements ReplacementFinder {
     private boolean isYear(String token) {
         // It could be ended with a comma in case of year-month-day
         if (token.length() == 4) {
-            return FinderUtils.isNumber(token);
+            return StringUtils.isNumeric(token);
         } else if (token.length() == 5) {
             return (
                 FinderUtils.startsWithNumber(token) &&
                 token.charAt(1) == '.' &&
-                FinderUtils.isNumber(token.substring(2))
+                StringUtils.isNumeric(token.substring(2))
             );
         } else {
             return false;
@@ -495,7 +495,7 @@ public class DateFinder implements ReplacementFinder {
     }
 
     private boolean isValidPrepositionAfter(@Nullable String prepAfter) {
-        return prepAfter != null && FinderUtils.isLowerCase(prepAfter);
+        return StringUtils.isAllLowerCase(prepAfter);
     }
 
     private boolean isValidYear(String year) {

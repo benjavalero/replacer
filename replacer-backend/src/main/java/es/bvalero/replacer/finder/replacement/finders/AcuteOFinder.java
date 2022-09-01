@@ -12,6 +12,7 @@ import es.bvalero.replacer.finder.util.LinearMatchResult;
 import java.util.Collections;
 import java.util.List;
 import java.util.regex.MatchResult;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 /**
@@ -74,8 +75,8 @@ public class AcuteOFinder implements ReplacementFinder {
     private ReplacementType findReplacementType(String text) {
         final int pos = text.indexOf(SEARCH_ACUTE_O);
         return (
-                FinderUtils.isNumber(text.substring(0, pos)) &&
-                FinderUtils.isNumber(text.substring(pos + SEARCH_ACUTE_O.length()))
+                StringUtils.isNumeric(text.substring(0, pos)) &&
+                StringUtils.isNumeric(text.substring(pos + SEARCH_ACUTE_O.length()))
             )
             ? ReplacementType.ACUTE_O_NUMBERS
             : ReplacementType.ACUTE_O_WORDS;

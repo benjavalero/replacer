@@ -241,7 +241,7 @@ public class CoordinatesFinder implements ReplacementFinder {
         return (
             StringUtils.isNotEmpty(number) &&
             number.length() <= 2 &&
-            FinderUtils.isNumber(number) &&
+            StringUtils.isNumeric(number) &&
             Integer.parseInt(number) < 60
         );
     }
@@ -268,7 +268,15 @@ public class CoordinatesFinder implements ReplacementFinder {
     }
 
     private boolean isDoublePrime(String str) {
-        return str.length() == 2 && str.chars().mapToObj(c -> (char) c).allMatch(this::isPrimeChar);
+        if (str.length() != 2) {
+            return false;
+        }
+        for (int i = 0; i < str.length(); i++) {
+            if (!isPrimeChar(str.charAt(i))) {
+                return false;
+            }
+        }
+        return true;
     }
 
     private boolean isValidDoublePrimeChar(String str) {

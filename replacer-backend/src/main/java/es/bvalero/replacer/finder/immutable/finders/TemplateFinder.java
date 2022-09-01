@@ -176,7 +176,12 @@ class TemplateFinder implements ImmutableFinder {
 
     private boolean validateSpecialCharacters(String templateContent) {
         // Check that not all the characters are a pipe
-        return templateContent.chars().anyMatch(ch -> ch != PIPE);
+        for (int i = 0; i < templateContent.length(); i++) {
+            if (templateContent.charAt(i) != PIPE) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private String findTemplateName(String parameter) {

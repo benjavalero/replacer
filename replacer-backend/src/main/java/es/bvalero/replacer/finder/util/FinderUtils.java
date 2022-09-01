@@ -74,36 +74,30 @@ public class FinderUtils {
         return word;
     }
 
-    public boolean isUpperCase(String word) {
-        return word.chars().allMatch(Character::isUpperCase);
-    }
-
-    public boolean isLowerCase(String word) {
-        return word.chars().allMatch(Character::isLowerCase);
-    }
-
     public boolean isAscii(char ch) {
         return (ch >= 'A' && ch <= 'Z') || (ch >= 'a' && ch <= 'z');
     }
 
     public boolean isAsciiLowerCase(String word) {
-        return word.chars().allMatch(FinderUtils::isAsciiLowerCase);
+        for (int i = 0; i < word.length(); i++) {
+            if (!isAsciiLowerCase(word.charAt(i))) {
+                return false;
+            }
+        }
+        return true;
     }
 
     private boolean isAsciiLowerCase(int ch) {
         return (ch >= 'a' && ch <= 'z');
     }
 
-    public boolean isWord(String word) {
-        return word.chars().allMatch(Character::isLetter);
-    }
-
-    public boolean isNumber(String word) {
-        return word.chars().allMatch(Character::isDigit);
-    }
-
     public boolean isDecimalNumber(String word) {
-        return word.chars().mapToObj(c -> (char) c).allMatch(FinderUtils::isDecimalNumber);
+        for (int i = 0; i < word.length(); i++) {
+            if (!isDecimalNumber(word.charAt(i))) {
+                return false;
+            }
+        }
+        return true;
     }
 
     private boolean isDecimalNumber(char ch) {

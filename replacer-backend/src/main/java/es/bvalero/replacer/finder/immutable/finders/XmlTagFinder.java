@@ -69,7 +69,12 @@ class XmlTagFinder extends ImmutableCheckedFinder {
     }
 
     private boolean isValidTagContent(String tagContent) {
-        return tagContent.chars().mapToObj(c -> (char) c).noneMatch(this::isForbiddenChar);
+        for (int i = 0; i < tagContent.length(); i++) {
+            if (isForbiddenChar(tagContent.charAt(i))) {
+                return false;
+            }
+        }
+        return true;
     }
 
     private boolean isForbiddenChar(char ch) {

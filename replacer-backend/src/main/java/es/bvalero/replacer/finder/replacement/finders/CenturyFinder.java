@@ -115,7 +115,12 @@ public class CenturyFinder implements ReplacementFinder {
     }
 
     private boolean isCenturyNumber(String text) {
-        return text.chars().mapToObj(c -> (char) c).allMatch(this::isCenturyLetter);
+        for (int i = 0; i < text.length(); i++) {
+            if (!isCenturyLetter(text.charAt(i))) {
+                return false;
+            }
+        }
+        return true;
     }
 
     private boolean isCenturyLetter(char ch) {

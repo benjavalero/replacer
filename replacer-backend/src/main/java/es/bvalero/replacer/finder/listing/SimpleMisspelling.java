@@ -3,6 +3,7 @@ package es.bvalero.replacer.finder.listing;
 import es.bvalero.replacer.common.domain.ReplacementKind;
 import java.util.List;
 import lombok.Value;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.TestOnly;
 
 @Value
@@ -24,7 +25,7 @@ public class SimpleMisspelling implements Misspelling {
     }
 
     private void validateMisspellingWord(String word) {
-        boolean isValid = word.chars().allMatch(Character::isLetter);
+        boolean isValid = StringUtils.isAlpha(word);
         if (!isValid) {
             throw new IllegalArgumentException("Not valid misspelling word: " + word);
         }

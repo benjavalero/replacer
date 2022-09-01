@@ -102,7 +102,12 @@ abstract class QuotesFinder extends ImmutableCheckedFinder {
     }
 
     private boolean containsForbiddenChars(String text) {
-        return text.chars().mapToObj(c -> (char) c).anyMatch(this::isForbiddenChar);
+        for (int i = 0; i < text.length(); i++) {
+            if (isForbiddenChar(text.charAt(i))) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private boolean isForbiddenChar(char ch) {

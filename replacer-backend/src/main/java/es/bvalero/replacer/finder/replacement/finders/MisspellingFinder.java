@@ -15,6 +15,7 @@ import java.util.*;
 import java.util.regex.MatchResult;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.SetValuedMap;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.VisibleForTesting;
 import org.springframework.boot.logging.LogLevel;
 
@@ -125,7 +126,7 @@ public abstract class MisspellingFinder implements ReplacementFinder {
         if (
             misspelling.isCaseSensitive() &&
             FinderUtils.startsWithUpperCase(word) &&
-            !FinderUtils.isUpperCase(word) &&
+            !StringUtils.isAllUpperCase(word) &&
             suggestions.stream().map(Suggestion::getText).noneMatch(word::equals)
         ) {
             suggestions
