@@ -6,6 +6,7 @@ import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.config.XmlConfiguration;
 import es.bvalero.replacer.finder.benchmark.BaseFinderBenchmark;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +17,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest(classes = XmlConfiguration.class)
 class CompleteTagFinderBenchmarkTest extends BaseFinderBenchmark {
+
+    private static final String fileName = "completetag/complete-tag-benchmark.csv";
 
     @Resource
     private Set<String> completeTags;
@@ -30,12 +33,12 @@ class CompleteTagFinderBenchmarkTest extends BaseFinderBenchmark {
         finders.add(new CompleteTagLinearIteratedFinder(completeTags));
         finders.add(new CompleteTagLinearFinder(completeTags));
 
-        runBenchmark(finders);
+        runBenchmark(finders, fileName);
 
         assertTrue(true);
     }
 
-    public static void main(String[] args) throws URISyntaxException {
-        generateBoxplot("completetag/complete-tag-benchmark.csv", "Complete Tag");
+    public static void main(String[] args) throws URISyntaxException, IOException {
+        generateBoxplot(fileName, "Complete Tag");
     }
 }

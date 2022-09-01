@@ -5,12 +5,15 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.finder.benchmark.BaseFinderBenchmark;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 
 class CursiveFinderBenchmarkTest extends BaseFinderBenchmark {
+
+    private static final String fileName = "cursive/cursive-benchmark.csv";
 
     @Test
     void testBenchmark() throws ReplacerException {
@@ -23,12 +26,12 @@ class CursiveFinderBenchmarkTest extends BaseFinderBenchmark {
         finders.add(new CursiveAutomatonFinder());
         finders.add(new CursiveLinearFinder());
 
-        runBenchmark(finders);
+        runBenchmark(finders, fileName);
 
         assertTrue(true);
     }
 
-    public static void main(String[] args) throws URISyntaxException {
-        generateBoxplot("cursive/cursive-benchmark.csv", "Cursive");
+    public static void main(String[] args) throws URISyntaxException, IOException {
+        generateBoxplot(fileName, "Cursive");
     }
 }

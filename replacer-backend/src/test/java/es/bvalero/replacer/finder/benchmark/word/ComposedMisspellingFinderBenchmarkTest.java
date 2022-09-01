@@ -13,6 +13,7 @@ import es.bvalero.replacer.finder.listing.find.ListingOfflineFinder;
 import es.bvalero.replacer.finder.listing.load.ComposedMisspellingLoader;
 import es.bvalero.replacer.finder.listing.parse.ComposedMisspellingParser;
 import es.bvalero.replacer.finder.replacement.finders.MisspellingComposedFinder;
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +23,8 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
 
 class ComposedMisspellingFinderBenchmarkTest extends BaseFinderBenchmark {
+
+    private static final String fileName = "word/composed-misspelling-benchmark.csv";
 
     @Test
     void testWordFinderBenchmark() throws ReplacerException {
@@ -62,12 +65,12 @@ class ComposedMisspellingFinderBenchmarkTest extends BaseFinderBenchmark {
         // finders.add(new WordLinearAllFinder(words)); // Don't work with composed
         // finders.add(new WordRegexAllCompleteFinder(words)); // Don't work with composed
 
-        runBenchmark(finders);
+        runBenchmark(finders, fileName);
 
         assertTrue(true);
     }
 
-    public static void main(String[] args) throws URISyntaxException {
-        generateBoxplot("word/composed-misspelling-benchmark.csv", "Composed Misspelling");
+    public static void main(String[] args) throws URISyntaxException, IOException {
+        generateBoxplot(fileName, "Composed Misspelling");
     }
 }

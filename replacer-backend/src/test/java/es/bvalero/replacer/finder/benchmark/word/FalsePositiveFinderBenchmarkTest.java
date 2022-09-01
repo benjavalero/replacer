@@ -11,6 +11,7 @@ import es.bvalero.replacer.finder.listing.find.ListingFinder;
 import es.bvalero.replacer.finder.listing.find.ListingOfflineFinder;
 import es.bvalero.replacer.finder.listing.load.FalsePositiveLoader;
 import es.bvalero.replacer.finder.listing.parse.FalsePositiveParser;
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +20,8 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
 
 class FalsePositiveFinderBenchmarkTest extends BaseFinderBenchmark {
+
+    private static final String fileName = "word/false-positive-benchmark.csv";
 
     @Test
     void testWordFinderBenchmark() throws ReplacerException {
@@ -49,12 +52,12 @@ class FalsePositiveFinderBenchmarkTest extends BaseFinderBenchmark {
         // finders.add(new WordLinearAllFinder(words)); // Don't work with composed
         // finders.add(new WordRegexAllCompleteFinder(words)); // Don't work with composed
 
-        runBenchmark(finders, WARM_UP / 10, ITERATIONS / 10);
+        runBenchmark(finders, WARM_UP / 10, ITERATIONS / 10, fileName);
 
         assertTrue(true);
     }
 
-    public static void main(String[] args) throws URISyntaxException {
-        generateBoxplot("word/false-positive-benchmark.csv", "False Positive");
+    public static void main(String[] args) throws URISyntaxException, IOException {
+        generateBoxplot(fileName, "False Positive");
     }
 }

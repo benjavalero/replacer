@@ -6,6 +6,7 @@ import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.config.XmlConfiguration;
 import es.bvalero.replacer.finder.benchmark.BaseFinderBenchmark;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +17,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest(classes = XmlConfiguration.class)
 class PersonFinderBenchmarkTest extends BaseFinderBenchmark {
+
+    private static final String fileName = "person/person-benchmark.csv";
 
     @Resource
     private Set<String> personNames;
@@ -34,12 +37,12 @@ class PersonFinderBenchmarkTest extends BaseFinderBenchmark {
         // finders.add(new PersonRegexAlternateCompleteFinder(personNames)); // Very long
         finders.add(new PersonAutomatonAlternateCompleteFinder(personNames));
 
-        runBenchmark(finders);
+        runBenchmark(finders, fileName);
 
         assertTrue(true);
     }
 
-    public static void main(String[] args) throws URISyntaxException {
-        generateBoxplot("person/person-benchmark.csv", "Person");
+    public static void main(String[] args) throws URISyntaxException, IOException {
+        generateBoxplot(fileName, "Person");
     }
 }

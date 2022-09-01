@@ -13,6 +13,7 @@ import es.bvalero.replacer.finder.listing.find.ListingOfflineFinder;
 import es.bvalero.replacer.finder.listing.load.SimpleMisspellingLoader;
 import es.bvalero.replacer.finder.listing.parse.SimpleMisspellingParser;
 import es.bvalero.replacer.finder.replacement.finders.MisspellingSimpleFinder;
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +23,8 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
 
 class SimpleMisspellingFinderBenchmarkTest extends BaseFinderBenchmark {
+
+    private static final String fileName = "word/simple-misspelling-benchmark.csv";
 
     @Test
     void testWordFinderBenchmark() throws ReplacerException {
@@ -60,12 +63,12 @@ class SimpleMisspellingFinderBenchmarkTest extends BaseFinderBenchmark {
         finders.add(new WordLinearAllFinder(words));
         finders.add(new WordRegexAllCompleteFinder(words));
 
-        runBenchmark(finders);
+        runBenchmark(finders, fileName);
 
         assertTrue(true);
     }
 
-    public static void main(String[] args) throws URISyntaxException {
-        generateBoxplot("word/simple-misspelling-benchmark.csv", "Simple Misspelling");
+    public static void main(String[] args) throws URISyntaxException, IOException {
+        generateBoxplot(fileName, "Simple Misspelling");
     }
 }

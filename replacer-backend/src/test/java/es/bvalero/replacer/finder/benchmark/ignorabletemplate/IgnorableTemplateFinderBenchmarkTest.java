@@ -6,6 +6,7 @@ import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.config.XmlConfiguration;
 import es.bvalero.replacer.finder.benchmark.BaseFinderBenchmark;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +17,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest(classes = XmlConfiguration.class)
 class IgnorableTemplateFinderBenchmarkTest extends BaseFinderBenchmark {
+
+    private static final String fileName = "ignorabletemplate/ignorable-template-benchmark.csv";
 
     @Resource
     private Set<String> ignorableTemplates;
@@ -29,12 +32,12 @@ class IgnorableTemplateFinderBenchmarkTest extends BaseFinderBenchmark {
         finders.add(new IgnorableTemplateRegexInsensitiveFinder(ignorableTemplates));
         finders.add(new IgnorableTemplateAutomatonFinder(ignorableTemplates));
 
-        runBenchmark(finders, WARM_UP / 5, ITERATIONS / 5);
+        runBenchmark(finders, WARM_UP / 5, ITERATIONS / 5, fileName);
 
         assertTrue(true);
     }
 
-    public static void main(String[] args) throws URISyntaxException {
-        generateBoxplot("ignorabletemplate/ignorable-template-benchmark.csv", "Ignorable Template");
+    public static void main(String[] args) throws URISyntaxException, IOException {
+        generateBoxplot(fileName, "Ignorable Template");
     }
 }

@@ -7,12 +7,17 @@ import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.wikipedia.api.WikipediaUtils;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Objects;
+import org.springframework.lang.Nullable;
 import tech.tablesaw.api.Table;
 import tech.tablesaw.columns.numbers.NumberColumnFormatter;
 import tech.tablesaw.io.csv.CsvReadOptions;
@@ -25,21 +30,25 @@ public abstract class BaseFinderBenchmark {
     public static final int WARM_UP = 100;
     public static final int ITERATIONS = 1000;
 
-    protected void runBenchmark(List<BenchmarkFinder> finders) throws ReplacerException {
-        runBenchmark(finders, WARM_UP, ITERATIONS);
+    protected void runBenchmark(List<BenchmarkFinder> finders, String fileName) throws ReplacerException {
+        runBenchmark(finders, WARM_UP, ITERATIONS, fileName);
     }
 
-    protected void runBenchmark(List<BenchmarkFinder> finders, int warmUp, int iterations) throws ReplacerException {
+    protected void runBenchmark(List<BenchmarkFinder> finders, int warmUp, int iterations, String fileName)
+        throws ReplacerException {
         try {
             List<WikipediaPage> sampleContents = WikipediaUtils.findSampleContents();
 
             // Warm-up
-            System.out.println("WARM-UP...");
-            run(finders, warmUp, sampleContents, false);
+            run(finders, warmUp, sampleContents, null);
 
             // Real run
-            run(finders, iterations, sampleContents, true);
-        } catch (WikipediaException e) {
+            String testResourcesPath = "src/test/resources/es/bvalero/replacer/finder/benchmark/";
+            File csvFile = new File(testResourcesPath + fileName);
+            BufferedWriter writer = new BufferedWriter(new FileWriter(csvFile));
+            run(finders, iterations, sampleContents, writer);
+            writer.close();
+        } catch (WikipediaException | IOException e) {
             throw new ReplacerException(e);
         }
     }
@@ -48,11 +57,13 @@ public abstract class BaseFinderBenchmark {
         List<BenchmarkFinder> finders,
         int numIterations,
         List<WikipediaPage> sampleContents,
-        boolean print
+        @Nullable BufferedWriter writer
     ) {
+        boolean print = (writer != null);
         if (print) {
-            System.out.println();
-            System.out.println("FINDER\tTIME");
+            String headers = "FINDER\tTIME\n";
+            print(writer, headers);
+            System.out.print(headers);
         }
         sampleContents.forEach(page -> {
             for (BenchmarkFinder finder : finders) {
@@ -62,10 +73,20 @@ public abstract class BaseFinderBenchmark {
                 }
                 double end = (double) (System.nanoTime() - start) / 1000.0; // In µs
                 if (print) {
-                    System.out.println(finder.getClass().getSimpleName() + "\t" + end);
+                    String time = finder.getClass().getSimpleName() + '\t' + end + '\n';
+                    print(writer, time);
+                    System.out.print(time);
                 }
             }
         });
+    }
+
+    protected void print(BufferedWriter writer, String str) {
+        try {
+            writer.append(str);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     protected List<WikipediaPage> findSampleContents() throws ReplacerException {
@@ -76,7 +97,7 @@ public abstract class BaseFinderBenchmark {
         }
     }
 
-    protected static void generateBoxplot(String fileName, String title) throws URISyntaxException {
+    protected static void generateBoxplot(String fileName, String title) throws URISyntaxException, IOException {
         // Generate boxplot
         final Path csvPath = Paths.get(Objects.requireNonNull(BaseFinderBenchmark.class.getResource(fileName)).toURI());
         CsvReadOptions options = CsvReadOptions.builder(csvPath.toFile()).separator('\t').build();
@@ -89,7 +110,16 @@ public abstract class BaseFinderBenchmark {
         summary.doubleColumn(2).setPrintFormatter(ncf);
         summary.doubleColumn(3).setPrintFormatter(ncf);
         summary.doubleColumn(4).setPrintFormatter(ncf);
+
+        // Print summary
         System.out.println(summary);
+
+        String testResourcesPath = "src/test/resources/es/bvalero/replacer/finder/benchmark/";
+        String txtName = fileName.replace("benchmark.csv", "summary.txt");
+        File txtFile = new File(testResourcesPath + txtName);
+        BufferedWriter writer = new BufferedWriter(new FileWriter(txtFile));
+        writer.write(summary.toString());
+        writer.close();
 
         Figure boxplot = BoxPlot.create(title, table, "FINDER", "TIME");
         Plot.show(boxplot);

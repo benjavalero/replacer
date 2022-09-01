@@ -12,6 +12,7 @@ import es.bvalero.replacer.finder.listing.find.ListingFinder;
 import es.bvalero.replacer.finder.listing.find.ListingOfflineFinder;
 import es.bvalero.replacer.finder.listing.load.SimpleMisspellingLoader;
 import es.bvalero.replacer.finder.listing.parse.SimpleMisspellingParser;
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +22,8 @@ import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
 import org.junit.jupiter.api.Test;
 
 class UppercaseFinderBenchmarkTest extends BaseFinderBenchmark {
+
+    private static final String fileName = "uppercase/uppercase-benchmark.csv";
 
     @Test
     void testBenchmark() throws ReplacerException {
@@ -51,12 +54,12 @@ class UppercaseFinderBenchmarkTest extends BaseFinderBenchmark {
         finders.add(new UppercaseAutomatonAlternateFinder(words));
         // finders.add(new UppercaseRegexAlternateLookBehindFinder(words)); // Medium
 
-        runBenchmark(finders);
+        runBenchmark(finders, fileName);
 
         assertTrue(true);
     }
 
-    public static void main(String[] args) throws URISyntaxException {
-        generateBoxplot("uppercase/uppercase-benchmark.csv", "Uppercase");
+    public static void main(String[] args) throws URISyntaxException, IOException {
+        generateBoxplot(fileName, "Uppercase");
     }
 }

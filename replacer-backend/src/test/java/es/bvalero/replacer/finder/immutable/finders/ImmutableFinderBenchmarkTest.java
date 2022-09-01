@@ -12,12 +12,17 @@ import es.bvalero.replacer.finder.listing.load.FalsePositiveLoader;
 import es.bvalero.replacer.finder.listing.load.SimpleMisspellingLoader;
 import es.bvalero.replacer.finder.listing.parse.FalsePositiveParser;
 import es.bvalero.replacer.finder.listing.parse.SimpleMisspellingParser;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.List;
 import org.apache.commons.collections4.IterableUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.lang.Nullable;
 import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest(
@@ -52,6 +57,8 @@ import org.springframework.test.context.ActiveProfiles;
 @ActiveProfiles("offline")
 class ImmutableFinderBenchmarkTest extends BaseFinderBenchmark {
 
+    private static final String fileName = "../immutable/finders/immutable-benchmark.csv";
+
     @Autowired
     private List<ImmutableFinder> immutableFinders;
 
@@ -62,7 +69,7 @@ class ImmutableFinderBenchmarkTest extends BaseFinderBenchmark {
     private FalsePositiveLoader falsePositiveLoader;
 
     @Test
-    void testBenchmark() throws ReplacerException {
+    void testBenchmark() throws ReplacerException, IOException {
         // Load false positives
         falsePositiveLoader.load();
 
@@ -74,26 +81,31 @@ class ImmutableFinderBenchmarkTest extends BaseFinderBenchmark {
         assertTrue(true);
     }
 
-    private void run(List<ImmutableFinder> finders) throws ReplacerException {
+    private void run(List<ImmutableFinder> finders) throws ReplacerException, IOException {
         List<WikipediaPage> sampleContents = findSampleContents();
 
         // Warm-up
-        System.out.println("WARM-UP...");
-        run(finders, WARM_UP, sampleContents, false);
+        run(finders, WARM_UP, sampleContents, null);
 
         // Real run
-        run(finders, ITERATIONS, sampleContents, true);
+        String testResourcesPath = "src/test/resources/es/bvalero/replacer/finder/benchmark/";
+        File csvFile = new File(testResourcesPath + fileName);
+        BufferedWriter writer = new BufferedWriter(new FileWriter(csvFile));
+        run(finders, ITERATIONS, sampleContents, writer);
+        writer.close();
     }
 
     private void run(
         List<ImmutableFinder> finders,
         int numIterations,
         List<WikipediaPage> sampleContents,
-        boolean print
+        @Nullable BufferedWriter writer
     ) {
+        boolean print = (writer != null);
         if (print) {
-            System.out.println();
-            System.out.println("FINDER\tTIME");
+            String headers = "FINDER\tTIME\n";
+            print(writer, headers);
+            System.out.print(headers);
         }
         sampleContents.forEach(page -> {
             for (ImmutableFinder finder : finders) {
@@ -104,13 +116,15 @@ class ImmutableFinderBenchmarkTest extends BaseFinderBenchmark {
                 }
                 double end = (double) (System.nanoTime() - start) / 1000.0; // In µs
                 if (print) {
-                    System.out.println(finder.getClass().getSimpleName() + "\t" + end);
+                    String time = finder.getClass().getSimpleName() + '\t' + end + '\n';
+                    print(writer, time);
+                    System.out.print(time);
                 }
             }
         });
     }
 
-    public static void main(String[] args) throws URISyntaxException {
-        generateBoxplot("../immutable/finders/immutable-benchmark.csv", "Immutables");
+    public static void main(String[] args) throws URISyntaxException, IOException {
+        generateBoxplot(fileName, "Immutables");
     }
 }
