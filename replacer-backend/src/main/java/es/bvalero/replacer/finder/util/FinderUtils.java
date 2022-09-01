@@ -110,18 +110,16 @@ public class FinderUtils {
 
     /***** TEXT UTILS *****/
 
-    public boolean isWordCompleteInText(int start, String word, String text) {
-        final int end = start + word.length();
-        if (start == 0) {
-            return end == text.length() || isValidRightSeparator(text.charAt(end));
-        } else if (end == text.length()) {
-            return isValidLeftSeparator(text, start - 1);
-        } else {
-            return isValidLeftSeparator(text, start - 1) && isValidRightSeparator(text.charAt(end));
-        }
+    public boolean isWordCompleteInText(int startWord, String word, String text) {
+        final int endWord = startWord + word.length();
+        return isValidLeftSeparator(text, startWord) && isValidRightSeparator(text, endWord);
     }
 
-    private boolean isValidLeftSeparator(String text, int position) {
+    private boolean isValidLeftSeparator(String text, int startWord) {
+        if (startWord == 0) {
+            return true;
+        }
+        final int position = startWord - 1;
         final char separator = text.charAt(position);
         return (
             !Character.isLetterOrDigit(separator) &&
@@ -134,7 +132,11 @@ public class FinderUtils {
         return text.charAt(position) == '\'' && Character.isLetterOrDigit(text.charAt(position - 1));
     }
 
-    private boolean isValidRightSeparator(char separator) {
+    private boolean isValidRightSeparator(String text, int endWord) {
+        if (endWord == text.length()) {
+            return true;
+        }
+        final char separator = text.charAt(endWord);
         return !Character.isLetterOrDigit(separator) && !INVALID_RIGHT_SEPARATORS.contains(separator);
     }
 
