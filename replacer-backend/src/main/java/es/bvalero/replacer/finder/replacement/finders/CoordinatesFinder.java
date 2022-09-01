@@ -189,14 +189,14 @@ public class CoordinatesFinder implements ReplacementFinder {
 
     @Nullable
     private LinearMatchResult findSecondMatch(String text, int endMinutes) {
-        final MatchResult matchMinutes = FinderUtils.findWordAfter(text, endMinutes, DECIMAL_SEPARATORS);
-        if (matchMinutes == null) {
+        final MatchResult matchSeconds = FinderUtils.findWordAfter(text, endMinutes, DECIMAL_SEPARATORS);
+        if (matchSeconds == null) {
             return null;
         } else {
-            if (isSecondNumber(matchMinutes.group())) {
-                final String space2 = text.substring(endMinutes + 1, matchMinutes.start());
+            if (isSecondNumber(matchSeconds.group())) {
+                final String space2 = text.substring(endMinutes + 1, matchSeconds.start());
                 if (isSpace(space2)) {
-                    return LinearMatchResult.of(matchMinutes);
+                    return LinearMatchResult.of(matchSeconds);
                 } else {
                     return null;
                 }
