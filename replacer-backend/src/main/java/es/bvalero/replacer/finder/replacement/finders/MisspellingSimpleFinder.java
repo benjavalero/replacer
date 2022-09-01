@@ -49,30 +49,33 @@ public class MisspellingSimpleFinder extends MisspellingFinder implements Proper
     private int findWord(WikipediaPage page, int start, List<MatchResult> matches) {
         final String text = page.getContent();
 
-        // Find next letter
-        int startWord = -1;
+        int startWord = findStartWord(text, start);
+        if (startWord >= 0) {
+            int endWord = findEndWord(text, startWord);
+            String word = text.substring(startWord, endWord);
+            matches.add(LinearMatchResult.of(startWord, word));
+            return endWord;
+        } else {
+            return -1;
+        }
+    }
+
+    private int findStartWord(String text, int start) {
         for (int i = start; i < text.length(); i++) {
             if (isLetter(text.charAt(i))) {
-                startWord = i;
-                break;
+                return i;
             }
-        }
-
-        if (startWord >= 0) {
-            // Find complete word
-            for (int j = startWord + 1; j < text.length(); j++) {
-                if (!isLetter(text.charAt(j))) {
-                    final String word = text.substring(startWord, j);
-                    matches.add(LinearMatchResult.of(startWord, word));
-                    return j;
-                }
-            }
-
-            // In case of getting here the text ends with a word
-            final String word = text.substring(startWord);
-            matches.add(LinearMatchResult.of(startWord, word));
         }
         return -1;
+    }
+
+    private int findEndWord(String text, int start) {
+        for (int j = start + 1; j < text.length(); j++) {
+            if (!isLetter(text.charAt(j))) {
+                return j;
+            }
+        }
+        return text.length();
     }
 
     private boolean isLetter(char ch) {
