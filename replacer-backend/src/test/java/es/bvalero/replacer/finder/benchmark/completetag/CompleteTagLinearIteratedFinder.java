@@ -15,7 +15,7 @@ class CompleteTagLinearIteratedFinder implements BenchmarkFinder {
     }
 
     @Override
-    public Set<BenchmarkResult> findMatches(WikipediaPage page) {
+    public Set<BenchmarkResult> find(WikipediaPage page) {
         String text = page.getContent();
         Set<BenchmarkResult> matches = new HashSet<>();
         for (String tag : tags) {

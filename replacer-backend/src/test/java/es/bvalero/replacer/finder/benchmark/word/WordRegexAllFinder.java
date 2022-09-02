@@ -20,7 +20,7 @@ class WordRegexAllFinder implements BenchmarkFinder {
     }
 
     @Override
-    public Set<BenchmarkResult> findMatches(WikipediaPage page) {
+    public Set<BenchmarkResult> find(WikipediaPage page) {
         String text = page.getContent();
         // Find all words in the text with a regex and check if they are in the list
         Set<BenchmarkResult> matches = new HashSet<>();

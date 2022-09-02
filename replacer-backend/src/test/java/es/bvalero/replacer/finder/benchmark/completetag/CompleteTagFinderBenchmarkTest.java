@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.config.XmlConfiguration;
+import es.bvalero.replacer.finder.Finder;
 import es.bvalero.replacer.finder.benchmark.BaseFinderBenchmark;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
 import java.io.IOException;
@@ -33,7 +34,8 @@ class CompleteTagFinderBenchmarkTest extends BaseFinderBenchmark {
         finders.add(new CompleteTagLinearIteratedFinder(completeTags));
         finders.add(new CompleteTagLinearFinder(completeTags));
 
-        runBenchmark(finders, fileName);
+        List<Finder<?>> benchmarkFinders = new ArrayList<>(finders);
+        runBenchmark(benchmarkFinders, fileName);
 
         assertTrue(true);
     }

@@ -21,7 +21,7 @@ class PersonAutomatonFinder implements BenchmarkFinder {
     }
 
     @Override
-    public Set<BenchmarkResult> findMatches(WikipediaPage page) {
+    public Set<BenchmarkResult> find(WikipediaPage page) {
         String text = page.getContent();
         // We loop over all the words and find them in the text with an automaton
         Set<BenchmarkResult> matches = new HashSet<>();

@@ -5,6 +5,7 @@ import static tech.tablesaw.aggregate.AggregateFunctions.max;
 
 import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.common.exception.ReplacerException;
+import es.bvalero.replacer.finder.Finder;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.wikipedia.api.WikipediaUtils;
 import java.io.BufferedWriter;
@@ -17,6 +18,7 @@ import java.nio.file.Paths;
 import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Objects;
+import org.apache.commons.collections4.IterableUtils;
 import org.springframework.lang.Nullable;
 import tech.tablesaw.api.Table;
 import tech.tablesaw.columns.numbers.NumberColumnFormatter;
@@ -30,11 +32,11 @@ public abstract class BaseFinderBenchmark {
     public static final int WARM_UP = 100;
     public static final int ITERATIONS = 1000;
 
-    protected void runBenchmark(List<BenchmarkFinder> finders, String fileName) throws ReplacerException {
+    protected void runBenchmark(List<Finder<?>> finders, String fileName) throws ReplacerException {
         runBenchmark(finders, WARM_UP, ITERATIONS, fileName);
     }
 
-    protected void runBenchmark(List<BenchmarkFinder> finders, int warmUp, int iterations, String fileName)
+    protected void runBenchmark(List<Finder<?>> finders, int warmUp, int iterations, String fileName)
         throws ReplacerException {
         try {
             List<WikipediaPage> sampleContents = WikipediaUtils.findSampleContents();
@@ -54,7 +56,7 @@ public abstract class BaseFinderBenchmark {
     }
 
     private void run(
-        List<BenchmarkFinder> finders,
+        List<Finder<?>> finders,
         int numIterations,
         List<WikipediaPage> sampleContents,
         @Nullable BufferedWriter writer
@@ -66,10 +68,11 @@ public abstract class BaseFinderBenchmark {
             System.out.print(headers);
         }
         sampleContents.forEach(page -> {
-            for (BenchmarkFinder finder : finders) {
+            for (Finder<?> finder : finders) {
                 long start = System.nanoTime();
                 for (int i = 0; i < numIterations; i++) {
-                    finder.findMatches(page);
+                    // Only transform the iterable without validating the positions not to penalize the performance of the benchmark
+                    IterableUtils.toList(finder.find(page));
                 }
                 double end = (double) (System.nanoTime() - start) / 1000.0; // In µs
                 if (print) {
@@ -81,19 +84,11 @@ public abstract class BaseFinderBenchmark {
         });
     }
 
-    protected void print(BufferedWriter writer, String str) {
+    private void print(BufferedWriter writer, String str) {
         try {
             writer.append(str);
         } catch (IOException e) {
             throw new RuntimeException(e);
-        }
-    }
-
-    protected List<WikipediaPage> findSampleContents() throws ReplacerException {
-        try {
-            return WikipediaUtils.findSampleContents();
-        } catch (WikipediaException e) {
-            throw new ReplacerException(e);
         }
     }
 

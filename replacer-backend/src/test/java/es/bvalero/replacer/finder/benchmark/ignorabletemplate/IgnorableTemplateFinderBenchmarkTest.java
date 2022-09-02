@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.config.XmlConfiguration;
+import es.bvalero.replacer.finder.Finder;
 import es.bvalero.replacer.finder.benchmark.BaseFinderBenchmark;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
 import java.io.IOException;
@@ -32,7 +33,8 @@ class IgnorableTemplateFinderBenchmarkTest extends BaseFinderBenchmark {
         finders.add(new IgnorableTemplateRegexInsensitiveFinder(ignorableTemplates));
         finders.add(new IgnorableTemplateAutomatonFinder(ignorableTemplates));
 
-        runBenchmark(finders, WARM_UP / 5, ITERATIONS / 5, fileName);
+        List<Finder<?>> benchmarkFinders = new ArrayList<>(finders);
+        runBenchmark(benchmarkFinders, WARM_UP / 5, ITERATIONS / 5, fileName);
 
         assertTrue(true);
     }

@@ -3,6 +3,7 @@ package es.bvalero.replacer.finder.benchmark.cursive;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import es.bvalero.replacer.common.exception.ReplacerException;
+import es.bvalero.replacer.finder.Finder;
 import es.bvalero.replacer.finder.benchmark.BaseFinderBenchmark;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
 import java.io.IOException;
@@ -26,7 +27,8 @@ class CursiveFinderBenchmarkTest extends BaseFinderBenchmark {
         finders.add(new CursiveAutomatonFinder());
         finders.add(new CursiveLinearFinder());
 
-        runBenchmark(finders, fileName);
+        List<Finder<?>> benchmarkFinders = new ArrayList<>(finders);
+        runBenchmark(benchmarkFinders, fileName);
 
         assertTrue(true);
     }

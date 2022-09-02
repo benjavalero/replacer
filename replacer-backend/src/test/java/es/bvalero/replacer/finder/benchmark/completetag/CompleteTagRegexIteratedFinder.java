@@ -26,7 +26,7 @@ class CompleteTagRegexIteratedFinder implements BenchmarkFinder {
     }
 
     @Override
-    public Set<BenchmarkResult> findMatches(WikipediaPage page) {
+    public Set<BenchmarkResult> find(WikipediaPage page) {
         String text = page.getContent();
         Set<BenchmarkResult> results = new HashSet<>();
         for (Pattern pattern : patterns) {

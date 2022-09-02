@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.exception.ReplacerException;
+import es.bvalero.replacer.finder.Finder;
 import es.bvalero.replacer.finder.benchmark.BaseFinderBenchmark;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
 import es.bvalero.replacer.finder.immutable.finders.UppercaseFinder;
@@ -54,7 +55,8 @@ class UppercaseFinderBenchmarkTest extends BaseFinderBenchmark {
         finders.add(new UppercaseAutomatonAlternateFinder(words));
         // finders.add(new UppercaseRegexAlternateLookBehindFinder(words)); // Medium
 
-        runBenchmark(finders, fileName);
+        List<Finder<?>> benchmarkFinders = new ArrayList<>(finders);
+        runBenchmark(benchmarkFinders, fileName);
 
         assertTrue(true);
     }

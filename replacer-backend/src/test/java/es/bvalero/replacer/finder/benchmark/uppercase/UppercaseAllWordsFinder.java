@@ -16,7 +16,7 @@ class UppercaseAllWordsFinder extends UppercaseBenchmarkFinder {
     }
 
     @Override
-    public Set<BenchmarkResult> findMatches(WikipediaPage page) {
+    public Set<BenchmarkResult> find(WikipediaPage page) {
         String text = page.getContent();
         Set<BenchmarkResult> matches = new HashSet<>();
         int start = 0;

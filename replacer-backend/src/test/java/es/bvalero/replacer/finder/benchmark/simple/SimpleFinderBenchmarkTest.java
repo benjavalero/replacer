@@ -3,6 +3,7 @@ package es.bvalero.replacer.finder.benchmark.simple;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import es.bvalero.replacer.common.exception.ReplacerException;
+import es.bvalero.replacer.finder.Finder;
 import es.bvalero.replacer.finder.benchmark.BaseFinderBenchmark;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
 import java.io.IOException;
@@ -23,7 +24,8 @@ class SimpleFinderBenchmarkTest extends BaseFinderBenchmark {
         finders.add(new SimpleAutomatonFinder());
         finders.add(new SimpleLinearFinder());
 
-        runBenchmark(finders, fileName);
+        List<Finder<?>> benchmarkFinders = new ArrayList<>(finders);
+        runBenchmark(benchmarkFinders, fileName);
 
         assertTrue(true);
     }

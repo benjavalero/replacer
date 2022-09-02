@@ -23,7 +23,7 @@ class SurnameAutomatonAlternateCompleteFinder implements BenchmarkFinder {
     }
 
     @Override
-    public Set<BenchmarkResult> findMatches(WikipediaPage page) {
+    public Set<BenchmarkResult> find(WikipediaPage page) {
         String text = page.getContent();
         // Build an alternate automaton with all the complete words and match it against the text
         final Set<BenchmarkResult> matches = new HashSet<>();

@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.exception.ReplacerException;
+import es.bvalero.replacer.finder.Finder;
 import es.bvalero.replacer.finder.benchmark.BaseFinderBenchmark;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
 import es.bvalero.replacer.finder.listing.FalsePositive;
@@ -52,7 +53,8 @@ class FalsePositiveFinderBenchmarkTest extends BaseFinderBenchmark {
         // finders.add(new WordLinearAllFinder(words)); // Don't work with composed
         // finders.add(new WordRegexAllCompleteFinder(words)); // Don't work with composed
 
-        runBenchmark(finders, WARM_UP / 10, ITERATIONS / 10, fileName);
+        List<Finder<?>> benchmarkFinders = new ArrayList<>(finders);
+        runBenchmark(benchmarkFinders, WARM_UP / 10, ITERATIONS / 10, fileName);
 
         assertTrue(true);
     }

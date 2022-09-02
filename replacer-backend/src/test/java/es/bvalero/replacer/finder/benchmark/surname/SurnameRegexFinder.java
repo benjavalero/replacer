@@ -22,7 +22,7 @@ class SurnameRegexFinder implements BenchmarkFinder {
     }
 
     @Override
-    public Set<BenchmarkResult> findMatches(WikipediaPage page) {
+    public Set<BenchmarkResult> find(WikipediaPage page) {
         String text = page.getContent();
         // We loop over all the words and find them in the text with a regex
         final Set<BenchmarkResult> matches = new HashSet<>();

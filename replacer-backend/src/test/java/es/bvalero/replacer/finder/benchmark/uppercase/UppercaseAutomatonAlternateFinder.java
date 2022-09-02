@@ -25,7 +25,7 @@ class UppercaseAutomatonAlternateFinder extends UppercaseBenchmarkFinder {
     }
 
     @Override
-    public Set<BenchmarkResult> findMatches(WikipediaPage page) {
+    public Set<BenchmarkResult> find(WikipediaPage page) {
         String text = page.getContent();
         // Build an alternate automaton with all the words and match it against the text
         Set<BenchmarkResult> matches = new HashSet<>();
