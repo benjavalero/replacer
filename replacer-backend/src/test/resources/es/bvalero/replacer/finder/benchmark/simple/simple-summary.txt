@@ -1,6 +1,6 @@
-                              simple-benchmark.csv summary                               
-        FINDER          |  Median [TIME]  |  Min [TIME]  |  Mean [TIME]  |  Max [TIME]  |
------------------------------------------------------------------------------------------
-     SimpleRegexFinder  |      38991,500  |    3221,700  |    87326,496  |  633504,700  |
- SimpleAutomatonFinder  |      46936,000  |    3852,200  |   105372,832  |  780876,000  |
-    SimpleLinearFinder  |      43402,200  |    3207,400  |    95638,376  |  759636,200  |
+                                                        simple-benchmark.csv summary                                                         
+        FINDER          |  Mean [TIME]  |  Min [TIME]  |  First Quartile [TIME]  |  Median [TIME]  |  Third Quartile [TIME]  |  Max [TIME]  |
+---------------------------------------------------------------------------------------------------------------------------------------------
+     SimpleRegexFinder  |    87326,496  |    3221,700  |              24025,525  |      38991,500  |             121924,050  |  633504,700  |
+ SimpleAutomatonFinder  |   105372,832  |    3852,200  |              26691,625  |      46936,000  |             153259,400  |  780876,000  |
+    SimpleLinearFinder  |    95638,376  |    3207,400  |              21637,775  |      43402,200  |             139783,325  |  759636,200  |

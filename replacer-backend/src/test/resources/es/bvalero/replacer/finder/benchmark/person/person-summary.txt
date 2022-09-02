@@ -1,5 +1,6 @@
-                 FINDER                  |  Median [TIME]  |  Min [TIME]  |  Mean [TIME]  |  Max [TIME]  |
-----------------------------------------------------------------------------------------------------------
-                    PersonIndexOfFinder  |      11049,036  |    1098,615  |    30038,466  |  259315,481  |
-         PersonAutomatonAlternateFinder  |      18611,872  |    1636,571  |    43216,788  |  367042,037  |
- PersonAutomatonAlternateCompleteFinder  |      12477,972  |    1294,143  |    30421,518  |  237914,491  |
+                                                                 person-benchmark.csv summary                                                                 
+                 FINDER                  |  Mean [TIME]  |  Min [TIME]  |  First Quartile [TIME]  |  Median [TIME]  |  Third Quartile [TIME]  |  Max [TIME]  |
+--------------------------------------------------------------------------------------------------------------------------------------------------------------
+                    PersonIndexOfFinder  |    30038,466  |    1098,615  |               4910,931  |      11049,036  |              36519,045  |  259315,481  |
+         PersonAutomatonAlternateFinder  |    43216,788  |    1636,571  |              10719,063  |      18611,872  |              51267,663  |  367042,037  |
+ PersonAutomatonAlternateCompleteFinder  |    30421,518  |    1294,143  |               7508,466  |      12477,972  |              41180,087  |  237914,491  |

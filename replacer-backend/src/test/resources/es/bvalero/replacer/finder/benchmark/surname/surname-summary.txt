@@ -1,5 +1,6 @@
-                 FINDER                   |  Median [TIME]  |  Min [TIME]  |  Mean [TIME]  |  Max [TIME]  |
------------------------------------------------------------------------------------------------------------
-                    SurnameIndexOfFinder  |      17927,418  |    1609,340  |    50591,048  |  442403,197  |
-         SurnameAutomatonAlternateFinder  |      27035,288  |    2307,312  |    57563,231  |  427008,634  |
- SurnameAutomatonAlternateCompleteFinder  |      25064,585  |    2229,890  |    53710,483  |  400921,093  |
+                                                                 surname-benchmark.csv summary                                                                 
+                 FINDER                   |  Mean [TIME]  |  Min [TIME]  |  First Quartile [TIME]  |  Median [TIME]  |  Third Quartile [TIME]  |  Max [TIME]  |
+---------------------------------------------------------------------------------------------------------------------------------------------------------------
+                    SurnameIndexOfFinder  |    50591,048  |    1609,340  |               8771,950  |      17927,418  |              63313,596  |  442403,197  |
+         SurnameAutomatonAlternateFinder  |    57563,231  |    2307,312  |              15432,215  |      27035,288  |              78607,403  |  427008,634  |
+ SurnameAutomatonAlternateCompleteFinder  |    53710,483  |    2229,890  |              15024,700  |      25064,585  |              78283,857  |  400921,093  |

@@ -1,6 +1,7 @@
-                  FINDER                   |  Median [TIME]  |  Min [TIME]  |  Mean [TIME]  |  Max [TIME]   |
--------------------------------------------------------------------------------------------------------------
- IgnorableTemplateLowercaseContainsFinder  |       5640,860  |     578,990  |    16965,116  |   154509,620  |
-             IgnorableTemplateRegexFinder  |     242340,346  |   22382,949  |   516164,669  |  3902628,995  |
-  IgnorableTemplateRegexInsensitiveFinder  |     319086,141  |   32245,930  |   676707,828  |  5118626,973  |
-         IgnorableTemplateAutomatonFinder  |       3644,640  |     472,771  |    10124,313  |    86513,007  |
+                                                            ignorable-template-benchmark.csv summary                                                             
+                  FINDER                   |  Mean [TIME]  |  Min [TIME]  |  First Quartile [TIME]  |  Median [TIME]  |  Third Quartile [TIME]  |  Max [TIME]   |
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------
+ IgnorableTemplateLowercaseContainsFinder  |    16965,116  |     578,990  |               2826,915  |       5640,860  |              22561,872  |   154509,620  |
+             IgnorableTemplateRegexFinder  |   516164,669  |   22382,949  |             137000,048  |     242340,346  |             685960,393  |  3902628,995  |
+  IgnorableTemplateRegexInsensitiveFinder  |   676707,828  |   32245,930  |             182858,342  |     319086,141  |             914182,336  |  5118626,973  |
+         IgnorableTemplateAutomatonFinder  |    10124,313  |     472,771  |               2010,508  |       3644,640  |              13992,141  |    86513,007  |

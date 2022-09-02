@@ -1,5 +1,6 @@
-              FINDER                |  Median [TIME]  |  Min [TIME]  |  Mean [TIME]  |  Max [TIME]  |
------------------------------------------------------------------------------------------------------
-            UppercaseIndexOfFinder  |      36814,891  |    4353,928  |   108036,109  |  878536,706  |
-           UppercaseAllWordsFinder  |      20905,525  |    1332,939  |    55271,179  |  479725,496  |
- UppercaseAutomatonAlternateFinder  |      12039,093  |    1124,576  |    28415,351  |  207560,628  |
+                                                             uppercase-benchmark.csv summary                                                             
+              FINDER                |  Mean [TIME]  |  Min [TIME]  |  First Quartile [TIME]  |  Median [TIME]  |  Third Quartile [TIME]  |  Max [TIME]  |
+---------------------------------------------------------------------------------------------------------------------------------------------------------
+            UppercaseIndexOfFinder  |   108036,109  |    4353,928  |              21163,812  |      36814,891  |             140866,438  |  878536,706  |
+           UppercaseAllWordsFinder  |    55271,179  |    1332,939  |              10939,136  |      20905,525  |              70218,636  |  479725,496  |
+ UppercaseAutomatonAlternateFinder  |    28415,351  |    1124,576  |               6356,001  |      12039,093  |              39088,639  |  207560,628  |

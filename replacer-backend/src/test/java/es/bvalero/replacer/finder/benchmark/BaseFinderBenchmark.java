@@ -103,13 +103,15 @@ public abstract class BaseFinderBenchmark {
         CsvReadOptions options = CsvReadOptions.builder(csvPath.toFile()).separator('\t').build();
         Table table = Table.read().usingOptions(options);
 
-        Table summary = table.summarize("TIME", median, min, mean, max).by("FINDER");
+        Table summary = table.summarize("TIME", mean, min, quartile1, median, quartile3, max).by("FINDER");
         DecimalFormat df = new DecimalFormat("0.000");
         NumberColumnFormatter ncf = new NumberColumnFormatter(df);
         summary.doubleColumn(1).setPrintFormatter(ncf);
         summary.doubleColumn(2).setPrintFormatter(ncf);
         summary.doubleColumn(3).setPrintFormatter(ncf);
         summary.doubleColumn(4).setPrintFormatter(ncf);
+        summary.doubleColumn(5).setPrintFormatter(ncf);
+        summary.doubleColumn(6).setPrintFormatter(ncf);
 
         // Print summary
         System.out.println(summary);

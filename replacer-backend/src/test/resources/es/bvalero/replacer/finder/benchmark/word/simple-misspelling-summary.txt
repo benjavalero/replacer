@@ -1,6 +1,7 @@
-           FINDER            |  Median [TIME]  |  Min [TIME]  |  Mean [TIME]  |  Max [TIME]   |
------------------------------------------------------------------------------------------------
-         WordRegexAllFinder  |      60847,855  |    4006,906  |   160053,504  |  1385002,271  |
-     WordAutomatonAllFinder  |      32917,982  |    1781,424  |    78911,854  |   744848,940  |
-        WordLinearAllFinder  |      23165,633  |    1433,089  |    62336,251  |   591638,245  |
- WordRegexAllCompleteFinder  |     112261,224  |    8459,515  |   255043,100  |  1956088,315  |
+                                                     simple-misspelling-benchmark.csv summary                                                      
+           FINDER            |  Mean [TIME]  |  Min [TIME]  |  First Quartile [TIME]  |  Median [TIME]  |  Third Quartile [TIME]  |  Max [TIME]   |
+---------------------------------------------------------------------------------------------------------------------------------------------------
+         WordRegexAllFinder  |   160053,504  |    4006,906  |              35356,768  |      60847,855  |             212289,827  |  1385002,271  |
+     WordAutomatonAllFinder  |    78911,854  |    1781,424  |              15119,634  |      32917,982  |             104720,506  |   744848,940  |
+        WordLinearAllFinder  |    62336,251  |    1433,089  |              10916,691  |      23165,633  |              74919,725  |   591638,245  |
+ WordRegexAllCompleteFinder  |   255043,100  |    8459,515  |              64587,606  |     112261,224  |             375926,404  |  1956088,315  |
