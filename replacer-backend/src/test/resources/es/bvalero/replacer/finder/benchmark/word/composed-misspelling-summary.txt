@@ -1,6 +1,9 @@
-                                                      composed-misspelling-benchmark.csv summary                                                      
-            FINDER             |  Mean [TIME]  |  Min [TIME]  |  First Quartile [TIME]  |  Median [TIME]  |  Third Quartile [TIME]  |   Max [TIME]   |
-------------------------------------------------------------------------------------------------------------------------------------------------------
-            WordIndexOfFinder  |   820531,214  |   30250,140  |             146427,433  |     271779,832  |            1100060,129  |   6920487,661  |
-              WordRegexFinder  |  4098692,602  |  228494,580  |            1135681,049  |    2167721,629  |            5824949,526  |  30741294,636  |
- WordAutomatonAlternateFinder  |    82487,540  |    1916,642  |              14741,400  |      37083,917  |             113519,007  |    721057,135  |
+                                                             composed-misspelling-benchmark.csv summary                                                             
+                   FINDER                    |  Mean [TIME]  |  Min [TIME]  |  First Quartile [TIME]  |  Median [TIME]  |  Third Quartile [TIME]  |   Max [TIME]   |
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+                           WordLinearFinder  |   174384,100  |   12872,404  |              39058,596  |      82982,671  |             210999,805  |   1295045,843  |
+                            WordRegexFinder  |  1253236,218  |   60050,004  |             347249,707  |     571244,917  |            1832291,587  |   9405777,792  |
+                        WordAutomatonFinder  |  2215012,977  |  110826,496  |             596337,580  |    1005443,988  |            2975297,886  |  16921757,728  |
+               WordAutomatonAlternateFinder  |    10131,390  |     254,114  |               2156,384  |       3982,047  |              15802,209  |     86728,638  |
+           WordRegexAlternateCompleteFinder  |  1835639,450  |   56127,465  |             430586,316  |     635068,443  |            2451668,582  |  16733435,897  |
+ WordRegexAlternateCompleteSeparatorsFinder  |  1809898,497  |  103265,151  |             461921,498  |     729181,693  |            2259274,876  |  14013156,393  |

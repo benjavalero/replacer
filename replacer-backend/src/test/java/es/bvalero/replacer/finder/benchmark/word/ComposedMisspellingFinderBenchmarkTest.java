@@ -49,25 +49,28 @@ class ComposedMisspellingFinderBenchmarkTest extends BaseFinderBenchmark {
         // Load the finders
         List<BenchmarkFinder> finders = new ArrayList<>();
 
-        // Loop over all the words and find them in the text with a regex
+        // Loop over all the misspelling expressions and find them in the text with a regex
         finders.add(new WordLinearFinder(words));
         finders.add(new WordRegexFinder(words));
-        // finders.add(new WordAutomatonFinder(words)); // Medium
-        // finders.add(new WordRegexCompleteFinder(words)); // Very long
+        finders.add(new WordAutomatonFinder(words));
+        // finders.add(new WordRegexCompleteFinder(words)); // Long
+        // finders.add(new WordRegexCompleteSeparatorsFinder(words)); // Very Long
 
-        // Build an alternation with all the words and find the regex in the text
-        // finders.add(new WordRegexAlternateFinder(words)); // Long
+        // Build an alternation with all the misspelling expressions and find the regex in the text
+        // finders.add(new WordRegexAlternateFinder(words)); // Medium
         finders.add(new WordAutomatonAlternateFinder(words));
-        // finders.add(new WordRegexAlternateCompleteFinder(words)); // Medium
+        finders.add(new WordRegexAlternateCompleteFinder(words));
+        finders.add(new WordRegexAlternateCompleteSeparatorsFinder(words));
 
         // Find all words in the text and check if they are in the list
         // finders.add(new WordRegexAllFinder(words)); // Don't work with composed
         // finders.add(new WordAutomatonAllFinder(words)); // Don't work with composed
         // finders.add(new WordLinearAllFinder(words)); // Don't work with composed
         // finders.add(new WordRegexAllCompleteFinder(words)); // Don't work with composed
+        // finders.add(new WordRegexAllCompleteSeparatorsFinder(words)); // Don't work with composed
 
         List<Finder<?>> benchmarkFinders = new ArrayList<>(finders);
-        runBenchmark(benchmarkFinders, fileName);
+        runBenchmark(benchmarkFinders, WARM_UP / 10, ITERATIONS / 10, fileName);
 
         assertTrue(true);
     }

@@ -54,7 +54,7 @@ class SimpleMisspellingFinderBenchmarkTest extends BaseFinderBenchmark {
         // finders.add(new WordRegexCompleteFinder(words)); // Very long
         // finders.add(new WordRegexCompleteSeparatorsFinder(words)); // Very long
 
-        // Build an alternation with all the words and find the regex in the text
+        // Build an alternation with all the misspelling words and find the regex in the text
         // finders.add(new WordRegexAlternateFinder(words)); // Very long
         // finders.add(new WordAutomatonAlternateFinder(words)); // Discarded: we need to increase too much the stack size
         // finders.add(new WordRegexAlternateCompleteFinder(words)); // Long
