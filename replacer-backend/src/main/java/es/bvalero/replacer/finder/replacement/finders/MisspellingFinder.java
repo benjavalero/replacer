@@ -65,13 +65,6 @@ public abstract class MisspellingFinder implements ReplacementFinder {
         return map;
     }
 
-    @Override
-    public boolean validate(MatchResult match, WikipediaPage page) {
-        // For simple misspellings, the word is complete, but we need to validate the separators.
-        // For composed misspellings, the word might not even be complete.
-        return ReplacementFinder.super.validate(match, page);
-    }
-
     boolean isExistingWord(String word, WikipediaLanguage lang) {
         return getMisspellingMap(lang).containsKey(word);
     }

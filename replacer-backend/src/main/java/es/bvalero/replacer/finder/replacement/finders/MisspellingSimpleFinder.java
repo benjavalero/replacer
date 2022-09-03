@@ -5,6 +5,7 @@ import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.finder.listing.Misspelling;
 import es.bvalero.replacer.finder.listing.load.SimpleMisspellingLoader;
+import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
 import es.bvalero.replacer.finder.util.LinearMatchResult;
 import java.beans.PropertyChangeEvent;
@@ -46,15 +47,21 @@ public class MisspellingSimpleFinder extends MisspellingFinder implements Proper
         return LinearMatchFinder.find(page, this::findWord);
     }
 
+    @Override
+    public boolean validate(MatchResult match, WikipediaPage page) {
+        // Validate that the word is complete in the linear finder to improve performance
+        return true;
+    }
+
     private int findWord(WikipediaPage page, int start, List<MatchResult> matches) {
         final WikipediaLanguage lang = page.getId().getLang();
         final String text = page.getContent();
 
-        int startWord = findStartWord(text, start);
+        final int startWord = findStartWord(text, start);
         if (startWord >= 0) {
-            int endWord = findEndWord(text, startWord);
-            String word = text.substring(startWord, endWord);
-            if (isExistingWord(word, lang)) {
+            final int endWord = findEndWord(text, startWord);
+            final String word = text.substring(startWord, endWord);
+            if (isExistingWord(word, lang) && FinderUtils.isWordCompleteInText(startWord, word, text)) {
                 matches.add(LinearMatchResult.of(startWord, word));
             }
             return endWord;
