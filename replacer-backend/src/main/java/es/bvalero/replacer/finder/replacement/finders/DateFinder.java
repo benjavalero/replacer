@@ -563,7 +563,7 @@ public class DateFinder implements ReplacementFinder {
             this.monthSearch = month.substring(1);
         }
 
-        public List<MatchResult> find(WikipediaPage page) {
+        public Iterable<MatchResult> find(WikipediaPage page) {
             return IterableUtils.toList(LinearMatchFinder.find(page, this::findMonth));
         }
 

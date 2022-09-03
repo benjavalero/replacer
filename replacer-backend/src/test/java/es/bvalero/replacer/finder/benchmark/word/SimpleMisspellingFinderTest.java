@@ -18,7 +18,7 @@ class SimpleMisspellingFinderTest {
     @BeforeEach
     public void setUp() {
         this.words = Set.of("Um", "um", "españa");
-        this.text = "Um suma um, españa um.";
+        this.text = "Um suma um, españa um.españa ";
 
         this.expected = new HashSet<>();
         this.expected.add(BenchmarkResult.of(0, "Um"));
@@ -28,8 +28,8 @@ class SimpleMisspellingFinderTest {
     }
 
     @Test
-    void testWordIndexOfFinder() {
-        WordIndexOfFinder finder = new WordIndexOfFinder(this.words);
+    void testWordLinearLoopFinder() {
+        WordLinearFinder finder = new WordLinearFinder(this.words);
         assertEquals(expected, finder.findMatches(text));
     }
 
@@ -52,6 +52,12 @@ class SimpleMisspellingFinderTest {
     }
 
     @Test
+    void testWordRegexCompleteSeparatorsFinder() {
+        WordRegexCompleteSeparatorsFinder finder = new WordRegexCompleteSeparatorsFinder(this.words);
+        assertEquals(expected, finder.findMatches(text));
+    }
+
+    @Test
     void testWordRegexAlternateFinder() {
         WordRegexAlternateFinder finder = new WordRegexAlternateFinder(this.words);
         assertEquals(expected, finder.findMatches(text));
@@ -66,6 +72,12 @@ class SimpleMisspellingFinderTest {
     @Test
     void testWordRegexAlternateCompleteFinder() {
         WordRegexAlternateCompleteFinder finder = new WordRegexAlternateCompleteFinder(this.words);
+        assertEquals(expected, finder.findMatches(text));
+    }
+
+    @Test
+    void testWordRegexAlternateCompleteSeparatorsFinder() {
+        WordRegexAlternateCompleteSeparatorsFinder finder = new WordRegexAlternateCompleteSeparatorsFinder(this.words);
         assertEquals(expected, finder.findMatches(text));
     }
 
@@ -90,6 +102,12 @@ class SimpleMisspellingFinderTest {
     @Test
     void testWordRegexAllCompleteFinder() {
         WordRegexAllCompleteFinder finder = new WordRegexAllCompleteFinder(this.words);
+        assertEquals(expected, finder.findMatches(text));
+    }
+
+    @Test
+    void testWordRegexAllCompleteSeparatorsFinder() {
+        WordRegexAllCompleteSeparatorsFinder finder = new WordRegexAllCompleteSeparatorsFinder(this.words);
         assertEquals(expected, finder.findMatches(text));
     }
 }

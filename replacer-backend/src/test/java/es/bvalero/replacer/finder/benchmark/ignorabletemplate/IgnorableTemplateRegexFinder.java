@@ -4,12 +4,12 @@ import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
 import es.bvalero.replacer.finder.benchmark.BenchmarkResult;
 import es.bvalero.replacer.finder.util.FinderUtils;
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import org.apache.commons.lang3.StringUtils;
 
 class IgnorableTemplateRegexFinder implements BenchmarkFinder {
 
@@ -25,11 +25,11 @@ class IgnorableTemplateRegexFinder implements BenchmarkFinder {
     }
 
     @Override
-    public Set<BenchmarkResult> find(WikipediaPage page) {
-        String text = page.getContent();
-        Set<BenchmarkResult> matches = new HashSet<>();
-        String lowerCaseText = FinderUtils.toLowerCase(text);
-        Matcher m = this.pattern.matcher(lowerCaseText);
+    public Iterable<BenchmarkResult> find(WikipediaPage page) {
+        final String text = page.getContent();
+        final List<BenchmarkResult> matches = new ArrayList<>(100);
+        final String lowerCaseText = FinderUtils.toLowerCase(text);
+        final Matcher m = this.pattern.matcher(lowerCaseText);
         while (m.find()) {
             if (FinderUtils.isWordCompleteInText(m.start(), m.group(), lowerCaseText)) {
                 matches.add(BenchmarkResult.of(0, text));

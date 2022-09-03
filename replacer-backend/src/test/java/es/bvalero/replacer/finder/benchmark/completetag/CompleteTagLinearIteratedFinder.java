@@ -3,7 +3,8 @@ package es.bvalero.replacer.finder.benchmark.completetag;
 import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
 import es.bvalero.replacer.finder.benchmark.BenchmarkResult;
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 class CompleteTagLinearIteratedFinder implements BenchmarkFinder {
@@ -15,32 +16,32 @@ class CompleteTagLinearIteratedFinder implements BenchmarkFinder {
     }
 
     @Override
-    public Set<BenchmarkResult> find(WikipediaPage page) {
-        String text = page.getContent();
-        Set<BenchmarkResult> matches = new HashSet<>();
+    public Iterable<BenchmarkResult> find(WikipediaPage page) {
+        final String text = page.getContent();
+        final List<BenchmarkResult> matches = new ArrayList<>(100);
         for (String tag : tags) {
             matches.addAll(findResults(text, tag));
         }
         return matches;
     }
 
-    private Set<BenchmarkResult> findResults(String text, String tag) {
-        Set<BenchmarkResult> matches = new HashSet<>();
-        String openTag = String.format("<%s", tag);
-        String closeTag = String.format("</%s>", tag);
+    private List<BenchmarkResult> findResults(String text, String tag) {
+        final List<BenchmarkResult> matches = new ArrayList<>(100);
+        final String openTag = String.format("<%s", tag);
+        final String closeTag = String.format("</%s>", tag);
         int start = 0;
         while (start >= 0) {
             start = text.indexOf(openTag, start);
             if (start >= 0) {
-                int endOpenTag = text.indexOf('>', start + openTag.length());
+                final int endOpenTag = text.indexOf('>', start + openTag.length());
                 if (endOpenTag >= 0) {
-                    String openTagContent = text.substring(start, endOpenTag);
+                    final String openTagContent = text.substring(start, endOpenTag);
                     if (openTagContent.contains("/")) {
                         start += openTag.length();
                     } else {
-                        int startCloseTag = text.indexOf(closeTag, start + openTag.length());
+                        final int startCloseTag = text.indexOf(closeTag, start + openTag.length());
                         if (startCloseTag >= 0) {
-                            int endCloseTag = startCloseTag + closeTag.length();
+                            final int endCloseTag = startCloseTag + closeTag.length();
                             matches.add(BenchmarkResult.of(start, text.substring(start, endCloseTag)));
                             start = endCloseTag + 1;
                         } else {

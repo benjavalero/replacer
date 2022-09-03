@@ -21,12 +21,12 @@ class PersonAutomatonFinder implements BenchmarkFinder {
     }
 
     @Override
-    public Set<BenchmarkResult> find(WikipediaPage page) {
-        String text = page.getContent();
+    public Iterable<BenchmarkResult> find(WikipediaPage page) {
+        final String text = page.getContent();
         // We loop over all the words and find them in the text with an automaton
-        Set<BenchmarkResult> matches = new HashSet<>();
+        final List<BenchmarkResult> matches = new ArrayList<>(100);
         for (RunAutomaton word : this.words) {
-            AutomatonMatcher m = word.newMatcher(text);
+            final AutomatonMatcher m = word.newMatcher(text);
             while (m.find()) {
                 if (FinderUtils.isWordFollowedByUpperCase(m.start(), m.group(), text)) {
                     matches.add(BenchmarkResult.of(m.start(), m.group()));

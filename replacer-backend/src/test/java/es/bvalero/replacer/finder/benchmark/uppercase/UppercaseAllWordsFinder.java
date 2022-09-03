@@ -3,9 +3,7 @@ package es.bvalero.replacer.finder.benchmark.uppercase;
 import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.finder.benchmark.BenchmarkResult;
 import es.bvalero.replacer.finder.util.FinderUtils;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 class UppercaseAllWordsFinder extends UppercaseBenchmarkFinder {
 
@@ -16,9 +14,9 @@ class UppercaseAllWordsFinder extends UppercaseBenchmarkFinder {
     }
 
     @Override
-    public Set<BenchmarkResult> find(WikipediaPage page) {
-        String text = page.getContent();
-        Set<BenchmarkResult> matches = new HashSet<>();
+    public Iterable<BenchmarkResult> find(WikipediaPage page) {
+        final String text = page.getContent();
+        final List<BenchmarkResult> matches = new ArrayList<>(100);
         int start = 0;
         while (start >= 0) {
             // Find next letter
@@ -34,7 +32,7 @@ class UppercaseAllWordsFinder extends UppercaseBenchmarkFinder {
                 // Find complete word
                 for (int j = startWord + 1; j < text.length(); j++) {
                     if (!isLetter(text.charAt(j))) {
-                        String word = text.substring(startWord, j);
+                        final String word = text.substring(startWord, j);
                         if (
                             FinderUtils.startsWithUpperCase(word) &&
                             words.contains(word) &&

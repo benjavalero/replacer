@@ -3,7 +3,10 @@ package es.bvalero.replacer.finder.benchmark.word;
 import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
 import es.bvalero.replacer.finder.benchmark.BenchmarkResult;
-import java.util.*;
+import es.bvalero.replacer.finder.util.FinderUtils;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -19,14 +22,18 @@ class WordRegexCompleteFinder implements BenchmarkFinder {
     }
 
     @Override
-    public Set<BenchmarkResult> find(WikipediaPage page) {
-        String text = page.getContent();
+    public Iterable<BenchmarkResult> find(WikipediaPage page) {
+        final String text = page.getContent();
         // We loop over all the words and find them completely in the text with a regex
-        Set<BenchmarkResult> matches = new HashSet<>();
+        final List<BenchmarkResult> matches = new ArrayList<>(100);
         for (Pattern pattern : this.patterns) {
-            Matcher m = pattern.matcher(text);
+            final Matcher m = pattern.matcher(text);
             while (m.find()) {
-                matches.add(BenchmarkResult.of(m.start(), m.group()));
+                final int start = m.start();
+                final String word = m.group();
+                if (FinderUtils.isWordCompleteInText(start, word, text)) {
+                    matches.add(BenchmarkResult.of(start, word));
+                }
             }
         }
         return matches;

@@ -41,7 +41,7 @@ class FalsePositiveFinderBenchmarkTest extends BaseFinderBenchmark {
 
         // Load the finders
         List<BenchmarkFinder> finders = new ArrayList<>();
-        finders.add(new WordIndexOfFinder(words));
+        finders.add(new WordLinearFinder(words));
         finders.add(new WordRegexFinder(words));
         finders.add(new WordAutomatonFinder(words));
         // finders.add(new WordRegexCompleteFinder(words)); // Very long

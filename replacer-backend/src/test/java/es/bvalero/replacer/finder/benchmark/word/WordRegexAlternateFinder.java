@@ -4,12 +4,11 @@ import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
 import es.bvalero.replacer.finder.benchmark.BenchmarkResult;
 import es.bvalero.replacer.finder.util.FinderUtils;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.apache.commons.lang3.StringUtils;
 
 class WordRegexAlternateFinder implements BenchmarkFinder {
 
@@ -21,14 +20,16 @@ class WordRegexAlternateFinder implements BenchmarkFinder {
     }
 
     @Override
-    public Set<BenchmarkResult> find(WikipediaPage page) {
-        String text = page.getContent();
+    public Iterable<BenchmarkResult> find(WikipediaPage page) {
+        final String text = page.getContent();
         // Build an alternate regex with all the words and match it against the text
-        Set<BenchmarkResult> matches = new HashSet<>();
-        Matcher m = this.pattern.matcher(text);
+        final List<BenchmarkResult> matches = new ArrayList<>(100);
+        final Matcher m = this.pattern.matcher(text);
         while (m.find()) {
-            if (FinderUtils.isWordCompleteInText(m.start(), m.group(), text)) {
-                matches.add(BenchmarkResult.of(m.start(), m.group()));
+            final int start = m.start();
+            final String word = m.group();
+            if (FinderUtils.isWordCompleteInText(start, word, text)) {
+                matches.add(BenchmarkResult.of(start, word));
             }
         }
         return matches;

@@ -18,8 +18,8 @@ class IgnorableTemplateLowercaseContainsFinder implements BenchmarkFinder {
     }
 
     @Override
-    public Set<BenchmarkResult> find(WikipediaPage page) {
-        String text = page.getContent();
+    public Iterable<BenchmarkResult> find(WikipediaPage page) {
+        final String text = page.getContent();
         String lowerCaseText = FinderUtils.toLowerCase(text);
         for (String ignorableTemplate : ignorableTemplates) {
             int start = lowerCaseText.indexOf(ignorableTemplate);

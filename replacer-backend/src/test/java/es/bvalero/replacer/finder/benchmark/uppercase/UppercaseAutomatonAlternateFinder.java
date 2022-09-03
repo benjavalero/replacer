@@ -7,9 +7,9 @@ import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.finder.benchmark.BenchmarkResult;
 import es.bvalero.replacer.finder.util.FinderUtils;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 class UppercaseAutomatonAlternateFinder extends UppercaseBenchmarkFinder {
 
@@ -25,11 +25,11 @@ class UppercaseAutomatonAlternateFinder extends UppercaseBenchmarkFinder {
     }
 
     @Override
-    public Set<BenchmarkResult> find(WikipediaPage page) {
-        String text = page.getContent();
+    public Iterable<BenchmarkResult> find(WikipediaPage page) {
+        final String text = page.getContent();
         // Build an alternate automaton with all the words and match it against the text
-        Set<BenchmarkResult> matches = new HashSet<>();
-        AutomatonMatcher m = this.words.newMatcher(text);
+        final List<BenchmarkResult> matches = new ArrayList<>(100);
+        final AutomatonMatcher m = this.words.newMatcher(text);
         while (m.find()) {
             String word = m.group().substring(1).trim();
             int pos = m.group().indexOf(word);

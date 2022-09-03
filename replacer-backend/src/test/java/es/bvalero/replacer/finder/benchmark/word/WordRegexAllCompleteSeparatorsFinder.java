@@ -8,13 +8,16 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-class WordRegexAllCompleteFinder implements BenchmarkFinder {
+class WordRegexAllCompleteSeparatorsFinder implements BenchmarkFinder {
 
     private final Pattern wordPattern;
     private final Set<String> words;
 
-    WordRegexAllCompleteFinder(Collection<String> words) {
-        this.wordPattern = Pattern.compile("\\b\\w+\\b", Pattern.UNICODE_CHARACTER_CLASS);
+    WordRegexAllCompleteSeparatorsFinder(Collection<String> words) {
+        final String leftSeparator = "(?<=^|[^\\w\\d_\\/\\.])";
+        final String rightSeparator = "(?=$|[^\\w\\d_\\/])";
+        final String regex = leftSeparator + "\\w+" + rightSeparator;
+        this.wordPattern = Pattern.compile(regex, Pattern.UNICODE_CHARACTER_CLASS);
         this.words = new HashSet<>(words);
     }
 
@@ -27,7 +30,7 @@ class WordRegexAllCompleteFinder implements BenchmarkFinder {
         while (m.find()) {
             final int start = m.start();
             final String word = m.group();
-            if (this.words.contains(word) && FinderUtils.isWordCompleteInText(start, word, text)) {
+            if (this.words.contains(word) && !FinderUtils.isApostrophe(text, start - 1)) {
                 matches.add(BenchmarkResult.of(start, word));
             }
         }

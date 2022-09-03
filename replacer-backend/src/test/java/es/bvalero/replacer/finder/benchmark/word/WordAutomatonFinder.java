@@ -7,7 +7,9 @@ import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
 import es.bvalero.replacer.finder.benchmark.BenchmarkResult;
 import es.bvalero.replacer.finder.util.FinderUtils;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 class WordAutomatonFinder implements BenchmarkFinder {
 
@@ -21,15 +23,17 @@ class WordAutomatonFinder implements BenchmarkFinder {
     }
 
     @Override
-    public Set<BenchmarkResult> find(WikipediaPage page) {
-        String text = page.getContent();
+    public Iterable<BenchmarkResult> find(WikipediaPage page) {
+        final String text = page.getContent();
         // We loop over all the words and find them in the text with an automaton
-        Set<BenchmarkResult> matches = new HashSet<>();
+        final List<BenchmarkResult> matches = new ArrayList<>(100);
         for (RunAutomaton automaton : this.automata) {
-            AutomatonMatcher m = automaton.newMatcher(text);
+            final AutomatonMatcher m = automaton.newMatcher(text);
             while (m.find()) {
-                if (FinderUtils.isWordCompleteInText(m.start(), m.group(), text)) {
-                    matches.add(BenchmarkResult.of(m.start(), m.group()));
+                final int start = m.start();
+                final String word = m.group();
+                if (FinderUtils.isWordCompleteInText(start, word, text)) {
+                    matches.add(BenchmarkResult.of(start, word));
                 }
             }
         }

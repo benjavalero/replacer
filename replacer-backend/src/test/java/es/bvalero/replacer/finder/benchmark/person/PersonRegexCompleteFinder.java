@@ -19,12 +19,12 @@ class PersonRegexCompleteFinder implements BenchmarkFinder {
     }
 
     @Override
-    public Set<BenchmarkResult> find(WikipediaPage page) {
-        String text = page.getContent();
+    public Iterable<BenchmarkResult> find(WikipediaPage page) {
+        final String text = page.getContent();
         // We loop over all the words and find them completely in the text with a regex
-        Set<BenchmarkResult> matches = new HashSet<>();
+        final List<BenchmarkResult> matches = new ArrayList<>(100);
         for (Pattern word : this.words) {
-            Matcher m = word.matcher(text);
+            final Matcher m = word.matcher(text);
             while (m.find()) {
                 matches.add(BenchmarkResult.of(m.start(), m.group().substring(0, m.group().length() - 2)));
             }

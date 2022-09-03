@@ -1,7 +1,8 @@
-                                                     simple-misspelling-benchmark.csv summary                                                      
-           FINDER            |  Mean [TIME]  |  Min [TIME]  |  First Quartile [TIME]  |  Median [TIME]  |  Third Quartile [TIME]  |  Max [TIME]   |
----------------------------------------------------------------------------------------------------------------------------------------------------
-         WordRegexAllFinder  |   160053,504  |    4006,906  |              35356,768  |      60847,855  |             212289,827  |  1385002,271  |
-     WordAutomatonAllFinder  |    78911,854  |    1781,424  |              15119,634  |      32917,982  |             104720,506  |   744848,940  |
-        WordLinearAllFinder  |    62336,251  |    1433,089  |              10916,691  |      23165,633  |              74919,725  |   591638,245  |
- WordRegexAllCompleteFinder  |   255043,100  |    8459,515  |              64587,606  |     112261,224  |             375926,404  |  1956088,315  |
+                                                          simple-misspelling-benchmark.csv summary                                                           
+                FINDER                 |  Mean [TIME]  |  Min [TIME]  |  First Quartile [TIME]  |  Median [TIME]  |  Third Quartile [TIME]  |  Max [TIME]   |
+-------------------------------------------------------------------------------------------------------------------------------------------------------------
+                   WordRegexAllFinder  |   169153,465  |    6163,578  |              44926,139  |      72403,828  |             243736,152  |  1449371,525  |
+               WordAutomatonAllFinder  |    80592,199  |    2161,192  |              17026,656  |      31848,906  |             119529,578  |   789223,795  |
+                  WordLinearAllFinder  |    71222,154  |    1639,386  |              13688,161  |      25934,448  |              85738,613  |   724491,893  |
+           WordRegexAllCompleteFinder  |   252372,124  |    9009,200  |              67288,679  |     128227,359  |             348379,380  |  2033669,930  |
+ WordRegexAllCompleteSeparatorsFinder  |   524561,166  |   23571,946  |             155044,820  |     244980,282  |             725423,576  |  3670763,279  |

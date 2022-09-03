@@ -3,9 +3,9 @@ package es.bvalero.replacer.finder.benchmark.uppercase;
 import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.finder.benchmark.BenchmarkResult;
 import es.bvalero.replacer.finder.util.FinderUtils;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 class UppercaseIndexOfFinder extends UppercaseBenchmarkFinder {
 
@@ -16,10 +16,10 @@ class UppercaseIndexOfFinder extends UppercaseBenchmarkFinder {
     }
 
     @Override
-    public Set<BenchmarkResult> find(WikipediaPage page) {
-        String text = page.getContent();
+    public Iterable<BenchmarkResult> find(WikipediaPage page) {
+        final String text = page.getContent();
         // We loop over all the words and find them in the text with the indexOf function
-        Set<BenchmarkResult> matches = new HashSet<>();
+        final List<BenchmarkResult> matches = new ArrayList<>(100);
         for (String word : this.words) {
             int start = 0;
             while (start >= 0) {

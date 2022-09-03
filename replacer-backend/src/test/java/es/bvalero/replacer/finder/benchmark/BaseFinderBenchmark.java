@@ -29,8 +29,8 @@ import tech.tablesaw.plotly.components.Figure;
 
 public abstract class BaseFinderBenchmark {
 
-    public static final int WARM_UP = 100;
-    public static final int ITERATIONS = 1000;
+    protected static final int WARM_UP = 100;
+    protected static final int ITERATIONS = 1000;
 
     protected void runBenchmark(List<Finder<?>> finders, String fileName) throws ReplacerException {
         runBenchmark(finders, WARM_UP, ITERATIONS, fileName);

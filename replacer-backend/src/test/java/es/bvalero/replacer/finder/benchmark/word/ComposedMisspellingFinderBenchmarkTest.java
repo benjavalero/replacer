@@ -50,7 +50,7 @@ class ComposedMisspellingFinderBenchmarkTest extends BaseFinderBenchmark {
         List<BenchmarkFinder> finders = new ArrayList<>();
 
         // Loop over all the words and find them in the text with a regex
-        finders.add(new WordIndexOfFinder(words));
+        finders.add(new WordLinearFinder(words));
         finders.add(new WordRegexFinder(words));
         // finders.add(new WordAutomatonFinder(words)); // Medium
         // finders.add(new WordRegexCompleteFinder(words)); // Very long

@@ -30,7 +30,7 @@ class FalsePositiveFinderTest {
 
     @Test
     void testWordIndexOfFinder() {
-        WordIndexOfFinder finder = new WordIndexOfFinder(this.words);
+        WordLinearFinder finder = new WordLinearFinder(this.words);
         assertEquals(expected, finder.findMatches(text));
     }
 

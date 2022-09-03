@@ -10,28 +10,31 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-class WordRegexFinder implements BenchmarkFinder {
+class WordRegexCompleteSeparatorsFinder implements BenchmarkFinder {
 
     private final List<Pattern> patterns;
 
-    WordRegexFinder(Collection<String> words) {
+    WordRegexCompleteSeparatorsFinder(Collection<String> words) {
         this.patterns = new ArrayList<>();
         for (String word : words) {
-            this.patterns.add(Pattern.compile(word));
+            final String leftSeparator = "(?<=^|[^\\w\\d_\\/\\.])";
+            final String rightSeparator = "(?=$|[^\\w\\d_\\/])";
+            final String regex = leftSeparator + word + rightSeparator;
+            this.patterns.add(Pattern.compile(regex));
         }
     }
 
     @Override
     public Iterable<BenchmarkResult> find(WikipediaPage page) {
         final String text = page.getContent();
-        // We loop over all the words and find them in the text with a regex
+        // We loop over all the words and find them completely in the text with a regex
         final List<BenchmarkResult> matches = new ArrayList<>(100);
         for (Pattern pattern : this.patterns) {
             final Matcher m = pattern.matcher(text);
             while (m.find()) {
                 final int start = m.start();
                 final String word = m.group();
-                if (FinderUtils.isWordCompleteInText(start, word, text)) {
+                if (!FinderUtils.isApostrophe(text, start - 1)) {
                     matches.add(BenchmarkResult.of(start, word));
                 }
             }
