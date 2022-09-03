@@ -7,6 +7,7 @@ import es.bvalero.replacer.common.domain.Suggestion;
 import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.finder.replacement.ReplacementFinder;
 import es.bvalero.replacer.finder.replacement.finders.MisspellingFinder;
+import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.RegexMatchFinder;
 import java.util.List;
 import java.util.regex.MatchResult;
@@ -43,6 +44,11 @@ class CustomReplacementFinder implements ReplacementFinder {
         } else {
             return Pattern.compile(Pattern.quote(replacement), Pattern.CASE_INSENSITIVE);
         }
+    }
+
+    @Override
+    public boolean validate(MatchResult match, WikipediaPage page) {
+        return FinderUtils.isWordCompleteInText(match.start(), match.group(), page.getContent());
     }
 
     @Override

@@ -82,6 +82,11 @@ public class MisspellingComposedFinder extends MisspellingFinder implements Prop
     }
 
     @Override
+    public boolean validate(MatchResult match, WikipediaPage page) {
+        return FinderUtils.isWordCompleteInText(match.start(), match.group(), page.getContent());
+    }
+
+    @Override
     ReplacementKind getType() {
         return ReplacementKind.COMPOSED;
     }

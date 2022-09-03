@@ -47,12 +47,6 @@ public class MisspellingSimpleFinder extends MisspellingFinder implements Proper
         return LinearMatchFinder.find(page, this::findWord);
     }
 
-    @Override
-    public boolean validate(MatchResult match, WikipediaPage page) {
-        // Validate that the word is complete in the linear finder to improve performance
-        return true;
-    }
-
     private int findWord(WikipediaPage page, int start, List<MatchResult> matches) {
         final WikipediaLanguage lang = page.getId().getLang();
         final String text = page.getContent();
@@ -61,6 +55,7 @@ public class MisspellingSimpleFinder extends MisspellingFinder implements Proper
         if (startWord >= 0) {
             final int endWord = findEndWord(text, startWord);
             final String word = text.substring(startWord, endWord);
+            // Validate that the word is complete in the linear finder to improve performance
             if (isExistingWord(word, lang) && FinderUtils.isWordCompleteInText(startWord, word, text)) {
                 matches.add(LinearMatchResult.of(startWord, word));
             }
