@@ -129,7 +129,7 @@ public class FinderUtils {
     }
 
     public boolean isApostrophe(String text, int position) {
-        return text.charAt(position) == '\'' && Character.isLetterOrDigit(text.charAt(position - 1));
+        return position >= 1 && text.charAt(position) == '\'' && Character.isLetterOrDigit(text.charAt(position - 1));
     }
 
     private boolean isValidRightSeparator(String text, int endWord) {
