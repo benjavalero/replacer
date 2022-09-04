@@ -16,6 +16,7 @@ import java.beans.PropertyChangeListener;
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.MatchResult;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
@@ -57,20 +58,24 @@ public class MisspellingComposedFinder extends MisspellingFinder implements Prop
     ) {
         final Map<WikipediaLanguage, RunAutomaton> map = new EnumMap<>(WikipediaLanguage.class);
         for (WikipediaLanguage lang : misspellings.keySet()) {
-            final String alternations = String.format(
-                "(%s)",
-                FinderUtils.joinAlternate(
-                    misspellings.get(lang).stream().map(this::processComposedMisspelling).collect(Collectors.toList())
-                )
-            );
+            final Set<ComposedMisspelling> langMisspellings = misspellings.get(lang);
+            final Set<String> processedMisspellings = langMisspellings
+                .stream()
+                .map(this::processComposedMisspelling)
+                .collect(Collectors.toUnmodifiableSet());
+            final String alternations = String.format("(%s)", FinderUtils.joinAlternate(processedMisspellings));
             map.put(lang, new RunAutomaton(new RegExp(alternations).toAutomaton()));
         }
         return map;
     }
 
     private String processComposedMisspelling(ComposedMisspelling misspelling) {
-        final String word = misspelling.getWord().replace("[", "\\[").replace("]", "\\]").replace(".", "\\.");
+        final String word = toRegex(misspelling.getWord());
         return misspelling.isCaseSensitive() ? word : FinderUtils.setFirstUpperCaseClass(word);
+    }
+
+    private String toRegex(String word) {
+        return word.replace("[", "\\[").replace("]", "\\]").replace(".", "\\.");
     }
 
     @Override
