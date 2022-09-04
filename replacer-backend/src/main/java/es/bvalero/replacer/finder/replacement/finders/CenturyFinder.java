@@ -83,13 +83,11 @@ public class CenturyFinder implements ReplacementFinder {
                 startCentury,
                 text.substring(startCentury, endCentury)
             );
-            final List<LinearMatchResult> groups = new ArrayList<>(3); // The era could be null
-            groups.add(LinearMatchResult.of(startCentury, centuryWord)); // The start is not relevant
-            groups.add(centuryNumber);
+            match.addGroup(LinearMatchResult.of(startCentury, centuryWord)); // The start is not relevant
+            match.addGroup(centuryNumber);
             if (era != null) {
-                groups.add(era);
+                match.addGroup(era);
             }
-            match.addGroups(groups);
             matches.add(match);
 
             return endCentury;

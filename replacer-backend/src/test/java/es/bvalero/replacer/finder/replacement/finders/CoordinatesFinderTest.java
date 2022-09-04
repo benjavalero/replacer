@@ -16,19 +16,16 @@ class CoordinatesFinderTest {
 
     @ParameterizedTest
     @CsvSource(
-        delimiter = '|',
+        delimiter = '*',
         value = {
-            "38º05′08″|38°05′08″",
-            "38°05'08″|38°05′08″",
-            "38°05′08\"|38°05′08″",
-            "38°05'08''|38°05′08″",
-            "38º05′08.325″|38°05′08.325″",
-            "38º05′08,325″|38°05′08,325″",
-            "38º05′08″N|38°05′08″{{esd}}N",
-            "38º05′08″ W|38°05′08″{{esd}}O",
+            "19°42′25″N 101°12′16.8″O * {{Coord|19|42|25|N|101|12|16.8|W}}",
+            "19°42′25″N 101°12′16,8″O * {{Coord|19|42|25|N|101|12|16.8|W}}",
+            "19º42'25\"N 101º12´16.8''E * {{Coord|19|42|25|N|101|12|16.8|E}}",
+            "19°42′25″N  101°12′16.8″O * {{Coord|19|42|25|N|101|12|16.8|W}}",
+            "19° 42′ 25″ N{{esd}}101° 12′ 16.8″ E * {{Coord|19|42|25|N|101|12|16.8|E}}",
         }
     )
-    void testNotValidCoordinates(String text, String expected) {
+    void testCompleteCoordinates(String text, String expected) {
         List<Replacement> replacements = coordinatesFinder.findList(text);
         assertEquals(1, replacements.size());
 
@@ -40,22 +37,8 @@ class CoordinatesFinderTest {
     }
 
     @ParameterizedTest
-    @ValueSource(
-        strings = {
-            "38°05′08″",
-            "38° 05′ 08″",
-            "38°05′08″",
-            "38°{{esd}}05′{{esd}}08″",
-            "38°{{esd}}05′{{esd}}08″{{esd}}N",
-            "38",
-            "38°",
-            "38°05",
-            "38°05′",
-            "38°05′08",
-            "38°  05′08″",
-        }
-    )
-    void testValidCoordinates(String text) {
+    @ValueSource(strings = { "19°42′25″N" })
+    void testFalsePositiveCoordinates(String text) {
         List<Replacement> replacements = coordinatesFinder.findList(text);
         assertTrue(replacements.isEmpty());
     }

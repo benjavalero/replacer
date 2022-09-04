@@ -61,8 +61,8 @@ public class AcuteOFinder implements ReplacementFinder {
         final LinearMatchResult wordAfter = findWordAfter(text, endAcuteO);
         if (wordBefore != null && wordAfter != null) {
             final LinearMatchResult match = LinearMatchResult.of(startAcuteO, ACUTE_O);
-            final List<LinearMatchResult> groups = List.of(wordBefore, wordAfter);
-            match.addGroups(groups);
+            match.addGroup(wordBefore);
+            match.addGroup(wordAfter);
             return match;
         } else {
             return null;

@@ -3,7 +3,9 @@ package es.bvalero.replacer.finder.util;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.MatchResult;
+import java.util.stream.Collectors;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.ToString;
 
 @ToString
@@ -14,6 +16,7 @@ public class LinearMatchResult implements MatchResult {
     private final int start;
 
     // Use groups to implement nested matches
+    @Getter
     @EqualsAndHashCode.Exclude
     private final List<LinearMatchResult> groups = new ArrayList<>();
 
@@ -28,6 +31,14 @@ public class LinearMatchResult implements MatchResult {
 
     public void addGroups(List<LinearMatchResult> groups) {
         this.groups.addAll(groups);
+    }
+
+    public void addGroup(LinearMatchResult group) {
+        this.groups.add(group);
+    }
+
+    public Iterable<String> getGroupValues() {
+        return this.groups.stream().map(LinearMatchResult::group).collect(Collectors.toUnmodifiableList());
     }
 
     @Override

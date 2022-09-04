@@ -22,7 +22,7 @@ public class FinderUtils {
     private static final Set<Character> INVALID_RIGHT_SEPARATORS = Set.of('_', '/');
     private static final String ALTERNATE_SEPARATOR = "|";
     private static final String NON_BREAKING_SPACE = "&nbsp;";
-    public static final String NON_BREAKING_SPACE_TEMPLATE = "{{esd}}";
+    private static final String NON_BREAKING_SPACE_TEMPLATE = "{{esd}}";
     public static final Set<String> SPACES = Set.of(SPACE, NON_BREAKING_SPACE, NON_BREAKING_SPACE_TEMPLATE);
     private static final char DECIMAL_COMMA = ',';
     private static final char DECIMAL_DOT = '.';
@@ -100,7 +100,7 @@ public class FinderUtils {
     }
 
     private boolean isDecimalNumber(char ch) {
-        return Character.isDigit(ch) || DECIMAL_SEPARATORS.contains(ch);
+        return Character.isDigit(ch) || ch == DECIMAL_DOT;
     }
 
     public String normalizeDecimalNumber(String number) {
