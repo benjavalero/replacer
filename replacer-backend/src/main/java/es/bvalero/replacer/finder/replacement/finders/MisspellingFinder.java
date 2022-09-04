@@ -95,7 +95,7 @@ public abstract class MisspellingFinder implements ReplacementFinder {
     }
 
     // Transform the case of the suggestion, e.g. "Habia" -> "Había"
-    List<Suggestion> findSuggestions(String originalWord, WikipediaLanguage lang) {
+    private List<Suggestion> findSuggestions(String originalWord, WikipediaLanguage lang) {
         // We are sure in this point that the Misspelling exists
         final Misspelling misspelling = findMisspellingByWord(originalWord, lang)
             .orElseThrow(IllegalArgumentException::new);
@@ -110,7 +110,7 @@ public abstract class MisspellingFinder implements ReplacementFinder {
                 suggestions.add(suggestion);
             } else {
                 // Apply the case of the original word to the generic misspelling suggestion
-                suggestions.add(FinderUtils.startsWithUpperCase(word) ? toUppercase(suggestion) : suggestion);
+                suggestions.add(FinderUtils.startsWithUpperCase(word) ? suggestion.toUpperCase() : suggestion);
             }
         }
 
@@ -126,7 +126,7 @@ public abstract class MisspellingFinder implements ReplacementFinder {
                 .stream()
                 .filter(s -> FinderUtils.toLowerCase(word).equals(s.getText()))
                 .findAny()
-                .ifPresent(s -> suggestions.add(toUppercase(s)));
+                .ifPresent(s -> suggestions.add(s.toUpperCase()));
         }
 
         return suggestions;
@@ -134,10 +134,6 @@ public abstract class MisspellingFinder implements ReplacementFinder {
 
     private static Suggestion convertSuggestion(MisspellingSuggestion misspellingSuggestion) {
         return Suggestion.of(misspellingSuggestion.getText(), misspellingSuggestion.getComment());
-    }
-
-    static Suggestion toUppercase(Suggestion suggestion) {
-        return Suggestion.of(FinderUtils.setFirstUpperCase(suggestion.getText()), suggestion.getComment());
     }
 
     @Override

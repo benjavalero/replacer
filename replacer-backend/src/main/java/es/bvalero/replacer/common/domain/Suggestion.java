@@ -1,5 +1,6 @@
 package es.bvalero.replacer.common.domain;
 
+import es.bvalero.replacer.finder.util.FinderUtils;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -34,6 +35,10 @@ public class Suggestion {
     @TestOnly
     public static Suggestion ofNoComment(String text) {
         return of(text, null);
+    }
+
+    public Suggestion toUpperCase() {
+        return Suggestion.of(FinderUtils.setFirstUpperCase(text), comment);
     }
 
     static Collection<Suggestion> mergeSuggestions(Collection<Suggestion> suggestions) {
