@@ -105,7 +105,7 @@ public class CenturyFinder implements ReplacementFinder {
 
     @Nullable
     private String findCenturyNumber(String text, int endCentury) {
-        final MatchResult centuryNumber = FinderUtils.findWordAfter(text, endCentury);
+        final LinearMatchResult centuryNumber = FinderUtils.findWordAfter(text, endCentury);
         if (centuryNumber == null) {
             return null;
         } else {

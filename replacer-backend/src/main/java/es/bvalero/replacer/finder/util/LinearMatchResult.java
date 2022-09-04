@@ -26,10 +26,6 @@ public class LinearMatchResult implements MatchResult {
         return new LinearMatchResult(text, start);
     }
 
-    public static LinearMatchResult of(MatchResult match) {
-        return new LinearMatchResult(match.group(), match.start());
-    }
-
     public void addGroups(List<LinearMatchResult> groups) {
         this.groups.addAll(groups);
     }

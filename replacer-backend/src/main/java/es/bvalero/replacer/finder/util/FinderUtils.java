@@ -6,7 +6,6 @@ import static org.apache.commons.lang3.StringUtils.SPACE;
 import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.common.util.ReplacerUtils;
 import java.util.*;
-import java.util.regex.MatchResult;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.experimental.UtilityClass;
@@ -150,12 +149,12 @@ public class FinderUtils {
     }
 
     @Nullable
-    public MatchResult findWordAfter(String text, int endWord) {
+    public LinearMatchResult findWordAfter(String text, int endWord) {
         return findWordAfter(text, endWord, Collections.emptyList());
     }
 
     @Nullable
-    public MatchResult findWordAfter(String text, int endWord, Collection<Character> allowedChars) {
+    public LinearMatchResult findWordAfter(String text, int endWord, Collection<Character> allowedChars) {
         if (endWord >= text.length() || !isWordDelimiter(text.charAt(endWord))) {
             return null;
         }
@@ -179,17 +178,17 @@ public class FinderUtils {
     }
 
     public boolean isWordPrecededByUpperCase(int start, String text) {
-        final MatchResult wordBefore = findWordBefore(text, start);
+        final LinearMatchResult wordBefore = findWordBefore(text, start);
         return wordBefore != null && startsWithUpperCase(wordBefore.group());
     }
 
     @Nullable
-    public MatchResult findWordBefore(String text, int start) {
+    public LinearMatchResult findWordBefore(String text, int start) {
         return findWordBefore(text, start, Collections.emptyList());
     }
 
     @Nullable
-    public MatchResult findWordBefore(String text, int start, Collection<Character> allowedChars) {
+    public LinearMatchResult findWordBefore(String text, int start, Collection<Character> allowedChars) {
         if (start < 1 || !isWordDelimiter(text.charAt(start - 1))) {
             return null;
         }

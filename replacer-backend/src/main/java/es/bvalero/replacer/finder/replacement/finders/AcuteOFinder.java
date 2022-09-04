@@ -57,11 +57,11 @@ public class AcuteOFinder implements ReplacementFinder {
 
     @Nullable
     private LinearMatchResult findMatch(String text, int startAcuteO, int endAcuteO) {
-        final MatchResult wordBefore = findWordBefore(text, startAcuteO);
-        final MatchResult wordAfter = findWordAfter(text, endAcuteO);
+        final LinearMatchResult wordBefore = findWordBefore(text, startAcuteO);
+        final LinearMatchResult wordAfter = findWordAfter(text, endAcuteO);
         if (wordBefore != null && wordAfter != null) {
             LinearMatchResult match = LinearMatchResult.of(startAcuteO, ACUTE_O);
-            List<LinearMatchResult> groups = List.of(LinearMatchResult.of(wordBefore), LinearMatchResult.of(wordAfter));
+            List<LinearMatchResult> groups = List.of(wordBefore, wordAfter);
             match.addGroups(groups);
             return match;
         } else {
@@ -70,8 +70,8 @@ public class AcuteOFinder implements ReplacementFinder {
     }
 
     @Nullable
-    private MatchResult findWordBefore(String text, int startAcuteO) {
-        final MatchResult matchBefore = FinderUtils.findWordBefore(text, startAcuteO);
+    private LinearMatchResult findWordBefore(String text, int startAcuteO) {
+        final LinearMatchResult matchBefore = FinderUtils.findWordBefore(text, startAcuteO);
         // The char before the acute-o is a white-space, but we need to check the rest of chars in the middle.
         if (matchBefore == null || (matchBefore.end() != startAcuteO - 1)) {
             return null;
@@ -81,8 +81,8 @@ public class AcuteOFinder implements ReplacementFinder {
     }
 
     @Nullable
-    private MatchResult findWordAfter(String text, int endAcuteO) {
-        final MatchResult matchAfter = FinderUtils.findWordAfter(text, endAcuteO);
+    private LinearMatchResult findWordAfter(String text, int endAcuteO) {
+        final LinearMatchResult matchAfter = FinderUtils.findWordAfter(text, endAcuteO);
         // The char after the acute-o is a white-space, but we need to check the rest of chars in the middle.
         if (matchAfter == null || (matchAfter.start() != endAcuteO + 1)) {
             return null;

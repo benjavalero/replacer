@@ -153,7 +153,7 @@ public class DateFinder implements ReplacementFinder {
         // We allow the dot to find years with a dot as a separator
         Set<Character> allowedChars = Set.of(YEAR_DOT);
         final int startMonth = match.start();
-        final MatchResult matchBefore = FinderUtils.findWordBefore(text, startMonth, allowedChars);
+        final LinearMatchResult matchBefore = FinderUtils.findWordBefore(text, startMonth, allowedChars);
         if (matchBefore == null) {
             return convertMonthDayYear(match, page);
         } else {
@@ -189,7 +189,7 @@ public class DateFinder implements ReplacementFinder {
         if (isPreposition(wordBefore, lang)) {
             tokenizedDate.setPrepBefore(wordBefore);
 
-            final MatchResult matchBefore2 = FinderUtils.findWordBefore(text, startBefore);
+            final LinearMatchResult matchBefore2 = FinderUtils.findWordBefore(text, startBefore);
             if (matchBefore2 == null) {
                 return null;
             } else {
@@ -233,14 +233,14 @@ public class DateFinder implements ReplacementFinder {
         }
 
         // Special case: the connector can be a preposition, so we actually want to convert a long date.
-        final MatchResult matchBefore2 = FinderUtils.findWordBefore(text, matchBefore.start());
+        final LinearMatchResult matchBefore2 = FinderUtils.findWordBefore(text, matchBefore.start());
         if (matchBefore2 != null && isDay(matchBefore2.group())) {
             return convertLongDate(matchMonth, matchBefore, page);
         }
 
         if (!findPrepositionAfterAndYear(tokenizedDate, page, matchMonth)) {
             // Special case: the date after the connector is unordered of type month-day-year
-            final MatchResult matchAfter = FinderUtils.findWordAfter(text, matchMonth.end());
+            final LinearMatchResult matchAfter = FinderUtils.findWordAfter(text, matchMonth.end());
             if (matchAfter != null && isDay(matchAfter.group())) {
                 return convertMonthDayYear(matchMonth, page);
             } else {
@@ -271,7 +271,7 @@ public class DateFinder implements ReplacementFinder {
         // We allow the dot to find years with a dot as a separator
         Set<Character> allowedChars = Set.of(YEAR_DOT);
         int endMonth = matchMonth.end();
-        final MatchResult matchAfter = FinderUtils.findWordAfter(text, endMonth, allowedChars);
+        final LinearMatchResult matchAfter = FinderUtils.findWordAfter(text, endMonth, allowedChars);
         if (matchAfter == null) {
             return false;
         } else {
@@ -283,7 +283,7 @@ public class DateFinder implements ReplacementFinder {
             if (isPreposition(wordAfter, lang)) {
                 tokenizedDate.setPrepAfter(wordAfter);
 
-                final MatchResult matchAfter2 = FinderUtils.findWordAfter(text, endAfter, allowedChars);
+                final LinearMatchResult matchAfter2 = FinderUtils.findWordAfter(text, endAfter, allowedChars);
                 if (matchAfter2 == null) {
                     return false;
                 } else {
@@ -315,7 +315,7 @@ public class DateFinder implements ReplacementFinder {
         tokenizedDate.setType(3);
 
         final int endMonth = matchMonth.end();
-        final MatchResult matchAfter = FinderUtils.findWordAfter(text, endMonth);
+        final LinearMatchResult matchAfter = FinderUtils.findWordAfter(text, endMonth);
         if (matchAfter == null) {
             return null;
         } else {
@@ -350,7 +350,7 @@ public class DateFinder implements ReplacementFinder {
         tokenizedDate.setStart(matchBefore.start());
 
         final int endMonth = matchMonth.end();
-        final MatchResult matchAfter = FinderUtils.findWordAfter(text, endMonth);
+        final LinearMatchResult matchAfter = FinderUtils.findWordAfter(text, endMonth);
         if (matchAfter == null) {
             return null;
         } else {
@@ -543,7 +543,7 @@ public class DateFinder implements ReplacementFinder {
 
     // Return the appropriate article for the date
     private List<String> getFixArticle(WikipediaPage page, int start) {
-        final MatchResult preceding = FinderUtils.findWordBefore(page.getContent(), start);
+        final LinearMatchResult preceding = FinderUtils.findWordBefore(page.getContent(), start);
         final WikipediaLanguage lang = page.getId().getLang();
         if (preceding != null) {
             final String precedingArticle = preceding.group();

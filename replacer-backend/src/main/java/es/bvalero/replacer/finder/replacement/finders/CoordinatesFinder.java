@@ -170,14 +170,14 @@ public class CoordinatesFinder implements ReplacementFinder {
 
     @Nullable
     private LinearMatchResult findMinuteMatch(String text, int endDegrees) {
-        final MatchResult matchMinutes = FinderUtils.findWordAfter(text, endDegrees);
+        final LinearMatchResult matchMinutes = FinderUtils.findWordAfter(text, endDegrees);
         if (matchMinutes == null) {
             return null;
         } else {
             if (isMinuteNumber(matchMinutes.group())) {
                 final String space1 = text.substring(endDegrees + 1, matchMinutes.start());
                 if (isSpace(space1)) {
-                    return LinearMatchResult.of(matchMinutes);
+                    return matchMinutes;
                 } else {
                     return null;
                 }
@@ -189,14 +189,14 @@ public class CoordinatesFinder implements ReplacementFinder {
 
     @Nullable
     private LinearMatchResult findSecondMatch(String text, int endMinutes) {
-        final MatchResult matchSeconds = FinderUtils.findWordAfter(text, endMinutes, DECIMAL_SEPARATORS);
+        final LinearMatchResult matchSeconds = FinderUtils.findWordAfter(text, endMinutes, DECIMAL_SEPARATORS);
         if (matchSeconds == null) {
             return null;
         } else {
             if (isSecondNumber(matchSeconds.group())) {
                 final String space2 = text.substring(endMinutes + 1, matchSeconds.start());
                 if (isSpace(space2)) {
-                    return LinearMatchResult.of(matchSeconds);
+                    return matchSeconds;
                 } else {
                     return null;
                 }
