@@ -90,7 +90,7 @@ class CenturyFinderTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = { "El siglo 20.", "Siglo 21.", "Los siglos XX y XXI." })
+    @ValueSource(strings = { "El siglo 20.", "Siglo 21.", "Los siglos XX y XXI.", "El siglo  XX." })
     void testCenturyNotValid(String text) {
         List<Replacement> replacements = centuryFinder.findList(text);
         assertTrue(replacements.isEmpty());

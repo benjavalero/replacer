@@ -1,6 +1,6 @@
 package es.bvalero.replacer.finder.replacement.finders;
 
-import static org.apache.commons.lang3.StringUtils.SPACE;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 import es.bvalero.replacer.common.domain.*;
 import es.bvalero.replacer.finder.replacement.ReplacementFinder;
@@ -51,36 +51,47 @@ public class CenturyFinder implements ReplacementFinder {
         int startCentury = findStartCentury(text, start);
         if (startCentury >= 0) {
             int endCentury = startCentury + CENTURY_WORD.length();
-            String century = findCenturyWord(text, startCentury);
-            if (century == null) {
+            final String centuryWord = findCenturyWord(text, startCentury);
+            if (centuryWord == null) {
                 return endCentury;
             }
 
             // Check the century number
-            final String centuryNumber = findCenturyNumber(text, endCentury);
+            final LinearMatchResult centuryNumber = findCenturyNumber(text, endCentury);
             if (centuryNumber == null) {
                 return endCentury;
             } else {
-                endCentury += 1 + centuryNumber.length();
-                century += (SPACE + centuryNumber);
+                endCentury = centuryNumber.end();
             }
 
             // Check the era
-            final String era = findEraAfter(text, century, startCentury);
-            endCentury += era.length();
-            century += era;
+            final LinearMatchResult era = findEra(text, endCentury);
+            if (era != null) {
+                endCentury = era.end();
+            }
 
             // Check the link
-            Boolean isLinked = isLinked(text, century, startCentury);
+            Boolean isLinked = isLinked(text, startCentury, endCentury);
             if (isLinked == null) {
                 return endCentury;
             } else if (isLinked) {
                 startCentury -= 2;
                 endCentury += 2;
-                century = "[[" + century + "]]";
             }
 
-            matches.add(LinearMatchResult.of(startCentury, century));
+            final LinearMatchResult match = LinearMatchResult.of(
+                startCentury,
+                text.substring(startCentury, endCentury)
+            );
+            final List<LinearMatchResult> groups = new ArrayList<>(3); // The era could be null
+            groups.add(LinearMatchResult.of(startCentury, centuryWord)); // The start is not relevant
+            groups.add(centuryNumber);
+            if (era != null) {
+                groups.add(era);
+            }
+            match.addGroups(groups);
+            matches.add(match);
+
             return endCentury;
         } else {
             return -1;
@@ -96,7 +107,7 @@ public class CenturyFinder implements ReplacementFinder {
     private String findCenturyWord(String text, int start) {
         final char firstLetter = text.charAt(start);
         final int endCentury = start + CENTURY_WORD.length();
-        if ((firstLetter == 'S' || firstLetter == 's') && text.charAt(endCentury) == ' ') {
+        if ((firstLetter == 'S' || firstLetter == 's') && Character.isWhitespace(text.charAt(endCentury))) {
             return firstLetter + CENTURY_SEARCH;
         } else {
             return null;
@@ -104,13 +115,13 @@ public class CenturyFinder implements ReplacementFinder {
     }
 
     @Nullable
-    private String findCenturyNumber(String text, int endCentury) {
+    private LinearMatchResult findCenturyNumber(String text, int endCentury) {
         final LinearMatchResult centuryNumber = FinderUtils.findWordAfter(text, endCentury);
-        if (centuryNumber == null) {
+        // The century word is followed by a white-space, but we need to check the chars in the middle.
+        if (centuryNumber == null || centuryNumber.start() != endCentury + 1) {
             return null;
         } else {
-            final String number = centuryNumber.group();
-            return isCenturyNumber(number) ? number : null;
+            return isCenturyNumber(centuryNumber.group()) ? centuryNumber : null;
         }
     }
 
@@ -127,30 +138,28 @@ public class CenturyFinder implements ReplacementFinder {
         return CENTURY_LETTERS.contains(ch);
     }
 
-    // Return, if exists, the era after the century, including the space between; or an empty string.
-    private String findEraAfter(String text, String century, int start) {
-        int endCentury = start + century.length();
-        final String postCentury = text.substring(endCentury, Math.min(endCentury + 6, text.length())); // 6 = &nbsp; length
-        String eraSpace = FinderUtils.SPACES.stream().filter(postCentury::startsWith).findAny().orElse(null);
+    @Nullable
+    private LinearMatchResult findEra(String text, int endCenturyNumber) {
+        final String postCentury = text.substring(endCenturyNumber, Math.min(endCenturyNumber + 6, text.length())); // 6 = &nbsp; length
+        final String eraSpace = FinderUtils.SPACES.stream().filter(postCentury::startsWith).findAny().orElse(null);
         if (eraSpace != null) {
-            endCentury += eraSpace.length();
-            final String eraText = text.substring(endCentury, Math.min(endCentury + 10, text.length())); // 10 is the maximum length of an era
+            final int startEra = endCenturyNumber + eraSpace.length();
+            final String eraText = text.substring(startEra, Math.min(startEra + 10, text.length())); // 10 is the maximum length of an era
             String era = ERA_WORDS.stream().filter(eraText::startsWith).findAny().orElse(null);
             if (era != null) {
-                return eraSpace + era;
+                return LinearMatchResult.of(startEra, era);
             }
         }
-        return "";
+        return null;
     }
 
     // True if linked; False if not linked; Null if linked not closed or open.
     @Nullable
-    private Boolean isLinked(String text, String century, int start) {
-        int endCentury = start + century.length();
+    private Boolean isLinked(String text, int start, int end) {
         int startLink = Math.max(0, start - 2);
-        int endLink = Math.min(text.length(), endCentury + 2);
+        int endLink = Math.min(text.length(), end + 2);
         final String leftLink = text.substring(startLink, start);
-        final String rightLink = text.substring(endCentury, endLink);
+        final String rightLink = text.substring(end, endLink);
         if ("[[".equals(leftLink) && "]]".equals(rightLink)) {
             return true;
         } else if ("[[".equals(leftLink) || "]]".equals(rightLink)) {
@@ -161,23 +170,14 @@ public class CenturyFinder implements ReplacementFinder {
     }
 
     @Override
-    public Replacement convert(MatchResult match, WikipediaPage page) {
-        final String century = match.group();
-        String normalized = century;
-        for (String space : FinderUtils.SPACES) {
-            if (!SPACE.equals(space)) {
-                normalized = normalized.replace(space, " ");
-            }
-        }
-        boolean linked = false;
-        if (century.startsWith("[[")) {
-            linked = true;
-            normalized = normalized.substring(2, normalized.length() - 2);
-        }
-        final String[] tokens = FinderUtils.splitAsArray(normalized);
-        final String centuryWord = tokens[0]; // We keep the original case for the template name to improve the edition diff
-        final String centuryNumber = FinderUtils.toUpperCase(tokens[1]);
-        String era = tokens.length >= 3 ? tokens[2].substring(0, 1) : "";
+    public Replacement convert(MatchResult matchResult, WikipediaPage page) {
+        final LinearMatchResult match = (LinearMatchResult) matchResult;
+
+        final String centuryText = match.group();
+        final String centuryWord = match.group(0);
+        final String centuryNumber = match.group(1);
+        final String era = match.groupCount() == 3 ? match.group(2).substring(0, 1) : EMPTY;
+        final boolean linked = centuryText.startsWith("[[");
 
         final String templateUpperLink = "{{" + centuryWord + "|" + centuryNumber + "|" + era + "|S|1}}";
         final String templateUpperNoLink = "{{" + centuryWord + "|" + centuryNumber + "|" + era + "|S}}";
@@ -207,7 +207,7 @@ public class CenturyFinder implements ReplacementFinder {
             .builder()
             .type(ReplacementType.CENTURY)
             .start(match.start())
-            .text(century)
+            .text(centuryText)
             .suggestions(suggestions)
             .build();
     }

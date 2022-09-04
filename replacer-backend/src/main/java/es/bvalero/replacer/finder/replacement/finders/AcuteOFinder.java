@@ -40,7 +40,7 @@ public class AcuteOFinder implements ReplacementFinder {
         final int startAcuteO = findStartAcuteO(text, start);
         if (startAcuteO >= 0) {
             final int endAcuteO = startAcuteO + ACUTE_O.length();
-            LinearMatchResult match = findMatch(text, startAcuteO, endAcuteO);
+            final LinearMatchResult match = findMatch(text, startAcuteO, endAcuteO);
             if (match != null) {
                 matches.add(match);
             }
@@ -60,8 +60,8 @@ public class AcuteOFinder implements ReplacementFinder {
         final LinearMatchResult wordBefore = findWordBefore(text, startAcuteO);
         final LinearMatchResult wordAfter = findWordAfter(text, endAcuteO);
         if (wordBefore != null && wordAfter != null) {
-            LinearMatchResult match = LinearMatchResult.of(startAcuteO, ACUTE_O);
-            List<LinearMatchResult> groups = List.of(wordBefore, wordAfter);
+            final LinearMatchResult match = LinearMatchResult.of(startAcuteO, ACUTE_O);
+            final List<LinearMatchResult> groups = List.of(wordBefore, wordAfter);
             match.addGroups(groups);
             return match;
         } else {
