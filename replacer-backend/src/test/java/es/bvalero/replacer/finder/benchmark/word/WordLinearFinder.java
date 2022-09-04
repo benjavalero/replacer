@@ -42,10 +42,12 @@ class WordLinearFinder implements BenchmarkFinder {
             final String text = page.getContent();
             final int startMisspelling = findStartMisspelling(text, start);
             if (startMisspelling >= 0) {
+                // The word is wrapped by non-letters, so we still need to validate the separators.
                 if (FinderUtils.isWordCompleteInText(startMisspelling, misspelling, text)) {
                     matches.add(LinearMatchResult.of(startMisspelling, misspelling));
                 }
-                return startMisspelling + misspelling.length();
+                // The char after the word is a non-letter, so we can start searching the next word one position after.
+                return startMisspelling + misspelling.length() + 1;
             } else {
                 return -1;
             }
