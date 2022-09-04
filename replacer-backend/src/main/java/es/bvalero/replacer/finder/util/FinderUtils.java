@@ -107,6 +107,10 @@ public class FinderUtils {
         return number.replace(DECIMAL_COMMA, DECIMAL_DOT);
     }
 
+    public boolean isSpace(String str) {
+        return StringUtils.isBlank(str) || FinderUtils.SPACES.contains(str);
+    }
+
     /***** TEXT UTILS *****/
 
     public boolean isWordCompleteInText(int startWord, String word, String text) {

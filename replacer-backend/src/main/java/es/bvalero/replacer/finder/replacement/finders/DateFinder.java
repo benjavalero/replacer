@@ -157,7 +157,8 @@ public class DateFinder implements ReplacementFinder {
         if (matchBefore == null) {
             return convertMonthDayYear(match, page);
         } else {
-            if (!isSpace(text, matchBefore.end(), startMonth)) {
+            final String spaceBefore = text.substring(matchBefore.end(), startMonth);
+            if (isNotSpace(spaceBefore)) {
                 return null;
             }
             final String wordBefore = matchBefore.group();
@@ -193,7 +194,8 @@ public class DateFinder implements ReplacementFinder {
             if (matchBefore2 == null) {
                 return null;
             } else {
-                if (!isSpace(text, matchBefore2.end(), startBefore)) {
+                final String spaceBefore2 = text.substring(matchBefore2.end(), startBefore);
+                if (isNotSpace(spaceBefore2)) {
                     return null;
                 }
                 final String wordBefore2 = matchBefore2.group();
@@ -252,10 +254,10 @@ public class DateFinder implements ReplacementFinder {
         return findDateReplacement(date, tokenizedDate, page);
     }
 
-    private boolean isSpace(String text, int start, int end) {
+    private boolean isNotSpace(String str) {
         // Allow commas before
-        final String space = StringUtils.removeStart(text.substring(start, end), ",");
-        return SPACE.equals(space);
+        final String space = StringUtils.removeStart(str, ",");
+        return !FinderUtils.isSpace(space);
     }
 
     private boolean findPrepositionAfterAndYear(
@@ -275,7 +277,8 @@ public class DateFinder implements ReplacementFinder {
         if (matchAfter == null) {
             return false;
         } else {
-            if (!isSpace(text, endMonth, matchAfter.start())) {
+            final String spaceAfter = text.substring(endMonth, matchAfter.start());
+            if (isNotSpace(spaceAfter)) {
                 return false;
             }
             final String wordAfter = matchAfter.group();
@@ -287,7 +290,8 @@ public class DateFinder implements ReplacementFinder {
                 if (matchAfter2 == null) {
                     return false;
                 } else {
-                    if (!isSpace(text, endAfter, matchAfter2.start())) {
+                    final String spaceAfter2 = text.substring(endAfter, matchAfter2.start());
+                    if (isNotSpace(spaceAfter2)) {
                         return false;
                     }
                     final String wordAfter2 = matchAfter2.group();
@@ -319,7 +323,8 @@ public class DateFinder implements ReplacementFinder {
         if (matchAfter == null) {
             return null;
         } else {
-            if (!isSpace(text, endMonth, matchAfter.start())) {
+            final String spaceAfter = text.substring(endMonth, matchAfter.start());
+            if (isNotSpace(spaceAfter)) {
                 return null;
             }
             final String wordAfter = matchAfter.group();
@@ -354,7 +359,8 @@ public class DateFinder implements ReplacementFinder {
         if (matchAfter == null) {
             return null;
         } else {
-            if (!isSpace(text, endMonth, matchAfter.start())) {
+            final String spaceAfter = text.substring(endMonth, matchAfter.start());
+            if (isNotSpace(spaceAfter)) {
                 return null;
             }
             final String wordAfter = matchAfter.group();

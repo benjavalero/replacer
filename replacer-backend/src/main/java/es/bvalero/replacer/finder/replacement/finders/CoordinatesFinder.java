@@ -52,7 +52,7 @@ public class CoordinatesFinder implements ReplacementFinder {
             } else {
                 // Check the space between longitude and latitude
                 final String space = text.substring(endLatitude, longitudeMatch.start());
-                if (isSpace(space)) {
+                if (FinderUtils.isSpace(space)) {
                     final int startLatitude = latitudeMatch.start();
                     final int endLongitude = longitudeMatch.end();
                     final LinearMatchResult match = LinearMatchResult.of(
@@ -195,7 +195,7 @@ public class CoordinatesFinder implements ReplacementFinder {
         } else {
             if (isMinuteNumber(matchMinutes.group())) {
                 final String space1 = text.substring(endDegrees + 1, matchMinutes.start());
-                if (isSpace(space1)) {
+                if (FinderUtils.isSpace(space1)) {
                     return matchMinutes;
                 } else {
                     return null;
@@ -215,7 +215,7 @@ public class CoordinatesFinder implements ReplacementFinder {
             String normalizedSeconds = FinderUtils.normalizeDecimalNumber(matchSeconds.group());
             if (isSecondNumber(normalizedSeconds)) {
                 final String space2 = text.substring(endMinutes + 1, matchSeconds.start());
-                if (isSpace(space2)) {
+                if (FinderUtils.isSpace(space2)) {
                     return LinearMatchResult.of(matchSeconds.start(), normalizedSeconds);
                 } else {
                     return null;
@@ -232,7 +232,7 @@ public class CoordinatesFinder implements ReplacementFinder {
         final int startDirection = StringUtils.indexOfAny(textRight, CARDINAL_DIRECTIONS);
         if (startDirection >= 0) {
             final String space = textRight.substring(0, startDirection);
-            if (isSpace(space)) {
+            if (FinderUtils.isSpace(space)) {
                 return LinearMatchResult.of(
                     endCoordinates + startDirection,
                     fixDirection(textRight.charAt(startDirection))
@@ -247,10 +247,6 @@ public class CoordinatesFinder implements ReplacementFinder {
 
     private boolean isDegreeChar(char ch) {
         return DEGREE_CHARS.contains(ch);
-    }
-
-    private boolean isSpace(String str) {
-        return StringUtils.isBlank(str) || FinderUtils.SPACES.contains(str);
     }
 
     private boolean isMinuteNumber(String number) {
