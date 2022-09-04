@@ -7,6 +7,7 @@ import es.bvalero.replacer.finder.replacement.ReplacementFinder;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
 import es.bvalero.replacer.finder.util.LinearMatchResult;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.regex.MatchResult;
 import javax.annotation.PostConstruct;
@@ -28,6 +29,7 @@ import org.springframework.stereotype.Component;
 public class DateFinder implements ReplacementFinder {
 
     private static final char YEAR_DOT = '.';
+    private static final int CURRENT_YEAR = LocalDate.now().getYear();
 
     @Resource
     private Map<String, String> monthNames;
@@ -179,6 +181,8 @@ public class DateFinder implements ReplacementFinder {
 
     @Nullable
     private Replacement convertLongDate(MatchResult matchMonth, MatchResult matchBefore, WikipediaPage page) {
+        // 1) Day + Prep? + Month + Prep? + Year
+
         final WikipediaLanguage lang = page.getId().getLang();
         final String text = page.getContent();
         final TokenizedDate tokenizedDate = new TokenizedDate(matchMonth);
@@ -221,6 +225,8 @@ public class DateFinder implements ReplacementFinder {
 
     @Nullable
     private Replacement convertMonthYear(MatchResult matchMonth, MatchResult matchBefore, WikipediaPage page) {
+        // 2) Connector + Month + Prep? + Year (month-year)
+
         final WikipediaLanguage lang = page.getId().getLang();
         final String text = page.getContent();
         final TokenizedDate tokenizedDate = new TokenizedDate(matchMonth);
@@ -265,7 +271,7 @@ public class DateFinder implements ReplacementFinder {
         WikipediaPage page,
         MatchResult matchMonth
     ) {
-        // Impure function!!
+        // Impure function!! Modify the tokenized date passed as a parameter.
         final WikipediaLanguage lang = page.getId().getLang();
         final String text = page.getContent();
 
@@ -314,6 +320,8 @@ public class DateFinder implements ReplacementFinder {
 
     @Nullable
     private Replacement convertMonthDayYear(MatchResult matchMonth, WikipediaPage page) {
+        // 3) Month + Day + Prep? + Year
+
         final String text = page.getContent();
         final TokenizedDate tokenizedDate = new TokenizedDate(matchMonth);
         tokenizedDate.setType(3);
@@ -347,6 +355,8 @@ public class DateFinder implements ReplacementFinder {
 
     @Nullable
     private Replacement convertYearMonthDay(MatchResult matchMonth, MatchResult matchBefore, WikipediaPage page) {
+        // 4) Year,? + Month + Day
+
         final String text = page.getContent();
         final TokenizedDate tokenizedDate = new TokenizedDate(matchMonth);
         tokenizedDate.setType(4);
@@ -459,17 +469,18 @@ public class DateFinder implements ReplacementFinder {
 
     private boolean isYear(String token) {
         // It could be ended with a comma in case of year-month-day
+        final String year;
         if (token.length() == 4) {
-            return StringUtils.isNumeric(token);
+            year = token;
         } else if (token.length() == 5) {
-            return (
-                FinderUtils.startsWithNumber(token) &&
-                token.charAt(1) == '.' &&
-                StringUtils.isNumeric(token.substring(2))
-            );
+            if (token.charAt(1) != YEAR_DOT) {
+                return false;
+            }
+            year = StringUtils.remove(token, YEAR_DOT);
         } else {
             return false;
         }
+        return StringUtils.isNumeric(year) && Integer.parseInt(year) <= CURRENT_YEAR;
     }
 
     private boolean isValidDay(String day) {
