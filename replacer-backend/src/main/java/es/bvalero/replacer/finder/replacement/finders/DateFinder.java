@@ -428,15 +428,16 @@ public class DateFinder implements ReplacementFinder {
             type = ReplacementType.DATE_UPPERCASE;
         }
 
-        // Fix september
-        month = fixSeptember(month, lang);
-
         if (date.getType() == 3 || date.getType() == 4) {
             type = ReplacementType.DATE_UNORDERED;
         } else if (type == null) {
             // Date not to be fixed
             return null;
         }
+
+        // Cosmetic fixes in case we actually fix the date
+        month = fixSeptember(month, lang);
+        prepAfter = fixPrepositionAfter(prepAfter, lang);
 
         final String fixedDate;
         if (date.getType() == 2) {
@@ -513,6 +514,10 @@ public class DateFinder implements ReplacementFinder {
 
     private boolean isValidPrepositionAfter(@Nullable String prepAfter) {
         return StringUtils.isAllLowerCase(prepAfter);
+    }
+
+    private String fixPrepositionAfter(String prepAfter, WikipediaLanguage lang) {
+        return WikipediaLanguage.SPANISH.equals(lang) ? getPrepositionDefault(lang) : prepAfter;
     }
 
     private boolean isValidYear(String year) {
