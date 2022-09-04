@@ -62,7 +62,7 @@ class AcuteOFinderTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = { "1 o 2", "1 ó." })
+    @ValueSource(strings = { "1 o 2", "1 ó.", "1, ó 2" })
     void testAcuteONotValid(String text) {
         List<Replacement> replacements = acuteOFinder.findList(text);
         assertTrue(replacements.isEmpty());

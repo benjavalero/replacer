@@ -13,6 +13,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.regex.MatchResult;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
 /**
@@ -38,46 +39,71 @@ public class AcuteOFinder implements ReplacementFinder {
         final String text = page.getContent();
         final int startAcuteO = findStartAcuteO(text, start);
         if (startAcuteO >= 0) {
-            final int endAcuteO = startAcuteO + SEARCH_ACUTE_O.length();
-            final MatchResult matchBefore = FinderUtils.findWordBefore(text, startAcuteO + 1);
-            final MatchResult matchAfter = FinderUtils.findWordAfter(text, endAcuteO - 1);
-            if (matchBefore == null || matchAfter == null) {
-                return endAcuteO;
-            } else {
-                matches.add(
-                    LinearMatchResult.of(
-                        startAcuteO - matchBefore.group().length(),
-                        matchBefore.group() + SEARCH_ACUTE_O + matchAfter.group()
-                    )
-                );
-                return endAcuteO;
+            final int endAcuteO = startAcuteO + ACUTE_O.length();
+            LinearMatchResult match = findMatch(text, startAcuteO, endAcuteO);
+            if (match != null) {
+                matches.add(match);
             }
+            return endAcuteO;
         } else {
             return -1;
         }
     }
 
     private int findStartAcuteO(String text, int start) {
-        return text.indexOf(SEARCH_ACUTE_O, start);
+        final int startSearchAcuteO = text.indexOf(SEARCH_ACUTE_O, start);
+        return startSearchAcuteO >= 0 ? startSearchAcuteO + 1 : -1;
+    }
+
+    @Nullable
+    private LinearMatchResult findMatch(String text, int startAcuteO, int endAcuteO) {
+        final MatchResult wordBefore = findWordBefore(text, startAcuteO);
+        final MatchResult wordAfter = findWordAfter(text, endAcuteO);
+        if (wordBefore != null && wordAfter != null) {
+            LinearMatchResult match = LinearMatchResult.of(startAcuteO, ACUTE_O);
+            List<LinearMatchResult> groups = List.of(LinearMatchResult.of(wordBefore), LinearMatchResult.of(wordAfter));
+            match.addGroups(groups);
+            return match;
+        } else {
+            return null;
+        }
+    }
+
+    @Nullable
+    private MatchResult findWordBefore(String text, int startAcuteO) {
+        final MatchResult matchBefore = FinderUtils.findWordBefore(text, startAcuteO);
+        // The char before the acute-o is a white-space, but we need to check the rest of chars in the middle.
+        if (matchBefore == null || (matchBefore.end() != startAcuteO - 1)) {
+            return null;
+        } else {
+            return matchBefore;
+        }
+    }
+
+    @Nullable
+    private MatchResult findWordAfter(String text, int endAcuteO) {
+        final MatchResult matchAfter = FinderUtils.findWordAfter(text, endAcuteO);
+        // The char after the acute-o is a white-space, but we need to check the rest of chars in the middle.
+        if (matchAfter == null || (matchAfter.start() != endAcuteO + 1)) {
+            return null;
+        } else {
+            return matchAfter;
+        }
     }
 
     @Override
     public Replacement convert(MatchResult match, WikipediaPage page) {
         return Replacement
             .builder()
-            .type(findReplacementType(match.group()))
-            .start(match.start() + match.group().indexOf(SEARCH_ACUTE_O) + 1)
+            .type(findReplacementType((LinearMatchResult) match))
+            .start(match.start())
             .text(ACUTE_O)
             .suggestions(findSuggestions())
             .build();
     }
 
-    private ReplacementType findReplacementType(String text) {
-        final int pos = text.indexOf(SEARCH_ACUTE_O);
-        return (
-                StringUtils.isNumeric(text.substring(0, pos)) &&
-                StringUtils.isNumeric(text.substring(pos + SEARCH_ACUTE_O.length()))
-            )
+    private ReplacementType findReplacementType(LinearMatchResult match) {
+        return (StringUtils.isNumeric(match.group(0)) && StringUtils.isNumeric(match.group(1)))
             ? ReplacementType.ACUTE_O_NUMBERS
             : ReplacementType.ACUTE_O_WORDS;
     }
