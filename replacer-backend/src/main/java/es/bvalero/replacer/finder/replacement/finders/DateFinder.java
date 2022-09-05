@@ -171,7 +171,6 @@ public class DateFinder implements ReplacementFinder {
             } else if (isConnector(wordBefore, lang)) {
                 return convertMonthYear(match, matchBefore, page);
             } else if (isPreposition(wordBefore, lang)) {
-                // We have checked it is not a preposition which is also a connector
                 return convertLongDate(match, matchBefore, page);
             } else {
                 return convertMonthDayYear(match, page);
@@ -238,12 +237,6 @@ public class DateFinder implements ReplacementFinder {
             tokenizedDate.setStart(matchBefore.start());
         } else {
             return null;
-        }
-
-        // Special case: the connector can be a preposition, so we actually want to convert a long date.
-        final LinearMatchResult matchBefore2 = FinderUtils.findWordBefore(text, matchBefore.start());
-        if (matchBefore2 != null && isDay(matchBefore2.group())) {
-            return convertLongDate(matchMonth, matchBefore, page);
         }
 
         if (!findPrepositionAfterAndYear(tokenizedDate, page, matchMonth)) {

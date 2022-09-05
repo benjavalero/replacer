@@ -14,10 +14,11 @@
         <entry key="gl" value="xaneiro,febreiro,marzo,abril,maio,xuño,xullo,agosto,setembro,outubro,novembro,decembro"/>
     </util:map>
 
+    <!-- The prepositions cannot be used as connectors -->
     <util:map id="dateConnectors" map-class="java.util.HashMap"
               key-type="java.lang.String" value-type="java.lang.String">
-        <entry key="es" value="a,desde,de,durante,el,entre,en,hacia,hasta,para,y"/>
-        <entry key="gl" value="a,desde,dende,de,durante,o,entre,en,cara,ata,para,e"/>
+        <entry key="es" value="a,desde,durante,el,entre,en,hacia,hasta,para,y"/>
+        <entry key="gl" value="a,desde,dende,durante,o,entre,en,cara,ata,para,e"/>
     </util:map>
 
     <!-- The first preposition is the default one that will be added when missing -->

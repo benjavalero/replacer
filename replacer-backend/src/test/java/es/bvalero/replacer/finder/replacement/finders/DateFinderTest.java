@@ -113,11 +113,9 @@ class DateFinderTest {
         {
             "Desde Agosto de 2019, Desde agosto de 2019, " + SUBTYPE_UPPERCASE,
             "desde Agosto de 2019, desde agosto de 2019, " + SUBTYPE_UPPERCASE,
-            "de Agosto de 2019, de agosto de 2019, " + SUBTYPE_UPPERCASE,
             "desde Agosto del 2019, desde agosto de 2019, " + SUBTYPE_UPPERCASE,
             "desde Agosto de 2.019, desde agosto de 2019, " + SUBTYPE_UPPERCASE,
             "desde Agosto 2019, desde agosto de 2019, " + SUBTYPE_UPPERCASE,
-            "de Setiembre de 2019, de septiembre de 2019, " + SUBTYPE_UPPERCASE,
             "Desde agosto 2019, Desde agosto de 2019, " + SUBTYPE_INCOMPLETE,
             "desde agosto 2.019, desde agosto de 2019, " + SUBTYPE_DOT_YEAR,
             "Desde agosto de 2.019, Desde agosto de 2019, " + SUBTYPE_DOT_YEAR,
@@ -139,6 +137,7 @@ class DateFinderTest {
         strings = {
             "Desde agosto del 2019",
             "desde setiembre de 2020",
+            "de Agosto de 2019",
             "de agosto de 2000",
             "En agosto de 2000",
             "en agosto de 2000",
