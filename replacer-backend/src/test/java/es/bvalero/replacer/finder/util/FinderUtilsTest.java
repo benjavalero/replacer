@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import org.junit.jupiter.api.Test;
 
 class FinderUtilsTest {
@@ -123,6 +124,7 @@ class FinderUtilsTest {
         assertNull(FinderUtils.findWordAfter("Hola ", 4));
         assertEquals(LinearMatchResult.of(5, "A"), FinderUtils.findWordAfter("Hola A", 4));
         assertEquals(LinearMatchResult.of(6, "A"), FinderUtils.findWordAfter("Hola  A", 4));
+        assertEquals(LinearMatchResult.of(7, "A"), FinderUtils.findWordAfter("Hola . A", 4, Set.of('.')));
     }
 
     @Test
@@ -145,6 +147,7 @@ class FinderUtilsTest {
         assertNull(FinderUtils.findWordBefore("HolaXmundo", 5));
         assertEquals(LinearMatchResult.of(0, "Hola"), FinderUtils.findWordBefore("Hola  mundo", 6));
         assertEquals(LinearMatchResult.of(3, "Hola"), FinderUtils.findWordBefore("Un Hola, mundo", 9));
+        assertEquals(LinearMatchResult.of(3, "Hola"), FinderUtils.findWordBefore("Un Hola , mundo", 10, Set.of(',')));
     }
 
     @Test

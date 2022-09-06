@@ -159,7 +159,7 @@ public class FinderUtils {
 
     @Nullable
     public LinearMatchResult findWordAfter(String text, int endWord, Collection<Character> allowedChars) {
-        if (endWord >= text.length() || !isWordDelimiter(text.charAt(endWord))) {
+        if (endWord >= text.length() || isWordChar(text.charAt(endWord))) {
             return null;
         }
 
@@ -167,18 +167,16 @@ public class FinderUtils {
         int lastLetter = -1;
         for (int i = endWord + 1; i < text.length(); i++) {
             final char ch = text.charAt(i);
-            if (isWordDelimiter(ch) && !allowedChars.contains(ch)) {
-                if (firstLetter >= 0) {
-                    break;
-                }
-            } else {
+            if (isWordChar(ch)) {
                 if (firstLetter < 0) {
                     firstLetter = i;
                 }
                 lastLetter = i;
+            } else if (firstLetter >= 0 && !allowedChars.contains(ch)) {
+                break;
             }
         }
-        return firstLetter >= 0 ? buildMatchResult(text, firstLetter, lastLetter, allowedChars) : null;
+        return firstLetter >= 0 ? LinearMatchResult.of(firstLetter, text.substring(firstLetter, lastLetter + 1)) : null;
     }
 
     public boolean isWordPrecededByUpperCase(int start, String text) {
@@ -193,7 +191,7 @@ public class FinderUtils {
 
     @Nullable
     public LinearMatchResult findWordBefore(String text, int start, Collection<Character> allowedChars) {
-        if (start < 1 || !isWordDelimiter(text.charAt(start - 1))) {
+        if (start < 1 || isWordChar(text.charAt(start - 1))) {
             return null;
         }
 
@@ -201,43 +199,16 @@ public class FinderUtils {
         int lastLetter = -1;
         for (int i = start - 2; i >= 0; i--) {
             final char ch = text.charAt(i);
-            if (isWordDelimiter(ch) && !allowedChars.contains(ch)) {
-                if (lastLetter >= 0) {
-                    break;
-                }
-            } else {
-                firstLetter = i;
+            if (isWordChar(ch)) {
                 if (lastLetter < 0) {
                     lastLetter = i;
                 }
+                firstLetter = i;
+            } else if (lastLetter >= 0 && !allowedChars.contains(ch)) {
+                break;
             }
         }
-        return lastLetter >= 0 ? buildMatchResult(text, firstLetter, lastLetter, allowedChars) : null;
-    }
-
-    @Nullable
-    private LinearMatchResult buildMatchResult(
-        String text,
-        int firstLetter,
-        int lastLetter,
-        Collection<Character> allowedChars
-    ) {
-        if (!allowedChars.isEmpty()) {
-            // Remove leading and trailing allowed chars
-            while (firstLetter < text.length() && allowedChars.contains(text.charAt(firstLetter))) {
-                firstLetter++;
-            }
-            while (lastLetter >= 0 && allowedChars.contains(text.charAt(lastLetter))) {
-                lastLetter--;
-            }
-        }
-
-        if (firstLetter > lastLetter) {
-            // Corner cases where the word is composed by allowed chars
-            return null;
-        }
-
-        return LinearMatchResult.of(firstLetter, text.substring(firstLetter, lastLetter + 1));
+        return lastLetter >= 0 ? LinearMatchResult.of(firstLetter, text.substring(firstLetter, lastLetter + 1)) : null;
     }
 
     @Nullable
@@ -255,9 +226,9 @@ public class FinderUtils {
         return start >= 0 ? text.substring(start) : null;
     }
 
-    private boolean isWordDelimiter(char ch) {
+    private boolean isWordChar(char ch) {
         // Unicode considers the masculine ordinal as a letter
-        return !Character.isLetterOrDigit(ch) || ch == MASCULINE_ORDINAL;
+        return Character.isLetterOrDigit(ch) && ch != MASCULINE_ORDINAL;
     }
 
     private String getTextSnippet(String text, int start, int end) {
@@ -286,10 +257,6 @@ public class FinderUtils {
 
     public String getFirstItemInList(String list) {
         return splitList(list).get(0);
-    }
-
-    public String[] splitAsArray(String text) {
-        return StringUtils.split(text);
     }
 
     /***** LOGGING UTILS *****/
