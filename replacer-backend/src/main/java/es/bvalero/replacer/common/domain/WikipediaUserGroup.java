@@ -22,6 +22,7 @@ public enum WikipediaUserGroup {
     VERIFIER("patroller"),
     BUREAUCRAT("bureaucrat"),
     SYSOP("sysop"), // Administrator
+    IP_BLOCK_EXEMPT("ipblock-exempt"),
     BOT("bot");
 
     private static final Map<String, WikipediaUserGroup> map = Arrays
