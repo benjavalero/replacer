@@ -161,7 +161,7 @@ public class DateFinder implements ReplacementFinder {
         } else {
             final String spaceBefore = text.substring(matchBefore.end(), startMonth);
             if (isNotSpace(spaceBefore)) {
-                return null;
+                return convertMonthDayYear(match, page);
             }
             final String wordBefore = matchBefore.group();
             if (isDay(wordBefore)) {

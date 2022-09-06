@@ -188,11 +188,15 @@ class DateFinderTest {
         assertEquals(subtype, replacements.get(0).getType().getSubtype());
     }
 
-    @Test
-    void testUnorderedDateMonthDayYearWithText() {
-        String text = "Siendo mayo 3, 1999.";
-        String match = "mayo 3, 1999";
-        String fix = "3 de mayo de 1999";
+    @ParameterizedTest
+    @CsvSource(
+        delimiter = '|',
+        value = {
+            "Siendo mayo 3, 1999. | mayo 3, 1999 | 3 de mayo de 1999",
+            "[[Line]]. * Mayo 3, 1999. | Mayo 3, 1999 | 3 de mayo de 1999",
+        }
+    )
+    void testUnorderedDateMonthDayYearWithWordBefore(String text, String match, String fix) {
         List<Replacement> replacements = dateFinder.findList(text);
 
         assertEquals(1, replacements.size());
