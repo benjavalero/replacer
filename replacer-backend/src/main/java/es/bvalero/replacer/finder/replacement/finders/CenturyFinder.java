@@ -46,54 +46,59 @@ public class CenturyFinder implements ReplacementFinder {
         }
     }
 
-    private int findCentury(WikipediaPage page, int start, List<MatchResult> matches) {
+    @Nullable
+    MatchResult findCentury(WikipediaPage page, int start) {
         final String text = page.getContent();
-        int startCentury = findStartCentury(text, start);
-        if (startCentury >= 0) {
-            int endCentury = startCentury + CENTURY_WORD.length();
-            final String centuryWord = findCenturyWord(text, startCentury);
-            if (centuryWord == null) {
-                return endCentury;
-            }
+        while (start < text.length()) {
+            int startCentury = findStartCentury(text, start);
+            if (startCentury >= 0) {
+                int endCentury = startCentury + CENTURY_WORD.length();
+                final String centuryWord = findCenturyWord(text, startCentury);
+                if (centuryWord == null) {
+                    start = endCentury;
+                    continue;
+                }
 
-            // Check the century number
-            final LinearMatchResult centuryNumber = findCenturyNumber(text, endCentury);
-            if (centuryNumber == null) {
-                return endCentury;
+                // Check the century number
+                final LinearMatchResult centuryNumber = findCenturyNumber(text, endCentury);
+                if (centuryNumber == null) {
+                    start = endCentury;
+                    continue;
+                } else {
+                    endCentury = centuryNumber.end();
+                }
+
+                // Check the era
+                final LinearMatchResult era = findEra(text, endCentury);
+                if (era != null) {
+                    endCentury = era.end();
+                }
+
+                // Check the link
+                Boolean isLinked = isLinked(text, startCentury, endCentury);
+                if (isLinked == null) {
+                    start = endCentury;
+                    continue;
+                } else if (isLinked) {
+                    startCentury -= 2;
+                    endCentury += 2;
+                }
+
+                final LinearMatchResult match = LinearMatchResult.of(
+                    startCentury,
+                    text.substring(startCentury, endCentury)
+                );
+                match.addGroup(LinearMatchResult.of(startCentury, centuryWord)); // The start is not relevant
+                match.addGroup(centuryNumber);
+                if (era != null) {
+                    match.addGroup(era);
+                }
+                return match;
             } else {
-                endCentury = centuryNumber.end();
+                return null;
             }
-
-            // Check the era
-            final LinearMatchResult era = findEra(text, endCentury);
-            if (era != null) {
-                endCentury = era.end();
-            }
-
-            // Check the link
-            Boolean isLinked = isLinked(text, startCentury, endCentury);
-            if (isLinked == null) {
-                return endCentury;
-            } else if (isLinked) {
-                startCentury -= 2;
-                endCentury += 2;
-            }
-
-            final LinearMatchResult match = LinearMatchResult.of(
-                startCentury,
-                text.substring(startCentury, endCentury)
-            );
-            match.addGroup(LinearMatchResult.of(startCentury, centuryWord)); // The start is not relevant
-            match.addGroup(centuryNumber);
-            if (era != null) {
-                match.addGroup(era);
-            }
-            matches.add(match);
-
-            return endCentury;
-        } else {
-            return -1;
         }
+        return null;
     }
 
     private int findStartCentury(String text, int start) {

@@ -1,6 +1,5 @@
 package es.bvalero.replacer.finder.benchmark.simple;
 
-import static org.apache.commons.lang3.StringUtils.SPACE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import es.bvalero.replacer.finder.benchmark.BenchmarkResult;
@@ -12,43 +11,43 @@ import org.junit.jupiter.api.Test;
 class SimpleFinderTest {
 
     private String text;
-    private Set<BenchmarkResult> expected;
+    private final String word = "_";
+    private final Set<BenchmarkResult> expected = new HashSet<>();
 
     @BeforeEach
     public void setUp() {
-        this.text = "In the town where I was born lived a man who sailed the sea.";
+        this.text = "In_the_town_where_I_was_born_lived_a_man_who_sailed_the_sea.";
 
-        this.expected = new HashSet<>();
-        this.expected.add(BenchmarkResult.of(2, SPACE));
-        this.expected.add(BenchmarkResult.of(6, SPACE));
-        this.expected.add(BenchmarkResult.of(11, SPACE));
-        this.expected.add(BenchmarkResult.of(17, SPACE));
-        this.expected.add(BenchmarkResult.of(19, SPACE));
-        this.expected.add(BenchmarkResult.of(23, SPACE));
-        this.expected.add(BenchmarkResult.of(28, SPACE));
-        this.expected.add(BenchmarkResult.of(34, SPACE));
-        this.expected.add(BenchmarkResult.of(36, SPACE));
-        this.expected.add(BenchmarkResult.of(40, SPACE));
-        this.expected.add(BenchmarkResult.of(44, SPACE));
-        this.expected.add(BenchmarkResult.of(51, SPACE));
-        this.expected.add(BenchmarkResult.of(55, SPACE));
+        this.expected.add(BenchmarkResult.of(2, word));
+        this.expected.add(BenchmarkResult.of(6, word));
+        this.expected.add(BenchmarkResult.of(11, word));
+        this.expected.add(BenchmarkResult.of(17, word));
+        this.expected.add(BenchmarkResult.of(19, word));
+        this.expected.add(BenchmarkResult.of(23, word));
+        this.expected.add(BenchmarkResult.of(28, word));
+        this.expected.add(BenchmarkResult.of(34, word));
+        this.expected.add(BenchmarkResult.of(36, word));
+        this.expected.add(BenchmarkResult.of(40, word));
+        this.expected.add(BenchmarkResult.of(44, word));
+        this.expected.add(BenchmarkResult.of(51, word));
+        this.expected.add(BenchmarkResult.of(55, word));
     }
 
     @Test
-    void testCursiveRegexFinder() {
-        SimpleRegexFinder finder = new SimpleRegexFinder();
+    void testSimpleLinearFinder() {
+        SimpleLinearFinder finder = new SimpleLinearFinder(word);
         assertEquals(expected, finder.findMatches(text));
     }
 
     @Test
-    void testCursiveAutomatonFinder() {
-        SimpleAutomatonFinder finder = new SimpleAutomatonFinder();
+    void testSimpleRegexFinder() {
+        SimpleRegexFinder finder = new SimpleRegexFinder(word);
         assertEquals(expected, finder.findMatches(text));
     }
 
     @Test
-    void testCursiveLinearFinder() {
-        SimpleLinearFinder finder = new SimpleLinearFinder();
+    void testSimpleAutomatonFinder() {
+        SimpleAutomatonFinder finder = new SimpleAutomatonFinder(word);
         assertEquals(expected, finder.findMatches(text));
     }
 }

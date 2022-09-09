@@ -7,10 +7,10 @@ import es.bvalero.replacer.finder.util.LinearMatchFinder;
 import es.bvalero.replacer.finder.util.LinearMatchResult;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 import java.util.Set;
 import java.util.regex.MatchResult;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.lang.Nullable;
 
 abstract class QuotesFinder extends ImmutableCheckedFinder {
 
@@ -47,37 +47,42 @@ abstract class QuotesFinder extends ImmutableCheckedFinder {
         return LinearMatchFinder.find(page, this::findQuote);
     }
 
-    private int findQuote(WikipediaPage page, int start, List<MatchResult> matches) {
+    @Nullable
+    MatchResult findQuote(WikipediaPage page, int start) {
         final String text = page.getContent();
-        final int startQuote = findStartQuote(text, start);
-        if (startQuote >= 0) {
-            final int startQuoteText = startQuote + 1; // 1 = start quote length
-            final int endQuoteText = findEndQuote(text, startQuoteText);
-            if (endQuoteText >= 0) {
-                final String quoteText = text.substring(startQuoteText, endQuoteText);
-                if (!isValidQuoteText(quoteText)) {
-                    return endQuoteText;
+        while (start < text.length()) {
+            final int startQuote = findStartQuote(text, start);
+            if (startQuote >= 0) {
+                final int startQuoteText = startQuote + 1; // 1 = start quote length
+                final int endQuoteText = findEndQuote(text, startQuoteText);
+                if (endQuoteText >= 0) {
+                    final String quoteText = text.substring(startQuoteText, endQuoteText);
+                    if (!isValidQuoteText(quoteText)) {
+                        start = endQuoteText;
+                        continue;
+                    }
+
+                    final int endQuote = endQuoteText + 1; // 1 = end quote length
+                    if (isEmptyQuote(quoteText, startQuote, text, page)) {
+                        start = endQuote;
+                        continue;
+                    }
+
+                    checkRedundantQuote(quoteText, startQuote, page);
+
+                    final String quote = text.substring(startQuote, endQuote);
+                    return LinearMatchResult.of(startQuote, quote);
+                } else {
+                    // No quote ending found
+                    // It's possible that the quote start was a false positive or the quote contains new lines
+                    logImmutableCheck(page, startQuote, startQuoteText, "Truncated quotes");
+                    start = startQuoteText;
                 }
-
-                final int endQuote = endQuoteText + 1; // 1 = end quote length
-                if (isEmptyQuote(quoteText, startQuote, text, page)) {
-                    return endQuote;
-                }
-
-                checkRedundantQuote(quoteText, startQuote, page);
-
-                final String quote = text.substring(startQuote, endQuote);
-                matches.add(LinearMatchResult.of(startQuote, quote));
-                return endQuote;
             } else {
-                // No quote ending found
-                // It's possible that the quote start was a false positive or the quote contains new lines
-                logImmutableCheck(page, startQuote, startQuoteText, "Truncated quotes");
-                return startQuoteText;
+                return null;
             }
-        } else {
-            return -1;
         }
+        return null;
     }
 
     private int findStartQuote(String text, int start) {

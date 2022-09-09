@@ -63,7 +63,7 @@ public class MisspellingComposedFinder extends MisspellingFinder implements Prop
                 .stream()
                 .map(this::processComposedMisspelling)
                 .collect(Collectors.toUnmodifiableSet());
-            final String alternations = String.format("(%s)", FinderUtils.joinAlternate(processedMisspellings));
+            final String alternations = FinderUtils.joinAlternate(processedMisspellings);
             map.put(lang, new RunAutomaton(new RegExp(alternations).toAutomaton()));
         }
         return map;

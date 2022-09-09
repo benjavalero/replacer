@@ -582,19 +582,24 @@ public class DateFinder implements ReplacementFinder {
             return IterableUtils.toList(LinearMatchFinder.find(page, this::findMonth));
         }
 
-        private int findMonth(WikipediaPage page, int start, List<MatchResult> matches) {
+        @Nullable
+        MatchResult findMonth(WikipediaPage page, int start) {
             final WikipediaLanguage lang = page.getId().getLang();
             final String text = page.getContent();
-            final int startMonth = findStartMonth(text, start);
-            if (startMonth >= 0) {
-                final String month = text.charAt(startMonth) + monthSearch;
-                if (isMonth(month, lang)) {
-                    matches.add(LinearMatchResult.of(startMonth, month));
+            while (start < text.length()) {
+                final int startMonth = findStartMonth(text, start);
+                if (startMonth >= 0) {
+                    final String month = text.charAt(startMonth) + monthSearch;
+                    if (isMonth(month, lang)) {
+                        return LinearMatchResult.of(startMonth, month);
+                    } else {
+                        start = startMonth + month.length();
+                    }
+                } else {
+                    return null;
                 }
-                return startMonth + month.length();
-            } else {
-                return -1;
             }
+            return null;
         }
 
         private int findStartMonth(String text, int start) {

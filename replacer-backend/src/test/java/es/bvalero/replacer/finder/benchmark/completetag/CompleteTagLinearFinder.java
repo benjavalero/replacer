@@ -6,7 +6,6 @@ import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
 import es.bvalero.replacer.finder.util.LinearMatchResult;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.regex.MatchResult;
 import org.springframework.lang.Nullable;
@@ -24,31 +23,36 @@ class CompleteTagLinearFinder implements BenchmarkFinder {
         return LinearMatchFinder.find(page, this::findCompleteTag);
     }
 
-    private int findCompleteTag(WikipediaPage page, int start, List<MatchResult> matches) {
+    @Nullable
+    MatchResult findCompleteTag(WikipediaPage page, int start) {
         final String text = page.getContent();
-        int startCompleteTag = findStartCompleteTag(text, start);
-        if (startCompleteTag >= 0) {
-            String tag = findSupportedTag(text, startCompleteTag + 1);
-            if (tag != null) {
-                int endOpenTag = findEndTag(text, startCompleteTag + tag.length() + 1);
-                if (endOpenTag >= 0) {
-                    int endCompleteTag = findEndCompleteTag(text, endOpenTag + 1, tag);
-                    if (endCompleteTag >= 0) {
-                        matches.add(
-                            LinearMatchResult.of(startCompleteTag, text.substring(startCompleteTag, endCompleteTag))
-                        );
-                        return endCompleteTag;
+        while (start < text.length()) {
+            int startCompleteTag = findStartCompleteTag(text, start);
+            if (startCompleteTag >= 0) {
+                String tag = findSupportedTag(text, startCompleteTag + 1);
+                if (tag != null) {
+                    int endOpenTag = findEndTag(text, startCompleteTag + tag.length() + 1);
+                    if (endOpenTag >= 0) {
+                        int endCompleteTag = findEndCompleteTag(text, endOpenTag + 1, tag);
+                        if (endCompleteTag >= 0) {
+                            return LinearMatchResult.of(
+                                startCompleteTag,
+                                text.substring(startCompleteTag, endCompleteTag)
+                            );
+                        } else {
+                            start = endOpenTag + 1;
+                        }
                     } else {
-                        return endOpenTag + 1;
+                        start = startCompleteTag + tag.length() + 1;
                     }
                 } else {
-                    return startCompleteTag + tag.length() + 1;
+                    start = startCompleteTag + 1;
                 }
+            } else {
+                return null;
             }
-            return startCompleteTag + 1;
-        } else {
-            return -1;
         }
+        return null;
     }
 
     private int findStartCompleteTag(String text, int start) {

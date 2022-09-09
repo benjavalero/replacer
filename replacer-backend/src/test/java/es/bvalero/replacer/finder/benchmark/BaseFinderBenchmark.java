@@ -18,7 +18,6 @@ import java.nio.file.Paths;
 import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Objects;
-import org.apache.commons.collections4.IterableUtils;
 import org.springframework.lang.Nullable;
 import tech.tablesaw.api.Table;
 import tech.tablesaw.columns.numbers.NumberColumnFormatter;
@@ -72,7 +71,7 @@ public abstract class BaseFinderBenchmark {
                 long start = System.nanoTime();
                 for (int i = 0; i < numIterations; i++) {
                     // Only transform the iterable without validating the positions not to penalize the performance of the benchmark
-                    IterableUtils.toList(finder.find(page));
+                    finder.find(page).forEach(result -> {});
                 }
                 double end = (double) (System.nanoTime() - start) / 1000.0; // In µs
                 if (print) {

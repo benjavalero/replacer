@@ -6,8 +6,8 @@ import es.bvalero.replacer.finder.immutable.ImmutableCheckedFinder;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
 import es.bvalero.replacer.finder.util.LinearMatchResult;
-import java.util.List;
 import java.util.regex.MatchResult;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
 /**
@@ -34,23 +34,26 @@ class CommentFinder extends ImmutableCheckedFinder {
         return LinearMatchFinder.find(page, this::findComment);
     }
 
-    private int findComment(WikipediaPage page, int start, List<MatchResult> matches) {
+    @Nullable
+    MatchResult findComment(WikipediaPage page, int start) {
         final String text = page.getContent();
-        final int startComment = findStartComment(text, start);
-        if (startComment >= 0) {
-            final int startCommentText = startComment + START_COMMENT.length();
-            final int endComment = findEndComment(text, startCommentText);
-            if (endComment >= 0) {
-                matches.add(LinearMatchResult.of(startComment, text.substring(startComment, endComment)));
-                return endComment;
+        while (start < text.length()) {
+            final int startComment = findStartComment(text, start);
+            if (startComment >= 0) {
+                final int startCommentText = startComment + START_COMMENT.length();
+                final int endComment = findEndComment(text, startCommentText);
+                if (endComment >= 0) {
+                    return LinearMatchResult.of(startComment, text.substring(startComment, endComment));
+                } else {
+                    // Comment not closed. Trace warning and continue.
+                    FinderUtils.logFinderResult(page, startComment, startCommentText, "Comment not closed");
+                    start = startCommentText;
+                }
             } else {
-                // Comment not closed. Trace warning and continue.
-                FinderUtils.logFinderResult(page, startComment, startCommentText, "Comment not closed");
-                return startCommentText;
+                return null;
             }
-        } else {
-            return -1;
         }
+        return null;
     }
 
     private int findStartComment(String text, int start) {

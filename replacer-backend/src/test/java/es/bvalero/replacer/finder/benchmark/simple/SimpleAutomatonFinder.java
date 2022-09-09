@@ -1,7 +1,5 @@
 package es.bvalero.replacer.finder.benchmark.simple;
 
-import static org.apache.commons.lang3.StringUtils.SPACE;
-
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.common.domain.WikipediaPage;
@@ -11,11 +9,14 @@ import java.util.regex.MatchResult;
 
 class SimpleAutomatonFinder implements BenchmarkFinder {
 
-    private static final String SIMPLE_REGEX = SPACE;
-    private static final RunAutomaton SIMPLE_AUTOMATON = new RunAutomaton(new RegExp(SIMPLE_REGEX).toAutomaton());
+    private final RunAutomaton automaton;
+
+    SimpleAutomatonFinder(String word) {
+        this.automaton = new RunAutomaton(new RegExp(word).toAutomaton());
+    }
 
     @Override
     public Iterable<MatchResult> findMatchResults(WikipediaPage page) {
-        return AutomatonMatchFinder.find(page.getContent(), SIMPLE_AUTOMATON);
+        return AutomatonMatchFinder.find(page.getContent(), automaton);
     }
 }

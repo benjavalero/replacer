@@ -7,6 +7,7 @@ import es.bvalero.replacer.finder.util.LinearMatchFinder;
 import es.bvalero.replacer.finder.util.LinearMatchResult;
 import java.util.*;
 import java.util.regex.MatchResult;
+import org.springframework.lang.Nullable;
 
 class WordLinearAllFinder implements BenchmarkFinder {
 
@@ -21,31 +22,27 @@ class WordLinearAllFinder implements BenchmarkFinder {
         return LinearMatchFinder.find(page, this::findMisspelling);
     }
 
-    private int findMisspelling(WikipediaPage page, int start, List<MatchResult> matches) {
+    @Nullable
+    private MatchResult findMisspelling(WikipediaPage page, int start) {
         final String text = page.getContent();
-        final int startWord = findStartWord(text, start);
-        if (startWord >= 0) {
-            final int endWord = findEndWord(text, startWord);
-            final String word = text.substring(startWord, endWord);
-            // Validate first that the word is complete to improve performance
-            // The word is wrapped by non-letters, so we still need to validate the separators.
-            if (words.contains(word) && FinderUtils.isWordCompleteInText(startWord, word, text)) {
-                matches.add(LinearMatchResult.of(startWord, word));
-            }
-            // The char after the word is a non-letter, so we can start searching the next word one position after.
-            return endWord + 1;
-        } else {
-            return -1;
-        }
-    }
-
-    private int findEndWord(String text, int startWord) {
-        for (int j = startWord + 1; j < text.length(); j++) {
-            if (!isLetter(text.charAt(j))) {
-                return j;
+        while (start < text.length()) {
+            final int startWord = findStartWord(text, start);
+            if (startWord >= 0) {
+                final int endWord = findEndWord(text, startWord);
+                final String word = text.substring(startWord, endWord);
+                // Validate first that the word is complete to improve performance
+                // The word is wrapped by non-letters, so we still need to validate the separators.
+                if (words.contains(word) && FinderUtils.isWordCompleteInText(startWord, word, text)) {
+                    return LinearMatchResult.of(startWord, word);
+                } else {
+                    // The char after the word is a non-letter, so we can start searching the next word one position after.
+                    start = endWord + 1;
+                }
+            } else {
+                return null;
             }
         }
-        return text.length();
+        return null;
     }
 
     private int findStartWord(String text, int start) {
@@ -55,6 +52,15 @@ class WordLinearAllFinder implements BenchmarkFinder {
             }
         }
         return -1;
+    }
+
+    private int findEndWord(String text, int startWord) {
+        for (int i = startWord + 1; i < text.length(); i++) {
+            if (!isLetter(text.charAt(i))) {
+                return i;
+            }
+        }
+        return text.length();
     }
 
     private boolean isLetter(char ch) {

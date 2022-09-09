@@ -7,11 +7,11 @@ import es.bvalero.replacer.finder.immutable.ImmutableFinder;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
 import es.bvalero.replacer.finder.util.LinearMatchResult;
-import java.util.List;
 import java.util.Set;
 import java.util.regex.MatchResult;
 import javax.annotation.Resource;
 import org.apache.commons.collections4.IterableUtils;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
 /**
@@ -67,17 +67,26 @@ class PersonNameFinder implements ImmutableFinder {
             return LinearMatchFinder.find(page, this::findPersonName);
         }
 
-        private int findPersonName(WikipediaPage page, int start, List<MatchResult> matches) {
+        @Nullable
+        MatchResult findPersonName(WikipediaPage page, int start) {
             final String text = page.getContent();
-            final int personNameStart = text.indexOf(personName, start);
-            if (personNameStart >= 0) {
-                if (FinderUtils.isWordFollowedByUpperCase(personNameStart, personName, text)) {
-                    matches.add(LinearMatchResult.of(personNameStart, personName));
+            while (start < text.length()) {
+                final int startPersonName = findStartPersonName(text, start);
+                if (startPersonName >= 0) {
+                    if (FinderUtils.isWordFollowedByUpperCase(startPersonName, personName, text)) {
+                        return LinearMatchResult.of(startPersonName, personName);
+                    } else {
+                        start = startPersonName + personName.length();
+                    }
+                } else {
+                    return null;
                 }
-                return personNameStart + personName.length();
-            } else {
-                return -1;
             }
+            return null;
+        }
+
+        private int findStartPersonName(String text, int start) {
+            return text.indexOf(personName, start);
         }
     }
 }

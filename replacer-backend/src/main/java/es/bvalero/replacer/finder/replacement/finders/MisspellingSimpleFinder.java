@@ -17,6 +17,7 @@ import lombok.Setter;
 import org.apache.commons.collections4.SetValuedMap;
 import org.jetbrains.annotations.TestOnly;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
 /**
@@ -47,24 +48,28 @@ public class MisspellingSimpleFinder extends MisspellingFinder implements Proper
         return LinearMatchFinder.find(page, this::findWord);
     }
 
-    private int findWord(WikipediaPage page, int start, List<MatchResult> matches) {
+    @Nullable
+    private MatchResult findWord(WikipediaPage page, int start) {
         final WikipediaLanguage lang = page.getId().getLang();
         final String text = page.getContent();
-
-        final int startWord = findStartWord(text, start);
-        if (startWord >= 0) {
-            final int endWord = findEndWord(text, startWord);
-            final String word = text.substring(startWord, endWord);
-            // Validate first that the word is complete to improve performance
-            // The word is wrapped by non-letters, so we still need to validate the separators.
-            if (isExistingWord(word, lang) && FinderUtils.isWordCompleteInText(startWord, word, text)) {
-                matches.add(LinearMatchResult.of(startWord, word));
+        while (start < text.length()) {
+            final int startWord = findStartWord(text, start);
+            if (startWord >= 0) {
+                final int endWord = findEndWord(text, startWord);
+                final String word = text.substring(startWord, endWord);
+                // Validate first that the word is complete to improve performance
+                // The word is wrapped by non-letters, so we still need to validate the separators.
+                if (isExistingWord(word, lang) && FinderUtils.isWordCompleteInText(startWord, word, text)) {
+                    return LinearMatchResult.of(startWord, word);
+                } else {
+                    // The char after the word is a non-letter, so we can start searching the next word one position after.
+                    start = endWord + 1;
+                }
+            } else {
+                return null;
             }
-            // The char after the word is a non-letter, so we can start searching the next word one position after.
-            return endWord + 1;
-        } else {
-            return -1;
         }
+        return null;
     }
 
     private int findStartWord(String text, int start) {
@@ -76,10 +81,10 @@ public class MisspellingSimpleFinder extends MisspellingFinder implements Proper
         return -1;
     }
 
-    private int findEndWord(String text, int start) {
-        for (int j = start + 1; j < text.length(); j++) {
-            if (!isLetter(text.charAt(j))) {
-                return j;
+    private int findEndWord(String text, int startWord) {
+        for (int i = startWord + 1; i < text.length(); i++) {
+            if (!isLetter(text.charAt(i))) {
+                return i;
             }
         }
         return text.length();

@@ -131,7 +131,7 @@ public class FinderUtils {
         );
     }
 
-    public boolean isApostrophe(String text, int position) {
+    private boolean isApostrophe(String text, int position) {
         return position >= 1 && text.charAt(position) == '\'' && Character.isLetterOrDigit(text.charAt(position - 1));
     }
 

@@ -9,7 +9,6 @@ import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
 import es.bvalero.replacer.finder.util.LinearMatchResult;
 import java.util.Arrays;
-import java.util.List;
 import java.util.regex.MatchResult;
 import org.apache.commons.collections4.IterableUtils;
 import org.springframework.lang.Nullable;
@@ -35,7 +34,7 @@ class TitleFinder extends ImmutableCheckedFinder {
             Arrays
                 .stream(page.getTitle().split("\\P{L}+"))
                 .filter(this::isTitleWordImmutable)
-                .map(TitleFinder.TitleLinearFinder::new)
+                .map(TitleLinearFinder::new)
                 .map(finder -> finder.find(page))
                 .toArray(Iterable[]::new)
         );
@@ -64,18 +63,23 @@ class TitleFinder extends ImmutableCheckedFinder {
             return LinearMatchFinder.find(page, this::findTitleWord);
         }
 
-        private int findTitleWord(WikipediaPage page, int start, List<MatchResult> matches) {
+        @Nullable
+        MatchResult findTitleWord(WikipediaPage page, int start) {
             final String text = page.getContent();
-            // Find the word case-sensitive improves the performance
-            final int wordStart = text.indexOf(word, start);
-            if (wordStart >= 0) {
-                if (FinderUtils.isWordCompleteInText(wordStart, word, text)) {
-                    matches.add(LinearMatchResult.of(wordStart, word));
+            while (start < text.length()) {
+                // Find the word case-sensitive improves the performance
+                final int wordStart = text.indexOf(word, start);
+                if (wordStart >= 0) {
+                    if (FinderUtils.isWordCompleteInText(wordStart, word, text)) {
+                        return LinearMatchResult.of(wordStart, word);
+                    } else {
+                        start = wordStart + word.length();
+                    }
+                } else {
+                    return null;
                 }
-                return wordStart + word.length();
-            } else {
-                return -1;
             }
+            return null;
         }
     }
 }

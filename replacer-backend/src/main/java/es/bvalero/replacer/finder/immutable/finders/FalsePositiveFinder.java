@@ -72,7 +72,7 @@ class FalsePositiveFinder implements ImmutableFinder, PropertyChangeListener {
                 .stream()
                 .map(FalsePositive::getExpression)
                 .collect(Collectors.toUnmodifiableList());
-            final String alternations = String.format("(%s)", FinderUtils.joinAlternate(falsePositiveExpressions));
+            final String alternations = FinderUtils.joinAlternate(falsePositiveExpressions);
             return new RunAutomaton(new RegExp(alternations).toAutomaton(new DatatypesAutomatonProvider()));
         } else {
             return null;

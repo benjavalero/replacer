@@ -1,0 +1,7 @@
+Benchmark                                                                             Mode  Cnt        Score        Error  Units
+ComposedMisspellingFinderJmhBenchmark.testWordAutomatonAlternateFinder                avgt    3     8476,021 ±   3780,748  us/op
+ComposedMisspellingFinderJmhBenchmark.testWordAutomatonFinder                         avgt    3  1073175,421 ± 272151,381  us/op
+ComposedMisspellingFinderJmhBenchmark.testWordLinearFinder                            avgt    3    73035,776 ±   5473,805  us/op
+ComposedMisspellingFinderJmhBenchmark.testWordRegexAlternateCompleteFinder            avgt    3   812866,164 ±  79311,356  us/op
+ComposedMisspellingFinderJmhBenchmark.testWordRegexAlternateCompleteSeparatorsFinder  avgt    3   886612,166 ± 232312,524  us/op
+ComposedMisspellingFinderJmhBenchmark.testWordRegexFinder                             avgt    3   596282,769 ±  47498,635  us/op

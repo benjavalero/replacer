@@ -4,9 +4,9 @@ import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.finder.immutable.ImmutableCheckedFinder;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
 import es.bvalero.replacer.finder.util.LinearMatchResult;
-import java.util.List;
 import java.util.Set;
 import java.util.regex.MatchResult;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
 /**
@@ -32,32 +32,37 @@ class XmlTagFinder extends ImmutableCheckedFinder {
         return LinearMatchFinder.find(page, this::findTag);
     }
 
-    private int findTag(WikipediaPage page, int start, List<MatchResult> matches) {
+    @Nullable
+    MatchResult findTag(WikipediaPage page, int start) {
         final String text = page.getContent();
-        final int startTag = findStartTag(text, start);
-        if (startTag >= 0) {
-            final int startTagContent = startTag + 1; // 1 = start tag length
-            final char firstChar = text.charAt(startTagContent);
-            if (Character.isLetter(firstChar) || firstChar == END_TAG_SLASH) {
-                final int endTagContent = findEndTag(text, startTagContent);
-                if (endTagContent >= 0) {
-                    final int endTag = endTagContent + 1; // 1 = end tag length
-                    final String tagContent = text.substring(startTagContent, endTagContent);
-                    if (isValidTagContent(tagContent)) {
-                        matches.add(LinearMatchResult.of(startTag, text.substring(startTag, endTag)));
+        while (start < text.length()) {
+            final int startTag = findStartTag(text, start);
+            if (startTag >= 0) {
+                final int startTagContent = startTag + 1; // 1 = start tag length
+                final char firstChar = text.charAt(startTagContent);
+                if (Character.isLetter(firstChar) || firstChar == END_TAG_SLASH) {
+                    final int endTagContent = findEndTag(text, startTagContent);
+                    if (endTagContent >= 0) {
+                        final int endTag = endTagContent + 1; // 1 = end tag length
+                        final String tagContent = text.substring(startTagContent, endTagContent);
+                        if (isValidTagContent(tagContent)) {
+                            return LinearMatchResult.of(startTag, text.substring(startTag, endTag));
+                        } else {
+                            start = endTag;
+                        }
+                    } else {
+                        // Not an XML tag
+                        start = startTagContent;
                     }
-                    return endTag;
                 } else {
                     // Not an XML tag
-                    return startTagContent;
+                    start = startTagContent;
                 }
             } else {
-                // Not an XML tag
-                return startTagContent;
+                return null;
             }
-        } else {
-            return -1;
         }
+        return null;
     }
 
     private int findStartTag(String text, int start) {

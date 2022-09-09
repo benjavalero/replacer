@@ -20,9 +20,10 @@ class SimpleFinderBenchmarkTest extends BaseFinderBenchmark {
     void testBenchmark() throws ReplacerException {
         // Load the finders
         List<BenchmarkFinder> finders = new ArrayList<>();
-        finders.add(new SimpleRegexFinder());
-        finders.add(new SimpleAutomatonFinder());
-        finders.add(new SimpleLinearFinder());
+        String word = "_";
+        finders.add(new SimpleRegexFinder(word));
+        finders.add(new SimpleAutomatonFinder(word));
+        finders.add(new SimpleLinearFinder(word));
 
         List<Finder<?>> benchmarkFinders = new ArrayList<>(finders);
         runBenchmark(benchmarkFinders, fileName);

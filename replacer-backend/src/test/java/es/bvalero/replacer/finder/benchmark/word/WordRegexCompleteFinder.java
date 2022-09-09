@@ -24,7 +24,8 @@ class WordRegexCompleteFinder implements BenchmarkFinder {
     @Override
     public Iterable<BenchmarkResult> find(WikipediaPage page) {
         final String text = page.getContent();
-        // We loop over all the words and find them completely in the text with a regex
+        // We loop over all the words and find them in the text with a regex
+        // We cannot use RegexMatchFinder in a loop
         final List<BenchmarkResult> matches = new ArrayList<>(100);
         for (Pattern pattern : this.patterns) {
             final Matcher m = pattern.matcher(text);

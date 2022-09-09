@@ -4,8 +4,8 @@ import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.finder.immutable.ImmutableFinder;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
 import es.bvalero.replacer.finder.util.LinearMatchResult;
-import java.util.List;
 import java.util.regex.MatchResult;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
 /**
@@ -27,21 +27,26 @@ class TableFinder implements ImmutableFinder {
         return LinearMatchFinder.find(page, this::findLine);
     }
 
-    private int findLine(WikipediaPage page, int start, List<MatchResult> matches) {
+    @Nullable
+    MatchResult findLine(WikipediaPage page, int start) {
         final String text = page.getContent();
-        final int startLine = findStartLine(text, start);
-        if (startLine >= 0) {
-            final int endLine = findEndLine(text, startLine);
-            // Take into account the end of file
-            final String line = endLine >= 0 ? text.substring(startLine, endLine) : text.substring(startLine);
+        while (start < text.length()) {
+            final int startLine = findStartLine(text, start);
+            if (startLine >= 0) {
+                final int endLine = findEndLine(text, startLine);
+                // Take into account the end of file
+                final String line = endLine >= 0 ? text.substring(startLine, endLine) : text.substring(startLine);
 
-            if (isImmutableLine(line)) {
-                matches.add(LinearMatchResult.of(startLine, line));
+                if (isImmutableLine(line)) {
+                    return LinearMatchResult.of(startLine, line);
+                } else {
+                    start = endLine;
+                }
+            } else {
+                return null;
             }
-            return endLine;
-        } else {
-            return -1;
         }
+        return null;
     }
 
     private int findStartLine(String text, int start) {

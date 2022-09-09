@@ -38,36 +38,39 @@ public class CoordinatesFinder implements ReplacementFinder {
         return LinearMatchFinder.find(page, this::findCompleteCoordinates);
     }
 
-    private int findCompleteCoordinates(WikipediaPage page, int start, List<MatchResult> matches) {
+    @Nullable
+    MatchResult findCompleteCoordinates(WikipediaPage page, int start) {
         final String text = page.getContent();
-
-        final LinearMatchResult latitudeMatch = findCoordinates(text, start);
-        if (latitudeMatch == null) {
-            return -1;
-        } else {
-            final int endLatitude = latitudeMatch.end();
-            final LinearMatchResult longitudeMatch = findCoordinates(text, endLatitude);
-            if (longitudeMatch == null) {
-                return endLatitude;
+        while (start < text.length()) {
+            final LinearMatchResult latitudeMatch = findCoordinates(text, start);
+            if (latitudeMatch == null) {
+                return null;
             } else {
-                // Check the space between longitude and latitude
-                final String space = text.substring(endLatitude, longitudeMatch.start());
-                if (FinderUtils.isSpace(space)) {
-                    final int startLatitude = latitudeMatch.start();
-                    final int endLongitude = longitudeMatch.end();
-                    final LinearMatchResult match = LinearMatchResult.of(
-                        startLatitude,
-                        text.substring(startLatitude, endLongitude)
-                    );
-                    match.addGroups(latitudeMatch.getGroups());
-                    match.addGroups(longitudeMatch.getGroups());
-                    matches.add(match);
-                    return endLongitude;
+                final int endLatitude = latitudeMatch.end();
+                final LinearMatchResult longitudeMatch = findCoordinates(text, endLatitude);
+                if (longitudeMatch == null) {
+                    start = endLatitude;
                 } else {
-                    return endLatitude; // Maybe the longitude is a valid latitude
+                    // Check the space between longitude and latitude
+                    final String space = text.substring(endLatitude, longitudeMatch.start());
+                    if (FinderUtils.isSpace(space)) {
+                        final int startLatitude = latitudeMatch.start();
+                        final int endLongitude = longitudeMatch.end();
+                        final LinearMatchResult match = LinearMatchResult.of(
+                            startLatitude,
+                            text.substring(startLatitude, endLongitude)
+                        );
+                        match.addGroups(latitudeMatch.getGroups());
+                        match.addGroups(longitudeMatch.getGroups());
+                        return match;
+                    } else {
+                        // Maybe the longitude is a valid latitude
+                        start = endLatitude;
+                    }
                 }
             }
         }
+        return null;
     }
 
     @Nullable

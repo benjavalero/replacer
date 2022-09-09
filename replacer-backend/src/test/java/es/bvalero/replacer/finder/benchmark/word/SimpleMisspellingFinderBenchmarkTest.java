@@ -65,7 +65,6 @@ class SimpleMisspellingFinderBenchmarkTest extends BaseFinderBenchmark {
         finders.add(new WordAutomatonAllFinder(words));
         finders.add(new WordLinearAllFinder(words));
         finders.add(new WordRegexAllCompleteFinder(words));
-        finders.add(new WordRegexAllCompleteSeparatorsFinder(words));
 
         List<Finder<?>> benchmarkFinders = new ArrayList<>(finders);
         runBenchmark(benchmarkFinders, fileName);

@@ -11,6 +11,8 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class RegexMatchFinder {
 
+    // As it returns directly the regex matches, we cannot use it in a loop.
+
     public static Iterable<MatchResult> find(String text, Pattern pattern) {
         return () -> new RegexIterator(text, pattern);
     }

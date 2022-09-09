@@ -5,9 +5,9 @@ import es.bvalero.replacer.finder.FinderPriority;
 import es.bvalero.replacer.finder.immutable.ImmutableCheckedFinder;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
 import es.bvalero.replacer.finder.util.LinearMatchResult;
-import java.util.List;
 import java.util.regex.MatchResult;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
 /**
@@ -36,29 +36,33 @@ class CursiveFinder extends ImmutableCheckedFinder {
         return LinearMatchFinder.find(page, this::findCursive);
     }
 
-    private int findCursive(WikipediaPage page, int start, List<MatchResult> matches) {
+    @Nullable
+    MatchResult findCursive(WikipediaPage page, int start) {
         final String text = page.getContent();
-        final int startCursive = findStartCursive(text, start);
-        if (startCursive >= 0) {
-            final int numQuotes = findNumQuotes(text, startCursive);
-            assert numQuotes >= 2;
-            final int startCursiveText = startCursive + numQuotes;
-            final int endCursive = findEndCursive(text, startCursiveText, numQuotes);
-            if (endCursive >= 0) {
-                if (isEmptyCursiveText(text, startCursive, endCursive, numQuotes)) {
-                    logImmutableCheck(page, startCursive, endCursive, "Empty cursive");
+        while (start < text.length()) {
+            final int startCursive = findStartCursive(text, start);
+            if (startCursive >= 0) {
+                final int numQuotes = findNumQuotes(text, startCursive);
+                assert numQuotes >= 2;
+                final int startCursiveText = startCursive + numQuotes;
+                final int endCursive = findEndCursive(text, startCursiveText, numQuotes);
+                if (endCursive >= 0) {
+                    if (isEmptyCursiveText(text, startCursive, endCursive, numQuotes)) {
+                        logImmutableCheck(page, startCursive, endCursive, "Empty cursive");
+                        start = endCursive;
+                    } else {
+                        return LinearMatchResult.of(startCursive, text.substring(startCursive, endCursive));
+                    }
                 } else {
-                    matches.add(LinearMatchResult.of(startCursive, text.substring(startCursive, endCursive)));
+                    // No cursive ending found. Notify and continue.
+                    logImmutableCheck(page, startCursive, startCursiveText, "Truncated cursive");
+                    start = startCursiveText;
                 }
-                return endCursive;
             } else {
-                // No cursive ending found. Notify and continue.
-                logImmutableCheck(page, startCursive, startCursiveText, "Truncated cursive");
-                return startCursiveText;
+                return null;
             }
-        } else {
-            return -1;
         }
+        return null;
     }
 
     private int findStartCursive(String text, int start) {

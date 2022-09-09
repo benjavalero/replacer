@@ -120,6 +120,8 @@ class ArchitectureTest {
     static final ArchRule testClasses = classes()
         .that()
         .haveSimpleNameEndingWith("Test")
+        .and()
+        .haveSimpleNameNotEndingWith("jmhTest")
         .should()
         .notHaveModifier(JavaModifier.PUBLIC);
 

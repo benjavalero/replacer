@@ -4,8 +4,8 @@ import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
 import es.bvalero.replacer.finder.util.LinearMatchResult;
-import java.util.List;
 import java.util.regex.MatchResult;
+import org.springframework.lang.Nullable;
 
 class CursiveLinearFinder implements BenchmarkFinder {
 
@@ -14,21 +14,24 @@ class CursiveLinearFinder implements BenchmarkFinder {
         return LinearMatchFinder.find(page, this::findCursive);
     }
 
-    private int findCursive(WikipediaPage page, int start, List<MatchResult> matches) {
+    @Nullable
+    MatchResult findCursive(WikipediaPage page, int start) {
         final String text = page.getContent();
-        int startCursive = findStartCursive(text, start);
-        if (startCursive >= 0) {
-            int numQuotes = findNumQuotes(text, startCursive);
-            int endQuotes = findEndQuotes(text, startCursive + numQuotes, numQuotes);
-            if (endQuotes >= 0) {
-                matches.add(LinearMatchResult.of(startCursive, text.substring(startCursive, endQuotes)));
-                return endQuotes;
+        while (start < text.length()) {
+            int startCursive = findStartCursive(text, start);
+            if (startCursive >= 0) {
+                int numQuotes = findNumQuotes(text, startCursive);
+                int endQuotes = findEndQuotes(text, startCursive + numQuotes, numQuotes);
+                if (endQuotes >= 0) {
+                    return LinearMatchResult.of(startCursive, text.substring(startCursive, endQuotes));
+                } else {
+                    start = startCursive + numQuotes;
+                }
             } else {
-                return startCursive + numQuotes;
+                return null;
             }
-        } else {
-            return -1;
         }
+        return null;
     }
 
     private int findStartCursive(String text, int start) {

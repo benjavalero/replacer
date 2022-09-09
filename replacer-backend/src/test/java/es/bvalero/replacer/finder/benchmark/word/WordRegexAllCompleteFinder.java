@@ -2,35 +2,36 @@ package es.bvalero.replacer.finder.benchmark.word;
 
 import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
-import es.bvalero.replacer.finder.benchmark.BenchmarkResult;
-import es.bvalero.replacer.finder.util.FinderUtils;
-import java.util.*;
-import java.util.regex.Matcher;
+import es.bvalero.replacer.finder.util.RegexMatchFinder;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
 
 class WordRegexAllCompleteFinder implements BenchmarkFinder {
 
     private final Pattern wordPattern;
-    private final Set<String> words;
+    private final Set<String> words = new HashSet<>();
 
     WordRegexAllCompleteFinder(Collection<String> words) {
-        this.wordPattern = Pattern.compile("\\b\\w+\\b", Pattern.UNICODE_CHARACTER_CLASS);
-        this.words = new HashSet<>(words);
+        final String leftSeparator = "(?<![\\p{L}_/.]|\\w')";
+        final String rightSeparator = "(?![_/])";
+        final String wordRegex = "\\p{L}++";
+        final String regex = leftSeparator + wordRegex + rightSeparator;
+        this.wordPattern = Pattern.compile(regex);
+        this.words.addAll(words);
     }
 
     @Override
-    public Iterable<BenchmarkResult> find(WikipediaPage page) {
-        final String text = page.getContent();
-        // Find all complete words in the text with a regex and check if they are in the list
-        final List<BenchmarkResult> matches = new ArrayList<>(100);
-        final Matcher m = this.wordPattern.matcher(text);
-        while (m.find()) {
-            final int start = m.start();
-            final String word = m.group();
-            if (this.words.contains(word) && FinderUtils.isWordCompleteInText(start, word, text)) {
-                matches.add(BenchmarkResult.of(start, word));
-            }
-        }
-        return matches;
+    public Iterable<MatchResult> findMatchResults(WikipediaPage page) {
+        return RegexMatchFinder.find(page.getContent(), wordPattern);
+    }
+
+    @Override
+    public boolean validate(MatchResult match, WikipediaPage page) {
+        // Validate first that the word is complete to improve performance
+        // The word is wrapped by non-letters, so we still need to validate the separators.
+        return this.words.contains(match.group());
     }
 }

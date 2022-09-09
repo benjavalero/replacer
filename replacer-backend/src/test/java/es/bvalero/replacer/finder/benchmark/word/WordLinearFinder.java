@@ -6,9 +6,9 @@ import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
 import es.bvalero.replacer.finder.util.LinearMatchResult;
 import java.util.Collection;
-import java.util.List;
 import java.util.regex.MatchResult;
 import org.apache.commons.collections4.IterableUtils;
+import org.springframework.lang.Nullable;
 
 class WordLinearFinder implements BenchmarkFinder {
 
@@ -21,6 +21,7 @@ class WordLinearFinder implements BenchmarkFinder {
     @SuppressWarnings("unchecked")
     @Override
     public Iterable<MatchResult> findMatchResults(WikipediaPage page) {
+        // Only works converting to list the iterables in the loop
         return IterableUtils.chainedIterable(
             words.stream().map(MisspellingLinearFinder::new).map(finder -> finder.find(page)).toArray(Iterable[]::new)
         );
@@ -38,19 +39,23 @@ class WordLinearFinder implements BenchmarkFinder {
             return IterableUtils.toList(LinearMatchFinder.find(page, this::findMisspelling));
         }
 
-        private int findMisspelling(WikipediaPage page, int start, List<MatchResult> matches) {
+        @Nullable
+        private MatchResult findMisspelling(WikipediaPage page, int start) {
             final String text = page.getContent();
-            final int startMisspelling = findStartMisspelling(text, start);
-            if (startMisspelling >= 0) {
-                // The word is wrapped by non-letters, so we still need to validate the separators.
-                if (FinderUtils.isWordCompleteInText(startMisspelling, misspelling, text)) {
-                    matches.add(LinearMatchResult.of(startMisspelling, misspelling));
+            while (start < text.length()) {
+                final int startMisspelling = findStartMisspelling(text, start);
+                if (startMisspelling >= 0) {
+                    if (FinderUtils.isWordCompleteInText(startMisspelling, misspelling, text)) {
+                        return LinearMatchResult.of(startMisspelling, misspelling);
+                    } else {
+                        // The char after the word is a non-letter, so we can start searching the next word one position after.
+                        start = startMisspelling + misspelling.length() + 1;
+                    }
+                } else {
+                    return null;
                 }
-                // The char after the word is a non-letter, so we can start searching the next word one position after.
-                return startMisspelling + misspelling.length() + 1;
-            } else {
-                return -1;
             }
+            return null;
         }
 
         private int findStartMisspelling(String text, int start) {

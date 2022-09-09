@@ -28,7 +28,7 @@ class SimpleMisspellingFinderTest {
     }
 
     @Test
-    void testWordLinearLoopFinder() {
+    void testWordLinearFinder() {
         WordLinearFinder finder = new WordLinearFinder(this.words);
         assertEquals(expected, finder.findMatches(text));
     }
@@ -102,12 +102,6 @@ class SimpleMisspellingFinderTest {
     @Test
     void testWordRegexAllCompleteFinder() {
         WordRegexAllCompleteFinder finder = new WordRegexAllCompleteFinder(this.words);
-        assertEquals(expected, finder.findMatches(text));
-    }
-
-    @Test
-    void testWordRegexAllCompleteSeparatorsFinder() {
-        WordRegexAllCompleteSeparatorsFinder finder = new WordRegexAllCompleteSeparatorsFinder(this.words);
         assertEquals(expected, finder.findMatches(text));
     }
 }

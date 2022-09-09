@@ -1,8 +1,7 @@
-                                                          simple-misspelling-benchmark.csv summary                                                           
-                FINDER                 |  Mean [TIME]  |  Min [TIME]  |  First Quartile [TIME]  |  Median [TIME]  |  Third Quartile [TIME]  |  Max [TIME]   |
--------------------------------------------------------------------------------------------------------------------------------------------------------------
-                   WordRegexAllFinder  |   169153,465  |    6163,578  |              44926,139  |      72403,828  |             243736,152  |  1449371,525  |
-               WordAutomatonAllFinder  |    80592,199  |    2161,192  |              17026,656  |      31848,906  |             119529,578  |   789223,795  |
-                  WordLinearAllFinder  |    71222,154  |    1639,386  |              13688,161  |      25934,448  |              85738,613  |   724491,893  |
-           WordRegexAllCompleteFinder  |   252372,124  |    9009,200  |              67288,679  |     128227,359  |             348379,380  |  2033669,930  |
- WordRegexAllCompleteSeparatorsFinder  |   524561,166  |   23571,946  |             155044,820  |     244980,282  |             725423,576  |  3670763,279  |
+                                                     simple-misspelling-benchmark.csv summary                                                      
+           FINDER            |  Mean [TIME]  |  Min [TIME]  |  First Quartile [TIME]  |  Median [TIME]  |  Third Quartile [TIME]  |  Max [TIME]   |
+---------------------------------------------------------------------------------------------------------------------------------------------------
+         WordRegexAllFinder  |   122789,346  |    3729,900  |              31551,125  |      59162,600  |             177854,625  |   978825,700  |
+     WordAutomatonAllFinder  |    78289,316  |    1921,900  |              15868,050  |      29658,250  |             121054,150  |   762535,300  |
+        WordLinearAllFinder  |    52410,916  |    1188,400  |              10079,675  |      18116,850  |              68047,275  |   500135,200  |
+ WordRegexAllCompleteFinder  |   325179,062  |   13892,700  |              97703,000  |     148376,700  |             436529,000  |  2308389,600  |

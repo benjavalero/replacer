@@ -6,7 +6,6 @@ import es.bvalero.replacer.finder.immutable.ImmutableCheckedFinder;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
 import es.bvalero.replacer.finder.util.LinearMatchResult;
-import java.util.List;
 import java.util.Set;
 import java.util.regex.MatchResult;
 import javax.annotation.Resource;
@@ -43,46 +42,51 @@ class CompleteTagFinder extends ImmutableCheckedFinder {
         return LinearMatchFinder.find(page, this::findCompleteTag);
     }
 
-    private int findCompleteTag(WikipediaPage page, int start, List<MatchResult> matches) {
+    @Nullable
+    MatchResult findCompleteTag(WikipediaPage page, int start) {
         final String text = page.getContent();
-        final int startCompleteTag = findStartTag(text, start);
-        if (startCompleteTag >= 0) {
-            final int startTagName = startCompleteTag + 1; // 1 = start tag length
-            final String tagName = findSupportedTag(text, startTagName);
-            if (tagName == null) {
-                // The tag name (if found) is not in the list. Continue.
-                return startTagName;
-            } else {
-                int endTagName = startTagName + tagName.length();
-                int endOpenTag = findEndTag(text, endTagName);
-                if (endOpenTag >= 0) {
-                    final String openTag = text.substring(startCompleteTag, endOpenTag);
-                    if (isSelfClosingTag(openTag)) {
-                        return endOpenTag;
-                    }
-
-                    final int endCompleteTag = findEndCompleteTag(text, endOpenTag, tagName);
-                    if (endCompleteTag >= 0) {
-                        matches.add(
-                            LinearMatchResult.of(startCompleteTag, text.substring(startCompleteTag, endCompleteTag))
-                        );
-                        return endCompleteTag;
-                    } else {
-                        // Tag not closed. Trace warning and continue.
-                        final String message = String.format("Tag %s not closed", tagName);
-                        FinderUtils.logFinderResult(page, startCompleteTag, endOpenTag, message);
-                        return endOpenTag;
-                    }
+        while (start < text.length()) {
+            final int startCompleteTag = findStartTag(text, start);
+            if (startCompleteTag >= 0) {
+                final int startTagName = startCompleteTag + 1; // 1 = start tag length
+                final String tagName = findSupportedTag(text, startTagName);
+                if (tagName == null) {
+                    // The tag name (if found) is not in the list. Continue.
+                    start = startTagName;
                 } else {
-                    // Open tag not closed. Trace warning and continue.
-                    final String message = String.format("Open tag %s not closed", tagName);
-                    FinderUtils.logFinderResult(page, startCompleteTag, endTagName, message);
-                    return endTagName;
+                    int endTagName = startTagName + tagName.length();
+                    int endOpenTag = findEndTag(text, endTagName);
+                    if (endOpenTag >= 0) {
+                        final String openTag = text.substring(startCompleteTag, endOpenTag);
+                        if (isSelfClosingTag(openTag)) {
+                            start = endOpenTag;
+                            continue;
+                        }
+
+                        final int endCompleteTag = findEndCompleteTag(text, endOpenTag, tagName);
+                        if (endCompleteTag >= 0) {
+                            return LinearMatchResult.of(
+                                startCompleteTag,
+                                text.substring(startCompleteTag, endCompleteTag)
+                            );
+                        } else {
+                            // Tag not closed. Trace warning and continue.
+                            final String message = String.format("Tag %s not closed", tagName);
+                            FinderUtils.logFinderResult(page, startCompleteTag, endOpenTag, message);
+                            start = endOpenTag;
+                        }
+                    } else {
+                        // Open tag not closed. Trace warning and continue.
+                        final String message = String.format("Open tag %s not closed", tagName);
+                        FinderUtils.logFinderResult(page, startCompleteTag, endTagName, message);
+                        start = endTagName;
+                    }
                 }
+            } else {
+                return null;
             }
-        } else {
-            return -1;
         }
+        return null;
     }
 
     private int findStartTag(String text, int start) {
