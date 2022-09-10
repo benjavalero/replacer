@@ -61,6 +61,7 @@ class DateFinderTest {
             "17 de agosto de 2.019|17 de agosto de 2019|" + SUBTYPE_DOT_YEAR,
             "17 de agosto del 2.019|17 de agosto de 2019|" + SUBTYPE_DOT_YEAR,
             "17 de setiembre de 2.019|17 de septiembre de 2019|" + SUBTYPE_DOT_YEAR,
+            "10 de septiembre, 2022|10 de septiembre de 2022|" + SUBTYPE_INCOMPLETE,
         }
     )
     void testLongDate(String date, String expected, String subtype) {
@@ -100,6 +101,7 @@ class DateFinderTest {
             "0 de septiembre de 2020",
             "7-Agosto-2019",
             "4 de septiembre, 3150",
+            "10, septiembre de 2022",
         }
     )
     void testNotDate(String date) {
