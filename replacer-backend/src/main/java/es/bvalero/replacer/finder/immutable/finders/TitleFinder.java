@@ -5,7 +5,6 @@ import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.finder.FinderPriority;
 import es.bvalero.replacer.finder.immutable.ImmutableCheckedFinder;
 import es.bvalero.replacer.finder.immutable.ImmutableFinder;
-import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
 import es.bvalero.replacer.finder.util.LinearMatchResult;
 import java.util.Arrays;
@@ -66,17 +65,11 @@ class TitleFinder extends ImmutableCheckedFinder {
         @Nullable
         MatchResult findTitleWord(WikipediaPage page, int start) {
             final String text = page.getContent();
-            while (start < text.length()) {
+            if (start < text.length()) {
                 // Find the word case-sensitive improves the performance
                 final int wordStart = text.indexOf(word, start);
                 if (wordStart >= 0) {
-                    if (FinderUtils.isWordCompleteInText(wordStart, word, text)) {
-                        return LinearMatchResult.of(wordStart, word);
-                    } else {
-                        start = wordStart + word.length();
-                    }
-                } else {
-                    return null;
+                    return LinearMatchResult.of(wordStart, word);
                 }
             }
             return null;

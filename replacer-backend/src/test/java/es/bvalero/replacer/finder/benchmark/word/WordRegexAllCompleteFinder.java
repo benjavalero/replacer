@@ -15,8 +15,8 @@ class WordRegexAllCompleteFinder implements BenchmarkFinder {
     private final Set<String> words = new HashSet<>();
 
     WordRegexAllCompleteFinder(Collection<String> words) {
-        final String leftSeparator = "(?<![\\p{L}_/.]|\\w')";
-        final String rightSeparator = "(?![_/])";
+        final String leftSeparator = "(?<![\\d_])";
+        final String rightSeparator = "(?![\\d_])";
         final String wordRegex = "\\p{L}++";
         final String regex = leftSeparator + wordRegex + rightSeparator;
         this.wordPattern = Pattern.compile(regex);

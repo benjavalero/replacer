@@ -10,7 +10,6 @@ import es.bvalero.replacer.finder.util.LinearMatchFinder;
 import es.bvalero.replacer.finder.util.LinearMatchResult;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.List;
 import java.util.regex.MatchResult;
 import javax.annotation.PostConstruct;
 import lombok.Setter;
@@ -57,9 +56,7 @@ public class MisspellingSimpleFinder extends MisspellingFinder implements Proper
             if (startWord >= 0) {
                 final int endWord = findEndWord(text, startWord);
                 final String word = text.substring(startWord, endWord);
-                // Validate first that the word is complete to improve performance
-                // The word is wrapped by non-letters, so we still need to validate the separators.
-                if (isExistingWord(word, lang) && FinderUtils.isWordCompleteInText(startWord, word, text)) {
+                if (isValid(word, startWord, text, lang)) {
                     return LinearMatchResult.of(startWord, word);
                 } else {
                     // The char after the word is a non-letter, so we can start searching the next word one position after.
@@ -92,6 +89,16 @@ public class MisspellingSimpleFinder extends MisspellingFinder implements Proper
 
     private boolean isLetter(char ch) {
         return Character.isLetter(ch);
+    }
+
+    private boolean isValid(String word, int startWord, String text, WikipediaLanguage lang) {
+        // Validate first that the word is complete to improve performance
+        // The word is wrapped by non-letters, so we still need to validate the separators.
+        // We discard some words in URLs by checking if they are wrapped by a dot or a slash.
+        return (
+            (isExistingWord(word, lang) && FinderUtils.isWordCompleteInText(startWord, word, text)) &&
+            !FinderUtils.isUrlWord(startWord, word, text)
+        );
     }
 
     @Override

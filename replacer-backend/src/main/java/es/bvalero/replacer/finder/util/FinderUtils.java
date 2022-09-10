@@ -18,8 +18,8 @@ import org.springframework.lang.Nullable;
 public class FinderUtils {
 
     private static final char MASCULINE_ORDINAL = '\u00ba'; // º
-    private static final Set<Character> INVALID_LEFT_SEPARATORS = Set.of('_', '/', '.');
-    private static final Set<Character> INVALID_RIGHT_SEPARATORS = Set.of('_', '/');
+    private static final char UNDERSCORE = '_'; // _ invalid word separator
+    private static final Set<Character> URL_SEPARATORS = Set.of('/', '.');
     private static final String ALTERNATE_SEPARATOR = "|";
     private static final String NON_BREAKING_SPACE = "&nbsp;";
     private static final String NON_BREAKING_SPACE_TEMPLATE = "{{esd}}";
@@ -114,33 +114,42 @@ public class FinderUtils {
     /***** TEXT UTILS *****/
 
     public boolean isWordCompleteInText(int startWord, String word, String text) {
+        // We check the separators are not letters. The detected word might not be complete.
+        // We check the separators are not digits. There are rare cases where the misspelling
+        // is preceded or followed by a digit, e.g. the misspelling "Km" in "Km2".
+        // We discard words preceded or followed by certain separators like '_'.
         final int endWord = startWord + word.length();
-        return isValidLeftSeparator(text, startWord) && isValidRightSeparator(text, endWord);
-    }
-
-    private boolean isValidLeftSeparator(String text, int startWord) {
-        if (startWord == 0) {
-            return true;
+        if (startWord >= 1) {
+            final char leftSeparator = text.charAt(startWord - 1);
+            if (endWord < text.length()) {
+                // Usual case: word contained in the text
+                final char rightSeparator = text.charAt(endWord);
+                return isValidSeparator(leftSeparator) && isValidSeparator(rightSeparator);
+            } else {
+                // Last word in the text with no right separator
+                return isValidSeparator(leftSeparator);
+            }
+        } else if (endWord < text.length()) {
+            // First word in the text with no left separator
+            final char rightSeparator = text.charAt(endWord);
+            return isValidSeparator(rightSeparator);
+        } else {
+            throw new IllegalArgumentException();
         }
-        final int position = startWord - 1;
-        final char separator = text.charAt(position);
-        return (
-            !Character.isLetterOrDigit(separator) &&
-            !INVALID_LEFT_SEPARATORS.contains(separator) &&
-            !isApostrophe(text, position)
-        );
     }
 
-    private boolean isApostrophe(String text, int position) {
-        return position >= 1 && text.charAt(position) == '\'' && Character.isLetterOrDigit(text.charAt(position - 1));
+    private boolean isValidSeparator(char separator) {
+        return !Character.isLetterOrDigit(separator) && separator != UNDERSCORE;
     }
 
-    private boolean isValidRightSeparator(String text, int endWord) {
-        if (endWord == text.length()) {
-            return true;
+    public boolean isUrlWord(int startWord, String word, String text) {
+        final int endWord = startWord + word.length();
+        if (startWord <= 0 || endWord >= text.length()) {
+            return false;
         }
-        final char separator = text.charAt(endWord);
-        return !Character.isLetterOrDigit(separator) && !INVALID_RIGHT_SEPARATORS.contains(separator);
+        final char left = text.charAt(startWord - 1);
+        final char right = text.charAt(endWord);
+        return left == right && URL_SEPARATORS.contains(left);
     }
 
     public boolean isWordFollowedByUpperCase(int start, String word, String text) {

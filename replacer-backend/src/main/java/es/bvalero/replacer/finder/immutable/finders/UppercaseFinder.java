@@ -159,17 +159,13 @@ public class UppercaseFinder implements ImmutableFinder, PropertyChangeListener 
         final int startUpperCase = match.start();
         final String leftTextNotTrimmed = text.substring(0, startUpperCase);
         final String leftText = StringUtils.strip(StringUtils.removeEnd(leftTextNotTrimmed, START_LINK));
-        final String upperCase = match.group();
 
         return (
-            FinderUtils.isWordCompleteInText(startUpperCase, upperCase, text) &&
-            (
-                isPrecededByPunctuation(leftText) ||
-                isPrecededByPipe(leftText) ||
-                isPrecededByCaptionSeparator(leftText) ||
-                isPrecededByTimeLineText(leftText) ||
-                isPrecededByParagraphStart(leftTextNotTrimmed)
-            )
+            isPrecededByPunctuation(leftText) ||
+            isPrecededByPipe(leftText) ||
+            isPrecededByCaptionSeparator(leftText) ||
+            isPrecededByTimeLineText(leftText) ||
+            isPrecededByParagraphStart(leftTextNotTrimmed)
         );
     }
 
