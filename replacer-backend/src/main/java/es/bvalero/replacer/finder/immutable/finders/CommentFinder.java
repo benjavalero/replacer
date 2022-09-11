@@ -37,7 +37,7 @@ class CommentFinder extends ImmutableCheckedFinder {
     @Nullable
     MatchResult findComment(WikipediaPage page, int start) {
         final String text = page.getContent();
-        while (start < text.length()) {
+        while (start >= 0 && start < text.length()) {
             final int startComment = findStartComment(text, start);
             if (startComment >= 0) {
                 final int startCommentText = startComment + START_COMMENT.length();

@@ -32,9 +32,6 @@ public class LinearMatchFinder {
 
         @Override
         public boolean hasNext() {
-            if (start >= page.getContent().length()) {
-                return false;
-            }
             MatchResult result = null;
             try {
                 result = finder.findResult(page, start);

@@ -30,7 +30,7 @@ class TableFinder implements ImmutableFinder {
     @Nullable
     MatchResult findLine(WikipediaPage page, int start) {
         final String text = page.getContent();
-        while (start < text.length()) {
+        while (start >= 0 && start < text.length()) {
             final int startLine = findStartLine(text, start);
             if (startLine >= 0) {
                 final int endLine = findEndLine(text, startLine);

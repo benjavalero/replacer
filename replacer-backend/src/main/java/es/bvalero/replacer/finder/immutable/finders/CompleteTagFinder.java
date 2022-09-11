@@ -45,7 +45,7 @@ class CompleteTagFinder extends ImmutableCheckedFinder {
     @Nullable
     MatchResult findCompleteTag(WikipediaPage page, int start) {
         final String text = page.getContent();
-        while (start < text.length()) {
+        while (start >= 0 && start < text.length()) {
             final int startCompleteTag = findStartTag(text, start);
             if (startCompleteTag >= 0) {
                 final int startTagName = startCompleteTag + 1; // 1 = start tag length

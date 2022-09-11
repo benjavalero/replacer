@@ -36,7 +36,7 @@ class IgnorableSectionFinder implements ImmutableFinder {
     @Nullable
     MatchResult findSection(WikipediaPage page, int start) {
         final String text = page.getContent();
-        while (start < text.length()) {
+        while (start >= 0 && start < text.length()) {
             final int startHeader = findStartHeader(text, start);
             if (startHeader >= 0) {
                 final int endHeader = findEndHeader(text, startHeader);

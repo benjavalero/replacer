@@ -23,7 +23,7 @@ class SimpleLinearFinder implements BenchmarkFinder {
     @Nullable
     private MatchResult findMatch(WikipediaPage page, int start) {
         final String text = page.getContent();
-        if (start < text.length()) {
+        if (start >= 0 && start < text.length()) {
             final int startMatch = findStartMatch(text, start);
             if (startMatch >= 0) {
                 return LinearMatchResult.of(startMatch, word);

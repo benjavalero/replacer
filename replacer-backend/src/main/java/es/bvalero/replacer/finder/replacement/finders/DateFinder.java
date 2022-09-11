@@ -596,7 +596,7 @@ public class DateFinder implements ReplacementFinder {
         MatchResult findMonth(WikipediaPage page, int start) {
             final WikipediaLanguage lang = page.getId().getLang();
             final String text = page.getContent();
-            while (start < text.length()) {
+            while (start >= 0 && start < text.length()) {
                 final int startMonth = findStartMonth(text, start);
                 if (startMonth >= 0) {
                     final String month = text.charAt(startMonth) + monthSearch;

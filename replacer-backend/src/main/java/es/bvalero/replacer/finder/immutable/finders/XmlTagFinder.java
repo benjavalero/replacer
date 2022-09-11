@@ -35,7 +35,7 @@ class XmlTagFinder extends ImmutableCheckedFinder {
     @Nullable
     MatchResult findTag(WikipediaPage page, int start) {
         final String text = page.getContent();
-        while (start < text.length()) {
+        while (start >= 0 && start < text.length()) {
             final int startTag = findStartTag(text, start);
             if (startTag >= 0) {
                 final int startTagContent = startTag + 1; // 1 = start tag length

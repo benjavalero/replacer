@@ -51,7 +51,7 @@ public class MisspellingSimpleFinder extends MisspellingFinder implements Proper
     private MatchResult findWord(WikipediaPage page, int start) {
         final WikipediaLanguage lang = page.getId().getLang();
         final String text = page.getContent();
-        while (start < text.length()) {
+        while (start >= 0 && start < text.length()) {
             final int startWord = findStartWord(text, start);
             if (startWord >= 0) {
                 final int endWord = findEndWord(text, startWord);

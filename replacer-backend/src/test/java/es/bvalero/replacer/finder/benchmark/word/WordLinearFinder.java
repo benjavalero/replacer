@@ -42,7 +42,7 @@ class WordLinearFinder implements BenchmarkFinder {
         @Nullable
         private MatchResult findMisspelling(WikipediaPage page, int start) {
             final String text = page.getContent();
-            while (start < text.length()) {
+            while (start >= 0 && start < text.length()) {
                 final int startMisspelling = findStartMisspelling(text, start);
                 if (startMisspelling >= 0) {
                     if (FinderUtils.isWordCompleteInText(startMisspelling, misspelling, text)) {

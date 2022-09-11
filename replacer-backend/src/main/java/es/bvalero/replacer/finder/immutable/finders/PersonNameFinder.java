@@ -70,7 +70,7 @@ class PersonNameFinder implements ImmutableFinder {
         @Nullable
         MatchResult findPersonName(WikipediaPage page, int start) {
             final String text = page.getContent();
-            while (start < text.length()) {
+            while (start >= 0 && start < text.length()) {
                 final int startPersonName = findStartPersonName(text, start);
                 if (startPersonName >= 0) {
                     if (FinderUtils.isWordFollowedByUpperCase(startPersonName, personName, text)) {

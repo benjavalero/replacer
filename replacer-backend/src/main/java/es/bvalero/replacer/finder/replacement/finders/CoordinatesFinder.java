@@ -41,7 +41,7 @@ public class CoordinatesFinder implements ReplacementFinder {
     @Nullable
     MatchResult findCompleteCoordinates(WikipediaPage page, int start) {
         final String text = page.getContent();
-        while (start < text.length()) {
+        while (start >= 0 && start < text.length()) {
             final LinearMatchResult latitudeMatch = findCoordinates(text, start);
             if (latitudeMatch == null) {
                 return null;

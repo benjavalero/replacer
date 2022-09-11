@@ -38,7 +38,7 @@ public class AcuteOFinder implements ReplacementFinder {
     @Nullable
     MatchResult findAcuteO(WikipediaPage page, int start) {
         final String text = page.getContent();
-        while (start < text.length()) {
+        while (start >= 0 && start < text.length()) {
             final int startAcuteO = findStartAcuteO(text, start);
             if (startAcuteO >= 0) {
                 final int endAcuteO = startAcuteO + ACUTE_O.length();

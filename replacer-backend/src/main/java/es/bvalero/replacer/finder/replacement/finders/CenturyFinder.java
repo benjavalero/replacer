@@ -49,7 +49,7 @@ public class CenturyFinder implements ReplacementFinder {
     @Nullable
     MatchResult findCentury(WikipediaPage page, int start) {
         final String text = page.getContent();
-        while (start < text.length()) {
+        while (start >= 0 && start < text.length()) {
             int startCentury = findStartCentury(text, start);
             if (startCentury >= 0) {
                 int endCentury = startCentury + CENTURY_WORD.length();

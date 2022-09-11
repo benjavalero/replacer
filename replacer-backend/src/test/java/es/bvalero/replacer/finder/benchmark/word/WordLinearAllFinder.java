@@ -25,7 +25,7 @@ class WordLinearAllFinder implements BenchmarkFinder {
     @Nullable
     private MatchResult findMisspelling(WikipediaPage page, int start) {
         final String text = page.getContent();
-        while (start < text.length()) {
+        while (start >= 0 && start < text.length()) {
             final int startWord = findStartWord(text, start);
             if (startWord >= 0) {
                 final int endWord = findEndWord(text, startWord);

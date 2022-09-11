@@ -17,7 +17,7 @@ class CursiveLinearFinder implements BenchmarkFinder {
     @Nullable
     MatchResult findCursive(WikipediaPage page, int start) {
         final String text = page.getContent();
-        while (start < text.length()) {
+        while (start >= 0 && start < text.length()) {
             int startCursive = findStartCursive(text, start);
             if (startCursive >= 0) {
                 int numQuotes = findNumQuotes(text, startCursive);

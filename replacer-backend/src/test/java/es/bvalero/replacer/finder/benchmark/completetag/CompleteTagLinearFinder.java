@@ -26,7 +26,7 @@ class CompleteTagLinearFinder implements BenchmarkFinder {
     @Nullable
     MatchResult findCompleteTag(WikipediaPage page, int start) {
         final String text = page.getContent();
-        while (start < text.length()) {
+        while (start >= 0 && start < text.length()) {
             int startCompleteTag = findStartCompleteTag(text, start);
             if (startCompleteTag >= 0) {
                 String tag = findSupportedTag(text, startCompleteTag + 1);
