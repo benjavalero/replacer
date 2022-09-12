@@ -2,6 +2,7 @@ package es.bvalero.replacer.finder.benchmark;
 
 import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.common.exception.ReplacerException;
+import es.bvalero.replacer.finder.Finder;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.wikipedia.api.WikipediaUtils;
 import java.util.List;
@@ -23,7 +24,7 @@ public class BaseFinderJmhBenchmark {
         sampleContents = WikipediaUtils.findSampleContents();
     }
 
-    public void runFinder(BenchmarkFinder finder) {
+    public void runFinder(Finder<?> finder) {
         sampleContents.forEach(page -> finder.find(page).forEach(result -> {}));
     }
 }

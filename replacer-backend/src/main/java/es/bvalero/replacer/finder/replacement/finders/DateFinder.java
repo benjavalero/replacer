@@ -13,12 +13,14 @@ import java.util.regex.MatchResult;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import lombok.Data;
+import lombok.Setter;
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.collections4.ListValuedMap;
 import org.apache.commons.collections4.SetValuedMap;
 import org.apache.commons.collections4.multimap.ArrayListValuedHashMap;
 import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.TestOnly;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
@@ -31,15 +33,19 @@ public class DateFinder implements ReplacementFinder {
     private static final char YEAR_DOT = '.';
     private static final int CURRENT_YEAR = LocalDate.now().getYear();
 
+    @Setter(onMethod_ = @TestOnly)
     @Resource
     private Map<String, String> monthNames;
 
+    @Setter(onMethod_ = @TestOnly)
     @Resource
     private Map<String, String> dateConnectors;
 
+    @Setter(onMethod_ = @TestOnly)
     @Resource
     private Map<String, String> yearPrepositions;
 
+    @Setter(onMethod_ = @TestOnly)
     @Resource
     private Map<String, String> dateArticles;
 

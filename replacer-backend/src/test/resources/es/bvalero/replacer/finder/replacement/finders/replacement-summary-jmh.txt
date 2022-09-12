@@ -1,0 +1,7 @@
+Benchmark                                                    Mode  Cnt     Score      Error  Units
+ReplacementFinderJmhBenchmark.testAcuteOFinder               avgt    3   117,461 ±  134,515  us/op
+ReplacementFinderJmhBenchmark.testCenturyFinder              avgt    3    94,172 ±   17,640  us/op
+ReplacementFinderJmhBenchmark.testCoordinatesFinder          avgt    3   114,930 ±   40,561  us/op
+ReplacementFinderJmhBenchmark.testDateFinder                 avgt    3  1574,768 ± 4335,939  us/op
+ReplacementFinderJmhBenchmark.testMisspellingComposedFinder  avgt    3  5836,268 ± 2179,007  us/op
+ReplacementFinderJmhBenchmark.testMisspellingSimpleFinder    avgt    3  3720,288 ± 2473,025  us/op
