@@ -11,12 +11,7 @@ import org.springframework.lang.Nullable;
 @Value(staticConstructor = "of")
 public class ReplacementType {
 
-    public static final ReplacementType DATE_DOT_YEAR = ReplacementType.of(ReplacementKind.DATE, "Año con punto");
-    public static final ReplacementType DATE_INCOMPLETE = ReplacementType.of(ReplacementKind.DATE, "Fecha incompleta");
-    public static final ReplacementType DATE_LEADING_ZERO = ReplacementType.of(ReplacementKind.DATE, "Día con cero");
-    public static final ReplacementType DATE_UPPERCASE = ReplacementType.of(ReplacementKind.DATE, "Mes en mayúscula");
-    public static final ReplacementType DATE_UNORDERED = ReplacementType.of(ReplacementKind.DATE, "Fecha desordenada");
-
+    public static final ReplacementType DATE = ReplacementType.of(ReplacementKind.STYLE, "Fechas");
     public static final ReplacementType ACUTE_O = ReplacementType.of(ReplacementKind.STYLE, "ó con tilde");
 
     public static final ReplacementType CENTURY = ReplacementType.of(ReplacementKind.STYLE, "Siglo sin versalitas");

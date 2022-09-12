@@ -37,7 +37,7 @@ class PageFindByTypeServiceTest {
         List<String> list = Arrays.asList("Bo", "C", "Aá", "Bñ", null, "Ae");
         List<String> sorted = List.of("Aá", "Ae", "Bñ", "Bo", "C");
 
-        ReplacementType type = ReplacementType.of(ReplacementKind.DATE, "Y");
+        ReplacementType type = ReplacementType.of(ReplacementKind.STYLE, "Y");
         when(pageRepository.findPageTitlesToReviewByType(WikipediaLanguage.getDefault(), type)).thenReturn(list);
 
         Collection<String> result = pageFindByTypeService.findPagesToReviewByType(WikipediaLanguage.getDefault(), type);

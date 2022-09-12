@@ -6,7 +6,6 @@ export const kindLabel: { [key: number]: string } = {
   1: 'Personalizado',
   2: 'Ortografía',
   3: 'Compuestos',
-  4: 'Fechas',
   5: 'Estilo'
 };
 

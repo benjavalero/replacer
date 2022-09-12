@@ -7,6 +7,7 @@
 - We don't need to force reindex by title anymore
 - Micro-optimization in replacement/immutable finders to improve indexing performance
 - Merge the existing two _o acute_ replacement types into one
+- Move date replacements to style kind and merge into one only type
 
 ## 2.20.0 (25 Aug 2022)
 - Revert "Count replacements by type without grouping by page"

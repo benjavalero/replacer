@@ -400,39 +400,39 @@ public class DateFinder implements ReplacementFinder {
         String prepBefore = date.getPrepBefore();
         if (date.getType() != 2 && !isValidPrepositionBefore(prepBefore, lang)) {
             prepBefore = getPrepositionDefault(lang);
-            type = ReplacementType.DATE_INCOMPLETE;
+            type = ReplacementType.DATE;
         }
 
         // Preposition After
         String prepAfter = date.getPrepAfter();
         if (!isValidPrepositionAfter(prepAfter)) {
             prepAfter = getPrepositionDefault(lang);
-            type = ReplacementType.DATE_INCOMPLETE;
+            type = ReplacementType.DATE;
         }
 
         // Year
         String year = date.getYear();
         if (!isValidYear(year)) {
             year = fixYearWithDot(year);
-            type = ReplacementType.DATE_DOT_YEAR;
+            type = ReplacementType.DATE;
         }
 
         // Day
         String day = date.getDay();
         if (date.getType() != 2 && !isValidDay(day)) {
             day = fixLeadingZero(day);
-            type = ReplacementType.DATE_LEADING_ZERO;
+            type = ReplacementType.DATE;
         }
 
         // Month
         String month = date.getMonth();
         if (!isValidMonth(month)) {
             month = fixUpperCaseMonth(month);
-            type = ReplacementType.DATE_UPPERCASE;
+            type = ReplacementType.DATE;
         }
 
         if (date.getType() == 3 || date.getType() == 4) {
-            type = ReplacementType.DATE_UNORDERED;
+            type = ReplacementType.DATE;
         } else if (type == null) {
             // Date not to be fixed
             return null;

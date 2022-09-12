@@ -36,7 +36,7 @@ class ReplacementTypeCacheRepositoryTest {
     void testGetCachedReplacementCount() throws ReplacerException {
         WikipediaLanguage lang = WikipediaLanguage.getDefault();
 
-        ReplacementKind kind = ReplacementKind.DATE;
+        ReplacementKind kind = ReplacementKind.STYLE;
         ReplacementType type1 = ReplacementType.of(kind, "Y");
         ReplacementType type2 = ReplacementType.of(kind, "Z");
         ResultCount<ReplacementType> count1 = ResultCount.of(type1, 2);
@@ -83,7 +83,7 @@ class ReplacementTypeCacheRepositoryTest {
         assertEquals(1, kindCounts.get(kind).size());
 
         // Remove a replacement count existing in cache
-        ReplacementType existing = ReplacementType.of(ReplacementKind.DATE, "Y");
+        ReplacementType existing = ReplacementType.of(ReplacementKind.STYLE, "Y");
         replacementCacheRepository.removeCachedReplacementCount(lang, existing);
 
         kindCounts = replacementCacheRepository.getKindCounts(lang);

@@ -117,11 +117,11 @@ class ReviewFindControllerTest {
 
     @Test
     void testFindRandomPageByTypeAndSubtype() throws Exception {
-        ReviewOptions options = ReviewOptions.ofType(ReplacementType.of(ReplacementKind.DATE, "Y"));
+        ReviewOptions options = ReviewOptions.ofType(ReplacementType.of(ReplacementKind.STYLE, "Y"));
         when(reviewTypeFinder.findRandomPageReview(options)).thenReturn(Optional.of(review));
 
         mvc
-            .perform(get("/api/review/random?kind=4&subtype=Y&lang=es&user=A").contentType(MediaType.APPLICATION_JSON))
+            .perform(get("/api/review/random?kind=5&subtype=Y&lang=es&user=A").contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk());
 
         verify(reviewTypeFinder).findRandomPageReview(options);
@@ -165,11 +165,11 @@ class ReviewFindControllerTest {
 
     @Test
     void testFindPageReviewByIdByTypeAndSubtype() throws Exception {
-        ReviewOptions options = ReviewOptions.ofType(ReplacementType.of(ReplacementKind.DATE, "Y"));
+        ReviewOptions options = ReviewOptions.ofType(ReplacementType.of(ReplacementKind.STYLE, "Y"));
         when(reviewTypeFinder.findPageReview(123, options)).thenReturn(Optional.of(review));
 
         mvc
-            .perform(get("/api/review/123?kind=4&subtype=Y&lang=es&user=A").contentType(MediaType.APPLICATION_JSON))
+            .perform(get("/api/review/123?kind=5&subtype=Y&lang=es&user=A").contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk());
 
         verify(reviewTypeFinder).findPageReview(123, options);

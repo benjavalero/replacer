@@ -29,7 +29,7 @@ class PageReviewByTypeServiceTest {
 
     @Test
     void testReviewAsSystemByType() {
-        ReplacementType type = ReplacementType.of(ReplacementKind.DATE, "Y");
+        ReplacementType type = ReplacementType.of(ReplacementKind.STYLE, "Y");
 
         pageReviewByTypeService.reviewPagesByType(WikipediaLanguage.getDefault(), type);
 

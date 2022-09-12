@@ -649,7 +649,7 @@ class ReviewCustomFinderTest {
             .builder()
             .start(0)
             .text("En Septiembre de 2020")
-            .type(ReplacementType.of(ReplacementKind.DATE, "Mes en mayúscula"))
+            .type(ReplacementType.DATE)
             .suggestions(List.of(Suggestion.ofNoComment("En septiembre de 2020")))
             .build();
         Collection<Replacement> replacements = List.of(replacement);

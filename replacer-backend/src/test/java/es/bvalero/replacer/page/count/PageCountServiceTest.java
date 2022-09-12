@@ -37,13 +37,13 @@ class PageCountServiceTest {
 
     @Test
     void testCountReplacementsGroupedByType() {
-        ReplacementType type = ReplacementType.of(ReplacementKind.DATE, "Y");
+        ReplacementType type = ReplacementType.of(ReplacementKind.STYLE, "Y");
         ResultCount<ReplacementType> count = ResultCount.of(type, 100);
         Collection<ResultCount<ReplacementType>> counts = Collections.singletonList(count);
 
         when(replacementTypeRepository.countReplacementsByType(WikipediaLanguage.getDefault())).thenReturn(counts);
 
-        KindCount kindCount = KindCount.of(ReplacementKind.DATE.getCode());
+        KindCount kindCount = KindCount.of(ReplacementKind.STYLE.getCode());
         kindCount.add(SubtypeCount.of("Y", 100));
         Collection<KindCount> expected = Collections.singletonList(kindCount);
 
@@ -55,10 +55,10 @@ class PageCountServiceTest {
 
     @Test
     void testCountReplacementsGroupedByTypeForBots() {
-        ReplacementType type = ReplacementType.of(ReplacementKind.DATE, "Y");
+        ReplacementType type = ReplacementType.of(ReplacementKind.STYLE, "Y");
         ResultCount<ReplacementType> count = ResultCount.of(type, 100);
         ReplacementType typeForBots = mock(ReplacementType.class);
-        when(typeForBots.getKind()).thenReturn(ReplacementKind.DATE);
+        when(typeForBots.getKind()).thenReturn(ReplacementKind.STYLE);
         when(typeForBots.getSubtype()).thenReturn("Z");
         when(typeForBots.isForBots()).thenReturn(true);
         ResultCount<ReplacementType> count2 = ResultCount.of(typeForBots, 200);
@@ -71,9 +71,9 @@ class PageCountServiceTest {
         when(userRightsService.isBot(WikipediaLanguage.getDefault(), user)).thenReturn(false);
         when(userRightsService.isBot(WikipediaLanguage.getDefault(), bot)).thenReturn(true);
 
-        KindCount kindCount = KindCount.of(ReplacementKind.DATE.getCode());
+        KindCount kindCount = KindCount.of(ReplacementKind.STYLE.getCode());
         kindCount.add(SubtypeCount.of("Y", 100));
-        KindCount kindCountBot = KindCount.of(ReplacementKind.DATE.getCode());
+        KindCount kindCountBot = KindCount.of(ReplacementKind.STYLE.getCode());
         kindCountBot.add(SubtypeCount.of("Y", 100));
         kindCountBot.add(SubtypeCount.of("Z", 200));
         Collection<KindCount> expected = List.of(kindCount);
