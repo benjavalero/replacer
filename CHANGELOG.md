@@ -1,8 +1,12 @@
 # Versions
 
 ## 2.21.0 (??)
+- Fix: don't offer the article correction for valid long dates
 - Fix: only apply an immutable if it contains the replacement (not intersects)
 - Feature: new replacement types for coordinates with wrong symbols
+- We don't need to force reindex by title anymore
+- Micro-optimization in replacement/immutable finders to improve indexing performance
+- Merge the existing two _o acute_ replacement types into one
 
 ## 2.20.0 (25 Aug 2022)
 - Revert "Count replacements by type without grouping by page"

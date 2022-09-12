@@ -12,7 +12,6 @@ import es.bvalero.replacer.finder.util.LinearMatchResult;
 import java.util.Collections;
 import java.util.List;
 import java.util.regex.MatchResult;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
@@ -65,10 +64,7 @@ public class AcuteOFinder implements ReplacementFinder {
         final LinearMatchResult wordBefore = findWordBefore(text, startAcuteO);
         final LinearMatchResult wordAfter = findWordAfter(text, endAcuteO);
         if (wordBefore != null && wordAfter != null) {
-            final LinearMatchResult match = LinearMatchResult.of(startAcuteO, ACUTE_O);
-            match.addGroup(wordBefore);
-            match.addGroup(wordAfter);
-            return match;
+            return LinearMatchResult.of(startAcuteO, ACUTE_O);
         } else {
             return null;
         }
@@ -100,17 +96,11 @@ public class AcuteOFinder implements ReplacementFinder {
     public Replacement convert(MatchResult match, WikipediaPage page) {
         return Replacement
             .builder()
-            .type(findReplacementType((LinearMatchResult) match))
+            .type(ReplacementType.ACUTE_O)
             .start(match.start())
             .text(ACUTE_O)
             .suggestions(findSuggestions())
             .build();
-    }
-
-    private ReplacementType findReplacementType(LinearMatchResult match) {
-        return (StringUtils.isNumeric(match.group(0)) && StringUtils.isNumeric(match.group(1)))
-            ? ReplacementType.ACUTE_O_NUMBERS
-            : ReplacementType.ACUTE_O_WORDS;
     }
 
     private List<Suggestion> findSuggestions() {

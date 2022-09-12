@@ -17,8 +17,7 @@ public class ReplacementType {
     public static final ReplacementType DATE_UPPERCASE = ReplacementType.of(ReplacementKind.DATE, "Mes en mayúscula");
     public static final ReplacementType DATE_UNORDERED = ReplacementType.of(ReplacementKind.DATE, "Fecha desordenada");
 
-    public static final ReplacementType ACUTE_O_NUMBERS = ReplacementType.of(ReplacementKind.STYLE, "ó entre números");
-    public static final ReplacementType ACUTE_O_WORDS = ReplacementType.of(ReplacementKind.STYLE, "ó entre palabras");
+    public static final ReplacementType ACUTE_O = ReplacementType.of(ReplacementKind.STYLE, "ó con tilde");
 
     public static final ReplacementType CENTURY = ReplacementType.of(ReplacementKind.STYLE, "Siglo sin versalitas");
     public static final ReplacementType COORDINATES = ReplacementType.of(ReplacementKind.STYLE, "Coordenadas");
