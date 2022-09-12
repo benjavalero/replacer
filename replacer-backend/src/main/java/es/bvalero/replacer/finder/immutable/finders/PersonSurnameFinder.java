@@ -62,6 +62,11 @@ class PersonSurnameFinder implements ImmutableFinder {
     }
 
     @Override
+    public boolean validate(MatchResult match, WikipediaPage page) {
+        return FinderUtils.isWordCompleteInText(match.start(), match.group(), page.getContent());
+    }
+
+    @Override
     public Immutable convert(MatchResult match, WikipediaPage page) {
         final int pos = match.group().indexOf(' ') + 1;
         final String matchText = match.group().substring(pos);
