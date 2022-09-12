@@ -119,6 +119,10 @@ public class FinderUtils {
         // is preceded or followed by a digit, e.g. the misspelling "Km" in "Km2".
         // We discard words preceded or followed by certain separators like '_'.
         final int endWord = startWord + word.length();
+        if (startWord < 0 || endWord > text.length()) {
+            throw new IllegalArgumentException();
+        }
+
         if (startWord >= 1) {
             final char leftSeparator = text.charAt(startWord - 1);
             if (endWord < text.length()) {
@@ -133,9 +137,8 @@ public class FinderUtils {
             // First word in the text with no left separator
             final char rightSeparator = text.charAt(endWord);
             return isValidSeparator(rightSeparator);
-        } else {
-            throw new IllegalArgumentException();
         }
+        return true;
     }
 
     private boolean isValidSeparator(char separator) {
