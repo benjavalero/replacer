@@ -1,6 +1,6 @@
 # Versions
 
-## 2.21.0 (??)
+## 2.21.0 (13 Sep 2022)
 - Fix: don't offer the article correction for valid long dates
 - Fix: only apply an immutable if it contains the replacement (not intersects)
 - Feature: new replacement types for coordinates with wrong symbols
