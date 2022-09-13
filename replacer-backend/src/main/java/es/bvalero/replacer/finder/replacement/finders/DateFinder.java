@@ -190,16 +190,12 @@ public class DateFinder implements ReplacementFinder {
             final String text = page.getContent();
 
             // We allow the dot to find years with a dot as a separator
-            Set<Character> allowedChars = Set.of(YEAR_DOT);
             final int startMonth = match.start();
+            final Set<Character> allowedChars = Set.of(YEAR_DOT);
             final LinearMatchResult matchBefore = FinderUtils.findWordBefore(text, startMonth, allowedChars);
             if (matchBefore == null) {
                 return convertMonthDayYear(match, page);
             } else {
-                final String spaceBefore = text.substring(matchBefore.end(), startMonth);
-                if (!isSpaceOrComma(spaceBefore)) {
-                    return convertMonthDayYear(match, page);
-                }
                 final String wordBefore = matchBefore.group();
                 if (isDay(wordBefore)) {
                     return convertLongDate(match, matchBefore, page);
@@ -221,6 +217,12 @@ public class DateFinder implements ReplacementFinder {
 
             final WikipediaLanguage lang = page.getId().getLang();
             final String text = page.getContent();
+
+            final String spaceBefore = text.substring(matchBefore.end(), matchMonth.start());
+            if (!isSpace(spaceBefore)) {
+                return null;
+            }
+
             final TokenizedDate tokenizedDate = new TokenizedDate(matchMonth);
             tokenizedDate.setType(1);
 
@@ -247,12 +249,6 @@ public class DateFinder implements ReplacementFinder {
                     }
                 }
             } else {
-                // Don't allow commas between the day and the month
-                final String spaceBefore = text.substring(matchBefore.end(), matchMonth.start());
-                if (!isSpace(spaceBefore)) {
-                    return null;
-                }
-
                 tokenizedDate.setDay(wordBefore);
                 tokenizedDate.setStart(startBefore);
             }
@@ -271,6 +267,12 @@ public class DateFinder implements ReplacementFinder {
 
             final WikipediaLanguage lang = page.getId().getLang();
             final String text = page.getContent();
+
+            final String spaceBefore = text.substring(matchBefore.end(), matchMonth.start());
+            if (!isSpace(spaceBefore)) {
+                return null;
+            }
+
             final TokenizedDate tokenizedDate = new TokenizedDate(matchMonth);
             tokenizedDate.setType(2);
 
@@ -317,19 +319,19 @@ public class DateFinder implements ReplacementFinder {
 
             // Find the year with a possible preposition in the middle
             // We allow the dot to find years with a dot as a separator
-            Set<Character> allowedChars = Set.of(YEAR_DOT);
             int endMonth = matchMonth.end();
+            final Set<Character> allowedChars = Set.of(YEAR_DOT);
             final LinearMatchResult matchAfter = FinderUtils.findWordAfter(text, endMonth, allowedChars);
             if (matchAfter == null) {
                 return false;
             } else {
-                final String spaceAfter = text.substring(endMonth, matchAfter.start());
-                if (!isSpaceOrComma(spaceAfter)) {
-                    return false;
-                }
                 final String wordAfter = matchAfter.group();
                 final int endAfter = matchAfter.end();
                 if (isPreposition(wordAfter, lang)) {
+                    final String spaceAfter = text.substring(endMonth, matchAfter.start());
+                    if (!isSpace(spaceAfter)) {
+                        return false;
+                    }
                     tokenizedDate.setPrepAfter(wordAfter);
 
                     final LinearMatchResult matchAfter2 = FinderUtils.findWordAfter(text, endAfter, allowedChars);
@@ -349,6 +351,10 @@ public class DateFinder implements ReplacementFinder {
                         }
                     }
                 } else if (isYear(wordAfter)) {
+                    final String spaceAfter = text.substring(endMonth, matchAfter.start());
+                    if (!isSpaceOrComma(spaceAfter)) {
+                        return false;
+                    }
                     tokenizedDate.setYear(wordAfter);
                     tokenizedDate.setEnd(endAfter);
                 } else {
@@ -398,6 +404,12 @@ public class DateFinder implements ReplacementFinder {
             // 4) Year,? + Month + Day
 
             final String text = page.getContent();
+
+            final String spaceBefore = text.substring(matchBefore.end(), matchMonth.start());
+            if (!isSpaceOrComma(spaceBefore)) {
+                return null;
+            }
+
             final TokenizedDate tokenizedDate = new TokenizedDate(matchMonth);
             tokenizedDate.setType(4);
 
@@ -430,47 +442,49 @@ public class DateFinder implements ReplacementFinder {
         private Replacement findDateReplacement(String dateText, TokenizedDate date, WikipediaPage page) {
             final WikipediaLanguage lang = page.getId().getLang();
 
-            // The last checks are the replacement types we want as a result
-            ReplacementType type = null;
+            boolean fixable = false;
 
             // Preposition Before
             String prepBefore = date.getPrepBefore();
             if (date.getType() != 2 && !isValidPrepositionBefore(prepBefore, lang)) {
                 prepBefore = getPrepositionDefault(lang);
-                type = ReplacementType.DATE;
+                fixable = true;
             }
 
             // Preposition After
             String prepAfter = date.getPrepAfter();
             if (!isValidPrepositionAfter(prepAfter)) {
                 prepAfter = getPrepositionDefault(lang);
-                type = ReplacementType.DATE;
+                fixable = true;
             }
 
             // Year
             String year = date.getYear();
             if (!isValidYear(year)) {
                 year = fixYearWithDot(year);
-                type = ReplacementType.DATE;
+                fixable = true;
             }
 
             // Day
             String day = date.getDay();
             if (date.getType() != 2 && !isValidDay(day)) {
                 day = fixLeadingZero(day);
-                type = ReplacementType.DATE;
+                fixable = true;
             }
 
             // Month
             String month = date.getMonth();
             if (!isValidMonth(month)) {
                 month = fixUpperCaseMonth(month);
-                type = ReplacementType.DATE;
+                fixable = true;
             }
 
+            // Unordered dates are always fixable
             if (date.getType() == 3 || date.getType() == 4) {
-                type = ReplacementType.DATE;
-            } else if (type == null) {
+                fixable = true;
+            }
+
+            if (!fixable) {
                 // Date not to be fixed
                 return null;
             }
@@ -486,7 +500,7 @@ public class DateFinder implements ReplacementFinder {
                 fixedDate = day + SPACE + prepBefore + SPACE + month + SPACE + prepAfter + SPACE + year;
             }
 
-            return buildDateReplacement(page, type, date.getStart(), dateText, fixedDate);
+            return buildDateReplacement(page, date.getStart(), dateText, fixedDate);
         }
 
         private boolean isDay(String token) {
@@ -571,7 +585,6 @@ public class DateFinder implements ReplacementFinder {
 
         private Replacement buildDateReplacement(
             WikipediaPage page,
-            ReplacementType type,
             int originalStart,
             String originalDate,
             String fixedDate
@@ -600,7 +613,13 @@ public class DateFinder implements ReplacementFinder {
                 }
             }
 
-            return Replacement.builder().type(type).start(start).text(text).suggestions(suggestions).build();
+            return Replacement
+                .builder()
+                .type(ReplacementType.DATE)
+                .start(start)
+                .text(text)
+                .suggestions(suggestions)
+                .build();
         }
 
         // Return the appropriate article for the date
