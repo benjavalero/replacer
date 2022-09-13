@@ -25,7 +25,6 @@ import org.openjdk.jmh.annotations.State;
 @State(Scope.Benchmark)
 public class ReplacementFinderJmhBenchmark extends BaseFinderJmhBenchmark {
 
-    // private final Set<String> words = new HashSet<>();
     private final AcuteOFinder acuteOFinder = new AcuteOFinder();
     private final CenturyFinder centuryFinder = new CenturyFinder();
     private final CoordinatesFinder coordinatesFinder = new CoordinatesFinder();

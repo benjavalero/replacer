@@ -104,16 +104,18 @@ class DateFinderTest {
 
     @ParameterizedTest
     @CsvSource(
-        {
-            "Desde Agosto de 2019, Desde agosto de 2019",
-            "desde Agosto de 2019, desde agosto de 2019",
-            "desde Agosto del 2019, desde agosto de 2019",
-            "desde Agosto de 2.019, desde agosto de 2019",
-            "desde Agosto 2019, desde agosto de 2019",
-            "Desde agosto 2019, Desde agosto de 2019",
-            "desde agosto 2.019, desde agosto de 2019",
-            "Desde agosto de 2.019, Desde agosto de 2019",
-            "En agosto del 2.019, En agosto de 2019",
+        delimiter = '|',
+        value = {
+            "Desde Agosto de 2019|Desde agosto de 2019",
+            "desde Agosto de 2019|desde agosto de 2019",
+            "desde Agosto del 2019|desde agosto de 2019",
+            "desde Agosto de 2.019| desde agosto de 2019",
+            "desde Agosto 2019|desde agosto de 2019",
+            "Desde agosto 2019|Desde agosto de 2019",
+            "desde agosto 2.019|desde agosto de 2019",
+            "Desde agosto, 2019|Desde agosto de 2019",
+            "Desde agosto de 2.019|Desde agosto de 2019",
+            "En agosto del 2.019|En agosto de 2019",
         }
     )
     void testMonthYear(String date, String expected) {
@@ -256,5 +258,16 @@ class DateFinderTest {
         assertEquals(expected1, replacements.get(0).getSuggestions().get(1).getText());
         assertEquals(expected2, replacements.get(0).getSuggestions().get(2).getText());
         assertEquals(ReplacementType.DATE, replacements.get(0).getType());
+    }
+
+    @Test
+    void testSeveralDates() {
+        String text = "Desde Agosto de 2022 al 2 de Septiembre de 2022.";
+
+        List<Replacement> replacements = dateFinder.findList(text);
+
+        assertEquals(2, replacements.size());
+        assertEquals(ReplacementType.DATE, replacements.get(0).getType());
+        assertEquals(ReplacementType.DATE, replacements.get(1).getType());
     }
 }
