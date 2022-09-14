@@ -47,7 +47,7 @@ public class CenturyFinder implements ReplacementFinder {
     }
 
     @Nullable
-    MatchResult findCentury(WikipediaPage page, int start) {
+    private MatchResult findCentury(WikipediaPage page, int start) {
         final String text = page.getContent();
         while (start >= 0 && start < text.length()) {
             int startCentury = findStartCentury(text, start);

@@ -37,7 +37,7 @@ class CursiveFinder extends ImmutableCheckedFinder {
     }
 
     @Nullable
-    MatchResult findCursive(WikipediaPage page, int start) {
+    private MatchResult findCursive(WikipediaPage page, int start) {
         final String text = page.getContent();
         while (start >= 0 && start < text.length()) {
             final int startCursive = findStartCursive(text, start);

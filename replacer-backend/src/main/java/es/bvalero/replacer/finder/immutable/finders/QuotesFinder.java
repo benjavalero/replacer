@@ -48,7 +48,7 @@ abstract class QuotesFinder extends ImmutableCheckedFinder {
     }
 
     @Nullable
-    MatchResult findQuote(WikipediaPage page, int start) {
+    private MatchResult findQuote(WikipediaPage page, int start) {
         final String text = page.getContent();
         while (start >= 0 && start < text.length()) {
             final int startQuote = findStartQuote(text, start);

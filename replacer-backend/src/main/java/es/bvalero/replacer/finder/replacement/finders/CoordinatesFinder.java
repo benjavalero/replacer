@@ -39,7 +39,7 @@ public class CoordinatesFinder implements ReplacementFinder {
     }
 
     @Nullable
-    MatchResult findCompleteCoordinates(WikipediaPage page, int start) {
+    private MatchResult findCompleteCoordinates(WikipediaPage page, int start) {
         final String text = page.getContent();
         while (start >= 0 && start < text.length()) {
             final LinearMatchResult latitudeMatch = findCoordinates(text, start);

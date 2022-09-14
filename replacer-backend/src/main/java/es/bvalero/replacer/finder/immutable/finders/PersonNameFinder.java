@@ -68,7 +68,7 @@ class PersonNameFinder implements ImmutableFinder {
         }
 
         @Nullable
-        MatchResult findPersonName(WikipediaPage page, int start) {
+        private MatchResult findPersonName(WikipediaPage page, int start) {
             final String text = page.getContent();
             while (start >= 0 && start < text.length()) {
                 final int startPersonName = findStartPersonName(text, start);

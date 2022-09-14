@@ -63,7 +63,7 @@ class TitleFinder extends ImmutableCheckedFinder {
         }
 
         @Nullable
-        MatchResult findTitleWord(WikipediaPage page, int start) {
+        private MatchResult findTitleWord(WikipediaPage page, int start) {
             final String text = page.getContent();
             if (start >= 0 && start < text.length()) {
                 // Find the word case-sensitive improves the performance
