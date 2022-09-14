@@ -7,10 +7,7 @@ import es.bvalero.replacer.finder.replacement.ReplacementFinder;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
 import es.bvalero.replacer.finder.util.LinearMatchResult;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.MatchResult;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
@@ -36,6 +33,16 @@ public class CenturyFinder implements ReplacementFinder {
         "d.&nbsp;C.",
         "d.{{esd}}C."
     );
+    private static final int MAX_SPACE_LENGTH = FinderUtils.SPACES
+        .stream()
+        .map(String::length)
+        .max(Comparator.comparingInt(o -> o))
+        .orElse(0);
+    private static final int MAX_ERA_LENGTH = ERA_WORDS
+        .stream()
+        .map(String::length)
+        .max(Comparator.comparingInt(o -> o))
+        .orElse(0);
 
     @Override
     public Iterable<MatchResult> findMatchResults(WikipediaPage page) {
@@ -55,14 +62,14 @@ public class CenturyFinder implements ReplacementFinder {
                 int endCentury = startCentury + CENTURY_WORD.length();
                 final String centuryWord = findCenturyWord(text, startCentury);
                 if (centuryWord == null) {
-                    start = endCentury;
+                    start = endCentury + 1;
                     continue;
                 }
 
                 // Check the century number
                 final LinearMatchResult centuryNumber = findCenturyNumber(text, endCentury);
                 if (centuryNumber == null) {
-                    start = endCentury;
+                    start = endCentury + 1;
                     continue;
                 } else {
                     endCentury = centuryNumber.end();
@@ -75,9 +82,9 @@ public class CenturyFinder implements ReplacementFinder {
                 }
 
                 // Check the link
-                Boolean isLinked = isLinked(text, startCentury, endCentury);
+                final Boolean isLinked = isLinked(text, startCentury, endCentury);
                 if (isLinked == null) {
-                    start = endCentury;
+                    start = endCentury + 1;
                     continue;
                 } else if (isLinked) {
                     startCentury -= 2;
@@ -143,12 +150,15 @@ public class CenturyFinder implements ReplacementFinder {
 
     @Nullable
     private LinearMatchResult findEra(String text, int endCenturyNumber) {
-        final String postCentury = text.substring(endCenturyNumber, Math.min(endCenturyNumber + 6, text.length())); // 6 = &nbsp; length
+        final String postCentury = text.substring(
+            endCenturyNumber,
+            Math.min(endCenturyNumber + MAX_SPACE_LENGTH, text.length())
+        );
         final String eraSpace = FinderUtils.SPACES.stream().filter(postCentury::startsWith).findAny().orElse(null);
         if (eraSpace != null) {
             final int startEra = endCenturyNumber + eraSpace.length();
-            final String eraText = text.substring(startEra, Math.min(startEra + 10, text.length())); // 10 is the maximum length of an era
-            String era = ERA_WORDS.stream().filter(eraText::startsWith).findAny().orElse(null);
+            final String eraText = text.substring(startEra, Math.min(startEra + MAX_ERA_LENGTH, text.length()));
+            final String era = ERA_WORDS.stream().filter(eraText::startsWith).findAny().orElse(null);
             if (era != null) {
                 return LinearMatchResult.of(startEra, era);
             }
@@ -159,8 +169,8 @@ public class CenturyFinder implements ReplacementFinder {
     // True if linked; False if not linked; Null if linked not closed or open.
     @Nullable
     private Boolean isLinked(String text, int start, int end) {
-        int startLink = Math.max(0, start - 2);
-        int endLink = Math.min(text.length(), end + 2);
+        final int startLink = Math.max(0, start - 2);
+        final int endLink = Math.min(text.length(), end + 2);
         final String leftLink = text.substring(startLink, start);
         final String rightLink = text.substring(end, endLink);
         if ("[[".equals(leftLink) && "]]".equals(rightLink)) {
