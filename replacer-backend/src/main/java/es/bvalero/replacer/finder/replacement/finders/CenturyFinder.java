@@ -178,7 +178,7 @@ public class CenturyFinder implements ReplacementFinder {
 
         final String centuryText = match.group();
         final String centuryWord = match.group(0);
-        final String centuryNumber = match.group(1);
+        final String centuryNumber = FinderUtils.toUpperCase(match.group(1));
         final String era = match.groupCount() == 3 ? match.group(2).substring(0, 1) : EMPTY;
         final boolean linked = centuryText.startsWith("[[");
 

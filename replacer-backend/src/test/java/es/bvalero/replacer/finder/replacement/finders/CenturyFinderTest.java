@@ -21,6 +21,7 @@ class CenturyFinderTest {
             "El siglo V., siglo V, {{siglo|V||s}}",
             "El siglo XXI., siglo XXI, {{siglo|XXI||s}}",
             "El siglo XIII., siglo XIII, {{siglo|XIII||s}}",
+            "El siglo xx., siglo xx, {{siglo|XX||s}}",
         }
     )
     void testCenturyLowerCase(String text, String century, String expected) {
