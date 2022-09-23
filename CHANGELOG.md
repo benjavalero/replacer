@@ -1,5 +1,8 @@
 # Versions
 
+## 2.21.1 (23 Sep 2022)
+- Fix parsing response from Wikipedia API
+
 ## 2.21.0 (13 Sep 2022)
 - Fix: don't offer the article correction for valid long dates
 - Fix: only apply an immutable if it contains the replacement (not intersects)

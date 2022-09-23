@@ -269,7 +269,7 @@ class WikipediaPageApiRepository implements WikipediaPageRepository, WikipediaUs
             .level(Integer.parseInt(section.getLevel()))
             .index(Integer.parseInt(section.getIndex()))
             .byteOffset(section.getByteoffset())
-            .anchor(section.getAnchor())
+            .anchor(Objects.requireNonNullElse(section.getLinkAnchor(), section.getAnchor()))
             .build();
     }
 

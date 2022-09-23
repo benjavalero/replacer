@@ -143,6 +143,10 @@ class WikipediaApiResponse {
         private String fromtitle;
         private Integer byteoffset;
         private String anchor;
+        private String linkAnchor;
+
+        @JsonProperty("html-summary")
+        private String htmlSummary;
     }
 
     @Data
