@@ -1,5 +1,8 @@
 # Versions
 
+## 2.21.2 (??)
+- Ignore more template parameters
+
 ## 2.21.1 (23 Sep 2022)
 - Fix parsing response from Wikipedia API
 
