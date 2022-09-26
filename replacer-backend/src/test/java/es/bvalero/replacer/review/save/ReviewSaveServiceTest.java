@@ -1,5 +1,7 @@
 package es.bvalero.replacer.review.save;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
 import es.bvalero.replacer.common.domain.*;
@@ -114,5 +116,54 @@ class ReviewSaveServiceTest {
         verify(pageRepository).updatePageLastUpdate(wikipediaPageId, LocalDate.now());
         verify(replacementTypeRepository, times(1)).updateReviewer(anyCollection());
         verify(customRepository, times(1)).addCustom(any(CustomModel.class));
+    }
+
+    @Test
+    void testBuildEditSummary() {
+        int pageId = 123;
+        WikipediaPageId wikipediaPageId = WikipediaPageId.of(WikipediaLanguage.getDefault(), pageId);
+        String reviewer = "X";
+
+        ReviewedReplacement r1 = ReviewedReplacement
+            .builder()
+            .pageId(wikipediaPageId)
+            .type(ReplacementType.of(ReplacementKind.SIMPLE, "1"))
+            .start(1)
+            .reviewer(reviewer)
+            .fixed(true)
+            .build();
+        ReviewedReplacement r2 = ReviewedReplacement
+            .builder()
+            .pageId(wikipediaPageId)
+            .type(ReplacementType.of(ReplacementKind.COMPOSED, "2"))
+            .start(2)
+            .reviewer(reviewer)
+            .fixed(true)
+            .build();
+        ReviewedReplacement r3 = ReviewedReplacement
+            .builder()
+            .pageId(wikipediaPageId)
+            .type(ReplacementType.of(ReplacementKind.CUSTOM, "3"))
+            .start(3)
+            .cs(false)
+            .reviewer(reviewer)
+            .fixed(true)
+            .build();
+        ReviewedReplacement r4 = ReviewedReplacement
+            .builder()
+            .pageId(wikipediaPageId)
+            .type(ReplacementType.DATE)
+            .start(4)
+            .reviewer(reviewer)
+            .fixed(true)
+            .build();
+        List<ReviewedReplacement> reviewedReplacements = List.of(r1, r2, r3, r4);
+
+        String summary = reviewSaveService.buildEditSummary(reviewedReplacements, false);
+        assertTrue(summary.contains("«1»"));
+        assertTrue(summary.contains("«2»"));
+        assertTrue(summary.contains("«3»"));
+        assertFalse(summary.contains("«Fechas»"));
+        assertTrue(summary.contains("Fechas"));
     }
 }

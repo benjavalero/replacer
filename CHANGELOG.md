@@ -2,6 +2,7 @@
 
 ## 2.21.2 (??)
 - Ignore more template parameters
+- Fix: don't quote generic replacement types in the edit summary
 
 ## 2.21.1 (23 Sep 2022)
 - Fix parsing response from Wikipedia API

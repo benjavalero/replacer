@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.VisibleForTesting;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
@@ -61,11 +62,13 @@ class ReviewSaveService {
         );
     }
 
-    private String buildEditSummary(Collection<ReviewedReplacement> reviewedReplacements, boolean applyCosmetics) {
+    @VisibleForTesting
+    String buildEditSummary(Collection<ReviewedReplacement> reviewedReplacements, boolean applyCosmetics) {
         Collection<String> fixed = reviewedReplacements
             .stream()
             .filter(ReviewedReplacement::isFixed)
-            .map(r -> "«" + r.getType().getSubtype() + "»")
+            .map(ReviewedReplacement::getType)
+            .map(this::buildSubtypeSummary)
             .collect(Collectors.toUnmodifiableSet());
         if (fixed.isEmpty()) {
             throw new IllegalArgumentException("No fixed replacements when building edit summary");
@@ -79,6 +82,19 @@ class ReviewSaveService {
             summary.append(" + ").append(COSMETIC_CHANGES);
         }
         return summary.toString();
+    }
+
+    private String buildSubtypeSummary(ReplacementType type) {
+        switch (type.getKind()) {
+            case SIMPLE:
+            case COMPOSED:
+            case CUSTOM:
+                return "«" + type.getSubtype() + "»";
+            case EMPTY:
+                throw new IllegalArgumentException();
+            default:
+                return type.getSubtype();
+        }
     }
 
     void markAsReviewed(Collection<ReviewedReplacement> reviewedReplacements, boolean updateDate) {
