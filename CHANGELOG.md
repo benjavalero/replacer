@@ -1,6 +1,6 @@
 # Versions
 
-## 2.21.2 (??)
+## 2.21.2 (28 Sep 2022)
 - Ignore more template parameters
 - Fix: don't quote generic replacement types in the edit summary
 
