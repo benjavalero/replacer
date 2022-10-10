@@ -8,7 +8,7 @@ INSERT INTO replacement (page_id, lang, kind, subtype, start, context)
 INSERT INTO replacement (page_id, lang, kind, subtype, start, context)
   VALUES (1, 'es', 3, 'aún así', 0, '');
 INSERT INTO replacement (page_id, lang, kind, subtype, start, context)
-  VALUES (1, 'es', 4, 'Mes en mayúscula', 0, '');
+  VALUES (1, 'es', 5, 'Fechas', 0, '');
 INSERT INTO replacement (page_id, lang, kind, subtype, start, context)
   VALUES (1, 'es', 2, 'publica', 0, '');
 INSERT INTO replacement (page_id, lang, kind, subtype, start, context)

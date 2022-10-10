@@ -27,7 +27,6 @@ CREATE TABLE IF NOT EXISTS replacement_kind (
 
 INSERT INTO replacement_kind (code, name) VALUES (2, 'SIMPLE');
 INSERT INTO replacement_kind (code, name) VALUES (3, 'COMPOSED');
-INSERT INTO replacement_kind (code, name) VALUES (4, 'DATE');
 INSERT INTO replacement_kind (code, name) VALUES (5, 'STYLE');
 
 CREATE TABLE IF NOT EXISTS replacement (
