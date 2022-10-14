@@ -1,5 +1,8 @@
 # Versions
 
+## 2.21.3 (??)
+- On composed misspellings check only that the found replacement is complete on the right
+
 ## 2.21.2 (28 Sep 2022)
 - Ignore more template parameters
 - Fix: don't quote generic replacement types in the edit summary

@@ -306,4 +306,23 @@ class MisspellingComposedFinderTest {
             .build();
         assertEquals(Set.of(expected), new HashSet<>(results));
     }
+
+    @Test
+    void testMisspellingWithSingleQuotes() {
+        String text = "'''Norteamérica''', es un continente.";
+
+        ComposedMisspelling misspelling = ComposedMisspelling.of("''', es", true, "''' es");
+        this.fakeUpdateMisspellingList(List.of(misspelling));
+
+        List<Replacement> results = misspellingComposedFinder.findList(text);
+
+        Replacement expected = Replacement
+            .builder()
+            .start(15)
+            .text("''', es")
+            .type(ReplacementType.of(ReplacementKind.COMPOSED, "''', es"))
+            .suggestions(List.of(Suggestion.ofNoComment("''', es"), Suggestion.ofNoComment("''' es")))
+            .build();
+        assertEquals(Set.of(expected), new HashSet<>(results));
+    }
 }
