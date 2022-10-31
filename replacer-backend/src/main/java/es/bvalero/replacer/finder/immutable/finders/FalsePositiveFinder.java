@@ -18,7 +18,9 @@ import java.util.*;
 import java.util.regex.MatchResult;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
+import lombok.Setter;
 import org.apache.commons.collections4.SetValuedMap;
+import org.jetbrains.annotations.TestOnly;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.logging.LogLevel;
 import org.springframework.lang.Nullable;
@@ -31,6 +33,7 @@ import org.springframework.stereotype.Component;
 @Component
 class FalsePositiveFinder implements ImmutableFinder, PropertyChangeListener {
 
+    @Setter(onMethod_ = @TestOnly)
     @Autowired
     private FalsePositiveLoader falsePositiveLoader;
 

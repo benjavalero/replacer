@@ -10,7 +10,9 @@ import es.bvalero.replacer.finder.util.LinearMatchResult;
 import java.util.Set;
 import java.util.regex.MatchResult;
 import javax.annotation.Resource;
+import lombok.Setter;
 import org.apache.commons.collections4.IterableUtils;
+import org.jetbrains.annotations.TestOnly;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
@@ -25,6 +27,7 @@ import org.springframework.stereotype.Component;
 @Component
 class PersonNameFinder implements ImmutableFinder {
 
+    @Setter(onMethod_ = @TestOnly)
     @Resource
     private Set<String> personNames;
 

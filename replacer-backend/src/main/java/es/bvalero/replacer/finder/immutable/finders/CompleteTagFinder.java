@@ -9,6 +9,8 @@ import es.bvalero.replacer.finder.util.LinearMatchResult;
 import java.util.Set;
 import java.util.regex.MatchResult;
 import javax.annotation.Resource;
+import lombok.Setter;
+import org.jetbrains.annotations.TestOnly;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
@@ -23,6 +25,7 @@ class CompleteTagFinder extends ImmutableCheckedFinder {
     private static final String END_SELF_CLOSING_TAG = "/>";
     private static final String START_CLOSING_TAG = "</";
 
+    @Setter(onMethod_ = @TestOnly)
     @Resource
     private Set<String> completeTags;
 

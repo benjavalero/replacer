@@ -14,9 +14,11 @@ import java.util.*;
 import java.util.regex.MatchResult;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
+import lombok.Setter;
 import org.apache.commons.collections4.SetValuedMap;
 import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.TestOnly;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
@@ -38,9 +40,11 @@ class TemplateFinder implements ImmutableFinder {
     private static final char PIPE = '|';
     private static final char COLON = ':';
 
+    @Setter(onMethod_ = @TestOnly)
     @Resource
     private List<String> templateParams;
 
+    @Setter(onMethod_ = @TestOnly)
     @Autowired
     private UppercaseFinder uppercaseFinder;
 
