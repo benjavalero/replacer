@@ -28,7 +28,7 @@ class ComposedMisspellingFinderBenchmarkTest extends BaseFinderBenchmark {
     private static final String fileName = "word/composed-misspelling-benchmark.csv";
 
     @Test
-    void testWordFinderBenchmark() throws ReplacerException {
+    void testBenchmark() throws ReplacerException {
         // Load the misspellings
         ComposedMisspellingLoader composedMisspellingLoader = new ComposedMisspellingLoader();
         ListingFinder listingFinder = new ListingOfflineFinder();

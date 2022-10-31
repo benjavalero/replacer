@@ -163,3 +163,18 @@ A custom `logback-spring.xml` exists to simplify the log pattern, and include a 
 The default logging level is DEBUG, using INFO for calls in controllers and WARNING for suspicious replacements or immutables.
 
 Finally, we use the annotation `@Loggable` provided by dependency `com.github.rozidan.logger-spring-boot`. It _wraps_ the annotated methods by aspects logging the start and the end of the method, displaying the elapsed time, warning about too long time, parameters, etc. Note that Spring provides a limited AspectJ solution: as it works proxying the classes, Spring adds the functionality in runtime and therefore it can only be applied in public methods and in calls from different classes.
+
+## Benchmarks
+
+For some critical finders, we can run benchmarks to find the best approach.
+Take into account that each finder is run more than one million of times (once per indexed page) so any small difference of microseconds might result in an overall difference of minutes when dump indexing.
+
+Each benchmark runs the finders against a sample of 50 pages. Note that resulting times depend strongly on the machine where the benchamrks have been run.
+
+Benchmarks in Replacer are test classes extending `BaseFinderBenchmark` and having `BenchmarkTest` as a name suffix to be ignored.
+
+For each finder (usually different approaches for the same purpose), the test method `testBenchmark` runs the finder several times (100 times by default) to warm up, and then it runs again the finder several times (1000 times by default) and prints the overall time.
+This is done for each page in the sample. This results into a text file with 50 lines per finder.
+Each time value represents 1000 (or the given value) iterations of the finder in µs.
+
+The class also contains a main method which reads the previous text file a generates a boxplot which allows comparing the times of the different approaches, along with a text file containing the classic five-number summary with the most important percentiles. These statistics help us not only to compare the different approaches in general, but also how the finders behave with simple or complex pages which in theory result into lower or higher times.

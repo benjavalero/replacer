@@ -25,7 +25,7 @@ class FalsePositiveFinderBenchmarkTest extends BaseFinderBenchmark {
     private static final String fileName = "word/false-positive-benchmark.csv";
 
     @Test
-    void testWordFinderBenchmark() throws ReplacerException {
+    void testBenchmark() throws ReplacerException {
         // Load the false positives
         FalsePositiveLoader falsePositiveLoader = new FalsePositiveLoader();
         ListingFinder listingFinder = new ListingOfflineFinder();
