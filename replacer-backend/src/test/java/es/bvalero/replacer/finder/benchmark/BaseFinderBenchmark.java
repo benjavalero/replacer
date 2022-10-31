@@ -73,7 +73,7 @@ public abstract class BaseFinderBenchmark {
                     // Only transform the iterable without validating the positions not to penalize the performance of the benchmark
                     finder.find(page).forEach(result -> {});
                 }
-                double end = (double) (System.nanoTime() - start) / 1000.0; // In µs
+                double end = (double) (System.nanoTime() - start) / (double) numIterations; // In ns
                 if (print) {
                     String time = finder.getClass().getSimpleName() + '\t' + end + '\n';
                     print(writer, time);

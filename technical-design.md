@@ -173,9 +173,8 @@ Each benchmark runs the finders against a sample of 50 pages. Note that resultin
 
 Benchmarks in Replacer are test classes extending `BaseFinderBenchmark` and having `BenchmarkTest` as a name suffix to be ignored.
 
-For each finder (usually different approaches for the same purpose), the test method `testBenchmark` runs the finder several times (100 times by default) to warm up, and then it runs again the finder several times (1000 times by default) and prints the overall time.
+For each finder (usually different approaches for the same purpose), the test method `testBenchmark` runs the finder several times (100 times by default) to warm up, and then it runs again the finder several times (1000 times by default) and prints the average time per iteration (in ns).
 This is done for each page in the sample. This results into a text file with 50 lines per finder.
-Each time value represents 1000 (or the given value) iterations of the finder in µs.
 
 The class also contains a main method which reads the previous text file a generates a boxplot which allows comparing the times of the different approaches, along with a text file containing the classic five-number summary with the most important percentiles. These statistics help us not only to compare the different approaches in general, but also how the finders behave with simple or complex pages which in theory result into lower or higher times.
 
