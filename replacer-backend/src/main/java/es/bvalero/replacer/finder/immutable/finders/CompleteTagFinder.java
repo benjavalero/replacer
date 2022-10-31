@@ -50,44 +50,44 @@ class CompleteTagFinder extends ImmutableCheckedFinder {
         final String text = page.getContent();
         while (start >= 0 && start < text.length()) {
             final int startCompleteTag = findStartTag(text, start);
-            if (startCompleteTag >= 0) {
-                final int startTagName = startCompleteTag + 1; // 1 = start tag length
-                final String tagName = findSupportedTag(text, startTagName);
-                if (tagName == null) {
-                    // The tag name (if found) is not in the list. Continue.
-                    start = startTagName;
-                } else {
-                    int endTagName = startTagName + tagName.length();
-                    int endOpenTag = findEndTag(text, endTagName);
-                    if (endOpenTag >= 0) {
-                        final String openTag = text.substring(startCompleteTag, endOpenTag);
-                        if (isSelfClosingTag(openTag)) {
-                            start = endOpenTag;
-                            continue;
-                        }
-
-                        final int endCompleteTag = findEndCompleteTag(text, endOpenTag, tagName);
-                        if (endCompleteTag >= 0) {
-                            return LinearMatchResult.of(
-                                startCompleteTag,
-                                text.substring(startCompleteTag, endCompleteTag)
-                            );
-                        } else {
-                            // Tag not closed. Trace warning and continue.
-                            final String message = String.format("Tag %s not closed", tagName);
-                            FinderUtils.logFinderResult(page, startCompleteTag, endOpenTag, message);
-                            start = endOpenTag;
-                        }
-                    } else {
-                        // Open tag not closed. Trace warning and continue.
-                        final String message = String.format("Open tag %s not closed", tagName);
-                        FinderUtils.logFinderResult(page, startCompleteTag, endTagName, message);
-                        start = endTagName;
-                    }
-                }
-            } else {
+            if (startCompleteTag < 0) {
                 return null;
             }
+
+            final int startTagName = startCompleteTag + 1; // 1 = start tag length
+            final String tagName = findSupportedTag(text, startTagName);
+            if (tagName == null) {
+                // The tag name (if found) is not in the list
+                start = startTagName;
+                continue;
+            }
+
+            int endTagName = startTagName + tagName.length();
+            int endOpenTag = findEndTag(text, endTagName);
+            if (endOpenTag < 0) {
+                // Open tag not closed
+                final String message = String.format("Open tag %s not closed", tagName);
+                FinderUtils.logFinderResult(page, startCompleteTag, endTagName, message);
+                start = endTagName;
+                continue;
+            }
+
+            final String openTag = text.substring(startCompleteTag, endOpenTag);
+            if (isSelfClosingTag(openTag)) {
+                start = endOpenTag;
+                continue;
+            }
+
+            final int endCompleteTag = findEndCompleteTag(text, endOpenTag, tagName);
+            if (endCompleteTag < 0) {
+                // Tag not closed
+                final String message = String.format("Tag %s not closed", tagName);
+                FinderUtils.logFinderResult(page, startCompleteTag, endOpenTag, message);
+                start = endOpenTag;
+                continue;
+            }
+
+            return LinearMatchResult.of(startCompleteTag, text.substring(startCompleteTag, endCompleteTag));
         }
         return null;
     }

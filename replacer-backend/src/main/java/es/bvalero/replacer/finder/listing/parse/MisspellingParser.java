@@ -17,16 +17,10 @@ interface MisspellingParser<T extends Misspelling> extends ListingParser<T> {
     @Override
     @Nullable
     default T parseItemLine(String itemLine) {
-        T misspelling = null;
-
-        String[] tokens = StringUtils.splitPreserveAllTokens(itemLine, '|');
+        final String[] tokens = StringUtils.splitPreserveAllTokens(itemLine, '|');
         if (tokens.length >= 3) {
-            String word = tokens[0].trim();
-            boolean cs = CASE_SENSITIVE_VALUE.equalsIgnoreCase(tokens[1].trim());
-            // If the comment contains a pipe then we need to re-join it
-            String comment = StringUtils.join(ArrayUtils.subarray(tokens, 2, tokens.length), '|').trim();
             try {
-                misspelling = buildMisspelling(word, cs, comment);
+                return buildMisspelling(tokens);
             } catch (IllegalArgumentException e) {
                 LogHolder.LOGGER.warn("Ignore not valid misspelling: " + e.getMessage());
             }
@@ -34,7 +28,15 @@ interface MisspellingParser<T extends Misspelling> extends ListingParser<T> {
             LogHolder.LOGGER.warn("Bad formatted misspelling: {}", itemLine);
         }
 
-        return misspelling;
+        return null;
+    }
+
+    default T buildMisspelling(String[] tokens) {
+        final String word = tokens[0].trim();
+        final boolean cs = CASE_SENSITIVE_VALUE.equalsIgnoreCase(tokens[1].trim());
+        // If the comment contains a pipe then we need to re-join it
+        final String comment = StringUtils.join(ArrayUtils.subarray(tokens, 2, tokens.length), '|').trim();
+        return buildMisspelling(word, cs, comment);
     }
 
     T buildMisspelling(String word, boolean cs, String comment);
