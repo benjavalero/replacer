@@ -14,8 +14,6 @@ import java.util.Set;
 import java.util.regex.MatchResult;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
-import lombok.Setter;
-import org.jetbrains.annotations.TestOnly;
 import org.springframework.stereotype.Component;
 
 /**
@@ -27,7 +25,6 @@ class PersonSurnameFinder implements ImmutableFinder {
 
     private RunAutomaton automaton;
 
-    @Setter(onMethod_ = @TestOnly)
     @Resource
     private Set<String> personSurnames;
 

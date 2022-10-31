@@ -13,8 +13,6 @@ import java.util.regex.MatchResult;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
-import lombok.Setter;
-import org.jetbrains.annotations.TestOnly;
 import org.springframework.stereotype.Component;
 
 /** Find some ignorable templates. In case they are found the complete text must be ignored. */
@@ -23,7 +21,6 @@ class IgnorableTemplateFinder implements ImmutableFinder {
 
     private RunAutomaton automaton;
 
-    @Setter(onMethod_ = @TestOnly)
     @Resource
     private List<String> ignorableTemplates;
 

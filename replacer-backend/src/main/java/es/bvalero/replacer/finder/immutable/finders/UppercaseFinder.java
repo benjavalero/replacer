@@ -22,11 +22,9 @@ import java.util.regex.MatchResult;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import lombok.Getter;
-import lombok.Setter;
 import org.apache.commons.collections4.SetValuedMap;
 import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
 import org.apache.commons.lang3.StringUtils;
-import org.jetbrains.annotations.TestOnly;
 import org.jetbrains.annotations.VisibleForTesting;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.logging.LogLevel;
@@ -62,7 +60,6 @@ public class UppercaseFinder implements ImmutableFinder, PropertyChangeListener 
     private static final String PIPE = "|";
     private static final char NEW_LINE = '\n';
 
-    @Setter(onMethod_ = @TestOnly)
     @Autowired
     private SimpleMisspellingLoader simpleMisspellingLoader;
 

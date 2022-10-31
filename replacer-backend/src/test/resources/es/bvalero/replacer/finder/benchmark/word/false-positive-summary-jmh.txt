@@ -1,7 +1,0 @@
-Benchmark                                                                       Mode  Cnt       Score       Error  Units
-FalsePositiveFinderJmhBenchmark.testWordAutomatonAlternateFinder                avgt    3    4597,973 ±   182,219  us/op
-FalsePositiveFinderJmhBenchmark.testWordAutomatonFinder                         avgt    3  448014,168 ± 24144,273  us/op
-FalsePositiveFinderJmhBenchmark.testWordLinearFinder                            avgt    3   32638,142 ±   563,306  us/op
-FalsePositiveFinderJmhBenchmark.testWordRegexAlternateCompleteFinder            avgt    3  404130,453 ± 32171,610  us/op
-FalsePositiveFinderJmhBenchmark.testWordRegexAlternateCompleteSeparatorsFinder  avgt    3  478931,013 ± 17133,125  us/op
-FalsePositiveFinderJmhBenchmark.testWordRegexFinder                             avgt    3  250503,589 ± 31345,732  us/op

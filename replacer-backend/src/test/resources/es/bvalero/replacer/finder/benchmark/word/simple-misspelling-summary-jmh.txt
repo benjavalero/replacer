@@ -1,5 +1,0 @@
-Benchmark                                                           Mode  Cnt      Score      Error  Units
-SimpleMisspellingFinderJmhBenchmark.testWordAutomatonAllFinder      avgt    3   3999,007 ± 2705,805  us/op
-SimpleMisspellingFinderJmhBenchmark.testWordLinearAllFinder         avgt    3   2930,063 ±  685,681  us/op
-SimpleMisspellingFinderJmhBenchmark.testWordRegexAllCompleteFinder  avgt    3  14742,844 ± 6318,904  us/op
-SimpleMisspellingFinderJmhBenchmark.testWordRegexAllFinder          avgt    3   5879,623 ± 1516,925  us/op
