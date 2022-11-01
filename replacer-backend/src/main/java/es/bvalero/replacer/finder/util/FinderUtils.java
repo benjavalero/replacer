@@ -118,37 +118,34 @@ public class FinderUtils {
         // We check the separators are not digits. There are rare cases where the misspelling
         // is preceded or followed by a digit, e.g. the misspelling "Km" in "Km2".
         // We discard words preceded or followed by certain separators like '_'.
-        return (
-            isWordCompleteInTextOnTheLeft(startWord, word, text) &&
-            isWordCompleteInTextOnTheRight(startWord, word, text)
-        );
-    }
-
-    private boolean isWordCompleteInTextOnTheLeft(int startWord, String word, String text) {
-        if (startWord < 0) {
-            throw new IllegalArgumentException();
-        }
-
-        if (startWord == 0) {
-            return true;
-        } else {
-            final char leftSeparator = text.charAt(startWord - 1);
-            return isValidSeparator(leftSeparator);
-        }
-    }
-
-    public boolean isWordCompleteInTextOnTheRight(int startWord, String word, String text) {
         final int endWord = startWord + word.length();
-        if (endWord > text.length()) {
+        if (startWord < 0 || endWord > text.length()) {
             throw new IllegalArgumentException();
         }
 
-        if (endWord == text.length()) {
-            return true;
-        } else {
+        if (startWord >= 1) {
+            // Special case: if the start of the word is a separator then we consider it as the left separator itself
+            final char leftSeparator;
+            final char firstChar = text.charAt(startWord);
+            if (isValidSeparator(firstChar)) {
+                leftSeparator = firstChar;
+            } else {
+                leftSeparator = text.charAt(startWord - 1);
+            }
+            if (endWord < text.length()) {
+                // Usual case: word contained in the text
+                final char rightSeparator = text.charAt(endWord);
+                return isValidSeparator(leftSeparator) && isValidSeparator(rightSeparator);
+            } else {
+                // Last word in the text with no right separator
+                return isValidSeparator(leftSeparator);
+            }
+        } else if (endWord < text.length()) {
+            // First word in the text with no left separator
             final char rightSeparator = text.charAt(endWord);
             return isValidSeparator(rightSeparator);
         }
+        return true;
     }
 
     private boolean isValidSeparator(char separator) {

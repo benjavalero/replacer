@@ -309,10 +309,11 @@ class MisspellingComposedFinderTest {
 
     @Test
     void testMisspellingWithSingleQuotes() {
-        String text = "'''Norteamérica''', es un continente.";
+        String text = "'''Norteamérica''', es un continente para el rodeo.";
 
-        ComposedMisspelling misspelling = ComposedMisspelling.of("''', es", true, "''' es");
-        this.fakeUpdateMisspellingList(List.of(misspelling));
+        ComposedMisspelling misspelling1 = ComposedMisspelling.of("''', es", true, "''' es");
+        ComposedMisspelling misspelling2 = ComposedMisspelling.of("a el", false, "al");
+        this.fakeUpdateMisspellingList(List.of(misspelling1, misspelling2));
 
         List<Replacement> results = misspellingComposedFinder.findList(text);
 
