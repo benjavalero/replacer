@@ -26,7 +26,7 @@ class WordAutomatonFinder implements BenchmarkFinder {
     public Iterable<BenchmarkResult> find(WikipediaPage page) {
         final String text = page.getContent();
         // We loop over all the words and find them in the text with a regex
-        // We cannot use RegexMatchFinder in a loop
+        // We cannot use AutomatonMatchFinder in a loop
         final List<BenchmarkResult> matches = new ArrayList<>(100);
         for (RunAutomaton automaton : this.automata) {
             final AutomatonMatcher m = automaton.newMatcher(text);

@@ -55,7 +55,7 @@ class WordFinderTest {
 
     @Test
     void testWordRegexAllCompleteFinder() {
-        WordRegexAllCompleteFinder finder = new WordRegexAllCompleteFinder(this.words);
+        WordRegexAllCompleteSeparatorsFinder finder = new WordRegexAllCompleteSeparatorsFinder(this.words);
         assertEquals(expected, finder.findMatches(text));
     }
 }

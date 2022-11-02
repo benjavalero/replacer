@@ -43,7 +43,8 @@ public class MisspellingSimpleFinder extends MisspellingFinder implements Proper
     @Override
     public Iterable<MatchResult> findMatchResults(WikipediaPage page) {
         // There are thousands of simple misspellings
-        // The best approach is to find all words in the text and check if they are in the list
+        // The best approach with big difference is to find all words in the text and check if they are in the list
+        // Within this approach the linear finder gives the best performance
         return LinearMatchFinder.find(page, this::findWord);
     }
 
@@ -92,7 +93,6 @@ public class MisspellingSimpleFinder extends MisspellingFinder implements Proper
     }
 
     private boolean isValid(String word, int startWord, String text, WikipediaLanguage lang) {
-        // Validate first that the word is complete to improve performance
         // The word is wrapped by non-letters, so we still need to validate the separators.
         // We discard some words in URLs by checking if they are wrapped by a dot or a slash.
         return (

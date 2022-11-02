@@ -25,11 +25,11 @@ class FalsePositiveFinderTest {
         this.expected.add(BenchmarkResult.of(34, "Aaron Carter"));
     }
 
-    // NOTE: We can use the same finders that we use for misspellings just with a different set of words.
-    // Nevertheless, some of them don't work as they search for simple words and not for composed ones.
+    // NOTE: We can use the same finders that we use for simple misspellings just with a different set of words,
+    // except the finders finding all the words in the text as here we might search several words.
 
     @Test
-    void testWordIndexOfFinder() {
+    void testWordLinearFinder() {
         WordLinearFinder finder = new WordLinearFinder(this.words);
         assertEquals(expected, finder.findMatches(text));
     }
@@ -67,30 +67,6 @@ class FalsePositiveFinderTest {
     @Test
     void testWordRegexAlternateCompleteFinder() {
         WordRegexAlternateCompleteFinder finder = new WordRegexAlternateCompleteFinder(this.words);
-        assertEquals(expected, finder.findMatches(text));
-    }
-
-    @Test
-    void testWordRegexAllFinder() {
-        WordRegexAllFinder finder = new WordRegexAllFinder(this.words);
-        assertEquals(expected, finder.findMatches(text));
-    }
-
-    @Test
-    void testWordAutomatonAllFinder() {
-        WordAutomatonAllFinder finder = new WordAutomatonAllFinder(this.words);
-        assertEquals(expected, finder.findMatches(text));
-    }
-
-    @Test
-    void testWordLinearAllFinder() {
-        WordLinearAllFinder finder = new WordLinearAllFinder(this.words);
-        assertEquals(expected, finder.findMatches(text));
-    }
-
-    @Test
-    void testWordRegexAllCompleteFinder() {
-        WordRegexAllCompleteFinder finder = new WordRegexAllCompleteFinder(this.words);
         assertEquals(expected, finder.findMatches(text));
     }
 }

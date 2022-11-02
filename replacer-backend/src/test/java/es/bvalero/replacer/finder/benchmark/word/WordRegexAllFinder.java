@@ -28,7 +28,6 @@ class WordRegexAllFinder implements BenchmarkFinder {
     @Override
     public boolean validate(MatchResult match, WikipediaPage page) {
         final String word = match.group();
-        // Validate first that the word is complete to improve performance
         // The word is wrapped by non-letters, so we still need to validate the separators.
         return this.words.contains(word) && FinderUtils.isWordCompleteInText(match.start(), word, page.getContent());
     }

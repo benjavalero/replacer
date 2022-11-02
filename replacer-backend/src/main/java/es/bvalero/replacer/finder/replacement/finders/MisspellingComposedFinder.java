@@ -80,8 +80,8 @@ public class MisspellingComposedFinder extends MisspellingFinder implements Prop
 
     @Override
     public Iterable<MatchResult> findMatchResults(WikipediaPage page) {
-        // With more than 400 composed misspellings
-        // the best approach is an automaton of oll the terms alternated
+        // There are hundreds of composed misspellings
+        // The best approach is an automaton of oll the terms alternated with big difference against the linear approach
         final RunAutomaton automaton = this.automata.get(page.getId().getLang());
         return automaton == null ? Collections.emptyList() : AutomatonMatchFinder.find(page.getContent(), automaton);
     }

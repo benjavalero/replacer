@@ -44,30 +44,24 @@ class ComposedMisspellingFinderBenchmarkTest extends BaseFinderBenchmark {
         );
         Set<String> words = misspellingMap.keySet();
 
-        /* NOTE: We can use the same finders that we use for misspellings just with a different set of words */
+        // NOTE: We can use the same finders that we use for simple misspellings just with a different set of words,
+        // except the finders finding all the words in the text as here we might search several words.
 
         // Load the finders
         List<BenchmarkFinder> finders = new ArrayList<>();
 
         // Loop over all the misspelling expressions and find them in the text with a regex
-        finders.add(new WordLinearFinder(words));
         finders.add(new WordRegexFinder(words));
-        finders.add(new WordAutomatonFinder(words));
         // finders.add(new WordRegexCompleteFinder(words)); // Long
         // finders.add(new WordRegexCompleteSeparatorsFinder(words)); // Very Long
+        finders.add(new WordAutomatonFinder(words));
+        finders.add(new WordLinearFinder(words));
 
         // Build an alternation with all the misspelling expressions and find the regex in the text
         // finders.add(new WordRegexAlternateFinder(words)); // Medium
-        finders.add(new WordAutomatonAlternateFinder(words));
         finders.add(new WordRegexAlternateCompleteFinder(words));
         finders.add(new WordRegexAlternateCompleteSeparatorsFinder(words));
-
-        // Find all words in the text and check if they are in the list
-        // finders.add(new WordRegexAllFinder(words)); // Don't work with composed
-        // finders.add(new WordAutomatonAllFinder(words)); // Don't work with composed
-        // finders.add(new WordLinearAllFinder(words)); // Don't work with composed
-        // finders.add(new WordRegexAllCompleteFinder(words)); // Don't work with composed
-        // finders.add(new WordRegexAllCompleteSeparatorsFinder(words)); // Don't work with composed
+        finders.add(new WordAutomatonAlternateFinder(words));
 
         List<Finder<?>> benchmarkFinders = new ArrayList<>(finders);
         runBenchmark(benchmarkFinders, WARM_UP / 10, ITERATIONS / 10, fileName);

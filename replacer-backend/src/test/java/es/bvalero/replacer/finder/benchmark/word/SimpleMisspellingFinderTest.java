@@ -18,13 +18,12 @@ class SimpleMisspellingFinderTest {
     @BeforeEach
     public void setUp() {
         this.words = Set.of("Um", "um", "españa");
-        this.text = "Um suma um, españa um.españa ";
+        this.text = "Um suma um, españa.";
 
         this.expected = new HashSet<>();
         this.expected.add(BenchmarkResult.of(0, "Um"));
         this.expected.add(BenchmarkResult.of(8, "um"));
         this.expected.add(BenchmarkResult.of(12, "españa"));
-        this.expected.add(BenchmarkResult.of(19, "um"));
     }
 
     @Test
@@ -102,6 +101,12 @@ class SimpleMisspellingFinderTest {
     @Test
     void testWordRegexAllCompleteFinder() {
         WordRegexAllCompleteFinder finder = new WordRegexAllCompleteFinder(this.words);
+        assertEquals(expected, finder.findMatches(text));
+    }
+
+    @Test
+    void testWordRegexAllCompleteSeparatorsFinder() {
+        WordRegexAllCompleteSeparatorsFinder finder = new WordRegexAllCompleteSeparatorsFinder(this.words);
         assertEquals(expected, finder.findMatches(text));
     }
 }

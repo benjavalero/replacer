@@ -30,7 +30,6 @@ class WordLinearAllFinder implements BenchmarkFinder {
             if (startWord >= 0) {
                 final int endWord = findEndWord(text, startWord);
                 final String word = text.substring(startWord, endWord);
-                // Validate first that the word is complete to improve performance
                 // The word is wrapped by non-letters, so we still need to validate the separators.
                 if (words.contains(word) && FinderUtils.isWordCompleteInText(startWord, word, text)) {
                     return LinearMatchResult.of(startWord, word);

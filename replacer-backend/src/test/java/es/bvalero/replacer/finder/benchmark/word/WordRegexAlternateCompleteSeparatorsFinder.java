@@ -13,8 +13,8 @@ class WordRegexAlternateCompleteSeparatorsFinder implements BenchmarkFinder {
     private final Pattern pattern;
 
     WordRegexAlternateCompleteSeparatorsFinder(Collection<String> words) {
-        final String leftSeparator = "(?<![\\d_])";
-        final String rightSeparator = "(?![\\d_])";
+        final String leftSeparator = "(?<![\\w_])";
+        final String rightSeparator = "(?![\\w_])";
         final String alternate = '(' + FinderUtils.joinAlternate(words) + ')';
         final String regex = leftSeparator + alternate + rightSeparator;
         this.pattern = Pattern.compile(regex);

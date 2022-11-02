@@ -75,7 +75,7 @@ public abstract class BaseFinderBenchmark {
                 }
                 double end = (double) (System.nanoTime() - start) / (double) numIterations; // In ns
                 if (print) {
-                    String time = finder.getClass().getSimpleName() + '\t' + end + '\n';
+                    String time = finder.getClass().getSimpleName() + '\t' + String.format("%.0f", end) + '\n';
                     print(writer, time);
                     System.out.print(time);
                 }

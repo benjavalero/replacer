@@ -48,23 +48,24 @@ class SimpleMisspellingFinderBenchmarkTest extends BaseFinderBenchmark {
         List<BenchmarkFinder> finders = new ArrayList<>();
 
         // Loop over all the misspelling words and find them in the text with a regex
-        // finders.add(new WordLinearFinder(words)); // Short
         // finders.add(new WordRegexFinder(words)); // Medium
-        // finders.add(new WordAutomatonFinder(words)); // Discarded: we need to increase too much the heap size
         // finders.add(new WordRegexCompleteFinder(words)); // Very long
         // finders.add(new WordRegexCompleteSeparatorsFinder(words)); // Very long
+        // finders.add(new WordAutomatonFinder(words)); // Discarded: we need to increase too much the heap size
+        // finders.add(new WordLinearFinder(words)); // Short
 
         // Build an alternation with all the misspelling words and find the regex in the text
         // finders.add(new WordRegexAlternateFinder(words)); // Very long
-        // finders.add(new WordAutomatonAlternateFinder(words)); // Discarded: we need to increase too much the stack size
         // finders.add(new WordRegexAlternateCompleteFinder(words)); // Long
         // finders.add(new WordRegexAlternateCompleteSeparatorsFinder(words)); // Long
+        // finders.add(new WordAutomatonAlternateFinder(words)); // Discarded: we need to increase too much the stack size
 
         // Find all words in the text and check if they are in the list
         finders.add(new WordRegexAllFinder(words));
+        finders.add(new WordRegexAllCompleteFinder(words));
+        finders.add(new WordRegexAllCompleteSeparatorsFinder(words));
         finders.add(new WordAutomatonAllFinder(words));
         finders.add(new WordLinearAllFinder(words));
-        finders.add(new WordRegexAllCompleteFinder(words));
 
         List<Finder<?>> benchmarkFinders = new ArrayList<>(finders);
         runBenchmark(benchmarkFinders, fileName);
