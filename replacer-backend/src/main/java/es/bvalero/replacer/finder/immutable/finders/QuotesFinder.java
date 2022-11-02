@@ -52,35 +52,35 @@ abstract class QuotesFinder extends ImmutableCheckedFinder {
         final String text = page.getContent();
         while (start >= 0 && start < text.length()) {
             final int startQuote = findStartQuote(text, start);
-            if (startQuote >= 0) {
-                final int startQuoteText = startQuote + 1; // 1 = start quote length
-                final int endQuoteText = findEndQuote(text, startQuoteText);
-                if (endQuoteText >= 0) {
-                    final String quoteText = text.substring(startQuoteText, endQuoteText);
-                    if (!isValidQuoteText(quoteText)) {
-                        start = endQuoteText;
-                        continue;
-                    }
-
-                    final int endQuote = endQuoteText + 1; // 1 = end quote length
-                    if (isEmptyQuote(quoteText, startQuote, text, page)) {
-                        start = endQuote;
-                        continue;
-                    }
-
-                    checkRedundantQuote(quoteText, startQuote, page);
-
-                    final String quote = text.substring(startQuote, endQuote);
-                    return LinearMatchResult.of(startQuote, quote);
-                } else {
-                    // No quote ending found
-                    // It's possible that the quote start was a false positive or the quote contains new lines
-                    logImmutableCheck(page, startQuote, startQuoteText, "Truncated quotes");
-                    start = startQuoteText;
-                }
-            } else {
-                return null;
+            if (startQuote < 0) {
+                break;
             }
+
+            final int startQuoteText = startQuote + 1; // 1 = start quote length
+            final int endQuoteText = findEndQuote(text, startQuoteText);
+            if (endQuoteText < 0) {
+                // No quote ending found
+                // It's possible that the quote start was a false positive or the quote contains new lines
+                logImmutableCheck(page, startQuote, startQuoteText, "Truncated quotes");
+                start = startQuoteText;
+                continue;
+            }
+
+            final String quoteText = text.substring(startQuoteText, endQuoteText);
+            if (!isValidQuoteText(quoteText)) {
+                start = endQuoteText;
+                continue;
+            }
+
+            final int endQuote = endQuoteText + 1; // 1 = end quote length
+            if (isEmptyQuote(quoteText, startQuote, text, page)) {
+                start = endQuote;
+                continue;
+            }
+
+            checkRedundantQuote(quoteText, startQuote, page);
+
+            return LinearMatchResult.of(startQuote, text.substring(startQuote, endQuote));
         }
         return null;
     }

@@ -1,6 +1,6 @@
                                                                  surname-benchmark.csv summary                                                                 
                  FINDER                   |  Mean [TIME]  |  Min [TIME]  |  First Quartile [TIME]  |  Median [TIME]  |  Third Quartile [TIME]  |  Max [TIME]  |
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------
-                    SurnameIndexOfFinder  |    50591,048  |    1609,340  |               8771,950  |      17927,418  |              63313,596  |  442403,197  |
-         SurnameAutomatonAlternateFinder  |    57563,231  |    2307,312  |              15432,215  |      27035,288  |              78607,403  |  427008,634  |
- SurnameAutomatonAlternateCompleteFinder  |    53710,483  |    2229,890  |              15024,700  |      25064,585  |              78283,857  |  400921,093  |
+                    SurnameIndexOfFinder  |    35412,560  |    1387,000  |               6604,500  |      12470,500  |              43664,500  |  308070,000  |
+         SurnameAutomatonAlternateFinder  |    33479,940  |    1206,000  |               6434,500  |      12929,500  |              54299,750  |  268632,000  |
+ SurnameAutomatonAlternateCompleteFinder  |    32230,060  |    1335,000  |               8009,500  |      14305,000  |              44316,500  |  259567,000  |

@@ -29,7 +29,7 @@ class PersonIndexOfFinder implements BenchmarkFinder {
                     if (FinderUtils.isWordFollowedByUpperCase(start, word, text)) {
                         matches.add(BenchmarkResult.of(start, word));
                     }
-                    start++;
+                    start += word.length();
                 }
             }
         }

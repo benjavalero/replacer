@@ -1,7 +1,7 @@
-                                                            ignorable-template-benchmark.csv summary                                                             
-                  FINDER                   |  Mean [TIME]  |  Min [TIME]  |  First Quartile [TIME]  |  Median [TIME]  |  Third Quartile [TIME]  |  Max [TIME]   |
------------------------------------------------------------------------------------------------------------------------------------------------------------------
- IgnorableTemplateLowercaseContainsFinder  |    16965,116  |     578,990  |               2826,915  |       5640,860  |              22561,872  |   154509,620  |
-             IgnorableTemplateRegexFinder  |   516164,669  |   22382,949  |             137000,048  |     242340,346  |             685960,393  |  3902628,995  |
-  IgnorableTemplateRegexInsensitiveFinder  |   676707,828  |   32245,930  |             182858,342  |     319086,141  |             914182,336  |  5118626,973  |
-         IgnorableTemplateAutomatonFinder  |    10124,313  |     472,771  |               2010,508  |       3644,640  |              13992,141  |    86513,007  |
+                                                             ignorable-template-benchmark.csv summary                                                             
+                  FINDER                   |  Mean [TIME]  |  Min [TIME]  |  First Quartile [TIME]  |  Median [TIME]  |  Third Quartile [TIME]  |   Max [TIME]   |
+------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ IgnorableTemplateLowercaseContainsFinder  |    70589,860  |    1797,000  |              10416,000  |      19382,000  |              87042,250  |    685797,000  |
+             IgnorableTemplateRegexFinder  |  1860323,180  |   79358,000  |             478614,500  |     823560,500  |            2450503,000  |  14023318,000  |
+  IgnorableTemplateRegexInsensitiveFinder  |  2511575,020  |  104918,000  |             692878,250  |    1175003,000  |            3323159,250  |  19224112,000  |
+         IgnorableTemplateAutomatonFinder  |    46760,020  |    1245,000  |               8416,500  |      14759,000  |              56386,250  |    406828,000  |

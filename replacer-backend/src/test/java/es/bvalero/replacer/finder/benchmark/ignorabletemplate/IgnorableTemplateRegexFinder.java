@@ -18,9 +18,10 @@ class IgnorableTemplateRegexFinder implements BenchmarkFinder {
     IgnorableTemplateRegexFinder(Set<String> ignorableTemplates) {
         Set<String> fixedTemplates = ignorableTemplates
             .stream()
-            .map(s -> FinderUtils.toLowerCase(s.replace("{", "\\{")))
+            .map(s -> s.replace("{", "\\{"))
+            .map(FinderUtils::toLowerCase)
             .collect(Collectors.toSet());
-        String alternations = '(' + FinderUtils.joinAlternate(fixedTemplates) + ')';
+        String alternations = '(' + FinderUtils.joinAlternate(fixedTemplates) + ")\\b";
         this.pattern = Pattern.compile(alternations);
     }
 
@@ -31,9 +32,7 @@ class IgnorableTemplateRegexFinder implements BenchmarkFinder {
         final String lowerCaseText = FinderUtils.toLowerCase(text);
         final Matcher m = this.pattern.matcher(lowerCaseText);
         while (m.find()) {
-            if (FinderUtils.isWordCompleteInText(m.start(), m.group(), lowerCaseText)) {
-                matches.add(BenchmarkResult.of(0, text));
-            }
+            matches.add(BenchmarkResult.of(0, text));
         }
         return matches;
     }

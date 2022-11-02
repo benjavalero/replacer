@@ -1,7 +1,7 @@
                                                              complete-tag-benchmark.csv summary                                                             
                FINDER                 |  Mean [TIME]  |  Min [TIME]  |  First Quartile [TIME]  |  Median [TIME]  |  Third Quartile [TIME]  |  Max [TIME]   |
 ------------------------------------------------------------------------------------------------------------------------------------------------------------
-      CompleteTagRegexIteratedFinder  |   188958,070  |    7974,455  |              48312,852  |      96725,897  |             270732,381  |  1552497,235  |
- CompleteTagRegexBackReferenceFinder  |    53149,033  |    1980,416  |              11791,141  |      27376,931  |              68279,528  |   485900,785  |
-     CompleteTagLinearIteratedFinder  |    41587,211  |   19784,486  |              22495,112  |      26809,459  |              43280,675  |   232772,408  |
-             CompleteTagLinearFinder  |     3799,018  |     284,572  |               1002,181  |       1730,415  |               5388,843  |    44649,857  |
+      CompleteTagRegexIteratedFinder  |   155396,080  |    6714,000  |              39715,500  |      69656,000  |             215564,250  |  1289920,000  |
+ CompleteTagRegexBackReferenceFinder  |    41723,620  |    1658,000  |              10116,000  |      17498,000  |              59330,000  |   385139,000  |
+     CompleteTagLinearIteratedFinder  |    32165,580  |   13202,000  |              16345,500  |      22316,000  |              41390,250  |   164481,000  |
+             CompleteTagLinearFinder  |     2314,560  |     128,000  |                755,750  |       1162,500  |               2531,500  |    26164,000  |

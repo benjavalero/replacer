@@ -29,7 +29,7 @@ class SurnameIndexOfFinder implements BenchmarkFinder {
                     if (FinderUtils.isWordPrecededByUpperCase(start, text)) {
                         matches.add(BenchmarkResult.of(start, word));
                     }
-                    start++;
+                    start += word.length();
                 }
             }
         }

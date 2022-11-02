@@ -20,7 +20,7 @@ class IgnorableTemplateRegexInsensitiveFinder implements BenchmarkFinder {
             .stream()
             .map(s -> s.replace("{", "\\{"))
             .collect(Collectors.toSet());
-        String alternations = '(' + FinderUtils.joinAlternate(fixedTemplates) + ')';
+        String alternations = '(' + FinderUtils.joinAlternate(fixedTemplates) + ")\\b";
         this.pattern = Pattern.compile(alternations, Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
     }
 
@@ -30,9 +30,7 @@ class IgnorableTemplateRegexInsensitiveFinder implements BenchmarkFinder {
         final List<BenchmarkResult> matches = new ArrayList<>(100);
         final Matcher m = this.pattern.matcher(text);
         while (m.find()) {
-            if (FinderUtils.isWordCompleteInText(m.start(), m.group(), text)) {
-                matches.add(BenchmarkResult.of(0, text));
-            }
+            matches.add(BenchmarkResult.of(0, text));
         }
         return matches;
     }

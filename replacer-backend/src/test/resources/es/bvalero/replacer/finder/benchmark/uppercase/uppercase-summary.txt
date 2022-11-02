@@ -1,6 +1,6 @@
                                                              uppercase-benchmark.csv summary                                                             
               FINDER                |  Mean [TIME]  |  Min [TIME]  |  First Quartile [TIME]  |  Median [TIME]  |  Third Quartile [TIME]  |  Max [TIME]  |
 ---------------------------------------------------------------------------------------------------------------------------------------------------------
-            UppercaseIndexOfFinder  |   108036,109  |    4353,928  |              21163,812  |      36814,891  |             140866,438  |  878536,706  |
-           UppercaseAllWordsFinder  |    55271,179  |    1332,939  |              10939,136  |      20905,525  |              70218,636  |  479725,496  |
- UppercaseAutomatonAlternateFinder  |    28415,351  |    1124,576  |               6356,001  |      12039,093  |              39088,639  |  207560,628  |
+            UppercaseIndexOfFinder  |    80463,400  |    6128,000  |              17259,750  |      31700,000  |              95926,500  |  630548,000  |
+           UppercaseAllWordsFinder  |    44677,160  |    1099,000  |               7686,500  |      15305,000  |              50269,000  |  404954,000  |
+ UppercaseAutomatonAlternateFinder  |    24099,360  |     883,000  |               5229,500  |       9942,000  |              33484,500  |  196667,000  |

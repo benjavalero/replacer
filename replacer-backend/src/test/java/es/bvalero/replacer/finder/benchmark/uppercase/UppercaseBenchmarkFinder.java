@@ -31,7 +31,7 @@ class UppercaseBenchmarkFinder implements BenchmarkFinder {
         TIMELINE_TEXT
     );
 
-    boolean isWordPrecededByPunctuation(int start, String text) {
+    static boolean isWordPrecededByPunctuation(int start, String text) {
         List<String> punctuations = List.of("=", "#", "*", ".", "!", "\n|", "||", "|+", "<td>", "text:");
         String textBefore = text.substring(0, start).trim();
         return punctuations.stream().anyMatch(textBefore::endsWith);

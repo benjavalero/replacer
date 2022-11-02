@@ -38,26 +38,27 @@ class IgnorableSectionFinder implements ImmutableFinder {
         final String text = page.getContent();
         while (start >= 0 && start < text.length()) {
             final int startHeader = findStartHeader(text, start);
-            if (startHeader >= 0) {
-                final int endHeader = findEndHeader(text, startHeader);
-                if (endHeader >= 0) {
-                    final String header = text.substring(startHeader, endHeader);
-                    final String label = StringUtils.remove(header, HEADER_CHAR).trim();
-                    if (isValidHeaderLabel(label)) {
-                        final int startNextHeader = findStartHeader(text, endHeader);
-                        final int endSection = startNextHeader >= 0 ? startNextHeader : text.length();
-                        return LinearMatchResult.of(startHeader, text.substring(startHeader, endSection));
-                    } else {
-                        // Not ignorable section
-                        start = endHeader;
-                    }
-                } else {
-                    // No new line found to end the header, so we are at the end of the text.
-                    return null;
-                }
-            } else {
+            if (startHeader < 0) {
+                break;
+            }
+
+            final int endHeader = findEndHeader(text, startHeader);
+            if (endHeader < 0) {
+                // No new line found to end the header, so we are at the end of the text.
                 return null;
             }
+
+            final String header = text.substring(startHeader, endHeader);
+            final String label = StringUtils.remove(header, HEADER_CHAR).trim();
+            if (!isValidHeaderLabel(label)) {
+                // Not ignorable section
+                start = endHeader;
+                continue;
+            }
+
+            final int startNextHeader = findStartHeader(text, endHeader);
+            final int endSection = startNextHeader >= 0 ? startNextHeader : text.length();
+            return LinearMatchResult.of(startHeader, text.substring(startHeader, endSection));
         }
         return null;
     }

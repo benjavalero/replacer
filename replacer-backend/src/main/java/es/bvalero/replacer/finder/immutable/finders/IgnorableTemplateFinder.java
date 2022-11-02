@@ -44,6 +44,8 @@ class IgnorableTemplateFinder implements ImmutableFinder {
 
     @Override
     public Iterable<MatchResult> findMatchResults(WikipediaPage page) {
+        // Currently, there are about 40 ignorable templates,
+        // so the best approach is an automaton of oll the terms alternated.
         return AutomatonMatchFinder.find(FinderUtils.toLowerCase(page.getContent()), automaton);
     }
 

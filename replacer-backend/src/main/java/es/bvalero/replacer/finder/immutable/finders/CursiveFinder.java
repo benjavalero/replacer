@@ -41,26 +41,28 @@ class CursiveFinder extends ImmutableCheckedFinder {
         final String text = page.getContent();
         while (start >= 0 && start < text.length()) {
             final int startCursive = findStartCursive(text, start);
-            if (startCursive >= 0) {
-                final int numQuotes = findNumQuotes(text, startCursive);
-                assert numQuotes >= 2;
-                final int startCursiveText = startCursive + numQuotes;
-                final int endCursive = findEndCursive(text, startCursiveText, numQuotes);
-                if (endCursive >= 0) {
-                    if (isEmptyCursiveText(text, startCursive, endCursive, numQuotes)) {
-                        logImmutableCheck(page, startCursive, endCursive, "Empty cursive");
-                        start = endCursive;
-                    } else {
-                        return LinearMatchResult.of(startCursive, text.substring(startCursive, endCursive));
-                    }
-                } else {
-                    // No cursive ending found. Notify and continue.
-                    logImmutableCheck(page, startCursive, startCursiveText, "Truncated cursive");
-                    start = startCursiveText;
-                }
-            } else {
-                return null;
+            if (startCursive < 0) {
+                break;
             }
+
+            final int numQuotes = findNumQuotes(text, startCursive);
+            assert numQuotes >= 2;
+            final int startCursiveText = startCursive + numQuotes;
+            final int endCursive = findEndCursive(text, startCursiveText, numQuotes);
+            if (endCursive < 0) {
+                // No cursive ending found. Notify and continue.
+                logImmutableCheck(page, startCursive, startCursiveText, "Truncated cursive");
+                start = startCursiveText;
+                continue;
+            }
+
+            if (isEmptyCursiveText(text, startCursive, endCursive, numQuotes)) {
+                logImmutableCheck(page, startCursive, endCursive, "Empty cursive");
+                start = endCursive;
+                continue;
+            }
+
+            return LinearMatchResult.of(startCursive, text.substring(startCursive, endCursive));
         }
         return null;
     }

@@ -32,19 +32,19 @@ class TableFinder implements ImmutableFinder {
         final String text = page.getContent();
         while (start >= 0 && start < text.length()) {
             final int startLine = findStartLine(text, start);
-            if (startLine >= 0) {
-                final int endLine = findEndLine(text, startLine);
-                // Take into account the end of file
-                final String line = endLine >= 0 ? text.substring(startLine, endLine) : text.substring(startLine);
-
-                if (isImmutableLine(line)) {
-                    return LinearMatchResult.of(startLine, line);
-                } else {
-                    start = endLine;
-                }
-            } else {
-                return null;
+            if (startLine < 0) {
+                break;
             }
+
+            final int endLine = findEndLine(text, startLine);
+            // Take into account the end of file
+            final String line = endLine >= 0 ? text.substring(startLine, endLine) : text.substring(startLine);
+            if (!isImmutableLine(line)) {
+                start = endLine;
+                continue;
+            }
+
+            return LinearMatchResult.of(startLine, line);
         }
         return null;
     }

@@ -1,17 +1,16 @@
 package es.bvalero.replacer.finder.immutable.finders;
 
-import es.bvalero.replacer.common.domain.Immutable;
+import dk.brics.automaton.RegExp;
+import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.finder.FinderPriority;
 import es.bvalero.replacer.finder.immutable.ImmutableFinder;
+import es.bvalero.replacer.finder.util.AutomatonMatchFinder;
 import es.bvalero.replacer.finder.util.FinderUtils;
-import es.bvalero.replacer.finder.util.LinearMatchFinder;
-import es.bvalero.replacer.finder.util.LinearMatchResult;
 import java.util.Set;
 import java.util.regex.MatchResult;
+import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
-import org.apache.commons.collections4.IterableUtils;
-import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
 /**
@@ -25,6 +24,8 @@ import org.springframework.stereotype.Component;
 @Component
 class PersonNameFinder implements ImmutableFinder {
 
+    private RunAutomaton automaton;
+
     @Resource
     private Set<String> personNames;
 
@@ -34,59 +35,22 @@ class PersonNameFinder implements ImmutableFinder {
         return FinderPriority.MEDIUM;
     }
 
-    @SuppressWarnings("unchecked")
-    @Override
-    public Iterable<Immutable> find(WikipediaPage page) {
-        // The list will keep on growing
-        // For the moment the best approach is to iterate the list of words and find them in the text
-        return IterableUtils.chainedIterable(
-            personNames
-                .stream()
-                .map(PersonNameLinearFinder::new)
-                .map(finder -> finder.find(page))
-                .toArray(Iterable[]::new)
-        );
+    @PostConstruct
+    public void init() {
+        final String alternations = "(" + FinderUtils.joinAlternate(personNames) + ")";
+        this.automaton = new RunAutomaton(new RegExp(alternations).toAutomaton());
     }
 
     @Override
     public Iterable<MatchResult> findMatchResults(WikipediaPage page) {
-        // We are overriding the more general find method
-        throw new IllegalCallerException();
+        // The list will keep on growing
+        // There are now difference among the approaches,
+        // so we decide to use an automaton for the sake of simplicity.
+        return AutomatonMatchFinder.find(page.getContent(), automaton);
     }
 
-    private static class PersonNameLinearFinder implements ImmutableFinder {
-
-        private final String personName;
-
-        PersonNameLinearFinder(String personName) {
-            this.personName = personName;
-        }
-
-        @Override
-        public Iterable<MatchResult> findMatchResults(WikipediaPage page) {
-            return LinearMatchFinder.find(page, this::findPersonName);
-        }
-
-        @Nullable
-        private MatchResult findPersonName(WikipediaPage page, int start) {
-            final String text = page.getContent();
-            while (start >= 0 && start < text.length()) {
-                final int startPersonName = findStartPersonName(text, start);
-                if (startPersonName >= 0) {
-                    if (FinderUtils.isWordFollowedByUpperCase(startPersonName, personName, text)) {
-                        return LinearMatchResult.of(startPersonName, personName);
-                    } else {
-                        start = startPersonName + personName.length();
-                    }
-                } else {
-                    return null;
-                }
-            }
-            return null;
-        }
-
-        private int findStartPersonName(String text, int start) {
-            return text.indexOf(personName, start);
-        }
+    @Override
+    public boolean validate(MatchResult match, WikipediaPage page) {
+        return FinderUtils.isWordFollowedByUpperCase(match.start(), match.group(), page.getContent());
     }
 }

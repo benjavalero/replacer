@@ -1,9 +1,9 @@
                                                            cursive-benchmark.csv summary                                                            
             FINDER             |  Mean [TIME]  |  Min [TIME]  |  First Quartile [TIME]  |  Median [TIME]  |  Third Quartile [TIME]  |  Max [TIME]  |
 ----------------------------------------------------------------------------------------------------------------------------------------------------
-    CursiveRegexDotLazyFinder  |       94,900  |       4,000  |                 24,500  |         45,500  |                122,500  |     690,000  |
-           CursiveRegexFinder  |      105,280  |       4,000  |                 26,750  |         51,500  |                128,000  |     714,000  |
- CursiveRegexDotAllLookFinder  |      150,240  |       7,000  |                 41,250  |         72,500  |                193,000  |    1098,000  |
-       CursiveRegexLookFinder  |      160,780  |       6,000  |                 46,000  |         82,000  |                205,500  |    1147,000  |
-       CursiveAutomatonFinder  |       42,720  |       2,000  |                 12,000  |         20,000  |                 56,500  |     331,000  |
-          CursiveLinearFinder  |        6,760  |       0,000  |                  1,000  |          2,000  |                  6,000  |      43,000  |
+    CursiveRegexDotLazyFinder  |    93937,860  |    3924,000  |              24798,250  |      47650,000  |             119085,500  |  722072,000  |
+           CursiveRegexFinder  |   102791,800  |    4092,000  |              27187,000  |      48910,500  |             137911,750  |  748381,000  |
+ CursiveRegexDotAllLookFinder  |   109156,900  |    4842,000  |              25840,000  |      49732,000  |             133764,000  |  854238,000  |
+       CursiveRegexLookFinder  |   117040,820  |    4835,000  |              32481,500  |      55468,000  |             138527,000  |  936628,000  |
+       CursiveAutomatonFinder  |    39689,520  |    1943,000  |              11623,000  |      20074,500  |              54144,750  |  300298,000  |
+          CursiveLinearFinder  |     4212,520  |     384,000  |                632,000  |       1612,000  |               3597,250  |   28921,000  |

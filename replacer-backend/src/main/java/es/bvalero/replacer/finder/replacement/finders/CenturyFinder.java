@@ -46,6 +46,7 @@ public class CenturyFinder implements ReplacementFinder {
 
     @Override
     public Iterable<MatchResult> findMatchResults(WikipediaPage page) {
+        // The linear approach is 20x better than using a regex
         if (WikipediaLanguage.SPANISH == page.getId().getLang()) {
             return LinearMatchFinder.find(page, this::findCentury);
         } else {
@@ -58,52 +59,52 @@ public class CenturyFinder implements ReplacementFinder {
         final String text = page.getContent();
         while (start >= 0 && start < text.length()) {
             int startCentury = findStartCentury(text, start);
-            if (startCentury >= 0) {
-                int endCentury = startCentury + CENTURY_WORD.length();
-                final String centuryWord = findCenturyWord(text, startCentury);
-                if (centuryWord == null) {
-                    start = endCentury + 1;
-                    continue;
-                }
-
-                // Check the century number
-                final LinearMatchResult centuryNumber = findCenturyNumber(text, endCentury);
-                if (centuryNumber == null) {
-                    start = endCentury + 1;
-                    continue;
-                } else {
-                    endCentury = centuryNumber.end();
-                }
-
-                // Check the era
-                final LinearMatchResult era = findEra(text, endCentury);
-                if (era != null) {
-                    endCentury = era.end();
-                }
-
-                // Check the link
-                final Boolean isLinked = isLinked(text, startCentury, endCentury);
-                if (isLinked == null) {
-                    start = endCentury + 1;
-                    continue;
-                } else if (isLinked) {
-                    startCentury -= 2;
-                    endCentury += 2;
-                }
-
-                final LinearMatchResult match = LinearMatchResult.of(
-                    startCentury,
-                    text.substring(startCentury, endCentury)
-                );
-                match.addGroup(LinearMatchResult.of(startCentury, centuryWord)); // The start is not relevant
-                match.addGroup(centuryNumber);
-                if (era != null) {
-                    match.addGroup(era);
-                }
-                return match;
-            } else {
-                return null;
+            if (startCentury < 0) {
+                break;
             }
+
+            int endCentury = startCentury + CENTURY_WORD.length();
+            final String centuryWord = findCenturyWord(text, startCentury);
+            if (centuryWord == null) {
+                start = endCentury + 1;
+                continue;
+            }
+
+            // Check the century number
+            final LinearMatchResult centuryNumber = findCenturyNumber(text, endCentury);
+            if (centuryNumber == null) {
+                start = endCentury + 1;
+                continue;
+            } else {
+                endCentury = centuryNumber.end();
+            }
+
+            // Check the era
+            final LinearMatchResult era = findEra(text, endCentury);
+            if (era != null) {
+                endCentury = era.end();
+            }
+
+            // Check the link
+            final Boolean isLinked = isLinked(text, startCentury, endCentury);
+            if (isLinked == null) {
+                start = endCentury + 1;
+                continue;
+            } else if (isLinked) {
+                startCentury -= 2;
+                endCentury += 2;
+            }
+
+            final LinearMatchResult match = LinearMatchResult.of(
+                startCentury,
+                text.substring(startCentury, endCentury)
+            );
+            match.addGroup(LinearMatchResult.of(startCentury, centuryWord)); // The start is not relevant
+            match.addGroup(centuryNumber);
+            if (era != null) {
+                match.addGroup(era);
+            }
+            return match;
         }
         return null;
     }

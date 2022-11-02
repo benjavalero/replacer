@@ -37,30 +37,32 @@ class XmlTagFinder extends ImmutableCheckedFinder {
         final String text = page.getContent();
         while (start >= 0 && start < text.length()) {
             final int startTag = findStartTag(text, start);
-            if (startTag >= 0) {
-                final int startTagContent = startTag + 1; // 1 = start tag length
-                final char firstChar = text.charAt(startTagContent);
-                if (Character.isLetter(firstChar) || firstChar == END_TAG_SLASH) {
-                    final int endTagContent = findEndTag(text, startTagContent);
-                    if (endTagContent >= 0) {
-                        final int endTag = endTagContent + 1; // 1 = end tag length
-                        final String tagContent = text.substring(startTagContent, endTagContent);
-                        if (isValidTagContent(tagContent)) {
-                            return LinearMatchResult.of(startTag, text.substring(startTag, endTag));
-                        } else {
-                            start = endTag;
-                        }
-                    } else {
-                        // Not an XML tag
-                        start = startTagContent;
-                    }
-                } else {
-                    // Not an XML tag
-                    start = startTagContent;
-                }
-            } else {
-                return null;
+            if (startTag < 0) {
+                break;
             }
+
+            final int startTagContent = startTag + 1; // 1 = start tag length
+            if (!isValidFirstChar(text.charAt(startTagContent))) {
+                // Not an XML tag
+                start = startTagContent;
+                continue;
+            }
+
+            final int endTagContent = findEndTag(text, startTagContent);
+            if (endTagContent < 0) {
+                // Not an XML tag
+                start = startTagContent;
+                continue;
+            }
+
+            final int endTag = endTagContent + 1; // 1 = end tag length
+            final String tagContent = text.substring(startTagContent, endTagContent);
+            if (!isValidTagContent(tagContent)) {
+                start = endTag;
+                continue;
+            }
+
+            return LinearMatchResult.of(startTag, text.substring(startTag, endTag));
         }
         return null;
     }
@@ -71,6 +73,10 @@ class XmlTagFinder extends ImmutableCheckedFinder {
 
     private int findEndTag(String text, int start) {
         return text.indexOf(END_TAG, start);
+    }
+
+    private boolean isValidFirstChar(char ch) {
+        return Character.isLetter(ch) || ch == END_TAG_SLASH;
     }
 
     private boolean isValidTagContent(String tagContent) {

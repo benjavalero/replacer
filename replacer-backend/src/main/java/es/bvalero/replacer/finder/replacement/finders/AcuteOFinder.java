@@ -39,17 +39,18 @@ public class AcuteOFinder implements ReplacementFinder {
         final String text = page.getContent();
         while (start >= 0 && start < text.length()) {
             final int startAcuteO = findStartAcuteO(text, start);
-            if (startAcuteO >= 0) {
-                final int endAcuteO = startAcuteO + ACUTE_O.length();
-                final LinearMatchResult match = findMatch(text, startAcuteO, endAcuteO);
-                if (match != null) {
-                    return match;
-                } else {
-                    start = endAcuteO;
-                }
-            } else {
-                return null;
+            if (startAcuteO < 0) {
+                break;
             }
+
+            final int endAcuteO = startAcuteO + ACUTE_O.length();
+            final LinearMatchResult match = findMatch(text, startAcuteO, endAcuteO);
+            if (match == null) {
+                start = endAcuteO;
+                continue;
+            }
+
+            return match;
         }
         return null;
     }

@@ -1,6 +1,6 @@
                                                                  person-benchmark.csv summary                                                                 
                  FINDER                  |  Mean [TIME]  |  Min [TIME]  |  First Quartile [TIME]  |  Median [TIME]  |  Third Quartile [TIME]  |  Max [TIME]  |
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
-                    PersonIndexOfFinder  |    30038,466  |    1098,615  |               4910,931  |      11049,036  |              36519,045  |  259315,481  |
-         PersonAutomatonAlternateFinder  |    43216,788  |    1636,571  |              10719,063  |      18611,872  |              51267,663  |  367042,037  |
- PersonAutomatonAlternateCompleteFinder  |    30421,518  |    1294,143  |               7508,466  |      12477,972  |              41180,087  |  237914,491  |
+                    PersonIndexOfFinder  |    26324,860  |    1124,000  |               4693,250  |       9372,000  |              31690,250  |  234198,000  |
+         PersonAutomatonAlternateFinder  |    23672,680  |     893,000  |               4614,000  |       9011,500  |              31802,000  |  201209,000  |
+ PersonAutomatonAlternateCompleteFinder  |    23504,080  |     950,000  |               5589,000  |      10016,500  |              31574,750  |  189069,000  |
