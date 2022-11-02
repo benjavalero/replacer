@@ -167,9 +167,11 @@ Finally, we use the annotation `@Loggable` provided by dependency `com.github.ro
 ## Benchmarks
 
 For some critical finders, we can run benchmarks to find the best approach.
-Take into account that each finder is run more than one million of times (once per indexed page) so any small difference of microseconds might result in an overall difference of minutes when dump indexing.
+Take into account that, when dump indexing, each finder might be run almost 2M times (once per indexed page), so a difference of microseconds might turn into minutes in the overall time.
 
-Each benchmark runs the finders against a sample of 50 pages. Note that resulting times depend strongly on the machine where the benchamrks have been run.
+Anyway take into account that the time finding the replacements might not represent all the time performing an indexation, as there are other parts like XML parsing and DB operations.
+
+Each benchmark runs the finders against a sample of 50 pages. Note that the resulting times depend strongly on the machine where the benchmarks have been run. Empirical tests show that the average time to find the replacements in an average page in different machines is about 1.5 to 3.5 ms.
 
 Benchmarks in Replacer are test classes extending `BaseFinderBenchmark` and having `BenchmarkTest` as a name suffix to be ignored.
 
@@ -178,4 +180,4 @@ This is done for each page in the sample. This results into a text file with 50 
 
 The class also contains a main method which reads the previous text file a generates a boxplot which allows comparing the times of the different approaches, along with a text file containing the classic five-number summary with the most important percentiles. These statistics help us not only to compare the different approaches in general, but also how the finders behave with simple or complex pages which in theory result into lower or higher times.
 
-_Note_: after some attempts to run benchmarks with JMH library, we have found similar results. For our purposes, as the benchamrks _by hand_ already exist, JMH benchmarks don't provide any advantage, so they have eventually been discarded from the code.
+_Note_: after some attempts to run benchmarks with JMH library, we have found similar results. For our purposes, as the benchmarks _by hand_ already exist, JMH benchmarks don't provide any advantage, so they have eventually been discarded from the code.
