@@ -39,6 +39,9 @@ class TemplateFinder implements ImmutableFinder {
     private static final char COLON = ':';
 
     @Resource
+    private Set<String> ignorableTemplates;
+
+    @Resource
     private List<String> templateParams;
 
     @Autowired
@@ -88,15 +91,16 @@ class TemplateFinder implements ImmutableFinder {
     public Iterable<MatchResult> findMatchResults(WikipediaPage page) {
         final List<MatchResult> immutables = new ArrayList<>(100);
         for (LinearMatchResult template : TemplateUtils.findAllTemplates(page)) {
-            immutables.addAll(findImmutables(page.getId().getLang(), template));
+            immutables.addAll(findImmutables(page, template));
         }
         return immutables;
     }
 
-    private List<MatchResult> findImmutables(WikipediaLanguage lang, LinearMatchResult template) {
+    private List<MatchResult> findImmutables(WikipediaPage page, LinearMatchResult template) {
         // There might be links in the values which make the algorithm return some parts of the links as parameters.
         // We could remove them, but it implies a performance penalty, and it isn't worth.
         // Instead, they should be found when finding the nested templates.
+        final WikipediaLanguage lang = page.getId().getLang();
 
         // Remove the content of the nested templates
         // Remove the start and end of the template
@@ -110,8 +114,13 @@ class TemplateFinder implements ImmutableFinder {
         final String[] parameters = StringUtils.split(templateContent, PIPE);
 
         final String templateName = findTemplateName(parameters[0]);
+        final String normalizedTemplateName = normalizeTemplateName(templateName);
+        // If the whole page is to be ignored the return an immutable of the complete page content
+        if (ignoreCompletePage(normalizedTemplateName)) {
+            return Collections.singletonList(LinearMatchResult.of(0, page.getContent()));
+        }
         // If the template is to be ignored as a whole then return an immutable of the complete template
-        if (ignoreCompleteTemplate(templateName)) {
+        if (ignoreCompleteTemplate(normalizedTemplateName)) {
             return Collections.singletonList(template);
         }
 
@@ -194,9 +203,18 @@ class TemplateFinder implements ImmutableFinder {
         return templateName;
     }
 
+    private String normalizeTemplateName(String templateName) {
+        return FinderUtils.toLowerCase(templateName.trim()).replace('_', ' ');
+    }
+
+    private boolean ignoreCompletePage(String templateName) {
+        return ignorableTemplates.contains(templateName);
+    }
+
     private boolean ignoreCompleteTemplate(String templateName) {
-        final String template = FinderUtils.toLowerCase(templateName.trim()).replace('_', ' ');
-        return (templateNames.contains(template) || templateNamesPartial.stream().anyMatch(template::startsWith));
+        return (
+            templateNames.contains(templateName) || templateNamesPartial.stream().anyMatch(templateName::startsWith)
+        );
     }
 
     private String findParameterKey(String parameter, int posEquals) {

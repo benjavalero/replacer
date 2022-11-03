@@ -1,4 +1,4 @@
-package es.bvalero.replacer.finder.benchmark.ignorabletemplate;
+package es.bvalero.replacer.finder.benchmark.redirection;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -11,36 +11,32 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest(classes = { XmlConfiguration.class })
-class IgnorableTemplateFinderTest {
+class RedirectionFinderTest {
 
     @Resource
     private Set<String> ignorableTemplates;
 
     @Test
-    void testIgnorableTemplateLowercaseContainsFinder() {
-        IgnorableTemplateLowercaseContainsFinder finder = new IgnorableTemplateLowercaseContainsFinder(
-            ignorableTemplates
-        );
+    void testRedirectionLowercaseContainsFinder() {
+        RedirectionLowercaseContainsFinder finder = new RedirectionLowercaseContainsFinder(ignorableTemplates);
         doAssertions(finder);
     }
 
     @Test
-    void testIgnorableTemplateRegexFinder() {
-        IgnorableTemplateRegexFinder finder = new IgnorableTemplateRegexFinder(ignorableTemplates);
+    void testRedirectionRegexFinder() {
+        RedirectionRegexFinder finder = new RedirectionRegexFinder(ignorableTemplates);
         doAssertions(finder);
     }
 
     @Test
-    void testIgnorableTemplateRegexInsensitiveFinder() {
-        IgnorableTemplateRegexInsensitiveFinder finder = new IgnorableTemplateRegexInsensitiveFinder(
-            ignorableTemplates
-        );
+    void testRedirectionRegexInsensitiveFinder() {
+        RedirectionRegexInsensitiveFinder finder = new RedirectionRegexInsensitiveFinder(ignorableTemplates);
         doAssertions(finder);
     }
 
     @Test
-    void testIgnorableTemplateAutomatonFinder() {
-        IgnorableTemplateAutomatonFinder finder = new IgnorableTemplateAutomatonFinder(ignorableTemplates);
+    void testRedirectionAutomatonFinder() {
+        RedirectionAutomatonFinder finder = new RedirectionAutomatonFinder(ignorableTemplates);
         doAssertions(finder);
     }
 
@@ -49,8 +45,6 @@ class IgnorableTemplateFinderTest {
         assertFalse(finder.findMatches("xxx #redirección [[A]] yyy").isEmpty());
         assertFalse(finder.findMatches("xxx #REDIRECT [[A]] yyy").isEmpty());
         assertTrue(finder.findMatches("Otro contenido").isEmpty());
-        assertFalse(finder.findMatches("xxx {{destruir|motivo}}").isEmpty());
-        // Test it is not ignored by containing "{{pa}}
-        assertTrue(finder.findMatches("Text {{Partial|Co-Director}} Text").isEmpty());
+        assertTrue(finder.findMatches("xxx {{destruir|motivo}}").isEmpty());
     }
 }

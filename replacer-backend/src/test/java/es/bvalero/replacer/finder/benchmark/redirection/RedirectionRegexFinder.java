@@ -1,39 +1,38 @@
-package es.bvalero.replacer.finder.benchmark.ignorabletemplate;
+package es.bvalero.replacer.finder.benchmark.redirection;
 
 import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
 import es.bvalero.replacer.finder.benchmark.BenchmarkResult;
 import es.bvalero.replacer.finder.util.FinderUtils;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-class IgnorableTemplateRegexFinder implements BenchmarkFinder {
+class RedirectionRegexFinder implements BenchmarkFinder {
 
     private final Pattern pattern;
 
-    IgnorableTemplateRegexFinder(Set<String> ignorableTemplates) {
+    RedirectionRegexFinder(Set<String> ignorableTemplates) {
         Set<String> fixedTemplates = ignorableTemplates
             .stream()
-            .map(s -> s.replace("{", "\\{"))
+            .filter(s -> s.contains("#"))
             .map(FinderUtils::toLowerCase)
             .collect(Collectors.toSet());
-        String alternations = '(' + FinderUtils.joinAlternate(fixedTemplates) + ")\\b";
+        String alternations = '(' + FinderUtils.joinAlternate(fixedTemplates) + ")";
         this.pattern = Pattern.compile(alternations);
     }
 
     @Override
     public Iterable<BenchmarkResult> find(WikipediaPage page) {
         final String text = page.getContent();
-        final List<BenchmarkResult> matches = new ArrayList<>(100);
         final String lowerCaseText = FinderUtils.toLowerCase(text);
         final Matcher m = this.pattern.matcher(lowerCaseText);
-        while (m.find()) {
-            matches.add(BenchmarkResult.of(0, text));
+        if (m.find()) {
+            return List.of(BenchmarkResult.of(0, text));
         }
-        return matches;
+        return Collections.emptyList();
     }
 }

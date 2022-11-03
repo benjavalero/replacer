@@ -1,4 +1,4 @@
-package es.bvalero.replacer.finder.benchmark.ignorabletemplate;
+package es.bvalero.replacer.finder.benchmark.redirection;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -17,9 +17,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest(classes = XmlConfiguration.class)
-class IgnorableTemplateFinderBenchmarkTest extends BaseFinderBenchmark {
+class RedirectionFinderBenchmarkTest extends BaseFinderBenchmark {
 
-    private static final String fileName = "ignorabletemplate/ignorable-template-benchmark.csv";
+    private static final String fileName = "redirection/redirection-benchmark.csv";
 
     @Resource
     private Set<String> ignorableTemplates;
@@ -28,18 +28,18 @@ class IgnorableTemplateFinderBenchmarkTest extends BaseFinderBenchmark {
     void testBenchmark() throws ReplacerException {
         // Load the finders
         List<BenchmarkFinder> finders = new ArrayList<>();
-        finders.add(new IgnorableTemplateLowercaseContainsFinder(ignorableTemplates));
-        finders.add(new IgnorableTemplateRegexFinder(ignorableTemplates));
-        finders.add(new IgnorableTemplateRegexInsensitiveFinder(ignorableTemplates));
-        finders.add(new IgnorableTemplateAutomatonFinder(ignorableTemplates));
+        finders.add(new RedirectionLowercaseContainsFinder(ignorableTemplates));
+        finders.add(new RedirectionRegexFinder(ignorableTemplates));
+        finders.add(new RedirectionRegexInsensitiveFinder(ignorableTemplates));
+        finders.add(new RedirectionAutomatonFinder(ignorableTemplates));
 
         List<Finder<?>> benchmarkFinders = new ArrayList<>(finders);
-        runBenchmark(benchmarkFinders, WARM_UP / 5, ITERATIONS / 5, fileName);
+        runBenchmark(benchmarkFinders, fileName);
 
         assertTrue(true);
     }
 
     public static void main(String[] args) throws URISyntaxException, IOException {
-        generateBoxplot(fileName, "Ignorable Template");
+        generateBoxplot(fileName, "Redirection");
     }
 }

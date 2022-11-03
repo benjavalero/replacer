@@ -250,4 +250,10 @@ class TemplateFinderTest {
         Set<Immutable> actual = new HashSet<>(matches);
         assertEquals(expected, actual);
     }
+
+    @Test
+    void testFindIgnorableTemplate() {
+        assertTrue(templateFinder.findList("Otro contenido").isEmpty());
+        assertFalse(templateFinder.findList("xxx {{destruir|motivo}}").isEmpty());
+    }
 }

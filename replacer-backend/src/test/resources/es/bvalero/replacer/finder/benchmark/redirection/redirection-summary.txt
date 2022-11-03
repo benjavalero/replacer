@@ -1,0 +1,7 @@
+                                                             redirection-benchmark.csv summary                                                             
+               FINDER                |  Mean [TIME]  |  Min [TIME]  |  First Quartile [TIME]  |  Median [TIME]  |  Third Quartile [TIME]  |  Max [TIME]   |
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+ RedirectionLowercaseContainsFinder  |    23166,780  |     434,000  |               2642,500  |       5833,000  |              25247,500  |   238934,000  |
+             RedirectionRegexFinder  |   189932,600  |    7240,000  |              44417,500  |      85287,500  |             267562,250  |  1550885,000  |
+  RedirectionRegexInsensitiveFinder  |   224093,340  |    9358,000  |              62369,750  |     103061,500  |             300014,000  |  1766998,000  |
+         RedirectionAutomatonFinder  |    40221,000  |    1151,000  |               7136,500  |      14577,000  |              52133,750  |   380116,000  |

@@ -33,7 +33,7 @@ import org.springframework.test.context.ActiveProfiles;
         FalsePositiveLoader.class,
         FalsePositiveFinder.class,
         IgnorableSectionFinder.class,
-        IgnorableTemplateFinder.class,
+        RedirectionFinder.class,
         LinkFinder.class,
         PersonNameFinder.class,
         PersonSurnameFinder.class,

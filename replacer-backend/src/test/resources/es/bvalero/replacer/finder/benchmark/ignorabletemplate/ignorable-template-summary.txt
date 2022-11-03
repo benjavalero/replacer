@@ -1,7 +1,0 @@
-                                                             ignorable-template-benchmark.csv summary                                                             
-                  FINDER                   |  Mean [TIME]  |  Min [TIME]  |  First Quartile [TIME]  |  Median [TIME]  |  Third Quartile [TIME]  |   Max [TIME]   |
-------------------------------------------------------------------------------------------------------------------------------------------------------------------
- IgnorableTemplateLowercaseContainsFinder  |    70589,860  |    1797,000  |              10416,000  |      19382,000  |              87042,250  |    685797,000  |
-             IgnorableTemplateRegexFinder  |  1860323,180  |   79358,000  |             478614,500  |     823560,500  |            2450503,000  |  14023318,000  |
-  IgnorableTemplateRegexInsensitiveFinder  |  2511575,020  |  104918,000  |             692878,250  |    1175003,000  |            3323159,250  |  19224112,000  |
-         IgnorableTemplateAutomatonFinder  |    46760,020  |    1245,000  |               8416,500  |      14759,000  |              56386,250  |    406828,000  |

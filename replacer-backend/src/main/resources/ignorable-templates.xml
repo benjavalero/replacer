@@ -8,58 +8,56 @@
    		   http://www.springframework.org/schema/util/spring-util.xsd">
 
     <!-- Pages containing these templates should not be processed -->
-    <!-- The verification is done with an automaton of all the items below alternated
-         so in theory these could contain simple regular expressions -->
-    <util:list id="ignorableTemplates" value-type="java.lang.String">
+    <util:set id="ignorableTemplates" value-type="java.lang.String">
         <value>#redirect</value>
         <value>#redirección</value>
         <value>#redireccion</value>
 
         <!-- Spanish -->
-        <value>{{destruir</value>
-        <value>{{delete</value>
-        <value>{{borrar</value>
-        <value>{{eliminar</value>
+        <value>destruir</value>
+        <value>delete</value>
+        <value>borrar</value>
+        <value>eliminar</value>
 
-        <value>{{copyedit</value>
-        <value>{{ortografía</value>
+        <value>copyedit</value>
+        <value>ortografía</value>
 
-        <value>{{problemas artículo</value>
-        <value>{{problemas</value>
-        <value>{{pa</value>
+        <value>problemas artículo</value>
+        <value>problemas</value>
+        <value>pa</value>
 
-        <value>{{nobots</value>
+        <value>nobots</value>
 
-        <value>{{en uso</value>
-        <value>{{enuso</value>
-        <value>{{en desarrollo</value>
-        <value>{{endesarrollo</value>
-        <value>{{en obras</value>
-        <value>{{enobras</value>
-        <value>{{en construcción</value>
+        <value>en uso</value>
+        <value>enuso</value>
+        <value>en desarrollo</value>
+        <value>endesarrollo</value>
+        <value>en obras</value>
+        <value>enobras</value>
+        <value>en construcción</value>
 
-        <value>{{traducción</value>
-        <value>{{mal traducido</value>
-        <value>{{maltraducido</value>
-        <value>{{mala traducción</value>
-        <value>{{malatraducción</value>
-        <value>{{traducción defectuosa</value>
-        <value>{{traducción incompleta</value>
-        <value>{{traducción inconclusa</value>
-        <value>{{autotrad</value>
-        <value>{{revisar traducción</value>
+        <value>traducción</value>
+        <value>mal traducido</value>
+        <value>maltraducido</value>
+        <value>mala traducción</value>
+        <value>malatraducción</value>
+        <value>traducción defectuosa</value>
+        <value>traducción incompleta</value>
+        <value>traducción inconclusa</value>
+        <value>autotrad</value>
+        <value>revisar traducción</value>
 
-        <value>{{wikificar</value>
+        <value>wikificar</value>
 
         <!-- Galician -->
-        <value>{{en tradución</value>
-        <value>{{entradución</value>
-        <value>{{non galego</value>
-        <value>{{lixo</value>
-        <value>{{lixoporque</value>
-        <value>{{pendente artigo</value>
-        <value>{{formatowiki</value>
-    </util:list>
+        <value>en tradución</value>
+        <value>entradución</value>
+        <value>non galego</value>
+        <value>lixo</value>
+        <value>lixoporque</value>
+        <value>pendente artigo</value>
+        <value>formatowiki</value>
+    </util:set>
 
     <util:set id="ignorableSections" value-type="java.lang.String">
         <value>Bibliografía</value>
