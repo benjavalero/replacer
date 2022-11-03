@@ -498,14 +498,11 @@ public class DateFinder implements ReplacementFinder {
         }
 
         private boolean isDay(String token) {
-            // It could be ended with a comma in case of month-day-year
-            return (
-                StringUtils.isNotEmpty(token) &&
-                token.length() <= 2 &&
-                StringUtils.isNumeric(token) &&
-                Integer.parseInt(token) <= 31 &&
-                Integer.parseInt(token) > 0
-            );
+            try {
+                return Integer.parseInt(token) <= 31 && Integer.parseInt(token) > 0;
+            } catch (NumberFormatException nfe) {
+                return false;
+            }
         }
 
         private boolean isPreposition(String token, WikipediaLanguage lang) {
@@ -517,19 +514,15 @@ public class DateFinder implements ReplacementFinder {
         }
 
         private boolean isYear(String token) {
-            // It could be ended with a comma in case of year-month-day
-            final String year;
-            if (token.length() == 4) {
-                year = token;
-            } else if (token.length() == 5) {
-                if (token.charAt(1) != YEAR_DOT) {
-                    return false;
-                }
+            String year = token;
+            if (year.length() > 1 && year.charAt(1) == YEAR_DOT) {
                 year = StringUtils.remove(token, YEAR_DOT);
-            } else {
+            }
+            try {
+                return year.length() == 4 && Integer.parseInt(year) <= CURRENT_YEAR;
+            } catch (NumberFormatException nfe) {
                 return false;
             }
-            return StringUtils.isNumeric(year) && Integer.parseInt(year) <= CURRENT_YEAR;
         }
 
         private boolean isValidDay(String day) {
