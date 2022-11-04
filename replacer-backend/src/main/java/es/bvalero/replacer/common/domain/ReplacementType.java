@@ -16,6 +16,7 @@ public class ReplacementType {
 
     public static final ReplacementType CENTURY = ReplacementType.of(ReplacementKind.STYLE, "Siglo sin versalitas");
     public static final ReplacementType COORDINATES = ReplacementType.of(ReplacementKind.STYLE, "Coordenadas");
+    public static final ReplacementType DEGREES = ReplacementType.of(ReplacementKind.STYLE, "Grados");
 
     private static final int MAX_SUBTYPE_LENGTH = 100; // Constrained by the database
 
@@ -60,7 +61,7 @@ public class ReplacementType {
 
     public boolean isForBots() {
         // For the moment we hardcode this property in the very domain entity
-        return false;
+        return this == DEGREES;
     }
 
     @Override

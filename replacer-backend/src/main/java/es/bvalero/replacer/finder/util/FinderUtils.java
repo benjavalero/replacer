@@ -21,7 +21,7 @@ public class FinderUtils {
     private static final char UNDERSCORE = '_'; // _ invalid word separator
     private static final Set<Character> URL_SEPARATORS = Set.of('/', '.');
     private static final String ALTERNATE_SEPARATOR = "|";
-    private static final String NON_BREAKING_SPACE = "&nbsp;";
+    public static final String NON_BREAKING_SPACE = "&nbsp;";
     private static final String NON_BREAKING_SPACE_TEMPLATE = "{{esd}}";
     public static final Set<String> SPACES = Set.of(SPACE, NON_BREAKING_SPACE, NON_BREAKING_SPACE_TEMPLATE);
     private static final char DECIMAL_COMMA = ',';
@@ -108,7 +108,11 @@ public class FinderUtils {
     }
 
     public boolean isSpace(String str) {
-        return StringUtils.isBlank(str) || FinderUtils.SPACES.contains(str);
+        return StringUtils.isBlank(str) || isActualSpace(str);
+    }
+
+    public boolean isActualSpace(String str) {
+        return FinderUtils.SPACES.contains(str);
     }
 
     /***** TEXT UTILS *****/
@@ -171,20 +175,21 @@ public class FinderUtils {
         );
     }
 
+    /* Find the most close sequence of letters and digits starting at the given position */
     @Nullable
-    public LinearMatchResult findWordAfter(String text, int endWord) {
-        return findWordAfter(text, endWord, Collections.emptyList());
+    public LinearMatchResult findWordAfter(String text, int start) {
+        return findWordAfter(text, start, Collections.emptyList());
     }
 
     @Nullable
-    public LinearMatchResult findWordAfter(String text, int endWord, Collection<Character> allowedChars) {
-        if (endWord >= text.length() || isWordChar(text.charAt(endWord))) {
+    public LinearMatchResult findWordAfter(String text, int start, Collection<Character> allowedChars) {
+        if (start >= text.length()) {
             return null;
         }
 
         int firstLetter = -1;
         int lastLetter = -1;
-        for (int i = endWord + 1; i < text.length(); i++) {
+        for (int i = start; i < text.length(); i++) {
             final char ch = text.charAt(i);
             if (isWordChar(ch)) {
                 if (firstLetter < 0) {
@@ -195,7 +200,18 @@ public class FinderUtils {
                 break;
             }
         }
-        return firstLetter >= 0 ? LinearMatchResult.of(firstLetter, text.substring(firstLetter, lastLetter + 1)) : null;
+
+        if (firstLetter < 0) {
+            return null;
+        }
+
+        // Check possible non-breaking space
+        final String word = text.substring(firstLetter, lastLetter + 1);
+        if ("nbsp".equals(word)) {
+            return findWordAfter(text, lastLetter + 1);
+        } else {
+            return LinearMatchResult.of(firstLetter, word);
+        }
     }
 
     public boolean isWordPrecededByUpperCase(int start, String text) {
@@ -203,6 +219,7 @@ public class FinderUtils {
         return wordBefore != null && startsWithUpperCase(wordBefore.group());
     }
 
+    /* Find the most close sequence of letters and digits ending at the given position */
     @Nullable
     public LinearMatchResult findWordBefore(String text, int start) {
         return findWordBefore(text, start, Collections.emptyList());
@@ -210,13 +227,13 @@ public class FinderUtils {
 
     @Nullable
     public LinearMatchResult findWordBefore(String text, int start, Collection<Character> allowedChars) {
-        if (start < 1 || isWordChar(text.charAt(start - 1))) {
+        if (start < 1) {
             return null;
         }
 
         int firstLetter = -1;
         int lastLetter = -1;
-        for (int i = start - 2; i >= 0; i--) {
+        for (int i = start - 1; i >= 0; i--) {
             final char ch = text.charAt(i);
             if (isWordChar(ch)) {
                 if (lastLetter < 0) {
@@ -227,7 +244,18 @@ public class FinderUtils {
                 break;
             }
         }
-        return lastLetter >= 0 ? LinearMatchResult.of(firstLetter, text.substring(firstLetter, lastLetter + 1)) : null;
+
+        if (lastLetter < 0) {
+            return null;
+        }
+
+        // Check possible non-breaking space
+        final String word = text.substring(firstLetter, lastLetter + 1);
+        if ("nbsp".equals(word)) {
+            return findWordBefore(text, firstLetter);
+        } else {
+            return LinearMatchResult.of(firstLetter, word);
+        }
     }
 
     @Nullable

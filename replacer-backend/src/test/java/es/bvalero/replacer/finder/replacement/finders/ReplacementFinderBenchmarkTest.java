@@ -29,6 +29,7 @@ import org.springframework.test.context.ActiveProfiles;
         CenturyFinder.class,
         CoordinatesFinder.class,
         DateFinder.class,
+        DegreeFinder.class,
         ListingOfflineFinder.class,
         ComposedMisspellingParser.class,
         ComposedMisspellingLoader.class,
