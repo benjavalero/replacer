@@ -207,11 +207,15 @@ public class FinderUtils {
 
         // Check possible non-breaking space
         final String word = text.substring(firstLetter, lastLetter + 1);
-        if ("nbsp".equals(word)) {
+        if (isSpaceWord(word)) {
             return findWordAfter(text, lastLetter + 1);
         } else {
             return LinearMatchResult.of(firstLetter, word);
         }
+    }
+
+    private boolean isSpaceWord(String word) {
+        return "nbsp".equals(word) || "esd".equals(word);
     }
 
     public boolean isWordPrecededByUpperCase(int start, String text) {
@@ -251,7 +255,7 @@ public class FinderUtils {
 
         // Check possible non-breaking space
         final String word = text.substring(firstLetter, lastLetter + 1);
-        if ("nbsp".equals(word)) {
+        if (isSpaceWord(word)) {
             return findWordBefore(text, firstLetter);
         } else {
             return LinearMatchResult.of(firstLetter, word);
