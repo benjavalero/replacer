@@ -62,7 +62,7 @@ public class ReplacementType {
     public boolean isForBots() {
         // For the moment we hardcode this property in the very domain entity
         // Note that this class is not an enumerate, so it must be compared with equals.
-        return this.equals(DEGREES);
+        return false;
     }
 
     @Override
