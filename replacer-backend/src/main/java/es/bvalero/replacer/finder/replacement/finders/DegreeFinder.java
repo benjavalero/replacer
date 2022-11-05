@@ -26,10 +26,10 @@ public class DegreeFinder implements ReplacementFinder {
 
     private static final char DEGREE = '\u00b0'; // °
     private static final char MASCULINE_ORDINAL = '\u00ba'; // º
-    private static final char CELSIUS = 'C';
-    private static final char FAHRENHEIT = 'F';
-    private static final char KELVIN = 'K';
-    private static final Set<Character> DEGREE_LETTERS = Set.of(CELSIUS, FAHRENHEIT, KELVIN);
+    private static final String CELSIUS = "C";
+    private static final String FAHRENHEIT = "F";
+    private static final String KELVIN = "K";
+    private static final Set<String> DEGREE_LETTERS = Set.of(CELSIUS, FAHRENHEIT, KELVIN);
 
     @Override
     public Iterable<MatchResult> findMatchResults(WikipediaPage page) {
@@ -73,7 +73,7 @@ public class DegreeFinder implements ReplacementFinder {
             assert matchSymbol.group().length() == 1;
             assert matchLetter.group().length() == 1;
             final char symbol = matchSymbol.group().charAt(0);
-            final char letter = matchLetter.group().charAt(0);
+            final String letter = matchLetter.group();
             if (isValidDegree(word, space1, symbol, space2, letter)) {
                 start = endDegree;
                 continue;
@@ -111,7 +111,7 @@ public class DegreeFinder implements ReplacementFinder {
         if (
             matchAfter == null ||
             matchAfter.group().length() != 1 ||
-            !DEGREE_LETTERS.contains(matchAfter.group().charAt(0))
+            !DEGREE_LETTERS.contains(FinderUtils.toUpperCase(matchAfter.group()))
         ) {
             return null;
         } else {
@@ -120,16 +120,21 @@ public class DegreeFinder implements ReplacementFinder {
     }
 
     // A degree is valid if it contains a space and the symbol is correct
-    private boolean isValidDegree(String word, String space1, char symbol, String space2, char letter) {
+    private boolean isValidDegree(String word, String space1, char symbol, String space2, String letter) {
         // Only check previous space if the word is a number
         if (StringUtils.isNumeric(word)) {
-            if (letter == KELVIN) {
+            if (letter.equalsIgnoreCase(KELVIN)) {
                 return false;
             } else {
-                return FinderUtils.isActualSpace(space1) && symbol == DEGREE && EMPTY.equals(space2);
+                return (
+                    FinderUtils.isActualSpace(space1) &&
+                    symbol == DEGREE &&
+                    EMPTY.equals(space2) &&
+                    DEGREE_LETTERS.contains(letter)
+                );
             }
         } else {
-            return symbol == DEGREE && EMPTY.equals(space2);
+            return symbol == DEGREE && EMPTY.equals(space2) && DEGREE_LETTERS.contains(letter);
         }
     }
 
@@ -139,12 +144,13 @@ public class DegreeFinder implements ReplacementFinder {
 
         final String fixedDegree;
         final String word = match.group(0);
-        final char letter = match.group(2).charAt(0);
-        final String fixedSymbol = letter == KELVIN ? "" : String.valueOf(DEGREE);
+        final String space1 = match.group(1);
+        final String fixedLetter = FinderUtils.toUpperCase(match.group(2));
+        final String fixedSymbol = fixedLetter.equals(KELVIN) ? "" : String.valueOf(DEGREE);
         if (StringUtils.isNumeric(word)) {
-            fixedDegree = match.group(0) + NON_BREAKING_SPACE + fixedSymbol + match.group(2);
+            fixedDegree = word + NON_BREAKING_SPACE + fixedSymbol + fixedLetter;
         } else {
-            fixedDegree = match.group(0) + match.group(1) + fixedSymbol + match.group(2);
+            fixedDegree = word + space1 + fixedSymbol + fixedLetter;
         }
 
         return Replacement
