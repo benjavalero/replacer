@@ -30,6 +30,8 @@ public class DegreeFinder implements ReplacementFinder {
     private static final String FAHRENHEIT = "F";
     private static final String KELVIN = "K";
     private static final Set<String> DEGREE_LETTERS = Set.of(CELSIUS, FAHRENHEIT, KELVIN);
+    private static final char CELSIUS_UNICODE = '\u2103'; // ℃
+    private static final char FAHRENHEIT_UNICODE = '\u2109'; // ℉
 
     @Override
     public Iterable<MatchResult> findMatchResults(WikipediaPage page) {
@@ -45,35 +47,38 @@ public class DegreeFinder implements ReplacementFinder {
             if (matchSymbol == null) {
                 break;
             }
-
             final int startSymbol = matchSymbol.start();
-            final LinearMatchResult matchLetter = findDegreeLetter(text, matchSymbol.end());
-            if (matchLetter == null) {
-                start = startSymbol + 1;
-                continue;
-            }
 
-            final String space2 = text.substring(matchSymbol.end(), matchLetter.start());
-            if (StringUtils.isNotBlank(space2)) {
-                start = startSymbol + 1;
-                continue;
-            }
+            // They can be null if the symbol is a Unicode character
+            String space2 = null;
+            LinearMatchResult matchLetter = null;
+            if (!isUnicodeSymbol(matchSymbol.group())) {
+                matchLetter = findDegreeLetter(text, matchSymbol.end());
+                if (matchLetter == null) {
+                    start = startSymbol + 1;
+                    continue;
+                }
 
-            final int endDegree = matchLetter.end();
+                space2 = text.substring(matchSymbol.end(), matchLetter.start());
+                if (StringUtils.isNotBlank(space2)) {
+                    start = startSymbol + 1;
+                    continue;
+                }
+            }
 
             final LinearMatchResult matchBefore = FinderUtils.findWordBefore(text, startSymbol);
             if (matchBefore == null) {
-                // This would only happen if the degree is at the very start of the content but we need to check it
+                // This would only happen if the degree is at the very start of the content, but we need to check it,
                 start = startSymbol + 1;
                 continue;
             }
 
+            final int endDegree = matchLetter == null ? matchSymbol.end() : matchLetter.end();
             final String word = matchBefore.group();
             final String space1 = text.substring(matchBefore.end(), startSymbol);
             assert matchSymbol.group().length() == 1;
-            assert matchLetter.group().length() == 1;
             final char symbol = matchSymbol.group().charAt(0);
-            final String letter = matchLetter.group();
+            final String letter = matchLetter == null ? null : matchLetter.group();
             if (isValidDegree(word, space1, symbol, space2, letter)) {
                 start = endDegree;
                 continue;
@@ -90,7 +95,7 @@ public class DegreeFinder implements ReplacementFinder {
             );
             match.addGroup(matchBefore);
             match.addGroup(LinearMatchResult.of(matchBefore.end(), space1));
-            match.addGroup(matchLetter);
+            match.addGroup(matchLetter == null ? matchSymbol : matchLetter);
             return match;
         }
         return null;
@@ -99,10 +104,22 @@ public class DegreeFinder implements ReplacementFinder {
     @Nullable
     private LinearMatchResult findDegreeSymbol(String text, int start) {
         final String textSearchable = text.substring(start);
-        int startSymbol = StringUtils.indexOfAny(textSearchable, DEGREE, MASCULINE_ORDINAL);
+        int startSymbol = StringUtils.indexOfAny(
+            textSearchable,
+            DEGREE,
+            MASCULINE_ORDINAL,
+            CELSIUS_UNICODE,
+            FAHRENHEIT_UNICODE
+        );
         return startSymbol < 0
             ? null
             : LinearMatchResult.of(start + startSymbol, String.valueOf(textSearchable.charAt(startSymbol)));
+    }
+
+    private boolean isUnicodeSymbol(String symbol) {
+        assert symbol.length() == 1;
+        final char symbolChar = symbol.charAt(0);
+        return symbolChar == CELSIUS_UNICODE || symbolChar == FAHRENHEIT_UNICODE;
     }
 
     @Nullable
@@ -120,7 +137,18 @@ public class DegreeFinder implements ReplacementFinder {
     }
 
     // A degree is valid if it contains a space and the symbol is correct
-    private boolean isValidDegree(String word, String space1, char symbol, String space2, String letter) {
+    private boolean isValidDegree(
+        String word,
+        String space1,
+        char symbol,
+        @Nullable String space2,
+        @Nullable String letter
+    ) {
+        if (space2 == null || letter == null) {
+            // Unicode character
+            return false;
+        }
+
         // Only check previous space if the word is a number
         if (StringUtils.isNumeric(word)) {
             if (letter.equalsIgnoreCase(KELVIN)) {
@@ -140,13 +168,21 @@ public class DegreeFinder implements ReplacementFinder {
 
     @Override
     public Replacement convert(MatchResult matchResult, WikipediaPage page) {
-        LinearMatchResult match = (LinearMatchResult) matchResult;
+        final LinearMatchResult match = (LinearMatchResult) matchResult;
 
         final String fixedDegree;
         final String word = match.group(0);
         final String space1 = match.group(1);
-        final String fixedLetter = FinderUtils.toUpperCase(match.group(2));
-        final String fixedSymbol = fixedLetter.equals(KELVIN) ? "" : String.valueOf(DEGREE);
+        final String fixedLetter;
+        final String fixedSymbol;
+        if (isUnicodeSymbol(match.group(2))) {
+            fixedLetter = match.group(2).charAt(0) == FAHRENHEIT_UNICODE ? FAHRENHEIT : CELSIUS;
+            fixedSymbol = String.valueOf(DEGREE);
+        } else {
+            fixedLetter = FinderUtils.toUpperCase(match.group(2));
+            fixedSymbol = fixedLetter.equals(KELVIN) ? "" : String.valueOf(DEGREE);
+        }
+
         if (StringUtils.isNumeric(word)) {
             fixedDegree = word + NON_BREAKING_SPACE + fixedSymbol + fixedLetter;
         } else {

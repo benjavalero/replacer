@@ -36,6 +36,7 @@ class DegreeFinderTest {
             "50 ºK, 50&nbsp;K", // With ordinal
             "50ºK, 50&nbsp;K", // With ordinal
             "50 °c, 50&nbsp;°C",
+            "50 ℃, 50&nbsp;°C",
         }
     )
     void testDegree(String text, String expected) {
