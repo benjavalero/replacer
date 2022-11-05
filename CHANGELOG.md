@@ -1,6 +1,6 @@
 # Versions
 
-## 2.22.0 (??)
+## 2.22.0 (5 Nov 2022)
 - On composed misspellings check only that the found replacement is complete on the right
 - Feature: new replacement for bad-formatted degrees
 
