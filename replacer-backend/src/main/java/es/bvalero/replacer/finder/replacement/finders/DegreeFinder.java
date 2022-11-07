@@ -184,18 +184,25 @@ public class DegreeFinder implements ReplacementFinder {
             fixedSymbol = fixedLetter.equals(KELVIN) ? "" : String.valueOf(DEGREE);
         }
 
+        final int start;
+        final String text;
         if (FinderUtils.isDecimalNumber(word)) {
             final String fixedSpace = FinderUtils.isNonBreakingSpace(space1) ? space1 : NON_BREAKING_SPACE;
             fixedDegree = word + fixedSpace + fixedSymbol + fixedLetter;
+            start = match.start();
+            text = match.group();
         } else {
-            fixedDegree = word + space1 + fixedSymbol + fixedLetter;
+            fixedDegree = fixedSymbol + fixedLetter;
+            final int offset = word.length() + space1.length();
+            start = match.start() + offset;
+            text = match.group().substring(offset);
         }
 
         return Replacement
             .builder()
             .type(ReplacementType.DEGREES)
-            .start(match.start())
-            .text(match.group())
+            .start(start)
+            .text(text)
             .suggestions(List.of(Suggestion.ofNoComment(fixedDegree)))
             .build();
     }

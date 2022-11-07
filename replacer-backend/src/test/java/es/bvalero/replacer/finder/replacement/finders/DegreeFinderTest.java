@@ -27,9 +27,6 @@ class DegreeFinderTest {
             "50 ° C| 50&nbsp;°C",
             "50º C| 50&nbsp;°C", // With ordinal
             "50 º C| 50&nbsp;°C", // With ordinal
-            "En ° C| En °C",
-            "En ºC| En °C", // With ordinal
-            "En º C| En °C", // With ordinal
             "50&nbsp;° C| 50&nbsp;°C",
             "50&nbsp;ºC| 50&nbsp;°C", // With ordinal
             "50&nbsp;º C| 50&nbsp;°C", // With ordinal
@@ -53,6 +50,30 @@ class DegreeFinderTest {
         assertEquals(text, rep.getText());
         assertEquals(text, rep.getSuggestions().get(0).getText());
         assertEquals(expected, rep.getSuggestions().get(1).getText());
+    }
+
+    @ParameterizedTest
+    @CsvSource(
+        delimiter = '|',
+        value = {
+            "En ° C|° C|°C|3",
+            "En ºC|ºC|°C|3", // With ordinal
+            "En ºK|ºK|K|3",
+            "En º C|º C|°C|3", // With ordinal
+            "Punto de fusión ºC|ºC|°C|16",
+            "Temperatura media (ºC)|ºC|°C|19",
+        }
+    )
+    void testDegreeWithWordBefore(String text, String expected, String fix, int position) {
+        List<Replacement> replacements = degreeFinder.findList(text);
+        assertEquals(1, replacements.size());
+
+        Replacement rep = replacements.get(0);
+        assertEquals(ReplacementType.DEGREES, rep.getType());
+        assertEquals(expected, rep.getText());
+        assertEquals(position, rep.getStart());
+        assertEquals(expected, rep.getSuggestions().get(0).getText());
+        assertEquals(fix, rep.getSuggestions().get(1).getText());
     }
 
     @ParameterizedTest
