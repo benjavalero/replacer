@@ -245,7 +245,7 @@ class TemplateFinder implements ImmutableFinder {
         final int dot = value.lastIndexOf('.');
         if (dot >= 0) {
             final String extension = value.substring(dot + 1);
-            return extension.length() >= 2 && extension.length() <= 4;
+            return extension.length() >= 2 && extension.length() <= 4 && StringUtils.isAlpha(extension);
         } else {
             return false;
         }

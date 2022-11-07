@@ -223,7 +223,8 @@ class TemplateFinderTest {
 
     @Test
     void testArgumentWithFile() {
-        String text = "{{T|xxx.jpg}}";
+        // The second parameter may appear a file if we don't check the extension
+        String text = "{{T|xxx.jpg|22.42}}";
 
         List<Immutable> matches = templateFinder.findList(text);
 

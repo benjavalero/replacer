@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import es.bvalero.replacer.common.domain.Replacement;
 import es.bvalero.replacer.common.domain.ReplacementType;
 import java.util.List;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -56,5 +57,16 @@ class DegreeFinderTest {
         List<Replacement> replacements = degreeFinder.findList(degree);
 
         assertTrue(replacements.isEmpty());
+    }
+
+    @Test
+    void testSeveralDegrees() {
+        // The 3 cases use the masculine ordinal
+        String text =
+            "|PEK=417.15|(o-xileno:144&nbsp;ºC); 412.15|(m-xileno:139&nbsp;ºC); 411.15|(p-xileno:138&nbsp;ºC)";
+
+        List<Replacement> replacements = degreeFinder.findList(text);
+
+        assertEquals(3, replacements.size());
     }
 }
