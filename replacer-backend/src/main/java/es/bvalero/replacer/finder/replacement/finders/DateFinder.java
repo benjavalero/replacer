@@ -611,9 +611,11 @@ public class DateFinder implements ReplacementFinder {
 
         // Return the appropriate article for the date
         private List<String> getFixArticle(WikipediaPage page, int start) {
-            final LinearMatchResult preceding = FinderUtils.findWordBefore(page.getContent(), start);
+            final String text = page.getContent();
+            final LinearMatchResult preceding = FinderUtils.findWordBefore(text, start);
             final WikipediaLanguage lang = page.getId().getLang();
-            if (preceding != null) {
+            // Check there is a space between the article and the date
+            if (preceding != null && SPACE.equals(text.substring(preceding.end(), start))) {
                 final String precedingArticle = preceding.group();
                 final String precedingAlternative = langArticles.get(lang).get(precedingArticle);
                 if (precedingAlternative != null) {

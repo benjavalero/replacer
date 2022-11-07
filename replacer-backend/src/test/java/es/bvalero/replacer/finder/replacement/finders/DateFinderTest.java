@@ -270,4 +270,19 @@ class DateFinderTest {
         assertEquals(ReplacementType.DATE, replacements.get(0).getType());
         assertEquals(ReplacementType.DATE, replacements.get(1).getType());
     }
+
+    @Test
+    void testPrecededByArticleWithNoSpaceBetween() {
+        String text = "|'''A'''\n" + "|-\n" + "|28 octubre 2022, ";
+        String date = "28 octubre 2022";
+        String expected = "28 de octubre de 2022";
+
+        List<Replacement> replacements = dateFinder.findList(text);
+
+        assertEquals(1, replacements.size());
+        assertEquals(date, replacements.get(0).getText());
+        assertEquals(date, replacements.get(0).getSuggestions().get(0).getText());
+        assertEquals(expected, replacements.get(0).getSuggestions().get(1).getText());
+        assertEquals(ReplacementType.DATE, replacements.get(0).getType());
+    }
 }
