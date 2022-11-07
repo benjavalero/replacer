@@ -100,7 +100,7 @@ public class FinderUtils {
     }
 
     private boolean isDecimalNumber(char ch) {
-        return Character.isDigit(ch) || ch == DECIMAL_DOT;
+        return Character.isDigit(ch) || DECIMAL_SEPARATORS.contains(ch);
     }
 
     public String normalizeDecimalNumber(String number) {

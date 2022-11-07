@@ -1,5 +1,6 @@
 package es.bvalero.replacer.finder.replacement.finders;
 
+import static es.bvalero.replacer.finder.util.FinderUtils.DECIMAL_SEPARATORS;
 import static es.bvalero.replacer.finder.util.FinderUtils.NON_BREAKING_SPACE;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
@@ -66,7 +67,7 @@ public class DegreeFinder implements ReplacementFinder {
                 }
             }
 
-            final LinearMatchResult matchBefore = FinderUtils.findWordBefore(text, startSymbol);
+            final LinearMatchResult matchBefore = FinderUtils.findWordBefore(text, startSymbol, DECIMAL_SEPARATORS);
             if (matchBefore == null) {
                 // This would only happen if the degree is at the very start of the content, but we need to check it,
                 start = startSymbol + 1;
@@ -150,7 +151,7 @@ public class DegreeFinder implements ReplacementFinder {
         }
 
         // Only check previous space if the word is a number
-        if (StringUtils.isNumeric(word)) {
+        if (FinderUtils.isDecimalNumber(word)) {
             if (letter.equalsIgnoreCase(KELVIN)) {
                 return false;
             } else {
@@ -183,7 +184,7 @@ public class DegreeFinder implements ReplacementFinder {
             fixedSymbol = fixedLetter.equals(KELVIN) ? "" : String.valueOf(DEGREE);
         }
 
-        if (StringUtils.isNumeric(word)) {
+        if (FinderUtils.isDecimalNumber(word)) {
             fixedDegree = word + NON_BREAKING_SPACE + fixedSymbol + fixedLetter;
         } else {
             fixedDegree = word + space1 + fixedSymbol + fixedLetter;

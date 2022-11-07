@@ -17,27 +17,30 @@ class DegreeFinderTest {
 
     @ParameterizedTest
     @CsvSource(
-        {
-            "50°C, 50&nbsp;°C",
-            "50°F, 50&nbsp;°F",
-            "50ºC, 50&nbsp;°C", // With ordinal
-            "50 ºC, 50&nbsp;°C", // With ordinal
-            "50° C, 50&nbsp;°C",
-            "50 ° C, 50&nbsp;°C",
-            "50º C, 50&nbsp;°C", // With ordinal
-            "50 º C, 50&nbsp;°C", // With ordinal
-            "En ° C, En °C",
-            "En ºC, En °C", // With ordinal
-            "En º C, En °C", // With ordinal
-            "50&nbsp;° C, 50&nbsp;°C",
-            "50&nbsp;ºC, 50&nbsp;°C", // With ordinal
-            "50&nbsp;º C, 50&nbsp;°C", // With ordinal
-            "50 °K, 50&nbsp;K",
-            "50°K, 50&nbsp;K",
-            "50 ºK, 50&nbsp;K", // With ordinal
-            "50ºK, 50&nbsp;K", // With ordinal
-            "50 °c, 50&nbsp;°C",
-            "50 ℃, 50&nbsp;°C",
+        delimiter = '|',
+        value = {
+            "50°C| 50&nbsp;°C",
+            "50°F| 50&nbsp;°F",
+            "50ºC| 50&nbsp;°C", // With ordinal
+            "50 ºC| 50&nbsp;°C", // With ordinal
+            "50° C| 50&nbsp;°C",
+            "50 ° C| 50&nbsp;°C",
+            "50º C| 50&nbsp;°C", // With ordinal
+            "50 º C| 50&nbsp;°C", // With ordinal
+            "En ° C| En °C",
+            "En ºC| En °C", // With ordinal
+            "En º C| En °C", // With ordinal
+            "50&nbsp;° C| 50&nbsp;°C",
+            "50&nbsp;ºC| 50&nbsp;°C", // With ordinal
+            "50&nbsp;º C| 50&nbsp;°C", // With ordinal
+            "50 °K| 50&nbsp;K",
+            "50°K| 50&nbsp;K",
+            "50 ºK| 50&nbsp;K", // With ordinal
+            "50ºK| 50&nbsp;K", // With ordinal
+            "50 °c| 50&nbsp;°C",
+            "50 ℃| 50&nbsp;°C",
+            "50.2°C| 50.2&nbsp;°C",
+            "50,2°C| 50,2&nbsp;°C",
         }
     )
     void testDegree(String text, String expected) {
