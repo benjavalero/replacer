@@ -185,7 +185,8 @@ public class DegreeFinder implements ReplacementFinder {
         }
 
         if (FinderUtils.isDecimalNumber(word)) {
-            fixedDegree = word + NON_BREAKING_SPACE + fixedSymbol + fixedLetter;
+            final String fixedSpace = FinderUtils.isNonBreakingSpace(space1) ? space1 : NON_BREAKING_SPACE;
+            fixedDegree = word + fixedSpace + fixedSymbol + fixedLetter;
         } else {
             fixedDegree = word + space1 + fixedSymbol + fixedLetter;
         }

@@ -115,6 +115,10 @@ public class FinderUtils {
         return FinderUtils.SPACES.contains(str);
     }
 
+    public boolean isNonBreakingSpace(String str) {
+        return NON_BREAKING_SPACE.equals(str) || NON_BREAKING_SPACE_TEMPLATE.equals(str);
+    }
+
     /***** TEXT UTILS *****/
 
     public boolean isWordCompleteInText(int startWord, String word, String text) {
