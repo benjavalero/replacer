@@ -25,6 +25,7 @@
         <value>coord|*</value>
         <value>DEFAULTSORT|*</value>    <!-- It usually contains words without accents for the sake of sorting -->
         <value>enlace roto|*</value>
+        <value>esd</value>
         <value>facebook|*</value>
         <value>ficha de taxón|*</value>
         <value>Fila BIC|*</value>
