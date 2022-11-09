@@ -77,7 +77,7 @@ class DegreeFinderTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = { "50 °C", "En °C", "50&nbsp;°C", "50{{esd}}°C", "50 K" })
+    @ValueSource(strings = { "50 °C", "En °C", "50&nbsp;°C", "50{{esd}}°C", "50 K", "{{unidad|−273.144|°C}})" })
     void testValidDegree(String degree) {
         List<Replacement> replacements = degreeFinder.findList(degree);
 

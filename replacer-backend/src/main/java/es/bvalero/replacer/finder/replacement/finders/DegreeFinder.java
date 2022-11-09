@@ -85,7 +85,7 @@ public class DegreeFinder implements ReplacementFinder {
                 continue;
             }
             // If preceded by number the space must be valid
-            if (StringUtils.isNumeric(word) && !FinderUtils.isSpace(space1)) {
+            if (FinderUtils.isDecimalNumber(word) && !FinderUtils.isSpace(space1)) {
                 start = endDegree;
                 continue;
             }
