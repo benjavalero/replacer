@@ -39,6 +39,8 @@ class DegreeFinderTest {
             "50.2°C| 50.2&nbsp;°C",
             "50,2°C| 50,2&nbsp;°C",
             "50{{esd}}ºC| 50{{esd}}°C",
+            "8.8{{esd}}℃|8.8{{esd}}°C",
+            "8.8&nbsp;℃|8.8&nbsp;°C",
         }
     )
     void testDegree(String text, String expected) {
@@ -77,7 +79,7 @@ class DegreeFinderTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = { "50 °C", "En °C", "50&nbsp;°C", "50{{esd}}°C", "50 K", "{{unidad|−273.144|°C}})" })
+    @ValueSource(strings = { "50 °C", "En °C", "50&nbsp;°C", "50.5{{esd}}°C", "50 K", "{{unidad|−273.144|°C}})" })
     void testValidDegree(String degree) {
         List<Replacement> replacements = degreeFinder.findList(degree);
 

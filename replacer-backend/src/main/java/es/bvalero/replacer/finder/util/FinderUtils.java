@@ -212,7 +212,7 @@ public class FinderUtils {
         // Check possible non-breaking space
         final String word = text.substring(firstLetter, lastLetter + 1);
         if (isSpaceWord(word)) {
-            return findWordAfter(text, lastLetter + 1);
+            return findWordAfter(text, lastLetter + 1, allowedChars);
         } else {
             return LinearMatchResult.of(firstLetter, word);
         }
@@ -260,7 +260,7 @@ public class FinderUtils {
         // Check possible non-breaking space
         final String word = text.substring(firstLetter, lastLetter + 1);
         if (isSpaceWord(word)) {
-            return findWordBefore(text, firstLetter);
+            return findWordBefore(text, firstLetter, allowedChars);
         } else {
             return LinearMatchResult.of(firstLetter, word);
         }
