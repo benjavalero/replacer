@@ -94,8 +94,10 @@ public class DegreeFinder implements ReplacementFinder {
                 matchBefore.start(),
                 text.substring(matchBefore.start(), endDegree)
             );
+            // 0 - word; 1 - space before; 2 - symbol; 3 - letter (or symbol again)
             match.addGroup(matchBefore);
             match.addGroup(LinearMatchResult.of(matchBefore.end(), space1));
+            match.addGroup(matchSymbol);
             match.addGroup(matchLetter == null ? matchSymbol : matchLetter);
             return match;
         }
@@ -171,19 +173,33 @@ public class DegreeFinder implements ReplacementFinder {
     public Replacement convert(MatchResult matchResult, WikipediaPage page) {
         final LinearMatchResult match = (LinearMatchResult) matchResult;
 
-        final String fixedDegree;
+        // 0 - word; 1 - space before; 2 - symbol; 3 - letter (or symbol again)
         final String word = match.group(0);
         final String space1 = match.group(1);
+        final String symbol = match.group(2);
+        final String letter = match.group(3).equals(symbol) ? null : match.group(3);
+
         final String fixedLetter;
         final String fixedSymbol;
-        if (isUnicodeSymbol(match.group(2))) {
-            fixedLetter = match.group(2).charAt(0) == FAHRENHEIT_UNICODE ? FAHRENHEIT : CELSIUS;
+        String suggestion = null;
+        if (isUnicodeSymbol(symbol)) {
+            fixedLetter = symbol.charAt(0) == FAHRENHEIT_UNICODE ? FAHRENHEIT : CELSIUS;
             fixedSymbol = String.valueOf(DEGREE);
+            suggestion = "carácter Unicode";
         } else {
-            fixedLetter = FinderUtils.toUpperCase(match.group(2));
-            fixedSymbol = fixedLetter.equals(KELVIN) ? "" : String.valueOf(DEGREE);
+            assert letter != null;
+            fixedLetter = FinderUtils.toUpperCase(letter);
+            if (fixedLetter.equals(KELVIN)) {
+                fixedSymbol = "";
+            } else {
+                fixedSymbol = String.valueOf(DEGREE);
+                if (symbol.charAt(0) == MASCULINE_ORDINAL) {
+                    suggestion = "símbolo de ordinal";
+                }
+            }
         }
 
+        final String fixedDegree;
         final int start;
         final String text;
         if (FinderUtils.isDecimalNumber(word)) {
@@ -198,12 +214,17 @@ public class DegreeFinder implements ReplacementFinder {
             text = match.group().substring(offset);
         }
 
+        final List<Suggestion> suggestions = List.of(
+            Suggestion.of(text, suggestion),
+            Suggestion.ofNoComment(fixedDegree)
+        );
+
         return Replacement
             .builder()
             .type(ReplacementType.DEGREES)
             .start(start)
             .text(text)
-            .suggestions(List.of(Suggestion.ofNoComment(fixedDegree)))
+            .suggestions(suggestions)
             .build();
     }
 }
