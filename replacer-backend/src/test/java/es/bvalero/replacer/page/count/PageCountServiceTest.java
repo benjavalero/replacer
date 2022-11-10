@@ -49,7 +49,7 @@ class PageCountServiceTest {
 
         assertEquals(expected, pageCountService.countReplacementsGroupedByType(WikipediaLanguage.getDefault(), "X"));
 
-        verify(userRightsService).isBot(WikipediaLanguage.getDefault(), "X");
+        verify(userRightsService).isTypeForbidden(type, WikipediaLanguage.getDefault(), "X");
         verify(replacementTypeRepository).countReplacementsByType(WikipediaLanguage.getDefault());
     }
 
@@ -57,19 +57,18 @@ class PageCountServiceTest {
     void testCountReplacementsGroupedByTypeForBots() {
         ReplacementType type = ReplacementType.of(ReplacementKind.STYLE, "Y");
         ResultCount<ReplacementType> count = ResultCount.of(type, 100);
-        ReplacementType typeForBots = mock(ReplacementType.class);
-        when(typeForBots.getKind()).thenReturn(ReplacementKind.STYLE);
-        when(typeForBots.getSubtype()).thenReturn("Z");
-        when(typeForBots.isForBots()).thenReturn(true);
+        ReplacementType typeForBots = ReplacementType.of(ReplacementKind.STYLE, "Z");
         ResultCount<ReplacementType> count2 = ResultCount.of(typeForBots, 200);
         Collection<ResultCount<ReplacementType>> counts = List.of(count, count2);
 
-        String user = "X";
-        String bot = "Z";
+        String user = "user";
+        String bot = "bot";
 
         when(replacementTypeRepository.countReplacementsByType(WikipediaLanguage.getDefault())).thenReturn(counts);
-        when(userRightsService.isBot(WikipediaLanguage.getDefault(), user)).thenReturn(false);
-        when(userRightsService.isBot(WikipediaLanguage.getDefault(), bot)).thenReturn(true);
+        when(userRightsService.isTypeForbidden(type, WikipediaLanguage.getDefault(), user)).thenReturn(false);
+        when(userRightsService.isTypeForbidden(typeForBots, WikipediaLanguage.getDefault(), user)).thenReturn(true);
+        when(userRightsService.isTypeForbidden(type, WikipediaLanguage.getDefault(), bot)).thenReturn(false);
+        when(userRightsService.isTypeForbidden(typeForBots, WikipediaLanguage.getDefault(), bot)).thenReturn(false);
 
         KindCount kindCount = KindCount.of(ReplacementKind.STYLE.getCode());
         kindCount.add(SubtypeCount.of("Y", 100));
@@ -82,7 +81,8 @@ class PageCountServiceTest {
         assertEquals(expected, pageCountService.countReplacementsGroupedByType(WikipediaLanguage.getDefault(), user));
         assertEquals(expectedBot, pageCountService.countReplacementsGroupedByType(WikipediaLanguage.getDefault(), bot));
 
-        verify(userRightsService, times(2)).isBot(any(WikipediaLanguage.class), anyString());
+        verify(userRightsService, times(4))
+            .isTypeForbidden(any(ReplacementType.class), any(WikipediaLanguage.class), anyString());
         verify(replacementTypeRepository, times(2)).countReplacementsByType(WikipediaLanguage.getDefault());
     }
 }

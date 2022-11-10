@@ -195,7 +195,7 @@ abstract class ReviewFinder {
 
     private Collection<Replacement> findReplacements(WikipediaPage page, ReviewOptions options) {
         // Calculate all the standard replacements
-        // We take profit and we update the database with the just calculated replacements (also when empty)
+        // We take profit, and we update the database with the just calculated replacements (also when empty).
         // If the page has not been indexed (or is not indexable) the collection of replacements is empty
         Collection<Replacement> standardReplacements = indexReplacements(page).getReplacements();
 
@@ -205,14 +205,12 @@ abstract class ReviewFinder {
         // Decorate the standard replacements with different actions depending on the type of review
         Collection<Replacement> decoratedReplacements = decorateReplacements(page, options, notReviewedReplacements);
 
-        // Discard the replacements only available for bots (if applicable)
-        if (!userRightsService.isBot(options.getLang(), options.getUser())) {
-            decoratedReplacements = discardBotReplacements(decoratedReplacements);
-        }
+        // Discard the replacements only available for bots or admin (if applicable)
+        Collection<Replacement> allowedReplacements = discardForbiddenReplacements(decoratedReplacements, options);
 
         // Return the replacements sorted as they appear in the text so there is no need to sort them in the frontend
-        // We assume the given replacement collection is already sorted but we sort it just in case
-        List<Replacement> replacements = new ArrayList<>(decoratedReplacements);
+        // We assume the given replacement collection is already sorted, but we sort it just in case.
+        List<Replacement> replacements = new ArrayList<>(allowedReplacements);
         Collections.sort(replacements);
         LOGGER.debug(
             "Found {} replacements in page {} - {} for options {}",
@@ -231,9 +229,12 @@ abstract class ReviewFinder {
         Collection<Replacement> replacements
     );
 
-    private Collection<Replacement> discardBotReplacements(Collection<Replacement> replacements) {
+    private Collection<Replacement> discardForbiddenReplacements(
+        Collection<Replacement> replacements,
+        ReviewOptions options
+    ) {
         List<Replacement> toReview = new LinkedList<>(replacements);
-        toReview.removeIf(r -> r.getType().isForBots());
+        toReview.removeIf(r -> userRightsService.isTypeForbidden(r.getType(), options.getLang(), options.getUser()));
         return toReview;
     }
 

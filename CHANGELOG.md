@@ -1,5 +1,12 @@
 # Versions
 
+## 2.22.1 (??)
+- Prepare the replacement types so some could only be available for admin users
+- Ignore template "esd" for hard-spaces
+- Improve the degree finder
+- Fix: decimal numbers in parameter values detected as file names
+- Fix: dates preceded by article but with no space between
+
 ## 2.22.0 (5 Nov 2022)
 - On composed misspellings check only that the found replacement is complete on the right
 - Feature: new replacement for bad-formatted degrees
@@ -23,7 +30,7 @@
 ## 2.20.0 (25 Aug 2022)
 - Revert "Count replacements by type without grouping by page"
 - Instead of a date subtype we add the dates with the article fixed as a new suggestion
-- Prepare the replacement types so some could be only available for bot users
+- Prepare the replacement types so some could only be available for bot users
 - New replacement kind for style replacements
 - Move _o acute_ replacements from composed to style kind
 - Feature: new style replacement for centuries without small caps

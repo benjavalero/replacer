@@ -2,6 +2,7 @@ package es.bvalero.replacer.user;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
+import es.bvalero.replacer.common.domain.ReplacementType;
 import es.bvalero.replacer.common.domain.ReplacerUser;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.exception.ForbiddenException;
@@ -47,6 +48,7 @@ public class UserRightsService {
         }
     }
 
+    @VisibleForTesting
     public boolean isBot(WikipediaLanguage lang, String username) {
         return getCachedUser(lang, username).isBot();
     }
@@ -65,5 +67,9 @@ public class UserRightsService {
         String username = tokens[1];
         // In case of empty result return a fake user with no groups
         return userService.findUser(lang, username).orElse(ReplacerUser.builder().lang(lang).name(username).build());
+    }
+
+    public boolean isTypeForbidden(ReplacementType type, WikipediaLanguage lang, String user) {
+        return (type.isForBots() && !isBot(lang, user)) || (type.isForAdmin() && !isAdmin(lang, user));
     }
 }

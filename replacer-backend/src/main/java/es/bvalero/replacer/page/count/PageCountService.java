@@ -22,16 +22,19 @@ class PageCountService {
     private ReplacementTypeRepository replacementTypeRepository;
 
     Collection<KindCount> countReplacementsGroupedByType(WikipediaLanguage lang, String user) {
-        boolean isBot = userRightsService.isBot(lang, user);
-        return toDto(replacementTypeRepository.countReplacementsByType(lang), isBot);
+        return toDto(replacementTypeRepository.countReplacementsByType(lang), lang, user);
     }
 
     // This mapping from domain to DTO could be done in the Controller instead
     // We do it here to keep the Controller simpler
-    private Collection<KindCount> toDto(Collection<ResultCount<ReplacementType>> counts, boolean isBot) {
+    private Collection<KindCount> toDto(
+        Collection<ResultCount<ReplacementType>> counts,
+        WikipediaLanguage lang,
+        String user
+    ) {
         final Map<Byte, KindCount> kindCounts = new TreeMap<>();
         for (ResultCount<ReplacementType> count : counts) {
-            if (!isBot && count.getKey().isForBots()) {
+            if (userRightsService.isTypeForbidden(count.getKey(), lang, user)) {
                 continue;
             }
             byte kindCode = count.getKey().getKind().getCode();
