@@ -154,6 +154,7 @@ class WikipediaApiResponse {
 
         private int userid;
         private String name;
+        private boolean missing;
         private List<String> groups;
     }
 }

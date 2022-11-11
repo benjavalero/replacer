@@ -233,6 +233,19 @@ class WikipediaApiServiceTest {
     }
 
     @Test
+    void testMissingUser() throws Exception {
+        // API response
+        String textResponse = "{\"batchcomplete\":true,\"query\":{\"users\":[{\"name\":\"Missi\",\"missing\":true}]}}";
+        WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
+        when(wikipediaApiRequestHelper.executeApiRequest(any(WikipediaApiRequest.class))).thenReturn(response);
+
+        WikipediaUser user = wikipediaPageRepository
+            .findByUsername(WikipediaLanguage.getDefault(), "Missi")
+            .orElse(null);
+        assertNull(user);
+    }
+
+    @Test
     void testSavePageContentWithConflict() throws Exception {
         // API response for the EditToken request
         String textResponse =

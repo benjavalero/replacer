@@ -100,7 +100,13 @@ class WikipediaPageApiRepository implements WikipediaPageRepository, WikipediaUs
         return Optional.empty();
     }
 
+    @Nullable
     private WikipediaUser convertUser(WikipediaLanguage lang, WikipediaApiResponse.User user) {
+        if (user.isMissing()) {
+            LOGGER.warn("Missing user: {}", user.getName());
+            return null;
+        }
+
         return WikipediaUser
             .builder()
             .lang(lang)
