@@ -29,6 +29,20 @@ public class DateFinder implements ReplacementFinder {
 
     private static final char YEAR_DOT = '.';
     private static final int CURRENT_YEAR = LocalDate.now().getYear();
+    private static final List<String> ENGLISH_MONTHS = List.of(
+        "january",
+        "february",
+        "march",
+        "april",
+        "may",
+        "june",
+        "july",
+        "august",
+        "september",
+        "october",
+        "november",
+        "december"
+    );
 
     @Resource
     private Map<String, String> monthNames;
@@ -42,8 +56,7 @@ public class DateFinder implements ReplacementFinder {
     @Resource
     private Map<String, String> dateArticles;
 
-    private static final SetValuedMap<WikipediaLanguage, String> langMonths = new HashSetValuedHashMap<>();
-    private static final SetValuedMap<WikipediaLanguage, String> langMonthsLowerCase = new HashSetValuedHashMap<>();
+    private static final ListValuedMap<WikipediaLanguage, String> langMonths = new ArrayListValuedHashMap<>();
     private static final SetValuedMap<WikipediaLanguage, String> langConnectors = new HashSetValuedHashMap<>();
     private static final ListValuedMap<WikipediaLanguage, String> langPrepositions = new ArrayListValuedHashMap<>();
     private static final Map<WikipediaLanguage, Map<String, String>> langArticles = new EnumMap<>(
@@ -67,9 +80,12 @@ public class DateFinder implements ReplacementFinder {
                 .splitListAsStream(monthNames.get(lang.getCode()))
                 .forEach(month -> {
                     langMonths.put(lang, month);
-                    langMonths.put(lang, FinderUtils.setFirstUpperCase(month));
-                    langMonthsLowerCase.put(lang, month);
                 });
+
+            // Trick only for Spanish months
+            if (WikipediaLanguage.SPANISH.equals(lang)) {
+                langMonths.put(lang, "setiembre");
+            }
 
             FinderUtils
                 .splitListAsStream(dateConnectors.get(lang.getCode()))
@@ -107,13 +123,10 @@ public class DateFinder implements ReplacementFinder {
     @Override
     public Iterable<Replacement> find(WikipediaPage page) {
         final WikipediaLanguage lang = page.getId().getLang();
+        final List<String> months = new ArrayList<>(langMonths.get(lang));
+        months.addAll(ENGLISH_MONTHS); // Also search English months to translate them
         return IterableUtils.chainedIterable(
-            langMonthsLowerCase
-                .get(lang)
-                .stream()
-                .map(MonthFinder::new)
-                .map(finder -> finder.find(page))
-                .toArray(Iterable[]::new)
+            months.stream().map(MonthFinder::new).map(finder -> finder.find(page)).toArray(Iterable[]::new)
         );
     }
 
@@ -167,7 +180,13 @@ public class DateFinder implements ReplacementFinder {
         }
 
         private boolean isMonth(String token, WikipediaLanguage lang) {
-            return langMonths.containsMapping(lang, token);
+            final String lowerMonth = FinderUtils.setFirstLowerCase(token);
+            return langMonths.containsMapping(lang, lowerMonth) || isEnglishMonth(lowerMonth);
+        }
+
+        private boolean isEnglishMonth(String month) {
+            assert FinderUtils.isAsciiLowerCase(month);
+            return ENGLISH_MONTHS.contains(month);
         }
 
         @Nullable
@@ -472,6 +491,7 @@ public class DateFinder implements ReplacementFinder {
                 month = fixUpperCaseMonth(month);
                 fixable = true;
             }
+            assert FinderUtils.isAsciiLowerCase(month);
 
             // Unordered dates are always fixable
             if (date.getType() == 3 || date.getType() == 4) {
@@ -485,6 +505,7 @@ public class DateFinder implements ReplacementFinder {
 
             // Cosmetic fixes in case we actually fix the date
             month = fixSeptember(month, lang);
+            month = fixEnglishMonth(month, lang);
             prepAfter = fixPrepositionAfter(prepAfter, lang);
 
             final String fixedDate;
@@ -550,7 +571,13 @@ public class DateFinder implements ReplacementFinder {
         }
 
         private String fixSeptember(String month, WikipediaLanguage lang) {
+            // The September fix is a trick only for Spanish months
             return WikipediaLanguage.SPANISH.equals(lang) && "setiembre".equals(month) ? "septiembre" : month;
+        }
+
+        private String fixEnglishMonth(String month, WikipediaLanguage lang) {
+            assert FinderUtils.isAsciiLowerCase(month);
+            return isEnglishMonth(month) ? langMonths.get(lang).get(ENGLISH_MONTHS.indexOf(month)) : month;
         }
 
         private boolean isValidPrepositionAfter(@Nullable String prepAfter) {

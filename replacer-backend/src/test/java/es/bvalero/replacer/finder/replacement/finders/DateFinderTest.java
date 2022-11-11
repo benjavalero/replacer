@@ -171,6 +171,7 @@ class DateFinderTest {
             "Mayo 03, 1999|3 de mayo de 1999",
             "Mayo 3, 1.999|3 de mayo de 1999",
             "mayo 3, 1999|3 de mayo de 1999",
+            "September 2, 1979|2 de septiembre de 1979",
         }
     )
     void testUnorderedDateMonthDayYear(String date, String expected) {

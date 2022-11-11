@@ -10,7 +10,7 @@
     <util:map id="monthNames" map-class="java.util.HashMap"
               key-type="java.lang.String" value-type="java.lang.String">
         <entry key="es"
-               value="enero,febrero,marzo,abril,mayo,junio,julio,agosto,septiembre,setiembre,octubre,noviembre,diciembre"/>
+               value="enero,febrero,marzo,abril,mayo,junio,julio,agosto,septiembre,octubre,noviembre,diciembre"/>
         <entry key="gl" value="xaneiro,febreiro,marzo,abril,maio,xuño,xullo,agosto,setembro,outubro,novembro,decembro"/>
     </util:map>
 
