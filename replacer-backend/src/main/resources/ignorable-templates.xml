@@ -18,6 +18,7 @@
         <value>delete</value>
         <value>borrar</value>
         <value>eliminar</value>
+        <value>d</value>
 
         <value>copyedit</value>
         <value>ortografía</value>
@@ -48,6 +49,7 @@
         <value>revisar traducción</value>
 
         <value>wikificar</value>
+        <value>formato de referencias</value>
 
         <!-- Galician -->
         <value>en tradución</value>
@@ -60,9 +62,19 @@
     </util:set>
 
     <util:set id="ignorableSections" value-type="java.lang.String">
+        <value>Referencias</value>
         <value>Bibliografía</value>
-        <value>Enlaces externos</value>
+        <value>Enlaces</value>
         <value>Publicaciones</value>
+        <value>Libros</value>
+        <value>Artículos</value>
+        <value>Notas</value>
+        <value>Obra</value>
+        <value>Lecturas</value>
+        <value>Fuentes</value>
+        <value>Discografía</value>
+        <value>Filmografía</value>
+        <value>Véase también</value>
 
         <!-- Galician -->
         <value>Ligazóns externas</value>

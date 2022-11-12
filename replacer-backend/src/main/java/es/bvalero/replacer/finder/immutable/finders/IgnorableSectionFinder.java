@@ -56,8 +56,7 @@ class IgnorableSectionFinder implements ImmutableFinder {
                 continue;
             }
 
-            final int startNextHeader = findStartHeader(text, endHeader);
-            final int endSection = startNextHeader >= 0 ? startNextHeader : text.length();
+            final int endSection = findNextHeader(text, endHeader, findHeaderLevel(text, startHeader));
             return LinearMatchResult.of(startHeader, text.substring(startHeader, endSection));
         }
         return null;
@@ -71,7 +70,32 @@ class IgnorableSectionFinder implements ImmutableFinder {
         return text.indexOf(NEW_LINE, start);
     }
 
+    private String findHeaderLevel(String text, int start) {
+        for (int i = start; i < text.length(); i++) {
+            if (text.charAt(i) != '=') {
+                return text.substring(start, i);
+            }
+        }
+        // Just in case
+        return text.substring(start);
+    }
+
+    private int findNextHeader(String text, int start, String headerLevel) {
+        final int pos = text.indexOf(headerLevel, start);
+        if (pos >= 0) {
+            final int endHeader = pos + headerLevel.length();
+            // In case we find a subsection, find again.
+            if (endHeader < text.length() && text.charAt(endHeader) == '=') {
+                return findNextHeader(text, endHeader + 1, headerLevel);
+            } else {
+                return pos;
+            }
+        } else {
+            return text.length();
+        }
+    }
+
     private boolean isValidHeaderLabel(String label) {
-        return ignorableSections.contains(label);
+        return ignorableSections.stream().anyMatch(label::startsWith);
     }
 }

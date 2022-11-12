@@ -19,7 +19,8 @@ class IgnorableSectionFinderTest {
 
     @Test
     void testIgnorableSection() {
-        String ignorableSection = "== Bibliografía ==\n" + "Ignorable Content\n";
+        String ignorableSection =
+            "== Bibliografía de Julio Verne ==\n" + "Ignorable Content\n === Ignorable Subsection\n";
         String text =
             "Text\n" + "== Section 1 ==\n" + "Content 1\n" + ignorableSection + "== Section 3 ==\n" + "Content 3";
 
