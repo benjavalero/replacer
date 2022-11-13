@@ -137,6 +137,7 @@ class DateFinderTest {
             "de agosto de 2000",
             "En agosto de 2000",
             "en agosto de 2000",
+            "Barcelona March 2015",
         }
     )
     void testValidMonthYear(String date) {

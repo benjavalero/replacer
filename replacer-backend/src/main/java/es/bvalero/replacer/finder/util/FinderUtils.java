@@ -306,7 +306,7 @@ public class FinderUtils {
     }
 
     // Get items in a comma-separated list
-    private List<String> splitList(String list) {
+    public List<String> splitList(String list) {
         return splitListAsStream(list).collect(Collectors.toUnmodifiableList());
     }
 
