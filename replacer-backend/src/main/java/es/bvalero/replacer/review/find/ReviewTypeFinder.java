@@ -53,14 +53,4 @@ class ReviewTypeFinder extends ReviewFinder {
 
         return replacements;
     }
-
-    private Collection<Replacement> filterReplacementsByType(
-        Collection<Replacement> replacements,
-        ReviewOptions options
-    ) {
-        return replacements
-            .stream()
-            .filter(replacement -> Objects.equals(replacement.getType(), options.getType()))
-            .collect(Collectors.toUnmodifiableList());
-    }
 }

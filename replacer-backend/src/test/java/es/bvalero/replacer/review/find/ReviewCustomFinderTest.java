@@ -665,7 +665,9 @@ class ReviewCustomFinderTest {
 
         Collection<Replacement> result = pageReviewCustomService.decorateReplacements(page, options, replacements);
 
-        assertEquals(Set.of(replacement), new HashSet<>(result));
+        // As we prefer the standard replacement to the custom one,
+        // there is no custom replacement to review.
+        assertTrue(result.isEmpty());
 
         verify(pageReplacementFinder).findCustomReplacements(page, options);
     }

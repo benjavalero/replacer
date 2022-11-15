@@ -73,7 +73,6 @@ class ReviewCustomFinder extends ReviewFinder {
 
                 searchResult = findWikipediaResults(options, offset);
                 // For simplicity's sake we assume the number of total results is the same
-                pageIds.clear();
                 pageIds.addAll(searchResult.getPageIds());
             } else {
                 int nextOffset = offset + getCacheSize();
@@ -111,11 +110,6 @@ class ReviewCustomFinder extends ReviewFinder {
     ) {
         Collection<Replacement> customReplacements = pageReplacementFinder.findCustomReplacements(page, options);
 
-        // If no custom replacements are found then we don't want to review the page
-        if (customReplacements.isEmpty()) {
-            return Collections.emptyList();
-        }
-
         // Add the custom replacements to the standard ones preferring the custom ones
         // Return the merged collection as a TreeSet to keep the order and discard duplicates
         // We also check there are no replacements containing others
@@ -124,6 +118,13 @@ class ReviewCustomFinder extends ReviewFinder {
             .flatMap(Collection::stream)
             .collect(Collectors.toCollection(TreeSet::new));
         FinderResult.removeNested(merged);
+
+        // We run a filter to check there is at least one replacement of the requested type
+        Collection<Replacement> filtered = filterReplacementsByType(merged, options);
+        if (filtered.isEmpty()) {
+            return Collections.emptyList();
+        }
+
         return merged;
     }
 }

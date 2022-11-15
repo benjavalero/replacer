@@ -229,6 +229,13 @@ abstract class ReviewFinder {
         Collection<Replacement> replacements
     );
 
+    Collection<Replacement> filterReplacementsByType(Collection<Replacement> replacements, ReviewOptions options) {
+        return replacements
+            .stream()
+            .filter(replacement -> Objects.equals(replacement.getType(), options.getType()))
+            .collect(Collectors.toUnmodifiableList());
+    }
+
     private Collection<Replacement> discardForbiddenReplacements(
         Collection<Replacement> replacements,
         ReviewOptions options
