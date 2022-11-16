@@ -1,6 +1,7 @@
 # Versions
 
-## 2.22.1 (??)
+## 2.22.1 (16 Nov 2022)
+- Improve ignorable section finder
 - Feature: detect months in English on date replacements
 - Prepare the replacement types so some could only be available for admin users
 - Ignore template "esd" for hard-spaces
