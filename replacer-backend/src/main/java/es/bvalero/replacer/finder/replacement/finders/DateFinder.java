@@ -120,7 +120,7 @@ public class DateFinder implements ReplacementFinder {
             String regexConnectors = String.format("(%s)", FinderUtils.joinAlternate(connectorsLowerUpperCase));
             String regexMonthsLowerUpperCase = String.format("(%s)", FinderUtils.joinAlternate(monthsLowerUpperCase));
             String regexSpaces = String.format(
-                "(%s)*",
+                "(%s)+",
                 FinderUtils.joinAlternate(
                     FinderUtils.SPACES
                         .stream()

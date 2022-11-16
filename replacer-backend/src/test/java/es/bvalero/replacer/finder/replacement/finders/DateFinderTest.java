@@ -94,6 +94,7 @@ class DateFinderTest {
             "7-Agosto-2019",
             "4 de septiembre, 3150",
             "10, septiembre de 2022",
+            "8 de junio de1997",
         }
     )
     void testNotDate(String date) {
