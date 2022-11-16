@@ -35,18 +35,18 @@ public class DateFinder implements ReplacementFinder {
     private static final int CURRENT_YEAR = LocalDate.now().getYear();
 
     private static final List<String> ENGLISH_MONTHS = List.of(
-        "january",
-        "february",
-        "march",
-        "april",
-        "may",
-        "june",
-        "july",
-        "august",
-        "september",
-        "october",
-        "november",
-        "december"
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
     );
 
     @Resource
@@ -73,21 +73,22 @@ public class DateFinder implements ReplacementFinder {
     @PostConstruct
     public void init() {
         for (WikipediaLanguage lang : WikipediaLanguage.values()) {
-            // Months: the ones for the language and the English ones, all in lower and uppercase.
+            // Months: the ones for the language, in lower and uppercase, and the English ones.
             // Plus the special case of "setiembre" in Spanish
             langMonths.putAll(lang, FinderUtils.splitList(monthNames.get(lang.getCode())));
-            List<String> monthsLowerCase = new ArrayList<>();
-            monthsLowerCase.addAll(langMonths.get(lang));
-            monthsLowerCase.addAll(ENGLISH_MONTHS);
+            List<String> monthsLowerUpperCase = new ArrayList<>();
+            langMonths
+                .get(lang)
+                .forEach(month -> {
+                    monthsLowerUpperCase.add(month);
+                    monthsLowerUpperCase.add(FinderUtils.setFirstUpperCase(month));
+                });
+            monthsLowerUpperCase.addAll(ENGLISH_MONTHS);
             if (WikipediaLanguage.SPANISH.equals(lang)) {
                 // Trick only for Spanish months
-                monthsLowerCase.add("setiembre");
+                monthsLowerUpperCase.add("setiembre");
+                monthsLowerUpperCase.add("Setiembre");
             }
-            List<String> monthsLowerUpperCase = new ArrayList<>();
-            monthsLowerCase.forEach(month -> {
-                monthsLowerUpperCase.add(month);
-                monthsLowerUpperCase.add(FinderUtils.setFirstUpperCase(month));
-            });
 
             // Prepositions
             langPrepositions.putAll(lang, FinderUtils.splitList(yearPrepositions.get(lang.getCode())));
@@ -516,19 +517,19 @@ public class DateFinder implements ReplacementFinder {
     }
 
     private boolean isFixableMonth(String month) {
-        return FinderUtils.startsWithUpperCase(month) || isEnglishMonth(month);
+        return FinderUtils.startsWithUpperCase(month);
     }
 
     private String fixMonth(String month, WikipediaLanguage lang) {
-        String fixedMonth = FinderUtils.setFirstLowerCase(month);
-        if (isEnglishMonth(fixedMonth)) {
-            fixedMonth = fixEnglishMonth(fixedMonth, lang);
+        if (isEnglishMonth(month)) {
+            return fixEnglishMonth(month, lang);
+        } else {
+            return FinderUtils.setFirstLowerCase(month);
         }
-        return fixedMonth;
     }
 
     private boolean isEnglishMonth(String month) {
-        return ENGLISH_MONTHS.contains(FinderUtils.setFirstLowerCase(month));
+        return ENGLISH_MONTHS.contains(month);
     }
 
     private String fixEnglishMonth(String month, WikipediaLanguage lang) {
