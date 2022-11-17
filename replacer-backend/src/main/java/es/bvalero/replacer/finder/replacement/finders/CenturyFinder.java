@@ -2,6 +2,8 @@ package es.bvalero.replacer.finder.replacement.finders;
 
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
+import com.roman.code.ConvertToArabic;
+import com.roman.code.exception.ConversionException;
 import dk.brics.automaton.AutomatonMatcher;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
@@ -24,7 +26,7 @@ public class CenturyFinder implements ReplacementFinder {
 
     private static final String CENTURY_WORD = "siglo";
     private static final String CENTURY_SEARCH = CENTURY_WORD.substring(1);
-    private static final Set<Character> CENTURY_LETTERS = Set.of('I', 'i', 'V', 'v', 'X', 'x');
+    private static final Set<Character> CENTURY_LETTERS = Set.of('I', 'V', 'X');
     private static final List<String> ERA_WORDS = List.of(
         "aC",
         "a.C.",
@@ -49,7 +51,7 @@ public class CenturyFinder implements ReplacementFinder {
         .orElse(0);
 
     private static final String REGEX_CENTURY = String.format(
-        "[%s]{2,}",
+        "[%s]+",
         CENTURY_LETTERS.stream().map(String::valueOf).collect(Collectors.joining())
     );
     private static final RunAutomaton AUTOMATON_CENTURY = new RunAutomaton(new RegExp(REGEX_CENTURY).toAutomaton());
@@ -147,16 +149,11 @@ public class CenturyFinder implements ReplacementFinder {
     }
 
     private boolean isCenturyNumber(String text) {
-        for (int i = 0; i < text.length(); i++) {
-            if (!isCenturyLetter(text.charAt(i))) {
-                return false;
-            }
+        try {
+            return ConvertToArabic.fromRoman(FinderUtils.toUpperCase(text)) <= 21;
+        } catch (ConversionException ce) {
+            return false;
         }
-        return true;
-    }
-
-    private boolean isCenturyLetter(char ch) {
-        return CENTURY_LETTERS.contains(ch);
     }
 
     @Nullable
@@ -206,7 +203,7 @@ public class CenturyFinder implements ReplacementFinder {
 
         // Try to fix simple centuries close to this one
         String extension = "";
-        final LinearMatchResult matchNext = findNextCentury(text, match.end());
+        final LinearMatchResult matchNext = findNextCentury(text, match.end(), centuryNumber);
         if (matchNext != null) {
             centuryText = text.substring(match.start(), matchNext.end());
             extension = text.substring(match.end(), matchNext.start()) + fixSimpleCentury(matchNext.group());
@@ -246,21 +243,32 @@ public class CenturyFinder implements ReplacementFinder {
     }
 
     @Nullable
-    private LinearMatchResult findNextCentury(String text, int endCurrentCentury) {
-        final AutomatonMatcher matcherNext = AUTOMATON_CENTURY.newMatcher(text, endCurrentCentury, text.length());
+    private LinearMatchResult findNextCentury(String text, int endCentury, String centuryNumber) {
+        final AutomatonMatcher matcherNext = AUTOMATON_CENTURY.newMatcher(text, endCentury, text.length());
         if (matcherNext.find()) {
-            final int startNext = endCurrentCentury + matcherNext.start();
-            final int numWords = FinderUtils.countWords(text, endCurrentCentury, startNext);
-            if (numWords <= 3) {
-                final String centuryNext = matcherNext.group();
-                if (!FinderUtils.isWordCompleteInText(startNext, centuryNext, text)) {
-                    return null;
-                }
-                if (FinderUtils.toLowerCase(text.substring(endCurrentCentury, startNext)).contains(CENTURY_WORD)) {
-                    return null;
-                }
-                return LinearMatchResult.of(startNext, centuryNext);
+            final int startNext = endCentury + matcherNext.start();
+            final String centuryNext = matcherNext.group();
+            // Check the found century number is actually a century
+            if (!isCenturyNumber(centuryNext) || !FinderUtils.isWordCompleteInText(startNext, centuryNext, text)) {
+                return null;
             }
+
+            // Check there are no more than 3 words between both century numbers
+            if (FinderUtils.countWords(text, endCentury, startNext) > 3) {
+                return null;
+            }
+
+            // Check we are not capturing a complete century again
+            if (FinderUtils.toLowerCase(text.substring(endCentury, startNext)).contains(CENTURY_WORD)) {
+                return null;
+            }
+
+            // Check the next century number is greater than the previous one
+            if (ConvertToArabic.fromRoman(centuryNext) <= ConvertToArabic.fromRoman(centuryNumber)) {
+                return null;
+            }
+
+            return LinearMatchResult.of(startNext, centuryNext);
         }
         return null;
     }

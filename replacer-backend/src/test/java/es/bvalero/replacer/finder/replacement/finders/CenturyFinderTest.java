@@ -145,6 +145,19 @@ class CenturyFinderTest {
     }
 
     @Test
+    void testCenturyWithFakeCenturyAfter() {
+        String text = "En el siglo XI Alfonso VI...";
+
+        List<Replacement> replacements = centuryFinder.findList(text);
+
+        assertEquals(1, replacements.size());
+        Replacement rep = replacements.get(0);
+        assertEquals(ReplacementType.CENTURY, rep.getType());
+        assertEquals("siglo XI", rep.getText());
+        assertEquals("{{siglo|XI||s}}", rep.getSuggestions().get(1).getText());
+    }
+
+    @Test
     void testCenturyWithCompleteCenturyAfter() {
         String text = "Entre el siglo XIX y principios del siglo XX.";
 
