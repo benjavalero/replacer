@@ -218,6 +218,16 @@ public class FinderUtils {
         }
     }
 
+    public int countWords(String text, int start, int end) {
+        int count = 0;
+        LinearMatchResult matchWord = findWordAfter(text, start);
+        while (matchWord != null && matchWord.end() <= end) {
+            count++;
+            matchWord = findWordAfter(text, matchWord.end());
+        }
+        return count;
+    }
+
     private boolean isSpaceWord(String word) {
         return "nbsp".equals(word) || "esd".equals(word);
     }

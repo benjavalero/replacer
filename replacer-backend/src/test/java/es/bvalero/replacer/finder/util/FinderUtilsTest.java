@@ -134,6 +134,15 @@ class FinderUtilsTest {
     }
 
     @Test
+    void testCountWords() {
+        assertEquals(0, FinderUtils.countWords("Mi casa es tu casa", 2, 3));
+        assertEquals(1, FinderUtils.countWords("Mi casa es tu casa", 2, 8));
+        assertEquals(2, FinderUtils.countWords("Mi casa es tu casa", 2, 11));
+        assertEquals(3, FinderUtils.countWords("Mi casa es tu casa", 2, 14));
+        assertEquals(4, FinderUtils.countWords("Mi casa es tu casa", 2, 18));
+    }
+
+    @Test
     void testIsWordPrecededByUpperCase() {
         assertTrue(FinderUtils.isWordPrecededByUpperCase(5, "Hola Mundo"));
         assertTrue(FinderUtils.isWordPrecededByUpperCase(8, "Un Hola Mundo"));

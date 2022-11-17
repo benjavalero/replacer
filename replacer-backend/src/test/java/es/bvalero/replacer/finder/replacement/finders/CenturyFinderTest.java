@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import es.bvalero.replacer.common.domain.Replacement;
 import es.bvalero.replacer.common.domain.ReplacementType;
 import java.util.List;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -128,5 +129,29 @@ class CenturyFinderTest {
         assertEquals(century, rep.getSuggestions().get(0).getText());
         assertEquals(notLinked, rep.getSuggestions().get(1).getText());
         assertEquals(linked, rep.getSuggestions().get(2).getText());
+    }
+
+    @Test
+    void testCenturyWithSimpleCenturyAfter() {
+        String text = "Entre el siglo XIX y principios del XX.";
+
+        List<Replacement> replacements = centuryFinder.findList(text);
+
+        assertEquals(1, replacements.size());
+        Replacement rep = replacements.get(0);
+        assertEquals(ReplacementType.CENTURY, rep.getType());
+        assertEquals("siglo XIX y principios del XX", rep.getText());
+        assertEquals("{{siglo|XIX||s}} y principios del {{Siglo|XX}}", rep.getSuggestions().get(1).getText());
+    }
+
+    @Test
+    void testCenturyWithCompleteCenturyAfter() {
+        String text = "Entre el siglo XIX y principios del siglo XX.";
+
+        List<Replacement> replacements = centuryFinder.findList(text);
+
+        assertEquals(2, replacements.size());
+        assertEquals("siglo XIX", replacements.get(0).getText());
+        assertEquals("siglo XX", replacements.get(1).getText());
     }
 }

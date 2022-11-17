@@ -2,6 +2,9 @@ package es.bvalero.replacer.finder.replacement.finders;
 
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
+import dk.brics.automaton.AutomatonMatcher;
+import dk.brics.automaton.RegExp;
+import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.common.domain.*;
 import es.bvalero.replacer.finder.replacement.ReplacementFinder;
 import es.bvalero.replacer.finder.util.FinderUtils;
@@ -9,6 +12,7 @@ import es.bvalero.replacer.finder.util.LinearMatchFinder;
 import es.bvalero.replacer.finder.util.LinearMatchResult;
 import java.util.*;
 import java.util.regex.MatchResult;
+import java.util.stream.Collectors;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
@@ -43,6 +47,12 @@ public class CenturyFinder implements ReplacementFinder {
         .map(String::length)
         .max(Comparator.comparingInt(o -> o))
         .orElse(0);
+
+    private static final String REGEX_CENTURY = String.format(
+        "[%s]{2,}",
+        CENTURY_LETTERS.stream().map(String::valueOf).collect(Collectors.joining())
+    );
+    private static final RunAutomaton AUTOMATON_CENTURY = new RunAutomaton(new RegExp(REGEX_CENTURY).toAutomaton());
 
     @Override
     public Iterable<MatchResult> findMatchResults(WikipediaPage page) {
@@ -185,18 +195,27 @@ public class CenturyFinder implements ReplacementFinder {
 
     @Override
     public Replacement convert(MatchResult matchResult, WikipediaPage page) {
+        final String text = page.getContent();
         final LinearMatchResult match = (LinearMatchResult) matchResult;
 
-        final String centuryText = match.group();
+        String centuryText = match.group();
         final String centuryWord = match.group(0);
         final String centuryNumber = FinderUtils.toUpperCase(match.group(1));
         final String era = match.groupCount() == 3 ? match.group(2).substring(0, 1) : EMPTY;
         final boolean linked = centuryText.startsWith("[[");
 
-        final String templateUpperLink = "{{" + centuryWord + "|" + centuryNumber + "|" + era + "|S|1}}";
-        final String templateUpperNoLink = "{{" + centuryWord + "|" + centuryNumber + "|" + era + "|S}}";
-        final String templateLowerLink = "{{" + centuryWord + "|" + centuryNumber + "|" + era + "|s|1}}";
-        final String templateLowerNoLink = "{{" + centuryWord + "|" + centuryNumber + "|" + era + "|s}}";
+        // Try to fix simple centuries close to this one
+        String extension = "";
+        final LinearMatchResult matchNext = findNextCentury(text, match.end());
+        if (matchNext != null) {
+            centuryText = text.substring(match.start(), matchNext.end());
+            extension = text.substring(match.end(), matchNext.start()) + fixSimpleCentury(matchNext.group());
+        }
+
+        final String templateUpperLink = "{{" + centuryWord + "|" + centuryNumber + "|" + era + "|S|1}}" + extension;
+        final String templateUpperNoLink = "{{" + centuryWord + "|" + centuryNumber + "|" + era + "|S}}" + extension;
+        final String templateLowerLink = "{{" + centuryWord + "|" + centuryNumber + "|" + era + "|s|1}}" + extension;
+        final String templateLowerNoLink = "{{" + centuryWord + "|" + centuryNumber + "|" + era + "|s}}" + extension;
 
         final List<Suggestion> suggestions = new ArrayList<>(4);
         // Not linked centuries are recommended
@@ -224,5 +243,29 @@ public class CenturyFinder implements ReplacementFinder {
             .text(centuryText)
             .suggestions(suggestions)
             .build();
+    }
+
+    @Nullable
+    private LinearMatchResult findNextCentury(String text, int endCurrentCentury) {
+        final AutomatonMatcher matcherNext = AUTOMATON_CENTURY.newMatcher(text, endCurrentCentury, text.length());
+        if (matcherNext.find()) {
+            final int startNext = endCurrentCentury + matcherNext.start();
+            final int numWords = FinderUtils.countWords(text, endCurrentCentury, startNext);
+            if (numWords <= 3) {
+                final String centuryNext = matcherNext.group();
+                if (!FinderUtils.isWordCompleteInText(startNext, centuryNext, text)) {
+                    return null;
+                }
+                if (FinderUtils.toLowerCase(text.substring(endCurrentCentury, startNext)).contains(CENTURY_WORD)) {
+                    return null;
+                }
+                return LinearMatchResult.of(startNext, centuryNext);
+            }
+        }
+        return null;
+    }
+
+    private String fixSimpleCentury(String century) {
+        return "{{Siglo|" + century + "}}";
     }
 }
