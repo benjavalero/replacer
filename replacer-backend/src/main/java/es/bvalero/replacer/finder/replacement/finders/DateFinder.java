@@ -598,7 +598,7 @@ public class DateFinder implements ReplacementFinder {
         }
 
         // Add a warning if the date contains an English month
-        if (ENGLISH_MONTHS.stream().anyMatch(m -> FinderUtils.toLowerCase(originalDate).contains(m))) {
+        if (ENGLISH_MONTHS.stream().anyMatch(originalDate::contains)) {
             suggestions.add(0, Suggestion.of(text, "no reemplazar si el contexto está en inglés"));
         }
 
