@@ -207,7 +207,7 @@ class PageReplacementFinderTest {
             .builder()
             .start(3)
             .text("example")
-            .type(ReplacementType.of(ReplacementKind.SIMPLE, "an"))
+            .type(ReplacementType.of(ReplacementKind.SIMPLE, "example"))
             .suggestions(List.of(Suggestion.ofNoComment("ejemplo")))
             .build();
         Immutable immutable = Immutable.of(0, "An");
