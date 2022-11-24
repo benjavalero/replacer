@@ -138,6 +138,8 @@ También hay que filtrar por los espacios ''Principal'' y ''Anexo'', que son los
  Domingo de Guzmán
  Domingo de Ramos
  Domingo de Resurrección
+ Domingo de Pascua
+ São Domingos
 
  Plácido Domingo
  Santo Domingo
@@ -154,6 +156,10 @@ También hay que filtrar por los espacios ''Principal'' y ''Anexo'', que son los
  # entrego
  El Entrego              # 150
 
+ # especifica
+ se especifica
+ que especifica
+
  # Febrero
  3 de Febrero FBC        # 150
  3 de Febrero CDE        # 100
@@ -165,6 +171,9 @@ También hay que filtrar por los espacios ''Principal'' y ''Anexo'', que son los
  Selena Gomez
  Ian Gomez
  Nick Gomez
+
+ #Guardian
+ The Guardian
 
  # ito
  Tatsuma Ito
@@ -398,6 +407,10 @@ También hay que filtrar por los espacios ''Principal'' y ''Anexo'', que son los
  # Se ignora también precedido de nombre propio
  Quintana del Pidio      # municipio español
 
+ # practica
+ se practica
+ que practica
+
  # publica
  [Pp]ublica el              # 2500
  [Pp]ublica en              # 2500
@@ -533,6 +546,9 @@ También hay que filtrar por los espacios ''Principal'' y ''Anexo'', que son los
  # Tokyo
  TV Tokyo
  FC Tokyo
+
+ # Trás
+ Trás-os-Montes
 
  # Tristan
  Tristan-Samuel Weissborn

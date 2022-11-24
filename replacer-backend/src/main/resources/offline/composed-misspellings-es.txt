@@ -9,12 +9,14 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  1° de Mayo|cs|1.º de Mayo, Primero de Mayo
  1ro de Mayo|cs|1.º de Mayo, Primero de Mayo
  1er||{{ord|1.|er}} (va con punto y letras voladitas), primer
+ 1er.||{{ord|1.|er}} (va con letras voladitas de indicación ordinal; el punto va entre el dígito y las letras voladitas), primer
  1ero||1.º (va con punto y letra voladita de indicación ordinal), primero
  1ro||1.º (va con punto y letra voladita de indicación ordinal), primero
- 1º||1.º (va con punto entre el dígito y la letra voladita de indicación ordinal), {{ord|1.|er}}, primero, primer, 1° (un grado)
+ 1º||1.º (va con punto entre el dígito y la letra voladita de indicación ordinal), {{ord|1.|er}}, primero, primer, 1° (un grado), 1 (numeral)
+ 1o.||1.º (va con punto entre el dígito y la letra voladita de indicación ordinal), {{ord|1.|er}}, primero, primer, 1° (un grado), 1 (numeral)
  2do||2.º (va con punto y letra voladita de indicación ordinal), segundo
  2ndo||2.º (va con punto y letra voladita de indicación ordinal), segundo
- 2º||2.º (va con punto entre el dígito y la letra voladita de indicación ordinal), segundo, 2° (dos grados)
+ 2º||2.º (va con punto entre el dígito y la letra voladita de indicación ordinal), segundo, 2° (dos grados), 2 (numeral)
  3er||{{ord|3.|er}} (va con punto y letras voladitas), tercer
  3ero||3.º (va con punto y letra voladita de indicación ordinal), tercero
  3ro||3.º (va con punto y letra voladita de indicación ordinal), tercero
@@ -194,14 +196,34 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  19nas||{{ord|19.|as}} (va con punto y letras voladitas de indicación ordinal), decimonovenas (ordinal), decimononas (ordinal), diecinueveavas (fraccionario)
  19vas||{{ord|19.|as}} (va con punto y letras voladitas de indicación ordinal), decimonovenas (ordinal), decimononas (ordinal), diecinueveavas (fraccionario)
  20mas||{{ord|20.|as}} (va con punto y letras voladitas de indicación ordinal), vigésimas (ordinal o fraccionario), veinteavas (fraccionario)
+ 50 m.||50&nbsp;m (los símbolos de medida se escriben sin punto —cuidado si es fin de frase—)
+ 60 m.||60&nbsp;m (los símbolos de medida se escriben sin punto —cuidado si es fin de frase—)
+ 100 m.||100&nbsp;m (los símbolos de medida se escriben sin punto —cuidado si es fin de frase—)
+ 110 m.||110&nbsp;m (los símbolos de medida se escriben sin punto —cuidado si es fin de frase—)
+ 200 m.||200&nbsp;m (los símbolos de medida se escriben sin punto —cuidado si es fin de frase—)
+ 400 m.||400&nbsp;m (los símbolos de medida se escriben sin punto —cuidado si es fin de frase—)
+ 800 m.||800&nbsp;m (los símbolos de medida se escriben sin punto —cuidado si es fin de frase—)
+ 1000 m.||1000&nbsp;m (los símbolos de medida se escriben sin punto —cuidado si es fin de frase—)
+ 1500 m.||1500&nbsp;m (los símbolos de medida se escriben sin punto —cuidado si es fin de frase—)
+ 3000 m.||3000&nbsp;m (los símbolos de medida se escriben sin punto —cuidado si es fin de frase—)
+ 3.000 m.||3000&nbsp;m (los símbolos de medida se escriben sin punto —cuidado si es fin de frase—)
+ 5000 m.||5000&nbsp;m (los símbolos de medida se escriben sin punto —cuidado si es fin de frase—)
+ 5.000 m.||5000&nbsp;m (los símbolos de medida se escriben sin punto —cuidado si es fin de frase—)
+ 10000 m.||10&nbsp;000&nbsp;m (los símbolos de medida se escriben sin punto —cuidado si es fin de frase—), 10&nbsp;000&nbsp;m. (para fin de frase)
+ 10.000 m.||10&nbsp;000&nbsp;m (los símbolos de medida se escriben sin punto —cuidado si es fin de frase—), 10&nbsp;000&nbsp;m. (para fin de frase)
+ 15000 m.||15&nbsp;000&nbsp;m (los símbolos de medida se escriben sin punto —cuidado si es fin de frase—), 15&nbsp;000&nbsp;m. (para fin de frase)
+ 15.000 m.||15&nbsp;000&nbsp;m (los símbolos de medida se escriben sin punto —cuidado si es fin de frase—), 15&nbsp;000&nbsp;m. (para fin de frase)
  anti-ruso||antirruso
- a.C.||a.{{esd}}C. (con espacio duro)
- a.C||a.{{esd}}C. (con espacio duro)
- a.m.||a.{{esd}}m. (con espacio duro)
- p.m.||p.{{esd}}m. (con espacio duro)
- a.m||a.{{esd}}m. (con espacio duro)
- p.m||p.{{esd}}m. (con espacio duro)
- a.n.e.||a.{{esd}}e.{{esd}}c. (con espacios duros; abreviatura de «antes de la era común»), a.{{esd}}n.{{esd}}e. (con espacios duros; abreviatura de «antes de nuestra era»)
+ a.C.|cs|a.&nbsp;C. (con espacio duro)
+ a.C|cs|a.&nbsp;C. (con espacio duro)
+ a. C.|cs|a.&nbsp;C. (con espacio duro)
+ adc|cs|a.&nbsp;C. (con espacio duro)
+ AdC|cs|a.&nbsp;C. (con espacio duro)
+ adC|cs|a.&nbsp;C. (con espacio duro)
+ a.m.||a.&nbsp;m. (con espacio duro)
+ a. m.||a.&nbsp;m. (con espacio duro)
+ a.m||a.&nbsp;m. (con espacio duro)
+ a.n.e.||a.&nbsp;e.&nbsp;c. (con espacios duros; abreviatura de «antes de la era común»), a.&nbsp;n.&nbsp;e. (con espacios duros; abreviatura de «antes de nuestra era»)
  a demás||además (adverbio)
  Administración Publica|cs|Administración Pública
  a el||al, a él, a El
@@ -218,9 +240,10 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  a parte||a parte (locución), aparte (adjetivo, sustantivo, adverbio o verbo)
  a pesar que||a pesar de que
  apenas sí||apenas si
+ aún así||aun así (equivale a «pese a eso» o «sin embargo»), aún así (equivale a «todavía así»)
  bajo la base de||sobre la base de
  bajo la base del||sobre la base del
- beauty addict||adicto a la belleza, adicta a la belleza,
+ beauty addict||adicto a la belleza, adicta a la belleza
  big five||los 5 grandes, los cinco grandes
  C's|cs|Cs (Ciudadanos, partido político español)
  Carlos Ménem|cs|Carlos Menem
@@ -231,10 +254,10 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  Castilla León|cs|Castilla y León
  Castilla Leon|cs|Castilla y León
  Castilla y Leon|cs|Castilla y León
- call||llamada, conversación telefónica, teleconferencia, videoconferencia
- caza recompensa||cazarrecompensas
+ caza recompensa||cazarrecompensas (es invariable en plural)
  caza recompensas||cazarrecompensas
- cazarrecompensa||cazarrecompensas
+ cazarrecompensa||cazarrecompensas (es invariable en plural)
+ cm. de||cm de (símbolo de centímetros —no lleva punto—)
  cm2||cm{{Exp|2}} (centímetro cuadrado), centímetro cuadrado, centímetros cuadrados
  cm3||cm{{Exp|3}} (centímetro cúbico), centímetro cúbico, centímetros cúbicos
  con mas||con más
@@ -252,9 +275,74 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  dam2||dam{{Exp|2}} (decámetro cuadrado), decámetro cuadrado, decámetros cuadrados
  dam3||dam{{Exp|3}} (decámetro cúbico), decámetro cúbico, decámetros cúbicos
  darse cuenta que||darse cuenta de que
+ d.C|cs|d.&nbsp;C. (con espacio duro)
+ d.C.|cs|d.&nbsp;C. (con espacio duro)
+ d. C.|cs|d.&nbsp;C. (con espacio duro)
  de Cordoba||de Córdoba
  de el||del, de él, de El, dé el, dé él
  de estás||de estas
+ décima cuartas||decimocuartas (uso mayoritario), décimas cuartas
+ decima cuartas||decimocuartas (uso mayoritario), décimas cuartas
+ décima novenas||decimonovenas (uso mayoritario), décimas novenas
+ decima novenas||decimonovenas (uso mayoritario), décimas novenas
+ décima octavas||decimoctavas (uso mayoritario), décimas octavas
+ decima octavas||decimoctavas (uso mayoritario), décimas octavas
+ décima primeras||decimoprimeras (uso mayoritario), décimas primeras
+ decima primeras||decimoprimeras (uso mayoritario), décimas primeras
+ décima quintas||decimoquintas (uso mayoritario), décimas quintas
+ decima quintas||decimoquintas (uso mayoritario), décimas quintas
+ décima segundas||decimosegundas (uso mayoritario), décimas segundas
+ decima segundas||decimosegundas (uso mayoritario), décimas segundas
+ decima séptimas||decimoséptimas (uso mayoritario), décimas séptimas
+ décima septimas||decimoséptimas (uso mayoritario), décimas séptimas
+ décima séptimas||decimoséptimas (uso mayoritario), décimas séptimas
+ decima septimas||decimoséptimas (uso mayoritario), décimas séptimas
+ décima sextas||decimosextas (uso mayoritario), décimas sextas
+ decima sextas||decimosextas (uso mayoritario), décimas sextas
+ décima terceras||decimoterceras (uso mayoritario), décimas terceras
+ decima terceras||decimoterceras (uso mayoritario), décimas terceras
+ décimo cuarta||decimocuarta (uso mayoritario), décima cuarta
+ décimo cuartas||decimocuartas (uso mayoritario), décimas cuartas
+ décimo cuartos||decimocuartos (uso mayoritario), décimos cuartos
+ décimo novena||decimonovena (uso mayoritario), décima novena
+ décimo novenas||decimonovenas (uso mayoritario), décimas novenas
+ décimo novenos||decimonovenos (uso mayoritario), décimos novenos
+ décimo octava||decimoctava (uso mayoritario), décima octava
+ decimo octava||decimoctava (uso mayoritario), décima octava
+ décimo octavas||decimoctavas (uso mayoritario), décimas octavas
+ decimo octavas||decimoctavas (uso mayoritario), décimas octavas
+ décimo octavos||decimoctavos (uso mayoritario), décimos octavos
+ decimo octavos||decimoctavos (uso mayoritario), décimos octavos
+ décimo primer||decimoprimer
+ décimo primera||decimoprimera (uso mayoritario), décima primera
+ décimo primeras||decimoprimeras (uso mayoritario), décimas primeras
+ décimo primeros||decimoprimeros (uso mayoritario), décimos primeros
+ décimo quinta||decimoquinta (uso mayoritario), décima quinta
+ décimo quintas||decimoquintas (uso mayoritario), décimas quintas
+ décimo quintos||decimoquintos (uso mayoritario), décimos quintos
+ décimo segunda||decimosegunda (uso mayoritario), décima segunda
+ décimo segundas||decimosegundas (uso mayoritario), décimas segundas
+ décimo segundos||decimosegundos (uso mayoritario), décimos segundos
+ décimo septima||decimoséptima (uso mayoritario), décima séptima
+ decimo séptima||decimoséptima (uso mayoritario), décima séptima
+ décimo séptima||decimoséptima (uso mayoritario), décima séptima
+ decimo septima||decimoséptima (uso mayoritario), décima séptima
+ décimo septimas||decimoséptimas (uso mayoritario), décimas séptimas
+ decimo séptimas||decimoséptimas (uso mayoritario), décimas séptimas
+ décimo séptimas||decimoséptimas (uso mayoritario), décimas séptimas
+ decimo septimas||decimoséptimas (uso mayoritario), décimas séptimas
+ décimo septimos||decimoséptimos (uso mayoritario), décimos séptimos
+ decimo séptimos||decimoséptimos (uso mayoritario), décimos séptimos
+ décimo séptimos||decimoséptimos (uso mayoritario), décimos séptimos
+ decimo septimos||decimoséptimos (uso mayoritario), décimos séptimos
+ décimo sexta||decimosexta (uso mayoritario), décima sexta
+ décimo sextas||decimosextas (uso mayoritario), décimas sextas
+ décimo sextos||decimosextos (uso mayoritario), décimos sextos
+ décimo tercer||decimotercer
+ decimo tercer||decimotercer
+ décimo tercera||decimotercera (uso mayoritario), décima tercera
+ décimo terceras||decimoterceras (uso mayoritario), décimas terceras
+ décimo terceros||decimoterceros (uso mayoritario), décimos terceros
  dejo el||dejó el
  del genero||del género
  del top ten||de la lista de los diez primeros, de la lista de las diez primeras, de la lista de los diez mejores, de la lista de las diez mejores, de la lista de los diez más populares, de la lista de las diez más populares, entre los diez primeros, entre las diez primeras, entre los diez mejores, entre las diez mejores, entre los diez más populares, entre las diez más populares
@@ -271,12 +359,15 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  dm3||dm{{Exp|3}} (decímetro cúbico), decímetro cúbico, decímetros cúbicos
  donde paso||donde pasó
  drop shot||dejada (tenis)
+ e-mail||mensaje de correo electrónico, correo electrónico
+ e-mails||mensajes de correo electrónico, correos electrónicos
  Educación Publica|cs|Educación Pública
  el mas||el más
  el proximo||el próximo
  el sólo||el solo (adjetivo), él solo (sin ninguna compañía), él solamente (para evitar ambigüedad)
  el titulo||el título
  el top ten||la lista de los diez primeros, la lista de las diez primeras, la lista de los diez mejores, la lista de las diez mejores, la lista de los diez más populares, la lista de las diez más populares, entre los diez primeros, entre las diez primeras, entre los diez mejores, entre las diez mejores, entre los diez más populares, entre las diez más populares
+ en base a||con base en (construcción recomendada), basándose en (construcción recomendada), sobre la base de (construcción recomendada)
  en caso que||en caso de que
  en el caso que||en el caso de que
  en el qué||en el que
@@ -286,6 +377,7 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  en relación a||en relación con, con relación a
  en relación al||en relación con el, con relación al
  entorno a||en torno a (locución adverbial)
+ entre medias||entremedias (entre dos lugares, cosas o tiempos)
  entre si||entre sí (pronombre), entre si (conjunción)
  es mas||es más
  ex presidente||expresidente
@@ -329,7 +421,6 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  ésta versión||esta versión
  ésta vez||esta vez
  ésta zona||esta zona
- estado sionista de Israel||[[Estado de Israel]]
  éste álbum||este álbum
  éste año||este año
  éste caso||este caso
@@ -353,7 +444,10 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  éstos últimos||estos últimos
  ex ministro||exministro
  ex-ministro||exministro
+ golpe de estado|cs|golpe de Estado
+ Golpe de estado|cs|Golpe de Estado
  grandes perdidas||grandes pérdidas
+ gr. de||g de (símbolo de gramos —no lleva punto—)
  han habido||ha habido
  hawk-eye||ojo de halcón
  hay mas||hay más
@@ -361,15 +455,19 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  hm3||hm{{Exp|3}} (hectómetro cúbico), hectómetro cúbico, hectómetros cúbicos
  Hugo Chavez|cs|Hugo Chávez
  in media res||''in medias res''
- Jose Antonio|cs|José Antonio (nombre propio español)
- Jose Manuel|cs|José Manuel (nombre propio español y portugués)
- Jose Maria|cs|José María (nombre propio español)
- Jose María|cs|José María (nombre propio español)
- José Maria|cs|José María (nombre propio español), José Maria (nombre propio portugués)
+ el interfaz||la interfaz (es sustantivo femenino)
+ un interfaz||una interfaz (es sustantivo femenino)
+ Jose Antonio|cs|José Antonio (nombre de pila español)
+ Jose Manuel|cs|José Manuel (nombre de pila español y portugués)
+ Jose Maria|cs|José María (nombre de pila español)
+ Jose María|cs|José María (nombre de pila español)
+ José Maria|cs|José María (nombre de pila español), José Maria (nombre de pila portugués)
  jugo en||jugó en
- km. al||km al
- km. de||km de
- km. del||km del
+ kg. de||kg de (símbolo de kilogramos —no lleva punto—)
+ km. al||km al (símbolo de kilómetros —no lleva punto—)
+ km. de||km de (símbolo de kilómetros —no lleva punto—)
+ km. del||km del (símbolo de kilómetros —no lleva punto—)
+ km. marcha||km marcha (símbolo de kilómetros —no lleva punto—)
  km2||km{{Exp|2}} (kilómetro cuadrado), kilómetro cuadrado, kilómetros cuadrados
  km3||km{{Exp|3}} (kilómetro cúbico), kilómetro cúbico, kilómetros cúbicos
  la mas||la más
@@ -391,27 +489,38 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  los mas||los más
  lucky loser||perdedor afortunado (deporte), perdedores afortunados (deporte), perdedora afortunada (deporte), perdedoras afortunadas (deporte)
  luego paso||luego pasó
+ m. al||m al (símbolo de metros —no lleva punto—)
+ m. de||m de (símbolo de metros —no lleva punto—)
+ m. del||m del (símbolo de metros —no lleva punto—)
+ m. braza||m braza (símbolo de metros —no lleva punto—)
+ m. espalda||m espalda (símbolo de metros —no lleva punto—)
+ m. estilos||m estilos (símbolo de metros —no lleva punto—)
+ m. lisos||m lisos (símbolo de metros —no lleva punto—)
+ m. vallas||m vallas (símbolo de metros —no lleva punto—)
+ m. obstáculos||m obstáculos (símbolo de metros —no lleva punto—)
  m2|cs|m{{Exp|2}} (metro cuadrado), m2 (variable, nombre propio o para plantilla convertir), metro cuadrado, metros cuadrados
  m3|cs|m{{Exp|3}} (metro cúbico), m3 (variable, nombre propio o para plantilla convertir), metro cúbico, metros cúbicos
  main draw||cuadro principal
  mal entendido||mal entendido (adjetivo), malentendido (sustantivo)
- Maria Antonia|cs|María Antonia (nombre propio español)
- Maria Antonieta|cs|María Antonieta (entre otros, nombre en español de la consorte de Francia)
- Maria Cristina|cs|María Cristina (entre otros, nombre en español de varios miembros de la realeza)
- Maria del Carmen|cs|María del Carmen (nombre propio español)
- Maria Eugenia|cs|María Eugenia (nombre propio español)
- Maria Fernanda|cs|María Fernanda (nombre propio español), Maria Fernanda (nombre propio portugués)
- Maria Isabel|cs|María Isabel (nombre propio español), Maria Isabel (nombre propio catalán y portugués)
- Maria José|cs|María José (nombre propio español), Maria José (nombre propio catalán y portugués)
- Maria Luisa|cs|María Luisa (nombre propio español), Maria Luisa (nombre propio catalán e italiano)
- Maria Magdalena|cs|María Magdalena (nombre en español, en particular del personaje bíblico)
- Maria Rosa|cs|María Rosa (nombre propio español), Maria Rosa (nombre propio catalán y portugués)
- Maria Teresa|cs|María Teresa (nombre propio español), Maria Teresa (nombre propio catalán e italiano)
+ Maria Antonia|cs|María Antonia (nombre de pila español)
+ Maria Antonieta|cs|María Antonieta (entre otros, nombre de pila en español de la consorte de Francia)
+ Maria Cristina|cs|María Cristina (entre otros, nombre de pila en español de varios miembros de la realeza)
+ Maria del Carmen|cs|María del Carmen (nombre de pila español)
+ Maria Eugenia|cs|María Eugenia (nombre de pila español)
+ Maria Fernanda|cs|María Fernanda (nombre de pila español), Maria Fernanda (nombre de pila portugués)
+ Maria Isabel|cs|María Isabel (nombre de pila español), Maria Isabel (nombre de pila catalán y portugués)
+ Maria José|cs|María José (nombre de pila español), Maria José (nombre de pila catalán y portugués)
+ Maria Luisa|cs|María Luisa (nombre de pila español), Maria Luisa (nombre de pila catalán e italiano)
+ Maria Magdalena|cs|María Magdalena (nombre de pila en español, en particular, del personaje bíblico)
+ Maria Rosa|cs|María Rosa (nombre de pila español), Maria Rosa (nombre de pila catalán y portugués)
+ Maria Teresa|cs|María Teresa (nombre de pila español), Maria Teresa (nombre de pila catalán e italiano)
  mas.|cs|más.
  master class||clase magistral, clases magistrales
  mas adelante||más adelante
  mas allá||más allá
  mas alta||más alta
+ mas aun||más aún (equivale a «más todavía»)
+ más aun||más aún (equivale a «más todavía»)
  mas bien||más bien
  mas conocida||más conocida
  mas conocido||más conocido
@@ -429,14 +538,19 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  match ball||pelota de partido
  match point||punto de partido
  Metro de Paris|cs|Metro de París (en español), Métro de Paris (en francés)
- Miguel Angel|cs|Miguel Ángel (nombre propio, en particular castellanización del artista italiano)
+ Miguel Angel|cs|Miguel Ángel (nombre de pila español; en particular, castellanización del nombre de pila del artista italiano)
  mm2|cs|mm{{Exp|2}} (milímetro cuadrado), milímetro cuadrado, milímetros cuadrados
  mm3|cs|mm{{Exp|3}} (milímetro cúbico), milímetro cúbico, milímetros cúbicos
+ m.s.n.m.||{{esd|m s. n. m.}} (con espacios duros —el símbolo de metro no lleva punto—), {{esd|[[m s. n. m.]]}} (con espacios duros y enlace al artículo en Wikipedia —el símbolo de metro no lleva punto—)
+ m. s. n. m.||{{esd|m s. n. m.}} (con espacios duros —el símbolo de metro no lleva punto—), {{esd|[[m s. n. m.]]}} (con espacios duros y enlace al artículo en Wikipedia —el símbolo de metro no lleva punto—)
+ [[msnm]]||{{esd|m s. n. m.}} (con espacios duros —el símbolo de metro no lleva punto—), {{esd|[[m s. n. m.]]}} (con espacios duros y enlace al artículo en Wikipedia —el símbolo de metro no lleva punto—)
  mucho mas||mucho más
+ multi-uso||multiuso, multiusos
  №||N.º (abreviatura de «número» con mayúscula inicial), n.º (abreviatura de «número» sin mayúscula inicial)
  nada mas||nada más
  Nicolas de Bari|cs|Nicolás de Bari
  Nicolas Maduro|cs|Nicolás Maduro
+ No.|cs|n.º (abreviatura de «número» sin mayúscula inicial y sin estar en inglés), N.º (para inicios de frase o columnas de tablas)
  noche buena||Nochebuena (forma recomendada), Noche Buena (forma tradicional y aceptada)
  noche vieja||Nochevieja (forma recomendada), Noche Vieja (forma tradicional y aceptada)
  norte americano||norteamericano (gentilicio)
@@ -444,6 +558,9 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  opera prima|cs|ópera prima (en español)
  opinión publica||opinión pública
  paso a ser||pasó a ser
+ p.m||p.&nbsp;m. (con espacio duro)
+ p.m.||p.&nbsp;m. (con espacio duro)
+ p. m.||p.&nbsp;m. (con espacio duro)
  por que||por que (preposición + relativo o conjunción), porque (conjunción causal), por qué (interrogación o exclamación), porqué (sustantivo, causa)
  Primera Division|cs|Primera División
  punto de break||punto de rotura
@@ -461,6 +578,7 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  relacionado a||relacionado con
  relacionados a||relacionados con
  revelarse contra||rebelarse contra
+ Rimsky-Korsakov|cs|Rimski-Kórsakov (transliteración correcta al español)
  Rio 2016|cs|Río 2016 (Juegos Olímpicos de Verano)
  Rio Claro|cs|Río Claro (región o río en varios países de lengua española y Brasil), Rio Claro (en portugués)
  Rio de Janeiro|cs|Río de Janeiro (en español), Rio de Janeiro (en portugués y otros idiomas)
@@ -473,6 +591,7 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  San Sebastian|cs|San Sebastián
  Santa Barbara|cs|Santa Bárbara (localidad o región en varios países de lengua española y Estados Unidos), Santa Barbara (en inglés)
  Santa Monica|cs|Santa Mónica (localidad o región en varios países de lengua española y Estados Unidos), Santa Monica (en inglés)
+ Saudi Arabia|cs|Arabia Saudí (uso mayoritario en España), Arabia Saudita (uso mayoritario en Hispanoamérica)
  SD Éibar|cs|SD Eibar
  se anuncio||se anunció
  se cambio||se cambió
@@ -497,6 +616,7 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  se publico||se publicó
  se puedo||se puede (presente), se pudo (pretérito)
  se registro||se registró
+ seg.||s (símbolo de la unidad temporal segundo), s. (para final de frase)
  ser mas||ser más
  set ball||pelota de set
  set point||punto de set
@@ -529,9 +649,12 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  vía publica||vía pública
  vice ministro||viceministro
  vice-ministro||viceministro
- Victor Manuel|cs|Víctor Manuel (entre otros, nombre en español de varios monarcas italianos)
+ Victor Manuel|cs|Víctor Manuel (entre otros, nombre de pila en español de varios monarcas italianos)
  Victor Pecci|cs|Víctor Pecci (tenista paraguayo)
  video clip||videoclip
+ Vladimir Putin|cs|Vladímir Putin (transcripción correcta al español)
  wild card||comodín, comodines, invitación, invitaciones, tarjeta de invitación, tarjetas de invitación, tenista invitado, tenistas invitados, tenista invitada, tenistas invitadas
  wedding planner||organizador de bodas, organizadora de bodas, experto en bodas, experta en bodas
  y mas||y más
+ ''', es||''' es (muchos inicios de artículo tienen coma entre sujeto y verbo; hay que comprobar que no haya oración subordinada entremedias)
+ ''', fue||''' fue (muchos inicios de artículo tienen coma entre sujeto y verbo; hay que comprobar que no haya oración subordinada entremedias)

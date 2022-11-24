@@ -206,6 +206,10 @@ Tamén ten que filtrar polos espazos ''Principal'' e ''Anexo'', que son os espaz
  Rainer Maria Rilke
  Tatjana Maria
 
+ # Martin
+ Aston Martin
+ Lockheed Martin
+
  # Master
  Master of
  Master and
@@ -323,6 +327,8 @@ Tamén ten que filtrar polos espazos ''Principal'' e ''Anexo'', que son os espaz
  células solares
  [Ss]istema [Ss]olar
  entre si
+ si mesm[oa]
+ si mesm[oa]s
 
  # ---------V
  # version
@@ -331,7 +337,8 @@ Tamén ten que filtrar polos espazos ''Principal'' e ''Anexo'', que son os espaz
  album version
  accoustic version
 
- # ---------V
+ # ---------X
  Río de Xaneiro
+ [Cc]apitán [Xx]eneral
 
 [[es:Usuario:Benjavalero/FalsePositives]]
