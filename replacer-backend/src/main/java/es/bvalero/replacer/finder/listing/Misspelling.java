@@ -57,7 +57,11 @@ public interface Misspelling extends ListingItem {
             }
 
             if (suggestionList.isEmpty()) {
-                throw new IllegalArgumentException();
+                throw new IllegalArgumentException("No suggestions");
+            }
+
+            if (suggestionList.size() == 1 && suggestionList.get(0).getText().equals(getWord())) {
+                throw new IllegalArgumentException("Only suggestion is equal to the word");
             }
 
             return suggestionList;

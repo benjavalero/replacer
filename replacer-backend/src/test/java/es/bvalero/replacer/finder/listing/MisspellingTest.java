@@ -80,4 +80,9 @@ class MisspellingTest {
     void testMisspellingWithEmptyComment() {
         assertThrows(IllegalArgumentException.class, () -> SimpleMisspelling.ofCaseInsensitive("A", ""));
     }
+
+    @Test
+    void testSuggestionEqualsWord() {
+        assertThrows(IllegalArgumentException.class, () -> SimpleMisspelling.ofCaseInsensitive("a", "a"));
+    }
 }
