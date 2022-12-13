@@ -1,5 +1,11 @@
 # Versions
 
+## 2.22.2 (13 Dic 2022)
+- Fix suggestion description for English months
+- Detect simple centuries (with no the century word) right after (or close to) the main replacement
+- Fix number of kings incorrectly detected as centuries
+- Review sections to be ignored
+
 ## 2.22.1 (16 Nov 2022)
 - Improve ignorable section finder
 - Feature: detect months in English on date replacements
