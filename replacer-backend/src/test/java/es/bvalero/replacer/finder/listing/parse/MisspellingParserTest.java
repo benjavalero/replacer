@@ -28,7 +28,7 @@ class MisspellingParserTest {
             " G|H\n" + // Bad formatted
             " I||J\n" +
             " I||J\n" + // Duplicated
-            " k||k\n" +
+            " k||L\n" +
             " k||M\n" + // Duplicated but different comment
             " t||{{T|x}}"; // Comment containing template
 
@@ -37,7 +37,7 @@ class MisspellingParserTest {
         assertTrue(misspellings.contains(SimpleMisspelling.of("C", true, "D")));
         assertTrue(misspellings.contains(SimpleMisspelling.of("E", true, "F")));
         assertTrue(misspellings.contains(SimpleMisspelling.of("I", false, "J")));
-        assertTrue(misspellings.contains(SimpleMisspelling.of("k", false, "k")));
+        assertTrue(misspellings.contains(SimpleMisspelling.of("k", false, "L")));
         assertTrue(misspellings.contains(SimpleMisspelling.of("t", false, "{{T|x}}")));
     }
 }
