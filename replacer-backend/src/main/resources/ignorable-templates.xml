@@ -63,18 +63,14 @@
 
     <util:set id="ignorableSections" value-type="java.lang.String">
         <value>Referencias</value>
-        <value>Bibliografía</value>
-        <value>Enlaces</value>
-        <value>Publicaciones</value>
-        <value>Libros</value>
-        <value>Artículos</value>
-        <value>Notas</value>
-        <value>Obra</value>
-        <value>Lecturas</value>
-        <value>Fuentes</value>
-        <value>Discografía</value>
-        <value>Filmografía</value>
+        <value>Enlaces externos</value>
         <value>Véase también</value>
+        <value>Bibliografía</value>
+        <value>Notas</value>
+        <value>Fuentes</value>
+        <value>Publicaciones</value>
+        <value>Otras lecturas</value>
+        <value>Lecturas</value>
 
         <!-- Galician -->
         <value>Ligazóns externas</value>
