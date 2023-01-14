@@ -65,12 +65,13 @@ The tool is composed by two independent modules, both in the same repository: th
 
 ### Code Organization
 
-The size of the project is not so big that it is worth to divide the backend in several submodules.
-Instead, packages are meant to be as independent as possible, organizing the code by feature and following the principles of Clean Architecture.
-Some architecture tests are included to check the decoupling between packages.
+The code is organized in different Maven submodules, whose dependencies follow the principles of Clean Architecture.
+
+Note it is not worth to implement the Java Module System, as it implies some modifications in order to work with JUnit and Spring: new version of Surefire, package names cannot be repeated between modules and integration tests in a different package.
 
 In general, services are created for each use case.
-The _ports_ (interfaces for the Wikipedia, OAuth and database adapters) are included in the same package of the adapter but with public visibility.
+
+The _ports_ (interfaces for the Wikipedia, OAuth and database adapters) are included in the same package of the adapter but in the `domain` submodule.
 
 Classes are usually suffixed: `Service`, `Controller`, `Repository`, etc.
 

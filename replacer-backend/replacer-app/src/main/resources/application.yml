@@ -1,0 +1,69 @@
+spring:
+  main:
+    banner-mode: 'off'
+  output:
+    ansi.enabled: ALWAYS
+  jackson:
+    date-format: dd-MM-yyyy HH:mm:ss
+  profiles.include: @includeSpringProfile@
+
+server:
+  port: 8080 # Default port for local deployment
+  compression.enabled: true
+
+---
+
+# Profile for Production
+spring:
+  config.activate.on-profile: default
+  datasource:
+    url: jdbc:mariadb://tools-db:3306/s52978__replacer?rewriteBatchedStatements=true
+    username: s52978
+    password: xxxxxx
+    driver-class-name: org.mariadb.jdbc.Driver
+    hikari.max-lifetime: 580000
+
+server:
+  port: 8000
+
+---
+
+spring:
+  config.activate.on-profile: backend
+
+server:
+  # Port to deploy only the backend and use the frontend deployed independently
+  port: 8000
+
+---
+
+# Local access to production database via SSH tunnel
+spring:
+  config.activate.on-profile: db-prod
+  datasource:
+    url: jdbc:mariadb://localhost:3306/s52978__replacer?rewriteBatchedStatements=true
+    username: s52978
+    password: xxxxxx
+    driver-class-name: org.mariadb.jdbc.Driver
+    hikari.max-lifetime: 580000
+
+---
+
+# Local persistent database
+spring:
+  config.activate.on-profile: db-local
+  datasource:
+    url: jdbc:h2:./replacer-h2;MODE=MySQL
+    username: sa
+    password: sa
+    driver-class-name: org.h2.Driver
+    platform: h2
+    initialization-mode: never # Set to "always" the first time
+
+---
+
+# Local in-memory database and mocked calls to Wikipedia API
+spring:
+  config.activate.on-profile: offline
+  datasource:
+    platform: h2

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.springframework.org/schema/util
+   		   http://www.springframework.org/schema/util/spring-util.xsd">
+
+    <util:map id="simpleMisspellingPages" map-class="java.util.HashMap"
+              key-type="java.lang.String" value-type="java.lang.String">
+        <entry key="es" value="Wikipedia:Corrector ortográfico/Listado"/>
+        <entry key="gl" value="Wikipedia:Revisor ortográfico/Listaxe"/>
+    </util:map>
+
+    <util:map id="composedMisspellingPages" map-class="java.util.HashMap"
+              key-type="java.lang.String" value-type="java.lang.String">
+        <entry key="es" value="Usuario:Benjavalero/ComposedMisspellings"/>
+        <entry key="gl" value="Usuario:Benjavalero/ComposedMisspellings"/>
+    </util:map>
+
+    <util:map id="falsePositivePages" map-class="java.util.HashMap"
+              key-type="java.lang.String" value-type="java.lang.String">
+        <entry key="es" value="Usuario:Benjavalero/FalsePositives"/>
+        <entry key="gl" value="Usuario:Benjavalero/FalsePositives"/>
+    </util:map>
+
+    <util:map id="templateWords" map-class="java.util.HashMap"
+              key-type="java.lang.String" value-type="java.lang.String">
+        <entry key="es" value="Plantilla"/>
+        <entry key="gl" value="Modelo"/>
+    </util:map>
+
+    <!-- The following maps contain the magical words for some concepts in the different languages -->
+    <!-- The words will be separated by commas being the first one the standard option -->
+
+    <util:map id="fileWords" map-class="java.util.HashMap"
+              key-type="java.lang.String" value-type="java.lang.String">
+        <entry key="es" value="Archivo,File"/>
+        <entry key="gl" value="Ficheiro,Arquivo,File"/>
+    </util:map>
+
+    <util:map id="imageWords" map-class="java.util.HashMap"
+              key-type="java.lang.String" value-type="java.lang.String">
+        <entry key="es" value="Imagen,Image"/>
+        <entry key="gl" value="Imaxe,Image"/>
+    </util:map>
+
+    <util:map id="annexWords" map-class="java.util.HashMap"
+              key-type="java.lang.String" value-type="java.lang.String">
+        <entry key="es" value="Anexo,Annex"/>
+        <entry key="gl" value="Anexo,Annex"/>
+    </util:map>
+
+    <util:map id="categoryWords" map-class="java.util.HashMap"
+              key-type="java.lang.String" value-type="java.lang.String">
+        <entry key="es" value="Categoría,Category"/>
+        <entry key="gl" value="Categoría,Category"/>
+    </util:map>
+</beans>
