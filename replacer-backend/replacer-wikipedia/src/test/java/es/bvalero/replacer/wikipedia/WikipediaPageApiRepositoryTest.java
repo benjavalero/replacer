@@ -21,6 +21,7 @@ import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junitpioneer.jupiter.RetryingTest;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -372,7 +373,7 @@ class WikipediaPageApiRepositoryTest {
         assertTrue(page.getContent().startsWith("=="));
     }
 
-    @Test
+    @RetryingTest(maxAttempts = 3)
     void testWikipediaServiceOffline() {
         // Offline page
         Optional<WikipediaPage> page = wikipediaPageOfflineRepository.findByTitle(WikipediaLanguage.getDefault(), "");
@@ -383,6 +384,13 @@ class WikipediaPageApiRepositoryTest {
             assertEquals(WikipediaNamespace.getDefault(), p.getNamespace());
             assertEquals("América del Norte", p.getTitle());
             assertFalse(p.isRedirect());
+
+            Optional<WikipediaPage> page2 = wikipediaPageOfflineRepository.findByKey(
+                PageKey.of(WikipediaLanguage.getDefault(), pageId)
+            );
+            // This test may fail sometimes if both fake offline pages have been built in different seconds
+            // Just in case with annotate this test with @RetryingTest
+            assertEquals(p, page2.orElse(null));
 
             Optional<WikipediaPage> pageSection = wikipediaPageOfflineRepository.findPageSection(
                 PageKey.of(WikipediaLanguage.getDefault(), pageId),
