@@ -48,7 +48,7 @@ class ObsoleteMisspellingListener implements PropertyChangeListener, ObsoleteRep
         SetValuedMap<WikipediaLanguage, Misspelling> newItems = (SetValuedMap<WikipediaLanguage, Misspelling>) evt.getNewValue();
         this.changeSupport.firePropertyChange(
                 "types",
-                Collections.EMPTY_LIST,
+                Collections.emptyList(),
                 getObsoleteMisspellings(oldItems, newItems)
             );
     }

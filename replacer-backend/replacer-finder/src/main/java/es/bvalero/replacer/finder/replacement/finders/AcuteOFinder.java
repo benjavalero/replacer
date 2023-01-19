@@ -40,7 +40,7 @@ public class AcuteOFinder implements ReplacementFinder {
         while (start >= 0 && start < text.length()) {
             final int startAcuteO = findStartAcuteO(text, start);
             if (startAcuteO < 0) {
-                break;
+                return null;
             }
 
             final int endAcuteO = startAcuteO + ACUTE_O.length();

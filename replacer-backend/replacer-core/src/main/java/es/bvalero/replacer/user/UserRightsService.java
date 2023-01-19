@@ -17,7 +17,6 @@ public class UserRightsService {
     @Autowired
     private UserService userService;
 
-    @VisibleForTesting
     public void validateAdminUser(WikipediaLanguage lang, String user) throws ForbiddenException {
         if (!isAdmin(lang, user)) {
             LOGGER.error("Unauthorized admin user: {} - {}", lang, user);
@@ -31,7 +30,6 @@ public class UserRightsService {
         return getUser(lang, username).map(User::isAdmin).orElse(false);
     }
 
-    @VisibleForTesting
     public void validateBotUser(WikipediaLanguage lang, String user) throws ForbiddenException {
         if (!isBot(lang, user)) {
             LOGGER.error("Unauthorized bot user: {} - {}", lang, user);

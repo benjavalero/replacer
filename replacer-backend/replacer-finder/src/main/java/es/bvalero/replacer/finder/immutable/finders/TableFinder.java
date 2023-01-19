@@ -33,7 +33,7 @@ class TableFinder implements ImmutableFinder {
         while (start >= 0 && start < text.length()) {
             final int startLine = findStartLine(text, start);
             if (startLine < 0) {
-                break;
+                return null;
             }
 
             final int endLine = findEndLine(text, startLine);

@@ -40,7 +40,7 @@ class CommentFinder extends ImmutableCheckedFinder {
         while (start >= 0 && start < text.length()) {
             final int startComment = findStartComment(text, start);
             if (startComment < 0) {
-                break;
+                return null;
             }
 
             final int startCommentText = startComment + START_COMMENT.length();

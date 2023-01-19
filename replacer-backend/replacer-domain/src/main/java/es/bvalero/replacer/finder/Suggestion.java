@@ -8,7 +8,6 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import lombok.Value;
 import org.apache.commons.lang3.StringUtils;
-import org.jetbrains.annotations.TestOnly;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
@@ -31,7 +30,6 @@ public class Suggestion {
         this.comment = comment;
     }
 
-    @TestOnly
     public static Suggestion ofNoComment(String text) {
         return of(text, null);
     }

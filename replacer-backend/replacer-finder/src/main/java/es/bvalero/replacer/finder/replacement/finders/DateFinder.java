@@ -72,7 +72,7 @@ public class DateFinder implements ReplacementFinder {
         WikipediaLanguage.class
     );
 
-    private static final Map<WikipediaLanguage, RunAutomaton> automata = new HashMap<>();
+    private static final Map<WikipediaLanguage, RunAutomaton> automata = new EnumMap<>(WikipediaLanguage.class);
 
     @PostConstruct
     public void init() {

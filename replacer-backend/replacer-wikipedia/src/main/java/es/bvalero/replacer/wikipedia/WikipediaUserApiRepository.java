@@ -26,9 +26,6 @@ import org.springframework.stereotype.Service;
 @Profile("!offline")
 class WikipediaUserApiRepository implements WikipediaUserRepository {
 
-    private static final String PARAM_ACTION = "action";
-    private static final String VALUE_QUERY = "query";
-
     @Autowired
     private WikipediaApiRequestHelper wikipediaApiRequestHelper;
 
@@ -64,7 +61,7 @@ class WikipediaUserApiRepository implements WikipediaUserRepository {
 
     private Map<String, String> buildUserInfoRequestParams() {
         Map<String, String> params = new HashMap<>();
-        params.put(PARAM_ACTION, VALUE_QUERY);
+        params.put("action", "query");
         params.put("meta", "userinfo");
         params.put("uiprop", "groups");
         return params;
@@ -103,7 +100,7 @@ class WikipediaUserApiRepository implements WikipediaUserRepository {
 
     private Map<String, String> buildUserRequestParams(String username) {
         Map<String, String> params = new HashMap<>();
-        params.put(PARAM_ACTION, VALUE_QUERY);
+        params.put("action", "query");
         params.put("list", "users");
         params.put("ususers", username);
         params.put("usprop", "groups");

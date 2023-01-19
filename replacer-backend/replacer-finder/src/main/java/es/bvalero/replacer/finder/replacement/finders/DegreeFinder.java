@@ -46,7 +46,7 @@ public class DegreeFinder implements ReplacementFinder {
         while (start >= 0 && start < text.length()) {
             final LinearMatchResult matchSymbol = findDegreeSymbol(text, start);
             if (matchSymbol == null) {
-                break;
+                return null;
             }
             final int startSymbol = matchSymbol.start();
 

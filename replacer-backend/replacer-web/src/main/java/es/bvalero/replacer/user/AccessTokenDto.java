@@ -8,7 +8,6 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.jetbrains.annotations.VisibleForTesting;
 import org.springframework.lang.NonNull;
 
 @Schema(
@@ -30,7 +29,6 @@ public class AccessTokenDto {
     @NotNull
     private String tokenSecret;
 
-    @VisibleForTesting
     public static AccessTokenDto of(AccessToken accessToken) {
         return new AccessTokenDto(accessToken.getToken(), accessToken.getTokenSecret());
     }

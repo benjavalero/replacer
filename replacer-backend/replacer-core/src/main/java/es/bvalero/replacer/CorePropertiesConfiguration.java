@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
 
+@SuppressWarnings("java:S1118")
 @Configuration
 public class CorePropertiesConfiguration {
 

@@ -42,7 +42,7 @@ class CursiveFinder extends ImmutableCheckedFinder {
         while (start >= 0 && start < text.length()) {
             final int startCursive = findStartCursive(text, start);
             if (startCursive < 0) {
-                break;
+                return null;
             }
 
             final int numQuotes = findNumQuotes(text, startCursive);

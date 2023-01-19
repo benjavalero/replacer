@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
  * DTO enumerating the language codes the application may receive in the controllers.
  * The listed values must match with the ones in {@link WikipediaLanguage}
  */
+@SuppressWarnings("java:S115")
 @Schema(enumAsRef = true, description = "Language of the Wikipedia in use", example = "es")
 public enum Language {
     gl,

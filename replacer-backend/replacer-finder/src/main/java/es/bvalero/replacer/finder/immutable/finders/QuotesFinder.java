@@ -53,7 +53,7 @@ abstract class QuotesFinder extends ImmutableCheckedFinder {
         while (start >= 0 && start < text.length()) {
             final int startQuote = findStartQuote(text, start);
             if (startQuote < 0) {
-                break;
+                return null;
             }
 
             final int startQuoteText = startQuote + 1; // 1 = start quote length

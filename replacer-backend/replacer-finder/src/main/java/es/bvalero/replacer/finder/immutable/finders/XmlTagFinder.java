@@ -38,7 +38,7 @@ class XmlTagFinder extends ImmutableCheckedFinder {
         while (start >= 0 && start < text.length()) {
             final int startTag = findStartTag(text, start);
             if (startTag < 0) {
-                break;
+                return null;
             }
 
             final int startTagContent = startTag + 1; // 1 = start tag length

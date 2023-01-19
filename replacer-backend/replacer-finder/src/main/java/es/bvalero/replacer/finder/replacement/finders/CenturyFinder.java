@@ -76,7 +76,7 @@ public class CenturyFinder implements ReplacementFinder {
         while (start >= 0 && start < text.length()) {
             int startCentury = findStartCentury(text, start);
             if (startCentury < 0) {
-                break;
+                return null;
             }
 
             int endCentury = startCentury + CENTURY_WORD.length();

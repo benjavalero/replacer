@@ -25,6 +25,7 @@ import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 
 /** Wikipedia service implementation using classic Wikipedia API */
+@SuppressWarnings("java:S1192")
 @Slf4j
 @Loggable(value = LogLevel.TRACE, skipResult = true, warnOver = 10, warnUnit = TimeUnit.SECONDS)
 @Service
@@ -33,10 +34,6 @@ class WikipediaPageApiRepository implements WikipediaPageRepository {
 
     private static final int MAX_PAGES_REQUESTED = 50; // MediaWiki API allows to retrieve the content of maximum 50 pages
     private static final int MAX_SEARCH_RESULTS = 500; // MediaWiki API allows at most 500 pages in a search result
-    private static final String PARAM_ACTION = "action";
-    private static final String VALUE_QUERY = "query";
-    private static final String PARAM_PAGE_ID = "pageid";
-    private static final String PARAM_PAGE_IDS = "pageids";
     private static final int MAX_OFFSET_LIMIT = 10000;
 
     @Autowired
@@ -78,7 +75,7 @@ class WikipediaPageApiRepository implements WikipediaPageRepository {
                     start,
                     start + Math.min(idList.size() - start, MAX_PAGES_REQUESTED)
                 );
-                pages.addAll(getPagesByIds(PARAM_PAGE_IDS, StringUtils.join(subList, '|'), lang));
+                pages.addAll(getPagesByIds("pageids", StringUtils.join(subList, '|'), lang));
                 start += subList.size();
             }
         } catch (Exception e) {
@@ -101,7 +98,7 @@ class WikipediaPageApiRepository implements WikipediaPageRepository {
 
     private Map<String, String> buildPageIdsRequestParams(String pagesParam, String pagesValue) {
         Map<String, String> params = new HashMap<>();
-        params.put(PARAM_ACTION, VALUE_QUERY);
+        params.put("action", "query");
         params.put("prop", "info|revisions");
         params.put("inprop", "protection");
         params.put("rvprop", "timestamp|content");
@@ -160,8 +157,8 @@ class WikipediaPageApiRepository implements WikipediaPageRepository {
 
     private Map<String, String> buildPageSectionsRequestParams(int pageId) {
         Map<String, String> params = new HashMap<>();
-        params.put(PARAM_ACTION, "parse");
-        params.put(PARAM_PAGE_ID, Integer.toString(pageId));
+        params.put("action", "parse");
+        params.put("pageid", Integer.toString(pageId));
         params.put("prop", "sections");
         return params;
     }
@@ -214,7 +211,7 @@ class WikipediaPageApiRepository implements WikipediaPageRepository {
     }
 
     private Map<String, String> buildPageIdsAndSectionRequestParams(int pageId, int section) {
-        Map<String, String> params = buildPageIdsRequestParams(PARAM_PAGE_IDS, Integer.toString(pageId));
+        Map<String, String> params = buildPageIdsRequestParams("pageids", Integer.toString(pageId));
         params.put("rvsection", Integer.toString(section));
         return params;
     }
@@ -263,7 +260,7 @@ class WikipediaPageApiRepository implements WikipediaPageRepository {
         int limit
     ) {
         Map<String, String> params = new HashMap<>();
-        params.put(PARAM_ACTION, VALUE_QUERY);
+        params.put("action", "query");
         params.put("list", "search");
         params.put("utf8", "1");
         params.put("srlimit", Integer.toString(limit));
@@ -364,8 +361,8 @@ class WikipediaPageApiRepository implements WikipediaPageRepository {
         EditToken editToken
     ) {
         Map<String, String> params = new HashMap<>();
-        params.put(PARAM_ACTION, "edit");
-        params.put(PARAM_PAGE_ID, Integer.toString(pageId));
+        params.put("action", "edit");
+        params.put("pageid", Integer.toString(pageId));
         params.put("text", pageContent);
         if (section != null) {
             params.put("section", Integer.toString(section));
@@ -397,9 +394,9 @@ class WikipediaPageApiRepository implements WikipediaPageRepository {
 
     private Map<String, String> buildEditTokenRequestParams(int pageId) {
         Map<String, String> params = new HashMap<>();
-        params.put(PARAM_ACTION, VALUE_QUERY);
+        params.put("action", "query");
         params.put("meta", "tokens");
-        params.put(PARAM_PAGE_IDS, Integer.toString(pageId));
+        params.put("pageids", Integer.toString(pageId));
         params.put("prop", "revisions");
         params.put("rvprop", "timestamp");
         return params;

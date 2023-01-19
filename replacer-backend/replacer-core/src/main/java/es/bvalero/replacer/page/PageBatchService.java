@@ -29,6 +29,7 @@ public class PageBatchService extends PageService {
     private int minCachedId = 0;
     private int maxCachedId = 0;
 
+    @Override
     public Optional<IndexedPage> findPageByKey(PageKey pageKey) {
         // If the page ID is lower than the minimum ID then we are in a new indexing
         if (pageKey.getPageId() < this.minCachedId) {

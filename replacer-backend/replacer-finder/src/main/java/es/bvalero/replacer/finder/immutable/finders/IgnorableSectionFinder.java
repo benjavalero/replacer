@@ -39,7 +39,7 @@ class IgnorableSectionFinder implements ImmutableFinder {
         while (start >= 0 && start < text.length()) {
             final int startHeader = findStartHeader(text, start);
             if (startHeader < 0) {
-                break;
+                return null;
             }
 
             final int endHeader = findEndHeader(text, startHeader);
