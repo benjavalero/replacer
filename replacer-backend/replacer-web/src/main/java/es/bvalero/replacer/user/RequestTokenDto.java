@@ -8,7 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.lang.NonNull;
 
-@Schema(description = "Request token to initiate an authorization process")
+@Schema(description = "Request token to initiate an authorization process", name = "RequestToken")
 @Data
 @NoArgsConstructor
 class RequestTokenDto {

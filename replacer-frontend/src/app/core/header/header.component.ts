@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Language } from '../user/language-model';
+import { Language } from '../../api/models/language';
 import { UserConfig } from '../user/user-config.model';
 import { UserConfigService } from '../user/user-config.service';
 import { User } from '../user/user.model';
@@ -34,7 +34,7 @@ export class HeaderComponent implements OnInit {
 
   onSelectLang(lang: string) {
     // Enable language
-    const language: Language = Language[lang as keyof typeof Language];
+    const language: Language = lang as Language;
     if (language) {
       const modalRef = this.modalService.open(ChangeLanguageComponent);
       modalRef.result.then(

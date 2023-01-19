@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Observable } from 'rxjs';
+import { ReplacementCount } from '../api/models/replacement-count';
+import { ReviewerCount } from '../api/models/reviewer-count';
 import { UserConfigService } from '../core/user/user-config.service';
-import { ReplacementCount } from './count.model';
-import { ReviewerCount } from './reviewer-count.model';
 import { StatsService } from './stats.service';
 
 @Component({

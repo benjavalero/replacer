@@ -1,7 +1,9 @@
 import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { UserService, USER_PARAM } from '../user/user.service';
+import { UserService } from '../user/user.service';
+
+export const USER_PARAM = 'user';
 
 @Injectable()
 export class UserInterceptor implements HttpInterceptor {

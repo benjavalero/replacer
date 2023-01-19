@@ -25,3 +25,15 @@ Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To u
 ## Further help
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+
+## OpenAPI generation
+
+Install [ng-openapi-gen](https://github.com/cyclosproject/ng-openapi-gen) to generate the frontend code based on the OpenAPI specification of the backend:
+```
+npm install -g ng-openapi-gen
+```
+and then we just run:
+```
+ng-openapi-gen
+```
+based on the configuration in `ng-openapi-gen.json`.

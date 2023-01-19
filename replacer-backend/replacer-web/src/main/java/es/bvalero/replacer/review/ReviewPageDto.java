@@ -15,11 +15,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
-@Schema
+@Schema(name = "ReviewPage")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Data
 @NoArgsConstructor
-public class ReviewPageDto {
+class ReviewPageDto {
 
     private static final int SHORT_CONTENT_LENGTH = 50;
 

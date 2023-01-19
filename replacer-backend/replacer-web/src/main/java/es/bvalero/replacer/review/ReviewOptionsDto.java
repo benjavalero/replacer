@@ -15,14 +15,14 @@ import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.lang.Nullable;
 
 @ParameterObject
-@Schema(description = "Options of the replacements to review")
+@Schema(description = "Options of the replacements to review", name = "ReviewOptions")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Data
 @NoArgsConstructor
 class ReviewOptionsDto {
 
-    @Parameter(description = "Replacement kind", example = "Ortografía")
-    @Schema(description = "Replacement kind", example = "Ortografía")
+    @Parameter(description = "Replacement kind code", example = "2")
+    @Schema(description = "Replacement kind code", type = "integer", example = "2")
     @Nullable
     private Byte kind;
 

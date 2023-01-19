@@ -8,11 +8,11 @@ import lombok.Builder;
 import lombok.Value;
 import org.springframework.lang.Nullable;
 
-@Schema(description = "Status of the current (or the last) dump indexing")
+@Schema(description = "Status of the current (or the last) dump indexing", name = "DumpIndexingStatus")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Value
 @Builder
-class DumpIndexingStatusResponse {
+class DumpIndexingStatusDto {
 
     // Even when it is quite similar to the domain object
     // we prefer to create this copy without the logic and with the different response types

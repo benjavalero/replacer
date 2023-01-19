@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AlertService } from 'src/app/shared/alert/alert.service';
 import { User } from '../user/user.model';
-import { AuthenticationService } from './authentication.service';
+import { LoginService } from './login.service';
 
 @Component({
   selector: 'app-oauth',
@@ -12,7 +12,7 @@ import { AuthenticationService } from './authentication.service';
 export class OAuthResponseComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
-    private authenticationService: AuthenticationService,
+    private authenticationService: LoginService,
     private router: Router,
     private alertService: AlertService
   ) {}

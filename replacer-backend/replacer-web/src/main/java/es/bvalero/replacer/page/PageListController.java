@@ -37,7 +37,7 @@ public class PageListController {
         @Valid ReplacementTypeDto request
     ) {
         String titleList = StringUtils.join(
-            pageFindByTypeService.findPagesToReviewByType(queryParameters.getLang(), request.toDomain()),
+            pageFindByTypeService.findPagesToReviewByType(queryParameters.getLang().toDomain(), request.toDomain()),
             "\n"
         );
         return new ResponseEntity<>(titleList, HttpStatus.OK);
@@ -48,6 +48,6 @@ public class PageListController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PostMapping(value = "/type/review")
     public void reviewPagesByType(@Valid CommonQueryParameters queryParameters, @Valid ReplacementTypeDto request) {
-        replacementService.reviewReplacementsByType(queryParameters.getLang(), request.toDomain());
+        replacementService.reviewReplacementsByType(queryParameters.getLang().toDomain(), request.toDomain());
     }
 }

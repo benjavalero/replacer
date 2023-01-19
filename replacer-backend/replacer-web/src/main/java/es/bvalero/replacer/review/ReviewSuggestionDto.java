@@ -8,7 +8,7 @@ import lombok.Value;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
-@Schema(description = "Suggestion for a replacement to review")
+@Schema(description = "Suggestion for a replacement to review", name = "ReviewSuggestion")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Value(staticConstructor = "of")
 class ReviewSuggestionDto {

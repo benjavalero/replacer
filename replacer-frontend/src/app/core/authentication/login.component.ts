@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { AuthenticationService } from './authentication.service';
+import { LoginService } from './login.service';
 
 @Component({
   selector: 'app-login',
@@ -10,7 +10,7 @@ import { AuthenticationService } from './authentication.service';
 export class LoginComponent implements OnInit {
   authorizationUrl$!: Observable<string>;
 
-  constructor(private authenticationService: AuthenticationService) {}
+  constructor(private authenticationService: LoginService) {}
 
   ngOnInit() {
     this.authorizationUrl$ = this.authenticationService.getAuthenticationUrl$();

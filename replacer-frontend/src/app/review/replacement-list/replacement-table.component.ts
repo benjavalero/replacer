@@ -3,12 +3,12 @@ import { faCheckDouble, faList } from '@fortawesome/free-solid-svg-icons';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { SubtypeCount } from '../../api/models/subtype-count';
 import { UserConfigService } from '../../core/user/user-config.service';
 import { User } from '../../core/user/user.model';
 import { UserService } from '../../core/user/user.service';
 import StringUtils from '../../shared/util/string-utils';
-import { kindLabel } from '../page/page-review.model';
-import { SubtypeCount } from './replacement-list.model';
+import { kindLabel } from '../page/find-random.component';
 import { ReplacementListService } from './replacement-list.service';
 import { ReviewSubtypeComponent } from './review-subtype.component';
 import { rotate, SortDirection } from './sort-direction.model';
@@ -60,7 +60,7 @@ export class ReplacementTableComponent implements OnInit, OnChanges {
     this.collectionSize = this.replacementCounts.length;
     this.pageValue = 1;
 
-    this.pageListUrl = `${environment.apiUrl}/page/type?lang=${this.userConfigService.lang}&user=${this.userService.userName}`;
+    this.pageListUrl = `${environment.baseUrl}/api/page/type?lang=${this.userConfigService.lang}&user=${this.userService.userName}`;
   }
 
   ngOnInit() {

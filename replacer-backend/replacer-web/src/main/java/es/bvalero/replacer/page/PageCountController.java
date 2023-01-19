@@ -26,7 +26,7 @@ public class PageCountController {
     @GetMapping(value = "/type/count")
     public Collection<KindCount> countPagesNotReviewedByType(@Valid CommonQueryParameters queryParameters) {
         return pageCountService
-            .countPagesNotReviewedByType(queryParameters.getLang(), queryParameters.getUser())
+            .countPagesNotReviewedByType(queryParameters.getLang().toDomain(), queryParameters.getUser())
             .stream()
             .collect(
                 groupingBy(

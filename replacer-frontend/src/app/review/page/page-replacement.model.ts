@@ -1,19 +1,7 @@
-export interface ReviewReplacement {
-  start: number;
-  text: string;
-  kind: number;
-  subtype: string;
-  cs: boolean | null;
-  suggestions: ReviewSuggestion[];
-}
+import { ReviewReplacement } from '../../api/models/review-replacement';
 
 export function getReplacementEnd(r: ReviewReplacement): number {
   return r.start + r.text.length;
-}
-
-export interface ReviewSuggestion {
-  text: string;
-  comment?: string;
 }
 
 export class FixedReplacement {

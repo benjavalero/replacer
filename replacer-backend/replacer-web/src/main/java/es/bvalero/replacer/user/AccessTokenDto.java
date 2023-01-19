@@ -11,6 +11,10 @@ import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.VisibleForTesting;
 import org.springframework.lang.NonNull;
 
+@Schema(
+    description = "Access token to log in the application and be able to apply changes in Wikipedia",
+    name = "AccessToken"
+)
 @Data
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor

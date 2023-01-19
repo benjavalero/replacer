@@ -31,7 +31,7 @@ public class ReplacementValidationController {
         @Valid ReplacementValidationRequest validationRequest
     ) {
         Optional<ReplacementType> type = replacementTypeMatchService.findMatchingReplacementType(
-            queryParameters.getLang(),
+            queryParameters.getLang().toDomain(),
             validationRequest.getReplacement(),
             validationRequest.isCs()
         );

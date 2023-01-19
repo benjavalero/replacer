@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { UserConfigService } from 'src/app/core/user/user-config.service';
-import { PageCount } from './page-count.model';
-import { UnreviewedService } from './unreviewed.service';
+import { PageCount } from '../../api/models/page-count';
+import { ReplacementsService } from '../../api/services/replacements.service';
 
 @Component({
   selector: 'app-unreviewed',
@@ -12,10 +12,10 @@ import { UnreviewedService } from './unreviewed.service';
 export class UnreviewedComponent implements OnInit {
   unreviewed$!: Observable<PageCount[]>;
 
-  constructor(private unreviewedService: UnreviewedService, private userConfigService: UserConfigService) {}
+  constructor(private replacementService: ReplacementsService, private userConfigService: UserConfigService) {}
 
   ngOnInit() {
-    this.unreviewed$ = this.unreviewedService.findPagesWithMostUnreviewedReplacements$();
+    this.unreviewed$ = this.replacementService.countNotReviewedGroupedByPage();
   }
 
   get wikipediaUrl(): string {

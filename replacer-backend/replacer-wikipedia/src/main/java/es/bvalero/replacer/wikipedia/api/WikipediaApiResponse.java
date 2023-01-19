@@ -188,5 +188,6 @@ public class WikipediaApiResponse {
         private int oldrevid;
         private int newrevid;
         private String newtimestamp;
+        private boolean watched;
     }
 }

@@ -1,52 +1,38 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
-import { environment } from '../../../environments/environment';
+import { FindReviewResponse } from '../../api/models/find-review-response';
+import { ReplacementType } from '../../api/models/replacement-type';
+import { ReviewOptions } from '../../api/models/review-options';
+import { ReviewPage } from '../../api/models/review-page';
+import { ReviewedReplacement } from '../../api/models/reviewed-replacement';
+import { SaveReviewRequest } from '../../api/models/save-review-request';
+import { ReplacementsService } from '../../api/services/replacements.service';
+import { ReviewService } from '../../api/services/review.service';
 import { UserService } from '../../core/user/user.service';
-import {
-  PageReviewResponse,
-  ReviewedReplacement,
-  ReviewOptions,
-  ReviewPage,
-  SaveReviewRequest
-} from './page-review.model';
-import { ReplacementValidationResponse } from './validate-custom.model';
 
 export const EMPTY_CONTENT = ' ';
 
 @Injectable()
 export class PageService {
-  private readonly baseUrl = `${environment.apiUrl}/review`;
+  constructor(
+    private reviewService: ReviewService,
+    private userService: UserService,
+    private replacementsService: ReplacementsService
+  ) {}
 
-  constructor(private httpClient: HttpClient, private userService: UserService) {}
-
-  findRandomPage(options: ReviewOptions): Observable<PageReviewResponse> {
-    const params: HttpParams = this.mapReviewOptionsToHttpParams(options);
-    return this.httpClient.get<PageReviewResponse>(`${this.baseUrl}/random`, { params });
+  findRandomPage(options: ReviewOptions): Observable<FindReviewResponse> {
+    return this.reviewService.findRandomPageWithReplacements({ ...options });
   }
 
-  private mapReviewOptionsToHttpParams(options: ReviewOptions): HttpParams {
-    let params: HttpParams = new HttpParams();
-    if (options.kind && options.subtype) {
-      params = params.append('kind', options.kind).append('subtype', options.subtype);
-      if (options.suggestion) {
-        params = params.append('suggestion', options.suggestion).append('cs', String(options.cs));
-      }
-    }
-    return params;
-  }
-
-  validateCustomReplacement(replacement: string, caseSensitive: boolean): Observable<ReplacementValidationResponse> {
-    let params: HttpParams = new HttpParams();
-    params = params.append('replacement', replacement).append('cs', String(caseSensitive));
-    return this.httpClient.get<ReplacementValidationResponse>(`${environment.apiUrl}/replacement/type/validate`, {
-      params
+  validateCustomReplacement(replacement: string, caseSensitive: boolean): Observable<ReplacementType> {
+    return this.replacementsService.validateCustomReplacement({
+      replacement: replacement,
+      cs: caseSensitive
     });
   }
 
-  findPageReviewById(pageId: number, options: ReviewOptions): Observable<PageReviewResponse> {
-    const params: HttpParams = this.mapReviewOptionsToHttpParams(options);
-    return this.httpClient.get<PageReviewResponse>(`${this.baseUrl}/${pageId}`, { params });
+  findPageReviewById(pageId: number, options: ReviewOptions): Observable<FindReviewResponse> {
+    return this.reviewService.findPageReviewById({ ...options, id: pageId });
   }
 
   saveReview(page: ReviewPage, reviewedReplacements: ReviewedReplacement[]): Observable<void> {
@@ -54,9 +40,16 @@ export class PageService {
       return throwError(() => new Error('El usuario no está autenticado. Recargue la página para retomar la sesión.'));
     }
 
-    const saveReview = new SaveReviewRequest(page, reviewedReplacements, this.userService.accessToken);
+    const saveReview = {
+      page: page,
+      reviewedReplacements: reviewedReplacements,
+      accessToken: this.userService.accessToken
+    } as SaveReviewRequest;
 
     // Call backend and delay the observable response
-    return this.httpClient.post<void>(`${this.baseUrl}/${page.id}`, saveReview);
+    return this.reviewService.saveReview({
+      id: page.id,
+      body: saveReview
+    });
   }
 }

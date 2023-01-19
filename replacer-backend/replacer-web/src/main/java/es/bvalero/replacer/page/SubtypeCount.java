@@ -7,7 +7,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Value;
 import org.springframework.lang.NonNull;
 
-@Schema(description = "Count the pages to review grouped by subtype")
+@Schema(description = "Count of pages to review grouped by subtype")
 @Value(staticConstructor = "of")
 class SubtypeCount {
 
@@ -18,7 +18,7 @@ class SubtypeCount {
     @NonNull
     String subtype;
 
-    @Schema(description = "Count the pages to review containing this subtype", requiredMode = REQUIRED, example = "1")
+    @Schema(description = "Count of pages to review containing this subtype", requiredMode = REQUIRED, example = "1")
     @JsonProperty("c")
     int count;
 }

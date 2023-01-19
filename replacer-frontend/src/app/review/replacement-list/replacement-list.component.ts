@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Observable } from 'rxjs';
-import { KindCount } from './replacement-list.model';
+import { KindCount } from '../../api/models/kind-count';
 import { ReplacementListService } from './replacement-list.service';
 
 @Component({

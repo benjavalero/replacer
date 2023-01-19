@@ -47,7 +47,7 @@ public class ReviewSaveController {
             LOGGER.error("Page ID mismatch");
             return ResponseEntity.badRequest().build();
         }
-        if (!Objects.equals(queryParameters.getLang().getCode(), request.getPage().getLang().name())) {
+        if (!Objects.equals(queryParameters.getLang(), request.getPage().getLang())) {
             LOGGER.error("Language mismatch");
             return ResponseEntity.badRequest().build();
         }
@@ -66,7 +66,7 @@ public class ReviewSaveController {
         if (EMPTY_CONTENT.equals(content)) {
             reviewSaveService.markAsReviewed(reviewed, false);
         } else {
-            PageKey pageKey = PageKey.of(queryParameters.getLang(), pageId);
+            PageKey pageKey = PageKey.of(queryParameters.getLang().toDomain(), pageId);
             ReviewSectionDto section = request.getPage().getSection();
             Integer sectionId = section == null ? null : section.getId();
             LocalDateTime saveTimestamp = WikipediaDateUtils.parseWikipediaTimestamp(

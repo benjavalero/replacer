@@ -3,11 +3,19 @@ import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { FindReviewResponse } from '../../api/models/find-review-response';
+import { ReplacementType } from '../../api/models/replacement-type';
+import { ReviewOptions } from '../../api/models/review-options';
 import { AlertService } from '../../shared/alert/alert.service';
-import { kindLabel, PageReviewResponse, ReviewOptions } from './page-review.model';
 import { PageService } from './page.service';
 import { ValidateCustomComponent } from './validate-custom.component';
-import { ReplacementValidationResponse } from './validate-custom.model';
+
+export const kindLabel: { [key: number]: string } = {
+  1: 'Personalizado',
+  2: 'Ortografía',
+  3: 'Compuestos',
+  5: 'Estilo'
+};
 
 @Component({
   selector: 'app-find-random',
@@ -17,7 +25,7 @@ import { ReplacementValidationResponse } from './validate-custom.model';
   styleUrls: []
 })
 export class FindRandomComponent implements OnInit {
-  review: PageReviewResponse | null;
+  review: FindReviewResponse | null;
 
   constructor(
     private alertService: AlertService,
@@ -34,12 +42,12 @@ export class FindRandomComponent implements OnInit {
   ngOnInit() {
     // Optional search options
     const pageId = this.route.snapshot.paramMap.get('id');
-    const options = new ReviewOptions(
-      this.convertKindParameter(this.route.snapshot.paramMap.get('kind')),
-      this.route.snapshot.paramMap.get('subtype'),
-      this.route.snapshot.paramMap.get('suggestion'),
-      this.route.snapshot.paramMap.get('cs') === 'true'
-    );
+    const options = {
+      kind: this.convertKindParameter(this.route.snapshot.paramMap.get('kind')),
+      subtype: this.route.snapshot.paramMap.get('subtype'),
+      suggestion: this.route.snapshot.paramMap.get('suggestion'),
+      cs: this.route.snapshot.paramMap.get('cs') === 'true'
+    } as ReviewOptions;
     if (options.suggestion) {
       options.kind = 1;
     }
@@ -78,20 +86,20 @@ export class FindRandomComponent implements OnInit {
   private findRandomPage(options: ReviewOptions): void {
     const msg =
       options.kind && options.subtype
-        ? `Buscando artículo aleatorio de tipo «${options.getKindLabel()} - ${options.subtype}»…`
+        ? `Buscando artículo aleatorio de tipo «${this.getKindLabel(options.kind)} - ${options.subtype}»…`
         : 'Buscando artículo aleatorio…';
     this.titleService.setTitle(`Replacer - ${msg}`);
 
     this.alertService.addInfoMessage(msg);
 
     this.pageService.findRandomPage(options).subscribe({
-      next: (review: PageReviewResponse) => {
+      next: (review: FindReviewResponse) => {
         if (review) {
           this.manageReview(review, options);
         } else {
           this.alertService.addWarningMessage(
             options.kind && options.subtype
-              ? `No se ha encontrado ningún artículo de tipo «${options.getKindLabel()} - ${options.subtype}»`
+              ? `No se ha encontrado ningún artículo de tipo «${this.getKindLabel(options.kind)} - ${options.subtype}»`
               : 'No se ha encontrado ningún artículo'
           );
         }
@@ -104,9 +112,17 @@ export class FindRandomComponent implements OnInit {
     });
   }
 
+  private getKindLabel(kind: number | null): string | null {
+    if (kind) {
+      return kindLabel[kind];
+    } else {
+      return null;
+    }
+  }
+
   private findPageReview(pageId: number, options: ReviewOptions): void {
     this.pageService.findPageReviewById(pageId, options).subscribe({
-      next: (review: PageReviewResponse) => {
+      next: (review: FindReviewResponse) => {
         if (review) {
           this.manageReview(review, options);
         } else {
@@ -125,7 +141,7 @@ export class FindRandomComponent implements OnInit {
     });
   }
 
-  private manageReview(review: PageReviewResponse, options: ReviewOptions): void {
+  private manageReview(review: FindReviewResponse, options: ReviewOptions): void {
     this.alertService.clearAlertMessages();
 
     this.review = review;
@@ -171,18 +187,15 @@ export class FindRandomComponent implements OnInit {
 
   private validateCustomReplacement(options: ReviewOptions): void {
     const replacement = options.subtype!.trim();
-    this.pageService
-      .validateCustomReplacement(replacement, options.cs!)
-      .subscribe((validateType: ReplacementValidationResponse) => {
-        if (validateType) {
-          this.openValidationModal$(validateType.kind, validateType.subtype).then((result) => {
-            const knownTypeOptions = new ReviewOptions(validateType.kind, validateType.subtype, null, null);
-            this.router.navigate([this.getReviewUrl(knownTypeOptions, null)]);
-          });
-        } else {
-          this.findRandomPage(options);
-        }
-      });
+    this.pageService.validateCustomReplacement(replacement, options.cs!).subscribe((validateType: ReplacementType) => {
+      if (validateType) {
+        this.openValidationModal$(validateType.kind!, validateType.subtype).then((result) => {
+          this.router.navigate([this.getReviewUrl(validateType as ReviewOptions, null)]);
+        });
+      } else {
+        this.findRandomPage(options);
+      }
+    });
   }
 
   private openValidationModal$(kind: number, subtype: string): Promise<any> {

@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { AccessToken, User } from './user.model';
-
-export const USER_PARAM = 'user';
+import { AccessToken } from '../../api/models/access-token';
+import { User } from './user.model';
 
 @Injectable()
 export class UserService {

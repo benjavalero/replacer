@@ -9,7 +9,7 @@ import lombok.Value;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
-@Schema(description = "Replacement to review")
+@Schema(description = "Replacement to review", name = "ReviewReplacement")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Value(staticConstructor = "of")
 class ReviewReplacementDto {
@@ -21,7 +21,7 @@ class ReviewReplacementDto {
     @NonNull
     String text;
 
-    @Schema(description = "Kind of the replacement", example = "2", requiredMode = REQUIRED)
+    @Schema(type = "integer", description = "Kind of the replacement", example = "2", requiredMode = REQUIRED)
     byte kind;
 
     @Schema(description = "Subtype of the replacement", example = "habia", requiredMode = REQUIRED)

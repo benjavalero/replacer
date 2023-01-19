@@ -1,13 +1,9 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ReviewReplacement } from '../../api/models/review-replacement';
+import { ReviewSuggestion } from '../../api/models/review-suggestion';
 import { EditCustomSnippetComponent } from './edit-custom-snippet.component';
-import {
-  FixedReplacement,
-  getReplacementEnd,
-  ReviewReplacement,
-  ReviewSuggestion,
-  Snippet
-} from './page-replacement.model';
+import { FixedReplacement, getReplacementEnd, Snippet } from './page-replacement.model';
 
 @Component({
   selector: 'app-edit-snippet',

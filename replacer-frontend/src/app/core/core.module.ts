@@ -3,9 +3,11 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { NgbCollapseModule, NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
+import { environment } from '../../environments/environment';
+import { ApiModule } from '../api/api.module';
 import { SharedModule } from '../shared/shared.module';
-import { AuthenticationService } from './authentication/authentication.service';
 import { LoginComponent } from './authentication/login.component';
+import { LoginService } from './authentication/login.service';
 import { OAuthResponseComponent } from './authentication/oauth-response.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { AuthenticationGuard } from './guard/authentication.guard';
@@ -19,11 +21,18 @@ import { UserService } from './user/user.service';
 @NgModule({
   declarations: [DashboardComponent, HeaderComponent, ChangeLanguageComponent, LoginComponent, OAuthResponseComponent],
   exports: [HeaderComponent],
-  imports: [CommonModule, RouterModule, SharedModule, NgbCollapseModule, NgbDropdownModule],
+  imports: [
+    CommonModule,
+    RouterModule,
+    SharedModule,
+    ApiModule.forRoot({ rootUrl: environment.baseUrl }),
+    NgbCollapseModule,
+    NgbDropdownModule
+  ],
   providers: [
     UserService,
     UserConfigService,
-    AuthenticationService,
+    LoginService,
     AuthenticationGuard,
     {
       provide: HTTP_INTERCEPTORS,

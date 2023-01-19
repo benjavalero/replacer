@@ -2,8 +2,8 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { interval, Observable, Subscription } from 'rxjs';
 import { sleep } from '../../shared/util/sleep';
-import { DumpIndexingStatus } from './dump-indexing.model';
-import { DumpIndexingService } from './dump-indexing.service';
+import { DumpIndexingAdapterService } from './dump-indexing-adapter.service';
+import { DumpIndexingAdapterStatus } from './dump-indexing.model';
 
 @Component({
   selector: 'app-dump',
@@ -12,12 +12,12 @@ import { DumpIndexingService } from './dump-indexing.service';
 })
 export class DumpIndexingComponent implements OnInit, OnDestroy {
   // Status Details
-  status$!: Observable<DumpIndexingStatus | null>;
+  status$!: Observable<DumpIndexingAdapterStatus | null>;
 
   // Check the status
   subscription!: Subscription;
 
-  constructor(private dumpService: DumpIndexingService, private titleService: Title) {}
+  constructor(private dumpService: DumpIndexingAdapterService, private titleService: Title) {}
 
   ngOnInit() {
     this.titleService.setTitle('Replacer - Indexación');

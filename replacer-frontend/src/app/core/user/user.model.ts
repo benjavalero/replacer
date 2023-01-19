@@ -1,4 +1,5 @@
-import { VerifyAuthenticationResponse } from '../authentication/authentication.model';
+import { AccessToken } from '../../api/models/access-token';
+import { VerifyAuthenticationResponse } from '../../api/models/verify-authentication-response';
 
 export class User {
   name: string;
@@ -15,9 +16,4 @@ export class User {
     this.admin = response.admin;
     this.accessToken = response.accessToken;
   }
-}
-
-export interface AccessToken {
-  token: string;
-  tokenSecret: string;
 }

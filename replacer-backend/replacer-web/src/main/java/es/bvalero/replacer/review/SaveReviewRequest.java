@@ -11,9 +11,7 @@ import javax.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.springdoc.api.annotations.ParameterObject;
 
-@ParameterObject
 @Schema
 @Data
 @NoArgsConstructor

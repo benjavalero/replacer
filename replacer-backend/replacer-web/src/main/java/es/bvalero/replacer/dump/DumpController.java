@@ -24,7 +24,7 @@ public class DumpController {
     @Loggable(skipResult = true)
     @ValidateAdminUser
     @GetMapping(value = "")
-    public DumpIndexingStatusResponse getDumpIndexingStatus(@Valid CommonQueryParameters queryParameters) {
+    public DumpIndexingStatusDto getDumpIndexingStatus(@Valid CommonQueryParameters queryParameters) {
         return toDto(dumpManager.getDumpIndexingStatus());
     }
 
@@ -37,8 +37,8 @@ public class DumpController {
         dumpManager.indexLatestDumpFiles();
     }
 
-    private DumpIndexingStatusResponse toDto(DumpIndexingStatus status) {
-        return DumpIndexingStatusResponse
+    private DumpIndexingStatusDto toDto(DumpIndexingStatus status) {
+        return DumpIndexingStatusDto
             .builder()
             .running(status.isRunning())
             .numPagesRead(status.getNumPagesRead())

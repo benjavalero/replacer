@@ -2,19 +2,19 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
+import { AdministrationService } from '../api/services/administration.service';
+import { ReplacementsService } from '../api/services/replacements.service';
 import { SharedModule } from '../shared/shared.module';
 import { AdminRoutingModule } from './admin-routing.module';
 import { AdminComponent } from './admin.component';
-import { AdminService } from './admin.service';
+import { DumpIndexingAdapterService } from './dump-indexing/dump-indexing-adapter.service';
 import { DumpIndexingComponent } from './dump-indexing/dump-indexing.component';
-import { DumpIndexingService } from './dump-indexing/dump-indexing.service';
 import { PublicIpComponent } from './public-ip/public-ip.component';
 import { UnreviewedComponent } from './unreviewed/unreviewed.component';
-import { UnreviewedService } from './unreviewed/unreviewed.service';
 
 @NgModule({
   declarations: [AdminComponent, DumpIndexingComponent, PublicIpComponent, UnreviewedComponent],
   imports: [CommonModule, RouterModule, FormsModule, AdminRoutingModule, SharedModule],
-  providers: [AdminService, DumpIndexingService, UnreviewedService]
+  providers: [AdministrationService, DumpIndexingAdapterService, ReplacementsService]
 })
 export class AdminModule {}

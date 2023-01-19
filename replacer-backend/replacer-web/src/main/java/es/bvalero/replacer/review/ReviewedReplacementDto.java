@@ -8,16 +8,14 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.lang.Nullable;
 
-@ParameterObject
-@Schema(description = "Reviewed replacement")
+@Schema(description = "Reviewed replacement", name = "ReviewedReplacement")
 @Data
 @NoArgsConstructor
 class ReviewedReplacementDto {
 
-    @Schema(description = "Replacement kind", requiredMode = REQUIRED)
+    @Schema(type = "integer", description = "Replacement kind", requiredMode = REQUIRED)
     byte kind;
 
     @Schema(description = "Replacement subtype", requiredMode = REQUIRED)

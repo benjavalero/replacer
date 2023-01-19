@@ -1,24 +1,20 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { environment } from '../../../environments/environment';
+import { InitiateAuthenticationResponse } from '../../api/models/initiate-authentication-response';
+import { RequestToken } from '../../api/models/request-token';
+import { VerifyAuthenticationRequest } from '../../api/models/verify-authentication-request';
+import { VerifyAuthenticationResponse } from '../../api/models/verify-authentication-response';
+import { AuthenticationService } from '../../api/services/authentication.service';
 import { User } from '../user/user.model';
 import { UserService } from '../user/user.service';
-import {
-  InitiateAuthenticationResponse,
-  RequestToken,
-  VerifyAuthenticationRequest,
-  VerifyAuthenticationResponse
-} from './authentication.model';
 
 @Injectable()
-export class AuthenticationService {
+export class LoginService {
   private readonly requestTokenKey = 'requestToken';
   private readonly redirectPathKey = 'redirectPath';
-  private readonly baseUrl = `${environment.apiUrl}/authentication`;
 
-  constructor(private httpClient: HttpClient, private userService: UserService) {}
+  constructor(private authenticationService: AuthenticationService, private userService: UserService) {}
 
   getAuthenticationUrl$(): Observable<string> {
     return this.initiateAuthentication$().pipe(
@@ -32,7 +28,7 @@ export class AuthenticationService {
   }
 
   private initiateAuthentication$(): Observable<InitiateAuthenticationResponse> {
-    return this.httpClient.get<InitiateAuthenticationResponse>(`${this.baseUrl}/initiate`);
+    return this.authenticationService.initiateAuthentication();
   }
 
   loginUser$(oauthVerifier: string): Observable<User> {
@@ -52,8 +48,12 @@ export class AuthenticationService {
   private authenticate$(oauthVerifier: string): Observable<VerifyAuthenticationResponse> {
     // At this point we can assert that the request token exists
     const requestToken: RequestToken = JSON.parse(localStorage.getItem(this.requestTokenKey)!);
-    const body = new VerifyAuthenticationRequest(requestToken, oauthVerifier);
-    return this.httpClient.post<VerifyAuthenticationResponse>(`${this.baseUrl}/verify`, body);
+    return this.authenticationService.verifyAuthentication({
+      body: {
+        oauthVerifier,
+        requestToken
+      } as VerifyAuthenticationRequest
+    });
   }
 
   get redirectPath(): string {

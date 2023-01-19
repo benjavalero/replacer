@@ -84,7 +84,7 @@ class ReviewMapper {
     ReviewOptions fromDto(ReviewOptionsDto options, CommonQueryParameters queryParameters) {
         return ReviewOptions
             .builder()
-            .lang(queryParameters.getLang())
+            .lang(queryParameters.getLang().toDomain())
             .user(queryParameters.getUser())
             .type(ReplacementType.of(options.getKind(), options.getSubtype()))
             .suggestion(options.getSuggestion())
@@ -112,7 +112,7 @@ class ReviewMapper {
     ) {
         return ReviewedReplacement
             .builder()
-            .pageKey(PageKey.of(queryParameters.getLang(), pageId))
+            .pageKey(PageKey.of(queryParameters.getLang().toDomain(), pageId))
             .type(ReplacementType.of(reviewed.getKind(), reviewed.getSubtype()))
             .cs(reviewed.getCs())
             .start(offset + reviewed.getStart())
