@@ -130,8 +130,12 @@ class WikipediaPageApiRepository implements WikipediaPageRepository {
             .pageKey(PageKey.of(lang, page.getPageid()))
             .namespace(WikipediaNamespace.valueOf(page.getNs()))
             .title(page.getTitle())
-            .content(page.getRevisions().get(0).getSlots().getMain().getContent())
-            .lastUpdate(WikipediaDateUtils.parseWikipediaTimestamp(page.getRevisions().get(0).getTimestamp()))
+            .content(page.getRevisions().stream().findFirst().orElseThrow().getSlots().getMain().getContent())
+            .lastUpdate(
+                WikipediaDateUtils.parseWikipediaTimestamp(
+                    page.getRevisions().stream().findFirst().orElseThrow().getTimestamp()
+                )
+            )
             .queryTimestamp(WikipediaDateUtils.parseWikipediaTimestamp(queryTimestamp))
             .redirect(page.isRedirect())
             .build();
@@ -186,7 +190,7 @@ class WikipediaPageApiRepository implements WikipediaPageRepository {
             .builder()
             .level(Integer.parseInt(section.getLevel()))
             .index(Integer.parseInt(section.getIndex()))
-            .byteOffset(section.getByteoffset())
+            .byteOffset(Objects.requireNonNull(section.getByteoffset()))
             .anchor(Objects.requireNonNullElse(section.getLinkAnchor(), section.getAnchor()))
             .build();
     }
@@ -294,7 +298,7 @@ class WikipediaPageApiRepository implements WikipediaPageRepository {
             .getQuery()
             .getSearch()
             .stream()
-            .map(WikipediaApiResponse.Page::getPageid)
+            .map(WikipediaApiResponse.Search::getPageid)
             .collect(Collectors.toUnmodifiableList());
 
         // Check nullity of IDs just in case to try to reproduce a strange bug
@@ -405,7 +409,17 @@ class WikipediaPageApiRepository implements WikipediaPageRepository {
         return EditToken.of(
             response.getQuery().getTokens().getCsrftoken(),
             WikipediaDateUtils.parseWikipediaTimestamp(
-                response.getQuery().getPages().get(0).getRevisions().get(0).getTimestamp()
+                response
+                    .getQuery()
+                    .getPages()
+                    .stream()
+                    .findFirst()
+                    .orElseThrow()
+                    .getRevisions()
+                    .stream()
+                    .findFirst()
+                    .orElseThrow()
+                    .getTimestamp()
             )
         );
     }

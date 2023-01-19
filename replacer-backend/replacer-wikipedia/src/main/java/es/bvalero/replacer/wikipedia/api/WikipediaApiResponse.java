@@ -1,26 +1,30 @@
 package es.bvalero.replacer.wikipedia.api;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import es.bvalero.replacer.wikipedia.WikipediaException;
-import java.util.List;
+import java.util.Collection;
 import lombok.Data;
+import org.springframework.lang.Nullable;
 
-/** DTO matching the common format for a Wikipedia classic API response */
+/**
+ * DTO matching the common format for a Wikipedia classic API response.
+ * There is no schema to follow up the changes in the API specification,
+ * so the best approach is to take only the needed values and ignore all the rest.
+ */
 @Data
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class WikipediaApiResponse {
 
+    @Nullable
     private Error error;
 
     private boolean batchcomplete;
 
-    @JsonProperty("continue")
-    private Continue continueObject;
-
     private String curtimestamp;
+
     private Query query;
-    private Page parse;
-    private Edit edit;
-    private String servedby;
+
+    private Parse parse;
 
     /**
      * @throws WikipediaException if the response contains an error.
@@ -34,79 +38,70 @@ public class WikipediaApiResponse {
     }
 
     @Data
+    @JsonIgnoreProperties(ignoreUnknown = true)
     private static class Error {
 
         private String code;
         private String info;
-        private String docref;
     }
 
     @Data
-    private static class Continue {
-
-        private int sroffset;
-
-        @JsonProperty("continue")
-        private String continueValue;
-    }
-
-    @Data
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Query {
 
         private UserInfo userinfo;
+
+        private Collection<User> users;
+
+        private Collection<Page> pages;
+
         private SearchInfo searchinfo;
-        private List<Normalized> normalized;
-        private List<Page> search;
-        private List<Page> pages;
+
+        private Collection<Search> search;
+
         private Tokens tokens;
-        private List<User> users;
     }
 
     @Data
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public static class UserInfo {
 
-        private int id;
         private String name;
-        private List<String> groups;
+        private Collection<String> groups;
     }
 
     @Data
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public static class SearchInfo {
 
         private int totalhits;
     }
 
     @Data
-    private static class Normalized {
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static class Search {
 
-        boolean fromencoded;
-        String from;
-        String to;
+        private int pageid;
     }
 
     @Data
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Page {
 
-        private String contentmodel;
-        private int lastrevid;
-        private int length;
         private int pageid;
-        private int ns;
-        private String pagelanguage;
-        private String pagelanguagedir;
-        private String pagelanguagehtmlcode;
-        private List<Protection> protection;
-        private boolean redirect;
-        private List<String> restrictiontypes;
-        private String title;
-        private List<Revision> revisions;
-        private List<Section> sections;
-        private String touched;
-        private boolean missing;
-        private boolean showtoc;
 
-        @JsonProperty("new")
-        private boolean newPage;
+        private int ns;
+
+        private boolean missing;
+
+        private String title;
+
+        private boolean redirect;
+
+        @Nullable
+        private Collection<Protection> protection;
+
+        private Collection<Revision> revisions;
 
         public boolean isProtected() {
             return this.protection != null && this.protection.stream().anyMatch(Protection::isLibrarianEditProtection);
@@ -114,80 +109,75 @@ public class WikipediaApiResponse {
     }
 
     @Data
+    @JsonIgnoreProperties(ignoreUnknown = true)
     private static class Protection {
 
-        private String expiry;
-        private String level;
         private String type;
+        private String level;
 
-        boolean isLibrarianEditProtection() {
+        private boolean isLibrarianEditProtection() {
             return "edit".equals(this.type) && "sysop".equals(this.level);
         }
     }
 
     @Data
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Revision {
 
         private String timestamp;
+
         private Slots slots;
     }
 
     @Data
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Tokens {
 
         private String csrftoken;
     }
 
     @Data
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Slots {
 
         private Main main;
     }
 
     @Data
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Main {
 
-        private String contentmodel;
-        private String contentformat;
         private String content;
     }
 
     @Data
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static class Parse {
+
+        private Collection<Section> sections;
+    }
+
+    @Data
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Section {
 
-        private int toclevel;
         private String level;
-        private String line;
-        private String number;
-        private String index;
-        private String fromtitle;
+
+        private String index; // It can be blank
+
+        @Nullable
         private Integer byteoffset;
+
         private String anchor;
         private String linkAnchor;
-
-        @JsonProperty("html-summary")
-        private String htmlSummary;
     }
 
     @Data
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public static class User {
 
-        private int userid;
         private String name;
         private boolean missing;
-        private List<String> groups;
-    }
-
-    @Data
-    private static class Edit {
-
-        private String result;
-        private int pageid;
-        private String title;
-        private String contentmodel;
-        private int oldrevid;
-        private int newrevid;
-        private String newtimestamp;
-        private boolean watched;
+        private Collection<String> groups;
     }
 }

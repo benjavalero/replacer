@@ -40,8 +40,12 @@ public class BenchmarkUtils {
             .pageKey(PageKey.of(WikipediaLanguage.getDefault(), page.getPageid()))
             .namespace(WikipediaNamespace.valueOf(page.getNs()))
             .title(page.getTitle())
-            .content(page.getRevisions().get(0).getSlots().getMain().getContent())
-            .lastUpdate(WikipediaDateUtils.parseWikipediaTimestamp(page.getRevisions().get(0).getTimestamp()))
+            .content(page.getRevisions().stream().findFirst().orElseThrow().getSlots().getMain().getContent())
+            .lastUpdate(
+                WikipediaDateUtils.parseWikipediaTimestamp(
+                    page.getRevisions().stream().findFirst().orElseThrow().getTimestamp()
+                )
+            )
             .queryTimestamp(LocalDateTime.now())
             .build();
     }

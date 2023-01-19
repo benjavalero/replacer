@@ -1,50 +1,55 @@
 package es.bvalero.replacer.finder.benchmark.util;
 
-import java.util.List;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.util.Collection;
 import lombok.Data;
 
 @Data
+@JsonIgnoreProperties(ignoreUnknown = true)
 class WikipediaApiResponse {
 
     // We cannot reuse the class in wikipedia submodule as submodules cannot access each other
 
-    private boolean batchcomplete;
-    private String curtimestamp;
     private Query query;
 
     @Data
-    static class Query {
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static class Query {
 
-        private List<Page> pages;
+        private Collection<Page> pages;
     }
 
     @Data
-    static class Page {
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static class Page {
 
         private int pageid;
+
         private int ns;
+
         private String title;
-        private List<Revision> revisions;
+
+        private Collection<Revision> revisions;
     }
 
     @Data
-    static class Revision {
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static class Revision {
 
         private String timestamp;
         private Slots slots;
     }
 
     @Data
-    static class Slots {
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static class Slots {
 
         private Main main;
     }
 
     @Data
-    static class Main {
-
-        private String contentmodel;
-        private String contentformat;
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static class Main {
 
         private String content;
     }
