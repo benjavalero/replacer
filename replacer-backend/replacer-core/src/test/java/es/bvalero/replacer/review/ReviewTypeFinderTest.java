@@ -14,11 +14,7 @@ import es.bvalero.replacer.page.PageKey;
 import es.bvalero.replacer.page.PageService;
 import es.bvalero.replacer.replacement.ReplacementService;
 import es.bvalero.replacer.user.UserRightsService;
-import es.bvalero.replacer.wikipedia.WikipediaNamespace;
-import es.bvalero.replacer.wikipedia.WikipediaPage;
-import es.bvalero.replacer.wikipedia.WikipediaPageRepository;
-import es.bvalero.replacer.wikipedia.WikipediaSection;
-import java.time.LocalDateTime;
+import es.bvalero.replacer.wikipedia.*;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -42,8 +38,8 @@ class ReviewTypeFinderTest {
         .namespace(WikipediaNamespace.ARTICLE)
         .title("Title1")
         .content(content)
-        .lastUpdate(LocalDateTime.now())
-        .queryTimestamp(LocalDateTime.now())
+        .lastUpdate(WikipediaTimestamp.now())
+        .queryTimestamp(WikipediaTimestamp.now())
         .build();
     private final WikipediaPage page2 = WikipediaPage
         .builder()
@@ -51,8 +47,8 @@ class ReviewTypeFinderTest {
         .namespace(WikipediaNamespace.ANNEX)
         .title("Title2")
         .content(content2)
-        .lastUpdate(LocalDateTime.now())
-        .queryTimestamp(LocalDateTime.now())
+        .lastUpdate(WikipediaTimestamp.now())
+        .queryTimestamp(WikipediaTimestamp.now())
         .build();
     private final int offset = 1;
     private final Replacement replacement = Replacement

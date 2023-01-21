@@ -2,14 +2,10 @@ package es.bvalero.replacer.review;
 
 import com.github.rozidan.springboot.logger.Loggable;
 import es.bvalero.replacer.common.dto.CommonQueryParameters;
-import es.bvalero.replacer.common.util.WikipediaDateUtils;
 import es.bvalero.replacer.page.PageKey;
 import es.bvalero.replacer.user.AccessToken;
 import es.bvalero.replacer.user.AccessTokenDto;
-import es.bvalero.replacer.wikipedia.WikipediaConflictException;
-import es.bvalero.replacer.wikipedia.WikipediaException;
-import es.bvalero.replacer.wikipedia.WikipediaNamespace;
-import es.bvalero.replacer.wikipedia.WikipediaPage;
+import es.bvalero.replacer.wikipedia.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -69,9 +65,7 @@ public class ReviewSaveController {
             PageKey pageKey = PageKey.of(queryParameters.getLang().toDomain(), pageId);
             ReviewSectionDto section = request.getPage().getSection();
             Integer sectionId = section == null ? null : section.getId();
-            LocalDateTime saveTimestamp = WikipediaDateUtils.parseWikipediaTimestamp(
-                request.getPage().getQueryTimestamp()
-            );
+            WikipediaTimestamp saveTimestamp = WikipediaTimestamp.of(request.getPage().getQueryTimestamp());
             WikipediaPage page = WikipediaPage
                 .builder()
                 .pageKey(pageKey)

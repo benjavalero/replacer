@@ -2,7 +2,6 @@ package es.bvalero.replacer.wikipedia;
 
 import es.bvalero.replacer.index.IndexablePage;
 import es.bvalero.replacer.page.PageKey;
-import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.ToString;
 import lombok.Value;
@@ -32,11 +31,11 @@ public class WikipediaPage implements IndexablePage {
     String content;
 
     @NonNull
-    LocalDateTime lastUpdate; // Store time (and not only date) in case it is needed in the future
+    WikipediaTimestamp lastUpdate; // Store time (and not only date) in case it is needed in the future
 
     @NonNull
     @ToString.Exclude
-    LocalDateTime queryTimestamp; // Store the timestamp when the page was queried
+    WikipediaTimestamp queryTimestamp; // Store the timestamp when the page was queried
 
     @ToString.Exclude
     boolean redirect; // If the page is considered a redirection page

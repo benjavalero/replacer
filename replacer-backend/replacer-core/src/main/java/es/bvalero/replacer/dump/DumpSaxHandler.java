@@ -1,11 +1,11 @@
 package es.bvalero.replacer.dump;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import es.bvalero.replacer.common.util.WikipediaDateUtils;
 import es.bvalero.replacer.index.PageIndexService;
 import es.bvalero.replacer.index.PageIndexStatus;
 import es.bvalero.replacer.page.PageKey;
 import es.bvalero.replacer.wikipedia.WikipediaNamespace;
+import es.bvalero.replacer.wikipedia.WikipediaTimestamp;
 import java.time.LocalDateTime;
 import lombok.Getter;
 import org.xml.sax.Attributes;
@@ -135,7 +135,7 @@ class DumpSaxHandler extends DefaultHandler {
             .namespace(WikipediaNamespace.valueOf(this.currentNamespace))
             .title(this.currentTitle)
             .content(this.currentContent)
-            .lastUpdate(WikipediaDateUtils.parseWikipediaTimestamp(this.currentTimestamp))
+            .lastUpdate(WikipediaTimestamp.of(this.currentTimestamp))
             .redirect(this.currentRedirect)
             .build();
 

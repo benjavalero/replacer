@@ -3,7 +3,7 @@ package es.bvalero.replacer.dump;
 import es.bvalero.replacer.index.IndexablePage;
 import es.bvalero.replacer.page.PageKey;
 import es.bvalero.replacer.wikipedia.WikipediaNamespace;
-import java.time.LocalDateTime;
+import es.bvalero.replacer.wikipedia.WikipediaTimestamp;
 import lombok.Builder;
 import lombok.Value;
 import org.springframework.lang.NonNull;
@@ -26,7 +26,7 @@ class DumpPage implements IndexablePage {
     String content;
 
     @NonNull
-    LocalDateTime lastUpdate; // Store time (and not only date) in case it is needed in the future
+    WikipediaTimestamp lastUpdate; // Store time (and not only date) in case it is needed in the future
 
     boolean redirect; // If the page is considered a redirection page
 }

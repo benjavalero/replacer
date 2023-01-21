@@ -5,12 +5,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.common.util.FileOfflineUtils;
-import es.bvalero.replacer.common.util.WikipediaDateUtils;
 import es.bvalero.replacer.page.PageKey;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.wikipedia.WikipediaNamespace;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
-import java.time.LocalDateTime;
+import es.bvalero.replacer.wikipedia.WikipediaTimestamp;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.experimental.UtilityClass;
@@ -41,12 +40,8 @@ public class BenchmarkUtils {
             .namespace(WikipediaNamespace.valueOf(page.getNs()))
             .title(page.getTitle())
             .content(page.getRevisions().stream().findFirst().orElseThrow().getSlots().getMain().getContent())
-            .lastUpdate(
-                WikipediaDateUtils.parseWikipediaTimestamp(
-                    page.getRevisions().stream().findFirst().orElseThrow().getTimestamp()
-                )
-            )
-            .queryTimestamp(LocalDateTime.now())
+            .lastUpdate(WikipediaTimestamp.of(page.getRevisions().stream().findFirst().orElseThrow().getTimestamp()))
+            .queryTimestamp(WikipediaTimestamp.now())
             .build();
     }
 }

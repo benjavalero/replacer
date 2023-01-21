@@ -16,7 +16,6 @@ import es.bvalero.replacer.page.PageKey;
 import es.bvalero.replacer.replacement.CustomReplacementService;
 import es.bvalero.replacer.user.UserRightsService;
 import es.bvalero.replacer.wikipedia.*;
-import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
@@ -70,8 +69,8 @@ class ReviewCustomFinderTest {
             .namespace(WikipediaNamespace.getDefault())
             .title("Title")
             .content(content)
-            .lastUpdate(LocalDateTime.now())
-            .queryTimestamp(LocalDateTime.now())
+            .lastUpdate(WikipediaTimestamp.now())
+            .queryTimestamp(WikipediaTimestamp.now())
             .build();
     }
 

@@ -10,16 +10,10 @@ import es.bvalero.replacer.common.domain.ReplacementKind;
 import es.bvalero.replacer.common.domain.ReplacementType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.dto.Language;
-import es.bvalero.replacer.common.util.WikipediaDateUtils;
 import es.bvalero.replacer.page.PageKey;
 import es.bvalero.replacer.user.AccessToken;
 import es.bvalero.replacer.user.AccessTokenDto;
-import es.bvalero.replacer.wikipedia.WikipediaConflictException;
-import es.bvalero.replacer.wikipedia.WikipediaException;
-import es.bvalero.replacer.wikipedia.WikipediaNamespace;
-import es.bvalero.replacer.wikipedia.WikipediaPage;
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
+import es.bvalero.replacer.wikipedia.*;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -38,7 +32,7 @@ class ReviewSaveControllerTest {
     private static final int pageId = 123;
     private static final String title = "Q";
     private static final String content = "X";
-    private static final LocalDateTime timestamp = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
+    private static final WikipediaTimestamp timestamp = WikipediaTimestamp.now();
     private static final AccessToken accessToken = AccessToken.of("A", "B");
     private static final WikipediaPage page = WikipediaPage
         .builder()
@@ -76,7 +70,7 @@ class ReviewSaveControllerTest {
         reviewPage.setId(pageId);
         reviewPage.setTitle(title);
         reviewPage.setContent(content);
-        reviewPage.setQueryTimestamp(WikipediaDateUtils.formatWikipediaTimestamp(timestamp));
+        reviewPage.setQueryTimestamp(timestamp.toString());
         request.setPage(reviewPage);
         ReviewedReplacementDto reviewedDto = new ReviewedReplacementDto();
         reviewedDto.setKind(reviewed.getType().getKind().getCode());

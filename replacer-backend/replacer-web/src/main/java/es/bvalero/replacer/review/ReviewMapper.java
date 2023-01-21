@@ -4,7 +4,6 @@ import es.bvalero.replacer.common.domain.ReplacementKind;
 import es.bvalero.replacer.common.domain.ReplacementType;
 import es.bvalero.replacer.common.dto.CommonQueryParameters;
 import es.bvalero.replacer.common.dto.Language;
-import es.bvalero.replacer.common.util.WikipediaDateUtils;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.Suggestion;
 import es.bvalero.replacer.page.PageKey;
@@ -34,7 +33,7 @@ class ReviewMapper {
         reviewPage.setTitle(page.getTitle());
         reviewPage.setContent(page.getContent());
         reviewPage.setSection(toDto(section));
-        reviewPage.setQueryTimestamp(WikipediaDateUtils.formatWikipediaTimestamp(page.getQueryTimestamp()));
+        reviewPage.setQueryTimestamp(page.getQueryTimestamp().toString());
         return reviewPage;
     }
 

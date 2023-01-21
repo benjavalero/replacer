@@ -10,11 +10,7 @@ import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.Suggestion;
 import es.bvalero.replacer.page.PageKey;
-import es.bvalero.replacer.wikipedia.WikipediaNamespace;
-import es.bvalero.replacer.wikipedia.WikipediaPage;
-import es.bvalero.replacer.wikipedia.WikipediaPageRepository;
-import es.bvalero.replacer.wikipedia.WikipediaSection;
-import java.time.LocalDateTime;
+import es.bvalero.replacer.wikipedia.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -46,8 +42,8 @@ class ReviewSectionFinderTest {
             .namespace(WikipediaNamespace.getDefault())
             .title("T")
             .content(content)
-            .lastUpdate(LocalDateTime.now())
-            .queryTimestamp(LocalDateTime.now())
+            .lastUpdate(WikipediaTimestamp.now())
+            .queryTimestamp(WikipediaTimestamp.now())
             .build();
     }
 

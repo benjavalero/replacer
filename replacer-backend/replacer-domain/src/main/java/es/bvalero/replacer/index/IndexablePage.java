@@ -2,12 +2,12 @@ package es.bvalero.replacer.index;
 
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.wikipedia.WikipediaNamespace;
-import java.time.LocalDateTime;
+import es.bvalero.replacer.wikipedia.WikipediaTimestamp;
 
 public interface IndexablePage extends FinderPage {
     WikipediaNamespace getNamespace();
 
-    LocalDateTime getLastUpdate();
+    WikipediaTimestamp getLastUpdate();
 
     boolean isRedirect();
 }

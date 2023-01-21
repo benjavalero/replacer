@@ -4,14 +4,12 @@ import static org.apache.commons.lang3.StringUtils.SPACE;
 
 import com.github.rozidan.springboot.logger.Loggable;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import es.bvalero.replacer.common.util.WikipediaDateUtils;
 import es.bvalero.replacer.page.PageKey;
 import es.bvalero.replacer.user.AccessToken;
 import es.bvalero.replacer.wikipedia.api.WikipediaApiRequest;
 import es.bvalero.replacer.wikipedia.api.WikipediaApiRequestHelper;
 import es.bvalero.replacer.wikipedia.api.WikipediaApiRequestVerb;
 import es.bvalero.replacer.wikipedia.api.WikipediaApiResponse;
-import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -109,30 +107,26 @@ class WikipediaPageApiRepository implements WikipediaPageRepository {
 
     private Collection<WikipediaPage> extractPagesFromJson(WikipediaApiResponse response, WikipediaLanguage lang) {
         // Query timestamp
-        String queryTimestamp = response.getCurtimestamp();
+        String curtimestamp = response.getCurtimestamp();
         return response
             .getQuery()
             .getPages()
             .stream()
             .filter(page -> !page.isMissing())
             .filter(page -> !page.isProtected())
-            .map(page -> convert(page, lang, queryTimestamp))
+            .map(page -> convert(page, lang, curtimestamp))
             .collect(Collectors.toUnmodifiableList());
     }
 
-    private WikipediaPage convert(WikipediaApiResponse.Page page, WikipediaLanguage lang, String queryTimestamp) {
+    private WikipediaPage convert(WikipediaApiResponse.Page page, WikipediaLanguage lang, String curtimestamp) {
         return WikipediaPage
             .builder()
             .pageKey(PageKey.of(lang, page.getPageid()))
             .namespace(WikipediaNamespace.valueOf(page.getNs()))
             .title(page.getTitle())
             .content(page.getRevisions().stream().findFirst().orElseThrow().getSlots().getMain().getContent())
-            .lastUpdate(
-                WikipediaDateUtils.parseWikipediaTimestamp(
-                    page.getRevisions().stream().findFirst().orElseThrow().getTimestamp()
-                )
-            )
-            .queryTimestamp(WikipediaDateUtils.parseWikipediaTimestamp(queryTimestamp))
+            .lastUpdate(WikipediaTimestamp.of(page.getRevisions().stream().findFirst().orElseThrow().getTimestamp()))
+            .queryTimestamp(WikipediaTimestamp.of(curtimestamp))
             .redirect(page.isRedirect())
             .build();
     }
@@ -317,10 +311,10 @@ class WikipediaPageApiRepository implements WikipediaPageRepository {
         wikipediaApiRequestHelper.executeApiRequest(apiRequest);
     }
 
-    private void validateEditToken(PageKey pageKey, EditToken editToken, LocalDateTime queryTimestamp)
+    private void validateEditToken(PageKey pageKey, EditToken editToken, WikipediaTimestamp queryTimestamp)
         throws WikipediaConflictException {
         // Pre-check of edit conflicts
-        if (!queryTimestamp.isAfter(editToken.getTimestamp())) {
+        if (!queryTimestamp.toLocalDateTime().isAfter(editToken.getTimestamp().toLocalDateTime())) {
             String message = String.format(
                 "Page edited at the same time: %s -%s - %s",
                 pageKey,
@@ -347,9 +341,9 @@ class WikipediaPageApiRepository implements WikipediaPageRepository {
         params.put("minor", "true");
         params.put("token", editToken.getCsrfToken());
         // Timestamp when the editing process began
-        params.put("starttimestamp", WikipediaDateUtils.formatWikipediaTimestamp(pageSave.getQueryTimestamp()));
+        params.put("starttimestamp", pageSave.getQueryTimestamp().toString());
         // Timestamp of the base revision
-        params.put("basetimestamp", WikipediaDateUtils.formatWikipediaTimestamp(editToken.getTimestamp()));
+        params.put("basetimestamp", editToken.getTimestamp().toString());
         return params;
     }
 
@@ -379,7 +373,7 @@ class WikipediaPageApiRepository implements WikipediaPageRepository {
     private EditToken extractEditTokenFromJson(WikipediaApiResponse response) {
         return EditToken.of(
             response.getQuery().getTokens().getCsrftoken(),
-            WikipediaDateUtils.parseWikipediaTimestamp(
+            WikipediaTimestamp.of(
                 response
                     .getQuery()
                     .getPages()

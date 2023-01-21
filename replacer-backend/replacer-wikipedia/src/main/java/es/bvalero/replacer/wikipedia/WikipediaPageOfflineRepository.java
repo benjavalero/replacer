@@ -4,8 +4,6 @@ import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.common.util.FileOfflineUtils;
 import es.bvalero.replacer.page.PageKey;
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Optional;
@@ -25,7 +23,6 @@ class WikipediaPageOfflineRepository implements WikipediaPageRepository {
 
     private Optional<WikipediaPage> buildFakePage(int pageId) {
         try {
-            LocalDateTime now = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
             return Optional.of(
                 WikipediaPage
                     .builder()
@@ -33,8 +30,8 @@ class WikipediaPageOfflineRepository implements WikipediaPageRepository {
                     .namespace(WikipediaNamespace.ARTICLE)
                     .title("América del Norte")
                     .content(FileOfflineUtils.getFileContent("offline/sample-page.txt"))
-                    .lastUpdate(now)
-                    .queryTimestamp(now)
+                    .lastUpdate(WikipediaTimestamp.now())
+                    .queryTimestamp(WikipediaTimestamp.now())
                     .build()
             );
         } catch (ReplacerException e) {

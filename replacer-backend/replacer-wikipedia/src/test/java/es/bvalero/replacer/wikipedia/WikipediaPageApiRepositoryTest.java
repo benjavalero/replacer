@@ -8,13 +8,11 @@ import static org.mockito.Mockito.when;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import es.bvalero.replacer.common.util.WikipediaDateUtils;
 import es.bvalero.replacer.page.PageKey;
 import es.bvalero.replacer.user.AccessToken;
 import es.bvalero.replacer.wikipedia.api.WikipediaApiRequest;
 import es.bvalero.replacer.wikipedia.api.WikipediaApiRequestHelper;
 import es.bvalero.replacer.wikipedia.api.WikipediaApiResponse;
-import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -80,7 +78,7 @@ class WikipediaPageApiRepositoryTest {
         EditToken editToken = wikipediaPageRepository.getEditToken(pageKey, AccessToken.empty());
         assertNotNull(editToken.getCsrfToken());
         assertEquals("332bb9c55bef953f93cb8391f8e6ee9e63c8fe90+\\", editToken.getCsrfToken());
-        assertEquals("2023-01-18T20:40:07Z", WikipediaDateUtils.formatWikipediaTimestamp(editToken.getTimestamp()));
+        assertEquals("2023-01-18T20:40:07Z", editToken.getTimestamp().toString());
     }
 
     @Test
@@ -131,7 +129,7 @@ class WikipediaPageApiRepositoryTest {
         assertEquals(pageId, page.getPageId());
         assertEquals(title, page.getTitle());
         assertEquals(WikipediaNamespace.USER, page.getNamespace());
-        assertTrue(page.getLastUpdate().getYear() >= 2016);
+        assertTrue(page.getLastUpdate().toLocalDate().getYear() >= 2016);
         assertTrue(page.getContent().contains("Orihuela"));
     }
 
@@ -181,7 +179,7 @@ class WikipediaPageApiRepositoryTest {
         assertEquals(pageKey, page.getPageKey());
         assertEquals(title, page.getTitle());
         assertEquals(WikipediaNamespace.USER, page.getNamespace());
-        assertTrue(page.getLastUpdate().getYear() >= 2016);
+        assertTrue(page.getLastUpdate().toLocalDate().getYear() >= 2016);
         assertTrue(page.getContent().contains("Orihuela"));
     }
 
@@ -497,7 +495,7 @@ class WikipediaPageApiRepositoryTest {
         when(wikipediaApiRequestHelper.executeApiRequest(any(WikipediaApiRequest.class))).thenReturn(response);
 
         // We use a timestamp BEFORE the timestamp of the last edition (from the edit token)
-        LocalDateTime currentTimestamp = WikipediaDateUtils.parseWikipediaTimestamp("2019-06-23T21:24:09Z");
+        WikipediaTimestamp currentTimestamp = WikipediaTimestamp.of("2019-06-23T21:24:09Z");
 
         WikipediaPageSave pageSave = WikipediaPageSave
             .builder()
@@ -520,7 +518,7 @@ class WikipediaPageApiRepositoryTest {
         when(wikipediaApiRequestHelper.executeApiRequest(any(WikipediaApiRequest.class))).thenReturn(response);
 
         // We use a timestamp AFTER the timestamp of the last edition (from the edit token)
-        LocalDateTime currentTimestamp = WikipediaDateUtils.parseWikipediaTimestamp("2019-06-25T21:24:09Z");
+        WikipediaTimestamp currentTimestamp = WikipediaTimestamp.of("2019-06-25T21:24:09Z");
         WikipediaPageSave pageSave = WikipediaPageSave
             .builder()
             .pageKey(PageKey.of(WikipediaLanguage.SPANISH, 1))
@@ -537,7 +535,7 @@ class WikipediaPageApiRepositoryTest {
 
         // Save a section
         // We use a timestamp AFTER the timestamp of the last edition (from the edit token)
-        currentTimestamp = WikipediaDateUtils.parseWikipediaTimestamp("2019-06-26T21:24:09Z");
+        currentTimestamp = WikipediaTimestamp.of("2019-06-26T21:24:09Z");
         pageSave =
             WikipediaPageSave
                 .builder()
@@ -777,7 +775,7 @@ class WikipediaPageApiRepositoryTest {
         assertEquals(pageKey, page.getPageKey());
         assertEquals(title, page.getTitle());
         assertEquals(WikipediaNamespace.USER, page.getNamespace());
-        assertTrue(page.getLastUpdate().getYear() >= 2019);
+        assertTrue(page.getLastUpdate().toLocalDate().getYear() >= 2019);
         assertTrue(page.getContent().startsWith("=="));
     }
 

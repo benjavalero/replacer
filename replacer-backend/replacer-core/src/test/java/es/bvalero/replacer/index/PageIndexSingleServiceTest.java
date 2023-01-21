@@ -10,8 +10,8 @@ import es.bvalero.replacer.page.PageKey;
 import es.bvalero.replacer.page.PageService;
 import es.bvalero.replacer.wikipedia.WikipediaNamespace;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
+import es.bvalero.replacer.wikipedia.WikipediaTimestamp;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -46,8 +46,8 @@ class PageIndexSingleServiceTest {
         .namespace(WikipediaNamespace.ARTICLE)
         .title("T")
         .content("")
-        .lastUpdate(LocalDateTime.now())
-        .queryTimestamp(LocalDateTime.now())
+        .lastUpdate(WikipediaTimestamp.now())
+        .queryTimestamp(WikipediaTimestamp.now())
         .build();
 
     @BeforeEach
@@ -77,8 +77,8 @@ class PageIndexSingleServiceTest {
             .namespace(WikipediaNamespace.ARTICLE)
             .title("T")
             .content("")
-            .lastUpdate(LocalDateTime.now())
-            .queryTimestamp(LocalDateTime.now())
+            .lastUpdate(WikipediaTimestamp.now())
+            .queryTimestamp(WikipediaTimestamp.now())
             .redirect(true)
             .build();
 

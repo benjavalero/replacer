@@ -10,7 +10,7 @@ import es.bvalero.replacer.finder.CosmeticFindService;
 import es.bvalero.replacer.page.PageKey;
 import es.bvalero.replacer.wikipedia.WikipediaNamespace;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
-import java.time.LocalDateTime;
+import es.bvalero.replacer.wikipedia.WikipediaTimestamp;
 import java.util.Collections;
 import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
@@ -58,8 +58,8 @@ class ApplyCosmeticsServiceTest {
             .namespace(WikipediaNamespace.getDefault())
             .title("T")
             .content(content)
-            .lastUpdate(LocalDateTime.now())
-            .queryTimestamp(LocalDateTime.now())
+            .lastUpdate(WikipediaTimestamp.now())
+            .queryTimestamp(WikipediaTimestamp.now())
             .build();
     }
 

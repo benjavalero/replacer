@@ -15,8 +15,6 @@ import es.bvalero.replacer.replacement.ReplacementService;
 import es.bvalero.replacer.user.AccessToken;
 import es.bvalero.replacer.wikipedia.*;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -54,15 +52,14 @@ class ReviewSaveServiceTest {
     void testSaveWithChanges() throws WikipediaException {
         int id = 123;
         PageKey pageKey = PageKey.of(WikipediaLanguage.getDefault(), id);
-        LocalDateTime timestamp = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
         WikipediaPage page = WikipediaPage
             .builder()
             .pageKey(pageKey)
             .namespace(WikipediaNamespace.getDefault()) // Not relevant for saving
             .title("T")
             .content("X")
-            .lastUpdate(timestamp)
-            .queryTimestamp(timestamp)
+            .lastUpdate(WikipediaTimestamp.now())
+            .queryTimestamp(WikipediaTimestamp.now())
             .build();
         ReviewedReplacement reviewed = ReviewedReplacement
             .builder()

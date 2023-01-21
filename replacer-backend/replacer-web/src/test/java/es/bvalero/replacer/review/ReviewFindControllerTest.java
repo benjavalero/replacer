@@ -10,14 +10,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import es.bvalero.replacer.common.domain.ReplacementKind;
 import es.bvalero.replacer.common.domain.ReplacementType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import es.bvalero.replacer.common.util.WikipediaDateUtils;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.Suggestion;
 import es.bvalero.replacer.page.PageKey;
 import es.bvalero.replacer.wikipedia.WikipediaNamespace;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
 import es.bvalero.replacer.wikipedia.WikipediaSection;
-import java.time.LocalDateTime;
+import es.bvalero.replacer.wikipedia.WikipediaTimestamp;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
@@ -51,14 +50,15 @@ class ReviewFindControllerTest {
     private final int pageId = 3;
     private final String title = "T";
     private final String content = "C";
-    private final LocalDateTime queryTimestamp = LocalDateTime.now();
+    private final WikipediaTimestamp now = WikipediaTimestamp.now();
+    private final WikipediaTimestamp queryTimestamp = now;
     private final WikipediaPage page = WikipediaPage
         .builder()
         .pageKey(PageKey.of(WikipediaLanguage.getDefault(), pageId))
         .namespace(WikipediaNamespace.getDefault())
         .title(title)
         .content(content)
-        .lastUpdate(LocalDateTime.now())
+        .lastUpdate(now)
         .queryTimestamp(queryTimestamp)
         .build();
     private final int sectionId = 2;
@@ -96,9 +96,7 @@ class ReviewFindControllerTest {
             .andExpect(jsonPath("$.page.content", is(content)))
             .andExpect(jsonPath("$.page.section.id", is(sectionId)))
             .andExpect(jsonPath("$.page.section.title", is(anchor)))
-            .andExpect(
-                jsonPath("$.page.queryTimestamp", is(WikipediaDateUtils.formatWikipediaTimestamp(queryTimestamp)))
-            )
+            .andExpect(jsonPath("$.page.queryTimestamp", is(queryTimestamp.toString())))
             .andExpect(jsonPath("$.replacements[0].start", is(start)))
             .andExpect(jsonPath("$.replacements[0].text", is(rep)))
             .andExpect(jsonPath("$.replacements[0].suggestions[0].text", is(rep)))

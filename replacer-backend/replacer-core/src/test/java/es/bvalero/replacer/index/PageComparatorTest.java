@@ -15,8 +15,8 @@ import es.bvalero.replacer.finder.Suggestion;
 import es.bvalero.replacer.page.IndexedPage;
 import es.bvalero.replacer.page.PageKey;
 import es.bvalero.replacer.replacement.IndexedReplacement;
+import es.bvalero.replacer.wikipedia.WikipediaTimestamp;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -35,7 +35,7 @@ class PageComparatorTest {
         when(page.getPageKey()).thenReturn(PageKey.of(WikipediaLanguage.getDefault(), pageId));
         when(page.getTitle()).thenReturn("T");
         when(page.getContent()).thenReturn("123456789");
-        when(page.getLastUpdate()).thenReturn(LocalDateTime.now());
+        when(page.getLastUpdate()).thenReturn(WikipediaTimestamp.now());
     }
 
     private static Replacement buildFinderReplacement(FinderPage page, int index) {
@@ -117,7 +117,7 @@ class PageComparatorTest {
     @Test
     void testExistingPageWithDateAfter() {
         // We force a difference in the replacements and title to be sure the page is not indexed at all
-        when(page.getLastUpdate()).thenReturn(before.atStartOfDay());
+        when(page.getLastUpdate()).thenReturn(WikipediaTimestamp.of(before.atStartOfDay()));
         IndexedPage dbPage = IndexedPage
             .builder()
             .pageKey(page.getPageKey())

@@ -10,7 +10,7 @@ import es.bvalero.replacer.page.PageBatchService;
 import es.bvalero.replacer.page.PageKey;
 import es.bvalero.replacer.wikipedia.WikipediaNamespace;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
-import java.time.LocalDateTime;
+import es.bvalero.replacer.wikipedia.WikipediaTimestamp;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -43,8 +43,8 @@ class PageIndexBatchServiceTest {
         .namespace(WikipediaNamespace.ARTICLE)
         .title("T")
         .content("")
-        .lastUpdate(LocalDateTime.now())
-        .queryTimestamp(LocalDateTime.now())
+        .lastUpdate(WikipediaTimestamp.now())
+        .queryTimestamp(WikipediaTimestamp.now())
         .build();
 
     @BeforeEach

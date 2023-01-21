@@ -38,7 +38,7 @@ class WikipediaPageApiRepositoryIT {
         assertEquals(6219990, page.getPageId());
         assertEquals(title, page.getTitle());
         assertEquals(WikipediaNamespace.USER, page.getNamespace());
-        assertTrue(page.getLastUpdate().getYear() >= 2016);
+        assertTrue(page.getLastUpdate().toLocalDate().getYear() >= 2016);
         assertTrue(page.getContent().contains("Orihuela"));
     }
 
@@ -110,13 +110,13 @@ class WikipediaPageApiRepositoryIT {
         wikipediaService.save(pageSave);
 
         // Save the conflict content started 1 day before
-        LocalDateTime before = page.getQueryTimestamp().minusDays(1);
+        LocalDateTime before = page.getQueryTimestamp().toLocalDateTime().minusDays(1);
         WikipediaPageSave pageConflictSave = WikipediaPageSave
             .builder()
             .pageKey(page.getPageKey())
             .content(conflictContent)
             .editSummary("Replacer Integration Test")
-            .queryTimestamp(before)
+            .queryTimestamp(WikipediaTimestamp.of(before))
             .accessToken(AccessToken.empty())
             .build();
 

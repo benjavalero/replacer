@@ -7,6 +7,7 @@ import es.bvalero.replacer.page.IndexedPage;
 import es.bvalero.replacer.page.PageKey;
 import es.bvalero.replacer.wikipedia.WikipediaNamespace;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
+import es.bvalero.replacer.wikipedia.WikipediaTimestamp;
 import java.time.LocalDateTime;
 import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
@@ -41,8 +42,8 @@ class PageIndexValidatorTest {
             .namespace(namespace)
             .title("T")
             .content("")
-            .lastUpdate(LocalDateTime.now())
-            .queryTimestamp(LocalDateTime.now())
+            .lastUpdate(WikipediaTimestamp.now())
+            .queryTimestamp(WikipediaTimestamp.now())
             .build();
     }
 
@@ -74,8 +75,8 @@ class PageIndexValidatorTest {
             .namespace(WikipediaNamespace.ARTICLE)
             .title("T")
             .content("")
-            .lastUpdate(lastUpdate)
-            .queryTimestamp(LocalDateTime.now())
+            .lastUpdate(WikipediaTimestamp.of(lastUpdate))
+            .queryTimestamp(WikipediaTimestamp.now())
             .build();
     }
 
