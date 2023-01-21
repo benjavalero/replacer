@@ -495,18 +495,16 @@ class WikipediaPageApiRepositoryTest {
         // We use a timestamp BEFORE the timestamp of the last edition (from the edit token)
         LocalDateTime currentTimestamp = WikipediaDateUtils.parseWikipediaTimestamp("2019-06-23T21:24:09Z");
 
-        assertThrows(
-            WikipediaException.class,
-            () ->
-                wikipediaPageRepository.save(
-                    PageKey.of(WikipediaLanguage.SPANISH, 1),
-                    0,
-                    "",
-                    currentTimestamp,
-                    "",
-                    AccessToken.empty()
-                )
-        );
+        WikipediaPageSave pageSave = WikipediaPageSave
+            .builder()
+            .pageKey(PageKey.of(WikipediaLanguage.SPANISH, 1))
+            .content("")
+            .editSummary("")
+            .queryTimestamp(currentTimestamp)
+            .accessToken(AccessToken.empty())
+            .build();
+
+        assertThrows(WikipediaException.class, () -> wikipediaPageRepository.save(pageSave));
     }
 
     @Test
@@ -519,14 +517,16 @@ class WikipediaPageApiRepositoryTest {
 
         // We use a timestamp AFTER the timestamp of the last edition (from the edit token)
         LocalDateTime currentTimestamp = WikipediaDateUtils.parseWikipediaTimestamp("2019-06-25T21:24:09Z");
-        wikipediaPageRepository.save(
-            PageKey.of(WikipediaLanguage.SPANISH, 1),
-            null,
-            "",
-            currentTimestamp,
-            "",
-            AccessToken.empty()
-        );
+        WikipediaPageSave pageSave = WikipediaPageSave
+            .builder()
+            .pageKey(PageKey.of(WikipediaLanguage.SPANISH, 1))
+            .content("")
+            .editSummary("")
+            .queryTimestamp(currentTimestamp)
+            .accessToken(AccessToken.empty())
+            .build();
+
+        wikipediaPageRepository.save(pageSave);
 
         // Two calls: one for the EditToken and another to save the content
         verify(wikipediaApiRequestHelper, times(2)).executeApiRequest(any(WikipediaApiRequest.class));
@@ -534,14 +534,17 @@ class WikipediaPageApiRepositoryTest {
         // Save a section
         // We use a timestamp AFTER the timestamp of the last edition (from the edit token)
         currentTimestamp = WikipediaDateUtils.parseWikipediaTimestamp("2019-06-26T21:24:09Z");
-        wikipediaPageRepository.save(
-            PageKey.of(WikipediaLanguage.SPANISH, 1),
-            2,
-            "",
-            currentTimestamp,
-            "",
-            AccessToken.empty()
-        );
+        pageSave =
+            WikipediaPageSave
+                .builder()
+                .pageKey(PageKey.of(WikipediaLanguage.SPANISH, 1))
+                .sectionId(2)
+                .content("")
+                .editSummary("")
+                .queryTimestamp(currentTimestamp)
+                .accessToken(AccessToken.empty())
+                .build();
+        wikipediaPageRepository.save(pageSave);
 
         // Two calls: one for the EditToken and another to save the content (x2 save page and section in this test)
         verify(wikipediaApiRequestHelper, times(4)).executeApiRequest(any(WikipediaApiRequest.class));

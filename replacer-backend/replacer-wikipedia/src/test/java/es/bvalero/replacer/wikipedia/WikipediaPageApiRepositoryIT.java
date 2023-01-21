@@ -99,29 +99,27 @@ class WikipediaPageApiRepositoryIT {
         String conflictContent = originalContent + "\nOtra edición sencilla para probar conflictos de edición.";
 
         // Save the new content
-        wikipediaService.save(
-            page.getPageKey(),
-            0,
-            newContent,
-            page.getQueryTimestamp(),
-            "Replacer Integration Test",
-            AccessToken.empty()
-        );
+        WikipediaPageSave pageSave = WikipediaPageSave
+            .builder()
+            .pageKey(page.getPageKey())
+            .content(newContent)
+            .editSummary("Replacer Integration Test")
+            .queryTimestamp(page.getQueryTimestamp())
+            .accessToken(AccessToken.empty())
+            .build();
+        wikipediaService.save(pageSave);
 
         // Save the conflict content started 1 day before
         LocalDateTime before = page.getQueryTimestamp().minusDays(1);
+        WikipediaPageSave pageConflictSave = WikipediaPageSave
+            .builder()
+            .pageKey(page.getPageKey())
+            .content(conflictContent)
+            .editSummary("Replacer Integration Test")
+            .queryTimestamp(before)
+            .accessToken(AccessToken.empty())
+            .build();
 
-        assertThrows(
-            WikipediaException.class,
-            () ->
-                wikipediaService.save(
-                    page.getPageKey(),
-                    0,
-                    conflictContent,
-                    before,
-                    "Replacer Integration Test",
-                    AccessToken.empty()
-                )
-        );
+        assertThrows(WikipediaException.class, () -> wikipediaService.save(pageConflictSave));
     }
 }

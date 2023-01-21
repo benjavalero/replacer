@@ -11,6 +11,7 @@ import es.bvalero.replacer.user.AccessToken;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
 import es.bvalero.replacer.wikipedia.WikipediaPageRepository;
+import es.bvalero.replacer.wikipedia.WikipediaPageSave;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
@@ -55,14 +56,16 @@ class ReviewSaveService {
         boolean applyCosmetics = !textToSave.equals(page.getContent());
 
         // Upload new content to Wikipedia
-        wikipediaPageRepository.save(
-            page.getPageKey(),
-            sectionId,
-            textToSave,
-            page.getQueryTimestamp(),
-            buildEditSummary(reviewedReplacements, applyCosmetics),
-            accessToken
-        );
+        WikipediaPageSave pageSave = WikipediaPageSave
+            .builder()
+            .pageKey(page.getPageKey())
+            .sectionId(sectionId)
+            .content(textToSave)
+            .editSummary(buildEditSummary(reviewedReplacements, applyCosmetics))
+            .queryTimestamp(page.getQueryTimestamp())
+            .accessToken(accessToken)
+            .build();
+        wikipediaPageRepository.save(pageSave);
     }
 
     @VisibleForTesting

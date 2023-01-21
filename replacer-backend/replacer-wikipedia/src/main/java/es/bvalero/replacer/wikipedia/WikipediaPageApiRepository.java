@@ -21,7 +21,6 @@ import org.jetbrains.annotations.VisibleForTesting;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.logging.LogLevel;
 import org.springframework.context.annotation.Profile;
-import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 
 /** Wikipedia service implementation using classic Wikipedia API */
@@ -311,15 +310,22 @@ class WikipediaPageApiRepository implements WikipediaPageRepository {
     }
 
     @Override
-    public void save(
-        PageKey pageKey,
-        @Nullable Integer section,
-        String content,
-        LocalDateTime queryTimestamp,
-        String editSummary,
-        AccessToken accessToken
-    ) throws WikipediaException {
-        EditToken editToken = getEditToken(pageKey, accessToken);
+    public void save(WikipediaPageSave pageSave) throws WikipediaException {
+        EditToken editToken = getEditToken(pageSave.getPageKey(), pageSave.getAccessToken());
+        validateEditToken(pageSave.getPageKey(), editToken, pageSave.getQueryTimestamp());
+
+        WikipediaApiRequest apiRequest = WikipediaApiRequest
+            .builder()
+            .verb(WikipediaApiRequestVerb.POST)
+            .lang(pageSave.getPageKey().getLang())
+            .params(buildSavePageContentRequestParams(pageSave, editToken))
+            .accessToken(pageSave.getAccessToken())
+            .build();
+        wikipediaApiRequestHelper.executeApiRequest(apiRequest);
+    }
+
+    private void validateEditToken(PageKey pageKey, EditToken editToken, LocalDateTime queryTimestamp)
+        throws WikipediaConflictException {
         // Pre-check of edit conflicts
         if (!queryTimestamp.isAfter(editToken.getTimestamp())) {
             String message = String.format(
@@ -332,48 +338,23 @@ class WikipediaPageApiRepository implements WikipediaPageRepository {
             // See: https://github.com/rozidan/logger-spring-boot/issues/3
             throw new WikipediaConflictException(message);
         }
-
-        WikipediaApiRequest apiRequest = WikipediaApiRequest
-            .builder()
-            .verb(WikipediaApiRequestVerb.POST)
-            .lang(pageKey.getLang())
-            .params(
-                buildSavePageContentRequestParams(
-                    pageKey.getPageId(),
-                    content,
-                    section,
-                    queryTimestamp,
-                    editSummary,
-                    editToken
-                )
-            )
-            .accessToken(accessToken)
-            .build();
-        wikipediaApiRequestHelper.executeApiRequest(apiRequest);
     }
 
-    private Map<String, String> buildSavePageContentRequestParams(
-        int pageId,
-        String pageContent,
-        @Nullable Integer section,
-        LocalDateTime currentTimestamp,
-        String editSummary,
-        EditToken editToken
-    ) {
+    private Map<String, String> buildSavePageContentRequestParams(WikipediaPageSave pageSave, EditToken editToken) {
         Map<String, String> params = new HashMap<>();
         params.put("action", "edit");
-        params.put("pageid", Integer.toString(pageId));
-        params.put("text", pageContent);
-        if (section != null) {
-            params.put("section", Integer.toString(section));
+        params.put("pageid", Integer.toString(pageSave.getPageKey().getPageId()));
+        params.put("text", pageSave.getContent());
+        if (pageSave.getSectionId() != null) {
+            params.put("section", Integer.toString(pageSave.getSectionId()));
         }
-        params.put("summary", editSummary);
+        params.put("summary", pageSave.getEditSummary());
         params.put("watchlist", "nochange");
         params.put("bot", "true");
         params.put("minor", "true");
         params.put("token", editToken.getCsrfToken());
         // Timestamp when the editing process began
-        params.put("starttimestamp", WikipediaDateUtils.formatWikipediaTimestamp(currentTimestamp));
+        params.put("starttimestamp", WikipediaDateUtils.formatWikipediaTimestamp(pageSave.getQueryTimestamp()));
         // Timestamp of the base revision
         params.put("basetimestamp", WikipediaDateUtils.formatWikipediaTimestamp(editToken.getTimestamp()));
         return params;

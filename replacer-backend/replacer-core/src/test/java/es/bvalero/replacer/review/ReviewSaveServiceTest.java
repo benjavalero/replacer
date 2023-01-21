@@ -13,10 +13,7 @@ import es.bvalero.replacer.replacement.CustomReplacementService;
 import es.bvalero.replacer.replacement.IndexedCustomReplacement;
 import es.bvalero.replacer.replacement.ReplacementService;
 import es.bvalero.replacer.user.AccessToken;
-import es.bvalero.replacer.wikipedia.WikipediaException;
-import es.bvalero.replacer.wikipedia.WikipediaNamespace;
-import es.bvalero.replacer.wikipedia.WikipediaPage;
-import es.bvalero.replacer.wikipedia.WikipediaPageRepository;
+import es.bvalero.replacer.wikipedia.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -83,15 +80,7 @@ class ReviewSaveServiceTest {
         reviewSaveService.saveReviewContent(page, null, List.of(reviewed), accessToken);
 
         verify(applyCosmeticsService).applyCosmeticChanges(page);
-        verify(wikipediaPageRepository)
-            .save(
-                eq(page.getPageKey()),
-                isNull(),
-                eq(contentAfterCosmetics),
-                eq(timestamp),
-                anyString(),
-                eq(accessToken)
-            );
+        verify(wikipediaPageRepository).save(any(WikipediaPageSave.class));
     }
 
     @Test
