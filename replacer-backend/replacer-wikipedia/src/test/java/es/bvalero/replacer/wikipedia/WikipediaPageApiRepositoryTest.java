@@ -447,12 +447,14 @@ class WikipediaPageApiRepositoryTest {
         when(wikipediaApiRequestHelper.executeApiRequest(any(WikipediaApiRequest.class))).thenReturn(response);
 
         WikipediaSearchResult pageIds = wikipediaPageRepository.findByContent(
-            WikipediaLanguage.SPANISH,
-            List.of(WikipediaNamespace.ANNEX),
-            "Campaneta",
-            false,
-            0,
-            100
+            WikipediaSearchRequest
+                .builder()
+                .lang(WikipediaLanguage.SPANISH)
+                .namespaces(List.of(WikipediaNamespace.ANNEX))
+                .text("Campaneta")
+                .offset(0)
+                .limit(100)
+                .build()
         );
         assertEquals(13, pageIds.getTotal());
     }
@@ -474,12 +476,14 @@ class WikipediaPageApiRepositoryTest {
         when(wikipediaApiRequestHelper.executeApiRequest(any(WikipediaApiRequest.class))).thenReturn(response);
 
         WikipediaSearchResult pageIds = wikipediaPageRepository.findByContent(
-            WikipediaLanguage.SPANISH,
-            List.of(WikipediaNamespace.getDefault()),
-            "jsdfslkdfjhow",
-            false,
-            0,
-            100
+            WikipediaSearchRequest
+                .builder()
+                .lang(WikipediaLanguage.SPANISH)
+                .namespaces(List.of(WikipediaNamespace.getDefault()))
+                .text("jsdfslkdfjhow")
+                .offset(0)
+                .limit(100)
+                .build()
         );
         assertTrue(pageIds.isEmpty());
     }
@@ -811,12 +815,14 @@ class WikipediaPageApiRepositoryTest {
         assertFalse(
             wikipediaPageOfflineRepository
                 .findByContent(
-                    WikipediaLanguage.getDefault(),
-                    List.of(WikipediaNamespace.getDefault()),
-                    "",
-                    false,
-                    0,
-                    100
+                    WikipediaSearchRequest
+                        .builder()
+                        .lang(WikipediaLanguage.getDefault())
+                        .namespaces(List.of(WikipediaNamespace.getDefault()))
+                        .text("")
+                        .offset(0)
+                        .limit(100)
+                        .build()
                 )
                 .isEmpty()
         );

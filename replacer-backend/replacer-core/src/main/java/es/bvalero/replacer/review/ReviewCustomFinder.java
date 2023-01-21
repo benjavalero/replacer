@@ -6,10 +6,7 @@ import es.bvalero.replacer.finder.CustomReplacementFindService;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.page.PageKey;
 import es.bvalero.replacer.replacement.CustomReplacementService;
-import es.bvalero.replacer.wikipedia.WikipediaNamespace;
-import es.bvalero.replacer.wikipedia.WikipediaPage;
-import es.bvalero.replacer.wikipedia.WikipediaPageRepository;
-import es.bvalero.replacer.wikipedia.WikipediaSearchResult;
+import es.bvalero.replacer.wikipedia.*;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -95,14 +92,20 @@ class ReviewCustomFinder extends ReviewFinder {
         String subtype = options.getType().getSubtype();
         Boolean cs = options.getCs();
         assert cs != null;
-        return wikipediaPageRepository.findByContent(
-            options.getLang(),
-            this.indexableNamespaces.stream().map(WikipediaNamespace::valueOf).collect(Collectors.toUnmodifiableSet()),
-            subtype,
-            cs,
-            offset,
-            getCacheSize()
-        );
+        WikipediaSearchRequest searchRequest = WikipediaSearchRequest
+            .builder()
+            .lang(options.getLang())
+            .namespaces(
+                this.indexableNamespaces.stream()
+                    .map(WikipediaNamespace::valueOf)
+                    .collect(Collectors.toUnmodifiableSet())
+            )
+            .text(subtype)
+            .caseSensitive(cs)
+            .offset(offset)
+            .limit(getCacheSize())
+            .build();
+        return wikipediaPageRepository.findByContent(searchRequest);
     }
 
     @Override

@@ -64,14 +64,7 @@ class WikipediaPageOfflineRepository implements WikipediaPageRepository {
     }
 
     @Override
-    public WikipediaSearchResult findByContent(
-        WikipediaLanguage lang,
-        Collection<WikipediaNamespace> namespaces,
-        String text,
-        boolean caseSensitive,
-        int offset,
-        int limit
-    ) {
+    public WikipediaSearchResult findByContent(WikipediaSearchRequest searchRequest) {
         return WikipediaSearchResult.builder().total(1).pageId(1).build();
     }
 

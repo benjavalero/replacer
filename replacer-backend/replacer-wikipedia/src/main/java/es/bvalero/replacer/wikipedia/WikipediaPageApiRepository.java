@@ -217,30 +217,28 @@ class WikipediaPageApiRepository implements WikipediaPageRepository {
 
     @Override
     @Loggable(LogLevel.DEBUG)
-    public WikipediaSearchResult findByContent(
-        WikipediaLanguage lang,
-        Collection<WikipediaNamespace> namespaces,
-        String text,
-        boolean caseSensitive,
-        int offset,
-        int limit
-    ) {
-        if (limit > MAX_SEARCH_RESULTS) {
-            LOGGER.error("Too big number of results to search: " + limit);
+    public WikipediaSearchResult findByContent(WikipediaSearchRequest searchRequest) {
+        if (searchRequest.getLimit() > MAX_SEARCH_RESULTS) {
+            LOGGER.error("Too big number of results to search: " + searchRequest.getLimit());
             return WikipediaSearchResult.ofEmpty();
         }
 
         // Avoid exception when reaching the maximum offset limit
-        if (offset + limit >= MAX_OFFSET_LIMIT) {
-            LOGGER.warn("Maximum offset reached: {} - {} - {}", lang, text, caseSensitive);
+        if (searchRequest.getOffset() + searchRequest.getLimit() >= MAX_OFFSET_LIMIT) {
+            LOGGER.warn(
+                "Maximum offset reached: {} - {} - {}",
+                searchRequest.getLang(),
+                searchRequest.getText(),
+                searchRequest.isCaseSensitive()
+            );
             return WikipediaSearchResult.ofEmpty();
         }
 
         WikipediaApiRequest apiRequest = WikipediaApiRequest
             .builder()
             .verb(WikipediaApiRequestVerb.GET)
-            .lang(lang)
-            .params(buildPageIdsByStringMatchRequestParams(namespaces, text, caseSensitive, offset, limit))
+            .lang(searchRequest.getLang())
+            .params(buildPageIdsByStringMatchRequestParams(searchRequest))
             .build();
         try {
             WikipediaApiResponse apiResponse = wikipediaApiRequestHelper.executeApiRequest(apiRequest);
@@ -251,22 +249,17 @@ class WikipediaPageApiRepository implements WikipediaPageRepository {
         return WikipediaSearchResult.ofEmpty();
     }
 
-    private Map<String, String> buildPageIdsByStringMatchRequestParams(
-        Collection<WikipediaNamespace> namespaces,
-        String text,
-        boolean caseSensitive,
-        int offset,
-        int limit
-    ) {
+    private Map<String, String> buildPageIdsByStringMatchRequestParams(WikipediaSearchRequest searchRequest) {
         Map<String, String> params = new HashMap<>();
         params.put("action", "query");
         params.put("list", "search");
         params.put("utf8", "1");
-        params.put("srlimit", Integer.toString(limit));
-        params.put("sroffset", Integer.toString(offset));
+        params.put("srlimit", Integer.toString(searchRequest.getLimit()));
+        params.put("sroffset", Integer.toString(searchRequest.getOffset()));
         params.put("srsort", "create_timestamp_asc"); // So the order is invariable after editing
-        params.put("srsearch", buildSearchExpression(text, caseSensitive));
-        Collection<Integer> namespaceIds = namespaces
+        params.put("srsearch", buildSearchExpression(searchRequest.getText(), searchRequest.isCaseSensitive()));
+        Collection<Integer> namespaceIds = searchRequest
+            .getNamespaces()
             .stream()
             .map(WikipediaNamespace::getValue)
             .collect(Collectors.toUnmodifiableSet());

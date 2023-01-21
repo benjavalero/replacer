@@ -17,14 +17,7 @@ public interface WikipediaPageRepository {
 
     Optional<WikipediaPage> findPageSection(PageKey pageKey, WikipediaSection section);
 
-    WikipediaSearchResult findByContent(
-        WikipediaLanguage lang,
-        Collection<WikipediaNamespace> namespaces,
-        String text,
-        boolean caseSensitive,
-        int offset,
-        int limit
-    );
+    WikipediaSearchResult findByContent(WikipediaSearchRequest searchRequest);
 
     void save(WikipediaPageSave pageSave) throws WikipediaException;
 }
