@@ -105,9 +105,8 @@ class WikipediaPageApiRepositoryIT {
             .content(newContent)
             .editSummary("Replacer Integration Test")
             .queryTimestamp(page.getQueryTimestamp())
-            .accessToken(AccessToken.empty())
             .build();
-        wikipediaService.save(pageSave);
+        wikipediaService.save(pageSave, AccessToken.empty());
 
         // Save the conflict content started 1 day before
         LocalDateTime before = page.getQueryTimestamp().toLocalDateTime().minusDays(1);
@@ -117,9 +116,8 @@ class WikipediaPageApiRepositoryIT {
             .content(conflictContent)
             .editSummary("Replacer Integration Test")
             .queryTimestamp(WikipediaTimestamp.of(before))
-            .accessToken(AccessToken.empty())
             .build();
 
-        assertThrows(WikipediaException.class, () -> wikipediaService.save(pageConflictSave));
+        assertThrows(WikipediaException.class, () -> wikipediaService.save(pageConflictSave, AccessToken.empty()));
     }
 }

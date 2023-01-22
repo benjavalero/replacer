@@ -1,7 +1,6 @@
 package es.bvalero.replacer.wikipedia;
 
 import es.bvalero.replacer.page.PageKey;
-import es.bvalero.replacer.user.AccessToken;
 import lombok.Builder;
 import lombok.Value;
 import org.springframework.lang.NonNull;
@@ -26,7 +25,4 @@ public class WikipediaPageSave {
 
     @NonNull
     WikipediaTimestamp queryTimestamp; // To check edit conflicts
-
-    @NonNull
-    AccessToken accessToken; // To save the edit as made by the logged user
 }

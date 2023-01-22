@@ -503,10 +503,9 @@ class WikipediaPageApiRepositoryTest {
             .content("")
             .editSummary("")
             .queryTimestamp(currentTimestamp)
-            .accessToken(AccessToken.empty())
             .build();
 
-        assertThrows(WikipediaException.class, () -> wikipediaPageRepository.save(pageSave));
+        assertThrows(WikipediaException.class, () -> wikipediaPageRepository.save(pageSave, AccessToken.empty()));
     }
 
     @Test
@@ -525,10 +524,9 @@ class WikipediaPageApiRepositoryTest {
             .content("")
             .editSummary("")
             .queryTimestamp(currentTimestamp)
-            .accessToken(AccessToken.empty())
             .build();
 
-        wikipediaPageRepository.save(pageSave);
+        wikipediaPageRepository.save(pageSave, AccessToken.empty());
 
         // Two calls: one for the EditToken and another to save the content
         verify(wikipediaApiRequestHelper, times(2)).executeApiRequest(any(WikipediaApiRequest.class));
@@ -544,9 +542,8 @@ class WikipediaPageApiRepositoryTest {
                 .content("")
                 .editSummary("")
                 .queryTimestamp(currentTimestamp)
-                .accessToken(AccessToken.empty())
                 .build();
-        wikipediaPageRepository.save(pageSave);
+        wikipediaPageRepository.save(pageSave, AccessToken.empty());
 
         // Two calls: one for the EditToken and another to save the content (x2 save page and section in this test)
         verify(wikipediaApiRequestHelper, times(4)).executeApiRequest(any(WikipediaApiRequest.class));

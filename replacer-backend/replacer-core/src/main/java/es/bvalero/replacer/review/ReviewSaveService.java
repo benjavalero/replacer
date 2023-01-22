@@ -63,9 +63,8 @@ class ReviewSaveService {
             .content(textToSave)
             .editSummary(buildEditSummary(reviewedReplacements, applyCosmetics))
             .queryTimestamp(page.getQueryTimestamp())
-            .accessToken(accessToken)
             .build();
-        wikipediaPageRepository.save(pageSave);
+        wikipediaPageRepository.save(pageSave, accessToken);
     }
 
     @VisibleForTesting

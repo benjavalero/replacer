@@ -77,7 +77,7 @@ class ReviewSaveServiceTest {
         reviewSaveService.saveReviewContent(page, null, List.of(reviewed), accessToken);
 
         verify(applyCosmeticsService).applyCosmeticChanges(page);
-        verify(wikipediaPageRepository).save(any(WikipediaPageSave.class));
+        verify(wikipediaPageRepository).save(any(WikipediaPageSave.class), eq(accessToken));
     }
 
     @Test

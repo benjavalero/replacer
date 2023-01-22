@@ -2,6 +2,7 @@ package es.bvalero.replacer.wikipedia;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.page.PageKey;
+import es.bvalero.replacer.user.AccessToken;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -19,5 +20,5 @@ public interface WikipediaPageRepository {
 
     WikipediaSearchResult findByContent(WikipediaSearchRequest searchRequest);
 
-    void save(WikipediaPageSave pageSave) throws WikipediaException;
+    void save(WikipediaPageSave pageSave, AccessToken accessToken) throws WikipediaException;
 }

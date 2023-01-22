@@ -297,8 +297,8 @@ class WikipediaPageApiRepository implements WikipediaPageRepository {
     }
 
     @Override
-    public void save(WikipediaPageSave pageSave) throws WikipediaException {
-        EditToken editToken = getEditToken(pageSave.getPageKey(), pageSave.getAccessToken());
+    public void save(WikipediaPageSave pageSave, AccessToken accessToken) throws WikipediaException {
+        EditToken editToken = getEditToken(pageSave.getPageKey(), accessToken);
         validateEditToken(pageSave.getPageKey(), editToken, pageSave.getQueryTimestamp());
 
         WikipediaApiRequest apiRequest = WikipediaApiRequest
@@ -306,7 +306,7 @@ class WikipediaPageApiRepository implements WikipediaPageRepository {
             .verb(WikipediaApiRequestVerb.POST)
             .lang(pageSave.getPageKey().getLang())
             .params(buildSavePageContentRequestParams(pageSave, editToken))
-            .accessToken(pageSave.getAccessToken())
+            .accessToken(accessToken)
             .build();
         wikipediaApiRequestHelper.executeApiRequest(apiRequest);
     }

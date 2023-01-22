@@ -4,6 +4,7 @@ import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.common.util.FileOfflineUtils;
 import es.bvalero.replacer.page.PageKey;
+import es.bvalero.replacer.user.AccessToken;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Optional;
@@ -66,7 +67,7 @@ class WikipediaPageOfflineRepository implements WikipediaPageRepository {
     }
 
     @Override
-    public void save(WikipediaPageSave pageSave) {
+    public void save(WikipediaPageSave pageSave, AccessToken accessToken) {
         // Do nothing
     }
 }
