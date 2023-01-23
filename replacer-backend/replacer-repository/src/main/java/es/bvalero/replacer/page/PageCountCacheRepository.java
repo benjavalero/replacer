@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.logging.LogLevel;
 import org.springframework.context.annotation.Primary;
+import org.springframework.lang.Nullable;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,6 +46,16 @@ public class PageCountCacheRepository implements PageCountRepository {
             .filter(entry -> entry.getKey().getLang().equals(lang))
             .map(entry -> ResultCount.of(entry.getKey().getType(), entry.getValue()))
             .collect(Collectors.toUnmodifiableList());
+    }
+
+    @Override
+    public int countNotReviewedByType(WikipediaLanguage lang, @Nullable ReplacementType type) {
+        if (type == null) {
+            return this.pageCountRepository.countNotReviewedByType(lang, null);
+        } else {
+            // Always return the cached count
+            return this.counts.get(LangReplacementType.of(lang, type));
+        }
     }
 
     public void removePageCount(WikipediaLanguage lang, ReplacementType type) {

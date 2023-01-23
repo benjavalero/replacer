@@ -42,15 +42,7 @@ public class PageService {
         return pageRepository.findNotReviewed(lang, null, numResults);
     }
 
-    public int countPagesToReviewByNoType(WikipediaLanguage lang) {
-        return pageRepository.countNotReviewedByType(lang, null);
-    }
-
     public Collection<PageKey> findPagesToReviewByType(WikipediaLanguage lang, ReplacementType type, int numResults) {
         return pageRepository.findNotReviewed(lang, type, numResults);
-    }
-
-    public int countPagesToReviewByType(WikipediaLanguage lang, ReplacementType type) {
-        return pageRepository.countNotReviewedByType(lang, type);
     }
 }

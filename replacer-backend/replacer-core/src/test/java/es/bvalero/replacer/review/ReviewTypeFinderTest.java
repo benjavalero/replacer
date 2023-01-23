@@ -10,6 +10,7 @@ import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.Suggestion;
 import es.bvalero.replacer.index.PageIndexResult;
 import es.bvalero.replacer.index.PageIndexService;
+import es.bvalero.replacer.page.PageCountService;
 import es.bvalero.replacer.page.PageKey;
 import es.bvalero.replacer.page.PageService;
 import es.bvalero.replacer.replacement.ReplacementService;
@@ -64,6 +65,9 @@ class ReviewTypeFinderTest {
 
     @Mock
     private PageService pageService;
+
+    @Mock
+    private PageCountService pageCountService;
 
     @Mock
     private ReplacementService replacementService;

@@ -236,7 +236,7 @@ abstract class ReviewFinder {
         return toReview;
     }
 
-    private Optional<Integer> findTotalResultsFromCache(ReviewOptions options) {
+    Optional<Integer> findTotalResultsFromCache(ReviewOptions options) {
         String key = buildCacheKey(options);
         // If a review is requested directly it is possible the cache doesn't exist
         // In case of custom replacements the number of pending will include pages with false positives

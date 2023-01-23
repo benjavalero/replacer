@@ -1,12 +1,14 @@
 package es.bvalero.replacer.review;
 
 import es.bvalero.replacer.finder.Replacement;
+import es.bvalero.replacer.page.PageCountService;
 import es.bvalero.replacer.page.PageKey;
 import es.bvalero.replacer.page.PageService;
 import es.bvalero.replacer.replacement.ReplacementService;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -15,6 +17,9 @@ class ReviewTypeFinder extends ReviewFinder {
 
     @Autowired
     private PageService pageService;
+
+    @Autowired
+    private PageCountService pageCountService;
 
     @Autowired
     private ReplacementService replacementService;
@@ -27,8 +32,11 @@ class ReviewTypeFinder extends ReviewFinder {
             getCacheSize()
         );
 
-        int totalResults = pageService.countPagesToReviewByType(options.getLang(), options.getType());
-        return PageSearchResult.of(totalResults, pageKeys);
+        return PageSearchResult.of(findTotalResults(options), pageKeys);
+    }
+
+    private int findTotalResults(ReviewOptions options) {
+        return pageCountService.countPagesToReviewByType(options.getLang(), options.getType());
     }
 
     @Override
@@ -48,5 +56,10 @@ class ReviewTypeFinder extends ReviewFinder {
         }
 
         return replacements;
+    }
+
+    @Override
+    Optional<Integer> findTotalResultsFromCache(ReviewOptions options) {
+        return Optional.of(findTotalResults(options));
     }
 }

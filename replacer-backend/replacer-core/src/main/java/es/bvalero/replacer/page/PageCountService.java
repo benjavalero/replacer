@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-class PageCountService {
+public class PageCountService {
 
     @Autowired
     private UserRightsService userRightsService;
@@ -26,5 +26,13 @@ class PageCountService {
             .map(rc -> ResultCount.of(rc.getKey(), rc.getCount()))
             .filter(rc -> !userRightsService.isTypeForbidden(rc.getKey(), lang, user))
             .collect(Collectors.toUnmodifiableList());
+    }
+
+    public int countPagesToReviewByNoType(WikipediaLanguage lang) {
+        return pageCountRepository.countNotReviewedByType(lang, null);
+    }
+
+    public int countPagesToReviewByType(WikipediaLanguage lang, ReplacementType type) {
+        return pageCountRepository.countNotReviewedByType(lang, type);
     }
 }

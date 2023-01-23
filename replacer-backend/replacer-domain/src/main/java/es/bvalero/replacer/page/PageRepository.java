@@ -29,9 +29,6 @@ interface PageRepository {
     /** Find a random batch of pages to review (optionally for a given type) and return the keys */
     Collection<PageKey> findNotReviewed(WikipediaLanguage lang, @Nullable ReplacementType type, int numResults);
 
-    /** Count the number of pages to review (optionally by type) */
-    int countNotReviewedByType(WikipediaLanguage lang, @Nullable ReplacementType type);
-
     /** Find the pages to review by the given type and return the titles */
     Collection<String> findPageTitlesNotReviewedByType(WikipediaLanguage lang, ReplacementType type);
 }
