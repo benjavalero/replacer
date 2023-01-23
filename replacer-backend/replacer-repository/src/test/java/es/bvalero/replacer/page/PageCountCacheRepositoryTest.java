@@ -43,8 +43,6 @@ class PageCountCacheRepositoryTest {
         Collection<ResultCount<ReplacementType>> counts = List.of(count1, count2);
         when(pageCountRepository.countPagesNotReviewedByType(lang)).thenReturn(counts);
 
-        pageCountCacheRepository.scheduledUpdateReplacementCount();
-
         Collection<ResultCount<ReplacementType>> typeCounts = pageCountCacheRepository.countPagesNotReviewedByType(
             lang
         );

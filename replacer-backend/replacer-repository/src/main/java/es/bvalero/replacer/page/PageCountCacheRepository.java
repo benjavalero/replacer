@@ -1,23 +1,22 @@
 package es.bvalero.replacer.page;
 
-import com.github.rozidan.springboot.logger.Loggable;
+import static java.time.temporal.ChronoUnit.MINUTES;
+
+import com.github.benmanes.caffeine.cache.Caffeine;
+import com.github.benmanes.caffeine.cache.LoadingCache;
 import es.bvalero.replacer.common.domain.ReplacementType;
 import es.bvalero.replacer.common.domain.ResultCount;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import java.util.Arrays;
+import java.time.Duration;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.Objects;
 import java.util.stream.Collectors;
-import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.logging.LogLevel;
 import org.springframework.context.annotation.Primary;
 import org.springframework.lang.Nullable;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,19 +31,27 @@ public class PageCountCacheRepository implements PageCountRepository {
     private PageCountRepository pageCountRepository;
 
     // Counts cache
-    // It's a heavy query in database (several seconds), so we load the counts on start and refresh them periodically.
+    // It's a heavy query in database (several seconds), so we load the counts the first time and refresh them periodically.
     // This may lead to a slight misalignment, which is fixed in the next refresh,
     // as modifications in the cache may happen while the count query is in progress.
-    // We add synchronization just in case the list is requested while still loading on start.
-    private Map<LangReplacementType, Integer> counts;
+    // We could lock the cache while querying but the query takes too long.
+    // In theory this cache is mirroring the database reality so in the future the duration could be even longer.
+    private final Duration refreshTime = Duration.of(30, MINUTES);
+    private final LoadingCache<WikipediaLanguage, Map<ReplacementType, Integer>> counts = Caffeine
+        .newBuilder()
+        .refreshAfterWrite(refreshTime)
+        .build(this::loadReplacementTypeCounts);
+
+    private Map<ReplacementType, Integer> getCounts(WikipediaLanguage lang) {
+        return Objects.requireNonNull(this.counts.get(lang));
+    }
 
     @Override
     public Collection<ResultCount<ReplacementType>> countPagesNotReviewedByType(WikipediaLanguage lang) {
-        return this.getCounts()
+        return this.getCounts(lang)
             .entrySet()
             .stream()
-            .filter(entry -> entry.getKey().getLang().equals(lang))
-            .map(entry -> ResultCount.of(entry.getKey().getType(), entry.getValue()))
+            .map(entry -> ResultCount.of(entry.getKey(), entry.getValue()))
             .collect(Collectors.toUnmodifiableList());
     }
 
@@ -54,69 +61,26 @@ public class PageCountCacheRepository implements PageCountRepository {
             return this.pageCountRepository.countNotReviewedByType(lang, null);
         } else {
             // Always return the cached count
-            return this.counts.get(LangReplacementType.of(lang, type));
+            return this.getCounts(lang).get(type);
         }
     }
 
     public void removePageCount(WikipediaLanguage lang, ReplacementType type) {
-        this.counts.remove(LangReplacementType.of(lang, type));
+        this.getCounts(lang).remove(type);
     }
 
     public void incrementPageCount(WikipediaLanguage lang, ReplacementType type) {
-        LangReplacementType langType = LangReplacementType.of(lang, type);
-        this.counts.compute(langType, (lt, c) -> c == null ? 1 : c + 1);
+        this.getCounts(lang).compute(type, (t, c) -> c == null ? 1 : c + 1);
     }
 
     public void decrementPageCount(WikipediaLanguage lang, ReplacementType type) {
-        LangReplacementType langType = LangReplacementType.of(lang, type);
-        this.counts.computeIfPresent(langType, (lt, c) -> c > 1 ? c - 1 : null);
+        this.getCounts(lang).computeIfPresent(type, (t, c) -> c > 1 ? c - 1 : null);
     }
 
-    /* SCHEDULED UPDATE OF CACHE */
-
-    private synchronized Map<LangReplacementType, Integer> getCounts() {
-        while (this.counts == null) {
-            try {
-                wait();
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-                LOGGER.error("Error getting the synchronized counts");
-                return Collections.emptyMap();
-            }
-        }
-        return this.counts;
-    }
-
-    @Loggable(value = LogLevel.DEBUG, skipArgs = true, skipResult = true)
-    @Scheduled(fixedDelay = 3600000)
-    public void scheduledUpdateReplacementCount() {
-        loadReplacementTypeCounts();
-    }
-
-    private synchronized void loadReplacementTypeCounts() {
-        this.counts =
-            Arrays
-                .stream(WikipediaLanguage.values())
-                .map(this::toLangTypeCount)
-                .flatMap(Collection::stream)
-                .collect(
-                    Collectors.toMap(ResultCount::getKey, ResultCount::getCount, (a, b) -> b, ConcurrentHashMap::new)
-                );
-        notifyAll();
-    }
-
-    private Collection<ResultCount<LangReplacementType>> toLangTypeCount(WikipediaLanguage lang) {
+    private Map<ReplacementType, Integer> loadReplacementTypeCounts(WikipediaLanguage lang) {
         return pageCountRepository
             .countPagesNotReviewedByType(lang)
             .stream()
-            .map(rc -> ResultCount.of(LangReplacementType.of(lang, rc.getKey()), rc.getCount()))
-            .collect(Collectors.toList());
-    }
-
-    @Value(staticConstructor = "of")
-    private static class LangReplacementType {
-
-        WikipediaLanguage lang;
-        ReplacementType type;
+            .collect(Collectors.toConcurrentMap(ResultCount::getKey, ResultCount::getCount));
     }
 }
