@@ -21,7 +21,6 @@ class ReviewMapper {
         return FindReviewResponse.of(
             toDto(review.getPage(), review.getSection()),
             toDto(review.getReplacements(), options),
-            toDto(options),
             review.getNumPending()
         );
     }
@@ -67,17 +66,6 @@ class ReviewMapper {
 
     private ReviewSuggestionDto toDto(Suggestion suggestion) {
         return ReviewSuggestionDto.of(suggestion.getText(), suggestion.getComment());
-    }
-
-    private ReviewOptionsDto toDto(ReviewOptions options) {
-        ReviewOptionsDto dto = new ReviewOptionsDto();
-        if (options.getOptionsType() != ReviewOptionsType.NO_TYPE) {
-            dto.setKind(options.getType().getKind().getCode());
-            dto.setSubtype(options.getType().getSubtype());
-            dto.setSuggestion(options.getSuggestion());
-            dto.setCs(options.getCs());
-        }
-        return dto;
     }
 
     ReviewOptions fromDto(ReviewOptionsDto options, CommonQueryParameters queryParameters) {

@@ -1,6 +1,5 @@
 /* tslint:disable */
 /* eslint-disable */
-import { ReviewOptions } from './review-options';
 import { ReviewPage } from './review-page';
 import { ReviewReplacement } from './review-replacement';
 
@@ -13,7 +12,6 @@ export interface FindReviewResponse {
    * Number of pending pages to review of the given type
    */
   numPending: number;
-  options: ReviewOptions;
   page: ReviewPage;
 
   /**

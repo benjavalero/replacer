@@ -20,10 +20,6 @@ class FindReviewResponse {
     @NonNull
     Collection<ReviewReplacementDto> replacements;
 
-    @Schema(requiredMode = REQUIRED)
-    @NonNull
-    ReviewOptionsDto options;
-
     @Schema(
         description = "Number of pending pages to review of the given type",
         requiredMode = REQUIRED,

@@ -1,6 +1,5 @@
 package es.bvalero.replacer.review;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import es.bvalero.replacer.common.domain.ReplacementKind;
 import es.bvalero.replacer.common.domain.ReplacementType;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -15,30 +14,24 @@ import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.lang.Nullable;
 
 @ParameterObject
-@Schema(description = "Options of the replacements to review", name = "ReviewOptions")
-@JsonInclude(JsonInclude.Include.NON_NULL)
 @Data
 @NoArgsConstructor
 class ReviewOptionsDto {
 
-    @Parameter(description = "Replacement kind code", example = "2")
-    @Schema(description = "Replacement kind code", type = "integer", example = "2")
+    @Parameter(schema = @Schema(type = "integer"), description = "Replacement kind code", example = "2")
     @Nullable
     private Byte kind;
 
     @Parameter(description = "Replacement subtype", example = "aún")
-    @Schema(description = "Replacement subtype", example = "aún")
     @Size(max = ReplacementType.MAX_SUBTYPE_LENGTH)
     @Nullable
     private String subtype;
 
     @Parameter(description = "Custom replacement suggestion", example = "todavía")
-    @Schema(description = "Custom replacement suggestion", example = "todavía")
     @Nullable
     private String suggestion;
 
     @Parameter(description = "If the custom replacement is case-sensitive")
-    @Schema(description = "If the custom replacement is case-sensitive")
     @Nullable
     private Boolean cs;
 

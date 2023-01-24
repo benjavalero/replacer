@@ -8,7 +8,6 @@ export { RequestToken } from './models/request-token';
 export { VerifyAuthenticationRequest } from './models/verify-authentication-request';
 export { VerifyAuthenticationResponse } from './models/verify-authentication-response';
 export { FindReviewResponse } from './models/find-review-response';
-export { ReviewOptions } from './models/review-options';
 export { ReviewReplacement } from './models/review-replacement';
 export { ReviewSuggestion } from './models/review-suggestion';
 export { ReviewerCount } from './models/reviewer-count';
