@@ -4,11 +4,6 @@ body {
   height: 100%;
 }
 
-/* I have to put this style here because the HR is generated on-the-fly and not applied in the component */
-.pre hr {
-  border-top: medium double black;
-}
-
 /* Simple links are underlined in Bootstrap 5 */
 .no-underline {
   text-decoration: none;
