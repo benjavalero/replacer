@@ -2,7 +2,6 @@ import { HttpStatusCode } from '@angular/common/http';
 import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { faFastForward } from '@fortawesome/free-solid-svg-icons';
 import { FindReviewResponse } from '../../api/models/find-review-response';
-import { ReviewOptions } from '../../api/models/review-options';
 import { ReviewPage } from '../../api/models/review-page';
 import { ReviewReplacement } from '../../api/models/review-replacement';
 import { ReviewedReplacement } from '../../api/models/reviewed-replacement';
@@ -12,6 +11,7 @@ import { sleep } from '../../shared/util/sleep';
 import { kindLabel } from './find-random.component';
 import { FixedReplacement, getReplacementEnd } from './page-replacement.model';
 import { EMPTY_CONTENT, PageService } from './page.service';
+import { ReviewOptions } from './review-options.model';
 
 @Component({
   selector: 'app-edit-page',
@@ -20,6 +20,7 @@ import { EMPTY_CONTENT, PageService } from './page.service';
 })
 export class EditPageComponent implements OnChanges {
   @Input() review!: FindReviewResponse;
+  @Input() options!: ReviewOptions;
 
   ffIcon = faFastForward;
   private readonly THRESHOLD = 200; // Maximum number of characters to display around the replacements
@@ -45,7 +46,7 @@ export class EditPageComponent implements OnChanges {
     if (this.reviewAllTypes) {
       return true;
     } else {
-      const options: ReviewOptions = this.review.options;
+      const options: ReviewOptions = this.options;
       if (options.kind && options.subtype) {
         const replacement = this.review.replacements[index];
         return replacement.kind === options.kind && replacement.subtype === options.subtype;
@@ -86,7 +87,7 @@ export class EditPageComponent implements OnChanges {
     if (this.reviewAllTypes) {
       return 0;
     } else {
-      const options: ReviewOptions = this.review.options;
+      const options: ReviewOptions = this.options;
       if (options.kind && options.subtype) {
         let count: number = 0;
         for (let replacement of this.review.replacements) {
@@ -233,7 +234,7 @@ export class EditPageComponent implements OnChanges {
 
   private nextPage(): void {
     // This event will be called when the page is saved with or without changes, and also when skipped.
-    this.saved.emit(this.review.options);
+    this.saved.emit(this.options);
   }
 
   private replaceText(fullText: string, position: number, currentText: string, newText: string): string {
@@ -253,6 +254,6 @@ export class EditPageComponent implements OnChanges {
   }
 
   get kindLabel(): string {
-    return kindLabel[this.review.options.kind!];
+    return kindLabel[this.options.kind!];
   }
 }

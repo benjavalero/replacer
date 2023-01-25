@@ -2,13 +2,13 @@ import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { FindReviewResponse } from '../../api/models/find-review-response';
 import { ReplacementType } from '../../api/models/replacement-type';
-import { ReviewOptions } from '../../api/models/review-options';
 import { ReviewPage } from '../../api/models/review-page';
 import { ReviewedReplacement } from '../../api/models/reviewed-replacement';
 import { SaveReviewRequest } from '../../api/models/save-review-request';
 import { ReplacementsService } from '../../api/services/replacements.service';
 import { ReviewService } from '../../api/services/review.service';
 import { UserService } from '../../core/user/user.service';
+import { ReviewOptions } from './review-options.model';
 
 export const EMPTY_CONTENT = ' ';
 

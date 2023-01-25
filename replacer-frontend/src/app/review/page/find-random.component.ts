@@ -5,9 +5,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { FindReviewResponse } from '../../api/models/find-review-response';
 import { ReplacementType } from '../../api/models/replacement-type';
-import { ReviewOptions } from '../../api/models/review-options';
 import { AlertService } from '../../shared/alert/alert.service';
 import { PageService } from './page.service';
+import { ReviewOptions } from './review-options.model';
 import { ValidateCustomComponent } from './validate-custom.component';
 
 export const kindLabel: { [key: number]: string } = {
@@ -20,12 +20,18 @@ export const kindLabel: { [key: number]: string } = {
 @Component({
   selector: 'app-find-random',
   template: `
-    <app-edit-page *ngIf="review" [review]="review" (saved)="onSaved($event)"></app-edit-page>
+    <app-edit-page
+      *ngIf="review && options"
+      [review]="review"
+      [options]="options"
+      (saved)="onSaved($event)"
+    ></app-edit-page>
   `,
   styleUrls: []
 })
 export class FindRandomComponent implements OnInit {
   review: FindReviewResponse | null;
+  options: ReviewOptions | null;
 
   constructor(
     private alertService: AlertService,
@@ -37,6 +43,7 @@ export class FindRandomComponent implements OnInit {
     private modalService: NgbModal
   ) {
     this.review = null;
+    this.options = null;
   }
 
   ngOnInit() {
@@ -144,6 +151,7 @@ export class FindRandomComponent implements OnInit {
   private manageReview(review: FindReviewResponse, options: ReviewOptions): void {
     this.alertService.clearAlertMessages();
 
+    this.options = options;
     this.review = review;
 
     // Modify title
