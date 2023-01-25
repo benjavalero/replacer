@@ -68,6 +68,9 @@ export class FindRandomComponent implements OnInit {
     }
   }
 
+  /**
+   * @deprecated This should be done in the routing component
+   */
   private convertKindParameter(kind: string | null): number | null {
     if (kind) {
       // Just for compatibility with old use with labels

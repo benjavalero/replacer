@@ -12,7 +12,7 @@ export class ReplacementListService {
   }
 
   loadCountsFromServer(): void {
-    this.findReplacementCounts$().subscribe((typeCounts: KindCount[]) => this.updateCounts(typeCounts));
+    this.findReplacementCounts$().subscribe((kindCounts: KindCount[]) => this.updateCounts(kindCounts));
   }
 
   private findReplacementCounts$(): Observable<KindCount[]> {
@@ -40,9 +40,9 @@ export class ReplacementListService {
       return;
     }
 
-    for (let typeCount of currentCounts) {
-      if (typeCount.k === kind) {
-        for (let subtypeCount of typeCount.l) {
+    for (let kindCount of currentCounts) {
+      if (kindCount.k === kind) {
+        for (let subtypeCount of kindCount.l) {
           if (subtypeCount.s === subtype) {
             subtypeCount.c = count;
           }

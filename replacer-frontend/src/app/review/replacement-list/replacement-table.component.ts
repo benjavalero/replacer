@@ -23,7 +23,7 @@ export class ReplacementTableComponent implements OnInit, OnChanges {
   private readonly MAX_SIZE = 3;
 
   @Input() kind!: number;
-  @Input() replacementCounts: SubtypeCount[];
+  @Input() subtypeCounts: SubtypeCount[];
 
   filteredItems: SubtypeCount[];
 
@@ -50,14 +50,14 @@ export class ReplacementTableComponent implements OnInit, OnChanges {
     private replacementListService: ReplacementListService,
     private modalService: NgbModal
   ) {
-    this.replacementCounts = [];
-    this.filteredItems = this.replacementCounts;
+    this.subtypeCounts = [];
+    this.filteredItems = this.subtypeCounts;
 
     // Default filter
     this.sortColumn = 's';
     this.sortDirection = 'asc';
     this.filterValue = '';
-    this.collectionSize = this.replacementCounts.length;
+    this.collectionSize = this.subtypeCounts.length;
     this.pageValue = 1;
 
     this.pageListUrl = `${environment.baseUrl}/api/page/type?lang=${this.userConfigService.lang}&user=${this.userService.userName}`;
@@ -74,13 +74,13 @@ export class ReplacementTableComponent implements OnInit, OnChanges {
 
   private sortAndRefresh(): void {
     // The sorting can be done in the original counts to speed up next filters without sorting
-    this.replacementCounts = this.sortCounts(this.replacementCounts, this.sortColumn, this.sortDirection);
+    this.subtypeCounts = this.sortCounts(this.subtypeCounts, this.sortColumn, this.sortDirection);
 
     this.refreshFilteredItems();
   }
 
   private refreshFilteredItems(): void {
-    const filtered = this.filterCounts(this.replacementCounts, this.filterValue);
+    const filtered = this.filterCounts(this.subtypeCounts, this.filterValue);
     const paginated = this.paginateCounts(filtered, this.pageValue, this.pageSize);
 
     this.collectionSize = filtered.length;
@@ -148,7 +148,7 @@ export class ReplacementTableComponent implements OnInit, OnChanges {
   }
 
   get filtrable(): boolean {
-    return this.replacementCounts.length > this.PAGE_SIZE;
+    return this.subtypeCounts.length > this.PAGE_SIZE;
   }
 
   reviewPages(subtype: string): void {
