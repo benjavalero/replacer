@@ -45,7 +45,7 @@ public class ReviewFindController {
                 review = reviewCustomFinder.findRandomPageReview(options);
                 break;
         }
-        return review.map(r -> ReviewMapper.toDto(r, options));
+        return review.map(ReviewMapper::toDto);
     }
 
     @Operation(summary = "Find a page and the replacements to review")
@@ -69,6 +69,6 @@ public class ReviewFindController {
                 review = reviewCustomFinder.findPageReview(pageKey, options);
                 break;
         }
-        return review.map(r -> ReviewMapper.toDto(r, options));
+        return review.map(ReviewMapper::toDto);
     }
 }

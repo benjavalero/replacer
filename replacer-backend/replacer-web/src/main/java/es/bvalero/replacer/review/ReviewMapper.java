@@ -1,6 +1,5 @@
 package es.bvalero.replacer.review;
 
-import es.bvalero.replacer.common.domain.ReplacementKind;
 import es.bvalero.replacer.common.domain.ReplacementType;
 import es.bvalero.replacer.common.dto.CommonQueryParameters;
 import es.bvalero.replacer.common.dto.Language;
@@ -17,10 +16,10 @@ import org.springframework.lang.Nullable;
 @UtilityClass
 class ReviewMapper {
 
-    FindReviewResponse toDto(Review review, ReviewOptions options) {
+    FindReviewResponse toDto(Review review) {
         return FindReviewResponse.of(
             toDto(review.getPage(), review.getSection()),
-            toDto(review.getReplacements(), options),
+            toDto(review.getReplacements()),
             review.getNumPending()
         );
     }
@@ -49,17 +48,16 @@ class ReviewMapper {
         }
     }
 
-    private Collection<ReviewReplacementDto> toDto(Collection<Replacement> replacements, ReviewOptions options) {
-        return replacements.stream().map(r -> toDto(r, options)).collect(Collectors.toUnmodifiableList());
+    private Collection<ReviewReplacementDto> toDto(Collection<Replacement> replacements) {
+        return replacements.stream().map(ReviewMapper::toDto).collect(Collectors.toUnmodifiableList());
     }
 
-    private ReviewReplacementDto toDto(Replacement replacement, ReviewOptions options) {
+    private ReviewReplacementDto toDto(Replacement replacement) {
         return ReviewReplacementDto.of(
             replacement.getStart(),
             replacement.getText(),
             replacement.getType().getKind().getCode(),
             replacement.getType().getSubtype(),
-            replacement.getType().getKind() == ReplacementKind.CUSTOM ? options.getCs() : null,
             replacement.getSuggestions().stream().map(ReviewMapper::toDto).collect(Collectors.toList())
         );
     }

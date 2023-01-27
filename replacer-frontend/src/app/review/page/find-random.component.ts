@@ -48,20 +48,29 @@ export class FindRandomComponent implements OnInit {
 
   ngOnInit() {
     // Optional search options
-    const pageId = this.route.snapshot.paramMap.get('id');
-    const options = {
-      kind: this.convertKindParameter(this.route.snapshot.paramMap.get('kind')),
-      subtype: this.route.snapshot.paramMap.get('subtype'),
-      suggestion: this.route.snapshot.paramMap.get('suggestion'),
-      cs: this.route.snapshot.paramMap.get('cs') === 'true'
-    } as ReviewOptions;
-    if (options.suggestion) {
-      options.kind = 1;
+    const idParam = this.route.snapshot.paramMap.get('id');
+    const kindParam = this.route.snapshot.paramMap.get('kind');
+    const subtypeParam = this.route.snapshot.paramMap.get('subtype');
+    const suggestionParam = this.route.snapshot.paramMap.get('suggestion');
+    const csParam = this.route.snapshot.paramMap.get('cs');
+    const options = {} as ReviewOptions;
+    if (subtypeParam !== null) {
+      options.subtype = subtypeParam;
+      if (suggestionParam !== null) {
+        // Custom type
+        options.kind = 1;
+        options.suggestion = suggestionParam;
+        // If the suggestion is defined we can assume the cs is also defined
+        options.cs = csParam! === 'true';
+      } else {
+        // If the subtype is defined we can assume the kind is also defined
+        options.kind = this.convertKindParameter(kindParam!);
+      }
     }
 
-    if (pageId) {
-      this.findPageReview(+pageId, options);
-    } else if (options.suggestion) {
+    if (idParam !== null) {
+      this.findPageReview(+idParam, options);
+    } else if (options.suggestion !== null) {
       this.validateCustomReplacement(options);
     } else {
       this.findRandomPage(options);
@@ -71,25 +80,21 @@ export class FindRandomComponent implements OnInit {
   /**
    * @deprecated This should be done in the routing component
    */
-  private convertKindParameter(kind: string | null): number | null {
-    if (kind) {
-      // Just for compatibility with old use with labels
-      switch (kind) {
-        case 'Personalizado': {
-          return 1;
-        }
-        case 'Ortografía': {
-          return 2;
-        }
-        case 'Compuestos': {
-          return 3;
-        }
-        default: {
-          return +kind;
-        }
+  private convertKindParameter(kind: string): number {
+    // Just for compatibility with old use with labels
+    switch (kind) {
+      case 'Personalizado': {
+        return 1;
       }
-    } else {
-      return null;
+      case 'Ortografía': {
+        return 2;
+      }
+      case 'Compuestos': {
+        return 3;
+      }
+      default: {
+        return +kind;
+      }
     }
   }
 

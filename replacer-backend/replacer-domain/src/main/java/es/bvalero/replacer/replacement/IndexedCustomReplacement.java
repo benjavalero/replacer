@@ -32,8 +32,7 @@ public class IndexedCustomReplacement {
     PageKey pageKey;
 
     // To store in the JDBC repository
-    @SuppressWarnings("unused")
-    byte getCs() {
+    public byte getCs() {
         return getCs(caseSensitive);
     }
 

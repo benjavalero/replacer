@@ -7,7 +7,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.Collection;
 import lombok.Value;
 import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
 
 @Schema(description = "Replacement to review", name = "ReviewReplacement")
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -27,10 +26,6 @@ class ReviewReplacementDto {
     @Schema(description = "Subtype of the replacement", example = "habia", requiredMode = REQUIRED)
     @NonNull
     String subtype;
-
-    @Schema(description = "If the replacement is case-sensitive. Only for custom replacements.")
-    @Nullable
-    Boolean cs;
 
     @Schema(description = "Collection of suggestions to fix the replacement", requiredMode = REQUIRED)
     @NonNull
