@@ -170,7 +170,7 @@ export class FindRandomComponent implements OnInit {
     htmlTitle += review.page.title;
     this.titleService.setTitle(htmlTitle);
 
-    this.setReviewUrl(options, review.page.id);
+    this.setReviewUrl(options, review.page.pageId);
   }
 
   private setReviewUrl(options: ReviewOptions, pageId: number | null): void {

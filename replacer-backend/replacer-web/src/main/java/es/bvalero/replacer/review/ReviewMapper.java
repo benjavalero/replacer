@@ -27,7 +27,7 @@ class ReviewMapper {
     private ReviewPageDto toDto(WikipediaPage page, @Nullable WikipediaSection section) {
         ReviewPageDto reviewPage = new ReviewPageDto();
         reviewPage.setLang(Language.valueOf(page.getPageKey().getLang().getCode()));
-        reviewPage.setId(page.getPageKey().getPageId());
+        reviewPage.setPageId(page.getPageKey().getPageId());
         reviewPage.setTitle(page.getTitle());
         reviewPage.setContent(page.getContent());
         reviewPage.setSection(toDto(section));

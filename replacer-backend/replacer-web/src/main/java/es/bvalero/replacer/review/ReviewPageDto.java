@@ -30,7 +30,7 @@ class ReviewPageDto {
 
     @Schema(description = "Page ID", requiredMode = REQUIRED, example = "6980716")
     @NotNull
-    private int id;
+    private int pageId;
 
     @Schema(description = "Page title", requiredMode = REQUIRED, example = "Artemio Zeno")
     @NonNull

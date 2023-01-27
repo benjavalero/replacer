@@ -48,7 +48,7 @@ export class PageService {
 
     // Call backend and delay the observable response
     return this.reviewService.saveReview({
-      id: page.id,
+      id: page.pageId,
       body: saveReview
     });
   }

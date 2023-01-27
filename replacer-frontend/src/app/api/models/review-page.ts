@@ -12,12 +12,12 @@ export interface ReviewPage {
    * Page (or section) content
    */
   content: string;
+  lang: Language;
 
   /**
    * Page ID
    */
-  id: number;
-  lang: Language;
+  pageId: number;
 
   /**
    * Timestamp when the page content was retrieved from Wikipedia

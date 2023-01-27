@@ -9,7 +9,6 @@ import es.bvalero.replacer.wikipedia.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Objects;
 import javax.validation.Valid;
@@ -39,7 +38,7 @@ public class ReviewSaveController {
         @Valid CommonQueryParameters queryParameters,
         @Valid @RequestBody SaveReviewRequest request
     ) {
-        if (!Objects.equals(pageId, request.getPage().getId())) {
+        if (!Objects.equals(pageId, request.getPage().getPageId())) {
             LOGGER.error("Page ID mismatch");
             return ResponseEntity.badRequest().build();
         }

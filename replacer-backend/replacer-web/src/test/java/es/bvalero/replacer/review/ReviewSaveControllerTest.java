@@ -67,7 +67,7 @@ class ReviewSaveControllerTest {
         this.request = new SaveReviewRequest();
         ReviewPageDto reviewPage = new ReviewPageDto();
         reviewPage.setLang(Language.es);
-        reviewPage.setId(pageId);
+        reviewPage.setPageId(pageId);
         reviewPage.setTitle(title);
         reviewPage.setContent(content);
         reviewPage.setQueryTimestamp(timestamp.toString());
