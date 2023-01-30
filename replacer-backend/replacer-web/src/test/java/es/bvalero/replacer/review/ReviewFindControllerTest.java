@@ -91,7 +91,7 @@ class ReviewFindControllerTest {
         mvc
             .perform(get("/api/review/random?lang=es&user=A").contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.page.id", is(pageId)))
+            .andExpect(jsonPath("$.page.pageId", is(pageId)))
             .andExpect(jsonPath("$.page.title", is(title)))
             .andExpect(jsonPath("$.page.content", is(content)))
             .andExpect(jsonPath("$.page.section.id", is(sectionId)))
