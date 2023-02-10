@@ -2,7 +2,6 @@ package es.bvalero.replacer.user;
 
 import es.bvalero.replacer.common.dto.CommonQueryParameters;
 import java.util.Arrays;
-import java.util.Optional;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -18,35 +17,23 @@ public class ValidateUserAspect {
 
     @Around("@annotation(es.bvalero.replacer.user.ValidateAdminUser)")
     Object validateAdminUser(ProceedingJoinPoint joinPoint) throws Throwable {
-        findCommonQueryParameters(joinPoint)
-            .ifPresentOrElse(
-                qp -> userRightsService.validateAdminUser(qp.getWikipediaLanguage(), qp.getUser()),
-                () -> {
-                    throw new IllegalArgumentException("Expected CommonQueryParameters argument");
-                }
-            );
-
+        CommonQueryParameters qp = findCommonQueryParameters(joinPoint);
+        userRightsService.validateAdminUser(qp.getWikipediaLanguage(), qp.getUser());
         return joinPoint.proceed();
     }
 
     @Around("@annotation(es.bvalero.replacer.user.ValidateBotUser)")
     Object validateBotUser(ProceedingJoinPoint joinPoint) throws Throwable {
-        findCommonQueryParameters(joinPoint)
-            .ifPresentOrElse(
-                qp -> userRightsService.validateBotUser(qp.getWikipediaLanguage(), qp.getUser()),
-                () -> {
-                    throw new IllegalArgumentException("Expected CommonQueryParameters argument");
-                }
-            );
-
+        CommonQueryParameters qp = findCommonQueryParameters(joinPoint);
+        userRightsService.validateBotUser(qp.getWikipediaLanguage(), qp.getUser());
         return joinPoint.proceed();
     }
 
-    private Optional<CommonQueryParameters> findCommonQueryParameters(ProceedingJoinPoint joinPoint) {
+    private CommonQueryParameters findCommonQueryParameters(ProceedingJoinPoint joinPoint) {
         return Arrays
             .stream(joinPoint.getArgs())
             .filter(CommonQueryParameters.class::isInstance)
             .map(CommonQueryParameters.class::cast)
-            .findAny();
+            .findAny().orElseThrow(IllegalArgumentException::new);
     }
 }
