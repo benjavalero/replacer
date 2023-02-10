@@ -7,11 +7,9 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Schema(description = "Request token and OAuth verifier to complete the authorization process")
 @Data
-@NoArgsConstructor
 class VerifyAuthenticationRequest {
 
     @Schema

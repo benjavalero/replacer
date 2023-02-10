@@ -7,12 +7,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.springframework.lang.Nullable;
 
 @Schema(description = "Reviewed replacement", name = "ReviewedReplacement")
 @Data
-@NoArgsConstructor
 class ReviewedReplacementDto {
 
     @Schema(type = "integer", description = "Replacement kind", requiredMode = REQUIRED)

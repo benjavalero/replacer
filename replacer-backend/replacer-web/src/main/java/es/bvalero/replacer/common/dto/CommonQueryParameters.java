@@ -5,7 +5,6 @@ import io.swagger.v3.oas.annotations.Parameter;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.springdoc.api.annotations.ParameterObject;
 
 /**
@@ -14,7 +13,6 @@ import org.springdoc.api.annotations.ParameterObject;
  */
 @ParameterObject
 @Data
-@NoArgsConstructor
 public class CommonQueryParameters {
 
     @Parameter(description = "Language of the Wikipedia in use", required = true, example = "es")

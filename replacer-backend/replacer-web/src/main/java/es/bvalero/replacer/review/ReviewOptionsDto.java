@@ -8,14 +8,12 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.validation.constraints.Size;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.lang.Nullable;
 
 @ParameterObject
 @Data
-@NoArgsConstructor
 class ReviewOptionsDto {
 
     @Parameter(schema = @Schema(type = "integer"), description = "Replacement kind code", example = "2")

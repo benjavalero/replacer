@@ -9,12 +9,10 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Schema
 @Data
-@NoArgsConstructor
 class SaveReviewRequest {
 
     @Schema(description = "Page reviewed", requiredMode = REQUIRED)

@@ -4,12 +4,10 @@ import io.swagger.v3.oas.annotations.Parameter;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.springdoc.api.annotations.ParameterObject;
 
 @ParameterObject
 @Data
-@NoArgsConstructor
 class ReplacementValidationRequest {
 
     @Parameter(description = "Replacement to validate", required = true, example = "aún")
