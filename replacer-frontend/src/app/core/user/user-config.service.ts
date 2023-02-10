@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { Language } from '../../api/models/language';
+import { Language } from './language.model';
 import { UserConfig } from './user-config.model';
 
 @Injectable()
 export class UserConfigService {
-  private readonly LANG_DEFAULT: Language = 'es';
+  private readonly LANG_DEFAULT: Language = Language.SPANISH;
 
   private readonly userConfigKey = 'userConfig';
   readonly config$ = new BehaviorSubject<UserConfig>(this.emptyConfig());

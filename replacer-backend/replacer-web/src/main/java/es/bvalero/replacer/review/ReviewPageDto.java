@@ -4,7 +4,6 @@ import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import es.bvalero.replacer.common.dto.Language;
 import io.swagger.v3.oas.annotations.media.Schema;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -23,10 +22,10 @@ class ReviewPageDto {
 
     private static final int SHORT_CONTENT_LENGTH = 50;
 
-    @Schema(description = "Language of the Wikipedia in use", requiredMode = REQUIRED)
+    @Schema(description = "Language of the Wikipedia in use", requiredMode = REQUIRED, example = "es")
     @NonNull
     @NotNull
-    private Language lang;
+    private String lang;
 
     @Schema(description = "Page ID", requiredMode = REQUIRED, example = "6980716")
     @NotNull

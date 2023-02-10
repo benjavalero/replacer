@@ -1,4 +1,4 @@
-import { Language } from '../../api/models/language';
+import { Language } from './language.model';
 
 export class UserConfig {
   lang: Language;

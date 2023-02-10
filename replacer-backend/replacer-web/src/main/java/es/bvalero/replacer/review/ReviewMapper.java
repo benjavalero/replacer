@@ -2,7 +2,6 @@ package es.bvalero.replacer.review;
 
 import es.bvalero.replacer.common.domain.ReplacementType;
 import es.bvalero.replacer.common.dto.CommonQueryParameters;
-import es.bvalero.replacer.common.dto.Language;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.Suggestion;
 import es.bvalero.replacer.page.PageKey;
@@ -26,7 +25,7 @@ class ReviewMapper {
 
     private ReviewPageDto toDto(WikipediaPage page, @Nullable WikipediaSection section) {
         ReviewPageDto reviewPage = new ReviewPageDto();
-        reviewPage.setLang(Language.valueOf(page.getPageKey().getLang().getCode()));
+        reviewPage.setLang(page.getPageKey().getLang().getCode());
         reviewPage.setPageId(page.getPageKey().getPageId());
         reviewPage.setTitle(page.getTitle());
         reviewPage.setContent(page.getContent());
@@ -69,7 +68,7 @@ class ReviewMapper {
     ReviewOptions fromDto(ReviewOptionsDto options, CommonQueryParameters queryParameters) {
         return ReviewOptions
             .builder()
-            .lang(queryParameters.getLang().toDomain())
+            .lang(queryParameters.getWikipediaLanguage())
             .user(queryParameters.getUser())
             .type(ReplacementType.of(options.getKind(), options.getSubtype()))
             .suggestion(options.getSuggestion())
@@ -97,7 +96,7 @@ class ReviewMapper {
     ) {
         return ReviewedReplacement
             .builder()
-            .pageKey(PageKey.of(queryParameters.getLang().toDomain(), pageId))
+            .pageKey(PageKey.of(queryParameters.getWikipediaLanguage(), pageId))
             .type(ReplacementType.of(reviewed.getKind(), reviewed.getSubtype()))
             .cs(reviewed.getCs())
             .start(offset + reviewed.getStart())

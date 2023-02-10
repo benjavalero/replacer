@@ -1,6 +1,5 @@
 /* tslint:disable */
 /* eslint-disable */
-import { Language } from './language';
 import { ReviewSectionDto } from './review-section-dto';
 
 /**
@@ -12,7 +11,11 @@ export interface ReviewPage {
    * Page (or section) content
    */
   content: string;
-  lang: Language;
+
+  /**
+   * Language of the Wikipedia in use
+   */
+  lang: string;
 
   /**
    * Page ID

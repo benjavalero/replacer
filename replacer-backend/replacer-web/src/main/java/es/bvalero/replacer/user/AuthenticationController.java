@@ -2,7 +2,6 @@ package es.bvalero.replacer.user;
 
 import com.github.rozidan.springboot.logger.Loggable;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import es.bvalero.replacer.common.dto.Language;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -51,14 +50,14 @@ public class AuthenticationController {
     @Operation(summary = "Verify the authorization process")
     @PostMapping(value = "/verify")
     public VerifyAuthenticationResponse verifyAuthentication(
-        @Parameter(description = "Language of the Wikipedia in use", required = true) @RequestParam Language lang,
+        @Parameter(description = "Language of the Wikipedia in use", required = true, example = "es") @RequestParam String lang,
         @Valid @RequestBody VerifyAuthenticationRequest verifyAuthenticationRequest
     ) throws AuthenticationException {
         RequestToken requestToken = RequestTokenDto.toDomain(verifyAuthenticationRequest.getRequestToken());
         String oAuthVerifier = verifyAuthenticationRequest.getOauthVerifier();
         AccessToken accessToken = authenticationService.getAccessToken(requestToken, oAuthVerifier);
         User user = userService
-            .findAuthenticatedUser(WikipediaLanguage.valueOfCode(lang.name()), accessToken)
+            .findAuthenticatedUser(WikipediaLanguage.valueOfCode(lang), accessToken)
             .orElseThrow(AuthenticationException::new);
         return VerifyAuthenticationResponse.of(user, accessToken);
     }

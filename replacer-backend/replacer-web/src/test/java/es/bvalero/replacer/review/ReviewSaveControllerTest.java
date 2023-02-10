@@ -9,7 +9,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import es.bvalero.replacer.common.domain.ReplacementKind;
 import es.bvalero.replacer.common.domain.ReplacementType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import es.bvalero.replacer.common.dto.Language;
 import es.bvalero.replacer.page.PageKey;
 import es.bvalero.replacer.user.AccessToken;
 import es.bvalero.replacer.user.AccessTokenDto;
@@ -66,7 +65,7 @@ class ReviewSaveControllerTest {
     public void setUp() {
         this.request = new SaveReviewRequest();
         ReviewPageDto reviewPage = new ReviewPageDto();
-        reviewPage.setLang(Language.es);
+        reviewPage.setLang(WikipediaLanguage.getDefault().getCode());
         reviewPage.setPageId(pageId);
         reviewPage.setTitle(title);
         reviewPage.setContent(content);

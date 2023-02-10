@@ -36,7 +36,7 @@ public class ReplacementCountController {
             example = "true"
         ) @RequestParam boolean reviewed
     ) {
-        WikipediaLanguage lang = queryParameters.getLang().toDomain();
+        WikipediaLanguage lang = queryParameters.getWikipediaLanguage();
         return reviewed
             ? ReplacementCount.of(replacementCountService.countReplacementsReviewed(lang))
             : ReplacementCount.of(replacementCountService.countReplacementsNotReviewed(lang));
@@ -46,7 +46,7 @@ public class ReplacementCountController {
     @GetMapping(value = "/user/count")
     public Collection<ReviewerCount> countReplacementsGroupedByReviewer(@Valid CommonQueryParameters queryParameters) {
         return replacementCountService
-            .countReplacementsGroupedByReviewer(queryParameters.getLang().toDomain())
+            .countReplacementsGroupedByReviewer(queryParameters.getWikipediaLanguage())
             .stream()
             .map(count -> ReviewerCount.of(count.getKey(), count.getCount()))
             .collect(Collectors.toUnmodifiableList());
@@ -59,7 +59,7 @@ public class ReplacementCountController {
     @GetMapping(value = "/page/count")
     public Collection<PageCount> countNotReviewedGroupedByPage(@Valid CommonQueryParameters queryParameters) {
         return replacementCountService
-            .countNotReviewedGroupedByPage(queryParameters.getLang().toDomain())
+            .countNotReviewedGroupedByPage(queryParameters.getWikipediaLanguage())
             .stream()
             .map(count ->
                 PageCount.of(count.getKey().getPageKey().getPageId(), count.getKey().getTitle(), count.getCount())

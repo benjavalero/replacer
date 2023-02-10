@@ -20,7 +20,7 @@ public class ValidateUserAspect {
     Object validateAdminUser(ProceedingJoinPoint joinPoint) throws Throwable {
         findCommonQueryParameters(joinPoint)
             .ifPresentOrElse(
-                qp -> userRightsService.validateAdminUser(qp.getLang().toDomain(), qp.getUser()),
+                qp -> userRightsService.validateAdminUser(qp.getWikipediaLanguage(), qp.getUser()),
                 () -> {
                     throw new IllegalArgumentException("Expected CommonQueryParameters argument");
                 }
@@ -33,7 +33,7 @@ public class ValidateUserAspect {
     Object validateBotUser(ProceedingJoinPoint joinPoint) throws Throwable {
         findCommonQueryParameters(joinPoint)
             .ifPresentOrElse(
-                qp -> userRightsService.validateBotUser(qp.getLang().toDomain(), qp.getUser()),
+                qp -> userRightsService.validateBotUser(qp.getWikipediaLanguage(), qp.getUser()),
                 () -> {
                     throw new IllegalArgumentException("Expected CommonQueryParameters argument");
                 }

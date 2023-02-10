@@ -57,7 +57,7 @@ public class ReviewFindController {
     ) {
         Optional<Review> review = Optional.empty();
         ReviewOptions options = ReviewMapper.fromDto(optionsDto, queryParameters);
-        PageKey pageKey = PageKey.of(queryParameters.getLang().toDomain(), pageId);
+        PageKey pageKey = PageKey.of(queryParameters.getWikipediaLanguage(), pageId);
         switch (options.getOptionsType()) {
             case NO_TYPE:
                 review = reviewNoTypeFinder.findPageReview(pageKey, options);
