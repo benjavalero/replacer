@@ -64,7 +64,7 @@ class ReviewSaveControllerTest {
     @BeforeEach
     public void setUp() {
         this.request = new SaveReviewRequest();
-        ReviewPageDto reviewPage = new ReviewPageDto();
+        ReviewPage reviewPage = new ReviewPage();
         reviewPage.setLang(WikipediaLanguage.getDefault().getCode());
         reviewPage.setPageId(pageId);
         reviewPage.setTitle(title);

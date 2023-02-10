@@ -1,9 +1,9 @@
 /* tslint:disable */
 /* eslint-disable */
-import { ReviewSectionDto } from './review-section-dto';
+import { ReviewSection } from './review-section';
 
 /**
- * Page reviewed
+ * Page to review
  */
 export interface ReviewPage {
 
@@ -26,7 +26,7 @@ export interface ReviewPage {
    * Timestamp when the page content was retrieved from Wikipedia
    */
   queryTimestamp: string;
-  section?: ReviewSectionDto;
+  section?: ReviewSection;
 
   /**
    * Page title

@@ -14,11 +14,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
-@Schema(name = "ReviewPage")
+@Schema(description = "Page to review")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Data
 @NoArgsConstructor
-class ReviewPageDto {
+class ReviewPage {
 
     private static final int SHORT_CONTENT_LENGTH = 50;
 
@@ -49,7 +49,7 @@ class ReviewPageDto {
     @Schema
     @Valid
     @Nullable
-    private ReviewSectionDto section;
+    private ReviewSection section;
 
     @Schema(
         description = "Timestamp when the page content was retrieved from Wikipedia",

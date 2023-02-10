@@ -17,7 +17,7 @@ import { ReviewerCount } from '../models/reviewer-count';
 @Injectable({
   providedIn: 'root',
 })
-export class ReplacementsService extends BaseService {
+export class ReplacementService extends BaseService {
   constructor(
     config: ApiConfiguration,
     http: HttpClient
@@ -45,7 +45,7 @@ export class ReplacementsService extends BaseService {
   }
 ): Observable<StrictHttpResponse<Array<ReviewerCount>>> {
 
-    const rb = new RequestBuilder(this.rootUrl, ReplacementsService.CountReplacementsGroupedByReviewerPath, 'get');
+    const rb = new RequestBuilder(this.rootUrl, ReplacementService.CountReplacementsGroupedByReviewerPath, 'get');
     if (params) {
     }
 
@@ -111,7 +111,7 @@ export class ReplacementsService extends BaseService {
   }
 ): Observable<StrictHttpResponse<ReplacementType>> {
 
-    const rb = new RequestBuilder(this.rootUrl, ReplacementsService.ValidateCustomReplacementPath, 'get');
+    const rb = new RequestBuilder(this.rootUrl, ReplacementService.ValidateCustomReplacementPath, 'get');
     if (params) {
       rb.query('replacement', params.replacement, {});
       rb.query('cs', params.cs, {});
@@ -179,7 +179,7 @@ export class ReplacementsService extends BaseService {
   }
 ): Observable<StrictHttpResponse<Array<PageCount>>> {
 
-    const rb = new RequestBuilder(this.rootUrl, ReplacementsService.CountNotReviewedGroupedByPagePath, 'get');
+    const rb = new RequestBuilder(this.rootUrl, ReplacementService.CountNotReviewedGroupedByPagePath, 'get');
     if (params) {
     }
 
@@ -240,7 +240,7 @@ export class ReplacementsService extends BaseService {
   }
 ): Observable<StrictHttpResponse<ReplacementCount>> {
 
-    const rb = new RequestBuilder(this.rootUrl, ReplacementsService.CountReplacementsPath, 'get');
+    const rb = new RequestBuilder(this.rootUrl, ReplacementService.CountReplacementsPath, 'get');
     if (params) {
       rb.query('reviewed', params.reviewed, {});
     }

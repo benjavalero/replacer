@@ -8,7 +8,7 @@ import { ReviewService } from './services/review.service';
 import { PagesService } from './services/pages.service';
 import { DumpIndexingService } from './services/dump-indexing.service';
 import { AuthenticationService } from './services/authentication.service';
-import { ReplacementsService } from './services/replacements.service';
+import { ReplacementService } from './services/replacement.service';
 import { AdministrationService } from './services/administration.service';
 
 /**
@@ -23,7 +23,7 @@ import { AdministrationService } from './services/administration.service';
     PagesService,
     DumpIndexingService,
     AuthenticationService,
-    ReplacementsService,
+    ReplacementService,
     AdministrationService,
     ApiConfiguration
   ],

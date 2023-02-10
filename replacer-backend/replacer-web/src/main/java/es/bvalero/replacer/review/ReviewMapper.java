@@ -23,8 +23,8 @@ class ReviewMapper {
         );
     }
 
-    private ReviewPageDto toDto(WikipediaPage page, @Nullable WikipediaSection section) {
-        ReviewPageDto reviewPage = new ReviewPageDto();
+    private ReviewPage toDto(WikipediaPage page, @Nullable WikipediaSection section) {
+        ReviewPage reviewPage = new ReviewPage();
         reviewPage.setLang(page.getPageKey().getLang().getCode());
         reviewPage.setPageId(page.getPageKey().getPageId());
         reviewPage.setTitle(page.getTitle());
@@ -35,11 +35,11 @@ class ReviewMapper {
     }
 
     @Nullable
-    private ReviewSectionDto toDto(@Nullable WikipediaSection section) {
+    private ReviewSection toDto(@Nullable WikipediaSection section) {
         if (section == null) {
             return null;
         } else {
-            ReviewSectionDto reviewSection = new ReviewSectionDto();
+            ReviewSection reviewSection = new ReviewSection();
             reviewSection.setId(section.getIndex());
             reviewSection.setTitle(section.getAnchor());
             reviewSection.setOffset(section.getByteOffset());
@@ -47,12 +47,12 @@ class ReviewMapper {
         }
     }
 
-    private Collection<ReviewReplacementDto> toDto(Collection<Replacement> replacements) {
+    private Collection<ReviewReplacement> toDto(Collection<Replacement> replacements) {
         return replacements.stream().map(ReviewMapper::toDto).collect(Collectors.toUnmodifiableList());
     }
 
-    private ReviewReplacementDto toDto(Replacement replacement) {
-        return ReviewReplacementDto.of(
+    private ReviewReplacement toDto(Replacement replacement) {
+        return ReviewReplacement.of(
             replacement.getStart(),
             replacement.getText(),
             replacement.getType().getKind().getCode(),
@@ -61,8 +61,8 @@ class ReviewMapper {
         );
     }
 
-    private ReviewSuggestionDto toDto(Suggestion suggestion) {
-        return ReviewSuggestionDto.of(suggestion.getText(), suggestion.getComment());
+    private ReviewSuggestion toDto(Suggestion suggestion) {
+        return ReviewSuggestion.of(suggestion.getText(), suggestion.getComment());
     }
 
     ReviewOptions fromDto(ReviewOptionsDto options, CommonQueryParameters queryParameters) {

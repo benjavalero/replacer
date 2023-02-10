@@ -11,7 +11,7 @@ import org.springframework.lang.NonNull;
 @Schema(description = "Section of a page to review")
 @Data
 @NoArgsConstructor
-class ReviewSectionDto {
+class ReviewSection {
 
     @Schema(description = "Section ID", requiredMode = REQUIRED, example = "1")
     @NotNull

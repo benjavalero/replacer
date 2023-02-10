@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { UserConfigService } from 'src/app/core/user/user-config.service';
 import { PageCount } from '../../api/models/page-count';
-import { ReplacementsService } from '../../api/services/replacements.service';
+import { ReplacementService } from '../../api/services/replacement.service';
 
 @Component({
   selector: 'app-unreviewed',
@@ -12,7 +12,7 @@ import { ReplacementsService } from '../../api/services/replacements.service';
 export class UnreviewedComponent implements OnInit {
   unreviewed$!: Observable<PageCount[]>;
 
-  constructor(private replacementService: ReplacementsService, private userConfigService: UserConfigService) {}
+  constructor(private replacementService: ReplacementService, private userConfigService: UserConfigService) {}
 
   ngOnInit() {
     this.unreviewed$ = this.replacementService.countNotReviewedGroupedByPage();

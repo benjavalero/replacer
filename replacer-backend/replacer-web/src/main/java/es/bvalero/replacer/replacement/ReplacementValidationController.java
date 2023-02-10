@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "Replacements")
+@Tag(name = "Replacement")
 @Loggable(entered = true)
 @RestController
 @RequestMapping("api/replacement")

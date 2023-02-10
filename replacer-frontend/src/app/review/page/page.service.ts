@@ -5,7 +5,7 @@ import { ReplacementType } from '../../api/models/replacement-type';
 import { ReviewPage } from '../../api/models/review-page';
 import { ReviewedReplacement } from '../../api/models/reviewed-replacement';
 import { SaveReviewRequest } from '../../api/models/save-review-request';
-import { ReplacementsService } from '../../api/services/replacements.service';
+import { ReplacementService } from '../../api/services/replacement.service';
 import { ReviewService } from '../../api/services/review.service';
 import { UserService } from '../../core/user/user.service';
 import { ReviewOptions } from './review-options.model';
@@ -17,7 +17,7 @@ export class PageService {
   constructor(
     private reviewService: ReviewService,
     private userService: UserService,
-    private replacementsService: ReplacementsService
+    private replacementsService: ReplacementService
   ) {}
 
   findRandomPage(options: ReviewOptions): Observable<FindReviewResponse> {

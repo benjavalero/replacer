@@ -2,11 +2,11 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ReplacementCount } from '../api/models/replacement-count';
 import { ReviewerCount } from '../api/models/reviewer-count';
-import { ReplacementsService } from '../api/services/replacements.service';
+import { ReplacementService } from '../api/services/replacement.service';
 
 @Injectable()
 export class StatsService {
-  constructor(private replacementService: ReplacementsService) {}
+  constructor(private replacementService: ReplacementService) {}
 
   findNumReviewed$(): Observable<ReplacementCount> {
     return this.replacementService.countReplacements({

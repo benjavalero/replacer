@@ -23,7 +23,7 @@ public class AdminController {
     @Operation(summary = "Get the public IP of the application used to perform the editions in Wikipedia")
     @ValidateAdminUser
     @GetMapping(value = "/public-ip")
-    public PublicIpDto getPublicIp(@Valid CommonQueryParameters queryParameters) throws ReplacerException {
-        return PublicIpDto.of(publicIpService.getPublicIp());
+    public PublicIp getPublicIp(@Valid CommonQueryParameters queryParameters) throws ReplacerException {
+        return PublicIp.of(publicIpService.getPublicIp());
     }
 }

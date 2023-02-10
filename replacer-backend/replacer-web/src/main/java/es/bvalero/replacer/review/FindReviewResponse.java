@@ -14,11 +14,11 @@ class FindReviewResponse {
 
     @Schema(requiredMode = REQUIRED)
     @NonNull
-    ReviewPageDto page;
+    ReviewPage page;
 
     @Schema(description = "Collection of replacements to review", requiredMode = REQUIRED)
     @NonNull
-    Collection<ReviewReplacementDto> replacements;
+    Collection<ReviewReplacement> replacements;
 
     @Schema(
         description = "Number of pending pages to review of the given type",

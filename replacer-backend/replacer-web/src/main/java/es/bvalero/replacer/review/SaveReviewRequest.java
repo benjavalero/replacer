@@ -20,7 +20,7 @@ class SaveReviewRequest {
     @Schema(description = "Page reviewed", requiredMode = REQUIRED)
     @Valid
     @NotNull
-    private ReviewPageDto page;
+    private ReviewPage page;
 
     @Schema(description = "Reviewed replacements", requiredMode = REQUIRED)
     @Valid

@@ -1,6 +1,6 @@
 export { AccessToken } from './models/access-token';
 export { ReviewPage } from './models/review-page';
-export { ReviewSectionDto } from './models/review-section-dto';
+export { ReviewSection } from './models/review-section';
 export { ReviewedReplacement } from './models/reviewed-replacement';
 export { SaveReviewRequest } from './models/save-review-request';
 export { RequestToken } from './models/request-token';

@@ -62,7 +62,7 @@ public class ReviewSaveController {
             reviewSaveService.markAsReviewed(reviewed, false);
         } else {
             PageKey pageKey = PageKey.of(queryParameters.getWikipediaLanguage(), pageId);
-            ReviewSectionDto section = request.getPage().getSection();
+            ReviewSection section = request.getPage().getSection();
             Integer sectionId = section == null ? null : section.getId();
             WikipediaTimestamp saveTimestamp = WikipediaTimestamp.of(request.getPage().getQueryTimestamp());
             WikipediaPage page = WikipediaPage
