@@ -35,7 +35,7 @@ export class ReplacementListService {
 
   private updateSubtypeCount(kind: number, subtype: string, count: number): void {
     const currentCounts = this.counts$.getValue();
-    if (!currentCounts) {
+    if (currentCounts === null) {
       console.warn('No replacement counts initialized yet');
       return;
     }

@@ -127,12 +127,8 @@ export class FindRandomComponent implements OnInit {
     });
   }
 
-  private getKindLabel(kind: number | null): string | null {
-    if (kind) {
-      return kindLabel[kind];
-    } else {
-      return null;
-    }
+  private getKindLabel(kind: number): string {
+    return kindLabel[kind];
   }
 
   private findPageReview(pageId: number, options: ReviewOptions): void {
