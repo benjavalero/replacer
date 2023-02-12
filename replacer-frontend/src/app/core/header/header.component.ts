@@ -17,7 +17,7 @@ import { ChangeLanguageComponent } from './change-language.component';
 })
 export class HeaderComponent implements OnInit {
   isNavCollapsed = true;
-  user$!: Observable<User>;
+  user$!: Observable<User | null>;
   lang$!: Observable<Language>;
 
   constructor(

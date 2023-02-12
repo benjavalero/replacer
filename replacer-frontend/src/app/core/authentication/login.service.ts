@@ -38,7 +38,7 @@ export class LoginService {
         localStorage.removeItem(this.requestTokenKey);
 
         // Save user and access token to further use in Wikipedia requests
-        const wikipediaUser = new User(response);
+        const wikipediaUser = response as User;
         this.userService.setUser(wikipediaUser);
         return wikipediaUser;
       })

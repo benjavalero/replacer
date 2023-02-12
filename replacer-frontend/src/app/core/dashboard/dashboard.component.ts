@@ -10,7 +10,7 @@ import { UserService } from '../user/user.service';
   styleUrls: []
 })
 export class DashboardComponent implements OnInit {
-  user$!: Observable<User>;
+  user$!: Observable<User | null>;
 
   constructor(private userService: UserService, private titleService: Title) {}
 

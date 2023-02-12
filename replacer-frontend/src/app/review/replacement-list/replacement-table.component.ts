@@ -27,7 +27,7 @@ export class ReplacementTableComponent implements OnInit, OnChanges {
 
   filteredItems: SubtypeCount[];
 
-  user$!: Observable<User>;
+  user$!: Observable<User | null>;
   label!: string;
 
   // Filters
