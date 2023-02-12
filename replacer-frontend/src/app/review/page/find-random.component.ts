@@ -70,7 +70,7 @@ export class FindRandomComponent implements OnInit {
 
     if (idParam !== null) {
       this.findPageReview(+idParam, options);
-    } else if (options.suggestion !== null) {
+    } else if (options.suggestion !== undefined) {
       this.validateCustomReplacement(options);
     } else {
       this.findRandomPage(options);
