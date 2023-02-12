@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS replacement (
 	subtype VARCHAR(100) NOT NULL,
 	start INTEGER NOT NULL,
 	context VARCHAR(255) NOT NULL,
-	reviewer VARCHAR(100),
+	reviewer VARCHAR(40),
 	CONSTRAINT constraint_r PRIMARY KEY (id)
 );
 
@@ -61,7 +61,7 @@ CREATE TABLE IF NOT EXISTS custom (
 	replacement VARCHAR(100) NOT NULL,
 	cs TINYINT NOT NULL,
 	start INTEGER NOT NULL,
-	reviewer VARCHAR(100) NOT NULL,
+	reviewer VARCHAR(40) NOT NULL,
 	CONSTRAINT constraint_c PRIMARY KEY (id)
 );
 

@@ -37,7 +37,7 @@ CREATE TABLE replacement (
     subtype VARCHAR(100) COLLATE utf8mb4_bin NOT NULL,
     start MEDIUMINT UNSIGNED NOT NULL,
     context VARCHAR(255) COLLATE utf8mb4_bin NOT NULL,
-    reviewer VARCHAR(100), -- In order to make the index work
+    reviewer VARCHAR(40),
     PRIMARY KEY (id)
 );
 
@@ -67,7 +67,7 @@ CREATE TABLE custom (
     replacement VARCHAR(100) COLLATE utf8mb4_bin NOT NULL,
     cs TINYINT(1) NOT NULL,
     start MEDIUMINT UNSIGNED NOT NULL, -- So we can move items to the replacements table
-    reviewer VARCHAR(100) NOT NULL, -- In order to make the index work
+    reviewer VARCHAR(40) NOT NULL,
     PRIMARY KEY (id)
 );
 

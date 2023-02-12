@@ -20,7 +20,7 @@ public class CommonQueryParameters {
     private String lang;
 
     @Parameter(description = "Name of the user in Wikipedia", required = true, example = "Benjavalero")
-    @Size(max = 100)
+    @Size(max = 40)
     @NotNull
     private String user;
 
