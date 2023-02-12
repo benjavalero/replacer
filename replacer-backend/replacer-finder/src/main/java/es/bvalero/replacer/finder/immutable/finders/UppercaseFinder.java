@@ -33,16 +33,18 @@ import org.springframework.stereotype.Component;
 
 /**
  * Find words in uppercase which are correct according to the punctuation,
- * e.g. `Enero` in `{{Cite|date=Enero de 2020}}`
- * <br />
+ * e.g. <code>Enero</code> in <code>{{Cite|date=Enero de 2020}}</code>
+ * <p />
  * The considered punctuations are:
- * - After dot
- * - Parameter values
- * - Unordered and ordered list items
- * - After an HTML tag like a reference or a table cell
- * - Wiki-table cells
- * - Starting a paragraph
- * - Starting a header
+ * <ul>
+ *   <li>After dot</li>
+ *   <li>Parameter values</li>
+ *   <li>Unordered and ordered list items</li>
+ *   <li>After an HTML tag like a reference or a table cell</li>
+ *   <li>Wiki-table cells</li>
+ *   <li>Starting a paragraph</li>
+ *   <li>Starting a header</li>
+ * </ul>
  */
 @Component
 public class UppercaseFinder implements ImmutableFinder, PropertyChangeListener {
@@ -50,8 +52,6 @@ public class UppercaseFinder implements ImmutableFinder, PropertyChangeListener 
     private static final String START_LINK = "[[";
 
     private static final String CAPTION_SEPARATOR = "|+";
-
-    private static final String TIMELINE_TEXT = "text:";
 
     private static final String PARAGRAPH_START = "\n\n";
 
@@ -165,7 +165,6 @@ public class UppercaseFinder implements ImmutableFinder, PropertyChangeListener 
             isPrecededByPunctuation(leftText) ||
             isPrecededByPipe(leftText) ||
             isPrecededByCaptionSeparator(leftText) ||
-            isPrecededByTimeLineText(leftText) ||
             isPrecededByParagraphStart(leftTextNotTrimmed)
         );
     }
@@ -187,10 +186,6 @@ public class UppercaseFinder implements ImmutableFinder, PropertyChangeListener 
 
     private boolean isPrecededByCaptionSeparator(String leftText) {
         return leftText.endsWith(CAPTION_SEPARATOR);
-    }
-
-    private boolean isPrecededByTimeLineText(String leftText) {
-        return leftText.endsWith(TIMELINE_TEXT);
     }
 
     private boolean isPrecededByParagraphStart(String leftText) {

@@ -1,5 +1,9 @@
 # Versions
 
+## 2.23.0 (??)
+- Internal refactoring into submodules
+- Ignore tag `timeline`
+
 ## 2.22.2 (13 Dic 2022)
 - Fix suggestion description for English months
 - Detect simple centuries (with no the century word) right after (or close to) the main replacement

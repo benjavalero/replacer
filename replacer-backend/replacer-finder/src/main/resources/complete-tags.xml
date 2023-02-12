@@ -16,6 +16,7 @@
         <value>cite</value> <!-- 900 -->
         <value>source</value>   <!-- 700 -->
         <value>code</value> <!-- 500 -->
+        <value>timeline</value> <!-- 450 -->
         <value>poem</value> <!-- 300 -->
         <value>pre</value>  <!-- 130 -->
         <value>tt</value>   <!-- 120 -->
@@ -25,7 +26,6 @@
 
     <!--
 1707 <sup
- 455 <timeline
  315 <onlyinclude
  298 <noinclude
  250 <references

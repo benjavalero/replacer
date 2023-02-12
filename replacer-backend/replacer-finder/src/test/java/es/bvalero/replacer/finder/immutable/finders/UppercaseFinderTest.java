@@ -61,8 +61,6 @@ class UppercaseFinderTest {
             "{|\n" + "|-\n" + "| align=\"center\" | Febrero\n" + "|}", // Table cell with style
             "{|\n" + "|-\n" + "| [[Febrero]] || Texto\n" + "|}", // Table cell with link
             "<table><tr><td>Febrero</td></tr></table>", // HTML cell
-            "<timeline>\n  text:Febrero\n</timeline>", // Timeline text
-            "<timeline>\n  text: Febrero\n</timeline>", // Timeline text
             "=== Febrero ===", // Header
             "=== [[Febrero]] ===", // Header with link
             "</ref> Febrero y tal", // After reference
