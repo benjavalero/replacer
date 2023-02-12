@@ -19,7 +19,7 @@ import org.springframework.lang.NonNull;
 @NoArgsConstructor
 public class ReplacementTypeDto {
 
-    @Schema(type = "integer")
+    @Schema(type = "integer", requiredMode = Schema.RequiredMode.REQUIRED)
     @Parameter(description = "Replacement kind code", required = true, example = "2")
     private byte kind;
 
