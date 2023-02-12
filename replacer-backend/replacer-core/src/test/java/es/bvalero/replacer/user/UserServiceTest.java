@@ -35,14 +35,14 @@ class UserServiceTest {
         WikipediaLanguage lang = WikipediaLanguage.getDefault();
         AccessToken accessToken = AccessToken.empty();
 
-        WikipediaUser user = WikipediaUser.of("N", Collections.emptyList());
+        WikipediaUser user = WikipediaUser.of(UserId.of(lang, "N"), Collections.emptyList());
         when(wikipediaUserRepository.findAuthenticatedUser(lang, accessToken)).thenReturn(Optional.of(user));
 
         Optional<User> result = userService.findAuthenticatedUser(lang, accessToken);
 
         assertTrue(result.isPresent());
         result.ifPresent(u -> {
-            assertEquals(user.getName(), u.getName());
+            assertEquals(user.getId(), u.getId());
             assertFalse(u.hasRights());
             assertFalse(u.isBot());
             assertFalse(u.isAdmin());
@@ -53,15 +53,16 @@ class UserServiceTest {
     void testFindUserByName() {
         WikipediaLanguage lang = WikipediaLanguage.getDefault();
         String name = "N";
+        UserId userId = UserId.of(lang, name);
 
-        WikipediaUser user = WikipediaUser.of(name, Collections.emptyList());
-        when(wikipediaUserRepository.findByUsername(lang, name)).thenReturn(Optional.of(user));
+        WikipediaUser user = WikipediaUser.of(userId, Collections.emptyList());
+        when(wikipediaUserRepository.findById(userId)).thenReturn(Optional.of(user));
 
-        Optional<User> result = userService.findUserByName(lang, name);
+        Optional<User> result = userService.findUserById(userId);
 
         assertTrue(result.isPresent());
         result.ifPresent(u -> {
-            assertEquals(user.getName(), u.getName());
+            assertEquals(user.getId(), u.getId());
             assertFalse(u.hasRights());
             assertFalse(u.isBot());
             assertFalse(u.isAdmin());
@@ -72,15 +73,16 @@ class UserServiceTest {
     void testFindUserWithRights() {
         WikipediaLanguage lang = WikipediaLanguage.getDefault();
         String name = "N";
+        UserId userId = UserId.of(lang, name);
 
-        WikipediaUser user = WikipediaUser.of(name, List.of(WikipediaUserGroup.AUTO_CONFIRMED));
-        when(wikipediaUserRepository.findByUsername(lang, name)).thenReturn(Optional.of(user));
+        WikipediaUser user = WikipediaUser.of(userId, List.of(WikipediaUserGroup.AUTO_CONFIRMED));
+        when(wikipediaUserRepository.findById(userId)).thenReturn(Optional.of(user));
 
-        Optional<User> result = userService.findUserByName(lang, name);
+        Optional<User> result = userService.findUserById(userId);
 
         assertTrue(result.isPresent());
         result.ifPresent(u -> {
-            assertEquals(user.getName(), u.getName());
+            assertEquals(user.getId(), u.getId());
             assertTrue(u.hasRights());
             assertFalse(u.isBot());
             assertFalse(u.isAdmin());
@@ -91,15 +93,16 @@ class UserServiceTest {
     void testFindBotUser() {
         WikipediaLanguage lang = WikipediaLanguage.getDefault();
         String name = "N";
+        UserId userId = UserId.of(lang, name);
 
-        WikipediaUser user = WikipediaUser.of(name, List.of(WikipediaUserGroup.AUTO_CONFIRMED, WikipediaUserGroup.BOT));
-        when(wikipediaUserRepository.findByUsername(lang, name)).thenReturn(Optional.of(user));
+        WikipediaUser user = WikipediaUser.of(userId, List.of(WikipediaUserGroup.AUTO_CONFIRMED, WikipediaUserGroup.BOT));
+        when(wikipediaUserRepository.findById(userId)).thenReturn(Optional.of(user));
 
-        Optional<User> result = userService.findUserByName(lang, name);
+        Optional<User> result = userService.findUserById(userId);
 
         assertTrue(result.isPresent());
         result.ifPresent(u -> {
-            assertEquals(user.getName(), u.getName());
+            assertEquals(user.getId(), u.getId());
             assertTrue(u.hasRights());
             assertTrue(u.isBot());
             assertFalse(u.isAdmin());
@@ -110,16 +113,17 @@ class UserServiceTest {
     void testFindAdminUser() {
         WikipediaLanguage lang = WikipediaLanguage.getDefault();
         String name = "ADMIN";
+        UserId userId = UserId.of(lang, name);
 
         userService.setAdminUser(name);
-        WikipediaUser user = WikipediaUser.of(name, Collections.emptyList());
-        when(wikipediaUserRepository.findByUsername(lang, name)).thenReturn(Optional.of(user));
+        WikipediaUser user = WikipediaUser.of(userId, Collections.emptyList());
+        when(wikipediaUserRepository.findById(userId)).thenReturn(Optional.of(user));
 
-        Optional<User> result = userService.findUserByName(lang, name);
+        Optional<User> result = userService.findUserById(userId);
 
         assertTrue(result.isPresent());
         result.ifPresent(u -> {
-            assertEquals(user.getName(), u.getName());
+            assertEquals(user.getId(), u.getId());
             assertFalse(u.hasRights());
             assertFalse(u.isBot());
             assertTrue(u.isAdmin());

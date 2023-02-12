@@ -52,7 +52,7 @@ class ReviewCustomFinder extends ReviewFinder {
         // Make it out of the loop as we are not taking into account the offset for this
         List<Integer> reviewedIds = new ArrayList<>();
         if (!pageIds.isEmpty()) {
-            reviewedIds.addAll(customReplacementService.findPagesReviewed(options.getLang(), subtype, caseSensitive));
+            reviewedIds.addAll(customReplacementService.findPagesReviewed(options.getUserId().getLang(), subtype, caseSensitive));
         }
 
         while (totalToReview >= 0) {
@@ -79,7 +79,7 @@ class ReviewCustomFinder extends ReviewFinder {
                 int nextOffset = offset + getCacheSize();
                 Collection<PageKey> pageKeys = pageIds
                     .stream()
-                    .map(pageId -> PageKey.of(options.getLang(), pageId))
+                    .map(pageId -> PageKey.of(options.getUserId().getLang(), pageId))
                     .collect(Collectors.toUnmodifiableSet());
                 return PageSearchResult.of(totalToReview, pageKeys, nextOffset);
             }
@@ -94,7 +94,7 @@ class ReviewCustomFinder extends ReviewFinder {
         assert cs != null;
         WikipediaSearchRequest searchRequest = WikipediaSearchRequest
             .builder()
-            .lang(options.getLang())
+            .lang(options.getUserId().getLang())
             .namespaces(
                 this.indexableNamespaces.stream()
                     .map(WikipediaNamespace::valueOf)

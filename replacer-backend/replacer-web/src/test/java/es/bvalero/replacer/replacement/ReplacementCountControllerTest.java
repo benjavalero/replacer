@@ -11,6 +11,7 @@ import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.exception.ForbiddenException;
 import es.bvalero.replacer.page.IndexedPage;
 import es.bvalero.replacer.page.PageKey;
+import es.bvalero.replacer.user.UserId;
 import es.bvalero.replacer.user.UserRightsService;
 import es.bvalero.replacer.user.ValidateUserAspect;
 import java.time.LocalDate;
@@ -105,21 +106,22 @@ class ReplacementCountControllerTest {
             .andExpect(jsonPath("$[0].title", is(page.getTitle())))
             .andExpect(jsonPath("$[0].count", is(100)));
 
-        verify(userRightsService).validateAdminUser(WikipediaLanguage.SPANISH, "A");
+        verify(userRightsService).validateAdminUser(UserId.of(WikipediaLanguage.SPANISH, "A"));
         verify(replacementCountService).countNotReviewedGroupedByPage(WikipediaLanguage.SPANISH);
     }
 
     @Test
     void testCountPagesWithMoreReplacementsToReviewNotAdmin() throws Exception {
+        UserId userId = UserId.of(WikipediaLanguage.SPANISH, "A");
         doThrow(ForbiddenException.class)
             .when(userRightsService)
-            .validateAdminUser(any(WikipediaLanguage.class), anyString());
+            .validateAdminUser(userId);
 
         mvc
             .perform(get("/api/replacement/page/count?lang=es&user=A").contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isForbidden());
 
-        verify(userRightsService).validateAdminUser(WikipediaLanguage.SPANISH, "A");
+        verify(userRightsService).validateAdminUser(userId);
         verify(replacementCountService, never()).countNotReviewedGroupedByPage(WikipediaLanguage.SPANISH);
     }
 }

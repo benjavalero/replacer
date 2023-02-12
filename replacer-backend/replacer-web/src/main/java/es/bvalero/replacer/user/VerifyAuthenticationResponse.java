@@ -41,7 +41,7 @@ class VerifyAuthenticationResponse {
     static VerifyAuthenticationResponse of(User user, AccessToken accessToken) {
         return VerifyAuthenticationResponse
             .builder()
-            .name(user.getName())
+            .name(user.getId().getUsername())
             .hasRights(user.hasRights())
             .bot(user.isBot())
             .admin(user.isAdmin())

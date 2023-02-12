@@ -6,7 +6,8 @@ import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.user.AccessToken;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
-import lombok.Value;
+
+import es.bvalero.replacer.user.UserId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Primary;
@@ -25,7 +26,7 @@ class WikipediaUserCacheRepository implements WikipediaUserRepository {
 
     // Cache the users which try to access features needing special rights
     // This map can grow. We use Caffeine cache to clean periodically the old or obsolete users.
-    private final Cache<WikipediaUserKey, WikipediaUser> cachedUsers = Caffeine
+    private final Cache<UserId, WikipediaUser> cachedUsers = Caffeine
         .newBuilder()
         .expireAfterWrite(1, TimeUnit.DAYS)
         .build();
@@ -36,20 +37,13 @@ class WikipediaUserCacheRepository implements WikipediaUserRepository {
     }
 
     @Override
-    public Optional<WikipediaUser> findByUsername(WikipediaLanguage lang, String username) {
-        return Optional.ofNullable(this.cachedUsers.get(WikipediaUserKey.of(lang, username), this::getUser));
+    public Optional<WikipediaUser> findById(UserId userId) {
+        return Optional.ofNullable(this.cachedUsers.get(userId, this::getUser));
     }
 
     @Nullable
-    private WikipediaUser getUser(WikipediaUserKey userKey) {
+    private WikipediaUser getUser(UserId userId) {
         // In case of empty result return a fake user with no groups
-        return wikipediaUserRepository.findByUsername(userKey.getLang(), userKey.getUsername()).orElse(null);
-    }
-
-    @Value(staticConstructor = "of")
-    private static class WikipediaUserKey {
-
-        WikipediaLanguage lang;
-        String username;
+        return wikipediaUserRepository.findById(userId).orElse(null);
     }
 }

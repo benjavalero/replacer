@@ -72,7 +72,7 @@ class AuthenticationControllerTest {
         String oAuthVerifier = "V";
 
         WikipediaLanguage lang = WikipediaLanguage.SPANISH;
-        User user = User.builder().name("C").hasRights(true).bot(false).admin(true).build();
+        User user = User.builder().id(UserId.of(lang, "C")).hasRights(true).bot(false).admin(true).build();
         when(authenticationService.getAccessToken(requestToken, oAuthVerifier)).thenReturn(accessToken);
         when(userService.findAuthenticatedUser(lang, accessToken)).thenReturn(Optional.of(user));
 
@@ -87,7 +87,7 @@ class AuthenticationControllerTest {
                     .content(objectMapper.writeValueAsString(verifyAuthenticationRequest))
             )
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.name", is(user.getName())))
+            .andExpect(jsonPath("$.name", is(user.getId().getUsername())))
             .andExpect(jsonPath("$.hasRights", equalTo(user.hasRights())))
             .andExpect(jsonPath("$.bot", equalTo(user.isBot())))
             .andExpect(jsonPath("$.admin", equalTo(user.isAdmin())))

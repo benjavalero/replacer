@@ -8,6 +8,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.exception.ForbiddenException;
+import es.bvalero.replacer.user.UserId;
 import es.bvalero.replacer.user.UserRightsService;
 import es.bvalero.replacer.user.ValidateUserAspect;
 import org.junit.jupiter.api.Test;
@@ -37,6 +38,7 @@ class AdminControllerTest {
 
     @Test
     void testGetPublic() throws Exception {
+        UserId userId = UserId.of(WikipediaLanguage.SPANISH, "x");
         String ip = "ip";
         when(publicIpService.getPublicIp()).thenReturn(ip);
 
@@ -45,21 +47,22 @@ class AdminControllerTest {
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.ip", is(ip)));
 
-        verify(userRightsService).validateAdminUser(WikipediaLanguage.SPANISH, "x");
+        verify(userRightsService).validateAdminUser(userId);
         verify(publicIpService).getPublicIp();
     }
 
     @Test
     void testGetPublicIpNotAdmin() throws Exception {
+        UserId userId = UserId.of(WikipediaLanguage.SPANISH, "x");
         doThrow(ForbiddenException.class)
             .when(userRightsService)
-            .validateAdminUser(any(WikipediaLanguage.class), anyString());
+            .validateAdminUser(userId);
 
         mvc
             .perform(get("/api/admin/public-ip?user=x&lang=es").contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isForbidden());
 
-        verify(userRightsService).validateAdminUser(WikipediaLanguage.SPANISH, "x");
+        verify(userRightsService).validateAdminUser(userId);
         verify(publicIpService, never()).getPublicIp();
     }
 }

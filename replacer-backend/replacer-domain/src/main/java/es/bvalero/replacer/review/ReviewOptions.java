@@ -6,6 +6,8 @@ import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
+import es.bvalero.replacer.user.UserId;
 import lombok.Builder;
 import lombok.Value;
 import org.apache.commons.lang3.StringUtils;
@@ -18,10 +20,7 @@ import org.springframework.lang.Nullable;
 class ReviewOptions {
 
     @NonNull
-    WikipediaLanguage lang;
-
-    @NonNull
-    String user;
+    UserId userId;
 
     @NonNull
     ReplacementType type;
@@ -36,15 +35,15 @@ class ReviewOptions {
     public static ReviewOptions ofNoType() {
         return ReviewOptions
             .builder()
-            .lang(WikipediaLanguage.getDefault())
-            .user("A")
+            .userId(UserId.of(WikipediaLanguage.getDefault(),
+            "A"))
             .type(ReplacementType.ofEmpty())
             .build();
     }
 
     @TestOnly
     public static ReviewOptions ofType(ReplacementType type) {
-        return ReviewOptions.builder().lang(WikipediaLanguage.getDefault()).user("A").type(type).build();
+        return ReviewOptions.builder().userId(UserId.of(WikipediaLanguage.getDefault(), "A")).type(type).build();
     }
 
     @TestOnly
@@ -56,8 +55,7 @@ class ReviewOptions {
     ) {
         return ReviewOptions
             .builder()
-            .lang(lang)
-            .user("A")
+            .userId(UserId.of(lang, "A"))
             .type(ReplacementType.of(ReplacementKind.CUSTOM, replacement))
             .suggestion(suggestion)
             .cs(caseSensitive)
@@ -77,12 +75,12 @@ class ReviewOptions {
 
     @Override
     public String toString() {
-        return String.format("%s - %s - %s", this.lang, this.user, toStringSearchType());
+        return String.format("%s - %s - %s", this.userId.getLang(), this.userId.getUsername(), toStringSearchType());
     }
 
     public String toStringSearchType() {
         List<String> list = new ArrayList<>();
-        list.add(this.lang.getCode());
+        list.add(this.userId.getLang().getCode());
         switch (getOptionsType()) {
             case NO_TYPE:
                 list.add("NO TYPE");
@@ -102,14 +100,12 @@ class ReviewOptions {
 
     // Used by the builder
     ReviewOptions(
-        WikipediaLanguage lang,
-        String user,
+        UserId userId,
         ReplacementType type,
         @Nullable String suggestion,
         @Nullable Boolean cs
     ) {
-        this.lang = lang;
-        this.user = user;
+        this.userId = userId;
         this.type = type;
         this.suggestion = suggestion;
         this.cs = cs;

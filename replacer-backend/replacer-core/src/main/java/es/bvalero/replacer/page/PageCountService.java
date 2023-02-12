@@ -3,6 +3,7 @@ package es.bvalero.replacer.page;
 import es.bvalero.replacer.common.domain.ReplacementType;
 import es.bvalero.replacer.common.domain.ResultCount;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
+import es.bvalero.replacer.user.UserId;
 import es.bvalero.replacer.user.UserRightsService;
 import java.util.Collection;
 import java.util.stream.Collectors;
@@ -18,13 +19,13 @@ public class PageCountService {
     @Autowired
     private PageCountRepository pageCountRepository;
 
-    public Collection<ResultCount<ReplacementType>> countPagesNotReviewedByType(WikipediaLanguage lang, String user) {
+    public Collection<ResultCount<ReplacementType>> countPagesNotReviewedByType(UserId userId) {
         // Filter the replacement types the user has no rights to see
         return pageCountRepository
-            .countPagesNotReviewedByType(lang)
+            .countPagesNotReviewedByType(userId.getLang())
             .stream()
             .map(rc -> ResultCount.of(rc.getKey(), rc.getCount()))
-            .filter(rc -> !userRightsService.isTypeForbidden(rc.getKey(), lang, user))
+            .filter(rc -> !userRightsService.isTypeForbidden(rc.getKey(), userId))
             .collect(Collectors.toUnmodifiableList());
     }
 

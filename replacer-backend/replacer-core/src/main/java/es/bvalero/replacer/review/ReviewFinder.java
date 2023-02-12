@@ -232,7 +232,7 @@ abstract class ReviewFinder {
         ReviewOptions options
     ) {
         List<Replacement> toReview = new LinkedList<>(replacements);
-        toReview.removeIf(r -> userRightsService.isTypeForbidden(r.getType(), options.getLang(), options.getUser()));
+        toReview.removeIf(r -> userRightsService.isTypeForbidden(r.getType(), options.getUserId()));
         return toReview;
     }
 

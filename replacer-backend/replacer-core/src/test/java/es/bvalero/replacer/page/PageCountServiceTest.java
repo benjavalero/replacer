@@ -7,6 +7,7 @@ import es.bvalero.replacer.common.domain.ReplacementKind;
 import es.bvalero.replacer.common.domain.ReplacementType;
 import es.bvalero.replacer.common.domain.ResultCount;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
+import es.bvalero.replacer.user.UserId;
 import es.bvalero.replacer.user.UserRightsService;
 import java.util.Collection;
 import java.util.List;
@@ -43,20 +44,20 @@ class PageCountServiceTest {
         ResultCount<ReplacementType> count2 = ResultCount.of(typeForBots, 200);
         Collection<ResultCount<ReplacementType>> counts = List.of(count, count2);
 
-        String user = "user";
-        String bot = "bot";
+        UserId user = UserId.of(lang, "user");
+        UserId bot = UserId.of(lang, "bot");
 
         when(pageCountRepository.countPagesNotReviewedByType(lang)).thenReturn(counts);
-        when(userRightsService.isTypeForbidden(type, lang, user)).thenReturn(false);
-        when(userRightsService.isTypeForbidden(typeForBots, lang, user)).thenReturn(true);
-        when(userRightsService.isTypeForbidden(type, lang, bot)).thenReturn(false);
-        when(userRightsService.isTypeForbidden(typeForBots, lang, bot)).thenReturn(false);
+        when(userRightsService.isTypeForbidden(type, user)).thenReturn(false);
+        when(userRightsService.isTypeForbidden(typeForBots, user)).thenReturn(true);
+        when(userRightsService.isTypeForbidden(type, bot)).thenReturn(false);
+        when(userRightsService.isTypeForbidden(typeForBots, bot)).thenReturn(false);
 
-        assertEquals(List.of(count), pageCountService.countPagesNotReviewedByType(lang, user));
-        assertEquals(counts, pageCountService.countPagesNotReviewedByType(lang, bot));
+        assertEquals(List.of(count), pageCountService.countPagesNotReviewedByType(user));
+        assertEquals(counts, pageCountService.countPagesNotReviewedByType(bot));
 
         verify(userRightsService, times(4))
-            .isTypeForbidden(any(ReplacementType.class), any(WikipediaLanguage.class), anyString());
+            .isTypeForbidden(any(ReplacementType.class), any(UserId.class));
         verify(pageCountRepository, times(2)).countPagesNotReviewedByType(lang);
     }
 }

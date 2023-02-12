@@ -1,6 +1,8 @@
 package es.bvalero.replacer.wikipedia;
 
 import java.util.Collection;
+
+import es.bvalero.replacer.user.UserId;
 import lombok.Value;
 import org.springframework.lang.NonNull;
 
@@ -13,7 +15,7 @@ import org.springframework.lang.NonNull;
 public class WikipediaUser {
 
     @NonNull
-    String name;
+    UserId id;
 
     @NonNull
     Collection<WikipediaUserGroup> groups;

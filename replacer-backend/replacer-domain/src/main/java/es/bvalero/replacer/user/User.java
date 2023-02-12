@@ -11,7 +11,7 @@ import org.springframework.lang.NonNull;
 class User {
 
     @NonNull
-    String name;
+    UserId id;
 
     @Builder.Default
     @Accessors(fluent = true)

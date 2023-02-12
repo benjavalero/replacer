@@ -30,68 +30,75 @@ class UserRightsServiceTest {
     void testIsAdmin() {
         WikipediaLanguage lang = WikipediaLanguage.getDefault();
         String name = "X";
-        User user = User.builder().name(name).hasRights(true).admin(true).build();
-        when(userService.findUserByName(lang, name)).thenReturn(Optional.of(user));
+        UserId userId = UserId.of(lang, name);
+        User user = User.builder().id(userId).hasRights(true).admin(true).build();
+        when(userService.findUserById(userId)).thenReturn(Optional.of(user));
 
-        assertTrue(userRightsService.isAdmin(lang, name));
+        assertTrue(userRightsService.isAdmin(userId));
     }
 
     @Test
     void testIsNotAdmin() {
         WikipediaLanguage lang = WikipediaLanguage.getDefault();
         String name = "X";
-        User user = User.builder().name(name).hasRights(true).build();
-        when(userService.findUserByName(lang, name)).thenReturn(Optional.of(user));
+        UserId userId = UserId.of(lang, name);
+        User user = User.builder().id(userId).hasRights(true).build();
+        when(userService.findUserById(userId)).thenReturn(Optional.of(user));
 
-        assertFalse(userRightsService.isAdmin(lang, name));
+        assertFalse(userRightsService.isAdmin(userId));
     }
 
     @Test
     void testValidateNotAdmin() {
         WikipediaLanguage lang = WikipediaLanguage.getDefault();
         String name = "X";
-        User user = User.builder().name(name).hasRights(true).build();
-        when(userService.findUserByName(lang, name)).thenReturn(Optional.of(user));
+        UserId userId = UserId.of(lang, name);
+        User user = User.builder().id(userId).hasRights(true).build();
+        when(userService.findUserById(userId)).thenReturn(Optional.of(user));
 
-        assertThrows(ForbiddenException.class, () -> userRightsService.validateAdminUser(lang, name));
+        assertThrows(ForbiddenException.class, () -> userRightsService.validateAdminUser(userId));
     }
 
     @Test
     void testIsBot() {
         WikipediaLanguage lang = WikipediaLanguage.getDefault();
         String name = "X";
-        User user = User.builder().name(name).hasRights(true).bot(true).build();
-        when(userService.findUserByName(lang, name)).thenReturn(Optional.of(user));
+        UserId userId = UserId.of(lang, name);
+        User user = User.builder().id(userId).hasRights(true).bot(true).build();
+        when(userService.findUserById(userId)).thenReturn(Optional.of(user));
 
-        assertTrue(userRightsService.isBot(lang, name));
+        assertTrue(userRightsService.isBot(userId));
     }
 
     @Test
     void testIsNotBot() {
         WikipediaLanguage lang = WikipediaLanguage.getDefault();
         String name = "X";
-        User user = User.builder().name(name).hasRights(true).bot(false).build();
-        when(userService.findUserByName(lang, name)).thenReturn(Optional.of(user));
+        UserId userId = UserId.of(lang, name);
+        User user = User.builder().id(userId).hasRights(true).bot(false).build();
+        when(userService.findUserById(userId)).thenReturn(Optional.of(user));
 
-        assertFalse(userRightsService.isBot(lang, name));
+        assertFalse(userRightsService.isBot(userId));
     }
 
     @Test
     void testIsNotBotWithException() {
         WikipediaLanguage lang = WikipediaLanguage.getDefault();
         String name = "X";
-        when(userService.findUserByName(lang, name)).thenReturn(Optional.empty());
+        UserId userId = UserId.of(lang, name);
+        when(userService.findUserById(userId)).thenReturn(Optional.empty());
 
-        assertFalse(userRightsService.isBot(lang, name));
+        assertFalse(userRightsService.isBot(userId));
     }
 
     @Test
     void testValidateNotBot() {
         WikipediaLanguage lang = WikipediaLanguage.getDefault();
         String name = "X";
-        User user = User.builder().name(name).hasRights(true).bot(false).build();
-        when(userService.findUserByName(lang, name)).thenReturn(Optional.of(user));
+        UserId userId = UserId.of(lang, name);
+        User user = User.builder().id(userId).hasRights(true).bot(false).build();
+        when(userService.findUserById(userId)).thenReturn(Optional.of(user));
 
-        assertThrows(ForbiddenException.class, () -> userRightsService.validateBotUser(lang, name));
+        assertThrows(ForbiddenException.class, () -> userRightsService.validateBotUser(userId));
     }
 }

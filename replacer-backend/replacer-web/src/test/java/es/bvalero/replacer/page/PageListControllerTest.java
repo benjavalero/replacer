@@ -10,6 +10,7 @@ import es.bvalero.replacer.common.domain.ReplacementType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.exception.ForbiddenException;
 import es.bvalero.replacer.replacement.ReplacementService;
+import es.bvalero.replacer.user.UserId;
 import es.bvalero.replacer.user.UserRightsService;
 import es.bvalero.replacer.user.ValidateUserAspect;
 import org.junit.jupiter.api.Test;
@@ -42,32 +43,35 @@ class PageListControllerTest {
 
     @Test
     void testFindPagesToReviewByType() throws Exception {
+        UserId userId = UserId.of(WikipediaLanguage.SPANISH, "A");
         mvc
             .perform(get("/api/page/type?lang=es&user=A&kind=2&subtype=Africa").contentType(MediaType.TEXT_PLAIN_VALUE))
             .andExpect(status().isOk());
 
-        verify(userRightsService).validateBotUser(WikipediaLanguage.SPANISH, "A");
+        verify(userRightsService).validateBotUser(userId);
         verify(pageFindByTypeService)
             .findPagesToReviewByType(WikipediaLanguage.SPANISH, ReplacementType.of(ReplacementKind.SIMPLE, "Africa"));
     }
 
     @Test
     void testFindPagesToReviewByTypeNotBot() throws Exception {
+        UserId userId = UserId.of(WikipediaLanguage.SPANISH, "A");
         doThrow(ForbiddenException.class)
             .when(userRightsService)
-            .validateBotUser(any(WikipediaLanguage.class), anyString());
+            .validateBotUser(userId);
 
         mvc
             .perform(get("/api/page/type?lang=es&user=A&kind=2&subtype=Africa").contentType(MediaType.TEXT_PLAIN_VALUE))
             .andExpect(status().isForbidden());
 
-        verify(userRightsService).validateBotUser(WikipediaLanguage.SPANISH, "A");
+        verify(userRightsService).validateBotUser(userId);
         verify(pageFindByTypeService, never())
             .findPagesToReviewByType(WikipediaLanguage.SPANISH, ReplacementType.of(ReplacementKind.SIMPLE, "Africa"));
     }
 
     @Test
     void testReviewPagesByType() throws Exception {
+        UserId userId = UserId.of(WikipediaLanguage.SPANISH, "A");
         mvc
             .perform(
                 post("/api/page/type/review?kind=2&subtype=Africa&lang=es&user=A")
@@ -75,16 +79,17 @@ class PageListControllerTest {
             )
             .andExpect(status().isNoContent());
 
-        verify(userRightsService).validateBotUser(WikipediaLanguage.SPANISH, "A");
+        verify(userRightsService).validateBotUser(userId);
         verify(replacementService)
             .reviewReplacementsByType(WikipediaLanguage.SPANISH, ReplacementType.of(ReplacementKind.SIMPLE, "Africa"));
     }
 
     @Test
     void testReviewPagesByTypeNotBot() throws Exception {
+        UserId userId = UserId.of(WikipediaLanguage.SPANISH, "A");
         doThrow(ForbiddenException.class)
             .when(userRightsService)
-            .validateBotUser(any(WikipediaLanguage.class), anyString());
+            .validateBotUser(userId);
 
         mvc
             .perform(
@@ -93,7 +98,7 @@ class PageListControllerTest {
             )
             .andExpect(status().isForbidden());
 
-        verify(userRightsService).validateBotUser(WikipediaLanguage.SPANISH, "A");
+        verify(userRightsService).validateBotUser(userId);
         verify(replacementService, never())
             .reviewReplacementsByType(WikipediaLanguage.SPANISH, ReplacementType.of(ReplacementKind.SIMPLE, "Africa"));
     }

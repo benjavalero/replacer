@@ -22,8 +22,8 @@ class ReviewNoTypeFinder extends ReviewFinder {
     PageSearchResult findPageIdsToReview(ReviewOptions options) {
         // Find a random page without filtering by type takes a lot
         // Instead find a random replacement and then the following pages
-        int totalResults = pageCountService.countPagesToReviewByNoType(options.getLang());
-        Collection<PageKey> pageKeys = pageService.findPagesToReviewByNoType(options.getLang(), getCacheSize());
+        int totalResults = pageCountService.countPagesToReviewByNoType(options.getUserId().getLang());
+        Collection<PageKey> pageKeys = pageService.findPagesToReviewByNoType(options.getUserId().getLang(), getCacheSize());
         return PageSearchResult.of(totalResults, pageKeys);
     }
 

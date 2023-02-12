@@ -42,7 +42,7 @@ public class ReviewSaveController {
             LOGGER.error("Page ID mismatch");
             return ResponseEntity.badRequest().build();
         }
-        if (!Objects.equals(queryParameters.getLang(), request.getPage().getLang())) {
+        if (!Objects.equals(queryParameters.getWikipediaLanguage().getCode(), request.getPage().getLang())) {
             LOGGER.error("Language mismatch");
             return ResponseEntity.badRequest().build();
         }

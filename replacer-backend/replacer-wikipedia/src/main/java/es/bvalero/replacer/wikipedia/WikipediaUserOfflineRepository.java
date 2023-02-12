@@ -5,6 +5,8 @@ import es.bvalero.replacer.user.AccessToken;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import es.bvalero.replacer.user.UserId;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
@@ -20,13 +22,13 @@ class WikipediaUserOfflineRepository implements WikipediaUserRepository {
     }
 
     @Override
-    public Optional<WikipediaUser> findByUsername(WikipediaLanguage lang, String username) {
+    public Optional<WikipediaUser> findById(UserId userId) {
         return Optional.of(getOfflineUser());
     }
 
     private WikipediaUser getOfflineUser() {
         return WikipediaUser.of(
-            "offline",
+            UserId.of(WikipediaLanguage.getDefault(), "offline"),
             Arrays.stream(WikipediaUserGroup.values()).collect(Collectors.toUnmodifiableList())
         );
     }

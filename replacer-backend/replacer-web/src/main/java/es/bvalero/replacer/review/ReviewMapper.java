@@ -68,8 +68,7 @@ class ReviewMapper {
     ReviewOptions fromDto(ReviewOptionsDto options, CommonQueryParameters queryParameters) {
         return ReviewOptions
             .builder()
-            .lang(queryParameters.getWikipediaLanguage())
-            .user(queryParameters.getUser())
+            .userId(queryParameters.getUserId())
             .type(ReplacementType.of(options.getKind(), options.getSubtype()))
             .suggestion(options.getSuggestion())
             .cs(options.getCs())
@@ -100,7 +99,7 @@ class ReviewMapper {
             .type(ReplacementType.of(reviewed.getKind(), reviewed.getSubtype()))
             .cs(reviewed.getCs())
             .start(offset + reviewed.getStart())
-            .reviewer(queryParameters.getUser())
+            .reviewer(queryParameters.getUserId().getUsername())
             .fixed(reviewed.isFixed())
             .build();
     }

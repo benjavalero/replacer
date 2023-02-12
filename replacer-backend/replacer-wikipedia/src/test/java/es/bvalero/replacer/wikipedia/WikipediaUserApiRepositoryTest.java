@@ -7,6 +7,7 @@ import static org.mockito.Mockito.when;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.user.AccessToken;
+import es.bvalero.replacer.user.UserId;
 import es.bvalero.replacer.wikipedia.api.WikipediaApiRequest;
 import es.bvalero.replacer.wikipedia.api.WikipediaApiRequestHelper;
 import es.bvalero.replacer.wikipedia.api.WikipediaApiResponse;
@@ -67,7 +68,7 @@ class WikipediaUserApiRepositoryTest {
             .findAuthenticatedUser(WikipediaLanguage.getDefault(), AccessToken.empty())
             .orElse(null);
         assertNotNull(user);
-        assertEquals("Benjavalero", user.getName());
+        assertEquals("Benjavalero", user.getId().getUsername());
         assertEquals(
             Set.of(WikipediaUserGroup.GENERIC, WikipediaUserGroup.USER, WikipediaUserGroup.AUTO_CONFIRMED),
             new HashSet<>(user.getGroups())
@@ -98,10 +99,10 @@ class WikipediaUserApiRepositoryTest {
         when(wikipediaApiRequestHelper.executeApiRequest(any(WikipediaApiRequest.class))).thenReturn(response);
 
         WikipediaUser user = wikipediaUserApiRepository
-            .findByUsername(WikipediaLanguage.getDefault(), "Benjavalero")
+            .findById(UserId.of(WikipediaLanguage.getDefault(), "Benjavalero"))
             .orElse(null);
         assertNotNull(user);
-        assertEquals("Benjavalero", user.getName());
+        assertEquals("Benjavalero", user.getId().getUsername());
         assertEquals(
             Set.of(WikipediaUserGroup.GENERIC, WikipediaUserGroup.USER, WikipediaUserGroup.AUTO_CONFIRMED),
             new HashSet<>(user.getGroups())
@@ -127,7 +128,7 @@ class WikipediaUserApiRepositoryTest {
         when(wikipediaApiRequestHelper.executeApiRequest(any(WikipediaApiRequest.class))).thenReturn(response);
 
         WikipediaUser user = wikipediaUserApiRepository
-            .findByUsername(WikipediaLanguage.getDefault(), "Missi")
+            .findById(UserId.of(WikipediaLanguage.getDefault(), "Missi"))
             .orElse(null);
         assertNull(user);
     }
@@ -141,13 +142,13 @@ class WikipediaUserApiRepositoryTest {
         );
         assertTrue(user.isPresent());
         user.ifPresent(u -> {
-            assertEquals("offline", u.getName());
+            assertEquals("offline", u.getId().getUsername());
             assertEquals(
                 Arrays.stream(WikipediaUserGroup.values()).collect(Collectors.toUnmodifiableSet()),
                 new HashSet<>(u.getGroups())
             );
 
-            Optional<WikipediaUser> user2 = wikipediaUserRepository.findByUsername(WikipediaLanguage.getDefault(), "x");
+            Optional<WikipediaUser> user2 = wikipediaUserRepository.findById(UserId.of(WikipediaLanguage.getDefault(), "x"));
             assertEquals(u, user2.orElse(null));
         });
     }

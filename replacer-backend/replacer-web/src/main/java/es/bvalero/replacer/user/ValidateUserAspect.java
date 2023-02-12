@@ -18,14 +18,14 @@ public class ValidateUserAspect {
     @Around("@annotation(es.bvalero.replacer.user.ValidateAdminUser)")
     Object validateAdminUser(ProceedingJoinPoint joinPoint) throws Throwable {
         CommonQueryParameters qp = findCommonQueryParameters(joinPoint);
-        userRightsService.validateAdminUser(qp.getWikipediaLanguage(), qp.getUser());
+        userRightsService.validateAdminUser(qp.getUserId());
         return joinPoint.proceed();
     }
 
     @Around("@annotation(es.bvalero.replacer.user.ValidateBotUser)")
     Object validateBotUser(ProceedingJoinPoint joinPoint) throws Throwable {
         CommonQueryParameters qp = findCommonQueryParameters(joinPoint);
-        userRightsService.validateBotUser(qp.getWikipediaLanguage(), qp.getUser());
+        userRightsService.validateBotUser(qp.getUserId());
         return joinPoint.proceed();
     }
 

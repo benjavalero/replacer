@@ -27,7 +27,7 @@ class ReviewTypeFinder extends ReviewFinder {
     @Override
     PageSearchResult findPageIdsToReview(ReviewOptions options) {
         Collection<PageKey> pageKeys = pageService.findPagesToReviewByType(
-            options.getLang(),
+            options.getUserId().getLang(),
             options.getType(),
             getCacheSize()
         );
@@ -36,7 +36,7 @@ class ReviewTypeFinder extends ReviewFinder {
     }
 
     private int findTotalResults(ReviewOptions options) {
-        return pageCountService.countPagesToReviewByType(options.getLang(), options.getType());
+        return pageCountService.countPagesToReviewByType(options.getUserId().getLang(), options.getType());
     }
 
     @Override

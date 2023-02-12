@@ -27,14 +27,14 @@ class UserService {
         return wikipediaUserRepository.findAuthenticatedUser(lang, accessToken).map(this::convert);
     }
 
-    Optional<User> findUserByName(WikipediaLanguage lang, String username) {
-        return wikipediaUserRepository.findByUsername(lang, username).map(this::convert);
+    Optional<User> findUserById(UserId userId) {
+        return wikipediaUserRepository.findById(userId).map(this::convert);
     }
 
     private User convert(WikipediaUser wikipediaUser) {
         return User
             .builder()
-            .name(wikipediaUser.getName())
+            .id(wikipediaUser.getId())
             .hasRights(hasRights(wikipediaUser))
             .bot(isBot(wikipediaUser))
             .admin(isAdmin(wikipediaUser))
@@ -50,6 +50,6 @@ class UserService {
     }
 
     private boolean isAdmin(WikipediaUser user) {
-        return Objects.equals(this.adminUser, user.getName());
+        return Objects.equals(this.adminUser, user.getId().getUsername());
     }
 }

@@ -3,6 +3,7 @@ package es.bvalero.replacer.wikipedia;
 import com.github.rozidan.springboot.logger.Loggable;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.user.AccessToken;
+import es.bvalero.replacer.user.UserId;
 import es.bvalero.replacer.wikipedia.api.WikipediaApiRequest;
 import es.bvalero.replacer.wikipedia.api.WikipediaApiRequestHelper;
 import es.bvalero.replacer.wikipedia.api.WikipediaApiRequestVerb;
@@ -40,15 +41,15 @@ class WikipediaUserApiRepository implements WikipediaUserRepository {
             .build();
         try {
             WikipediaApiResponse apiResponse = wikipediaApiRequestHelper.executeApiRequest(apiRequest);
-            return Optional.of(extractUserInfoFromJson(apiResponse));
+            return Optional.of(extractUserInfoFromJson(apiResponse, lang));
         } catch (WikipediaException e) {
             LOGGER.error("Error finding authenticated user", e);
         }
         return Optional.empty();
     }
 
-    private WikipediaUser convertUserInfo(WikipediaApiResponse.UserInfo userInfo) {
-        return WikipediaUser.of(userInfo.getName(), convertGroups(userInfo.getGroups()));
+    private WikipediaUser convertUserInfo(WikipediaApiResponse.UserInfo userInfo, WikipediaLanguage lang) {
+        return WikipediaUser.of(UserId.of(lang, userInfo.getName()), convertGroups(userInfo.getGroups()));
     }
 
     private Collection<WikipediaUserGroup> convertGroups(Collection<String> userGroups) {
@@ -67,35 +68,36 @@ class WikipediaUserApiRepository implements WikipediaUserRepository {
         return params;
     }
 
-    private WikipediaUser extractUserInfoFromJson(WikipediaApiResponse response) {
-        return convertUserInfo(response.getQuery().getUserinfo());
+    private WikipediaUser extractUserInfoFromJson(WikipediaApiResponse response, WikipediaLanguage lang) {
+        return convertUserInfo(response.getQuery().getUserinfo(), lang);
     }
 
     @Override
-    public Optional<WikipediaUser> findByUsername(WikipediaLanguage lang, String username) {
+    public Optional<WikipediaUser> findById(UserId userId) {
+        WikipediaLanguage lang = userId.getLang();
         WikipediaApiRequest apiRequest = WikipediaApiRequest
             .builder()
             .verb(WikipediaApiRequestVerb.GET)
             .lang(lang)
-            .params(buildUserRequestParams(username))
+            .params(buildUserRequestParams(userId.getUsername()))
             .build();
         try {
             WikipediaApiResponse apiResponse = wikipediaApiRequestHelper.executeApiRequest(apiRequest);
-            return extractUserFromJson(apiResponse);
+            return extractUserFromJson(apiResponse, lang);
         } catch (WikipediaException e) {
-            LOGGER.error("Error finding user by username: {}", username, e);
+            LOGGER.error("Error finding user by ID: {}", userId, e);
         }
         return Optional.empty();
     }
 
     @Nullable
-    private WikipediaUser convertUser(WikipediaApiResponse.User user) {
+    private WikipediaUser convertUser(WikipediaApiResponse.User user, WikipediaLanguage lang) {
         if (user.isMissing()) {
             LOGGER.warn("Missing user: {}", user.getName());
             return null;
         }
 
-        return WikipediaUser.of(user.getName(), convertGroups(user.getGroups()));
+        return WikipediaUser.of(UserId.of(lang, user.getName()), convertGroups(user.getGroups()));
     }
 
     private Map<String, String> buildUserRequestParams(String username) {
@@ -107,7 +109,7 @@ class WikipediaUserApiRepository implements WikipediaUserRepository {
         return params;
     }
 
-    private Optional<WikipediaUser> extractUserFromJson(WikipediaApiResponse response) {
-        return response.getQuery().getUsers().stream().findFirst().map(this::convertUser);
+    private Optional<WikipediaUser> extractUserFromJson(WikipediaApiResponse response, WikipediaLanguage lang) {
+        return response.getQuery().getUsers().stream().findFirst().map(u -> this.convertUser(u, lang));
     }
 }

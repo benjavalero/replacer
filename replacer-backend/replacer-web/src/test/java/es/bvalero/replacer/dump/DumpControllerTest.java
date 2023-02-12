@@ -11,6 +11,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.exception.ForbiddenException;
 import es.bvalero.replacer.common.util.ReplacerUtils;
+import es.bvalero.replacer.user.UserId;
 import es.bvalero.replacer.user.UserRightsService;
 import es.bvalero.replacer.user.ValidateUserAspect;
 import java.time.LocalDateTime;
@@ -41,6 +42,8 @@ class DumpControllerTest {
 
     @Test
     void testGetDumpIndexingStatus() throws Exception {
+        UserId userId = UserId.of(WikipediaLanguage.SPANISH, "x");
+
         boolean running = true;
         int numPagesRead = 1000;
         int numPagesIndexed = 500;
@@ -70,43 +73,48 @@ class DumpControllerTest {
             .andExpect(jsonPath("$.start", is(ReplacerUtils.convertLocalDateTimeToMilliseconds(start))))
             .andExpect(jsonPath("$.end", is(ReplacerUtils.convertLocalDateTimeToMilliseconds(end))));
 
+        verify(userRightsService).validateAdminUser(userId);
         verify(dumpManager).getDumpIndexingStatus();
     }
 
     @Test
     void testGetDumpIndexingStatusNotAdmin() throws Exception {
+        UserId userId = UserId.of(WikipediaLanguage.SPANISH, "x");
         doThrow(ForbiddenException.class)
             .when(userRightsService)
-            .validateAdminUser(any(WikipediaLanguage.class), anyString());
+            .validateAdminUser(userId);
 
         mvc
             .perform(get("/api/dump-indexing?user=x&lang=es").contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isForbidden());
 
-        verify(userRightsService).validateAdminUser(any(WikipediaLanguage.class), anyString());
+        verify(userRightsService).validateAdminUser(userId);
         verify(dumpManager, never()).indexLatestDumpFiles();
     }
 
     @Test
     void testPostStart() throws Exception {
+        UserId userId = UserId.of(WikipediaLanguage.SPANISH, "x");
         mvc
             .perform(post("/api/dump-indexing?user=x&lang=es").contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isAccepted());
 
+        verify(userRightsService).validateAdminUser(userId);
         verify(dumpManager).indexLatestDumpFiles();
     }
 
     @Test
     void testPostStartNotAdmin() throws Exception {
+        UserId userId = UserId.of(WikipediaLanguage.SPANISH, "x");
         doThrow(ForbiddenException.class)
             .when(userRightsService)
-            .validateAdminUser(any(WikipediaLanguage.class), anyString());
+            .validateAdminUser(userId);
 
         mvc
             .perform(post("/api/dump-indexing?user=x&lang=es").contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isForbidden());
 
-        verify(userRightsService).validateAdminUser(any(WikipediaLanguage.class), anyString());
+        verify(userRightsService).validateAdminUser(userId);
         verify(dumpManager, never()).indexLatestDumpFiles();
     }
 }

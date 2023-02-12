@@ -1,7 +1,6 @@
 package es.bvalero.replacer.user;
 
 import es.bvalero.replacer.common.domain.ReplacementType;
-import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.exception.ForbiddenException;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
@@ -17,36 +16,36 @@ public class UserRightsService {
     @Autowired
     private UserService userService;
 
-    public void validateAdminUser(WikipediaLanguage lang, String user) throws ForbiddenException {
-        if (!isAdmin(lang, user)) {
-            LOGGER.error("Unauthorized admin user: {} - {}", lang, user);
+    public void validateAdminUser(UserId userId) throws ForbiddenException {
+        if (!isAdmin(userId)) {
+            LOGGER.error("Unauthorized admin user: {}", userId);
             throw new ForbiddenException();
         }
     }
 
     @VisibleForTesting
-    boolean isAdmin(WikipediaLanguage lang, String username) {
+    boolean isAdmin(UserId userId) {
         // Get the user just to check it actually exists
-        return getUser(lang, username).map(User::isAdmin).orElse(false);
+        return getUser(userId).map(User::isAdmin).orElse(false);
     }
 
-    public void validateBotUser(WikipediaLanguage lang, String user) throws ForbiddenException {
-        if (!isBot(lang, user)) {
-            LOGGER.error("Unauthorized bot user: {} - {}", lang, user);
+    public void validateBotUser(UserId userId) throws ForbiddenException {
+        if (!isBot(userId)) {
+            LOGGER.error("Unauthorized bot user: {}", userId);
             throw new ForbiddenException();
         }
     }
 
     @VisibleForTesting
-    boolean isBot(WikipediaLanguage lang, String username) {
-        return getUser(lang, username).map(User::isBot).orElse(false);
+    boolean isBot(UserId userId) {
+        return getUser(userId).map(User::isBot).orElse(false);
     }
 
-    private Optional<User> getUser(WikipediaLanguage lang, String username) {
-        return userService.findUserByName(lang, username);
+    private Optional<User> getUser(UserId userId) {
+        return userService.findUserById(userId);
     }
 
-    public boolean isTypeForbidden(ReplacementType type, WikipediaLanguage lang, String user) {
-        return (type.isForBots() && !isBot(lang, user)) || (type.isForAdmin() && !isAdmin(lang, user));
+    public boolean isTypeForbidden(ReplacementType type, UserId userId) {
+        return (type.isForBots() && !isBot(userId)) || (type.isForAdmin() && !isAdmin(userId));
     }
 }
