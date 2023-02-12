@@ -9,6 +9,7 @@ import org.springframework.lang.Nullable;
 @Value(staticConstructor = "of")
 public class ReplacementType {
 
+    public static final ReplacementType EMPTY = new ReplacementType(ReplacementKind.EMPTY, "");
     public static final ReplacementType DATE = ReplacementType.of(ReplacementKind.STYLE, "Fechas");
     public static final ReplacementType ACUTE_O = ReplacementType.of(ReplacementKind.STYLE, "ó con tilde");
 
@@ -26,16 +27,12 @@ public class ReplacementType {
 
     public static ReplacementType of(@Nullable Byte kind, @Nullable String subtype) {
         if (kind == null && subtype == null) {
-            return ofEmpty();
+            return EMPTY;
         } else if (kind == null || subtype == null) {
             throw new IllegalArgumentException();
         } else {
             return ReplacementType.of(ReplacementKind.valueOf(kind), subtype);
         }
-    }
-
-    public static ReplacementType ofEmpty() {
-        return new ReplacementType(ReplacementKind.EMPTY, "");
     }
 
     private ReplacementType(ReplacementKind kind, String subtype) {

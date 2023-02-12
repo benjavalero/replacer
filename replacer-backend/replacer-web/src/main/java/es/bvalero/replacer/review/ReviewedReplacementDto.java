@@ -2,10 +2,8 @@ package es.bvalero.replacer.review;
 
 import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
 
-import es.bvalero.replacer.common.domain.ReplacementType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import lombok.Data;
 import org.springframework.lang.Nullable;
 
@@ -17,7 +15,6 @@ class ReviewedReplacementDto {
     byte kind;
 
     @Schema(description = "Replacement subtype", requiredMode = REQUIRED)
-    @Size(max = ReplacementType.MAX_SUBTYPE_LENGTH)
     @NotNull
     String subtype;
 

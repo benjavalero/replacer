@@ -1,12 +1,10 @@
 package es.bvalero.replacer.review;
 
 import es.bvalero.replacer.common.domain.ReplacementKind;
-import es.bvalero.replacer.common.domain.ReplacementType;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.ArrayList;
 import java.util.List;
-import javax.validation.constraints.Size;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 import org.springdoc.api.annotations.ParameterObject;
@@ -21,7 +19,6 @@ class ReviewOptionsDto {
     private Byte kind;
 
     @Parameter(description = "Replacement subtype", example = "aún")
-    @Size(max = ReplacementType.MAX_SUBTYPE_LENGTH)
     @Nullable
     private String subtype;
 

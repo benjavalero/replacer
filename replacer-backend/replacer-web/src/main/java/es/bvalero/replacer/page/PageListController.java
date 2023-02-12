@@ -1,6 +1,8 @@
 package es.bvalero.replacer.page;
 
 import com.github.rozidan.springboot.logger.Loggable;
+import es.bvalero.replacer.common.domain.ReplacementKind;
+import es.bvalero.replacer.common.domain.ReplacementType;
 import es.bvalero.replacer.common.dto.CommonQueryParameters;
 import es.bvalero.replacer.common.dto.ReplacementTypeDto;
 import es.bvalero.replacer.replacement.ReplacementService;
@@ -36,6 +38,11 @@ public class PageListController {
         @Valid CommonQueryParameters queryParameters,
         @Valid ReplacementTypeDto request
     ) {
+        ReplacementType type = request.toDomain();
+        if (type.getKind() == ReplacementKind.EMPTY || type.getKind() == ReplacementKind.CUSTOM) {
+            throw new IllegalArgumentException("Invalid replacement type to list: " + type);
+        }
+
         String titleList = StringUtils.join(
             pageFindByTypeService.findPagesToReviewByType(queryParameters.getWikipediaLanguage(), request.toDomain()),
             "\n"
@@ -48,6 +55,11 @@ public class PageListController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PostMapping(value = "/type/review")
     public void reviewPagesByType(@Valid CommonQueryParameters queryParameters, @Valid ReplacementTypeDto request) {
+        ReplacementType type = request.toDomain();
+        if (type.getKind() == ReplacementKind.EMPTY || type.getKind() == ReplacementKind.CUSTOM) {
+            throw new IllegalArgumentException("Invalid replacement type to review: " + type);
+        }
+
         replacementService.reviewReplacementsByType(queryParameters.getWikipediaLanguage(), request.toDomain());
     }
 }

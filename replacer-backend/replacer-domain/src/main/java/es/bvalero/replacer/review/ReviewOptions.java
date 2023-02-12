@@ -37,7 +37,7 @@ class ReviewOptions {
             .builder()
             .userId(UserId.of(WikipediaLanguage.getDefault(),
             "A"))
-            .type(ReplacementType.ofEmpty())
+            .type(ReplacementType.EMPTY)
             .build();
     }
 

@@ -5,10 +5,8 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
 
 /** Enumerates the kinds (or base types) of replacements supported in the application */
-@Getter
 @AllArgsConstructor
 public enum ReplacementKind {
     SIMPLE((byte) 2),
@@ -19,9 +17,17 @@ public enum ReplacementKind {
 
     private static final Map<Byte, ReplacementKind> map = Arrays
         .stream(ReplacementKind.values())
+        .filter(k -> k != EMPTY)
         .collect(Collectors.toUnmodifiableMap(ReplacementKind::getCode, Function.identity()));
 
     private final byte code;
+
+    public byte getCode() {
+        if (this == EMPTY) {
+            throw new IllegalStateException("Empty kind cannot be serialized");
+        }
+        return this.code;
+    }
 
     // We cannot override the static method "valueOf(String)"
     // but in this case as the value is an integer we can overload the method

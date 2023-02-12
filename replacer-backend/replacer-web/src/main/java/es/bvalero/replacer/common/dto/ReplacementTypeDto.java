@@ -25,8 +25,6 @@ public class ReplacementTypeDto {
 
     @Parameter(description = "Replacement subtype", required = true, example = "aún")
     @NonNull
-    @Size(max = ReplacementType.MAX_SUBTYPE_LENGTH)
-    @NotBlank
     private String subtype;
 
     public static ReplacementTypeDto of(ReplacementType replacementType) {
@@ -34,6 +32,6 @@ public class ReplacementTypeDto {
     }
 
     public ReplacementType toDomain() {
-        return ReplacementType.of(getKind(), getSubtype());
+        return ReplacementType.of(this.kind, this.subtype);
     }
 }

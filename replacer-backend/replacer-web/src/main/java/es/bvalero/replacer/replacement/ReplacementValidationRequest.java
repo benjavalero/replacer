@@ -2,7 +2,6 @@ package es.bvalero.replacer.replacement;
 
 import io.swagger.v3.oas.annotations.Parameter;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
 import lombok.Data;
 import org.springdoc.api.annotations.ParameterObject;
 
@@ -11,7 +10,6 @@ import org.springdoc.api.annotations.ParameterObject;
 class ReplacementValidationRequest {
 
     @Parameter(description = "Replacement to validate", required = true, example = "aún")
-    @Size(max = 100)
     @NotBlank
     String replacement;
 
