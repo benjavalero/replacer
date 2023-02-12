@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
+import { DumpIndexingStatus } from '../../api/models/dump-indexing-status';
 import { DumpIndexingService } from '../../api/services/dump-indexing.service';
 import { DumpIndexingAdapterStatus } from './dump-indexing.model';
 
@@ -13,7 +14,7 @@ export class DumpIndexingAdapterService {
   }
 
   refreshDumpIndexing(): void {
-    this.getDumpIndexing$().subscribe((status: DumpIndexingAdapterStatus) => {
+    this.getDumpIndexing$().subscribe((status: DumpIndexingStatus) => {
       // The calculations could be done with asynchronous pipes,
       // but it is not worth as the calculations are quite simple
       const startDate = this.formatDate(status.start);
@@ -25,8 +26,8 @@ export class DumpIndexingAdapterService {
 
       const newStatus: DumpIndexingAdapterStatus = {
         ...status,
-        startDate: startDate || undefined,
-        endDate: endDate || undefined,
+        startDate: startDate,
+        endDate: endDate,
         elapsed: elapsed,
         progress: progress,
         average: average,
@@ -36,7 +37,7 @@ export class DumpIndexingAdapterService {
     });
   }
 
-  private getDumpIndexing$(): Observable<DumpIndexingAdapterStatus> {
+  private getDumpIndexing$(): Observable<DumpIndexingStatus> {
     return this.dumpIndexingService.getDumpIndexingStatus();
   }
 
@@ -47,8 +48,8 @@ export class DumpIndexingAdapterService {
     return this.dumpIndexingService.manualStartDumpIndexing();
   }
 
-  private formatDate(milliseconds: number | undefined): Date | null {
-    return milliseconds ? new Date(milliseconds) : null;
+  private formatDate(milliseconds?: number): Date | undefined {
+    return milliseconds ? new Date(milliseconds) : undefined;
   }
 
   private formatMilliseconds(milliseconds: number): string {
@@ -60,7 +61,7 @@ export class DumpIndexingAdapterService {
     return `${totalHours}:${minutes}:${seconds}`;
   }
 
-  private calculateElapsed(status: DumpIndexingAdapterStatus): number {
+  private calculateElapsed(status: DumpIndexingStatus): number {
     if (status.start) {
       if (status.end) {
         return status.end - status.start;
@@ -72,7 +73,7 @@ export class DumpIndexingAdapterService {
     }
   }
 
-  private calculateProgress(status: DumpIndexingAdapterStatus): number {
+  private calculateProgress(status: DumpIndexingStatus): number {
     if (status.numPagesRead && status.numPagesEstimated) {
       // We might have more read pages than the estimation constant
       return (status.numPagesRead * 100.0) / Math.max(status.numPagesEstimated, status.numPagesRead);
@@ -81,7 +82,7 @@ export class DumpIndexingAdapterService {
     }
   }
 
-  private calculateAverage(status: DumpIndexingAdapterStatus): number {
+  private calculateAverage(status: DumpIndexingStatus): number {
     if (status.numPagesRead) {
       return this.calculateElapsed(status) / status.numPagesRead;
     } else {
@@ -89,7 +90,7 @@ export class DumpIndexingAdapterService {
     }
   }
 
-  private calculateEta(status: DumpIndexingAdapterStatus): number {
+  private calculateEta(status: DumpIndexingStatus): number {
     if (status.running && status.numPagesRead && status.numPagesEstimated) {
       const toRead = Math.max(status.numPagesEstimated, status.numPagesRead) - status.numPagesRead;
       return toRead * this.calculateAverage(status);
