@@ -8,6 +8,7 @@ import es.bvalero.replacer.common.domain.ReplacementType;
 import es.bvalero.replacer.common.domain.ResultCount;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import java.time.Duration;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Objects;
@@ -19,6 +20,8 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.annotation.PostConstruct;
 
 @Slf4j
 @Primary
@@ -44,6 +47,13 @@ public class PageCountCacheRepository implements PageCountRepository {
 
     private Map<ReplacementType, Integer> getCounts(WikipediaLanguage lang) {
         return Objects.requireNonNull(this.counts.get(lang));
+    }
+
+    @PostConstruct
+    public void init() {
+        // Initial population of the caches
+        Iterable<WikipediaLanguage> keys = Arrays.asList(WikipediaLanguage.values());
+        this.counts.getAll(keys);
     }
 
     @Override
