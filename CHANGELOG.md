@@ -3,6 +3,7 @@
 ## 2.23.0 (??)
 - Internal refactoring into submodules
 - Ignore tag `timeline`
+- Ignore pages containing the template `página nueva sin referencias`
 
 ## 2.22.2 (13 Dic 2022)
 - Fix suggestion description for English months
