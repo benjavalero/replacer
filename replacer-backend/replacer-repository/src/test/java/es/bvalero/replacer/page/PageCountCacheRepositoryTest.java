@@ -110,6 +110,7 @@ class PageCountCacheRepositoryTest {
                 .orElse(null)
         );
         assertTrue(typeCounts.stream().noneMatch(rc -> rc.getKey().equals(type2)));
+        assertEquals(0, pageCountCacheRepository.countNotReviewedByType(lang, type2));
 
         // Remove a replacement count not existing in cache
         ReplacementType nonExisting = ReplacementType.of(ReplacementKind.SIMPLE, "B");

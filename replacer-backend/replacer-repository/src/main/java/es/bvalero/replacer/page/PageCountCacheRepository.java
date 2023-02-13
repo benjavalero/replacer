@@ -70,7 +70,7 @@ public class PageCountCacheRepository implements PageCountRepository {
             return this.pageCountRepository.countNotReviewedByType(lang, null);
         } else {
             // Always return the cached count
-            return this.getCounts(lang).get(type);
+            return Objects.requireNonNullElse(this.getCounts(lang).get(type), 0);
         }
     }
 
