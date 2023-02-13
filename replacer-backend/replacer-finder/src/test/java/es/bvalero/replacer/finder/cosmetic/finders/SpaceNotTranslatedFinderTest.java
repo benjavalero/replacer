@@ -27,6 +27,7 @@ class SpaceNotTranslatedFinderTest {
     @CsvSource(
         value = {
             "[[File:x.jpeg|test]], [[Archivo:x.jpeg|test]]",
+            "[[FIle:x.jpeg|test]], [[Archivo:x.jpeg|test]]",
             "[[image:x.png]], [[Imagen:x.png]]",
             "[[Annex:Países]], [[Anexo:Países]]",
             "[[Category:Animal]], [[Categoría:Animal]]",

@@ -54,6 +54,10 @@ public class FinderUtils {
         return StringUtils.capitalize(word);
     }
 
+    public String toFirstUpperCase(String word) {
+        return toUpperCase(word.substring(0, 1)) + toLowerCase(word.substring(1));
+    }
+
     public String setFirstLowerCase(String word) {
         return StringUtils.uncapitalize(word);
     }

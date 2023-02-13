@@ -80,7 +80,7 @@ class SpaceNotTranslatedFinder implements CosmeticCheckedFinder {
 
     @Override
     public String getFix(MatchResult match, FinderPage page) {
-        String spaceWord = FinderUtils.setFirstUpperCase(match.group(1));
+        String spaceWord = FinderUtils.toFirstUpperCase(match.group(1));
         String spaceWordTranslated;
         String lang = page.getPageKey().getLang().getCode();
         if (FinderUtils.getItemsInCollection(this.fileWords.values()).contains(spaceWord)) {
