@@ -20,7 +20,7 @@ done
 echo
 
 echo "3. Copy JAR"
-scp -i ~/.ssh/id_rsa replacer-backend/target/replacer.jar benjavalero@login.toolforge.org:/data/project/replacer
+scp -i ~/.ssh/id_rsa replacer-backend/replacer-app/target/replacer.jar benjavalero@login.toolforge.org:/data/project/replacer
 echo
 
 echo "5. Start service"
