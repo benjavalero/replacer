@@ -1,5 +1,8 @@
 # Versions
 
+## 2.23.1 (13 Feb 2023)
+- Fix: count pages when there are none to review for a specific type
+
 ## 2.23.0 (13 Feb 2023)
 - Internal refactoring into submodules
 - Ignore tag `timeline`
