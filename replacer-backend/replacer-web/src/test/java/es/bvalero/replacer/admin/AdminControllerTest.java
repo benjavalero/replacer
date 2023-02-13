@@ -54,9 +54,7 @@ class AdminControllerTest {
     @Test
     void testGetPublicIpNotAdmin() throws Exception {
         UserId userId = UserId.of(WikipediaLanguage.SPANISH, "x");
-        doThrow(ForbiddenException.class)
-            .when(userRightsService)
-            .validateAdminUser(userId);
+        doThrow(ForbiddenException.class).when(userRightsService).validateAdminUser(userId);
 
         mvc
             .perform(get("/api/admin/public-ip?user=x&lang=es").contentType(MediaType.APPLICATION_JSON))

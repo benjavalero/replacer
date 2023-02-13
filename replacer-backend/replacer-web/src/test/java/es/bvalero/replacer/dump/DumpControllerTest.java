@@ -80,9 +80,7 @@ class DumpControllerTest {
     @Test
     void testGetDumpIndexingStatusNotAdmin() throws Exception {
         UserId userId = UserId.of(WikipediaLanguage.SPANISH, "x");
-        doThrow(ForbiddenException.class)
-            .when(userRightsService)
-            .validateAdminUser(userId);
+        doThrow(ForbiddenException.class).when(userRightsService).validateAdminUser(userId);
 
         mvc
             .perform(get("/api/dump-indexing?user=x&lang=es").contentType(MediaType.APPLICATION_JSON))
@@ -106,9 +104,7 @@ class DumpControllerTest {
     @Test
     void testPostStartNotAdmin() throws Exception {
         UserId userId = UserId.of(WikipediaLanguage.SPANISH, "x");
-        doThrow(ForbiddenException.class)
-            .when(userRightsService)
-            .validateAdminUser(userId);
+        doThrow(ForbiddenException.class).when(userRightsService).validateAdminUser(userId);
 
         mvc
             .perform(post("/api/dump-indexing?user=x&lang=es").contentType(MediaType.APPLICATION_JSON))

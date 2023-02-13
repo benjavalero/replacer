@@ -52,7 +52,9 @@ class ReviewCustomFinder extends ReviewFinder {
         // Make it out of the loop as we are not taking into account the offset for this
         List<Integer> reviewedIds = new ArrayList<>();
         if (!pageIds.isEmpty()) {
-            reviewedIds.addAll(customReplacementService.findPagesReviewed(options.getUserId().getLang(), subtype, caseSensitive));
+            reviewedIds.addAll(
+                customReplacementService.findPagesReviewed(options.getUserId().getLang(), subtype, caseSensitive)
+            );
         }
 
         while (totalToReview >= 0) {

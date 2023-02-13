@@ -56,8 +56,7 @@ class PageCountServiceTest {
         assertEquals(List.of(count), pageCountService.countPagesNotReviewedByType(user));
         assertEquals(counts, pageCountService.countPagesNotReviewedByType(bot));
 
-        verify(userRightsService, times(4))
-            .isTypeForbidden(any(ReplacementType.class), any(UserId.class));
+        verify(userRightsService, times(4)).isTypeForbidden(any(ReplacementType.class), any(UserId.class));
         verify(pageCountRepository, times(2)).countPagesNotReviewedByType(lang);
     }
 }

@@ -113,9 +113,7 @@ class ReplacementCountControllerTest {
     @Test
     void testCountPagesWithMoreReplacementsToReviewNotAdmin() throws Exception {
         UserId userId = UserId.of(WikipediaLanguage.SPANISH, "A");
-        doThrow(ForbiddenException.class)
-            .when(userRightsService)
-            .validateAdminUser(userId);
+        doThrow(ForbiddenException.class).when(userRightsService).validateAdminUser(userId);
 
         mvc
             .perform(get("/api/replacement/page/count?lang=es&user=A").contentType(MediaType.APPLICATION_JSON))

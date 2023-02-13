@@ -56,9 +56,7 @@ class PageListControllerTest {
     @Test
     void testFindPagesToReviewByTypeNotBot() throws Exception {
         UserId userId = UserId.of(WikipediaLanguage.SPANISH, "A");
-        doThrow(ForbiddenException.class)
-            .when(userRightsService)
-            .validateBotUser(userId);
+        doThrow(ForbiddenException.class).when(userRightsService).validateBotUser(userId);
 
         mvc
             .perform(get("/api/page/type?lang=es&user=A&kind=2&subtype=Africa").contentType(MediaType.TEXT_PLAIN_VALUE))
@@ -87,9 +85,7 @@ class PageListControllerTest {
     @Test
     void testReviewPagesByTypeNotBot() throws Exception {
         UserId userId = UserId.of(WikipediaLanguage.SPANISH, "A");
-        doThrow(ForbiddenException.class)
-            .when(userRightsService)
-            .validateBotUser(userId);
+        doThrow(ForbiddenException.class).when(userRightsService).validateBotUser(userId);
 
         mvc
             .perform(

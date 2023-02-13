@@ -148,7 +148,9 @@ class WikipediaUserApiRepositoryTest {
                 new HashSet<>(u.getGroups())
             );
 
-            Optional<WikipediaUser> user2 = wikipediaUserRepository.findById(UserId.of(WikipediaLanguage.getDefault(), "x"));
+            Optional<WikipediaUser> user2 = wikipediaUserRepository.findById(
+                UserId.of(WikipediaLanguage.getDefault(), "x")
+            );
             assertEquals(u, user2.orElse(null));
         });
     }

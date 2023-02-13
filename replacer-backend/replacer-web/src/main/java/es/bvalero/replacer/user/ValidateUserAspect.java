@@ -34,6 +34,7 @@ public class ValidateUserAspect {
             .stream(joinPoint.getArgs())
             .filter(CommonQueryParameters.class::isInstance)
             .map(CommonQueryParameters.class::cast)
-            .findAny().orElseThrow(IllegalArgumentException::new);
+            .findAny()
+            .orElseThrow(IllegalArgumentException::new);
     }
 }

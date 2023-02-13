@@ -3,11 +3,10 @@ package es.bvalero.replacer.review;
 import es.bvalero.replacer.common.domain.ReplacementKind;
 import es.bvalero.replacer.common.domain.ReplacementType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
+import es.bvalero.replacer.user.UserId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-
-import es.bvalero.replacer.user.UserId;
 import lombok.Builder;
 import lombok.Value;
 import org.apache.commons.lang3.StringUtils;
@@ -35,8 +34,7 @@ class ReviewOptions {
     public static ReviewOptions ofNoType() {
         return ReviewOptions
             .builder()
-            .userId(UserId.of(WikipediaLanguage.getDefault(),
-            "A"))
+            .userId(UserId.of(WikipediaLanguage.getDefault(), "A"))
             .type(ReplacementType.EMPTY)
             .build();
     }
@@ -99,12 +97,7 @@ class ReviewOptions {
     }
 
     // Used by the builder
-    ReviewOptions(
-        UserId userId,
-        ReplacementType type,
-        @Nullable String suggestion,
-        @Nullable Boolean cs
-    ) {
+    ReviewOptions(UserId userId, ReplacementType type, @Nullable String suggestion, @Nullable Boolean cs) {
         this.userId = userId;
         this.type = type;
         this.suggestion = suggestion;

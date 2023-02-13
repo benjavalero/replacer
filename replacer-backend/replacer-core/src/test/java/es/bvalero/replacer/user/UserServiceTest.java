@@ -95,7 +95,10 @@ class UserServiceTest {
         String name = "N";
         UserId userId = UserId.of(lang, name);
 
-        WikipediaUser user = WikipediaUser.of(userId, List.of(WikipediaUserGroup.AUTO_CONFIRMED, WikipediaUserGroup.BOT));
+        WikipediaUser user = WikipediaUser.of(
+            userId,
+            List.of(WikipediaUserGroup.AUTO_CONFIRMED, WikipediaUserGroup.BOT)
+        );
         when(wikipediaUserRepository.findById(userId)).thenReturn(Optional.of(user));
 
         Optional<User> result = userService.findUserById(userId);

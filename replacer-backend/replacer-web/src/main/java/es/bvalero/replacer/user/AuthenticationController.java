@@ -50,7 +50,11 @@ public class AuthenticationController {
     @Operation(summary = "Verify the authorization process")
     @PostMapping(value = "/verify")
     public VerifyAuthenticationResponse verifyAuthentication(
-        @Parameter(description = "Language of the Wikipedia in use", required = true, example = "es") @RequestParam String lang,
+        @Parameter(
+            description = "Language of the Wikipedia in use",
+            required = true,
+            example = "es"
+        ) @RequestParam String lang,
         @Valid @RequestBody VerifyAuthenticationRequest verifyAuthenticationRequest
     ) throws AuthenticationException {
         RequestToken requestToken = RequestTokenDto.toDomain(verifyAuthenticationRequest.getRequestToken());

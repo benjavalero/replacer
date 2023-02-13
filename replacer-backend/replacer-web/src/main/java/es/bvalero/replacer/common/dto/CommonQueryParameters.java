@@ -4,7 +4,6 @@ import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.user.UserId;
 import io.swagger.v3.oas.annotations.Parameter;
 import javax.validation.constraints.NotNull;
-
 import lombok.Data;
 import org.springdoc.api.annotations.ParameterObject;
 

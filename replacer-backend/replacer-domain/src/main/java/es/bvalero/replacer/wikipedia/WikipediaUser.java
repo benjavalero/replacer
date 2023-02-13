@@ -1,8 +1,7 @@
 package es.bvalero.replacer.wikipedia;
 
-import java.util.Collection;
-
 import es.bvalero.replacer.user.UserId;
+import java.util.Collection;
 import lombok.Value;
 import org.springframework.lang.NonNull;
 
