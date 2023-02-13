@@ -1,6 +1,6 @@
 # Versions
 
-## 2.23.0 (??)
+## 2.23.0 (13 Feb 2023)
 - Internal refactoring into submodules
 - Ignore tag `timeline`
 - Ignore pages containing the template `página nueva sin referencias`
