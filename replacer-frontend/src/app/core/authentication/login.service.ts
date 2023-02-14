@@ -17,7 +17,7 @@ export class LoginService {
   constructor(private authenticationService: AuthenticationService, private userService: UserService) {}
 
   getAuthenticationUrl$(): Observable<string> {
-    return this.initiateAuthentication$().pipe(
+    return this.authenticationService.initiateAuthentication().pipe(
       map((token: InitiateAuthenticationResponse) => {
         // We keep the request token for further use on verification
         localStorage.setItem(this.requestTokenKey, JSON.stringify(token.requestToken));
@@ -25,10 +25,6 @@ export class LoginService {
         return token.authorizationUrl;
       })
     );
-  }
-
-  private initiateAuthentication$(): Observable<InitiateAuthenticationResponse> {
-    return this.authenticationService.initiateAuthentication();
   }
 
   loginUser$(oauthVerifier: string): Observable<User> {

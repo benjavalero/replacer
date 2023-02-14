@@ -10,9 +10,9 @@ import { LoginService } from './login.service';
 export class LoginComponent implements OnInit {
   authorizationUrl$!: Observable<string>;
 
-  constructor(private authenticationService: LoginService) {}
+  constructor(private loginService: LoginService) {}
 
   ngOnInit() {
-    this.authorizationUrl$ = this.authenticationService.getAuthenticationUrl$();
+    this.authorizationUrl$ = this.loginService.getAuthenticationUrl$();
   }
 }

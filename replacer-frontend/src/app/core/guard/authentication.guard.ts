@@ -8,7 +8,7 @@ import { UserService } from '../user/user.service';
 @Injectable()
 export class AuthenticationGuard implements CanActivate {
   constructor(
-    private authenticationService: LoginService,
+    private loginService: LoginService,
     private userService: UserService,
     private alertService: AlertService,
     private router: Router
@@ -28,7 +28,7 @@ export class AuthenticationGuard implements CanActivate {
       return true;
     } else {
       // Save redirect url so after authenticating we can move them back to the page they requested
-      this.authenticationService.redirectPath = route.url.join('/');
+      this.loginService.redirectPath = route.url.join('/');
 
       // Navigate to login page
       this.router.navigate(['login']);

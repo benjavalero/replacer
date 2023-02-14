@@ -12,7 +12,7 @@ import { LoginService } from './login.service';
 export class OAuthResponseComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
-    private authenticationService: LoginService,
+    private loginService: LoginService,
     private router: Router,
     private alertService: AlertService
   ) {}
@@ -24,9 +24,9 @@ export class OAuthResponseComponent implements OnInit {
     this.route.queryParams.subscribe((params) => {
       const oauthVerifier: string = params['oauth_verifier'];
       if (oauthVerifier) {
-        this.authenticationService.loginUser$(oauthVerifier).subscribe({
+        this.loginService.loginUser$(oauthVerifier).subscribe({
           next: (user: User) => {
-            this.router.navigate([this.authenticationService.redirectPath || 'dashboard']);
+            this.router.navigate([this.loginService.redirectPath || 'dashboard']);
           },
           error: (err) => {
             this.alertService.addErrorMessage('Error al solicitar un Access Token del API de MediaWiki');
