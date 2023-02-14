@@ -14,7 +14,12 @@ const routes: Routes = [
   { path: 'dashboard', component: DashboardComponent, canActivate: [AuthenticationGuard] },
   { path: 'random', component: FindRandomComponent, canActivate: [AuthenticationGuard] },
   { path: 'random/:id', component: FindRandomComponent, canActivate: [AuthenticationGuard] },
-  { path: 'random/:kind/:subtype/:suggestion', component: FindRandomComponent, canActivate: [AuthenticationGuard] }, // Backward-compatibility
+
+  // Backward-compatibility
+  { path: 'random/Personalizado/:subtype/:suggestion', redirectTo: 'custom/:subtype/:suggestion/false' },
+  { path: 'random/Ortografía/:subtype', redirectTo: 'list/2/:subtype' },
+  { path: 'random/Compuestos/:subtype', redirectTo: 'list/3/:subtype' },
+
   { path: 'custom', component: FindCustomComponent, canActivate: [AuthenticationGuard] },
   { path: 'custom/:subtype/:suggestion/:cs', component: FindRandomComponent, canActivate: [AuthenticationGuard] },
   { path: 'custom/:subtype/:suggestion/:cs/:id', component: FindRandomComponent, canActivate: [AuthenticationGuard] },
@@ -29,7 +34,7 @@ const routes: Routes = [
 @NgModule({
   imports: [
     RouterModule.forRoot(routes, {
-      onSameUrlNavigation: 'reload',
+      onSameUrlNavigation: 'reload'
     })
   ],
   exports: [RouterModule],

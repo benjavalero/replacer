@@ -64,7 +64,7 @@ export class FindRandomComponent implements OnInit {
         options.cs = csParam! === 'true';
       } else {
         // If the subtype is defined we can assume the kind is also defined
-        options.kind = this.convertKindParameter(kindParam!);
+        options.kind = +kindParam!;
       }
     }
 
@@ -74,27 +74,6 @@ export class FindRandomComponent implements OnInit {
       this.validateCustomReplacement(options);
     } else {
       this.findRandomPage(options);
-    }
-  }
-
-  /**
-   * @deprecated This should be done in the routing component
-   */
-  private convertKindParameter(kind: string): number {
-    // Just for compatibility with old use with labels
-    switch (kind) {
-      case 'Personalizado': {
-        return 1;
-      }
-      case 'Ortografía': {
-        return 2;
-      }
-      case 'Compuestos': {
-        return 3;
-      }
-      default: {
-        return +kind;
-      }
     }
   }
 
