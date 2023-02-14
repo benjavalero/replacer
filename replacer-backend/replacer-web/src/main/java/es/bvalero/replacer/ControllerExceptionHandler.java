@@ -13,8 +13,8 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(value = { IllegalArgumentException.class })
-    protected ResponseEntity<Object> handleIllegalArgumentException() {
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    protected ResponseEntity<Object> handleIllegalArgumentException(IllegalArgumentException e) {
+        return new ResponseEntity<>(e, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(value = { AuthenticationException.class })
@@ -28,7 +28,7 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(value = { ReplacerException.class })
-    protected ResponseEntity<Object> handleReplacerException() {
-        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    protected ResponseEntity<Object> handleReplacerException(ReplacerException e) {
+        return new ResponseEntity<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
