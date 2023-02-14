@@ -66,13 +66,13 @@ class ReviewMapper {
     }
 
     ReviewOptions fromDto(ReviewOptionsDto options, CommonQueryParameters queryParameters) {
-        return ReviewOptions
-            .builder()
-            .userId(queryParameters.getUserId())
-            .type(ReplacementType.of(options.getKind(), options.getSubtype()))
-            .suggestion(options.getSuggestion())
-            .cs(options.getCs())
-            .build();
+        return ReviewOptions.of(
+            queryParameters.getUserId(),
+            options.getKind(),
+            options.getSubtype(),
+            options.getSuggestion(),
+            options.getCs()
+        );
     }
 
     Collection<ReviewedReplacement> fromDto(

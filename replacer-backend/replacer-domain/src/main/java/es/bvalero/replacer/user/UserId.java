@@ -24,4 +24,9 @@ public class UserId {
         this.lang = lang;
         this.username = username;
     }
+
+    @Override
+    public String toString() {
+        return String.format("%s - %s", this.lang, this.username);
+    }
 }

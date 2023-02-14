@@ -145,11 +145,11 @@ class ReviewCustomFinder extends ReviewFinder {
     }
 
     private CustomOptions convertOptions(ReviewOptions options) {
-        assert options.getType().getKind() == ReplacementKind.CUSTOM;
-        String subtype = options.getType().getSubtype();
-        Boolean cs = options.getCs();
-        String suggestion = options.getSuggestion();
-        assert cs != null && suggestion != null;
-        return CustomOptions.of(subtype, cs, suggestion);
+        assert options.getOptionsType() == ReviewOptionsType.CUSTOM;
+        return CustomOptions.of(
+            options.getType().getSubtype(),
+            Objects.requireNonNull(options.getCs()),
+            Objects.requireNonNull(options.getSuggestion())
+        );
     }
 }

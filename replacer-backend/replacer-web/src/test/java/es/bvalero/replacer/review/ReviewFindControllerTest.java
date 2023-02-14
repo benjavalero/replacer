@@ -13,6 +13,7 @@ import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.Suggestion;
 import es.bvalero.replacer.page.PageKey;
+import es.bvalero.replacer.user.UserId;
 import es.bvalero.replacer.wikipedia.WikipediaNamespace;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
 import es.bvalero.replacer.wikipedia.WikipediaSection;
@@ -85,7 +86,8 @@ class ReviewFindControllerTest {
 
     @Test
     void testFindRandomPageWithReplacements() throws Exception {
-        ReviewOptions options = ReviewOptions.ofNoType();
+        UserId userId = UserId.of(WikipediaLanguage.SPANISH, "A");
+        ReviewOptions options = ReviewOptions.ofNoType(userId);
         when(reviewNoTypeFinder.findRandomPageReview(options)).thenReturn(Optional.of(review));
 
         mvc
@@ -110,7 +112,8 @@ class ReviewFindControllerTest {
 
     @Test
     void testFindRandomPageByNoType() throws Exception {
-        ReviewOptions options = ReviewOptions.ofNoType();
+        UserId userId = UserId.of(WikipediaLanguage.SPANISH, "A");
+        ReviewOptions options = ReviewOptions.ofNoType(userId);
         when(reviewNoTypeFinder.findRandomPageReview(options)).thenReturn(Optional.of(review));
 
         mvc
@@ -122,7 +125,8 @@ class ReviewFindControllerTest {
 
     @Test
     void testFindRandomPageByTypeAndSubtype() throws Exception {
-        ReviewOptions options = ReviewOptions.ofType(ReplacementType.of(ReplacementKind.STYLE, "Y"));
+        UserId userId = UserId.of(WikipediaLanguage.SPANISH, "A");
+        ReviewOptions options = ReviewOptions.ofType(userId, ReplacementKind.STYLE.getCode(), "Y");
         when(reviewTypeFinder.findRandomPageReview(options)).thenReturn(Optional.of(review));
 
         mvc
@@ -134,7 +138,8 @@ class ReviewFindControllerTest {
 
     @Test
     void testFindRandomPageByCustomReplacement() throws Exception {
-        ReviewOptions options = ReviewOptions.ofCustom(WikipediaLanguage.SPANISH, "X", "Y", false);
+        UserId userId = UserId.of(WikipediaLanguage.SPANISH, "A");
+        ReviewOptions options = ReviewOptions.ofCustom(userId, "X", "Y", false);
         when(reviewCustomFinder.findRandomPageReview(options)).thenReturn(Optional.of(review));
 
         mvc
@@ -158,7 +163,8 @@ class ReviewFindControllerTest {
 
     @Test
     void testFindPageReviewById() throws Exception {
-        ReviewOptions options = ReviewOptions.ofNoType();
+        UserId userId = UserId.of(WikipediaLanguage.SPANISH, "A");
+        ReviewOptions options = ReviewOptions.ofNoType(userId);
         PageKey pageKey = PageKey.of(WikipediaLanguage.SPANISH, 123);
         when(reviewNoTypeFinder.findPageReview(pageKey, options)).thenReturn(Optional.of(review));
 
@@ -171,7 +177,8 @@ class ReviewFindControllerTest {
 
     @Test
     void testFindPageReviewByIdByTypeAndSubtype() throws Exception {
-        ReviewOptions options = ReviewOptions.ofType(ReplacementType.of(ReplacementKind.STYLE, "Y"));
+        UserId userId = UserId.of(WikipediaLanguage.SPANISH, "A");
+        ReviewOptions options = ReviewOptions.ofType(userId, ReplacementKind.STYLE.getCode(), "Y");
         PageKey pageKey = PageKey.of(WikipediaLanguage.SPANISH, 123);
         when(reviewTypeFinder.findPageReview(pageKey, options)).thenReturn(Optional.of(review));
 
@@ -184,7 +191,8 @@ class ReviewFindControllerTest {
 
     @Test
     void testFindPageReviewByIdAndCustomReplacement() throws Exception {
-        ReviewOptions options = ReviewOptions.ofCustom(WikipediaLanguage.SPANISH, "X", "Y", true);
+        UserId userId = UserId.of(WikipediaLanguage.SPANISH, "A");
+        ReviewOptions options = ReviewOptions.ofCustom(userId, "X", "Y", true);
         PageKey pageKey = PageKey.of(WikipediaLanguage.SPANISH, 123);
         when(reviewCustomFinder.findPageReview(pageKey, options)).thenReturn(Optional.of(review));
 

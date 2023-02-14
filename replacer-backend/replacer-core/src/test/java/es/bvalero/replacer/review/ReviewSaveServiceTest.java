@@ -103,7 +103,7 @@ class ReviewSaveServiceTest {
         ReviewedReplacement r3 = ReviewedReplacement
             .builder()
             .pageKey(pageKey)
-            .type(ReplacementType.of(ReplacementKind.CUSTOM, "3"))
+            .type(ReplacementType.ofCustom("3"))
             .start(3)
             .cs(false)
             .reviewer(reviewer)
@@ -142,7 +142,7 @@ class ReviewSaveServiceTest {
         ReviewedReplacement r3 = ReviewedReplacement
             .builder()
             .pageKey(pageKey)
-            .type(ReplacementType.of(ReplacementKind.CUSTOM, "3"))
+            .type(ReplacementType.ofCustom("3"))
             .start(3)
             .cs(false)
             .reviewer(reviewer)

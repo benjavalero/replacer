@@ -3,8 +3,6 @@ package es.bvalero.replacer.common.dto;
 import es.bvalero.replacer.common.domain.ReplacementType;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -28,6 +26,7 @@ public class ReplacementTypeDto {
     private String subtype;
 
     public static ReplacementTypeDto of(ReplacementType replacementType) {
+        assert replacementType.isStandardType();
         return new ReplacementTypeDto(replacementType.getKind().getCode(), replacementType.getSubtype());
     }
 

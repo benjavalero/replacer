@@ -33,20 +33,23 @@ class ReviewOptionsDto {
     @Override
     public String toString() {
         List<String> list = new ArrayList<>();
-
-        if (this.kind == null) {
-            list.add("NO TYPE");
-        } else {
+        if (this.kind != null) {
             list.add(ReplacementKind.valueOf(this.kind).toString());
-            assert this.subtype != null;
+        }
+        if (this.subtype != null) {
             list.add(this.subtype);
-            if (this.suggestion != null) {
-                list.add(this.suggestion);
-                assert this.cs != null;
-                list.add(Boolean.toString(this.cs));
-            }
+        }
+        if (this.suggestion != null) {
+            list.add(this.suggestion);
+        }
+        if (this.cs != null) {
+            list.add(Boolean.toString(this.cs));
         }
 
-        return StringUtils.join(list, " - ");
+        if (list.isEmpty()) {
+            return "NO TYPE";
+        } else {
+            return StringUtils.join(list, " - ");
+        }
     }
 }

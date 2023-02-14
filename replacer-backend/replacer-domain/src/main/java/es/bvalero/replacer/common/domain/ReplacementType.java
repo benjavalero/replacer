@@ -1,15 +1,16 @@
 package es.bvalero.replacer.common.domain;
 
+import static org.apache.commons.lang3.StringUtils.EMPTY;
+
 import lombok.Value;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
 
 /** Type of replacement found in the content of a page */
-@Value(staticConstructor = "of")
+@Value
 public class ReplacementType {
 
-    public static final ReplacementType EMPTY = new ReplacementType(ReplacementKind.EMPTY, "");
+    public static final ReplacementType NO_TYPE = ofNoType();
     public static final ReplacementType DATE = ReplacementType.of(ReplacementKind.STYLE, "Fechas");
     public static final ReplacementType ACUTE_O = ReplacementType.of(ReplacementKind.STYLE, "ó con tilde");
 
@@ -25,33 +26,45 @@ public class ReplacementType {
     @NonNull
     String subtype;
 
-    public static ReplacementType of(@Nullable Byte kind, @Nullable String subtype) {
-        if (kind == null && subtype == null) {
-            return EMPTY;
-        } else if (kind == null || subtype == null) {
-            throw new IllegalArgumentException();
-        } else {
-            return ReplacementType.of(ReplacementKind.valueOf(kind), subtype);
+    private static ReplacementType ofNoType() {
+        return new ReplacementType(ReplacementKind.EMPTY, EMPTY);
+    }
+
+    public static ReplacementType of(byte kind, String subtype) {
+        return ReplacementType.of(ReplacementKind.valueOf(kind), subtype);
+    }
+
+    public static ReplacementType of(ReplacementKind kind, String subtype) {
+        if (kind == ReplacementKind.EMPTY || kind == ReplacementKind.CUSTOM) {
+            throw new IllegalArgumentException("Invalid kind for a standard type: " + kind);
+        }
+
+        validateSubtype(subtype);
+
+        return new ReplacementType(kind, subtype);
+    }
+
+    public static ReplacementType ofCustom(String replacement) {
+        validateSubtype(replacement);
+        return new ReplacementType(ReplacementKind.CUSTOM, replacement);
+    }
+
+    private static void validateSubtype(String subtype) {
+        if (StringUtils.isBlank(subtype)) {
+            throw new IllegalArgumentException("Invalid blank subtype for a standard type");
+        }
+
+        if (subtype.length() > MAX_SUBTYPE_LENGTH) {
+            throw new IllegalArgumentException("Too long subtype: " + subtype);
         }
     }
 
-    private ReplacementType(ReplacementKind kind, String subtype) {
-        // Validate subtype
-        if (subtype.length() > MAX_SUBTYPE_LENGTH) {
-            throw new IllegalArgumentException("Too long replacement subtype: " + subtype);
-        }
-        if (kind == ReplacementKind.EMPTY) {
-            if (StringUtils.isNotBlank(subtype)) {
-                throw new IllegalArgumentException("Non-empty subtype for an empty type: " + subtype);
-            }
-        } else {
-            if (StringUtils.isBlank(subtype)) {
-                throw new IllegalArgumentException("Empty subtype for a non-empty type");
-            }
-        }
+    public boolean isStandardType() {
+        return !this.equals(NO_TYPE) && !isCustomType();
+    }
 
-        this.kind = kind;
-        this.subtype = subtype;
+    private boolean isCustomType() {
+        return this.kind == ReplacementKind.CUSTOM;
     }
 
     public boolean isForBots() {
@@ -66,6 +79,10 @@ public class ReplacementType {
 
     @Override
     public String toString() {
-        return String.format("%s - %s", this.kind, this.subtype);
+        if (this.equals(NO_TYPE)) {
+            return "NO TYPE";
+        } else {
+            return String.format("%s - %s", this.kind, this.subtype);
+        }
     }
 }
