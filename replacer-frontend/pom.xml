@@ -13,7 +13,9 @@
     <packaging>pom</packaging>
 
     <properties>
+        <!-- Don't analyze API generated code -->
         <sonar.sources>src</sonar.sources>
+        <sonar.exclusions>**/api/**/*.ts</sonar.exclusions>
     </properties>
 
     <build>
