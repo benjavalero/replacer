@@ -1,20 +1,28 @@
+import { CommonModule } from '@angular/common';
 import { HttpStatusCode } from '@angular/common/http';
 import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faFastForward } from '@fortawesome/free-solid-svg-icons';
+import { Observable } from 'rxjs';
 import { FindReviewResponse } from '../../api/models/find-review-response';
 import { ReviewPage } from '../../api/models/review-page';
 import { ReviewReplacement } from '../../api/models/review-replacement';
 import { ReviewedReplacement } from '../../api/models/reviewed-replacement';
+import { SaveReviewRequest } from '../../api/models/save-review-request';
+import { ReviewService } from '../../api/services/review.service';
 import { UserService } from '../../core/user/user.service';
+import { AlertComponent } from '../../shared/alert/alert.component';
 import { AlertService } from '../../shared/alert/alert.service';
 import { sleep } from '../../shared/util/sleep';
+import { EditSnippetComponent } from './edit-snippet.component';
 import { kindLabel } from './find-random.component';
 import { FixedReplacement, getReplacementEnd } from './page-replacement.model';
-import { EMPTY_CONTENT, PageService } from './page.service';
 import { ReviewOptions } from './review-options.model';
 
 @Component({
+  standalone: true,
   selector: 'app-edit-page',
+  imports: [CommonModule, AlertComponent, FontAwesomeModule, EditSnippetComponent],
   templateUrl: './edit-page.component.html',
   styleUrls: ['./edit-page.component.css']
 })
@@ -31,8 +39,13 @@ export class EditPageComponent implements OnChanges {
 
   private readonly lastSaveKey = 'lastSave';
   private readonly editionsPerMinute = 5;
+  private readonly EMPTY_CONTENT = ' ';
 
-  constructor(private alertService: AlertService, private pageService: PageService, private userService: UserService) {}
+  constructor(
+    private alertService: AlertService,
+    private userService: UserService,
+    private reviewService: ReviewService
+  ) {}
 
   ngOnChanges() {
     // We assume the replacements are returned sorted by the back-end
@@ -149,7 +162,7 @@ export class EditPageComponent implements OnChanges {
 
   private saveWithNoChanges() {
     this.alertService.addInfoMessage(`Marcando como revisado sin guardar cambios en «${this.review.page.title}»…`);
-    this.saveContent(EMPTY_CONTENT);
+    this.saveContent(this.EMPTY_CONTENT);
   }
 
   private saveContent(content: string) {
@@ -163,7 +176,7 @@ export class EditPageComponent implements OnChanges {
     // Delay the saving in case there are other saving too recent
     let sleepTime = 0;
     const isBotUser: boolean = this.userService.isBotUser();
-    if (!isBotUser && savePage.content !== EMPTY_CONTENT) {
+    if (!isBotUser && savePage.content !== this.EMPTY_CONTENT) {
       sleepTime = this.calculateSleepTime();
     }
 
@@ -171,7 +184,7 @@ export class EditPageComponent implements OnChanges {
   }
 
   private saveReview(savePage: ReviewPage, reviewedReplacements: ReviewedReplacement[]): void {
-    this.pageService.saveReview(savePage, reviewedReplacements).subscribe({
+    this.postSaveReview(savePage, reviewedReplacements).subscribe({
       error: (err) => {
         const errStatus = err.status;
         if (errStatus == HttpStatusCode.Conflict) {
@@ -192,6 +205,20 @@ export class EditPageComponent implements OnChanges {
 
         this.nextPage();
       }
+    });
+  }
+
+  private postSaveReview(page: ReviewPage, reviewedReplacements: ReviewedReplacement[]): Observable<void> {
+    const saveReview = {
+      page: page,
+      reviewedReplacements: reviewedReplacements,
+      accessToken: this.userService.accessToken
+    } as SaveReviewRequest;
+
+    // Call backend and delay the observable response
+    return this.reviewService.saveReview({
+      id: page.pageId,
+      body: saveReview
     });
   }
 

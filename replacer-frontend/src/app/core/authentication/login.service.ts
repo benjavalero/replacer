@@ -9,7 +9,9 @@ import { AuthenticationService } from '../../api/services/authentication.service
 import { User } from '../user/user.model';
 import { UserService } from '../user/user.service';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class LoginService {
   private readonly requestTokenKey = 'requestToken';
   private readonly redirectPathKey = 'redirectPath';

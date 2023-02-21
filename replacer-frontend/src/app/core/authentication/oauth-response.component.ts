@@ -5,6 +5,7 @@ import { User } from '../user/user.model';
 import { LoginService } from './login.service';
 
 @Component({
+  standalone: true,
   selector: 'app-oauth',
   template: ``,
   styles: []

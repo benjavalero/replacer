@@ -1,12 +1,18 @@
+import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
 import { interval, Observable, Subscription } from 'rxjs';
+import { AlertComponent } from '../../shared/alert/alert.component';
 import { sleep } from '../../shared/util/sleep';
 import { DumpIndexingAdapterService } from './dump-indexing-adapter.service';
 import { DumpIndexingAdapterStatus } from './dump-indexing.model';
 
 @Component({
+  standalone: true,
   selector: 'app-dump',
+  imports: [CommonModule, FormsModule, AlertComponent],
+  providers: [DumpIndexingAdapterService],
   templateUrl: './dump-indexing.component.html',
   styleUrls: []
 })

@@ -3,7 +3,9 @@ import { BehaviorSubject } from 'rxjs';
 import { Language } from './language.model';
 import { UserConfig } from './user-config.model';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class UserConfigService {
   private readonly LANG_DEFAULT: Language = Language.SPANISH;
 

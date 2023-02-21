@@ -4,6 +4,7 @@ import { UserConfigService } from '../../core/user/user-config.service';
 import { Snippet } from './page-replacement.model';
 
 @Component({
+  standalone: true,
   selector: 'app-edit-custom-snippet',
   templateUrl: './edit-custom-snippet.component.html',
   styleUrls: ['./edit-custom-snippet.component.css']

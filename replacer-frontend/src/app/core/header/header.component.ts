@@ -1,6 +1,7 @@
+import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { Router, RouterModule } from '@angular/router';
+import { NgbCollapseModule, NgbDropdownModule, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Language } from '../user/language.model';
@@ -11,7 +12,9 @@ import { UserService } from '../user/user.service';
 import { ChangeLanguageComponent } from './change-language.component';
 
 @Component({
+  standalone: true,
   selector: 'app-header',
+  imports: [CommonModule, RouterModule, NgbCollapseModule, NgbDropdownModule, ChangeLanguageComponent],
   templateUrl: './header.component.html',
   styleUrls: []
 })

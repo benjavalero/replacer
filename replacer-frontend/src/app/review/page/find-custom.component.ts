@@ -1,11 +1,15 @@
 import { Component, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
+import { AlertComponent } from '../../shared/alert/alert.component';
 import { AlertService } from '../../shared/alert/alert.service';
 import StringUtils from '../../shared/util/string-utils';
 
 @Component({
+  standalone: true,
   selector: 'app-find-custom',
+  imports: [FormsModule, AlertComponent],
   templateUrl: './find-custom.component.html',
   styleUrls: []
 })
@@ -30,7 +34,7 @@ export class FindCustomComponent implements OnInit {
     const cs = this.caseSensitive || false;
 
     if (this.validate(r, s, cs)) {
-      this.router.navigate([`custom/${r}/${s}/${cs}`]);
+      this.router.navigate([`review/custom/${r}/${s}/${cs}`]);
     }
   }
 

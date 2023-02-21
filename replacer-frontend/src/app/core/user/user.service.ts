@@ -3,7 +3,9 @@ import { BehaviorSubject } from 'rxjs';
 import { AccessToken } from '../../api/models/access-token';
 import { User } from './user.model';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class UserService {
   private readonly wikipediaUserKey = 'wikipediaUser';
   readonly user$ = new BehaviorSubject<User | null>(null);

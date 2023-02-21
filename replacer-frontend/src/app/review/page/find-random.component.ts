@@ -1,12 +1,14 @@
-import { Location } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { FindReviewResponse } from '../../api/models/find-review-response';
 import { ReplacementType } from '../../api/models/replacement-type';
+import { ReplacementService } from '../../api/services/replacement.service';
+import { ReviewService } from '../../api/services/review.service';
 import { AlertService } from '../../shared/alert/alert.service';
-import { PageService } from './page.service';
+import { EditPageComponent } from './edit-page.component';
 import { ReviewOptions } from './review-options.model';
 import { ValidateCustomComponent } from './validate-custom.component';
 
@@ -18,7 +20,9 @@ export const kindLabel: { [key: number]: string } = {
 };
 
 @Component({
+  standalone: true,
   selector: 'app-find-random',
+  imports: [CommonModule, EditPageComponent, ValidateCustomComponent],
   template: `
     <app-edit-page
       *ngIf="review && options"
@@ -35,7 +39,8 @@ export class FindRandomComponent implements OnInit {
 
   constructor(
     private alertService: AlertService,
-    private pageService: PageService,
+    private replacementsService: ReplacementService,
+    private reviewService: ReviewService,
     private router: Router,
     private route: ActivatedRoute,
     private titleService: Title,
@@ -86,7 +91,7 @@ export class FindRandomComponent implements OnInit {
 
     this.alertService.addInfoMessage(msg);
 
-    this.pageService.findRandomPage(options).subscribe({
+    this.reviewService.findRandomPageWithReplacements({ ...options }).subscribe({
       next: (review: FindReviewResponse) => {
         if (review) {
           this.manageReview(review, options);
@@ -111,7 +116,7 @@ export class FindRandomComponent implements OnInit {
   }
 
   private findPageReview(pageId: number, options: ReviewOptions): void {
-    this.pageService.findPageReviewById(pageId, options).subscribe({
+    this.reviewService.findPageReviewById({ ...options, id: pageId }).subscribe({
       next: (review: FindReviewResponse) => {
         if (review) {
           this.manageReview(review, options);
@@ -156,12 +161,12 @@ export class FindRandomComponent implements OnInit {
     let path: string;
     if (options.kind && options.subtype) {
       if (options.suggestion) {
-        path = `/custom/${options.subtype}/${options.suggestion}/${options.cs}`;
+        path = `/review/custom/${options.subtype}/${options.suggestion}/${options.cs}`;
       } else {
-        path = `/list/${options.kind}/${options.subtype}`;
+        path = `/review/${options.kind}/${options.subtype}`;
       }
     } else {
-      path = '/random';
+      path = '/review';
     }
 
     if (pageId) {
@@ -178,15 +183,20 @@ export class FindRandomComponent implements OnInit {
 
   private validateCustomReplacement(options: ReviewOptions): void {
     const replacement = options.subtype!.trim();
-    this.pageService.validateCustomReplacement(replacement, options.cs!).subscribe((validateType: ReplacementType) => {
-      if (validateType) {
-        this.openValidationModal$(validateType.kind, validateType.subtype).then((result) => {
-          this.router.navigate([this.getReviewUrl(validateType as ReviewOptions, null)]);
-        });
-      } else {
-        this.findRandomPage(options);
-      }
-    });
+    this.replacementsService
+      .validateCustomReplacement({
+        replacement: replacement,
+        cs: options.cs!
+      })
+      .subscribe((validateType: ReplacementType) => {
+        if (validateType) {
+          this.openValidationModal$(validateType.kind, validateType.subtype).then((result) => {
+            this.router.navigate([this.getReviewUrl(validateType as ReviewOptions, null)]);
+          });
+        } else {
+          this.findRandomPage(options);
+        }
+      });
   }
 
   private openValidationModal$(kind: number, subtype: string): Promise<any> {

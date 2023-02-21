@@ -1,13 +1,17 @@
+import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Observable } from 'rxjs';
 import { ReplacementCount } from '../api/models/replacement-count';
 import { ReviewerCount } from '../api/models/reviewer-count';
+import { ReplacementService } from '../api/services/replacement.service';
 import { UserConfigService } from '../core/user/user-config.service';
-import { StatsService } from './stats.service';
+import { AlertComponent } from '../shared/alert/alert.component';
 
 @Component({
+  standalone: true,
   selector: 'app-stats',
+  imports: [CommonModule, AlertComponent],
   templateUrl: './stats.component.html',
   styleUrls: []
 })
@@ -18,7 +22,7 @@ export class StatsComponent implements OnInit {
   numReviewedGrouped$!: Observable<ReviewerCount[]>;
 
   constructor(
-    private statsService: StatsService,
+    private replacementService: ReplacementService,
     private titleService: Title,
     private userConfigService: UserConfigService
   ) {}
@@ -28,8 +32,12 @@ export class StatsComponent implements OnInit {
 
     this.lang = this.userConfigService.lang;
 
-    this.numReviewed$ = this.statsService.findNumReviewed$();
-    this.numNotReviewed$ = this.statsService.findNumNotReviewed$();
-    this.numReviewedGrouped$ = this.statsService.findNumReviewedByReviewer$();
+    this.numReviewed$ = this.replacementService.countReplacements({
+      reviewed: true
+    });
+    this.numNotReviewed$ = this.replacementService.countReplacements({
+      reviewed: false
+    });
+    this.numReviewedGrouped$ = this.replacementService.countReplacementsGroupedByReviewer();
   }
 }

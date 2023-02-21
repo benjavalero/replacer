@@ -5,7 +5,9 @@ import { AlertService } from '../../shared/alert/alert.service';
 import { LoginService } from '../authentication/login.service';
 import { UserService } from '../user/user.service';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class AuthenticationGuard implements CanActivate {
   constructor(
     private loginService: LoginService,

@@ -1,9 +1,13 @@
+import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
+import { AlertComponent } from '../../shared/alert/alert.component';
 import { LoginService } from './login.service';
 
 @Component({
+  standalone: true,
   selector: 'app-login',
+  imports: [CommonModule, AlertComponent],
   templateUrl: './login.component.html',
   styles: []
 })

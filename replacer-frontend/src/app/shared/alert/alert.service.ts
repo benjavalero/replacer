@@ -2,7 +2,9 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { AlertMessage } from './alert-message.model';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class AlertService {
   readonly alerts$ = new BehaviorSubject<AlertMessage[]>([]);
 

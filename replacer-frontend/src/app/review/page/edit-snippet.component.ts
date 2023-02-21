@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ReviewReplacement } from '../../api/models/review-replacement';
@@ -6,7 +7,9 @@ import { EditCustomSnippetComponent } from './edit-custom-snippet.component';
 import { FixedReplacement, getReplacementEnd, Snippet } from './page-replacement.model';
 
 @Component({
+  standalone: true,
   selector: 'app-edit-snippet',
+  imports: [CommonModule],
   templateUrl: './edit-snippet.component.html',
   encapsulation: ViewEncapsulation.None,
   styleUrls: ['./edit-snippet.component.css']
