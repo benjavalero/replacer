@@ -1,12 +1,10 @@
 package es.bvalero.replacer.review;
 
 import es.bvalero.replacer.page.PageKey;
-import java.util.Collection;
-import java.util.NavigableSet;
-import java.util.Optional;
-import java.util.TreeSet;
 import lombok.AccessLevel;
 import lombok.Getter;
+
+import java.util.*;
 
 // It's not worth to make this class immutable.
 // Instead, we encapsulate the logic to manage the internal list.
@@ -67,7 +65,8 @@ final class PageSearchResult {
             return Optional.empty();
         } else {
             this.total--;
-            return Optional.ofNullable(this.pageKeys.pollFirst());
+            assert this.total >= 0;
+            return Optional.of(Objects.requireNonNull(this.pageKeys.pollFirst()));
         }
     }
 

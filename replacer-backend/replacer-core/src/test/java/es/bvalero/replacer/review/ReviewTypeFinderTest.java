@@ -98,6 +98,7 @@ class ReviewTypeFinderTest {
     @Test
     void testFindRandomPageToReviewTypeNotFiltered() {
         // 1 result in DB
+        when(pageCountService.countPagesToReviewByType(any(WikipediaLanguage.class), any(ReplacementType.class))).thenReturn(1);
         when(pageService.findPagesToReviewByType(any(WikipediaLanguage.class), any(ReplacementType.class), anyInt()))
             .thenReturn(Collections.singletonList(randomPageKey))
             .thenReturn(Collections.emptyList());
@@ -117,6 +118,7 @@ class ReviewTypeFinderTest {
     @Test
     void testFindRandomPageToReviewTypeFiltered() {
         // 1 result in DB
+        when(pageCountService.countPagesToReviewByType(any(WikipediaLanguage.class), any(ReplacementType.class))).thenReturn(1);
         when(pageService.findPagesToReviewByType(any(WikipediaLanguage.class), any(ReplacementType.class), anyInt()))
             .thenReturn(Collections.singletonList(randomPageKey));
 
@@ -140,10 +142,12 @@ class ReviewTypeFinderTest {
         // 3. Find a random page by type. In DB there is no page.
 
         // 2 results in DB by type, no results the second time.
+        when(pageCountService.countPagesToReviewByType(any(WikipediaLanguage.class), any(ReplacementType.class))).thenReturn(2);
         when(pageService.findPagesToReviewByType(any(WikipediaLanguage.class), any(ReplacementType.class), anyInt()))
             .thenReturn(List.of(randomPageKey, randomPageKey2))
             .thenReturn(Collections.emptyList());
         // 1 result in DB by no type
+        when(pageCountService.countPagesToReviewByNoType(any(WikipediaLanguage.class))).thenReturn(1);
         when(pageService.findPagesToReviewByNoType(any(WikipediaLanguage.class), anyInt()))
             .thenReturn(Collections.singletonList(randomPageKey2));
 
@@ -227,6 +231,7 @@ class ReviewTypeFinderTest {
     @Test
     void testFindReplacementFilteredAndReviewed() {
         // 1 result in DB
+        when(pageCountService.countPagesToReviewByType(any(WikipediaLanguage.class), any(ReplacementType.class))).thenReturn(1);
         when(pageService.findPagesToReviewByType(any(WikipediaLanguage.class), any(ReplacementType.class), anyInt()))
             .thenReturn(Collections.singletonList(randomPageKey))
             .thenReturn(Collections.emptyList());

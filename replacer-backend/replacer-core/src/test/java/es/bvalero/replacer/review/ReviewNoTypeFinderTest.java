@@ -123,6 +123,7 @@ class ReviewNoTypeFinderTest {
     @Test
     void testFindRandomPageToReviewNoTypeWithReplacements() {
         // 1 result in DB
+        when(pageCountService.countPagesToReviewByNoType(any(WikipediaLanguage.class))).thenReturn(1);
         when(pageService.findPagesToReviewByNoType(any(WikipediaLanguage.class), anyInt()))
             .thenReturn(new ArrayList<>(Collections.singleton(randomPageKey)));
 
@@ -142,6 +143,7 @@ class ReviewNoTypeFinderTest {
     @Test
     void testFindRandomPageToReviewNoTypeNoReplacements() {
         // 1 result in DB
+        when(pageCountService.countPagesToReviewByNoType(any(WikipediaLanguage.class))).thenReturn(1);
         when(pageService.findPagesToReviewByNoType(any(WikipediaLanguage.class), anyInt()))
             .thenReturn(new ArrayList<>(Collections.singleton(randomPageKey)))
             .thenReturn(Collections.emptyList());
@@ -162,6 +164,7 @@ class ReviewNoTypeFinderTest {
     @Test
     void testFindRandomPageToReviewNoTypeSecondResult() {
         // 2 results in DB
+        when(pageCountService.countPagesToReviewByNoType(any(WikipediaLanguage.class))).thenReturn(2);
         when(pageService.findPagesToReviewByNoType(any(WikipediaLanguage.class), anyInt()))
             .thenReturn(List.of(randomPageKey, randomPageKey2));
 

@@ -11,7 +11,7 @@ export interface FindReviewResponse {
   /**
    * Number of pending pages to review of the given type
    */
-  numPending: number;
+  numPending?: number;
   page: ReviewPage;
 
   /**

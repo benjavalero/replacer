@@ -26,13 +26,18 @@ class ReviewTypeFinder extends ReviewFinder {
 
     @Override
     PageSearchResult findPageIdsToReview(ReviewOptions options) {
+        int totalResults = findTotalResults(options);
+        if (totalResults == 0) {
+            return PageSearchResult.ofEmpty();
+        }
+
         Collection<PageKey> pageKeys = pageService.findPagesToReviewByType(
             options.getUserId().getLang(),
             options.getType(),
             getCacheSize()
         );
 
-        return PageSearchResult.of(findTotalResults(options), pageKeys);
+        return PageSearchResult.of(totalResults, pageKeys);
     }
 
     private int findTotalResults(ReviewOptions options) {
@@ -56,10 +61,5 @@ class ReviewTypeFinder extends ReviewFinder {
         }
 
         return replacements;
-    }
-
-    @Override
-    Optional<Integer> findTotalResultsFromCache(ReviewOptions options) {
-        return Optional.of(findTotalResults(options));
     }
 }

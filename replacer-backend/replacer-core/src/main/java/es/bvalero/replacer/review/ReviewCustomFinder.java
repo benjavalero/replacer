@@ -111,11 +111,6 @@ class ReviewCustomFinder extends ReviewFinder {
     }
 
     @Override
-    boolean stopWhenEmptyTotal() {
-        return true;
-    }
-
-    @Override
     Collection<Replacement> decorateReplacements(
         WikipediaPage page,
         ReviewOptions options,

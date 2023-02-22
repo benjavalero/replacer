@@ -129,7 +129,7 @@ abstract class ReviewFinder {
         PageSearchResult result = this.cachedPageIds.getIfPresent(key);
         assert result == null || result.isEmpty(); // !cacheContainsKey
 
-        if (result != null && result.isEmptyTotal() && stopWhenEmptyTotal()) {
+        if (result != null && result.isEmptyTotal()) {
             // In some cases, in particular for custom replacements found with Wikipedia search,
             // as we are not marking the non-reviewed pages in the database,
             // we don't want to find the pages to review in an infinite loop.
@@ -141,10 +141,6 @@ abstract class ReviewFinder {
         PageSearchResult searchResult = findPageIdsToReview(options);
         this.cachedPageIds.put(key, searchResult);
         return !searchResult.isEmpty();
-    }
-
-    boolean stopWhenEmptyTotal() {
-        return false;
     }
 
     abstract PageSearchResult findPageIdsToReview(ReviewOptions options);
@@ -180,6 +176,7 @@ abstract class ReviewFinder {
 
         // STEP 2.2.2: Build an initial review for the complete page with the found replacements
         Integer numPending = findTotalResultsFromCache(options).orElse(null);
+        assert numPending == null || numPending > 0;
         Review review = Review.of(page, null, replacements, numPending);
 
         // STEP 2.2.3: Try to reduce the review size by returning just a section of the page
@@ -236,7 +233,7 @@ abstract class ReviewFinder {
         return toReview;
     }
 
-    Optional<Integer> findTotalResultsFromCache(ReviewOptions options) {
+    private Optional<Integer> findTotalResultsFromCache(ReviewOptions options) {
         String key = buildCacheKey(options);
         // If a review is requested directly it is possible the cache doesn't exist
         // In case of custom replacements the number of pending will include pages with false positives
