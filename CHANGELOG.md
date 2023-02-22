@@ -1,5 +1,9 @@
 # Versions
 
+## 2.23.2 (??)
+- Fix: don't remove obsolete items if the load of a listing fails
+- Fix: cosmetic replacement when the space word has uppercases in the middle
+
 ## 2.23.1 (13 Feb 2023)
 - Fix: count pages when there are none to review for a specific type
 
