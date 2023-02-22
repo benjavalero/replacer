@@ -1,6 +1,6 @@
 # Versions
 
-## 2.23.2 (??)
+## 2.23.2 (22 Feb 2023)
 - Fix: don't remove obsolete items if the load of a listing fails
 - Fix: cosmetic replacement when the space word has uppercases in the middle
 
