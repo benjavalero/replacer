@@ -27,6 +27,7 @@ const routes: Routes = [
     path: 'review',
     providers: [ReplacementListService],
     canActivate: [AuthenticationGuard],
+    canActivateChild: [AuthenticationGuard],
     children: [
       { path: 'custom', component: FindCustomComponent },
       { path: 'custom/:subtype/:suggestion/:cs', component: FindRandomComponent },
