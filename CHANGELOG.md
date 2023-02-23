@@ -1,6 +1,6 @@
 # Versions
 
-## 2.23.3 (??)
+## 2.23.3 (23 Feb 2023)
 - Fix: custom types can be built from the controller when receiving a custom reviewed replacement
 
 ## 2.23.2 (22 Feb 2023)
