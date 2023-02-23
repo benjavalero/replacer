@@ -31,7 +31,10 @@ public class ReplacementType {
     }
 
     public static ReplacementType of(byte kind, String subtype) {
-        return ReplacementType.of(ReplacementKind.valueOf(kind), subtype);
+        ReplacementKind replacementKind = ReplacementKind.valueOf(kind);
+        return replacementKind == ReplacementKind.CUSTOM
+            ? ReplacementType.ofCustom(subtype)
+            : ReplacementType.of(replacementKind, subtype);
     }
 
     public static ReplacementType of(ReplacementKind kind, String subtype) {
