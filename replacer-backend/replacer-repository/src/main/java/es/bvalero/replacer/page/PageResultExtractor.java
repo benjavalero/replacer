@@ -38,7 +38,7 @@ class PageResultExtractor implements ResultSetExtractor<Collection<IndexedPage>>
                         .builder()
                         .id(rs.getInt("ID"))
                         .pageKey(pageKey)
-                        .type(ReplacementType.of(kind, rs.getString("SUBTYPE")))
+                        .type(ReplacementType.ofType(kind, rs.getString("SUBTYPE")))
                         .start(rs.getInt("START"))
                         .context(rs.getString("CONTEXT"))
                         .reviewer(rs.getString("REVIEWER"))

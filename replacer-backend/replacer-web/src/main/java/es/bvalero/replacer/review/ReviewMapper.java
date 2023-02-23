@@ -1,5 +1,6 @@
 package es.bvalero.replacer.review;
 
+import es.bvalero.replacer.common.domain.ReplacementKind;
 import es.bvalero.replacer.common.domain.ReplacementType;
 import es.bvalero.replacer.common.dto.CommonQueryParameters;
 import es.bvalero.replacer.finder.Replacement;
@@ -93,10 +94,14 @@ class ReviewMapper {
         int offset,
         CommonQueryParameters queryParameters
     ) {
+        ReplacementKind replacementKind = ReplacementKind.valueOf(reviewed.getKind());
+        ReplacementType replacementType = replacementKind == ReplacementKind.CUSTOM
+            ? ReplacementType.ofCustom(reviewed.getSubtype())
+            : ReplacementType.ofType(replacementKind, reviewed.getSubtype());
         return ReviewedReplacement
             .builder()
             .pageKey(PageKey.of(queryParameters.getWikipediaLanguage(), pageId))
-            .type(ReplacementType.of(reviewed.getKind(), reviewed.getSubtype()))
+            .type(replacementType)
             .cs(reviewed.getCs())
             .start(offset + reviewed.getStart())
             .reviewer(queryParameters.getUserId().getUsername())

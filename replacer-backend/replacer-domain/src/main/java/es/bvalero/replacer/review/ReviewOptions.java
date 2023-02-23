@@ -66,8 +66,8 @@ class ReviewOptions {
         return ReviewOptions.builder().userId(userId).type(ReplacementType.NO_TYPE).build();
     }
 
-    public static ReviewOptions ofType(UserId userId, Byte kind, String subtype) {
-        return ReviewOptions.builder().userId(userId).type(ReplacementType.of(kind, subtype)).build();
+    public static ReviewOptions ofType(UserId userId, byte kind, String subtype) {
+        return ReviewOptions.builder().userId(userId).type(ReplacementType.ofType(kind, subtype)).build();
     }
 
     public static ReviewOptions ofCustom(UserId userId, String replacement, String suggestion, boolean caseSensitive) {

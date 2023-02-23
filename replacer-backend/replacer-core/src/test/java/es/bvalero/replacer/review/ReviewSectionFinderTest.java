@@ -69,7 +69,7 @@ class ReviewSectionFinderTest {
             .builder()
             .start(8)
             .text("an")
-            .type(ReplacementType.of(ReplacementKind.SIMPLE, "an"))
+            .type(ReplacementType.ofType(ReplacementKind.SIMPLE, "an"))
             .suggestions(Collections.singletonList(suggestion))
             .build();
         List<Replacement> replacements = Collections.singletonList(replacement);

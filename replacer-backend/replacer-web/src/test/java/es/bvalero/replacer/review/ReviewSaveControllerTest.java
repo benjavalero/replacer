@@ -45,7 +45,7 @@ class ReviewSaveControllerTest {
     ReviewedReplacement reviewed = ReviewedReplacement
         .builder()
         .pageKey(page.getPageKey())
-        .type(ReplacementType.of(ReplacementKind.SIMPLE, "1"))
+        .type(ReplacementType.ofType(ReplacementKind.SIMPLE, "1"))
         .start(1)
         .reviewer("A")
         .build();

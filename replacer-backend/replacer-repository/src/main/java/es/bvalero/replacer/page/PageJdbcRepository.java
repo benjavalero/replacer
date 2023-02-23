@@ -205,7 +205,7 @@ class PageJdbcRepository implements PageRepository, PageCountRepository {
             namedParameters,
             (resultSet, rowNum) ->
                 ResultCount.of(
-                    ReplacementType.of(resultSet.getByte("KIND"), resultSet.getString("SUBTYPE")),
+                    ReplacementType.ofType(resultSet.getByte("KIND"), resultSet.getString("SUBTYPE")),
                     resultSet.getInt("NUM")
                 )
         );

@@ -36,8 +36,8 @@ class PageCountCacheRepositoryTest {
         WikipediaLanguage lang = WikipediaLanguage.getDefault();
 
         ReplacementKind kind = ReplacementKind.STYLE;
-        ReplacementType type1 = ReplacementType.of(kind, "Y");
-        ReplacementType type2 = ReplacementType.of(kind, "Z");
+        ReplacementType type1 = ReplacementType.ofType(kind, "Y");
+        ReplacementType type2 = ReplacementType.ofType(kind, "Z");
         ResultCount<ReplacementType> count1 = ResultCount.of(type1, 2);
         ResultCount<ReplacementType> count2 = ResultCount.of(type2, 1);
         Collection<ResultCount<ReplacementType>> counts = List.of(count1, count2);
@@ -113,7 +113,7 @@ class PageCountCacheRepositoryTest {
         assertEquals(0, pageCountCacheRepository.countNotReviewedByType(lang, type2));
 
         // Remove a replacement count not existing in cache
-        ReplacementType nonExisting = ReplacementType.of(ReplacementKind.SIMPLE, "B");
+        ReplacementType nonExisting = ReplacementType.ofType(ReplacementKind.SIMPLE, "B");
         pageCountCacheRepository.removePageCount(lang, nonExisting);
 
         typeCounts = pageCountCacheRepository.countPagesNotReviewedByType(lang);
@@ -130,7 +130,7 @@ class PageCountCacheRepositoryTest {
         );
 
         // Remove a replacement count existing in cache
-        ReplacementType existing = ReplacementType.of(ReplacementKind.STYLE, "Y");
+        ReplacementType existing = ReplacementType.ofType(ReplacementKind.STYLE, "Y");
         pageCountCacheRepository.removePageCount(lang, existing);
 
         typeCounts = pageCountCacheRepository.countPagesNotReviewedByType(lang);

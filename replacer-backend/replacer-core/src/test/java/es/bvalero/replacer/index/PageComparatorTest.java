@@ -44,7 +44,7 @@ class PageComparatorTest {
             .page(page)
             .start(index)
             .text(String.valueOf(index))
-            .type(ReplacementType.of(ReplacementKind.SIMPLE, String.valueOf(index)))
+            .type(ReplacementType.ofType(ReplacementKind.SIMPLE, String.valueOf(index)))
             .suggestions(List.of(Suggestion.ofNoComment(String.valueOf(index + 1))))
             .build();
     }
@@ -221,14 +221,14 @@ class PageComparatorTest {
         IndexedReplacement r6db = IndexedReplacement
             .builder()
             .pageKey(page.getPageKey())
-            .type(ReplacementType.of(ReplacementKind.SIMPLE, "6"))
+            .type(ReplacementType.ofType(ReplacementKind.SIMPLE, "6"))
             .start(6)
             .context("6")
             .build();
         IndexedReplacement r7db = IndexedReplacement
             .builder()
             .pageKey(page.getPageKey())
-            .type(ReplacementType.of(ReplacementKind.SIMPLE, "7"))
+            .type(ReplacementType.ofType(ReplacementKind.SIMPLE, "7"))
             .start(7)
             .context("7")
             .reviewer("User")
@@ -236,7 +236,7 @@ class PageComparatorTest {
         IndexedReplacement r8db = IndexedReplacement
             .builder()
             .pageKey(page.getPageKey())
-            .type(ReplacementType.of(ReplacementKind.SIMPLE, "8"))
+            .type(ReplacementType.ofType(ReplacementKind.SIMPLE, "8"))
             .start(8)
             .context("8")
             .reviewer(REVIEWER_SYSTEM)
@@ -302,7 +302,7 @@ class PageComparatorTest {
         IndexedReplacement r1db = IndexedReplacement
             .builder()
             .pageKey(page.getPageKey())
-            .type(ReplacementType.of(ReplacementKind.SIMPLE, "1"))
+            .type(ReplacementType.ofType(ReplacementKind.SIMPLE, "1"))
             .start(1)
             .context("C")
             .reviewer("X")
@@ -310,7 +310,7 @@ class PageComparatorTest {
         IndexedReplacement r2db = IndexedReplacement
             .builder()
             .pageKey(page.getPageKey())
-            .type(ReplacementType.of(ReplacementKind.SIMPLE, "1"))
+            .type(ReplacementType.ofType(ReplacementKind.SIMPLE, "1"))
             .start(5)
             .context("C")
             .reviewer("X")

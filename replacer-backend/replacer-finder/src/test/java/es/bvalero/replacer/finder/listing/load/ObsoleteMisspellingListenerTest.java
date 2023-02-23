@@ -31,7 +31,10 @@ class ObsoleteMisspellingListenerTest {
         map2.putAll(WikipediaLanguage.getDefault(), List.of(misspelling2, misspelling3));
 
         Set<ObsoleteReplacementType> expected = Set.of(
-            ObsoleteReplacementType.of(WikipediaLanguage.getDefault(), ReplacementType.of(ReplacementKind.SIMPLE, "A"))
+            ObsoleteReplacementType.of(
+                WikipediaLanguage.getDefault(),
+                ReplacementType.ofType(ReplacementKind.SIMPLE, "A")
+            )
         );
         assertEquals(expected, new HashSet<>(obsoleteMisspellingListener.getObsoleteMisspellings(map1, map2)));
     }

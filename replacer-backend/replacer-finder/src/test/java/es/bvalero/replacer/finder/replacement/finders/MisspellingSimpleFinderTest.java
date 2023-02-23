@@ -83,7 +83,7 @@ class MisspellingSimpleFinderTest {
             .builder()
             .start(4)
             .text("abadia")
-            .type(ReplacementType.of(ReplacementKind.SIMPLE, "abadia"))
+            .type(ReplacementType.ofType(ReplacementKind.SIMPLE, "abadia"))
             .suggestions(List.of(Suggestion.ofNoComment("abadia"), Suggestion.ofNoComment("abadía")))
             .build();
         assertEquals(Set.of(expected), new HashSet<>(results));
@@ -103,14 +103,14 @@ class MisspellingSimpleFinderTest {
             .builder()
             .start(4)
             .text("abadia")
-            .type(ReplacementType.of(ReplacementKind.SIMPLE, "abadia"))
+            .type(ReplacementType.ofType(ReplacementKind.SIMPLE, "abadia"))
             .suggestions(List.of(Suggestion.ofNoComment("abadia"), Suggestion.ofNoComment("abadía")))
             .build();
         Replacement expected2 = Replacement
             .builder()
             .start(11)
             .text("online")
-            .type(ReplacementType.of(ReplacementKind.SIMPLE, "online"))
+            .type(ReplacementType.ofType(ReplacementKind.SIMPLE, "online"))
             .suggestions(List.of(Suggestion.ofNoComment("online"), Suggestion.ofNoComment("en línea")))
             .build();
         assertEquals(Set.of(expected1, expected2), new HashSet<>(results));
@@ -129,7 +129,7 @@ class MisspellingSimpleFinderTest {
             .builder()
             .start(4)
             .text("Abadia")
-            .type(ReplacementType.of(ReplacementKind.SIMPLE, "abadia"))
+            .type(ReplacementType.ofType(ReplacementKind.SIMPLE, "abadia"))
             .suggestions(List.of(Suggestion.ofNoComment("Abadia"), Suggestion.ofNoComment("Abadía")))
             .build();
         assertEquals(Set.of(expected), new HashSet<>(results));
@@ -148,7 +148,7 @@ class MisspellingSimpleFinderTest {
             .builder()
             .start(3)
             .text("Brazil")
-            .type(ReplacementType.of(ReplacementKind.SIMPLE, "Brazil"))
+            .type(ReplacementType.ofType(ReplacementKind.SIMPLE, "Brazil"))
             .suggestions(List.of(Suggestion.ofNoComment("Brazil"), Suggestion.ofNoComment("Brasil")))
             .build();
         assertEquals(Set.of(expected), new HashSet<>(results));
@@ -167,7 +167,7 @@ class MisspellingSimpleFinderTest {
             .builder()
             .start(3)
             .text("Enero")
-            .type(ReplacementType.of(ReplacementKind.SIMPLE, "Enero"))
+            .type(ReplacementType.ofType(ReplacementKind.SIMPLE, "Enero"))
             .suggestions(List.of(Suggestion.ofNoComment("Enero"), Suggestion.ofNoComment("enero")))
             .build();
         assertEquals(Set.of(expected), new HashSet<>(results));
@@ -186,7 +186,7 @@ class MisspellingSimpleFinderTest {
             .builder()
             .start(3)
             .text("ves")
-            .type(ReplacementType.of(ReplacementKind.SIMPLE, "ves"))
+            .type(ReplacementType.ofType(ReplacementKind.SIMPLE, "ves"))
             .suggestions(List.of(Suggestion.ofNoComment("ves"), Suggestion.ofNoComment("vez")))
             .build();
         assertEquals(Set.of(expected), new HashSet<>(results));
@@ -205,7 +205,7 @@ class MisspellingSimpleFinderTest {
             .builder()
             .start(3)
             .text("angola")
-            .type(ReplacementType.of(ReplacementKind.SIMPLE, "angola"))
+            .type(ReplacementType.ofType(ReplacementKind.SIMPLE, "angola"))
             .suggestions(List.of(Suggestion.ofNoComment("angola"), Suggestion.ofNoComment("Angola")))
             .build();
         assertEquals(Set.of(expected), new HashSet<>(results));
@@ -224,7 +224,7 @@ class MisspellingSimpleFinderTest {
             .builder()
             .start(3)
             .text("OVNI")
-            .type(ReplacementType.of(ReplacementKind.SIMPLE, "OVNI"))
+            .type(ReplacementType.ofType(ReplacementKind.SIMPLE, "OVNI"))
             .suggestions(List.of(Suggestion.ofNoComment("OVNI"), Suggestion.ofNoComment("ovni")))
             .build();
         assertEquals(Set.of(expected), new HashSet<>(results));
@@ -243,7 +243,7 @@ class MisspellingSimpleFinderTest {
             .builder()
             .start(21)
             .text("Text")
-            .type(ReplacementType.of(ReplacementKind.SIMPLE, "text"))
+            .type(ReplacementType.ofType(ReplacementKind.SIMPLE, "text"))
             .suggestions(List.of(Suggestion.ofNoComment("Text"), Suggestion.ofNoComment("Texto")))
             .build();
         assertEquals(Set.of(expected), new HashSet<>(results));
@@ -264,7 +264,7 @@ class MisspellingSimpleFinderTest {
             .builder()
             .start(3)
             .text("entreno")
-            .type(ReplacementType.of(ReplacementKind.SIMPLE, "entreno"))
+            .type(ReplacementType.ofType(ReplacementKind.SIMPLE, "entreno"))
             .suggestions(List.of(Suggestion.of("entreno", "sustantivo"), Suggestion.of("entrenó", "verbo")))
             .build();
         assertEquals(Set.of(expected), new HashSet<>(results));
@@ -289,7 +289,7 @@ class MisspellingSimpleFinderTest {
             .builder()
             .start(3)
             .text("avion")
-            .type(ReplacementType.of(ReplacementKind.SIMPLE, "avion"))
+            .type(ReplacementType.ofType(ReplacementKind.SIMPLE, "avion"))
             .suggestions(
                 List.of(
                     Suggestion.ofNoComment("avion"),
@@ -314,7 +314,7 @@ class MisspellingSimpleFinderTest {
             .builder()
             .start(3)
             .text("Avion")
-            .type(ReplacementType.of(ReplacementKind.SIMPLE, "avion"))
+            .type(ReplacementType.ofType(ReplacementKind.SIMPLE, "avion"))
             .suggestions(
                 List.of(
                     Suggestion.ofNoComment("Avion"),
@@ -342,7 +342,7 @@ class MisspellingSimpleFinderTest {
             .builder()
             .start(6)
             .text("am")
-            .type(ReplacementType.of(ReplacementKind.SIMPLE, "am"))
+            .type(ReplacementType.ofType(ReplacementKind.SIMPLE, "am"))
             .suggestions(
                 List.of(Suggestion.of("am", "idioma"), Suggestion.of("AM", "sigla"), Suggestion.of("a. m.", "hora"))
             )
@@ -363,7 +363,7 @@ class MisspellingSimpleFinderTest {
             .builder()
             .start(3)
             .text("Julio")
-            .type(ReplacementType.of(ReplacementKind.SIMPLE, "Julio"))
+            .type(ReplacementType.ofType(ReplacementKind.SIMPLE, "Julio"))
             .suggestions(List.of(Suggestion.of("Julio", "nombre"), Suggestion.of("julio", "mes")))
             .build();
         assertEquals(Set.of(expected), new HashSet<>(results));
@@ -384,7 +384,7 @@ class MisspellingSimpleFinderTest {
             .builder()
             .start(3)
             .text("brazil")
-            .type(ReplacementType.of(ReplacementKind.SIMPLE, "Brazil"))
+            .type(ReplacementType.ofType(ReplacementKind.SIMPLE, "Brazil"))
             .suggestions(List.of(Suggestion.ofNoComment("brazil"), Suggestion.ofNoComment("Brasil")))
             .build();
         assertEquals(Set.of(expected), new HashSet<>(results));
@@ -408,7 +408,7 @@ class MisspellingSimpleFinderTest {
             .builder()
             .start(7)
             .text("Vario")
-            .type(ReplacementType.of(ReplacementKind.SIMPLE, "vario"))
+            .type(ReplacementType.ofType(ReplacementKind.SIMPLE, "vario"))
             .suggestions(List.of(Suggestion.of("Vario", "adjetivo; nombre propio"), Suggestion.of("Varío", "verbo")))
             .build();
         assertEquals(Set.of(expected), new HashSet<>(results));
@@ -432,7 +432,7 @@ class MisspellingSimpleFinderTest {
             .builder()
             .start(6)
             .text("Barbara")
-            .type(ReplacementType.of(ReplacementKind.SIMPLE, "barbara"))
+            .type(ReplacementType.ofType(ReplacementKind.SIMPLE, "barbara"))
             .suggestions(
                 List.of(
                     Suggestion.of("Barbara", "nombre en inglés; verbo imperfecto"),
@@ -462,12 +462,12 @@ class MisspellingSimpleFinderTest {
         // Accion - false => OK
         assertEquals(Optional.empty(), misspellingFinder.findMatchingReplacementType(lang, "accion", true));
         assertEquals(
-            Optional.of(ReplacementType.of(simple, "accion")),
+            Optional.of(ReplacementType.ofType(simple, "accion")),
             misspellingFinder.findMatchingReplacementType(lang, "accion", false)
         );
         assertEquals(Optional.empty(), misspellingFinder.findMatchingReplacementType(lang, "Accion", true));
         assertEquals(
-            Optional.of(ReplacementType.of(simple, "accion")),
+            Optional.of(ReplacementType.ofType(simple, "accion")),
             misspellingFinder.findMatchingReplacementType(lang, "Accion", false)
         );
 
@@ -479,7 +479,7 @@ class MisspellingSimpleFinderTest {
         assertEquals(Optional.empty(), misspellingFinder.findMatchingReplacementType(lang, "enero", true));
         assertEquals(Optional.empty(), misspellingFinder.findMatchingReplacementType(lang, "enero", false));
         assertEquals(
-            Optional.of(ReplacementType.of(simple, "Enero")),
+            Optional.of(ReplacementType.ofType(simple, "Enero")),
             misspellingFinder.findMatchingReplacementType(lang, "Enero", true)
         );
         assertEquals(Optional.empty(), misspellingFinder.findMatchingReplacementType(lang, "Enero", false));
@@ -490,7 +490,7 @@ class MisspellingSimpleFinderTest {
         // Madrid - true  => KO
         // Madrid - false => KO
         assertEquals(
-            Optional.of(ReplacementType.of(simple, "madrid")),
+            Optional.of(ReplacementType.ofType(simple, "madrid")),
             misspellingFinder.findMatchingReplacementType(lang, "madrid", true)
         );
         assertEquals(Optional.empty(), misspellingFinder.findMatchingReplacementType(lang, "madrid", false));
@@ -504,12 +504,12 @@ class MisspellingSimpleFinderTest {
         // Peru - false => OK
         assertEquals(Optional.empty(), misspellingFinder.findMatchingReplacementType(lang, "peru", true));
         assertEquals(
-            Optional.of(ReplacementType.of(simple, "peru")),
+            Optional.of(ReplacementType.ofType(simple, "peru")),
             misspellingFinder.findMatchingReplacementType(lang, "peru", false)
         );
         assertEquals(Optional.empty(), misspellingFinder.findMatchingReplacementType(lang, "Peru", true));
         assertEquals(
-            Optional.of(ReplacementType.of(simple, "peru")),
+            Optional.of(ReplacementType.ofType(simple, "peru")),
             misspellingFinder.findMatchingReplacementType(lang, "Peru", false)
         );
     }

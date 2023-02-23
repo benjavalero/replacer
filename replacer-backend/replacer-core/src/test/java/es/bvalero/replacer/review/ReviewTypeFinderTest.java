@@ -56,7 +56,7 @@ class ReviewTypeFinderTest {
     private final Replacement replacement = Replacement
         .builder()
         .start(offset)
-        .type(ReplacementType.of(ReplacementKind.SIMPLE, "Y"))
+        .type(ReplacementType.ofType(ReplacementKind.SIMPLE, "Y"))
         .text("Y")
         .suggestions(List.of(Suggestion.ofNoComment("Z")))
         .build();
@@ -246,7 +246,7 @@ class ReviewTypeFinderTest {
         final Replacement replacement2 = Replacement
             .builder()
             .start(offset + 1)
-            .type(ReplacementType.of(ReplacementKind.SIMPLE, "Z"))
+            .type(ReplacementType.ofType(ReplacementKind.SIMPLE, "Z"))
             .text("Z")
             .suggestions(List.of(Suggestion.ofNoComment("z")))
             .build();

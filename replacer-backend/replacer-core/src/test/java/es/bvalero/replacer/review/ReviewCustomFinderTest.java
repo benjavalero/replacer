@@ -471,7 +471,7 @@ class ReviewCustomFinderTest {
             .builder()
             .start(2)
             .text("lucho")
-            .type(ReplacementType.of(ReplacementKind.SIMPLE, "lucho"))
+            .type(ReplacementType.ofType(ReplacementKind.SIMPLE, "lucho"))
             .suggestions(List.of(suggestion))
             .build();
         Collection<Replacement> replacements = List.of(replacement);
@@ -505,7 +505,7 @@ class ReviewCustomFinderTest {
             .builder()
             .start(8)
             .text("Leon")
-            .type(ReplacementType.of(ReplacementKind.SIMPLE, "leon"))
+            .type(ReplacementType.ofType(ReplacementKind.SIMPLE, "leon"))
             .suggestions(List.of(Suggestion.ofNoComment("León")))
             .build();
         Collection<Replacement> replacements = List.of(replacement);

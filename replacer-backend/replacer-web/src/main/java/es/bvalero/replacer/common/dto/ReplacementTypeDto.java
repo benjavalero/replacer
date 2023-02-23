@@ -31,6 +31,6 @@ public class ReplacementTypeDto {
     }
 
     public ReplacementType toDomain() {
-        return ReplacementType.of(this.kind, this.subtype);
+        return ReplacementType.ofType(this.kind, this.subtype);
     }
 }

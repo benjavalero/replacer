@@ -76,7 +76,7 @@ public abstract class MisspellingFinder implements ReplacementFinder {
         return Replacement
             .builder()
             .page(page)
-            .type(ReplacementType.of(getType(), getSubtype(text, page.getPageKey().getLang())))
+            .type(ReplacementType.ofType(getType(), getSubtype(text, page.getPageKey().getLang())))
             .start(start)
             .text(text)
             .suggestions(findSuggestions(text, page.getPageKey().getLang()))
@@ -155,7 +155,7 @@ public abstract class MisspellingFinder implements ReplacementFinder {
                 (!misspelling.get().isCaseSensitive() && !caseSensitive)
             )
         ) {
-            type = ReplacementType.of(misspelling.get().getReplacementKind(), misspelling.get().getWord());
+            type = ReplacementType.ofType(misspelling.get().getReplacementKind(), misspelling.get().getWord());
         }
 
         return Optional.ofNullable(type);

@@ -50,7 +50,10 @@ class PageListControllerTest {
 
         verify(userRightsService).validateBotUser(userId);
         verify(pageFindByTypeService)
-            .findPagesToReviewByType(WikipediaLanguage.SPANISH, ReplacementType.of(ReplacementKind.SIMPLE, "Africa"));
+            .findPagesToReviewByType(
+                WikipediaLanguage.SPANISH,
+                ReplacementType.ofType(ReplacementKind.SIMPLE, "Africa")
+            );
     }
 
     @Test
@@ -64,7 +67,10 @@ class PageListControllerTest {
 
         verify(userRightsService).validateBotUser(userId);
         verify(pageFindByTypeService, never())
-            .findPagesToReviewByType(WikipediaLanguage.SPANISH, ReplacementType.of(ReplacementKind.SIMPLE, "Africa"));
+            .findPagesToReviewByType(
+                WikipediaLanguage.SPANISH,
+                ReplacementType.ofType(ReplacementKind.SIMPLE, "Africa")
+            );
     }
 
     @Test
@@ -79,7 +85,10 @@ class PageListControllerTest {
 
         verify(userRightsService).validateBotUser(userId);
         verify(replacementService)
-            .reviewReplacementsByType(WikipediaLanguage.SPANISH, ReplacementType.of(ReplacementKind.SIMPLE, "Africa"));
+            .reviewReplacementsByType(
+                WikipediaLanguage.SPANISH,
+                ReplacementType.ofType(ReplacementKind.SIMPLE, "Africa")
+            );
     }
 
     @Test
@@ -96,6 +105,9 @@ class PageListControllerTest {
 
         verify(userRightsService).validateBotUser(userId);
         verify(replacementService, never())
-            .reviewReplacementsByType(WikipediaLanguage.SPANISH, ReplacementType.of(ReplacementKind.SIMPLE, "Africa"));
+            .reviewReplacementsByType(
+                WikipediaLanguage.SPANISH,
+                ReplacementType.ofType(ReplacementKind.SIMPLE, "Africa")
+            );
     }
 }

@@ -83,7 +83,7 @@ class ObsoleteMisspellingListener implements PropertyChangeListener, ObsoleteRep
                 );
                 oldWords
                     .stream()
-                    .map(word -> ReplacementType.of(misspellingType, word))
+                    .map(word -> ReplacementType.ofType(misspellingType, word))
                     .forEach(type -> types.add(ObsoleteReplacementType.of(lang, type)));
             }
         }

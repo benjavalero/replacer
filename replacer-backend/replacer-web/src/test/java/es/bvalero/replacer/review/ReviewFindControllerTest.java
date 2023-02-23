@@ -78,7 +78,7 @@ class ReviewFindControllerTest {
         .builder()
         .start(start)
         .text(rep)
-        .type(ReplacementType.of(ReplacementKind.SIMPLE, rep))
+        .type(ReplacementType.ofType(ReplacementKind.SIMPLE, rep))
         .suggestions(List.of(suggestion))
         .build();
     private final int numPending = 100;

@@ -39,7 +39,7 @@ class ReplacementValidationControllerTest {
     void testValidateCustomReplacement() throws Exception {
         final String replacement = "Africa";
         when(replacementTypeMatchService.findMatchingReplacementType(WikipediaLanguage.SPANISH, replacement, true))
-            .thenReturn(Optional.of(ReplacementType.of(ReplacementKind.SIMPLE, replacement)));
+            .thenReturn(Optional.of(ReplacementType.ofType(ReplacementKind.SIMPLE, replacement)));
 
         mvc
             .perform(

@@ -64,7 +64,7 @@ class ReviewSaveServiceTest {
         ReviewedReplacement reviewed = ReviewedReplacement
             .builder()
             .pageKey(pageKey)
-            .type(ReplacementType.of(ReplacementKind.SIMPLE, "1"))
+            .type(ReplacementType.ofType(ReplacementKind.SIMPLE, "1"))
             .start(1)
             .reviewer("A")
             .fixed(true)
@@ -89,14 +89,14 @@ class ReviewSaveServiceTest {
         ReviewedReplacement r1 = ReviewedReplacement
             .builder()
             .pageKey(pageKey)
-            .type(ReplacementType.of(ReplacementKind.SIMPLE, "1"))
+            .type(ReplacementType.ofType(ReplacementKind.SIMPLE, "1"))
             .start(1)
             .reviewer(reviewer)
             .build();
         ReviewedReplacement r2 = ReviewedReplacement
             .builder()
             .pageKey(pageKey)
-            .type(ReplacementType.of(ReplacementKind.COMPOSED, "2"))
+            .type(ReplacementType.ofType(ReplacementKind.COMPOSED, "2"))
             .start(2)
             .reviewer(reviewer)
             .build();
@@ -126,7 +126,7 @@ class ReviewSaveServiceTest {
         ReviewedReplacement r1 = ReviewedReplacement
             .builder()
             .pageKey(pageKey)
-            .type(ReplacementType.of(ReplacementKind.SIMPLE, "1"))
+            .type(ReplacementType.ofType(ReplacementKind.SIMPLE, "1"))
             .start(1)
             .reviewer(reviewer)
             .fixed(true)
@@ -134,7 +134,7 @@ class ReviewSaveServiceTest {
         ReviewedReplacement r2 = ReviewedReplacement
             .builder()
             .pageKey(pageKey)
-            .type(ReplacementType.of(ReplacementKind.COMPOSED, "2"))
+            .type(ReplacementType.ofType(ReplacementKind.COMPOSED, "2"))
             .start(2)
             .reviewer(reviewer)
             .fixed(true)

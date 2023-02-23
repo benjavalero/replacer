@@ -34,7 +34,7 @@ class PageCountControllerTest {
 
     @Test
     void testFindReplacementCount() throws Exception {
-        ReplacementType type = ReplacementType.of(ReplacementKind.SIMPLE, "Y");
+        ReplacementType type = ReplacementType.ofType(ReplacementKind.SIMPLE, "Y");
         ResultCount<ReplacementType> count = ResultCount.of(type, 100);
         Collection<ResultCount<ReplacementType>> counts = Collections.singletonList(count);
         UserId userId = UserId.of(WikipediaLanguage.SPANISH, "A");

@@ -2,21 +2,24 @@ package es.bvalero.replacer.common.domain;
 
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Value;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.NonNull;
 
 /** Type of replacement found in the content of a page */
 @Value
+@AllArgsConstructor(access = AccessLevel.PRIVATE) // Override the default constructor to constrain the access
 public class ReplacementType {
 
     public static final ReplacementType NO_TYPE = ofNoType();
-    public static final ReplacementType DATE = ReplacementType.of(ReplacementKind.STYLE, "Fechas");
-    public static final ReplacementType ACUTE_O = ReplacementType.of(ReplacementKind.STYLE, "ó con tilde");
+    public static final ReplacementType DATE = ReplacementType.ofType(ReplacementKind.STYLE, "Fechas");
+    public static final ReplacementType ACUTE_O = ReplacementType.ofType(ReplacementKind.STYLE, "ó con tilde");
 
-    public static final ReplacementType CENTURY = ReplacementType.of(ReplacementKind.STYLE, "Siglo sin versalitas");
-    public static final ReplacementType COORDINATES = ReplacementType.of(ReplacementKind.STYLE, "Coordenadas");
-    public static final ReplacementType DEGREES = ReplacementType.of(ReplacementKind.STYLE, "Grados");
+    public static final ReplacementType CENTURY = ReplacementType.ofType(ReplacementKind.STYLE, "Siglo sin versalitas");
+    public static final ReplacementType COORDINATES = ReplacementType.ofType(ReplacementKind.STYLE, "Coordenadas");
+    public static final ReplacementType DEGREES = ReplacementType.ofType(ReplacementKind.STYLE, "Grados");
 
     public static final int MAX_SUBTYPE_LENGTH = 100; // Constrained by the database
 
@@ -30,14 +33,7 @@ public class ReplacementType {
         return new ReplacementType(ReplacementKind.EMPTY, EMPTY);
     }
 
-    public static ReplacementType of(byte kind, String subtype) {
-        ReplacementKind replacementKind = ReplacementKind.valueOf(kind);
-        return replacementKind == ReplacementKind.CUSTOM
-            ? ReplacementType.ofCustom(subtype)
-            : ReplacementType.of(replacementKind, subtype);
-    }
-
-    public static ReplacementType of(ReplacementKind kind, String subtype) {
+    public static ReplacementType ofType(ReplacementKind kind, String subtype) {
         if (kind == ReplacementKind.EMPTY || kind == ReplacementKind.CUSTOM) {
             throw new IllegalArgumentException("Invalid kind for a standard type: " + kind);
         }
@@ -45,6 +41,10 @@ public class ReplacementType {
         validateSubtype(subtype);
 
         return new ReplacementType(kind, subtype);
+    }
+
+    public static ReplacementType ofType(byte kind, String subtype) {
+        return ReplacementType.ofType(ReplacementKind.valueOf(kind), subtype);
     }
 
     public static ReplacementType ofCustom(String replacement) {
