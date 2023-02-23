@@ -1,10 +1,9 @@
 package es.bvalero.replacer.review;
 
 import es.bvalero.replacer.page.PageKey;
+import java.util.*;
 import lombok.AccessLevel;
 import lombok.Getter;
-
-import java.util.*;
 
 // It's not worth to make this class immutable.
 // Instead, we encapsulate the logic to manage the internal list.

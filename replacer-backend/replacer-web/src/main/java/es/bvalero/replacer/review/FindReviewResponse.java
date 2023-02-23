@@ -22,10 +22,7 @@ class FindReviewResponse {
     @NonNull
     Collection<ReviewReplacement> replacements;
 
-    @Schema(
-        description = "Number of pending pages to review of the given type",
-        example = "1704147"
-    )
+    @Schema(description = "Number of pending pages to review of the given type", example = "1704147")
     @Nullable
     Integer numPending;
 }
