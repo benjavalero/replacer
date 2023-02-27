@@ -196,7 +196,7 @@ export class EditPageComponent implements OnChanges {
           this.userService.clearSession();
           window.location.reload();
         } else {
-          this.alertService.addErrorMessage('Error al guardar la página');
+          this.alertService.addErrorMessage('Error al guardar la página: ' + (err.error?.message || err.message));
         }
       },
       complete: () => {

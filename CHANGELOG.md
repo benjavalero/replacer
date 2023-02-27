@@ -1,5 +1,8 @@
 # Versions
 
+## 2.23.4 (??)
+- Capture Wikipedia exceptions when saving a page in order to display a descriptive message
+
 ## 2.23.3 (23 Feb 2023)
 - Fix: custom types can be built from the controller when receiving a custom reviewed replacement
 
