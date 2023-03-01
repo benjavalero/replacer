@@ -50,7 +50,7 @@ class ReviewFindControllerTest {
 
     private final int pageId = 3;
     private final String title = "T";
-    private final String content = "C";
+    private final String content = "ABCDE";
     private final WikipediaTimestamp now = WikipediaTimestamp.now();
     private final WikipediaTimestamp queryTimestamp = now;
     private final WikipediaPage page = WikipediaPage
@@ -71,9 +71,9 @@ class ReviewFindControllerTest {
         .byteOffset(0)
         .anchor(anchor)
         .build();
-    private final int start = 5;
-    private final String rep = "A";
-    private final Suggestion suggestion = Suggestion.of("a", "b");
+    private final int start = 2;
+    private final String rep = "C";
+    private final Suggestion suggestion = Suggestion.of("c", "ç");
     private final Replacement replacement = Replacement
         .builder()
         .start(start)

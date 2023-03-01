@@ -34,7 +34,7 @@ class ReviewNoTypeFinderTest {
     private final int randomId = 1;
     private final int randomId2 = 2;
     private final String content = "XYZ";
-    private final String content2 = "Y";
+    private final String content2 = "AYB";
     private final PageKey randomPageKey = PageKey.of(WikipediaLanguage.getDefault(), randomId);
     private final PageKey randomPageKey2 = PageKey.of(WikipediaLanguage.getDefault(), randomId2);
     private final WikipediaPage page = WikipediaPage
@@ -55,10 +55,9 @@ class ReviewNoTypeFinderTest {
         .lastUpdate(WikipediaTimestamp.now())
         .queryTimestamp(WikipediaTimestamp.now())
         .build();
-    private final int offset = 1;
     private final Replacement replacement = Replacement
         .builder()
-        .start(offset)
+        .start(1)
         .text("Y")
         .type(ReplacementType.ofType(ReplacementKind.STYLE, "Y"))
         .suggestions(List.of(Suggestion.ofNoComment("Z")))

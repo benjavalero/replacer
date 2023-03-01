@@ -2,7 +2,6 @@ package es.bvalero.replacer.finder;
 
 import java.util.Objects;
 import org.apache.commons.lang3.Range;
-import org.jetbrains.annotations.TestOnly;
 import org.jetbrains.annotations.VisibleForTesting;
 
 /** Base interface for the finder results: cosmetics, immutables and replacements. */
@@ -41,13 +40,17 @@ public interface FinderResult extends Comparable<FinderResult> {
         return getRange().containsRange(r.getRange());
     }
 
-    @TestOnly
     default boolean validate(String pageContent) {
         // Validate positions only on tests not to penalize the performance
         if (getText().equals(pageContent.substring(getStart(), getEnd()))) {
             return true;
         } else {
-            throw new IllegalArgumentException("Wrong positions in Finder Result");
+            String msg = String.format(
+                "Finder result (%d - %s) doesn't match with page content",
+                this.getStart(),
+                this.getText()
+            );
+            throw new IllegalStateException(msg);
         }
     }
 }

@@ -23,4 +23,19 @@ class Review {
 
     @Nullable
     Integer numPending;
+
+    private Review(
+        WikipediaPage page,
+        @Nullable WikipediaSection section,
+        Collection<Replacement> replacements,
+        @Nullable Integer numPending
+    ) {
+        // Validate replacement positions
+        replacements.forEach(replacement -> replacement.validate(page.getContent()));
+
+        this.page = page;
+        this.section = section;
+        this.replacements = replacements;
+        this.numPending = numPending;
+    }
 }
