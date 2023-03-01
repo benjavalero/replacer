@@ -299,7 +299,7 @@ class WikipediaPageApiRepository implements WikipediaPageRepository {
     @Override
     public void save(WikipediaPageSave pageSave, AccessToken accessToken) throws WikipediaException {
         EditToken editToken = getEditToken(pageSave.getPageKey(), accessToken);
-        validateEditToken(pageSave.getPageKey(), editToken, pageSave.getQueryTimestamp());
+        validateEditTimestamp(pageSave.getPageKey(), editToken.getTimestamp(), pageSave.getQueryTimestamp());
 
         WikipediaApiRequest apiRequest = WikipediaApiRequest
             .builder()
@@ -311,15 +311,18 @@ class WikipediaPageApiRepository implements WikipediaPageRepository {
         wikipediaApiRequestHelper.executeApiRequest(apiRequest);
     }
 
-    private void validateEditToken(PageKey pageKey, EditToken editToken, WikipediaTimestamp queryTimestamp)
-        throws WikipediaConflictException {
+    private void validateEditTimestamp(
+        PageKey pageKey,
+        WikipediaTimestamp editTimestamp,
+        WikipediaTimestamp queryTimestamp
+    ) throws WikipediaConflictException {
         // Pre-check of edit conflicts
-        if (!queryTimestamp.toLocalDateTime().isAfter(editToken.getTimestamp().toLocalDateTime())) {
+        if (queryTimestamp.isBeforeOrEquals(editTimestamp)) {
             String message = String.format(
-                "Page edited at the same time: %s -%s - %s",
+                "Page edited at the same time: %s - %s - %s",
                 pageKey,
                 queryTimestamp,
-                queryTimestamp
+                editTimestamp
             );
             // This exception is always logged by the aspect-based library even when ignored
             // See: https://github.com/rozidan/logger-spring-boot/issues/3

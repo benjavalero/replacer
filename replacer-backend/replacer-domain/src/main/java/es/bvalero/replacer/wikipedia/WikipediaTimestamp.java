@@ -7,7 +7,7 @@ import java.time.temporal.ChronoUnit;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Setter;
-import org.jetbrains.annotations.TestOnly;
+import org.jetbrains.annotations.VisibleForTesting;
 
 /** Timestamp in Wikipedia, for instance for the last update or the query instant. */
 @EqualsAndHashCode
@@ -32,7 +32,7 @@ public class WikipediaTimestamp {
         return of(LocalDateTime.now());
     }
 
-    @TestOnly
+    @VisibleForTesting
     public static WikipediaTimestamp of(LocalDateTime localDateTime) {
         WikipediaTimestamp wikipediaTimestamp = new WikipediaTimestamp();
         wikipediaTimestamp.setLocalDateTime(localDateTime.truncatedTo(ChronoUnit.SECONDS));
@@ -43,13 +43,17 @@ public class WikipediaTimestamp {
         return this.localDateTime.toLocalDate();
     }
 
-    @TestOnly
+    @VisibleForTesting
     LocalDateTime toLocalDateTime() {
         return this.localDateTime;
     }
 
     private static LocalDateTime parseWikipediaTimestamp(String timestamp) {
         return LocalDateTime.from(WIKIPEDIA_DATE_FORMATTER.parse(timestamp)).truncatedTo(ChronoUnit.SECONDS);
+    }
+
+    public boolean isBeforeOrEquals(WikipediaTimestamp timestamp) {
+        return !this.toLocalDateTime().isAfter(timestamp.toLocalDateTime());
     }
 
     @Override
