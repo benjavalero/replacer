@@ -11,6 +11,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.VisibleForTesting;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
@@ -19,6 +20,9 @@ import org.springframework.lang.Nullable;
 @Data
 @NoArgsConstructor
 class ReviewPage {
+
+    @VisibleForTesting
+    static final String EMPTY_CONTENT = " ";
 
     private static final int SHORT_CONTENT_LENGTH = 50;
 
@@ -37,7 +41,7 @@ class ReviewPage {
     private String title;
 
     @Schema(
-        description = "Page (or section) content",
+        description = "Page (or section) content. When saving without changes, it matches a string with an only whitespace.",
         requiredMode = REQUIRED,
         example = "== Biografía ==Hijo de humildes inmigrantes piamonteses [...]"
     )
@@ -68,5 +72,9 @@ class ReviewPage {
     @JsonIgnore
     public int getSectionOffset() {
         return this.section != null ? this.section.getOffset() : 0;
+    }
+
+    boolean isReviewedWithoutChanges() {
+        return this.content.equals(EMPTY_CONTENT);
     }
 }

@@ -27,8 +27,6 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("api/review")
 public class ReviewSaveController {
 
-    static final String EMPTY_CONTENT = " ";
-
     @Autowired
     private ReviewSaveService reviewSaveService;
 
@@ -50,7 +48,7 @@ public class ReviewSaveController {
         }
 
         String content = request.getPage().getContent();
-        if (StringUtils.isBlank(content) && !EMPTY_CONTENT.equals(content)) {
+        if (StringUtils.isBlank(content) && !request.getPage().isReviewedWithoutChanges()) {
             LOGGER.error("Non valid empty content");
             return ResponseEntity.badRequest().build();
         }
@@ -60,7 +58,7 @@ public class ReviewSaveController {
             request.getPage().getSectionOffset(),
             queryParameters
         );
-        if (EMPTY_CONTENT.equals(content)) {
+        if (request.getPage().isReviewedWithoutChanges()) {
             reviewSaveService.markAsReviewed(reviewed, false);
         } else {
             PageKey pageKey = PageKey.of(queryParameters.getWikipediaLanguage(), pageId);

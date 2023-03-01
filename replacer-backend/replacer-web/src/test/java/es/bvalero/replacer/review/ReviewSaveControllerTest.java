@@ -1,6 +1,6 @@
 package es.bvalero.replacer.review;
 
-import static es.bvalero.replacer.review.ReviewSaveController.EMPTY_CONTENT;
+import static es.bvalero.replacer.review.ReviewPage.EMPTY_CONTENT;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
