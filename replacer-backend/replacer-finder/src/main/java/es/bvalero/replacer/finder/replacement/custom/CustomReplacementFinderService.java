@@ -1,5 +1,6 @@
 package es.bvalero.replacer.finder.replacement.custom;
 
+import es.bvalero.replacer.common.domain.CustomType;
 import es.bvalero.replacer.finder.*;
 import java.util.Collections;
 import java.util.Set;
@@ -23,8 +24,8 @@ public class CustomReplacementFinderService implements FinderService<Replacement
         throw new UnsupportedOperationException();
     }
 
-    public Iterable<Replacement> findCustomReplacements(FinderPage page, CustomOptions customOptions) {
-        final CustomReplacementFinder finder = CustomReplacementFinder.of(customOptions);
+    public Iterable<Replacement> findCustomReplacements(FinderPage page, CustomType customType) {
+        final CustomReplacementFinder finder = CustomReplacementFinder.of(customType);
         return findIterable(page, Collections.singleton(finder));
     }
 }

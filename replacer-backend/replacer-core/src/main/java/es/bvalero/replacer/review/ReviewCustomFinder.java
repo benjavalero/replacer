@@ -1,7 +1,5 @@
 package es.bvalero.replacer.review;
 
-import es.bvalero.replacer.common.domain.ReplacementKind;
-import es.bvalero.replacer.finder.CustomOptions;
 import es.bvalero.replacer.finder.CustomReplacementFindService;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.page.PageKey;
@@ -44,16 +42,15 @@ class ReviewCustomFinder extends ReviewFinder {
         int totalToReview = searchResult.getTotal();
         final Set<Integer> pageIds = new HashSet<>(searchResult.getPageIds());
 
-        String subtype = options.getType().getSubtype();
-        boolean caseSensitive = options.getCs() != null && Boolean.TRUE.equals(options.getCs());
-        assert options.getType().getKind() == ReplacementKind.CUSTOM;
-
         // Find all the pages already reviewed for this custom replacement
         // Make it out of the loop as we are not taking into account the offset for this
         List<Integer> reviewedIds = new ArrayList<>();
         if (!pageIds.isEmpty()) {
             reviewedIds.addAll(
-                customReplacementService.findPagesReviewed(options.getUserId().getLang(), subtype, caseSensitive)
+                customReplacementService.findPagesReviewed(
+                    options.getUserId().getLang(),
+                    options.getType().toCustomType()
+                )
             );
         }
 
@@ -91,9 +88,6 @@ class ReviewCustomFinder extends ReviewFinder {
     }
 
     private WikipediaSearchResult findWikipediaResults(ReviewOptions options, int offset) {
-        String subtype = options.getType().getSubtype();
-        Boolean cs = options.getCs();
-        assert cs != null;
         WikipediaSearchRequest searchRequest = WikipediaSearchRequest
             .builder()
             .lang(options.getUserId().getLang())
@@ -102,8 +96,8 @@ class ReviewCustomFinder extends ReviewFinder {
                     .map(WikipediaNamespace::valueOf)
                     .collect(Collectors.toUnmodifiableSet())
             )
-            .text(subtype)
-            .caseSensitive(cs)
+            .text(options.getType().getSubtype())
+            .caseSensitive(options.getType().toCustomType().isCaseSensitive())
             .offset(offset)
             .limit(getCacheSize())
             .build();
@@ -118,7 +112,7 @@ class ReviewCustomFinder extends ReviewFinder {
     ) {
         Collection<Replacement> customReplacements = customReplacementFindService.findCustomReplacements(
             page,
-            convertOptions(options)
+            options.getType().toCustomType()
         );
 
         // Add the custom replacements to the standard ones preferring the custom ones
@@ -137,14 +131,5 @@ class ReviewCustomFinder extends ReviewFinder {
         }
 
         return merged;
-    }
-
-    private CustomOptions convertOptions(ReviewOptions options) {
-        assert options.getOptionsType() == ReviewOptionsType.CUSTOM;
-        return CustomOptions.of(
-            options.getType().getSubtype(),
-            Objects.requireNonNull(options.getCs()),
-            Objects.requireNonNull(options.getSuggestion())
-        );
     }
 }

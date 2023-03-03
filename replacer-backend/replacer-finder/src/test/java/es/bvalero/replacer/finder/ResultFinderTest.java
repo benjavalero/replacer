@@ -5,7 +5,7 @@ import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.when;
 
 import es.bvalero.replacer.common.domain.ReplacementKind;
-import es.bvalero.replacer.common.domain.ReplacementType;
+import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.finder.cosmetic.CosmeticFinderService;
 import es.bvalero.replacer.finder.immutable.ImmutableFinderService;
 import es.bvalero.replacer.finder.replacement.ReplacementFinderService;
@@ -59,7 +59,7 @@ class ResultFinderTest {
             .builder()
             .start(0)
             .text("An")
-            .type(ReplacementType.ofType(ReplacementKind.SIMPLE, "an"))
+            .type(StandardType.of(ReplacementKind.SIMPLE, "an"))
             .suggestions(List.of(Suggestion.ofNoComment("Un")))
             .build();
         when(replacementFinderService.find(any(FinderPage.class))).thenReturn(new HashSet<>(List.of(replacement)));
@@ -78,14 +78,14 @@ class ResultFinderTest {
             .builder()
             .start(0)
             .text("An")
-            .type(ReplacementType.ofType(ReplacementKind.SIMPLE, "an"))
+            .type(StandardType.of(ReplacementKind.SIMPLE, "an"))
             .suggestions(List.of(Suggestion.ofNoComment("Un")))
             .build();
         Replacement replacement2 = Replacement
             .builder()
             .start(3)
             .text("example")
-            .type(ReplacementType.ofType(ReplacementKind.SIMPLE, "example"))
+            .type(StandardType.of(ReplacementKind.SIMPLE, "example"))
             .suggestions(List.of(Suggestion.ofNoComment("ejemplo")))
             .build();
         when(replacementFinderService.find(any(FinderPage.class)))
@@ -105,14 +105,14 @@ class ResultFinderTest {
             .builder()
             .start(0)
             .text("An")
-            .type(ReplacementType.ofType(ReplacementKind.SIMPLE, "an"))
+            .type(StandardType.of(ReplacementKind.SIMPLE, "an"))
             .suggestions(List.of(Suggestion.ofNoComment("Un")))
             .build();
         Replacement replacement2 = Replacement
             .builder()
             .start(0)
             .text("An")
-            .type(ReplacementType.ofType(ReplacementKind.SIMPLE, "an"))
+            .type(StandardType.of(ReplacementKind.SIMPLE, "an"))
             .suggestions(List.of(Suggestion.ofNoComment("Un")))
             .build();
         assertEquals(replacement1, replacement2);
@@ -137,14 +137,14 @@ class ResultFinderTest {
             .builder()
             .start(0)
             .text("An")
-            .type(ReplacementType.ofType(ReplacementKind.SIMPLE, "an"))
+            .type(StandardType.of(ReplacementKind.SIMPLE, "an"))
             .suggestions(List.of(Suggestion.ofNoComment("Un")))
             .build();
         Replacement replacement2 = Replacement
             .builder()
             .start(0)
             .text("An example")
-            .type(ReplacementType.ofType(ReplacementKind.COMPOSED, "an example"))
+            .type(StandardType.of(ReplacementKind.COMPOSED, "an example"))
             .suggestions(List.of(Suggestion.ofNoComment("Un ejemplo")))
             .build();
         assertTrue(replacement2.containsStrictly(replacement1));
@@ -166,14 +166,14 @@ class ResultFinderTest {
             .builder()
             .start(0)
             .text("An")
-            .type(ReplacementType.ofType(ReplacementKind.SIMPLE, "an"))
+            .type(StandardType.of(ReplacementKind.SIMPLE, "an"))
             .suggestions(List.of(Suggestion.ofNoComment("Un")))
             .build();
         Replacement replacement2 = Replacement
             .builder()
             .start(3)
             .text("example")
-            .type(ReplacementType.ofType(ReplacementKind.SIMPLE, "example"))
+            .type(StandardType.of(ReplacementKind.SIMPLE, "example"))
             .suggestions(List.of(Suggestion.ofNoComment("ejemplo")))
             .build();
         Immutable immutable = Immutable.of(14, "two");
@@ -196,14 +196,14 @@ class ResultFinderTest {
             .builder()
             .start(0)
             .text("An")
-            .type(ReplacementType.ofType(ReplacementKind.SIMPLE, "an"))
+            .type(StandardType.of(ReplacementKind.SIMPLE, "an"))
             .suggestions(List.of(Suggestion.ofNoComment("Un")))
             .build();
         Replacement replacement2 = Replacement
             .builder()
             .start(3)
             .text("example")
-            .type(ReplacementType.ofType(ReplacementKind.SIMPLE, "example"))
+            .type(StandardType.of(ReplacementKind.SIMPLE, "example"))
             .suggestions(List.of(Suggestion.ofNoComment("ejemplo")))
             .build();
         Immutable immutable = Immutable.of(0, "An");
@@ -226,14 +226,14 @@ class ResultFinderTest {
             .builder()
             .start(0)
             .text("An")
-            .type(ReplacementType.ofType(ReplacementKind.SIMPLE, "an"))
+            .type(StandardType.of(ReplacementKind.SIMPLE, "an"))
             .suggestions(List.of(Suggestion.ofNoComment("Un")))
             .build();
         Replacement replacement2 = Replacement
             .builder()
             .start(3)
             .text("example")
-            .type(ReplacementType.ofType(ReplacementKind.SIMPLE, "ejemplo"))
+            .type(StandardType.of(ReplacementKind.SIMPLE, "ejemplo"))
             .suggestions(List.of(Suggestion.ofNoComment("ejemplo")))
             .build();
         Immutable immutable = Immutable.of(0, "An example");
@@ -255,7 +255,7 @@ class ResultFinderTest {
             .builder()
             .start(0)
             .text("An example")
-            .type(ReplacementType.ofType(ReplacementKind.COMPOSED, "an example"))
+            .type(StandardType.of(ReplacementKind.COMPOSED, "an example"))
             .suggestions(List.of(Suggestion.ofNoComment("Un ejemplo")))
             .build();
         Immutable immutable = Immutable.of(3, "example or");
@@ -275,42 +275,42 @@ class ResultFinderTest {
             .builder()
             .start(0)
             .text("A")
-            .type(ReplacementType.ofType(ReplacementKind.SIMPLE, "a"))
+            .type(StandardType.of(ReplacementKind.SIMPLE, "a"))
             .suggestions(List.of(Suggestion.ofNoComment("x")))
             .build();
         Replacement result2 = Replacement
             .builder()
             .start(1)
             .text("BC")
-            .type(ReplacementType.ofType(ReplacementKind.SIMPLE, "a"))
+            .type(StandardType.of(ReplacementKind.SIMPLE, "a"))
             .suggestions(List.of(Suggestion.ofNoComment("x")))
             .build();
         Replacement result3 = Replacement
             .builder()
             .start(1)
             .text("B")
-            .type(ReplacementType.ofType(ReplacementKind.SIMPLE, "a"))
+            .type(StandardType.of(ReplacementKind.SIMPLE, "a"))
             .suggestions(List.of(Suggestion.ofNoComment("x")))
             .build();
         Replacement result4 = Replacement
             .builder()
             .start(0)
             .text("AB")
-            .type(ReplacementType.ofType(ReplacementKind.SIMPLE, "a"))
+            .type(StandardType.of(ReplacementKind.SIMPLE, "a"))
             .suggestions(List.of(Suggestion.ofNoComment("x")))
             .build();
         Replacement result5 = Replacement
             .builder()
             .start(0)
             .text("ABC")
-            .type(ReplacementType.ofType(ReplacementKind.SIMPLE, "a"))
+            .type(StandardType.of(ReplacementKind.SIMPLE, "a"))
             .suggestions(List.of(Suggestion.ofNoComment("x")))
             .build();
         Replacement result6 = Replacement
             .builder()
             .start(2)
             .text("C")
-            .type(ReplacementType.ofType(ReplacementKind.SIMPLE, "a"))
+            .type(StandardType.of(ReplacementKind.SIMPLE, "a"))
             .suggestions(List.of(Suggestion.ofNoComment("x")))
             .build();
 

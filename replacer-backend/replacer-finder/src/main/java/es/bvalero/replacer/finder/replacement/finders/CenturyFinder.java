@@ -7,7 +7,7 @@ import com.roman.code.exception.ConversionException;
 import dk.brics.automaton.AutomatonMatcher;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
-import es.bvalero.replacer.common.domain.ReplacementType;
+import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.Replacement;
@@ -240,7 +240,7 @@ public class CenturyFinder implements ReplacementFinder {
         return Replacement
             .builder()
             .page(page)
-            .type(ReplacementType.CENTURY)
+            .type(StandardType.CENTURY)
             .start(match.start())
             .text(centuryText)
             .suggestions(suggestions)

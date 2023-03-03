@@ -2,7 +2,7 @@ package es.bvalero.replacer.finder.replacement.finders;
 
 import static es.bvalero.replacer.finder.util.FinderUtils.DECIMAL_SEPARATORS;
 
-import es.bvalero.replacer.common.domain.ReplacementType;
+import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.Suggestion;
@@ -183,7 +183,7 @@ public class CoordinatesFinder implements ReplacementFinder {
         return Replacement
             .builder()
             .page(page)
-            .type(ReplacementType.COORDINATES)
+            .type(StandardType.COORDINATES)
             .start(match.start())
             .text(match.group())
             .suggestions(List.of(Suggestion.ofNoComment(fixedCoordinates)))

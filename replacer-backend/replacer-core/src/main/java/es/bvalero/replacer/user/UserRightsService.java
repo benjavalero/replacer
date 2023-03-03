@@ -46,6 +46,12 @@ public class UserRightsService {
     }
 
     public boolean isTypeForbidden(ReplacementType type, UserId userId) {
-        return (type.isForBots() && !isBot(userId)) || (type.isForAdmin() && !isAdmin(userId));
+        return (
+            !type.isStandardType() ||
+            (
+                (type.toStandardType().isForBots() && !isBot(userId)) ||
+                (type.toStandardType().isForAdmin() && !isAdmin(userId))
+            )
+        );
     }
 }

@@ -3,6 +3,7 @@ package es.bvalero.replacer.finder.replacement.finders;
 import com.github.rozidan.springboot.logger.Loggable;
 import es.bvalero.replacer.common.domain.ReplacementKind;
 import es.bvalero.replacer.common.domain.ReplacementType;
+import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.Replacement;
@@ -76,7 +77,7 @@ public abstract class MisspellingFinder implements ReplacementFinder {
         return Replacement
             .builder()
             .page(page)
-            .type(ReplacementType.ofType(getType(), getSubtype(text, page.getPageKey().getLang())))
+            .type(StandardType.of(getType(), getSubtype(text, page.getPageKey().getLang())))
             .start(start)
             .text(text)
             .suggestions(findSuggestions(text, page.getPageKey().getLang()))
@@ -138,7 +139,7 @@ public abstract class MisspellingFinder implements ReplacementFinder {
     }
 
     @Override
-    public Optional<ReplacementType> findMatchingReplacementType(
+    public Optional<StandardType> findMatchingReplacementType(
         WikipediaLanguage lang,
         String replacement,
         boolean caseSensitive
@@ -147,7 +148,7 @@ public abstract class MisspellingFinder implements ReplacementFinder {
             ? FinderUtils.toLowerCase(replacement)
             : replacement;
         Optional<Misspelling> misspelling = findMisspellingByWord(word, lang);
-        ReplacementType type = null;
+        StandardType type = null;
         if (
             misspelling.isPresent() &&
             (
@@ -155,7 +156,7 @@ public abstract class MisspellingFinder implements ReplacementFinder {
                 (!misspelling.get().isCaseSensitive() && !caseSensitive)
             )
         ) {
-            type = ReplacementType.ofType(misspelling.get().getReplacementKind(), misspelling.get().getWord());
+            type = StandardType.of(misspelling.get().getReplacementKind(), misspelling.get().getWord());
         }
 
         return Optional.ofNullable(type);

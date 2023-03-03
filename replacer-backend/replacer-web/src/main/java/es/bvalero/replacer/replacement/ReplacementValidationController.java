@@ -1,7 +1,7 @@
 package es.bvalero.replacer.replacement;
 
 import com.github.rozidan.springboot.logger.Loggable;
-import es.bvalero.replacer.common.domain.ReplacementType;
+import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.common.dto.CommonQueryParameters;
 import es.bvalero.replacer.common.dto.ReplacementTypeDto;
 import es.bvalero.replacer.finder.ReplacementTypeMatchService;
@@ -30,7 +30,7 @@ public class ReplacementValidationController {
         @Valid CommonQueryParameters queryParameters,
         @Valid ReplacementValidationRequest validationRequest
     ) {
-        Optional<ReplacementType> type = replacementTypeMatchService.findMatchingReplacementType(
+        Optional<StandardType> type = replacementTypeMatchService.findMatchingReplacementType(
             queryParameters.getWikipediaLanguage(),
             validationRequest.getReplacement(),
             validationRequest.isCs()

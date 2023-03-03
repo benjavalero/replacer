@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import es.bvalero.replacer.common.domain.ReplacementKind;
-import es.bvalero.replacer.common.domain.ReplacementType;
+import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.Suggestion;
@@ -67,7 +67,7 @@ class MisspellingComposedFinderTest {
             .builder()
             .start(2)
             .text("aún así")
-            .type(ReplacementType.ofType(ReplacementKind.COMPOSED, "aún así"))
+            .type(StandardType.of(ReplacementKind.COMPOSED, "aún así"))
             .suggestions(List.of(Suggestion.ofNoComment("aún así"), Suggestion.ofNoComment("aun así")))
             .build();
         assertEquals(Set.of(expected), new HashSet<>(results));
@@ -87,7 +87,7 @@ class MisspellingComposedFinderTest {
             .builder()
             .start(2)
             .text("aún así")
-            .type(ReplacementType.ofType(ReplacementKind.COMPOSED, "aún así"))
+            .type(StandardType.of(ReplacementKind.COMPOSED, "aún así"))
             .suggestions(List.of(Suggestion.ofNoComment("aún así"), Suggestion.ofNoComment("aun así")))
             .build();
         assertEquals(Set.of(expected), new HashSet<>(results));
@@ -106,7 +106,7 @@ class MisspellingComposedFinderTest {
             .builder()
             .start(4)
             .text("mas.")
-            .type(ReplacementType.ofType(ReplacementKind.COMPOSED, "mas."))
+            .type(StandardType.of(ReplacementKind.COMPOSED, "mas."))
             .suggestions(List.of(Suggestion.ofNoComment("mas."), Suggestion.ofNoComment("más.")))
             .build();
         assertEquals(Set.of(expected), new HashSet<>(results));
@@ -125,7 +125,7 @@ class MisspellingComposedFinderTest {
             .builder()
             .start(4)
             .text("aun,")
-            .type(ReplacementType.ofType(ReplacementKind.COMPOSED, "aun,"))
+            .type(StandardType.of(ReplacementKind.COMPOSED, "aun,"))
             .suggestions(List.of(Suggestion.ofNoComment("aun,"), Suggestion.ofNoComment("aún,")))
             .build();
         assertEquals(Set.of(expected), new HashSet<>(results));
@@ -144,7 +144,7 @@ class MisspellingComposedFinderTest {
             .builder()
             .start(3)
             .text("Rio 2016")
-            .type(ReplacementType.ofType(ReplacementKind.COMPOSED, "Rio 2016"))
+            .type(StandardType.of(ReplacementKind.COMPOSED, "Rio 2016"))
             .suggestions(List.of(Suggestion.ofNoComment("Rio 2016"), Suggestion.ofNoComment("Río 2016")))
             .build();
         assertEquals(Set.of(expected), new HashSet<>(results));
@@ -175,7 +175,7 @@ class MisspellingComposedFinderTest {
             .builder()
             .start(0)
             .text("Parque Nacional")
-            .type(ReplacementType.ofType(ReplacementKind.COMPOSED, "Parque Nacional"))
+            .type(StandardType.of(ReplacementKind.COMPOSED, "Parque Nacional"))
             .suggestions(
                 List.of(
                     Suggestion.ofNoComment("Parque Nacional"),
@@ -200,7 +200,7 @@ class MisspellingComposedFinderTest {
             .builder()
             .start(3)
             .text("1º")
-            .type(ReplacementType.ofType(ReplacementKind.COMPOSED, "1º"))
+            .type(StandardType.of(ReplacementKind.COMPOSED, "1º"))
             .suggestions(List.of(Suggestion.ofNoComment("1º"), Suggestion.ofNoComment("1.º")))
             .build();
         assertEquals(Set.of(expected), new HashSet<>(results));
@@ -219,7 +219,7 @@ class MisspellingComposedFinderTest {
             .builder()
             .start(3)
             .text("1°")
-            .type(ReplacementType.ofType(ReplacementKind.COMPOSED, "1°"))
+            .type(StandardType.of(ReplacementKind.COMPOSED, "1°"))
             .suggestions(List.of(Suggestion.ofNoComment("1°"), Suggestion.ofNoComment("1.º")))
             .build();
         assertEquals(Set.of(expected), new HashSet<>(results));
@@ -238,7 +238,7 @@ class MisspellingComposedFinderTest {
             .builder()
             .start(3)
             .text("anti-ruso")
-            .type(ReplacementType.ofType(ReplacementKind.COMPOSED, "anti-ruso"))
+            .type(StandardType.of(ReplacementKind.COMPOSED, "anti-ruso"))
             .suggestions(List.of(Suggestion.ofNoComment("anti-ruso"), Suggestion.ofNoComment("antirruso")))
             .build();
         assertEquals(Set.of(expected), new HashSet<>(results));
@@ -257,7 +257,7 @@ class MisspellingComposedFinderTest {
             .builder()
             .start(3)
             .text("C's")
-            .type(ReplacementType.ofType(ReplacementKind.COMPOSED, "C's"))
+            .type(StandardType.of(ReplacementKind.COMPOSED, "C's"))
             .suggestions(List.of(Suggestion.ofNoComment("C's"), Suggestion.ofNoComment("Cs")))
             .build();
         assertEquals(Set.of(expected), new HashSet<>(results));
@@ -276,7 +276,7 @@ class MisspellingComposedFinderTest {
             .builder()
             .start(3)
             .text("[[siglo X]]")
-            .type(ReplacementType.ofType(ReplacementKind.COMPOSED, "[[siglo X]]"))
+            .type(StandardType.of(ReplacementKind.COMPOSED, "[[siglo X]]"))
             .suggestions(List.of(Suggestion.ofNoComment("[[siglo X]]"), Suggestion.ofNoComment("{{siglo|X||s|1}}")))
             .build();
         assertEquals(Set.of(expected), new HashSet<>(results));
@@ -296,7 +296,7 @@ class MisspellingComposedFinderTest {
             .builder()
             .start(3)
             .text(cm2.getWord())
-            .type(ReplacementType.ofType(ReplacementKind.COMPOSED, cm2.getWord()))
+            .type(StandardType.of(ReplacementKind.COMPOSED, cm2.getWord()))
             .suggestions(
                 List.of(
                     Suggestion.ofNoComment(cm2.getWord()),
@@ -321,7 +321,7 @@ class MisspellingComposedFinderTest {
             .builder()
             .start(15)
             .text("''', es")
-            .type(ReplacementType.ofType(ReplacementKind.COMPOSED, "''', es"))
+            .type(StandardType.of(ReplacementKind.COMPOSED, "''', es"))
             .suggestions(List.of(Suggestion.ofNoComment("''', es"), Suggestion.ofNoComment("''' es")))
             .build();
         assertEquals(Set.of(expected), new HashSet<>(results));

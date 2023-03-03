@@ -6,6 +6,7 @@ import static org.mockito.Mockito.when;
 
 import es.bvalero.replacer.common.domain.ReplacementKind;
 import es.bvalero.replacer.common.domain.ReplacementType;
+import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import java.util.Arrays;
 import java.util.Collection;
@@ -37,7 +38,7 @@ class PageFindByTypeServiceTest {
         List<String> sorted = List.of("Aá", "Ae", "Bñ", "Bo", "C");
 
         WikipediaLanguage lang = WikipediaLanguage.getDefault();
-        ReplacementType type = ReplacementType.ofType(ReplacementKind.STYLE, "Y");
+        StandardType type = StandardType.of(ReplacementKind.STYLE, "Y");
         when(pageRepository.findPageTitlesNotReviewedByType(lang, type)).thenReturn(list);
 
         Collection<String> result = pageFindByTypeService.findPagesToReviewByType(lang, type);

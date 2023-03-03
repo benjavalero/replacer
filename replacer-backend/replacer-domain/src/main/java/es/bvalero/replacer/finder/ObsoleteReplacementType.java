@@ -1,6 +1,6 @@
 package es.bvalero.replacer.finder;
 
-import es.bvalero.replacer.common.domain.ReplacementType;
+import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import lombok.Value;
 
@@ -8,5 +8,5 @@ import lombok.Value;
 public class ObsoleteReplacementType {
 
     WikipediaLanguage lang;
-    ReplacementType type;
+    StandardType type;
 }

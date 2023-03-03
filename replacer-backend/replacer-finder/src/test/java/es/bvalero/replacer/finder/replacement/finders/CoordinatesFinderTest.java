@@ -3,7 +3,7 @@ package es.bvalero.replacer.finder.replacement.finders;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import es.bvalero.replacer.common.domain.ReplacementType;
+import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.finder.Replacement;
 import java.util.List;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -30,7 +30,7 @@ class CoordinatesFinderTest {
         assertEquals(1, replacements.size());
 
         Replacement rep = replacements.get(0);
-        assertEquals(ReplacementType.COORDINATES, rep.getType());
+        assertEquals(StandardType.COORDINATES, rep.getType());
         assertEquals(text, rep.getText());
         assertEquals(text, rep.getSuggestions().get(0).getText());
         assertEquals(expected, rep.getSuggestions().get(1).getText());

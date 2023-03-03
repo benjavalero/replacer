@@ -32,18 +32,16 @@ public class ReviewFindController {
         @Valid CommonQueryParameters queryParameters,
         @Valid ReviewOptionsDto optionsDto
     ) {
-        Optional<Review> review = Optional.empty();
+        Optional<Review> review;
         ReviewOptions options = ReviewMapper.fromDto(optionsDto, queryParameters);
-        switch (options.getOptionsType()) {
-            case NO_TYPE:
-                review = reviewNoTypeFinder.findRandomPageReview(options);
-                break;
-            case TYPE_SUBTYPE:
-                review = reviewTypeFinder.findRandomPageReview(options);
-                break;
-            case CUSTOM:
-                review = reviewCustomFinder.findRandomPageReview(options);
-                break;
+        if (options.getType().isNoType()) {
+            review = reviewNoTypeFinder.findRandomPageReview(options);
+        } else if (options.getType().isStandardType()) {
+            review = reviewTypeFinder.findRandomPageReview(options);
+        } else if (options.getType().isCustomType()) {
+            review = reviewCustomFinder.findRandomPageReview(options);
+        } else {
+            throw new IllegalStateException();
         }
         return review.map(ReviewMapper::toDto);
     }
@@ -55,19 +53,17 @@ public class ReviewFindController {
         @Valid CommonQueryParameters queryParameters,
         @Valid ReviewOptionsDto optionsDto
     ) {
-        Optional<Review> review = Optional.empty();
+        Optional<Review> review;
         ReviewOptions options = ReviewMapper.fromDto(optionsDto, queryParameters);
         PageKey pageKey = PageKey.of(queryParameters.getWikipediaLanguage(), pageId);
-        switch (options.getOptionsType()) {
-            case NO_TYPE:
-                review = reviewNoTypeFinder.findPageReview(pageKey, options);
-                break;
-            case TYPE_SUBTYPE:
-                review = reviewTypeFinder.findPageReview(pageKey, options);
-                break;
-            case CUSTOM:
-                review = reviewCustomFinder.findPageReview(pageKey, options);
-                break;
+        if (options.getType().isNoType()) {
+            review = reviewNoTypeFinder.findPageReview(pageKey, options);
+        } else if (options.getType().isStandardType()) {
+            review = reviewTypeFinder.findPageReview(pageKey, options);
+        } else if (options.getType().isCustomType()) {
+            review = reviewCustomFinder.findPageReview(pageKey, options);
+        } else {
+            throw new IllegalStateException();
         }
         return review.map(ReviewMapper::toDto);
     }

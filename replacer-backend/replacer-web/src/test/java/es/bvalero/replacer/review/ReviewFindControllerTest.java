@@ -7,9 +7,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import es.bvalero.replacer.common.domain.ReplacementKind;
-import es.bvalero.replacer.common.domain.ReplacementType;
-import es.bvalero.replacer.common.domain.WikipediaLanguage;
+import es.bvalero.replacer.common.domain.*;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.Suggestion;
 import es.bvalero.replacer.page.PageKey;
@@ -78,7 +76,7 @@ class ReviewFindControllerTest {
         .builder()
         .start(start)
         .text(rep)
-        .type(ReplacementType.ofType(ReplacementKind.SIMPLE, rep))
+        .type(StandardType.of(ReplacementKind.SIMPLE, rep))
         .suggestions(List.of(suggestion))
         .build();
     private final int numPending = 100;
@@ -126,7 +124,8 @@ class ReviewFindControllerTest {
     @Test
     void testFindRandomPageByTypeAndSubtype() throws Exception {
         UserId userId = UserId.of(WikipediaLanguage.SPANISH, "A");
-        ReviewOptions options = ReviewOptions.ofType(userId, ReplacementKind.STYLE.getCode(), "Y");
+        StandardType type = StandardType.of(ReplacementKind.STYLE.getCode(), "Y");
+        ReviewOptions options = ReviewOptions.ofType(userId, type);
         when(reviewTypeFinder.findRandomPageReview(options)).thenReturn(Optional.of(review));
 
         mvc
@@ -139,7 +138,8 @@ class ReviewFindControllerTest {
     @Test
     void testFindRandomPageByCustomReplacement() throws Exception {
         UserId userId = UserId.of(WikipediaLanguage.SPANISH, "A");
-        ReviewOptions options = ReviewOptions.ofCustom(userId, "X", "Y", false);
+        CustomType customType = CustomType.of("X", false, "Y");
+        ReviewOptions options = ReviewOptions.ofCustom(userId, customType);
         when(reviewCustomFinder.findRandomPageReview(options)).thenReturn(Optional.of(review));
 
         mvc
@@ -178,7 +178,8 @@ class ReviewFindControllerTest {
     @Test
     void testFindPageReviewByIdByTypeAndSubtype() throws Exception {
         UserId userId = UserId.of(WikipediaLanguage.SPANISH, "A");
-        ReviewOptions options = ReviewOptions.ofType(userId, ReplacementKind.STYLE.getCode(), "Y");
+        StandardType type = StandardType.of(ReplacementKind.STYLE.getCode(), "Y");
+        ReviewOptions options = ReviewOptions.ofType(userId, type);
         PageKey pageKey = PageKey.of(WikipediaLanguage.SPANISH, 123);
         when(reviewTypeFinder.findPageReview(pageKey, options)).thenReturn(Optional.of(review));
 
@@ -192,7 +193,8 @@ class ReviewFindControllerTest {
     @Test
     void testFindPageReviewByIdAndCustomReplacement() throws Exception {
         UserId userId = UserId.of(WikipediaLanguage.SPANISH, "A");
-        ReviewOptions options = ReviewOptions.ofCustom(userId, "X", "Y", true);
+        CustomType customType = CustomType.of("X", true, "Y");
+        ReviewOptions options = ReviewOptions.ofCustom(userId, customType);
         PageKey pageKey = PageKey.of(WikipediaLanguage.SPANISH, 123);
         when(reviewCustomFinder.findPageReview(pageKey, options)).thenReturn(Optional.of(review));
 

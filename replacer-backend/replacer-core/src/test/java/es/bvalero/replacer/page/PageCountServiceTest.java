@@ -3,10 +3,7 @@ package es.bvalero.replacer.page;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
-import es.bvalero.replacer.common.domain.ReplacementKind;
-import es.bvalero.replacer.common.domain.ReplacementType;
-import es.bvalero.replacer.common.domain.ResultCount;
-import es.bvalero.replacer.common.domain.WikipediaLanguage;
+import es.bvalero.replacer.common.domain.*;
 import es.bvalero.replacer.user.UserId;
 import es.bvalero.replacer.user.UserRightsService;
 import java.util.Collection;
@@ -38,11 +35,11 @@ class PageCountServiceTest {
     void testCountReplacementsGroupedByTypeForBots() {
         WikipediaLanguage lang = WikipediaLanguage.getDefault();
 
-        ReplacementType type = ReplacementType.ofType(ReplacementKind.STYLE, "Y");
-        ResultCount<ReplacementType> count = ResultCount.of(type, 100);
-        ReplacementType typeForBots = ReplacementType.ofType(ReplacementKind.STYLE, "Z");
-        ResultCount<ReplacementType> count2 = ResultCount.of(typeForBots, 200);
-        Collection<ResultCount<ReplacementType>> counts = List.of(count, count2);
+        StandardType type = StandardType.of(ReplacementKind.STYLE, "Y");
+        ResultCount<StandardType> count = ResultCount.of(type, 100);
+        StandardType typeForBots = StandardType.of(ReplacementKind.STYLE, "Z");
+        ResultCount<StandardType> count2 = ResultCount.of(typeForBots, 200);
+        Collection<ResultCount<StandardType>> counts = List.of(count, count2);
 
         UserId user = UserId.of(lang, "user");
         UserId bot = UserId.of(lang, "bot");

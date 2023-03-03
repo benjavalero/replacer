@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import es.bvalero.replacer.XmlConfiguration;
-import es.bvalero.replacer.common.domain.ReplacementType;
+import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.Replacement;
@@ -64,7 +64,7 @@ class DateFinderTest {
         assertEquals(date, replacements.get(0).getText());
         assertEquals(date, replacements.get(0).getSuggestions().get(0).getText());
         assertEquals(expected, replacements.get(0).getSuggestions().get(1).getText());
-        assertEquals(ReplacementType.DATE, replacements.get(0).getType());
+        assertEquals(StandardType.DATE, replacements.get(0).getType());
     }
 
     @ParameterizedTest
@@ -128,7 +128,7 @@ class DateFinderTest {
         assertEquals(date, replacements.get(0).getText());
         assertEquals(date, replacements.get(0).getSuggestions().get(0).getText());
         assertEquals(expected, replacements.get(0).getSuggestions().get(1).getText());
-        assertEquals(ReplacementType.DATE, replacements.get(0).getType());
+        assertEquals(StandardType.DATE, replacements.get(0).getType());
     }
 
     @ParameterizedTest
@@ -161,7 +161,7 @@ class DateFinderTest {
         assertEquals(date, replacements.get(0).getText());
         assertEquals(date, replacements.get(0).getSuggestions().get(0).getText());
         assertEquals(expected, replacements.get(0).getSuggestions().get(1).getText());
-        assertEquals(ReplacementType.DATE, replacements.get(0).getType());
+        assertEquals(StandardType.DATE, replacements.get(0).getType());
     }
 
     @ParameterizedTest
@@ -185,7 +185,7 @@ class DateFinderTest {
         assertEquals(date, replacements.get(0).getText());
         assertEquals(date, replacements.get(0).getSuggestions().get(0).getText());
         assertEquals(expected, replacements.get(0).getSuggestions().get(1).getText());
-        assertEquals(ReplacementType.DATE, replacements.get(0).getType());
+        assertEquals(StandardType.DATE, replacements.get(0).getType());
     }
 
     @ParameterizedTest
@@ -203,7 +203,7 @@ class DateFinderTest {
         assertEquals(match, replacements.get(0).getText());
         assertEquals(match, replacements.get(0).getSuggestions().get(0).getText());
         assertEquals(fix, replacements.get(0).getSuggestions().get(1).getText());
-        assertEquals(ReplacementType.DATE, replacements.get(0).getType());
+        assertEquals(StandardType.DATE, replacements.get(0).getType());
     }
 
     @ParameterizedTest
@@ -225,7 +225,7 @@ class DateFinderTest {
         assertEquals(date, replacements.get(0).getText());
         assertEquals(date, replacements.get(0).getSuggestions().get(0).getText());
         assertEquals(expected, replacements.get(0).getSuggestions().get(1).getText());
-        assertEquals(ReplacementType.DATE, replacements.get(0).getType());
+        assertEquals(StandardType.DATE, replacements.get(0).getType());
     }
 
     @ParameterizedTest
@@ -262,7 +262,7 @@ class DateFinderTest {
         assertEquals(date, replacements.get(0).getSuggestions().get(0).getText());
         assertEquals(expected1, replacements.get(0).getSuggestions().get(1).getText());
         assertEquals(expected2, replacements.get(0).getSuggestions().get(2).getText());
-        assertEquals(ReplacementType.DATE, replacements.get(0).getType());
+        assertEquals(StandardType.DATE, replacements.get(0).getType());
     }
 
     @Test
@@ -272,8 +272,8 @@ class DateFinderTest {
         List<Replacement> replacements = dateFinder.findList(text);
 
         assertEquals(2, replacements.size());
-        assertEquals(ReplacementType.DATE, replacements.get(0).getType());
-        assertEquals(ReplacementType.DATE, replacements.get(1).getType());
+        assertEquals(StandardType.DATE, replacements.get(0).getType());
+        assertEquals(StandardType.DATE, replacements.get(1).getType());
     }
 
     @Test
@@ -288,6 +288,6 @@ class DateFinderTest {
         assertEquals(date, replacements.get(0).getText());
         assertEquals(date, replacements.get(0).getSuggestions().get(0).getText());
         assertEquals(expected, replacements.get(0).getSuggestions().get(1).getText());
-        assertEquals(ReplacementType.DATE, replacements.get(0).getType());
+        assertEquals(StandardType.DATE, replacements.get(0).getType());
     }
 }

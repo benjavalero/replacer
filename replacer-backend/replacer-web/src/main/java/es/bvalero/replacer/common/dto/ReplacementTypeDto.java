@@ -1,6 +1,7 @@
 package es.bvalero.replacer.common.dto;
 
 import es.bvalero.replacer.common.domain.ReplacementType;
+import es.bvalero.replacer.common.domain.StandardType;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AccessLevel;
@@ -25,12 +26,11 @@ public class ReplacementTypeDto {
     @NonNull
     private String subtype;
 
-    public static ReplacementTypeDto of(ReplacementType replacementType) {
-        assert replacementType.isStandardType();
+    public static ReplacementTypeDto of(StandardType replacementType) {
         return new ReplacementTypeDto(replacementType.getKind().getCode(), replacementType.getSubtype());
     }
 
-    public ReplacementType toDomain() {
-        return ReplacementType.ofType(this.kind, this.subtype);
+    public StandardType toDomain() {
+        return StandardType.of(this.kind, this.subtype);
     }
 }

@@ -5,7 +5,7 @@ import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.when;
 
 import es.bvalero.replacer.common.domain.ReplacementKind;
-import es.bvalero.replacer.common.domain.ReplacementType;
+import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.Suggestion;
@@ -69,7 +69,7 @@ class ReviewSectionFinderTest {
             .builder()
             .start(8)
             .text("an")
-            .type(ReplacementType.ofType(ReplacementKind.SIMPLE, "an"))
+            .type(StandardType.of(ReplacementKind.SIMPLE, "an"))
             .suggestions(Collections.singletonList(suggestion))
             .build();
         List<Replacement> replacements = Collections.singletonList(replacement);

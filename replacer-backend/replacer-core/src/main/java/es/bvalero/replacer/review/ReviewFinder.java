@@ -103,7 +103,7 @@ abstract class ReviewFinder {
     }
 
     private String buildCacheKey(ReviewOptions options) {
-        return options.toStringSearchType();
+        return options.getType().toString();
     }
 
     private boolean cacheContainsKey(String key) {

@@ -6,6 +6,7 @@ import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.LoadingCache;
 import es.bvalero.replacer.common.domain.ReplacementType;
 import es.bvalero.replacer.common.domain.ResultCount;
+import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import java.time.Duration;
 import java.util.Arrays;
@@ -18,7 +19,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Primary;
-import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,12 +39,12 @@ public class PageCountCacheRepository implements PageCountRepository {
     // We could lock the cache while querying but the query takes too long.
     // In theory this cache is mirroring the database reality so in the future the duration could be even longer.
     private final Duration refreshTime = Duration.of(30, MINUTES);
-    private final LoadingCache<WikipediaLanguage, Map<ReplacementType, Integer>> counts = Caffeine
+    private final LoadingCache<WikipediaLanguage, Map<StandardType, Integer>> counts = Caffeine
         .newBuilder()
         .refreshAfterWrite(refreshTime)
         .build(this::loadReplacementTypeCounts);
 
-    private Map<ReplacementType, Integer> getCounts(WikipediaLanguage lang) {
+    private Map<StandardType, Integer> getCounts(WikipediaLanguage lang) {
         return Objects.requireNonNull(this.counts.get(lang));
     }
 
@@ -56,7 +56,7 @@ public class PageCountCacheRepository implements PageCountRepository {
     }
 
     @Override
-    public Collection<ResultCount<ReplacementType>> countPagesNotReviewedByType(WikipediaLanguage lang) {
+    public Collection<ResultCount<StandardType>> countPagesNotReviewedByType(WikipediaLanguage lang) {
         return this.getCounts(lang)
             .entrySet()
             .stream()
@@ -65,28 +65,28 @@ public class PageCountCacheRepository implements PageCountRepository {
     }
 
     @Override
-    public int countNotReviewedByType(WikipediaLanguage lang, @Nullable ReplacementType type) {
-        if (type == null) {
-            return this.pageCountRepository.countNotReviewedByType(lang, null);
+    public int countNotReviewedByType(WikipediaLanguage lang, ReplacementType type) {
+        if (type.isNoType()) {
+            return this.pageCountRepository.countNotReviewedByType(lang, ReplacementType.NO_TYPE);
         } else {
             // Always return the cached count
-            return Objects.requireNonNullElse(this.getCounts(lang).get(type), 0);
+            return Objects.requireNonNullElse(this.getCounts(lang).get(type.toStandardType()), 0);
         }
     }
 
-    public void removePageCount(WikipediaLanguage lang, ReplacementType type) {
+    public void removePageCount(WikipediaLanguage lang, StandardType type) {
         this.getCounts(lang).remove(type);
     }
 
-    public void incrementPageCount(WikipediaLanguage lang, ReplacementType type) {
+    public void incrementPageCount(WikipediaLanguage lang, StandardType type) {
         this.getCounts(lang).compute(type, (t, c) -> c == null ? 1 : c + 1);
     }
 
-    public void decrementPageCount(WikipediaLanguage lang, ReplacementType type) {
+    public void decrementPageCount(WikipediaLanguage lang, StandardType type) {
         this.getCounts(lang).computeIfPresent(type, (t, c) -> c > 1 ? c - 1 : null);
     }
 
-    private Map<ReplacementType, Integer> loadReplacementTypeCounts(WikipediaLanguage lang) {
+    private Map<StandardType, Integer> loadReplacementTypeCounts(WikipediaLanguage lang) {
         return pageCountRepository
             .countPagesNotReviewedByType(lang)
             .stream()

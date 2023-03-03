@@ -7,7 +7,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import es.bvalero.replacer.common.domain.ReplacementKind;
-import es.bvalero.replacer.common.domain.ReplacementType;
+import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.Replacement;
@@ -44,7 +44,7 @@ class PageComparatorTest {
             .page(page)
             .start(index)
             .text(String.valueOf(index))
-            .type(ReplacementType.ofType(ReplacementKind.SIMPLE, String.valueOf(index)))
+            .type(StandardType.of(ReplacementKind.SIMPLE, String.valueOf(index)))
             .suggestions(List.of(Suggestion.ofNoComment(String.valueOf(index + 1))))
             .build();
     }
@@ -184,14 +184,14 @@ class PageComparatorTest {
         IndexedReplacement r1db = IndexedReplacement
             .builder()
             .pageKey(page.getPageKey())
-            .type(r1.getType())
+            .type(r1.getType().toStandardType())
             .start(r1.getStart())
             .context(r1.getContext())
             .build();
         IndexedReplacement r2db = IndexedReplacement
             .builder()
             .pageKey(page.getPageKey())
-            .type(r2.getType())
+            .type(r2.getType().toStandardType())
             .start(r2.getStart())
             .context(r2.getContext())
             .reviewer("User")
@@ -199,7 +199,7 @@ class PageComparatorTest {
         IndexedReplacement r3db = IndexedReplacement
             .builder()
             .pageKey(page.getPageKey())
-            .type(r3.getType())
+            .type(r3.getType().toStandardType())
             .start(r3.getStart())
             .context(r3.getContext())
             .reviewer(REVIEWER_SYSTEM)
@@ -207,28 +207,28 @@ class PageComparatorTest {
         IndexedReplacement r4db = IndexedReplacement
             .builder()
             .pageKey(page.getPageKey())
-            .type(r4.getType())
+            .type(r4.getType().toStandardType())
             .start(40)
             .context(r4.getContext())
             .build();
         IndexedReplacement r5db = IndexedReplacement
             .builder()
             .pageKey(page.getPageKey())
-            .type(r5.getType())
+            .type(r5.getType().toStandardType())
             .start(r5.getStart())
             .context("50")
             .build();
         IndexedReplacement r6db = IndexedReplacement
             .builder()
             .pageKey(page.getPageKey())
-            .type(ReplacementType.ofType(ReplacementKind.SIMPLE, "6"))
+            .type(StandardType.of(ReplacementKind.SIMPLE, "6"))
             .start(6)
             .context("6")
             .build();
         IndexedReplacement r7db = IndexedReplacement
             .builder()
             .pageKey(page.getPageKey())
-            .type(ReplacementType.ofType(ReplacementKind.SIMPLE, "7"))
+            .type(StandardType.of(ReplacementKind.SIMPLE, "7"))
             .start(7)
             .context("7")
             .reviewer("User")
@@ -236,7 +236,7 @@ class PageComparatorTest {
         IndexedReplacement r8db = IndexedReplacement
             .builder()
             .pageKey(page.getPageKey())
-            .type(ReplacementType.ofType(ReplacementKind.SIMPLE, "8"))
+            .type(StandardType.of(ReplacementKind.SIMPLE, "8"))
             .start(8)
             .context("8")
             .reviewer(REVIEWER_SYSTEM)
@@ -274,7 +274,7 @@ class PageComparatorTest {
         IndexedReplacement r1db = IndexedReplacement
             .builder()
             .pageKey(page.getPageKey())
-            .type(r1.getType())
+            .type(r1.getType().toStandardType())
             .start(r1.getStart())
             .context(r1.getContext())
             .build();
@@ -302,7 +302,7 @@ class PageComparatorTest {
         IndexedReplacement r1db = IndexedReplacement
             .builder()
             .pageKey(page.getPageKey())
-            .type(ReplacementType.ofType(ReplacementKind.SIMPLE, "1"))
+            .type(StandardType.of(ReplacementKind.SIMPLE, "1"))
             .start(1)
             .context("C")
             .reviewer("X")
@@ -310,7 +310,7 @@ class PageComparatorTest {
         IndexedReplacement r2db = IndexedReplacement
             .builder()
             .pageKey(page.getPageKey())
-            .type(ReplacementType.ofType(ReplacementKind.SIMPLE, "1"))
+            .type(StandardType.of(ReplacementKind.SIMPLE, "1"))
             .start(5)
             .context("C")
             .reviewer("X")
@@ -340,14 +340,14 @@ class PageComparatorTest {
         IndexedReplacement r1db = IndexedReplacement
             .builder()
             .pageKey(page.getPageKey())
-            .type(r1.getType())
+            .type(r1.getType().toStandardType())
             .start(r1.getStart())
             .context("1")
             .build();
         IndexedReplacement r2db = IndexedReplacement
             .builder()
             .pageKey(page.getPageKey())
-            .type(r1.getType())
+            .type(r1.getType().toStandardType())
             .start(r1.getStart())
             .context("")
             .reviewer("X")

@@ -5,6 +5,7 @@ import static es.bvalero.replacer.replacement.IndexedReplacement.REVIEWER_SYSTEM
 import com.github.rozidan.springboot.logger.Loggable;
 import es.bvalero.replacer.common.domain.ReplacementType;
 import es.bvalero.replacer.common.domain.ResultCount;
+import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.page.IndexedPage;
 import es.bvalero.replacer.page.PageKey;
@@ -21,7 +22,6 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSourceUtils;
-import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -140,7 +140,7 @@ class ReplacementJdbcRepository implements ReplacementSaveRepository, Replacemen
     }
 
     @Override
-    public void updateReviewerByType(WikipediaLanguage lang, ReplacementType type, String reviewer) {
+    public void updateReviewerByType(WikipediaLanguage lang, StandardType type, String reviewer) {
         String sql =
             "UPDATE replacement SET reviewer=:reviewer " +
             "WHERE lang = :lang AND kind = :kind AND subtype = :subtype AND reviewer IS NULL";
@@ -153,7 +153,7 @@ class ReplacementJdbcRepository implements ReplacementSaveRepository, Replacemen
     }
 
     @Override
-    public void updateReviewerByPageAndType(PageKey pageKey, @Nullable ReplacementType type, String reviewer) {
+    public void updateReviewerByPageAndType(PageKey pageKey, ReplacementType type, String reviewer) {
         String from = "UPDATE replacement SET reviewer=:reviewer ";
         String where = "WHERE lang = :lang AND page_id = :pageId AND reviewer IS NULL ";
         MapSqlParameterSource namedParameters = new MapSqlParameterSource()
@@ -161,7 +161,7 @@ class ReplacementJdbcRepository implements ReplacementSaveRepository, Replacemen
             .addValue("lang", pageKey.getLang().getCode())
             .addValue("pageId", pageKey.getPageId());
 
-        if (Objects.nonNull(type)) {
+        if (type.isStandardType()) {
             where += "AND kind = :kind AND subtype = :subtype";
             namedParameters =
                 namedParameters.addValue("kind", type.getKind().getCode()).addValue("subtype", type.getSubtype());
@@ -191,7 +191,7 @@ class ReplacementJdbcRepository implements ReplacementSaveRepository, Replacemen
     }
 
     @Override
-    public void removeByType(WikipediaLanguage lang, ReplacementType type) {
+    public void removeByType(WikipediaLanguage lang, StandardType type) {
         String sql =
             "DELETE FROM replacement " +
             "WHERE lang = :lang AND kind = :kind AND subtype = :subtype AND reviewer IS NULL";

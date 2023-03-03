@@ -2,6 +2,7 @@ package es.bvalero.replacer.page;
 
 import es.bvalero.replacer.common.domain.ReplacementType;
 import es.bvalero.replacer.common.domain.ResultCount;
+import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.user.UserId;
 import es.bvalero.replacer.user.UserRightsService;
@@ -19,7 +20,7 @@ public class PageCountService {
     @Autowired
     private PageCountRepository pageCountRepository;
 
-    public Collection<ResultCount<ReplacementType>> countPagesNotReviewedByType(UserId userId) {
+    public Collection<ResultCount<StandardType>> countPagesNotReviewedByType(UserId userId) {
         // Filter the replacement types the user has no rights to see
         return pageCountRepository
             .countPagesNotReviewedByType(userId.getLang())
@@ -30,7 +31,7 @@ public class PageCountService {
     }
 
     public int countPagesToReviewByNoType(WikipediaLanguage lang) {
-        return pageCountRepository.countNotReviewedByType(lang, null);
+        return pageCountRepository.countNotReviewedByType(lang, ReplacementType.NO_TYPE);
     }
 
     public int countPagesToReviewByType(WikipediaLanguage lang, ReplacementType type) {

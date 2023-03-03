@@ -7,7 +7,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import es.bvalero.replacer.common.domain.ReplacementKind;
-import es.bvalero.replacer.common.domain.ReplacementType;
+import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.page.PageKey;
 import es.bvalero.replacer.user.AccessToken;
@@ -45,7 +45,7 @@ class ReviewSaveControllerTest {
     ReviewedReplacement reviewed = ReviewedReplacement
         .builder()
         .pageKey(page.getPageKey())
-        .type(ReplacementType.ofType(ReplacementKind.SIMPLE, "1"))
+        .type(StandardType.of(ReplacementKind.SIMPLE, "1"))
         .start(1)
         .reviewer("A")
         .build();

@@ -1,6 +1,6 @@
 package es.bvalero.replacer.page;
 
-import es.bvalero.replacer.common.domain.ReplacementType;
+import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.replacement.IndexedReplacement;
 import java.sql.ResultSet;
@@ -38,7 +38,7 @@ class PageResultExtractor implements ResultSetExtractor<Collection<IndexedPage>>
                         .builder()
                         .id(rs.getInt("ID"))
                         .pageKey(pageKey)
-                        .type(ReplacementType.ofType(kind, rs.getString("SUBTYPE")))
+                        .type(StandardType.of(kind, rs.getString("SUBTYPE")))
                         .start(rs.getInt("START"))
                         .context(rs.getString("CONTEXT"))
                         .reviewer(rs.getString("REVIEWER"))

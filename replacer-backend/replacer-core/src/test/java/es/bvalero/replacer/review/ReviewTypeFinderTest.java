@@ -5,6 +5,7 @@ import static org.mockito.Mockito.*;
 
 import es.bvalero.replacer.common.domain.ReplacementKind;
 import es.bvalero.replacer.common.domain.ReplacementType;
+import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.Suggestion;
@@ -52,17 +53,19 @@ class ReviewTypeFinderTest {
         .lastUpdate(WikipediaTimestamp.now())
         .queryTimestamp(WikipediaTimestamp.now())
         .build();
+    private final StandardType simpleType = StandardType.of(ReplacementKind.SIMPLE, "Y");
+    private final StandardType composedType = StandardType.of(ReplacementKind.COMPOSED, "B");
     private final Replacement replacement = Replacement
         .builder()
         .start(1)
-        .type(ReplacementType.ofType(ReplacementKind.SIMPLE, "Y"))
+        .type(StandardType.of(ReplacementKind.SIMPLE, "Y"))
         .text("Y")
         .suggestions(List.of(Suggestion.ofNoComment("Z")))
         .build();
     private final List<Replacement> replacements = Collections.singletonList(replacement);
     private final UserId userId = UserId.of(WikipediaLanguage.getDefault(), "A");
-    private final ReviewOptions options = ReviewOptions.ofType(userId, ReplacementKind.SIMPLE.getCode(), "Y");
-    private final ReviewOptions options2 = ReviewOptions.ofType(userId, ReplacementKind.COMPOSED.getCode(), "B");
+    private final ReviewOptions options = ReviewOptions.ofType(userId, simpleType);
+    private final ReviewOptions options2 = ReviewOptions.ofType(userId, composedType);
 
     @Mock
     private PageService pageService;
@@ -245,7 +248,7 @@ class ReviewTypeFinderTest {
         final Replacement replacement2 = Replacement
             .builder()
             .start(2)
-            .type(ReplacementType.ofType(ReplacementKind.SIMPLE, "Z"))
+            .type(StandardType.of(ReplacementKind.SIMPLE, "Z"))
             .text("Z")
             .suggestions(List.of(Suggestion.ofNoComment("z")))
             .build();

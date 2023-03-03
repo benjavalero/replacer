@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import es.bvalero.replacer.common.domain.ReplacementKind;
-import es.bvalero.replacer.common.domain.ReplacementType;
+import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.Suggestion;
@@ -59,7 +59,7 @@ class ReviewNoTypeFinderTest {
         .builder()
         .start(1)
         .text("Y")
-        .type(ReplacementType.ofType(ReplacementKind.STYLE, "Y"))
+        .type(StandardType.of(ReplacementKind.STYLE, "Y"))
         .suggestions(List.of(Suggestion.ofNoComment("Z")))
         .build();
     private final List<Replacement> replacements = Collections.singletonList(replacement);

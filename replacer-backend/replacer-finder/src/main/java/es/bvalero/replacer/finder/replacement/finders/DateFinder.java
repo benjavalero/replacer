@@ -5,7 +5,7 @@ import static org.apache.commons.lang3.StringUtils.SPACE;
 import dk.brics.automaton.DatatypesAutomatonProvider;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
-import es.bvalero.replacer.common.domain.ReplacementType;
+import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.Replacement;
@@ -609,7 +609,7 @@ public class DateFinder implements ReplacementFinder {
         return Replacement
             .builder()
             .page(page)
-            .type(ReplacementType.DATE)
+            .type(StandardType.DATE)
             .start(start)
             .text(text)
             .suggestions(suggestions)

@@ -2,7 +2,7 @@ package es.bvalero.replacer.page;
 
 import static es.bvalero.replacer.common.util.ReplacerUtils.LOCALE_ES;
 
-import es.bvalero.replacer.common.domain.ReplacementType;
+import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import java.text.Collator;
 import java.util.Collection;
@@ -17,7 +17,7 @@ class PageFindByTypeService {
     @Autowired
     private PageRepository pageRepository;
 
-    Collection<String> findPagesToReviewByType(WikipediaLanguage lang, ReplacementType type) {
+    Collection<String> findPagesToReviewByType(WikipediaLanguage lang, StandardType type) {
         return pageRepository
             .findPageTitlesNotReviewedByType(lang, type)
             .stream()

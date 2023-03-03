@@ -2,7 +2,7 @@ package es.bvalero.replacer.index;
 
 import static es.bvalero.replacer.replacement.IndexedReplacement.REVIEWER_SYSTEM;
 
-import es.bvalero.replacer.common.domain.ReplacementType;
+import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.page.PageKey;
 import es.bvalero.replacer.replacement.IndexedReplacement;
@@ -22,7 +22,7 @@ class ComparableReplacement {
     Integer id;
 
     @NonNull
-    ReplacementType type;
+    StandardType type;
 
     @With
     int start;
@@ -61,7 +61,7 @@ class ComparableReplacement {
             IndexedReplacement
                 .builder()
                 .pageKey(replacement.getPage().getPageKey())
-                .type(replacement.getType())
+                .type(replacement.getType().toStandardType())
                 .start(replacement.getStart())
                 .context(replacement.getContext())
                 .build()

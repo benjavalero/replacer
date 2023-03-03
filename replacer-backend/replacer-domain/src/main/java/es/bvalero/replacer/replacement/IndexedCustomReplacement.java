@@ -1,5 +1,6 @@
 package es.bvalero.replacer.replacement;
 
+import es.bvalero.replacer.common.domain.CustomType;
 import es.bvalero.replacer.page.PageKey;
 import lombok.Builder;
 import lombok.Value;
@@ -18,9 +19,7 @@ public class IndexedCustomReplacement {
     Integer id;
 
     @NonNull
-    String replacement;
-
-    boolean caseSensitive;
+    CustomType type;
 
     int start;
 
@@ -33,7 +32,7 @@ public class IndexedCustomReplacement {
 
     // To store in the JDBC repository
     public byte getCs() {
-        return getCs(caseSensitive);
+        return getCs(this.type.isCaseSensitive());
     }
 
     static byte getCs(boolean caseSensitive) {

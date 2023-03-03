@@ -6,7 +6,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import es.bvalero.replacer.common.domain.ReplacementKind;
-import es.bvalero.replacer.common.domain.ReplacementType;
+import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.exception.ForbiddenException;
 import es.bvalero.replacer.replacement.ReplacementService;
@@ -50,10 +50,7 @@ class PageListControllerTest {
 
         verify(userRightsService).validateBotUser(userId);
         verify(pageFindByTypeService)
-            .findPagesToReviewByType(
-                WikipediaLanguage.SPANISH,
-                ReplacementType.ofType(ReplacementKind.SIMPLE, "Africa")
-            );
+            .findPagesToReviewByType(WikipediaLanguage.SPANISH, StandardType.of(ReplacementKind.SIMPLE, "Africa"));
     }
 
     @Test
@@ -67,10 +64,7 @@ class PageListControllerTest {
 
         verify(userRightsService).validateBotUser(userId);
         verify(pageFindByTypeService, never())
-            .findPagesToReviewByType(
-                WikipediaLanguage.SPANISH,
-                ReplacementType.ofType(ReplacementKind.SIMPLE, "Africa")
-            );
+            .findPagesToReviewByType(WikipediaLanguage.SPANISH, StandardType.of(ReplacementKind.SIMPLE, "Africa"));
     }
 
     @Test
@@ -85,10 +79,7 @@ class PageListControllerTest {
 
         verify(userRightsService).validateBotUser(userId);
         verify(replacementService)
-            .reviewReplacementsByType(
-                WikipediaLanguage.SPANISH,
-                ReplacementType.ofType(ReplacementKind.SIMPLE, "Africa")
-            );
+            .reviewReplacementsByType(WikipediaLanguage.SPANISH, StandardType.of(ReplacementKind.SIMPLE, "Africa"));
     }
 
     @Test
@@ -105,9 +96,6 @@ class PageListControllerTest {
 
         verify(userRightsService).validateBotUser(userId);
         verify(replacementService, never())
-            .reviewReplacementsByType(
-                WikipediaLanguage.SPANISH,
-                ReplacementType.ofType(ReplacementKind.SIMPLE, "Africa")
-            );
+            .reviewReplacementsByType(WikipediaLanguage.SPANISH, StandardType.of(ReplacementKind.SIMPLE, "Africa"));
     }
 }

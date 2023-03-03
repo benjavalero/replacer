@@ -1,7 +1,7 @@
 package es.bvalero.replacer.page;
 
 import com.github.rozidan.springboot.logger.Loggable;
-import es.bvalero.replacer.common.domain.ReplacementType;
+import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.common.dto.CommonQueryParameters;
 import es.bvalero.replacer.common.dto.ReplacementTypeDto;
 import es.bvalero.replacer.replacement.ReplacementService;
@@ -37,7 +37,7 @@ public class PageListController {
         @Valid CommonQueryParameters queryParameters,
         @Valid ReplacementTypeDto request
     ) {
-        ReplacementType type = request.toDomain();
+        StandardType type = request.toDomain();
         String titleList = StringUtils.join(
             pageFindByTypeService.findPagesToReviewByType(queryParameters.getWikipediaLanguage(), type),
             "\n"
@@ -50,7 +50,7 @@ public class PageListController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PostMapping(value = "/type/review")
     public void reviewPagesByType(@Valid CommonQueryParameters queryParameters, @Valid ReplacementTypeDto request) {
-        ReplacementType type = request.toDomain();
+        StandardType type = request.toDomain();
         replacementService.reviewReplacementsByType(queryParameters.getWikipediaLanguage(), type);
     }
 }

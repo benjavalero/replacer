@@ -3,7 +3,7 @@ package es.bvalero.replacer.finder.replacement.finders;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import es.bvalero.replacer.common.domain.ReplacementType;
+import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.finder.Replacement;
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -27,7 +27,7 @@ class AcuteOFinderTest {
         assertEquals(1, replacements.size());
 
         Replacement rep = replacements.get(0);
-        assertEquals(ReplacementType.ACUTE_O, rep.getType());
+        assertEquals(StandardType.ACUTE_O, rep.getType());
         assertEquals(AcuteOFinder.ACUTE_O, rep.getText());
         assertEquals(AcuteOFinder.ACUTE_O, rep.getSuggestions().get(0).getText());
         assertEquals(AcuteOFinder.FIX_ACUTE_O, rep.getSuggestions().get(1).getText());
@@ -41,7 +41,7 @@ class AcuteOFinderTest {
         assertEquals(1, replacements.size());
 
         Replacement rep = replacements.get(0);
-        assertEquals(ReplacementType.ACUTE_O, rep.getType());
+        assertEquals(StandardType.ACUTE_O, rep.getType());
         assertEquals(AcuteOFinder.ACUTE_O, rep.getText());
         assertEquals(7, rep.getStart());
         assertEquals(AcuteOFinder.ACUTE_O, rep.getSuggestions().get(0).getText());

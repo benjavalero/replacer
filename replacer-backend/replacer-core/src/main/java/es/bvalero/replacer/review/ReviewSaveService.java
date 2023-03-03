@@ -1,6 +1,5 @@
 package es.bvalero.replacer.review;
 
-import es.bvalero.replacer.common.domain.ReplacementKind;
 import es.bvalero.replacer.common.domain.ReplacementType;
 import es.bvalero.replacer.page.PageKey;
 import es.bvalero.replacer.page.PageService;
@@ -113,15 +112,12 @@ class ReviewSaveService {
         }
 
         // Mark the custom replacements as reviewed
-        reviewedReplacements
-            .stream()
-            .filter(r -> r.getType().getKind() == ReplacementKind.CUSTOM)
-            .forEach(this::markCustomAsReviewed);
+        reviewedReplacements.stream().filter(r -> r.getType().isCustomType()).forEach(this::markCustomAsReviewed);
 
         // Mark the usual replacements as reviewed
         Collection<IndexedReplacement> usualToReview = reviewedReplacements
             .stream()
-            .filter(r -> r.getType().getKind() != ReplacementKind.CUSTOM)
+            .filter(r -> r.getType().isStandardType())
             .map(ReviewedReplacement::toReplacement)
             .collect(Collectors.toUnmodifiableList());
         replacementService.updateReviewer(usualToReview);

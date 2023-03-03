@@ -1,5 +1,6 @@
 package es.bvalero.replacer.replacement;
 
+import es.bvalero.replacer.common.domain.CustomType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.page.PageKey;
 import java.util.Collection;
@@ -17,9 +18,9 @@ public class CustomReplacementService {
         customRepository.add(customReplacement);
     }
 
-    public Collection<Integer> findPagesReviewed(WikipediaLanguage lang, String replacement, boolean caseSensitive) {
+    public Collection<Integer> findPagesReviewed(WikipediaLanguage lang, CustomType type) {
         return customRepository
-            .findPagesReviewed(lang, replacement, caseSensitive)
+            .findPagesReviewed(lang, type)
             .stream()
             .map(PageKey::getPageId)
             .collect(Collectors.toUnmodifiableList());

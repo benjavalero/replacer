@@ -1,7 +1,6 @@
 package es.bvalero.replacer.finder.replacement.custom;
 
-import es.bvalero.replacer.common.domain.ReplacementType;
-import es.bvalero.replacer.finder.CustomOptions;
+import es.bvalero.replacer.common.domain.CustomType;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.Suggestion;
@@ -19,17 +18,13 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 class CustomReplacementFinder implements ReplacementFinder {
 
-    private final String replacement;
-    private final boolean caseSensitive;
-    private final String suggestion;
+    private final CustomType customType;
     private final Pattern pattern;
 
-    static CustomReplacementFinder of(CustomOptions customOptions) {
+    static CustomReplacementFinder of(CustomType customType) {
         return new CustomReplacementFinder(
-            customOptions.getReplacement(),
-            customOptions.isCaseSensitive(),
-            customOptions.getSuggestion(),
-            buildCustomRegex(customOptions.getReplacement(), customOptions.isCaseSensitive())
+            customType,
+            buildCustomRegex(customType.getSubtype(), customType.isCaseSensitive())
         );
     }
 
@@ -58,7 +53,7 @@ class CustomReplacementFinder implements ReplacementFinder {
         return Replacement
             .builder()
             .page(page)
-            .type(ReplacementType.ofCustom(this.replacement))
+            .type(this.customType)
             .start(start)
             .text(text)
             .suggestions(findSuggestions(text))
@@ -66,11 +61,7 @@ class CustomReplacementFinder implements ReplacementFinder {
     }
 
     private List<Suggestion> findSuggestions(String text) {
-        final CustomMisspelling misspelling = CustomMisspelling.of(
-            this.replacement,
-            this.caseSensitive,
-            this.suggestion
-        );
+        final CustomMisspelling misspelling = CustomMisspelling.of(this.customType);
         return MisspellingFinder.applyMisspellingSuggestions(text, misspelling);
     }
 }

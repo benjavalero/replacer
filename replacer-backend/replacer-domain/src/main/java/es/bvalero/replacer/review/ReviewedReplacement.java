@@ -9,7 +9,6 @@ import java.time.LocalDate;
 import lombok.Builder;
 import lombok.Value;
 import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
 
 @Value
 @Builder
@@ -20,9 +19,6 @@ public class ReviewedReplacement {
 
     @NonNull
     ReplacementType type;
-
-    @Nullable
-    Boolean cs; // Only for custom replacements
 
     int start;
 
@@ -43,7 +39,7 @@ public class ReviewedReplacement {
     IndexedReplacement toReplacement() {
         return IndexedReplacement
             .builder()
-            .type(type)
+            .type(type.toStandardType())
             .start(start)
             .context("") // It is not important when saving a review as we only want to update the reviewer
             .reviewer(reviewer)
@@ -54,8 +50,7 @@ public class ReviewedReplacement {
     IndexedCustomReplacement toCustomReplacement() {
         return IndexedCustomReplacement
             .builder()
-            .replacement(type.getSubtype())
-            .caseSensitive(Boolean.TRUE.equals(this.cs))
+            .type(type.toCustomType())
             .start(start)
             .reviewer(reviewer)
             .pageKey(pageKey)

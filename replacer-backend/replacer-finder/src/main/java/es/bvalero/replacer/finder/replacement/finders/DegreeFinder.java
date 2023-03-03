@@ -4,7 +4,7 @@ import static es.bvalero.replacer.finder.util.FinderUtils.DECIMAL_SEPARATORS;
 import static es.bvalero.replacer.finder.util.FinderUtils.NON_BREAKING_SPACE;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
-import es.bvalero.replacer.common.domain.ReplacementType;
+import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.Suggestion;
@@ -222,7 +222,7 @@ public class DegreeFinder implements ReplacementFinder {
         return Replacement
             .builder()
             .page(page)
-            .type(ReplacementType.DEGREES)
+            .type(StandardType.DEGREES)
             .start(start)
             .text(text)
             .suggestions(suggestions)

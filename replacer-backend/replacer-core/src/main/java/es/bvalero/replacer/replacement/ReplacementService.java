@@ -3,6 +3,7 @@ package es.bvalero.replacer.replacement;
 import static es.bvalero.replacer.replacement.IndexedReplacement.REVIEWER_SYSTEM;
 
 import es.bvalero.replacer.common.domain.ReplacementType;
+import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.page.PageKey;
 import java.util.Collection;
@@ -33,7 +34,7 @@ public class ReplacementService {
         replacementSaveRepository.remove(replacements);
     }
 
-    public void reviewReplacementsByType(WikipediaLanguage lang, ReplacementType type) {
+    public void reviewReplacementsByType(WikipediaLanguage lang, StandardType type) {
         replacementSaveRepository.updateReviewerByType(lang, type, REVIEWER_SYSTEM);
     }
 
@@ -45,7 +46,7 @@ public class ReplacementService {
         replacementSaveRepository.updateReviewer(replacements);
     }
 
-    void removeReplacementsByType(WikipediaLanguage lang, ReplacementType type) {
+    void removeReplacementsByType(WikipediaLanguage lang, StandardType type) {
         replacementSaveRepository.removeByType(lang, type);
     }
 }

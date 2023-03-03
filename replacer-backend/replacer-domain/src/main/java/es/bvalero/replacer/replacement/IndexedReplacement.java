@@ -1,6 +1,6 @@
 package es.bvalero.replacer.replacement;
 
-import es.bvalero.replacer.common.domain.ReplacementType;
+import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.page.PageKey;
 import lombok.Builder;
 import lombok.Value;
@@ -21,7 +21,7 @@ public class IndexedReplacement {
     Integer id;
 
     @NonNull
-    ReplacementType type;
+    StandardType type;
 
     int start;
 

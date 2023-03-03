@@ -4,8 +4,9 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
+import es.bvalero.replacer.common.domain.CustomType;
 import es.bvalero.replacer.common.domain.ReplacementKind;
-import es.bvalero.replacer.common.domain.ReplacementType;
+import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.page.PageKey;
 import es.bvalero.replacer.page.PageService;
@@ -64,7 +65,7 @@ class ReviewSaveServiceTest {
         ReviewedReplacement reviewed = ReviewedReplacement
             .builder()
             .pageKey(pageKey)
-            .type(ReplacementType.ofType(ReplacementKind.SIMPLE, "1"))
+            .type(StandardType.of(ReplacementKind.SIMPLE, "1"))
             .start(1)
             .reviewer("A")
             .fixed(true)
@@ -89,23 +90,22 @@ class ReviewSaveServiceTest {
         ReviewedReplacement r1 = ReviewedReplacement
             .builder()
             .pageKey(pageKey)
-            .type(ReplacementType.ofType(ReplacementKind.SIMPLE, "1"))
+            .type(StandardType.of(ReplacementKind.SIMPLE, "1"))
             .start(1)
             .reviewer(reviewer)
             .build();
         ReviewedReplacement r2 = ReviewedReplacement
             .builder()
             .pageKey(pageKey)
-            .type(ReplacementType.ofType(ReplacementKind.COMPOSED, "2"))
+            .type(StandardType.of(ReplacementKind.COMPOSED, "2"))
             .start(2)
             .reviewer(reviewer)
             .build();
         ReviewedReplacement r3 = ReviewedReplacement
             .builder()
             .pageKey(pageKey)
-            .type(ReplacementType.ofCustom("3"))
+            .type(CustomType.ofReviewed("3", false))
             .start(3)
-            .cs(false)
             .reviewer(reviewer)
             .build();
         List<ReviewedReplacement> reviewedReplacements = List.of(r1, r2, r3);
@@ -126,7 +126,7 @@ class ReviewSaveServiceTest {
         ReviewedReplacement r1 = ReviewedReplacement
             .builder()
             .pageKey(pageKey)
-            .type(ReplacementType.ofType(ReplacementKind.SIMPLE, "1"))
+            .type(StandardType.of(ReplacementKind.SIMPLE, "1"))
             .start(1)
             .reviewer(reviewer)
             .fixed(true)
@@ -134,7 +134,7 @@ class ReviewSaveServiceTest {
         ReviewedReplacement r2 = ReviewedReplacement
             .builder()
             .pageKey(pageKey)
-            .type(ReplacementType.ofType(ReplacementKind.COMPOSED, "2"))
+            .type(StandardType.of(ReplacementKind.COMPOSED, "2"))
             .start(2)
             .reviewer(reviewer)
             .fixed(true)
@@ -142,16 +142,15 @@ class ReviewSaveServiceTest {
         ReviewedReplacement r3 = ReviewedReplacement
             .builder()
             .pageKey(pageKey)
-            .type(ReplacementType.ofCustom("3"))
+            .type(CustomType.ofReviewed("3", false))
             .start(3)
-            .cs(false)
             .reviewer(reviewer)
             .fixed(true)
             .build();
         ReviewedReplacement r4 = ReviewedReplacement
             .builder()
             .pageKey(pageKey)
-            .type(ReplacementType.DATE)
+            .type(StandardType.DATE)
             .start(4)
             .reviewer(reviewer)
             .fixed(true)

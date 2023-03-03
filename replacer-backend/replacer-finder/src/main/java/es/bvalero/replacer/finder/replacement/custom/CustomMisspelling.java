@@ -1,5 +1,6 @@
 package es.bvalero.replacer.finder.replacement.custom;
 
+import es.bvalero.replacer.common.domain.CustomType;
 import es.bvalero.replacer.common.domain.ReplacementKind;
 import es.bvalero.replacer.finder.listing.Misspelling;
 import es.bvalero.replacer.finder.listing.MisspellingSuggestion;
@@ -19,8 +20,8 @@ class CustomMisspelling implements Misspelling {
         this.suggestions = parseComment(comment);
     }
 
-    public static CustomMisspelling of(String word, boolean caseSensitive, String comment) {
-        return new CustomMisspelling(word, caseSensitive, comment);
+    public static CustomMisspelling of(CustomType customType) {
+        return new CustomMisspelling(customType.getSubtype(), customType.isCaseSensitive(), customType.getSuggestion());
     }
 
     @Override
