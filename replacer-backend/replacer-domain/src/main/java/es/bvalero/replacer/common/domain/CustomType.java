@@ -4,9 +4,10 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.NonNull;
+import lombok.EqualsAndHashCode;
 import lombok.Value;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.lang.NonNull;
 
 @Value
 @AllArgsConstructor(access = AccessLevel.PRIVATE) // Override the default constructor to constrain the access
@@ -22,6 +23,7 @@ public class CustomType implements ReplacementType {
 
     boolean caseSensitive;
 
+    @EqualsAndHashCode.Exclude
     @NonNull
     String suggestion;
 

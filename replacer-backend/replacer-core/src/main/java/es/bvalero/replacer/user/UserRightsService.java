@@ -1,6 +1,7 @@
 package es.bvalero.replacer.user;
 
 import es.bvalero.replacer.common.domain.ReplacementType;
+import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.common.exception.ForbiddenException;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
@@ -46,12 +47,11 @@ public class UserRightsService {
     }
 
     public boolean isTypeForbidden(ReplacementType type, UserId userId) {
-        return (
-            !type.isStandardType() ||
-            (
-                (type.toStandardType().isForBots() && !isBot(userId)) ||
-                (type.toStandardType().isForAdmin() && !isAdmin(userId))
-            )
-        );
+        if (type.isCustomType()) {
+            return false;
+        }
+
+        StandardType standardType = type.toStandardType();
+        return (standardType.isForBots() && !isBot(userId)) || (standardType.isForAdmin() && !isAdmin(userId));
     }
 }

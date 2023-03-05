@@ -59,7 +59,7 @@ class ReviewNoTypeFinderTest {
         .builder()
         .start(1)
         .text("Y")
-        .type(StandardType.of(ReplacementKind.STYLE, "Y"))
+        .type(StandardType.DEGREES)
         .suggestions(List.of(Suggestion.ofNoComment("Z")))
         .build();
     private final List<Replacement> replacements = Collections.singletonList(replacement);

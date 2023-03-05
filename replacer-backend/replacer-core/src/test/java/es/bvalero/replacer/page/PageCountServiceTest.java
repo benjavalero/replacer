@@ -35,9 +35,9 @@ class PageCountServiceTest {
     void testCountReplacementsGroupedByTypeForBots() {
         WikipediaLanguage lang = WikipediaLanguage.getDefault();
 
-        StandardType type = StandardType.of(ReplacementKind.STYLE, "Y");
+        StandardType type = StandardType.DATE;
         ResultCount<StandardType> count = ResultCount.of(type, 100);
-        StandardType typeForBots = StandardType.of(ReplacementKind.STYLE, "Z");
+        StandardType typeForBots = StandardType.CENTURY;
         ResultCount<StandardType> count2 = ResultCount.of(typeForBots, 200);
         Collection<ResultCount<StandardType>> counts = List.of(count, count2);
 

@@ -31,7 +31,7 @@ class PageCountCacheRepositoryTest {
     void testGetCachedReplacementCount() {
         WikipediaLanguage lang = WikipediaLanguage.getDefault();
 
-        ReplacementKind kind = ReplacementKind.STYLE;
+        ReplacementKind kind = ReplacementKind.SIMPLE;
         StandardType type1 = StandardType.of(kind, "Y");
         StandardType type2 = StandardType.of(kind, "Z");
         ResultCount<StandardType> count1 = ResultCount.of(type1, 2);
@@ -124,7 +124,7 @@ class PageCountCacheRepositoryTest {
         );
 
         // Remove a replacement count existing in cache
-        StandardType existing = StandardType.of(ReplacementKind.STYLE, "Y");
+        StandardType existing = StandardType.of(ReplacementKind.SIMPLE, "Y");
         pageCountCacheRepository.removePageCount(lang, existing);
 
         typeCounts = pageCountCacheRepository.countPagesNotReviewedByType(lang);

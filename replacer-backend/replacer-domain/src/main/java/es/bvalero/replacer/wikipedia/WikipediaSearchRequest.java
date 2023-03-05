@@ -3,8 +3,8 @@ package es.bvalero.replacer.wikipedia;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import java.util.Collection;
 import lombok.Builder;
-import lombok.NonNull;
 import lombok.Value;
+import org.springframework.lang.NonNull;
 
 @Value
 @Builder

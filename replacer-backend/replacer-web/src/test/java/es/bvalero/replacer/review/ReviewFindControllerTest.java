@@ -124,12 +124,14 @@ class ReviewFindControllerTest {
     @Test
     void testFindRandomPageByTypeAndSubtype() throws Exception {
         UserId userId = UserId.of(WikipediaLanguage.SPANISH, "A");
-        StandardType type = StandardType.of(ReplacementKind.STYLE.getCode(), "Y");
+        StandardType type = StandardType.DATE;
         ReviewOptions options = ReviewOptions.ofType(userId, type);
         when(reviewTypeFinder.findRandomPageReview(options)).thenReturn(Optional.of(review));
 
         mvc
-            .perform(get("/api/review/random?kind=5&subtype=Y&lang=es&user=A").contentType(MediaType.APPLICATION_JSON))
+            .perform(
+                get("/api/review/random?kind=5&subtype=Fechas&lang=es&user=A").contentType(MediaType.APPLICATION_JSON)
+            )
             .andExpect(status().isOk());
 
         verify(reviewTypeFinder).findRandomPageReview(options);
@@ -178,13 +180,15 @@ class ReviewFindControllerTest {
     @Test
     void testFindPageReviewByIdByTypeAndSubtype() throws Exception {
         UserId userId = UserId.of(WikipediaLanguage.SPANISH, "A");
-        StandardType type = StandardType.of(ReplacementKind.STYLE.getCode(), "Y");
+        StandardType type = StandardType.DATE;
         ReviewOptions options = ReviewOptions.ofType(userId, type);
         PageKey pageKey = PageKey.of(WikipediaLanguage.SPANISH, 123);
         when(reviewTypeFinder.findPageReview(pageKey, options)).thenReturn(Optional.of(review));
 
         mvc
-            .perform(get("/api/review/123?kind=5&subtype=Y&lang=es&user=A").contentType(MediaType.APPLICATION_JSON))
+            .perform(
+                get("/api/review/123?kind=5&subtype=Fechas&lang=es&user=A").contentType(MediaType.APPLICATION_JSON)
+            )
             .andExpect(status().isOk());
 
         verify(reviewTypeFinder).findPageReview(pageKey, options);
