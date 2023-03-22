@@ -3,6 +3,7 @@ package es.bvalero.replacer.finder.cosmetic.finders;
 import es.bvalero.replacer.checkwikipedia.CheckWikipediaAction;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.FinderPage;
+import es.bvalero.replacer.finder.FinderPriority;
 import es.bvalero.replacer.finder.cosmetic.CosmeticCheckedFinder;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.RegexMatchFinder;
@@ -59,6 +60,12 @@ class SpaceNotTranslatedFinder implements CosmeticCheckedFinder {
             this.firstWords.put(lang, FinderUtils.getFirstItemInList(this.annexWords.get(lang.getCode())));
             this.firstWords.put(lang, FinderUtils.getFirstItemInList(this.categoryWords.get(lang.getCode())));
         }
+    }
+
+    @Override
+    public FinderPriority getPriority() {
+        // To have a little more priority than the space-lowercase finder
+        return FinderPriority.LOW;
     }
 
     @Override

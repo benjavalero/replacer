@@ -36,6 +36,8 @@ public interface FinderService<T extends FinderResult> {
 
     @SuppressWarnings("unchecked")
     default Iterable<T> findIterable(FinderPage page, Iterable<Finder<T>> finders) {
+        // The finders are sorted in the implementations
+        // in order not to sort them here every time
         return IterableUtils.chainedIterable(
             IterableUtils.toList(finders).stream().map(finder -> finder.find(page)).toArray(Iterable[]::new)
         );
