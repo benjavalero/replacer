@@ -39,7 +39,7 @@ public class PageService {
     }
 
     public Collection<PageKey> findPagesToReviewByNoType(WikipediaLanguage lang, int numResults) {
-        return pageRepository.findNotReviewed(lang, null, numResults);
+        return pageRepository.findNotReviewed(lang, ReplacementType.NO_TYPE, numResults);
     }
 
     public Collection<PageKey> findPagesToReviewByType(WikipediaLanguage lang, ReplacementType type, int numResults) {
