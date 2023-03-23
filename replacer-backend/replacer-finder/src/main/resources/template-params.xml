@@ -15,6 +15,7 @@
     -->
     <util:list id="templateParams" value-type="java.lang.String">
         <!-- Templates to be ignored completely -->
+        <value>AP|*</value>
         <value>bandera*|*</value>
         <value>cita*|*</value>
         <value>cite*|*</value>
