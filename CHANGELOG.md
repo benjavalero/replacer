@@ -1,6 +1,7 @@
 # Versions
 
-## 2.23.4 (??)
+## 2.23.4 (23 Mar 2023)
+- Ignore content in template `AP`
 - Capture Wikipedia exceptions when saving a page in order to display a descriptive message
 
 ## 2.23.3 (23 Feb 2023)
