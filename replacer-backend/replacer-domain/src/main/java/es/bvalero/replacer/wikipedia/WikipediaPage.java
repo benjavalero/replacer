@@ -14,8 +14,6 @@ import org.springframework.lang.NonNull;
 @Builder
 public class WikipediaPage implements IndexablePage {
 
-    private static final int SHORT_CONTENT_LENGTH = 50;
-
     @NonNull
     PageKey pageKey;
 
