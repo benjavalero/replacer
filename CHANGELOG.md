@@ -1,5 +1,8 @@
 # Versions
 
+## 2.23.5 (30 Apr 2023)
+- Fix: add empty results to save throws eventually an out-of-memory
+
 ## 2.23.4 (23 Mar 2023)
 - Ignore content in template `AP`
 - Capture Wikipedia exceptions when saving a page in order to display a descriptive message
