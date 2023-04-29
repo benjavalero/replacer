@@ -58,7 +58,9 @@ abstract class PageIndexAbstractService {
         final Collection<Replacement> replacements = replacementFindService.findReplacements(indexablePage);
 
         final PageComparatorResult result = pageComparator.indexPageReplacements(indexablePage, replacements, dbPage);
-        saveResult(result);
+        if (!result.isEmpty()) {
+            saveResult(result);
+        }
 
         return PageIndexResult.of(
             result.isEmpty() ? PageIndexStatus.PAGE_NOT_INDEXED : PageIndexStatus.PAGE_INDEXED,
