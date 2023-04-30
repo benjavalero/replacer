@@ -44,7 +44,11 @@ class PageComparatorSaver {
 
     private void addResultToBatch(PageComparatorResult pageComparatorResult) {
         // Add all the items to the batch result
-        this.batchResult.add(pageComparatorResult);
+        // Just in case we check it is not empty,
+        // not to increase unnecessarily the heap use.
+        if (!pageComparatorResult.isEmpty()) {
+            this.batchResult.add(pageComparatorResult);
+        }
     }
 
     private int getBatchSize() {
