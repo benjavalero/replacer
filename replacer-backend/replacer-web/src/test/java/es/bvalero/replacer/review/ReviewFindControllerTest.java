@@ -64,8 +64,9 @@ class ReviewFindControllerTest {
     private final String anchor = "S";
     private final WikipediaSection section = WikipediaSection
         .builder()
-        .level(2)
+        .pageKey(page.getPageKey())
         .index(sectionId)
+        .level(2)
         .byteOffset(0)
         .anchor(anchor)
         .build();

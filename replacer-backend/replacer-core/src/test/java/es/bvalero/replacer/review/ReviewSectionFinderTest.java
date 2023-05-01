@@ -81,8 +81,9 @@ class ReviewSectionFinderTest {
         int offset = 5;
         WikipediaSection section = WikipediaSection
             .builder()
-            .level(2)
+            .pageKey(page.getPageKey())
             .index(sectionId)
+            .level(2)
             .byteOffset(offset)
             .anchor("X")
             .build();
@@ -99,7 +100,7 @@ class ReviewSectionFinderTest {
             .lastUpdate(page.getLastUpdate())
             .queryTimestamp(page.getQueryTimestamp())
             .build();
-        when(wikipediaPageRepository.findPageSection(page.getPageKey(), section)).thenReturn(Optional.of(pageSection));
+        when(wikipediaPageRepository.findPageSection(section)).thenReturn(Optional.of(pageSection));
 
         Optional<Review> sectionReview = reviewSectionFinder.findPageReviewSection(pageReview);
 

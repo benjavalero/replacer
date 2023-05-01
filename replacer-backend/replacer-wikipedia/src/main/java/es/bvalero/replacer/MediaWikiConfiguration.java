@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class OAuthMediaWikiConfiguration {
+public class MediaWikiConfiguration {
 
     @Value("${replacer.wikipedia.api.key}")
     private String apiKey;
@@ -16,8 +16,8 @@ public class OAuthMediaWikiConfiguration {
     @Value("${replacer.wikipedia.api.secret}")
     private String apiSecret;
 
-    @Bean("oAuthMediaWikiService")
-    public OAuth10aService oAuthMediaWikiService() {
+    @Bean("mediaWikiService")
+    public OAuth10aService mediaWikiService() {
         return new ServiceBuilder(this.apiKey).apiSecret(this.apiSecret).callback("oob").build(MediaWikiApi.instance());
     }
 }

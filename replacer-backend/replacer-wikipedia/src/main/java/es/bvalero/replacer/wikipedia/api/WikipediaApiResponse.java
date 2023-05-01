@@ -7,9 +7,9 @@ import lombok.Data;
 import org.springframework.lang.Nullable;
 
 /**
- * DTO matching the common format for a Wikipedia classic API response.
- * There is no schema to follow up the changes in the API specification,
- * so the best approach is to take only the needed values and ignore all the rest.
+ * DTO to represent any possible response from Wikipedia API,
+ * ot at least the fields we are interested in, ignoring the rest.
+ * Note there is no fixed schema to follow up the changes in the API specification.
  */
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)

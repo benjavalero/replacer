@@ -7,10 +7,14 @@ import es.bvalero.replacer.wikipedia.WikipediaTimestamp;
 import lombok.Builder;
 import lombok.ToString;
 import lombok.Value;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.NonNull;
 
-/** Page in a Wikipedia dump */
+/**
+ * A dump page is a page retrieved from a Wikipedia dump, from any language or namespace.
+ * It contains the most important properties, in particular the text content.
+ * It is obviously a snapshot, as the page content may have been modified later by any Wikipedia user,
+ * so we can define this class as immutable.
+ */
 @Value
 @Builder
 class DumpPage implements IndexablePage {
@@ -30,14 +34,14 @@ class DumpPage implements IndexablePage {
     String content;
 
     @NonNull
-    WikipediaTimestamp lastUpdate; // Store time (and not only date) in case it is needed in the future
+    WikipediaTimestamp lastUpdate;
 
     @ToString.Exclude
-    boolean redirect; // If the page is considered a redirection page
+    boolean redirect;
 
     // Lombok trick to print only a fragment of the page content
     @ToString.Include
     private String shortContent() {
-        return StringUtils.abbreviate(getContent(), SHORT_CONTENT_LENGTH);
+        return getAbbreviatedContent();
     }
 }

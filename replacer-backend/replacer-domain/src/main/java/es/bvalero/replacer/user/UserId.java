@@ -4,7 +4,7 @@ import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import lombok.Value;
 import org.springframework.lang.NonNull;
 
-/** Unique identifier for a user in the application and Wikipedia */
+/** A key to identify a user in a specific Wikipedia */
 @Value(staticConstructor = "of")
 public class UserId {
 

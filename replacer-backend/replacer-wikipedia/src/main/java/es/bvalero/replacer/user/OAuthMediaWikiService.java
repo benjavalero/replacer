@@ -17,13 +17,13 @@ import org.springframework.stereotype.Service;
 class OAuthMediaWikiService implements OAuthService {
 
     @Autowired
-    @Qualifier("oAuthMediaWikiService")
-    private OAuth10aService oAuth10aService;
+    @Qualifier("mediaWikiService")
+    private OAuth10aService mediaWikiService;
 
     @Override
     public RequestToken getRequestToken() throws AuthenticationException {
         try {
-            return convertRequestToken(oAuth10aService.getRequestToken());
+            return convertRequestToken(mediaWikiService.getRequestToken());
         } catch (InterruptedException e) {
             // This cannot be unit-tested because the mocked InterruptedException make other tests fail
             Thread.currentThread().interrupt();
@@ -41,7 +41,7 @@ class OAuthMediaWikiService implements OAuthService {
 
     @Override
     public String getAuthorizationUrl(RequestToken requestToken) {
-        return oAuth10aService.getAuthorizationUrl(convertToRequestToken(requestToken));
+        return mediaWikiService.getAuthorizationUrl(convertToRequestToken(requestToken));
     }
 
     private OAuth1RequestToken convertToRequestToken(RequestToken authenticationToken) {
@@ -52,7 +52,7 @@ class OAuthMediaWikiService implements OAuthService {
     public AccessToken getAccessToken(RequestToken requestToken, String oAuthVerifier) throws AuthenticationException {
         try {
             return convertAccessToken(
-                oAuth10aService.getAccessToken(convertToRequestToken(requestToken), oAuthVerifier)
+                mediaWikiService.getAccessToken(convertToRequestToken(requestToken), oAuthVerifier)
             );
         } catch (InterruptedException e) {
             // This cannot be unit-tested because the mocked InterruptedException make other tests fail

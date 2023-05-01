@@ -8,7 +8,6 @@ import com.github.scribejava.core.model.OAuthRequest;
 import com.github.scribejava.core.model.Response;
 import com.github.scribejava.core.model.Verb;
 import com.github.scribejava.core.oauth.OAuth10aService;
-import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.user.AccessToken;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import java.io.IOException;
@@ -22,13 +21,11 @@ import org.springframework.stereotype.Component;
 /** Helper to perform Wikipedia API requests */
 @Slf4j
 @Component
-public class WikipediaApiRequestHelper {
-
-    private static final String WIKIPEDIA_API_URL = "https://%s.wikipedia.org/w/api.php";
+public class WikipediaApiHelper {
 
     @Autowired
-    @Qualifier("mediaWikiApiService")
-    private OAuth10aService mediaWikiApiService;
+    @Qualifier("mediaWikiService")
+    private OAuth10aService mediaWikiService;
 
     @Autowired
     private ObjectMapper jsonMapper;
@@ -48,18 +45,17 @@ public class WikipediaApiRequestHelper {
 
     private String executeMediaWikiRequest(WikipediaApiRequest apiRequest) throws WikipediaException {
         Verb verb = convertVerb(apiRequest.getVerb());
-        String url = buildWikipediaRequestUrl(apiRequest.getLang());
+        String url = apiRequest.getUrl();
         OAuthRequest mediaWikiRequest = new OAuthRequest(verb, url);
         apiRequest.getParams().forEach(mediaWikiRequest::addParameter);
-        AccessToken accessToken = apiRequest.getAccessToken();
-        // Access token can be empty in tests
-        if (accessToken != null && !accessToken.isEmpty()) {
-            OAuth1AccessToken oAuth1AccessToken = convertAccessToken(accessToken);
-            mediaWikiApiService.signRequest(oAuth1AccessToken, mediaWikiRequest);
+        if (apiRequest.isSigned()) {
+            assert apiRequest.getAccessToken() != null;
+            OAuth1AccessToken oAuth1AccessToken = convertAccessToken(apiRequest.getAccessToken());
+            mediaWikiService.signRequest(oAuth1AccessToken, mediaWikiRequest);
         }
 
         try {
-            Response response = mediaWikiApiService.execute(mediaWikiRequest);
+            Response response = mediaWikiService.execute(mediaWikiRequest);
             if (!response.isSuccessful()) {
                 throw new WikipediaException(
                     String.format("Call not successful: %d - %s", response.getCode(), response.getMessage())
@@ -77,12 +73,8 @@ public class WikipediaApiRequestHelper {
         }
     }
 
-    private Verb convertVerb(WikipediaApiRequestVerb verb) {
+    private Verb convertVerb(WikipediaApiVerb verb) {
         return Verb.valueOf(verb.name());
-    }
-
-    private String buildWikipediaRequestUrl(WikipediaLanguage lang) {
-        return String.format(WIKIPEDIA_API_URL, lang.getCode());
     }
 
     private OAuth1AccessToken convertAccessToken(AccessToken accessToken) {

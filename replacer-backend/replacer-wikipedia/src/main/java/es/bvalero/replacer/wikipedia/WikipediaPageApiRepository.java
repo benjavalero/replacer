@@ -6,10 +6,10 @@ import com.github.rozidan.springboot.logger.Loggable;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.page.PageKey;
 import es.bvalero.replacer.user.AccessToken;
+import es.bvalero.replacer.wikipedia.api.WikipediaApiHelper;
 import es.bvalero.replacer.wikipedia.api.WikipediaApiRequest;
-import es.bvalero.replacer.wikipedia.api.WikipediaApiRequestHelper;
-import es.bvalero.replacer.wikipedia.api.WikipediaApiRequestVerb;
 import es.bvalero.replacer.wikipedia.api.WikipediaApiResponse;
+import es.bvalero.replacer.wikipedia.api.WikipediaApiVerb;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -21,7 +21,6 @@ import org.springframework.boot.logging.LogLevel;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
-/** Wikipedia service implementation using classic Wikipedia API */
 @SuppressWarnings("java:S1192")
 @Slf4j
 @Loggable(value = LogLevel.TRACE, skipResult = true, warnOver = 10, warnUnit = TimeUnit.SECONDS)
@@ -34,7 +33,7 @@ class WikipediaPageApiRepository implements WikipediaPageRepository {
     private static final int MAX_OFFSET_LIMIT = 10000;
 
     @Autowired
-    private WikipediaApiRequestHelper wikipediaApiRequestHelper;
+    private WikipediaApiHelper wikipediaApiHelper;
 
     @Override
     public Optional<WikipediaPage> findByTitle(WikipediaLanguage lang, String pageTitle) {
@@ -85,11 +84,11 @@ class WikipediaPageApiRepository implements WikipediaPageRepository {
         throws WikipediaException {
         WikipediaApiRequest apiRequest = WikipediaApiRequest
             .builder()
-            .verb(WikipediaApiRequestVerb.GET)
+            .verb(WikipediaApiVerb.GET)
             .lang(lang)
             .params(buildPageIdsRequestParams(pagesParam, pagesValue))
             .build();
-        WikipediaApiResponse apiResponse = wikipediaApiRequestHelper.executeApiRequest(apiRequest);
+        WikipediaApiResponse apiResponse = wikipediaApiHelper.executeApiRequest(apiRequest);
         return extractPagesFromJson(apiResponse, lang);
     }
 
@@ -135,13 +134,13 @@ class WikipediaPageApiRepository implements WikipediaPageRepository {
     public Collection<WikipediaSection> findSectionsInPage(PageKey pageKey) {
         WikipediaApiRequest apiRequest = WikipediaApiRequest
             .builder()
-            .verb(WikipediaApiRequestVerb.GET)
+            .verb(WikipediaApiVerb.GET)
             .lang(pageKey.getLang())
             .params(buildPageSectionsRequestParams(pageKey.getPageId()))
             .build();
         try {
-            WikipediaApiResponse apiResponse = wikipediaApiRequestHelper.executeApiRequest(apiRequest);
-            return extractSectionsFromJson(apiResponse);
+            WikipediaApiResponse apiResponse = wikipediaApiHelper.executeApiRequest(apiRequest);
+            return extractSectionsFromJson(apiResponse, pageKey);
         } catch (WikipediaException e) {
             LOGGER.error("Error finding sections in page: {}", pageKey, e);
         }
@@ -156,13 +155,13 @@ class WikipediaPageApiRepository implements WikipediaPageRepository {
         return params;
     }
 
-    private Collection<WikipediaSection> extractSectionsFromJson(WikipediaApiResponse response) {
+    private Collection<WikipediaSection> extractSectionsFromJson(WikipediaApiResponse response, PageKey pageKey) {
         return response
             .getParse()
             .getSections()
             .stream()
             .filter(this::isSectionValid)
-            .map(this::convert)
+            .map(s -> convert(s, pageKey))
             .collect(Collectors.toUnmodifiableList());
     }
 
@@ -175,30 +174,32 @@ class WikipediaPageApiRepository implements WikipediaPageRepository {
         }
     }
 
-    private WikipediaSection convert(WikipediaApiResponse.Section section) {
+    private WikipediaSection convert(WikipediaApiResponse.Section section, PageKey pageKey) {
         return WikipediaSection
             .builder()
-            .level(Integer.parseInt(section.getLevel()))
+            .pageKey(pageKey)
             .index(Integer.parseInt(section.getIndex()))
+            .level(Integer.parseInt(section.getLevel()))
             .byteOffset(Objects.requireNonNull(section.getByteoffset()))
             .anchor(Objects.requireNonNullElse(section.getLinkAnchor(), section.getAnchor()))
             .build();
     }
 
     @Override
-    public Optional<WikipediaPage> findPageSection(PageKey pageKey, WikipediaSection section) {
+    public Optional<WikipediaPage> findPageSection(WikipediaSection section) {
         try {
+            PageKey pageKey = section.getPageKey();
             WikipediaApiRequest apiRequest = WikipediaApiRequest
                 .builder()
-                .verb(WikipediaApiRequestVerb.GET)
+                .verb(WikipediaApiVerb.GET)
                 .lang(pageKey.getLang())
                 .params(buildPageIdsAndSectionRequestParams(pageKey.getPageId(), section.getIndex()))
                 .build();
-            WikipediaApiResponse apiResponse = wikipediaApiRequestHelper.executeApiRequest(apiRequest);
+            WikipediaApiResponse apiResponse = wikipediaApiHelper.executeApiRequest(apiRequest);
             Collection<WikipediaPage> pages = extractPagesFromJson(apiResponse, pageKey.getLang());
             return pages.stream().findAny();
         } catch (WikipediaException e) {
-            LOGGER.error("Error getting page section: {} - {}", pageKey, section, e);
+            LOGGER.error("Error getting page section: {}", section, e);
             return Optional.empty();
         }
     }
@@ -230,12 +231,12 @@ class WikipediaPageApiRepository implements WikipediaPageRepository {
 
         WikipediaApiRequest apiRequest = WikipediaApiRequest
             .builder()
-            .verb(WikipediaApiRequestVerb.GET)
+            .verb(WikipediaApiVerb.GET)
             .lang(searchRequest.getLang())
             .params(buildPageIdsByStringMatchRequestParams(searchRequest))
             .build();
         try {
-            WikipediaApiResponse apiResponse = wikipediaApiRequestHelper.executeApiRequest(apiRequest);
+            WikipediaApiResponse apiResponse = wikipediaApiHelper.executeApiRequest(apiRequest);
             return extractPageIdsFromSearchJson(apiResponse);
         } catch (WikipediaException e) {
             LOGGER.error("Error finding pages by content", e);
@@ -257,7 +258,9 @@ class WikipediaPageApiRepository implements WikipediaPageRepository {
             .stream()
             .map(WikipediaNamespace::getValue)
             .collect(Collectors.toUnmodifiableSet());
-        params.put("srnamespace", StringUtils.join(namespaceIds, '|'));
+        if (!namespaceIds.isEmpty()) {
+            params.put("srnamespace", StringUtils.join(namespaceIds, '|'));
+        }
         params.put("srwhat", "text");
         params.put("srinfo", "totalhits");
         params.put("srprop", "");
@@ -303,12 +306,12 @@ class WikipediaPageApiRepository implements WikipediaPageRepository {
 
         WikipediaApiRequest apiRequest = WikipediaApiRequest
             .builder()
-            .verb(WikipediaApiRequestVerb.POST)
+            .verb(WikipediaApiVerb.POST)
             .lang(pageSave.getPageKey().getLang())
             .params(buildSavePageContentRequestParams(pageSave, editToken))
             .accessToken(accessToken)
             .build();
-        wikipediaApiRequestHelper.executeApiRequest(apiRequest);
+        wikipediaApiHelper.executeApiRequest(apiRequest);
     }
 
     private void validateEditTimestamp(
@@ -354,12 +357,12 @@ class WikipediaPageApiRepository implements WikipediaPageRepository {
     EditToken getEditToken(PageKey id, AccessToken accessToken) throws WikipediaException {
         WikipediaApiRequest apiRequest = WikipediaApiRequest
             .builder()
-            .verb(WikipediaApiRequestVerb.POST)
+            .verb(WikipediaApiVerb.POST)
             .lang(id.getLang())
             .params(buildEditTokenRequestParams(id.getPageId()))
             .accessToken(accessToken)
             .build();
-        WikipediaApiResponse apiResponse = wikipediaApiRequestHelper.executeApiRequest(apiRequest);
+        WikipediaApiResponse apiResponse = wikipediaApiHelper.executeApiRequest(apiRequest);
         return extractEditTokenFromJson(apiResponse);
     }
 

@@ -57,8 +57,8 @@ class WikipediaPageOfflineRepository implements WikipediaPageRepository {
     }
 
     @Override
-    public Optional<WikipediaPage> findPageSection(PageKey pageKey, WikipediaSection section) {
-        return buildFakePage(pageKey.getPageId());
+    public Optional<WikipediaPage> findPageSection(WikipediaSection section) {
+        return buildFakePage(section.getPageKey().getPageId());
     }
 
     @Override

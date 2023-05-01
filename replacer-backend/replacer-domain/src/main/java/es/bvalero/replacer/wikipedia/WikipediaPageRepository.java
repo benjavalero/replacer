@@ -16,7 +16,7 @@ public interface WikipediaPageRepository {
 
     Collection<WikipediaSection> findSectionsInPage(PageKey pageKey);
 
-    Optional<WikipediaPage> findPageSection(PageKey pageKey, WikipediaSection section);
+    Optional<WikipediaPage> findPageSection(WikipediaSection section);
 
     WikipediaSearchResult findByContent(WikipediaSearchRequest searchRequest);
 

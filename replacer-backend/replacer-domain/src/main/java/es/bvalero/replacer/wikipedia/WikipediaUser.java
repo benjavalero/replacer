@@ -6,9 +6,8 @@ import lombok.Value;
 import org.springframework.lang.NonNull;
 
 /**
- * User in Wikipedia.
- * We consider the correspondence between the groups and the Replacer rights as business rules,
- * so we keep this class as a subdomain value-object.
+ * A user registered in Wikipedia, along with the roles in Wikipedia he/she belongs to.
+ * Note that not all Wikipedia users are allowed to be Replacer users.
  */
 @Value(staticConstructor = "of")
 public class WikipediaUser {

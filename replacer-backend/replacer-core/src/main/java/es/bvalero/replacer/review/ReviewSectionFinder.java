@@ -38,10 +38,7 @@ class ReviewSectionFinder {
         );
         if (smallestSection.isPresent()) {
             // Find the section from Wikipedia API (better than calculating it by ourselves)
-            Optional<WikipediaPage> pageSection = wikipediaPageRepository.findPageSection(
-                review.getPage().getPageKey(),
-                smallestSection.get()
-            );
+            Optional<WikipediaPage> pageSection = wikipediaPageRepository.findPageSection(smallestSection.get());
             if (pageSection.isPresent()) {
                 // We need to modify the start position of the replacements according to the section start
                 Collection<Replacement> sectionReplacements = translateReplacementsByOffset(

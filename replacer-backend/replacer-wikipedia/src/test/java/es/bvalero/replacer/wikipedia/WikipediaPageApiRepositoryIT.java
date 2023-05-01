@@ -3,11 +3,11 @@ package es.bvalero.replacer.wikipedia;
 import static org.junit.jupiter.api.Assertions.*;
 
 import es.bvalero.replacer.JsonMapperConfiguration;
-import es.bvalero.replacer.MediaWikiApiConfiguration;
+import es.bvalero.replacer.MediaWikiConfiguration;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.page.PageKey;
 import es.bvalero.replacer.user.AccessToken;
-import es.bvalero.replacer.wikipedia.api.WikipediaApiRequestHelper;
+import es.bvalero.replacer.wikipedia.api.WikipediaApiHelper;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
@@ -18,8 +18,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest(
     classes = {
         WikipediaPageApiRepository.class,
-        WikipediaApiRequestHelper.class,
-        MediaWikiApiConfiguration.class,
+        WikipediaApiHelper.class,
+        MediaWikiConfiguration.class,
         JsonMapperConfiguration.class,
     }
 )

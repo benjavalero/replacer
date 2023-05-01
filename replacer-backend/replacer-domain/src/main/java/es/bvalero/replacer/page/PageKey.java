@@ -5,7 +5,12 @@ import lombok.Value;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.lang.NonNull;
 
-/** A key to identify a page in Wikipedia */
+/**
+ * A key to identify a page.
+ * A page in a particular Wikipedia can be identified by title or by an internal ID.
+ * We prefer the second approach. Therefore, to identify any Wikipedia page,
+ * we also need to know the language of the Wikipedia the page belongs to.
+ */
 @Value(staticConstructor = "of")
 public class PageKey implements Comparable<PageKey> {
 

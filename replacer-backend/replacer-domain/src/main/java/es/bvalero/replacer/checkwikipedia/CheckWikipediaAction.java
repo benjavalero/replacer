@@ -3,7 +3,7 @@ package es.bvalero.replacer.checkwikipedia;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-/** Enumerates all actions on Check Wikipedia supported by the application */
+/** An action on Check Wikipedia supported by the application */
 @Getter
 @AllArgsConstructor
 public enum CheckWikipediaAction {
@@ -26,4 +26,8 @@ public enum CheckWikipediaAction {
     EXTERNAL_LINK_WITH_DOUBLE_HTTP(93);
 
     private final int value;
+
+    boolean isNoAction() {
+        return this.equals(NO_ACTION);
+    }
 }

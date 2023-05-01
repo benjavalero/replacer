@@ -1,6 +1,6 @@
 package es.bvalero.replacer.wikipedia.api;
 
-public enum WikipediaApiRequestVerb {
+public enum WikipediaApiVerb {
     GET,
     POST,
 }

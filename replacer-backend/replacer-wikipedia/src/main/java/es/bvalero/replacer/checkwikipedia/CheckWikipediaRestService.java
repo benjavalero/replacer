@@ -1,7 +1,6 @@
 package es.bvalero.replacer.checkwikipedia;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import java.util.Objects;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.Async;
@@ -19,7 +18,7 @@ class CheckWikipediaRestService implements CheckWikipediaService {
 
     @Async
     public void reportFix(WikipediaLanguage lang, String pageTitle, CheckWikipediaAction action) {
-        if (Objects.equals(action, CheckWikipediaAction.NO_ACTION)) {
+        if (action.isNoAction()) {
             return;
         }
 

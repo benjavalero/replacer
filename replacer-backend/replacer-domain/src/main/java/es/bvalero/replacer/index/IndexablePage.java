@@ -5,11 +5,11 @@ import es.bvalero.replacer.wikipedia.WikipediaNamespace;
 import es.bvalero.replacer.wikipedia.WikipediaTimestamp;
 
 public interface IndexablePage extends FinderPage {
-    int SHORT_CONTENT_LENGTH = 50;
-
     WikipediaNamespace getNamespace();
 
+    // Store time (and not only date) in case it is needed in the future
     WikipediaTimestamp getLastUpdate();
 
+    /* If the page is considered a redirection page */
     boolean isRedirect();
 }

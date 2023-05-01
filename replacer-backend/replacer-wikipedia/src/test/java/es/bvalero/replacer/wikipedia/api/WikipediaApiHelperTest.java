@@ -17,20 +17,20 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 
-class WikipediaApiRequestHelperTest {
+class WikipediaApiHelperTest {
 
     @Mock
-    private OAuth10aService mediaWikiApiService;
+    private OAuth10aService mediaWikiService;
 
     @Spy
     private ObjectMapper jsonMapper;
 
     @InjectMocks
-    private WikipediaApiRequestHelper wikipediaApiRequestHelper;
+    private WikipediaApiHelper wikipediaApiHelper;
 
     @BeforeEach
     public void setUp() {
-        wikipediaApiRequestHelper = new WikipediaApiRequestHelper();
+        wikipediaApiHelper = new WikipediaApiHelper();
         MockitoAnnotations.openMocks(this);
     }
 
@@ -40,17 +40,17 @@ class WikipediaApiRequestHelperTest {
         Response response = mock(Response.class);
         String textResponse =
             "{\"error\":{\"code\":\"too-many-pageids\",\"info\":\"Too many values supplied for parameter \\\"pageids\\\". The limit is 50.\",\"docref\":\"See https://es.wikipedia.org/w/api.php for API usage. Subscribe to the mediawiki-api-announce mailing list at &lt;https://lists.wikimedia.org/mailman/listinfo/mediawiki-api-announce&gt; for notice of API deprecations and breaking changes.\"},\"servedby\":\"mw1342\"}";
-        when(mediaWikiApiService.execute(any(OAuthRequest.class))).thenReturn(response);
+        when(mediaWikiService.execute(any(OAuthRequest.class))).thenReturn(response);
         when(response.isSuccessful()).thenReturn(true);
         when(response.getBody()).thenReturn(textResponse);
 
         try {
             WikipediaApiRequest apiRequest = WikipediaApiRequest
                 .builder()
-                .verb(WikipediaApiRequestVerb.GET)
+                .verb(WikipediaApiVerb.GET)
                 .lang(WikipediaLanguage.getDefault())
                 .build();
-            wikipediaApiRequestHelper.executeApiRequest(apiRequest);
+            wikipediaApiHelper.executeApiRequest(apiRequest);
         } catch (WikipediaException e) {
             assertTrue(e.getMessage().startsWith("too-many-pageids"));
         }
@@ -60,15 +60,15 @@ class WikipediaApiRequestHelperTest {
     void testResponseNotSuccessful() throws Exception {
         // API response
         Response response = mock(Response.class);
-        when(mediaWikiApiService.execute(any(OAuthRequest.class))).thenReturn(response);
+        when(mediaWikiService.execute(any(OAuthRequest.class))).thenReturn(response);
         when(response.isSuccessful()).thenReturn(false);
 
         WikipediaApiRequest apiRequest = WikipediaApiRequest
             .builder()
-            .verb(WikipediaApiRequestVerb.GET)
+            .verb(WikipediaApiVerb.GET)
             .lang(WikipediaLanguage.getDefault())
             .build();
-        assertThrows(WikipediaException.class, () -> wikipediaApiRequestHelper.executeApiRequest(apiRequest));
+        assertThrows(WikipediaException.class, () -> wikipediaApiHelper.executeApiRequest(apiRequest));
     }
 
     @Test
@@ -77,16 +77,16 @@ class WikipediaApiRequestHelperTest {
         Response response = mock(Response.class);
         String textResponse =
             "{\"batchcomplete\":true,\"query\":{\"pages\":[{\"pageid\":2209245,\"ns\":4,\"title\":\"Wikipedia:Zona de pruebas/5\",\"revisions\":[{\"timestamp\":\"2019-06-24T21:24:09Z\"}]}],\"tokens\":{\"csrftoken\":\"+\\\\\"}}}";
-        when(mediaWikiApiService.execute(any(OAuthRequest.class))).thenReturn(response);
+        when(mediaWikiService.execute(any(OAuthRequest.class))).thenReturn(response);
         when(response.isSuccessful()).thenReturn(true);
         when(response.getBody()).thenReturn(textResponse);
 
         WikipediaApiRequest apiRequest = WikipediaApiRequest
             .builder()
-            .verb(WikipediaApiRequestVerb.POST)
+            .verb(WikipediaApiVerb.POST)
             .lang(WikipediaLanguage.getDefault())
             .accessToken(AccessToken.of("A", "B"))
             .build();
-        assertNotNull(wikipediaApiRequestHelper.executeApiRequest(apiRequest));
+        assertNotNull(wikipediaApiHelper.executeApiRequest(apiRequest));
     }
 }

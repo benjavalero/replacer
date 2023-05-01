@@ -2,9 +2,12 @@ package es.bvalero.replacer.finder;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.page.PageKey;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.TestOnly;
 
 public interface FinderPage {
+    int SHORT_CONTENT_LENGTH = 50;
+
     PageKey getPageKey();
 
     String getTitle();
@@ -34,5 +37,9 @@ public interface FinderPage {
                 return content;
             }
         };
+    }
+
+    default String getAbbreviatedContent() {
+        return StringUtils.abbreviate(getContent(), SHORT_CONTENT_LENGTH);
     }
 }

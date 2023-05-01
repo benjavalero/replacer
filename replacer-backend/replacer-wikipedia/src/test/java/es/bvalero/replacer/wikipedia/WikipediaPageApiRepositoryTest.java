@@ -10,8 +10,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.page.PageKey;
 import es.bvalero.replacer.user.AccessToken;
+import es.bvalero.replacer.wikipedia.api.WikipediaApiHelper;
 import es.bvalero.replacer.wikipedia.api.WikipediaApiRequest;
-import es.bvalero.replacer.wikipedia.api.WikipediaApiRequestHelper;
 import es.bvalero.replacer.wikipedia.api.WikipediaApiResponse;
 import java.util.Collection;
 import java.util.List;
@@ -31,7 +31,7 @@ class WikipediaPageApiRepositoryTest {
     private ObjectMapper jsonMapper;
 
     @Mock
-    private WikipediaApiRequestHelper wikipediaApiRequestHelper;
+    private WikipediaApiHelper wikipediaApiHelper;
 
     @InjectMocks
     private WikipediaPageApiRepository wikipediaPageRepository;
@@ -70,7 +70,7 @@ class WikipediaPageApiRepositoryTest {
             "    }\n" +
             "}";
         WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
-        when(wikipediaApiRequestHelper.executeApiRequest(any(WikipediaApiRequest.class))).thenReturn(response);
+        when(wikipediaApiHelper.executeApiRequest(any(WikipediaApiRequest.class))).thenReturn(response);
         assertTrue(response.isBatchcomplete());
 
         // We pass an empty access token to retrieve an anonymous edit token
@@ -118,7 +118,7 @@ class WikipediaPageApiRepositoryTest {
             "    }\n" +
             "}";
         WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
-        when(wikipediaApiRequestHelper.executeApiRequest(any(WikipediaApiRequest.class))).thenReturn(response);
+        when(wikipediaApiHelper.executeApiRequest(any(WikipediaApiRequest.class))).thenReturn(response);
 
         int pageId = 6219990;
         String title = "Usuario:Benjavalero";
@@ -170,7 +170,7 @@ class WikipediaPageApiRepositoryTest {
             "    }\n" +
             "}";
         WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
-        when(wikipediaApiRequestHelper.executeApiRequest(any(WikipediaApiRequest.class))).thenReturn(response);
+        when(wikipediaApiHelper.executeApiRequest(any(WikipediaApiRequest.class))).thenReturn(response);
 
         PageKey pageKey = PageKey.of(WikipediaLanguage.SPANISH, 6219990);
         String title = "Usuario:Benjavalero";
@@ -244,7 +244,7 @@ class WikipediaPageApiRepositoryTest {
             "    }\n" +
             "}";
         WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
-        when(wikipediaApiRequestHelper.executeApiRequest(any(WikipediaApiRequest.class))).thenReturn(response);
+        when(wikipediaApiHelper.executeApiRequest(any(WikipediaApiRequest.class))).thenReturn(response);
 
         WikipediaLanguage lang = WikipediaLanguage.SPANISH;
         Collection<WikipediaPage> pages = wikipediaPageRepository.findByKeys(
@@ -296,7 +296,7 @@ class WikipediaPageApiRepositoryTest {
             "    }\n" +
             "}";
         WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
-        when(wikipediaApiRequestHelper.executeApiRequest(any(WikipediaApiRequest.class))).thenReturn(response);
+        when(wikipediaApiHelper.executeApiRequest(any(WikipediaApiRequest.class))).thenReturn(response);
 
         assertFalse(
             wikipediaPageRepository.findByTitle(WikipediaLanguage.SPANISH, "Usuario:Benjavaleroxx").isPresent()
@@ -357,7 +357,7 @@ class WikipediaPageApiRepositoryTest {
             "    }\n" +
             "}";
         WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
-        when(wikipediaApiRequestHelper.executeApiRequest(any(WikipediaApiRequest.class))).thenReturn(response);
+        when(wikipediaApiHelper.executeApiRequest(any(WikipediaApiRequest.class))).thenReturn(response);
 
         assertFalse(wikipediaPageRepository.findByTitle(WikipediaLanguage.SPANISH, "Getxo").isPresent());
     }
@@ -442,7 +442,7 @@ class WikipediaPageApiRepositoryTest {
             "    }\n" +
             "}";
         WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
-        when(wikipediaApiRequestHelper.executeApiRequest(any(WikipediaApiRequest.class))).thenReturn(response);
+        when(wikipediaApiHelper.executeApiRequest(any(WikipediaApiRequest.class))).thenReturn(response);
 
         WikipediaSearchResult pageIds = wikipediaPageRepository.findByContent(
             WikipediaSearchRequest
@@ -471,7 +471,7 @@ class WikipediaPageApiRepositoryTest {
             "    }\n" +
             "}";
         WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
-        when(wikipediaApiRequestHelper.executeApiRequest(any(WikipediaApiRequest.class))).thenReturn(response);
+        when(wikipediaApiHelper.executeApiRequest(any(WikipediaApiRequest.class))).thenReturn(response);
 
         WikipediaSearchResult pageIds = wikipediaPageRepository.findByContent(
             WikipediaSearchRequest
@@ -492,7 +492,7 @@ class WikipediaPageApiRepositoryTest {
         String textResponse =
             "{\"batchcomplete\":true,\"query\":{\"pages\":[{\"pageid\":2209245,\"ns\":4,\"title\":\"Wikipedia:Zona de pruebas/5\",\"revisions\":[{\"timestamp\":\"2019-06-24T21:24:09Z\"}]}],\"tokens\":{\"csrftoken\":\"+\\\\\"}}}";
         WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
-        when(wikipediaApiRequestHelper.executeApiRequest(any(WikipediaApiRequest.class))).thenReturn(response);
+        when(wikipediaApiHelper.executeApiRequest(any(WikipediaApiRequest.class))).thenReturn(response);
 
         // We use a timestamp BEFORE the timestamp of the last edition (from the edit token)
         WikipediaTimestamp currentTimestamp = WikipediaTimestamp.of("2019-06-23T21:24:09Z");
@@ -514,7 +514,7 @@ class WikipediaPageApiRepositoryTest {
         String textResponse =
             "{\"batchcomplete\":true,\"query\":{\"pages\":[{\"pageid\":2209245,\"ns\":4,\"title\":\"Wikipedia:Zona de pruebas/5\",\"revisions\":[{\"timestamp\":\"2019-06-24T21:24:09Z\"}]}],\"tokens\":{\"csrftoken\":\"+\\\\\"}}}";
         WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
-        when(wikipediaApiRequestHelper.executeApiRequest(any(WikipediaApiRequest.class))).thenReturn(response);
+        when(wikipediaApiHelper.executeApiRequest(any(WikipediaApiRequest.class))).thenReturn(response);
 
         // We use a timestamp AFTER the timestamp of the last edition (from the edit token)
         WikipediaTimestamp currentTimestamp = WikipediaTimestamp.of("2019-06-25T21:24:09Z");
@@ -529,7 +529,7 @@ class WikipediaPageApiRepositoryTest {
         wikipediaPageRepository.save(pageSave, AccessToken.empty());
 
         // Two calls: one for the EditToken and another to save the content
-        verify(wikipediaApiRequestHelper, times(2)).executeApiRequest(any(WikipediaApiRequest.class));
+        verify(wikipediaApiHelper, times(2)).executeApiRequest(any(WikipediaApiRequest.class));
 
         // Save a section
         // We use a timestamp AFTER the timestamp of the last edition (from the edit token)
@@ -546,7 +546,7 @@ class WikipediaPageApiRepositoryTest {
         wikipediaPageRepository.save(pageSave, AccessToken.empty());
 
         // Two calls: one for the EditToken and another to save the content (x2 save page and section in this test)
-        verify(wikipediaApiRequestHelper, times(4)).executeApiRequest(any(WikipediaApiRequest.class));
+        verify(wikipediaApiHelper, times(4)).executeApiRequest(any(WikipediaApiRequest.class));
     }
 
     @Test
@@ -610,7 +610,7 @@ class WikipediaPageApiRepositoryTest {
             "    }\n" +
             "}";
         WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
-        when(wikipediaApiRequestHelper.executeApiRequest(any(WikipediaApiRequest.class))).thenReturn(response);
+        when(wikipediaApiHelper.executeApiRequest(any(WikipediaApiRequest.class))).thenReturn(response);
 
         Collection<WikipediaSection> sections = wikipediaPageRepository.findSectionsInPage(
             PageKey.of(WikipediaLanguage.SPANISH, 6903884)
@@ -701,7 +701,7 @@ class WikipediaPageApiRepositoryTest {
             "    }\n" +
             "}";
         WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
-        when(wikipediaApiRequestHelper.executeApiRequest(any(WikipediaApiRequest.class))).thenReturn(response);
+        when(wikipediaApiHelper.executeApiRequest(any(WikipediaApiRequest.class))).thenReturn(response);
 
         Collection<WikipediaSection> sections = wikipediaPageRepository.findSectionsInPage(
             PageKey.of(WikipediaLanguage.SPANISH, 6633556)
@@ -752,21 +752,20 @@ class WikipediaPageApiRepositoryTest {
             "    }\n" +
             "}";
         WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
-        when(wikipediaApiRequestHelper.executeApiRequest(any(WikipediaApiRequest.class))).thenReturn(response);
+        when(wikipediaApiHelper.executeApiRequest(any(WikipediaApiRequest.class))).thenReturn(response);
 
         PageKey pageKey = PageKey.of(WikipediaLanguage.getDefault(), 6903884);
         int sectionId = 1;
         WikipediaSection section = WikipediaSection
             .builder()
-            .level(2)
+            .pageKey(pageKey)
             .index(sectionId)
+            .level(2)
             .byteOffset(0)
             .anchor("X")
             .build();
         String title = "Usuario:Benjavalero/Taller";
-        WikipediaPage page = wikipediaPageRepository
-            .findPageSection(pageKey, section)
-            .orElseThrow(WikipediaException::new);
+        WikipediaPage page = wikipediaPageRepository.findPageSection(section).orElseThrow(WikipediaException::new);
         assertNotNull(page);
         assertEquals(WikipediaLanguage.getDefault(), page.getPageKey().getLang());
         assertEquals(pageKey, page.getPageKey());
@@ -795,9 +794,9 @@ class WikipediaPageApiRepositoryTest {
             // Just in case with annotate this test with @RetryingTest
             assertEquals(p, page2.orElse(null));
 
+            PageKey pageKey = PageKey.of(WikipediaLanguage.getDefault(), pageId);
             Optional<WikipediaPage> pageSection = wikipediaPageOfflineRepository.findPageSection(
-                PageKey.of(WikipediaLanguage.getDefault(), pageId),
-                WikipediaSection.builder().anchor("").build()
+                WikipediaSection.builder().pageKey(pageKey).anchor("").build()
             );
             assertEquals(p, pageSection.orElse(null));
 

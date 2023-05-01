@@ -18,7 +18,7 @@ import org.mockito.MockitoAnnotations;
 class OAuthMediaWikiServiceTest {
 
     @Mock
-    private OAuth10aService oAuth10aService;
+    private OAuth10aService mediaWikiService;
 
     @InjectMocks
     private OAuthService oAuthMediaWikiService;
@@ -35,18 +35,18 @@ class OAuthMediaWikiServiceTest {
     @Test
     void testGetRequestToken() throws IOException, ExecutionException, InterruptedException, AuthenticationException {
         OAuth1RequestToken requestToken = new OAuth1RequestToken("A", "B");
-        when(oAuth10aService.getRequestToken()).thenReturn(requestToken);
+        when(mediaWikiService.getRequestToken()).thenReturn(requestToken);
 
         RequestToken expected = RequestToken.of("A", "B");
         RequestToken actual = oAuthMediaWikiService.getRequestToken();
         assertEquals(expected, actual);
 
-        verify(oAuth10aService).getRequestToken();
+        verify(mediaWikiService).getRequestToken();
     }
 
     @Test
     void testGetRequestTokenWithException() throws IOException, ExecutionException, InterruptedException {
-        when(oAuth10aService.getRequestToken()).thenThrow(new IOException());
+        when(mediaWikiService.getRequestToken()).thenThrow(new IOException());
 
         assertThrows(AuthenticationException.class, () -> oAuthMediaWikiService.getRequestToken());
     }
@@ -56,11 +56,11 @@ class OAuthMediaWikiServiceTest {
         RequestToken requestToken = RequestToken.of("A", "B");
         OAuth1RequestToken oAuth1RequestToken = new OAuth1RequestToken("A", "B");
         String authorizationUrl = "Z";
-        when(oAuth10aService.getAuthorizationUrl(oAuth1RequestToken)).thenReturn(authorizationUrl);
+        when(mediaWikiService.getAuthorizationUrl(oAuth1RequestToken)).thenReturn(authorizationUrl);
 
         assertEquals(authorizationUrl, oAuthMediaWikiService.getAuthorizationUrl(requestToken));
 
-        verify(oAuth10aService).getAuthorizationUrl(oAuth1RequestToken);
+        verify(mediaWikiService).getAuthorizationUrl(oAuth1RequestToken);
     }
 
     @Test
@@ -70,14 +70,14 @@ class OAuthMediaWikiServiceTest {
 
         OAuth1RequestToken oAuth1RequestToken = new OAuth1RequestToken("R", "S");
         OAuth1AccessToken oAuth1AccessToken = new OAuth1AccessToken("A", "B");
-        when(oAuth10aService.getAccessToken(oAuth1RequestToken, oAuthVerifier)).thenReturn(oAuth1AccessToken);
+        when(mediaWikiService.getAccessToken(oAuth1RequestToken, oAuthVerifier)).thenReturn(oAuth1AccessToken);
 
         AccessToken expected = AccessToken.of("A", "B");
         AccessToken actual = oAuthMediaWikiService.getAccessToken(requestToken, oAuthVerifier);
 
         assertEquals(expected, actual);
 
-        verify(oAuth10aService).getAccessToken(oAuth1RequestToken, oAuthVerifier);
+        verify(mediaWikiService).getAccessToken(oAuth1RequestToken, oAuthVerifier);
     }
 
     @Test
@@ -86,7 +86,7 @@ class OAuthMediaWikiServiceTest {
         String oAuthVerifier = "V";
 
         OAuth1RequestToken oAuth1RequestToken = new OAuth1RequestToken("R", "S");
-        when(oAuth10aService.getAccessToken(oAuth1RequestToken, oAuthVerifier)).thenThrow(new IOException());
+        when(mediaWikiService.getAccessToken(oAuth1RequestToken, oAuthVerifier)).thenThrow(new IOException());
 
         assertThrows(
             AuthenticationException.class,

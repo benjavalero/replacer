@@ -9,7 +9,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Setter;
 import org.jetbrains.annotations.VisibleForTesting;
 
-/** Timestamp in Wikipedia, for instance for the last update or the query instant. */
+/** A timestamp in Wikipedia, for instance for the last update or the query instant. */
 @EqualsAndHashCode
 public class WikipediaTimestamp {
 

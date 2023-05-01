@@ -1,5 +1,13 @@
 # Technical Design
 
+## Domain
+
+- A **Wikipedia page** is a page retrieved from Wikipedia, from any language or namespace. It contains the most important properties, in particular the text content. It is actually a snapshot, as the page content can still be modified later by any Wikipedia user.
+- A **dump page** is similar to a Wikipedia page, but retrieved from a Wikipedia dump, and therefore quite likely to be outdated depending on the dump date. A **dump** is huge XML file, generated monthly, containing all the current Wikipedia pages for a language.
+- A **Wikipedia user** is a user registered in Wikipedia. Note that not all Wikipedia users are allowed to be a Replacer user.
+- A **user** is a Wikipedia user who also has the necessary permissions in Wikipedia in order to use the tool.
+
+
 ## Nomenclature and use cases
 
 Main use cases:
@@ -19,7 +27,6 @@ The following concepts are used:
   - **Query timestamp**. The date and time when the page was queried and retrieved.
   - **Redirect**. If the page is considered a redirection page.
   - **Sections**. A Wikipedia page is usually divided in sections in different levels identified by its anchor (header title). Note that Wikipedia allows editing sections instead of the whole page.
-- **Dump**. A huge XML file, generated monthly, containing all the current Wikipedia pages for a language.
 - **Replacement**. A potential issue to be checked and fixed (replaced). For instance, the word _aproximated_ is misspelled and therefore could be proposed to be replaced with _approximated_.
 
   Note the importance of the _potential_ adjective, as an issue could be just a false positive. For instance, in Spanish the word _Paris_ could be misspelled if it corresponds to the French city (written correctly as _París_), but it would be correct if it refers to the mythological Trojan prince.
@@ -77,7 +84,11 @@ Classes are usually suffixed: `Service`, `Controller`, `Repository`, etc.
 
 DTO objects are used to communicate the different layers. The suffixes `Request` and `Response` are preferred to `Dto` for the objects used to communicate the controllers with the view.
 
-In backend, we have the following packages:
+In backend, we have the following modules:
+
+- `replacer-wikipedia`. Implementations (adapters) to access external resources: Wikipedia (pages, users and authentication), and Check-Wikipedia, to send notifications when some types of cosmetics are applied.
+
+And the following packages:
 
 - `common.domain`. Domain entities.
 
@@ -110,9 +121,9 @@ In backend, we have the following packages:
 
   When a new page is indexed, or there have been any modifications, the replacements in the database must be updated. `ReplacementIndexService` offers a method, receiving the list of the new page replacements, which adds the new replacements and marks as obsolete the ones not found in the new list.
 
-- `wikipedia`. Repository to perform requests against the [Wikipedia API](https://www.mediawiki.org/wiki/API:Main_page) regarding Wikipedia pages and users.
-
-- `authentication`. The authentication is performed by the Oauth 1.0a protocol, the authentication is implemented in the backend, and the frontend only contains the last access token. Note there are different OAuth tokens to develop locally (see `replacer.wikipedia.api.*` properties). The Production ones, once logged in, redirect to https://replacer.toolforge.org, while the Development ones redirect to http://localhost:8080.
+- `user`. Features related to user management. In particular, aspects to restrict permissions to certain operations, and authentication with OAuth 1.0a against Wikipedia.
+- `wikipedia`. Repository to perform operations on Wikipedia pages and users. Currently, these operations are implemented with requests against the [Wikipedia API](https://www.mediawiki.org/wiki/API:Main_page). The common behaviour for these API requests has been refactored to a helper class in the inner `wikipedia.api` package.
+- `check-wikipedia`. Service to notify to Check-Wikipedia about fixes performed by Replacer, which are also supported in Check-Wikipedia, so we can help this project to keep their figures up-to-date.
 
 
 ### Formatting

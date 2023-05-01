@@ -8,8 +8,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.user.AccessToken;
 import es.bvalero.replacer.user.UserId;
+import es.bvalero.replacer.wikipedia.api.WikipediaApiHelper;
 import es.bvalero.replacer.wikipedia.api.WikipediaApiRequest;
-import es.bvalero.replacer.wikipedia.api.WikipediaApiRequestHelper;
 import es.bvalero.replacer.wikipedia.api.WikipediaApiResponse;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -29,7 +29,7 @@ class WikipediaUserApiRepositoryTest {
     private ObjectMapper jsonMapper;
 
     @Mock
-    private WikipediaApiRequestHelper wikipediaApiRequestHelper;
+    private WikipediaApiHelper wikipediaApiHelper;
 
     @InjectMocks
     private WikipediaUserApiRepository wikipediaUserApiRepository;
@@ -62,7 +62,7 @@ class WikipediaUserApiRepositoryTest {
             "    }\n" +
             "}";
         WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
-        when(wikipediaApiRequestHelper.executeApiRequest(any(WikipediaApiRequest.class))).thenReturn(response);
+        when(wikipediaApiHelper.executeApiRequest(any(WikipediaApiRequest.class))).thenReturn(response);
 
         WikipediaUser user = wikipediaUserApiRepository
             .findAuthenticatedUser(WikipediaLanguage.getDefault(), AccessToken.empty())
@@ -96,7 +96,7 @@ class WikipediaUserApiRepositoryTest {
             "    }\n" +
             "}";
         WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
-        when(wikipediaApiRequestHelper.executeApiRequest(any(WikipediaApiRequest.class))).thenReturn(response);
+        when(wikipediaApiHelper.executeApiRequest(any(WikipediaApiRequest.class))).thenReturn(response);
 
         WikipediaUser user = wikipediaUserApiRepository
             .findById(UserId.of(WikipediaLanguage.getDefault(), "Benjavalero"))
@@ -125,7 +125,7 @@ class WikipediaUserApiRepositoryTest {
             "    }\n" +
             "}";
         WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
-        when(wikipediaApiRequestHelper.executeApiRequest(any(WikipediaApiRequest.class))).thenReturn(response);
+        when(wikipediaApiHelper.executeApiRequest(any(WikipediaApiRequest.class))).thenReturn(response);
 
         WikipediaUser user = wikipediaUserApiRepository
             .findById(UserId.of(WikipediaLanguage.getDefault(), "Missi"))

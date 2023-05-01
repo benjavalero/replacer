@@ -6,7 +6,7 @@ import lombok.Value;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
-/** Aggregate containing all the parameters needed to save a page in Wikipedia */
+/** A group with all the parameters needed to save a page in Wikipedia. */
 @Value
 @Builder
 public class WikipediaPageSave {

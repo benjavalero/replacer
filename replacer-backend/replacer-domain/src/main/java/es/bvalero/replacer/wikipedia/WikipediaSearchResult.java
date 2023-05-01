@@ -7,6 +7,13 @@ import lombok.ToString;
 import lombok.Value;
 import org.jetbrains.annotations.TestOnly;
 
+/**
+ * A collection of page IDs as a result from a search request,
+ * along with the total number of results without pagination.
+ * As one of the mandatory search parameters is the language of the Wikipedia,
+ * we can assume all the page IDs belong to the same Wikipedia,
+ * so we can use directly the page IDs as numbers.
+ */
 @Value
 @Builder
 public class WikipediaSearchResult {
