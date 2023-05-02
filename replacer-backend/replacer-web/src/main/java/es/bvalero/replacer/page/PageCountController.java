@@ -9,7 +9,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.Collection;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -24,9 +26,12 @@ public class PageCountController {
 
     @Operation(summary = "Count the pages to review grouped by type (kind-subtype)")
     @GetMapping(value = "/type/count")
-    public Collection<KindCount> countPagesNotReviewedByType(@Valid CommonQueryParameters queryParameters) {
+    public Collection<KindCount> countPagesNotReviewedByType(
+        @RequestHeader(HttpHeaders.ACCEPT_LANGUAGE) String langHeader,
+        @Valid CommonQueryParameters queryParameters
+    ) {
         return pageCountService
-            .countPagesNotReviewedByType(queryParameters.getUserId())
+            .countPagesNotReviewedByType(queryParameters.getUserId(langHeader))
             .stream()
             .collect(
                 groupingBy(

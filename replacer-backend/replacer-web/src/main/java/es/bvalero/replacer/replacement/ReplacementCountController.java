@@ -11,10 +11,8 @@ import java.util.Collection;
 import java.util.stream.Collectors;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpHeaders;
+import org.springframework.web.bind.annotation.*;
 
 /** REST controller to get different counts of replacements */
 @Tag(name = "Replacement")
@@ -29,14 +27,14 @@ public class ReplacementCountController {
     @Operation(summary = "Count the number of reviewed/unreviewed replacements including the custom ones")
     @GetMapping(value = "/count")
     public ReplacementCount countReplacements(
-        @Valid CommonQueryParameters queryParameters,
+        @RequestHeader(HttpHeaders.ACCEPT_LANGUAGE) String langHeader,
         @Parameter(
             description = "Filter by reviewed/unreviewed replacements",
             required = true,
             example = "true"
         ) @RequestParam boolean reviewed
     ) {
-        WikipediaLanguage lang = queryParameters.getWikipediaLanguage();
+        WikipediaLanguage lang = WikipediaLanguage.valueOfCode(langHeader);
         return reviewed
             ? ReplacementCount.of(replacementCountService.countReplacementsReviewed(lang))
             : ReplacementCount.of(replacementCountService.countReplacementsNotReviewed(lang));
@@ -44,9 +42,11 @@ public class ReplacementCountController {
 
     @Operation(summary = "Count the number of reviewed replacements grouped by reviewer in descending order by count")
     @GetMapping(value = "/user/count")
-    public Collection<ReviewerCount> countReplacementsGroupedByReviewer(@Valid CommonQueryParameters queryParameters) {
+    public Collection<ReviewerCount> countReplacementsGroupedByReviewer(
+        @RequestHeader(HttpHeaders.ACCEPT_LANGUAGE) String langHeader
+    ) {
         return replacementCountService
-            .countReplacementsGroupedByReviewer(queryParameters.getWikipediaLanguage())
+            .countReplacementsGroupedByReviewer(WikipediaLanguage.valueOfCode(langHeader))
             .stream()
             .map(count -> ReviewerCount.of(count.getKey(), count.getCount()))
             .collect(Collectors.toUnmodifiableList());
@@ -57,9 +57,12 @@ public class ReplacementCountController {
     )
     @ValidateAdminUser
     @GetMapping(value = "/page/count")
-    public Collection<PageCount> countNotReviewedGroupedByPage(@Valid CommonQueryParameters queryParameters) {
+    public Collection<PageCount> countNotReviewedGroupedByPage(
+        @RequestHeader(HttpHeaders.ACCEPT_LANGUAGE) String langHeader,
+        @Valid CommonQueryParameters queryParameters
+    ) {
         return replacementCountService
-            .countNotReviewedGroupedByPage(queryParameters.getWikipediaLanguage())
+            .countNotReviewedGroupedByPage(WikipediaLanguage.valueOfCode(langHeader))
             .stream()
             .map(count ->
                 PageCount.of(count.getKey().getPageKey().getPageId(), count.getKey().getTitle(), count.getCount())

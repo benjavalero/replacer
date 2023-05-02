@@ -15,6 +15,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -34,11 +35,15 @@ class PageCountControllerTest {
         StandardType type = StandardType.of(ReplacementKind.SIMPLE, "Y");
         ResultCount<StandardType> count = ResultCount.of(type, 100);
         Collection<ResultCount<StandardType>> counts = Collections.singletonList(count);
-        UserId userId = UserId.of(WikipediaLanguage.SPANISH, "A");
+        UserId userId = UserId.of(WikipediaLanguage.getDefault(), "A");
         when(pageCountService.countPagesNotReviewedByType(userId)).thenReturn(counts);
 
         mvc
-            .perform(get("/api/page/type/count?lang=es&user=A").contentType(MediaType.APPLICATION_JSON))
+            .perform(
+                get("/api/page/type/count?user=A")
+                    .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
+                    .contentType(MediaType.APPLICATION_JSON)
+            )
             .andExpect(status().isOk())
             .andExpect(jsonPath("$[0].k", is((int) ReplacementKind.SIMPLE.getCode())))
             .andExpect(jsonPath("$[0].l[0].s", is("Y")))

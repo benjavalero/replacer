@@ -1,6 +1,7 @@
 package es.bvalero.replacer.review;
 
 import com.github.rozidan.springboot.logger.Loggable;
+import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.dto.CommonQueryParameters;
 import es.bvalero.replacer.page.PageKey;
 import es.bvalero.replacer.user.AccessToken;
@@ -18,6 +19,7 @@ import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,6 +37,7 @@ public class ReviewSaveController {
     @PostMapping(value = "/{id}")
     public ResponseEntity<Void> saveReview(
         @Parameter(description = "Page ID", example = "1") @PathVariable("id") int pageId,
+        @RequestHeader(HttpHeaders.ACCEPT_LANGUAGE) String langHeader,
         @Valid CommonQueryParameters queryParameters,
         @Valid @RequestBody SaveReviewRequest request
     ) throws WikipediaException {
@@ -42,7 +45,7 @@ public class ReviewSaveController {
             LOGGER.error("Page ID mismatch");
             return ResponseEntity.badRequest().build();
         }
-        if (!Objects.equals(queryParameters.getWikipediaLanguage().getCode(), request.getPage().getLang())) {
+        if (!Objects.equals(langHeader, request.getPage().getLang())) {
             LOGGER.error("Language mismatch");
             return ResponseEntity.badRequest().build();
         }
@@ -52,16 +55,18 @@ public class ReviewSaveController {
             LOGGER.error("Non valid empty content");
             return ResponseEntity.badRequest().build();
         }
+        WikipediaLanguage lang = WikipediaLanguage.valueOfCode(langHeader);
         Collection<ReviewedReplacement> reviewed = ReviewMapper.fromDto(
             pageId,
             request.getReviewedReplacements(),
             request.getPage().getSectionOffset(),
+            lang,
             queryParameters
         );
         if (request.getPage().isReviewedWithoutChanges()) {
             reviewSaveService.markAsReviewed(reviewed, false);
         } else {
-            PageKey pageKey = PageKey.of(queryParameters.getWikipediaLanguage(), pageId);
+            PageKey pageKey = PageKey.of(lang, pageId);
             ReviewSection section = request.getPage().getSection();
             Integer sectionId = section == null ? null : section.getId();
             WikipediaTimestamp saveTimestamp = WikipediaTimestamp.of(request.getPage().getQueryTimestamp());

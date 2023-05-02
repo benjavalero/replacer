@@ -8,7 +8,7 @@ import { ReviewSection } from './review-section';
 export interface ReviewPage {
 
   /**
-   * Page (or section) content
+   * Page (or section) content. When saving without changes, it matches a string with an only whitespace.
    */
   content: string;
 

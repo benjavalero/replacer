@@ -16,6 +16,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -71,7 +72,7 @@ class AuthenticationControllerTest {
         AccessToken accessToken = AccessToken.of("A", "B");
         String oAuthVerifier = "V";
 
-        WikipediaLanguage lang = WikipediaLanguage.SPANISH;
+        WikipediaLanguage lang = WikipediaLanguage.getDefault();
         User user = User.builder().id(UserId.of(lang, "C")).hasRights(true).bot(false).admin(true).build();
         when(authenticationService.getAccessToken(requestToken, oAuthVerifier)).thenReturn(accessToken);
         when(userService.findAuthenticatedUser(lang, accessToken)).thenReturn(Optional.of(user));
@@ -82,7 +83,8 @@ class AuthenticationControllerTest {
 
         mvc
             .perform(
-                post("/api/authentication/verify?lang=es")
+                post("/api/authentication/verify")
+                    .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(verifyAuthenticationRequest))
             )
@@ -108,7 +110,8 @@ class AuthenticationControllerTest {
         verifyAuthenticationRequest.setOauthVerifier(oAuthVerifier);
         mvc
             .perform(
-                post("/api/authentication/verify?lang=es")
+                post("/api/authentication/verify")
+                    .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(verifyAuthenticationRequest))
             )

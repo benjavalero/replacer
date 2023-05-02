@@ -1,6 +1,7 @@
 package es.bvalero.replacer.review;
 
 import com.github.rozidan.springboot.logger.Loggable;
+import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.dto.CommonQueryParameters;
 import es.bvalero.replacer.page.PageKey;
 import io.swagger.v3.oas.annotations.Operation;
@@ -9,6 +10,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.Optional;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "Review")
@@ -29,11 +31,12 @@ public class ReviewFindController {
     @Operation(summary = "Find a random page and the replacements to review")
     @GetMapping(value = "/random")
     public Optional<FindReviewResponse> findRandomPageWithReplacements(
+        @RequestHeader(HttpHeaders.ACCEPT_LANGUAGE) String langHeader,
         @Valid CommonQueryParameters queryParameters,
         @Valid ReviewOptionsDto optionsDto
     ) {
         Optional<Review> review;
-        ReviewOptions options = ReviewMapper.fromDto(optionsDto, queryParameters);
+        ReviewOptions options = ReviewMapper.fromDto(optionsDto, queryParameters, langHeader);
         if (options.getType().isNoType()) {
             review = reviewNoTypeFinder.findRandomPageReview(options);
         } else if (options.getType().isStandardType()) {
@@ -50,12 +53,13 @@ public class ReviewFindController {
     @GetMapping(value = "/{id}")
     public Optional<FindReviewResponse> findPageReviewById(
         @Parameter(description = "Page ID", example = "6980716") @PathVariable("id") int pageId,
+        @RequestHeader(HttpHeaders.ACCEPT_LANGUAGE) String langHeader,
         @Valid CommonQueryParameters queryParameters,
         @Valid ReviewOptionsDto optionsDto
     ) {
         Optional<Review> review;
-        ReviewOptions options = ReviewMapper.fromDto(optionsDto, queryParameters);
-        PageKey pageKey = PageKey.of(queryParameters.getWikipediaLanguage(), pageId);
+        ReviewOptions options = ReviewMapper.fromDto(optionsDto, queryParameters, langHeader);
+        PageKey pageKey = PageKey.of(WikipediaLanguage.valueOfCode(langHeader), pageId);
         if (options.getType().isNoType()) {
             review = reviewNoTypeFinder.findPageReview(pageKey, options);
         } else if (options.getType().isStandardType()) {

@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,7 +25,10 @@ public class DumpController {
     @Loggable(skipResult = true)
     @ValidateAdminUser
     @GetMapping(value = "")
-    public DumpIndexingStatusDto getDumpIndexingStatus(@Valid CommonQueryParameters queryParameters) {
+    public DumpIndexingStatusDto getDumpIndexingStatus(
+        @RequestHeader(HttpHeaders.ACCEPT_LANGUAGE) String langHeader,
+        @Valid CommonQueryParameters queryParameters
+    ) {
         return toDto(dumpManager.getDumpIndexingStatus());
     }
 
@@ -33,7 +37,10 @@ public class DumpController {
     @ValidateAdminUser
     @ResponseStatus(HttpStatus.ACCEPTED)
     @PostMapping(value = "")
-    public void manualStartDumpIndexing(@Valid CommonQueryParameters queryParameters) {
+    public void manualStartDumpIndexing(
+        @RequestHeader(HttpHeaders.ACCEPT_LANGUAGE) String langHeader,
+        @Valid CommonQueryParameters queryParameters
+    ) {
         dumpManager.indexLatestDumpFiles();
     }
 

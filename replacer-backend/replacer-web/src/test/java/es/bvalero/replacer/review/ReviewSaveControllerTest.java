@@ -20,6 +20,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -35,7 +36,7 @@ class ReviewSaveControllerTest {
     private static final AccessToken accessToken = AccessToken.of("A", "B");
     private static final WikipediaPage page = WikipediaPage
         .builder()
-        .pageKey(PageKey.of(WikipediaLanguage.SPANISH, pageId))
+        .pageKey(PageKey.of(WikipediaLanguage.getDefault(), pageId))
         .namespace(WikipediaNamespace.getDefault())
         .title(title)
         .content(content)
@@ -83,7 +84,8 @@ class ReviewSaveControllerTest {
     void testSaveWithChanges() throws Exception {
         mvc
             .perform(
-                post("/api/review/123?lang=es&user=A")
+                post("/api/review/123?user=A")
+                    .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(request))
             )
@@ -99,7 +101,8 @@ class ReviewSaveControllerTest {
 
         mvc
             .perform(
-                post("/api/review/123?lang=es&user=A")
+                post("/api/review/123?user=A")
+                    .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(request))
             )
@@ -114,7 +117,8 @@ class ReviewSaveControllerTest {
     void testPageIdMismatch() throws Exception {
         mvc
             .perform(
-                post("/api/review/321?lang=es&user=A")
+                post("/api/review/321?user=A")
+                    .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(request))
             )
@@ -127,7 +131,8 @@ class ReviewSaveControllerTest {
     void testPageLanguageMismatch() throws Exception {
         mvc
             .perform(
-                post("/api/review/123?lang=en&user=A")
+                post("/api/review/123?user=A")
+                    .header(HttpHeaders.ACCEPT_LANGUAGE, "en")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(request))
             )
@@ -142,7 +147,8 @@ class ReviewSaveControllerTest {
 
         mvc
             .perform(
-                post("/api/review/123?lang=es&user=A")
+                post("/api/review/123?user=A")
+                    .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(request))
             )
@@ -159,7 +165,8 @@ class ReviewSaveControllerTest {
 
         mvc
             .perform(
-                post("/api/review/123?lang=es&user=A")
+                post("/api/review/123?user=A")
+                    .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(request))
             )
@@ -177,7 +184,8 @@ class ReviewSaveControllerTest {
 
         mvc
             .perform(
-                post("/api/review/123?lang=es&user=A")
+                post("/api/review/123?user=A")
+                    .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(request))
             )
@@ -195,7 +203,8 @@ class ReviewSaveControllerTest {
 
         mvc
             .perform(
-                post("/api/review/123?lang=es&user=A")
+                post("/api/review/123?user=A")
+                    .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(request))
             )

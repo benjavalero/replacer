@@ -15,21 +15,12 @@ import org.springdoc.api.annotations.ParameterObject;
 @Data
 public class CommonQueryParameters {
 
-    @Parameter(description = "Language of the Wikipedia in use", required = true, example = "es")
-    @NotNull
-    private String lang;
-
     @Parameter(description = "Name of the user in Wikipedia", required = true, example = "Benjavalero")
     @NotNull
     private String user;
 
-    /* Helper method to get the language as a domain object */
-    public WikipediaLanguage getWikipediaLanguage() {
-        return WikipediaLanguage.valueOfCode(lang);
-    }
-
     /* Helper method to get the parameters as a domain user ID */
-    public UserId getUserId() {
-        return UserId.of(getWikipediaLanguage(), user);
+    public UserId getUserId(String lang) {
+        return UserId.of(WikipediaLanguage.valueOfCode(lang), user);
     }
 }

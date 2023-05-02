@@ -3,10 +3,10 @@ package es.bvalero.replacer.user;
 import com.github.rozidan.springboot.logger.Loggable;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.*;
 
 /** REST controller to perform authentication operations */
@@ -50,18 +50,14 @@ public class AuthenticationController {
     @Operation(summary = "Verify the authorization process")
     @PostMapping(value = "/verify")
     public VerifyAuthenticationResponse verifyAuthentication(
-        @Parameter(
-            description = "Language of the Wikipedia in use",
-            required = true,
-            example = "es"
-        ) @RequestParam String lang,
+        @RequestHeader(HttpHeaders.ACCEPT_LANGUAGE) String langHeader,
         @Valid @RequestBody VerifyAuthenticationRequest verifyAuthenticationRequest
     ) throws AuthenticationException {
         RequestToken requestToken = RequestTokenDto.toDomain(verifyAuthenticationRequest.getRequestToken());
         String oAuthVerifier = verifyAuthenticationRequest.getOauthVerifier();
         AccessToken accessToken = authenticationService.getAccessToken(requestToken, oAuthVerifier);
         User user = userService
-            .findAuthenticatedUser(WikipediaLanguage.valueOfCode(lang), accessToken)
+            .findAuthenticatedUser(WikipediaLanguage.valueOfCode(langHeader), accessToken)
             .orElseThrow(AuthenticationException::new);
         return VerifyAuthenticationResponse.of(user, accessToken);
     }

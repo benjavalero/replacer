@@ -1,9 +1,6 @@
 package es.bvalero.replacer.review;
 
-import es.bvalero.replacer.common.domain.CustomType;
-import es.bvalero.replacer.common.domain.ReplacementKind;
-import es.bvalero.replacer.common.domain.ReplacementType;
-import es.bvalero.replacer.common.domain.StandardType;
+import es.bvalero.replacer.common.domain.*;
 import es.bvalero.replacer.common.dto.CommonQueryParameters;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.Suggestion;
@@ -69,9 +66,9 @@ class ReviewMapper {
         return ReviewSuggestion.of(suggestion.getText(), suggestion.getComment());
     }
 
-    ReviewOptions fromDto(ReviewOptionsDto options, CommonQueryParameters queryParameters) {
+    ReviewOptions fromDto(ReviewOptionsDto options, CommonQueryParameters queryParameters, String lang) {
         return ReviewOptions.of(
-            queryParameters.getUserId(),
+            queryParameters.getUserId(lang),
             options.getKind(),
             options.getSubtype(),
             options.getCs(),
@@ -83,11 +80,12 @@ class ReviewMapper {
         int pageId,
         Collection<ReviewedReplacementDto> reviewed,
         int offset,
+        WikipediaLanguage lang,
         CommonQueryParameters queryParameters
     ) {
         return reviewed
             .stream()
-            .map(r -> fromDto(pageId, r, offset, queryParameters))
+            .map(r -> fromDto(pageId, r, offset, lang, queryParameters))
             .collect(Collectors.toUnmodifiableList());
     }
 
@@ -95,6 +93,7 @@ class ReviewMapper {
         int pageId,
         ReviewedReplacementDto reviewed,
         int offset,
+        WikipediaLanguage lang,
         CommonQueryParameters queryParameters
     ) {
         ReplacementKind replacementKind = ReplacementKind.valueOf(reviewed.getKind());
@@ -103,10 +102,10 @@ class ReviewMapper {
             : StandardType.of(replacementKind, reviewed.getSubtype());
         return ReviewedReplacement
             .builder()
-            .pageKey(PageKey.of(queryParameters.getWikipediaLanguage(), pageId))
+            .pageKey(PageKey.of(lang, pageId))
             .type(replacementType)
             .start(offset + reviewed.getStart())
-            .reviewer(queryParameters.getUserId().getUsername())
+            .reviewer(queryParameters.getUser())
             .fixed(reviewed.isFixed())
             .build();
     }

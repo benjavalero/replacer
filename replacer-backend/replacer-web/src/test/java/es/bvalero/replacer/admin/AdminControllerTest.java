@@ -18,6 +18,7 @@ import org.springframework.boot.autoconfigure.aop.AopAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -38,12 +39,16 @@ class AdminControllerTest {
 
     @Test
     void testGetPublic() throws Exception {
-        UserId userId = UserId.of(WikipediaLanguage.SPANISH, "x");
+        UserId userId = UserId.of(WikipediaLanguage.getDefault(), "x");
         String ip = "ip";
         when(publicIpService.getPublicIp()).thenReturn(ip);
 
         mvc
-            .perform(get("/api/admin/public-ip?user=x&lang=es").contentType(MediaType.APPLICATION_JSON))
+            .perform(
+                get("/api/admin/public-ip?user=x")
+                    .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
+                    .contentType(MediaType.APPLICATION_JSON)
+            )
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.ip", is(ip)));
 
@@ -53,11 +58,15 @@ class AdminControllerTest {
 
     @Test
     void testGetPublicIpNotAdmin() throws Exception {
-        UserId userId = UserId.of(WikipediaLanguage.SPANISH, "x");
+        UserId userId = UserId.of(WikipediaLanguage.getDefault(), "x");
         doThrow(ForbiddenException.class).when(userRightsService).validateAdminUser(userId);
 
         mvc
-            .perform(get("/api/admin/public-ip?user=x&lang=es").contentType(MediaType.APPLICATION_JSON))
+            .perform(
+                get("/api/admin/public-ip?user=x")
+                    .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
+                    .contentType(MediaType.APPLICATION_JSON)
+            )
             .andExpect(status().isForbidden());
 
         verify(userRightsService).validateAdminUser(userId);

@@ -23,6 +23,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -85,12 +86,16 @@ class ReviewFindControllerTest {
 
     @Test
     void testFindRandomPageWithReplacements() throws Exception {
-        UserId userId = UserId.of(WikipediaLanguage.SPANISH, "A");
+        UserId userId = UserId.of(WikipediaLanguage.getDefault(), "A");
         ReviewOptions options = ReviewOptions.ofNoType(userId);
         when(reviewNoTypeFinder.findRandomPageReview(options)).thenReturn(Optional.of(review));
 
         mvc
-            .perform(get("/api/review/random?lang=es&user=A").contentType(MediaType.APPLICATION_JSON))
+            .perform(
+                get("/api/review/random?user=A")
+                    .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
+                    .contentType(MediaType.APPLICATION_JSON)
+            )
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.page.pageId", is(pageId)))
             .andExpect(jsonPath("$.page.title", is(title)))
@@ -111,12 +116,16 @@ class ReviewFindControllerTest {
 
     @Test
     void testFindRandomPageByNoType() throws Exception {
-        UserId userId = UserId.of(WikipediaLanguage.SPANISH, "A");
+        UserId userId = UserId.of(WikipediaLanguage.getDefault(), "A");
         ReviewOptions options = ReviewOptions.ofNoType(userId);
         when(reviewNoTypeFinder.findRandomPageReview(options)).thenReturn(Optional.of(review));
 
         mvc
-            .perform(get("/api/review/random?lang=es&user=A").contentType(MediaType.APPLICATION_JSON))
+            .perform(
+                get("/api/review/random?user=A")
+                    .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
+                    .contentType(MediaType.APPLICATION_JSON)
+            )
             .andExpect(status().isOk());
 
         verify(reviewNoTypeFinder).findRandomPageReview(options);
@@ -124,14 +133,16 @@ class ReviewFindControllerTest {
 
     @Test
     void testFindRandomPageByTypeAndSubtype() throws Exception {
-        UserId userId = UserId.of(WikipediaLanguage.SPANISH, "A");
+        UserId userId = UserId.of(WikipediaLanguage.getDefault(), "A");
         StandardType type = StandardType.DATE;
         ReviewOptions options = ReviewOptions.ofType(userId, type);
         when(reviewTypeFinder.findRandomPageReview(options)).thenReturn(Optional.of(review));
 
         mvc
             .perform(
-                get("/api/review/random?kind=5&subtype=Fechas&lang=es&user=A").contentType(MediaType.APPLICATION_JSON)
+                get("/api/review/random?kind=5&subtype=Fechas&user=A")
+                    .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
+                    .contentType(MediaType.APPLICATION_JSON)
             )
             .andExpect(status().isOk());
 
@@ -140,14 +151,15 @@ class ReviewFindControllerTest {
 
     @Test
     void testFindRandomPageByCustomReplacement() throws Exception {
-        UserId userId = UserId.of(WikipediaLanguage.SPANISH, "A");
+        UserId userId = UserId.of(WikipediaLanguage.getDefault(), "A");
         CustomType customType = CustomType.of("X", false, "Y");
         ReviewOptions options = ReviewOptions.ofCustom(userId, customType);
         when(reviewCustomFinder.findRandomPageReview(options)).thenReturn(Optional.of(review));
 
         mvc
             .perform(
-                get("/api/review/random?kind=1&subtype=X&cs=false&suggestion=Y&lang=es&user=A")
+                get("/api/review/random?kind=1&subtype=X&cs=false&suggestion=Y&user=A")
+                    .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
                     .contentType(MediaType.APPLICATION_JSON)
             )
             .andExpect(status().isOk());
@@ -158,7 +170,11 @@ class ReviewFindControllerTest {
     @Test
     void testFindPageReviewByIdWithWrongOptions() throws Exception {
         mvc
-            .perform(get("/api/review/123?kind=X&lang=es&user=A").contentType(MediaType.APPLICATION_JSON))
+            .perform(
+                get("/api/review/123?kind=X&user=A")
+                    .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
+                    .contentType(MediaType.APPLICATION_JSON)
+            )
             .andExpect(status().isBadRequest());
 
         verify(reviewNoTypeFinder, never()).findPageReview(any(PageKey.class), any(ReviewOptions.class));
@@ -166,13 +182,17 @@ class ReviewFindControllerTest {
 
     @Test
     void testFindPageReviewById() throws Exception {
-        UserId userId = UserId.of(WikipediaLanguage.SPANISH, "A");
+        UserId userId = UserId.of(WikipediaLanguage.getDefault(), "A");
         ReviewOptions options = ReviewOptions.ofNoType(userId);
-        PageKey pageKey = PageKey.of(WikipediaLanguage.SPANISH, 123);
+        PageKey pageKey = PageKey.of(WikipediaLanguage.getDefault(), 123);
         when(reviewNoTypeFinder.findPageReview(pageKey, options)).thenReturn(Optional.of(review));
 
         mvc
-            .perform(get("/api/review/123?lang=es&user=A").contentType(MediaType.APPLICATION_JSON))
+            .perform(
+                get("/api/review/123?user=A")
+                    .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
+                    .contentType(MediaType.APPLICATION_JSON)
+            )
             .andExpect(status().isOk());
 
         verify(reviewNoTypeFinder).findPageReview(pageKey, options);
@@ -180,15 +200,17 @@ class ReviewFindControllerTest {
 
     @Test
     void testFindPageReviewByIdByTypeAndSubtype() throws Exception {
-        UserId userId = UserId.of(WikipediaLanguage.SPANISH, "A");
+        UserId userId = UserId.of(WikipediaLanguage.getDefault(), "A");
         StandardType type = StandardType.DATE;
         ReviewOptions options = ReviewOptions.ofType(userId, type);
-        PageKey pageKey = PageKey.of(WikipediaLanguage.SPANISH, 123);
+        PageKey pageKey = PageKey.of(WikipediaLanguage.getDefault(), 123);
         when(reviewTypeFinder.findPageReview(pageKey, options)).thenReturn(Optional.of(review));
 
         mvc
             .perform(
-                get("/api/review/123?kind=5&subtype=Fechas&lang=es&user=A").contentType(MediaType.APPLICATION_JSON)
+                get("/api/review/123?kind=5&subtype=Fechas&user=A")
+                    .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
+                    .contentType(MediaType.APPLICATION_JSON)
             )
             .andExpect(status().isOk());
 
@@ -197,15 +219,16 @@ class ReviewFindControllerTest {
 
     @Test
     void testFindPageReviewByIdAndCustomReplacement() throws Exception {
-        UserId userId = UserId.of(WikipediaLanguage.SPANISH, "A");
+        UserId userId = UserId.of(WikipediaLanguage.getDefault(), "A");
         CustomType customType = CustomType.of("X", true, "Y");
         ReviewOptions options = ReviewOptions.ofCustom(userId, customType);
-        PageKey pageKey = PageKey.of(WikipediaLanguage.SPANISH, 123);
+        PageKey pageKey = PageKey.of(WikipediaLanguage.getDefault(), 123);
         when(reviewCustomFinder.findPageReview(pageKey, options)).thenReturn(Optional.of(review));
 
         mvc
             .perform(
-                get("/api/review/123?kind=1&subtype=X&cs=true&suggestion=Y&lang=es&user=A")
+                get("/api/review/123?kind=1&subtype=X&cs=true&suggestion=Y&user=A")
+                    .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
                     .contentType(MediaType.APPLICATION_JSON)
             )
             .andExpect(status().isOk());

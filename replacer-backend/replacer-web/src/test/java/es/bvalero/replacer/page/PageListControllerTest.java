@@ -20,6 +20,7 @@ import org.springframework.boot.autoconfigure.aop.AopAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -43,59 +44,75 @@ class PageListControllerTest {
 
     @Test
     void testFindPagesToReviewByType() throws Exception {
-        UserId userId = UserId.of(WikipediaLanguage.SPANISH, "A");
+        UserId userId = UserId.of(WikipediaLanguage.getDefault(), "A");
         mvc
-            .perform(get("/api/page/type?lang=es&user=A&kind=2&subtype=Africa").contentType(MediaType.TEXT_PLAIN_VALUE))
+            .perform(
+                get("/api/page/type?user=A&kind=2&subtype=Africa")
+                    .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
+                    .contentType(MediaType.TEXT_PLAIN_VALUE)
+            )
             .andExpect(status().isOk());
 
         verify(userRightsService).validateBotUser(userId);
         verify(pageFindByTypeService)
-            .findPagesToReviewByType(WikipediaLanguage.SPANISH, StandardType.of(ReplacementKind.SIMPLE, "Africa"));
+            .findPagesToReviewByType(WikipediaLanguage.getDefault(), StandardType.of(ReplacementKind.SIMPLE, "Africa"));
     }
 
     @Test
     void testFindPagesToReviewByTypeNotBot() throws Exception {
-        UserId userId = UserId.of(WikipediaLanguage.SPANISH, "A");
+        UserId userId = UserId.of(WikipediaLanguage.getDefault(), "A");
         doThrow(ForbiddenException.class).when(userRightsService).validateBotUser(userId);
 
         mvc
-            .perform(get("/api/page/type?lang=es&user=A&kind=2&subtype=Africa").contentType(MediaType.TEXT_PLAIN_VALUE))
+            .perform(
+                get("/api/page/type?user=A&kind=2&subtype=Africa")
+                    .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
+                    .contentType(MediaType.TEXT_PLAIN_VALUE)
+            )
             .andExpect(status().isForbidden());
 
         verify(userRightsService).validateBotUser(userId);
         verify(pageFindByTypeService, never())
-            .findPagesToReviewByType(WikipediaLanguage.SPANISH, StandardType.of(ReplacementKind.SIMPLE, "Africa"));
+            .findPagesToReviewByType(WikipediaLanguage.getDefault(), StandardType.of(ReplacementKind.SIMPLE, "Africa"));
     }
 
     @Test
     void testReviewPagesByType() throws Exception {
-        UserId userId = UserId.of(WikipediaLanguage.SPANISH, "A");
+        UserId userId = UserId.of(WikipediaLanguage.getDefault(), "A");
         mvc
             .perform(
-                post("/api/page/type/review?kind=2&subtype=Africa&lang=es&user=A")
+                post("/api/page/type/review?kind=2&subtype=Africa&user=A")
+                    .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
                     .contentType(MediaType.APPLICATION_JSON)
             )
             .andExpect(status().isNoContent());
 
         verify(userRightsService).validateBotUser(userId);
         verify(replacementService)
-            .reviewReplacementsByType(WikipediaLanguage.SPANISH, StandardType.of(ReplacementKind.SIMPLE, "Africa"));
+            .reviewReplacementsByType(
+                WikipediaLanguage.getDefault(),
+                StandardType.of(ReplacementKind.SIMPLE, "Africa")
+            );
     }
 
     @Test
     void testReviewPagesByTypeNotBot() throws Exception {
-        UserId userId = UserId.of(WikipediaLanguage.SPANISH, "A");
+        UserId userId = UserId.of(WikipediaLanguage.getDefault(), "A");
         doThrow(ForbiddenException.class).when(userRightsService).validateBotUser(userId);
 
         mvc
             .perform(
-                post("/api/page/type/review?kind=2&subtype=Africa&lang=es&user=A")
+                post("/api/page/type/review?kind=2&subtype=Africa&user=A")
+                    .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
                     .contentType(MediaType.APPLICATION_JSON)
             )
             .andExpect(status().isForbidden());
 
         verify(userRightsService).validateBotUser(userId);
         verify(replacementService, never())
-            .reviewReplacementsByType(WikipediaLanguage.SPANISH, StandardType.of(ReplacementKind.SIMPLE, "Africa"));
+            .reviewReplacementsByType(
+                WikipediaLanguage.getDefault(),
+                StandardType.of(ReplacementKind.SIMPLE, "Africa")
+            );
     }
 }
