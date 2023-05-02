@@ -37,7 +37,7 @@ export class HeaderComponent implements OnInit {
 
   onSelectLang(lang: string) {
     // Enable language
-    const language: Language = Language[lang as keyof typeof Language];
+    const language: Language = lang as Language;
     if (language) {
       const modalRef = this.modalService.open(ChangeLanguageComponent);
       modalRef.result.then(

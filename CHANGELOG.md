@@ -1,5 +1,8 @@
 # Versions
 
+## 2.23.6 (??)
+- Fix regression: dropdown to change language
+
 ## 2.23.5 (30 Apr 2023)
 - Fix: add empty results to save throws eventually an out-of-memory
 
