@@ -33,12 +33,12 @@ class UserServiceTest {
     @Test
     void testFindUserByToken() {
         WikipediaLanguage lang = WikipediaLanguage.getDefault();
-        AccessToken accessToken = AccessToken.empty();
 
         WikipediaUser user = WikipediaUser.of(UserId.of(lang, "N"), Collections.emptyList());
-        when(wikipediaUserRepository.findAuthenticatedUser(lang, accessToken)).thenReturn(Optional.of(user));
+        // We pass on purpose a null access token as we are mocking the response
+        when(wikipediaUserRepository.findAuthenticatedUser(lang, null)).thenReturn(Optional.of(user));
 
-        Optional<User> result = userService.findAuthenticatedUser(lang, accessToken);
+        Optional<User> result = userService.findAuthenticatedUser(lang, null);
 
         assertTrue(result.isPresent());
         result.ifPresent(u -> {

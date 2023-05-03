@@ -64,8 +64,9 @@ class WikipediaUserApiRepositoryTest {
         WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
         when(wikipediaApiHelper.executeApiRequest(any(WikipediaApiRequest.class))).thenReturn(response);
 
+        // We pass on purpose a null access token as we are mocking the response
         WikipediaUser user = wikipediaUserApiRepository
-            .findAuthenticatedUser(WikipediaLanguage.getDefault(), AccessToken.empty())
+            .findAuthenticatedUser(WikipediaLanguage.getDefault(), null)
             .orElse(null);
         assertNotNull(user);
         assertEquals("Benjavalero", user.getId().getUsername());
@@ -136,9 +137,10 @@ class WikipediaUserApiRepositoryTest {
     @Test
     void testWikipediaServiceOffline() {
         // Offline user
+        // We pass on purpose a null access token as we are mocking the response
         Optional<WikipediaUser> user = wikipediaUserRepository.findAuthenticatedUser(
             WikipediaLanguage.getDefault(),
-            AccessToken.empty()
+            null
         );
         assertTrue(user.isPresent());
         user.ifPresent(u -> {

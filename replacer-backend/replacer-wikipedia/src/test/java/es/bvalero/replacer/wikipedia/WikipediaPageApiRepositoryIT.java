@@ -6,7 +6,6 @@ import es.bvalero.replacer.JsonMapperConfiguration;
 import es.bvalero.replacer.MediaWikiConfiguration;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.page.PageKey;
-import es.bvalero.replacer.user.AccessToken;
 import es.bvalero.replacer.wikipedia.api.WikipediaApiHelper;
 import java.time.LocalDateTime;
 import java.util.Collection;
@@ -80,9 +79,9 @@ class WikipediaPageApiRepositoryIT {
 
     @Test
     void testGetEditToken() throws WikipediaException {
-        // We pass an empty access token to retrieve an anonymous edit token
+        // We pass on purpose a null access token to retrieve an anonymous edit token
         PageKey pageKey = PageKey.of(WikipediaLanguage.SPANISH, 6903884);
-        EditToken editToken = wikipediaService.getEditToken(pageKey, AccessToken.empty());
+        EditToken editToken = wikipediaService.getEditToken(pageKey, null);
         assertNotNull(editToken);
         assertTrue(editToken.getCsrfToken().endsWith("+\\"));
         assertNotNull(editToken.getTimestamp());
@@ -106,7 +105,8 @@ class WikipediaPageApiRepositoryIT {
             .editSummary("Replacer Integration Test")
             .queryTimestamp(page.getQueryTimestamp())
             .build();
-        wikipediaService.save(pageSave, AccessToken.empty());
+        // We pass on purpose a null access token to perform an anonymous edit
+        wikipediaService.save(pageSave, null);
 
         // Save the conflict content started 1 day before
         LocalDateTime before = page.getQueryTimestamp().toLocalDateTime().minusDays(1);
@@ -118,6 +118,7 @@ class WikipediaPageApiRepositoryIT {
             .queryTimestamp(WikipediaTimestamp.of(before))
             .build();
 
-        assertThrows(WikipediaException.class, () -> wikipediaService.save(pageConflictSave, AccessToken.empty()));
+        // We pass on purpose a null access token to perform an anonymous edit
+        assertThrows(WikipediaException.class, () -> wikipediaService.save(pageConflictSave, null));
     }
 }

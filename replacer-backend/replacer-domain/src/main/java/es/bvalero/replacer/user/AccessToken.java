@@ -1,7 +1,6 @@
 package es.bvalero.replacer.user;
 
 import lombok.Value;
-import org.jetbrains.annotations.TestOnly;
 import org.springframework.lang.NonNull;
 
 /** OAuth access token to log in the application and be able to apply changes in Wikipedia */
@@ -13,13 +12,4 @@ public class AccessToken {
 
     @NonNull
     String tokenSecret;
-
-    @TestOnly
-    public static AccessToken empty() {
-        return AccessToken.of("", "");
-    }
-
-    public boolean isEmpty() {
-        return AccessToken.empty().equals(this);
-    }
 }

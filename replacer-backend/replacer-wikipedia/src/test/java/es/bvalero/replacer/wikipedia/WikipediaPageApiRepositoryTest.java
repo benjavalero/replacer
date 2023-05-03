@@ -73,9 +73,9 @@ class WikipediaPageApiRepositoryTest {
         when(wikipediaApiHelper.executeApiRequest(any(WikipediaApiRequest.class))).thenReturn(response);
         assertTrue(response.isBatchcomplete());
 
-        // We pass an empty access token to retrieve an anonymous edit token
+        // We pass on purpose a null access token to retrieve an anonymous edit token
         PageKey pageKey = PageKey.of(WikipediaLanguage.SPANISH, 2209245);
-        EditToken editToken = wikipediaPageRepository.getEditToken(pageKey, AccessToken.empty());
+        EditToken editToken = wikipediaPageRepository.getEditToken(pageKey, null);
         assertNotNull(editToken.getCsrfToken());
         assertEquals("332bb9c55bef953f93cb8391f8e6ee9e63c8fe90+\\", editToken.getCsrfToken());
         assertEquals("2023-01-18T20:40:07Z", editToken.getTimestamp().toString());
@@ -505,7 +505,8 @@ class WikipediaPageApiRepositoryTest {
             .queryTimestamp(currentTimestamp)
             .build();
 
-        assertThrows(WikipediaException.class, () -> wikipediaPageRepository.save(pageSave, AccessToken.empty()));
+        // We pass on purpose a null access token to perform an anonymous edit
+        assertThrows(WikipediaException.class, () -> wikipediaPageRepository.save(pageSave, null));
     }
 
     @Test
@@ -526,7 +527,8 @@ class WikipediaPageApiRepositoryTest {
             .queryTimestamp(currentTimestamp)
             .build();
 
-        wikipediaPageRepository.save(pageSave, AccessToken.empty());
+        // We pass on purpose a null access token to perform an anonymous edit
+        wikipediaPageRepository.save(pageSave, null);
 
         // Two calls: one for the EditToken and another to save the content
         verify(wikipediaApiHelper, times(2)).executeApiRequest(any(WikipediaApiRequest.class));
@@ -543,7 +545,9 @@ class WikipediaPageApiRepositoryTest {
                 .editSummary("")
                 .queryTimestamp(currentTimestamp)
                 .build();
-        wikipediaPageRepository.save(pageSave, AccessToken.empty());
+
+        // We pass on purpose a null access token to perform an anonymous edit
+        wikipediaPageRepository.save(pageSave, null);
 
         // Two calls: one for the EditToken and another to save the content (x2 save page and section in this test)
         verify(wikipediaApiHelper, times(4)).executeApiRequest(any(WikipediaApiRequest.class));

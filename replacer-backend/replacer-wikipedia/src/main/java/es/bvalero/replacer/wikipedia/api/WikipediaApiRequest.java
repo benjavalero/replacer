@@ -37,6 +37,6 @@ public class WikipediaApiRequest {
 
     boolean isSigned() {
         // Access token can be empty in tests
-        return (this.accessToken != null && !this.accessToken.isEmpty());
+        return this.accessToken != null;
     }
 }
