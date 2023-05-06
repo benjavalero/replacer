@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 import es.bvalero.replacer.common.domain.*;
+import es.bvalero.replacer.user.AccessToken;
+import es.bvalero.replacer.user.User;
 import es.bvalero.replacer.user.UserId;
 import es.bvalero.replacer.user.UserRightsService;
 import java.util.Collection;
@@ -41,8 +43,9 @@ class PageCountServiceTest {
         ResultCount<StandardType> count2 = ResultCount.of(typeForBots, 200);
         Collection<ResultCount<StandardType>> counts = List.of(count, count2);
 
-        UserId user = UserId.of(lang, "user");
-        UserId bot = UserId.of(lang, "bot");
+        AccessToken accessToken = AccessToken.of("a", "b");
+        User user = User.builder().id(UserId.of(lang, "user")).accessToken(accessToken).bot(false).build();
+        User bot = User.builder().id(UserId.of(lang, "bot")).accessToken(accessToken).bot(true).build();
 
         when(pageCountRepository.countPagesNotReviewedByType(lang)).thenReturn(counts);
         when(userRightsService.isTypeForbidden(type, user)).thenReturn(false);
@@ -53,7 +56,7 @@ class PageCountServiceTest {
         assertEquals(List.of(count), pageCountService.countPagesNotReviewedByType(user));
         assertEquals(counts, pageCountService.countPagesNotReviewedByType(bot));
 
-        verify(userRightsService, times(4)).isTypeForbidden(any(ReplacementType.class), any(UserId.class));
+        verify(userRightsService, times(4)).isTypeForbidden(any(ReplacementType.class), any(User.class));
         verify(pageCountRepository, times(2)).countPagesNotReviewedByType(lang);
     }
 }

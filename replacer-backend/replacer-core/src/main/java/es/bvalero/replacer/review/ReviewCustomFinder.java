@@ -48,7 +48,7 @@ class ReviewCustomFinder extends ReviewFinder {
         if (!pageIds.isEmpty()) {
             reviewedIds.addAll(
                 customReplacementService.findPagesReviewed(
-                    options.getUserId().getLang(),
+                    options.getUser().getId().getLang(),
                     options.getType().toCustomType()
                 )
             );
@@ -78,7 +78,7 @@ class ReviewCustomFinder extends ReviewFinder {
                 int nextOffset = offset + getCacheSize();
                 Collection<PageKey> pageKeys = pageIds
                     .stream()
-                    .map(pageId -> PageKey.of(options.getUserId().getLang(), pageId))
+                    .map(pageId -> PageKey.of(options.getUser().getId().getLang(), pageId))
                     .collect(Collectors.toUnmodifiableSet());
                 return PageSearchResult.of(totalToReview, pageKeys, nextOffset);
             }
@@ -90,7 +90,7 @@ class ReviewCustomFinder extends ReviewFinder {
     private WikipediaSearchResult findWikipediaResults(ReviewOptions options, int offset) {
         WikipediaSearchRequest searchRequest = WikipediaSearchRequest
             .builder()
-            .lang(options.getUserId().getLang())
+            .lang(options.getUser().getId().getLang())
             .namespaces(
                 this.indexableNamespaces.stream()
                     .map(WikipediaNamespace::valueOf)

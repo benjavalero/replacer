@@ -3,15 +3,13 @@ package es.bvalero.replacer.page;
 import static java.util.stream.Collectors.*;
 
 import com.github.rozidan.springboot.logger.Loggable;
-import es.bvalero.replacer.common.dto.CommonQueryParameters;
+import es.bvalero.replacer.user.AuthenticatedUser;
+import es.bvalero.replacer.user.User;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.Collection;
-import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -26,12 +24,9 @@ public class PageCountController {
 
     @Operation(summary = "Count the pages to review grouped by type (kind-subtype)")
     @GetMapping(value = "/type/count")
-    public Collection<KindCount> countPagesNotReviewedByType(
-        @RequestHeader(HttpHeaders.ACCEPT_LANGUAGE) String langHeader,
-        @Valid CommonQueryParameters queryParameters
-    ) {
+    public Collection<KindCount> countPagesNotReviewedByType(@AuthenticatedUser User user) {
         return pageCountService
-            .countPagesNotReviewedByType(queryParameters.getUserId(langHeader))
+            .countPagesNotReviewedByType(user)
             .stream()
             .collect(
                 groupingBy(

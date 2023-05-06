@@ -5,14 +5,14 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import es.bvalero.replacer.WebMvcConfiguration;
 import es.bvalero.replacer.common.domain.ReplacementKind;
 import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import es.bvalero.replacer.common.exception.ForbiddenException;
 import es.bvalero.replacer.replacement.ReplacementService;
-import es.bvalero.replacer.user.UserId;
-import es.bvalero.replacer.user.UserRightsService;
-import es.bvalero.replacer.user.ValidateUserAspect;
+import es.bvalero.replacer.user.*;
+import java.util.Optional;
+import javax.servlet.http.Cookie;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,14 +27,14 @@ import org.springframework.test.web.servlet.MockMvc;
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(controllers = PageListController.class)
-@Import({ AopAutoConfiguration.class, ValidateUserAspect.class })
+@Import({ AopAutoConfiguration.class, ValidateUserAspect.class, WebMvcConfiguration.class })
 class PageListControllerTest {
 
     @Autowired
     private MockMvc mvc;
 
     @MockBean
-    private UserRightsService userRightsService;
+    private UserService userService;
 
     @MockBean
     private PageFindByTypeService pageFindByTypeService;
@@ -44,50 +44,63 @@ class PageListControllerTest {
 
     @Test
     void testFindPagesToReviewByType() throws Exception {
-        UserId userId = UserId.of(WikipediaLanguage.getDefault(), "A");
+        UserId userId = UserId.of(WikipediaLanguage.getDefault(), "x");
+        AccessToken accessToken = AccessToken.of("a", "b");
+        User user = User.builder().id(userId).accessToken(accessToken).bot(true).build();
+        when(userService.findAuthenticatedUser(WikipediaLanguage.getDefault(), accessToken))
+            .thenReturn(Optional.of(user));
+
         mvc
             .perform(
-                get("/api/page/type?user=A&kind=2&subtype=Africa")
+                get("/api/page/type?kind=2&subtype=Africa")
                     .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
+                    .cookie(new Cookie(AccessToken.COOKIE_NAME, accessToken.toCookieValue()))
                     .contentType(MediaType.TEXT_PLAIN_VALUE)
             )
             .andExpect(status().isOk());
 
-        verify(userRightsService).validateBotUser(userId);
         verify(pageFindByTypeService)
             .findPagesToReviewByType(WikipediaLanguage.getDefault(), StandardType.of(ReplacementKind.SIMPLE, "Africa"));
     }
 
     @Test
     void testFindPagesToReviewByTypeNotBot() throws Exception {
-        UserId userId = UserId.of(WikipediaLanguage.getDefault(), "A");
-        doThrow(ForbiddenException.class).when(userRightsService).validateBotUser(userId);
+        UserId userId = UserId.of(WikipediaLanguage.getDefault(), "x");
+        AccessToken accessToken = AccessToken.of("a", "b");
+        User user = User.builder().id(userId).accessToken(accessToken).bot(false).build();
+        when(userService.findAuthenticatedUser(WikipediaLanguage.getDefault(), accessToken))
+            .thenReturn(Optional.of(user));
 
         mvc
             .perform(
-                get("/api/page/type?user=A&kind=2&subtype=Africa")
+                get("/api/page/type?kind=2&subtype=Africa")
                     .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
+                    .cookie(new Cookie(AccessToken.COOKIE_NAME, accessToken.toCookieValue()))
                     .contentType(MediaType.TEXT_PLAIN_VALUE)
             )
             .andExpect(status().isForbidden());
 
-        verify(userRightsService).validateBotUser(userId);
         verify(pageFindByTypeService, never())
             .findPagesToReviewByType(WikipediaLanguage.getDefault(), StandardType.of(ReplacementKind.SIMPLE, "Africa"));
     }
 
     @Test
     void testReviewPagesByType() throws Exception {
-        UserId userId = UserId.of(WikipediaLanguage.getDefault(), "A");
+        UserId userId = UserId.of(WikipediaLanguage.getDefault(), "x");
+        AccessToken accessToken = AccessToken.of("a", "b");
+        User user = User.builder().id(userId).accessToken(accessToken).bot(true).build();
+        when(userService.findAuthenticatedUser(WikipediaLanguage.getDefault(), accessToken))
+            .thenReturn(Optional.of(user));
+
         mvc
             .perform(
-                post("/api/page/type/review?kind=2&subtype=Africa&user=A")
+                post("/api/page/type/review?kind=2&subtype=Africa")
                     .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
+                    .cookie(new Cookie(AccessToken.COOKIE_NAME, accessToken.toCookieValue()))
                     .contentType(MediaType.APPLICATION_JSON)
             )
             .andExpect(status().isNoContent());
 
-        verify(userRightsService).validateBotUser(userId);
         verify(replacementService)
             .reviewReplacementsByType(
                 WikipediaLanguage.getDefault(),
@@ -97,18 +110,21 @@ class PageListControllerTest {
 
     @Test
     void testReviewPagesByTypeNotBot() throws Exception {
-        UserId userId = UserId.of(WikipediaLanguage.getDefault(), "A");
-        doThrow(ForbiddenException.class).when(userRightsService).validateBotUser(userId);
+        UserId userId = UserId.of(WikipediaLanguage.getDefault(), "x");
+        AccessToken accessToken = AccessToken.of("a", "b");
+        User user = User.builder().id(userId).accessToken(accessToken).bot(false).build();
+        when(userService.findAuthenticatedUser(WikipediaLanguage.getDefault(), accessToken))
+            .thenReturn(Optional.of(user));
 
         mvc
             .perform(
-                post("/api/page/type/review?kind=2&subtype=Africa&user=A")
+                post("/api/page/type/review?kind=2&subtype=Africa")
                     .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
+                    .cookie(new Cookie(AccessToken.COOKIE_NAME, accessToken.toCookieValue()))
                     .contentType(MediaType.APPLICATION_JSON)
             )
             .andExpect(status().isForbidden());
 
-        verify(userRightsService).validateBotUser(userId);
         verify(replacementService, never())
             .reviewReplacementsByType(
                 WikipediaLanguage.getDefault(),

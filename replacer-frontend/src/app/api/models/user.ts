@@ -1,12 +1,10 @@
 /* tslint:disable */
 /* eslint-disable */
-import { AccessToken } from './access-token';
 
 /**
  * Application user with access token after completing the authorization verification
  */
-export interface VerifyAuthenticationResponse {
-  accessToken: AccessToken;
+export interface User {
 
   /**
    * If the user is administrator of Replacer

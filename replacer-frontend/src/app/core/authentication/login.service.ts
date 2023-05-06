@@ -3,10 +3,9 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { InitiateAuthenticationResponse } from '../../api/models/initiate-authentication-response';
 import { RequestToken } from '../../api/models/request-token';
+import { User } from '../../api/models/user';
 import { VerifyAuthenticationRequest } from '../../api/models/verify-authentication-request';
-import { VerifyAuthenticationResponse } from '../../api/models/verify-authentication-response';
 import { AuthenticationService } from '../../api/services/authentication.service';
-import { User } from '../user/user.model';
 import { UserService } from '../user/user.service';
 
 @Injectable({
@@ -31,19 +30,18 @@ export class LoginService {
 
   loginUser$(oauthVerifier: string): Observable<User> {
     return this.authenticate$(oauthVerifier).pipe(
-      map((response: VerifyAuthenticationResponse) => {
+      map((wikipediaUser: User) => {
         // Remove request token as it is no longer needed
         localStorage.removeItem(this.requestTokenKey);
 
         // Save user and access token to further use in Wikipedia requests
-        const wikipediaUser = response as User;
         this.userService.setUser(wikipediaUser);
         return wikipediaUser;
       })
     );
   }
 
-  private authenticate$(oauthVerifier: string): Observable<VerifyAuthenticationResponse> {
+  private authenticate$(oauthVerifier: string): Observable<User> {
     // At this point we can assert that the request token exists
     const requestToken: RequestToken = JSON.parse(localStorage.getItem(this.requestTokenKey)!);
     return this.authenticationService.verifyAuthentication({

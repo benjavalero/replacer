@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { AccessToken } from '../../api/models/access-token';
-import { User } from './user.model';
+import { User } from '../../api/models/user';
 
 @Injectable({
   providedIn: 'root'
@@ -12,10 +11,6 @@ export class UserService {
 
   constructor() {
     this.loadUser();
-  }
-
-  get accessToken(): AccessToken | undefined {
-    return this.user$.getValue()?.accessToken;
   }
 
   get userName(): string | undefined {

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AlertService } from 'src/app/shared/alert/alert.service';
-import { User } from '../user/user.model';
+import { User } from '../../api/models/user';
 import { LoginService } from './login.service';
 
 @Component({

@@ -8,13 +8,13 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import es.bvalero.replacer.WebMvcConfiguration;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import es.bvalero.replacer.common.exception.ForbiddenException;
 import es.bvalero.replacer.common.util.ReplacerUtils;
-import es.bvalero.replacer.user.UserId;
-import es.bvalero.replacer.user.UserRightsService;
-import es.bvalero.replacer.user.ValidateUserAspect;
+import es.bvalero.replacer.user.*;
 import java.time.LocalDateTime;
+import java.util.Optional;
+import javax.servlet.http.Cookie;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +29,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(controllers = DumpController.class)
-@Import({ AopAutoConfiguration.class, ValidateUserAspect.class })
+@Import({ AopAutoConfiguration.class, ValidateUserAspect.class, WebMvcConfiguration.class })
 class DumpControllerTest {
 
     @Autowired
@@ -39,11 +39,15 @@ class DumpControllerTest {
     private DumpManager dumpManager;
 
     @MockBean
-    private UserRightsService userRightsService;
+    private UserService userService;
 
     @Test
     void testGetDumpIndexingStatus() throws Exception {
         UserId userId = UserId.of(WikipediaLanguage.getDefault(), "x");
+        AccessToken accessToken = AccessToken.of("a", "b");
+        User user = User.builder().id(userId).accessToken(accessToken).admin(true).build();
+        when(userService.findAuthenticatedUser(WikipediaLanguage.getDefault(), accessToken))
+            .thenReturn(Optional.of(user));
 
         boolean running = true;
         int numPagesRead = 1000;
@@ -65,8 +69,9 @@ class DumpControllerTest {
 
         mvc
             .perform(
-                get("/api/dump-indexing?user=x")
+                get("/api/dump-indexing")
                     .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
+                    .cookie(new Cookie(AccessToken.COOKIE_NAME, accessToken.toCookieValue()))
                     .contentType(MediaType.APPLICATION_JSON)
             )
             .andExpect(status().isOk())
@@ -78,56 +83,66 @@ class DumpControllerTest {
             .andExpect(jsonPath("$.start", is(ReplacerUtils.convertLocalDateTimeToMilliseconds(start))))
             .andExpect(jsonPath("$.end", is(ReplacerUtils.convertLocalDateTimeToMilliseconds(end))));
 
-        verify(userRightsService).validateAdminUser(userId);
         verify(dumpManager).getDumpIndexingStatus();
     }
 
     @Test
     void testGetDumpIndexingStatusNotAdmin() throws Exception {
         UserId userId = UserId.of(WikipediaLanguage.getDefault(), "x");
-        doThrow(ForbiddenException.class).when(userRightsService).validateAdminUser(userId);
+        AccessToken accessToken = AccessToken.of("a", "b");
+        User user = User.builder().id(userId).accessToken(accessToken).admin(false).build();
+        when(userService.findAuthenticatedUser(WikipediaLanguage.getDefault(), accessToken))
+            .thenReturn(Optional.of(user));
 
         mvc
             .perform(
-                get("/api/dump-indexing?user=x")
+                get("/api/dump-indexing")
                     .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
+                    .cookie(new Cookie(AccessToken.COOKIE_NAME, accessToken.toCookieValue()))
                     .contentType(MediaType.APPLICATION_JSON)
             )
             .andExpect(status().isForbidden());
 
-        verify(userRightsService).validateAdminUser(userId);
         verify(dumpManager, never()).indexLatestDumpFiles();
     }
 
     @Test
     void testPostStart() throws Exception {
         UserId userId = UserId.of(WikipediaLanguage.getDefault(), "x");
+        AccessToken accessToken = AccessToken.of("a", "b");
+        User user = User.builder().id(userId).accessToken(accessToken).admin(true).build();
+        when(userService.findAuthenticatedUser(WikipediaLanguage.getDefault(), accessToken))
+            .thenReturn(Optional.of(user));
+
         mvc
             .perform(
-                post("/api/dump-indexing?user=x")
+                post("/api/dump-indexing")
                     .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
+                    .cookie(new Cookie(AccessToken.COOKIE_NAME, accessToken.toCookieValue()))
                     .contentType(MediaType.APPLICATION_JSON)
             )
             .andExpect(status().isAccepted());
 
-        verify(userRightsService).validateAdminUser(userId);
         verify(dumpManager).indexLatestDumpFiles();
     }
 
     @Test
     void testPostStartNotAdmin() throws Exception {
         UserId userId = UserId.of(WikipediaLanguage.getDefault(), "x");
-        doThrow(ForbiddenException.class).when(userRightsService).validateAdminUser(userId);
+        AccessToken accessToken = AccessToken.of("a", "b");
+        User user = User.builder().id(userId).accessToken(accessToken).admin(false).build();
+        when(userService.findAuthenticatedUser(WikipediaLanguage.getDefault(), accessToken))
+            .thenReturn(Optional.of(user));
 
         mvc
             .perform(
-                post("/api/dump-indexing?user=x")
+                post("/api/dump-indexing")
                     .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
+                    .cookie(new Cookie(AccessToken.COOKIE_NAME, accessToken.toCookieValue()))
                     .contentType(MediaType.APPLICATION_JSON)
             )
             .andExpect(status().isForbidden());
 
-        verify(userRightsService).validateAdminUser(userId);
         verify(dumpManager, never()).indexLatestDumpFiles();
     }
 }

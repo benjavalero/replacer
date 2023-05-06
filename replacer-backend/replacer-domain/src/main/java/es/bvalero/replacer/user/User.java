@@ -14,13 +14,17 @@ import org.springframework.lang.NonNull;
  * to separate clearly the Wikipedia rights logic from the on in Replacer rights.
  * Precisely because of this access to the configuration, the logic is not implemented
  * in the domain object itself, but in a related but separated service.
+ * A user of the application must always be authenticated, so we also store here the access token.
  */
 @Value
 @Builder
-class User {
+public class User {
 
     @NonNull
     UserId id;
+
+    @NonNull
+    AccessToken accessToken;
 
     /** If the user is allowed to use the application as a standard user */
     @Builder.Default
@@ -34,4 +38,9 @@ class User {
     /** It the user is allowed to perform tasks in the application restricted to administrators */
     @Builder.Default
     boolean admin = false;
+
+    @Override
+    public String toString() {
+        return this.id.toString();
+    }
 }

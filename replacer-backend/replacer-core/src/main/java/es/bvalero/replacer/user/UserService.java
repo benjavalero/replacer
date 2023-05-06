@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 
 /** Service to retrieve details about the users of the application */
 @Service
-class UserService {
+public class UserService {
 
     @Autowired
     private WikipediaUserRepository wikipediaUserRepository;
@@ -24,17 +24,14 @@ class UserService {
     private String adminUser;
 
     public Optional<User> findAuthenticatedUser(WikipediaLanguage lang, AccessToken accessToken) {
-        return wikipediaUserRepository.findAuthenticatedUser(lang, accessToken).map(this::convert);
+        return wikipediaUserRepository.findAuthenticatedUser(lang, accessToken).map(u -> convert(u, accessToken));
     }
 
-    Optional<User> findUserById(UserId userId) {
-        return wikipediaUserRepository.findById(userId).map(this::convert);
-    }
-
-    private User convert(WikipediaUser wikipediaUser) {
+    private User convert(WikipediaUser wikipediaUser, AccessToken accessToken) {
         return User
             .builder()
             .id(wikipediaUser.getId())
+            .accessToken(accessToken)
             .hasRights(hasRights(wikipediaUser))
             .bot(isBot(wikipediaUser))
             .admin(isAdmin(wikipediaUser))

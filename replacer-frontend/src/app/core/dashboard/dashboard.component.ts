@@ -3,8 +3,8 @@ import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
 import { Observable } from 'rxjs';
+import { User } from '../../api/models/user';
 import { AlertComponent } from '../../shared/alert/alert.component';
-import { User } from '../user/user.model';
 import { UserService } from '../user/user.service';
 
 @Component({

@@ -1,14 +1,14 @@
 package es.bvalero.replacer.dump;
 
 import com.github.rozidan.springboot.logger.Loggable;
-import es.bvalero.replacer.common.dto.CommonQueryParameters;
 import es.bvalero.replacer.common.util.ReplacerUtils;
+import es.bvalero.replacer.user.AuthenticatedUser;
+import es.bvalero.replacer.user.User;
 import es.bvalero.replacer.user.ValidateAdminUser;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,10 +25,7 @@ public class DumpController {
     @Loggable(skipResult = true)
     @ValidateAdminUser
     @GetMapping(value = "")
-    public DumpIndexingStatusDto getDumpIndexingStatus(
-        @RequestHeader(HttpHeaders.ACCEPT_LANGUAGE) String langHeader,
-        @Valid CommonQueryParameters queryParameters
-    ) {
+    public DumpIndexingStatusDto getDumpIndexingStatus(@AuthenticatedUser User user) {
         return toDto(dumpManager.getDumpIndexingStatus());
     }
 
@@ -37,10 +34,7 @@ public class DumpController {
     @ValidateAdminUser
     @ResponseStatus(HttpStatus.ACCEPTED)
     @PostMapping(value = "")
-    public void manualStartDumpIndexing(
-        @RequestHeader(HttpHeaders.ACCEPT_LANGUAGE) String langHeader,
-        @Valid CommonQueryParameters queryParameters
-    ) {
+    public void manualStartDumpIndexing(@AuthenticatedUser User user) {
         dumpManager.indexLatestDumpFiles();
     }
 

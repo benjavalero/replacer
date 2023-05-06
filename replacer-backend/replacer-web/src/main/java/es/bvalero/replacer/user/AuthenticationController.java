@@ -7,6 +7,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 /** REST controller to perform authentication operations */
@@ -49,16 +51,31 @@ public class AuthenticationController {
 
     @Operation(summary = "Verify the authorization process")
     @PostMapping(value = "/verify")
-    public VerifyAuthenticationResponse verifyAuthentication(
-        @RequestHeader(HttpHeaders.ACCEPT_LANGUAGE) String langHeader,
+    public ResponseEntity<UserDto> verifyAuthentication(
+        @UserLanguage WikipediaLanguage lang,
         @Valid @RequestBody VerifyAuthenticationRequest verifyAuthenticationRequest
     ) throws AuthenticationException {
         RequestToken requestToken = RequestTokenDto.toDomain(verifyAuthenticationRequest.getRequestToken());
         String oAuthVerifier = verifyAuthenticationRequest.getOauthVerifier();
         AccessToken accessToken = authenticationService.getAccessToken(requestToken, oAuthVerifier);
-        User user = userService
-            .findAuthenticatedUser(WikipediaLanguage.valueOfCode(langHeader), accessToken)
-            .orElseThrow(AuthenticationException::new);
-        return VerifyAuthenticationResponse.of(user, accessToken);
+        User user = userService.findAuthenticatedUser(lang, accessToken).orElseThrow(AuthenticationException::new);
+        return ResponseEntity
+            .ok()
+            .header(HttpHeaders.SET_COOKIE, buildAccessTokenCookie(accessToken).toString())
+            .body(UserDto.of(user));
+    }
+
+    private ResponseCookie buildAccessTokenCookie(AccessToken accessToken) {
+        // Max age 400 days: https://developer.chrome.com/blog/cookie-max-age-expires/
+        // Domain: default
+        // SameSite is Lax by default, but it fails in some old browsers, so we set it explicitly.
+        return ResponseCookie
+            .from(AccessToken.COOKIE_NAME, accessToken.toCookieValue())
+            .maxAge(400 * 24 * 3600)
+            .path("/api")
+            .secure(true)
+            .httpOnly(true)
+            .sameSite("Lax")
+            .build();
     }
 }

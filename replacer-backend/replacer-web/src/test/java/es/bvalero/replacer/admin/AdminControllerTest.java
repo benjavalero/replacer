@@ -6,11 +6,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import es.bvalero.replacer.WebMvcConfiguration;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import es.bvalero.replacer.common.exception.ForbiddenException;
-import es.bvalero.replacer.user.UserId;
-import es.bvalero.replacer.user.UserRightsService;
-import es.bvalero.replacer.user.ValidateUserAspect;
+import es.bvalero.replacer.user.*;
+import java.util.Optional;
+import javax.servlet.http.Cookie;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,14 +25,14 @@ import org.springframework.test.web.servlet.MockMvc;
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(controllers = AdminController.class)
-@Import({ AopAutoConfiguration.class, ValidateUserAspect.class })
+@Import({ AopAutoConfiguration.class, ValidateUserAspect.class, WebMvcConfiguration.class })
 class AdminControllerTest {
 
     @Autowired
     private MockMvc mvc;
 
     @MockBean
-    private UserRightsService userRightsService;
+    private UserService userService;
 
     @MockBean
     private PublicIpService publicIpService;
@@ -40,36 +40,44 @@ class AdminControllerTest {
     @Test
     void testGetPublic() throws Exception {
         UserId userId = UserId.of(WikipediaLanguage.getDefault(), "x");
+        AccessToken accessToken = AccessToken.of("a", "b");
+        User user = User.builder().id(userId).accessToken(accessToken).admin(true).build();
+        when(userService.findAuthenticatedUser(WikipediaLanguage.getDefault(), accessToken))
+            .thenReturn(Optional.of(user));
+
         String ip = "ip";
         when(publicIpService.getPublicIp()).thenReturn(ip);
 
         mvc
             .perform(
-                get("/api/admin/public-ip?user=x")
+                get("/api/admin/public-ip")
                     .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
+                    .cookie(new Cookie(AccessToken.COOKIE_NAME, accessToken.toCookieValue()))
                     .contentType(MediaType.APPLICATION_JSON)
             )
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.ip", is(ip)));
 
-        verify(userRightsService).validateAdminUser(userId);
         verify(publicIpService).getPublicIp();
     }
 
     @Test
     void testGetPublicIpNotAdmin() throws Exception {
         UserId userId = UserId.of(WikipediaLanguage.getDefault(), "x");
-        doThrow(ForbiddenException.class).when(userRightsService).validateAdminUser(userId);
+        AccessToken accessToken = AccessToken.of("a", "b");
+        User user = User.builder().id(userId).accessToken(accessToken).admin(false).build();
+        when(userService.findAuthenticatedUser(WikipediaLanguage.getDefault(), accessToken))
+            .thenReturn(Optional.of(user));
 
         mvc
             .perform(
-                get("/api/admin/public-ip?user=x")
+                get("/api/admin/public-ip")
                     .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
+                    .cookie(new Cookie(AccessToken.COOKIE_NAME, accessToken.toCookieValue()))
                     .contentType(MediaType.APPLICATION_JSON)
             )
             .andExpect(status().isForbidden());
 
-        verify(userRightsService).validateAdminUser(userId);
         verify(publicIpService, never()).getPublicIp();
     }
 }

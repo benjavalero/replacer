@@ -3,7 +3,6 @@ package es.bvalero.replacer.review;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-import es.bvalero.replacer.common.domain.ReplacementKind;
 import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.Replacement;
@@ -13,6 +12,8 @@ import es.bvalero.replacer.index.PageIndexService;
 import es.bvalero.replacer.page.PageCountService;
 import es.bvalero.replacer.page.PageKey;
 import es.bvalero.replacer.page.PageService;
+import es.bvalero.replacer.user.AccessToken;
+import es.bvalero.replacer.user.User;
 import es.bvalero.replacer.user.UserId;
 import es.bvalero.replacer.user.UserRightsService;
 import es.bvalero.replacer.wikipedia.WikipediaNamespace;
@@ -64,7 +65,9 @@ class ReviewNoTypeFinderTest {
         .build();
     private final List<Replacement> replacements = Collections.singletonList(replacement);
     private final UserId userId = UserId.of(WikipediaLanguage.getDefault(), "A");
-    private final ReviewOptions options = ReviewOptions.ofNoType(userId);
+    private final AccessToken accessToken = AccessToken.of("a", "b");
+    private final User user = User.builder().id(userId).accessToken(accessToken).build();
+    private final ReviewOptions options = ReviewOptions.ofNoType(user);
 
     @Mock
     private PageService pageService;

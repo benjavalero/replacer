@@ -9,6 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import es.bvalero.replacer.WebMvcConfiguration;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
@@ -22,7 +23,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
 @ExtendWith(SpringExtension.class)
-@WebMvcTest(controllers = AuthenticationController.class)
+@WebMvcTest(controllers = { AuthenticationController.class, WebMvcConfiguration.class })
 class AuthenticationControllerTest {
 
     @Autowired
@@ -73,7 +74,14 @@ class AuthenticationControllerTest {
         String oAuthVerifier = "V";
 
         WikipediaLanguage lang = WikipediaLanguage.getDefault();
-        User user = User.builder().id(UserId.of(lang, "C")).hasRights(true).bot(false).admin(true).build();
+        User user = User
+            .builder()
+            .id(UserId.of(lang, "C"))
+            .accessToken(accessToken)
+            .hasRights(true)
+            .bot(false)
+            .admin(true)
+            .build();
         when(authenticationService.getAccessToken(requestToken, oAuthVerifier)).thenReturn(accessToken);
         when(userService.findAuthenticatedUser(lang, accessToken)).thenReturn(Optional.of(user));
 
@@ -92,9 +100,7 @@ class AuthenticationControllerTest {
             .andExpect(jsonPath("$.name", is(user.getId().getUsername())))
             .andExpect(jsonPath("$.hasRights", equalTo(user.hasRights())))
             .andExpect(jsonPath("$.bot", equalTo(user.isBot())))
-            .andExpect(jsonPath("$.admin", equalTo(user.isAdmin())))
-            .andExpect(jsonPath("$.accessToken.token", is(accessToken.getToken())))
-            .andExpect(jsonPath("$.accessToken.tokenSecret", is(accessToken.getTokenSecret())));
+            .andExpect(jsonPath("$.admin", equalTo(user.isAdmin())));
 
         verify(authenticationService).getAccessToken(requestToken, oAuthVerifier);
         verify(userService).findAuthenticatedUser(lang, accessToken);

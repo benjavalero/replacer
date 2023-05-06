@@ -211,8 +211,7 @@ export class EditPageComponent implements OnChanges {
   private postSaveReview(page: ReviewPage, reviewedReplacements: ReviewedReplacement[]): Observable<void> {
     const saveReview = {
       page: page,
-      reviewedReplacements: reviewedReplacements,
-      accessToken: this.userService.accessToken
+      reviewedReplacements: reviewedReplacements
     } as SaveReviewRequest;
 
     // Call backend and delay the observable response

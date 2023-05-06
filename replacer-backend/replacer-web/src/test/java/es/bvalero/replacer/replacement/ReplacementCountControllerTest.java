@@ -6,19 +6,15 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import es.bvalero.replacer.WebMvcConfiguration;
 import es.bvalero.replacer.common.domain.ResultCount;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import es.bvalero.replacer.common.exception.ForbiddenException;
 import es.bvalero.replacer.page.IndexedPage;
 import es.bvalero.replacer.page.PageKey;
-import es.bvalero.replacer.user.UserId;
-import es.bvalero.replacer.user.UserRightsService;
-import es.bvalero.replacer.user.ValidateUserAspect;
+import es.bvalero.replacer.user.*;
 import java.time.LocalDate;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
+import javax.servlet.http.Cookie;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,14 +29,14 @@ import org.springframework.test.web.servlet.MockMvc;
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(controllers = ReplacementCountController.class)
-@Import({ AopAutoConfiguration.class, ValidateUserAspect.class })
+@Import({ AopAutoConfiguration.class, ValidateUserAspect.class, WebMvcConfiguration.class })
 class ReplacementCountControllerTest {
 
     @Autowired
     private MockMvc mvc;
 
     @MockBean
-    private UserRightsService userRightsService;
+    private UserService userService;
 
     @MockBean
     private ReplacementCountService replacementCountService;
@@ -52,7 +48,7 @@ class ReplacementCountControllerTest {
 
         mvc
             .perform(
-                get("/api/replacement/count?reviewed=false&user=A")
+                get("/api/replacement/count?reviewed=false")
                     .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
                     .contentType(MediaType.APPLICATION_JSON)
             )
@@ -69,7 +65,7 @@ class ReplacementCountControllerTest {
 
         mvc
             .perform(
-                get("/api/replacement/count?reviewed=true&user=A")
+                get("/api/replacement/count?reviewed=true")
                     .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
                     .contentType(MediaType.APPLICATION_JSON)
             )
@@ -87,7 +83,7 @@ class ReplacementCountControllerTest {
 
         mvc
             .perform(
-                get("/api/replacement/user/count?user=A")
+                get("/api/replacement/user/count")
                     .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
                     .contentType(MediaType.APPLICATION_JSON)
             )
@@ -100,6 +96,12 @@ class ReplacementCountControllerTest {
 
     @Test
     void testCountPagesWithMoreReplacementsToReview() throws Exception {
+        UserId userId = UserId.of(WikipediaLanguage.getDefault(), "x");
+        AccessToken accessToken = AccessToken.of("a", "b");
+        User user = User.builder().id(userId).accessToken(accessToken).admin(true).build();
+        when(userService.findAuthenticatedUser(WikipediaLanguage.getDefault(), accessToken))
+            .thenReturn(Optional.of(user));
+
         IndexedPage page = IndexedPage
             .builder()
             .pageKey(PageKey.of(WikipediaLanguage.getDefault(), 2))
@@ -112,8 +114,9 @@ class ReplacementCountControllerTest {
 
         mvc
             .perform(
-                get("/api/replacement/page/count?user=A")
+                get("/api/replacement/page/count")
                     .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
+                    .cookie(new Cookie(AccessToken.COOKIE_NAME, accessToken.toCookieValue()))
                     .contentType(MediaType.APPLICATION_JSON)
             )
             .andExpect(status().isOk())
@@ -121,24 +124,26 @@ class ReplacementCountControllerTest {
             .andExpect(jsonPath("$[0].title", is(page.getTitle())))
             .andExpect(jsonPath("$[0].count", is(100)));
 
-        verify(userRightsService).validateAdminUser(UserId.of(WikipediaLanguage.getDefault(), "A"));
         verify(replacementCountService).countNotReviewedGroupedByPage(WikipediaLanguage.getDefault());
     }
 
     @Test
     void testCountPagesWithMoreReplacementsToReviewNotAdmin() throws Exception {
-        UserId userId = UserId.of(WikipediaLanguage.getDefault(), "A");
-        doThrow(ForbiddenException.class).when(userRightsService).validateAdminUser(userId);
+        UserId userId = UserId.of(WikipediaLanguage.getDefault(), "x");
+        AccessToken accessToken = AccessToken.of("a", "b");
+        User user = User.builder().id(userId).accessToken(accessToken).admin(false).build();
+        when(userService.findAuthenticatedUser(WikipediaLanguage.getDefault(), accessToken))
+            .thenReturn(Optional.of(user));
 
         mvc
             .perform(
-                get("/api/replacement/page/count?user=A")
+                get("/api/replacement/page/count")
                     .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
+                    .cookie(new Cookie(AccessToken.COOKIE_NAME, accessToken.toCookieValue()))
                     .contentType(MediaType.APPLICATION_JSON)
             )
             .andExpect(status().isForbidden());
 
-        verify(userRightsService).validateAdminUser(userId);
         verify(replacementCountService, never()).countNotReviewedGroupedByPage(WikipediaLanguage.getDefault());
     }
 }

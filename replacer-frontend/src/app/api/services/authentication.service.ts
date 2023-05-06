@@ -10,8 +10,8 @@ import { Observable } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
 
 import { InitiateAuthenticationResponse } from '../models/initiate-authentication-response';
+import { User } from '../models/user';
 import { VerifyAuthenticationRequest } from '../models/verify-authentication-request';
-import { VerifyAuthenticationResponse } from '../models/verify-authentication-response';
 
 @Injectable({
   providedIn: 'root',
@@ -43,7 +43,7 @@ export class AuthenticationService extends BaseService {
     context?: HttpContext
     body: VerifyAuthenticationRequest
   }
-): Observable<StrictHttpResponse<VerifyAuthenticationResponse>> {
+): Observable<StrictHttpResponse<User>> {
 
     const rb = new RequestBuilder(this.rootUrl, AuthenticationService.VerifyAuthenticationPath, 'post');
     if (params) {
@@ -57,7 +57,7 @@ export class AuthenticationService extends BaseService {
     })).pipe(
       filter((r: any) => r instanceof HttpResponse),
       map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<VerifyAuthenticationResponse>;
+        return r as StrictHttpResponse<User>;
       })
     );
   }
@@ -76,10 +76,10 @@ export class AuthenticationService extends BaseService {
     context?: HttpContext
     body: VerifyAuthenticationRequest
   }
-): Observable<VerifyAuthenticationResponse> {
+): Observable<User> {
 
     return this.verifyAuthentication$Response(params).pipe(
-      map((r: StrictHttpResponse<VerifyAuthenticationResponse>) => r.body as VerifyAuthenticationResponse)
+      map((r: StrictHttpResponse<User>) => r.body as User)
     );
   }
 

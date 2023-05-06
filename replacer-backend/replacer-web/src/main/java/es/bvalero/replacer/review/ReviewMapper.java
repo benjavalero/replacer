@@ -1,10 +1,11 @@
 package es.bvalero.replacer.review;
 
 import es.bvalero.replacer.common.domain.*;
-import es.bvalero.replacer.common.dto.CommonQueryParameters;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.Suggestion;
 import es.bvalero.replacer.page.PageKey;
+import es.bvalero.replacer.user.User;
+import es.bvalero.replacer.user.UserId;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
 import es.bvalero.replacer.wikipedia.WikipediaSection;
 import java.util.Collection;
@@ -66,9 +67,9 @@ class ReviewMapper {
         return ReviewSuggestion.of(suggestion.getText(), suggestion.getComment());
     }
 
-    ReviewOptions fromDto(ReviewOptionsDto options, CommonQueryParameters queryParameters, String lang) {
+    ReviewOptions fromDto(ReviewOptionsDto options, User user) {
         return ReviewOptions.of(
-            queryParameters.getUserId(lang),
+            user,
             options.getKind(),
             options.getSubtype(),
             options.getCs(),
@@ -80,32 +81,22 @@ class ReviewMapper {
         int pageId,
         Collection<ReviewedReplacementDto> reviewed,
         int offset,
-        WikipediaLanguage lang,
-        CommonQueryParameters queryParameters
+        UserId userId
     ) {
-        return reviewed
-            .stream()
-            .map(r -> fromDto(pageId, r, offset, lang, queryParameters))
-            .collect(Collectors.toUnmodifiableList());
+        return reviewed.stream().map(r -> fromDto(pageId, r, offset, userId)).collect(Collectors.toUnmodifiableList());
     }
 
-    private ReviewedReplacement fromDto(
-        int pageId,
-        ReviewedReplacementDto reviewed,
-        int offset,
-        WikipediaLanguage lang,
-        CommonQueryParameters queryParameters
-    ) {
+    private ReviewedReplacement fromDto(int pageId, ReviewedReplacementDto reviewed, int offset, UserId userId) {
         ReplacementKind replacementKind = ReplacementKind.valueOf(reviewed.getKind());
         ReplacementType replacementType = replacementKind == ReplacementKind.CUSTOM
             ? CustomType.ofReviewed(reviewed.getSubtype(), Objects.requireNonNull(reviewed.getCs()))
             : StandardType.of(replacementKind, reviewed.getSubtype());
         return ReviewedReplacement
             .builder()
-            .pageKey(PageKey.of(lang, pageId))
+            .pageKey(PageKey.of(userId.getLang(), pageId))
             .type(replacementType)
             .start(offset + reviewed.getStart())
-            .reviewer(queryParameters.getUser())
+            .reviewer(userId.getUsername())
             .fixed(reviewed.isFixed())
             .build();
     }

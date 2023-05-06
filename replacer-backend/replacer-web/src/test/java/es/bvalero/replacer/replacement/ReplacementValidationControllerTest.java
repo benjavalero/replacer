@@ -8,10 +8,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import es.bvalero.replacer.WebMvcConfiguration;
 import es.bvalero.replacer.common.domain.ReplacementKind;
 import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.ReplacementTypeMatchService;
+import es.bvalero.replacer.user.UserService;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,11 +26,14 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
 @ExtendWith(SpringExtension.class)
-@WebMvcTest(controllers = ReplacementValidationController.class)
+@WebMvcTest(controllers = { ReplacementValidationController.class, WebMvcConfiguration.class })
 class ReplacementValidationControllerTest {
 
     @Autowired
     private MockMvc mvc;
+
+    @MockBean
+    private UserService userService;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -44,7 +49,7 @@ class ReplacementValidationControllerTest {
 
         mvc
             .perform(
-                get("/api/replacement/type/validate?replacement=Africa&cs=true&user=A")
+                get("/api/replacement/type/validate?replacement=Africa&cs=true")
                     .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
                     .contentType(MediaType.APPLICATION_JSON)
             )
@@ -64,7 +69,7 @@ class ReplacementValidationControllerTest {
 
         mvc
             .perform(
-                get("/api/replacement/type/validate?replacement=African&cs=true&user=A")
+                get("/api/replacement/type/validate?replacement=African&cs=true")
                     .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
                     .contentType(MediaType.APPLICATION_JSON)
             )

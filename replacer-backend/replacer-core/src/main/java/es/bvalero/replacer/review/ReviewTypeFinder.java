@@ -8,7 +8,6 @@ import es.bvalero.replacer.replacement.ReplacementService;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -32,7 +31,7 @@ class ReviewTypeFinder extends ReviewFinder {
         }
 
         Collection<PageKey> pageKeys = pageService.findPagesToReviewByType(
-            options.getUserId().getLang(),
+            options.getUser().getId().getLang(),
             options.getType(),
             getCacheSize()
         );
@@ -41,7 +40,7 @@ class ReviewTypeFinder extends ReviewFinder {
     }
 
     private int findTotalResults(ReviewOptions options) {
-        return pageCountService.countPagesToReviewByType(options.getUserId().getLang(), options.getType());
+        return pageCountService.countPagesToReviewByType(options.getUser().getId().getLang(), options.getType());
     }
 
     @Override

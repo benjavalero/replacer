@@ -5,14 +5,16 @@ import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AccessLevel;
 import lombok.Builder;
-import lombok.ToString;
 import lombok.Value;
 import org.springframework.lang.NonNull;
 
-@Schema(description = "Application user with access token after completing the authorization verification")
+@Schema(
+    description = "Application user with access token after completing the authorization verification",
+    name = "User"
+)
 @Value
 @Builder(access = AccessLevel.PRIVATE)
-class VerifyAuthenticationResponse {
+class UserDto {
 
     @Schema(description = "Name of the user in Wikipedia", requiredMode = REQUIRED, example = "Benjavalero")
     @NonNull
@@ -30,22 +32,13 @@ class VerifyAuthenticationResponse {
     @NonNull
     Boolean admin;
 
-    @Schema(
-        description = "Access token authenticating the user to perform operations in Wikipedia",
-        requiredMode = REQUIRED
-    )
-    @ToString.Exclude
-    @NonNull
-    AccessTokenDto accessToken;
-
-    static VerifyAuthenticationResponse of(User user, AccessToken accessToken) {
-        return VerifyAuthenticationResponse
+    static UserDto of(User user) {
+        return UserDto
             .builder()
             .name(user.getId().getUsername())
             .hasRights(user.hasRights())
             .bot(user.isBot())
             .admin(user.isAdmin())
-            .accessToken(AccessTokenDto.of(accessToken))
             .build();
     }
 }
