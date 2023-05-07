@@ -5,7 +5,6 @@ import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.Suggestion;
 import es.bvalero.replacer.page.PageKey;
 import es.bvalero.replacer.user.User;
-import es.bvalero.replacer.user.UserId;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
 import es.bvalero.replacer.wikipedia.WikipediaSection;
 import java.util.Collection;
@@ -81,22 +80,22 @@ class ReviewMapper {
         int pageId,
         Collection<ReviewedReplacementDto> reviewed,
         int offset,
-        UserId userId
+        User user
     ) {
-        return reviewed.stream().map(r -> fromDto(pageId, r, offset, userId)).collect(Collectors.toUnmodifiableList());
+        return reviewed.stream().map(r -> fromDto(pageId, r, offset, user)).collect(Collectors.toUnmodifiableList());
     }
 
-    private ReviewedReplacement fromDto(int pageId, ReviewedReplacementDto reviewed, int offset, UserId userId) {
+    private ReviewedReplacement fromDto(int pageId, ReviewedReplacementDto reviewed, int offset, User user) {
         ReplacementKind replacementKind = ReplacementKind.valueOf(reviewed.getKind());
         ReplacementType replacementType = replacementKind == ReplacementKind.CUSTOM
             ? CustomType.ofReviewed(reviewed.getSubtype(), Objects.requireNonNull(reviewed.getCs()))
             : StandardType.of(replacementKind, reviewed.getSubtype());
         return ReviewedReplacement
             .builder()
-            .pageKey(PageKey.of(userId.getLang(), pageId))
+            .pageKey(PageKey.of(user.getId().getLang(), pageId))
             .type(replacementType)
             .start(offset + reviewed.getStart())
-            .reviewer(userId.getUsername())
+            .reviewer(user.getId().getUsername())
             .fixed(reviewed.isFixed())
             .build();
     }

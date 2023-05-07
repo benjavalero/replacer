@@ -14,7 +14,6 @@ import es.bvalero.replacer.finder.Suggestion;
 import es.bvalero.replacer.page.PageKey;
 import es.bvalero.replacer.user.AccessToken;
 import es.bvalero.replacer.user.User;
-import es.bvalero.replacer.user.UserId;
 import es.bvalero.replacer.user.UserService;
 import es.bvalero.replacer.wikipedia.WikipediaNamespace;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
@@ -94,10 +93,8 @@ class ReviewFindControllerTest {
 
     @Test
     void testFindRandomPageWithReplacements() throws Exception {
-        UserId userId = UserId.of(WikipediaLanguage.getDefault(), "x");
-        AccessToken accessToken = AccessToken.of("a", "b");
-        User user = User.builder().id(userId).accessToken(accessToken).build();
-        when(userService.findAuthenticatedUser(WikipediaLanguage.getDefault(), accessToken))
+        User user = User.buildTestUser();
+        when(userService.findAuthenticatedUser(WikipediaLanguage.getDefault(), user.getAccessToken()))
             .thenReturn(Optional.of(user));
 
         ReviewOptions options = ReviewOptions.ofNoType(user);
@@ -107,7 +104,7 @@ class ReviewFindControllerTest {
             .perform(
                 get("/api/review/random")
                     .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
-                    .cookie(new Cookie(AccessToken.COOKIE_NAME, accessToken.toCookieValue()))
+                    .cookie(new Cookie(AccessToken.COOKIE_NAME, user.getAccessToken().toCookieValue()))
                     .contentType(MediaType.APPLICATION_JSON)
             )
             .andExpect(status().isOk())
@@ -130,10 +127,8 @@ class ReviewFindControllerTest {
 
     @Test
     void testFindRandomPageByNoType() throws Exception {
-        UserId userId = UserId.of(WikipediaLanguage.getDefault(), "x");
-        AccessToken accessToken = AccessToken.of("a", "b");
-        User user = User.builder().id(userId).accessToken(accessToken).build();
-        when(userService.findAuthenticatedUser(WikipediaLanguage.getDefault(), accessToken))
+        User user = User.buildTestUser();
+        when(userService.findAuthenticatedUser(WikipediaLanguage.getDefault(), user.getAccessToken()))
             .thenReturn(Optional.of(user));
 
         ReviewOptions options = ReviewOptions.ofNoType(user);
@@ -143,7 +138,7 @@ class ReviewFindControllerTest {
             .perform(
                 get("/api/review/random")
                     .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
-                    .cookie(new Cookie(AccessToken.COOKIE_NAME, accessToken.toCookieValue()))
+                    .cookie(new Cookie(AccessToken.COOKIE_NAME, user.getAccessToken().toCookieValue()))
                     .contentType(MediaType.APPLICATION_JSON)
             )
             .andExpect(status().isOk());
@@ -153,10 +148,8 @@ class ReviewFindControllerTest {
 
     @Test
     void testFindRandomPageByTypeAndSubtype() throws Exception {
-        UserId userId = UserId.of(WikipediaLanguage.getDefault(), "x");
-        AccessToken accessToken = AccessToken.of("a", "b");
-        User user = User.builder().id(userId).accessToken(accessToken).build();
-        when(userService.findAuthenticatedUser(WikipediaLanguage.getDefault(), accessToken))
+        User user = User.buildTestUser();
+        when(userService.findAuthenticatedUser(WikipediaLanguage.getDefault(), user.getAccessToken()))
             .thenReturn(Optional.of(user));
 
         StandardType type = StandardType.DATE;
@@ -167,7 +160,7 @@ class ReviewFindControllerTest {
             .perform(
                 get("/api/review/random?kind=5&subtype=Fechas")
                     .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
-                    .cookie(new Cookie(AccessToken.COOKIE_NAME, accessToken.toCookieValue()))
+                    .cookie(new Cookie(AccessToken.COOKIE_NAME, user.getAccessToken().toCookieValue()))
                     .contentType(MediaType.APPLICATION_JSON)
             )
             .andExpect(status().isOk());
@@ -177,10 +170,8 @@ class ReviewFindControllerTest {
 
     @Test
     void testFindRandomPageByCustomReplacement() throws Exception {
-        UserId userId = UserId.of(WikipediaLanguage.getDefault(), "x");
-        AccessToken accessToken = AccessToken.of("a", "b");
-        User user = User.builder().id(userId).accessToken(accessToken).build();
-        when(userService.findAuthenticatedUser(WikipediaLanguage.getDefault(), accessToken))
+        User user = User.buildTestUser();
+        when(userService.findAuthenticatedUser(WikipediaLanguage.getDefault(), user.getAccessToken()))
             .thenReturn(Optional.of(user));
 
         CustomType customType = CustomType.of("X", false, "Y");
@@ -191,7 +182,7 @@ class ReviewFindControllerTest {
             .perform(
                 get("/api/review/random?kind=1&subtype=X&cs=false&suggestion=Y")
                     .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
-                    .cookie(new Cookie(AccessToken.COOKIE_NAME, accessToken.toCookieValue()))
+                    .cookie(new Cookie(AccessToken.COOKIE_NAME, user.getAccessToken().toCookieValue()))
                     .contentType(MediaType.APPLICATION_JSON)
             )
             .andExpect(status().isOk());
@@ -201,17 +192,15 @@ class ReviewFindControllerTest {
 
     @Test
     void testFindPageReviewByIdWithWrongOptions() throws Exception {
-        UserId userId = UserId.of(WikipediaLanguage.getDefault(), "x");
-        AccessToken accessToken = AccessToken.of("a", "b");
-        User user = User.builder().id(userId).accessToken(accessToken).build();
-        when(userService.findAuthenticatedUser(WikipediaLanguage.getDefault(), accessToken))
+        User user = User.buildTestUser();
+        when(userService.findAuthenticatedUser(WikipediaLanguage.getDefault(), user.getAccessToken()))
             .thenReturn(Optional.of(user));
 
         mvc
             .perform(
                 get("/api/review/123?kind=X")
                     .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
-                    .cookie(new Cookie(AccessToken.COOKIE_NAME, accessToken.toCookieValue()))
+                    .cookie(new Cookie(AccessToken.COOKIE_NAME, user.getAccessToken().toCookieValue()))
                     .contentType(MediaType.APPLICATION_JSON)
             )
             .andExpect(status().isBadRequest());
@@ -221,10 +210,8 @@ class ReviewFindControllerTest {
 
     @Test
     void testFindPageReviewById() throws Exception {
-        UserId userId = UserId.of(WikipediaLanguage.getDefault(), "x");
-        AccessToken accessToken = AccessToken.of("a", "b");
-        User user = User.builder().id(userId).accessToken(accessToken).build();
-        when(userService.findAuthenticatedUser(WikipediaLanguage.getDefault(), accessToken))
+        User user = User.buildTestUser();
+        when(userService.findAuthenticatedUser(WikipediaLanguage.getDefault(), user.getAccessToken()))
             .thenReturn(Optional.of(user));
 
         ReviewOptions options = ReviewOptions.ofNoType(user);
@@ -235,7 +222,7 @@ class ReviewFindControllerTest {
             .perform(
                 get("/api/review/123")
                     .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
-                    .cookie(new Cookie(AccessToken.COOKIE_NAME, accessToken.toCookieValue()))
+                    .cookie(new Cookie(AccessToken.COOKIE_NAME, user.getAccessToken().toCookieValue()))
                     .contentType(MediaType.APPLICATION_JSON)
             )
             .andExpect(status().isOk());
@@ -245,10 +232,8 @@ class ReviewFindControllerTest {
 
     @Test
     void testFindPageReviewByIdByTypeAndSubtype() throws Exception {
-        UserId userId = UserId.of(WikipediaLanguage.getDefault(), "x");
-        AccessToken accessToken = AccessToken.of("a", "b");
-        User user = User.builder().id(userId).accessToken(accessToken).build();
-        when(userService.findAuthenticatedUser(WikipediaLanguage.getDefault(), accessToken))
+        User user = User.buildTestUser();
+        when(userService.findAuthenticatedUser(WikipediaLanguage.getDefault(), user.getAccessToken()))
             .thenReturn(Optional.of(user));
 
         StandardType type = StandardType.DATE;
@@ -260,7 +245,7 @@ class ReviewFindControllerTest {
             .perform(
                 get("/api/review/123?kind=5&subtype=Fechas")
                     .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
-                    .cookie(new Cookie(AccessToken.COOKIE_NAME, accessToken.toCookieValue()))
+                    .cookie(new Cookie(AccessToken.COOKIE_NAME, user.getAccessToken().toCookieValue()))
                     .contentType(MediaType.APPLICATION_JSON)
             )
             .andExpect(status().isOk());
@@ -270,10 +255,8 @@ class ReviewFindControllerTest {
 
     @Test
     void testFindPageReviewByIdAndCustomReplacement() throws Exception {
-        UserId userId = UserId.of(WikipediaLanguage.getDefault(), "x");
-        AccessToken accessToken = AccessToken.of("a", "b");
-        User user = User.builder().id(userId).accessToken(accessToken).build();
-        when(userService.findAuthenticatedUser(WikipediaLanguage.getDefault(), accessToken))
+        User user = User.buildTestUser();
+        when(userService.findAuthenticatedUser(WikipediaLanguage.getDefault(), user.getAccessToken()))
             .thenReturn(Optional.of(user));
 
         CustomType customType = CustomType.of("X", true, "Y");
@@ -285,7 +268,7 @@ class ReviewFindControllerTest {
             .perform(
                 get("/api/review/123?kind=1&subtype=X&cs=true&suggestion=Y")
                     .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
-                    .cookie(new Cookie(AccessToken.COOKIE_NAME, accessToken.toCookieValue()))
+                    .cookie(new Cookie(AccessToken.COOKIE_NAME, user.getAccessToken().toCookieValue()))
                     .contentType(MediaType.APPLICATION_JSON)
             )
             .andExpect(status().isOk());

@@ -11,7 +11,9 @@ import es.bvalero.replacer.common.domain.ReplacementKind;
 import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.page.PageKey;
-import es.bvalero.replacer.user.*;
+import es.bvalero.replacer.user.AccessToken;
+import es.bvalero.replacer.user.User;
+import es.bvalero.replacer.user.UserService;
 import es.bvalero.replacer.wikipedia.*;
 import java.util.List;
 import java.util.Optional;
@@ -85,32 +87,28 @@ class ReviewSaveControllerTest {
 
     @Test
     void testSaveWithChanges() throws Exception {
-        UserId userId = UserId.of(WikipediaLanguage.getDefault(), "x");
-        AccessToken accessToken = AccessToken.of("a", "b");
-        User user = User.builder().id(userId).accessToken(accessToken).build();
-        when(userService.findAuthenticatedUser(WikipediaLanguage.getDefault(), accessToken))
+        User user = User.buildTestUser();
+        when(userService.findAuthenticatedUser(WikipediaLanguage.getDefault(), user.getAccessToken()))
             .thenReturn(Optional.of(user));
 
         mvc
             .perform(
                 post("/api/review/123")
                     .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
-                    .cookie(new Cookie(AccessToken.COOKIE_NAME, accessToken.toCookieValue()))
+                    .cookie(new Cookie(AccessToken.COOKIE_NAME, user.getAccessToken().toCookieValue()))
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(request))
             )
             .andExpect(status().isNoContent());
 
-        verify(reviewSaveService).saveReviewContent(page, null, List.of(reviewed), accessToken);
+        verify(reviewSaveService).saveReviewContent(page, null, List.of(reviewed), user.getAccessToken());
         verify(reviewSaveService).markAsReviewed(List.of(reviewed), true);
     }
 
     @Test
     void testSaveWithNoChanges() throws Exception {
-        UserId userId = UserId.of(WikipediaLanguage.getDefault(), "x");
-        AccessToken accessToken = AccessToken.of("a", "b");
-        User user = User.builder().id(userId).accessToken(accessToken).build();
-        when(userService.findAuthenticatedUser(WikipediaLanguage.getDefault(), accessToken))
+        User user = User.buildTestUser();
+        when(userService.findAuthenticatedUser(WikipediaLanguage.getDefault(), user.getAccessToken()))
             .thenReturn(Optional.of(user));
 
         request.getPage().setContent(EMPTY_CONTENT);
@@ -119,7 +117,7 @@ class ReviewSaveControllerTest {
             .perform(
                 post("/api/review/123")
                     .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
-                    .cookie(new Cookie(AccessToken.COOKIE_NAME, accessToken.toCookieValue()))
+                    .cookie(new Cookie(AccessToken.COOKIE_NAME, user.getAccessToken().toCookieValue()))
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(request))
             )
@@ -132,17 +130,15 @@ class ReviewSaveControllerTest {
 
     @Test
     void testPageIdMismatch() throws Exception {
-        UserId userId = UserId.of(WikipediaLanguage.getDefault(), "x");
-        AccessToken accessToken = AccessToken.of("a", "b");
-        User user = User.builder().id(userId).accessToken(accessToken).build();
-        when(userService.findAuthenticatedUser(WikipediaLanguage.getDefault(), accessToken))
+        User user = User.buildTestUser();
+        when(userService.findAuthenticatedUser(WikipediaLanguage.getDefault(), user.getAccessToken()))
             .thenReturn(Optional.of(user));
 
         mvc
             .perform(
                 post("/api/review/321")
                     .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
-                    .cookie(new Cookie(AccessToken.COOKIE_NAME, accessToken.toCookieValue()))
+                    .cookie(new Cookie(AccessToken.COOKIE_NAME, user.getAccessToken().toCookieValue()))
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(request))
             )
@@ -153,17 +149,15 @@ class ReviewSaveControllerTest {
 
     @Test
     void testPageLanguageMismatch() throws Exception {
-        UserId userId = UserId.of(WikipediaLanguage.getDefault(), "x");
-        AccessToken accessToken = AccessToken.of("a", "b");
-        User user = User.builder().id(userId).accessToken(accessToken).build();
-        when(userService.findAuthenticatedUser(WikipediaLanguage.getDefault(), accessToken))
+        User user = User.buildTestUser();
+        when(userService.findAuthenticatedUser(WikipediaLanguage.getDefault(), user.getAccessToken()))
             .thenReturn(Optional.of(user));
 
         mvc
             .perform(
                 post("/api/review/123")
                     .header(HttpHeaders.ACCEPT_LANGUAGE, "en")
-                    .cookie(new Cookie(AccessToken.COOKIE_NAME, accessToken.toCookieValue()))
+                    .cookie(new Cookie(AccessToken.COOKIE_NAME, user.getAccessToken().toCookieValue()))
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(request))
             )
@@ -174,10 +168,8 @@ class ReviewSaveControllerTest {
 
     @Test
     void testPageNotValidEmptyContent() throws Exception {
-        UserId userId = UserId.of(WikipediaLanguage.getDefault(), "x");
-        AccessToken accessToken = AccessToken.of("a", "b");
-        User user = User.builder().id(userId).accessToken(accessToken).build();
-        when(userService.findAuthenticatedUser(WikipediaLanguage.getDefault(), accessToken))
+        User user = User.buildTestUser();
+        when(userService.findAuthenticatedUser(WikipediaLanguage.getDefault(), user.getAccessToken()))
             .thenReturn(Optional.of(user));
 
         request.getPage().setContent("");
@@ -186,7 +178,7 @@ class ReviewSaveControllerTest {
             .perform(
                 post("/api/review/123")
                     .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
-                    .cookie(new Cookie(AccessToken.COOKIE_NAME, accessToken.toCookieValue()))
+                    .cookie(new Cookie(AccessToken.COOKIE_NAME, user.getAccessToken().toCookieValue()))
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(request))
             )
@@ -197,79 +189,73 @@ class ReviewSaveControllerTest {
 
     @Test
     void testSaveWithChangesWithConflict() throws Exception {
-        UserId userId = UserId.of(WikipediaLanguage.getDefault(), "x");
-        AccessToken accessToken = AccessToken.of("a", "b");
-        User user = User.builder().id(userId).accessToken(accessToken).build();
-        when(userService.findAuthenticatedUser(WikipediaLanguage.getDefault(), accessToken))
+        User user = User.buildTestUser();
+        when(userService.findAuthenticatedUser(WikipediaLanguage.getDefault(), user.getAccessToken()))
             .thenReturn(Optional.of(user));
 
         doThrow(WikipediaConflictException.class)
             .when(reviewSaveService)
-            .saveReviewContent(page, null, List.of(reviewed), accessToken);
+            .saveReviewContent(page, null, List.of(reviewed), user.getAccessToken());
 
         mvc
             .perform(
                 post("/api/review/123")
                     .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
-                    .cookie(new Cookie(AccessToken.COOKIE_NAME, accessToken.toCookieValue()))
+                    .cookie(new Cookie(AccessToken.COOKIE_NAME, user.getAccessToken().toCookieValue()))
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(request))
             )
             .andExpect(status().isConflict());
 
-        verify(reviewSaveService).saveReviewContent(page, null, List.of(reviewed), accessToken);
+        verify(reviewSaveService).saveReviewContent(page, null, List.of(reviewed), user.getAccessToken());
         verify(reviewSaveService, never()).markAsReviewed(anyCollection(), anyBoolean());
     }
 
     @Test
     void testSaveWithChangesNotAuthorizedWikipedia() throws Exception {
-        UserId userId = UserId.of(WikipediaLanguage.getDefault(), "x");
-        AccessToken accessToken = AccessToken.of("a", "b");
-        User user = User.builder().id(userId).accessToken(accessToken).build();
-        when(userService.findAuthenticatedUser(WikipediaLanguage.getDefault(), accessToken))
+        User user = User.buildTestUser();
+        when(userService.findAuthenticatedUser(WikipediaLanguage.getDefault(), user.getAccessToken()))
             .thenReturn(Optional.of(user));
 
         doThrow(new WikipediaException("mwoauth-invalid-authorization"))
             .when(reviewSaveService)
-            .saveReviewContent(page, null, List.of(reviewed), accessToken);
+            .saveReviewContent(page, null, List.of(reviewed), user.getAccessToken());
 
         mvc
             .perform(
                 post("/api/review/123")
                     .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
-                    .cookie(new Cookie(AccessToken.COOKIE_NAME, accessToken.toCookieValue()))
+                    .cookie(new Cookie(AccessToken.COOKIE_NAME, user.getAccessToken().toCookieValue()))
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(request))
             )
             .andExpect(status().isUnauthorized());
 
-        verify(reviewSaveService).saveReviewContent(page, null, List.of(reviewed), accessToken);
+        verify(reviewSaveService).saveReviewContent(page, null, List.of(reviewed), user.getAccessToken());
         verify(reviewSaveService, never()).markAsReviewed(anyCollection(), anyBoolean());
     }
 
     @Test
     void testSaveWithChangesWikipediaException() throws Exception {
-        UserId userId = UserId.of(WikipediaLanguage.getDefault(), "x");
-        AccessToken accessToken = AccessToken.of("a", "b");
-        User user = User.builder().id(userId).accessToken(accessToken).build();
-        when(userService.findAuthenticatedUser(WikipediaLanguage.getDefault(), accessToken))
+        User user = User.buildTestUser();
+        when(userService.findAuthenticatedUser(WikipediaLanguage.getDefault(), user.getAccessToken()))
             .thenReturn(Optional.of(user));
 
         doThrow(WikipediaException.class)
             .when(reviewSaveService)
-            .saveReviewContent(page, null, List.of(reviewed), accessToken);
+            .saveReviewContent(page, null, List.of(reviewed), user.getAccessToken());
 
         mvc
             .perform(
                 post("/api/review/123")
                     .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
-                    .cookie(new Cookie(AccessToken.COOKIE_NAME, accessToken.toCookieValue()))
+                    .cookie(new Cookie(AccessToken.COOKIE_NAME, user.getAccessToken().toCookieValue()))
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(request))
             )
             .andExpect(status().isInternalServerError());
 
-        verify(reviewSaveService).saveReviewContent(page, null, List.of(reviewed), accessToken);
+        verify(reviewSaveService).saveReviewContent(page, null, List.of(reviewed), user.getAccessToken());
         verify(reviewSaveService, never()).markAsReviewed(anyCollection(), anyBoolean());
     }
 }

@@ -10,7 +10,6 @@ import es.bvalero.replacer.WebMvcConfiguration;
 import es.bvalero.replacer.common.domain.*;
 import es.bvalero.replacer.user.AccessToken;
 import es.bvalero.replacer.user.User;
-import es.bvalero.replacer.user.UserId;
 import es.bvalero.replacer.user.UserService;
 import java.util.Collection;
 import java.util.Collections;
@@ -41,10 +40,8 @@ class PageCountControllerTest {
 
     @Test
     void testFindReplacementCount() throws Exception {
-        UserId userId = UserId.of(WikipediaLanguage.getDefault(), "x");
-        AccessToken accessToken = AccessToken.of("a", "b");
-        User user = User.builder().id(userId).accessToken(accessToken).build();
-        when(userService.findAuthenticatedUser(WikipediaLanguage.getDefault(), accessToken))
+        User user = User.buildTestUser();
+        when(userService.findAuthenticatedUser(WikipediaLanguage.getDefault(), user.getAccessToken()))
             .thenReturn(Optional.of(user));
 
         StandardType type = StandardType.of(ReplacementKind.SIMPLE, "Y");
@@ -56,7 +53,7 @@ class PageCountControllerTest {
             .perform(
                 get("/api/page/type/count")
                     .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
-                    .cookie(new Cookie(AccessToken.COOKIE_NAME, accessToken.toCookieValue()))
+                    .cookie(new Cookie(AccessToken.COOKIE_NAME, user.getAccessToken().toCookieValue()))
                     .contentType(MediaType.APPLICATION_JSON)
             )
             .andExpect(status().isOk())

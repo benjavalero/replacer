@@ -55,7 +55,7 @@ public class ReviewSaveController {
             pageId,
             request.getReviewedReplacements(),
             request.getPage().getSectionOffset(),
-            user.getId()
+            user
         );
         if (request.getPage().isReviewedWithoutChanges()) {
             reviewSaveService.markAsReviewed(reviewed, false);

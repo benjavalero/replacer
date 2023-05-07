@@ -10,7 +10,10 @@ import es.bvalero.replacer.common.domain.ReplacementKind;
 import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.replacement.ReplacementService;
-import es.bvalero.replacer.user.*;
+import es.bvalero.replacer.user.AccessToken;
+import es.bvalero.replacer.user.User;
+import es.bvalero.replacer.user.UserService;
+import es.bvalero.replacer.user.ValidateUserAspect;
 import java.util.Optional;
 import javax.servlet.http.Cookie;
 import org.junit.jupiter.api.Test;
@@ -44,17 +47,15 @@ class PageListControllerTest {
 
     @Test
     void testFindPagesToReviewByType() throws Exception {
-        UserId userId = UserId.of(WikipediaLanguage.getDefault(), "x");
-        AccessToken accessToken = AccessToken.of("a", "b");
-        User user = User.builder().id(userId).accessToken(accessToken).bot(true).build();
-        when(userService.findAuthenticatedUser(WikipediaLanguage.getDefault(), accessToken))
+        User user = User.buildTestBotUser();
+        when(userService.findAuthenticatedUser(WikipediaLanguage.getDefault(), user.getAccessToken()))
             .thenReturn(Optional.of(user));
 
         mvc
             .perform(
                 get("/api/page/type?kind=2&subtype=Africa")
                     .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
-                    .cookie(new Cookie(AccessToken.COOKIE_NAME, accessToken.toCookieValue()))
+                    .cookie(new Cookie(AccessToken.COOKIE_NAME, user.getAccessToken().toCookieValue()))
                     .contentType(MediaType.TEXT_PLAIN_VALUE)
             )
             .andExpect(status().isOk());
@@ -65,17 +66,15 @@ class PageListControllerTest {
 
     @Test
     void testFindPagesToReviewByTypeNotBot() throws Exception {
-        UserId userId = UserId.of(WikipediaLanguage.getDefault(), "x");
-        AccessToken accessToken = AccessToken.of("a", "b");
-        User user = User.builder().id(userId).accessToken(accessToken).bot(false).build();
-        when(userService.findAuthenticatedUser(WikipediaLanguage.getDefault(), accessToken))
+        User user = User.buildTestUser();
+        when(userService.findAuthenticatedUser(WikipediaLanguage.getDefault(), user.getAccessToken()))
             .thenReturn(Optional.of(user));
 
         mvc
             .perform(
                 get("/api/page/type?kind=2&subtype=Africa")
                     .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
-                    .cookie(new Cookie(AccessToken.COOKIE_NAME, accessToken.toCookieValue()))
+                    .cookie(new Cookie(AccessToken.COOKIE_NAME, user.getAccessToken().toCookieValue()))
                     .contentType(MediaType.TEXT_PLAIN_VALUE)
             )
             .andExpect(status().isForbidden());
@@ -86,17 +85,15 @@ class PageListControllerTest {
 
     @Test
     void testReviewPagesByType() throws Exception {
-        UserId userId = UserId.of(WikipediaLanguage.getDefault(), "x");
-        AccessToken accessToken = AccessToken.of("a", "b");
-        User user = User.builder().id(userId).accessToken(accessToken).bot(true).build();
-        when(userService.findAuthenticatedUser(WikipediaLanguage.getDefault(), accessToken))
+        User user = User.buildTestBotUser();
+        when(userService.findAuthenticatedUser(WikipediaLanguage.getDefault(), user.getAccessToken()))
             .thenReturn(Optional.of(user));
 
         mvc
             .perform(
                 post("/api/page/type/review?kind=2&subtype=Africa")
                     .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
-                    .cookie(new Cookie(AccessToken.COOKIE_NAME, accessToken.toCookieValue()))
+                    .cookie(new Cookie(AccessToken.COOKIE_NAME, user.getAccessToken().toCookieValue()))
                     .contentType(MediaType.APPLICATION_JSON)
             )
             .andExpect(status().isNoContent());
@@ -110,17 +107,15 @@ class PageListControllerTest {
 
     @Test
     void testReviewPagesByTypeNotBot() throws Exception {
-        UserId userId = UserId.of(WikipediaLanguage.getDefault(), "x");
-        AccessToken accessToken = AccessToken.of("a", "b");
-        User user = User.builder().id(userId).accessToken(accessToken).bot(false).build();
-        when(userService.findAuthenticatedUser(WikipediaLanguage.getDefault(), accessToken))
+        User user = User.buildTestUser();
+        when(userService.findAuthenticatedUser(WikipediaLanguage.getDefault(), user.getAccessToken()))
             .thenReturn(Optional.of(user));
 
         mvc
             .perform(
                 post("/api/page/type/review?kind=2&subtype=Africa")
                     .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
-                    .cookie(new Cookie(AccessToken.COOKIE_NAME, accessToken.toCookieValue()))
+                    .cookie(new Cookie(AccessToken.COOKIE_NAME, user.getAccessToken().toCookieValue()))
                     .contentType(MediaType.APPLICATION_JSON)
             )
             .andExpect(status().isForbidden());

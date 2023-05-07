@@ -1,8 +1,10 @@
 package es.bvalero.replacer.user;
 
+import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import lombok.Builder;
 import lombok.Value;
 import lombok.experimental.Accessors;
+import org.jetbrains.annotations.TestOnly;
 import org.springframework.lang.NonNull;
 
 /**
@@ -42,5 +44,26 @@ public class User {
     @Override
     public String toString() {
         return this.id.toString();
+    }
+
+    @TestOnly
+    public static User buildTestUser() {
+        UserId userId = UserId.of(WikipediaLanguage.getDefault(), "x");
+        AccessToken accessToken = AccessToken.of("a", "b");
+        return User.builder().id(userId).accessToken(accessToken).hasRights(true).build();
+    }
+
+    @TestOnly
+    public static User buildTestBotUser() {
+        UserId userId = UserId.of(WikipediaLanguage.getDefault(), "bot");
+        AccessToken accessToken = AccessToken.of("a", "b");
+        return User.builder().id(userId).accessToken(accessToken).hasRights(true).bot(true).build();
+    }
+
+    @TestOnly
+    public static User buildTestAdminUser() {
+        UserId userId = UserId.of(WikipediaLanguage.getDefault(), "admin");
+        AccessToken accessToken = AccessToken.of("a", "b");
+        return User.builder().id(userId).accessToken(accessToken).hasRights(true).admin(true).build();
     }
 }

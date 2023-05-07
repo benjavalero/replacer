@@ -11,7 +11,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import es.bvalero.replacer.WebMvcConfiguration;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.util.ReplacerUtils;
-import es.bvalero.replacer.user.*;
+import es.bvalero.replacer.user.AccessToken;
+import es.bvalero.replacer.user.User;
+import es.bvalero.replacer.user.UserService;
+import es.bvalero.replacer.user.ValidateUserAspect;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import javax.servlet.http.Cookie;
@@ -43,10 +46,8 @@ class DumpControllerTest {
 
     @Test
     void testGetDumpIndexingStatus() throws Exception {
-        UserId userId = UserId.of(WikipediaLanguage.getDefault(), "x");
-        AccessToken accessToken = AccessToken.of("a", "b");
-        User user = User.builder().id(userId).accessToken(accessToken).admin(true).build();
-        when(userService.findAuthenticatedUser(WikipediaLanguage.getDefault(), accessToken))
+        User user = User.buildTestAdminUser();
+        when(userService.findAuthenticatedUser(WikipediaLanguage.getDefault(), user.getAccessToken()))
             .thenReturn(Optional.of(user));
 
         boolean running = true;
@@ -71,7 +72,7 @@ class DumpControllerTest {
             .perform(
                 get("/api/dump-indexing")
                     .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
-                    .cookie(new Cookie(AccessToken.COOKIE_NAME, accessToken.toCookieValue()))
+                    .cookie(new Cookie(AccessToken.COOKIE_NAME, user.getAccessToken().toCookieValue()))
                     .contentType(MediaType.APPLICATION_JSON)
             )
             .andExpect(status().isOk())
@@ -88,17 +89,15 @@ class DumpControllerTest {
 
     @Test
     void testGetDumpIndexingStatusNotAdmin() throws Exception {
-        UserId userId = UserId.of(WikipediaLanguage.getDefault(), "x");
-        AccessToken accessToken = AccessToken.of("a", "b");
-        User user = User.builder().id(userId).accessToken(accessToken).admin(false).build();
-        when(userService.findAuthenticatedUser(WikipediaLanguage.getDefault(), accessToken))
+        User user = User.buildTestUser();
+        when(userService.findAuthenticatedUser(WikipediaLanguage.getDefault(), user.getAccessToken()))
             .thenReturn(Optional.of(user));
 
         mvc
             .perform(
                 get("/api/dump-indexing")
                     .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
-                    .cookie(new Cookie(AccessToken.COOKIE_NAME, accessToken.toCookieValue()))
+                    .cookie(new Cookie(AccessToken.COOKIE_NAME, user.getAccessToken().toCookieValue()))
                     .contentType(MediaType.APPLICATION_JSON)
             )
             .andExpect(status().isForbidden());
@@ -108,17 +107,15 @@ class DumpControllerTest {
 
     @Test
     void testPostStart() throws Exception {
-        UserId userId = UserId.of(WikipediaLanguage.getDefault(), "x");
-        AccessToken accessToken = AccessToken.of("a", "b");
-        User user = User.builder().id(userId).accessToken(accessToken).admin(true).build();
-        when(userService.findAuthenticatedUser(WikipediaLanguage.getDefault(), accessToken))
+        User user = User.buildTestAdminUser();
+        when(userService.findAuthenticatedUser(WikipediaLanguage.getDefault(), user.getAccessToken()))
             .thenReturn(Optional.of(user));
 
         mvc
             .perform(
                 post("/api/dump-indexing")
                     .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
-                    .cookie(new Cookie(AccessToken.COOKIE_NAME, accessToken.toCookieValue()))
+                    .cookie(new Cookie(AccessToken.COOKIE_NAME, user.getAccessToken().toCookieValue()))
                     .contentType(MediaType.APPLICATION_JSON)
             )
             .andExpect(status().isAccepted());
@@ -128,17 +125,15 @@ class DumpControllerTest {
 
     @Test
     void testPostStartNotAdmin() throws Exception {
-        UserId userId = UserId.of(WikipediaLanguage.getDefault(), "x");
-        AccessToken accessToken = AccessToken.of("a", "b");
-        User user = User.builder().id(userId).accessToken(accessToken).admin(false).build();
-        when(userService.findAuthenticatedUser(WikipediaLanguage.getDefault(), accessToken))
+        User user = User.buildTestUser();
+        when(userService.findAuthenticatedUser(WikipediaLanguage.getDefault(), user.getAccessToken()))
             .thenReturn(Optional.of(user));
 
         mvc
             .perform(
                 post("/api/dump-indexing")
                     .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
-                    .cookie(new Cookie(AccessToken.COOKIE_NAME, accessToken.toCookieValue()))
+                    .cookie(new Cookie(AccessToken.COOKIE_NAME, user.getAccessToken().toCookieValue()))
                     .contentType(MediaType.APPLICATION_JSON)
             )
             .andExpect(status().isForbidden());

@@ -15,9 +15,7 @@ import es.bvalero.replacer.page.PageCountService;
 import es.bvalero.replacer.page.PageKey;
 import es.bvalero.replacer.page.PageService;
 import es.bvalero.replacer.replacement.ReplacementService;
-import es.bvalero.replacer.user.AccessToken;
 import es.bvalero.replacer.user.User;
-import es.bvalero.replacer.user.UserId;
 import es.bvalero.replacer.user.UserRightsService;
 import es.bvalero.replacer.wikipedia.*;
 import java.util.Collections;
@@ -65,9 +63,7 @@ class ReviewTypeFinderTest {
         .suggestions(List.of(Suggestion.ofNoComment("Z")))
         .build();
     private final List<Replacement> replacements = Collections.singletonList(replacement);
-    private final UserId userId = UserId.of(WikipediaLanguage.getDefault(), "A");
-    private final AccessToken accessToken = AccessToken.of("a", "b");
-    private final User user = User.builder().id(userId).accessToken(accessToken).build();
+    private final User user = User.buildTestUser();
     private final ReviewOptions options = ReviewOptions.ofType(user, simpleType);
     private final ReviewOptions options2 = ReviewOptions.ofType(user, composedType);
 

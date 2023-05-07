@@ -70,20 +70,12 @@ class AuthenticationControllerTest {
     @Test
     void testVerifyAuthentication() throws Exception {
         RequestToken requestToken = RequestToken.of("R", "S");
-        AccessToken accessToken = AccessToken.of("A", "B");
         String oAuthVerifier = "V";
 
         WikipediaLanguage lang = WikipediaLanguage.getDefault();
-        User user = User
-            .builder()
-            .id(UserId.of(lang, "C"))
-            .accessToken(accessToken)
-            .hasRights(true)
-            .bot(false)
-            .admin(true)
-            .build();
-        when(authenticationService.getAccessToken(requestToken, oAuthVerifier)).thenReturn(accessToken);
-        when(userService.findAuthenticatedUser(lang, accessToken)).thenReturn(Optional.of(user));
+        User user = User.buildTestAdminUser();
+        when(authenticationService.getAccessToken(requestToken, oAuthVerifier)).thenReturn(user.getAccessToken());
+        when(userService.findAuthenticatedUser(lang, user.getAccessToken())).thenReturn(Optional.of(user));
 
         VerifyAuthenticationRequest verifyAuthenticationRequest = new VerifyAuthenticationRequest();
         verifyAuthenticationRequest.setRequestToken(RequestTokenDto.of(requestToken));
@@ -103,7 +95,7 @@ class AuthenticationControllerTest {
             .andExpect(jsonPath("$.admin", equalTo(user.isAdmin())));
 
         verify(authenticationService).getAccessToken(requestToken, oAuthVerifier);
-        verify(userService).findAuthenticatedUser(lang, accessToken);
+        verify(userService).findAuthenticatedUser(lang, user.getAccessToken());
     }
 
     @Test

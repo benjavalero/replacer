@@ -4,9 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 import es.bvalero.replacer.common.domain.*;
-import es.bvalero.replacer.user.AccessToken;
 import es.bvalero.replacer.user.User;
-import es.bvalero.replacer.user.UserId;
 import es.bvalero.replacer.user.UserRightsService;
 import java.util.Collection;
 import java.util.List;
@@ -43,9 +41,8 @@ class PageCountServiceTest {
         ResultCount<StandardType> count2 = ResultCount.of(typeForBots, 200);
         Collection<ResultCount<StandardType>> counts = List.of(count, count2);
 
-        AccessToken accessToken = AccessToken.of("a", "b");
-        User user = User.builder().id(UserId.of(lang, "user")).accessToken(accessToken).bot(false).build();
-        User bot = User.builder().id(UserId.of(lang, "bot")).accessToken(accessToken).bot(true).build();
+        User user = User.buildTestUser();
+        User bot = User.buildTestBotUser();
 
         when(pageCountRepository.countPagesNotReviewedByType(lang)).thenReturn(counts);
         when(userRightsService.isTypeForbidden(type, user)).thenReturn(false);
