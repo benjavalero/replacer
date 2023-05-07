@@ -4,7 +4,7 @@ import es.bvalero.replacer.finder.listing.ComposedMisspelling;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ComposedMisspellingParser implements MisspellingParser<ComposedMisspelling> {
+public class ComposedMisspellingParser extends MisspellingParser<ComposedMisspelling> {
 
     @Override
     public ComposedMisspelling buildMisspelling(String word, boolean cs, String comment) {

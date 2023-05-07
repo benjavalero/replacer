@@ -1,30 +1,17 @@
 package es.bvalero.replacer.finder.listing;
 
 import es.bvalero.replacer.common.domain.ReplacementKind;
-import java.util.List;
-import lombok.Value;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.TestOnly;
 
-@Value
-public class SimpleMisspelling implements Misspelling {
-
-    String word;
-    boolean caseSensitive;
-    List<MisspellingSuggestion> suggestions;
+public class SimpleMisspelling extends Misspelling implements ListingItem {
 
     private SimpleMisspelling(String word, boolean caseSensitive, String comment) {
-        // Validate the word
-        validateMisspellingWord(word);
-
-        this.word = word;
-        this.caseSensitive = caseSensitive;
-        this.suggestions = parseComment(comment);
-
-        validateWordCase();
+        super(word, caseSensitive, comment);
     }
 
-    private void validateMisspellingWord(String word) {
+    @Override
+    public void validateMisspellingWord(String word) {
         boolean isValid = StringUtils.isAlpha(word);
         if (!isValid) {
             throw new IllegalArgumentException("Not valid misspelling word: " + word);
@@ -47,7 +34,7 @@ public class SimpleMisspelling implements Misspelling {
 
     @Override
     public String getKey() {
-        return this.word;
+        return this.getWord();
     }
 
     @Override

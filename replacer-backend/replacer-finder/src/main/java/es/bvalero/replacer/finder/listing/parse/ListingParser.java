@@ -12,14 +12,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.Nullable;
 
-interface ListingParser<T extends ListingItem> {
-    @Slf4j
-    final class LogHolder {
-        // Trick to be able to log in interfaces
-    }
+@Slf4j
+abstract class ListingParser<T extends ListingItem> {
 
     /** Parse the listing text containing the items line by line */
-    default Set<T> parseListing(String listing) {
+    public Set<T> parseListing(String listing) {
         Set<T> itemSet = new HashSet<>();
 
         // We maintain a temporary set of item keys to find soft duplicates
@@ -35,7 +32,7 @@ interface ListingParser<T extends ListingItem> {
                     if (itemKeys.add(item.getKey())) {
                         itemSet.add(item);
                     } else {
-                        LogHolder.LOGGER.warn("Duplicated item: {}", item.getKey());
+                        LOGGER.warn("Duplicated item: {}", item.getKey());
                     }
                 }
             });
@@ -58,5 +55,5 @@ interface ListingParser<T extends ListingItem> {
 
     /** Parse a line in the text corresponding to an item */
     @Nullable
-    T parseItemLine(String itemLine);
+    abstract T parseItemLine(String itemLine);
 }

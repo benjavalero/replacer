@@ -6,41 +6,55 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.intellij.lang.annotations.RegExp;
 
-public interface Misspelling extends ListingItem {
-    @Slf4j
-    final class LogHolder {
-        // Trick to be able to log in interfaces
+@Slf4j
+@Getter
+@EqualsAndHashCode
+public abstract class Misspelling {
+
+    @RegExp
+    private static final String REGEX_BRACKETS = "\\([^)]+\\)";
+
+    private static final Pattern PATTERN_BRACKETS = Pattern.compile(REGEX_BRACKETS);
+
+    @RegExp
+    private static final String REGEX_SUGGESTION = String.format("([^,(]|%s)+", REGEX_BRACKETS);
+
+    private static final Pattern PATTERN_SUGGESTION = Pattern.compile(REGEX_SUGGESTION);
+
+    private final String word;
+    private final boolean caseSensitive;
+    private final List<MisspellingSuggestion> suggestions;
+
+    public abstract ReplacementKind getReplacementKind();
+
+    protected Misspelling(String word, boolean caseSensitive, String comment) {
+        // Validate the word
+        validateMisspellingWord(word);
+
+        this.word = word;
+        this.caseSensitive = caseSensitive;
+        this.suggestions = parseComment(comment);
+
+        validateWordCase();
     }
 
-    @RegExp
-    String REGEX_BRACKETS = "\\([^)]+\\)";
+    void validateMisspellingWord(String word) {
+        // Throw an exception if anything is wrong
+    }
 
-    Pattern PATTERN_BRACKETS = Pattern.compile(REGEX_BRACKETS);
-
-    @RegExp
-    String REGEX_SUGGESTION = String.format("([^,(]|%s)+", REGEX_BRACKETS);
-
-    Pattern PATTERN_SUGGESTION = Pattern.compile(REGEX_SUGGESTION);
-
-    String getWord();
-
-    boolean isCaseSensitive();
-
-    List<MisspellingSuggestion> getSuggestions();
-
-    ReplacementKind getReplacementKind();
-
-    default void validateWordCase() {
-        if (!isCaseSensitive() && FinderUtils.startsWithUpperCase(getWord())) {
-            LogHolder.LOGGER.warn("Case-insensitive uppercase misspelling: " + getWord());
+    protected void validateWordCase() {
+        if (!this.caseSensitive && FinderUtils.startsWithUpperCase(this.word)) {
+            LOGGER.warn("Case-insensitive uppercase misspelling: " + this.word);
         }
     }
 
-    default List<MisspellingSuggestion> parseComment(String comment) {
+    private List<MisspellingSuggestion> parseComment(String comment) {
         List<MisspellingSuggestion> suggestionList = new ArrayList<>();
 
         try {
@@ -60,7 +74,7 @@ public interface Misspelling extends ListingItem {
                 throw new IllegalArgumentException("No suggestions");
             }
 
-            if (suggestionList.size() == 1 && suggestionList.get(0).getText().equals(getWord())) {
+            if (suggestionList.size() == 1 && suggestionList.get(0).getText().equals(this.word)) {
                 throw new IllegalArgumentException("Only suggestion is equal to the word");
             }
 

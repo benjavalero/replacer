@@ -4,7 +4,7 @@ import es.bvalero.replacer.finder.listing.FalsePositive;
 import org.springframework.stereotype.Component;
 
 @Component
-public class FalsePositiveParser implements ListingParser<FalsePositive> {
+public class FalsePositiveParser extends ListingParser<FalsePositive> {
 
     @Override
     public FalsePositive parseItemLine(String itemLine) {
