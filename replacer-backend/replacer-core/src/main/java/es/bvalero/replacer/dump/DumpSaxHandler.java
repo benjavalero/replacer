@@ -8,6 +8,7 @@ import es.bvalero.replacer.wikipedia.WikipediaNamespace;
 import es.bvalero.replacer.wikipedia.WikipediaTimestamp;
 import java.time.LocalDateTime;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.DefaultHandler;
 
@@ -15,6 +16,7 @@ import org.xml.sax.helpers.DefaultHandler;
  * Handler to parse a Wikipedia XML dump with SAX.
  * It will be instantiated for each parse job.
  */
+@Slf4j
 class DumpSaxHandler extends DefaultHandler {
 
     private static final String TITLE_TAG = "title";
@@ -111,7 +113,11 @@ class DumpSaxHandler extends DefaultHandler {
                 this.currentRedirect = true;
                 break;
             case PAGE_TAG:
-                indexPage();
+                try {
+                    indexPage();
+                } catch (Exception e) {
+                    LOGGER.error("Error parsing dump page", e);
+                }
 
                 // Reset current ID and Content to avoid duplicates
                 this.currentId = 0;

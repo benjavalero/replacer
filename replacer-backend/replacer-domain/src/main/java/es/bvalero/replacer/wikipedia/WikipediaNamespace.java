@@ -28,6 +28,7 @@ public enum WikipediaNamespace {
     PORTAL(100),
     WIKI_PROJECT(102),
     ANNEX(104),
+    TIMED_TEXT(710),
     MODULE(828);
 
     private static final Map<Integer, WikipediaNamespace> map = Arrays
