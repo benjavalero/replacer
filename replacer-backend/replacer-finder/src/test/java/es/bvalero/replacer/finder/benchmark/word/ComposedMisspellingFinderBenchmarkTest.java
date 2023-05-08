@@ -8,7 +8,7 @@ import es.bvalero.replacer.finder.Finder;
 import es.bvalero.replacer.finder.benchmark.BaseFinderBenchmark;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
 import es.bvalero.replacer.finder.listing.ComposedMisspelling;
-import es.bvalero.replacer.finder.listing.Misspelling;
+import es.bvalero.replacer.finder.listing.StandardMisspelling;
 import es.bvalero.replacer.finder.listing.find.ListingFinder;
 import es.bvalero.replacer.finder.listing.find.ListingOfflineFinder;
 import es.bvalero.replacer.finder.listing.load.ComposedMisspellingLoader;
@@ -39,8 +39,8 @@ class ComposedMisspellingFinderBenchmarkTest extends BaseFinderBenchmark {
 
         // Extract the misspelling words
         MisspellingComposedFinder misspellingComposedFinder = new MisspellingComposedFinder();
-        Map<String, Misspelling> misspellingMap = misspellingComposedFinder.buildMisspellingMap(
-            misspellings.stream().map(cm -> (Misspelling) cm).collect(Collectors.toSet())
+        Map<String, StandardMisspelling> misspellingMap = misspellingComposedFinder.buildMisspellingMap(
+            misspellings.stream().map(cm -> (StandardMisspelling) cm).collect(Collectors.toSet())
         );
         Set<String> words = misspellingMap.keySet();
 

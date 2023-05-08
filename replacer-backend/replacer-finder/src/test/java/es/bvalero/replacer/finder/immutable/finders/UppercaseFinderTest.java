@@ -5,8 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.Immutable;
-import es.bvalero.replacer.finder.listing.Misspelling;
 import es.bvalero.replacer.finder.listing.SimpleMisspelling;
+import es.bvalero.replacer.finder.listing.StandardMisspelling;
 import es.bvalero.replacer.finder.listing.load.SimpleMisspellingLoader;
 import java.beans.PropertyChangeEvent;
 import java.util.List;
@@ -102,7 +102,7 @@ class UppercaseFinderTest {
             misspelling5,
             misspelling6
         );
-        SetValuedMap<WikipediaLanguage, Misspelling> map = new HashSetValuedHashMap<>();
+        SetValuedMap<WikipediaLanguage, StandardMisspelling> map = new HashSetValuedHashMap<>();
         map.putAll(WikipediaLanguage.getDefault(), misspellingSet);
 
         Set<String> expectedWords = Set.of(misspelling1.getWord(), misspelling2.getWord(), misspelling5.getWord());

@@ -5,7 +5,7 @@ import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.ObsoleteReplacementType;
 import es.bvalero.replacer.finder.ObsoleteReplacementTypeObservable;
-import es.bvalero.replacer.finder.listing.Misspelling;
+import es.bvalero.replacer.finder.listing.StandardMisspelling;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -44,8 +44,8 @@ class ObsoleteMisspellingListener implements PropertyChangeListener, ObsoleteRep
     @SuppressWarnings("unchecked")
     public void propertyChange(PropertyChangeEvent evt) {
         // This should work for both types of misspellings
-        SetValuedMap<WikipediaLanguage, Misspelling> oldItems = (SetValuedMap<WikipediaLanguage, Misspelling>) evt.getOldValue();
-        SetValuedMap<WikipediaLanguage, Misspelling> newItems = (SetValuedMap<WikipediaLanguage, Misspelling>) evt.getNewValue();
+        SetValuedMap<WikipediaLanguage, StandardMisspelling> oldItems = (SetValuedMap<WikipediaLanguage, StandardMisspelling>) evt.getOldValue();
+        SetValuedMap<WikipediaLanguage, StandardMisspelling> newItems = (SetValuedMap<WikipediaLanguage, StandardMisspelling>) evt.getNewValue();
         this.changeSupport.firePropertyChange(
                 "types",
                 Collections.emptyList(),
@@ -55,17 +55,21 @@ class ObsoleteMisspellingListener implements PropertyChangeListener, ObsoleteRep
 
     @VisibleForTesting
     Collection<ObsoleteReplacementType> getObsoleteMisspellings(
-        SetValuedMap<WikipediaLanguage, Misspelling> oldItems,
-        SetValuedMap<WikipediaLanguage, Misspelling> newItems
+        SetValuedMap<WikipediaLanguage, StandardMisspelling> oldItems,
+        SetValuedMap<WikipediaLanguage, StandardMisspelling> newItems
     ) {
         List<ObsoleteReplacementType> types = new ArrayList<>();
         // Find the misspellings removed from the list to remove them from the database
         for (WikipediaLanguage lang : WikipediaLanguage.values()) {
-            Set<String> oldWords = oldItems.get(lang).stream().map(Misspelling::getWord).collect(Collectors.toSet());
+            Set<String> oldWords = oldItems
+                .get(lang)
+                .stream()
+                .map(StandardMisspelling::getWord)
+                .collect(Collectors.toSet());
             Set<String> newWords = newItems
                 .get(lang)
                 .stream()
-                .map(Misspelling::getWord)
+                .map(StandardMisspelling::getWord)
                 .collect(Collectors.toUnmodifiableSet());
             oldWords.removeAll(newWords);
             if (!oldWords.isEmpty()) {
@@ -73,7 +77,7 @@ class ObsoleteMisspellingListener implements PropertyChangeListener, ObsoleteRep
                     .get(lang)
                     .stream()
                     .findAny()
-                    .map(Misspelling::getReplacementKind)
+                    .map(StandardMisspelling::getReplacementKind)
                     .orElseThrow(IllegalArgumentException::new);
                 LOGGER.warn(
                     "Deleting from database obsolete misspellings: {} - {} - {}",

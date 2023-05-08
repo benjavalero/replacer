@@ -7,7 +7,7 @@ import es.bvalero.replacer.common.domain.ReplacementKind;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.listing.ComposedMisspelling;
-import es.bvalero.replacer.finder.listing.Misspelling;
+import es.bvalero.replacer.finder.listing.StandardMisspelling;
 import es.bvalero.replacer.finder.listing.load.ComposedMisspellingLoader;
 import es.bvalero.replacer.finder.util.AutomatonMatchFinder;
 import es.bvalero.replacer.finder.util.FinderUtils;
@@ -47,7 +47,7 @@ public class MisspellingComposedFinder extends MisspellingFinder implements Prop
     @Override
     @SuppressWarnings("unchecked")
     public void propertyChange(PropertyChangeEvent evt) {
-        buildMisspellingMaps((SetValuedMap<WikipediaLanguage, Misspelling>) evt.getNewValue());
+        buildMisspellingMaps((SetValuedMap<WikipediaLanguage, StandardMisspelling>) evt.getNewValue());
         this.automata =
             buildComposedMisspellingAutomata((SetValuedMap<WikipediaLanguage, ComposedMisspelling>) evt.getNewValue());
     }

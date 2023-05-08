@@ -1,18 +1,14 @@
 package es.bvalero.replacer.finder.listing;
 
-import es.bvalero.replacer.common.domain.ReplacementKind;
-import es.bvalero.replacer.finder.util.FinderUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.intellij.lang.annotations.RegExp;
 
-@Slf4j
 @Getter
 @EqualsAndHashCode
 public abstract class Misspelling {
@@ -31,27 +27,10 @@ public abstract class Misspelling {
     private final boolean caseSensitive;
     private final List<MisspellingSuggestion> suggestions;
 
-    public abstract ReplacementKind getReplacementKind();
-
     protected Misspelling(String word, boolean caseSensitive, String comment) {
-        // Validate the word
-        validateMisspellingWord(word);
-
         this.word = word;
         this.caseSensitive = caseSensitive;
         this.suggestions = parseComment(comment);
-
-        validateWordCase();
-    }
-
-    void validateMisspellingWord(String word) {
-        // Throw an exception if anything is wrong
-    }
-
-    protected void validateWordCase() {
-        if (!this.caseSensitive && FinderUtils.startsWithUpperCase(this.word)) {
-            LOGGER.warn("Case-insensitive uppercase misspelling: " + this.word);
-        }
     }
 
     private List<MisspellingSuggestion> parseComment(String comment) {

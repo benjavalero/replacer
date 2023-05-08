@@ -8,7 +8,7 @@ import es.bvalero.replacer.finder.Finder;
 import es.bvalero.replacer.finder.benchmark.BaseFinderBenchmark;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
 import es.bvalero.replacer.finder.immutable.finders.UppercaseFinder;
-import es.bvalero.replacer.finder.listing.Misspelling;
+import es.bvalero.replacer.finder.listing.StandardMisspelling;
 import es.bvalero.replacer.finder.listing.find.ListingFinder;
 import es.bvalero.replacer.finder.listing.find.ListingOfflineFinder;
 import es.bvalero.replacer.finder.listing.load.SimpleMisspellingLoader;
@@ -32,7 +32,7 @@ class UppercaseFinderBenchmarkTest extends BaseFinderBenchmark {
         SimpleMisspellingLoader simpleMisspellingLoader = new SimpleMisspellingLoader();
         ListingFinder listingFinder = new ListingOfflineFinder();
         simpleMisspellingLoader.setSimpleMisspellingParser(new SimpleMisspellingParser());
-        SetValuedMap<WikipediaLanguage, Misspelling> misspellings = new HashSetValuedHashMap<>();
+        SetValuedMap<WikipediaLanguage, StandardMisspelling> misspellings = new HashSetValuedHashMap<>();
         misspellings.putAll(
             WikipediaLanguage.getDefault(),
             simpleMisspellingLoader.parseListing(

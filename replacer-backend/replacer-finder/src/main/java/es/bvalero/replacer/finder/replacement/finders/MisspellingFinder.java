@@ -9,6 +9,7 @@ import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.Suggestion;
 import es.bvalero.replacer.finder.listing.Misspelling;
 import es.bvalero.replacer.finder.listing.MisspellingSuggestion;
+import es.bvalero.replacer.finder.listing.StandardMisspelling;
 import es.bvalero.replacer.finder.replacement.ReplacementFinder;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import java.util.*;
@@ -26,10 +27,12 @@ import org.springframework.boot.logging.LogLevel;
 public abstract class MisspellingFinder implements ReplacementFinder {
 
     // Derived from the misspelling set to access faster by word
-    private Map<WikipediaLanguage, Map<String, Misspelling>> misspellingMap = new EnumMap<>(WikipediaLanguage.class);
+    private Map<WikipediaLanguage, Map<String, StandardMisspelling>> misspellingMap = new EnumMap<>(
+        WikipediaLanguage.class
+    );
 
-    private Map<String, Misspelling> getMisspellingMap(WikipediaLanguage lang) {
-        final Map<String, Misspelling> langMap = this.misspellingMap.get(lang);
+    private Map<String, StandardMisspelling> getMisspellingMap(WikipediaLanguage lang) {
+        final Map<String, StandardMisspelling> langMap = this.misspellingMap.get(lang);
         if (langMap == null) {
             LOGGER.error("No misspelling map for lang {}", lang);
             return Collections.emptyMap();
@@ -39,9 +42,9 @@ public abstract class MisspellingFinder implements ReplacementFinder {
     }
 
     @Loggable(value = LogLevel.DEBUG, skipArgs = true, skipResult = true)
-    void buildMisspellingMaps(SetValuedMap<WikipediaLanguage, Misspelling> misspellings) {
+    void buildMisspellingMaps(SetValuedMap<WikipediaLanguage, StandardMisspelling> misspellings) {
         // Build a map to quick access the misspellings by word
-        final Map<WikipediaLanguage, Map<String, Misspelling>> map = new EnumMap<>(WikipediaLanguage.class);
+        final Map<WikipediaLanguage, Map<String, StandardMisspelling>> map = new EnumMap<>(WikipediaLanguage.class);
         for (WikipediaLanguage lang : misspellings.keySet()) {
             map.put(lang, buildMisspellingMap(misspellings.get(lang)));
         }
@@ -49,9 +52,9 @@ public abstract class MisspellingFinder implements ReplacementFinder {
     }
 
     @VisibleForTesting
-    public Map<String, Misspelling> buildMisspellingMap(Set<Misspelling> misspellings) {
+    public Map<String, StandardMisspelling> buildMisspellingMap(Set<StandardMisspelling> misspellings) {
         // Build a map to quick access the misspellings by word
-        final Map<String, Misspelling> map = new HashMap<>(misspellings.size());
+        final Map<String, StandardMisspelling> map = new HashMap<>(misspellings.size());
         misspellings.forEach(misspelling -> {
             final String word = misspelling.getWord();
             if (misspelling.isCaseSensitive()) {
@@ -87,18 +90,20 @@ public abstract class MisspellingFinder implements ReplacementFinder {
 
     String getSubtype(String text, WikipediaLanguage lang) {
         // We are sure in this point that the Misspelling exists
-        return findMisspellingByWord(text, lang).map(Misspelling::getWord).orElseThrow(IllegalArgumentException::new);
+        return findMisspellingByWord(text, lang)
+            .map(StandardMisspelling::getWord)
+            .orElseThrow(IllegalArgumentException::new);
     }
 
     // Return the misspelling related to the given word, or empty if there is no such misspelling.
-    private Optional<Misspelling> findMisspellingByWord(String word, WikipediaLanguage lang) {
+    private Optional<StandardMisspelling> findMisspellingByWord(String word, WikipediaLanguage lang) {
         return Optional.ofNullable(getMisspellingMap(lang).get(word));
     }
 
     // Transform the case of the suggestion, e.g. "Habia" -> "Había"
     private List<Suggestion> findSuggestions(String originalWord, WikipediaLanguage lang) {
         // We are sure in this point that the Misspelling exists
-        final Misspelling misspelling = findMisspellingByWord(originalWord, lang)
+        final StandardMisspelling misspelling = findMisspellingByWord(originalWord, lang)
             .orElseThrow(IllegalArgumentException::new);
         return applyMisspellingSuggestions(originalWord, misspelling);
     }
@@ -146,7 +151,7 @@ public abstract class MisspellingFinder implements ReplacementFinder {
         final String word = !caseSensitive && FinderUtils.startsWithUpperCase(replacement)
             ? FinderUtils.toLowerCase(replacement)
             : replacement;
-        Optional<Misspelling> misspelling = findMisspellingByWord(word, lang);
+        Optional<StandardMisspelling> misspelling = findMisspellingByWord(word, lang);
         StandardType type = null;
         if (
             misspelling.isPresent() &&

@@ -7,8 +7,8 @@ import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.FinderPriority;
 import es.bvalero.replacer.finder.immutable.ImmutableFinder;
-import es.bvalero.replacer.finder.listing.Misspelling;
 import es.bvalero.replacer.finder.listing.MisspellingSuggestion;
+import es.bvalero.replacer.finder.listing.StandardMisspelling;
 import es.bvalero.replacer.finder.listing.load.SimpleMisspellingLoader;
 import es.bvalero.replacer.finder.util.AutomatonMatchFinder;
 import es.bvalero.replacer.finder.util.FinderUtils;
@@ -79,13 +79,13 @@ public class UppercaseFinder implements ImmutableFinder, PropertyChangeListener 
     @Override
     @SuppressWarnings("unchecked")
     public void propertyChange(PropertyChangeEvent evt) {
-        this.uppercaseMap = getUppercaseWords((SetValuedMap<WikipediaLanguage, Misspelling>) evt.getNewValue());
+        this.uppercaseMap = getUppercaseWords((SetValuedMap<WikipediaLanguage, StandardMisspelling>) evt.getNewValue());
         this.uppercaseAutomata = buildUppercaseAutomata(this.uppercaseMap);
     }
 
     @VisibleForTesting
     public SetValuedMap<WikipediaLanguage, String> getUppercaseWords(
-        SetValuedMap<WikipediaLanguage, Misspelling> misspellings
+        SetValuedMap<WikipediaLanguage, StandardMisspelling> misspellings
     ) {
         final SetValuedMap<WikipediaLanguage, String> map = new HashSetValuedHashMap<>();
         for (WikipediaLanguage lang : misspellings.keySet()) {
@@ -97,15 +97,15 @@ public class UppercaseFinder implements ImmutableFinder, PropertyChangeListener 
     /**
      * Find the misspellings which start with uppercase and are case-sensitive
      */
-    private Set<String> getUppercaseWords(Set<Misspelling> misspellings) {
+    private Set<String> getUppercaseWords(Set<StandardMisspelling> misspellings) {
         return misspellings
             .stream()
             .filter(this::isUppercaseMisspelling)
-            .map(Misspelling::getWord)
+            .map(StandardMisspelling::getWord)
             .collect(Collectors.toSet());
     }
 
-    private boolean isUppercaseMisspelling(Misspelling misspelling) {
+    private boolean isUppercaseMisspelling(StandardMisspelling misspelling) {
         final String word = misspelling.getWord();
         // Any of the suggestions is the misspelling word in lowercase
         return (

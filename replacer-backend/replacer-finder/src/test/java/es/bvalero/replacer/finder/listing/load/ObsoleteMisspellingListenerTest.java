@@ -6,8 +6,8 @@ import es.bvalero.replacer.common.domain.ReplacementKind;
 import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.ObsoleteReplacementType;
-import es.bvalero.replacer.finder.listing.Misspelling;
 import es.bvalero.replacer.finder.listing.SimpleMisspelling;
+import es.bvalero.replacer.finder.listing.StandardMisspelling;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -23,11 +23,11 @@ class ObsoleteMisspellingListenerTest {
     void testGetObsoleteMisspellings() {
         SimpleMisspelling misspelling1 = SimpleMisspelling.ofCaseInsensitive("A", "B");
         SimpleMisspelling misspelling2 = SimpleMisspelling.ofCaseInsensitive("B", "C");
-        SetValuedMap<WikipediaLanguage, Misspelling> map1 = new HashSetValuedHashMap<>();
+        SetValuedMap<WikipediaLanguage, StandardMisspelling> map1 = new HashSetValuedHashMap<>();
         map1.putAll(WikipediaLanguage.getDefault(), List.of(misspelling1, misspelling2));
 
         SimpleMisspelling misspelling3 = SimpleMisspelling.ofCaseInsensitive("C", "D");
-        SetValuedMap<WikipediaLanguage, Misspelling> map2 = new HashSetValuedHashMap<>();
+        SetValuedMap<WikipediaLanguage, StandardMisspelling> map2 = new HashSetValuedHashMap<>();
         map2.putAll(WikipediaLanguage.getDefault(), List.of(misspelling2, misspelling3));
 
         Set<ObsoleteReplacementType> expected = Set.of(

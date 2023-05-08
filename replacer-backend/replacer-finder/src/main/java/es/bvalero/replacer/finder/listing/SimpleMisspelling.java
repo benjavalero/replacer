@@ -4,7 +4,7 @@ import es.bvalero.replacer.common.domain.ReplacementKind;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.TestOnly;
 
-public class SimpleMisspelling extends Misspelling implements ListingItem {
+public class SimpleMisspelling extends StandardMisspelling {
 
     private SimpleMisspelling(String word, boolean caseSensitive, String comment) {
         super(word, caseSensitive, comment);
@@ -30,11 +30,6 @@ public class SimpleMisspelling extends Misspelling implements ListingItem {
     @TestOnly
     public static SimpleMisspelling ofCaseSensitive(String word, String comment) {
         return of(word, true, comment);
-    }
-
-    @Override
-    public String getKey() {
-        return this.getWord();
     }
 
     @Override

@@ -7,8 +7,8 @@ import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.finder.Finder;
 import es.bvalero.replacer.finder.benchmark.BaseFinderBenchmark;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
-import es.bvalero.replacer.finder.listing.Misspelling;
 import es.bvalero.replacer.finder.listing.SimpleMisspelling;
+import es.bvalero.replacer.finder.listing.StandardMisspelling;
 import es.bvalero.replacer.finder.listing.find.ListingFinder;
 import es.bvalero.replacer.finder.listing.find.ListingOfflineFinder;
 import es.bvalero.replacer.finder.listing.load.SimpleMisspellingLoader;
@@ -39,8 +39,8 @@ class SimpleMisspellingFinderBenchmarkTest extends BaseFinderBenchmark {
 
         // Extract the misspelling words
         MisspellingSimpleFinder misspellingSimpleFinder = new MisspellingSimpleFinder();
-        Map<String, Misspelling> misspellingMap = misspellingSimpleFinder.buildMisspellingMap(
-            misspellings.stream().map(sm -> (Misspelling) sm).collect(Collectors.toSet())
+        Map<String, StandardMisspelling> misspellingMap = misspellingSimpleFinder.buildMisspellingMap(
+            misspellings.stream().map(sm -> (StandardMisspelling) sm).collect(Collectors.toSet())
         );
         Set<String> words = misspellingMap.keySet();
 
