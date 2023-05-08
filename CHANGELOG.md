@@ -1,6 +1,6 @@
 # Versions
 
-## 2.23.6 (??)
+## 2.23.6 (8 May 2023)
 - Fix regression: dropdown to change language
 - Fix: don't stop the whole indexing process if there is any error on a specific dump page
 
