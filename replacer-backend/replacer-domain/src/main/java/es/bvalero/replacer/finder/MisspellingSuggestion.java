@@ -1,4 +1,4 @@
-package es.bvalero.replacer.finder.listing;
+package es.bvalero.replacer.finder;
 
 import lombok.Value;
 import org.springframework.lang.Nullable;

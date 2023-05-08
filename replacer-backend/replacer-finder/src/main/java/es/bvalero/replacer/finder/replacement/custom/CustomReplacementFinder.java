@@ -1,6 +1,7 @@
 package es.bvalero.replacer.finder.replacement.custom;
 
 import es.bvalero.replacer.common.domain.CustomType;
+import es.bvalero.replacer.finder.CustomMisspelling;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.Suggestion;

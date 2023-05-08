@@ -1,9 +1,8 @@
-package es.bvalero.replacer.finder.replacement.custom;
+package es.bvalero.replacer.finder;
 
 import es.bvalero.replacer.common.domain.CustomType;
-import es.bvalero.replacer.finder.listing.Misspelling;
 
-class CustomMisspelling extends Misspelling {
+public class CustomMisspelling extends Misspelling {
 
     private CustomMisspelling(String word, boolean caseSensitive, String comment) {
         super(word, caseSensitive, comment);

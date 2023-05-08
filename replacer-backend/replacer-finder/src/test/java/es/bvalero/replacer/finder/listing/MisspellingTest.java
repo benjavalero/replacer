@@ -2,6 +2,7 @@ package es.bvalero.replacer.finder.listing;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import es.bvalero.replacer.finder.MisspellingSuggestion;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 

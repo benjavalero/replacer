@@ -1,6 +1,7 @@
 package es.bvalero.replacer.finder.listing;
 
 import es.bvalero.replacer.common.domain.ReplacementKind;
+import es.bvalero.replacer.finder.Misspelling;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import lombok.extern.slf4j.Slf4j;
 
