@@ -184,14 +184,14 @@ class PageComparatorTest {
         IndexedReplacement r1db = IndexedReplacement
             .builder()
             .pageKey(page.getPageKey())
-            .type(r1.getType().toStandardType())
+            .type((StandardType) r1.getType())
             .start(r1.getStart())
             .context(r1.getContext())
             .build();
         IndexedReplacement r2db = IndexedReplacement
             .builder()
             .pageKey(page.getPageKey())
-            .type(r2.getType().toStandardType())
+            .type((StandardType) r2.getType())
             .start(r2.getStart())
             .context(r2.getContext())
             .reviewer("User")
@@ -199,7 +199,7 @@ class PageComparatorTest {
         IndexedReplacement r3db = IndexedReplacement
             .builder()
             .pageKey(page.getPageKey())
-            .type(r3.getType().toStandardType())
+            .type((StandardType) r3.getType())
             .start(r3.getStart())
             .context(r3.getContext())
             .reviewer(REVIEWER_SYSTEM)
@@ -207,14 +207,14 @@ class PageComparatorTest {
         IndexedReplacement r4db = IndexedReplacement
             .builder()
             .pageKey(page.getPageKey())
-            .type(r4.getType().toStandardType())
+            .type((StandardType) r4.getType())
             .start(40)
             .context(r4.getContext())
             .build();
         IndexedReplacement r5db = IndexedReplacement
             .builder()
             .pageKey(page.getPageKey())
-            .type(r5.getType().toStandardType())
+            .type((StandardType) r5.getType())
             .start(r5.getStart())
             .context("50")
             .build();
@@ -274,7 +274,7 @@ class PageComparatorTest {
         IndexedReplacement r1db = IndexedReplacement
             .builder()
             .pageKey(page.getPageKey())
-            .type(r1.getType().toStandardType())
+            .type((StandardType) r1.getType())
             .start(r1.getStart())
             .context(r1.getContext())
             .build();
@@ -340,14 +340,14 @@ class PageComparatorTest {
         IndexedReplacement r1db = IndexedReplacement
             .builder()
             .pageKey(page.getPageKey())
-            .type(r1.getType().toStandardType())
+            .type((StandardType) r1.getType())
             .start(r1.getStart())
             .context("1")
             .build();
         IndexedReplacement r2db = IndexedReplacement
             .builder()
             .pageKey(page.getPageKey())
-            .type(r1.getType().toStandardType())
+            .type((StandardType) r1.getType())
             .start(r1.getStart())
             .context("")
             .reviewer("X")

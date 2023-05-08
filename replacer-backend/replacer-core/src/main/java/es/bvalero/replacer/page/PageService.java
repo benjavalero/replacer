@@ -1,6 +1,6 @@
 package es.bvalero.replacer.page;
 
-import es.bvalero.replacer.common.domain.ReplacementType;
+import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import java.time.LocalDate;
 import java.util.Collection;
@@ -39,10 +39,10 @@ public class PageService {
     }
 
     public Collection<PageKey> findPagesToReviewByNoType(WikipediaLanguage lang, int numResults) {
-        return pageRepository.findNotReviewed(lang, ReplacementType.NO_TYPE, numResults);
+        return pageRepository.findNotReviewed(lang, null, numResults);
     }
 
-    public Collection<PageKey> findPagesToReviewByType(WikipediaLanguage lang, ReplacementType type, int numResults) {
+    public Collection<PageKey> findPagesToReviewByType(WikipediaLanguage lang, StandardType type, int numResults) {
         return pageRepository.findNotReviewed(lang, type, numResults);
     }
 }

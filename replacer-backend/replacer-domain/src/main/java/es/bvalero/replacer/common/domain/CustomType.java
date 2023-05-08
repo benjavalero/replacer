@@ -1,47 +1,28 @@
 package es.bvalero.replacer.common.domain;
 
-import static org.apache.commons.lang3.StringUtils.EMPTY;
+import es.bvalero.replacer.finder.CustomMisspelling;
+import lombok.Getter;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Value;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.lang.NonNull;
-
-@Value
-@AllArgsConstructor(access = AccessLevel.PRIVATE) // Override the default constructor to constrain the access
-public class CustomType implements ReplacementType {
-
-    @Override
-    public ReplacementKind getKind() {
-        return ReplacementKind.CUSTOM;
-    }
-
-    @NonNull
-    String subtype;
+@Getter
+public class CustomType extends ReplacementType {
 
     boolean caseSensitive;
 
-    @EqualsAndHashCode.Exclude
-    @NonNull
-    String suggestion;
-
-    public static CustomType ofReviewed(String replacement, boolean caseSensitive) {
-        ReplacementType.validateSubtype(replacement);
-        return new CustomType(replacement, caseSensitive, EMPTY);
+    private CustomType(String subtype, boolean caseSensitive) {
+        super(ReplacementKind.CUSTOM, subtype);
+        this.caseSensitive = caseSensitive;
     }
 
-    public static CustomType of(String replacement, boolean caseSensitive, String suggestion) {
-        ReplacementType.validateSubtype(replacement);
-        if (StringUtils.isBlank(suggestion)) {
-            throw new IllegalArgumentException("Blank custom suggestion");
-        }
-        return new CustomType(replacement, caseSensitive, suggestion);
+    public static CustomType of(String replacement, boolean caseSensitive) {
+        return new CustomType(replacement, caseSensitive);
+    }
+
+    public static CustomType of(CustomMisspelling customMisspelling) {
+        return CustomType.of(customMisspelling.getWord(), customMisspelling.isCaseSensitive());
     }
 
     @Override
     public String toString() {
-        return String.format("%s - %s - %s", this.getKind(), this.subtype, this.caseSensitive);
+        return String.format("%s - %s - %s", this.getKind(), this.getSubtype(), this.caseSensitive);
     }
 }

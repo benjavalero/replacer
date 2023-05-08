@@ -2,7 +2,7 @@ package es.bvalero.replacer.finder.replacement.custom;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import es.bvalero.replacer.common.domain.CustomType;
+import es.bvalero.replacer.finder.CustomMisspelling;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import java.util.List;
@@ -17,7 +17,7 @@ class CustomReplacementFinderTest {
         String text = "Ax x.";
 
         CustomReplacementFinder customReplacementFinder = CustomReplacementFinder.of(
-            CustomType.of(replacement, false, suggestion)
+            CustomMisspelling.of(replacement, false, suggestion)
         );
         List<Replacement> replacements = customReplacementFinder.findList(text);
 
@@ -35,7 +35,7 @@ class CustomReplacementFinderTest {
         String text = "En parís París.";
 
         CustomReplacementFinder customReplacementFinder = CustomReplacementFinder.of(
-            CustomType.of(replacement, true, suggestion)
+            CustomMisspelling.of(replacement, true, suggestion)
         );
         List<Replacement> replacements = customReplacementFinder.findList(text);
 
@@ -52,7 +52,7 @@ class CustomReplacementFinderTest {
         String text = "En enero Enero.";
 
         CustomReplacementFinder customReplacementFinder = CustomReplacementFinder.of(
-            CustomType.of(replacement, true, suggestion)
+            CustomMisspelling.of(replacement, true, suggestion)
         );
         List<Replacement> replacements = customReplacementFinder.findList(text);
 
@@ -71,7 +71,7 @@ class CustomReplacementFinderTest {
         String text = "En taiwan Taiwan taiwán Taiwán.";
 
         CustomReplacementFinder customReplacementFinder = CustomReplacementFinder.of(
-            CustomType.of(replacement, true, suggestion)
+            CustomMisspelling.of(replacement, true, suggestion)
         );
         List<Replacement> replacements = customReplacementFinder.findList(text);
 
@@ -88,7 +88,7 @@ class CustomReplacementFinderTest {
         String text = "En mas Mas más Más.";
 
         CustomReplacementFinder customReplacementFinder = CustomReplacementFinder.of(
-            CustomType.of(replacement, false, suggestion)
+            CustomMisspelling.of(replacement, false, suggestion)
         );
         List<Replacement> replacements = customReplacementFinder.findList(text);
 
@@ -109,7 +109,7 @@ class CustomReplacementFinderTest {
         String text = "En Washington D.CX. y Washington D.C. y Madrid";
 
         CustomReplacementFinder customReplacementFinder = CustomReplacementFinder.of(
-            CustomType.of(replacement, false, suggestion)
+            CustomMisspelling.of(replacement, false, suggestion)
         );
         List<Replacement> replacements = customReplacementFinder.findList(text);
 
@@ -124,7 +124,7 @@ class CustomReplacementFinderTest {
         String text = "Curso on line.";
 
         CustomReplacementFinder customReplacementFinder = CustomReplacementFinder.of(
-            CustomType.of(replacement, false, suggestion)
+            CustomMisspelling.of(replacement, false, suggestion)
         );
         List<Replacement> replacements = customReplacementFinder.findList(text);
 

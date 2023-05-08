@@ -1,6 +1,5 @@
 package es.bvalero.replacer.page;
 
-import es.bvalero.replacer.common.domain.ReplacementType;
 import es.bvalero.replacer.common.domain.ResultCount;
 import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
@@ -31,10 +30,10 @@ public class PageCountService {
     }
 
     public int countPagesToReviewByNoType(WikipediaLanguage lang) {
-        return pageCountRepository.countNotReviewedByType(lang, ReplacementType.NO_TYPE);
+        return pageCountRepository.countNotReviewedByType(lang, null);
     }
 
-    public int countPagesToReviewByType(WikipediaLanguage lang, ReplacementType type) {
+    public int countPagesToReviewByType(WikipediaLanguage lang, StandardType type) {
         return pageCountRepository.countNotReviewedByType(lang, type);
     }
 }

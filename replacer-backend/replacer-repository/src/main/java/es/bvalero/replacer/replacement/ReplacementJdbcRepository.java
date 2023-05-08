@@ -3,7 +3,6 @@ package es.bvalero.replacer.replacement;
 import static es.bvalero.replacer.replacement.IndexedReplacement.REVIEWER_SYSTEM;
 
 import com.github.rozidan.springboot.logger.Loggable;
-import es.bvalero.replacer.common.domain.ReplacementType;
 import es.bvalero.replacer.common.domain.ResultCount;
 import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
@@ -22,6 +21,7 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSourceUtils;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -153,7 +153,7 @@ class ReplacementJdbcRepository implements ReplacementSaveRepository, Replacemen
     }
 
     @Override
-    public void updateReviewerByPageAndType(PageKey pageKey, ReplacementType type, String reviewer) {
+    public void updateReviewerByPageAndType(PageKey pageKey, @Nullable StandardType type, String reviewer) {
         String from = "UPDATE replacement SET reviewer=:reviewer ";
         String where = "WHERE lang = :lang AND page_id = :pageId AND reviewer IS NULL ";
         MapSqlParameterSource namedParameters = new MapSqlParameterSource()
@@ -161,7 +161,7 @@ class ReplacementJdbcRepository implements ReplacementSaveRepository, Replacemen
             .addValue("lang", pageKey.getLang().getCode())
             .addValue("pageId", pageKey.getPageId());
 
-        if (type.isStandardType()) {
+        if (type != null) {
             where += "AND kind = :kind AND subtype = :subtype";
             namedParameters =
                 namedParameters.addValue("kind", type.getKind().getCode()).addValue("subtype", type.getSubtype());

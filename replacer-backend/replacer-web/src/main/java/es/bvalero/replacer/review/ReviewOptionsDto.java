@@ -22,13 +22,13 @@ class ReviewOptionsDto {
     @Nullable
     private String subtype;
 
-    @Parameter(description = "Custom replacement suggestion", example = "todavía")
-    @Nullable
-    private String suggestion;
-
     @Parameter(description = "If the custom replacement is case-sensitive")
     @Nullable
     private Boolean cs;
+
+    @Parameter(description = "Custom replacement suggestion", example = "todavía")
+    @Nullable
+    private String suggestion;
 
     @Override
     public String toString() {
@@ -39,11 +39,11 @@ class ReviewOptionsDto {
         if (this.subtype != null) {
             list.add(this.subtype);
         }
-        if (this.suggestion != null) {
-            list.add(this.suggestion);
-        }
         if (this.cs != null) {
             list.add(Boolean.toString(this.cs));
+        }
+        if (this.suggestion != null) {
+            list.add(this.suggestion);
         }
 
         if (list.isEmpty()) {

@@ -2,13 +2,13 @@ package es.bvalero.replacer.replacement;
 
 import static es.bvalero.replacer.replacement.IndexedReplacement.REVIEWER_SYSTEM;
 
-import es.bvalero.replacer.common.domain.ReplacementType;
 import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.page.PageKey;
 import java.util.Collection;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 
 /**
@@ -38,7 +38,7 @@ public class ReplacementService {
         replacementSaveRepository.updateReviewerByType(lang, type, REVIEWER_SYSTEM);
     }
 
-    public void reviewReplacementsByPageAndType(PageKey pageKey, ReplacementType type) {
+    public void reviewReplacementsByPageAndType(PageKey pageKey, @Nullable StandardType type) {
         replacementSaveRepository.updateReviewerByPageAndType(pageKey, type, REVIEWER_SYSTEM);
     }
 

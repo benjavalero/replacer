@@ -1,7 +1,6 @@
 package es.bvalero.replacer.page;
 
 import com.github.rozidan.springboot.logger.Loggable;
-import es.bvalero.replacer.common.domain.ReplacementType;
 import es.bvalero.replacer.common.domain.ResultCount;
 import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
@@ -18,6 +17,7 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSourceUtils;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -102,12 +102,12 @@ class PageJdbcRepository implements PageRepository, PageCountRepository {
     }
 
     @Override
-    public Collection<PageKey> findNotReviewed(WikipediaLanguage lang, ReplacementType type, int numResults) {
+    public Collection<PageKey> findNotReviewed(WikipediaLanguage lang, @Nullable StandardType type, int numResults) {
         // For the sake of optimization, we use different queries to find by type or by no-type.
-        if (type.isNoType()) {
+        if (type == null) {
             return findNotReviewedByNoType(lang, numResults);
         } else {
-            return findNotReviewedByType(lang, type.toStandardType(), numResults);
+            return findNotReviewedByType(lang, type, numResults);
         }
     }
 
@@ -165,11 +165,11 @@ class PageJdbcRepository implements PageRepository, PageCountRepository {
     }
 
     @Override
-    public int countNotReviewedByType(WikipediaLanguage lang, ReplacementType type) {
+    public int countNotReviewedByType(WikipediaLanguage lang, @Nullable StandardType type) {
         // This approach is slightly better than using a JOIN with the page table
         String sql = "SELECT COUNT (DISTINCT page_id) FROM replacement WHERE lang = :lang AND reviewer IS NULL";
         MapSqlParameterSource namedParameters = new MapSqlParameterSource().addValue("lang", lang.getCode());
-        if (type.isStandardType()) {
+        if (type != null) {
             sql += " AND kind = :kind AND subtype = :subtype";
             namedParameters.addValue("kind", type.getKind().getCode()).addValue("subtype", type.getSubtype());
         }

@@ -1,5 +1,7 @@
 package es.bvalero.replacer.review;
 
+import es.bvalero.replacer.common.domain.WikipediaLanguage;
+import es.bvalero.replacer.finder.CustomMisspelling;
 import es.bvalero.replacer.finder.CustomReplacementFindService;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.page.PageKey;
@@ -35,6 +37,7 @@ class ReviewCustomFinder extends ReviewFinder {
     @Override
     PageSearchResult findPageIdsToReview(ReviewOptions options) {
         // Initialize search
+        WikipediaLanguage lang = options.getUser().getId().getLang();
         int offset = findCachedResult(options).map(PageSearchResult::getOffset).orElse(0);
 
         WikipediaSearchResult searchResult = findWikipediaResults(options, offset);
@@ -46,12 +49,7 @@ class ReviewCustomFinder extends ReviewFinder {
         // Make it out of the loop as we are not taking into account the offset for this
         List<Integer> reviewedIds = new ArrayList<>();
         if (!pageIds.isEmpty()) {
-            reviewedIds.addAll(
-                customReplacementService.findPagesReviewed(
-                    options.getUser().getId().getLang(),
-                    options.getType().toCustomType()
-                )
-            );
+            reviewedIds.addAll(customReplacementService.findPagesReviewed(lang, options.getCustomType()));
         }
 
         while (totalToReview >= 0) {
@@ -78,7 +76,7 @@ class ReviewCustomFinder extends ReviewFinder {
                 int nextOffset = offset + getCacheSize();
                 Collection<PageKey> pageKeys = pageIds
                     .stream()
-                    .map(pageId -> PageKey.of(options.getUser().getId().getLang(), pageId))
+                    .map(pageId -> PageKey.of(lang, pageId))
                     .collect(Collectors.toUnmodifiableSet());
                 return PageSearchResult.of(totalToReview, pageKeys, nextOffset);
             }
@@ -88,16 +86,18 @@ class ReviewCustomFinder extends ReviewFinder {
     }
 
     private WikipediaSearchResult findWikipediaResults(ReviewOptions options, int offset) {
+        WikipediaLanguage lang = options.getUser().getId().getLang();
+        CustomMisspelling customMisspelling = options.getCustomMisspelling();
         WikipediaSearchRequest searchRequest = WikipediaSearchRequest
             .builder()
-            .lang(options.getUser().getId().getLang())
+            .lang(lang)
             .namespaces(
                 this.indexableNamespaces.stream()
                     .map(WikipediaNamespace::valueOf)
                     .collect(Collectors.toUnmodifiableSet())
             )
-            .text(options.getType().getSubtype())
-            .caseSensitive(options.getType().toCustomType().isCaseSensitive())
+            .text(customMisspelling.getWord())
+            .caseSensitive(customMisspelling.isCaseSensitive())
             .offset(offset)
             .limit(getCacheSize())
             .build();
@@ -112,7 +112,7 @@ class ReviewCustomFinder extends ReviewFinder {
     ) {
         Collection<Replacement> customReplacements = customReplacementFindService.findCustomReplacements(
             page,
-            options.getType().toCustomType()
+            options.getCustomMisspelling()
         );
 
         // Add the custom replacements to the standard ones preferring the custom ones
@@ -125,7 +125,7 @@ class ReviewCustomFinder extends ReviewFinder {
         Replacement.removeNested(merged);
 
         // We run a filter to check there is at least one replacement of the requested type
-        Collection<Replacement> filtered = filterReplacementsByType(merged, options);
+        Collection<Replacement> filtered = filterReplacementsByType(merged, options.getCustomType());
         if (filtered.isEmpty()) {
             return Collections.emptyList();
         }

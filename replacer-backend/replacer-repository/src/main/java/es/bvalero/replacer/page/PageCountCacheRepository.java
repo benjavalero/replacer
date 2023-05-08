@@ -4,7 +4,6 @@ import static java.time.temporal.ChronoUnit.MINUTES;
 
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.LoadingCache;
-import es.bvalero.replacer.common.domain.ReplacementType;
 import es.bvalero.replacer.common.domain.ResultCount;
 import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
@@ -19,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Primary;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -65,12 +65,12 @@ public class PageCountCacheRepository implements PageCountRepository {
     }
 
     @Override
-    public int countNotReviewedByType(WikipediaLanguage lang, ReplacementType type) {
-        if (type.isNoType()) {
-            return this.pageCountRepository.countNotReviewedByType(lang, ReplacementType.NO_TYPE);
+    public int countNotReviewedByType(WikipediaLanguage lang, @Nullable StandardType type) {
+        if (type == null) {
+            return this.pageCountRepository.countNotReviewedByType(lang, null);
         } else {
             // Always return the cached count
-            return Objects.requireNonNullElse(this.getCounts(lang).get(type.toStandardType()), 0);
+            return Objects.requireNonNullElse(this.getCounts(lang).get(type), 0);
         }
     }
 

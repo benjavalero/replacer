@@ -1,6 +1,5 @@
 package es.bvalero.replacer.common.dto;
 
-import es.bvalero.replacer.common.domain.ReplacementType;
 import es.bvalero.replacer.common.domain.StandardType;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -15,7 +14,7 @@ import org.springframework.lang.NonNull;
 @ParameterObject
 @Data
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-@NoArgsConstructor
+@NoArgsConstructor(force = true)
 public class ReplacementTypeDto {
 
     @Schema(type = "integer", requiredMode = Schema.RequiredMode.REQUIRED)
@@ -30,7 +29,7 @@ public class ReplacementTypeDto {
         return new ReplacementTypeDto(replacementType.getKind().getCode(), replacementType.getSubtype());
     }
 
-    public StandardType toDomain() {
+    public StandardType toStandardType() {
         return StandardType.of(this.kind, this.subtype);
     }
 }

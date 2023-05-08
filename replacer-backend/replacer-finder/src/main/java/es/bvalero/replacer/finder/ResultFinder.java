@@ -1,7 +1,6 @@
 package es.bvalero.replacer.finder;
 
 import com.github.rozidan.springboot.logger.Loggable;
-import es.bvalero.replacer.common.domain.CustomType;
 import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.cosmetic.CosmeticFinderService;
@@ -50,11 +49,14 @@ class ResultFinder
     }
 
     @Override
-    public Collection<Replacement> findCustomReplacements(FinderPage page, CustomType customType) {
+    public Collection<Replacement> findCustomReplacements(FinderPage page, CustomMisspelling customMisspelling) {
         // There will usually be much more immutables found than results.
         // Thus, it is better to obtain first all the results, and then obtain the immutables one by one,
         // aborting in case the replacement list gets empty. This way we can avoid lots of immutable calculations.
-        Iterable<Replacement> customResults = customReplacementFinderService.findCustomReplacements(page, customType);
+        Iterable<Replacement> customResults = customReplacementFinderService.findCustomReplacements(
+            page,
+            customMisspelling
+        );
         Set<Replacement> sortedResults = new TreeSet<>();
         customResults.forEach(sortedResults::add);
         return filterResults(page, sortedResults);

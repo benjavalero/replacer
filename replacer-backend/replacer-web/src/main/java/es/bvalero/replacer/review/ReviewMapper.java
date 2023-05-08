@@ -88,7 +88,7 @@ class ReviewMapper {
     private ReviewedReplacement fromDto(int pageId, ReviewedReplacementDto reviewed, int offset, User user) {
         ReplacementKind replacementKind = ReplacementKind.valueOf(reviewed.getKind());
         ReplacementType replacementType = replacementKind == ReplacementKind.CUSTOM
-            ? CustomType.ofReviewed(reviewed.getSubtype(), Objects.requireNonNull(reviewed.getCs()))
+            ? CustomType.of(reviewed.getSubtype(), Objects.requireNonNull(reviewed.getCs()))
             : StandardType.of(replacementKind, reviewed.getSubtype());
         return ReviewedReplacement
             .builder()

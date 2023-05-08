@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import es.bvalero.replacer.common.domain.ReplacementKind;
-import es.bvalero.replacer.common.domain.ReplacementType;
 import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.Replacement;
@@ -100,9 +99,9 @@ class ReviewTypeFinderTest {
     @Test
     void testFindRandomPageToReviewTypeNotFiltered() {
         // 1 result in DB
-        when(pageCountService.countPagesToReviewByType(any(WikipediaLanguage.class), any(ReplacementType.class)))
+        when(pageCountService.countPagesToReviewByType(any(WikipediaLanguage.class), any(StandardType.class)))
             .thenReturn(1);
-        when(pageService.findPagesToReviewByType(any(WikipediaLanguage.class), any(ReplacementType.class), anyInt()))
+        when(pageService.findPagesToReviewByType(any(WikipediaLanguage.class), any(StandardType.class), anyInt()))
             .thenReturn(Collections.singletonList(randomPageKey))
             .thenReturn(Collections.emptyList());
 
@@ -121,9 +120,9 @@ class ReviewTypeFinderTest {
     @Test
     void testFindRandomPageToReviewTypeFiltered() {
         // 1 result in DB
-        when(pageCountService.countPagesToReviewByType(any(WikipediaLanguage.class), any(ReplacementType.class)))
+        when(pageCountService.countPagesToReviewByType(any(WikipediaLanguage.class), any(StandardType.class)))
             .thenReturn(1);
-        when(pageService.findPagesToReviewByType(any(WikipediaLanguage.class), any(ReplacementType.class), anyInt()))
+        when(pageService.findPagesToReviewByType(any(WikipediaLanguage.class), any(StandardType.class), anyInt()))
             .thenReturn(Collections.singletonList(randomPageKey));
 
         // The page exists in Wikipedia
@@ -146,9 +145,9 @@ class ReviewTypeFinderTest {
         // 3. Find a random page by type. In DB there is no page.
 
         // 2 results in DB by type, no results the second time.
-        when(pageCountService.countPagesToReviewByType(any(WikipediaLanguage.class), any(ReplacementType.class)))
+        when(pageCountService.countPagesToReviewByType(any(WikipediaLanguage.class), any(StandardType.class)))
             .thenReturn(2);
-        when(pageService.findPagesToReviewByType(any(WikipediaLanguage.class), any(ReplacementType.class), anyInt()))
+        when(pageService.findPagesToReviewByType(any(WikipediaLanguage.class), any(StandardType.class), anyInt()))
             .thenReturn(List.of(randomPageKey, randomPageKey2))
             .thenReturn(Collections.emptyList());
         // 1 result in DB by no type
@@ -237,9 +236,9 @@ class ReviewTypeFinderTest {
     @Test
     void testFindReplacementFilteredAndReviewed() {
         // 1 result in DB
-        when(pageCountService.countPagesToReviewByType(any(WikipediaLanguage.class), any(ReplacementType.class)))
+        when(pageCountService.countPagesToReviewByType(any(WikipediaLanguage.class), any(StandardType.class)))
             .thenReturn(1);
-        when(pageService.findPagesToReviewByType(any(WikipediaLanguage.class), any(ReplacementType.class), anyInt()))
+        when(pageService.findPagesToReviewByType(any(WikipediaLanguage.class), any(StandardType.class), anyInt()))
             .thenReturn(Collections.singletonList(randomPageKey))
             .thenReturn(Collections.emptyList());
 

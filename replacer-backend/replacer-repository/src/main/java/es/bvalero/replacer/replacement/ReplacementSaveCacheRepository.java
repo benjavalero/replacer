@@ -1,6 +1,5 @@
 package es.bvalero.replacer.replacement;
 
-import es.bvalero.replacer.common.domain.ReplacementType;
 import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.page.PageCountCacheRepository;
@@ -12,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Primary;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -61,9 +61,9 @@ class ReplacementSaveCacheRepository implements ReplacementSaveRepository {
     }
 
     @Override
-    public void updateReviewerByPageAndType(PageKey pageKey, ReplacementType type, String reviewer) {
-        if (type.isStandardType()) {
-            pageCountCacheRepository.decrementPageCount(pageKey.getLang(), type.toStandardType());
+    public void updateReviewerByPageAndType(PageKey pageKey, @Nullable StandardType type, String reviewer) {
+        if (type != null) {
+            pageCountCacheRepository.decrementPageCount(pageKey.getLang(), type);
         }
         // This is just to update the cache, the replacement must have been reindexed and should not exist in DB anymore.
         replacementSaveRepository.updateReviewerByPageAndType(pageKey, type, reviewer);

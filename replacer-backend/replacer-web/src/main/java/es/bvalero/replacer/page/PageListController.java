@@ -8,7 +8,6 @@ import es.bvalero.replacer.user.AuthenticatedUser;
 import es.bvalero.replacer.user.User;
 import es.bvalero.replacer.user.ValidateBotUser;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -39,7 +38,7 @@ public class PageListController {
         @AuthenticatedUser User user,
         @Valid ReplacementTypeDto request
     ) {
-        StandardType type = request.toDomain();
+        StandardType type = request.toStandardType();
         String titleList = StringUtils.join(
             pageFindByTypeService.findPagesToReviewByType(user.getId().getLang(), type),
             "\n"
@@ -52,7 +51,7 @@ public class PageListController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PostMapping(value = "/type/review")
     public void reviewPagesByType(@AuthenticatedUser User user, @Valid ReplacementTypeDto request) {
-        StandardType type = request.toDomain();
+        StandardType type = request.toStandardType();
         replacementService.reviewReplacementsByType(user.getId().getLang(), type);
     }
 }

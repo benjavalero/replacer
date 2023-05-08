@@ -2,6 +2,7 @@ package es.bvalero.replacer.review;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
+import es.bvalero.replacer.common.domain.ReplacementType;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.index.PageIndexService;
 import es.bvalero.replacer.page.PageKey;
@@ -103,7 +104,7 @@ abstract class ReviewFinder {
     }
 
     private String buildCacheKey(ReviewOptions options) {
-        return options.getType().toString();
+        return options.toString();
     }
 
     private boolean cacheContainsKey(String key) {
@@ -210,17 +211,20 @@ abstract class ReviewFinder {
         return replacements;
     }
 
-    // Apply different actions to the standard replacements depending on the type of review
-    abstract Collection<Replacement> decorateReplacements(
+    /* Apply different actions to the standard replacements depending on the type of review */
+    Collection<Replacement> decorateReplacements(
         WikipediaPage page,
         ReviewOptions options,
         Collection<Replacement> replacements
-    );
+    ) {
+        // No decoration by default
+        return replacements;
+    }
 
-    Collection<Replacement> filterReplacementsByType(Collection<Replacement> replacements, ReviewOptions options) {
+    Collection<Replacement> filterReplacementsByType(Collection<Replacement> replacements, ReplacementType type) {
         return replacements
             .stream()
-            .filter(replacement -> Objects.equals(replacement.getType(), options.getType()))
+            .filter(replacement -> Objects.equals(replacement.getType(), type))
             .collect(Collectors.toUnmodifiableList());
     }
 

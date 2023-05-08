@@ -1,6 +1,8 @@
 package es.bvalero.replacer.review;
 
+import es.bvalero.replacer.common.domain.CustomType;
 import es.bvalero.replacer.common.domain.ReplacementType;
+import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.page.IndexedPage;
 import es.bvalero.replacer.page.PageKey;
 import es.bvalero.replacer.replacement.IndexedCustomReplacement;
@@ -37,9 +39,10 @@ public class ReviewedReplacement {
     }
 
     IndexedReplacement toReplacement() {
+        assert type instanceof StandardType;
         return IndexedReplacement
             .builder()
-            .type(type.toStandardType())
+            .type((StandardType) type)
             .start(start)
             .context("") // It is not important when saving a review as we only want to update the reviewer
             .reviewer(reviewer)
@@ -48,9 +51,10 @@ public class ReviewedReplacement {
     }
 
     IndexedCustomReplacement toCustomReplacement() {
+        assert type instanceof CustomType;
         return IndexedCustomReplacement
             .builder()
-            .type(type.toCustomType())
+            .type((CustomType) type)
             .start(start)
             .reviewer(reviewer)
             .pageKey(pageKey)

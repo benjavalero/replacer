@@ -19,13 +19,13 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 class CustomReplacementFinder implements ReplacementFinder {
 
-    private final CustomType customType;
+    private final CustomMisspelling customMisspelling;
     private final Pattern pattern;
 
-    static CustomReplacementFinder of(CustomType customType) {
+    static CustomReplacementFinder of(CustomMisspelling customMisspelling) {
         return new CustomReplacementFinder(
-            customType,
-            buildCustomRegex(customType.getSubtype(), customType.isCaseSensitive())
+            customMisspelling,
+            buildCustomRegex(customMisspelling.getWord(), customMisspelling.isCaseSensitive())
         );
     }
 
@@ -54,7 +54,7 @@ class CustomReplacementFinder implements ReplacementFinder {
         return Replacement
             .builder()
             .page(page)
-            .type(this.customType)
+            .type(CustomType.of(this.customMisspelling))
             .start(start)
             .text(text)
             .suggestions(findSuggestions(text))
@@ -62,7 +62,6 @@ class CustomReplacementFinder implements ReplacementFinder {
     }
 
     private List<Suggestion> findSuggestions(String text) {
-        final CustomMisspelling misspelling = CustomMisspelling.of(this.customType);
-        return MisspellingFinder.applyMisspellingSuggestions(text, misspelling);
+        return MisspellingFinder.applyMisspellingSuggestions(text, this.customMisspelling);
     }
 }

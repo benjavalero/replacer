@@ -36,14 +36,15 @@ public class ReviewFindController {
     ) {
         Optional<Review> review;
         ReviewOptions options = ReviewMapper.fromDto(optionsDto, user);
-        if (options.getType().isNoType()) {
-            review = reviewNoTypeFinder.findRandomPageReview(options);
-        } else if (options.getType().isStandardType()) {
-            review = reviewTypeFinder.findRandomPageReview(options);
-        } else if (options.getType().isCustomType()) {
-            review = reviewCustomFinder.findRandomPageReview(options);
-        } else {
-            throw new IllegalStateException();
+        switch (options.getKind()) {
+            case EMPTY:
+                review = reviewNoTypeFinder.findRandomPageReview(options);
+                break;
+            case CUSTOM:
+                review = reviewCustomFinder.findRandomPageReview(options);
+                break;
+            default:
+                review = reviewTypeFinder.findRandomPageReview(options);
         }
         return review.map(ReviewMapper::toDto);
     }
@@ -58,14 +59,15 @@ public class ReviewFindController {
         Optional<Review> review;
         ReviewOptions options = ReviewMapper.fromDto(optionsDto, user);
         PageKey pageKey = PageKey.of(user.getId().getLang(), pageId);
-        if (options.getType().isNoType()) {
-            review = reviewNoTypeFinder.findPageReview(pageKey, options);
-        } else if (options.getType().isStandardType()) {
-            review = reviewTypeFinder.findPageReview(pageKey, options);
-        } else if (options.getType().isCustomType()) {
-            review = reviewCustomFinder.findPageReview(pageKey, options);
-        } else {
-            throw new IllegalStateException();
+        switch (options.getKind()) {
+            case EMPTY:
+                review = reviewNoTypeFinder.findPageReview(pageKey, options);
+                break;
+            case CUSTOM:
+                review = reviewCustomFinder.findPageReview(pageKey, options);
+                break;
+            default:
+                review = reviewTypeFinder.findPageReview(pageKey, options);
         }
         return review.map(ReviewMapper::toDto);
     }

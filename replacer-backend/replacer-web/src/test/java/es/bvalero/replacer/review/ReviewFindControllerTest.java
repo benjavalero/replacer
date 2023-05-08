@@ -174,8 +174,7 @@ class ReviewFindControllerTest {
         when(userService.findAuthenticatedUser(WikipediaLanguage.getDefault(), user.getAccessToken()))
             .thenReturn(Optional.of(user));
 
-        CustomType customType = CustomType.of("X", false, "Y");
-        ReviewOptions options = ReviewOptions.ofCustom(user, customType);
+        ReviewOptions options = ReviewOptions.ofCustom(user, "X", false, "Y");
         when(reviewCustomFinder.findRandomPageReview(options)).thenReturn(Optional.of(review));
 
         mvc
@@ -259,8 +258,7 @@ class ReviewFindControllerTest {
         when(userService.findAuthenticatedUser(WikipediaLanguage.getDefault(), user.getAccessToken()))
             .thenReturn(Optional.of(user));
 
-        CustomType customType = CustomType.of("X", true, "Y");
-        ReviewOptions options = ReviewOptions.ofCustom(user, customType);
+        ReviewOptions options = ReviewOptions.ofCustom(user, "X", true, "Y");
         PageKey pageKey = PageKey.of(WikipediaLanguage.getDefault(), 123);
         when(reviewCustomFinder.findPageReview(pageKey, options)).thenReturn(Optional.of(review));
 

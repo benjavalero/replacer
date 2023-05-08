@@ -6,15 +6,13 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Value;
-import org.springframework.lang.NonNull;
 
 /** Type of replacement found in the content of a page */
-@Value
-@AllArgsConstructor(access = AccessLevel.PRIVATE) // Override the default constructor to constrain the access
-public class StandardType implements ReplacementType {
+public class StandardType extends ReplacementType {
+
+    private StandardType(ReplacementKind kind, String subtype) {
+        super(kind, subtype);
+    }
 
     // Cache the known types to reuse them and save memory
     private static final Cache<String, StandardType> cachedPageIds = Caffeine
@@ -31,21 +29,13 @@ public class StandardType implements ReplacementType {
     private static final Set<String> STYLE_SUBTYPES = Set
         .of(DATE, ACUTE_O, CENTURY, COORDINATES, DEGREES)
         .stream()
-        .map(st -> st.subtype)
+        .map(ReplacementType::getSubtype)
         .collect(Collectors.toUnmodifiableSet());
-
-    @NonNull
-    ReplacementKind kind;
-
-    @NonNull
-    String subtype;
 
     public static StandardType of(ReplacementKind kind, String subtype) {
         if (kind == ReplacementKind.EMPTY || kind == ReplacementKind.CUSTOM) {
             throw new IllegalArgumentException("Invalid kind for a standard type: " + kind);
         }
-
-        ReplacementType.validateSubtype(subtype);
 
         // Validate style type
         assert STYLE_SUBTYPES != null;
@@ -87,6 +77,6 @@ public class StandardType implements ReplacementType {
 
     @Override
     public String toString() {
-        return String.format("%s - %s", this.kind, this.subtype);
+        return String.format("%s - %s", this.getKind(), this.getSubtype());
     }
 }

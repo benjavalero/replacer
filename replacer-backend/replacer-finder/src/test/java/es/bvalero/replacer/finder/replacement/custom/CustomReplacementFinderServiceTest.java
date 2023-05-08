@@ -2,7 +2,7 @@ package es.bvalero.replacer.finder.replacement.custom;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import es.bvalero.replacer.common.domain.CustomType;
+import es.bvalero.replacer.finder.CustomMisspelling;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.Replacement;
 import java.util.List;
@@ -26,7 +26,7 @@ class CustomReplacementFinderServiceTest {
     @Test
     void testFindCustomReplacements() {
         FinderPage page = FinderPage.of("A X C");
-        CustomType options = CustomType.of("X", true, "Y");
+        CustomMisspelling options = CustomMisspelling.of("X", true, "Y");
 
         List<Replacement> replacements = IterableUtils.toList(
             customReplacementFinderService.findCustomReplacements(page, options)
@@ -40,7 +40,7 @@ class CustomReplacementFinderServiceTest {
     @Test
     void testFindCustomReplacementsWithNoResults() {
         FinderPage page = FinderPage.of("AXC");
-        CustomType options = CustomType.of("X", true, "Y");
+        CustomMisspelling options = CustomMisspelling.of("X", true, "Y");
 
         List<Replacement> replacements = IterableUtils.toList(
             customReplacementFinderService.findCustomReplacements(page, options)
