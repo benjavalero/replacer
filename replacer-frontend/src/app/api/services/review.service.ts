@@ -56,14 +56,14 @@ export class ReviewService extends BaseService {
     subtype?: string;
 
     /**
-     * Custom replacement suggestion
-     */
-    suggestion?: string;
-
-    /**
      * If the custom replacement is case-sensitive
      */
     cs?: boolean;
+
+    /**
+     * Custom replacement suggestion
+     */
+    suggestion?: string;
     context?: HttpContext
   }
 ): Observable<StrictHttpResponse<FindReviewResponse>> {
@@ -73,8 +73,8 @@ export class ReviewService extends BaseService {
       rb.path('id', params.id, {});
       rb.query('kind', params.kind, {});
       rb.query('subtype', params.subtype, {});
-      rb.query('suggestion', params.suggestion, {});
       rb.query('cs', params.cs, {});
+      rb.query('suggestion', params.suggestion, {});
     }
 
     return this.http.request(rb.build({
@@ -117,14 +117,14 @@ export class ReviewService extends BaseService {
     subtype?: string;
 
     /**
-     * Custom replacement suggestion
-     */
-    suggestion?: string;
-
-    /**
      * If the custom replacement is case-sensitive
      */
     cs?: boolean;
+
+    /**
+     * Custom replacement suggestion
+     */
+    suggestion?: string;
     context?: HttpContext
   }
 ): Observable<FindReviewResponse> {
@@ -232,14 +232,14 @@ export class ReviewService extends BaseService {
     subtype?: string;
 
     /**
-     * Custom replacement suggestion
-     */
-    suggestion?: string;
-
-    /**
      * If the custom replacement is case-sensitive
      */
     cs?: boolean;
+
+    /**
+     * Custom replacement suggestion
+     */
+    suggestion?: string;
     context?: HttpContext
   }
 ): Observable<StrictHttpResponse<FindReviewResponse>> {
@@ -248,8 +248,8 @@ export class ReviewService extends BaseService {
     if (params) {
       rb.query('kind', params.kind, {});
       rb.query('subtype', params.subtype, {});
-      rb.query('suggestion', params.suggestion, {});
       rb.query('cs', params.cs, {});
+      rb.query('suggestion', params.suggestion, {});
     }
 
     return this.http.request(rb.build({
@@ -287,14 +287,14 @@ export class ReviewService extends BaseService {
     subtype?: string;
 
     /**
-     * Custom replacement suggestion
-     */
-    suggestion?: string;
-
-    /**
      * If the custom replacement is case-sensitive
      */
     cs?: boolean;
+
+    /**
+     * Custom replacement suggestion
+     */
+    suggestion?: string;
     context?: HttpContext
   }
 ): Observable<FindReviewResponse> {

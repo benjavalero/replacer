@@ -1,5 +1,6 @@
 package es.bvalero.replacer.review;
 
+import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.NOT_REQUIRED;
 import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
 
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -18,7 +19,10 @@ class ReviewedReplacementDto {
     @NotNull
     String subtype;
 
-    @Schema(description = "If the replacement is case-sensitive. Only for custom replacements.")
+    @Schema(
+        description = "If the replacement is case-sensitive. Only for custom replacements.",
+        requiredMode = NOT_REQUIRED
+    )
     @Nullable
     Boolean cs;
 

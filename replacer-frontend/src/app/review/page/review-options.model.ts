@@ -13,12 +13,12 @@ export interface ReviewOptions {
   subtype?: string;
 
   /**
-   * Custom replacement suggestion
-   */
-  suggestion?: string;
-
-  /**
    * If the custom replacement is case-sensitive
    */
   cs?: boolean;
+
+  /**
+   * Custom replacement suggestion
+   */
+  suggestion?: string;
 }

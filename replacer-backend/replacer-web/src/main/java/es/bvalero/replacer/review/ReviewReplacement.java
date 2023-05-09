@@ -1,5 +1,6 @@
 package es.bvalero.replacer.review;
 
+import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.NOT_REQUIRED;
 import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -7,6 +8,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.Collection;
 import lombok.Value;
 import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 
 @Schema(description = "Replacement to review")
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -26,6 +28,13 @@ class ReviewReplacement {
     @Schema(description = "Subtype of the replacement", example = "habia", requiredMode = REQUIRED)
     @NonNull
     String subtype;
+
+    @Schema(
+        description = "If the replacement is case-sensitive. Only for custom replacements.",
+        requiredMode = NOT_REQUIRED
+    )
+    @Nullable
+    Boolean cs;
 
     @Schema(description = "Collection of suggestions to fix the replacement", requiredMode = REQUIRED)
     @NonNull

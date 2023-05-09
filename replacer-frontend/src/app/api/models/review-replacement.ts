@@ -8,6 +8,11 @@ import { ReviewSuggestion } from './review-suggestion';
 export interface ReviewReplacement {
 
   /**
+   * If the replacement is case-sensitive. Only for custom replacements.
+   */
+  cs?: boolean;
+
+  /**
    * Kind of the replacement
    */
   kind: number;

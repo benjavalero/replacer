@@ -252,8 +252,7 @@ export class EditPageComponent implements OnChanges {
         const fixed: boolean = this.fixedReplacements[i]?.isFixed() || false;
         // Destructure to delete unneeded properties
         const { suggestions, text, ...reviewed } = replacement;
-        const cs = reviewed.kind === 1 ? this.options.cs : undefined;
-        reviewedReplacements.push({ ...reviewed, fixed: fixed, cs: cs } as ReviewedReplacement);
+        reviewedReplacements.push({ ...reviewed, fixed: fixed } as ReviewedReplacement);
       }
     }
     return reviewedReplacements;
