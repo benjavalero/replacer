@@ -15,7 +15,6 @@ import es.bvalero.replacer.page.PageKey;
 import es.bvalero.replacer.page.PageService;
 import es.bvalero.replacer.replacement.ReplacementService;
 import es.bvalero.replacer.user.User;
-import es.bvalero.replacer.user.UserRightsService;
 import es.bvalero.replacer.wikipedia.*;
 import java.util.Collections;
 import java.util.List;
@@ -83,9 +82,6 @@ class ReviewTypeFinderTest {
 
     @Mock
     private ReviewSectionFinder reviewSectionFinder;
-
-    @Mock
-    private UserRightsService userRightsService;
 
     @InjectMocks
     private ReviewTypeFinder pageReviewTypeSubtypeService;

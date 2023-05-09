@@ -2,16 +2,29 @@ package es.bvalero.replacer.common.domain;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
+import es.bvalero.replacer.user.User;
 import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+import lombok.Getter;
+import org.jetbrains.annotations.TestOnly;
 
 /** Type of replacement found in the content of a page */
+@Getter
 public class StandardType extends ReplacementType {
+
+    private boolean forBots = false;
+    private boolean forAdmin = false;
 
     private StandardType(ReplacementKind kind, String subtype) {
         super(kind, subtype);
+    }
+
+    private StandardType(ReplacementKind kind, String subtype, boolean forBots, boolean forAdmin) {
+        super(kind, subtype);
+        this.forBots = forBots;
+        this.forAdmin = forAdmin;
     }
 
     // Cache the known types to reuse them and save memory
@@ -50,6 +63,16 @@ public class StandardType extends ReplacementType {
         return getTypeFromCache(ReplacementKind.STYLE, subtype);
     }
 
+    @TestOnly
+    public static StandardType ofForBots(ReplacementKind kind, String subtype) {
+        return new StandardType(kind, subtype, true, false);
+    }
+
+    @TestOnly
+    public static StandardType ofForAdmin(ReplacementKind kind, String subtype) {
+        return new StandardType(kind, subtype, false, true);
+    }
+
     private static StandardType getTypeFromCache(ReplacementKind kind, String subtype) {
         assert cachedPageIds != null;
         return Objects.requireNonNull(
@@ -65,14 +88,8 @@ public class StandardType extends ReplacementType {
         return of(ReplacementKind.valueOf(kind), subtype);
     }
 
-    public boolean isForBots() {
-        // Note that this class is not an enumerate, so it must be compared with equals.
-        return false;
-    }
-
-    public boolean isForAdmin() {
-        // Note that this class is not an enumerate, so it must be compared with equals.
-        return false;
+    public boolean isTypeForbidden(User user) {
+        return (isForBots() && !user.isBot()) || (isForAdmin() && !user.isAdmin());
     }
 
     @Override

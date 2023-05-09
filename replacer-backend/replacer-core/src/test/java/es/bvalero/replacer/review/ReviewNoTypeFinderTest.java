@@ -13,7 +13,6 @@ import es.bvalero.replacer.page.PageCountService;
 import es.bvalero.replacer.page.PageKey;
 import es.bvalero.replacer.page.PageService;
 import es.bvalero.replacer.user.User;
-import es.bvalero.replacer.user.UserRightsService;
 import es.bvalero.replacer.wikipedia.WikipediaNamespace;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
 import es.bvalero.replacer.wikipedia.WikipediaPageRepository;
@@ -79,9 +78,6 @@ class ReviewNoTypeFinderTest {
 
     @Mock
     private ReviewSectionFinder reviewSectionFinder;
-
-    @Mock
-    private UserRightsService userRightsService;
 
     @InjectMocks
     private ReviewNoTypeFinder pageReviewNoTypeService;

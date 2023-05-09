@@ -5,7 +5,6 @@ import static org.mockito.Mockito.*;
 
 import es.bvalero.replacer.common.domain.*;
 import es.bvalero.replacer.user.User;
-import es.bvalero.replacer.user.UserRightsService;
 import java.util.Collection;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,9 +14,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 class PageCountServiceTest {
-
-    @Mock
-    private UserRightsService userRightsService;
 
     @Mock
     private PageCountRepository pageCountRepository;
@@ -37,7 +33,7 @@ class PageCountServiceTest {
 
         StandardType type = StandardType.DATE;
         ResultCount<StandardType> count = ResultCount.of(type, 100);
-        StandardType typeForBots = StandardType.CENTURY;
+        StandardType typeForBots = StandardType.ofForBots(ReplacementKind.SIMPLE, "x");
         ResultCount<StandardType> count2 = ResultCount.of(typeForBots, 200);
         Collection<ResultCount<StandardType>> counts = List.of(count, count2);
 
@@ -45,15 +41,10 @@ class PageCountServiceTest {
         User bot = User.buildTestBotUser();
 
         when(pageCountRepository.countPagesNotReviewedByType(lang)).thenReturn(counts);
-        when(userRightsService.isTypeForbidden(type, user)).thenReturn(false);
-        when(userRightsService.isTypeForbidden(typeForBots, user)).thenReturn(true);
-        when(userRightsService.isTypeForbidden(type, bot)).thenReturn(false);
-        when(userRightsService.isTypeForbidden(typeForBots, bot)).thenReturn(false);
 
         assertEquals(List.of(count), pageCountService.countPagesNotReviewedByType(user));
         assertEquals(counts, pageCountService.countPagesNotReviewedByType(bot));
 
-        verify(userRightsService, times(4)).isTypeForbidden(any(StandardType.class), any(User.class));
         verify(pageCountRepository, times(2)).countPagesNotReviewedByType(lang);
     }
 }

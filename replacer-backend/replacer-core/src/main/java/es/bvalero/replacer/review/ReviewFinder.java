@@ -3,11 +3,12 @@ package es.bvalero.replacer.review;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import es.bvalero.replacer.common.domain.ReplacementType;
+import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.index.PageIndexService;
 import es.bvalero.replacer.page.PageKey;
 import es.bvalero.replacer.page.PageService;
-import es.bvalero.replacer.user.UserRightsService;
+import es.bvalero.replacer.user.User;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
 import es.bvalero.replacer.wikipedia.WikipediaPageRepository;
 import java.util.*;
@@ -36,9 +37,6 @@ abstract class ReviewFinder {
 
     @Autowired
     private ReviewSectionFinder reviewSectionFinder;
-
-    @Autowired
-    private UserRightsService userRightsService;
 
     // Maximum 500 as it is used as page size when searching in Wikipedia
     // If too big it may produce out-of-memory issues with the cached page contents
@@ -233,8 +231,12 @@ abstract class ReviewFinder {
         ReviewOptions options
     ) {
         List<Replacement> toReview = new LinkedList<>(replacements);
-        toReview.removeIf(r -> userRightsService.isTypeForbidden(r.getType(), options.getUser()));
+        toReview.removeIf(r -> isTypeForbidden(r.getType(), options.getUser()));
         return toReview;
+    }
+
+    private boolean isTypeForbidden(ReplacementType type, User user) {
+        return type instanceof StandardType && ((StandardType) type).isTypeForbidden(user);
     }
 
     private Optional<Integer> findTotalResultsFromCache(ReviewOptions options) {

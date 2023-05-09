@@ -16,7 +16,6 @@ import es.bvalero.replacer.index.PageIndexService;
 import es.bvalero.replacer.page.PageKey;
 import es.bvalero.replacer.replacement.CustomReplacementService;
 import es.bvalero.replacer.user.User;
-import es.bvalero.replacer.user.UserRightsService;
 import es.bvalero.replacer.wikipedia.*;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -54,9 +53,6 @@ class ReviewCustomFinderTest {
 
     @Mock
     private PageIndexService pageIndexService;
-
-    @Mock
-    private UserRightsService userRightsService;
 
     @InjectMocks
     private ReviewCustomFinder pageReviewCustomService;
