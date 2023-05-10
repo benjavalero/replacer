@@ -49,17 +49,13 @@ ADD CONSTRAINT fk_page_id FOREIGN KEY (lang, page_id) REFERENCES page (lang, pag
 ALTER TABLE replacement
 ADD CONSTRAINT fk_replacement_kind FOREIGN KEY (kind) REFERENCES replacement_kind (code);
 
--- To find random pages and count the group replacements
-CREATE INDEX idx_count ON replacement (lang, reviewer, kind, subtype);
-CREATE INDEX idx_count_no_type ON replacement (lang, reviewer);
-
--- Statistics
-CREATE INDEX idx_reviewer ON replacement (reviewer);
+-- Find and count pages to review by subtype (or no type)
+-- According to the explain plan, we need to put the reviewer at first to use the index.
+CREATE INDEX idx_count ON replacement (reviewer, lang, kind, subtype);
 
 -- Dump index
-CREATE INDEX idx_dump ON replacement (lang, page_id, reviewer);
+CREATE INDEX idx_dump ON replacement (page_id, lang);
 
--- New table only for custom replacements
 CREATE TABLE custom (
     id INT UNSIGNED NOT NULL AUTO_INCREMENT,
     lang CHAR(2) CHARACTER SET ascii NOT NULL,

@@ -49,10 +49,12 @@ ADD CONSTRAINT fk_page_id FOREIGN KEY (lang, page_id) REFERENCES page (lang, pag
 ALTER TABLE replacement
 ADD CONSTRAINT fk_replacement_kind FOREIGN KEY (kind) REFERENCES replacement_kind (code);
 
-CREATE INDEX IF NOT EXISTS idx_count ON replacement (lang, reviewer, kind, subtype);
-CREATE INDEX IF NOT EXISTS idx_count_no_type ON replacement (lang, reviewer);
-CREATE INDEX IF NOT EXISTS idx_reviewer ON replacement (reviewer);
-CREATE INDEX IF NOT EXISTS idx_dump ON replacement (lang, page_id, reviewer);
+-- Find and count pages to review by subtype (or no type)
+-- According to the explain plan, we need to put the reviewer at first to use the index.
+CREATE INDEX IF NOT EXISTS idx_count ON replacement (reviewer, lang, kind, subtype);
+
+-- Dump index
+CREATE INDEX IF NOT EXISTS idx_dump ON replacement (page_id, lang);
 
 CREATE TABLE IF NOT EXISTS custom (
 	id INTEGER NOT NULL AUTO_INCREMENT,
@@ -60,7 +62,7 @@ CREATE TABLE IF NOT EXISTS custom (
 	page_id INTEGER NOT NULL,
 	replacement VARCHAR(100) NOT NULL,
 	cs TINYINT NOT NULL,
-	start INTEGER NOT NULL,
+	start INTEGER NOT NULL, -- So we can move items to the replacements table
 	reviewer VARCHAR(40) NOT NULL,
 	CONSTRAINT constraint_c PRIMARY KEY (id)
 );
