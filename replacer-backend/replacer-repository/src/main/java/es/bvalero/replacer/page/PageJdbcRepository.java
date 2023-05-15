@@ -191,7 +191,6 @@ class PageJdbcRepository implements PageRepository, PageCountRepository {
         return jdbcTemplate.queryForList(sql, namedParameters, String.class);
     }
 
-    @Loggable(value = LogLevel.TRACE, skipResult = true, warnOver = 20, warnUnit = TimeUnit.SECONDS)
     @Override
     public Collection<ResultCount<StandardType>> countPagesNotReviewedByType(WikipediaLanguage lang) {
         // Using the index this approach is better than executing several queries by kind
