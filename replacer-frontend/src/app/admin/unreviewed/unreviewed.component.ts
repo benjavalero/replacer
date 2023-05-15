@@ -4,7 +4,7 @@ import { RouterModule } from '@angular/router';
 import { Observable } from 'rxjs';
 import { UserConfigService } from 'src/app/core/user/user-config.service';
 import { PageCount } from '../../api/models/page-count';
-import { ReplacementService } from '../../api/services/replacement.service';
+import { ReplacementApiService } from '../../api/services/replacement-api.service';
 
 @Component({
   standalone: true,
@@ -16,10 +16,10 @@ import { ReplacementService } from '../../api/services/replacement.service';
 export class UnreviewedComponent implements OnInit {
   unreviewed$!: Observable<PageCount[]>;
 
-  constructor(private replacementService: ReplacementService, private userConfigService: UserConfigService) {}
+  constructor(private replacementApiService: ReplacementApiService, private userConfigService: UserConfigService) {}
 
   ngOnInit() {
-    this.unreviewed$ = this.replacementService.countNotReviewedGroupedByPage();
+    this.unreviewed$ = this.replacementApiService.countNotReviewedGroupedByPage();
   }
 
   get wikipediaUrl(): string {

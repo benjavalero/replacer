@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { DumpIndexingStatus } from '../../api/models/dump-indexing-status';
-import { DumpIndexingService } from '../../api/services/dump-indexing.service';
+import { DumpIndexingApiService } from '../../api/services/dump-indexing-api.service';
 import { DumpIndexingAdapterStatus } from './dump-indexing.model';
 
 @Injectable()
@@ -9,7 +9,7 @@ export class DumpIndexingAdapterService {
   // Initial state is null when there is no data yet
   readonly status$ = new Subject<DumpIndexingAdapterStatus | null>();
 
-  constructor(private dumpIndexingService: DumpIndexingService) {
+  constructor(private dumpIndexingApiService: DumpIndexingApiService) {
     this.refreshDumpIndexing();
   }
 
@@ -38,14 +38,14 @@ export class DumpIndexingAdapterService {
   }
 
   private getDumpIndexing$(): Observable<DumpIndexingStatus> {
-    return this.dumpIndexingService.getDumpIndexingStatus();
+    return this.dumpIndexingApiService.getDumpIndexingStatus();
   }
 
   startDumpIndexing$(): Observable<void> {
     // Empty the last indexation
     this.status$.next(null);
 
-    return this.dumpIndexingService.manualStartDumpIndexing();
+    return this.dumpIndexingApiService.manualStartDumpIndexing();
   }
 
   private formatDate(milliseconds?: number): Date | undefined {

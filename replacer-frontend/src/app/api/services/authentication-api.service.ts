@@ -16,7 +16,7 @@ import { VerifyAuthenticationRequest } from '../models/verify-authentication-req
 @Injectable({
   providedIn: 'root',
 })
-export class AuthenticationService extends BaseService {
+export class AuthenticationApiService extends BaseService {
   constructor(
     config: ApiConfiguration,
     http: HttpClient
@@ -45,7 +45,7 @@ export class AuthenticationService extends BaseService {
   }
 ): Observable<StrictHttpResponse<User>> {
 
-    const rb = new RequestBuilder(this.rootUrl, AuthenticationService.VerifyAuthenticationPath, 'post');
+    const rb = new RequestBuilder(this.rootUrl, AuthenticationApiService.VerifyAuthenticationPath, 'post');
     if (params) {
       rb.body(params.body, 'application/json');
     }
@@ -103,7 +103,7 @@ export class AuthenticationService extends BaseService {
   }
 ): Observable<StrictHttpResponse<InitiateAuthenticationResponse>> {
 
-    const rb = new RequestBuilder(this.rootUrl, AuthenticationService.InitiateAuthenticationPath, 'get');
+    const rb = new RequestBuilder(this.rootUrl, AuthenticationApiService.InitiateAuthenticationPath, 'get');
     if (params) {
     }
 

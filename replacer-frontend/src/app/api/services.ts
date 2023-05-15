@@ -1,6 +1,6 @@
-export { ReviewService } from './services/review.service';
-export { PagesService } from './services/pages.service';
-export { DumpIndexingService } from './services/dump-indexing.service';
-export { AuthenticationService } from './services/authentication.service';
-export { ReplacementService } from './services/replacement.service';
-export { AdministrationService } from './services/administration.service';
+export { ReviewApiService } from './services/review-api.service';
+export { PagesApiService } from './services/pages-api.service';
+export { DumpIndexingApiService } from './services/dump-indexing-api.service';
+export { AuthenticationApiService } from './services/authentication-api.service';
+export { ReplacementApiService } from './services/replacement-api.service';
+export { AdministrationApiService } from './services/administration-api.service';

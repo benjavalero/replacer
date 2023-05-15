@@ -14,7 +14,7 @@ import { PublicIp } from '../models/public-ip';
 @Injectable({
   providedIn: 'root',
 })
-export class AdministrationService extends BaseService {
+export class AdministrationApiService extends BaseService {
   constructor(
     config: ApiConfiguration,
     http: HttpClient
@@ -42,7 +42,7 @@ export class AdministrationService extends BaseService {
   }
 ): Observable<StrictHttpResponse<PublicIp>> {
 
-    const rb = new RequestBuilder(this.rootUrl, AdministrationService.GetPublicIpPath, 'get');
+    const rb = new RequestBuilder(this.rootUrl, AdministrationApiService.GetPublicIpPath, 'get');
     if (params) {
     }
 

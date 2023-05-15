@@ -14,7 +14,7 @@ import { KindCount } from '../models/kind-count';
 @Injectable({
   providedIn: 'root',
 })
-export class PagesService extends BaseService {
+export class PagesApiService extends BaseService {
   constructor(
     config: ApiConfiguration,
     http: HttpClient
@@ -52,7 +52,7 @@ export class PagesService extends BaseService {
   }
 ): Observable<StrictHttpResponse<void>> {
 
-    const rb = new RequestBuilder(this.rootUrl, PagesService.ReviewPagesByTypePath, 'post');
+    const rb = new RequestBuilder(this.rootUrl, PagesApiService.ReviewPagesByTypePath, 'post');
     if (params) {
       rb.query('kind', params.kind, {});
       rb.query('subtype', params.subtype, {});
@@ -130,7 +130,7 @@ export class PagesService extends BaseService {
   }
 ): Observable<StrictHttpResponse<string>> {
 
-    const rb = new RequestBuilder(this.rootUrl, PagesService.FindPagesToReviewByTypePath, 'get');
+    const rb = new RequestBuilder(this.rootUrl, PagesApiService.FindPagesToReviewByTypePath, 'get');
     if (params) {
       rb.query('kind', params.kind, {});
       rb.query('subtype', params.subtype, {});
@@ -198,7 +198,7 @@ export class PagesService extends BaseService {
   }
 ): Observable<StrictHttpResponse<Array<KindCount>>> {
 
-    const rb = new RequestBuilder(this.rootUrl, PagesService.CountPagesNotReviewedByTypePath, 'get');
+    const rb = new RequestBuilder(this.rootUrl, PagesApiService.CountPagesNotReviewedByTypePath, 'get');
     if (params) {
     }
 

@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { PublicIp } from '../../api/models/public-ip';
-import { AdministrationService } from '../../api/services/administration.service';
+import { AdministrationApiService } from '../../api/services/administration-api.service';
 
 @Component({
   standalone: true,
@@ -14,9 +14,9 @@ import { AdministrationService } from '../../api/services/administration.service
 export class PublicIpComponent implements OnInit {
   publicIp$!: Observable<PublicIp>;
 
-  constructor(private administrationService: AdministrationService) {}
+  constructor(private administrationApiService: AdministrationApiService) {}
 
   ngOnInit(): void {
-    this.publicIp$ = this.administrationService.getPublicIp();
+    this.publicIp$ = this.administrationApiService.getPublicIp();
   }
 }

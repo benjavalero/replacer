@@ -15,7 +15,7 @@ import { SaveReviewRequest } from '../models/save-review-request';
 @Injectable({
   providedIn: 'root',
 })
-export class ReviewService extends BaseService {
+export class ReviewApiService extends BaseService {
   constructor(
     config: ApiConfiguration,
     http: HttpClient
@@ -68,7 +68,7 @@ export class ReviewService extends BaseService {
   }
 ): Observable<StrictHttpResponse<FindReviewResponse>> {
 
-    const rb = new RequestBuilder(this.rootUrl, ReviewService.FindPageReviewByIdPath, 'get');
+    const rb = new RequestBuilder(this.rootUrl, ReviewApiService.FindPageReviewByIdPath, 'get');
     if (params) {
       rb.path('id', params.id, {});
       rb.query('kind', params.kind, {});
@@ -160,7 +160,7 @@ export class ReviewService extends BaseService {
   }
 ): Observable<StrictHttpResponse<void>> {
 
-    const rb = new RequestBuilder(this.rootUrl, ReviewService.SaveReviewPath, 'post');
+    const rb = new RequestBuilder(this.rootUrl, ReviewApiService.SaveReviewPath, 'post');
     if (params) {
       rb.path('id', params.id, {});
       rb.body(params.body, 'application/json');
@@ -244,7 +244,7 @@ export class ReviewService extends BaseService {
   }
 ): Observable<StrictHttpResponse<FindReviewResponse>> {
 
-    const rb = new RequestBuilder(this.rootUrl, ReviewService.FindRandomPageWithReplacementsPath, 'get');
+    const rb = new RequestBuilder(this.rootUrl, ReviewApiService.FindRandomPageWithReplacementsPath, 'get');
     if (params) {
       rb.query('kind', params.kind, {});
       rb.query('subtype', params.subtype, {});

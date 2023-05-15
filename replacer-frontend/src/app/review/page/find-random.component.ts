@@ -5,8 +5,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { FindReviewResponse } from '../../api/models/find-review-response';
 import { ReplacementType } from '../../api/models/replacement-type';
-import { ReplacementService } from '../../api/services/replacement.service';
-import { ReviewService } from '../../api/services/review.service';
+import { ReplacementApiService } from '../../api/services/replacement-api.service';
+import { ReviewApiService } from '../../api/services/review-api.service';
 import { AlertService } from '../../shared/alert/alert.service';
 import { EditPageComponent } from './edit-page.component';
 import { ReviewOptions } from './review-options.model';
@@ -39,8 +39,8 @@ export class FindRandomComponent implements OnInit {
 
   constructor(
     private alertService: AlertService,
-    private replacementsService: ReplacementService,
-    private reviewService: ReviewService,
+    private replacementApiService: ReplacementApiService,
+    private reviewApiService: ReviewApiService,
     private router: Router,
     private route: ActivatedRoute,
     private titleService: Title,
@@ -91,7 +91,7 @@ export class FindRandomComponent implements OnInit {
 
     this.alertService.addInfoMessage(msg);
 
-    this.reviewService.findRandomPageWithReplacements({ ...options }).subscribe({
+    this.reviewApiService.findRandomPageWithReplacements({ ...options }).subscribe({
       next: (review: FindReviewResponse) => {
         if (review) {
           this.manageReview(review, options);
@@ -116,7 +116,7 @@ export class FindRandomComponent implements OnInit {
   }
 
   private findPageReview(pageId: number, options: ReviewOptions): void {
-    this.reviewService.findPageReviewById({ ...options, id: pageId }).subscribe({
+    this.reviewApiService.findPageReviewById({ ...options, id: pageId }).subscribe({
       next: (review: FindReviewResponse) => {
         if (review) {
           this.manageReview(review, options);
@@ -183,7 +183,7 @@ export class FindRandomComponent implements OnInit {
 
   private validateCustomReplacement(options: ReviewOptions): void {
     const replacement = options.subtype!.trim();
-    this.replacementsService
+    this.replacementApiService
       .validateCustomReplacement({
         replacement: replacement,
         cs: options.cs!

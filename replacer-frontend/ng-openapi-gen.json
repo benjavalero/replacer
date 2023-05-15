@@ -2,5 +2,6 @@
   "$schema": "https://raw.githubusercontent.com/cyclosproject/ng-openapi-gen/master/ng-openapi-gen-schema.json",
   "input": "http://localhost:8080/v3/api-docs",
   "excludeParameters": ["Accept-Language"],
+  "serviceSuffix": "ApiService",
   "enumStyle": "alias"
 }

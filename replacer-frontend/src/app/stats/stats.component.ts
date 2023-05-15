@@ -4,7 +4,7 @@ import { Title } from '@angular/platform-browser';
 import { Observable } from 'rxjs';
 import { ReplacementCount } from '../api/models/replacement-count';
 import { ReviewerCount } from '../api/models/reviewer-count';
-import { ReplacementService } from '../api/services/replacement.service';
+import { ReplacementApiService } from '../api/services/replacement-api.service';
 import { UserConfigService } from '../core/user/user-config.service';
 import { AlertComponent } from '../shared/alert/alert.component';
 
@@ -22,7 +22,7 @@ export class StatsComponent implements OnInit {
   numReviewedGrouped$!: Observable<ReviewerCount[]>;
 
   constructor(
-    private replacementService: ReplacementService,
+    private replacementApiService: ReplacementApiService,
     private titleService: Title,
     private userConfigService: UserConfigService
   ) {}
@@ -32,12 +32,12 @@ export class StatsComponent implements OnInit {
 
     this.lang = this.userConfigService.lang;
 
-    this.numReviewed$ = this.replacementService.countReplacements({
+    this.numReviewed$ = this.replacementApiService.countReplacements({
       reviewed: true
     });
-    this.numNotReviewed$ = this.replacementService.countReplacements({
+    this.numNotReviewed$ = this.replacementApiService.countReplacements({
       reviewed: false
     });
-    this.numReviewedGrouped$ = this.replacementService.countReplacementsGroupedByReviewer();
+    this.numReviewedGrouped$ = this.replacementApiService.countReplacementsGroupedByReviewer();
   }
 }

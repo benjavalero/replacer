@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { KindCount } from '../../api/models/kind-count';
-import { PagesService } from '../../api/services/pages.service';
+import { PagesApiService } from '../../api/services/pages-api.service';
 
 @Injectable()
 export class ReplacementListService {
   readonly counts$ = new BehaviorSubject<KindCount[] | null>(null);
 
-  constructor(private pagesService: PagesService) {
+  constructor(private pagesApiService: PagesApiService) {
     // Service don't implement OnInit so all initialization must be done in the constructor
   }
 
@@ -16,7 +16,7 @@ export class ReplacementListService {
   }
 
   private findReplacementCounts$(): Observable<KindCount[]> {
-    return this.pagesService.countPagesNotReviewedByType();
+    return this.pagesApiService.countPagesNotReviewedByType();
   }
 
   private updateCounts(counts: KindCount[]): void {
@@ -27,7 +27,7 @@ export class ReplacementListService {
     // Remove the kind/subtype from the cache
     this.updateSubtypeCount(kind, subtype, 0);
 
-    return this.pagesService.reviewPagesByType({
+    return this.pagesApiService.reviewPagesByType({
       kind: kind,
       subtype: subtype
     });

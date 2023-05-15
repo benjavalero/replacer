@@ -9,7 +9,7 @@ import { ReviewPage } from '../../api/models/review-page';
 import { ReviewReplacement } from '../../api/models/review-replacement';
 import { ReviewedReplacement } from '../../api/models/reviewed-replacement';
 import { SaveReviewRequest } from '../../api/models/save-review-request';
-import { ReviewService } from '../../api/services/review.service';
+import { ReviewApiService } from '../../api/services/review-api.service';
 import { UserService } from '../../core/user/user.service';
 import { AlertComponent } from '../../shared/alert/alert.component';
 import { AlertService } from '../../shared/alert/alert.service';
@@ -44,7 +44,7 @@ export class EditPageComponent implements OnChanges {
   constructor(
     private alertService: AlertService,
     private userService: UserService,
-    private reviewService: ReviewService
+    private reviewApiService: ReviewApiService
   ) {}
 
   ngOnChanges() {
@@ -215,7 +215,7 @@ export class EditPageComponent implements OnChanges {
     } as SaveReviewRequest;
 
     // Call backend and delay the observable response
-    return this.reviewService.saveReview({
+    return this.reviewApiService.saveReview({
       id: page.pageId,
       body: saveReview
     });

@@ -4,12 +4,12 @@ import { NgModule, ModuleWithProviders, SkipSelf, Optional } from '@angular/core
 import { HttpClient } from '@angular/common/http';
 import { ApiConfiguration, ApiConfigurationParams } from './api-configuration';
 
-import { ReviewService } from './services/review.service';
-import { PagesService } from './services/pages.service';
-import { DumpIndexingService } from './services/dump-indexing.service';
-import { AuthenticationService } from './services/authentication.service';
-import { ReplacementService } from './services/replacement.service';
-import { AdministrationService } from './services/administration.service';
+import { ReviewApiService } from './services/review-api.service';
+import { PagesApiService } from './services/pages-api.service';
+import { DumpIndexingApiService } from './services/dump-indexing-api.service';
+import { AuthenticationApiService } from './services/authentication-api.service';
+import { ReplacementApiService } from './services/replacement-api.service';
+import { AdministrationApiService } from './services/administration-api.service';
 
 /**
  * Module that provides all services and configuration.
@@ -19,12 +19,12 @@ import { AdministrationService } from './services/administration.service';
   exports: [],
   declarations: [],
   providers: [
-    ReviewService,
-    PagesService,
-    DumpIndexingService,
-    AuthenticationService,
-    ReplacementService,
-    AdministrationService,
+    ReviewApiService,
+    PagesApiService,
+    DumpIndexingApiService,
+    AuthenticationApiService,
+    ReplacementApiService,
+    AdministrationApiService,
     ApiConfiguration
   ],
 })

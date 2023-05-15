@@ -14,7 +14,7 @@ import { DumpIndexingStatus } from '../models/dump-indexing-status';
 @Injectable({
   providedIn: 'root',
 })
-export class DumpIndexingService extends BaseService {
+export class DumpIndexingApiService extends BaseService {
   constructor(
     config: ApiConfiguration,
     http: HttpClient
@@ -42,7 +42,7 @@ export class DumpIndexingService extends BaseService {
   }
 ): Observable<StrictHttpResponse<DumpIndexingStatus>> {
 
-    const rb = new RequestBuilder(this.rootUrl, DumpIndexingService.GetDumpIndexingStatusPath, 'get');
+    const rb = new RequestBuilder(this.rootUrl, DumpIndexingApiService.GetDumpIndexingStatusPath, 'get');
     if (params) {
     }
 
@@ -98,7 +98,7 @@ export class DumpIndexingService extends BaseService {
   }
 ): Observable<StrictHttpResponse<void>> {
 
-    const rb = new RequestBuilder(this.rootUrl, DumpIndexingService.ManualStartDumpIndexingPath, 'post');
+    const rb = new RequestBuilder(this.rootUrl, DumpIndexingApiService.ManualStartDumpIndexingPath, 'post');
     if (params) {
     }
 

@@ -5,7 +5,7 @@ import { InitiateAuthenticationResponse } from '../../api/models/initiate-authen
 import { RequestToken } from '../../api/models/request-token';
 import { User } from '../../api/models/user';
 import { VerifyAuthenticationRequest } from '../../api/models/verify-authentication-request';
-import { AuthenticationService } from '../../api/services/authentication.service';
+import { AuthenticationApiService } from '../../api/services/authentication-api.service';
 import { UserService } from '../user/user.service';
 
 @Injectable({
@@ -15,10 +15,10 @@ export class LoginService {
   private readonly requestTokenKey = 'requestToken';
   private readonly redirectPathKey = 'redirectPath';
 
-  constructor(private authenticationService: AuthenticationService, private userService: UserService) {}
+  constructor(private authenticationApiService: AuthenticationApiService, private userService: UserService) {}
 
   getAuthenticationUrl$(): Observable<string> {
-    return this.authenticationService.initiateAuthentication().pipe(
+    return this.authenticationApiService.initiateAuthentication().pipe(
       map((token: InitiateAuthenticationResponse) => {
         // We keep the request token for further use on verification
         localStorage.setItem(this.requestTokenKey, JSON.stringify(token.requestToken));
@@ -44,7 +44,7 @@ export class LoginService {
   private authenticate$(oauthVerifier: string): Observable<User> {
     // At this point we can assert that the request token exists
     const requestToken: RequestToken = JSON.parse(localStorage.getItem(this.requestTokenKey)!);
-    return this.authenticationService.verifyAuthentication({
+    return this.authenticationApiService.verifyAuthentication({
       body: {
         oauthVerifier,
         requestToken
