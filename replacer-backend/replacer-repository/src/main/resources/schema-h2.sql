@@ -53,9 +53,6 @@ ADD CONSTRAINT fk_replacement_kind FOREIGN KEY (kind) REFERENCES replacement_kin
 -- According to the explain plan, we need to put the reviewer at first to use the index.
 CREATE INDEX IF NOT EXISTS idx_count ON replacement (reviewer, lang, kind, subtype);
 
--- Dump index
-CREATE INDEX IF NOT EXISTS idx_dump ON replacement (page_id, lang);
-
 CREATE TABLE IF NOT EXISTS custom (
 	id INTEGER NOT NULL AUTO_INCREMENT,
 	lang CHAR(2) NOT NULL,
