@@ -51,7 +51,7 @@ ADD CONSTRAINT fk_replacement_kind FOREIGN KEY (kind) REFERENCES replacement_kin
 
 -- Find and count pages to review by subtype (or no type)
 -- According to the explain plan, we need to put the reviewer at first to use the index.
-CREATE INDEX IF NOT EXISTS idx_count ON replacement (reviewer, lang, kind, subtype);
+CREATE INDEX IF NOT EXISTS idx_count ON replacement (reviewer, lang, kind, subtype, page_id);
 
 CREATE TABLE IF NOT EXISTS custom (
 	id INTEGER NOT NULL AUTO_INCREMENT,
