@@ -1,31 +1,25 @@
 /* tslint:disable */
 /* eslint-disable */
+import { HttpClient, HttpContext, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpResponse, HttpContext } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { filter, map } from 'rxjs/operators';
+
 import { BaseService } from '../base-service';
 import { ApiConfiguration } from '../api-configuration';
 import { StrictHttpResponse } from '../strict-http-response';
 import { RequestBuilder } from '../request-builder';
-import { Observable } from 'rxjs';
-import { map, filter } from 'rxjs/operators';
 
 import { FindReviewResponse } from '../models/find-review-response';
 import { SaveReviewRequest } from '../models/save-review-request';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class ReviewApiService extends BaseService {
-  constructor(
-    config: ApiConfiguration,
-    http: HttpClient
-  ) {
+  constructor(config: ApiConfiguration, http: HttpClient) {
     super(config, http);
   }
 
-  /**
-   * Path part for operation findPageReviewById
-   */
+  /** Path part for operation `findPageReviewById()` */
   static readonly FindPageReviewByIdPath = '/api/review/{id}';
 
   /**
@@ -38,36 +32,36 @@ export class ReviewApiService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  findPageReviewById$Response(params: {
+  findPageReviewById$Response(
+    params: {
 
     /**
      * Page ID
      */
-    id: number;
+      id: number;
 
     /**
      * Replacement kind code
      */
-    kind?: number;
+      kind?: number;
 
     /**
      * Replacement subtype
      */
-    subtype?: string;
+      subtype?: string;
 
     /**
      * If the custom replacement is case-sensitive
      */
-    cs?: boolean;
+      cs?: boolean;
 
     /**
      * Custom replacement suggestion
      */
-    suggestion?: string;
+      suggestion?: string;
+    },
     context?: HttpContext
-  }
-): Observable<StrictHttpResponse<FindReviewResponse>> {
-
+  ): Observable<StrictHttpResponse<FindReviewResponse>> {
     const rb = new RequestBuilder(this.rootUrl, ReviewApiService.FindPageReviewByIdPath, 'get');
     if (params) {
       rb.path('id', params.id, {});
@@ -77,12 +71,10 @@ export class ReviewApiService extends BaseService {
       rb.query('suggestion', params.suggestion, {});
     }
 
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json',
-      context: params?.context
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
+    return this.http.request(
+      rb.build({ responseType: 'json', accept: 'application/json', context })
+    ).pipe(
+      filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
       map((r: HttpResponse<any>) => {
         return r as StrictHttpResponse<FindReviewResponse>;
       })
@@ -94,49 +86,47 @@ export class ReviewApiService extends BaseService {
    *
    *
    *
-   * This method provides access to only to the response body.
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `findPageReviewById$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  findPageReviewById(params: {
+  findPageReviewById(
+    params: {
 
     /**
      * Page ID
      */
-    id: number;
+      id: number;
 
     /**
      * Replacement kind code
      */
-    kind?: number;
+      kind?: number;
 
     /**
      * Replacement subtype
      */
-    subtype?: string;
+      subtype?: string;
 
     /**
      * If the custom replacement is case-sensitive
      */
-    cs?: boolean;
+      cs?: boolean;
 
     /**
      * Custom replacement suggestion
      */
-    suggestion?: string;
+      suggestion?: string;
+    },
     context?: HttpContext
-  }
-): Observable<FindReviewResponse> {
-
-    return this.findPageReviewById$Response(params).pipe(
-      map((r: StrictHttpResponse<FindReviewResponse>) => r.body as FindReviewResponse)
+  ): Observable<FindReviewResponse> {
+    return this.findPageReviewById$Response(params, context).pipe(
+      map((r: StrictHttpResponse<FindReviewResponse>): FindReviewResponse => r.body)
     );
   }
 
-  /**
-   * Path part for operation saveReview
-   */
+  /** Path part for operation `saveReview()` */
   static readonly SaveReviewPath = '/api/review/{id}';
 
   /**
@@ -149,29 +139,27 @@ export class ReviewApiService extends BaseService {
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  saveReview$Response(params: {
+  saveReview$Response(
+    params: {
 
     /**
      * Page ID
      */
-    id: number;
+      id: number;
+      body: SaveReviewRequest
+    },
     context?: HttpContext
-    body: SaveReviewRequest
-  }
-): Observable<StrictHttpResponse<void>> {
-
+  ): Observable<StrictHttpResponse<void>> {
     const rb = new RequestBuilder(this.rootUrl, ReviewApiService.SaveReviewPath, 'post');
     if (params) {
       rb.path('id', params.id, {});
       rb.body(params.body, 'application/json');
     }
 
-    return this.http.request(rb.build({
-      responseType: 'text',
-      accept: '*/*',
-      context: params?.context
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
+    return this.http.request(
+      rb.build({ responseType: 'text', accept: '*/*', context })
+    ).pipe(
+      filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
       map((r: HttpResponse<any>) => {
         return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
       })
@@ -183,30 +171,28 @@ export class ReviewApiService extends BaseService {
    *
    *
    *
-   * This method provides access to only to the response body.
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `saveReview$Response()` instead.
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  saveReview(params: {
+  saveReview(
+    params: {
 
     /**
      * Page ID
      */
-    id: number;
+      id: number;
+      body: SaveReviewRequest
+    },
     context?: HttpContext
-    body: SaveReviewRequest
-  }
-): Observable<void> {
-
-    return this.saveReview$Response(params).pipe(
-      map((r: StrictHttpResponse<void>) => r.body as void)
+  ): Observable<void> {
+    return this.saveReview$Response(params, context).pipe(
+      map((r: StrictHttpResponse<void>): void => r.body)
     );
   }
 
-  /**
-   * Path part for operation findRandomPageWithReplacements
-   */
+  /** Path part for operation `findRandomPageWithReplacements()` */
   static readonly FindRandomPageWithReplacementsPath = '/api/review/random';
 
   /**
@@ -219,31 +205,31 @@ export class ReviewApiService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  findRandomPageWithReplacements$Response(params?: {
+  findRandomPageWithReplacements$Response(
+    params?: {
 
     /**
      * Replacement kind code
      */
-    kind?: number;
+      kind?: number;
 
     /**
      * Replacement subtype
      */
-    subtype?: string;
+      subtype?: string;
 
     /**
      * If the custom replacement is case-sensitive
      */
-    cs?: boolean;
+      cs?: boolean;
 
     /**
      * Custom replacement suggestion
      */
-    suggestion?: string;
+      suggestion?: string;
+    },
     context?: HttpContext
-  }
-): Observable<StrictHttpResponse<FindReviewResponse>> {
-
+  ): Observable<StrictHttpResponse<FindReviewResponse>> {
     const rb = new RequestBuilder(this.rootUrl, ReviewApiService.FindRandomPageWithReplacementsPath, 'get');
     if (params) {
       rb.query('kind', params.kind, {});
@@ -252,12 +238,10 @@ export class ReviewApiService extends BaseService {
       rb.query('suggestion', params.suggestion, {});
     }
 
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json',
-      context: params?.context
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
+    return this.http.request(
+      rb.build({ responseType: 'json', accept: 'application/json', context })
+    ).pipe(
+      filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
       map((r: HttpResponse<any>) => {
         return r as StrictHttpResponse<FindReviewResponse>;
       })
@@ -269,38 +253,38 @@ export class ReviewApiService extends BaseService {
    *
    *
    *
-   * This method provides access to only to the response body.
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `findRandomPageWithReplacements$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  findRandomPageWithReplacements(params?: {
+  findRandomPageWithReplacements(
+    params?: {
 
     /**
      * Replacement kind code
      */
-    kind?: number;
+      kind?: number;
 
     /**
      * Replacement subtype
      */
-    subtype?: string;
+      subtype?: string;
 
     /**
      * If the custom replacement is case-sensitive
      */
-    cs?: boolean;
+      cs?: boolean;
 
     /**
      * Custom replacement suggestion
      */
-    suggestion?: string;
+      suggestion?: string;
+    },
     context?: HttpContext
-  }
-): Observable<FindReviewResponse> {
-
-    return this.findRandomPageWithReplacements$Response(params).pipe(
-      map((r: StrictHttpResponse<FindReviewResponse>) => r.body as FindReviewResponse)
+  ): Observable<FindReviewResponse> {
+    return this.findRandomPageWithReplacements$Response(params, context).pipe(
+      map((r: StrictHttpResponse<FindReviewResponse>): FindReviewResponse => r.body)
     );
   }
 

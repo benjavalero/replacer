@@ -1,5 +1,4 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { Routes } from '@angular/router';
 import { AdminComponent } from './admin/admin.component';
 import { LoginComponent } from './core/authentication/login.component';
 import { OAuthResponseComponent } from './core/authentication/oauth-response.component';
@@ -11,7 +10,7 @@ import { ReplacementListComponent } from './review/replacement-list/replacement-
 import { ReplacementListService } from './review/replacement-list/replacement-list.service';
 import { StatsComponent } from './stats/stats.component';
 
-const routes: Routes = [
+export const routes: Routes = [
   { path: '', component: OAuthResponseComponent },
   { path: 'login', component: LoginComponent },
   { path: 'dashboard', component: DashboardComponent, canActivate: [AuthenticationGuard] },
@@ -42,13 +41,3 @@ const routes: Routes = [
   { path: 'stats', component: StatsComponent, canActivate: [AuthenticationGuard] },
   { path: '**', redirectTo: '/dashboard', pathMatch: 'full' }
 ];
-
-@NgModule({
-  imports: [
-    RouterModule.forRoot(routes, {
-      onSameUrlNavigation: 'reload'
-    })
-  ],
-  exports: [RouterModule]
-})
-export class AppRoutingModule {}

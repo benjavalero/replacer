@@ -9,10 +9,10 @@ export interface SubtypeCount {
   /**
    * Count of pages to review containing this subtype
    */
-  'c': number;
+  c: number;
 
   /**
    * Replacement subtype
    */
-  's': string;
+  s: string;
 }

@@ -1,33 +1,27 @@
 /* tslint:disable */
 /* eslint-disable */
+import { HttpClient, HttpContext, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpResponse, HttpContext } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { filter, map } from 'rxjs/operators';
+
 import { BaseService } from '../base-service';
 import { ApiConfiguration } from '../api-configuration';
 import { StrictHttpResponse } from '../strict-http-response';
 import { RequestBuilder } from '../request-builder';
-import { Observable } from 'rxjs';
-import { map, filter } from 'rxjs/operators';
 
 import { PageCount } from '../models/page-count';
 import { ReplacementCount } from '../models/replacement-count';
 import { ReplacementType } from '../models/replacement-type';
 import { ReviewerCount } from '../models/reviewer-count';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class ReplacementApiService extends BaseService {
-  constructor(
-    config: ApiConfiguration,
-    http: HttpClient
-  ) {
+  constructor(config: ApiConfiguration, http: HttpClient) {
     super(config, http);
   }
 
-  /**
-   * Path part for operation countReplacementsGroupedByReviewer
-   */
+  /** Path part for operation `countReplacementsGroupedByReviewer()` */
   static readonly CountReplacementsGroupedByReviewerPath = '/api/replacement/user/count';
 
   /**
@@ -40,21 +34,19 @@ export class ReplacementApiService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  countReplacementsGroupedByReviewer$Response(params?: {
+  countReplacementsGroupedByReviewer$Response(
+    params?: {
+    },
     context?: HttpContext
-  }
-): Observable<StrictHttpResponse<Array<ReviewerCount>>> {
-
+  ): Observable<StrictHttpResponse<Array<ReviewerCount>>> {
     const rb = new RequestBuilder(this.rootUrl, ReplacementApiService.CountReplacementsGroupedByReviewerPath, 'get');
     if (params) {
     }
 
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json',
-      context: params?.context
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
+    return this.http.request(
+      rb.build({ responseType: 'json', accept: 'application/json', context })
+    ).pipe(
+      filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
       map((r: HttpResponse<any>) => {
         return r as StrictHttpResponse<Array<ReviewerCount>>;
       })
@@ -66,24 +58,22 @@ export class ReplacementApiService extends BaseService {
    *
    *
    *
-   * This method provides access to only to the response body.
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `countReplacementsGroupedByReviewer$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  countReplacementsGroupedByReviewer(params?: {
+  countReplacementsGroupedByReviewer(
+    params?: {
+    },
     context?: HttpContext
-  }
-): Observable<Array<ReviewerCount>> {
-
-    return this.countReplacementsGroupedByReviewer$Response(params).pipe(
-      map((r: StrictHttpResponse<Array<ReviewerCount>>) => r.body as Array<ReviewerCount>)
+  ): Observable<Array<ReviewerCount>> {
+    return this.countReplacementsGroupedByReviewer$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Array<ReviewerCount>>): Array<ReviewerCount> => r.body)
     );
   }
 
-  /**
-   * Path part for operation validateCustomReplacement
-   */
+  /** Path part for operation `validateCustomReplacement()` */
   static readonly ValidateCustomReplacementPath = '/api/replacement/type/validate';
 
   /**
@@ -96,33 +86,31 @@ export class ReplacementApiService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  validateCustomReplacement$Response(params: {
+  validateCustomReplacement$Response(
+    params: {
 
     /**
      * Replacement to validate
      */
-    replacement: string;
+      replacement: string;
 
     /**
      * If the custom replacement is case-sensitive
      */
-    cs: boolean;
+      cs: boolean;
+    },
     context?: HttpContext
-  }
-): Observable<StrictHttpResponse<ReplacementType>> {
-
+  ): Observable<StrictHttpResponse<ReplacementType>> {
     const rb = new RequestBuilder(this.rootUrl, ReplacementApiService.ValidateCustomReplacementPath, 'get');
     if (params) {
       rb.query('replacement', params.replacement, {});
       rb.query('cs', params.cs, {});
     }
 
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json',
-      context: params?.context
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
+    return this.http.request(
+      rb.build({ responseType: 'json', accept: 'application/json', context })
+    ).pipe(
+      filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
       map((r: HttpResponse<any>) => {
         return r as StrictHttpResponse<ReplacementType>;
       })
@@ -134,34 +122,32 @@ export class ReplacementApiService extends BaseService {
    *
    *
    *
-   * This method provides access to only to the response body.
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `validateCustomReplacement$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  validateCustomReplacement(params: {
+  validateCustomReplacement(
+    params: {
 
     /**
      * Replacement to validate
      */
-    replacement: string;
+      replacement: string;
 
     /**
      * If the custom replacement is case-sensitive
      */
-    cs: boolean;
+      cs: boolean;
+    },
     context?: HttpContext
-  }
-): Observable<ReplacementType> {
-
-    return this.validateCustomReplacement$Response(params).pipe(
-      map((r: StrictHttpResponse<ReplacementType>) => r.body as ReplacementType)
+  ): Observable<ReplacementType> {
+    return this.validateCustomReplacement$Response(params, context).pipe(
+      map((r: StrictHttpResponse<ReplacementType>): ReplacementType => r.body)
     );
   }
 
-  /**
-   * Path part for operation countNotReviewedGroupedByPage
-   */
+  /** Path part for operation `countNotReviewedGroupedByPage()` */
   static readonly CountNotReviewedGroupedByPagePath = '/api/replacement/page/count';
 
   /**
@@ -174,21 +160,19 @@ export class ReplacementApiService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  countNotReviewedGroupedByPage$Response(params?: {
+  countNotReviewedGroupedByPage$Response(
+    params?: {
+    },
     context?: HttpContext
-  }
-): Observable<StrictHttpResponse<Array<PageCount>>> {
-
+  ): Observable<StrictHttpResponse<Array<PageCount>>> {
     const rb = new RequestBuilder(this.rootUrl, ReplacementApiService.CountNotReviewedGroupedByPagePath, 'get');
     if (params) {
     }
 
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json',
-      context: params?.context
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
+    return this.http.request(
+      rb.build({ responseType: 'json', accept: 'application/json', context })
+    ).pipe(
+      filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
       map((r: HttpResponse<any>) => {
         return r as StrictHttpResponse<Array<PageCount>>;
       })
@@ -200,24 +184,22 @@ export class ReplacementApiService extends BaseService {
    *
    *
    *
-   * This method provides access to only to the response body.
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `countNotReviewedGroupedByPage$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  countNotReviewedGroupedByPage(params?: {
+  countNotReviewedGroupedByPage(
+    params?: {
+    },
     context?: HttpContext
-  }
-): Observable<Array<PageCount>> {
-
-    return this.countNotReviewedGroupedByPage$Response(params).pipe(
-      map((r: StrictHttpResponse<Array<PageCount>>) => r.body as Array<PageCount>)
+  ): Observable<Array<PageCount>> {
+    return this.countNotReviewedGroupedByPage$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Array<PageCount>>): Array<PageCount> => r.body)
     );
   }
 
-  /**
-   * Path part for operation countReplacements
-   */
+  /** Path part for operation `countReplacements()` */
   static readonly CountReplacementsPath = '/api/replacement/count';
 
   /**
@@ -230,27 +212,25 @@ export class ReplacementApiService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  countReplacements$Response(params: {
+  countReplacements$Response(
+    params: {
 
     /**
      * Filter by reviewed/unreviewed replacements
      */
-    reviewed: boolean;
+      reviewed: boolean;
+    },
     context?: HttpContext
-  }
-): Observable<StrictHttpResponse<ReplacementCount>> {
-
+  ): Observable<StrictHttpResponse<ReplacementCount>> {
     const rb = new RequestBuilder(this.rootUrl, ReplacementApiService.CountReplacementsPath, 'get');
     if (params) {
       rb.query('reviewed', params.reviewed, {});
     }
 
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json',
-      context: params?.context
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
+    return this.http.request(
+      rb.build({ responseType: 'json', accept: 'application/json', context })
+    ).pipe(
+      filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
       map((r: HttpResponse<any>) => {
         return r as StrictHttpResponse<ReplacementCount>;
       })
@@ -262,23 +242,23 @@ export class ReplacementApiService extends BaseService {
    *
    *
    *
-   * This method provides access to only to the response body.
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `countReplacements$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  countReplacements(params: {
+  countReplacements(
+    params: {
 
     /**
      * Filter by reviewed/unreviewed replacements
      */
-    reviewed: boolean;
+      reviewed: boolean;
+    },
     context?: HttpContext
-  }
-): Observable<ReplacementCount> {
-
-    return this.countReplacements$Response(params).pipe(
-      map((r: StrictHttpResponse<ReplacementCount>) => r.body as ReplacementCount)
+  ): Observable<ReplacementCount> {
+    return this.countReplacements$Response(params, context).pipe(
+      map((r: StrictHttpResponse<ReplacementCount>): ReplacementCount => r.body)
     );
   }
 
