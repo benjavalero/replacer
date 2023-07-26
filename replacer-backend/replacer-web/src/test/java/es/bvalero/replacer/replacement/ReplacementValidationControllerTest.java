@@ -1,6 +1,7 @@
 package es.bvalero.replacer.replacement;
 
 import static org.hamcrest.Matchers.is;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -12,9 +13,10 @@ import es.bvalero.replacer.WebMvcConfiguration;
 import es.bvalero.replacer.common.domain.ReplacementKind;
 import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
+import es.bvalero.replacer.common.util.WebUtils;
 import es.bvalero.replacer.finder.ReplacementTypeMatchService;
-import es.bvalero.replacer.user.UserService;
 import java.util.Optional;
+import javax.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,17 +34,20 @@ class ReplacementValidationControllerTest {
     @Autowired
     private MockMvc mvc;
 
-    @MockBean
-    private UserService userService;
-
     @Autowired
     private ObjectMapper objectMapper;
+
+    @MockBean
+    private WebUtils webUtils;
 
     @MockBean
     private ReplacementTypeMatchService replacementTypeMatchService;
 
     @Test
     void testValidateCustomReplacement() throws Exception {
+        WikipediaLanguage lang = WikipediaLanguage.getDefault();
+        when(webUtils.getLanguageHeader(any(HttpServletRequest.class))).thenReturn(lang);
+
         final String replacement = "Africa";
         when(replacementTypeMatchService.findMatchingReplacementType(WikipediaLanguage.getDefault(), replacement, true))
             .thenReturn(Optional.of(StandardType.of(ReplacementKind.SIMPLE, replacement)));
@@ -63,6 +68,9 @@ class ReplacementValidationControllerTest {
 
     @Test
     void testValidateCustomReplacementEmpty() throws Exception {
+        WikipediaLanguage lang = WikipediaLanguage.getDefault();
+        when(webUtils.getLanguageHeader(any(HttpServletRequest.class))).thenReturn(lang);
+
         final String replacement = "African";
         when(replacementTypeMatchService.findMatchingReplacementType(WikipediaLanguage.getDefault(), replacement, true))
             .thenReturn(Optional.empty());

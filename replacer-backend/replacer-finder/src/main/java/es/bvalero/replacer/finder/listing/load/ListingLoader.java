@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.SetValuedMap;
 import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
 import org.jetbrains.annotations.VisibleForTesting;
+import org.slf4j.MDC;
 
 // Use an abstract class to include the logic to fire events on item changes
 @Slf4j
@@ -38,11 +39,14 @@ abstract class ListingLoader<T extends ListingItem> {
     }
 
     public final void load() {
+        MDC.put("user", "system");
         LOGGER.debug("Load {} listings...", getLabel());
         try {
             setItems(findItemsForAllLanguages());
         } catch (ReplacerException e) {
             LOGGER.error("Error finding {} items in Wikipedia", getLabel(), e);
+        } finally {
+            MDC.remove("user");
         }
     }
 

@@ -8,13 +8,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import es.bvalero.replacer.WebMvcConfiguration;
 import es.bvalero.replacer.common.domain.*;
+import es.bvalero.replacer.common.util.WebUtils;
 import es.bvalero.replacer.user.AccessToken;
 import es.bvalero.replacer.user.User;
-import es.bvalero.replacer.user.UserService;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Optional;
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +33,7 @@ class PageCountControllerTest {
     private MockMvc mvc;
 
     @MockBean
-    private UserService userService;
+    private WebUtils webUtils;
 
     @MockBean
     private PageCountService pageCountService;
@@ -41,8 +41,7 @@ class PageCountControllerTest {
     @Test
     void testFindReplacementCount() throws Exception {
         User user = User.buildTestUser();
-        when(userService.findAuthenticatedUser(WikipediaLanguage.getDefault(), user.getAccessToken()))
-            .thenReturn(Optional.of(user));
+        when(webUtils.getAuthenticatedUser(any(HttpServletRequest.class))).thenReturn(user);
 
         StandardType type = StandardType.of(ReplacementKind.SIMPLE, "Y");
         ResultCount<StandardType> count = ResultCount.of(type, 100);

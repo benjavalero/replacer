@@ -10,14 +10,15 @@ import es.bvalero.replacer.WebMvcConfiguration;
 import es.bvalero.replacer.common.domain.ReplacementKind;
 import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
+import es.bvalero.replacer.common.util.WebUtils;
 import es.bvalero.replacer.page.PageKey;
 import es.bvalero.replacer.user.AccessToken;
 import es.bvalero.replacer.user.User;
-import es.bvalero.replacer.user.UserService;
+import es.bvalero.replacer.user.UserId;
 import es.bvalero.replacer.wikipedia.*;
 import java.util.List;
-import java.util.Optional;
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -61,7 +62,7 @@ class ReviewSaveControllerTest {
     private ObjectMapper objectMapper;
 
     @MockBean
-    private UserService userService;
+    private WebUtils webUtils;
 
     @MockBean
     private ReviewSaveService reviewSaveService;
@@ -88,8 +89,7 @@ class ReviewSaveControllerTest {
     @Test
     void testSaveWithChanges() throws Exception {
         User user = User.buildTestUser();
-        when(userService.findAuthenticatedUser(WikipediaLanguage.getDefault(), user.getAccessToken()))
-            .thenReturn(Optional.of(user));
+        when(webUtils.getAuthenticatedUser(any(HttpServletRequest.class))).thenReturn(user);
 
         mvc
             .perform(
@@ -108,8 +108,7 @@ class ReviewSaveControllerTest {
     @Test
     void testSaveWithNoChanges() throws Exception {
         User user = User.buildTestUser();
-        when(userService.findAuthenticatedUser(WikipediaLanguage.getDefault(), user.getAccessToken()))
-            .thenReturn(Optional.of(user));
+        when(webUtils.getAuthenticatedUser(any(HttpServletRequest.class))).thenReturn(user);
 
         request.getPage().setContent(EMPTY_CONTENT);
 
@@ -131,8 +130,7 @@ class ReviewSaveControllerTest {
     @Test
     void testPageIdMismatch() throws Exception {
         User user = User.buildTestUser();
-        when(userService.findAuthenticatedUser(WikipediaLanguage.getDefault(), user.getAccessToken()))
-            .thenReturn(Optional.of(user));
+        when(webUtils.getAuthenticatedUser(any(HttpServletRequest.class))).thenReturn(user);
 
         mvc
             .perform(
@@ -149,14 +147,17 @@ class ReviewSaveControllerTest {
 
     @Test
     void testPageLanguageMismatch() throws Exception {
-        User user = User.buildTestUser();
-        when(userService.findAuthenticatedUser(WikipediaLanguage.getDefault(), user.getAccessToken()))
-            .thenReturn(Optional.of(user));
+        // Build a standard user but with Galician language
+        // As the page language in the request is Spanish
+        UserId userId = UserId.of(WikipediaLanguage.GALICIAN, "x");
+        AccessToken accessToken = AccessToken.of("a", "b");
+        User user = User.builder().id(userId).accessToken(accessToken).hasRights(true).build();
+        when(webUtils.getAuthenticatedUser(any(HttpServletRequest.class))).thenReturn(user);
 
         mvc
             .perform(
                 post("/api/review/123")
-                    .header(HttpHeaders.ACCEPT_LANGUAGE, "en")
+                    .header(HttpHeaders.ACCEPT_LANGUAGE, "gl")
                     .cookie(new Cookie(AccessToken.COOKIE_NAME, user.getAccessToken().toCookieValue()))
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(request))
@@ -169,8 +170,7 @@ class ReviewSaveControllerTest {
     @Test
     void testPageNotValidEmptyContent() throws Exception {
         User user = User.buildTestUser();
-        when(userService.findAuthenticatedUser(WikipediaLanguage.getDefault(), user.getAccessToken()))
-            .thenReturn(Optional.of(user));
+        when(webUtils.getAuthenticatedUser(any(HttpServletRequest.class))).thenReturn(user);
 
         request.getPage().setContent("");
 
@@ -190,8 +190,7 @@ class ReviewSaveControllerTest {
     @Test
     void testSaveWithChangesWithConflict() throws Exception {
         User user = User.buildTestUser();
-        when(userService.findAuthenticatedUser(WikipediaLanguage.getDefault(), user.getAccessToken()))
-            .thenReturn(Optional.of(user));
+        when(webUtils.getAuthenticatedUser(any(HttpServletRequest.class))).thenReturn(user);
 
         doThrow(WikipediaConflictException.class)
             .when(reviewSaveService)
@@ -214,8 +213,7 @@ class ReviewSaveControllerTest {
     @Test
     void testSaveWithChangesNotAuthorizedWikipedia() throws Exception {
         User user = User.buildTestUser();
-        when(userService.findAuthenticatedUser(WikipediaLanguage.getDefault(), user.getAccessToken()))
-            .thenReturn(Optional.of(user));
+        when(webUtils.getAuthenticatedUser(any(HttpServletRequest.class))).thenReturn(user);
 
         doThrow(new WikipediaException("mwoauth-invalid-authorization"))
             .when(reviewSaveService)
@@ -238,8 +236,7 @@ class ReviewSaveControllerTest {
     @Test
     void testSaveWithChangesWikipediaException() throws Exception {
         User user = User.buildTestUser();
-        when(userService.findAuthenticatedUser(WikipediaLanguage.getDefault(), user.getAccessToken()))
-            .thenReturn(Optional.of(user));
+        when(webUtils.getAuthenticatedUser(any(HttpServletRequest.class))).thenReturn(user);
 
         doThrow(WikipediaException.class)
             .when(reviewSaveService)

@@ -9,15 +9,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import es.bvalero.replacer.WebMvcConfiguration;
 import es.bvalero.replacer.common.domain.ResultCount;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
+import es.bvalero.replacer.common.util.WebUtils;
 import es.bvalero.replacer.page.IndexedPage;
 import es.bvalero.replacer.page.PageKey;
 import es.bvalero.replacer.user.AccessToken;
 import es.bvalero.replacer.user.User;
-import es.bvalero.replacer.user.UserService;
 import es.bvalero.replacer.user.ValidateUserAspect;
 import java.time.LocalDate;
 import java.util.*;
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,13 +40,16 @@ class ReplacementCountControllerTest {
     private MockMvc mvc;
 
     @MockBean
-    private UserService userService;
+    private WebUtils webUtils;
 
     @MockBean
     private ReplacementCountService replacementCountService;
 
     @Test
     void testCountReplacementsToReview() throws Exception {
+        WikipediaLanguage lang = WikipediaLanguage.getDefault();
+        when(webUtils.getLanguageHeader(any(HttpServletRequest.class))).thenReturn(lang);
+
         int count = new Random().nextInt();
         when(replacementCountService.countReplacementsNotReviewed(WikipediaLanguage.getDefault())).thenReturn(count);
 
@@ -63,6 +67,9 @@ class ReplacementCountControllerTest {
 
     @Test
     void testCountReplacementsReviewed() throws Exception {
+        WikipediaLanguage lang = WikipediaLanguage.getDefault();
+        when(webUtils.getLanguageHeader(any(HttpServletRequest.class))).thenReturn(lang);
+
         int count = new Random().nextInt();
         when(replacementCountService.countReplacementsReviewed(WikipediaLanguage.getDefault())).thenReturn(count);
 
@@ -80,6 +87,9 @@ class ReplacementCountControllerTest {
 
     @Test
     void testCountReplacementsGroupedByReviewer() throws Exception {
+        WikipediaLanguage lang = WikipediaLanguage.getDefault();
+        when(webUtils.getLanguageHeader(any(HttpServletRequest.class))).thenReturn(lang);
+
         ResultCount<String> count = ResultCount.of("X", 100);
         when(replacementCountService.countReplacementsGroupedByReviewer(WikipediaLanguage.getDefault()))
             .thenReturn(Collections.singletonList(count));
@@ -100,8 +110,7 @@ class ReplacementCountControllerTest {
     @Test
     void testCountPagesWithMoreReplacementsToReview() throws Exception {
         User user = User.buildTestAdminUser();
-        when(userService.findAuthenticatedUser(WikipediaLanguage.getDefault(), user.getAccessToken()))
-            .thenReturn(Optional.of(user));
+        when(webUtils.getAuthenticatedUser(any(HttpServletRequest.class))).thenReturn(user);
 
         IndexedPage page = IndexedPage
             .builder()
@@ -131,8 +140,7 @@ class ReplacementCountControllerTest {
     @Test
     void testCountPagesWithMoreReplacementsToReviewNotAdmin() throws Exception {
         User user = User.buildTestUser();
-        when(userService.findAuthenticatedUser(WikipediaLanguage.getDefault(), user.getAccessToken()))
-            .thenReturn(Optional.of(user));
+        when(webUtils.getAuthenticatedUser(any(HttpServletRequest.class))).thenReturn(user);
 
         mvc
             .perform(

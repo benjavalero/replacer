@@ -11,13 +11,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import es.bvalero.replacer.WebMvcConfiguration;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.util.ReplacerUtils;
+import es.bvalero.replacer.common.util.WebUtils;
 import es.bvalero.replacer.user.AccessToken;
 import es.bvalero.replacer.user.User;
-import es.bvalero.replacer.user.UserService;
 import es.bvalero.replacer.user.ValidateUserAspect;
 import java.time.LocalDateTime;
-import java.util.Optional;
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,16 +39,15 @@ class DumpControllerTest {
     private MockMvc mvc;
 
     @MockBean
-    private DumpManager dumpManager;
+    private WebUtils webUtils;
 
     @MockBean
-    private UserService userService;
+    private DumpManager dumpManager;
 
     @Test
     void testGetDumpIndexingStatus() throws Exception {
         User user = User.buildTestAdminUser();
-        when(userService.findAuthenticatedUser(WikipediaLanguage.getDefault(), user.getAccessToken()))
-            .thenReturn(Optional.of(user));
+        when(webUtils.getAuthenticatedUser(any(HttpServletRequest.class))).thenReturn(user);
 
         boolean running = true;
         int numPagesRead = 1000;
@@ -90,8 +89,7 @@ class DumpControllerTest {
     @Test
     void testGetDumpIndexingStatusNotAdmin() throws Exception {
         User user = User.buildTestUser();
-        when(userService.findAuthenticatedUser(WikipediaLanguage.getDefault(), user.getAccessToken()))
-            .thenReturn(Optional.of(user));
+        when(webUtils.getAuthenticatedUser(any(HttpServletRequest.class))).thenReturn(user);
 
         mvc
             .perform(
@@ -108,8 +106,7 @@ class DumpControllerTest {
     @Test
     void testPostStart() throws Exception {
         User user = User.buildTestAdminUser();
-        when(userService.findAuthenticatedUser(WikipediaLanguage.getDefault(), user.getAccessToken()))
-            .thenReturn(Optional.of(user));
+        when(webUtils.getAuthenticatedUser(any(HttpServletRequest.class))).thenReturn(user);
 
         mvc
             .perform(
@@ -126,8 +123,7 @@ class DumpControllerTest {
     @Test
     void testPostStartNotAdmin() throws Exception {
         User user = User.buildTestUser();
-        when(userService.findAuthenticatedUser(WikipediaLanguage.getDefault(), user.getAccessToken()))
-            .thenReturn(Optional.of(user));
+        when(webUtils.getAuthenticatedUser(any(HttpServletRequest.class))).thenReturn(user);
 
         mvc
             .perform(

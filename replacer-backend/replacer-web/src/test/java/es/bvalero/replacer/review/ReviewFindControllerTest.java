@@ -9,12 +9,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import es.bvalero.replacer.WebMvcConfiguration;
 import es.bvalero.replacer.common.domain.*;
+import es.bvalero.replacer.common.util.WebUtils;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.Suggestion;
 import es.bvalero.replacer.page.PageKey;
 import es.bvalero.replacer.user.AccessToken;
 import es.bvalero.replacer.user.User;
-import es.bvalero.replacer.user.UserService;
 import es.bvalero.replacer.wikipedia.WikipediaNamespace;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
 import es.bvalero.replacer.wikipedia.WikipediaSection;
@@ -22,6 +22,7 @@ import es.bvalero.replacer.wikipedia.WikipediaTimestamp;
 import java.util.List;
 import java.util.Optional;
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +44,7 @@ class ReviewFindControllerTest {
     private ObjectMapper objectMapper;
 
     @MockBean
-    private UserService userService;
+    private WebUtils webUtils;
 
     @MockBean
     private ReviewNoTypeFinder reviewNoTypeFinder;
@@ -94,8 +95,7 @@ class ReviewFindControllerTest {
     @Test
     void testFindRandomPageWithReplacements() throws Exception {
         User user = User.buildTestUser();
-        when(userService.findAuthenticatedUser(WikipediaLanguage.getDefault(), user.getAccessToken()))
-            .thenReturn(Optional.of(user));
+        when(webUtils.getAuthenticatedUser(any(HttpServletRequest.class))).thenReturn(user);
 
         ReviewOptions options = ReviewOptions.ofNoType(user);
         when(reviewNoTypeFinder.findRandomPageReview(options)).thenReturn(Optional.of(review));
@@ -128,8 +128,7 @@ class ReviewFindControllerTest {
     @Test
     void testFindRandomPageByNoType() throws Exception {
         User user = User.buildTestUser();
-        when(userService.findAuthenticatedUser(WikipediaLanguage.getDefault(), user.getAccessToken()))
-            .thenReturn(Optional.of(user));
+        when(webUtils.getAuthenticatedUser(any(HttpServletRequest.class))).thenReturn(user);
 
         ReviewOptions options = ReviewOptions.ofNoType(user);
         when(reviewNoTypeFinder.findRandomPageReview(options)).thenReturn(Optional.of(review));
@@ -149,8 +148,7 @@ class ReviewFindControllerTest {
     @Test
     void testFindRandomPageByTypeAndSubtype() throws Exception {
         User user = User.buildTestUser();
-        when(userService.findAuthenticatedUser(WikipediaLanguage.getDefault(), user.getAccessToken()))
-            .thenReturn(Optional.of(user));
+        when(webUtils.getAuthenticatedUser(any(HttpServletRequest.class))).thenReturn(user);
 
         StandardType type = StandardType.DATE;
         ReviewOptions options = ReviewOptions.ofType(user, type);
@@ -171,8 +169,7 @@ class ReviewFindControllerTest {
     @Test
     void testFindRandomPageByCustomReplacement() throws Exception {
         User user = User.buildTestUser();
-        when(userService.findAuthenticatedUser(WikipediaLanguage.getDefault(), user.getAccessToken()))
-            .thenReturn(Optional.of(user));
+        when(webUtils.getAuthenticatedUser(any(HttpServletRequest.class))).thenReturn(user);
 
         ReviewOptions options = ReviewOptions.ofCustom(user, "X", false, "Y");
         when(reviewCustomFinder.findRandomPageReview(options)).thenReturn(Optional.of(review));
@@ -192,8 +189,7 @@ class ReviewFindControllerTest {
     @Test
     void testFindPageReviewByIdWithWrongOptions() throws Exception {
         User user = User.buildTestUser();
-        when(userService.findAuthenticatedUser(WikipediaLanguage.getDefault(), user.getAccessToken()))
-            .thenReturn(Optional.of(user));
+        when(webUtils.getAuthenticatedUser(any(HttpServletRequest.class))).thenReturn(user);
 
         mvc
             .perform(
@@ -210,8 +206,7 @@ class ReviewFindControllerTest {
     @Test
     void testFindPageReviewById() throws Exception {
         User user = User.buildTestUser();
-        when(userService.findAuthenticatedUser(WikipediaLanguage.getDefault(), user.getAccessToken()))
-            .thenReturn(Optional.of(user));
+        when(webUtils.getAuthenticatedUser(any(HttpServletRequest.class))).thenReturn(user);
 
         ReviewOptions options = ReviewOptions.ofNoType(user);
         PageKey pageKey = PageKey.of(WikipediaLanguage.getDefault(), 123);
@@ -232,8 +227,7 @@ class ReviewFindControllerTest {
     @Test
     void testFindPageReviewByIdByTypeAndSubtype() throws Exception {
         User user = User.buildTestUser();
-        when(userService.findAuthenticatedUser(WikipediaLanguage.getDefault(), user.getAccessToken()))
-            .thenReturn(Optional.of(user));
+        when(webUtils.getAuthenticatedUser(any(HttpServletRequest.class))).thenReturn(user);
 
         StandardType type = StandardType.DATE;
         ReviewOptions options = ReviewOptions.ofType(user, type);
@@ -255,8 +249,7 @@ class ReviewFindControllerTest {
     @Test
     void testFindPageReviewByIdAndCustomReplacement() throws Exception {
         User user = User.buildTestUser();
-        when(userService.findAuthenticatedUser(WikipediaLanguage.getDefault(), user.getAccessToken()))
-            .thenReturn(Optional.of(user));
+        when(webUtils.getAuthenticatedUser(any(HttpServletRequest.class))).thenReturn(user);
 
         ReviewOptions options = ReviewOptions.ofCustom(user, "X", true, "Y");
         PageKey pageKey = PageKey.of(WikipediaLanguage.getDefault(), 123);

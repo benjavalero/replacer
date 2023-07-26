@@ -1,9 +1,10 @@
 package es.bvalero.replacer.user;
 
-import es.bvalero.replacer.common.domain.WikipediaLanguage;
+import es.bvalero.replacer.common.util.WebUtils;
 import javax.servlet.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
-import org.springframework.http.HttpHeaders;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
@@ -13,6 +14,9 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 @Component
 public class UserLanguageArgumentResolver implements HandlerMethodArgumentResolver {
 
+    @Autowired
+    private WebUtils webUtils;
+
     @Override
     public boolean supportsParameter(MethodParameter methodParameter) {
         return methodParameter.getParameterAnnotation(UserLanguage.class) != null;
@@ -21,12 +25,11 @@ public class UserLanguageArgumentResolver implements HandlerMethodArgumentResolv
     @Override
     public Object resolveArgument(
         MethodParameter methodParameter,
-        ModelAndViewContainer modelAndViewContainer,
+        @Nullable ModelAndViewContainer modelAndViewContainer,
         NativeWebRequest nativeWebRequest,
-        WebDataBinderFactory webDataBinderFactory
+        @Nullable WebDataBinderFactory webDataBinderFactory
     ) {
         HttpServletRequest request = (HttpServletRequest) nativeWebRequest.getNativeRequest();
-        String langHeader = request.getHeader(HttpHeaders.ACCEPT_LANGUAGE);
-        return WikipediaLanguage.valueOfCode(langHeader);
+        return webUtils.getLanguageHeader(request);
     }
 }

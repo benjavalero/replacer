@@ -8,12 +8,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import es.bvalero.replacer.WebMvcConfiguration;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
+import es.bvalero.replacer.common.util.WebUtils;
 import es.bvalero.replacer.user.AccessToken;
 import es.bvalero.replacer.user.User;
-import es.bvalero.replacer.user.UserService;
 import es.bvalero.replacer.user.ValidateUserAspect;
-import java.util.Optional;
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +35,7 @@ class AdminControllerTest {
     private MockMvc mvc;
 
     @MockBean
-    private UserService userService;
+    private WebUtils webUtils;
 
     @MockBean
     private PublicIpService publicIpService;
@@ -43,8 +43,7 @@ class AdminControllerTest {
     @Test
     void testGetPublic() throws Exception {
         User user = User.buildTestAdminUser();
-        when(userService.findAuthenticatedUser(WikipediaLanguage.getDefault(), user.getAccessToken()))
-            .thenReturn(Optional.of(user));
+        when(webUtils.getAuthenticatedUser(any(HttpServletRequest.class))).thenReturn(user);
 
         String ip = "ip";
         when(publicIpService.getPublicIp()).thenReturn(ip);
@@ -65,8 +64,7 @@ class AdminControllerTest {
     @Test
     void testGetPublicIpNotAdmin() throws Exception {
         User user = User.buildTestUser();
-        when(userService.findAuthenticatedUser(WikipediaLanguage.getDefault(), user.getAccessToken()))
-            .thenReturn(Optional.of(user));
+        when(webUtils.getAuthenticatedUser(any(HttpServletRequest.class))).thenReturn(user);
 
         mvc
             .perform(

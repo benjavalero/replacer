@@ -2,11 +2,8 @@ package es.bvalero.replacer.dump;
 
 import com.github.rozidan.springboot.logger.Loggable;
 import es.bvalero.replacer.common.util.ReplacerUtils;
-import es.bvalero.replacer.user.AuthenticatedUser;
-import es.bvalero.replacer.user.User;
 import es.bvalero.replacer.user.ValidateAdminUser;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,7 +22,7 @@ public class DumpController {
     @Loggable(skipResult = true)
     @ValidateAdminUser
     @GetMapping(value = "")
-    public DumpIndexingStatusDto getDumpIndexingStatus(@AuthenticatedUser User user) {
+    public DumpIndexingStatusDto getDumpIndexingStatus() {
         return toDto(dumpManager.getDumpIndexingStatus());
     }
 
@@ -34,7 +31,7 @@ public class DumpController {
     @ValidateAdminUser
     @ResponseStatus(HttpStatus.ACCEPTED)
     @PostMapping(value = "")
-    public void manualStartDumpIndexing(@AuthenticatedUser User user) {
+    public void manualStartDumpIndexing() {
         dumpManager.indexLatestDumpFiles();
     }
 

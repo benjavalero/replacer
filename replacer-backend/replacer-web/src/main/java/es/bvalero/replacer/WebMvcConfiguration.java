@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
@@ -28,6 +29,9 @@ public class WebMvcConfiguration {
     @Autowired
     private UserLanguageArgumentResolver userLanguageArgumentResolver;
 
+    @Autowired
+    private MdcInterceptor mdcInterceptor;
+
     @Bean
     public WebMvcConfigurer webMvcConfigurer() {
         return new WebMvcConfigurer() {
@@ -41,6 +45,11 @@ public class WebMvcConfiguration {
             public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
                 argumentResolvers.add(authenticatedUserArgumentResolver);
                 argumentResolvers.add(userLanguageArgumentResolver);
+            }
+
+            @Override
+            public void addInterceptors(InterceptorRegistry registry) {
+                registry.addInterceptor(mdcInterceptor);
             }
         };
     }

@@ -1,9 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
     <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
-    <property name="CONSOLE_LOG_PATTERN"
-              value="%clr(%d){faint} %clr(%5p) %clr([%-6.6t]){faint} %clr(%-30.30logger{29}){cyan} %clr(:){faint} %m%n%wEx"/>
-    <property name="FILE_LOG_PATTERN" value="%d %5p [%-6.6t] %-30.30logger{29} : %m%n%wEx"/>
+    <!--
+        - Date: in standard ISO format
+        - Level: right justified, minimum length 5, highlighted
+        - Thread: left justified, exact length 6
+        - Logger: left justified, exact length 30, cyan
+        - Language: exact length 2 (only file)
+        - User: left justified, minimum length 10 (only file)
+        - Message + new line + exception
+    -->
+    <property name="CONSOLE_LOG_PATTERN" value="%d %clr(%5p) [%6.6t] %clr(%-30.30logger{29}){cyan} : %message%n%wEx"/>
+    <property name="FILE_LOG_PATTERN" value="%d %5p [%6.6t] %-30.30logger{29} : %2.2X{lang} %-10X{user} %message%n%wEx"/>
     <property name="LOG_FILE" value="logs/replacer.log"/>
     <property name="LOG_FILE_MAX_SIZE" value="50MB"/>
     <property name="LOG_FILE_MAX_HISTORY" value="30"/>

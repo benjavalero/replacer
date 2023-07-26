@@ -11,7 +11,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import es.bvalero.replacer.WebMvcConfiguration;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
+import es.bvalero.replacer.common.util.WebUtils;
 import java.util.Optional;
+import javax.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +35,9 @@ class AuthenticationControllerTest {
     private ObjectMapper objectMapper;
 
     @MockBean
+    private WebUtils webUtils;
+
+    @MockBean
     private AuthenticationService authenticationService;
 
     @MockBean
@@ -40,6 +45,9 @@ class AuthenticationControllerTest {
 
     @Test
     void testInitiateAuthentication() throws Exception {
+        WikipediaLanguage lang = WikipediaLanguage.getDefault();
+        when(webUtils.getLanguageHeader(any(HttpServletRequest.class))).thenReturn(lang);
+
         RequestToken requestToken = RequestToken.of("R", "S");
         String authorizationUrl = "Z";
         when(authenticationService.getRequestToken()).thenReturn(requestToken);
@@ -58,6 +66,9 @@ class AuthenticationControllerTest {
 
     @Test
     void testInitiateAuthenticationWithException() throws Exception {
+        WikipediaLanguage lang = WikipediaLanguage.getDefault();
+        when(webUtils.getLanguageHeader(any(HttpServletRequest.class))).thenReturn(lang);
+
         when(authenticationService.getRequestToken()).thenThrow(new AuthenticationException());
 
         mvc
@@ -73,6 +84,7 @@ class AuthenticationControllerTest {
         String oAuthVerifier = "V";
 
         WikipediaLanguage lang = WikipediaLanguage.getDefault();
+        when(webUtils.getLanguageHeader(any(HttpServletRequest.class))).thenReturn(lang);
         User user = User.buildTestAdminUser();
         when(authenticationService.getAccessToken(requestToken, oAuthVerifier)).thenReturn(user.getAccessToken());
         when(userService.findAuthenticatedUser(lang, user.getAccessToken())).thenReturn(Optional.of(user));
@@ -100,6 +112,9 @@ class AuthenticationControllerTest {
 
     @Test
     void testVerifyAuthenticationWithEmptyVerifier() throws Exception {
+        WikipediaLanguage lang = WikipediaLanguage.getDefault();
+        when(webUtils.getLanguageHeader(any(HttpServletRequest.class))).thenReturn(lang);
+
         RequestToken requestToken = RequestToken.of("R", "S");
         String oAuthVerifier = "";
 
