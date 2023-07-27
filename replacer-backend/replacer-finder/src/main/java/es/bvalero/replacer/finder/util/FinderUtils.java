@@ -11,6 +11,8 @@ import java.util.stream.Stream;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Marker;
+import org.slf4j.MarkerFactory;
 import org.springframework.lang.Nullable;
 
 @Slf4j
@@ -27,6 +29,7 @@ public class FinderUtils {
     private static final char DECIMAL_COMMA = ',';
     private static final char DECIMAL_DOT = '.';
     public static final Set<Character> DECIMAL_SEPARATORS = Set.of(DECIMAL_COMMA, DECIMAL_DOT);
+    public static Marker MARKER_IMMUTABLE = MarkerFactory.getMarker("IMMUTABLE");
 
     /***** STRING UTILS *****/
 
@@ -331,12 +334,18 @@ public class FinderUtils {
     /***** LOGGING UTILS *****/
 
     public void logFinderResult(FinderPage page, int start, int end, String message) {
-        LOGGER.warn(
-            "{}: {} - {} - {}",
+        LOGGER.debug(
+            MARKER_IMMUTABLE,
+            "{}: {}",
             message,
-            page.getPageKey().getLang(),
-            page.getTitle(),
-            getTextSnippet(page.getContent(), start, end)
+            ReplacerUtils.toJson(
+                "lang",
+                page.getPageKey().getLang(),
+                "title",
+                page.getTitle(),
+                "snippet",
+                getTextSnippet(page.getContent(), start, end)
+            )
         );
     }
 }

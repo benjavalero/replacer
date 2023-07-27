@@ -8,10 +8,11 @@
         - Logger: left justified, exact length 30, cyan
         - Language: exact length 2 (only file)
         - User: left justified, minimum length 10 (only file)
+        - Marker: e.g. IMMUTABLE
         - Message + new line + exception
     -->
-    <property name="CONSOLE_LOG_PATTERN" value="%d %clr(%5p) [%6.6t] %clr(%-30.30logger{29}){cyan} : %message%n%wEx"/>
-    <property name="FILE_LOG_PATTERN" value="%d %5p [%6.6t] %-30.30logger{29} : %2.2X{lang} %-10X{user} %message%n%wEx"/>
+    <property name="CONSOLE_LOG_PATTERN" value="%d %clr(%5p) [%6.6t] %clr(%-30.30logger{29}){cyan} : %marker %message%n%wEx"/>
+    <property name="FILE_LOG_PATTERN" value="%d %5p [%6.6t] %-30.30logger{29} : %2.2X{lang} %-10X{user} %marker %message%n%wEx"/>
     <property name="LOG_FILE" value="logs/replacer.log"/>
     <property name="LOG_FILE_MAX_SIZE" value="50MB"/>
     <property name="LOG_FILE_MAX_HISTORY" value="30"/>
