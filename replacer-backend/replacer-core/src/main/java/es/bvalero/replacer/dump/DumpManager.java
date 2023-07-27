@@ -1,11 +1,9 @@
 package es.bvalero.replacer.dump;
 
-import com.github.rozidan.springboot.logger.Loggable;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.exception.ReplacerException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.logging.LogLevel;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -32,12 +30,13 @@ class DumpManager {
      * In order to be asynchronous it must be public and called externally:
      * https://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/scheduling/annotation/EnableAsync.html
      */
-    @Loggable(value = LogLevel.DEBUG, skipArgs = true, skipResult = true)
     @Async
     public void indexLatestDumpFiles() {
+        LOGGER.debug("START dump indexing...");
+
         // Check just in case the handler is already running
         if (isDumpIndexingRunning()) {
-            LOGGER.warn("Dump indexing is already running");
+            LOGGER.warn("Dump indexing is already running. Abort.");
             return;
         }
 
@@ -52,6 +51,8 @@ class DumpManager {
                     }
                 });
         }
+
+        LOGGER.debug("END dump indexing...");
     }
 
     DumpIndexingStatus getDumpIndexingStatus() {

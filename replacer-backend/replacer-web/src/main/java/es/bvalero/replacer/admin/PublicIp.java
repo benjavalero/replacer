@@ -8,9 +8,14 @@ import org.springframework.lang.NonNull;
 
 @Schema(description = "Public IP of the application used to perform the editions in Wikipedia")
 @Value(staticConstructor = "of")
-class PublicIp {
+public class PublicIp {
 
     @Schema(requiredMode = REQUIRED)
     @NonNull
     String ip;
+
+    @Override
+    public String toString() {
+        return this.ip;
+    }
 }

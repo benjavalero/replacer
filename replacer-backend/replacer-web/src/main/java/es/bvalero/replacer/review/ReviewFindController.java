@@ -1,6 +1,5 @@
 package es.bvalero.replacer.review;
 
-import com.github.rozidan.springboot.logger.Loggable;
 import es.bvalero.replacer.page.PageKey;
 import es.bvalero.replacer.user.AuthenticatedUser;
 import es.bvalero.replacer.user.User;
@@ -9,12 +8,12 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.Optional;
 import javax.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "Review")
-// We add the authenticated user as a parameter instead of only the language to provide better traces
-@Loggable(entered = true)
+@Slf4j
 @RestController
 @RequestMapping("api/review")
 public class ReviewFindController {
@@ -34,6 +33,7 @@ public class ReviewFindController {
         @AuthenticatedUser User user,
         @Valid ReviewOptionsDto optionsDto
     ) {
+        LOGGER.info("START Find Random Page with Replacements. Options: {}", optionsDto);
         Optional<Review> review;
         ReviewOptions options = ReviewMapper.fromDto(optionsDto, user);
         switch (options.getKind()) {
@@ -46,7 +46,9 @@ public class ReviewFindController {
             default:
                 review = reviewTypeFinder.findRandomPageReview(options);
         }
-        return review.map(ReviewMapper::toDto);
+        Optional<FindReviewResponse> response = review.map(ReviewMapper::toDto);
+        LOGGER.info("END Find Random Page with Replacements: {}", response.isPresent() ? response.get() : "No Review");
+        return response;
     }
 
     @Operation(summary = "Find a page and the replacements to review")
@@ -56,6 +58,7 @@ public class ReviewFindController {
         @AuthenticatedUser User user,
         @Valid ReviewOptionsDto optionsDto
     ) {
+        LOGGER.info("START Find Page Review by ID {}. Options: {}", pageId, optionsDto);
         Optional<Review> review;
         ReviewOptions options = ReviewMapper.fromDto(optionsDto, user);
         PageKey pageKey = PageKey.of(user.getId().getLang(), pageId);
@@ -69,6 +72,8 @@ public class ReviewFindController {
             default:
                 review = reviewTypeFinder.findPageReview(pageKey, options);
         }
-        return review.map(ReviewMapper::toDto);
+        Optional<FindReviewResponse> response = review.map(ReviewMapper::toDto);
+        LOGGER.info("END Find Random Page with Replacements: {}", response.isPresent() ? response.get() : "No Review");
+        return response;
     }
 }

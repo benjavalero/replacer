@@ -1,6 +1,5 @@
 package es.bvalero.replacer.wikipedia;
 
-import com.github.rozidan.springboot.logger.Loggable;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.user.AccessToken;
 import es.bvalero.replacer.user.UserId;
@@ -9,18 +8,15 @@ import es.bvalero.replacer.wikipedia.api.WikipediaApiRequest;
 import es.bvalero.replacer.wikipedia.api.WikipediaApiResponse;
 import es.bvalero.replacer.wikipedia.api.WikipediaApiVerb;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.logging.LogLevel;
 import org.springframework.context.annotation.Profile;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 
 @Slf4j
-@Loggable(value = LogLevel.TRACE, skipResult = true, warnOver = 10, warnUnit = TimeUnit.SECONDS)
 @Qualifier("wikipediaUserApiRepository")
 @Service
 @Profile("!offline")

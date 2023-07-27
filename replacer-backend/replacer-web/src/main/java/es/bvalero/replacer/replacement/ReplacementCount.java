@@ -7,8 +7,13 @@ import lombok.Value;
 
 @Schema(description = "Count of reviewed/unreviewed replacements")
 @Value(staticConstructor = "of")
-class ReplacementCount {
+public class ReplacementCount {
 
     @Schema(requiredMode = REQUIRED, example = "1")
     int count;
+
+    @Override
+    public String toString() {
+        return Integer.toString(this.count);
+    }
 }

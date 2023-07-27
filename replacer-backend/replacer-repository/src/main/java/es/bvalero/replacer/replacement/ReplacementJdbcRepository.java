@@ -2,7 +2,6 @@ package es.bvalero.replacer.replacement;
 
 import static es.bvalero.replacer.replacement.IndexedReplacement.REVIEWER_SYSTEM;
 
-import com.github.rozidan.springboot.logger.Loggable;
 import es.bvalero.replacer.common.domain.ResultCount;
 import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
@@ -12,11 +11,9 @@ import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.logging.LogLevel;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -25,7 +22,6 @@ import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-@Loggable(value = LogLevel.TRACE, skipResult = true, warnOver = 10, warnUnit = TimeUnit.SECONDS)
 @Qualifier("replacementJdbcRepository")
 @Transactional
 @Repository

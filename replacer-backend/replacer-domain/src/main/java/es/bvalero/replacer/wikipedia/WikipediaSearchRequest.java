@@ -1,6 +1,7 @@
 package es.bvalero.replacer.wikipedia;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
+import es.bvalero.replacer.common.util.ReplacerUtils;
 import java.util.Collection;
 import lombok.Builder;
 import lombok.Value;
@@ -29,4 +30,9 @@ public class WikipediaSearchRequest {
     // Pagination
     int offset;
     int limit;
+
+    @Override
+    public String toString() {
+        return ReplacerUtils.toJson(this);
+    }
 }

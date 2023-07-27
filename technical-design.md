@@ -174,8 +174,6 @@ A custom `logback-spring.xml` exists to simplify the log pattern, and include a 
 
 The default logging level is DEBUG, using INFO for calls in controllers and WARNING for suspicious replacements or immutables.
 
-Finally, we use the annotation `@Loggable` provided by dependency `com.github.rozidan.logger-spring-boot`. It _wraps_ the annotated methods by aspects logging the start and the end of the method, displaying the elapsed time, warning about too long time, parameters, etc. Note that Spring provides a limited AspectJ solution: as it works proxying the classes, Spring adds the functionality in runtime and therefore it can only be applied in public methods and in calls from different classes.
-
 ## Benchmarks
 
 For some critical finders, we can run benchmarks to find the best approach.

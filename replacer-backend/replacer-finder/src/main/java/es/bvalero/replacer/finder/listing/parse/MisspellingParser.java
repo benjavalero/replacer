@@ -19,7 +19,7 @@ abstract class MisspellingParser<T extends ListingItem> extends ListingParser<T>
             try {
                 return buildMisspelling(tokens);
             } catch (IllegalArgumentException e) {
-                LOGGER.warn("Ignore not valid misspelling: " + e.getMessage());
+                LOGGER.warn(e.getMessage());
             }
         } else {
             LOGGER.warn("Bad formatted misspelling: {}", itemLine);

@@ -66,7 +66,7 @@ export class ReplacementTableComponent implements OnInit, OnChanges {
     this.collectionSize = this.subtypeCounts.length;
     this.pageValue = 1;
 
-    this.pageListUrl = `${environment.baseUrl}/api/page/type?lang=${this.userConfigService.lang}&user=${this.userService.userName}`;
+    this.pageListUrl = `${environment.baseUrl}/api/page/type?lang=${this.userConfigService.lang}`;
   }
 
   ngOnInit() {

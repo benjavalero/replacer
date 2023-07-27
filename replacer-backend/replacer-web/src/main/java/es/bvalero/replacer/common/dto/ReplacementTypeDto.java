@@ -1,6 +1,7 @@
 package es.bvalero.replacer.common.dto;
 
 import es.bvalero.replacer.common.domain.StandardType;
+import es.bvalero.replacer.common.util.ReplacerUtils;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AccessLevel;
@@ -31,5 +32,10 @@ public class ReplacementTypeDto {
 
     public StandardType toStandardType() {
         return StandardType.of(this.kind, this.subtype);
+    }
+
+    @Override
+    public String toString() {
+        return ReplacerUtils.toJson(this);
     }
 }

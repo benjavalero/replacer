@@ -1,9 +1,6 @@
 package es.bvalero.replacer.replacement;
 
-import com.github.rozidan.springboot.logger.Loggable;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import es.bvalero.replacer.user.AuthenticatedUser;
-import es.bvalero.replacer.user.User;
 import es.bvalero.replacer.user.UserLanguage;
 import es.bvalero.replacer.user.ValidateAdminUser;
 import io.swagger.v3.oas.annotations.Operation;
@@ -11,12 +8,13 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.Collection;
 import java.util.stream.Collectors;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 /** REST controller to get different counts of replacements */
 @Tag(name = "Replacement")
-@Loggable(skipResult = true)
+@Slf4j
 @RestController
 @RequestMapping("api/replacement")
 public class ReplacementCountController {
@@ -34,19 +32,27 @@ public class ReplacementCountController {
             example = "true"
         ) @RequestParam boolean reviewed
     ) {
-        return reviewed
-            ? ReplacementCount.of(replacementCountService.countReplacementsReviewed(lang))
-            : ReplacementCount.of(replacementCountService.countReplacementsNotReviewed(lang));
+        ReplacementCount count;
+        if (reviewed) {
+            count = ReplacementCount.of(replacementCountService.countReplacementsReviewed(lang));
+            LOGGER.info("GET Count Reviewed Replacements: {}", count);
+        } else {
+            count = ReplacementCount.of(replacementCountService.countReplacementsNotReviewed(lang));
+            LOGGER.info("GET Count Not Reviewed Replacements: {}", count);
+        }
+        return count;
     }
 
     @Operation(summary = "Count the number of reviewed replacements grouped by reviewer in descending order by count")
     @GetMapping(value = "/user/count")
     public Collection<ReviewerCount> countReplacementsGroupedByReviewer(@UserLanguage WikipediaLanguage lang) {
-        return replacementCountService
+        Collection<ReviewerCount> counts = replacementCountService
             .countReplacementsGroupedByReviewer(lang)
             .stream()
             .map(count -> ReviewerCount.of(count.getKey(), count.getCount()))
             .collect(Collectors.toUnmodifiableList());
+        LOGGER.info("GET Count Replacements By Reviewer: {} items", counts.size());
+        return counts;
     }
 
     @Operation(
@@ -54,13 +60,15 @@ public class ReplacementCountController {
     )
     @ValidateAdminUser
     @GetMapping(value = "/page/count")
-    public Collection<PageCount> countNotReviewedGroupedByPage(@AuthenticatedUser User user) {
-        return replacementCountService
-            .countNotReviewedGroupedByPage(user.getId().getLang())
+    public Collection<PageCount> countReplacementsNotReviewedGroupedByPage(@UserLanguage WikipediaLanguage lang) {
+        Collection<PageCount> counts = replacementCountService
+            .countReplacementsNotReviewedGroupedByPage(lang)
             .stream()
             .map(count ->
                 PageCount.of(count.getKey().getPageKey().getPageId(), count.getKey().getTitle(), count.getCount())
             )
             .collect(Collectors.toUnmodifiableList());
+        LOGGER.info("GET Count Replacements Not Reviewed By Page: {} items", counts.size());
+        return counts;
     }
 }

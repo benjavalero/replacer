@@ -116,7 +116,7 @@ class DumpSaxHandler extends DefaultHandler {
                 try {
                     indexPage();
                 } catch (Exception e) {
-                    LOGGER.error("Error parsing dump page", e);
+                    LOGGER.error("Error parsing dump page: {} - {} - {}", lang, this.currentId, this.currentTitle, e);
                 }
 
                 // Reset current ID and Content to avoid duplicates

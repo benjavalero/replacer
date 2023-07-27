@@ -51,12 +51,7 @@ class PageListControllerTest {
         when(webUtils.getAuthenticatedUser(any(HttpServletRequest.class))).thenReturn(user);
 
         mvc
-            .perform(
-                get("/api/page/type?kind=2&subtype=Africa")
-                    .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
-                    .cookie(new Cookie(AccessToken.COOKIE_NAME, user.getAccessToken().toCookieValue()))
-                    .contentType(MediaType.TEXT_PLAIN_VALUE)
-            )
+            .perform(get("/api/page/type?lang=es&kind=2&subtype=Africa").contentType(MediaType.TEXT_PLAIN_VALUE))
             .andExpect(status().isOk());
 
         verify(pageFindByTypeService)
@@ -64,27 +59,11 @@ class PageListControllerTest {
     }
 
     @Test
-    void testFindPagesToReviewByTypeNotBot() throws Exception {
-        User user = User.buildTestUser();
-        when(webUtils.getAuthenticatedUser(any(HttpServletRequest.class))).thenReturn(user);
-
-        mvc
-            .perform(
-                get("/api/page/type?kind=2&subtype=Africa")
-                    .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
-                    .cookie(new Cookie(AccessToken.COOKIE_NAME, user.getAccessToken().toCookieValue()))
-                    .contentType(MediaType.TEXT_PLAIN_VALUE)
-            )
-            .andExpect(status().isForbidden());
-
-        verify(pageFindByTypeService, never())
-            .findPagesToReviewByType(WikipediaLanguage.getDefault(), StandardType.of(ReplacementKind.SIMPLE, "Africa"));
-    }
-
-    @Test
     void testReviewPagesByType() throws Exception {
         User user = User.buildTestBotUser();
         when(webUtils.getAuthenticatedUser(any(HttpServletRequest.class))).thenReturn(user);
+        WikipediaLanguage lang = WikipediaLanguage.getDefault();
+        when(webUtils.getLanguageHeader(any(HttpServletRequest.class))).thenReturn(lang);
 
         mvc
             .perform(

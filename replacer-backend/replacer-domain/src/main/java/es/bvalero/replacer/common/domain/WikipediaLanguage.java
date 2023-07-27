@@ -1,5 +1,6 @@
 package es.bvalero.replacer.common.domain;
 
+import com.fasterxml.jackson.annotation.JsonValue;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.function.Function;
@@ -36,6 +37,7 @@ public enum WikipediaLanguage {
         }
     }
 
+    @JsonValue
     @Override
     public String toString() {
         return this.code;

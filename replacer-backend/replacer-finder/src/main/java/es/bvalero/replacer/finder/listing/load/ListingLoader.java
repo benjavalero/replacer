@@ -14,7 +14,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.SetValuedMap;
 import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
 import org.jetbrains.annotations.VisibleForTesting;
-import org.slf4j.MDC;
 
 // Use an abstract class to include the logic to fire events on item changes
 @Slf4j
@@ -39,40 +38,35 @@ abstract class ListingLoader<T extends ListingItem> {
     }
 
     public final void load() {
-        MDC.put("user", "system");
-        LOGGER.debug("Load {} listings...", getLabel());
-        try {
-            setItems(findItemsForAllLanguages());
-        } catch (ReplacerException e) {
-            LOGGER.error("Error finding {} items in Wikipedia", getLabel(), e);
-        } finally {
-            MDC.remove("user");
-        }
+        setItems(findItemsForAllLanguages());
     }
 
     abstract String getLabel(); // For tracing purposes
 
-    private SetValuedMap<WikipediaLanguage, T> findItemsForAllLanguages() throws ReplacerException {
+    private SetValuedMap<WikipediaLanguage, T> findItemsForAllLanguages() {
         SetValuedMap<WikipediaLanguage, T> map = new HashSetValuedHashMap<>();
         for (Map.Entry<WikipediaLanguage, String> entry : findListingsForAllLanguages().entrySet()) {
             WikipediaLanguage lang = entry.getKey();
             Set<T> listingItems = parseListing(entry.getValue());
             map.putAll(lang, listingItems);
-            LOGGER.debug("Found {} items in {} Wikipedia: {}", getLabel(), lang, listingItems.size());
+            LOGGER.debug("Found {} {} items in {} Wikipedia", listingItems.size(), getLabel(), lang);
         }
         return map;
     }
 
-    private Map<WikipediaLanguage, String> findListingsForAllLanguages() throws ReplacerException {
+    private Map<WikipediaLanguage, String> findListingsForAllLanguages() {
         Map<WikipediaLanguage, String> map = new HashMap<>();
         for (WikipediaLanguage wikipediaLanguage : WikipediaLanguage.values()) {
-            map.put(wikipediaLanguage, findListingContentByLang(wikipediaLanguage));
+            try {
+                map.put(wikipediaLanguage, findListingContentByLang(wikipediaLanguage));
+            } catch (ReplacerException e) {
+                LOGGER.error("Error finding {} items in {} Wikipedia", getLabel(), wikipediaLanguage, e);
+            }
         }
         return map;
     }
 
     private String findListingContentByLang(WikipediaLanguage lang) throws ReplacerException {
-        LOGGER.debug("Find {} listings in {} Wikipedia...", getLabel(), lang);
         return findListingByLang(lang);
     }
 

@@ -3,7 +3,6 @@ package es.bvalero.replacer.wikipedia;
 import java.util.Collection;
 import lombok.Builder;
 import lombok.Singular;
-import lombok.ToString;
 import lombok.Value;
 import org.jetbrains.annotations.TestOnly;
 
@@ -20,7 +19,6 @@ public class WikipediaSearchResult {
 
     int total;
 
-    @ToString.Exclude
     @Singular
     Collection<Integer> pageIds;
 
@@ -31,5 +29,10 @@ public class WikipediaSearchResult {
     @TestOnly
     public boolean isEmpty() {
         return this.pageIds.isEmpty();
+    }
+
+    @Override
+    public String toString() {
+        return Integer.toString(this.total);
     }
 }

@@ -1,6 +1,5 @@
 package es.bvalero.replacer.review;
 
-import com.github.rozidan.springboot.logger.Loggable;
 import es.bvalero.replacer.page.PageKey;
 import es.bvalero.replacer.user.AuthenticatedUser;
 import es.bvalero.replacer.user.User;
@@ -29,7 +28,6 @@ public class ReviewSaveController {
     @Autowired
     private ReviewSaveService reviewSaveService;
 
-    @Loggable(skipResult = true)
     @Operation(summary = "Save a review: update page contents and mark as reviewed")
     @PostMapping(value = "/{id}")
     public ResponseEntity<Void> saveReview(
@@ -37,6 +35,8 @@ public class ReviewSaveController {
         @AuthenticatedUser User user,
         @Valid @RequestBody SaveReviewRequest request
     ) throws WikipediaException {
+        LOGGER.info("POST Save Review: {}", request);
+
         if (!Objects.equals(pageId, request.getPage().getPageId())) {
             LOGGER.error("Page ID mismatch");
             return ResponseEntity.badRequest().build();

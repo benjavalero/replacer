@@ -2,7 +2,6 @@ package es.bvalero.replacer.wikipedia;
 
 import static org.apache.commons.lang3.StringUtils.SPACE;
 
-import com.github.rozidan.springboot.logger.Loggable;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.page.PageKey;
 import es.bvalero.replacer.user.AccessToken;
@@ -11,19 +10,16 @@ import es.bvalero.replacer.wikipedia.api.WikipediaApiRequest;
 import es.bvalero.replacer.wikipedia.api.WikipediaApiResponse;
 import es.bvalero.replacer.wikipedia.api.WikipediaApiVerb;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.VisibleForTesting;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.logging.LogLevel;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 @SuppressWarnings("java:S1192")
 @Slf4j
-@Loggable(value = LogLevel.TRACE, skipResult = true, warnOver = 10, warnUnit = TimeUnit.SECONDS)
 @Service
 @Profile("!offline")
 class WikipediaPageApiRepository implements WikipediaPageRepository {
@@ -52,7 +48,6 @@ class WikipediaPageApiRepository implements WikipediaPageRepository {
         return findByKeys(List.of(pageKey)).stream().findAny();
     }
 
-    @Loggable(value = LogLevel.TRACE, skipArgs = true, skipResult = true, warnOver = 10, warnUnit = TimeUnit.SECONDS)
     @Override
     public Collection<WikipediaPage> findByKeys(Collection<PageKey> pageKeys) {
         if (pageKeys.stream().map(PageKey::getLang).distinct().count() > 1) {
@@ -211,8 +206,9 @@ class WikipediaPageApiRepository implements WikipediaPageRepository {
     }
 
     @Override
-    @Loggable(LogLevel.DEBUG)
     public WikipediaSearchResult findByContent(WikipediaSearchRequest searchRequest) {
+        LOGGER.debug("START Find Page by Content: {}", searchRequest);
+
         if (searchRequest.getLimit() > MAX_SEARCH_RESULTS) {
             LOGGER.error("Too big number of results to search: " + searchRequest.getLimit());
             return WikipediaSearchResult.ofEmpty();
@@ -235,13 +231,15 @@ class WikipediaPageApiRepository implements WikipediaPageRepository {
             .lang(searchRequest.getLang())
             .params(buildPageIdsByStringMatchRequestParams(searchRequest))
             .build();
+        WikipediaSearchResult result = WikipediaSearchResult.ofEmpty();
         try {
             WikipediaApiResponse apiResponse = wikipediaApiHelper.executeApiRequest(apiRequest);
-            return extractPageIdsFromSearchJson(apiResponse);
+            result = extractPageIdsFromSearchJson(apiResponse);
         } catch (WikipediaException e) {
             LOGGER.error("Error finding pages by content", e);
         }
-        return WikipediaSearchResult.ofEmpty();
+        LOGGER.debug("END Find Page by Content: {}", result);
+        return result;
     }
 
     private Map<String, String> buildPageIdsByStringMatchRequestParams(WikipediaSearchRequest searchRequest) {
@@ -327,8 +325,6 @@ class WikipediaPageApiRepository implements WikipediaPageRepository {
                 queryTimestamp,
                 editTimestamp
             );
-            // This exception is always logged by the aspect-based library even when ignored
-            // See: https://github.com/rozidan/logger-spring-boot/issues/3
             throw new WikipediaConflictException(message);
         }
     }

@@ -1,6 +1,5 @@
 package es.bvalero.replacer.dump;
 
-import com.github.rozidan.springboot.logger.Loggable;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.index.PageIndexService;
@@ -18,7 +17,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.logging.LogLevel;
 import org.springframework.stereotype.Component;
 import org.xml.sax.SAXException;
 
@@ -45,10 +43,10 @@ class DumpSaxParser implements DumpParser {
     }
 
     @Override
-    @Loggable(value = LogLevel.DEBUG, entered = true, skipResult = true)
     public void parseDumpFile(WikipediaLanguage lang, DumpFile dumpFile) throws ReplacerException {
         assert !getDumpIndexingStatus().isRunning();
 
+        LOGGER.debug("START Parse dump file: {} ...", dumpFile);
         try (InputStream xmlInput = new BZip2CompressorInputStream(Files.newInputStream(dumpFile.getPath()), true)) {
             SAXParserFactory factory = SAXParserFactory.newInstance();
             SAXParser saxParser = factory.newSAXParser();
@@ -59,10 +57,12 @@ class DumpSaxParser implements DumpParser {
             this.dumpHandler = new DumpSaxHandler(lang, pageIndexService);
             saxParser.parse(xmlInput, this.dumpHandler);
         } catch (IOException e) {
-            throw new ReplacerException("Dump file not valid", e);
+            throw new ReplacerException("Dump file not valid: " + dumpFile, e);
         } catch (ParserConfigurationException | SAXException e) {
-            throw new ReplacerException("SAX Error parsing dump file", e);
+            throw new ReplacerException("SAX Error parsing dump file: " + dumpFile, e);
         }
+
+        LOGGER.debug("END Parse dump file: {}", dumpFile);
     }
 
     @Override

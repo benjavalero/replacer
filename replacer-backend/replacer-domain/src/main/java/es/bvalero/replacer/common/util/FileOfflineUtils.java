@@ -13,11 +13,11 @@ import lombok.extern.slf4j.Slf4j;
 public class FileOfflineUtils {
 
     public String getFileContent(String fileName) throws ReplacerException {
-        LOGGER.debug("Load fake content from file: {} ...", fileName);
+        LOGGER.trace("Load fake content from file: {} ...", fileName);
         try (InputStream is = FileOfflineUtils.class.getClassLoader().getResourceAsStream(fileName)) {
             return new String(Objects.requireNonNull(is).readAllBytes(), StandardCharsets.UTF_8);
         } catch (IOException e) {
-            LOGGER.error("Error loading resource file", e);
+            LOGGER.error("Error loading resource file: {}", fileName, e);
             throw new ReplacerException(e);
         }
     }

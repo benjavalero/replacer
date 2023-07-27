@@ -1,6 +1,5 @@
 package es.bvalero.replacer.replacement;
 
-import com.github.rozidan.springboot.logger.Loggable;
 import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.dto.ReplacementTypeDto;
@@ -10,6 +9,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.Optional;
 import javax.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "Replacement")
-@Loggable(entered = true)
+@Slf4j
 @RestController
 @RequestMapping("api/replacement")
 public class ReplacementValidationController {
@@ -36,8 +36,13 @@ public class ReplacementValidationController {
             validationRequest.getReplacement(),
             validationRequest.isCs()
         );
-        return type
-            .map(replacementType -> ResponseEntity.ok(ReplacementTypeDto.of(replacementType)))
-            .orElseGet(() -> ResponseEntity.noContent().build());
+        if (type.isPresent()) {
+            ReplacementTypeDto typeDto = ReplacementTypeDto.of(type.get());
+            LOGGER.info("GET Validate Custom Replacement: {} => {}", validationRequest, typeDto);
+            return ResponseEntity.ok(typeDto);
+        } else {
+            LOGGER.info("GET Validate Custom Replacement: {} => {}", validationRequest, "No Content");
+            return ResponseEntity.noContent().build();
+        }
     }
 }

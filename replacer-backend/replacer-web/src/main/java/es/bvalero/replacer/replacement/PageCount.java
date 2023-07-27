@@ -8,7 +8,7 @@ import org.springframework.lang.NonNull;
 
 @Schema(description = "Count of reviewed replacements by page")
 @Value(staticConstructor = "of")
-class PageCount {
+public class PageCount {
 
     @Schema(requiredMode = REQUIRED, example = "1")
     int pageId;

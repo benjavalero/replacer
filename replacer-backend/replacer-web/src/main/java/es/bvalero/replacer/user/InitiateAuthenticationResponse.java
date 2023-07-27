@@ -2,13 +2,14 @@ package es.bvalero.replacer.user;
 
 import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
 
+import es.bvalero.replacer.common.util.ReplacerUtils;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Value;
 import org.springframework.lang.NonNull;
 
 @Schema(description = "Request token and authorization URL to initiate an authorization process")
 @Value(staticConstructor = "of")
-class InitiateAuthenticationResponse {
+public class InitiateAuthenticationResponse {
 
     @Schema
     @NonNull
@@ -20,4 +21,9 @@ class InitiateAuthenticationResponse {
     )
     @NonNull
     String authorizationUrl;
+
+    @Override
+    public String toString() {
+        return ReplacerUtils.toJson(this);
+    }
 }

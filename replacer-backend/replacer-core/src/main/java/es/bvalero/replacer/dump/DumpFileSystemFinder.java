@@ -1,6 +1,5 @@
 package es.bvalero.replacer.dump;
 
-import com.github.rozidan.springboot.logger.Loggable;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -16,7 +15,6 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.TestOnly;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.logging.LogLevel;
 import org.springframework.stereotype.Component;
 
 /**
@@ -46,10 +44,9 @@ class DumpFileSystemFinder implements DumpFinder {
     @Value("${replacer.dump.path.base}")
     private String dumpPathBase;
 
-    @Loggable(LogLevel.DEBUG)
     public Optional<DumpFile> findLatestDumpFile(WikipediaLanguage lang) {
         Path dumpPath = Paths.get(this.dumpPathBase, getDumpPathProject(lang));
-        LOGGER.trace("Dump path: {}", dumpPath);
+        LOGGER.debug("Finding latest dump file in: {} ...", dumpPath);
 
         Path latestDumpFile = null;
         for (Path dumpFolder : findDumpFolders(dumpPath)) {
@@ -60,10 +57,11 @@ class DumpFileSystemFinder implements DumpFinder {
             }
         }
         if (latestDumpFile == null) {
-            LOGGER.error("No dump file has been found");
+            LOGGER.error("No dump file found for {} Wikipedia", lang);
             return Optional.empty();
         }
 
+        LOGGER.debug("Found latest dump for {} Wikipedia: {}", lang, latestDumpFile);
         return Optional.of(DumpFile.of(latestDumpFile));
     }
 
@@ -75,7 +73,7 @@ class DumpFileSystemFinder implements DumpFinder {
                 .sorted(Collections.reverseOrder())
                 .collect(Collectors.toUnmodifiableList());
         } catch (IOException e) {
-            LOGGER.error("Error listing files in base folder", e);
+            LOGGER.error("Error listing files in: {}", dumpPath, e);
             return Collections.emptyList();
         }
     }

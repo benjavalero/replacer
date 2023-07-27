@@ -1,6 +1,5 @@
 package es.bvalero.replacer.finder.immutable.finders;
 
-import com.github.rozidan.springboot.logger.Loggable;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
@@ -27,7 +26,6 @@ import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.VisibleForTesting;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.logging.LogLevel;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
@@ -119,7 +117,6 @@ public class UppercaseFinder implements ImmutableFinder, PropertyChangeListener 
         );
     }
 
-    @Loggable(value = LogLevel.DEBUG, skipArgs = true, skipResult = true)
     private Map<WikipediaLanguage, RunAutomaton> buildUppercaseAutomata(
         SetValuedMap<WikipediaLanguage, String> uppercaseWords
     ) {

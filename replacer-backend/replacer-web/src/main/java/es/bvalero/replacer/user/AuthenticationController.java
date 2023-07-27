@@ -1,10 +1,10 @@
 package es.bvalero.replacer.user;
 
-import com.github.rozidan.springboot.logger.Loggable;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import javax.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 /** REST controller to perform authentication operations */
 @Tag(name = "Authentication")
-@Loggable
+@Slf4j
 @RestController
 @RequestMapping("api/authentication")
 public class AuthenticationController {
@@ -44,9 +44,15 @@ public class AuthenticationController {
     @Operation(summary = "Initiate an authorization process")
     @GetMapping(value = "/initiate")
     public InitiateAuthenticationResponse initiateAuthentication() throws AuthenticationException {
+        LOGGER.info("START Initiate Authentication");
         RequestToken requestToken = authenticationService.getRequestToken();
         String authorizationUrl = authenticationService.getAuthorizationUrl(requestToken);
-        return InitiateAuthenticationResponse.of(RequestTokenDto.of(requestToken), authorizationUrl);
+        InitiateAuthenticationResponse response = InitiateAuthenticationResponse.of(
+            RequestTokenDto.of(requestToken),
+            authorizationUrl
+        );
+        LOGGER.info("END Initiate Authentication: {}", response);
+        return response;
     }
 
     @Operation(summary = "Verify the authorization process")
@@ -55,14 +61,17 @@ public class AuthenticationController {
         @UserLanguage WikipediaLanguage lang,
         @Valid @RequestBody VerifyAuthenticationRequest verifyAuthenticationRequest
     ) throws AuthenticationException {
+        LOGGER.info("START Verify Authentication: {}", verifyAuthenticationRequest);
         RequestToken requestToken = RequestTokenDto.toDomain(verifyAuthenticationRequest.getRequestToken());
         String oAuthVerifier = verifyAuthenticationRequest.getOauthVerifier();
         AccessToken accessToken = authenticationService.getAccessToken(requestToken, oAuthVerifier);
         User user = userService.findAuthenticatedUser(lang, accessToken).orElseThrow(AuthenticationException::new);
+        UserDto userDto = UserDto.of(user);
+        LOGGER.info("END Verify Authentication: {}", userDto);
         return ResponseEntity
             .ok()
             .header(HttpHeaders.SET_COOKIE, buildAccessTokenCookie(accessToken).toString())
-            .body(UserDto.of(user));
+            .body(userDto);
     }
 
     private ResponseCookie buildAccessTokenCookie(AccessToken accessToken) {

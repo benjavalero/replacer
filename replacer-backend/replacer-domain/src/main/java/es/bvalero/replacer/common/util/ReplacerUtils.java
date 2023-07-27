@@ -1,9 +1,13 @@
 package es.bvalero.replacer.common.util;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.LinkedHashMap;
 import java.util.Locale;
+import java.util.Map;
 import lombok.experimental.UtilityClass;
 import org.springframework.lang.Nullable;
 
@@ -25,5 +29,22 @@ public class ReplacerUtils {
         }
         ZonedDateTime zdt = ZonedDateTime.of(localDateTime, ZoneId.systemDefault());
         return zdt.toInstant().toEpochMilli();
+    }
+
+    public String toJson(Object obj) {
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            return mapper.writeValueAsString(obj);
+        } catch (JsonProcessingException e) {
+            return obj.toString();
+        }
+    }
+
+    public String toJson(Object... objs) {
+        Map<String, Object> map = new LinkedHashMap<>();
+        for (int i = 0; i < objs.length;) {
+            map.put(objs[i++].toString(), objs[i++]);
+        }
+        return toJson(map);
     }
 }

@@ -1,6 +1,5 @@
 package es.bvalero.replacer.finder.replacement.finders;
 
-import com.github.rozidan.springboot.logger.Loggable;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.common.domain.ReplacementKind;
@@ -24,7 +23,6 @@ import lombok.Setter;
 import org.apache.commons.collections4.SetValuedMap;
 import org.jetbrains.annotations.TestOnly;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.logging.LogLevel;
 import org.springframework.stereotype.Component;
 
 /**
@@ -52,7 +50,6 @@ public class MisspellingComposedFinder extends MisspellingFinder implements Prop
             buildComposedMisspellingAutomata((SetValuedMap<WikipediaLanguage, ComposedMisspelling>) evt.getNewValue());
     }
 
-    @Loggable(value = LogLevel.DEBUG, skipArgs = true, skipResult = true)
     private Map<WikipediaLanguage, RunAutomaton> buildComposedMisspellingAutomata(
         SetValuedMap<WikipediaLanguage, ComposedMisspelling> misspellings
     ) {

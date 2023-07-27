@@ -42,7 +42,7 @@ class ReplacementCountService {
     }
 
     /** Count the number of replacements to review grouped by page in descending order by count */
-    Collection<ResultCount<IndexedPage>> countNotReviewedGroupedByPage(WikipediaLanguage lang) {
+    Collection<ResultCount<IndexedPage>> countReplacementsNotReviewedGroupedByPage(WikipediaLanguage lang) {
         // For the moment we are not going to cache it as it is used only by admins
         return replacementCountRepository
             .countNotReviewedGroupedByPage(lang, NUM_RESULTS)

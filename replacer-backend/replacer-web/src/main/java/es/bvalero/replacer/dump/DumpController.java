@@ -1,16 +1,17 @@
 package es.bvalero.replacer.dump;
 
-import com.github.rozidan.springboot.logger.Loggable;
 import es.bvalero.replacer.common.util.ReplacerUtils;
 import es.bvalero.replacer.user.ValidateAdminUser;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 /** REST controller to perform actions related to the dump indexing process */
 @Tag(name = "Dump Indexing")
+@Slf4j
 @RestController
 @RequestMapping("api/dump-indexing")
 public class DumpController {
@@ -19,19 +20,20 @@ public class DumpController {
     private DumpManager dumpManager;
 
     @Operation(summary = "Find the status of the current (or the last) dump indexing")
-    @Loggable(skipResult = true)
     @ValidateAdminUser
     @GetMapping(value = "")
     public DumpIndexingStatusDto getDumpIndexingStatus() {
-        return toDto(dumpManager.getDumpIndexingStatus());
+        DumpIndexingStatusDto dto = toDto(dumpManager.getDumpIndexingStatus());
+        LOGGER.debug("GET Dump Indexing Status: {}", dto);
+        return dto;
     }
 
     @Operation(summary = "Start manually a dump indexing")
-    @Loggable(entered = true, skipResult = true)
     @ValidateAdminUser
     @ResponseStatus(HttpStatus.ACCEPTED)
     @PostMapping(value = "")
     public void manualStartDumpIndexing() {
+        LOGGER.info("START Manual Dump Indexing...");
         dumpManager.indexLatestDumpFiles();
     }
 

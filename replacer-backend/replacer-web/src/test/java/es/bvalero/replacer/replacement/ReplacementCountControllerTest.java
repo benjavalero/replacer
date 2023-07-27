@@ -111,6 +111,8 @@ class ReplacementCountControllerTest {
     void testCountPagesWithMoreReplacementsToReview() throws Exception {
         User user = User.buildTestAdminUser();
         when(webUtils.getAuthenticatedUser(any(HttpServletRequest.class))).thenReturn(user);
+        WikipediaLanguage lang = WikipediaLanguage.getDefault();
+        when(webUtils.getLanguageHeader(any(HttpServletRequest.class))).thenReturn(lang);
 
         IndexedPage page = IndexedPage
             .builder()
@@ -120,7 +122,8 @@ class ReplacementCountControllerTest {
             .build();
         Collection<ResultCount<IndexedPage>> counts = List.of(ResultCount.of(page, 100));
 
-        when(replacementCountService.countNotReviewedGroupedByPage(WikipediaLanguage.getDefault())).thenReturn(counts);
+        when(replacementCountService.countReplacementsNotReviewedGroupedByPage(WikipediaLanguage.getDefault()))
+            .thenReturn(counts);
 
         mvc
             .perform(
@@ -134,7 +137,7 @@ class ReplacementCountControllerTest {
             .andExpect(jsonPath("$[0].title", is(page.getTitle())))
             .andExpect(jsonPath("$[0].count", is(100)));
 
-        verify(replacementCountService).countNotReviewedGroupedByPage(WikipediaLanguage.getDefault());
+        verify(replacementCountService).countReplacementsNotReviewedGroupedByPage(WikipediaLanguage.getDefault());
     }
 
     @Test
@@ -151,6 +154,7 @@ class ReplacementCountControllerTest {
             )
             .andExpect(status().isForbidden());
 
-        verify(replacementCountService, never()).countNotReviewedGroupedByPage(WikipediaLanguage.getDefault());
+        verify(replacementCountService, never())
+            .countReplacementsNotReviewedGroupedByPage(WikipediaLanguage.getDefault());
     }
 }

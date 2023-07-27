@@ -4,13 +4,13 @@ import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import es.bvalero.replacer.common.util.ReplacerUtils;
 import io.swagger.v3.oas.annotations.media.Schema;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
-import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.VisibleForTesting;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
@@ -23,8 +23,6 @@ class ReviewPage {
 
     @VisibleForTesting
     static final String EMPTY_CONTENT = " ";
-
-    private static final int SHORT_CONTENT_LENGTH = 50;
 
     @Schema(description = "Language of the Wikipedia in use", requiredMode = REQUIRED, example = "es")
     @NonNull
@@ -45,7 +43,7 @@ class ReviewPage {
         requiredMode = REQUIRED,
         example = "== Biografía ==Hijo de humildes inmigrantes piamonteses [...]"
     )
-    @ToString.Exclude
+    @JsonSerialize(using = PageContentSerializer.class)
     @NonNull
     @NotNull
     private String content;
@@ -64,17 +62,18 @@ class ReviewPage {
     @NotNull
     private String queryTimestamp;
 
-    @ToString.Include
-    private String shortContent() {
-        return StringUtils.abbreviate(getContent(), SHORT_CONTENT_LENGTH);
-    }
-
     @JsonIgnore
     public int getSectionOffset() {
         return this.section != null ? this.section.getOffset() : 0;
     }
 
+    @JsonIgnore
     boolean isReviewedWithoutChanges() {
         return this.content.equals(EMPTY_CONTENT);
+    }
+
+    @Override
+    public String toString() {
+        return ReplacerUtils.toJson(this);
     }
 }

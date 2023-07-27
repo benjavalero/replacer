@@ -3,6 +3,7 @@ package es.bvalero.replacer.review;
 import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import es.bvalero.replacer.common.util.ReplacerUtils;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.Collection;
 import lombok.Value;
@@ -12,7 +13,7 @@ import org.springframework.lang.Nullable;
 @Schema(description = "Page and replacements to review")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Value(staticConstructor = "of")
-class FindReviewResponse {
+public class FindReviewResponse {
 
     @Schema(requiredMode = REQUIRED)
     @NonNull
@@ -25,4 +26,9 @@ class FindReviewResponse {
     @Schema(description = "Number of pending pages to review of the given type", example = "1704147")
     @Nullable
     Integer numPending;
+
+    @Override
+    public String toString() {
+        return ReplacerUtils.toJson(this);
+    }
 }

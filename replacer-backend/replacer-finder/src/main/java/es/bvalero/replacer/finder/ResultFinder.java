@@ -1,6 +1,5 @@
 package es.bvalero.replacer.finder;
 
-import com.github.rozidan.springboot.logger.Loggable;
 import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.cosmetic.CosmeticFinderService;
@@ -8,9 +7,7 @@ import es.bvalero.replacer.finder.immutable.ImmutableFinderService;
 import es.bvalero.replacer.finder.replacement.ReplacementFinderService;
 import es.bvalero.replacer.finder.replacement.custom.CustomReplacementFinderService;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.logging.LogLevel;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -34,7 +31,6 @@ class ResultFinder
         return cosmeticFinderService.find(page);
     }
 
-    @Loggable(value = LogLevel.TRACE, skipResult = true, warnOver = 1, warnUnit = TimeUnit.SECONDS)
     @Override
     public Collection<Replacement> findReplacements(FinderPage page) {
         // There will usually be much more immutables found than results.

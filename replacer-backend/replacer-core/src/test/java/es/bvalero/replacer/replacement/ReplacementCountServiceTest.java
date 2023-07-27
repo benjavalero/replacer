@@ -79,7 +79,7 @@ class ReplacementCountServiceTest {
         when(replacementCountRepository.countNotReviewedGroupedByPage(lang, ReplacementCountService.NUM_RESULTS))
             .thenReturn(counts);
 
-        assertEquals(counts, replacementCountService.countNotReviewedGroupedByPage(lang));
+        assertEquals(counts, replacementCountService.countReplacementsNotReviewedGroupedByPage(lang));
 
         verify(replacementCountRepository).countNotReviewedGroupedByPage(lang, ReplacementCountService.NUM_RESULTS);
     }

@@ -2,6 +2,7 @@ package es.bvalero.replacer.user;
 
 import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
 
+import es.bvalero.replacer.common.util.ReplacerUtils;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -14,7 +15,7 @@ import org.springframework.lang.NonNull;
 )
 @Value
 @Builder(access = AccessLevel.PRIVATE)
-class UserDto {
+public class UserDto {
 
     @Schema(description = "Name of the user in Wikipedia", requiredMode = REQUIRED, example = "Benjavalero")
     @NonNull
@@ -40,5 +41,10 @@ class UserDto {
             .bot(user.isBot())
             .admin(user.isAdmin())
             .build();
+    }
+
+    @Override
+    public String toString() {
+        return ReplacerUtils.toJson(this);
     }
 }

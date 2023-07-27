@@ -2,19 +2,19 @@ package es.bvalero.replacer.page;
 
 import static java.util.stream.Collectors.*;
 
-import com.github.rozidan.springboot.logger.Loggable;
 import es.bvalero.replacer.user.AuthenticatedUser;
 import es.bvalero.replacer.user.User;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.Collection;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "Pages")
-@Loggable(skipResult = true)
+@Slf4j
 @RestController
 @RequestMapping("api/page")
 public class PageCountController {
@@ -25,7 +25,7 @@ public class PageCountController {
     @Operation(summary = "Count the pages to review grouped by type (kind-subtype)")
     @GetMapping(value = "/type/count")
     public Collection<KindCount> countPagesNotReviewedByType(@AuthenticatedUser User user) {
-        return pageCountService
+        Collection<KindCount> counts = pageCountService
             .countPagesNotReviewedByType(user)
             .stream()
             .collect(
@@ -39,5 +39,7 @@ public class PageCountController {
             .map(entry -> KindCount.of(entry.getKey().getCode(), entry.getValue()))
             .sorted()
             .collect(toList());
+        LOGGER.info("GET Count Pages Not Reviewed By Type: {}", counts);
+        return counts;
     }
 }

@@ -8,7 +8,7 @@ import org.springframework.lang.NonNull;
 
 @Schema(description = "Count of reviewed replacements by reviewer")
 @Value(staticConstructor = "of")
-class ReviewerCount {
+public class ReviewerCount {
 
     @Schema(requiredMode = REQUIRED, example = "Benjavalero")
     @NonNull
