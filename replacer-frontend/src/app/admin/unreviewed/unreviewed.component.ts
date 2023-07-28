@@ -16,10 +16,13 @@ import { ReplacementApiService } from '../../api/services/replacement-api.servic
 export class UnreviewedComponent implements OnInit {
   unreviewed$!: Observable<PageCount[]>;
 
-  constructor(private replacementApiService: ReplacementApiService, private userConfigService: UserConfigService) {}
+  constructor(
+    private replacementApiService: ReplacementApiService,
+    private userConfigService: UserConfigService
+  ) {}
 
   ngOnInit() {
-    this.unreviewed$ = this.replacementApiService.countNotReviewedGroupedByPage();
+    this.unreviewed$ = this.replacementApiService.countReplacementsNotReviewedGroupedByPage();
   }
 
   get wikipediaUrl(): string {

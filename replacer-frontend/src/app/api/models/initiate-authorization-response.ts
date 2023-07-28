@@ -5,7 +5,7 @@ import { RequestToken } from './request-token';
 /**
  * Request token and authorization URL to initiate an authorization process
  */
-export interface InitiateAuthenticationResponse {
+export interface InitiateAuthorizationResponse {
   authorizationUrl: string;
   requestToken: RequestToken;
 }

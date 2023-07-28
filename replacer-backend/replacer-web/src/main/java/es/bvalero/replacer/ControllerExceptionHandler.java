@@ -42,7 +42,7 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
             LOGGER.info(e.getMessage());
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         } else if (e.getMessage() != null && e.getMessage().contains("mwoauth-invalid-authorization")) {
-            LOGGER.warn("Authentication error saving page content: " + e.getMessage());
+            LOGGER.warn("Authorization error saving page content: " + e.getMessage());
             return ResponseEntity
                 .status(HttpStatus.UNAUTHORIZED)
                 .header(HttpHeaders.SET_COOKIE, buildAccessTokenCookie().toString())

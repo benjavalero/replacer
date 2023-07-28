@@ -11,15 +11,15 @@ import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-/** REST controller to perform authentication operations */
-@Tag(name = "Authentication")
+/** REST controller to perform user authorization operations */
+@Tag(name = "User")
 @Slf4j
 @RestController
-@RequestMapping("api/authentication")
-public class AuthenticationController {
+@RequestMapping("api/user")
+public class AuthorizationController {
 
     @Autowired
-    private AuthenticationService authenticationService;
+    private AuthorizationService authorizationService;
 
     @Autowired
     private UserService userService;
@@ -38,40 +38,43 @@ public class AuthenticationController {
     // B. Verify (steps 3 and 4)
     // We also orchestrate the steps in the controller,
     // but we create a simple service to keep right directions in module dependencies.
+    // We include the endpoints under the User resource, with custom verbs for both actions.
 
-    // Note these are the only REST endpoints which don't receive the common query parameters
+    // Note these are the only REST endpoints which don't expect to receive the language header and the token cookie
 
     @Operation(summary = "Initiate an authorization process")
-    @GetMapping(value = "/initiate")
-    public InitiateAuthenticationResponse initiateAuthentication() throws AuthenticationException {
-        LOGGER.info("START Initiate Authentication");
-        RequestToken requestToken = authenticationService.getRequestToken();
-        String authorizationUrl = authenticationService.getAuthorizationUrl(requestToken);
-        InitiateAuthenticationResponse response = InitiateAuthenticationResponse.of(
+    @GetMapping(value = "/initiate-authorization")
+    public InitiateAuthorizationResponse initiateAuthorization() throws AuthenticationException {
+        LOGGER.info("START Initiate Authorization");
+        RequestToken requestToken = authorizationService.getRequestToken();
+        String authorizationUrl = authorizationService.getAuthorizationUrl(requestToken);
+        InitiateAuthorizationResponse initiateAuthorizationResponse = InitiateAuthorizationResponse.of(
             RequestTokenDto.of(requestToken),
             authorizationUrl
         );
-        LOGGER.info("END Initiate Authentication: {}", response);
-        return response;
+        LOGGER.info("END Initiate Authorization: {}", initiateAuthorizationResponse);
+        return initiateAuthorizationResponse;
     }
 
     @Operation(summary = "Verify the authorization process")
-    @PostMapping(value = "/verify")
-    public ResponseEntity<UserDto> verifyAuthentication(
+    @PostMapping(value = "/verify-authorization")
+    public ResponseEntity<UserDto> verifyAuthorization(
         @UserLanguage WikipediaLanguage lang,
-        @Valid @RequestBody VerifyAuthenticationRequest verifyAuthenticationRequest
+        @Valid @RequestBody VerifyAuthorizationRequest verifyAuthorizationRequest
     ) throws AuthenticationException {
-        LOGGER.info("START Verify Authentication: {}", verifyAuthenticationRequest);
-        RequestToken requestToken = RequestTokenDto.toDomain(verifyAuthenticationRequest.getRequestToken());
-        String oAuthVerifier = verifyAuthenticationRequest.getOauthVerifier();
-        AccessToken accessToken = authenticationService.getAccessToken(requestToken, oAuthVerifier);
-        User user = userService.findAuthenticatedUser(lang, accessToken).orElseThrow(AuthenticationException::new);
-        UserDto userDto = UserDto.of(user);
-        LOGGER.info("END Verify Authentication: {}", userDto);
+        LOGGER.info("START Verify Authorization: {}", verifyAuthorizationRequest);
+        RequestToken requestToken = RequestTokenDto.toDomain(verifyAuthorizationRequest.getRequestToken());
+        String oAuthVerifier = verifyAuthorizationRequest.getOauthVerifier();
+        AccessToken accessToken = authorizationService.getAccessToken(requestToken, oAuthVerifier);
+        User authenticatedUser = userService
+            .findAuthenticatedUser(lang, accessToken)
+            .orElseThrow(AuthenticationException::new);
+        UserDto authenticatedUserDto = UserDto.of(authenticatedUser);
+        LOGGER.info("END Verify Authorization: {}", authenticatedUserDto);
         return ResponseEntity
             .ok()
             .header(HttpHeaders.SET_COOKIE, buildAccessTokenCookie(accessToken).toString())
-            .body(userDto);
+            .body(authenticatedUserDto);
     }
 
     private ResponseCookie buildAccessTokenCookie(AccessToken accessToken) {

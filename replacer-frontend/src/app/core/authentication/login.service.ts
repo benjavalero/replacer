@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { InitiateAuthenticationResponse } from '../../api/models/initiate-authentication-response';
 import { RequestToken } from '../../api/models/request-token';
 import { User } from '../../api/models/user';
-import { VerifyAuthenticationRequest } from '../../api/models/verify-authentication-request';
-import { AuthenticationApiService } from '../../api/services/authentication-api.service';
 import { UserService } from '../user/user.service';
+import { UserApiService } from '../../api/services/user-api.service';
+import { InitiateAuthorizationResponse } from '../../api/models/initiate-authorization-response';
+import { VerifyAuthorizationRequest } from '../../api/models/verify-authorization-request';
 
 @Injectable({
   providedIn: 'root'
@@ -15,11 +15,14 @@ export class LoginService {
   private readonly requestTokenKey = 'requestToken';
   private readonly redirectPathKey = 'redirectPath';
 
-  constructor(private authenticationApiService: AuthenticationApiService, private userService: UserService) {}
+  constructor(
+    private userApiService: UserApiService,
+    private userService: UserService
+  ) {}
 
-  getAuthenticationUrl$(): Observable<string> {
-    return this.authenticationApiService.initiateAuthentication().pipe(
-      map((token: InitiateAuthenticationResponse) => {
+  getAuthorizationUrl$(): Observable<string> {
+    return this.userApiService.initiateAuthorization().pipe(
+      map((token: InitiateAuthorizationResponse) => {
         // We keep the request token for further use on verification
         localStorage.setItem(this.requestTokenKey, JSON.stringify(token.requestToken));
 
@@ -29,7 +32,7 @@ export class LoginService {
   }
 
   loginUser$(oauthVerifier: string): Observable<User> {
-    return this.authenticate$(oauthVerifier).pipe(
+    return this.authorize$(oauthVerifier).pipe(
       map((wikipediaUser: User) => {
         // Remove request token as it is no longer needed
         localStorage.removeItem(this.requestTokenKey);
@@ -41,14 +44,14 @@ export class LoginService {
     );
   }
 
-  private authenticate$(oauthVerifier: string): Observable<User> {
+  private authorize$(oauthVerifier: string): Observable<User> {
     // At this point we can assert that the request token exists
     const requestToken: RequestToken = JSON.parse(localStorage.getItem(this.requestTokenKey)!);
-    return this.authenticationApiService.verifyAuthentication({
+    return this.userApiService.verifyAuthorization({
       body: {
         oauthVerifier,
         requestToken
-      } as VerifyAuthenticationRequest
+      } as VerifyAuthorizationRequest
     });
   }
 

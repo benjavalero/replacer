@@ -4,10 +4,10 @@ import { NgModule, ModuleWithProviders, SkipSelf, Optional } from '@angular/core
 import { HttpClient } from '@angular/common/http';
 import { ApiConfiguration, ApiConfigurationParams } from './api-configuration';
 
+import { UserApiService } from './services/user-api.service';
 import { ReviewApiService } from './services/review-api.service';
 import { PagesApiService } from './services/pages-api.service';
 import { DumpIndexingApiService } from './services/dump-indexing-api.service';
-import { AuthenticationApiService } from './services/authentication-api.service';
 import { ReplacementApiService } from './services/replacement-api.service';
 import { AdministrationApiService } from './services/administration-api.service';
 
@@ -19,10 +19,10 @@ import { AdministrationApiService } from './services/administration-api.service'
   exports: [],
   declarations: [],
   providers: [
+    UserApiService,
     ReviewApiService,
     PagesApiService,
     DumpIndexingApiService,
-    AuthenticationApiService,
     ReplacementApiService,
     AdministrationApiService,
     ApiConfiguration

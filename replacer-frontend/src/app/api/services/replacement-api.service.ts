@@ -147,8 +147,8 @@ export class ReplacementApiService extends BaseService {
     );
   }
 
-  /** Path part for operation `countNotReviewedGroupedByPage()` */
-  static readonly CountNotReviewedGroupedByPagePath = '/api/replacement/page/count';
+  /** Path part for operation `countReplacementsNotReviewedGroupedByPage()` */
+  static readonly CountReplacementsNotReviewedGroupedByPagePath = '/api/replacement/page/count';
 
   /**
    * Count the number of replacements to review, including the custom ones, grouped by page in descending order by count.
@@ -156,16 +156,16 @@ export class ReplacementApiService extends BaseService {
    *
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `countNotReviewedGroupedByPage()` instead.
+   * To access only the response body, use `countReplacementsNotReviewedGroupedByPage()` instead.
    *
    * This method doesn't expect any request body.
    */
-  countNotReviewedGroupedByPage$Response(
+  countReplacementsNotReviewedGroupedByPage$Response(
     params?: {
     },
     context?: HttpContext
   ): Observable<StrictHttpResponse<Array<PageCount>>> {
-    const rb = new RequestBuilder(this.rootUrl, ReplacementApiService.CountNotReviewedGroupedByPagePath, 'get');
+    const rb = new RequestBuilder(this.rootUrl, ReplacementApiService.CountReplacementsNotReviewedGroupedByPagePath, 'get');
     if (params) {
     }
 
@@ -185,16 +185,16 @@ export class ReplacementApiService extends BaseService {
    *
    *
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `countNotReviewedGroupedByPage$Response()` instead.
+   * To access the full response (for headers, for example), `countReplacementsNotReviewedGroupedByPage$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  countNotReviewedGroupedByPage(
+  countReplacementsNotReviewedGroupedByPage(
     params?: {
     },
     context?: HttpContext
   ): Observable<Array<PageCount>> {
-    return this.countNotReviewedGroupedByPage$Response(params, context).pipe(
+    return this.countReplacementsNotReviewedGroupedByPage$Response(params, context).pipe(
       map((r: StrictHttpResponse<Array<PageCount>>): Array<PageCount> => r.body)
     );
   }

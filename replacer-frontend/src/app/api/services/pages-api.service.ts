@@ -107,6 +107,7 @@ export class PagesApiService extends BaseService {
    */
   findPagesToReviewByType$Response(
     params: {
+      lang: string;
 
     /**
      * Replacement kind code
@@ -122,6 +123,7 @@ export class PagesApiService extends BaseService {
   ): Observable<StrictHttpResponse<string>> {
     const rb = new RequestBuilder(this.rootUrl, PagesApiService.FindPagesToReviewByTypePath, 'get');
     if (params) {
+      rb.query('lang', params.lang, {});
       rb.query('kind', params.kind, {});
       rb.query('subtype', params.subtype, {});
     }
@@ -148,6 +150,7 @@ export class PagesApiService extends BaseService {
    */
   findPagesToReviewByType(
     params: {
+      lang: string;
 
     /**
      * Replacement kind code

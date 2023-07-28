@@ -5,7 +5,7 @@ import { RequestToken } from './request-token';
 /**
  * Request token and OAuth verifier to complete the authorization process
  */
-export interface VerifyAuthenticationRequest {
+export interface VerifyAuthorizationRequest {
   oauthVerifier: string;
   requestToken: RequestToken;
 }

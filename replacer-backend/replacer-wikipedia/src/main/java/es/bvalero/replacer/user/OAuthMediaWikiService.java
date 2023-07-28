@@ -44,8 +44,8 @@ class OAuthMediaWikiService implements OAuthService {
         return mediaWikiService.getAuthorizationUrl(convertToRequestToken(requestToken));
     }
 
-    private OAuth1RequestToken convertToRequestToken(RequestToken authenticationToken) {
-        return new OAuth1RequestToken(authenticationToken.getToken(), authenticationToken.getTokenSecret());
+    private OAuth1RequestToken convertToRequestToken(RequestToken authorizationToken) {
+        return new OAuth1RequestToken(authorizationToken.getToken(), authorizationToken.getTokenSecret());
     }
 
     @Override
