@@ -1,4 +1,5 @@
 import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { UserConfigService } from '../user/user-config.service';
@@ -10,7 +11,8 @@ export class LangInterceptor implements HttpInterceptor {
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     return next.handle(
       req.clone({
-        headers: req.headers.append('Accept-Language', this.userConfigService.lang)
+        headers: req.headers.append('Accept-Language', this.userConfigService.lang),
+        withCredentials: !environment.production
       })
     );
   }

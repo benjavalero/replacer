@@ -38,7 +38,11 @@ public class WebMvcConfiguration {
             @Profile("backend")
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/api/**").allowedOrigins(corsAllowedOrigins).allowedMethods("GET", "POST");
+                registry
+                    .addMapping("/api/**")
+                    .allowCredentials(true)
+                    .allowedOrigins(corsAllowedOrigins)
+                    .allowedMethods("GET", "POST");
             }
 
             @Override
