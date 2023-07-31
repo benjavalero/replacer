@@ -59,6 +59,7 @@ export class HeaderComponent implements OnInit {
   private closeSession(): void {
     // Clear session and reload the page
     this.userService.clearSession();
-    this.router.navigate(['']);
+    console.log('Close session. Discard current user and redirect to Dashboard.');
+    this.router.navigate(['dashboard']);
   }
 }

@@ -9,7 +9,7 @@
   </div>
 </div>
 
-<div *ngIf="user$ | async as user">
+<div *ngIf="user$ | async as user; else login">
   <div class="row" *ngIf="user.hasRights">
     <div class="col-md-6 col-lg-4 py-1">
       <div class="card h-100 bg-light">
@@ -66,10 +66,13 @@
     <p>Es necesario ser un usuario <a href="https://es.wikipedia.org/wiki/Wikipedia:Autoconfirmados" target="_blank"
         rel="noopener noreferrer">autoconfirmado</a> para utilizar Replacer.</p>
   </app-alert>
-</div>
 
-<app-alert type="warning" [icon]="true" class="alert-small">
-  <p><strong>Usa Replacer de forma responsable</strong></p>
-  <p>Tómate tu tiempo y revisa cuidadosamente cada reemplazo en su contexto.</p>
-  <p>Hay muchísimos falsos positivos; en caso de duda, elige la opción de guardar sin cambios.</p>
-</app-alert>
+  <app-alert type="warning" [icon]="true" class="alert-small">
+    <p><strong>Usa Replacer de forma responsable</strong></p>
+    <p>Tómate tu tiempo y revisa cuidadosamente cada reemplazo en su contexto.</p>
+    <p>Hay muchísimos falsos positivos; en caso de duda, elige la opción de guardar sin cambios.</p>
+  </app-alert>
+</div>
+<ng-template #login>
+  <app-login></app-login>
+</ng-template>

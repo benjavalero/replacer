@@ -1,29 +1,16 @@
-<div>
-  <div class="card mb-3 mt-3">
-    <div class="card-body">
-      <h2 class="card-title">Replacer de la Wikipedia</h2>
-      <p class="card-text pt-3">
-        <strong>Replacer</strong>
-        es una herramienta en línea cuyo objetivo es proporcionar una interfaz sencilla que ayude a corregir los errores
-        ortográficos o de estilo más comunes en Wikipedia.
-      </p>
+<div class="card bg-light">
+  <div class="card-body">
+    <p class="card-text">
+      Necesita autenticarse en la Wikipedia para guardar los cambios con su usuario.
+    </p>
+    <div *ngIf="authorizationUrl$ | async as url; else loading">
+      <a class="btn btn-primary w-100" href="{{ url }}">
+        Iniciar sesión</a>
     </div>
-  </div>
-
-  <div class="card bg-light">
-    <div class="card-body">
-      <p class="card-text">
-        Necesita autenticarse en la Wikipedia para guardar los cambios con su usuario.
-      </p>
-      <div *ngIf="authorizationUrl$ | async as url; else loading">
-        <a class="btn btn-primary w-100" href="{{ url }}">
-          Iniciar sesión</a>
-      </div>
-      <ng-template #loading>
-        <app-alert>
-          Comprobando autenticación…
-        </app-alert>
-      </ng-template>
-    </div>
+    <ng-template #loading>
+      <app-alert>
+        Comprobando autenticación…
+      </app-alert>
+    </ng-template>
   </div>
 </div>

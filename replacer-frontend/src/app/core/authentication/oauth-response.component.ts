@@ -34,6 +34,7 @@ export class OAuthResponseComponent implements OnInit {
           }
         });
       } else {
+        console.log('Empty route but not back from authorization. Redirect to Dashboard.');
         this.router.navigate(['dashboard']);
       }
     });

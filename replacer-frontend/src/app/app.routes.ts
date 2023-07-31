@@ -1,6 +1,5 @@
 import { Routes } from '@angular/router';
 import { AdminComponent } from './admin/admin.component';
-import { LoginComponent } from './core/authentication/login.component';
 import { OAuthResponseComponent } from './core/authentication/oauth-response.component';
 import { DashboardComponent } from './core/dashboard/dashboard.component';
 import { AuthenticationGuard } from './core/guard/authentication.guard';
@@ -12,7 +11,6 @@ import { StatsComponent } from './stats/stats.component';
 
 export const routes: Routes = [
   { path: '', component: OAuthResponseComponent },
-  { path: 'login', component: LoginComponent },
   { path: 'dashboard', component: DashboardComponent, canActivate: [AuthenticationGuard] },
 
   // Backward-compatibility

@@ -6,18 +6,22 @@ import { Observable } from 'rxjs';
 import { User } from '../../api/models/user';
 import { AlertComponent } from '../../shared/alert/alert.component';
 import { UserService } from '../user/user.service';
+import { LoginComponent } from '../authentication/login.component';
 
 @Component({
   standalone: true,
   selector: 'app-dashboard',
-  imports: [CommonModule, RouterModule, AlertComponent],
+  imports: [CommonModule, RouterModule, AlertComponent, LoginComponent],
   templateUrl: './dashboard.component.html',
   styleUrls: []
 })
 export class DashboardComponent implements OnInit {
   user$!: Observable<User | null>;
 
-  constructor(private userService: UserService, private titleService: Title) {}
+  constructor(
+    private userService: UserService,
+    private titleService: Title
+  ) {}
 
   ngOnInit() {
     this.titleService.setTitle('Replacer - Reemplazador de la Wikipedia');
