@@ -2,7 +2,7 @@ import { Routes } from '@angular/router';
 import { AdminComponent } from './admin/admin.component';
 import { OAuthResponseComponent } from './core/authentication/oauth-response.component';
 import { DashboardComponent } from './core/dashboard/dashboard.component';
-import { AuthenticationGuard } from './core/guard/authentication.guard';
+import { authenticationGuard } from './core/guard/authentication.guard';
 import { FindCustomComponent } from './review/page/find-custom.component';
 import { FindRandomComponent } from './review/page/find-random.component';
 import { ReplacementListComponent } from './review/replacement-list/replacement-list.component';
@@ -11,7 +11,7 @@ import { StatsComponent } from './stats/stats.component';
 
 export const routes: Routes = [
   { path: '', component: OAuthResponseComponent },
-  { path: 'dashboard', component: DashboardComponent, canActivate: [AuthenticationGuard] },
+  { path: 'dashboard', component: DashboardComponent, canActivate: [authenticationGuard] },
 
   // Backward-compatibility
   { path: 'random/Personalizado/:subtype/:suggestion', redirectTo: 'custom/:subtype/:suggestion/false' },
@@ -19,12 +19,12 @@ export const routes: Routes = [
   { path: 'random/Compuestos/:subtype', redirectTo: 'review/3/:subtype' },
   { path: 'custom', redirectTo: 'review/custom' },
 
-  { path: 'admin', component: AdminComponent, canActivate: [AuthenticationGuard] },
+  { path: 'admin', component: AdminComponent, canActivate: [authenticationGuard] },
   {
     path: 'review',
     providers: [ReplacementListService],
-    canActivate: [AuthenticationGuard],
-    canActivateChild: [AuthenticationGuard],
+    canActivate: [authenticationGuard],
+    canActivateChild: [authenticationGuard],
     children: [
       { path: 'custom', component: FindCustomComponent },
       { path: 'custom/:subtype/:suggestion/:cs', component: FindRandomComponent },
@@ -36,6 +36,6 @@ export const routes: Routes = [
       { path: '', component: FindRandomComponent }
     ]
   },
-  { path: 'stats', component: StatsComponent, canActivate: [AuthenticationGuard] },
+  { path: 'stats', component: StatsComponent, canActivate: [authenticationGuard] },
   { path: '**', redirectTo: '/dashboard', pathMatch: 'full' }
 ];
