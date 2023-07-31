@@ -21,17 +21,17 @@ class OAuthMediaWikiService implements OAuthService {
     private OAuth10aService mediaWikiService;
 
     @Override
-    public RequestToken getRequestToken() throws AuthenticationException {
+    public RequestToken getRequestToken() {
         try {
             return convertRequestToken(mediaWikiService.getRequestToken());
         } catch (InterruptedException e) {
             // This cannot be unit-tested because the mocked InterruptedException make other tests fail
             Thread.currentThread().interrupt();
             LOGGER.error("Error getting the request token", e);
-            throw new AuthenticationException();
+            throw new AuthorizationException();
         } catch (ExecutionException | IOException e) {
             LOGGER.error("Error getting the request token", e);
-            throw new AuthenticationException();
+            throw new AuthorizationException();
         }
     }
 
@@ -49,7 +49,7 @@ class OAuthMediaWikiService implements OAuthService {
     }
 
     @Override
-    public AccessToken getAccessToken(RequestToken requestToken, String oAuthVerifier) throws AuthenticationException {
+    public AccessToken getAccessToken(RequestToken requestToken, String oAuthVerifier) {
         try {
             return convertAccessToken(
                 mediaWikiService.getAccessToken(convertToRequestToken(requestToken), oAuthVerifier)
@@ -58,10 +58,10 @@ class OAuthMediaWikiService implements OAuthService {
             // This cannot be unit-tested because the mocked InterruptedException make other tests fail
             Thread.currentThread().interrupt();
             LOGGER.error("Error getting the access token", e);
-            throw new AuthenticationException();
+            throw new AuthorizationException();
         } catch (ExecutionException | IOException e) {
             LOGGER.error("Error getting the access token", e);
-            throw new AuthenticationException();
+            throw new AuthorizationException();
         }
     }
 

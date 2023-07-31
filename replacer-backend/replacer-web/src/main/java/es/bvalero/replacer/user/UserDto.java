@@ -9,10 +9,7 @@ import lombok.Builder;
 import lombok.Value;
 import org.springframework.lang.NonNull;
 
-@Schema(
-    description = "Application user with access token after completing the authorization verification",
-    name = "User"
-)
+@Schema(description = "Application user after completing the authorization verification", name = "User")
 @Value
 @Builder(access = AccessLevel.PRIVATE)
 public class UserDto {

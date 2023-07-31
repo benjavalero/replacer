@@ -1,6 +1,5 @@
 package es.bvalero.replacer.user;
 
-import es.bvalero.replacer.common.exception.ForbiddenException;
 import es.bvalero.replacer.common.util.WebUtils;
 import javax.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +25,11 @@ public class ValidateUserAspect {
             ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
         User user = webUtils.getAuthenticatedUser(request);
         if (!user.isAdmin()) {
-            LOGGER.error("Unauthorized admin user: {}", user);
+            LOGGER.error(
+                "User {} is not an administrator and is accessing method {}",
+                user,
+                joinPoint.getSignature().getName()
+            );
             throw new ForbiddenException();
         }
         return joinPoint.proceed();
@@ -38,7 +41,7 @@ public class ValidateUserAspect {
             ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
         User user = webUtils.getAuthenticatedUser(request);
         if (!user.isBot()) {
-            LOGGER.error("Unauthorized bot user: {}", user);
+            LOGGER.error("User {} is not a bot and is accessing method {}", user, joinPoint.getSignature().getName());
             throw new ForbiddenException();
         }
         return joinPoint.proceed();

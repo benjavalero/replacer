@@ -44,7 +44,7 @@ public class AuthorizationController {
 
     @Operation(summary = "Initiate an authorization process")
     @GetMapping(value = "/initiate-authorization")
-    public InitiateAuthorizationResponse initiateAuthorization() throws AuthenticationException {
+    public InitiateAuthorizationResponse initiateAuthorization() {
         LOGGER.info("START Initiate Authorization");
         RequestToken requestToken = authorizationService.getRequestToken();
         String authorizationUrl = authorizationService.getAuthorizationUrl(requestToken);
@@ -61,14 +61,14 @@ public class AuthorizationController {
     public ResponseEntity<UserDto> verifyAuthorization(
         @UserLanguage WikipediaLanguage lang,
         @Valid @RequestBody VerifyAuthorizationRequest verifyAuthorizationRequest
-    ) throws AuthenticationException {
+    ) {
         LOGGER.info("START Verify Authorization: {}", verifyAuthorizationRequest);
         RequestToken requestToken = RequestTokenDto.toDomain(verifyAuthorizationRequest.getRequestToken());
         String oAuthVerifier = verifyAuthorizationRequest.getOauthVerifier();
         AccessToken accessToken = authorizationService.getAccessToken(requestToken, oAuthVerifier);
         User authenticatedUser = userService
             .findAuthenticatedUser(lang, accessToken)
-            .orElseThrow(AuthenticationException::new);
+            .orElseThrow(AuthorizationException::new);
         UserDto authenticatedUserDto = UserDto.of(authenticatedUser);
         LOGGER.info("END Verify Authorization: {}", authenticatedUserDto);
         return ResponseEntity

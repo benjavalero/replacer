@@ -9,7 +9,7 @@ class AuthorizationService {
     @Autowired
     private OAuthService oAuthService;
 
-    RequestToken getRequestToken() throws AuthenticationException {
+    RequestToken getRequestToken() {
         return this.oAuthService.getRequestToken();
     }
 
@@ -17,7 +17,7 @@ class AuthorizationService {
         return this.oAuthService.getAuthorizationUrl(requestToken);
     }
 
-    AccessToken getAccessToken(RequestToken requestToken, String oAuthVerifier) throws AuthenticationException {
+    AccessToken getAccessToken(RequestToken requestToken, String oAuthVerifier) {
         return this.oAuthService.getAccessToken(requestToken, oAuthVerifier);
     }
 }

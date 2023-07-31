@@ -1,8 +1,8 @@
 package es.bvalero.replacer;
 
-import es.bvalero.replacer.common.exception.ForbiddenException;
 import es.bvalero.replacer.user.AccessToken;
-import es.bvalero.replacer.user.AuthenticationException;
+import es.bvalero.replacer.user.AuthorizationException;
+import es.bvalero.replacer.user.ForbiddenException;
 import es.bvalero.replacer.wikipedia.WikipediaConflictException;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import lombok.extern.slf4j.Slf4j;
@@ -23,8 +23,8 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(e, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(value = { AuthenticationException.class })
-    protected ResponseEntity<Object> handleAuthenticationException(AuthenticationException e) {
+    @ExceptionHandler(value = { AuthorizationException.class })
+    protected ResponseEntity<Object> handleAuthorizationException(AuthorizationException e) {
         return ResponseEntity
             .status(HttpStatus.UNAUTHORIZED)
             .header(HttpHeaders.SET_COOKIE, buildAccessTokenCookie().toString())

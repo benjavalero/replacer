@@ -33,7 +33,7 @@ class OAuthMediaWikiServiceTest {
     }
 
     @Test
-    void testGetRequestToken() throws IOException, ExecutionException, InterruptedException, AuthenticationException {
+    void testGetRequestToken() throws IOException, ExecutionException, InterruptedException, AuthorizationException {
         OAuth1RequestToken requestToken = new OAuth1RequestToken("A", "B");
         when(mediaWikiService.getRequestToken()).thenReturn(requestToken);
 
@@ -48,7 +48,7 @@ class OAuthMediaWikiServiceTest {
     void testGetRequestTokenWithException() throws IOException, ExecutionException, InterruptedException {
         when(mediaWikiService.getRequestToken()).thenThrow(new IOException());
 
-        assertThrows(AuthenticationException.class, () -> oAuthMediaWikiService.getRequestToken());
+        assertThrows(AuthorizationException.class, () -> oAuthMediaWikiService.getRequestToken());
     }
 
     @Test
@@ -64,7 +64,7 @@ class OAuthMediaWikiServiceTest {
     }
 
     @Test
-    void testGetAccessToken() throws IOException, ExecutionException, InterruptedException, AuthenticationException {
+    void testGetAccessToken() throws IOException, ExecutionException, InterruptedException, AuthorizationException {
         RequestToken requestToken = RequestToken.of("R", "S");
         String oAuthVerifier = "V";
 
@@ -89,13 +89,13 @@ class OAuthMediaWikiServiceTest {
         when(mediaWikiService.getAccessToken(oAuth1RequestToken, oAuthVerifier)).thenThrow(new IOException());
 
         assertThrows(
-            AuthenticationException.class,
+            AuthorizationException.class,
             () -> oAuthMediaWikiService.getAccessToken(requestToken, oAuthVerifier)
         );
     }
 
     @Test
-    void testOAuthServiceOffline() throws AuthenticationException {
+    void testOAuthServiceOffline() throws AuthorizationException {
         RequestToken requestToken = oAuthOfflineService.getRequestToken();
         assertNotNull(requestToken);
         assertFalse(oAuthOfflineService.getAuthorizationUrl(requestToken).isEmpty());

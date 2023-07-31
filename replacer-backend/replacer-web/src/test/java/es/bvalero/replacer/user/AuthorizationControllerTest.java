@@ -69,7 +69,7 @@ class AuthorizationControllerTest {
         WikipediaLanguage lang = WikipediaLanguage.getDefault();
         when(webUtils.getLanguageHeader(any(HttpServletRequest.class))).thenReturn(lang);
 
-        when(authorizationService.getRequestToken()).thenThrow(new AuthenticationException());
+        when(authorizationService.getRequestToken()).thenThrow(new AuthorizationException());
 
         mvc
             .perform(get("/api/user/initiate-authorization").contentType(MediaType.APPLICATION_JSON))
