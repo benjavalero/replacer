@@ -9,7 +9,6 @@ import { ReviewApiService } from './services/review-api.service';
 import { PagesApiService } from './services/pages-api.service';
 import { DumpIndexingApiService } from './services/dump-indexing-api.service';
 import { ReplacementApiService } from './services/replacement-api.service';
-import { AdministrationApiService } from './services/administration-api.service';
 
 /**
  * Module that provides all services and configuration.
@@ -24,7 +23,6 @@ import { AdministrationApiService } from './services/administration-api.service'
     PagesApiService,
     DumpIndexingApiService,
     ReplacementApiService,
-    AdministrationApiService,
     ApiConfiguration
   ],
 })

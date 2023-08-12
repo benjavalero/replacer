@@ -3,6 +3,7 @@
 ## 2.23.7 (??)
 - Fix: intercept any 401 error in a response
 - Upgrade frontend to Angular 16
+- Remove feature: Public IP
 
 ## 2.23.6 (8 May 2023)
 - Fix regression: dropdown to change language

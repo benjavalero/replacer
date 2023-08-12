@@ -18,4 +18,3 @@ export { ReplacementCount } from './models/replacement-count';
 export { KindCount } from './models/kind-count';
 export { SubtypeCount } from './models/subtype-count';
 export { DumpIndexingStatus } from './models/dump-indexing-status';
-export { PublicIp } from './models/public-ip';

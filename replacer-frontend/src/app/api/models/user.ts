@@ -2,7 +2,7 @@
 /* eslint-disable */
 
 /**
- * Application user with access token after completing the authorization verification
+ * Application user after completing the authorization verification
  */
 export interface User {
 
