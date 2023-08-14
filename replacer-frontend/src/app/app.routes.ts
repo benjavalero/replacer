@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
-import { AdminComponent } from './admin/admin.component';
+import { DumpIndexingComponent } from './admin/dump-indexing/dump-indexing.component';
+import { UnreviewedComponent } from './admin/unreviewed/unreviewed.component';
 import { OAuthResponseComponent } from './core/authentication/oauth-response.component';
 import { DashboardComponent } from './core/dashboard/dashboard.component';
 import { authenticationGuard } from './core/guard/authentication.guard';
@@ -19,7 +20,15 @@ export const routes: Routes = [
   { path: 'random/Compuestos/:subtype', redirectTo: 'review/3/:subtype' },
   { path: 'custom', redirectTo: 'review/custom' },
 
-  { path: 'admin', component: AdminComponent, canActivate: [authenticationGuard] },
+  {
+    path: 'admin',
+    canActivate: [authenticationGuard],
+    canActivateChild: [authenticationGuard],
+    children: [
+      { path: 'dump-indexing', component: DumpIndexingComponent },
+      { path: 'unreviewed', component: UnreviewedComponent }
+    ]
+  },
   {
     path: 'review',
     providers: [ReplacementListService],

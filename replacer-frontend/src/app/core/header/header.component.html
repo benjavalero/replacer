@@ -27,9 +27,15 @@
           <a class="nav-link" href="https://es.wikipedia.org/wiki/Usuario:Benjavalero/Replacer" target="_blank"
              rel="noopener noreferrer" title="Abrir página de la herramienta en Wikipedia">Ayuda</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLinkActive="active" routerLink="/admin" [ngbCollapse]="!user.admin"
-             (click)="isNavCollapsed = true" title="Tareas de administración">Administración</a>
+        <li class="nav-item" ngbDropdown *ngIf="user.admin">
+          <a class="nav-link" style="cursor: pointer;" ngbDropdownToggle id="navbarDropdownAdmin" role="button"
+             title="Tareas de administración">Administración</a>
+          <div ngbDropdownMenu aria-labelledby="navbarDropdownAdmin">
+            <button ngbDropdownItem routerLinkActive="active" routerLink="/admin/dump-indexing"
+                    (click)="isNavCollapsed = true" title="Indexación">Indexación</button>
+            <button ngbDropdownItem routerLinkActive="active" routerLink="/admin/unreviewed"
+                    (click)="isNavCollapsed = true" title="Páginas con más reemplazos">Páginas con más reemplazos</button>
+          </div>
         </li>
       </ul>
       <hr />
@@ -38,7 +44,7 @@
           <a class="nav-link" style="cursor: pointer;" ngbDropdownToggle id="navbarDropdownUser" role="button">
             <em>{{ user.name }} - {{ lang$ | async }}</em>
           </a>
-          <div ngbDropdownMenu aria-labelledby="navbarDropdownUser" class="dropdown-menu dropdown-menu-right">
+          <div ngbDropdownMenu aria-labelledby="navbarDropdownUser" class="dropdown-menu-right">
             <button ngbDropdownItem (click)="onSelectLang('es')">
               En español (es.wikipedia.org)
             </button>

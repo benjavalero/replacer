@@ -50,16 +50,6 @@
         </div>
       </div>
     </div>
-
-    <div class="col-md-6 col-lg-4 py-1">
-      <div class="card h-100 bg-light" *ngIf="user.admin">
-        <div class="card-body">
-          <h4 class="card-title">Administración [ADMIN]</h4>
-          <p class="card-text">Tareas de administración.</p>
-          <a routerLink="/admin" class="stretched-link"></a>
-        </div>
-      </div>
-    </div>
   </div>
 
   <app-alert type="danger" *ngIf="!user.hasRights">
