@@ -1,20 +1,20 @@
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
-import { DumpIndexingStatus } from '../../api/models/dump-indexing-status';
-import { DumpIndexingApiService } from '../../api/services/dump-indexing-api.service';
-import { DumpIndexingAdapterStatus } from './dump-indexing.model';
+import { DumpStatus } from '../../api/models/dump-status';
+import { DumpApiService } from '../../api/services/dump-api.service';
+import { DumpAdapterStatus } from './dump.model';
 
 @Injectable()
-export class DumpIndexingAdapterService {
+export class DumpAdapterService {
   // Initial state is null when there is no data yet
-  readonly status$ = new Subject<DumpIndexingAdapterStatus | null>();
+  readonly status$ = new Subject<DumpAdapterStatus | null>();
 
-  constructor(private dumpIndexingApiService: DumpIndexingApiService) {
+  constructor(private dumpApiService: DumpApiService) {
     this.refreshDumpIndexing();
   }
 
   refreshDumpIndexing(): void {
-    this.getDumpIndexing$().subscribe((status: DumpIndexingStatus) => {
+    this.getDumpIndexing$().subscribe((status: DumpStatus) => {
       // The calculations could be done with asynchronous pipes,
       // but it is not worth as the calculations are quite simple
       const startDate = this.formatDate(status.start);
@@ -24,7 +24,7 @@ export class DumpIndexingAdapterService {
       const average = this.calculateAverage(status);
       const eta = this.formatMilliseconds(this.calculateEta(status));
 
-      const newStatus: DumpIndexingAdapterStatus = {
+      const newStatus: DumpAdapterStatus = {
         ...status,
         startDate: startDate,
         endDate: endDate,
@@ -37,15 +37,15 @@ export class DumpIndexingAdapterService {
     });
   }
 
-  private getDumpIndexing$(): Observable<DumpIndexingStatus> {
-    return this.dumpIndexingApiService.getDumpIndexingStatus();
+  private getDumpIndexing$(): Observable<DumpStatus> {
+    return this.dumpApiService.getDumpStatus();
   }
 
   startDumpIndexing$(): Observable<void> {
     // Empty the last indexation
     this.status$.next(null);
 
-    return this.dumpIndexingApiService.manualStartDumpIndexing();
+    return this.dumpApiService.manualStartDumpIndexing();
   }
 
   private formatDate(milliseconds?: number): Date | undefined {
@@ -61,7 +61,7 @@ export class DumpIndexingAdapterService {
     return `${totalHours}:${minutes}:${seconds}`;
   }
 
-  private calculateElapsed(status: DumpIndexingStatus): number {
+  private calculateElapsed(status: DumpStatus): number {
     if (status.start) {
       if (status.end) {
         return status.end - status.start;
@@ -73,7 +73,7 @@ export class DumpIndexingAdapterService {
     }
   }
 
-  private calculateProgress(status: DumpIndexingStatus): number {
+  private calculateProgress(status: DumpStatus): number {
     if (status.numPagesRead && status.numPagesEstimated) {
       // We might have more read pages than the estimation constant
       return (status.numPagesRead * 100.0) / Math.max(status.numPagesEstimated, status.numPagesRead);
@@ -82,7 +82,7 @@ export class DumpIndexingAdapterService {
     }
   }
 
-  private calculateAverage(status: DumpIndexingStatus): number {
+  private calculateAverage(status: DumpStatus): number {
     if (status.numPagesRead) {
       return this.calculateElapsed(status) / status.numPagesRead;
     } else {
@@ -90,7 +90,7 @@ export class DumpIndexingAdapterService {
     }
   }
 
-  private calculateEta(status: DumpIndexingStatus): number {
+  private calculateEta(status: DumpStatus): number {
     if (status.running && status.numPagesRead && status.numPagesEstimated) {
       const toRead = Math.max(status.numPagesEstimated, status.numPagesRead) - status.numPagesRead;
       return toRead * this.calculateAverage(status);

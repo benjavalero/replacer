@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { DumpIndexingComponent } from './admin/dump-indexing/dump-indexing.component';
+import { DumpComponent } from './admin/dump-indexing/dump.component';
 import { UnreviewedComponent } from './admin/unreviewed/unreviewed.component';
 import { OAuthResponseComponent } from './core/authentication/oauth-response.component';
 import { DashboardComponent } from './core/dashboard/dashboard.component';
@@ -25,7 +25,7 @@ export const routes: Routes = [
     canActivate: [authenticationGuard],
     canActivateChild: [authenticationGuard],
     children: [
-      { path: 'dump-indexing', component: DumpIndexingComponent },
+      { path: 'dump-indexing', component: DumpComponent },
       { path: 'unreviewed', component: UnreviewedComponent }
     ]
   },

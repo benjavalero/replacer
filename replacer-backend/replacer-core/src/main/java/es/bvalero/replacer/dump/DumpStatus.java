@@ -5,9 +5,10 @@ import lombok.Builder;
 import lombok.Value;
 import org.springframework.lang.Nullable;
 
+/** The status of the current (or the last) dump indexing */
 @Value
 @Builder
-class DumpIndexingStatus {
+class DumpStatus {
 
     boolean running;
 
@@ -29,7 +30,7 @@ class DumpIndexingStatus {
     @Nullable
     LocalDateTime end;
 
-    static DumpIndexingStatus ofEmpty() {
-        return DumpIndexingStatus.builder().running(false).build();
+    static DumpStatus ofEmpty() {
+        return DumpStatus.builder().running(false).build();
     }
 }

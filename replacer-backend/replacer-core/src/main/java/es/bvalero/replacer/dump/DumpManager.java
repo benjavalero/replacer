@@ -55,11 +55,11 @@ class DumpManager {
         LOGGER.debug("END dump indexing...");
     }
 
-    DumpIndexingStatus getDumpIndexingStatus() {
-        return dumpParser.getDumpIndexingStatus();
+    DumpStatus getDumpStatus() {
+        return dumpParser.getDumpStatus();
     }
 
     private boolean isDumpIndexingRunning() {
-        return getDumpIndexingStatus().isRunning();
+        return getDumpStatus().isRunning();
     }
 }

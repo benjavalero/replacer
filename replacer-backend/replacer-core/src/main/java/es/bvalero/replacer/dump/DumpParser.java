@@ -7,5 +7,5 @@ import es.bvalero.replacer.common.exception.ReplacerException;
 interface DumpParser {
     void parseDumpFile(WikipediaLanguage lang, DumpFile dumpFile) throws ReplacerException;
 
-    DumpIndexingStatus getDumpIndexingStatus();
+    DumpStatus getDumpStatus();
 }

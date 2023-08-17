@@ -45,7 +45,7 @@ class DumpControllerTest {
     private DumpManager dumpManager;
 
     @Test
-    void testGetDumpIndexingStatus() throws Exception {
+    void testGetDumpStatus() throws Exception {
         User user = User.buildTestAdminUser();
         when(webUtils.getAuthenticatedUser(any(HttpServletRequest.class))).thenReturn(user);
 
@@ -56,7 +56,7 @@ class DumpControllerTest {
         String dumpFileName = "xxx.xml.bz2";
         LocalDateTime start = LocalDateTime.now();
         LocalDateTime end = start.plusHours(1);
-        DumpIndexingStatus indexingStatus = new DumpIndexingStatus(
+        DumpStatus dumpStatus = new DumpStatus(
             running,
             numPagesRead,
             numPagesIndexed,
@@ -65,11 +65,11 @@ class DumpControllerTest {
             start,
             end
         );
-        when(dumpManager.getDumpIndexingStatus()).thenReturn(indexingStatus);
+        when(dumpManager.getDumpStatus()).thenReturn(dumpStatus);
 
         mvc
             .perform(
-                get("/api/dump-indexing")
+                get("/api/dump")
                     .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
                     .cookie(new Cookie(AccessToken.COOKIE_NAME, user.getAccessToken().toCookieValue()))
                     .contentType(MediaType.APPLICATION_JSON)
@@ -83,17 +83,17 @@ class DumpControllerTest {
             .andExpect(jsonPath("$.start", is(ReplacerUtils.convertLocalDateTimeToMilliseconds(start))))
             .andExpect(jsonPath("$.end", is(ReplacerUtils.convertLocalDateTimeToMilliseconds(end))));
 
-        verify(dumpManager).getDumpIndexingStatus();
+        verify(dumpManager).getDumpStatus();
     }
 
     @Test
-    void testGetDumpIndexingStatusNotAdmin() throws Exception {
+    void testGetDumpStatusNotAdmin() throws Exception {
         User user = User.buildTestUser();
         when(webUtils.getAuthenticatedUser(any(HttpServletRequest.class))).thenReturn(user);
 
         mvc
             .perform(
-                get("/api/dump-indexing")
+                get("/api/dump")
                     .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
                     .cookie(new Cookie(AccessToken.COOKIE_NAME, user.getAccessToken().toCookieValue()))
                     .contentType(MediaType.APPLICATION_JSON)
@@ -110,7 +110,7 @@ class DumpControllerTest {
 
         mvc
             .perform(
-                post("/api/dump-indexing")
+                post("/api/dump")
                     .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
                     .cookie(new Cookie(AccessToken.COOKIE_NAME, user.getAccessToken().toCookieValue()))
                     .contentType(MediaType.APPLICATION_JSON)
@@ -127,7 +127,7 @@ class DumpControllerTest {
 
         mvc
             .perform(
-                post("/api/dump-indexing")
+                post("/api/dump")
                     .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
                     .cookie(new Cookie(AccessToken.COOKIE_NAME, user.getAccessToken().toCookieValue()))
                     .contentType(MediaType.APPLICATION_JSON)

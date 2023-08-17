@@ -44,7 +44,7 @@ class DumpSaxParser implements DumpParser {
 
     @Override
     public void parseDumpFile(WikipediaLanguage lang, DumpFile dumpFile) throws ReplacerException {
-        assert !getDumpIndexingStatus().isRunning();
+        assert !getDumpStatus().isRunning();
 
         LOGGER.debug("START Parse dump file: {} ...", dumpFile);
         try (InputStream xmlInput = new BZip2CompressorInputStream(Files.newInputStream(dumpFile.getPath()), true)) {
@@ -66,11 +66,11 @@ class DumpSaxParser implements DumpParser {
     }
 
     @Override
-    public DumpIndexingStatus getDumpIndexingStatus() {
+    public DumpStatus getDumpStatus() {
         if (this.dumpHandler == null) {
-            return DumpIndexingStatus.ofEmpty();
+            return DumpStatus.ofEmpty();
         } else {
-            return DumpIndexingStatus
+            return DumpStatus
                 .builder()
                 .running(this.dumpHandler.isRunning())
                 .numPagesRead(this.dumpHandler.getNumPagesRead())

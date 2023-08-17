@@ -7,7 +7,7 @@ import { ApiConfiguration, ApiConfigurationParams } from './api-configuration';
 import { UserApiService } from './services/user-api.service';
 import { ReviewApiService } from './services/review-api.service';
 import { PagesApiService } from './services/pages-api.service';
-import { DumpIndexingApiService } from './services/dump-indexing-api.service';
+import { DumpApiService } from './services/dump-api.service';
 import { ReplacementApiService } from './services/replacement-api.service';
 
 /**
@@ -21,7 +21,7 @@ import { ReplacementApiService } from './services/replacement-api.service';
     UserApiService,
     ReviewApiService,
     PagesApiService,
-    DumpIndexingApiService,
+    DumpApiService,
     ReplacementApiService,
     ApiConfiguration
   ],

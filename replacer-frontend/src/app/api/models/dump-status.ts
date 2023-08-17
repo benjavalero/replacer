@@ -4,7 +4,7 @@
 /**
  * Status of the current (or the last) dump indexing
  */
-export interface DumpIndexingStatus {
+export interface DumpStatus {
 
   /**
    * Filename of the indexed dump

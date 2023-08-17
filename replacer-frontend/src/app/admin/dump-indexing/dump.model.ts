@@ -1,4 +1,4 @@
-export interface DumpIndexingAdapterStatus {
+export interface DumpAdapterStatus {
   // Fields coming from REST service
   running: boolean;
   numPagesRead?: number;

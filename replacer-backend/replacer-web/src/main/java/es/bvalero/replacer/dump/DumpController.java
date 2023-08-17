@@ -10,10 +10,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 /** REST controller to perform actions related to the dump indexing process */
-@Tag(name = "Dump Indexing")
+@Tag(name = "Dump")
 @Slf4j
 @RestController
-@RequestMapping("api/dump-indexing")
+@RequestMapping("api/dump")
 public class DumpController {
 
     @Autowired
@@ -22,8 +22,8 @@ public class DumpController {
     @Operation(summary = "Find the status of the current (or the last) dump indexing")
     @ValidateAdminUser
     @GetMapping(value = "")
-    public DumpIndexingStatusDto getDumpIndexingStatus() {
-        DumpIndexingStatusDto dto = toDto(dumpManager.getDumpIndexingStatus());
+    public DumpStatusDto getDumpStatus() {
+        DumpStatusDto dto = toDto(dumpManager.getDumpStatus());
         LOGGER.debug("GET Dump Indexing Status: {}", dto);
         return dto;
     }
@@ -37,8 +37,8 @@ public class DumpController {
         dumpManager.indexLatestDumpFiles();
     }
 
-    private DumpIndexingStatusDto toDto(DumpIndexingStatus status) {
-        return DumpIndexingStatusDto
+    private DumpStatusDto toDto(DumpStatus status) {
+        return DumpStatusDto
             .builder()
             .running(status.isRunning())
             .numPagesRead(status.getNumPagesRead())

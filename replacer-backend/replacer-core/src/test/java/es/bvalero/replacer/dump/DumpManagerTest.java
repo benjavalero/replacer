@@ -32,7 +32,7 @@ class DumpManagerTest {
 
     @Test
     void testProcessLatestDumpFiles() throws ReplacerException {
-        when(dumpParser.getDumpIndexingStatus()).thenReturn(DumpIndexingStatus.ofEmpty());
+        when(dumpParser.getDumpStatus()).thenReturn(DumpStatus.ofEmpty());
 
         Path dumpPath = mock(Path.class);
         DumpFile dumpFile = DumpFile.of(dumpPath);
@@ -47,7 +47,7 @@ class DumpManagerTest {
 
     @Test
     void testProcessLatestDumpFilesWithException() throws ReplacerException {
-        when(dumpParser.getDumpIndexingStatus()).thenReturn(DumpIndexingStatus.ofEmpty());
+        when(dumpParser.getDumpStatus()).thenReturn(DumpStatus.ofEmpty());
 
         Path dumpPath = mock(Path.class);
         DumpFile dumpFile = DumpFile.of(dumpPath);
@@ -65,7 +65,7 @@ class DumpManagerTest {
 
     @Test
     void testProcessLatestDumpFilesAlreadyRunning() throws ReplacerException {
-        when(dumpParser.getDumpIndexingStatus()).thenReturn(DumpIndexingStatus.builder().running(true).build());
+        when(dumpParser.getDumpStatus()).thenReturn(DumpStatus.builder().running(true).build());
 
         dumpManager.indexLatestDumpFiles();
 
@@ -77,7 +77,7 @@ class DumpManagerTest {
     @Test
     void testGetDumpIndexingStatus() {
         LocalDateTime now = LocalDateTime.now();
-        DumpIndexingStatus expected = DumpIndexingStatus
+        DumpStatus expected = DumpStatus
             .builder()
             .running(true)
             .dumpFileName("X")
@@ -88,11 +88,11 @@ class DumpManagerTest {
             .end(now.plusHours(1))
             .build();
 
-        when(dumpParser.getDumpIndexingStatus()).thenReturn(expected);
+        when(dumpParser.getDumpStatus()).thenReturn(expected);
 
-        DumpIndexingStatus actual = dumpManager.getDumpIndexingStatus();
+        DumpStatus actual = dumpManager.getDumpStatus();
 
         assertEquals(expected, actual);
-        verify(dumpParser).getDumpIndexingStatus();
+        verify(dumpParser).getDumpStatus();
     }
 }
