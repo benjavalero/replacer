@@ -16,6 +16,7 @@ import es.bvalero.replacer.user.AccessToken;
 import es.bvalero.replacer.user.User;
 import es.bvalero.replacer.user.ValidateUserAspect;
 import java.time.LocalDateTime;
+import java.util.Optional;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.Test;
@@ -65,7 +66,7 @@ class DumpControllerTest {
             start,
             end
         );
-        when(dumpManager.getDumpStatus()).thenReturn(dumpStatus);
+        when(dumpManager.getDumpStatus()).thenReturn(Optional.of(dumpStatus));
 
         mvc
             .perform(
@@ -82,6 +83,25 @@ class DumpControllerTest {
             .andExpect(jsonPath("$.dumpFileName", is(dumpFileName)))
             .andExpect(jsonPath("$.start", is(ReplacerUtils.convertLocalDateTimeToMilliseconds(start))))
             .andExpect(jsonPath("$.end", is(ReplacerUtils.convertLocalDateTimeToMilliseconds(end))));
+
+        verify(dumpManager).getDumpStatus();
+    }
+
+    @Test
+    void testGetDumpStatusEmpty() throws Exception {
+        User user = User.buildTestAdminUser();
+        when(webUtils.getAuthenticatedUser(any(HttpServletRequest.class))).thenReturn(user);
+
+        when(dumpManager.getDumpStatus()).thenReturn(Optional.empty());
+
+        mvc
+            .perform(
+                get("/api/dump")
+                    .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
+                    .cookie(new Cookie(AccessToken.COOKIE_NAME, user.getAccessToken().toCookieValue()))
+                    .contentType(MediaType.APPLICATION_JSON)
+            )
+            .andExpect(status().isNoContent());
 
         verify(dumpManager).getDumpStatus();
     }

@@ -2,6 +2,7 @@ package es.bvalero.replacer.dump;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.exception.ReplacerException;
+import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
@@ -55,11 +56,11 @@ class DumpManager {
         LOGGER.debug("END dump indexing...");
     }
 
-    DumpStatus getDumpStatus() {
+    Optional<DumpStatus> getDumpStatus() {
         return dumpParser.getDumpStatus();
     }
 
     private boolean isDumpIndexingRunning() {
-        return getDumpStatus().isRunning();
+        return getDumpStatus().isPresent() && getDumpStatus().get().isRunning();
     }
 }

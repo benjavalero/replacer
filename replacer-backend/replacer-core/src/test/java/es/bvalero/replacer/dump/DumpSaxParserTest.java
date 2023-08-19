@@ -13,6 +13,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -49,27 +50,23 @@ class DumpSaxParserTest {
         assertNotNull(dumpFile);
         assertTrue(Files.exists(dumpFile));
 
-        DumpStatus status = dumpParser.getDumpStatus();
-        assertFalse(status.isRunning());
-        assertNull(status.getDumpFileName());
-        assertNull(status.getStart());
-        assertNull(status.getEnd());
-        assertNull(status.getNumPagesRead());
-        assertNull(status.getNumPagesIndexed());
+        assertTrue(dumpParser.getDumpStatus().isEmpty());
 
         when(pageIndexService.indexPage(any(DumpPage.class)))
             .thenReturn(PageIndexResult.ofIndexed())
             .thenReturn(PageIndexResult.ofNotIndexed())
             .thenReturn(PageIndexResult.ofIndexed())
             .thenReturn(PageIndexResult.ofNotIndexable());
+        when(numPagesEstimated.get(WikipediaLanguage.SPANISH.getCode())).thenReturn(150000);
 
         dumpParser.parseDumpFile(WikipediaLanguage.SPANISH, DumpFile.of(dumpFile));
 
-        assertFalse(dumpParser.getDumpStatus().isRunning());
         verify(pageIndexService, times(4)).indexPage(any(DumpPage.class));
         verify(pageIndexService).finish();
 
-        status = dumpParser.getDumpStatus();
+        Optional<DumpStatus> dumpStatus = dumpParser.getDumpStatus();
+        assertTrue(dumpStatus.isPresent());
+        DumpStatus status = dumpStatus.get();
         assertFalse(status.isRunning());
         assertEquals("eswiki-20170101-pages-articles.xml.bz2", status.getDumpFileName());
         assertNotNull(status.getStart());

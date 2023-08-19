@@ -4,9 +4,11 @@ import es.bvalero.replacer.common.util.ReplacerUtils;
 import es.bvalero.replacer.user.ValidateAdminUser;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 /** REST controller to perform actions related to the dump indexing process */
@@ -22,10 +24,16 @@ public class DumpController {
     @Operation(summary = "Find the status of the current (or the last) dump indexing")
     @ValidateAdminUser
     @GetMapping(value = "")
-    public DumpStatusDto getDumpStatus() {
-        DumpStatusDto dto = toDto(dumpManager.getDumpStatus());
-        LOGGER.debug("GET Dump Indexing Status: {}", dto);
-        return dto;
+    public ResponseEntity<DumpStatusDto> getDumpStatus() {
+        Optional<DumpStatus> dumpStatus = dumpManager.getDumpStatus();
+        if (dumpStatus.isPresent()) {
+            DumpStatusDto dto = toDto(dumpStatus.get());
+            LOGGER.debug("GET Dump Indexing Status: {}", dto);
+            return ResponseEntity.ok(dto);
+        } else {
+            LOGGER.debug("GET Dump Indexing Status: EMPTY");
+            return ResponseEntity.noContent().build();
+        }
     }
 
     @Operation(summary = "Start manually a dump indexing")

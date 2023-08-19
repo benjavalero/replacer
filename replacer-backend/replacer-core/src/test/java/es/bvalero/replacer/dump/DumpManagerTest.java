@@ -32,7 +32,7 @@ class DumpManagerTest {
 
     @Test
     void testProcessLatestDumpFiles() throws ReplacerException {
-        when(dumpParser.getDumpStatus()).thenReturn(DumpStatus.ofEmpty());
+        when(dumpParser.getDumpStatus()).thenReturn(Optional.empty());
 
         Path dumpPath = mock(Path.class);
         DumpFile dumpFile = DumpFile.of(dumpPath);
@@ -47,7 +47,7 @@ class DumpManagerTest {
 
     @Test
     void testProcessLatestDumpFilesWithException() throws ReplacerException {
-        when(dumpParser.getDumpStatus()).thenReturn(DumpStatus.ofEmpty());
+        when(dumpParser.getDumpStatus()).thenReturn(Optional.empty());
 
         Path dumpPath = mock(Path.class);
         DumpFile dumpFile = DumpFile.of(dumpPath);
@@ -65,7 +65,18 @@ class DumpManagerTest {
 
     @Test
     void testProcessLatestDumpFilesAlreadyRunning() throws ReplacerException {
-        when(dumpParser.getDumpStatus()).thenReturn(DumpStatus.builder().running(true).build());
+        Optional<DumpStatus> dumpStatus = Optional.of(
+            DumpStatus
+                .builder()
+                .running(true)
+                .dumpFileName("X")
+                .numPagesRead(1)
+                .numPagesIndexed(2)
+                .numPagesEstimated(3)
+                .start(LocalDateTime.now())
+                .build()
+        );
+        when(dumpParser.getDumpStatus()).thenReturn(dumpStatus);
 
         dumpManager.indexLatestDumpFiles();
 
@@ -77,20 +88,22 @@ class DumpManagerTest {
     @Test
     void testGetDumpIndexingStatus() {
         LocalDateTime now = LocalDateTime.now();
-        DumpStatus expected = DumpStatus
-            .builder()
-            .running(true)
-            .dumpFileName("X")
-            .numPagesRead(1)
-            .numPagesIndexed(2)
-            .numPagesEstimated(3)
-            .start(now)
-            .end(now.plusHours(1))
-            .build();
+        Optional<DumpStatus> expected = Optional.of(
+            DumpStatus
+                .builder()
+                .running(true)
+                .dumpFileName("X")
+                .numPagesRead(1)
+                .numPagesIndexed(2)
+                .numPagesEstimated(3)
+                .start(now)
+                .end(now.plusHours(1))
+                .build()
+        );
 
         when(dumpParser.getDumpStatus()).thenReturn(expected);
 
-        DumpStatus actual = dumpManager.getDumpStatus();
+        Optional<DumpStatus> actual = dumpManager.getDumpStatus();
 
         assertEquals(expected, actual);
         verify(dumpParser).getDumpStatus();

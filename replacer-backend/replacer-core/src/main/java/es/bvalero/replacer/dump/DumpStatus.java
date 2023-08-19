@@ -3,6 +3,7 @@ package es.bvalero.replacer.dump;
 import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Value;
+import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
 /** The status of the current (or the last) dump indexing */
@@ -12,25 +13,18 @@ class DumpStatus {
 
     boolean running;
 
-    @Nullable
-    Integer numPagesRead;
+    int numPagesRead;
 
-    @Nullable
-    Integer numPagesIndexed;
+    int numPagesIndexed;
 
-    @Nullable
-    Integer numPagesEstimated;
+    int numPagesEstimated;
 
-    @Nullable
+    @NonNull
     String dumpFileName;
 
-    @Nullable
+    @NonNull
     LocalDateTime start;
 
     @Nullable
     LocalDateTime end;
-
-    static DumpStatus ofEmpty() {
-        return DumpStatus.builder().running(false).build();
-    }
 }

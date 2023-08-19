@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.util.Map;
+import java.util.Optional;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.xml.XMLConstants;
@@ -44,7 +45,7 @@ class DumpSaxParser implements DumpParser {
 
     @Override
     public void parseDumpFile(WikipediaLanguage lang, DumpFile dumpFile) throws ReplacerException {
-        assert !getDumpStatus().isRunning();
+        assert getDumpStatus().isEmpty() || !getDumpStatus().get().isRunning();
 
         LOGGER.debug("START Parse dump file: {} ...", dumpFile);
         try (InputStream xmlInput = new BZip2CompressorInputStream(Files.newInputStream(dumpFile.getPath()), true)) {
@@ -66,20 +67,22 @@ class DumpSaxParser implements DumpParser {
     }
 
     @Override
-    public DumpStatus getDumpStatus() {
-        if (this.dumpHandler == null) {
-            return DumpStatus.ofEmpty();
+    public Optional<DumpStatus> getDumpStatus() {
+        if (this.dumpHandler == null || this.dumpHandler.getStart() == null) {
+            return Optional.empty();
         } else {
-            return DumpStatus
-                .builder()
-                .running(this.dumpHandler.isRunning())
-                .numPagesRead(this.dumpHandler.getNumPagesRead())
-                .numPagesIndexed(this.dumpHandler.getNumPagesIndexed())
-                .numPagesEstimated(this.numPagesEstimated.get(this.dumpHandler.getLang().getCode()))
-                .dumpFileName(this.dumpFile.getPath().getFileName().toString())
-                .start(this.dumpHandler.getStart())
-                .end(this.dumpHandler.getEnd())
-                .build();
+            return Optional.of(
+                DumpStatus
+                    .builder()
+                    .running(this.dumpHandler.isRunning())
+                    .numPagesRead(this.dumpHandler.getNumPagesRead())
+                    .numPagesIndexed(this.dumpHandler.getNumPagesIndexed())
+                    .numPagesEstimated(this.numPagesEstimated.get(this.dumpHandler.getLang().getCode()))
+                    .dumpFileName(this.dumpFile.getPath().getFileName().toString())
+                    .start(this.dumpHandler.getStart())
+                    .end(this.dumpHandler.getEnd())
+                    .build()
+            );
         }
     }
 }

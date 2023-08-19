@@ -21,25 +21,29 @@ public class DumpStatusDto {
     @Schema(description = "If the indexing is running", requiredMode = REQUIRED, example = "false")
     boolean running;
 
-    @Schema(description = "Number of indexable pages read", example = "251934")
-    @Nullable
-    Integer numPagesRead;
+    @Schema(description = "Number of indexable pages read", requiredMode = REQUIRED, example = "251934")
+    int numPagesRead;
 
-    @Schema(description = "Number of indexable pages indexed", example = "5016")
-    @Nullable
-    Integer numPagesIndexed;
+    @Schema(description = "Number of indexable pages indexed", requiredMode = REQUIRED, example = "5016")
+    int numPagesIndexed;
 
-    @Schema(description = "Estimated number of indexable pages", example = "249805")
-    @Nullable
-    Integer numPagesEstimated;
+    @Schema(description = "Estimated number of indexable pages", requiredMode = REQUIRED, example = "249805")
+    int numPagesEstimated;
 
-    @Schema(description = "Filename of the indexed dump", example = "glwiki-20210320-pages-articles.xml.bz2")
-    @Nullable
+    @Schema(
+        description = "Filename of the indexed dump",
+        requiredMode = REQUIRED,
+        example = "glwiki-20210320-pages-articles.xml.bz2"
+    )
     String dumpFileName;
 
-    @Schema(description = "Indexing start time (in ms)", type = "number", example = "1616315965367")
-    @Nullable
-    Long start;
+    @Schema(
+        description = "Indexing start time (in ms)",
+        type = "number",
+        requiredMode = REQUIRED,
+        example = "1616315965367"
+    )
+    long start;
 
     @Schema(description = "Indexing end time (in ms)", type = "number", example = "1616317331756")
     @Nullable

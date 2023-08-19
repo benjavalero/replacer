@@ -14,26 +14,32 @@ export class DumpAdapterService {
   }
 
   refreshDumpIndexing(): void {
-    this.getDumpIndexing$().subscribe((status: DumpStatus) => {
-      // The calculations could be done with asynchronous pipes,
-      // but it is not worth as the calculations are quite simple
-      const startDate = this.formatDate(status.start);
-      const endDate = this.formatDate(status.end);
-      const elapsed = this.formatMilliseconds(this.calculateElapsed(status));
-      const progress = this.calculateProgress(status);
-      const average = this.calculateAverage(status);
-      const eta = this.formatMilliseconds(this.calculateEta(status));
+    this.getDumpIndexing$().subscribe((status: DumpStatus | null) => {
+      if (status === null) {
+        // As a trick we add an empty dump status
+        const emptyStatus: DumpAdapterStatus = {};
+        this.status$.next(emptyStatus);
+      } else {
+        // The calculations could be done with asynchronous pipes,
+        // but it is not worth as the calculations are quite simple
+        const startDate = this.formatDate(status.start);
+        const endDate = this.formatDate(status.end);
+        const elapsed = this.formatMilliseconds(this.calculateElapsed(status));
+        const progress = this.calculateProgress(status);
+        const average = this.calculateAverage(status);
+        const eta = this.formatMilliseconds(this.calculateEta(status));
 
-      const newStatus: DumpAdapterStatus = {
-        ...status,
-        startDate: startDate,
-        endDate: endDate,
-        elapsed: elapsed,
-        progress: progress,
-        average: average,
-        eta: eta
-      };
-      this.status$.next(newStatus);
+        const newStatus: DumpAdapterStatus = {
+          ...status,
+          startDate: startDate,
+          endDate: endDate,
+          elapsed: elapsed,
+          progress: progress,
+          average: average,
+          eta: eta
+        };
+        this.status$.next(newStatus);
+      }
     });
   }
 

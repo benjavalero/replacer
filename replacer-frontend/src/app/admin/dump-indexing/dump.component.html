@@ -1,7 +1,8 @@
 <h3>Indexación</h3>
 
 <div *ngIf="status$ | async as status; else loading">
-  <ul>
+  <app-alert type="warning" *ngIf="!status.start">No se ha encontrado el estado de la última indexación</app-alert>
+  <ul *ngIf="status.start">
     <li>En ejecución: <strong>{{ status.running }}</strong></li>
     <li>Fichero en proceso: <strong>{{ status.dumpFileName }}</strong></li>
     <li>Inicio: <strong>{{ status.startDate }}</strong></li>

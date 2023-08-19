@@ -9,7 +9,7 @@ export interface DumpStatus {
   /**
    * Filename of the indexed dump
    */
-  dumpFileName?: string;
+  dumpFileName: string;
 
   /**
    * Indexing end time (in ms)
@@ -19,17 +19,17 @@ export interface DumpStatus {
   /**
    * Estimated number of indexable pages
    */
-  numPagesEstimated?: number;
+  numPagesEstimated: number;
 
   /**
    * Number of indexable pages indexed
    */
-  numPagesIndexed?: number;
+  numPagesIndexed: number;
 
   /**
    * Number of indexable pages read
    */
-  numPagesRead?: number;
+  numPagesRead: number;
 
   /**
    * If the indexing is running
@@ -39,5 +39,5 @@ export interface DumpStatus {
   /**
    * Indexing start time (in ms)
    */
-  start?: number;
+  start: number;
 }

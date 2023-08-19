@@ -1,6 +1,6 @@
 export interface DumpAdapterStatus {
   // Fields coming from REST service
-  running: boolean;
+  running?: boolean;
   numPagesRead?: number;
   numPagesIndexed?: number;
   numPagesEstimated?: number;
