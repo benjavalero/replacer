@@ -18,80 +18,6 @@ export class PagesApiService extends BaseService {
     super(config, http);
   }
 
-  /** Path part for operation `reviewPagesByType()` */
-  static readonly ReviewPagesByTypePath = '/api/page/type/review';
-
-  /**
-   * Mark as reviewed the pages containing the given replacement type.
-   *
-   *
-   *
-   * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `reviewPagesByType()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  reviewPagesByType$Response(
-    params: {
-
-    /**
-     * Replacement kind code
-     */
-      kind: number;
-
-    /**
-     * Replacement subtype
-     */
-      subtype: string;
-    },
-    context?: HttpContext
-  ): Observable<StrictHttpResponse<void>> {
-    const rb = new RequestBuilder(this.rootUrl, PagesApiService.ReviewPagesByTypePath, 'post');
-    if (params) {
-      rb.query('kind', params.kind, {});
-      rb.query('subtype', params.subtype, {});
-    }
-
-    return this.http.request(
-      rb.build({ responseType: 'text', accept: '*/*', context })
-    ).pipe(
-      filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
-      })
-    );
-  }
-
-  /**
-   * Mark as reviewed the pages containing the given replacement type.
-   *
-   *
-   *
-   * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `reviewPagesByType$Response()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  reviewPagesByType(
-    params: {
-
-    /**
-     * Replacement kind code
-     */
-      kind: number;
-
-    /**
-     * Replacement subtype
-     */
-      subtype: string;
-    },
-    context?: HttpContext
-  ): Observable<void> {
-    return this.reviewPagesByType$Response(params, context).pipe(
-      map((r: StrictHttpResponse<void>): void => r.body)
-    );
-  }
-
   /** Path part for operation `findPagesToReviewByType()` */
   static readonly FindPagesToReviewByTypePath = '/api/page/type';
 
@@ -166,6 +92,80 @@ export class PagesApiService extends BaseService {
   ): Observable<string> {
     return this.findPagesToReviewByType$Response(params, context).pipe(
       map((r: StrictHttpResponse<string>): string => r.body)
+    );
+  }
+
+  /** Path part for operation `reviewPagesByType()` */
+  static readonly ReviewPagesByTypePath = '/api/page/type';
+
+  /**
+   * Mark as reviewed the pages containing the given replacement type.
+   *
+   *
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `reviewPagesByType()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  reviewPagesByType$Response(
+    params: {
+
+    /**
+     * Replacement kind code
+     */
+      kind: number;
+
+    /**
+     * Replacement subtype
+     */
+      subtype: string;
+    },
+    context?: HttpContext
+  ): Observable<StrictHttpResponse<void>> {
+    const rb = new RequestBuilder(this.rootUrl, PagesApiService.ReviewPagesByTypePath, 'post');
+    if (params) {
+      rb.query('kind', params.kind, {});
+      rb.query('subtype', params.subtype, {});
+    }
+
+    return this.http.request(
+      rb.build({ responseType: 'text', accept: '*/*', context })
+    ).pipe(
+      filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
+      })
+    );
+  }
+
+  /**
+   * Mark as reviewed the pages containing the given replacement type.
+   *
+   *
+   *
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `reviewPagesByType$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  reviewPagesByType(
+    params: {
+
+    /**
+     * Replacement kind code
+     */
+      kind: number;
+
+    /**
+     * Replacement subtype
+     */
+      subtype: string;
+    },
+    context?: HttpContext
+  ): Observable<void> {
+    return this.reviewPagesByType$Response(params, context).pipe(
+      map((r: StrictHttpResponse<void>): void => r.body)
     );
   }
 

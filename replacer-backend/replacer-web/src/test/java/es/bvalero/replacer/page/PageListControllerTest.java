@@ -67,7 +67,7 @@ class PageListControllerTest {
 
         mvc
             .perform(
-                post("/api/page/type/review?kind=2&subtype=Africa")
+                post("/api/page/type?kind=2&subtype=Africa")
                     .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
                     .cookie(new Cookie(AccessToken.COOKIE_NAME, user.getAccessToken().toCookieValue()))
                     .contentType(MediaType.APPLICATION_JSON)
@@ -88,7 +88,7 @@ class PageListControllerTest {
 
         mvc
             .perform(
-                post("/api/page/type/review?kind=2&subtype=Africa")
+                post("/api/page/type?kind=2&subtype=Africa")
                     .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
                     .cookie(new Cookie(AccessToken.COOKIE_NAME, user.getAccessToken().toCookieValue()))
                     .contentType(MediaType.APPLICATION_JSON)

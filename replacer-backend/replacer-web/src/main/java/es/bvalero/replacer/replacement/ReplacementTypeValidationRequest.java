@@ -8,7 +8,7 @@ import org.springdoc.api.annotations.ParameterObject;
 
 @ParameterObject
 @Data
-public class ReplacementValidationRequest {
+public class ReplacementTypeValidationRequest {
 
     @Parameter(description = "Replacement to validate", required = true, example = "aún")
     @NotBlank

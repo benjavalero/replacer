@@ -5,7 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { FindReviewResponse } from '../../api/models/find-review-response';
 import { ReplacementType } from '../../api/models/replacement-type';
-import { ReplacementApiService } from '../../api/services/replacement-api.service';
+import { ReplacementTypeApiService } from '../../api/services/replacement-type-api.service';
 import { ReviewApiService } from '../../api/services/review-api.service';
 import { AlertService } from '../../shared/alert/alert.service';
 import { EditPageComponent } from './edit-page.component';
@@ -39,7 +39,7 @@ export class FindRandomComponent implements OnInit {
 
   constructor(
     private alertService: AlertService,
-    private replacementApiService: ReplacementApiService,
+    private replacementTypeApiService: ReplacementTypeApiService,
     private reviewApiService: ReviewApiService,
     private router: Router,
     private route: ActivatedRoute,
@@ -183,7 +183,7 @@ export class FindRandomComponent implements OnInit {
 
   private validateCustomReplacement(options: ReviewOptions): void {
     const replacement = options.subtype!.trim();
-    this.replacementApiService
+    this.replacementTypeApiService
       .validateCustomReplacement({
         replacement: replacement,
         cs: options.cs!

@@ -28,8 +28,8 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
 @ExtendWith(SpringExtension.class)
-@WebMvcTest(controllers = { ReplacementValidationController.class, WebMvcConfiguration.class })
-class ReplacementValidationControllerTest {
+@WebMvcTest(controllers = { ReplacementTypeController.class, WebMvcConfiguration.class })
+class ReplacementTypeControllerTest {
 
     @Autowired
     private MockMvc mvc;
@@ -54,7 +54,7 @@ class ReplacementValidationControllerTest {
 
         mvc
             .perform(
-                get("/api/replacement/type/validate?replacement=Africa&cs=true")
+                get("/api/type/validate?replacement=Africa&cs=true")
                     .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
                     .contentType(MediaType.APPLICATION_JSON)
             )
@@ -77,7 +77,7 @@ class ReplacementValidationControllerTest {
 
         mvc
             .perform(
-                get("/api/replacement/type/validate?replacement=African&cs=true")
+                get("/api/type/validate?replacement=African&cs=true")
                     .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
                     .contentType(MediaType.APPLICATION_JSON)
             )

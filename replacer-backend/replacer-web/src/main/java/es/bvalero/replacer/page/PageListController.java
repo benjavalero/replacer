@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "Pages")
 @Slf4j
 @RestController
-@RequestMapping("api/page")
+@RequestMapping("api/page/type")
 public class PageListController {
 
     @Autowired
@@ -32,7 +32,7 @@ public class PageListController {
     private ReplacementService replacementService;
 
     @Operation(summary = "List the pages to review containing the given replacement type")
-    @GetMapping(value = "/type", produces = MediaType.TEXT_PLAIN_VALUE)
+    @GetMapping(value = "", produces = MediaType.TEXT_PLAIN_VALUE)
     public ResponseEntity<String> findPagesToReviewByType(
         @RequestParam String lang,
         @Valid ReplacementTypeDto request
@@ -53,7 +53,7 @@ public class PageListController {
     @Operation(summary = "Mark as reviewed the pages containing the given replacement type")
     @ValidateBotUser
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PostMapping(value = "/type/review")
+    @PostMapping(value = "")
     public void reviewPagesByType(@UserLanguage WikipediaLanguage lang, @Valid ReplacementTypeDto request) {
         LOGGER.info("POST Review pages by type {}", request);
         StandardType type = request.toStandardType();

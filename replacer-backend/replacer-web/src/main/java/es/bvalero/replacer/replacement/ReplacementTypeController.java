@@ -16,20 +16,20 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "Replacement")
+@Tag(name = "Replacement Type")
 @Slf4j
 @RestController
-@RequestMapping("api/replacement")
-public class ReplacementValidationController {
+@RequestMapping("api/type")
+public class ReplacementTypeController {
 
     @Autowired
     private ReplacementTypeMatchService replacementTypeMatchService;
 
     @Operation(summary = "Validate if the custom replacement matches with a known replacement type")
-    @GetMapping(value = "/type/validate")
+    @GetMapping(value = "/validate")
     public ResponseEntity<ReplacementTypeDto> validateCustomReplacement(
         @UserLanguage WikipediaLanguage lang,
-        @Valid ReplacementValidationRequest validationRequest
+        @Valid ReplacementTypeValidationRequest validationRequest
     ) {
         Optional<StandardType> type = replacementTypeMatchService.findMatchingReplacementType(
             lang,

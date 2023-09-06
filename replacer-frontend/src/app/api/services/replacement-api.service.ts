@@ -12,7 +12,6 @@ import { RequestBuilder } from '../request-builder';
 
 import { PageCount } from '../models/page-count';
 import { ReplacementCount } from '../models/replacement-count';
-import { ReplacementType } from '../models/replacement-type';
 import { ReviewerCount } from '../models/reviewer-count';
 
 @Injectable({ providedIn: 'root' })
@@ -70,80 +69,6 @@ export class ReplacementApiService extends BaseService {
   ): Observable<Array<ReviewerCount>> {
     return this.countReplacementsGroupedByReviewer$Response(params, context).pipe(
       map((r: StrictHttpResponse<Array<ReviewerCount>>): Array<ReviewerCount> => r.body)
-    );
-  }
-
-  /** Path part for operation `validateCustomReplacement()` */
-  static readonly ValidateCustomReplacementPath = '/api/replacement/type/validate';
-
-  /**
-   * Validate if the custom replacement matches with a known replacement type.
-   *
-   *
-   *
-   * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `validateCustomReplacement()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  validateCustomReplacement$Response(
-    params: {
-
-    /**
-     * Replacement to validate
-     */
-      replacement: string;
-
-    /**
-     * If the custom replacement is case-sensitive
-     */
-      cs: boolean;
-    },
-    context?: HttpContext
-  ): Observable<StrictHttpResponse<ReplacementType>> {
-    const rb = new RequestBuilder(this.rootUrl, ReplacementApiService.ValidateCustomReplacementPath, 'get');
-    if (params) {
-      rb.query('replacement', params.replacement, {});
-      rb.query('cs', params.cs, {});
-    }
-
-    return this.http.request(
-      rb.build({ responseType: 'json', accept: 'application/json', context })
-    ).pipe(
-      filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<ReplacementType>;
-      })
-    );
-  }
-
-  /**
-   * Validate if the custom replacement matches with a known replacement type.
-   *
-   *
-   *
-   * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `validateCustomReplacement$Response()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  validateCustomReplacement(
-    params: {
-
-    /**
-     * Replacement to validate
-     */
-      replacement: string;
-
-    /**
-     * If the custom replacement is case-sensitive
-     */
-      cs: boolean;
-    },
-    context?: HttpContext
-  ): Observable<ReplacementType> {
-    return this.validateCustomReplacement$Response(params, context).pipe(
-      map((r: StrictHttpResponse<ReplacementType>): ReplacementType => r.body)
     );
   }
 

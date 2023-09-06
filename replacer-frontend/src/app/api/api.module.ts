@@ -8,6 +8,7 @@ import { UserApiService } from './services/user-api.service';
 import { ReviewApiService } from './services/review-api.service';
 import { PagesApiService } from './services/pages-api.service';
 import { DumpApiService } from './services/dump-api.service';
+import { ReplacementTypeApiService } from './services/replacement-type-api.service';
 import { ReplacementApiService } from './services/replacement-api.service';
 
 /**
@@ -22,6 +23,7 @@ import { ReplacementApiService } from './services/replacement-api.service';
     ReviewApiService,
     PagesApiService,
     DumpApiService,
+    ReplacementTypeApiService,
     ReplacementApiService,
     ApiConfiguration
   ],
