@@ -92,8 +92,8 @@ export class FindRandomComponent implements OnInit {
     this.alertService.addInfoMessage(msg);
 
     this.pageApiService.findRandomPageWithReplacements({ ...options }).subscribe({
-      next: (review: FindReviewResponse) => {
-        if (review) {
+      next: (review: FindReviewResponse | null) => {
+        if (review !== null) {
           this.manageReview(review, options);
         } else {
           this.alertService.addWarningMessage(

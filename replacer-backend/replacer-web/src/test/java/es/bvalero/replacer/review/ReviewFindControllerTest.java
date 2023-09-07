@@ -146,6 +146,26 @@ class ReviewFindControllerTest {
     }
 
     @Test
+    void testFindRandomPageByNoResults() throws Exception {
+        User user = User.buildTestUser();
+        when(webUtils.getAuthenticatedUser(any(HttpServletRequest.class))).thenReturn(user);
+
+        ReviewOptions options = ReviewOptions.ofNoType(user);
+        when(reviewNoTypeFinder.findRandomPageReview(options)).thenReturn(Optional.empty());
+
+        mvc
+            .perform(
+                get("/api/page/random")
+                    .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
+                    .cookie(new Cookie(AccessToken.COOKIE_NAME, user.getAccessToken().toCookieValue()))
+                    .contentType(MediaType.APPLICATION_JSON)
+            )
+            .andExpect(status().isNoContent());
+
+        verify(reviewNoTypeFinder).findRandomPageReview(options);
+    }
+
+    @Test
     void testFindRandomPageByTypeAndSubtype() throws Exception {
         User user = User.buildTestUser();
         when(webUtils.getAuthenticatedUser(any(HttpServletRequest.class))).thenReturn(user);

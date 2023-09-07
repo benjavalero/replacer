@@ -10,6 +10,7 @@ import java.util.Optional;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "Page")
@@ -29,7 +30,7 @@ public class ReviewFindController {
 
     @Operation(summary = "Find a random page and the replacements to review")
     @GetMapping(value = "/random")
-    public Optional<FindReviewResponse> findRandomPageWithReplacements(
+    public ResponseEntity<FindReviewResponse> findRandomPageWithReplacements(
         @AuthenticatedUser User user,
         @Valid ReviewOptionsDto optionsDto
     ) {
@@ -46,14 +47,19 @@ public class ReviewFindController {
             default:
                 review = reviewTypeFinder.findRandomPageReview(options);
         }
-        Optional<FindReviewResponse> response = review.map(ReviewMapper::toDto);
-        LOGGER.info("END Find Random Page with Replacements: {}", response.isPresent() ? response.get() : "No Review");
-        return response;
+        if (review.isPresent()) {
+            FindReviewResponse response = ReviewMapper.toDto(review.get());
+            LOGGER.info("END Find Random Page with Replacements: {}", response);
+            return ResponseEntity.ok(response);
+        } else {
+            LOGGER.info("END Find Random Page with Replacements: No Review");
+            return ResponseEntity.noContent().build();
+        }
     }
 
     @Operation(summary = "Find a page and the replacements to review")
     @GetMapping(value = "/{id}")
-    public Optional<FindReviewResponse> findPageReviewById(
+    public ResponseEntity<FindReviewResponse> findPageReviewById(
         @Parameter(description = "Page ID", example = "6980716") @PathVariable("id") int pageId,
         @AuthenticatedUser User user,
         @Valid ReviewOptionsDto optionsDto
@@ -72,8 +78,13 @@ public class ReviewFindController {
             default:
                 review = reviewTypeFinder.findPageReview(pageKey, options);
         }
-        Optional<FindReviewResponse> response = review.map(ReviewMapper::toDto);
-        LOGGER.info("END Find Random Page with Replacements: {}", response.isPresent() ? response.get() : "No Review");
-        return response;
+        if (review.isPresent()) {
+            FindReviewResponse response = ReviewMapper.toDto(review.get());
+            LOGGER.info("END Find Random Page with Replacements: {}", response);
+            return ResponseEntity.ok(response);
+        } else {
+            LOGGER.info("END Find Random Page with Replacements: No Review");
+            return ResponseEntity.noContent().build();
+        }
     }
 }
