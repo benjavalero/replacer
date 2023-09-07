@@ -14,13 +14,13 @@ import { FindReviewResponse } from '../models/find-review-response';
 import { SaveReviewRequest } from '../models/save-review-request';
 
 @Injectable({ providedIn: 'root' })
-export class ReviewApiService extends BaseService {
+export class PageApiService extends BaseService {
   constructor(config: ApiConfiguration, http: HttpClient) {
     super(config, http);
   }
 
   /** Path part for operation `findPageReviewById()` */
-  static readonly FindPageReviewByIdPath = '/api/review/{id}';
+  static readonly FindPageReviewByIdPath = '/api/page/{id}';
 
   /**
    * Find a page and the replacements to review.
@@ -62,7 +62,7 @@ export class ReviewApiService extends BaseService {
     },
     context?: HttpContext
   ): Observable<StrictHttpResponse<FindReviewResponse>> {
-    const rb = new RequestBuilder(this.rootUrl, ReviewApiService.FindPageReviewByIdPath, 'get');
+    const rb = new RequestBuilder(this.rootUrl, PageApiService.FindPageReviewByIdPath, 'get');
     if (params) {
       rb.path('id', params.id, {});
       rb.query('kind', params.kind, {});
@@ -127,7 +127,7 @@ export class ReviewApiService extends BaseService {
   }
 
   /** Path part for operation `saveReview()` */
-  static readonly SaveReviewPath = '/api/review/{id}';
+  static readonly SaveReviewPath = '/api/page/{id}';
 
   /**
    * Save a review: update page contents and mark as reviewed.
@@ -150,7 +150,7 @@ export class ReviewApiService extends BaseService {
     },
     context?: HttpContext
   ): Observable<StrictHttpResponse<void>> {
-    const rb = new RequestBuilder(this.rootUrl, ReviewApiService.SaveReviewPath, 'post');
+    const rb = new RequestBuilder(this.rootUrl, PageApiService.SaveReviewPath, 'post');
     if (params) {
       rb.path('id', params.id, {});
       rb.body(params.body, 'application/json');
@@ -193,7 +193,7 @@ export class ReviewApiService extends BaseService {
   }
 
   /** Path part for operation `findRandomPageWithReplacements()` */
-  static readonly FindRandomPageWithReplacementsPath = '/api/review/random';
+  static readonly FindRandomPageWithReplacementsPath = '/api/page/random';
 
   /**
    * Find a random page and the replacements to review.
@@ -230,7 +230,7 @@ export class ReviewApiService extends BaseService {
     },
     context?: HttpContext
   ): Observable<StrictHttpResponse<FindReviewResponse>> {
-    const rb = new RequestBuilder(this.rootUrl, ReviewApiService.FindRandomPageWithReplacementsPath, 'get');
+    const rb = new RequestBuilder(this.rootUrl, PageApiService.FindRandomPageWithReplacementsPath, 'get');
     if (params) {
       rb.query('kind', params.kind, {});
       rb.query('subtype', params.subtype, {});

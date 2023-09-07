@@ -102,7 +102,7 @@ class ReviewFindControllerTest {
 
         mvc
             .perform(
-                get("/api/review/random")
+                get("/api/page/random")
                     .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
                     .cookie(new Cookie(AccessToken.COOKIE_NAME, user.getAccessToken().toCookieValue()))
                     .contentType(MediaType.APPLICATION_JSON)
@@ -135,7 +135,7 @@ class ReviewFindControllerTest {
 
         mvc
             .perform(
-                get("/api/review/random")
+                get("/api/page/random")
                     .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
                     .cookie(new Cookie(AccessToken.COOKIE_NAME, user.getAccessToken().toCookieValue()))
                     .contentType(MediaType.APPLICATION_JSON)
@@ -156,7 +156,7 @@ class ReviewFindControllerTest {
 
         mvc
             .perform(
-                get("/api/review/random?kind=5&subtype=Fechas")
+                get("/api/page/random?kind=5&subtype=Fechas")
                     .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
                     .cookie(new Cookie(AccessToken.COOKIE_NAME, user.getAccessToken().toCookieValue()))
                     .contentType(MediaType.APPLICATION_JSON)
@@ -176,7 +176,7 @@ class ReviewFindControllerTest {
 
         mvc
             .perform(
-                get("/api/review/random?kind=1&subtype=X&cs=false&suggestion=Y")
+                get("/api/page/random?kind=1&subtype=X&cs=false&suggestion=Y")
                     .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
                     .cookie(new Cookie(AccessToken.COOKIE_NAME, user.getAccessToken().toCookieValue()))
                     .contentType(MediaType.APPLICATION_JSON)
@@ -193,7 +193,7 @@ class ReviewFindControllerTest {
 
         mvc
             .perform(
-                get("/api/review/123?kind=X")
+                get("/api/page/123?kind=X")
                     .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
                     .cookie(new Cookie(AccessToken.COOKIE_NAME, user.getAccessToken().toCookieValue()))
                     .contentType(MediaType.APPLICATION_JSON)
@@ -214,7 +214,7 @@ class ReviewFindControllerTest {
 
         mvc
             .perform(
-                get("/api/review/123")
+                get("/api/page/123")
                     .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
                     .cookie(new Cookie(AccessToken.COOKIE_NAME, user.getAccessToken().toCookieValue()))
                     .contentType(MediaType.APPLICATION_JSON)
@@ -236,7 +236,7 @@ class ReviewFindControllerTest {
 
         mvc
             .perform(
-                get("/api/review/123?kind=5&subtype=Fechas")
+                get("/api/page/123?kind=5&subtype=Fechas")
                     .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
                     .cookie(new Cookie(AccessToken.COOKIE_NAME, user.getAccessToken().toCookieValue()))
                     .contentType(MediaType.APPLICATION_JSON)
@@ -257,7 +257,7 @@ class ReviewFindControllerTest {
 
         mvc
             .perform(
-                get("/api/review/123?kind=1&subtype=X&cs=true&suggestion=Y")
+                get("/api/page/123?kind=1&subtype=X&cs=true&suggestion=Y")
                     .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
                     .cookie(new Cookie(AccessToken.COOKIE_NAME, user.getAccessToken().toCookieValue()))
                     .contentType(MediaType.APPLICATION_JSON)

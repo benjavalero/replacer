@@ -93,7 +93,7 @@ class ReviewSaveControllerTest {
 
         mvc
             .perform(
-                post("/api/review/123")
+                post("/api/page/123")
                     .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
                     .cookie(new Cookie(AccessToken.COOKIE_NAME, user.getAccessToken().toCookieValue()))
                     .contentType(MediaType.APPLICATION_JSON)
@@ -114,7 +114,7 @@ class ReviewSaveControllerTest {
 
         mvc
             .perform(
-                post("/api/review/123")
+                post("/api/page/123")
                     .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
                     .cookie(new Cookie(AccessToken.COOKIE_NAME, user.getAccessToken().toCookieValue()))
                     .contentType(MediaType.APPLICATION_JSON)
@@ -134,7 +134,7 @@ class ReviewSaveControllerTest {
 
         mvc
             .perform(
-                post("/api/review/321")
+                post("/api/page/321")
                     .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
                     .cookie(new Cookie(AccessToken.COOKIE_NAME, user.getAccessToken().toCookieValue()))
                     .contentType(MediaType.APPLICATION_JSON)
@@ -156,7 +156,7 @@ class ReviewSaveControllerTest {
 
         mvc
             .perform(
-                post("/api/review/123")
+                post("/api/page/123")
                     .header(HttpHeaders.ACCEPT_LANGUAGE, "gl")
                     .cookie(new Cookie(AccessToken.COOKIE_NAME, user.getAccessToken().toCookieValue()))
                     .contentType(MediaType.APPLICATION_JSON)
@@ -176,7 +176,7 @@ class ReviewSaveControllerTest {
 
         mvc
             .perform(
-                post("/api/review/123")
+                post("/api/page/123")
                     .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
                     .cookie(new Cookie(AccessToken.COOKIE_NAME, user.getAccessToken().toCookieValue()))
                     .contentType(MediaType.APPLICATION_JSON)
@@ -198,7 +198,7 @@ class ReviewSaveControllerTest {
 
         mvc
             .perform(
-                post("/api/review/123")
+                post("/api/page/123")
                     .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
                     .cookie(new Cookie(AccessToken.COOKIE_NAME, user.getAccessToken().toCookieValue()))
                     .contentType(MediaType.APPLICATION_JSON)
@@ -221,7 +221,7 @@ class ReviewSaveControllerTest {
 
         mvc
             .perform(
-                post("/api/review/123")
+                post("/api/page/123")
                     .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
                     .cookie(new Cookie(AccessToken.COOKIE_NAME, user.getAccessToken().toCookieValue()))
                     .contentType(MediaType.APPLICATION_JSON)
@@ -244,7 +244,7 @@ class ReviewSaveControllerTest {
 
         mvc
             .perform(
-                post("/api/review/123")
+                post("/api/page/123")
                     .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
                     .cookie(new Cookie(AccessToken.COOKIE_NAME, user.getAccessToken().toCookieValue()))
                     .contentType(MediaType.APPLICATION_JSON)

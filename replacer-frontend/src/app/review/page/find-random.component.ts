@@ -6,7 +6,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { FindReviewResponse } from '../../api/models/find-review-response';
 import { ReplacementType } from '../../api/models/replacement-type';
 import { ReplacementTypeApiService } from '../../api/services/replacement-type-api.service';
-import { ReviewApiService } from '../../api/services/review-api.service';
+import { PageApiService } from '../../api/services/page-api.service';
 import { AlertService } from '../../shared/alert/alert.service';
 import { EditPageComponent } from './edit-page.component';
 import { ReviewOptions } from './review-options.model';
@@ -40,7 +40,7 @@ export class FindRandomComponent implements OnInit {
   constructor(
     private alertService: AlertService,
     private replacementTypeApiService: ReplacementTypeApiService,
-    private reviewApiService: ReviewApiService,
+    private pageApiService: PageApiService,
     private router: Router,
     private route: ActivatedRoute,
     private titleService: Title,
@@ -91,7 +91,7 @@ export class FindRandomComponent implements OnInit {
 
     this.alertService.addInfoMessage(msg);
 
-    this.reviewApiService.findRandomPageWithReplacements({ ...options }).subscribe({
+    this.pageApiService.findRandomPageWithReplacements({ ...options }).subscribe({
       next: (review: FindReviewResponse) => {
         if (review) {
           this.manageReview(review, options);
@@ -116,7 +116,7 @@ export class FindRandomComponent implements OnInit {
   }
 
   private findPageReview(pageId: number, options: ReviewOptions): void {
-    this.reviewApiService.findPageReviewById({ ...options, id: pageId }).subscribe({
+    this.pageApiService.findPageReviewById({ ...options, id: pageId }).subscribe({
       next: (review: FindReviewResponse) => {
         if (review) {
           this.manageReview(review, options);

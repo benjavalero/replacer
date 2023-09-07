@@ -19,10 +19,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@Tag(name = "Review")
+@Tag(name = "Page")
 @Slf4j
 @RestController
-@RequestMapping("api/review")
+@RequestMapping("api/page")
 public class ReviewSaveController {
 
     @Autowired
