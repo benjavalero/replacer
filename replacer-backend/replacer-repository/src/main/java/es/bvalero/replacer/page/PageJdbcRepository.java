@@ -1,6 +1,5 @@
 package es.bvalero.replacer.page;
 
-import es.bvalero.replacer.common.domain.ResultCount;
 import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import java.time.LocalDate;
@@ -22,7 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Qualifier("pageJdbcRepository")
 @Transactional
 @Repository
-class PageJdbcRepository implements PageRepository, PageCountRepository {
+class PageJdbcRepository implements PageRepository {
 
     private static final String FROM_REPLACEMENT_JOIN_PAGE =
         "FROM page p LEFT JOIN replacement r ON p.lang = r.lang AND p.page_id = r.page_id ";
@@ -161,19 +160,6 @@ class PageJdbcRepository implements PageRepository, PageCountRepository {
     }
 
     @Override
-    public int countNotReviewedByType(WikipediaLanguage lang, @Nullable StandardType type) {
-        // This approach is slightly better than using a JOIN with the page table
-        String sql = "SELECT COUNT (DISTINCT page_id) FROM replacement WHERE lang = :lang AND reviewer IS NULL";
-        MapSqlParameterSource namedParameters = new MapSqlParameterSource().addValue("lang", lang.getCode());
-        if (type != null) {
-            sql += " AND kind = :kind AND subtype = :subtype";
-            namedParameters.addValue("kind", type.getKind().getCode()).addValue("subtype", type.getSubtype());
-        }
-        Integer result = jdbcTemplate.queryForObject(sql, namedParameters, Integer.class);
-        return Objects.requireNonNullElse(result, 0);
-    }
-
-    @Override
     public Collection<String> findPageTitlesNotReviewedByType(WikipediaLanguage lang, StandardType type) {
         String sql =
             "SELECT p.title FROM page p " +
@@ -185,24 +171,5 @@ class PageJdbcRepository implements PageRepository, PageCountRepository {
             .addValue("kind", type.getKind().getCode())
             .addValue("subtype", type.getSubtype());
         return jdbcTemplate.queryForList(sql, namedParameters, String.class);
-    }
-
-    @Override
-    public Collection<ResultCount<StandardType>> countPagesNotReviewedByType(WikipediaLanguage lang) {
-        // Using the index this approach is better than executing several queries by kind
-        String sql =
-            "SELECT kind, subtype, COUNT(DISTINCT page_id) AS num FROM replacement " +
-            "WHERE lang = :lang AND reviewer IS NULL " +
-            "GROUP BY kind, subtype";
-        SqlParameterSource namedParameters = new MapSqlParameterSource().addValue("lang", lang.getCode());
-        return jdbcTemplate.query(
-            sql,
-            namedParameters,
-            (resultSet, rowNum) ->
-                ResultCount.of(
-                    StandardType.of(resultSet.getByte("KIND"), resultSet.getString("SUBTYPE")),
-                    resultSet.getInt("NUM")
-                )
-        );
     }
 }

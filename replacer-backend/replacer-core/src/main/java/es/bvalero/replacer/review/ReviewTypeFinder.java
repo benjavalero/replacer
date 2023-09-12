@@ -2,9 +2,9 @@ package es.bvalero.replacer.review;
 
 import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.finder.Replacement;
-import es.bvalero.replacer.page.PageCountService;
 import es.bvalero.replacer.page.PageKey;
 import es.bvalero.replacer.page.PageService;
+import es.bvalero.replacer.page.count.PageCountService;
 import es.bvalero.replacer.replacement.ReplacementService;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
 import java.util.Collection;
@@ -41,10 +41,7 @@ class ReviewTypeFinder extends ReviewFinder {
     }
 
     private int findTotalResults(ReviewOptions options) {
-        return pageCountService.countPagesToReviewByType(
-            options.getUser().getId().getLang(),
-            options.getStandardType()
-        );
+        return pageCountService.countNotReviewedByType(options.getUser().getId().getLang(), options.getStandardType());
     }
 
     @Override

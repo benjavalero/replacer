@@ -1,4 +1,4 @@
-package es.bvalero.replacer.page;
+package es.bvalero.replacer.page.count;
 
 import es.bvalero.replacer.common.domain.ResultCount;
 import es.bvalero.replacer.common.domain.StandardType;
@@ -15,21 +15,24 @@ public class PageCountService {
     @Autowired
     private PageCountRepository pageCountRepository;
 
-    public Collection<ResultCount<StandardType>> countPagesNotReviewedByType(User user) {
+    /** Count the number of pages to review grouped by replacement type */
+    public Collection<ResultCount<StandardType>> countNotReviewedGroupedByType(User user) {
         // Filter the replacement types the user has no rights to see
         return pageCountRepository
-            .countPagesNotReviewedByType(user.getId().getLang())
+            .countNotReviewedGroupedByType(user.getId().getLang())
             .stream()
             .map(rc -> ResultCount.of(rc.getKey(), rc.getCount()))
             .filter(rc -> !rc.getKey().isTypeForbidden(user))
             .collect(Collectors.toUnmodifiableList());
     }
 
-    public int countPagesToReviewByNoType(WikipediaLanguage lang) {
+    /** Count the number of pages to review */
+    public int countNotReviewedByNoType(WikipediaLanguage lang) {
         return pageCountRepository.countNotReviewedByType(lang, null);
     }
 
-    public int countPagesToReviewByType(WikipediaLanguage lang, StandardType type) {
+    /** Count the number of pages to review by type */
+    public int countNotReviewedByType(WikipediaLanguage lang, StandardType type) {
         return pageCountRepository.countNotReviewedByType(lang, type);
     }
 }

@@ -1,4 +1,4 @@
-package es.bvalero.replacer.page;
+package es.bvalero.replacer.page.count;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
@@ -28,7 +28,7 @@ class PageCountServiceTest {
     }
 
     @Test
-    void testCountReplacementsGroupedByTypeForBots() {
+    void testCountNotReviewedGroupedByTypeForBots() {
         WikipediaLanguage lang = WikipediaLanguage.getDefault();
 
         StandardType type = StandardType.DATE;
@@ -40,11 +40,11 @@ class PageCountServiceTest {
         User user = User.buildTestUser();
         User bot = User.buildTestBotUser();
 
-        when(pageCountRepository.countPagesNotReviewedByType(lang)).thenReturn(counts);
+        when(pageCountRepository.countNotReviewedGroupedByType(lang)).thenReturn(counts);
 
-        assertEquals(List.of(count), pageCountService.countPagesNotReviewedByType(user));
-        assertEquals(counts, pageCountService.countPagesNotReviewedByType(bot));
+        assertEquals(List.of(count), pageCountService.countNotReviewedGroupedByType(user));
+        assertEquals(counts, pageCountService.countNotReviewedGroupedByType(bot));
 
-        verify(pageCountRepository, times(2)).countPagesNotReviewedByType(lang);
+        verify(pageCountRepository, times(2)).countNotReviewedGroupedByType(lang);
     }
 }

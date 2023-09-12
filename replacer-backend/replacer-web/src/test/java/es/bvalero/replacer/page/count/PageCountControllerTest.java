@@ -1,4 +1,4 @@
-package es.bvalero.replacer.page;
+package es.bvalero.replacer.page.count;
 
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.*;
@@ -39,14 +39,14 @@ class PageCountControllerTest {
     private PageCountService pageCountService;
 
     @Test
-    void testFindReplacementCount() throws Exception {
+    void testCountNotReviewedGroupedByType() throws Exception {
         User user = User.buildTestUser();
         when(webUtils.getAuthenticatedUser(any(HttpServletRequest.class))).thenReturn(user);
 
         StandardType type = StandardType.of(ReplacementKind.SIMPLE, "Y");
         ResultCount<StandardType> count = ResultCount.of(type, 100);
         Collection<ResultCount<StandardType>> counts = Collections.singletonList(count);
-        when(pageCountService.countPagesNotReviewedByType(user)).thenReturn(counts);
+        when(pageCountService.countNotReviewedGroupedByType(user)).thenReturn(counts);
 
         mvc
             .perform(
@@ -60,6 +60,6 @@ class PageCountControllerTest {
             .andExpect(jsonPath("$[0].l[0].s", is("Y")))
             .andExpect(jsonPath("$[0].l[0].c", is(100)));
 
-        verify(pageCountService).countPagesNotReviewedByType(user);
+        verify(pageCountService).countNotReviewedGroupedByType(user);
     }
 }

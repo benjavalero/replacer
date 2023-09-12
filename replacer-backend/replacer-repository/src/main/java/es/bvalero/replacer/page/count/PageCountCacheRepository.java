@@ -1,4 +1,4 @@
-package es.bvalero.replacer.page;
+package es.bvalero.replacer.page.count;
 
 import static java.time.temporal.ChronoUnit.MINUTES;
 
@@ -29,7 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class PageCountCacheRepository implements PageCountRepository {
 
     @Autowired
-    @Qualifier("pageJdbcRepository")
+    @Qualifier("pageCountJdbcRepository")
     private PageCountRepository pageCountRepository;
 
     // Counts cache
@@ -56,7 +56,7 @@ public class PageCountCacheRepository implements PageCountRepository {
     }
 
     @Override
-    public Collection<ResultCount<StandardType>> countPagesNotReviewedByType(WikipediaLanguage lang) {
+    public Collection<ResultCount<StandardType>> countNotReviewedGroupedByType(WikipediaLanguage lang) {
         return this.getCounts(lang)
             .entrySet()
             .stream()
@@ -88,7 +88,7 @@ public class PageCountCacheRepository implements PageCountRepository {
 
     private Map<StandardType, Integer> loadReplacementTypeCounts(WikipediaLanguage lang) {
         return pageCountRepository
-            .countPagesNotReviewedByType(lang)
+            .countNotReviewedGroupedByType(lang)
             .stream()
             .collect(Collectors.toConcurrentMap(ResultCount::getKey, ResultCount::getCount));
     }

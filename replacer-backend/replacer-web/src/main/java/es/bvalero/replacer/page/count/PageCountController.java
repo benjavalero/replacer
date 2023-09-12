@@ -1,4 +1,4 @@
-package es.bvalero.replacer.page;
+package es.bvalero.replacer.page.count;
 
 import static java.util.stream.Collectors.*;
 
@@ -22,11 +22,11 @@ public class PageCountController {
     @Autowired
     private PageCountService pageCountService;
 
-    @Operation(summary = "Count the pages to review grouped by type (kind-subtype)")
+    @Operation(summary = "Count the number of pages to review grouped by replacement type")
     @GetMapping(value = "/type/count")
-    public Collection<KindCount> countPagesNotReviewedByType(@AuthenticatedUser User user) {
+    public Collection<KindCount> countNotReviewedGroupedByType(@AuthenticatedUser User user) {
         Collection<KindCount> counts = pageCountService
-            .countPagesNotReviewedByType(user)
+            .countNotReviewedGroupedByType(user)
             .stream()
             .collect(
                 groupingBy(

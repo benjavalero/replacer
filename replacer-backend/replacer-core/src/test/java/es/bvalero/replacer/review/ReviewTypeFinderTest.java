@@ -10,9 +10,9 @@ import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.Suggestion;
 import es.bvalero.replacer.index.PageIndexResult;
 import es.bvalero.replacer.index.PageIndexService;
-import es.bvalero.replacer.page.PageCountService;
 import es.bvalero.replacer.page.PageKey;
 import es.bvalero.replacer.page.PageService;
+import es.bvalero.replacer.page.count.PageCountService;
 import es.bvalero.replacer.replacement.ReplacementService;
 import es.bvalero.replacer.user.User;
 import es.bvalero.replacer.wikipedia.*;
@@ -95,7 +95,7 @@ class ReviewTypeFinderTest {
     @Test
     void testFindRandomPageToReviewTypeNotFiltered() {
         // 1 result in DB
-        when(pageCountService.countPagesToReviewByType(any(WikipediaLanguage.class), any(StandardType.class)))
+        when(pageCountService.countNotReviewedByType(any(WikipediaLanguage.class), any(StandardType.class)))
             .thenReturn(1);
         when(pageService.findPagesToReviewByType(any(WikipediaLanguage.class), any(StandardType.class), anyInt()))
             .thenReturn(Collections.singletonList(randomPageKey))
@@ -116,7 +116,7 @@ class ReviewTypeFinderTest {
     @Test
     void testFindRandomPageToReviewTypeFiltered() {
         // 1 result in DB
-        when(pageCountService.countPagesToReviewByType(any(WikipediaLanguage.class), any(StandardType.class)))
+        when(pageCountService.countNotReviewedByType(any(WikipediaLanguage.class), any(StandardType.class)))
             .thenReturn(1);
         when(pageService.findPagesToReviewByType(any(WikipediaLanguage.class), any(StandardType.class), anyInt()))
             .thenReturn(Collections.singletonList(randomPageKey));
@@ -141,13 +141,13 @@ class ReviewTypeFinderTest {
         // 3. Find a random page by type. In DB there is no page.
 
         // 2 results in DB by type, no results the second time.
-        when(pageCountService.countPagesToReviewByType(any(WikipediaLanguage.class), any(StandardType.class)))
+        when(pageCountService.countNotReviewedByType(any(WikipediaLanguage.class), any(StandardType.class)))
             .thenReturn(2);
         when(pageService.findPagesToReviewByType(any(WikipediaLanguage.class), any(StandardType.class), anyInt()))
             .thenReturn(List.of(randomPageKey, randomPageKey2))
             .thenReturn(Collections.emptyList());
         // 1 result in DB by no type
-        when(pageCountService.countPagesToReviewByNoType(any(WikipediaLanguage.class))).thenReturn(1);
+        when(pageCountService.countNotReviewedByNoType(any(WikipediaLanguage.class))).thenReturn(1);
         when(pageService.findPagesToReviewByNoType(any(WikipediaLanguage.class), anyInt()))
             .thenReturn(Collections.singletonList(randomPageKey2));
 
@@ -232,7 +232,7 @@ class ReviewTypeFinderTest {
     @Test
     void testFindReplacementFilteredAndReviewed() {
         // 1 result in DB
-        when(pageCountService.countPagesToReviewByType(any(WikipediaLanguage.class), any(StandardType.class)))
+        when(pageCountService.countNotReviewedByType(any(WikipediaLanguage.class), any(StandardType.class)))
             .thenReturn(1);
         when(pageService.findPagesToReviewByType(any(WikipediaLanguage.class), any(StandardType.class), anyInt()))
             .thenReturn(Collections.singletonList(randomPageKey))

@@ -1,4 +1,4 @@
-package es.bvalero.replacer.page;
+package es.bvalero.replacer.page.count;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -37,9 +37,9 @@ class PageCountCacheRepositoryTest {
         ResultCount<StandardType> count1 = ResultCount.of(type1, 2);
         ResultCount<StandardType> count2 = ResultCount.of(type2, 1);
         Collection<ResultCount<StandardType>> counts = List.of(count1, count2);
-        when(pageCountRepository.countPagesNotReviewedByType(lang)).thenReturn(counts);
+        when(pageCountRepository.countNotReviewedGroupedByType(lang)).thenReturn(counts);
 
-        Collection<ResultCount<StandardType>> typeCounts = pageCountCacheRepository.countPagesNotReviewedByType(lang);
+        Collection<ResultCount<StandardType>> typeCounts = pageCountCacheRepository.countNotReviewedGroupedByType(lang);
         assertEquals(2, typeCounts.size());
         assertEquals(1, typeCounts.stream().map(rc -> rc.getKey().getKind()).distinct().count());
         assertEquals(kind, typeCounts.stream().map(rc -> rc.getKey().getKind()).distinct().findAny().orElse(null));
@@ -65,7 +65,7 @@ class PageCountCacheRepositoryTest {
         // Decrease a replacement count
         pageCountCacheRepository.decrementPageCount(lang, type1);
 
-        typeCounts = pageCountCacheRepository.countPagesNotReviewedByType(lang);
+        typeCounts = pageCountCacheRepository.countNotReviewedGroupedByType(lang);
         assertEquals(2, typeCounts.size());
         assertEquals(1, typeCounts.stream().map(rc -> rc.getKey().getKind()).distinct().count());
         assertEquals(kind, typeCounts.stream().map(rc -> rc.getKey().getKind()).distinct().findAny().orElse(null));
@@ -91,7 +91,7 @@ class PageCountCacheRepositoryTest {
         // Decrease a replacement count emptying it
         pageCountCacheRepository.decrementPageCount(lang, type2);
 
-        typeCounts = pageCountCacheRepository.countPagesNotReviewedByType(lang);
+        typeCounts = pageCountCacheRepository.countNotReviewedGroupedByType(lang);
         assertEquals(1, typeCounts.size());
         assertEquals(kind, typeCounts.stream().map(rc -> rc.getKey().getKind()).distinct().findAny().orElse(null));
         assertEquals(
@@ -110,7 +110,7 @@ class PageCountCacheRepositoryTest {
         StandardType nonExisting = StandardType.of(ReplacementKind.SIMPLE, "B");
         pageCountCacheRepository.removePageCount(lang, nonExisting);
 
-        typeCounts = pageCountCacheRepository.countPagesNotReviewedByType(lang);
+        typeCounts = pageCountCacheRepository.countNotReviewedGroupedByType(lang);
         assertEquals(1, typeCounts.size());
         assertEquals(kind, typeCounts.stream().map(rc -> rc.getKey().getKind()).distinct().findAny().orElse(null));
         assertEquals(
@@ -127,7 +127,7 @@ class PageCountCacheRepositoryTest {
         StandardType existing = StandardType.of(ReplacementKind.SIMPLE, "Y");
         pageCountCacheRepository.removePageCount(lang, existing);
 
-        typeCounts = pageCountCacheRepository.countPagesNotReviewedByType(lang);
+        typeCounts = pageCountCacheRepository.countNotReviewedGroupedByType(lang);
         assertTrue(typeCounts.isEmpty());
     }
 }

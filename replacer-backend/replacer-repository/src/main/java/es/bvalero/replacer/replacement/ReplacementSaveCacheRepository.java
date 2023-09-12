@@ -2,8 +2,8 @@ package es.bvalero.replacer.replacement;
 
 import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import es.bvalero.replacer.page.PageCountCacheRepository;
 import es.bvalero.replacer.page.PageKey;
+import es.bvalero.replacer.page.count.PageCountCacheRepository;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
