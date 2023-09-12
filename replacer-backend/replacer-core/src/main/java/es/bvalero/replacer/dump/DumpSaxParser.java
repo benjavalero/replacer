@@ -2,7 +2,7 @@ package es.bvalero.replacer.dump;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.exception.ReplacerException;
-import es.bvalero.replacer.index.PageIndexService;
+import es.bvalero.replacer.index.PageIndexBatchService;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -17,7 +17,6 @@ import javax.xml.parsers.SAXParserFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.xml.sax.SAXException;
 
@@ -27,8 +26,7 @@ import org.xml.sax.SAXException;
 class DumpSaxParser implements DumpParser {
 
     @Autowired
-    @Qualifier("pageBatchIndexService")
-    private PageIndexService pageIndexService;
+    private PageIndexBatchService pageIndexService;
 
     @Resource
     private Map<String, Integer> numPagesEstimated;

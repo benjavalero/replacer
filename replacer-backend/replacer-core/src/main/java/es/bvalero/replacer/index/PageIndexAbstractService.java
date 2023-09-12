@@ -30,6 +30,7 @@ abstract class PageIndexAbstractService {
     @Autowired
     private PageComparator pageComparator;
 
+    /** Index a page. Replacements and details in database (if any) will be calculated. */
     public PageIndexResult indexPage(IndexablePage page) {
         try {
             final IndexedPage dbPage = findIndexedPage(page.getPageKey());

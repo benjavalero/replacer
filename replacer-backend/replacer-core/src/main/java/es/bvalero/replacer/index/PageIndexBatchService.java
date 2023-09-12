@@ -10,8 +10,7 @@ import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 
 @Service
-@Qualifier("pageBatchIndexService")
-class PageIndexBatchService extends PageIndexAbstractService implements PageIndexService {
+public class PageIndexBatchService extends PageIndexAbstractService {
 
     @Autowired
     private PageBatchService pageBatchService;
@@ -48,7 +47,7 @@ class PageIndexBatchService extends PageIndexAbstractService implements PageInde
         return pageIndexValidator.isIndexableByTimestamp(page, dbPage);
     }
 
-    @Override
+    /* Force saving what is left on the batch (if applicable) */
     public void finish() {
         pageComparatorSaver.forceSave();
     }

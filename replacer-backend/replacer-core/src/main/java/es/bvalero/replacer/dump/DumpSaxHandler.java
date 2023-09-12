@@ -1,7 +1,7 @@
 package es.bvalero.replacer.dump;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import es.bvalero.replacer.index.PageIndexService;
+import es.bvalero.replacer.index.PageIndexBatchService;
 import es.bvalero.replacer.index.PageIndexStatus;
 import es.bvalero.replacer.page.PageKey;
 import es.bvalero.replacer.wikipedia.WikipediaNamespace;
@@ -31,7 +31,7 @@ class DumpSaxHandler extends DefaultHandler {
     @Getter
     private final WikipediaLanguage lang;
 
-    private final PageIndexService pageIndexService;
+    private final PageIndexBatchService pageIndexService;
 
     // Current page values
     private final StringBuilder currentChars = new StringBuilder(5000);
@@ -58,7 +58,7 @@ class DumpSaxHandler extends DefaultHandler {
     @Getter
     private LocalDateTime end = null;
 
-    DumpSaxHandler(WikipediaLanguage lang, PageIndexService indexer) {
+    DumpSaxHandler(WikipediaLanguage lang, PageIndexBatchService indexer) {
         this.lang = lang;
         this.pageIndexService = indexer;
     }

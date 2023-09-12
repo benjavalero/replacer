@@ -6,13 +6,11 @@ import es.bvalero.replacer.page.PageService;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 @Slf4j
-@Primary
 @Service
-class PageIndexSingleService extends PageIndexAbstractService implements PageIndexService {
+public class PageIndexService extends PageIndexAbstractService {
 
     @Autowired
     private PageService pageService;
@@ -28,10 +26,5 @@ class PageIndexSingleService extends PageIndexAbstractService implements PageInd
     @Override
     void saveResult(PageComparatorResult result) {
         pageComparatorSaver.save(result);
-    }
-
-    @Override
-    public void finish() {
-        throw new UnsupportedOperationException();
     }
 }
