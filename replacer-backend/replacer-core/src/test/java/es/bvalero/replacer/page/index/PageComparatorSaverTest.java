@@ -1,4 +1,4 @@
-package es.bvalero.replacer.index;
+package es.bvalero.replacer.page.index;
 
 import static org.mockito.Mockito.anyCollection;
 import static org.mockito.Mockito.verify;

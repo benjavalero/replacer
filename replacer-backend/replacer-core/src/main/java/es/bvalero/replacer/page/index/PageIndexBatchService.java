@@ -1,11 +1,10 @@
-package es.bvalero.replacer.index;
+package es.bvalero.replacer.page.index;
 
 import es.bvalero.replacer.page.IndexedPage;
 import es.bvalero.replacer.page.PageBatchService;
 import es.bvalero.replacer.page.PageKey;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 

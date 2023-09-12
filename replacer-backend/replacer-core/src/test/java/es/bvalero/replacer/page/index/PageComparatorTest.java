@@ -1,6 +1,6 @@
-package es.bvalero.replacer.index;
+package es.bvalero.replacer.page.index;
 
-import static es.bvalero.replacer.index.PageComparator.toIndexedPage;
+import static es.bvalero.replacer.page.index.PageComparator.toIndexedPage;
 import static es.bvalero.replacer.replacement.IndexedReplacement.REVIEWER_SYSTEM;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;

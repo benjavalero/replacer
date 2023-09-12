@@ -1,4 +1,4 @@
-package es.bvalero.replacer.index;
+package es.bvalero.replacer.page.index;
 
 import es.bvalero.replacer.page.IndexedPage;
 import es.bvalero.replacer.page.PageKey;

@@ -1,4 +1,4 @@
-package es.bvalero.replacer.index;
+package es.bvalero.replacer.page.index;
 
 /** Status of a page after trying to index it */
 public enum PageIndexStatus {

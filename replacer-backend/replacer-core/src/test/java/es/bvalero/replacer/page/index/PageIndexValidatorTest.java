@@ -1,4 +1,4 @@
-package es.bvalero.replacer.index;
+package es.bvalero.replacer.page.index;
 
 import static org.junit.jupiter.api.Assertions.*;
 

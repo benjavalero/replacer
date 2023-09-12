@@ -1,7 +1,7 @@
 package es.bvalero.replacer.dump;
 
-import es.bvalero.replacer.index.IndexablePage;
 import es.bvalero.replacer.page.PageKey;
+import es.bvalero.replacer.page.index.IndexablePage;
 import es.bvalero.replacer.wikipedia.WikipediaNamespace;
 import es.bvalero.replacer.wikipedia.WikipediaTimestamp;
 import lombok.Builder;

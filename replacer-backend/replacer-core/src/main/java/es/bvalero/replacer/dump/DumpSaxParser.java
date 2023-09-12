@@ -2,7 +2,7 @@ package es.bvalero.replacer.dump;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.exception.ReplacerException;
-import es.bvalero.replacer.index.PageIndexBatchService;
+import es.bvalero.replacer.page.index.PageIndexBatchService;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;

@@ -5,8 +5,8 @@ import static org.mockito.Mockito.*;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.exception.ReplacerException;
-import es.bvalero.replacer.index.PageIndexBatchService;
-import es.bvalero.replacer.index.PageIndexResult;
+import es.bvalero.replacer.page.index.PageIndexBatchService;
+import es.bvalero.replacer.page.index.PageIndexResult;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;

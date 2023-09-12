@@ -1,7 +1,7 @@
 package es.bvalero.replacer.wikipedia;
 
-import es.bvalero.replacer.index.IndexablePage;
 import es.bvalero.replacer.page.PageKey;
+import es.bvalero.replacer.page.index.IndexablePage;
 import lombok.Builder;
 import lombok.ToString;
 import lombok.Value;

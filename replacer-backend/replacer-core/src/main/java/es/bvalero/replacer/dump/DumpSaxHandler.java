@@ -1,9 +1,9 @@
 package es.bvalero.replacer.dump;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import es.bvalero.replacer.index.PageIndexBatchService;
-import es.bvalero.replacer.index.PageIndexStatus;
 import es.bvalero.replacer.page.PageKey;
+import es.bvalero.replacer.page.index.PageIndexBatchService;
+import es.bvalero.replacer.page.index.PageIndexStatus;
 import es.bvalero.replacer.wikipedia.WikipediaNamespace;
 import es.bvalero.replacer.wikipedia.WikipediaTimestamp;
 import java.time.LocalDateTime;
