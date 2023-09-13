@@ -18,13 +18,13 @@
     </ol>
   </nav>
 
-  <h3 id="pageTitle">{{ review.page.title }}
+  <h3 id="pageTitle">{{ review.title }}
     <a href="{{ url }}" target="_blank" rel="noopener noreferrer" class="small no-underline">[Abrir en Wikipedia]</a>
     <a href="{{ historyUrl }}" target="_blank" rel="noopener noreferrer" class="small no-underline">[Historial]</a>
   </h3>
 
   <app-edit-snippet *ngFor="let replacement of review.replacements; let i = index; let first = first; let last = last"
-    [index]="i" [pageText]="review.page.content" [replacement]="replacement" (fixed)="onFixed($event)"
+    [index]="i" [pageText]="review.content" [replacement]="replacement" (fixed)="onFixed($event)"
     [limitLeft]="limitLeft(i)" [limitRight]="limitRight(i)" [hidden]="!displayReplacement(i)">
   </app-edit-snippet>
 

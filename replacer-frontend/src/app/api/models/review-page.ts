@@ -1,5 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
+import { ReviewReplacement } from './review-replacement';
 import { ReviewSection } from './review-section';
 
 /**
@@ -18,6 +19,11 @@ export interface ReviewPage {
   lang: string;
 
   /**
+   * Number of pending pages to review of the given type
+   */
+  numPending?: number;
+
+  /**
    * Page ID
    */
   pageId: number;
@@ -26,6 +32,11 @@ export interface ReviewPage {
    * Timestamp when the page content was retrieved from Wikipedia
    */
   queryTimestamp: string;
+
+  /**
+   * Collection of replacements to review
+   */
+  replacements: Array<ReviewReplacement>;
   section?: ReviewSection;
 
   /**

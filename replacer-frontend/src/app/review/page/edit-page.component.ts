@@ -4,9 +4,9 @@ import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faFastForward } from '@fortawesome/free-solid-svg-icons';
 import { Observable } from 'rxjs';
-import { FindReviewResponse } from '../../api/models/find-review-response';
 import { ReviewReplacement } from '../../api/models/review-replacement';
 import { ReviewedReplacement } from '../../api/models/reviewed-replacement';
+import { ReviewPage } from '../../api/models/review-page';
 import { ReviewedPage } from '../../api/models/reviewed-page';
 import { PageApiService } from '../../api/services/page-api.service';
 import { UserService } from '../../core/user/user.service';
@@ -26,7 +26,7 @@ import { ReviewOptions } from './review-options.model';
   styleUrls: ['./edit-page.component.css']
 })
 export class EditPageComponent implements OnChanges {
-  @Input() review!: FindReviewResponse;
+  @Input() review!: ReviewPage;
   @Input() options!: ReviewOptions;
 
   ffIcon = faFastForward;
@@ -85,7 +85,7 @@ export class EditPageComponent implements OnChanges {
     const currentEnd = getReplacementEnd(this.review.replacements[index]);
     let limit: number;
     if (index == this.review.replacements.length - 1) {
-      limit = this.review.page.content.length;
+      limit = this.review.content.length;
     } else {
       const nextStart = this.review.replacements[index + 1].start;
       const diff = Math.ceil((nextStart - currentEnd) / 2);
@@ -130,12 +130,12 @@ export class EditPageComponent implements OnChanges {
     const fixedReplacements = this.filterFixedReplacements().sort((a, b): number => b.start - a.start);
     if (fixedReplacements.length > 0) {
       // Apply the fixes in the original text
-      let contentToSave = this.review.page.content;
+      let contentToSave = this.review.content;
       fixedReplacements.forEach((fix) => {
         contentToSave = this.replaceText(contentToSave, fix.start, fix.oldText, fix.newText!);
       });
 
-      this.alertService.addInfoMessage(`Guardando cambios en «${this.review.page.title}»…`);
+      this.alertService.addInfoMessage(`Guardando cambios en «${this.review.title}»…`);
       this.saveContent(contentToSave);
     } else {
       // Save with no changes => Mark page as reviewed
@@ -159,7 +159,7 @@ export class EditPageComponent implements OnChanges {
   }
 
   private saveWithNoChanges() {
-    this.alertService.addInfoMessage(`Marcando como revisado sin guardar cambios en «${this.review.page.title}»…`);
+    this.alertService.addInfoMessage(`Marcando como revisado sin guardar cambios en «${this.review.title}»…`);
     this.saveContent(null);
   }
 
@@ -177,11 +177,11 @@ export class EditPageComponent implements OnChanges {
       } as ReviewedPage;
     } else {
       reviewedPage = {
-        title: this.review.page.title,
-        content: this.review.page.content,
-        sectionId: this.review.page.section?.id,
-        sectionOffset: this.review.page.section?.offset,
-        queryTimestamp: this.review.page.queryTimestamp,
+        title: this.review.title,
+        content: this.review.content,
+        sectionId: this.review.section?.id,
+        sectionOffset: this.review.section?.offset,
+        queryTimestamp: this.review.queryTimestamp,
         reviewedReplacements: reviewedReplacements
       } as ReviewedPage;
     }
@@ -224,7 +224,7 @@ export class EditPageComponent implements OnChanges {
   private postSaveReview(reviewedPage: ReviewedPage): Observable<void> {
     // Call backend and delay the observable response
     return this.pageApiService.saveReview({
-      id: this.review.page.pageId,
+      id: this.review.pageId,
       body: reviewedPage
     });
   }
@@ -276,15 +276,15 @@ export class EditPageComponent implements OnChanges {
   }
 
   get url(): string {
-    let url = `https://${this.review.page.lang}.wikipedia.org/wiki/${this.review.page.title}`;
-    if (this.review.page.section) {
-      url += `#${this.review.page.section.title}`;
+    let url = `https://${this.review.lang}.wikipedia.org/wiki/${this.review.title}`;
+    if (this.review.section) {
+      url += `#${this.review.section.title}`;
     }
     return url;
   }
 
   get historyUrl(): string {
-    return `https://${this.review.page.lang}.wikipedia.org/w/index.php?title=${this.review.page.title}&action=history`;
+    return `https://${this.review.lang}.wikipedia.org/w/index.php?title=${this.review.title}&action=history`;
   }
 
   get kindLabel(): string {

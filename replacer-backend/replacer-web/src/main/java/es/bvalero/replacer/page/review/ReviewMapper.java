@@ -4,7 +4,6 @@ import es.bvalero.replacer.common.domain.CustomType;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.Suggestion;
 import es.bvalero.replacer.user.User;
-import es.bvalero.replacer.wikipedia.WikipediaPage;
 import es.bvalero.replacer.wikipedia.WikipediaSection;
 import java.util.Collection;
 import java.util.stream.Collectors;
@@ -14,23 +13,17 @@ import org.springframework.lang.Nullable;
 @UtilityClass
 class ReviewMapper {
 
-    FindReviewResponse toDto(Review review) {
-        return FindReviewResponse.of(
-            toDto(review.getPage(), review.getSection()),
-            toDto(review.getReplacements()),
-            review.getNumPending()
-        );
-    }
-
-    private ReviewPage toDto(WikipediaPage page, @Nullable WikipediaSection section) {
+    ReviewPage toDto(Review review) {
         return ReviewPage
             .builder()
-            .lang(page.getPageKey().getLang().getCode())
-            .pageId(page.getPageKey().getPageId())
-            .title(page.getTitle())
-            .content(page.getContent())
-            .section(toDto(section))
-            .queryTimestamp(page.getQueryTimestamp().toString())
+            .lang(review.getPage().getPageKey().getLang().getCode())
+            .pageId(review.getPage().getPageKey().getPageId())
+            .title(review.getPage().getTitle())
+            .content(review.getPage().getContent())
+            .section(toDto(review.getSection()))
+            .queryTimestamp(review.getPage().getQueryTimestamp().toString())
+            .replacements(toDto(review.getReplacements()))
+            .numPending(review.getNumPending())
             .build();
     }
 

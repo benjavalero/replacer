@@ -30,7 +30,7 @@ public class ReviewFindController {
 
     @Operation(summary = "Find a random page and the replacements to review")
     @GetMapping(value = "/random")
-    public ResponseEntity<FindReviewResponse> findRandomPageWithReplacements(
+    public ResponseEntity<ReviewPage> findRandomPageWithReplacements(
         @AuthenticatedUser User user,
         @Valid ReviewOptionsDto optionsDto
     ) {
@@ -48,7 +48,7 @@ public class ReviewFindController {
                 review = reviewTypeFinder.findRandomPageReview(options);
         }
         if (review.isPresent()) {
-            FindReviewResponse response = ReviewMapper.toDto(review.get());
+            ReviewPage response = ReviewMapper.toDto(review.get());
             LOGGER.info("END Find Random Page with Replacements: {}", response);
             return ResponseEntity.ok(response);
         } else {
@@ -59,7 +59,7 @@ public class ReviewFindController {
 
     @Operation(summary = "Find a page and the replacements to review")
     @GetMapping(value = "/{id}")
-    public ResponseEntity<FindReviewResponse> findPageReviewById(
+    public ResponseEntity<ReviewPage> findPageReviewById(
         @Parameter(description = "Page ID", example = "6980716") @PathVariable("id") int pageId,
         @AuthenticatedUser User user,
         @Valid ReviewOptionsDto optionsDto
@@ -79,7 +79,7 @@ public class ReviewFindController {
                 review = reviewTypeFinder.findPageReview(pageKey, options);
         }
         if (review.isPresent()) {
-            FindReviewResponse response = ReviewMapper.toDto(review.get());
+            ReviewPage response = ReviewMapper.toDto(review.get());
             LOGGER.info("END Find Random Page with Replacements: {}", response);
             return ResponseEntity.ok(response);
         } else {

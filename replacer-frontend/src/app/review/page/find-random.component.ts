@@ -3,8 +3,8 @@ import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { FindReviewResponse } from '../../api/models/find-review-response';
 import { ReplacementType } from '../../api/models/replacement-type';
+import { ReviewPage } from '../../api/models/review-page';
 import { ReplacementTypeApiService } from '../../api/services/replacement-type-api.service';
 import { PageApiService } from '../../api/services/page-api.service';
 import { AlertService } from '../../shared/alert/alert.service';
@@ -34,7 +34,7 @@ export const kindLabel: { [key: number]: string } = {
   styleUrls: []
 })
 export class FindRandomComponent implements OnInit {
-  review: FindReviewResponse | null;
+  review: ReviewPage | null;
   options: ReviewOptions | null;
 
   constructor(
@@ -92,7 +92,7 @@ export class FindRandomComponent implements OnInit {
     this.alertService.addInfoMessage(msg);
 
     this.pageApiService.findRandomPageWithReplacements({ ...options }).subscribe({
-      next: (review: FindReviewResponse | null) => {
+      next: (review: ReviewPage | null) => {
         if (review !== null) {
           this.manageReview(review, options);
         } else {
@@ -117,7 +117,7 @@ export class FindRandomComponent implements OnInit {
 
   private findPageReview(pageId: number, options: ReviewOptions): void {
     this.pageApiService.findPageReviewById({ ...options, id: pageId }).subscribe({
-      next: (review: FindReviewResponse) => {
+      next: (review: ReviewPage) => {
         if (review) {
           this.manageReview(review, options);
         } else {
@@ -136,7 +136,7 @@ export class FindRandomComponent implements OnInit {
     });
   }
 
-  private manageReview(review: FindReviewResponse, options: ReviewOptions): void {
+  private manageReview(review: ReviewPage, options: ReviewOptions): void {
     this.alertService.clearAlertMessages();
 
     this.options = options;
@@ -147,10 +147,10 @@ export class FindRandomComponent implements OnInit {
     if (options.kind && options.subtype) {
       htmlTitle += `${options.subtype} - `;
     }
-    htmlTitle += review.page.title;
+    htmlTitle += review.title;
     this.titleService.setTitle(htmlTitle);
 
-    this.setReviewUrl(options, review.page.pageId);
+    this.setReviewUrl(options, review.pageId);
   }
 
   private setReviewUrl(options: ReviewOptions, pageId: number | null): void {

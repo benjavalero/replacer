@@ -10,7 +10,6 @@ export { ReplacementType } from './models/replacement-type';
 export { ReviewerCount } from './models/reviewer-count';
 export { PageCount } from './models/page-count';
 export { ReplacementCount } from './models/replacement-count';
-export { FindReviewResponse } from './models/find-review-response';
 export { ReviewPage } from './models/review-page';
 export { ReviewReplacement } from './models/review-replacement';
 export { ReviewSection } from './models/review-section';
