@@ -209,7 +209,8 @@ export class EditPageComponent implements OnChanges {
   }
 
   private postSaveReview(page: ReviewPage, reviewedReplacements: ReviewedReplacement[]): Observable<void> {
-    const saveReview = {
+    const reviewedPage = {
+      title: page.title,
       content: page.content,
       sectionId: page.section?.id,
       sectionOffset: page.section?.offset,
@@ -221,7 +222,7 @@ export class EditPageComponent implements OnChanges {
     // Call backend and delay the observable response
     return this.pageApiService.saveReview({
       id: page.pageId,
-      body: saveReview
+      body: reviewedPage
     });
   }
 

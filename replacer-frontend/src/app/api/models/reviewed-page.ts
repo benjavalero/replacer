@@ -31,4 +31,9 @@ export interface ReviewedPage {
    * Offset of the section with the page content
    */
   sectionOffset?: number;
+
+  /**
+   * Page title
+   */
+  title: string;
 }

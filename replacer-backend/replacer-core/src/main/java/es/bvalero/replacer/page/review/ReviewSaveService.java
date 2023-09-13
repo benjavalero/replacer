@@ -11,7 +11,6 @@ import es.bvalero.replacer.replacement.IndexedReplacement;
 import es.bvalero.replacer.replacement.ReplacementService;
 import es.bvalero.replacer.user.AccessToken;
 import es.bvalero.replacer.wikipedia.WikipediaException;
-import es.bvalero.replacer.wikipedia.WikipediaPage;
 import es.bvalero.replacer.wikipedia.WikipediaPageRepository;
 import es.bvalero.replacer.wikipedia.WikipediaPageSave;
 import java.time.LocalDate;
@@ -20,9 +19,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.jetbrains.annotations.VisibleForTesting;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -44,45 +41,21 @@ class ReviewSaveService {
     @Autowired
     private WikipediaPageRepository wikipediaPageRepository;
 
-    @Autowired
-    private ApplyCosmeticsService applyCosmeticChanges;
-
-    void saveReviewContent(
-        WikipediaPage page,
-        @Nullable Integer sectionId,
-        Collection<ReviewedReplacement> reviewedReplacements,
-        AccessToken accessToken
-    ) throws WikipediaException {
-        // Apply cosmetic changes
-        String textToSave = applyCosmeticChanges.applyCosmeticChanges(page);
-        boolean applyCosmetics = !textToSave.equals(page.getContent());
-
-        // Upload new content to Wikipedia
-        WikipediaPageSave pageSave = WikipediaPageSave
-            .builder()
-            .pageKey(page.getPageKey())
-            .sectionId(sectionId)
-            .content(textToSave)
-            .editSummary(buildEditSummary(reviewedReplacements, applyCosmetics))
-            .queryTimestamp(page.getQueryTimestamp())
-            .build();
+    void saveReviewContent(WikipediaPageSave pageSave, AccessToken accessToken) throws WikipediaException {
         wikipediaPageRepository.save(pageSave, accessToken);
     }
 
-    @VisibleForTesting
-    String buildEditSummary(Collection<ReviewedReplacement> reviewedReplacements, boolean applyCosmetics) {
-        Collection<String> fixed = reviewedReplacements
-            .stream()
-            .filter(ReviewedReplacement::isFixed)
-            .map(ReviewedReplacement::getType)
-            .map(this::buildSubtypeSummary)
-            .collect(Collectors.toUnmodifiableSet());
-        if (fixed.isEmpty()) {
+    String buildEditSummary(Collection<ReplacementType> fixedReplacementTypes, boolean applyCosmetics) {
+        if (fixedReplacementTypes.isEmpty()) {
             throw new IllegalArgumentException("No fixed replacements when building edit summary");
         }
 
         // The summary is truncated to 500 codepoints when the page is published
         // https://en.wikipedia.org/wiki/Help:Edit_summary#The_500-character_limit
+        Collection<String> fixed = fixedReplacementTypes
+            .stream()
+            .map(this::buildSubtypeSummary)
+            .collect(Collectors.toUnmodifiableSet());
         StringBuilder summary = new StringBuilder(EDIT_SUMMARY).append(": ").append(StringUtils.join(fixed, ", "));
 
         if (applyCosmetics) {

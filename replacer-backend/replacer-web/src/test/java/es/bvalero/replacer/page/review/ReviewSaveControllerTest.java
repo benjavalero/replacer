@@ -11,10 +11,14 @@ import es.bvalero.replacer.common.domain.ReplacementKind;
 import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.util.WebUtils;
+import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.page.PageKey;
 import es.bvalero.replacer.user.AccessToken;
 import es.bvalero.replacer.user.User;
-import es.bvalero.replacer.wikipedia.*;
+import es.bvalero.replacer.wikipedia.WikipediaConflictException;
+import es.bvalero.replacer.wikipedia.WikipediaException;
+import es.bvalero.replacer.wikipedia.WikipediaPageSave;
+import es.bvalero.replacer.wikipedia.WikipediaTimestamp;
 import java.util.List;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -34,23 +38,24 @@ import org.springframework.test.web.servlet.MockMvc;
 class ReviewSaveControllerTest {
 
     private static final int pageId = 123;
+    private static final PageKey pageKey = PageKey.of(WikipediaLanguage.getDefault(), pageId);
+    private static final String title = "T";
     private static final String content = "X";
     private static final WikipediaTimestamp timestamp = WikipediaTimestamp.now();
-    private static final WikipediaPage page = WikipediaPage
+    private static final ReviewedReplacement reviewed = ReviewedReplacement
         .builder()
-        .pageKey(PageKey.of(WikipediaLanguage.getDefault(), pageId))
-        .namespace(WikipediaNamespace.getDefault())
-        .title("")
-        .content(content)
-        .lastUpdate(timestamp)
-        .queryTimestamp(timestamp)
-        .build();
-    ReviewedReplacement reviewed = ReviewedReplacement
-        .builder()
-        .pageKey(page.getPageKey())
+        .pageKey(pageKey)
         .type(StandardType.of(ReplacementKind.SIMPLE, "1"))
         .start(1)
         .reviewer("x")
+        .fixed(true)
+        .build();
+    private static final WikipediaPageSave pageSave = WikipediaPageSave
+        .builder()
+        .pageKey(pageKey)
+        .content(content)
+        .editSummary("S")
+        .queryTimestamp(timestamp)
         .build();
 
     @Autowired
@@ -63,17 +68,21 @@ class ReviewSaveControllerTest {
     private WebUtils webUtils;
 
     @MockBean
+    private ApplyCosmeticsService applyCosmeticsService;
+
+    @MockBean
     private ReviewSaveService reviewSaveService;
 
     private ReviewedPage reviewedPage;
 
     @BeforeEach
     public void setUp() {
-        this.reviewedPage = new ReviewedPage(content, timestamp.toString());
+        this.reviewedPage = new ReviewedPage(title, content, timestamp.toString());
         ReviewedReplacementDto reviewedDto = new ReviewedReplacementDto();
         reviewedDto.setKind(reviewed.getType().getKind().getCode());
         reviewedDto.setSubtype(reviewed.getType().getSubtype());
         reviewedDto.setStart(reviewed.getStart());
+        reviewedDto.setFixed(reviewed.isFixed());
         reviewedPage.setReviewedReplacements(List.of(reviewedDto));
     }
 
@@ -81,6 +90,9 @@ class ReviewSaveControllerTest {
     void testSaveWithChanges() throws Exception {
         User user = User.buildTestUser();
         when(webUtils.getAuthenticatedUser(any(HttpServletRequest.class))).thenReturn(user);
+
+        when(applyCosmeticsService.applyCosmeticChanges(any(FinderPage.class))).thenReturn(pageSave.getContent());
+        when(reviewSaveService.buildEditSummary(anyCollection(), anyBoolean())).thenReturn(pageSave.getEditSummary());
 
         mvc
             .perform(
@@ -92,7 +104,7 @@ class ReviewSaveControllerTest {
             )
             .andExpect(status().isNoContent());
 
-        verify(reviewSaveService).saveReviewContent(page, null, List.of(reviewed), user.getAccessToken());
+        verify(reviewSaveService).saveReviewContent(pageSave, user.getAccessToken());
         verify(reviewSaveService).markAsReviewed(List.of(reviewed), true);
     }
 
@@ -113,8 +125,7 @@ class ReviewSaveControllerTest {
             )
             .andExpect(status().isNoContent());
 
-        verify(reviewSaveService, never())
-            .saveReviewContent(any(WikipediaPage.class), anyInt(), anyCollection(), any(AccessToken.class));
+        verify(reviewSaveService, never()).saveReviewContent(any(WikipediaPageSave.class), any(AccessToken.class));
         verify(reviewSaveService).markAsReviewed(List.of(reviewed), false);
     }
 
@@ -143,9 +154,12 @@ class ReviewSaveControllerTest {
         User user = User.buildTestUser();
         when(webUtils.getAuthenticatedUser(any(HttpServletRequest.class))).thenReturn(user);
 
+        when(applyCosmeticsService.applyCosmeticChanges(any(FinderPage.class))).thenReturn(pageSave.getContent());
+        when(reviewSaveService.buildEditSummary(anyCollection(), anyBoolean())).thenReturn(pageSave.getEditSummary());
+
         doThrow(WikipediaConflictException.class)
             .when(reviewSaveService)
-            .saveReviewContent(page, null, List.of(reviewed), user.getAccessToken());
+            .saveReviewContent(pageSave, user.getAccessToken());
 
         mvc
             .perform(
@@ -157,7 +171,7 @@ class ReviewSaveControllerTest {
             )
             .andExpect(status().isConflict());
 
-        verify(reviewSaveService).saveReviewContent(page, null, List.of(reviewed), user.getAccessToken());
+        verify(reviewSaveService).saveReviewContent(pageSave, user.getAccessToken());
         verify(reviewSaveService, never()).markAsReviewed(anyCollection(), anyBoolean());
     }
 
@@ -166,9 +180,12 @@ class ReviewSaveControllerTest {
         User user = User.buildTestUser();
         when(webUtils.getAuthenticatedUser(any(HttpServletRequest.class))).thenReturn(user);
 
+        when(applyCosmeticsService.applyCosmeticChanges(any(FinderPage.class))).thenReturn(pageSave.getContent());
+        when(reviewSaveService.buildEditSummary(anyCollection(), anyBoolean())).thenReturn(pageSave.getEditSummary());
+
         doThrow(new WikipediaException("mwoauth-invalid-authorization"))
             .when(reviewSaveService)
-            .saveReviewContent(page, null, List.of(reviewed), user.getAccessToken());
+            .saveReviewContent(pageSave, user.getAccessToken());
 
         mvc
             .perform(
@@ -180,7 +197,7 @@ class ReviewSaveControllerTest {
             )
             .andExpect(status().isUnauthorized());
 
-        verify(reviewSaveService).saveReviewContent(page, null, List.of(reviewed), user.getAccessToken());
+        verify(reviewSaveService).saveReviewContent(pageSave, user.getAccessToken());
         verify(reviewSaveService, never()).markAsReviewed(anyCollection(), anyBoolean());
     }
 
@@ -189,9 +206,10 @@ class ReviewSaveControllerTest {
         User user = User.buildTestUser();
         when(webUtils.getAuthenticatedUser(any(HttpServletRequest.class))).thenReturn(user);
 
-        doThrow(WikipediaException.class)
-            .when(reviewSaveService)
-            .saveReviewContent(page, null, List.of(reviewed), user.getAccessToken());
+        when(applyCosmeticsService.applyCosmeticChanges(any(FinderPage.class))).thenReturn(pageSave.getContent());
+        when(reviewSaveService.buildEditSummary(anyCollection(), anyBoolean())).thenReturn(pageSave.getEditSummary());
+
+        doThrow(WikipediaException.class).when(reviewSaveService).saveReviewContent(pageSave, user.getAccessToken());
 
         mvc
             .perform(
@@ -203,7 +221,7 @@ class ReviewSaveControllerTest {
             )
             .andExpect(status().isInternalServerError());
 
-        verify(reviewSaveService).saveReviewContent(page, null, List.of(reviewed), user.getAccessToken());
+        verify(reviewSaveService).saveReviewContent(pageSave, user.getAccessToken());
         verify(reviewSaveService, never()).markAsReviewed(anyCollection(), anyBoolean());
     }
 }

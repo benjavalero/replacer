@@ -6,6 +6,8 @@ import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import es.bvalero.replacer.common.util.ReplacerUtils;
+import es.bvalero.replacer.finder.FinderPage;
+import es.bvalero.replacer.page.PageKey;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.Collection;
 import javax.validation.Valid;
@@ -22,6 +24,11 @@ public class ReviewedPage {
 
     @VisibleForTesting
     static final String EMPTY_CONTENT = " ";
+
+    @Schema(description = "Page title", requiredMode = REQUIRED, example = "Artemio Zeno")
+    @NonNull
+    @NotNull
+    private String title;
 
     @Schema(
         description = "Page (or section) content. When saving without changes, it matches a string with an only whitespace.",
@@ -59,6 +66,25 @@ public class ReviewedPage {
     @JsonIgnore
     boolean isReviewedWithoutChanges() {
         return this.content.equals(EMPTY_CONTENT);
+    }
+
+    FinderPage toFinderPage(PageKey pageKey) {
+        return new FinderPage() {
+            @Override
+            public PageKey getPageKey() {
+                return pageKey;
+            }
+
+            @Override
+            public String getTitle() {
+                return title;
+            }
+
+            @Override
+            public String getContent() {
+                return content;
+            }
+        };
     }
 
     @Override

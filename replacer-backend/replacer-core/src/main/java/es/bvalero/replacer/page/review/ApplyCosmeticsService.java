@@ -3,7 +3,7 @@ package es.bvalero.replacer.page.review;
 import es.bvalero.replacer.checkwikipedia.CheckWikipediaService;
 import es.bvalero.replacer.finder.Cosmetic;
 import es.bvalero.replacer.finder.CosmeticFindService;
-import es.bvalero.replacer.wikipedia.WikipediaPage;
+import es.bvalero.replacer.finder.FinderPage;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -23,7 +23,7 @@ class ApplyCosmeticsService {
     private CheckWikipediaService checkWikipediaService;
 
     /** Return the new content of the page after applying all the cosmetic changes */
-    String applyCosmeticChanges(WikipediaPage page) {
+    String applyCosmeticChanges(FinderPage page) {
         String fixedText = page.getContent();
         Collection<Cosmetic> cosmeticFound = cosmeticFindService.findCosmetics(page);
 
@@ -52,7 +52,7 @@ class ApplyCosmeticsService {
         return text.substring(0, cosmetic.getStart()) + newText + text.substring(cosmetic.getEnd());
     }
 
-    private void applyCheckWikipediaAction(WikipediaPage page, Cosmetic cosmetic) {
+    private void applyCheckWikipediaAction(FinderPage page, Cosmetic cosmetic) {
         checkWikipediaService.reportFix(
             page.getPageKey().getLang(),
             page.getTitle(),
