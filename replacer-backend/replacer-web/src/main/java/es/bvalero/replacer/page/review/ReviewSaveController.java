@@ -11,7 +11,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.Collection;
-import java.util.Objects;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -37,43 +36,32 @@ public class ReviewSaveController {
     ) throws WikipediaException {
         LOGGER.info("POST Save Review: {}", request);
 
-        if (!Objects.equals(pageId, request.getPage().getPageId())) {
-            LOGGER.error("Page ID mismatch");
-            return ResponseEntity.badRequest().build();
-        }
-        if (!Objects.equals(user.getId().getLang().getCode(), request.getPage().getLang())) {
-            LOGGER.error("Language mismatch");
-            return ResponseEntity.badRequest().build();
-        }
-
-        String content = request.getPage().getContent();
-        if (StringUtils.isBlank(content) && !request.getPage().isReviewedWithoutChanges()) {
+        String content = request.getContent();
+        if (StringUtils.isBlank(content) && !request.isReviewedWithoutChanges()) {
             LOGGER.error("Non valid empty content");
             return ResponseEntity.badRequest().build();
         }
         Collection<ReviewedReplacement> reviewed = ReviewMapper.fromDto(
             pageId,
             request.getReviewedReplacements(),
-            request.getPage().getSectionOffset(),
+            request.getSectionOffset(),
             user
         );
-        if (request.getPage().isReviewedWithoutChanges()) {
+        if (request.isReviewedWithoutChanges()) {
             reviewSaveService.markAsReviewed(reviewed, false);
         } else {
             PageKey pageKey = PageKey.of(user.getId().getLang(), pageId);
-            ReviewSection section = request.getPage().getSection();
-            Integer sectionId = section == null ? null : section.getId();
-            WikipediaTimestamp saveTimestamp = WikipediaTimestamp.of(request.getPage().getQueryTimestamp());
+            WikipediaTimestamp saveTimestamp = WikipediaTimestamp.of(request.getQueryTimestamp());
             WikipediaPage page = WikipediaPage
                 .builder()
                 .pageKey(pageKey)
                 .namespace(WikipediaNamespace.ARTICLE) // TODO: Not relevant for saving
-                .title(request.getPage().getTitle())
-                .content(request.getPage().getContent())
+                .title("") // TODO: Not relevant for saving
+                .content(request.getContent())
                 .lastUpdate(saveTimestamp)
                 .queryTimestamp(saveTimestamp)
                 .build();
-            reviewSaveService.saveReviewContent(page, sectionId, reviewed, user.getAccessToken());
+            reviewSaveService.saveReviewContent(page, request.getSectionId(), reviewed, user.getAccessToken());
             reviewSaveService.markAsReviewed(reviewed, true);
         }
 

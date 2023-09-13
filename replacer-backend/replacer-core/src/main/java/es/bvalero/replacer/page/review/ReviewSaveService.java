@@ -3,6 +3,7 @@ package es.bvalero.replacer.page.review;
 import es.bvalero.replacer.common.domain.CustomType;
 import es.bvalero.replacer.common.domain.ReplacementType;
 import es.bvalero.replacer.common.domain.StandardType;
+import es.bvalero.replacer.page.IndexedPage;
 import es.bvalero.replacer.page.PageKey;
 import es.bvalero.replacer.page.PageService;
 import es.bvalero.replacer.replacement.CustomReplacementService;
@@ -131,7 +132,13 @@ class ReviewSaveService {
     private void markCustomAsReviewed(ReviewedReplacement reviewed) {
         // Add the page to the database in case it doesn't exist yet
         if (pageService.findPageByKey(reviewed.getPageKey()).isEmpty()) {
-            pageService.addPages(List.of(reviewed.toPage()));
+            IndexedPage indexedPage = IndexedPage
+                .builder()
+                .pageKey(reviewed.getPageKey())
+                .title("") // It will be set in a next indexation
+                .lastUpdate(LocalDate.now())
+                .build();
+            pageService.addPages(List.of(indexedPage));
         }
         customReplacementService.addCustomReplacement(reviewed.toCustomReplacement());
     }

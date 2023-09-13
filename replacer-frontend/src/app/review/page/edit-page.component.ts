@@ -210,6 +210,10 @@ export class EditPageComponent implements OnChanges {
 
   private postSaveReview(page: ReviewPage, reviewedReplacements: ReviewedReplacement[]): Observable<void> {
     const saveReview = {
+      content: page.content,
+      sectionId: page.section?.id,
+      sectionOffset: page.section?.offset,
+      queryTimestamp: page.queryTimestamp,
       page: page,
       reviewedReplacements: reviewedReplacements
     } as SaveReviewRequest;

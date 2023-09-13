@@ -2,7 +2,6 @@ package es.bvalero.replacer.page.review;
 
 import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import es.bvalero.replacer.common.util.ReplacerUtils;
@@ -11,7 +10,6 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.jetbrains.annotations.VisibleForTesting;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
@@ -20,9 +18,6 @@ import org.springframework.lang.Nullable;
 @Data
 @NoArgsConstructor
 class ReviewPage {
-
-    @VisibleForTesting
-    static final String EMPTY_CONTENT = " ";
 
     @Schema(description = "Language of the Wikipedia in use", requiredMode = REQUIRED, example = "es")
     @NonNull
@@ -61,16 +56,6 @@ class ReviewPage {
     @NonNull
     @NotNull
     private String queryTimestamp;
-
-    @JsonIgnore
-    public int getSectionOffset() {
-        return this.section != null ? this.section.getOffset() : 0;
-    }
-
-    @JsonIgnore
-    boolean isReviewedWithoutChanges() {
-        return this.content.equals(EMPTY_CONTENT);
-    }
 
     @Override
     public String toString() {

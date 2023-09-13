@@ -1,6 +1,6 @@
 package es.bvalero.replacer.page.review;
 
-import static es.bvalero.replacer.page.review.ReviewPage.EMPTY_CONTENT;
+import static es.bvalero.replacer.page.review.SaveReviewRequest.EMPTY_CONTENT;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -14,7 +14,6 @@ import es.bvalero.replacer.common.util.WebUtils;
 import es.bvalero.replacer.page.PageKey;
 import es.bvalero.replacer.user.AccessToken;
 import es.bvalero.replacer.user.User;
-import es.bvalero.replacer.user.UserId;
 import es.bvalero.replacer.wikipedia.*;
 import java.util.List;
 import javax.servlet.http.Cookie;
@@ -35,14 +34,13 @@ import org.springframework.test.web.servlet.MockMvc;
 class ReviewSaveControllerTest {
 
     private static final int pageId = 123;
-    private static final String title = "Q";
     private static final String content = "X";
     private static final WikipediaTimestamp timestamp = WikipediaTimestamp.now();
     private static final WikipediaPage page = WikipediaPage
         .builder()
         .pageKey(PageKey.of(WikipediaLanguage.getDefault(), pageId))
         .namespace(WikipediaNamespace.getDefault())
-        .title(title)
+        .title("")
         .content(content)
         .lastUpdate(timestamp)
         .queryTimestamp(timestamp)
@@ -71,14 +69,7 @@ class ReviewSaveControllerTest {
 
     @BeforeEach
     public void setUp() {
-        this.request = new SaveReviewRequest();
-        ReviewPage reviewPage = new ReviewPage();
-        reviewPage.setLang(WikipediaLanguage.getDefault().getCode());
-        reviewPage.setPageId(pageId);
-        reviewPage.setTitle(title);
-        reviewPage.setContent(content);
-        reviewPage.setQueryTimestamp(timestamp.toString());
-        request.setPage(reviewPage);
+        this.request = new SaveReviewRequest(content, timestamp.toString());
         ReviewedReplacementDto reviewedDto = new ReviewedReplacementDto();
         reviewedDto.setKind(reviewed.getType().getKind().getCode());
         reviewedDto.setSubtype(reviewed.getType().getSubtype());
@@ -110,7 +101,7 @@ class ReviewSaveControllerTest {
         User user = User.buildTestUser();
         when(webUtils.getAuthenticatedUser(any(HttpServletRequest.class))).thenReturn(user);
 
-        request.getPage().setContent(EMPTY_CONTENT);
+        request.setContent(EMPTY_CONTENT);
 
         mvc
             .perform(
@@ -128,51 +119,11 @@ class ReviewSaveControllerTest {
     }
 
     @Test
-    void testPageIdMismatch() throws Exception {
-        User user = User.buildTestUser();
-        when(webUtils.getAuthenticatedUser(any(HttpServletRequest.class))).thenReturn(user);
-
-        mvc
-            .perform(
-                post("/api/page/321")
-                    .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
-                    .cookie(new Cookie(AccessToken.COOKIE_NAME, user.getAccessToken().toCookieValue()))
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(request))
-            )
-            .andExpect(status().isBadRequest());
-
-        verify(reviewSaveService, never()).markAsReviewed(anyCollection(), anyBoolean());
-    }
-
-    @Test
-    void testPageLanguageMismatch() throws Exception {
-        // Build a standard user but with Galician language
-        // As the page language in the request is Spanish
-        UserId userId = UserId.of(WikipediaLanguage.GALICIAN, "x");
-        AccessToken accessToken = AccessToken.of("a", "b");
-        User user = User.builder().id(userId).accessToken(accessToken).hasRights(true).build();
-        when(webUtils.getAuthenticatedUser(any(HttpServletRequest.class))).thenReturn(user);
-
-        mvc
-            .perform(
-                post("/api/page/123")
-                    .header(HttpHeaders.ACCEPT_LANGUAGE, "gl")
-                    .cookie(new Cookie(AccessToken.COOKIE_NAME, user.getAccessToken().toCookieValue()))
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(request))
-            )
-            .andExpect(status().isBadRequest());
-
-        verify(reviewSaveService, never()).markAsReviewed(anyCollection(), anyBoolean());
-    }
-
-    @Test
     void testPageNotValidEmptyContent() throws Exception {
         User user = User.buildTestUser();
         when(webUtils.getAuthenticatedUser(any(HttpServletRequest.class))).thenReturn(user);
 
-        request.getPage().setContent("");
+        request.setContent("");
 
         mvc
             .perform(

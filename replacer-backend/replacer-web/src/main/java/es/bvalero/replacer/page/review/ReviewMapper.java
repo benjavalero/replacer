@@ -83,17 +83,26 @@ class ReviewMapper {
     Collection<ReviewedReplacement> fromDto(
         int pageId,
         Collection<ReviewedReplacementDto> reviewed,
-        int offset,
+        @Nullable Integer sectionOffset,
         User user
     ) {
-        return reviewed.stream().map(r -> fromDto(pageId, r, offset, user)).collect(Collectors.toUnmodifiableList());
+        return reviewed
+            .stream()
+            .map(r -> fromDto(pageId, r, sectionOffset, user))
+            .collect(Collectors.toUnmodifiableList());
     }
 
-    private ReviewedReplacement fromDto(int pageId, ReviewedReplacementDto reviewed, int offset, User user) {
+    private ReviewedReplacement fromDto(
+        int pageId,
+        ReviewedReplacementDto reviewed,
+        @Nullable Integer sectionOffset,
+        User user
+    ) {
         ReplacementKind replacementKind = ReplacementKind.valueOf(reviewed.getKind());
         ReplacementType replacementType = replacementKind == ReplacementKind.CUSTOM
             ? CustomType.of(reviewed.getSubtype(), Objects.requireNonNull(reviewed.getCs()))
             : StandardType.of(replacementKind, reviewed.getSubtype());
+        int offset = Objects.requireNonNullElse(sectionOffset, 0);
         return ReviewedReplacement
             .builder()
             .pageKey(PageKey.of(user.getId().getLang(), pageId))

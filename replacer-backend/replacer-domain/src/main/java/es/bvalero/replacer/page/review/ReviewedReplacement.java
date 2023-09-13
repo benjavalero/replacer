@@ -3,11 +3,9 @@ package es.bvalero.replacer.page.review;
 import es.bvalero.replacer.common.domain.CustomType;
 import es.bvalero.replacer.common.domain.ReplacementType;
 import es.bvalero.replacer.common.domain.StandardType;
-import es.bvalero.replacer.page.IndexedPage;
 import es.bvalero.replacer.page.PageKey;
 import es.bvalero.replacer.replacement.IndexedCustomReplacement;
 import es.bvalero.replacer.replacement.IndexedReplacement;
-import java.time.LocalDate;
 import lombok.Builder;
 import lombok.Value;
 import org.springframework.lang.NonNull;
@@ -22,21 +20,15 @@ public class ReviewedReplacement {
     @NonNull
     ReplacementType type;
 
+    // It is used to identify the replacement along with the type and page
     int start;
 
     @NonNull
     String reviewer;
 
+    // True if fixed. False if reviewed with no changes.
+    // It is used to know which replacement types to include in the edit summary.
     boolean fixed;
-
-    IndexedPage toPage() {
-        return IndexedPage
-            .builder()
-            .pageKey(pageKey)
-            .title("") // It will be set in a next indexation
-            .lastUpdate(LocalDate.now())
-            .build();
-    }
 
     IndexedReplacement toReplacement() {
         assert type instanceof StandardType;
