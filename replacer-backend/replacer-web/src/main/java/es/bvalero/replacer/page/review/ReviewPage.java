@@ -1,6 +1,5 @@
 package es.bvalero.replacer.page.review;
 
-import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.NOT_REQUIRED;
 import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -18,7 +17,7 @@ import org.springframework.lang.Nullable;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Value
 @Builder
-class ReviewPage {
+public class ReviewPage {
 
     @Schema(description = "Language of the Wikipedia in use", requiredMode = REQUIRED, example = "es")
     @NonNull
@@ -55,14 +54,6 @@ class ReviewPage {
     @Schema(description = "Collection of replacements to review", requiredMode = REQUIRED)
     @NonNull
     Collection<ReviewReplacement> replacements;
-
-    @Schema(
-        description = "Number of pending pages to review of the given type",
-        requiredMode = NOT_REQUIRED,
-        example = "1704147"
-    )
-    @Nullable
-    Integer numPending;
 
     @Override
     public String toString() {

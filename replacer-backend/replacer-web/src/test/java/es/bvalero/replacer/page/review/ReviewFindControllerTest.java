@@ -1,6 +1,9 @@
 package es.bvalero.replacer.page.review;
 
+import static es.bvalero.replacer.page.review.ReviewFindController.TOTAL_PAGES_HEADER;
 import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -32,6 +35,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(controllers = { ReviewFindController.class, WebMvcConfiguration.class })
@@ -100,7 +104,7 @@ class ReviewFindControllerTest {
         ReviewOptions options = ReviewOptions.ofNoType(user);
         when(reviewNoTypeFinder.findRandomPageReview(options)).thenReturn(Optional.of(review));
 
-        mvc
+        ResultActions resultActions = mvc
             .perform(
                 get("/api/page/random")
                     .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
@@ -119,8 +123,11 @@ class ReviewFindControllerTest {
             .andExpect(jsonPath("$.replacements[0].suggestions[0].text", is(rep)))
             .andExpect(jsonPath("$.replacements[0].suggestions[0].comment").doesNotExist())
             .andExpect(jsonPath("$.replacements[0].suggestions[1].text", is(suggestion.getText())))
-            .andExpect(jsonPath("$.replacements[0].suggestions[1].comment", is(suggestion.getComment())))
-            .andExpect(jsonPath("$.numPending", is(numPending)));
+            .andExpect(jsonPath("$.replacements[0].suggestions[1].comment", is(suggestion.getComment())));
+
+        String numPendingHeader = resultActions.andReturn().getResponse().getHeader(TOTAL_PAGES_HEADER);
+        assertNotNull(numPendingHeader);
+        assertEquals(numPending, Integer.valueOf(numPendingHeader));
 
         verify(reviewNoTypeFinder).findRandomPageReview(options);
     }

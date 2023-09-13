@@ -28,6 +28,7 @@ import { ReviewOptions } from './review-options.model';
 export class EditPageComponent implements OnChanges {
   @Input() review!: ReviewPage;
   @Input() options!: ReviewOptions;
+  @Input() numPending!: number;
 
   ffIcon = faFastForward;
   private readonly THRESHOLD = 200; // Maximum number of characters to display around the replacements

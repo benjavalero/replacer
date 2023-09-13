@@ -6,6 +6,7 @@ import es.bvalero.replacer.user.User;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.Objects;
 import java.util.Optional;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +19,8 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("api/page")
 public class ReviewFindController {
+
+    static final String TOTAL_PAGES_HEADER = "X-Pagination-Total-Pages";
 
     @Autowired
     private ReviewNoTypeFinder reviewNoTypeFinder;
@@ -50,7 +53,10 @@ public class ReviewFindController {
         if (review.isPresent()) {
             ReviewPage response = ReviewMapper.toDto(review.get());
             LOGGER.info("END Find Random Page with Replacements: {}", response);
-            return ResponseEntity.ok(response);
+            return ResponseEntity
+                .ok()
+                .header(TOTAL_PAGES_HEADER, String.valueOf(Objects.requireNonNullElse(review.get().getNumPending(), 0)))
+                .body(response);
         } else {
             LOGGER.info("END Find Random Page with Replacements: No Review");
             return ResponseEntity.noContent().build();
@@ -81,7 +87,10 @@ public class ReviewFindController {
         if (review.isPresent()) {
             ReviewPage response = ReviewMapper.toDto(review.get());
             LOGGER.info("END Find Random Page with Replacements: {}", response);
-            return ResponseEntity.ok(response);
+            return ResponseEntity
+                .ok()
+                .header(TOTAL_PAGES_HEADER, String.valueOf(Objects.requireNonNullElse(review.get().getNumPending(), 0)))
+                .body(response);
         } else {
             LOGGER.info("END Find Random Page with Replacements: No Review");
             return ResponseEntity.noContent().build();

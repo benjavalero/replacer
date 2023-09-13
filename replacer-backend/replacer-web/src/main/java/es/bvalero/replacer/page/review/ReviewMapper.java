@@ -23,7 +23,6 @@ class ReviewMapper {
             .section(toDto(review.getSection()))
             .queryTimestamp(review.getPage().getQueryTimestamp().toString())
             .replacements(toDto(review.getReplacements()))
-            .numPending(review.getNumPending())
             .build();
     }
 

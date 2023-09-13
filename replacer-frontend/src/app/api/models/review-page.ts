@@ -19,11 +19,6 @@ export interface ReviewPage {
   lang: string;
 
   /**
-   * Number of pending pages to review of the given type
-   */
-  numPending?: number;
-
-  /**
    * Page ID
    */
   pageId: number;

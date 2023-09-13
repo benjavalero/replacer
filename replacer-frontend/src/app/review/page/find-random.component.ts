@@ -11,6 +11,7 @@ import { AlertService } from '../../shared/alert/alert.service';
 import { EditPageComponent } from './edit-page.component';
 import { ReviewOptions } from './review-options.model';
 import { ValidateCustomComponent } from './validate-custom.component';
+import { StrictHttpResponse } from '../../api/strict-http-response';
 
 export const kindLabel: { [key: number]: string } = {
   1: 'Personalizado',
@@ -28,6 +29,7 @@ export const kindLabel: { [key: number]: string } = {
       *ngIf="review && options"
       [review]="review"
       [options]="options"
+      [numPending]="numPending"
       (saved)="onSaved($event)"
     ></app-edit-page>
   `,
@@ -36,6 +38,7 @@ export const kindLabel: { [key: number]: string } = {
 export class FindRandomComponent implements OnInit {
   review: ReviewPage | null;
   options: ReviewOptions | null;
+  numPending: number = 0;
 
   constructor(
     private alertService: AlertService,
@@ -91,10 +94,12 @@ export class FindRandomComponent implements OnInit {
 
     this.alertService.addInfoMessage(msg);
 
-    this.pageApiService.findRandomPageWithReplacements({ ...options }).subscribe({
-      next: (review: ReviewPage | null) => {
+    this.pageApiService.findRandomPageWithReplacements$Response({ ...options }).subscribe({
+      next: (response: StrictHttpResponse<ReviewPage>) => {
+        const review: ReviewPage | null = response.body;
+        const numPending: number = Number(response.headers.get('X-Pagination-Total-Pages') ?? '0');
         if (review !== null) {
-          this.manageReview(review, options);
+          this.manageReview(review, options, numPending);
         } else {
           this.alertService.addWarningMessage(
             options.kind && options.subtype
@@ -116,10 +121,12 @@ export class FindRandomComponent implements OnInit {
   }
 
   private findPageReview(pageId: number, options: ReviewOptions): void {
-    this.pageApiService.findPageReviewById({ ...options, id: pageId }).subscribe({
-      next: (review: ReviewPage) => {
+    this.pageApiService.findPageReviewById$Response({ ...options, id: pageId }).subscribe({
+      next: (response: StrictHttpResponse<ReviewPage>) => {
+        const review: ReviewPage | null = response.body;
+        const numPending: number = Number(response.headers.get('X-Pagination-Total-Pages') ?? '0');
         if (review) {
-          this.manageReview(review, options);
+          this.manageReview(review, options, numPending);
         } else {
           // This alert will be short as it will be cleared on redirecting to next page
           this.alertService.addWarningMessage(
@@ -136,11 +143,12 @@ export class FindRandomComponent implements OnInit {
     });
   }
 
-  private manageReview(review: ReviewPage, options: ReviewOptions): void {
+  private manageReview(review: ReviewPage, options: ReviewOptions, numPending: number): void {
     this.alertService.clearAlertMessages();
 
     this.options = options;
     this.review = review;
+    this.numPending = numPending;
 
     // Modify title
     let htmlTitle = 'Replacer - ';
