@@ -169,25 +169,25 @@ export class PagesApiService extends BaseService {
     );
   }
 
-  /** Path part for operation `countPagesNotReviewedByType()` */
-  static readonly CountPagesNotReviewedByTypePath = '/api/page/type/count';
+  /** Path part for operation `countNotReviewedGroupedByType()` */
+  static readonly CountNotReviewedGroupedByTypePath = '/api/page/type/count';
 
   /**
-   * Count the pages to review grouped by type (kind-subtype).
+   * Count the number of pages to review grouped by replacement type.
    *
    *
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `countPagesNotReviewedByType()` instead.
+   * To access only the response body, use `countNotReviewedGroupedByType()` instead.
    *
    * This method doesn't expect any request body.
    */
-  countPagesNotReviewedByType$Response(
+  countNotReviewedGroupedByType$Response(
     params?: {
     },
     context?: HttpContext
   ): Observable<StrictHttpResponse<Array<KindCount>>> {
-    const rb = new RequestBuilder(this.rootUrl, PagesApiService.CountPagesNotReviewedByTypePath, 'get');
+    const rb = new RequestBuilder(this.rootUrl, PagesApiService.CountNotReviewedGroupedByTypePath, 'get');
     if (params) {
     }
 
@@ -202,21 +202,21 @@ export class PagesApiService extends BaseService {
   }
 
   /**
-   * Count the pages to review grouped by type (kind-subtype).
+   * Count the number of pages to review grouped by replacement type.
    *
    *
    *
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `countPagesNotReviewedByType$Response()` instead.
+   * To access the full response (for headers, for example), `countNotReviewedGroupedByType$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  countPagesNotReviewedByType(
+  countNotReviewedGroupedByType(
     params?: {
     },
     context?: HttpContext
   ): Observable<Array<KindCount>> {
-    return this.countPagesNotReviewedByType$Response(params, context).pipe(
+    return this.countNotReviewedGroupedByType$Response(params, context).pipe(
       map((r: StrictHttpResponse<Array<KindCount>>): Array<KindCount> => r.body)
     );
   }

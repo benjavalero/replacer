@@ -16,7 +16,7 @@ export class ReplacementListService {
   }
 
   private findReplacementCounts$(): Observable<KindCount[]> {
-    return this.pagesApiService.countPagesNotReviewedByType();
+    return this.pagesApiService.countNotReviewedGroupedByType();
   }
 
   private updateCounts(counts: KindCount[]): void {
