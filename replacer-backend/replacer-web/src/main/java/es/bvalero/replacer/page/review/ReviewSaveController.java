@@ -12,10 +12,10 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.Collection;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -41,11 +41,9 @@ public class ReviewSaveController {
     ) throws WikipediaException {
         LOGGER.info("POST Save Reviewed Page: {}", reviewedPage);
 
-        String content = reviewedPage.getContent();
-        if (StringUtils.isBlank(content) && !reviewedPage.isReviewedWithoutChanges()) {
-            LOGGER.error("Non valid empty content");
-            return ResponseEntity.badRequest().build();
-        }
+        // Validate the request body
+        reviewedPage.validate();
+
         Collection<ReviewedReplacement> reviewedReplacements = ReviewMapper.fromDto(
             pageId,
             reviewedPage.getReviewedReplacements(),
@@ -60,7 +58,7 @@ public class ReviewSaveController {
 
             // Apply cosmetic changes
             String textToSave = applyCosmeticsService.applyCosmeticChanges(page);
-            boolean applyCosmetics = !textToSave.equals(content);
+            boolean applyCosmetics = !textToSave.equals(reviewedPage.getContent());
 
             // Edit summary
             Collection<ReplacementType> fixedReplacementTypes = reviewedReplacements
@@ -71,7 +69,9 @@ public class ReviewSaveController {
             String summary = reviewSaveService.buildEditSummary(fixedReplacementTypes, applyCosmetics);
 
             // Upload new content to Wikipedia
-            WikipediaTimestamp queryTimestamp = WikipediaTimestamp.of(reviewedPage.getQueryTimestamp());
+            WikipediaTimestamp queryTimestamp = WikipediaTimestamp.of(
+                Objects.requireNonNull(reviewedPage.getQueryTimestamp())
+            );
             WikipediaPageSave pageSave = WikipediaPageSave
                 .builder()
                 .pageKey(pageKey)

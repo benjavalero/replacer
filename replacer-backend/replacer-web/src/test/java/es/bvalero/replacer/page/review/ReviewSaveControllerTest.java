@@ -1,6 +1,5 @@
 package es.bvalero.replacer.page.review;
 
-import static es.bvalero.replacer.page.review.ReviewedPage.EMPTY_CONTENT;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -42,7 +41,7 @@ class ReviewSaveControllerTest {
     private static final String title = "T";
     private static final String content = "X";
     private static final WikipediaTimestamp timestamp = WikipediaTimestamp.now();
-    private static final ReviewedReplacement reviewed = ReviewedReplacement
+    private static final ReviewedReplacement reviewedReplacement = ReviewedReplacement
         .builder()
         .pageKey(pageKey)
         .type(StandardType.of(ReplacementKind.SIMPLE, "1"))
@@ -73,17 +72,25 @@ class ReviewSaveControllerTest {
     @MockBean
     private ReviewSaveService reviewSaveService;
 
-    private ReviewedPage reviewedPage;
+    private ReviewedPage reviewedPageWithoutChanges;
+    private ReviewedPage reviewedPageWithChanges;
 
     @BeforeEach
     public void setUp() {
-        this.reviewedPage = new ReviewedPage(title, content, timestamp.toString());
         ReviewedReplacementDto reviewedDto = new ReviewedReplacementDto();
-        reviewedDto.setKind(reviewed.getType().getKind().getCode());
-        reviewedDto.setSubtype(reviewed.getType().getSubtype());
-        reviewedDto.setStart(reviewed.getStart());
-        reviewedDto.setFixed(reviewed.isFixed());
-        reviewedPage.setReviewedReplacements(List.of(reviewedDto));
+        reviewedDto.setKind(reviewedReplacement.getType().getKind().getCode());
+        reviewedDto.setSubtype(reviewedReplacement.getType().getSubtype());
+        reviewedDto.setStart(reviewedReplacement.getStart());
+        reviewedDto.setFixed(reviewedReplacement.isFixed());
+
+        reviewedPageWithoutChanges = new ReviewedPage();
+        reviewedPageWithoutChanges.setReviewedReplacements(List.of(reviewedDto));
+
+        reviewedPageWithChanges = new ReviewedPage();
+        reviewedPageWithChanges.setTitle(title);
+        reviewedPageWithChanges.setContent(content);
+        reviewedPageWithChanges.setQueryTimestamp(timestamp.toString());
+        reviewedPageWithChanges.setReviewedReplacements(List.of(reviewedDto));
     }
 
     @Test
@@ -100,12 +107,12 @@ class ReviewSaveControllerTest {
                     .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
                     .cookie(new Cookie(AccessToken.COOKIE_NAME, user.getAccessToken().toCookieValue()))
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(reviewedPage))
+                    .content(objectMapper.writeValueAsString(reviewedPageWithChanges))
             )
             .andExpect(status().isNoContent());
 
         verify(reviewSaveService).saveReviewContent(pageSave, user.getAccessToken());
-        verify(reviewSaveService).markAsReviewed(List.of(reviewed), true);
+        verify(reviewSaveService).markAsReviewed(List.of(reviewedReplacement), true);
     }
 
     @Test
@@ -113,20 +120,18 @@ class ReviewSaveControllerTest {
         User user = User.buildTestUser();
         when(webUtils.getAuthenticatedUser(any(HttpServletRequest.class))).thenReturn(user);
 
-        reviewedPage.setContent(EMPTY_CONTENT);
-
         mvc
             .perform(
                 post("/api/page/123")
                     .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
                     .cookie(new Cookie(AccessToken.COOKIE_NAME, user.getAccessToken().toCookieValue()))
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(reviewedPage))
+                    .content(objectMapper.writeValueAsString(reviewedPageWithoutChanges))
             )
             .andExpect(status().isNoContent());
 
         verify(reviewSaveService, never()).saveReviewContent(any(WikipediaPageSave.class), any(AccessToken.class));
-        verify(reviewSaveService).markAsReviewed(List.of(reviewed), false);
+        verify(reviewSaveService).markAsReviewed(List.of(reviewedReplacement), false);
     }
 
     @Test
@@ -134,7 +139,7 @@ class ReviewSaveControllerTest {
         User user = User.buildTestUser();
         when(webUtils.getAuthenticatedUser(any(HttpServletRequest.class))).thenReturn(user);
 
-        reviewedPage.setContent("");
+        reviewedPageWithoutChanges.setContent("");
 
         mvc
             .perform(
@@ -142,7 +147,7 @@ class ReviewSaveControllerTest {
                     .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
                     .cookie(new Cookie(AccessToken.COOKIE_NAME, user.getAccessToken().toCookieValue()))
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(reviewedPage))
+                    .content(objectMapper.writeValueAsString(reviewedPageWithoutChanges))
             )
             .andExpect(status().isBadRequest());
 
@@ -167,7 +172,7 @@ class ReviewSaveControllerTest {
                     .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
                     .cookie(new Cookie(AccessToken.COOKIE_NAME, user.getAccessToken().toCookieValue()))
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(reviewedPage))
+                    .content(objectMapper.writeValueAsString(reviewedPageWithChanges))
             )
             .andExpect(status().isConflict());
 
@@ -193,7 +198,7 @@ class ReviewSaveControllerTest {
                     .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
                     .cookie(new Cookie(AccessToken.COOKIE_NAME, user.getAccessToken().toCookieValue()))
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(reviewedPage))
+                    .content(objectMapper.writeValueAsString(reviewedPageWithChanges))
             )
             .andExpect(status().isUnauthorized());
 
@@ -217,7 +222,7 @@ class ReviewSaveControllerTest {
                     .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
                     .cookie(new Cookie(AccessToken.COOKIE_NAME, user.getAccessToken().toCookieValue()))
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(reviewedPage))
+                    .content(objectMapper.writeValueAsString(reviewedPageWithChanges))
             )
             .andExpect(status().isInternalServerError());
 

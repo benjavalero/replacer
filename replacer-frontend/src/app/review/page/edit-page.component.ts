@@ -5,7 +5,6 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faFastForward } from '@fortawesome/free-solid-svg-icons';
 import { Observable } from 'rxjs';
 import { FindReviewResponse } from '../../api/models/find-review-response';
-import { ReviewPage } from '../../api/models/review-page';
 import { ReviewReplacement } from '../../api/models/review-replacement';
 import { ReviewedReplacement } from '../../api/models/reviewed-replacement';
 import { ReviewedPage } from '../../api/models/reviewed-page';
@@ -39,7 +38,6 @@ export class EditPageComponent implements OnChanges {
 
   private readonly lastSaveKey = 'lastSave';
   private readonly editionsPerMinute = 5;
-  private readonly EMPTY_CONTENT = ' ';
 
   constructor(
     private alertService: AlertService,
@@ -162,29 +160,44 @@ export class EditPageComponent implements OnChanges {
 
   private saveWithNoChanges() {
     this.alertService.addInfoMessage(`Marcando como revisado sin guardar cambios en «${this.review.page.title}»…`);
-    this.saveContent(this.EMPTY_CONTENT);
+    this.saveContent(null);
   }
 
-  private saveContent(content: string) {
+  private saveContent(content: string | null) {
     const reviewedReplacements: ReviewedReplacement[] = this.getReviewedReplacements();
 
     // Remove replacements as a trick to hide the page
     this.review.replacements = [];
 
-    const savePage: ReviewPage = { ...this.review.page, content: content };
+    // Build the reviewed page depending on changes or not
+    let reviewedPage: ReviewedPage;
+    if (content === null) {
+      reviewedPage = {
+        reviewedReplacements: reviewedReplacements
+      } as ReviewedPage;
+    } else {
+      reviewedPage = {
+        title: this.review.page.title,
+        content: this.review.page.content,
+        sectionId: this.review.page.section?.id,
+        sectionOffset: this.review.page.section?.offset,
+        queryTimestamp: this.review.page.queryTimestamp,
+        reviewedReplacements: reviewedReplacements
+      } as ReviewedPage;
+    }
 
     // Delay the saving in case there are other saving too recent
     let sleepTime = 0;
     const isBotUser: boolean = this.userService.isBotUser();
-    if (!isBotUser && savePage.content !== this.EMPTY_CONTENT) {
+    if (!isBotUser && content !== null) {
       sleepTime = this.calculateSleepTime();
     }
 
-    sleep(sleepTime).then(() => this.saveReview(savePage, reviewedReplacements));
+    sleep(sleepTime).then(() => this.saveReview(reviewedPage));
   }
 
-  private saveReview(savePage: ReviewPage, reviewedReplacements: ReviewedReplacement[]): void {
-    this.postSaveReview(savePage, reviewedReplacements).subscribe({
+  private saveReview(reviewedPage: ReviewedPage): void {
+    this.postSaveReview(reviewedPage).subscribe({
       error: (err) => {
         const errStatus = err.status;
         if (errStatus == HttpStatusCode.Conflict) {
@@ -208,20 +221,10 @@ export class EditPageComponent implements OnChanges {
     });
   }
 
-  private postSaveReview(page: ReviewPage, reviewedReplacements: ReviewedReplacement[]): Observable<void> {
-    const reviewedPage = {
-      title: page.title,
-      content: page.content,
-      sectionId: page.section?.id,
-      sectionOffset: page.section?.offset,
-      queryTimestamp: page.queryTimestamp,
-      page: page,
-      reviewedReplacements: reviewedReplacements
-    } as ReviewedPage;
-
+  private postSaveReview(reviewedPage: ReviewedPage): Observable<void> {
     // Call backend and delay the observable response
     return this.pageApiService.saveReview({
-      id: page.pageId,
+      id: this.review.page.pageId,
       body: reviewedPage
     });
   }

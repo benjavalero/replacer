@@ -10,34 +10,28 @@ import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.page.PageKey;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.Collection;
+import java.util.Objects;
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import lombok.Data;
-import org.jetbrains.annotations.VisibleForTesting;
-import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
-@Schema(description = "Reviewed page")
+@Schema(description = "Reviewed page. The page fields are only mandatory when saving the page with changes.")
 @Data
 public class ReviewedPage {
 
-    @VisibleForTesting
-    static final String EMPTY_CONTENT = " ";
-
-    @Schema(description = "Page title", requiredMode = REQUIRED, example = "Artemio Zeno")
-    @NonNull
-    @NotNull
+    @Schema(description = "Page title", requiredMode = NOT_REQUIRED, example = "Artemio Zeno")
+    @Nullable
     private String title;
 
     @Schema(
-        description = "Page (or section) content. When saving without changes, it matches a string with an only whitespace.",
-        requiredMode = REQUIRED,
+        description = "Page (or section) content",
+        requiredMode = NOT_REQUIRED,
         example = "== Biografía ==Hijo de humildes inmigrantes piamonteses [...]"
     )
     @JsonSerialize(using = PageContentSerializer.class)
-    @NonNull
-    @NotNull
+    @Nullable
     private String content;
 
     @Schema(description = "Section ID", requiredMode = NOT_REQUIRED, example = "1")
@@ -50,11 +44,10 @@ public class ReviewedPage {
 
     @Schema(
         description = "Timestamp when the page content was retrieved from Wikipedia",
-        requiredMode = REQUIRED,
+        requiredMode = NOT_REQUIRED,
         example = "2021-03-21T15:06:49Z"
     )
-    @NonNull
-    @NotNull
+    @Nullable
     private String queryTimestamp;
 
     @Schema(description = "Reviewed replacements", requiredMode = REQUIRED)
@@ -65,7 +58,25 @@ public class ReviewedPage {
 
     @JsonIgnore
     boolean isReviewedWithoutChanges() {
-        return this.content.equals(EMPTY_CONTENT);
+        return Objects.isNull(this.content);
+    }
+
+    void validate() {
+        if (isReviewedWithoutChanges()) {
+            if (
+                this.content != null ||
+                this.title != null ||
+                this.sectionId != null ||
+                this.sectionOffset != null ||
+                this.queryTimestamp != null
+            ) {
+                throw new IllegalArgumentException("Unnecessary fields to save a reviewed page without changes");
+            }
+        } else {
+            if (this.content == null || this.title == null || this.queryTimestamp == null) {
+                throw new IllegalArgumentException("Missing mandatory fields to save a reviewed page with changes");
+            }
+        }
     }
 
     FinderPage toFinderPage(PageKey pageKey) {
@@ -77,12 +88,12 @@ public class ReviewedPage {
 
             @Override
             public String getTitle() {
-                return title;
+                return Objects.requireNonNull(title);
             }
 
             @Override
             public String getContent() {
-                return content;
+                return Objects.requireNonNull(content);
             }
         };
     }

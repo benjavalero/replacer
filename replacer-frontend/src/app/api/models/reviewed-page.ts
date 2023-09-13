@@ -3,19 +3,19 @@
 import { ReviewedReplacement } from './reviewed-replacement';
 
 /**
- * Reviewed page
+ * Reviewed page. The page fields are only mandatory when saving the page with changes.
  */
 export interface ReviewedPage {
 
   /**
-   * Page (or section) content. When saving without changes, it matches a string with an only whitespace.
+   * Page (or section) content
    */
-  content: string;
+  content?: string;
 
   /**
    * Timestamp when the page content was retrieved from Wikipedia
    */
-  queryTimestamp: string;
+  queryTimestamp?: string;
 
   /**
    * Reviewed replacements
@@ -35,5 +35,5 @@ export interface ReviewedPage {
   /**
    * Page title
    */
-  title: string;
+  title?: string;
 }
