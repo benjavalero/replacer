@@ -8,7 +8,7 @@ import { FindReviewResponse } from '../../api/models/find-review-response';
 import { ReviewPage } from '../../api/models/review-page';
 import { ReviewReplacement } from '../../api/models/review-replacement';
 import { ReviewedReplacement } from '../../api/models/reviewed-replacement';
-import { SaveReviewRequest } from '../../api/models/save-review-request';
+import { ReviewedPage } from '../../api/models/reviewed-page';
 import { PageApiService } from '../../api/services/page-api.service';
 import { UserService } from '../../core/user/user.service';
 import { AlertComponent } from '../../shared/alert/alert.component';
@@ -216,7 +216,7 @@ export class EditPageComponent implements OnChanges {
       queryTimestamp: page.queryTimestamp,
       page: page,
       reviewedReplacements: reviewedReplacements
-    } as SaveReviewRequest;
+    } as ReviewedPage;
 
     // Call backend and delay the observable response
     return this.pageApiService.saveReview({

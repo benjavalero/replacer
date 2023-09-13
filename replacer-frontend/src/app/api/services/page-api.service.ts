@@ -11,7 +11,7 @@ import { StrictHttpResponse } from '../strict-http-response';
 import { RequestBuilder } from '../request-builder';
 
 import { FindReviewResponse } from '../models/find-review-response';
-import { SaveReviewRequest } from '../models/save-review-request';
+import { ReviewedPage } from '../models/reviewed-page';
 
 @Injectable({ providedIn: 'root' })
 export class PageApiService extends BaseService {
@@ -146,7 +146,7 @@ export class PageApiService extends BaseService {
      * Page ID
      */
       id: number;
-      body: SaveReviewRequest
+      body: ReviewedPage
     },
     context?: HttpContext
   ): Observable<StrictHttpResponse<void>> {
@@ -183,7 +183,7 @@ export class PageApiService extends BaseService {
      * Page ID
      */
       id: number;
-      body: SaveReviewRequest
+      body: ReviewedPage
     },
     context?: HttpContext
   ): Observable<void> {

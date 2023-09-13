@@ -8,7 +8,6 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import es.bvalero.replacer.common.util.ReplacerUtils;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.Collection;
-import java.util.Objects;
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -17,9 +16,9 @@ import org.jetbrains.annotations.VisibleForTesting;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
-@Schema
+@Schema(description = "Reviewed page")
 @Data
-public class SaveReviewRequest {
+public class ReviewedPage {
 
     @VisibleForTesting
     static final String EMPTY_CONTENT = " ";

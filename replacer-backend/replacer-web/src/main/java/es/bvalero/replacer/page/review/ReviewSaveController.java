@@ -32,7 +32,7 @@ public class ReviewSaveController {
     public ResponseEntity<Void> saveReview(
         @Parameter(description = "Page ID", example = "1") @PathVariable("id") int pageId,
         @AuthenticatedUser User user,
-        @Valid @RequestBody SaveReviewRequest request
+        @Valid @RequestBody ReviewedPage request
     ) throws WikipediaException {
         LOGGER.info("POST Save Review: {}", request);
 

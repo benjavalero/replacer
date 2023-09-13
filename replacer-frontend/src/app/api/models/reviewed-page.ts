@@ -1,7 +1,11 @@
 /* tslint:disable */
 /* eslint-disable */
 import { ReviewedReplacement } from './reviewed-replacement';
-export interface SaveReviewRequest {
+
+/**
+ * Reviewed page
+ */
+export interface ReviewedPage {
 
   /**
    * Page (or section) content. When saving without changes, it matches a string with an only whitespace.
