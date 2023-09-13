@@ -9,15 +9,15 @@ import es.bvalero.replacer.page.PageContentSerializer;
 import io.swagger.v3.oas.annotations.media.Schema;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Builder;
+import lombok.Value;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
 @Schema(description = "Page to review")
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@Data
-@NoArgsConstructor
+@Value
+@Builder
 class ReviewPage {
 
     @Schema(description = "Language of the Wikipedia in use", requiredMode = REQUIRED, example = "es")

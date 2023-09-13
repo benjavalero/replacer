@@ -23,14 +23,15 @@ class ReviewMapper {
     }
 
     private ReviewPage toDto(WikipediaPage page, @Nullable WikipediaSection section) {
-        ReviewPage reviewPage = new ReviewPage();
-        reviewPage.setLang(page.getPageKey().getLang().getCode());
-        reviewPage.setPageId(page.getPageKey().getPageId());
-        reviewPage.setTitle(page.getTitle());
-        reviewPage.setContent(page.getContent());
-        reviewPage.setSection(toDto(section));
-        reviewPage.setQueryTimestamp(page.getQueryTimestamp().toString());
-        return reviewPage;
+        return ReviewPage
+            .builder()
+            .lang(page.getPageKey().getLang().getCode())
+            .pageId(page.getPageKey().getPageId())
+            .title(page.getTitle())
+            .content(page.getContent())
+            .section(toDto(section))
+            .queryTimestamp(page.getQueryTimestamp().toString())
+            .build();
     }
 
     @Nullable
@@ -38,11 +39,7 @@ class ReviewMapper {
         if (section == null) {
             return null;
         } else {
-            ReviewSection reviewSection = new ReviewSection();
-            reviewSection.setId(section.getIndex());
-            reviewSection.setTitle(section.getAnchor());
-            reviewSection.setOffset(section.getByteOffset());
-            return reviewSection;
+            return ReviewSection.of(section.getIndex(), section.getAnchor(), section.getByteOffset());
         }
     }
 

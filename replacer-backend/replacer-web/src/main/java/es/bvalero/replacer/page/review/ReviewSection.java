@@ -4,13 +4,11 @@ import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import javax.validation.constraints.NotNull;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Value;
 import org.springframework.lang.NonNull;
 
 @Schema(description = "Section of a page to review")
-@Data
-@NoArgsConstructor
+@Value(staticConstructor = "of")
 class ReviewSection {
 
     @Schema(description = "Section ID", requiredMode = REQUIRED, example = "1")
