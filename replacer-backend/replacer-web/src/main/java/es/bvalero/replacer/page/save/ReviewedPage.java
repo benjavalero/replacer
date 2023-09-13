@@ -1,4 +1,4 @@
-package es.bvalero.replacer.page.review;
+package es.bvalero.replacer.page.save;
 
 import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.NOT_REQUIRED;
 import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import es.bvalero.replacer.common.util.ReplacerUtils;
 import es.bvalero.replacer.finder.FinderPage;
+import es.bvalero.replacer.page.PageContentSerializer;
 import es.bvalero.replacer.page.PageKey;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.Collection;

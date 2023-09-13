@@ -1,4 +1,4 @@
-package es.bvalero.replacer.page.review;
+package es.bvalero.replacer.page.save;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;

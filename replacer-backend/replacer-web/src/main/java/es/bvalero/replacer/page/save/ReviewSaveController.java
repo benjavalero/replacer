@@ -1,4 +1,4 @@
-package es.bvalero.replacer.page.review;
+package es.bvalero.replacer.page.save;
 
 import es.bvalero.replacer.common.domain.ReplacementType;
 import es.bvalero.replacer.finder.FinderPage;
@@ -44,7 +44,7 @@ public class ReviewSaveController {
         // Validate the request body
         reviewedPage.validate();
 
-        Collection<ReviewedReplacement> reviewedReplacements = ReviewMapper.fromDto(
+        Collection<ReviewedReplacement> reviewedReplacements = ReviewedMapper.fromDto(
             pageId,
             reviewedPage.getReviewedReplacements(),
             reviewedPage.getSectionOffset(),

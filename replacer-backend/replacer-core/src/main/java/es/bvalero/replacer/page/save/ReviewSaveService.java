@@ -1,4 +1,4 @@
-package es.bvalero.replacer.page.review;
+package es.bvalero.replacer.page.save;
 
 import es.bvalero.replacer.common.domain.CustomType;
 import es.bvalero.replacer.common.domain.ReplacementType;

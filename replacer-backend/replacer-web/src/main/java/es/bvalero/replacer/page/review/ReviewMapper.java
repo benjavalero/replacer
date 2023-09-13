@@ -1,14 +1,12 @@
 package es.bvalero.replacer.page.review;
 
-import es.bvalero.replacer.common.domain.*;
+import es.bvalero.replacer.common.domain.CustomType;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.Suggestion;
-import es.bvalero.replacer.page.PageKey;
 import es.bvalero.replacer.user.User;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
 import es.bvalero.replacer.wikipedia.WikipediaSection;
 import java.util.Collection;
-import java.util.Objects;
 import java.util.stream.Collectors;
 import lombok.experimental.UtilityClass;
 import org.springframework.lang.Nullable;
@@ -78,38 +76,5 @@ class ReviewMapper {
             options.getCs(),
             options.getSuggestion()
         );
-    }
-
-    Collection<ReviewedReplacement> fromDto(
-        int pageId,
-        Collection<ReviewedReplacementDto> reviewed,
-        @Nullable Integer sectionOffset,
-        User user
-    ) {
-        return reviewed
-            .stream()
-            .map(r -> fromDto(pageId, r, sectionOffset, user))
-            .collect(Collectors.toUnmodifiableList());
-    }
-
-    private ReviewedReplacement fromDto(
-        int pageId,
-        ReviewedReplacementDto reviewed,
-        @Nullable Integer sectionOffset,
-        User user
-    ) {
-        ReplacementKind replacementKind = ReplacementKind.valueOf(reviewed.getKind());
-        ReplacementType replacementType = replacementKind == ReplacementKind.CUSTOM
-            ? CustomType.of(reviewed.getSubtype(), Objects.requireNonNull(reviewed.getCs()))
-            : StandardType.of(replacementKind, reviewed.getSubtype());
-        int offset = Objects.requireNonNullElse(sectionOffset, 0);
-        return ReviewedReplacement
-            .builder()
-            .pageKey(PageKey.of(user.getId().getLang(), pageId))
-            .type(replacementType)
-            .start(offset + reviewed.getStart())
-            .reviewer(user.getId().getUsername())
-            .fixed(reviewed.isFixed())
-            .build();
     }
 }

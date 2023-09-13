@@ -1,4 +1,4 @@
-package es.bvalero.replacer.page.review;
+package es.bvalero.replacer.page.save;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
