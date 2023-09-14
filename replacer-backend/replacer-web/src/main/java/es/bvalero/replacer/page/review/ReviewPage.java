@@ -3,13 +3,14 @@ package es.bvalero.replacer.page.review;
 import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import es.bvalero.replacer.common.util.ReplacerUtils;
-import es.bvalero.replacer.page.PageContentSerializer;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.Collection;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Value;
+import lombok.With;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
@@ -35,7 +36,7 @@ public class ReviewPage {
         requiredMode = REQUIRED,
         example = "== Biografía ==Hijo de humildes inmigrantes piamonteses [...]"
     )
-    @JsonSerialize(using = PageContentSerializer.class)
+    @With(AccessLevel.PRIVATE)
     @NonNull
     String content;
 
@@ -57,6 +58,6 @@ public class ReviewPage {
 
     @Override
     public String toString() {
-        return ReplacerUtils.toJson(this);
+        return ReplacerUtils.toJson(this.withContent(StringUtils.abbreviate(this.content, 50)));
     }
 }

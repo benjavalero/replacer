@@ -4,10 +4,8 @@ import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.NOT_REQUIR
 import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import es.bvalero.replacer.common.util.ReplacerUtils;
 import es.bvalero.replacer.finder.FinderPage;
-import es.bvalero.replacer.page.PageContentSerializer;
 import es.bvalero.replacer.page.PageKey;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.Collection;
@@ -15,11 +13,14 @@ import java.util.Objects;
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import lombok.Data;
+import lombok.*;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.Nullable;
 
 @Schema(description = "Reviewed page. The page fields are only mandatory when saving the page with changes.")
 @Data
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor
 public class ReviewedPage {
 
     @Schema(description = "Page title", requiredMode = NOT_REQUIRED, example = "Artemio Zeno")
@@ -31,7 +32,7 @@ public class ReviewedPage {
         requiredMode = NOT_REQUIRED,
         example = "== Biografía ==Hijo de humildes inmigrantes piamonteses [...]"
     )
-    @JsonSerialize(using = PageContentSerializer.class)
+    @With(AccessLevel.PRIVATE)
     @Nullable
     private String content;
 
@@ -101,6 +102,6 @@ public class ReviewedPage {
 
     @Override
     public String toString() {
-        return ReplacerUtils.toJson(this);
+        return ReplacerUtils.toJson(this.withContent(StringUtils.abbreviate(this.content, 50)));
     }
 }
