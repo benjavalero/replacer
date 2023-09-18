@@ -35,6 +35,11 @@ class ReviewCustomFinder extends ReviewFinder {
     private Set<Integer> indexableNamespaces;
 
     @Override
+    boolean reloadIfCacheIsEmpty() {
+        return false;
+    }
+
+    @Override
     PageSearchResult findPageIdsToReview(ReviewOptions options) {
         // Initialize search
         WikipediaLanguage lang = options.getUser().getId().getLang();

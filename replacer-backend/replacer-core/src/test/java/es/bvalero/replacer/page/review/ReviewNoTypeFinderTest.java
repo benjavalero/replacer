@@ -175,4 +175,36 @@ class ReviewNoTypeFinderTest {
         assertTrue(review.isPresent());
         assertEquals(randomId2, review.get().getPage().getPageId());
     }
+
+    @Test
+    void testReviewAfterWhenCacheIsEmpty() {
+        // When a page to review is retrieved and presented to the user, is removed from the cache.
+        // If user chooses to Review After, a new page to review is retrieved and presented.
+        // When the cache is empty, it should mean that there are no more pages to review.
+        // However, the page marked to review after is in fact pending to review and should be retrieved.
+
+        // First load of cache
+        when(pageCountService.countNotReviewedByNoType(any(WikipediaLanguage.class))).thenReturn(1);
+        when(pageService.findPagesToReviewByNoType(any(WikipediaLanguage.class), anyInt()))
+            .thenReturn(List.of(randomPageKey));
+
+        when(wikipediaPageRepository.findByKey(randomPageKey)).thenReturn(Optional.of(page));
+
+        when(pageIndexService.indexPage(page)).thenReturn(PageIndexResult.ofIndexed(replacements));
+
+        Optional<Review> review = pageReviewNoTypeService.findRandomPageReview(options);
+
+        verify(pageIndexService).indexPage(page);
+
+        assertTrue(review.isPresent());
+        assertEquals(randomId, review.get().getPage().getPageId());
+
+        // At this point, the user marks the page to Review After.
+        // The page should be retrieved when asked for a new page.
+
+        review = pageReviewNoTypeService.findRandomPageReview(options);
+
+        assertTrue(review.isPresent());
+        assertEquals(randomId, review.get().getPage().getPageId());
+    }
 }

@@ -91,7 +91,18 @@ abstract class ReviewFinder {
         Optional<PageKey> pageKey;
         String key = buildCacheKey(options);
         if (cacheContainsKey(key)) {
-            pageKey = popPageKeyFromCache(key);
+            if (cacheIsEmpty(key)) {
+                // The key could exist in the cache but the list of pages could be empty.
+                // If the list of pages is really empty, we remove the key from the cache.
+                if (loadCache(options)) {
+                    pageKey = popPageKeyFromCache(key);
+                } else {
+                    pageKey = Optional.empty();
+                    removeKeyFromCache(key);
+                }
+            } else {
+                pageKey = popPageKeyFromCache(key);
+            }
         } else if (loadCache(options)) {
             pageKey = popPageKeyFromCache(key);
         } else {
@@ -107,13 +118,23 @@ abstract class ReviewFinder {
 
     private boolean cacheContainsKey(String key) {
         PageSearchResult result = this.cachedPageIds.getIfPresent(key);
-        return result != null && !result.isEmpty();
+        return result != null;
     }
 
-    private Optional<PageKey> popPageKeyFromCache(String cacheKey) {
-        PageSearchResult result = this.cachedPageIds.getIfPresent(cacheKey);
+    private boolean cacheIsEmpty(String key) {
+        PageSearchResult result = this.cachedPageIds.getIfPresent(key);
+        assert result != null;
+        return result.isEmpty();
+    }
+
+    private Optional<PageKey> popPageKeyFromCache(String key) {
+        PageSearchResult result = this.cachedPageIds.getIfPresent(key);
         assert result != null;
         return result.popPageKey();
+    }
+
+    private void removeKeyFromCache(String key) {
+        this.cachedPageIds.invalidate(key);
     }
 
     Optional<PageSearchResult> findCachedResult(ReviewOptions options) {
@@ -128,7 +149,7 @@ abstract class ReviewFinder {
         PageSearchResult result = this.cachedPageIds.getIfPresent(key);
         assert result == null || result.isEmpty(); // !cacheContainsKey
 
-        if (result != null && result.isEmptyTotal()) {
+        if (!reloadIfCacheIsEmpty() && result != null && result.isEmptyTotal()) {
             // In some cases, in particular for custom replacements found with Wikipedia search,
             // as we are not marking the non-reviewed pages in the database,
             // we don't want to find the pages to review in an infinite loop.
@@ -140,6 +161,10 @@ abstract class ReviewFinder {
         PageSearchResult searchResult = findPageIdsToReview(options);
         this.cachedPageIds.put(key, searchResult);
         return !searchResult.isEmpty();
+    }
+
+    boolean reloadIfCacheIsEmpty() {
+        return true;
     }
 
     abstract PageSearchResult findPageIdsToReview(ReviewOptions options);

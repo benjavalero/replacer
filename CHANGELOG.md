@@ -5,6 +5,7 @@
 - Upgrade frontend to Angular 16
 - Remove feature: Public IP
 - Make Admin menu in frontend a dropdown
+- Fix: reload empty cache to find pages left to review after
 
 ## 2.23.6 (8 May 2023)
 - Fix regression: dropdown to change language
