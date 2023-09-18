@@ -3,6 +3,10 @@ En esta lista se detallan los «términos compuestos» que la herramienta [[Usua
 El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|listado de términos simples]], con la salvedad de que este listado extiende al anterior con términos o expresiones que contienen caracteres no alfabéticos: espacios, números, etc. Las recomendaciones aplican igualmente.
 <!-- Procurar el orden alfabético -->
 
+{{Índice|num=sí|sim=sí}}
+
+== 0-9 ==
+
  1 sólo||un solo, Un solo, 1 solamente, uno solamente
  1º de Agosto|cs|1.º de Agosto, Primero de Agosto
  1º de Mayo|cs|1.º de Mayo, Primero de Mayo
@@ -196,56 +200,251 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  19nas||{{ord|19.|as}} (va con punto y letras voladitas de indicación ordinal), decimonovenas (ordinal), decimononas (ordinal), diecinueveavas (fraccionario)
  19vas||{{ord|19.|as}} (va con punto y letras voladitas de indicación ordinal), decimonovenas (ordinal), decimononas (ordinal), diecinueveavas (fraccionario)
  20mas||{{ord|20.|as}} (va con punto y letras voladitas de indicación ordinal), vigésimas (ordinal o fraccionario), veinteavas (fraccionario)
- 50 m.||50&nbsp;m (los símbolos de medida se escriben sin punto —cuidado si es fin de frase—)
- 60 m.||60&nbsp;m (los símbolos de medida se escriben sin punto —cuidado si es fin de frase—)
- 100 m.||100&nbsp;m (los símbolos de medida se escriben sin punto —cuidado si es fin de frase—)
- 110 m.||110&nbsp;m (los símbolos de medida se escriben sin punto —cuidado si es fin de frase—)
- 200 m.||200&nbsp;m (los símbolos de medida se escriben sin punto —cuidado si es fin de frase—)
- 400 m.||400&nbsp;m (los símbolos de medida se escriben sin punto —cuidado si es fin de frase—)
- 800 m.||800&nbsp;m (los símbolos de medida se escriben sin punto —cuidado si es fin de frase—)
- 1000 m.||1000&nbsp;m (los símbolos de medida se escriben sin punto —cuidado si es fin de frase—)
- 1500 m.||1500&nbsp;m (los símbolos de medida se escriben sin punto —cuidado si es fin de frase—)
- 3000 m.||3000&nbsp;m (los símbolos de medida se escriben sin punto —cuidado si es fin de frase—)
- 3.000 m.||3000&nbsp;m (los símbolos de medida se escriben sin punto —cuidado si es fin de frase—)
- 5000 m.||5000&nbsp;m (los símbolos de medida se escriben sin punto —cuidado si es fin de frase—)
- 5.000 m.||5000&nbsp;m (los símbolos de medida se escriben sin punto —cuidado si es fin de frase—)
+ 50 m.||50&nbsp;m (los símbolos de medida se escriben sin punto —cuidado si es fin de frase—), 50&nbsp;m. (para fin de frase)
+ 60 m.||60&nbsp;m (los símbolos de medida se escriben sin punto —cuidado si es fin de frase—), 60&nbsp;m. (para fin de frase)
+ 100 m.||100&nbsp;m (los símbolos de medida se escriben sin punto —cuidado si es fin de frase—), 100&nbsp;m. (para fin de frase frase)
+ 110 m.||110&nbsp;m (los símbolos de medida se escriben sin punto —cuidado si es fin de frase—), 110&nbsp;m. (para fin de frase)
+ 200 m.||200&nbsp;m (los símbolos de medida se escriben sin punto —cuidado si es fin de frase—), 200&nbsp;m. (para fin de frase)
+ 400 m.||400&nbsp;m (los símbolos de medida se escriben sin punto —cuidado si es fin de frase—), 400&nbsp;m. (para fin de frase)
+ 800 m.||800&nbsp;m (los símbolos de medida se escriben sin punto —cuidado si es fin de frase—), 800&nbsp;m. (para fin de frase)
+ 1000 m.||1000&nbsp;m (los símbolos de medida se escriben sin punto —cuidado si es fin de frase—), 1000&nbsp;m. (para fin de frase)
+ 1500 m.||1500&nbsp;m (los símbolos de medida se escriben sin punto —cuidado si es fin de frase—), 1500&nbsp;m. (para fin de frase)
+ 3000 m.||3000&nbsp;m (los símbolos de medida se escriben sin punto —cuidado si es fin de frase—), 3000&nbsp;m. (para fin de frase)
+ 3.000 m.||3000&nbsp;m (los símbolos de medida se escriben sin punto —cuidado si es fin de frase—), 3000&nbsp;m. (para fin de frase)
+ 5000 m.||5000&nbsp;m (los símbolos de medida se escriben sin punto —cuidado si es fin de frase—), 5000&nbsp;m. (para fin de frase)
+ 5.000 m.||5000&nbsp;m (los símbolos de medida se escriben sin punto —cuidado si es fin de frase—), 5000&nbsp;m. (para fin de frase)
  10000 m.||10&nbsp;000&nbsp;m (los símbolos de medida se escriben sin punto —cuidado si es fin de frase—), 10&nbsp;000&nbsp;m. (para fin de frase)
  10.000 m.||10&nbsp;000&nbsp;m (los símbolos de medida se escriben sin punto —cuidado si es fin de frase—), 10&nbsp;000&nbsp;m. (para fin de frase)
  15000 m.||15&nbsp;000&nbsp;m (los símbolos de medida se escriben sin punto —cuidado si es fin de frase—), 15&nbsp;000&nbsp;m. (para fin de frase)
  15.000 m.||15&nbsp;000&nbsp;m (los símbolos de medida se escriben sin punto —cuidado si es fin de frase—), 15&nbsp;000&nbsp;m. (para fin de frase)
- anti-ruso||antirruso
+
+== A ==
  a.C.|cs|a.&nbsp;C. (con espacio duro)
  a.C|cs|a.&nbsp;C. (con espacio duro)
  a. C.|cs|a.&nbsp;C. (con espacio duro)
+ a. de C.|cs|a.&nbsp;C. (con espacio duro)
+ actualmente en vigor||en vigor, vigente, vigentes
  adc|cs|a.&nbsp;C. (con espacio duro)
  AdC|cs|a.&nbsp;C. (con espacio duro)
  adC|cs|a.&nbsp;C. (con espacio duro)
+ ad honorem||''ad honorem''
+ ad honórem||''ad honorem''
+ ad honoren||''ad honorem''
  a.m.||a.&nbsp;m. (con espacio duro)
  a. m.||a.&nbsp;m. (con espacio duro)
  a.m||a.&nbsp;m. (con espacio duro)
- a.n.e.||a.&nbsp;e.&nbsp;c. (con espacios duros; abreviatura de «antes de la era común»), a.&nbsp;n.&nbsp;e. (con espacios duros; abreviatura de «antes de nuestra era»)
+ a.e.c.||a.&nbsp;C. (con espacio duro; abreviatura de «antes de Cristo»; recomendada), a.&nbsp;e.&nbsp;c. (con espacios duros; abreviatura de «antes de la era común»)
+ a. e. c.||a.&nbsp;C. (con espacio duro; abreviatura de «antes de Cristo»; recomendada), a.&nbsp;e.&nbsp;c. (con espacios duros; abreviatura de «antes de la era común»)
+ a.n.e.||a.&nbsp;C. (con espacio duro; abreviatura de «antes de Cristo»; recomendada), a.&nbsp;e.&nbsp;c. (con espacios duros; abreviatura de «antes de la era común»), a.&nbsp;n.&nbsp;e. (con espacios duros; abreviatura de «antes de nuestra era»)
+ a. n. e.||a.&nbsp;C. (con espacio duro; abreviatura de «antes de Cristo»; recomendada), a.&nbsp;e.&nbsp;c. (con espacios duros; abreviatura de «antes de la era común»), a.&nbsp;n.&nbsp;e. (con espacios duros; abreviatura de «antes de nuestra era»)
  a demás||además (adverbio)
+ ad-hoc||''ad hoc''
  Administración Publica|cs|Administración Pública
  a el||al, a él, a El
+ a la alza||al alza
  Alberto Del Río|cs|Alberto Del Rio (nombre comercial del luchador, sin tilde)
+ al Andalus||al-Ándalus, Al-Ándalus (para inicios de frase o columnas de tablas), el Ándalus
+ alma mater||''alma mater''
+ alma-mater||''alma mater''
+ alma máter||''alma mater''
+ alma-máter||''alma mater''
+ alma Mater|cs|''alma mater''
+ alma-Mater|cs|''alma mater''
+ alma Máter|cs|''alma mater''
+ alma-Máter|cs|''alma mater''
+ Alma mater|cs|''alma mater''
+ Alma-mater|cs|''alma mater''
+ Alma máter|cs|''alma mater''
+ Alma-máter|cs|''alma mater''
+ Alma Mater|cs|''alma mater''
+ Alma-Mater|cs|''alma mater''
+ Alma Máter|cs|''alma mater''
+ Alma-Máter|cs|''alma mater''
+ al rededor||alrededor
+ alta edad media|cs|Alta Edad Media
+ alta edad Media|cs|Alta Edad Media
+ alta Edad media|cs|Alta Edad Media
+ alta Edad Media|cs|Alta Edad Media
+ Alta edad media|cs|Alta Edad Media
+ Alta edad Media|cs|Alta Edad Media
+ Alta Edad media|cs|Alta Edad Media
+ alter ego||''alter ego''
+ alter-ego||''alter ego''
+ álter ego||''alter ego''
+ álter-ego||''alter ego''
+ alter egos||''alter ego''
+ alter-egos||''alter ego''
+ álter egos||''alter ego''
+ álter-egos||''alter ego''
+ al al|cs|al, a la
  al top ten||a la lista de los diez primeros, a la lista de las diez primeras, a la lista de los diez mejores, a la lista de las diez mejores, a la lista de los diez más populares, a la lista de las diez más populares, entre los diez primeros, entre las diez primeras, entre los diez mejores, entre las diez mejores, entre los diez más populares, entre las diez más populares
  a mas||a más
  America Latina|cs|América Latina
  Angel Nieto|cs|Ángel Nieto (piloto español)
+ anti aerea||antiaérea
+ anti-aerea||antiaérea
+ anti aérea||antiaérea
+ anti-aérea||antiaérea
+ anti aereas||antiaéreas
+ anti-aereas||antiaéreas
+ anti aéreas||antiaéreas
+ anti-aéreas||antiaéreas
+ anti aereo||antiaéreo
+ anti-aereo||antiaéreo
+ anti aéreo||antiaéreo
+ anti-aéreo||antiaéreo
+ anti aereos||antiaéreos
+ anti-aereos||antiaéreos
+ anti aéreos||antiaéreos
+ anti-aéreos||antiaéreos
+ anti buque||antibuque
+ anti-buque||antibuque
+ anti buques||antibuques
+ anti-buques||antibuques
+ anti comunista||anticomunista
+ anti-comunista||anticomunista
+ anti comunistas||anticomunistas
+ anti-comunistas||anticomunistas
+ anti dopaje||antidopaje
+ anti-dopaje||antidopaje
+ anti doping||antidopaje
+ anti-doping||antidopaje
+ anti dóping||antidopaje
+ anti-dóping||antidopaje
+ anti droga||antidroga
+ anti-droga||antidroga
+ anti drogas||antidrogas
+ anti-drogas||antidrogas
+ anti esclavista||antiesclavista
+ anti-esclavista||antiesclavista
+ anti esclavistas||antiesclavistas
+ anti-esclavistas||antiesclavistas
+ anti esclavitud||antiesclavitud
+ anti-esclavitud||antiesclavitud
+ anti gas||antigás
+ anti-gas||antigás
+ anti guerra||antiguerra
+ anti-guerra||antiguerra
+ anti imperialismo||antiimperialismo, antimperialismo
+ anti-imperialismo||antiimperialismo, antimperialismo
+ anti imperialista||antiimperialista, antimperialista
+ anti-imperialista||antiimperialista, antimperialista
+ anti imperialistas||antiimperialistas, antimperialistas
+ anti-imperialistas||antiimperialistas, antimperialistas
+ anti imperio||antiimperio, antimperio
+ anti-imperio||antiimperio, antimperio
+ anti inflamatoria||antinflamatoria (recomendada), antiinflamatoria
+ anti-inflamatoria||antinflamatoria (recomendada), antiinflamatoria
+ anti inflamatorias||antinflamatorias (recomendada), antiinflamatorias
+ anti-inflamatorias||antinflamatorias (recomendada), antiinflamatorias
+ anti inflamatorio||antinflamatorio (recomendada), antiinflamatorio
+ anti-inflamatorio||antinflamatorio (recomendada), antiinflamatorio
+ anti inflamatorios||antinflamatorios (recomendada), antiinflamatorios
+ anti-inflamatorios||antinflamatorios (recomendada), antiinflamatorios
+ anti LGBT||anti-LGBT
+ anti misil||antimisil
+ anti-misil||antimisil
+ anti misiles||antimisiles
+ anti-misiles||antimisiles
+ anti nuclear||antinuclear
+ anti-nuclear||antinuclear
+ anti nucleares||antinucleares
+ anti-nucleares||antinucleares
+ anti radiacion||antirradiación
+ anti-radiacion||antirradiación
+ anti radiación||antirradiación
+ anti-radiación||antirradiación
  anti ruido||antirruido
  anti-ruido||antirruido
  anti ruso||antirruso
+ anti-ruso||antirruso
+ anti social||antisocial
+ anti-social||antisocial
+ anti sociales||antisociales
+ anti-sociales||antisociales
+ anti sovietica||antisoviética
+ anti-sovietica||antisoviética
+ anti soviética||antisoviética
+ anti-soviética||antisoviética
+ anti sovieticas||antisoviéticas
+ anti-sovieticas||antisoviéticas
+ anti soviéticas||antisoviéticas
+ anti-soviéticas||antisoviéticas
+ anti sovietico||antisoviético
+ anti-sovietico||antisoviético
+ anti soviético||antisoviético
+ anti-soviético||antisoviético
+ anti sovieticos||antisoviéticos
+ anti-sovieticos||antisoviéticos
+ anti soviéticos||antisoviéticos
+ anti-soviéticos||antisoviéticos
+ antispam||''antispam''
+ anti spam||''antispam''
+ anti-spam||''antispam''
+ anti submarina||antisubmarina
+ anti-submarina||antisubmarina
+ anti submarinas||antisubmarinas
+ anti-submarinas||antisubmarinas
+ anti submarino||antisubmarino
+ anti-submarino||antisubmarino
+ anti submarinos||antisubmarinos
+ anti-submarinos||antisubmarinos
+ anti tanque||antitanque
+ anti-tanque||antitanque
+ anti tanques||antitanques
+ anti-tanques||antitanques
+ anti terrorismo||antiterrorismo
+ anti-terrorismo||antiterrorismo
+ anti terrorista||antiterrorista
+ anti-terrorista||antiterrorista
+ anti terroristas||antiterroristas
+ anti-terroristas||antiterroristas
+ anti virus||antivirus
+ anti-virus||antivirus
+ anuncio que||anunció que
  anuncio su||anunció su
  arriba a abajo||arriba abajo
  a parte||a parte (locución), aparte (adjetivo, sustantivo, adverbio o verbo)
  a pesar que||a pesar de que
  apenas sí||apenas si
+ a posteriori||''a posteriori'' (en cursiva)
+ a-posteriori||''a posteriori'' (en cursiva)
+ a priori||''a priori'' (en cursiva)
+ a-priori||''a priori'' (en cursiva)
+ aproximadamente unos||aproximadamente, unos
  aún así||aun así (equivale a «pese a eso» o «sin embargo»), aún así (equivale a «todavía así»)
+ auto ayuda||autoayuda
+ auto-ayuda||autoayuda
+ auto control||autocontrol
+ auto-control||autocontrol
+ auto suficiente||autosuficiente
+ auto-suficiente||autosuficiente
+ auto suficientes||autosuficientes
+ auto-suficientes||autosuficientes
+
+== B ==
+
+ baby boom||''baby boom'', explosión de natalidad
+ baby-boom||''baby boom'', explosión de natalidad
+ baja edad media|cs|Baja Edad Media
+ baja edad Media|cs|Baja Edad Media
+ baja Edad media|cs|Baja Edad Media
+ baja Edad Media|cs|Baja Edad Media
+ Baja edad media|cs|Baja Edad Media
+ Baja edad Media|cs|Baja Edad Media
+ Baja Edad media|cs|Baja Edad Media
  bajo la base de||sobre la base de
  bajo la base del||sobre la base del
  beauty addict||adicto a la belleza, adicta a la belleza
  big five||los 5 grandes, los cinco grandes
+
+== C ==
+
  C's|cs|Cs (Ciudadanos, partido político español)
+ canta autor||cantautor
+ canta-autor||cantautor
+ canta autores||cantautores
+ canta-autores||cantautores
  Carlos Ménem|cs|Carlos Menem
  Castilla la Mancha|cs|Castilla-La Mancha
  Castilla La Mancha|cs|Castilla-La Mancha
@@ -257,14 +456,306 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  caza recompensa||cazarrecompensas (es invariable en plural)
  caza recompensas||cazarrecompensas
  cazarrecompensa||cazarrecompensas (es invariable en plural)
+ Ché Guevara|cs|Che Guevara
+ ciencia-ficcion||ciencia ficción
+ ciencia-ficción||ciencia ficción
  cm. de||cm de (símbolo de centímetros —no lleva punto—)
  cm2||cm{{Exp|2}} (centímetro cuadrado), centímetro cuadrado, centímetros cuadrados
  cm3||cm{{Exp|3}} (centímetro cúbico), centímetro cúbico, centímetros cúbicos
+ co anima||coanima
+ co-anima||coanima
+ co animacion||coanimación
+ co-animacion||coanimación
+ co animación||coanimación
+ co-animación||coanimación
+ co animaciones||coanimaciones
+ co-animaciones||coanimaciones
+ co animada||coanimada
+ co-animada||coanimada
+ co animadas||coanimadas
+ co-animadas||coanimadas
+ co animado||coanimado
+ co-animado||coanimado
+ co animador||coanimador
+ co-animador||coanimador
+ co animadora||coanimadora
+ co-animadora||coanimadora
+ co animadoras||coanimadoras
+ co-animadoras||coanimadoras
+ co animadores||coanimadores
+ co-animadores||coanimadores
+ co animados||coanimados
+ co-animados||coanimados
+ co animando||coanimando
+ co-animando||coanimando
+ co animar||coanimar
+ co-animar||coanimar
+ co autor||coautor
+ co-autor||coautor
+ co autora||coautora
+ co-autora||coautora
+ co autoras||coautoras
+ co-autoras||coautoras
+ co autores||coautores
+ co-autores||coautores
+ co autoria||coautoría
+ co-autoria||coautoría
+ co autoría||coautoría
+ co-autoría||coautoría
+ co autorias||coautorías
+ co-autorias||coautorías
+ co autorías||coautorías
+ co-autorías||coautorías
+ co compositor||cocompositor
+ co-compositor||cocompositor
+ co compositora||cocompositora
+ co-compositora||cocompositora
+ co compositoras||cocompositoras
+ co-compositoras||cocompositoras
+ co compositores||cocompositores
+ co-compositores||cocompositores
+ co conduccion||coconducción
+ co-conduccion||coconducción
+ co conducción||coconducción
+ co-conducción||coconducción
+ co conduce||coconduce
+ co-conduce||coconduce
+ co conducen||coconducen
+ co-conducen||coconducen
+ co conducida||coconducida
+ co-conducida||coconducida
+ co conducidas||coconducidas
+ co-conducidas||coconducidas
+ co conducido||coconducido
+ co-conducido||coconducido
+ co conducidos||coconducidos
+ co-conducidos||coconducidos
+ co conduciendo||coconduciendo
+ co-conduciendo||coconduciendo
+ co conducir||coconducir
+ co-conducir||coconducir
+ co conductor||coconductor
+ co-conductor||coconductor
+ co conductora||coconductora
+ co-conductora||coconductora
+ co conductoras||coconductoras
+ co-conductoras||coconductoras
+ co conductores||coconductores
+ co-conductores||coconductores
+ co condujeron||cocondujeron
+ co-condujeron||cocondujeron
+ co condujo||cocondujo
+ co-condujo||cocondujo
+ co crea||cocrea
+ co-crea||cocrea
+ co creacion||cocreación
+ co-creacion||cocreación
+ co creación||cocreación
+ co-creación||cocreación
+ co creaciones||cocreaciones
+ co-creaciones||cocreaciones
+ co creada||cocreada
+ co-creada||cocreada
+ co creadas||cocreadas
+ co-creadas||cocreadas
+ co creado||cocreado
+ co-creado||cocreado
+ co creador||cocreador
+ co-creador||cocreador
+ co creadora||cocreadora
+ co-creadora||cocreadora
+ co creadoras||cocreadoras
+ co-creadoras||cocreadoras
+ co creados||cocreados
+ co-creados||cocreados
+ co crean||cocrean
+ co-crean||cocrean
+ co creando||cocreando
+ co-creando||cocreando
+ co crear||cocrear
+ co-crear||cocrear
+ co crearía||cocrearía
+ co-crearía||cocrearía
+ co crearon||cocrearon
+ co-crearon||cocrearon
+ co creo||cocreó (3.ª persona), cocreo (1.ª persona)
+ co-creo||cocreó (3.ª persona), cocreo (1.ª persona)
+ co creó||cocreó (3.ª persona), cocreo (1.ª persona)
+ co-creó||cocreó (3.ª persona), cocreo (1.ª persona)
+ co descubridor||codescubridor
+ co-descubridor||codescubridor
+ co descubridora||codescubridora
+ co-descubridora||codescubridora
+ co descubridoras||codescubridoras
+ co-descubridoras||codescubridoras
+ co descubridores||codescubridores
+ co-descubridores||codescubridores
+ co director||codirector
+ co-director||codirector
+ co directora||codirectora
+ co-directora||codirectora
+ co directoras||codirectoras
+ co-directoras||codirectoras
+ co directores||codirectores
+ co-directores||codirectores
+ co diseñada||codiseñada
+ co-diseñada||codiseñada
+ co diseñadas||codiseñadas
+ co-diseñadas||codiseñadas
+ co diseñado||codiseñado
+ co-diseñado||codiseñado
+ co diseñador||codiseñador
+ co-diseñador||codiseñador
+ co diseñadora||codiseñadora
+ co-diseñadora||codiseñadora
+ co diseñadoras||codiseñadoras
+ co-diseñadoras||codiseñadoras
+ co diseñadores||codiseñadores
+ co-diseñadores||codiseñadores
+ co diseñados||codiseñados
+ co-diseñados||codiseñados
+ co diseñando||codiseñando
+ co-diseñando||codiseñando
+ co diseñar||codiseñar
+ co-diseñar||codiseñar
+ co diseñaron||codiseñaron
+ co-diseñaron||codiseñaron
+ co diseño||codiseño (1.ª persona), codiseñó (3.ª persona)
+ co-diseño||codiseño (1.ª persona), codiseñó (3.ª persona)
+ co diseñó||codiseñó (3.ª persona), codiseño (1.ª persona)
+ co-diseñó||codiseñó (3.ª persona), codiseño (1.ª persona)
+ co escriba||coescriba
+ co-escriba||coescriba
+ co escriban||coescriban
+ co-escriban||coescriban
+ co escribe||coescribe
+ co-escribe||coescribe
+ co escriben||coescriben
+ co-escriben||coescriben
+ co escribiendo||coescribiendo
+ co-escribiendo||coescribiendo
+ co escribieron||coescribieron
+ co-escribieron||coescribieron
+ co escribio||coescribió
+ co-escribio||coescribió
+ co escribió||coescribió
+ co-escribió||coescribió
+ co escribir||coescribir
+ co-escribir||coescribir
+ co escrito||coescrito
+ co-escrito||coescrito
+ co escritor||coescritor
+ co-escritor||coescritor
+ co escritora||coescritora
+ co-escritora||coescritora
+ co escritoras||coescritoras
+ co-escritoras||coescritoras
+ co escritores||coescritores
+ co-escritores||coescritores
+ co escritos||coescritos
+ co-escritos||coescritos
+ co escritura||coescritura
+ co-escritura||coescritura
+ co escrituras||coescrituras
+ co-escrituras||coescrituras
+ co estrella||coestrella
+ co-estrella||coestrella
+ co estrellas||coestrellas
+ co-estrellas||coestrellas
+ co estelar||coestelar
+ co-estelar||coestelar
+ co estelares||coestelares
+ co-estelares||coestelares
+ co foundador||cofundador
+ co-foundador||cofundador
+ co funda||cofunda
+ co-funda||cofunda
+ co fundacion||cofundación
+ co-fundacion||cofundación
+ co fundación||cofundación
+ co-fundación||cofundación
+ co fundada||cofundada
+ co-fundada||cofundada
+ co fundadas||cofundadas
+ co-fundadas||cofundadas
+ co fundado||cofundado
+ co-fundado||cofundado
+ co fundados||cofundados
+ co-fundados||cofundados
+ co fundador||cofundador
+ co-fundador||cofundador
+ co fundadores||cofundadores
+ co-fundadores||cofundadores
+ co fundan||cofundan
+ co-fundan||cofundan
+ co fundando||cofundando
+ co-fundando||cofundando
+ co fundar||cofundar
+ co-fundar||cofundar
+ co fundara||cofundara, cofundará
+ co-fundara||cofundara, cofundará
+ co fundaron||cofundaron
+ co-fundaron||cofundaron
+ co fundo||cofundó (3.ª persona), cofundo (1.ª persona)
+ co-fundo||cofundó (3.ª persona), cofundo (1.ª persona)
+ co fundó||cofundó (3.ª persona), cofundo (1.ª persona)
+ co-fundó||cofundó (3.ª persona), cofundo (1.ª persona)
+ co gobernacion||cogobernación
+ co-gobernacion||cogobernación
+ co gobernación||cogobernación
+ co-gobernación||cogobernación
+ co gobernado||cogobernado
+ co-gobernado||cogobernado
+ co gobernador||cogobernador
+ co-gobernador||cogobernador
+ co gobernadores||cogobernadores
+ co-gobernadores||cogobernadores
+ co gobernados||cogobernados
+ co-gobernados||cogobernados
+ co gobernando||cogobernando
+ co-gobernando||cogobernando
+ co gobernante||cogobernante
+ co-gobernante||cogobernante
+ co gobernar||cogobernar
+ co-gobernar||cogobernar
+ co gobernaron||cogobernaron
+ co-gobernaron||cogobernaron
+ co goberno||cogobernó
+ co-goberno||cogobernó
+ co gobernó||cogobernó
+ co-gobernó||cogobernó
+ co gobierna||cogobierna
+ co-gobierna||cogobierna
+ co gobiernan||cogobiernan
+ co-gobiernan||cogobiernan
+ co gobierno||cogobierno
+ co-gobierno||cogobierno
+ co gobiernos||cogobiernos
+ co-gobiernos||cogobiernos
+ co guionista||coguionista
+ co-guionista||coguionista
+ co guionistas||coguionistas
+ co-guionistas||coguionistas
+ co lider||colíder
+ co-lider||colíder
+ co líder||colíder
+ co-líder||colíder
+ co lideres||colíderes
+ co-lideres||colíderes
+ co líderes||colíderes
+ co-líderes||colíderes
+ comicios electorales||comicios
  con mas||con más
  continua estando||continúa estando
  continua siendo||continúa siendo
  continuo su||continuó su
  continuo sus||continuó sus
+ contra ataque||contraataque, contrataque
+ contra-ataque||contraataque, contrataque
+ contra ataques||contraataques, contrataques
+ contra-ataques||contraataques, contrataques
+ Conurbano bonaerense|cs|conurbano bonaerense
+ Conurbano Bonaerense|cs|conurbano bonaerense
  convencer que||convencer de que
  convencida que||convencida de que
  convencidas que||convencidas de que
@@ -272,13 +763,177 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  convencidos que||convencidos de que
  convencieron que||convencieron de que
  convenció que||convenció de que
+ co oficial||cooficial
+ co-oficial||cooficial
+ co oficiales||cooficiales
+ co-oficiales||cooficiales
+ co presenta||copresenta
+ co-presenta||copresenta
+ co presentacion||copresentación
+ co-presentacion||copresentación
+ co presentación||copresentación
+ co-presentación||copresentación
+ co presentada||copresentada
+ co-presentada||copresentada
+ co presentadas||copresentadas
+ co-presentadas||copresentadas
+ co presentado||copresentado
+ co-presentado||copresentado
+ co presentados||copresentados
+ co-presentados||copresentados
+ co presentador||copresentador
+ co-presentador||copresentador
+ co presentadora||copresentadora
+ co-presentadora||copresentadora
+ co presentadoras||copresentadoras
+ co-presentadoras||copresentadoras
+ co presentadores||copresentadores
+ co-presentadores||copresentadores
+ co presentan||copresentan
+ co-presentan||copresentan
+ co presentando||copresentando
+ co-presentando||copresentando
+ co presentar||copresentar
+ co-presentar||copresentar
+ co presentaron||copresentaron
+ co-presentaron||copresentaron
+ co presento||copresentó (3.ª persona), copresento (1.ª persona)
+ co-presento||copresentó (3.ª persona), copresento (1.ª persona)
+ co presentó||copresentó (3.ª persona), copresento (1.ª persona)
+ co-presentó||copresentó (3.ª persona), copresento (1.ª persona)
+ co preside||copreside
+ co-preside||copreside
+ co presidencia||copresidencia
+ co-presidencia||copresidencia
+ co presidencias||copresidencias
+ co-presidencias||copresidencias
+ co presidente||copresidente
+ co-presidente||copresidente
+ co presidentes||copresidentes
+ co-presidentes||copresidentes
+ co presidia||copresidía
+ co-presidia||copresidía
+ co presidía||copresidía
+ co-presidía||copresidía
+ co presidida||copresidida
+ co-presidida||copresidida
+ co presididas||copresididas
+ co-presididas||copresididas
+ co presidido||copresidido
+ co-presidido||copresidido
+ co presididos||copresididos
+ co-presididos||copresididos
+ co presidieron||copresidieron
+ co-presidieron||copresidieron
+ co presidio||copresidió
+ co-presidio||copresidió
+ co presidir||copresidir
+ co-presidir||copresidir
+ co produccion||coproducción
+ co-produccion||coproducción
+ co producción||coproducción
+ co-producción||coproducción
+ co produce||coproduce
+ co-produce||coproduce
+ co producen||coproducen
+ co-producen||coproducen
+ co producida||coproducida
+ co-producida||coproducida
+ co producidas||coproducidas
+ co-producidas||coproducidas
+ co producido||coproducido
+ co-producido||coproducido
+ co producidos||coproducidos
+ co-producidos||coproducidos
+ co produciendo||coproduciendo
+ co-produciendo||coproduciendo
+ co producir||coproducir
+ co-producir||coproducir
+ co producira||coproducirá
+ co-producira||coproducirá
+ co producirá||coproducirá
+ co-producirá||coproducirá
+ co produciran||coproducirán
+ co-produciran||coproducirán
+ co producirán||coproducirán
+ co-producirán||coproducirán
+ co productor||coproductor
+ co-productor||coproductor
+ co productora||coproductora
+ co-productora||coproductora
+ co productoras||coproductoras
+ co-productoras||coproductoras
+ co productores||coproductores
+ co-productores||coproductores
+ co produjeron||coprodujeron
+ co-produjeron||coprodujeron
+ co produjo||coprodujo
+ co-produjo||coprodujo
+ co propiedad||copropiedad
+ co-propiedad||copropiedad
+ co propiedades||copropiedades
+ co-propiedades||copropiedades
+ co propietaria||copropietaria
+ co-propietaria||copropietaria
+ co propietarias||copropietarias
+ co-propietarias||copropietarias
+ co propietario||copropietario
+ co-propietario||copropietario
+ co propietarios||copropietarios
+ co-propietarios||copropietarios
+ co protagonico||coprotagónico
+ co-protagonico||coprotagónico
+ co protagónico||coprotagónico
+ co-protagónico||coprotagónico
+ co protagonismo||coprotagonismo
+ co-protagonismo||coprotagonismo
+ co protagonismos||coprotagonismos
+ co-protagonismos||coprotagonismos
+ co protagonista||coprotagonista
+ co-protagonista||coprotagonista
+ co protagonistas||coprotagonistas
+ co-protagonistas||coprotagonistas
+ co protagoniza||coprotagoniza
+ co-protagoniza||coprotagoniza
+ co protagonizaba||coprotagonizaba
+ co-protagonizaba||coprotagonizaba
+ co protagonizaban||coprotagonizaban
+ co-protagonizaban||coprotagonizaban
+ co protagonizada||coprotagonizada
+ co-protagonizada||coprotagonizada
+ co protagonizadas||coprotagonizadas
+ co-protagonizadas||coprotagonizadas
+ co protagonizado||coprotagonizado
+ co-protagonizado||coprotagonizado
+ co protagonizados||coprotagonizados
+ co-protagonizados||coprotagonizados
+ co protagonizando||coprotagonizando
+ co-protagonizando||coprotagonizando
+ co protagonizar||coprotagonizar
+ co-protagonizar||coprotagonizar
+ co protagonizaron||coprotagonizaron
+ co-protagonizaron||coprotagonizaron
+ co protagonizo||coprotagonizó (3.ª persona), coprotagonizo (1.ª persona)
+ co-protagonizo||coprotagonizó (3.ª persona), coprotagonizo (1.ª persona)
+ co protagonizó||coprotagonizó (3.ª persona), coprotagonizo (1.ª persona)
+ co-protagonizó||coprotagonizó (3.ª persona), coprotagonizo (1.ª persona)
+ curriculum vitae||''curriculum vitae''
+ currículum vitae||''curriculum vitae''
+
+== D ==
+ dado a que||dado que
+ dado cuenta que||dado cuenta de que
  dam2||dam{{Exp|2}} (decámetro cuadrado), decámetro cuadrado, decámetros cuadrados
  dam3||dam{{Exp|3}} (decámetro cúbico), decámetro cúbico, decámetros cúbicos
+ dandose cuenta que||dándose cuenta de que
+ dándose cuenta que||dándose cuenta de que
  darse cuenta que||darse cuenta de que
  d.C|cs|d.&nbsp;C. (con espacio duro)
  d.C.|cs|d.&nbsp;C. (con espacio duro)
  d. C.|cs|d.&nbsp;C. (con espacio duro)
+ d. de C.|cs|d.&nbsp;C. (con espacio duro)
  de Cordoba||de Córdoba
+ de de|cs|de
  de el||del, de él, de El, dé el, dé él
  de estás||de estas
  décima cuartas||decimocuartas (uso mayoritario), décimas cuartas
@@ -344,13 +999,32 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  décimo terceras||decimoterceras (uso mayoritario), décimas terceras
  décimo terceros||decimoterceros (uso mayoritario), décimos terceros
  dejo el||dejó el
+ del celebre||del célebre
+ del cuál||del cual
  del genero||del género
+ delirium tremens||''delirium tremens'' (locución en latín), Delirium Tremens (grupo musical, marca), «Delirium tremens» (canción)
+ delírium tremens||''delirium tremens'' (locución en latín), Delirium Tremens (grupo musical, marca), «Delirium tremens» (canción)
+ delírium trémens||''delirium tremens'' (locución en latín), Delirium Tremens (grupo musical, marca), «Delirium tremens» (canción)
+ delirium trémens||''delirium tremens'' (locución en latín), Delirium Tremens (grupo musical, marca), «Delirium tremens» (canción)
+ del la|cs|de la
  del top ten||de la lista de los diez primeros, de la lista de las diez primeras, de la lista de los diez mejores, de la lista de las diez mejores, de la lista de los diez más populares, de la lista de las diez más populares, entre los diez primeros, entre las diez primeras, entre los diez mejores, entre las diez mejores, entre los diez más populares, entre las diez más populares
  de mas||de más
  de Mexico||de México
  desarrollo un||desarrolló un (verbo)
  delante suyo||delante de él, delante de ella, delante de sí
  detrás suyo||detrás de él, detrás de ella, detrás de sí
+ director General|cs|director general, Director general (para inicios de frase o columnas de tablas)
+ Director General|cs|director general, Director general (para inicios de frase o columnas de tablas)
+ Director general|cs|director general, Director general (para inicios de frase o columnas de tablas)
+ directora General|cs|directora general, Directora general (para inicios de frase o columnas de tablas)
+ Directora General|cs|directora general, Directora general (para inicios de frase o columnas de tablas)
+ Directora general|cs|directora general, Directora general (para inicios de frase o columnas de tablas)
+ directoras Generales|cs|directoras generales, Directoras generales (para inicios de frase o columnas de tablas)
+ Directoras Generales|cs|directoras generales, Directoras generales (para inicios de frase o columnas de tablas)
+ Directoras generales|cs|directoras generales, Directoras generales (para inicios de frase o columnas de tablas)
+ directores Generales|cs|directores generales, Directores generales (para inicios de frase o columnas de tablas)
+ Directores Generales|cs|directores generales, Directores generales (para inicios de frase o columnas de tablas)
+ Directores generales|cs|directores generales, Directores generales (para inicios de frase o columnas de tablas)
  discrepar con||discrepar de, discrepar sobre, discrepar en, discrepar con (no censurable en Argentina, úsese solamente en artículos relacionados con este)
  discrepa con||discrepa de, discrepa sobre, discrepa en, discrepa con (no censurable en Argentina, úsese solamente en artículos relacionados con este)
  discrepó con||discrepó de, discrepó sobre, discrepó en, discrepó con (no censurable en Argentina, úsese solamente en artículos relacionados con este)
@@ -359,38 +1033,93 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  dm3||dm{{Exp|3}} (decímetro cúbico), decímetro cúbico, decímetros cúbicos
  donde paso||donde pasó
  drop shot||dejada (tenis)
- e-mail||mensaje de correo electrónico, correo electrónico
- e-mails||mensajes de correo electrónico, correos electrónicos
+
+== E ==
+ e.c.||d.&nbsp;C. (con espacio duro; abreviatura de «después de Cristo»; recomendada), e.&nbsp;c. (con espacio duro; abreviatura de «de la era común» o abreviatura de gol «en contra» —o autogol—)
+ e. c.||d.&nbsp;C. (con espacio duro; abreviatura de «después de Cristo»; recomendada), e.&nbsp;c. (con espacio duro; abreviatura de «de la era común» o abreviatura de gol «en contra» —o autogol—)
+ edad antigua|cs|Edad Antigua
+ edad Antigua|cs|Edad Antigua
+ Edad antigua|cs|Edad Antigua
+ edad contemporanea|cs|Edad Contemporánea
+ edad Contemporanea|cs|Edad Contemporánea
+ Edad contemporanea|cs|Edad Contemporánea
+ edad contemporánea|cs|Edad Contemporánea
+ edad Contemporánea|cs|Edad Contemporánea
+ Edad contemporánea|cs|Edad Contemporánea
+ edad del bronce|cs|Edad del Bronce
+ edad del Bronce|cs|Edad del Bronce
+ Edad del bronce|cs|Edad del Bronce
+ edad del cobre|cs|Edad del Cobre
+ edad del Cobre|cs|Edad del Cobre
+ Edad del cobre|cs|Edad del Cobre
+ edad del hierro|cs|Edad del Hierro
+ edad del Hierro|cs|Edad del Hierro
+ Edad del hierro|cs|Edad del Hierro
+ edad de los metales|cs|Edad de los Metales
+ edad de los Metales|cs|Edad de los Metales
+ Edad de los metales|cs|Edad de los Metales
+ edad de piedra|cs|Edad de Piedra
+ edad de Piedra|cs|Edad de Piedra
+ Edad de piedra|cs|Edad de Piedra
+ edad media|cs|Edad Media, edad media (edad promedio)
+ edad Media|cs|Edad Media, edad media (edad promedio)
+ Edad media|cs|Edad Media, edad media (edad promedio)
+ edad moderna|cs|Edad Moderna
+ edad Moderna|cs|Edad Moderna
+ Edad moderna|cs|Edad Moderna
  Educación Publica|cs|Educación Pública
+ e iones||y iones
+ el alma mater||la ''alma mater''
+ el autoestima||la autoestima
+ el cuál||el cual
+ el el||el, en el
+ el interfaz||la interfaz (es sustantivo femenino)
  el mas||el más
  el proximo||el próximo
  el sólo||el solo (adjetivo), él solo (sin ninguna compañía), él solamente (para evitar ambigüedad)
  el titulo||el título
  el top ten||la lista de los diez primeros, la lista de las diez primeras, la lista de los diez mejores, la lista de las diez mejores, la lista de los diez más populares, la lista de las diez más populares, entre los diez primeros, entre las diez primeras, entre los diez mejores, entre las diez mejores, entre los diez más populares, entre las diez más populares
+ e-mail||mensaje de correo electrónico, correo electrónico
+ e-mails||mensajes de correo electrónico, correos electrónicos
  en base a||con base en (construcción recomendada), basándose en (construcción recomendada), sobre la base de (construcción recomendada)
  en caso que||en caso de que
  en el caso que||en el caso de que
  en el qué||en el que
+ en en||en, en el
  en estás||en estas
+ Enlace externos|cs|Enlaces externos
+ Enlaces externo|cs|Enlaces externos
+ Enlaces Externos|cs|Enlaces externos
  en la qué||en la que
  en perdida||en pérdida
  en relación a||en relación con, con relación a
  en relación al||en relación con el, con relación al
+ enterada que||enterada de que
+ enteradas que||enteradas de que
+ enterado que||enterado de que
+ enterados que||enterados de que
+ enterandose que||enterándose de que
+ enterándose que||enterándose de que
+ enterarse que||enterarse de que
  entorno a||en torno a (locución adverbial)
  entre medias||entremedias (entre dos lugares, cosas o tiempos)
- entre si||entre sí (pronombre), entre si (conjunción)
+ entre si||entre sí (pronombre), entre si (conjunción, o nota musical)
  es mas||es más
- ex presidente||expresidente
- ex-presidente||expresidente
- ex militar||exmilitar
- ex-militar||exmilitar
- ex preso||ex-preso
- ex-preso||expreso (para referirse a una vía de transporte o la rapidez de algo), ex-preso (para referirse a alguien que ya no es preso)
  ésta área||esta área
  ésta canción||esta canción
  ésta ciudad||esta ciudad
  esta compuesta||está compuesta
  esta compuesto||está compuesto
+ Estado de Bienestar|cs|estado de bienestar
+ Estado de bienestar|cs|estado de bienestar
+ estado de Bienestar|cs|estado de bienestar
+ Estado del Bienestar|cs|estado del bienestar
+ Estado del bienestar|cs|estado del bienestar
+ estado del Bienestar|cs|estado del bienestar
+ estados miembro|cs|Estados miembro
+ Estados Miembro|cs|Estados miembro
+ estados miembros|cs|Estados miembros
+ Estados Miembros|cs|Estados miembros
  ésta edición||esta edición
  ésta época||esta época
  ésta especie||esta especie
@@ -417,6 +1146,8 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  éstas últimas||estas últimas
  ésta técnica||esta técnica
  ésta temporada||esta temporada
+ estatu quo||''statu quo''
+ estatus quo||''statu quo''
  ésta última|| esta última
  ésta versión||esta versión
  ésta vez||esta vez
@@ -442,34 +1173,272 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  éste último|| este último
  éstos dos||estos dos
  éstos últimos||estos últimos
+ ex agente||exagente
+ ex-agente||exagente
+ ex agentes||exagentes
+ ex-agentes||exagentes
+ ex alumna||exalumna
+ ex-alumna||exalumna
+ ex alumnas||exalumnas
+ ex-alumnas||exalumnas
+ ex alumno||exalumno
+ ex-alumno||exalumno
+ ex alumnos||exalumnos
+ ex-alumnos||exalumnos
+ ex asesor||exasesor
+ ex-asesor||exasesor
+ ex asesora||exasesora
+ ex-asesora||exasesora
+ ex asesoras||exasesoras
+ ex-asesoras||exasesoras
+ ex asesores||exasesores
+ ex-asesores||exasesores
+ ex capitan||excapitán
+ ex-capitan||excapitán
+ ex capitán||excapitán
+ ex-capitán||excapitán
+ ex capitana||excapitana
+ ex-capitana||excapitana
+ ex capitanas||excapitanas
+ ex-capitanas||excapitanas
+ ex capitanes||excapitanes
+ ex-capitanes||excapitanes
+ ex combatiente||excombatiente
+ ex-combatiente||excombatiente
+ ex combatientes||excombatientes
+ ex-combatientes||excombatientes
+ ex compañera||excompañera
+ ex-compañera||excompañera
+ ex compañeras||excompañeras
+ ex-compañeras||excompañeras
+ ex compañero||excompañero
+ ex-compañero||excompañero
+ ex compañeros||excompañeros
+ ex-compañeros||excompañeros
+ exdirector general||ex director general
+ exdirectora general||ex directora general
+ ex ejecutiva||exejecutiva
+ ex-ejecutiva||exejecutiva
+ ex ejecutivas||exejecutivas
+ ex-ejecutivas||exejecutivas
+ ex ejecutivo||exejecutivo
+ ex-ejecutivo||exejecutivo
+ ex ejecutivos||exejecutivos
+ ex-ejecutivos||exejecutivos
+ ex esposa||exesposa
+ ex-esposa||exesposa
+ ex esposas||exesposas
+ ex-esposas||exesposas
+ ex esposo||exesposo
+ ex-esposo||exesposo
+ ex esposos||exesposos
+ ex-esposos||exesposos
+ ex fiscal||exfiscal
+ ex-fiscal||exfiscal
+ ex fiscales||exfiscales
+ ex-fiscales||exfiscales
+ ex futbolista||exfutbolista
+ ex-futbolista||exfutbolista
+ ex futbolistas||exfutbolistas
+ ex-futbolistas||exfutbolistas
+ ex integrante||exintegrante
+ ex-integrante||exintegrante
+ ex integrantes||exintegrantes
+ ex-integrantes||exintegrantes
+ ex jugador||exjugador
+ ex-jugador||exjugador
+ ex jugadores||exjugadores
+ ex-jugadores||exjugadores
+ ex mandataria||exmandataria
+ ex-mandataria||exmandataria
+ ex mandatarias||exmandatarias
+ ex-mandatarias||exmandatarias
+ ex mandatario||exmandatario
+ ex-mandatario||exmandatario
+ ex mandatarios||exmandatarios
+ ex-mandatarios||exmandatarios
+ ex miembro||exmiembro
+ ex-miembro||exmiembro
+ ex miembros||exmiembros
+ ex-miembros||exmiembros
+ ex militante||exmilitante
+ ex-militante||exmilitante
+ ex militantes||exmilitantes
+ ex-militantes||exmilitantes
+ ex militar||exmilitar
+ ex-militar||exmilitar
+ ex militares||exmilitares
+ ex-militares||exmilitares
+ ex ministra||exministra
+ ex-ministra||exministra
+ ex ministras||exministras
+ ex-ministras||exministras
  ex ministro||exministro
  ex-ministro||exministro
+ ex ministros||exministros
+ ex-ministros||exministros
+ ex novia||exnovia
+ ex-novia||exnovia
+ ex novias||exnovias
+ ex-novias||exnovias
+ ex novio||exnovio
+ ex-novio||exnovio
+ ex novios||exnovios
+ ex-novios||exnovios
+ ex oficio||''ex officio''
+ ex-oficio||''ex officio''
+ ex officio||''ex officio''
+ ex-officio||''ex officio''
+ ex pareja||expareja
+ ex-pareja||expareja
+ ex parejas||exparejas
+ ex-parejas||exparejas
+ ex participante||exparticipante
+ ex-participante||exparticipante
+ ex participantes||exparticipantes
+ ex-participantes||exparticipantes
+ ex politica||expolítica
+ ex-politica||expolítica
+ ex política||expolítica
+ ex-política||expolítica
+ ex politicas||expolíticas
+ ex-politicas||expolíticas
+ ex políticas||expolíticas
+ ex-políticas||expolíticas
+ ex politico||expolítico
+ ex-politico||expolítico
+ ex político||expolítico
+ ex-político||expolítico
+ ex politicos||expolíticos
+ ex-politicos||expolíticos
+ ex políticos||expolíticos
+ ex-políticos||expolíticos
+ ex presidente||expresidente
+ ex-presidente||expresidente
+ ex presidentes||expresidentes
+ ex-presidentes||expresidentes
+ ex preso||ex-preso
+ ex-preso||expreso (para referirse a una vía de transporte o la rapidez de algo), ex-preso (para referirse a alguien que ya no es preso)
+ exprimera dama||ex primera dama
+ exprimera ministra||ex primera ministra
+ exprimeras damas||ex primeras damas
+ exprimeras ministras||ex primeras ministras
+ exprimer ministro||ex primer ministro
+ exprimeros ministros||ex primeros ministros
+ exsecretaria de Estado||ex secretaria de Estado
+ ex-secretaria de Estado||ex secretaria de Estado
+ exsecretarias de Estado||ex secretarias de Estado
+ ex-secretarias de Estado||ex secretarias de Estado
+ exsecretario de Estado||ex secretario de Estado
+ ex-secretario de Estado||ex secretario de Estado
+ exsecretarios de Estado||ex secretarios de Estado
+ ex-secretarios de Estado||ex secretarios de Estado
+ ex vice presidenta||exvicepresidenta
+ ex-vice-presidenta||exvicepresidenta
+ ex vicepresidenta||exvicepresidenta
+ ex-vicepresidenta||exvicepresidenta
+ ex vice presidente||exvicepresidente
+ ex-vice-presidente||exvicepresidente
+ ex vicepresidente||exvicepresidente
+ ex-vicepresidente||exvicepresidente
+
+== F ==
+
+ fue sido||fue, ha sido
+
+== G ==
+
  golpe de estado|cs|golpe de Estado
  Golpe de estado|cs|Golpe de Estado
  grandes perdidas||grandes pérdidas
  gr. de||g de (símbolo de gramos —no lleva punto—)
+ Guerra de las Malvinas|cs|guerra de las Malvinas
+
+== H ==
+
+ Ha.|cs|ha (símbolo de hectárea —va en minúscula y sin punto—), ha. (para final de frase), hectáreas (texto)
+ habeas corpus||''habeas corpus'' (locución en latín), Habeas Corpus (grupo musical)
+ hábeas corpus||''habeas corpus'' (locución en latín), Habeas Corpus (grupo musical)
  han habido||ha habido
  hawk-eye||ojo de halcón
  hay mas||hay más
  hm2||hm{{Exp|2}} (hectómetro cuadrado), hectómetro cuadrado, hectómetros cuadrados
  hm3||hm{{Exp|3}} (hectómetro cúbico), hectómetro cúbico, hectómetros cúbicos
  Hugo Chavez|cs|Hugo Chávez
+
+== I ==
+
+ infra especifica||infraespecífica
+ infra-especifica||infraespecífica
+ infra específica||infraespecífica
+ infra-específica||infraespecífica
+ infra especificas||infraespecíficas
+ infra-especificas||infraespecíficas
+ infra específicas||infraespecíficas
+ infra-específicas||infraespecíficas
+ infra especifico||infraespecífico
+ infra-especifico||infraespecífico
+ infra específico||infraespecífico
+ infra-específico||infraespecífico
+ infra especificos||infraespecíficos
+ infra-especificos||infraespecíficos
+ infra específicos||infraespecíficos
+ infra-específicos||infraespecíficos
  in media res||''in medias res''
- el interfaz||la interfaz (es sustantivo femenino)
- un interfaz||una interfaz (es sustantivo femenino)
+ in memóriam||''in memoriam''
+ in memorian||''in memoriam''
+ insistía que||insistía en que
+ insistían que||insistían en que
+ insistieron que||insistieron en que
+ insistió que ||insistió en que
+ insistir que||insistir en que
+ Inteligencia Artificial|cs|inteligencia artificial
+ Inteligencias Artificiales|cs|inteligencias artificiales
+ inter continental||intercontinental
+ inter-continental||intercontinental
+ inter continentales||intercontinentales
+ inter-continentales||intercontinentales
+
+== J ==
+
+ Jefe de estado|cs|jefe de Estado
+ Jefe de Estado|cs|jefe de Estado
+ jefe de estado|cs|jefe de Estado
+ Jefes de estado|cs|jefes de Estado
+ Jefes de Estado|cs|jefes de Estado
+ jefes de estado|cs|jefes de Estado
  Jose Antonio|cs|José Antonio (nombre de pila español)
  Jose Manuel|cs|José Manuel (nombre de pila español y portugués)
  Jose Maria|cs|José María (nombre de pila español)
  Jose María|cs|José María (nombre de pila español)
  José Maria|cs|José María (nombre de pila español), José Maria (nombre de pila portugués)
+ judeo cristiana||judeocristiana
+ judeo-cristiana||judeocristiana
+ judeo cristianas||judeocristianas
+ judeo-cristianas||judeocristianas
+ judeo cristianismo||judeocristianismo
+ judeo-cristianismo||judeocristianismo
+ judeo cristiano||judeocristiano
+ judeo-cristiano||judeocristiano
+ judeo cristianos||judeocristianos
+ judeo-cristianos||judeocristianos
  jugo en||jugó en
- kg. de||kg de (símbolo de kilogramos —no lleva punto—)
- km. al||km al (símbolo de kilómetros —no lleva punto—)
- km. de||km de (símbolo de kilómetros —no lleva punto—)
- km. del||km del (símbolo de kilómetros —no lleva punto—)
- km. marcha||km marcha (símbolo de kilómetros —no lleva punto—)
- km2||km{{Exp|2}} (kilómetro cuadrado), kilómetro cuadrado, kilómetros cuadrados
- km3||km{{Exp|3}} (kilómetro cúbico), kilómetro cúbico, kilómetros cúbicos
+
+== K ==
+
+ kg. de|cs|kg de (símbolo de kilogramos —no lleva punto—)
+ km. al|cs|km al (símbolo de kilómetros —no lleva punto—)
+ km. de|cs|km de (símbolo de kilómetros —no lleva punto—)
+ km. del|cs|km del (símbolo de kilómetros —no lleva punto—)
+ km. marcha|cs|km marcha (símbolo de kilómetros —no lleva punto—)
+ km2|cs|km{{Exp|2}} (kilómetro cuadrado), kilómetro cuadrado, kilómetros cuadrados
+ km3|cs|km{{Exp|3}} (kilómetro cúbico), kilómetro cúbico, kilómetros cúbicos
+
+== L ==
+
+ la cuál||la cual
+ la hidromiel||el hidromiel (es masculino)
+ la la||la, La
  la mas||la más
  laminas de||láminas de
  la perdida||la pérdida
@@ -484,13 +1453,24 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  la tercer||la tercera, el tercero, el tercer
  Latino América|cs|Latinoamérica
  la version||la versión
+ le a||le ha
+ le hecho||el hecho, le ha hecho, le echó, le echo
+ Ley seca|cs|ley seca
+ Ley Seca|cs|ley seca
+ ley Seca|cs|ley seca
+ lo cuál||lo cual
  logro ganar||logró ganar
  lo mas||lo más
+ los los||los (artículo repetido)
  los mas||los más
+ los mismo||lo mismo, los mismos
  lucky loser||perdedor afortunado (deporte), perdedores afortunados (deporte), perdedora afortunada (deporte), perdedoras afortunadas (deporte)
  luego paso||luego pasó
+
+== M ==
+
  m. al||m al (símbolo de metros —no lleva punto—)
- m. de||m de (símbolo de metros —no lleva punto—)
+ m. de|cs|m de (símbolo de metros —no lleva punto—)
  m. del||m del (símbolo de metros —no lleva punto—)
  m. braza||m braza (símbolo de metros —no lleva punto—)
  m. espalda||m espalda (símbolo de metros —no lleva punto—)
@@ -500,6 +1480,10 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  m. obstáculos||m obstáculos (símbolo de metros —no lleva punto—)
  m2|cs|m{{Exp|2}} (metro cuadrado), m2 (variable, nombre propio o para plantilla convertir), metro cuadrado, metros cuadrados
  m3|cs|m{{Exp|3}} (metro cúbico), m3 (variable, nombre propio o para plantilla convertir), metro cúbico, metros cúbicos
+ macro region||macrorregión
+ macro-region||macrorregión
+ macro región||macrorregión
+ macro-región||macrorregión
  main draw||cuadro principal
  mal entendido||mal entendido (adjetivo), malentendido (sustantivo)
  Maria Antonia|cs|María Antonia (nombre de pila español)
@@ -537,46 +1521,577 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  mas y|cs|más y
  match ball||pelota de partido
  match point||punto de partido
+ maxi sencillo||maxisencillo
+ maxi-sencillo||maxisencillo
+ maxi sencillos||maxisencillos
+ maxi-sencillos||maxisencillos
  Metro de Paris|cs|Metro de París (en español), Métro de Paris (en francés)
+ micro region||microrregión
+ micro-region||microrregión
+ micro región||microrregión
+ micro-región||microrregión
  Miguel Angel|cs|Miguel Ángel (nombre de pila español; en particular, castellanización del nombre de pila del artista italiano)
+ mini album||miniálbum
+ mini-album||miniálbum
+ mini álbum||miniálbum
+ mini-álbum||miniálbum
+ mini albumes||miniálbumes
+ mini-albumes||miniálbumes
+ mini álbumes||miniálbumes
+ mini-álbumes||miniálbumes
+ mini albums||miniálbumes, miniálbum
+ mini-albums||miniálbumes, miniálbum
+ mini álbums||miniálbumes, miniálbum
+ mini-álbums||miniálbumes, miniálbum
+ mini golf||minigolf
+ mini-golf||minigolf
+ mini serie||miniserie
+ mini-serie||miniserie
+ mini series||miniseries
+ mini-series||miniseries
+ mini USB|cs|mini-USB
+ mini usb|cs|mini-USB
+ mini-usb|cs|mini-USB
+ motu propio||motu proprio
  mm2|cs|mm{{Exp|2}} (milímetro cuadrado), milímetro cuadrado, milímetros cuadrados
  mm3|cs|mm{{Exp|3}} (milímetro cúbico), milímetro cúbico, milímetros cúbicos
+ mm. de|cs| mm de  (símbolo de milímetros —no lleva punto—)
  m.s.n.m.||{{esd|m s. n. m.}} (con espacios duros —el símbolo de metro no lleva punto—), {{esd|[[m s. n. m.]]}} (con espacios duros y enlace al artículo en Wikipedia —el símbolo de metro no lleva punto—)
  m. s. n. m.||{{esd|m s. n. m.}} (con espacios duros —el símbolo de metro no lleva punto—), {{esd|[[m s. n. m.]]}} (con espacios duros y enlace al artículo en Wikipedia —el símbolo de metro no lleva punto—)
  [[msnm]]||{{esd|m s. n. m.}} (con espacios duros —el símbolo de metro no lleva punto—), {{esd|[[m s. n. m.]]}} (con espacios duros y enlace al artículo en Wikipedia —el símbolo de metro no lleva punto—)
+ msnm.||{{esd|m s. n. m.}} (con espacios duros —el símbolo de metro no lleva punto—), {{esd|[[m s. n. m.]]}} (con espacios duros y enlace al artículo en Wikipedia —el símbolo de metro no lleva punto—)
  mucho mas||mucho más
+ multa economica||multa
+ multa económica||multa
+ multas economicas||multas
+ multas económicas||multas
  multi-uso||multiuso, multiusos
+
+== N ==
+
  №||N.º (abreviatura de «número» con mayúscula inicial), n.º (abreviatura de «número» sin mayúscula inicial)
  nada mas||nada más
+ neo liberal||neoliberal
+ neo-liberal||neoliberal
+ neo liberales||neoliberales
+ neo-liberales||neoliberales
+ neo liberalismo||neoliberalismo
+ neo-liberalismo||neoliberalismo
+ New Mexico|cs|Nuevo México
  Nicolas de Bari|cs|Nicolás de Bari
  Nicolas Maduro|cs|Nicolás Maduro
+ Nizhni Nóvgorod|cs|Nizni Nóvgorod
  No.|cs|n.º (abreviatura de «número» sin mayúscula inicial y sin estar en inglés), N.º (para inicios de frase o columnas de tablas)
  noche buena||Nochebuena (forma recomendada), Noche Buena (forma tradicional y aceptada)
  noche vieja||Nochevieja (forma recomendada), Noche Vieja (forma tradicional y aceptada)
  norte americano||norteamericano (gentilicio)
+ Nouri al Maliki|cs|Nuri al Maliki
+ Nouri al-Maliki|cs|Nuri al Maliki
+ Nouri Al Maliki|cs|Nuri al Maliki
+ Nouri Al-Maliki|cs|Nuri al Maliki
+ nuevo mundo|cs|Nuevo Mundo (continente americano)
+ Nuevo mundo|cs|Nuevo Mundo (continente americano)
+ Nuri al-Maliki|cs|Nuri al Maliki
+ Nuri Al Maliki|cs|Nuri al Maliki
+ Nuri Al-Maliki|cs|Nuri al Maliki
+
+== Ñ ==
+
+== O ==
+
  o mas||o más
  opera prima|cs|ópera prima (en español)
  opinión publica||opinión pública
+
+== P ==
+
+ para para||para, Para Para (baile japonés o personaje de Sailor Moon)
  paso a ser||pasó a ser
  p.m||p.&nbsp;m. (con espacio duro)
  p.m.||p.&nbsp;m. (con espacio duro)
  p. m.||p.&nbsp;m. (con espacio duro)
+ por el cuál||por el cual
+ por la cuál||por la cual
+ por por||por
  por que||por que (preposición + relativo o conjunción), porque (conjunción causal), por qué (interrogación o exclamación), porqué (sustantivo, causa)
+ pos guerra||posguerra
+ pos-guerra||posguerra
+ pos guerras||posguerras
+ pos-guerras||posguerras
+ post guerra||posguerra
+ post-guerra||posguerra
+ post guerras||posguerras
+ post-guerras||posguerras
+ post industrial||posindustrial
+ post-industrial||posindustrial
+ post industriales||posindustriales
+ post-industriales||posindustriales
+ post mortem||''post mortem''
+ post-mortem||''post mortem''
+ post mórtem||''post mortem''
+ post-mórtem||''post mortem''
+ post parto||posparto
+ post-parto||posparto
+ post presidencia||pospresidencia
+ post-presidencia||pospresidencia
+ post presidencial||pospresidencial
+ post-presidencial||pospresidencial
+ post presidenciales||pospresidenciales
+ post-presidenciales||pospresidenciales
+ post presidencias||pospresidencias
+ post-presidencias||pospresidencias
+ post produccion||posproducción
+ post-produccion||posproducción
+ post producción||posproducción
+ post-producción||posproducción
+ post producciones||posproducciones
+ post-producciones||posproducciones
+ post revolucion||posrevolución
+ post-revolucion||posrevolución
+ post revolución||posrevolución
+ post-revolución||posrevolución
+ post revolucionaria||posrevolucionaria
+ post-revolucionaria||posrevolucionaria
+ post revolucionarias||posrevolucionarias
+ post-revolucionarias||posrevolucionarias
+ post revolucionario||posrevolucionario
+ post-revolucionario||posrevolucionario
+ post revolucionarios||posrevolucionarios
+ post-revolucionarios||posrevolucionarios
+ post revoluciones||posrevoluciones
+ post-revoluciones||posrevoluciones
+ post sovietica||postsoviética
+ post-sovietica||postsoviética
+ post soviética||postsoviética
+ post-soviética||postsoviética
+ post sovieticas||postsoviéticas
+ post-sovieticas||postsoviéticas
+ post soviéticas||postsoviéticas
+ post-soviéticas||postsoviéticas
+ post sovietico||postsoviético
+ post-sovietico||postsoviético
+ post soviético||postsoviético
+ post-soviético||postsoviético
+ post sovieticos||postsoviéticos
+ post-sovieticos||postsoviéticos
+ post soviéticos||postsoviéticos
+ post-soviéticos||postsoviéticos
+ post temporada||postemporada
+ post-temporada||postemporada
+ post temporadas||postemporadas
+ post-temporadas||postemporadas
+ post traumatico||postraumático
+ post-traumatico||postraumático
+ post traumático||postraumático
+ post-traumático||postraumático
+ post traumaticos||postraumáticos
+ post-traumaticos||postraumáticos
+ post traumáticos||postraumáticos
+ post-traumáticos||postraumáticos
+ pre adolescencia||preadolescencia
+ pre-adolescencia||preadolescencia
+ pre adolescente||preadolescente
+ pre-adolescente||preadolescente
+ pre adolescentes||preadolescentes
+ pre-adolescentes||preadolescentes
+ pre candidata||precandidata
+ pre-candidata||precandidata
+ pre candidatas||precandidatas
+ pre-candidatas||precandidatas
+ pre candidato||precandidato
+ pre-candidato||precandidato
+ pre candidatos||precandidatos
+ pre-candidatos||precandidatos
+ pre candidatura||precandidatura
+ pre-candidatura||precandidatura
+ pre candidaturas||precandidaturas
+ pre-candidaturas||precandidaturas
+ pre contrato||precontrato
+ pre-contrato||precontrato
+ pre contratos||precontratos
+ pre-contratos||precontratos
+ pre cristiana||precristiana
+ pre-cristiana||precristiana
+ pre cristianas||precristianas
+ pre-cristianas||precristianas
+ pre cristiano||precristiano
+ pre-cristiano||precristiano
+ pre cristianos||precristianos
+ pre-cristianos||precristianos
+ pre debut||predebut
+ pre-debut||predebut
+ pre escolar||preescolar
+ pre-escolar||preescolar
+ pre escolares||preescolares
+ pre-escolares||preescolares
+ pre estrena||preestrena
+ pre-estrena||preestrena
+ pre estrenada||preestrenada
+ pre-estrenada||preestrenada
+ pre estrenadas||preestrenadas
+ pre-estrenadas||preestrenadas
+ pre estrenado||preestrenado
+ pre-estrenado||preestrenado
+ pre estrenados||preestrenados
+ pre-estrenados||preestrenados
+ pre estrenaron||preestrenaron
+ pre-estrenaron||preestrenaron
+ pre estreno||preestreno (1.ª persona, sustantivo), preestrenó (3.ª persona)
+ pre-estreno||preestreno (1.ª persona, sustantivo), preestrenó (3.ª persona)
+ pre estrenó||preestrenó (3.ª persona), preestreno (1.ª persona)
+ pre-estrenó||preestrenó (3.ª persona), preestreno (1.ª persona)
+ pre estrenos||preestrenos
+ pre-estrenos||preestrenos
+ pre existente||preexistente
+ pre-existente||preexistente
+ pre existentes||preexistentes
+ pre-existentes||preexistentes
+ pre grabacion||pregrabación
+ pre-grabacion||pregrabación
+ pre grabación||pregrabación
+ pre-grabación||pregrabación
+ pre grabaciones||pregrabaciones
+ pre-grabaciones||pregrabaciones
+ pre grabada||pregrabada
+ pre-grabada||pregrabada
+ pre grabadas||pregrabadas
+ pre-grabadas||pregrabadas
+ pre grabado||pregrabado
+ pre-grabado||pregrabado
+ pre grabados||pregrabados
+ pre-grabados||pregrabados
+ pre grabar||pregrabar
+ pre-grabar||pregrabar
+ pre islamica||preislámica
+ pre-islamica||preislámica
+ pre islámica||preislámica
+ pre-islámica||preislámica
+ pre islamicas||preislámicas
+ pre-islamicas||preislámicas
+ pre islámicas||preislámicas
+ pre-islámicas||preislámicas
+ pre islamico||preislámico
+ pre-islamico||preislámico
+ pre islámico||preislámico
+ pre-islámico||preislámico
+ pre islamicos||preislámicos
+ pre-islamicos||preislámicos
+ pre islámicos||preislámicos
+ pre-islámicos||preislámicos
+ pre lanzada||prelanzada
+ pre-lanzada||prelanzada
+ pre lanzadas||prelanzadas
+ pre-lanzadas||prelanzadas
+ pre lanzado||prelanzado
+ pre-lanzado||prelanzado
+ pre lanzados||prelanzados
+ pre-lanzados||prelanzados
+ pre lanzamiento||prelanzamiento
+ pre-lanzamiento||prelanzamiento
+ pre lanzamientos||prelanzamientos
+ pre-lanzamientos||prelanzamientos
+ pre nominada||prenominada
+ pre-nominada||prenominada
+ pre nominadas||prenominadas
+ pre-nominadas||prenominadas
+ pre nominado||prenominado
+ pre-nominado||prenominado
+ pre nominados||prenominados
+ pre-nominados||prenominados
+ pre produccion||preproducción
+ pre-produccion||preproducción
+ pre producción||preproducción
+ pre-producción||preproducción
+ pre producciones||preproducciones
+ pre-producciones||preproducciones
+ pre seleccion||preselección
+ pre-seleccion||preselección
+ pre selección||preselección
+ pre-selección||preselección
+ pre selecciona||preselecciona
+ pre-selecciona||preselecciona
+ pre seleccionador||preseleccionador
+ pre-seleccionador||preseleccionador
+ pre seleccionada||preseleccionada
+ pre-seleccionada||preseleccionada
+ pre seleccionadas||preseleccionadas
+ pre-seleccionadas||preseleccionadas
+ pre seleccionado||preseleccionado
+ pre-seleccionado||preseleccionado
+ pre seleccionados||preseleccionados
+ pre-seleccionados||preseleccionados
+ pre seleccionan||preseleccionan
+ pre-seleccionan||preseleccionan
+ pre seleccionando||preseleccionando
+ pre-seleccionando||preseleccionando
+ pre selecciones||preselecciones
+ pre-selecciones||preselecciones
+ pre temporada||pretemporada
+ pre-temporada||pretemporada
+ pre temporadas||pretemporadas
+ pre-temporadas||pretemporadas
+ pre universitaria||preuniversitaria
+ pre-universitaria||preuniversitaria
+ pre universitarias||preuniversitarias
+ pre-universitarias||preuniversitarias
+ pre universitario||preuniversitario
+ pre-universitario||preuniversitario
+ pre universitarios||preuniversitarios
+ pre-universitarios||preuniversitarios
+ pre venta||preventa
+ pre-venta||preventa
+ pre ventas||preventas
+ pre-ventas||preventas
+ primavera arabe|cs|Primavera Árabe
+ primavera árabe|cs|Primavera Árabe
+ Primavera arabe|cs|Primavera Árabe
+ Primavera árabe|cs|Primavera Árabe
+ primer vez||primera vez
  Primera Division|cs|Primera División
+ primer ministra||primera ministra
+ pro secretaria||prosecretaria, prosecretaría
+ pro-secretaria||prosecretaria, prosecretaría
+ pro secretaría||prosecretaría, prosecretaria
+ pro-secretaría||prosecretaría, prosecretaria
+ pro secretarias||prosecretarias, prosecretarías
+ pro-secretarias||prosecretarias, prosecretarías
+ pro secretarías||prosecretarías, prosecretarias
+ pro-secretarías||prosecretarías, prosecretarias
+ pro secretario||prosecretario
+ pro-secretario||prosecretario
+ pro secretarios||prosecretarios
+ pro-secretarios||prosecretarios
+ pro sovietica||prosoviética
+ pro-sovietica||prosoviética
+ pro soviética||prosoviética
+ pro-soviética||prosoviética
+ pro sovieticas||prosoviéticas
+ pro-sovieticas||prosoviéticas
+ pro soviéticas||prosoviéticas
+ pro-soviéticas||prosoviéticas
+ pro sovietico||prosoviético
+ pro-sovietico||prosoviético
+ pro soviético||prosoviético
+ pro-soviético||prosoviético
+ pro sovieticos||prosoviéticos
+ pro-sovieticos||prosoviéticos
+ pro soviéticos||prosoviéticos
+ pro-soviéticos||prosoviéticos
+ pro témpore||''pro tempore'' (latinismo), protémpore (castellanización —usada en Hispanoamérica—)
+ pro-tempore||''pro tempore'' (latinismo), protémpore (castellanización —usada en Hispanoamérica—)
+ pro-témpore||''pro tempore'' (latinismo), protémpore (castellanización —usada en Hispanoamérica—)
+ pro tesorera||protesorera
+ pro-tesorera||protesorera
+ pro tesoreras||protesoreras
+ pro-tesoreras||protesoreras
+ pro tesorero||protesorero
+ pro-tesorero||protesorero
+ pro tesoreros||protesoreros
+ pro-tesoreros||protesoreros
+ pro vida||provida
+ pro-vida||provida
+ psico social||psicosocial
+ psico-social||psicosocial
+ psico sociales||psicosociales
+ psico-sociales||psicosociales
  punto de break||punto de rotura
+
+== Q ==
+
  que dejo||que dejó
  que desempeño||que desempeñó
  que esta en||que está en
  que mas||que más
- que seria||que sería
+ que que||que
+ que seria||que sería, qué sería, qué seria
  que tenia||que tenía
  que venia de||que venía de
+
+== R ==
+
  Ramón Llull|cs|Ramon Llull
  red carpet||alfombra roja, alfombras rojas
+ re eleccion||reelección
+ re-eleccion||reelección
+ re elección||reelección
+ re-elección||reelección
+ re electa||reelecta
+ re-electa||reelecta
+ re electas||reelectas
+ re-electas||reelectas
+ re electo||reelecto
+ re-electo||reelecto
+ re electos||reelectos
+ re-electos||reelectos
+ re escriba||reescriba
+ re-escriba||reescriba
+ re escribe||reescribe
+ re-escribe||reescribe
+ re escriben||reescriben
+ re-escriben||reescriben
+ re escribia||reescribía
+ re-escribia||reescribía
+ re escribía||reescribía
+ re-escribía||reescribía
+ re escribian||reescribían
+ re-escribian||reescribían
+ re escribían||reescribían
+ re-escribían||reescribían
+ re escribiendo||reescribiendo
+ re-escribiendo||reescribiendo
+ re escribiera||reescribiera
+ re-escribiera||reescribiera
+ re escribieron||reescribieron
+ re-escribieron||reescribieron
+ re escribio||reescribió
+ re-escribio||reescribió
+ re escribió||reescribió
+ re-escribió||reescribió
+ re escribir||reescribir
+ re-escribir||reescribir
+ re escrita||reescrita
+ re-escrita||reescrita
+ re escritas||reescritas
+ re-escritas||reescritas
+ re escrito||reescrito
+ re-escrito||reescrito
+ re escritos||reescritos
+ re-escritos||reescritos
+ re escritura||reescritura
+ re-escritura||reescritura
+ re escrituras||reescrituras
+ re-escrituras||reescrituras
+ re estrena||reestrena
+ re-estrena||reestrena
+ re estrenada||reestrenada
+ re-estrenada||reestrenada
+ re estrenadas||reestrenadas
+ re-estrenadas||reestrenadas
+ re estrenado||reestrenado
+ re-estrenado||reestrenado
+ re estrenados||reestrenados
+ re-estrenados||reestrenados
+ re estrenando||reestrenando
+ re-estrenando||reestrenando
+ re estrenar||reestrenar
+ re-estrenar||reestrenar
+ re estrenaron||reestrenaron
+ re-estrenaron||reestrenaron
+ re estreno||reestrenó (3.ª persona), reestreno (1.ª persona, sustantivo)
+ re-estreno||reestrenó (3.ª persona), reestreno (1.ª persona, sustantivo)
+ re estrenó||reestrenó
+ re-estrenó||reestrenó
+ re estrenos||reestrenos
+ re-estrenos||reestrenos
+ re graba||regraba
+ re-graba||regraba
+ re grababa||regrababa
+ re-grababa||regrababa
+ re grabacion||regrabación
+ re-grabacion||regrabación
+ re grabación||regrabación
+ re-grabación||regrabación
+ re grabada||regrabada
+ re-grabada||regrabada
+ re grabadas||regrabadas
+ re-grabadas||regrabadas
+ re grabado||regrabado
+ re-grabado||regrabado
+ re grabados||regrabados
+ re-grabados||regrabados
+ re grabando||regrabando
+ re-grabando||regrabando
+ re grabaron||regrabaron
+ re-grabaron||regrabaron
+ re grabar||regrabar
+ re-grabar||regrabar
+ re grabo||regrabó (3.ª persona), regrabo (1.ª persona)
+ re-grabo||regrabó (3.ª persona), regrabo (1.ª persona)
+ re grabó||regrabó (3.ª persona), regrabo (1.ª persona)
+ re-grabó||regrabó (3.ª persona), regrabo (1.ª persona)
+ re impresion||reimpresión
+ re-impresion||reimpresión
+ re impresión||reimpresión
+ re-impresión||reimpresión
+ re impresiones||reimpresiones
+ re-impresiones||reimpresiones
+ re impresa||reimpresa
+ re-impresa||reimpresa
+ re impresas||reimpresas
+ re-impresas||reimpresas
+ re impreso||reimpreso
+ re-impreso||reimpreso
+ re impresos||reimpresos
+ re-impresos||reimpresos
  relacionada a||relacionada con
  relacionadas a||relacionadas con
  relacionado a||relacionado con
  relacionados a||relacionados con
+ re lanza||relanza
+ re-lanza||relanza
+ re lanzaba||relanzaba
+ re-lanzaba||relanzaba
+ re lanzaban||relanzaban
+ re-lanzaban||relanzaban
+ re lanzada||relanzada
+ re-lanzada||relanzada
+ re lanzadas||relanzadas
+ re-lanzadas||relanzadas
+ re lanzado||relanzado
+ re-lanzado||relanzado
+ re lanzados||relanzados
+ re-lanzados||relanzados
+ re lanzamiento||relanzamiento
+ re-lanzamiento||relanzamiento
+ re lanzando||relanzando
+ re-lanzando||relanzando
+ re lanzar||relanzar
+ re-lanzar||relanzar
+ re lanzaron||relanzaron
+ re-lanzaron||relanzaron
+ re lanzo||relanzó (3.ª persona), relanzo (1.ª persona)
+ re-lanzo||relanzó (3.ª persona), relanzo (1.ª persona)
+ re lanzó||relanzó (3.ª persona), relanzo (1.ª persona)
+ re-lanzó||relanzó (3.ª persona), relanzo (1.ª persona)
+ republica argentina|cs|República Argentina
+ república argentina|cs|República Argentina
+ republica Argentina|cs|República Argentina
+ república Argentina|cs|República Argentina
+ Republica argentina|cs|República Argentina
+ República argentina|cs|República Argentina
+ re-publicada||republicada
+ re-publicadas||republicadas
+ re-publicado||republicado
+ re-publicados||republicados
+ re ubica||reubica
+ re-ubica||reubica
+ re ubicaba||reubicaba
+ re-ubicaba||reubicaba
+ re ubicaban||reubicaban
+ re-ubicaban||reubicaban
+ re ubicacion||reubicación
+ re-ubicacion||reubicación
+ re ubicación||reubicación
+ re-ubicación||reubicación
+ re ubicada||reubicada
+ re-ubicada||reubicada
+ re ubicadas||reubicadas
+ re-ubicadas||reubicadas
+ re ubicado||reubicado
+ re-ubicado||reubicado
+ re ubicados||reubicados
+ re-ubicados||reubicados
+ re ubicando||reubicando
+ re-ubicando||reubicando
+ re ubicar||reubicar
+ re-ubicar||reubicar
+ re ubicaron||reubicaron
+ re-ubicaron||reubicaron
+ re ubico||reubicó (3.ª persona), reubico (1.ª persona)
+ re-ubico||reubicó (3.ª persona), reubico (1.ª persona)
+ re ubicó||reubicó (3.ª persona), reubico (1.ª persona)
+ re-ubicó||reubicó (3.ª persona), reubico (1.ª persona)
+ el remake||la versión, la adaptación
  revelarse contra||rebelarse contra
  Rimsky-Korsakov|cs|Rimski-Kórsakov (transliteración correcta al español)
  Rio 2016|cs|Río 2016 (Juegos Olímpicos de Verano)
@@ -584,6 +2099,9 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  Rio de Janeiro|cs|Río de Janeiro (en español), Rio de Janeiro (en portugués y otros idiomas)
  Rio Negro|cs|Río Negro (región o río en varios países de lengua española, Estados Unidos y Brasil), Rio Negro (en portugués e inglés)
  round robin||todos contra todos, fase de liguilla
+
+== S ==
+
  S. D. Éibar|cs|S. D. Eibar
  S.D. Éibar|cs|S. D. Eibar
  Salud Publica|cs|Salud Pública
@@ -593,6 +2111,7 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  Santa Monica|cs|Santa Mónica (localidad o región en varios países de lengua española y Estados Unidos), Santa Monica (en inglés)
  Saudi Arabia|cs|Arabia Saudí (uso mayoritario en España), Arabia Saudita (uso mayoritario en Hispanoamérica)
  SD Éibar|cs|SD Eibar
+ se a||se ha, sé a
  se anuncio||se anunció
  se cambio||se cambió
  se caso||se casó
@@ -604,19 +2123,58 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  se dieron cuenta que||se dieron cuenta de que
  se dio cuenta que||se dio cuenta de que
  se encuentro||se encuentra (presente), se encontró (pretérito)
- se entero||se enteró
+ se entera que||se entera de que
+ se enteran que||se enteran de que
+ se enteraba que||se enteraba de que
+ se enteraban que||se enteraban de que
+ se enterara que||se enterara de que
+ se enteraran que||se enteraran de que
+ se enteraron que||se enteraron de que
+ se entere que||se entere de que
+ se enteren que||se enteren de que
+ se entero que||se enteró de que
+ se enteró que||se enteró de que
  se esta||se está
  se fundo||se fundó
+ seg.||s (símbolo de la unidad temporal segundo), s. (para final de frase)
  Segunda Division|cs|Segunda División
  Seguridad Publica|cs|Seguridad Pública
  se ira||se irá
  se jugo||se jugó
  se llamo||se llamó
+ semi automatico||semiautomático
+ semi-automatico||semiautomático
+ semi automático||semiautomático
+ semi-automático||semiautomático
+ semi automaticos||semiautomáticos
+ semi-automaticos||semiautomáticos
+ semi automáticos||semiautomáticos
+ semi-automáticos||semiautomáticos
+ semi circular||semicircular
+ semi-circular||semicircular
+ semi circulares||semicirculares
+ semi-circulares||semicirculares
+ semi circulo||semicírculo
+ semi-circulo||semicírculo
+ semi círculo||semicírculo
+ semi-círculo||semicírculo
  se probo||se probó
  se publico||se publicó
  se puedo||se puede (presente), se pudo (pretérito)
+ Sergei Prokofiev|cs|Serguéi Prokófiev
+ Sergei Prokófiev|cs|Serguéi Prokófiev
+ Sergéi Prokofiev|cs|Serguéi Prokófiev
+ Sergéi Prokófiev|cs|Serguéi Prokófiev
+ Serguei Prokofiev|cs|Serguéi Prokófiev
+ Serguei Prokófiev|cs|Serguéi Prokófiev
+ Serguéi Prokofiev|cs|Serguéi Prokófiev
  se registro||se registró
- seg.||s (símbolo de la unidad temporal segundo), s. (para final de frase)
+ se revela contra||se rebela contra
+ se revelaba contra||se rebelaba contra
+ se revelaban contra||se rebelaban contra
+ se revelaron contra||se rebelaron contra
+ se revelo contra||se rebeló contra
+ se reveló contra||se rebeló contra
  ser mas||ser más
  set ball||pelota de set
  set point||punto de set
@@ -628,33 +2186,519 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  si mismos||sí mismos
  Simon Bolivar|cs|Simón Bolívar
  Simon Bolívar|cs|Simón Bolívar
+ sobre sobre||sobre
  Sociedad Deportiva Éibar|cs|Sociedad Deportiva Eibar
+ socio cultural||sociocultural
+ socio-cultural||sociocultural
+ socio culturales||socioculturales
+ socio-culturales||socioculturales
+ socio economia||socioeconomía
+ socio-economia||socioeconomía
+ socio economía||socioeconomía
+ socio-economía||socioeconomía
+ socio economica||socioeconómica
+ socio-economica||socioeconómica
+ socio económica||socioeconómica
+ socio-económica||socioeconómica
+ socio economicas||socioeconómicas
+ socio-economicas||socioeconómicas
+ socio económicas||socioeconómicas
+ socio-económicas||socioeconómicas
+ socio economico||socioeconómico
+ socio-economico||socioeconómico
+ socio económico||socioeconómico
+ socio-económico||socioeconómico
+ socio economicos||socioeconómicos
+ socio-economicos||socioeconómicos
+ socio económicos||socioeconómicos
+ socio-económicos||socioeconómicos
+ socio politica||sociopolítica
+ socio-politica||sociopolítica
+ socio política||sociopolítica
+ socio-política||sociopolítica
+ socio politicas||sociopolíticas
+ socio-politicas||sociopolíticas
+ socio políticas||sociopolíticas
+ socio-políticas||sociopolíticas
+ socio politico||sociopolítico
+ socio-politico||sociopolítico
+ socio político||sociopolítico
+ socio-político||sociopolítico
+ socio politicos||sociopolíticos
+ socio-politicos||sociopolíticos
+ socio políticos||sociopolíticos
+ socio-políticos||sociopolíticos
  sold out||agotado, agotada, agotados, agotadas
  son mas||son más
+ sound-track||banda sonora
+ [[statu quo]]||''[[statu quo]]'' (con enlace), ''statu quo'' (sin enlace)
+ statu quo||''statu quo''
+ status quo||''statu quo'' (locución en latín), Status Quo (grupo musical)
+ statu quo ante bellum||''statu quo ante bellum''
+ status quo ante bellum||''statu quo ante bellum''
+ sub6||sub-6 (categoría en deportes)
+ sub'6||sub-6 (categoría en deportes)
+ sub 6||sub-6 (categoría en deportes)
+ sub7||sub-7 (categoría en deportes)
+ sub'7||sub-7 (categoría en deportes)
+ sub 7||sub-7 (categoría en deportes)
+ sub8||sub-8 (categoría en deportes)
+ sub'8||sub-8 (categoría en deportes)
+ sub 8||sub-8 (categoría en deportes)
+ sub9||sub-9 (categoría en deportes)
+ sub'9||sub-9 (categoría en deportes)
+ sub 9||sub-9 (categoría en deportes)
+ sub10||sub-10 (categoría en deportes)
+ sub'10||sub-10 (categoría en deportes)
+ sub 10||sub-10 (categoría en deportes)
+ sub11||sub-11 (categoría en deportes)
+ sub'11||sub-11 (categoría en deportes)
+ sub 11||sub-11 (categoría en deportes)
+ sub12||sub-12 (categoría en deportes)
+ sub'12||sub-12 (categoría en deportes)
+ sub 12||sub-12 (categoría en deportes)
+ sub13||sub-13 (categoría en deportes)
+ sub'13||sub-13 (categoría en deportes)
+ sub 13||sub-13 (categoría en deportes)
+ sub14||sub-14 (categoría en deportes)
+ sub'14||sub-14 (categoría en deportes)
+ sub 14||sub-14 (categoría en deportes)
+ sub15||sub-15 (categoría en deportes)
+ sub'15||sub-15 (categoría en deportes)
+ sub 15||sub-15 (categoría en deportes)
+ sub16||sub-16 (categoría en deportes)
+ sub'16||sub-16 (categoría en deportes)
+ sub 16||sub-16 (categoría en deportes)
+ sub17||sub-17 (categoría en deportes)
+ sub'17||sub-17 (categoría en deportes)
+ sub 17||sub-17 (categoría en deportes)
+ sub18||sub-18 (categoría en deportes)
+ sub'18||sub-18 (categoría en deportes)
+ sub 18||sub-18 (categoría en deportes)
+ sub19||sub-19 (categoría en deportes)
+ sub'19||sub-19 (categoría en deportes)
+ sub 19||sub-19 (categoría en deportes)
+ sub20||sub-20 (categoría en deportes)
+ sub'20||sub-20 (categoría en deportes)
+ sub 20||sub-20 (categoría en deportes)
+ sub21||sub-21 (categoría en deportes)
+ sub'21||sub-21 (categoría en deportes)
+ sub 21||sub-21 (categoría en deportes)
+ sub22||sub-22 (categoría en deportes)
+ sub'22||sub-22 (categoría en deportes)
+ sub 22||sub-22 (categoría en deportes)
+ sub23||sub-23 (categoría en deportes)
+ sub'23||sub-23 (categoría en deportes)
+ sub 23||sub-23 (categoría en deportes)
+ sub24||sub-24 (categoría en deportes)
+ sub'24||sub-24 (categoría en deportes)
+ sub 24||sub-24 (categoría en deportes)
+ sub25||sub-25 (categoría en deportes)
+ sub'25||sub-25 (categoría en deportes)
+ sub 25||sub-25 (categoría en deportes)
+ sub campeon||subcampeón
+ sub-campeon||subcampeón
+ sub campeón||subcampeón
+ sub-campeón||subcampeón
+ sub campeona||subcampeona
+ sub-campeona||subcampeona
+ sub campeonas||subcampeonas
+ sub-campeonas||subcampeonas
+ sub campeonato||subcampeonato
+ sub-campeonato||subcampeonato
+ sub campeonatos||subcampeonatos
+ sub-campeonatos||subcampeonatos
+ sub campeones||subcampeones
+ sub-campeones||subcampeones
+ sub comision||subcomisión
+ sub-comision||subcomisión
+ sub comisión||subcomisión
+ sub-comisión||subcomisión
+ sub comisiones||subcomisiones
+ sub-comisiones||subcomisiones
+ sub cuenca||subcuenca
+ sub-cuenca||subcuenca
+ sub cuencas||subcuencas
+ sub-cuencas||subcuencas
+ sub distrito||subdistrito
+ sub-distrito||subdistrito
+ sub distritos||subdistritos
+ sub-distritos||subdistritos
+ sub genero||subgénero
+ sub-genero||subgénero
+ sub género||subgénero
+ sub-género||subgénero
+ sub generos||subgéneros
+ sub-generos||subgéneros
+ sub géneros||subgéneros
+ sub-géneros||subgéneros
+ sub grupo||subgrupo
+ sub-grupo||subgrupo
+ sub grupos||subgrupos
+ sub-grupos||subgrupos
+ sub jefa||subjefa
+ sub-jefa||subjefa
+ sub jefas||subjefas
+ sub-jefas||subjefas
+ sub jefatura||subjefatura
+ sub-jefatura||subjefatura
+ sub jefaturas||subjefaturas
+ sub-jefaturas||subjefaturas
+ sub jefe||subjefe
+ sub-jefe||subjefe
+ sub jefes||subjefes
+ sub-jefes||subjefes
+ sub oficial||suboficial
+ sub-oficial||suboficial
+ sub oficiales||suboficiales
+ sub-oficiales||suboficiales
+ sub prefecta||subprefecta
+ sub-prefecta||subprefecta
+ sub prefectas||subprefectas
+ sub-prefectas||subprefectas
+ sub prefecto||subprefecto
+ sub-prefecto||subprefecto
+ sub prefectos||subprefectos
+ sub-prefectos||subprefectos
+ sub prefectura||subprefectura
+ sub-prefectura||subprefectura
+ sub prefecturas||subprefecturas
+ sub-prefecturas||subprefecturas
+ sub provincia||subprovincia
+ sub-provincia||subprovincia
+ sub provincial||subprovincial
+ sub-provincial||subprovincial
+ sub provinciales||subprovinciales
+ sub-provinciales||subprovinciales
+ sub provincias||subprovincias
+ sub-provincias||subprovincias
+ sub region||subregión
+ sub-region||subregión
+ sub región||subregión
+ sub-región||subregión
+ sub regional||subregional
+ sub-regional||subregional
+ sub regionales||subregionales
+ sub-regionales||subregionales
+ sub regiones||subregiones
+ sub-regiones||subregiones
+ sub sahariana||subsahariana
+ sub-sahariana||subsahariana
+ sub saharianas||subsaharianas
+ sub-saharianas||subsaharianas
+ sub sahariano||subsahariano
+ sub-sahariano||subsahariano
+ sub saharianos||subsaharianos
+ sub-saharianos||subsaharianos
+ sub secretaria||subsecretaria, subsecretaría
+ sub-secretaria||subsecretaria, subsecretaría
+ sub secretaría||subsecretaría, subsecretaria
+ sub-secretaría||subsecretaría, subsecretaria
+ sub secretarias||subsecretarias, subsecretarías
+ sub-secretarias||subsecretarias, subsecretarías
+ sub secretarías||subsecretarías, subsecretarias
+ sub-secretarías||subsecretarías, subsecretarias
+ sub secretario||subsecretario
+ sub-secretario||subsecretario
+ sub secretarios||subsecretarios
+ sub-secretarios||subsecretarios
+ sub sello||subsello
+ sub-sello||subsello
+ sub sellos||subsellos
+ sub-sellos||subsellos
+ sub teniente||subteniente
+ sub-teniente||subteniente
+ sub tenientes||subtenientes
+ sub-tenientes||subtenientes
+ sub tropical||subtropical
+ sub-tropical||subtropical
+ sub tropicales||subtropicales
+ sub-tropicales||subtropicales
+ sub unidad||subunidad
+ sub-unidad||subunidad
+ sub unidades||subunidades
+ sub-unidades||subunidades
+ Sumo Pontifice|cs|sumo pontífice
+ Sumo Pontífice|cs|sumo pontífice
+ super produccion||superproducción
+ super-produccion||superproducción
+ super producción||superproducción
+ super-producción||superproducción
+ super producciones||superproducciones
+ super-producciones||superproducciones
  super tiebreak||superdesempate
+
+== T ==
+
+ tabula rasa||''tabula rasa''
+ tabula-rasa||''tabula rasa''
+ tábula rasa||''tabula rasa''
+ tábula-rasa||''tabula rasa''
  tener mas||tener más
  Tercera Division|cs|Tercera División
  tomo el||tomó el
  top spin||golpe liftado
  trade deadline||cierre del mercado de traspasos (deportes)
  TV Publica|cs|TV Pública
+
+== U ==
+
+ ultra derecha||ultraderecha
+ ultra-derecha||ultraderecha
+ ultra derechista||ultraderechista
+ ultra-derechista||ultraderechista
+ ultra derechistas||ultraderechistas
+ ultra-derechistas||ultraderechistas
+ ultra izquierda||ultraizquierda
+ ultra-izquierda||ultraizquierda
+ ultra izquierdista||ultraizquierdista
+ ultra-izquierdista||ultraizquierdista
+ ultra izquierdistas||ultraizquierdistas
+ ultra-izquierdistas||ultraizquierdistas
+ una nuevo||un nuevo, una nueva
  una perdida||una pérdida
  unas miles||unos miles
  una tercer||una tercera, un tercer, un tercero
  una version||una versión
+ un interfaz||una interfaz (es sustantivo femenino)
+ union europea|cs|Unión Europea
+ unión europea|cs|Unión Europea
+ Union europea|cs|Unión Europea
+ Unión europea|cs|Unión Europea
+ union Europea|cs|Unión Europea
+ unión Europea|cs|Unión Europea
  Universidad de Paris|cs|Universidad de París
  un sin fin||un sinfín
  un sólo||un solo
+ ut-supra||''ut supra''
+
+== V ==
+ va ser||va a ser
+ Véase También|cs|Véase también
+ Véase Tambien|cs|Véase también
+ vease también||Véase también
+ vease tambien||Véase también
+ veáse también||Véase también
  vez mas||vez más
+ via publica||vía pública
+ via pública||vía pública
  vía publica||vía pública
+ vice alcalde||vicealcalde
+ vice-alcalde||vicealcalde
+ vice alcaldes||vicealcaldes
+ vice-alcaldes||vicealcaldes
+ vice alcaldesa||vicealcaldesa
+ vice-alcaldesa||vicealcaldesa
+ vice alcaldesas||vicealcaldesas
+ vice-alcaldesas||vicealcaldesas
+ vice almirantazgo||vicealmirantazgo
+ vice-almirantazgo||vicealmirantazgo
+ vice almirantazgos||vicealmirantazgos
+ vice-almirantazgos||vicealmirantazgos
+ vice almirante||vicealmirante
+ vice-almirante||vicealmirante
+ vice almirantes||vicealmirantes
+ vice-almirantes||vicealmirantes
+ vice campeon||vicecampeón
+ vice-campeon||vicecampeón
+ vice campeón||vicecampeón
+ vice-campeón||vicecampeón
+ vice campeona||vicecampeona
+ vice-campeona||vicecampeona
+ vice campeonas||vicecampeonas
+ vice-campeonas||vicecampeonas
+ vice campeonato||vicecampeonato
+ vice-campeonato||vicecampeonato
+ vice campeonatos||vicecampeonatos
+ vice-campeonatos||vicecampeonatos
+ vice campeones||vicecampeones
+ vice-campeones||vicecampeones
+ vice canciller||vicecanciller
+ vice-canciller||vicecanciller
+ vice cancilleres||vicecancilleres
+ vice-cancilleres||vicecancilleres
+ vice cancilleria||vicecancillería
+ vice-cancilleria||vicecancillería
+ vice cancillería||vicecancillería
+ vice-cancillería||vicecancillería
+ vice cancillerias||vicecancillerías
+ vice-cancillerias||vicecancillerías
+ vice cancillerías||vicecancillerías
+ vice-cancillerías||vicecancillerías
+ vice comandante||vicecomandante
+ vice-comandante||vicecomandante
+ vice comandantes||vicecomandantes
+ vice-comandantes||vicecomandantes
+ vice consul||vicecónsul
+ vice-consul||vicecónsul
+ vice cónsul||vicecónsul
+ vice-cónsul||vicecónsul
+ vice consules||vicecónsules
+ vice-consules||vicecónsules
+ vice cónsules||vicecónsules
+ vice-cónsules||vicecónsules
+ vice decana||vicedecana
+ vice-decana||vicedecana
+ vice decanas||vicedecanas
+ vice-decanas||vicedecanas
+ vice decano||vicedecano
+ vice-decano||vicedecano
+ vice decanos||vicedecanos
+ vice-decanos||vicedecanos
+ vice direccion||vicedirección
+ vice-direccion||vicedirección
+ vice dirección||vicedirección
+ vice-dirección||vicedirección
+ vice director||vicedirector
+ vice-director||vicedirector
+ vice directora||vicedirectora
+ vice-directora||vicedirectora
+ vice directoras||vicedirectoras
+ vice-directoras||vicedirectoras
+ vice directores||vicedirectores
+ vice-directores||vicedirectores
+ vice gobernacion||vicegobernación
+ vice-gobernacion||vicegobernación
+ vice gobernación||vicegobernación
+ vice-gobernación||vicegobernación
+ vice gobernador||vicegobernador
+ vice-gobernador||vicegobernador
+ vice gobernadora||vicegobernadora
+ vice-gobernadora||vicegobernadora
+ vice gobernadoras||vicegobernadoras
+ vice-gobernadoras||vicegobernadoras
+ vice gobernadores||vicegobernadores
+ vice-gobernadores||vicegobernadores
+ vice jefa||vicejefa
+ vice-jefa||vicejefa
+ vice jefas||vicejefas
+ vice-jefas||vicejefas
+ vice jefe||vicejefe
+ vice-jefe||vicejefe
+ vice jefes||vicejefes
+ vice-jefes||vicejefes
+ vice ministra||viceministra
+ vice-ministra||viceministra
+ vice ministras||viceministras
+ vice-ministras||viceministras
  vice ministro||viceministro
  vice-ministro||viceministro
+ vice ministros||viceministros
+ vice-ministros||viceministros
+ vice parroco||vicepárroco
+ vice-parroco||vicepárroco
+ vice párroco||vicepárroco
+ vice-párroco||vicepárroco
+ vice parrocos||vicepárrocos
+ vice-parrocos||vicepárrocos
+ vice párrocos||vicepárrocos
+ vice-párrocos||vicepárrocos
+ vice parroquia||viceparroquia
+ vice-parroquia||viceparroquia
+ vice parroquias||viceparroquias
+ vice-parroquias||viceparroquias
+ vice presidencia||vicepresidencia
+ vice-presidencia||vicepresidencia
+ vice presidencial||vicepresidencial
+ vice-presidencial||vicepresidencial
+ vice presidenciales||vicepresidenciales
+ vice-presidenciales||vicepresidenciales
+ vice presidencias||vicepresidencias
+ vice-presidencias||vicepresidencias
+ vice presidenta||vicepresidenta
+ vice-presidenta||vicepresidenta
+ vice presidentas||vicepresidentas
+ vice-presidentas||vicepresidentas
+ vice presidente||vicepresidente
+ vice-presidente||vicepresidente
+ vice presidentes||vicepresidentes
+ vice-presidentes||vicepresidentes
+ viceprimer ministra||vice primera ministra
+ vice-primer ministra||vice primera ministra
+ viceprimera ministra||vice primera ministra
+ vice-primera ministra||vice primera ministra
+ viceprimeras ministras||vice primeras ministras
+ vice-primeras ministras||vice primeras ministras
+ viceprimer ministro||vice primer ministro
+ vice-primer ministro||vice primer ministro
+ viceprimeros ministros||vice primeros ministros
+ vice-primeros ministros||vice primeros ministros
+ vice rector||vicerrector
+ vice-rector||vicerrector
+ vice rectora||vicerrectora
+ vice-rectora||vicerrectora
+ vice rectorado||vicerrectorado
+ vice-rectorado||vicerrectorado
+ vice rectorados||vicerrectorados
+ vice-rectorados||vicerrectorados
+ vice rectoras||vicerrectoras
+ vice-rectoras||vicerrectoras
+ vice rectores||vicerrectores
+ vice-rectores||vicerrectores
+ vice rectoria||vicerrectoría
+ vice-rectoria||vicerrectoría
+ vice rectoría||vicerrectoría
+ vice-rectoría||vicerrectoría
+ vice rectorias||vicerrectorías
+ vice-rectorias||vicerrectorías
+ vice rectorías||vicerrectorías
+ vice-rectorías||vicerrectorías
+ vice secretaria||vicesecretaria, vicesecretaría
+ vice-secretaria||vicesecretaria, vicesecretaría
+ vice secretaría||vicesecretaría, vicesecretaria
+ vice-secretaría||vicesecretaría, vicesecretaria
+ vice secretarias||vicesecretarias, vicesecretarías
+ vice-secretarias||vicesecretarias, vicesecretarías
+ vice secretarías||vicesecretarías, vicesecretarias
+ vice-secretarías||vicesecretarías, vicesecretarias
+ vice secretario||vicesecretario
+ vice-secretario||vicesecretario
+ vice secretarios||vicesecretarios
+ vice-secretarios||vicesecretarios
+ vice versa||viceversa
  Victor Manuel|cs|Víctor Manuel (entre otros, nombre de pila en español de varios monarcas italianos)
  Victor Pecci|cs|Víctor Pecci (tenista paraguayo)
+ video casete||videocasete
+ video-casete||videocasete
+ video cassette||videocasete
+ video-cassette||videocasete
  video clip||videoclip
+ video-clip||videoclip
+ vídeo clip||videoclip
+ vídeo-clip||videoclip
+ video juego||videojuego
+ video-juego||videojuego
+ vídeo juego||videojuego
+ vídeo-juego||videojuego
+ video juegos||videojuegos
+ video-juegos||videojuegos
+ vídeo juegos||videojuegos
+ vídeo-juegos||videojuegos
  Vladimir Putin|cs|Vladímir Putin (transcripción correcta al español)
- wild card||comodín, comodines, invitación, invitaciones, tarjeta de invitación, tarjetas de invitación, tenista invitado, tenistas invitados, tenista invitada, tenistas invitadas
+
+== W ==
+
+ washington DC.||Washington&nbsp;D.&nbsp;C.
+ washington DC||Washington&nbsp;D.&nbsp;C.
+ washington D.C.||Washington&nbsp;D.&nbsp;C.
+ washington, DC.||Washington&nbsp;D.&nbsp;C.
+ washington, DC||Washington&nbsp;D.&nbsp;C.
+ washington, D.C.||Washington&nbsp;D.&nbsp;C.
  wedding planner||organizador de bodas, organizadora de bodas, experto en bodas, experta en bodas
+ wild card||comodín, comodines, invitación, invitaciones, tarjeta de invitación, tarjetas de invitación, tenista invitado, tenistas invitados, tenista invitada, tenistas invitadas
+
+== X ==
+
+== Y ==
+
  y mas||y más
+
+== Z ==
+
+ Zona Euro|cs|zona euro
+ zona Euro|cs|zona euro
+
+== !$@ ==
+
  ''', es||''' es (muchos inicios de artículo tienen coma entre sujeto y verbo; hay que comprobar que no haya oración subordinada entremedias)
  ''', fue||''' fue (muchos inicios de artículo tienen coma entre sujeto y verbo; hay que comprobar que no haya oración subordinada entremedias)
