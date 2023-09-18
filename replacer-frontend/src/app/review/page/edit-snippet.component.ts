@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { ReviewReplacement } from '../../api/models/review-replacement';
-import { ReviewSuggestion } from '../../api/models/review-suggestion';
+import { Replacement } from '../../api/models/replacement';
+import { Suggestion } from '../../api/models/suggestion';
 import { EditCustomSnippetComponent } from './edit-custom-snippet.component';
 import { FixedReplacement, getReplacementEnd, Snippet } from './page-replacement.model';
 
@@ -17,13 +17,13 @@ import { FixedReplacement, getReplacementEnd, Snippet } from './page-replacement
 export class EditSnippetComponent implements OnInit {
   @Input() index!: number;
   @Input() pageText!: string;
-  @Input() replacement!: ReviewReplacement;
+  @Input() replacement!: Replacement;
 
   // Limits on left and right to edit the snippet as we would clash with other replacements
   @Input() limitLeft!: number;
   @Input() limitRight!: number;
 
-  private suggestionSelectedValue!: ReviewSuggestion | null;
+  private suggestionSelectedValue!: Suggestion | null;
   customFix: Snippet | null;
 
   @Output() fixed: EventEmitter<FixedReplacement> = new EventEmitter();
@@ -49,11 +49,11 @@ export class EditSnippetComponent implements OnInit {
     return this.trimRight().text;
   }
 
-  get suggestionSelected(): ReviewSuggestion | null {
+  get suggestionSelected(): Suggestion | null {
     return this.suggestionSelectedValue;
   }
 
-  set suggestionSelected(suggestion: ReviewSuggestion | null) {
+  set suggestionSelected(suggestion: Suggestion | null) {
     this.suggestionSelectedValue = suggestion;
     this.customFix = null;
     const fixedReplacement = new FixedReplacement(

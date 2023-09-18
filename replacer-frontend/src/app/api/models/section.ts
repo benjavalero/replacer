@@ -4,7 +4,7 @@
 /**
  * Section of a page to review
  */
-export interface ReviewSection {
+export interface Section {
 
   /**
    * Section ID

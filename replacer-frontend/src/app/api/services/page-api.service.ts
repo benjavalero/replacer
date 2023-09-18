@@ -10,7 +10,7 @@ import { ApiConfiguration } from '../api-configuration';
 import { StrictHttpResponse } from '../strict-http-response';
 import { RequestBuilder } from '../request-builder';
 
-import { ReviewPage } from '../models/review-page';
+import { Page } from '../models/page';
 import { ReviewedPage } from '../models/reviewed-page';
 
 @Injectable({ providedIn: 'root' })
@@ -61,7 +61,7 @@ export class PageApiService extends BaseService {
       suggestion?: string;
     },
     context?: HttpContext
-  ): Observable<StrictHttpResponse<ReviewPage>> {
+  ): Observable<StrictHttpResponse<Page>> {
     const rb = new RequestBuilder(this.rootUrl, PageApiService.FindPageReviewByIdPath, 'get');
     if (params) {
       rb.path('id', params.id, {});
@@ -76,7 +76,7 @@ export class PageApiService extends BaseService {
     ).pipe(
       filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
       map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<ReviewPage>;
+        return r as StrictHttpResponse<Page>;
       })
     );
   }
@@ -120,9 +120,9 @@ export class PageApiService extends BaseService {
       suggestion?: string;
     },
     context?: HttpContext
-  ): Observable<ReviewPage> {
+  ): Observable<Page> {
     return this.findPageReviewById$Response(params, context).pipe(
-      map((r: StrictHttpResponse<ReviewPage>): ReviewPage => r.body)
+      map((r: StrictHttpResponse<Page>): Page => r.body)
     );
   }
 
@@ -229,7 +229,7 @@ export class PageApiService extends BaseService {
       suggestion?: string;
     },
     context?: HttpContext
-  ): Observable<StrictHttpResponse<ReviewPage>> {
+  ): Observable<StrictHttpResponse<Page>> {
     const rb = new RequestBuilder(this.rootUrl, PageApiService.FindRandomPageWithReplacementsPath, 'get');
     if (params) {
       rb.query('kind', params.kind, {});
@@ -243,7 +243,7 @@ export class PageApiService extends BaseService {
     ).pipe(
       filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
       map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<ReviewPage>;
+        return r as StrictHttpResponse<Page>;
       })
     );
   }
@@ -282,9 +282,9 @@ export class PageApiService extends BaseService {
       suggestion?: string;
     },
     context?: HttpContext
-  ): Observable<ReviewPage> {
+  ): Observable<Page> {
     return this.findRandomPageWithReplacements$Response(params, context).pipe(
-      map((r: StrictHttpResponse<ReviewPage>): ReviewPage => r.body)
+      map((r: StrictHttpResponse<Page>): Page => r.body)
     );
   }
 

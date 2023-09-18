@@ -13,8 +13,8 @@ import org.springframework.lang.Nullable;
 @UtilityClass
 class ReviewMapper {
 
-    ReviewPage toDto(Review review) {
-        return ReviewPage
+    Page toDto(Review review) {
+        return Page
             .builder()
             .lang(review.getPage().getPageKey().getLang().getCode())
             .pageId(review.getPage().getPageKey().getPageId())
@@ -27,23 +27,23 @@ class ReviewMapper {
     }
 
     @Nullable
-    private ReviewSection toDto(@Nullable WikipediaSection section) {
+    private Section toDto(@Nullable WikipediaSection section) {
         if (section == null) {
             return null;
         } else {
-            return ReviewSection.of(section.getIndex(), section.getAnchor(), section.getByteOffset());
+            return Section.of(section.getIndex(), section.getAnchor(), section.getByteOffset());
         }
     }
 
-    private Collection<ReviewReplacement> toDto(Collection<Replacement> replacements) {
+    private Collection<ReplacementDto> toDto(Collection<Replacement> replacements) {
         return replacements.stream().map(ReviewMapper::toDto).collect(Collectors.toUnmodifiableList());
     }
 
-    private ReviewReplacement toDto(Replacement replacement) {
+    private ReplacementDto toDto(Replacement replacement) {
         Boolean caseSensitive = replacement.getType() instanceof CustomType
             ? ((CustomType) replacement.getType()).isCaseSensitive()
             : null;
-        return ReviewReplacement.of(
+        return ReplacementDto.of(
             replacement.getStart(),
             replacement.getText(),
             replacement.getType().getKind().getCode(),
@@ -53,8 +53,8 @@ class ReviewMapper {
         );
     }
 
-    private ReviewSuggestion toDto(Suggestion suggestion) {
-        return ReviewSuggestion.of(suggestion.getText(), suggestion.getComment());
+    private SuggestionDto toDto(Suggestion suggestion) {
+        return SuggestionDto.of(suggestion.getText(), suggestion.getComment());
     }
 
     ReviewOptions fromDto(ReviewOptionsDto options, User user) {

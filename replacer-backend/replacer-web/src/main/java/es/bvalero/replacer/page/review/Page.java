@@ -18,7 +18,7 @@ import org.springframework.lang.Nullable;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Value
 @Builder
-public class ReviewPage {
+public class Page {
 
     @Schema(description = "Language of the Wikipedia in use", requiredMode = REQUIRED, example = "es")
     @NonNull
@@ -42,7 +42,7 @@ public class ReviewPage {
 
     @Schema
     @Nullable
-    ReviewSection section;
+    Section section;
 
     @Schema(
         description = "Timestamp when the page content was retrieved from Wikipedia",
@@ -54,7 +54,7 @@ public class ReviewPage {
 
     @Schema(description = "Collection of replacements to review", requiredMode = REQUIRED)
     @NonNull
-    Collection<ReviewReplacement> replacements;
+    Collection<ReplacementDto> replacements;
 
     @Override
     public String toString() {

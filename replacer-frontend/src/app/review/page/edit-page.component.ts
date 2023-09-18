@@ -4,9 +4,9 @@ import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faFastForward } from '@fortawesome/free-solid-svg-icons';
 import { Observable } from 'rxjs';
-import { ReviewReplacement } from '../../api/models/review-replacement';
+import { Page } from '../../api/models/page';
+import { Replacement } from '../../api/models/replacement';
 import { ReviewedReplacement } from '../../api/models/reviewed-replacement';
-import { ReviewPage } from '../../api/models/review-page';
 import { ReviewedPage } from '../../api/models/reviewed-page';
 import { PageApiService } from '../../api/services/page-api.service';
 import { UserService } from '../../core/user/user.service';
@@ -26,7 +26,7 @@ import { ReviewOptions } from './review-options.model';
   styleUrls: ['./edit-page.component.css']
 })
 export class EditPageComponent implements OnChanges {
-  @Input() review!: ReviewPage;
+  @Input() page!: Page;
   @Input() options!: ReviewOptions;
   @Input() numPending!: number;
 
@@ -48,7 +48,7 @@ export class EditPageComponent implements OnChanges {
 
   ngOnChanges() {
     // We assume the replacements are returned sorted by the back-end
-    this.fixedReplacements = new Array<FixedReplacement>(this.review.replacements.length);
+    this.fixedReplacements = new Array<FixedReplacement>(this.page.replacements.length);
 
     // Reset filter by type
     this.reviewAllTypes = false;
@@ -60,7 +60,7 @@ export class EditPageComponent implements OnChanges {
     } else {
       const options: ReviewOptions = this.options;
       if (options.kind && options.subtype) {
-        const replacement = this.review.replacements[index];
+        const replacement = this.page.replacements[index];
         return replacement.kind === options.kind && replacement.subtype === options.subtype;
       } else {
         return true;
@@ -70,12 +70,12 @@ export class EditPageComponent implements OnChanges {
 
   // Calculate limits in order not to clash with other replacements
   limitLeft(index: number): number {
-    const currentStart = this.review.replacements[index].start;
+    const currentStart = this.page.replacements[index].start;
     let limit: number;
     if (index == 0) {
       limit = 0;
     } else {
-      const previousEnd = getReplacementEnd(this.review.replacements[index - 1]);
+      const previousEnd = getReplacementEnd(this.page.replacements[index - 1]);
       const diff = Math.floor((currentStart - previousEnd) / 2);
       limit = currentStart - diff;
     }
@@ -83,12 +83,12 @@ export class EditPageComponent implements OnChanges {
   }
 
   limitRight(index: number): number {
-    const currentEnd = getReplacementEnd(this.review.replacements[index]);
+    const currentEnd = getReplacementEnd(this.page.replacements[index]);
     let limit: number;
-    if (index == this.review.replacements.length - 1) {
-      limit = this.review.content.length;
+    if (index == this.page.replacements.length - 1) {
+      limit = this.page.content.length;
     } else {
-      const nextStart = this.review.replacements[index + 1].start;
+      const nextStart = this.page.replacements[index + 1].start;
       const diff = Math.ceil((nextStart - currentEnd) / 2);
       limit = currentEnd + diff;
     }
@@ -102,7 +102,7 @@ export class EditPageComponent implements OnChanges {
       const options: ReviewOptions = this.options;
       if (options.kind && options.subtype) {
         let count: number = 0;
-        for (let replacement of this.review.replacements) {
+        for (let replacement of this.page.replacements) {
           if (replacement.kind !== options.kind || replacement.subtype !== options.subtype) {
             count++;
           }
@@ -131,12 +131,12 @@ export class EditPageComponent implements OnChanges {
     const fixedReplacements = this.filterFixedReplacements().sort((a, b): number => b.start - a.start);
     if (fixedReplacements.length > 0) {
       // Apply the fixes in the original text
-      let contentToSave = this.review.content;
+      let contentToSave = this.page.content;
       fixedReplacements.forEach((fix) => {
         contentToSave = this.replaceText(contentToSave, fix.start, fix.oldText, fix.newText!);
       });
 
-      this.alertService.addInfoMessage(`Guardando cambios en «${this.review.title}»…`);
+      this.alertService.addInfoMessage(`Guardando cambios en «${this.page.title}»…`);
       this.saveContent(contentToSave);
     } else {
       // Save with no changes => Mark page as reviewed
@@ -146,7 +146,7 @@ export class EditPageComponent implements OnChanges {
 
   onSkip() {
     // Remove replacements as a trick to hide the page
-    this.review.replacements = [];
+    this.page.replacements = [];
 
     // Just move to the next page making the current one to move to the end of the queue
     this.nextPage();
@@ -160,7 +160,7 @@ export class EditPageComponent implements OnChanges {
   }
 
   private saveWithNoChanges() {
-    this.alertService.addInfoMessage(`Marcando como revisado sin guardar cambios en «${this.review.title}»…`);
+    this.alertService.addInfoMessage(`Marcando como revisado sin guardar cambios en «${this.page.title}»…`);
     this.saveContent(null);
   }
 
@@ -168,7 +168,7 @@ export class EditPageComponent implements OnChanges {
     const reviewedReplacements: ReviewedReplacement[] = this.getReviewedReplacements();
 
     // Remove replacements as a trick to hide the page
-    this.review.replacements = [];
+    this.page.replacements = [];
 
     // Build the reviewed page depending on changes or not
     let reviewedPage: ReviewedPage;
@@ -178,11 +178,11 @@ export class EditPageComponent implements OnChanges {
       } as ReviewedPage;
     } else {
       reviewedPage = {
-        title: this.review.title,
-        content: this.review.content,
-        sectionId: this.review.section?.id,
-        sectionOffset: this.review.section?.offset,
-        queryTimestamp: this.review.queryTimestamp,
+        title: this.page.title,
+        content: this.page.content,
+        sectionId: this.page.section?.id,
+        sectionOffset: this.page.section?.offset,
+        queryTimestamp: this.page.queryTimestamp,
         reviewedReplacements: reviewedReplacements
       } as ReviewedPage;
     }
@@ -225,7 +225,7 @@ export class EditPageComponent implements OnChanges {
   private postSaveReview(reviewedPage: ReviewedPage): Observable<void> {
     // Call backend and delay the observable response
     return this.pageApiService.saveReview({
-      id: this.review.pageId,
+      id: this.page.pageId,
       body: reviewedPage
     });
   }
@@ -254,10 +254,10 @@ export class EditPageComponent implements OnChanges {
 
   private getReviewedReplacements(): ReviewedReplacement[] {
     const reviewedReplacements: ReviewedReplacement[] = [];
-    for (let i = 0; i < this.review.replacements.length; i++) {
+    for (let i = 0; i < this.page.replacements.length; i++) {
       const displayed: boolean = this.displayReplacement(i);
       if (displayed) {
-        const replacement: ReviewReplacement = this.review.replacements[i];
+        const replacement: Replacement = this.page.replacements[i];
         const fixed: boolean = this.fixedReplacements[i]?.isFixed() || false;
         // Destructure to delete unneeded properties
         const { suggestions, text, ...reviewed } = replacement;
@@ -277,15 +277,15 @@ export class EditPageComponent implements OnChanges {
   }
 
   get url(): string {
-    let url = `https://${this.review.lang}.wikipedia.org/wiki/${this.review.title}`;
-    if (this.review.section) {
-      url += `#${this.review.section.title}`;
+    let url = `https://${this.page.lang}.wikipedia.org/wiki/${this.page.title}`;
+    if (this.page.section) {
+      url += `#${this.page.section.title}`;
     }
     return url;
   }
 
   get historyUrl(): string {
-    return `https://${this.review.lang}.wikipedia.org/w/index.php?title=${this.review.title}&action=history`;
+    return `https://${this.page.lang}.wikipedia.org/w/index.php?title=${this.page.title}&action=history`;
   }
 
   get kindLabel(): string {

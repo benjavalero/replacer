@@ -3,8 +3,8 @@ import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { Page } from '../../api/models/page';
 import { ReplacementType } from '../../api/models/replacement-type';
-import { ReviewPage } from '../../api/models/review-page';
 import { ReplacementTypeApiService } from '../../api/services/replacement-type-api.service';
 import { PageApiService } from '../../api/services/page-api.service';
 import { AlertService } from '../../shared/alert/alert.service';
@@ -26,8 +26,8 @@ export const kindLabel: { [key: number]: string } = {
   imports: [CommonModule, EditPageComponent, ValidateCustomComponent],
   template: `
     <app-edit-page
-      *ngIf="review && options"
-      [review]="review"
+      *ngIf="page && options"
+      [page]="page"
       [options]="options"
       [numPending]="numPending"
       (saved)="onSaved($event)"
@@ -36,7 +36,7 @@ export const kindLabel: { [key: number]: string } = {
   styleUrls: []
 })
 export class FindRandomComponent implements OnInit {
-  review: ReviewPage | null;
+  page: Page | null;
   options: ReviewOptions | null;
   numPending: number = 0;
 
@@ -50,7 +50,7 @@ export class FindRandomComponent implements OnInit {
     private location: Location,
     private modalService: NgbModal
   ) {
-    this.review = null;
+    this.page = null;
     this.options = null;
   }
 
@@ -95,11 +95,11 @@ export class FindRandomComponent implements OnInit {
     this.alertService.addInfoMessage(msg);
 
     this.pageApiService.findRandomPageWithReplacements$Response({ ...options }).subscribe({
-      next: (response: StrictHttpResponse<ReviewPage>) => {
-        const review: ReviewPage | null = response.body;
+      next: (response: StrictHttpResponse<Page>) => {
+        const page: Page | null = response.body;
         const numPending: number = Number(response.headers.get('X-Pagination-Total-Pages') ?? '0');
-        if (review !== null) {
-          this.manageReview(review, options, numPending);
+        if (page !== null) {
+          this.manageReview(page, options, numPending);
         } else {
           this.alertService.addWarningMessage(
             options.kind && options.subtype
@@ -122,11 +122,11 @@ export class FindRandomComponent implements OnInit {
 
   private findPageReview(pageId: number, options: ReviewOptions): void {
     this.pageApiService.findPageReviewById$Response({ ...options, id: pageId }).subscribe({
-      next: (response: StrictHttpResponse<ReviewPage>) => {
-        const review: ReviewPage | null = response.body;
+      next: (response: StrictHttpResponse<Page>) => {
+        const page: Page | null = response.body;
         const numPending: number = Number(response.headers.get('X-Pagination-Total-Pages') ?? '0');
-        if (review) {
-          this.manageReview(review, options, numPending);
+        if (page) {
+          this.manageReview(page, options, numPending);
         } else {
           // This alert will be short as it will be cleared on redirecting to next page
           this.alertService.addWarningMessage(
@@ -143,11 +143,11 @@ export class FindRandomComponent implements OnInit {
     });
   }
 
-  private manageReview(review: ReviewPage, options: ReviewOptions, numPending: number): void {
+  private manageReview(page: Page, options: ReviewOptions, numPending: number): void {
     this.alertService.clearAlertMessages();
 
     this.options = options;
-    this.review = review;
+    this.page = page;
     this.numPending = numPending;
 
     // Modify title
@@ -155,10 +155,10 @@ export class FindRandomComponent implements OnInit {
     if (options.kind && options.subtype) {
       htmlTitle += `${options.subtype} - `;
     }
-    htmlTitle += review.title;
+    htmlTitle += page.title;
     this.titleService.setTitle(htmlTitle);
 
-    this.setReviewUrl(options, review.pageId);
+    this.setReviewUrl(options, page.pageId);
   }
 
   private setReviewUrl(options: ReviewOptions, pageId: number | null): void {

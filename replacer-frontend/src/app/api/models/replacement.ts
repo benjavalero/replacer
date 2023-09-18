@@ -1,11 +1,11 @@
 /* tslint:disable */
 /* eslint-disable */
-import { ReviewSuggestion } from './review-suggestion';
+import { Suggestion } from './suggestion';
 
 /**
  * Replacement to review
  */
-export interface ReviewReplacement {
+export interface Replacement {
 
   /**
    * If the replacement is case-sensitive. Only for custom replacements.
@@ -30,7 +30,7 @@ export interface ReviewReplacement {
   /**
    * Collection of suggestions to fix the replacement
    */
-  suggestions: Array<ReviewSuggestion>;
+  suggestions: Array<Suggestion>;
 
   /**
    * Text of the replacement

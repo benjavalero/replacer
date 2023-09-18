@@ -1,6 +1,6 @@
-import { ReviewReplacement } from '../../api/models/review-replacement';
+import { Replacement } from '../../api/models/replacement';
 
-export function getReplacementEnd(r: ReviewReplacement): number {
+export function getReplacementEnd(r: Replacement): number {
   return r.start + r.text.length;
 }
 

@@ -10,10 +10,10 @@ import lombok.Value;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
-@Schema(description = "Replacement to review")
+@Schema(description = "Replacement to review", name = "Replacement")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Value(staticConstructor = "of")
-class ReviewReplacement {
+class ReplacementDto {
 
     @Schema(description = "Position of the replacement in the content", requiredMode = REQUIRED, example = "1776")
     int start;
@@ -38,5 +38,5 @@ class ReviewReplacement {
 
     @Schema(description = "Collection of suggestions to fix the replacement", requiredMode = REQUIRED)
     @NonNull
-    Collection<ReviewSuggestion> suggestions;
+    Collection<SuggestionDto> suggestions;
 }

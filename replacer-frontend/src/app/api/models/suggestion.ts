@@ -4,7 +4,7 @@
 /**
  * Suggestion for a replacement to review
  */
-export interface ReviewSuggestion {
+export interface Suggestion {
 
   /**
    * Description to explain the motivation of the fix

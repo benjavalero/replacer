@@ -8,7 +8,7 @@ import org.springframework.lang.NonNull;
 
 @Schema(description = "Section of a page to review")
 @Value(staticConstructor = "of")
-class ReviewSection {
+class Section {
 
     @Schema(description = "Section ID", requiredMode = REQUIRED, example = "1")
     int id;

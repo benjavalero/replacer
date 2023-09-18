@@ -33,7 +33,7 @@ public class ReviewFindController {
 
     @Operation(summary = "Find a random page and the replacements to review")
     @GetMapping(value = "/random")
-    public ResponseEntity<ReviewPage> findRandomPageWithReplacements(
+    public ResponseEntity<Page> findRandomPageWithReplacements(
         @AuthenticatedUser User user,
         @Valid ReviewOptionsDto optionsDto
     ) {
@@ -50,22 +50,12 @@ public class ReviewFindController {
             default:
                 review = reviewTypeFinder.findRandomPageReview(options);
         }
-        if (review.isPresent()) {
-            ReviewPage response = ReviewMapper.toDto(review.get());
-            LOGGER.info("END Find Random Page with Replacements: {}", response);
-            return ResponseEntity
-                .ok()
-                .header(TOTAL_PAGES_HEADER, String.valueOf(Objects.requireNonNullElse(review.get().getNumPending(), 0)))
-                .body(response);
-        } else {
-            LOGGER.info("END Find Random Page with Replacements: No Review");
-            return ResponseEntity.noContent().build();
-        }
+        return buildResponse(review);
     }
 
     @Operation(summary = "Find a page and the replacements to review")
     @GetMapping(value = "/{id}")
-    public ResponseEntity<ReviewPage> findPageReviewById(
+    public ResponseEntity<Page> findPageReviewById(
         @Parameter(description = "Page ID", example = "6980716") @PathVariable("id") int pageId,
         @AuthenticatedUser User user,
         @Valid ReviewOptionsDto optionsDto
@@ -84,8 +74,12 @@ public class ReviewFindController {
             default:
                 review = reviewTypeFinder.findPageReview(pageKey, options);
         }
+        return buildResponse(review);
+    }
+
+    private ResponseEntity<Page> buildResponse(Optional<Review> review) {
         if (review.isPresent()) {
-            ReviewPage response = ReviewMapper.toDto(review.get());
+            Page response = ReviewMapper.toDto(review.get());
             LOGGER.info("END Find Random Page with Replacements: {}", response);
             return ResponseEntity
                 .ok()

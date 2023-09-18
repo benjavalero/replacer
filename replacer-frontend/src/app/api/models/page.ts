@@ -1,12 +1,12 @@
 /* tslint:disable */
 /* eslint-disable */
-import { ReviewReplacement } from './review-replacement';
-import { ReviewSection } from './review-section';
+import { Replacement } from './replacement';
+import { Section } from './section';
 
 /**
  * Page to review
  */
-export interface ReviewPage {
+export interface Page {
 
   /**
    * Page (or section) content. When saving without changes, it matches a string with an only whitespace.
@@ -31,8 +31,8 @@ export interface ReviewPage {
   /**
    * Collection of replacements to review
    */
-  replacements: Array<ReviewReplacement>;
-  section?: ReviewSection;
+  replacements: Array<Replacement>;
+  section?: Section;
 
   /**
    * Page title

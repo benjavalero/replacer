@@ -1,4 +1,4 @@
-<div *ngIf="review.replacements.length" class="container">
+<div *ngIf="page.replacements.length" class="container">
   <nav *ngIf="options.kind && options.subtype" aria-label="breadcrumb">
     <ol class="breadcrumb">
       <li class="breadcrumb-item">{{ kindLabel }}</li>
@@ -18,13 +18,13 @@
     </ol>
   </nav>
 
-  <h3 id="pageTitle">{{ review.title }}
+  <h3 id="pageTitle">{{ page.title }}
     <a href="{{ url }}" target="_blank" rel="noopener noreferrer" class="small no-underline">[Abrir en Wikipedia]</a>
     <a href="{{ historyUrl }}" target="_blank" rel="noopener noreferrer" class="small no-underline">[Historial]</a>
   </h3>
 
-  <app-edit-snippet *ngFor="let replacement of review.replacements; let i = index; let first = first; let last = last"
-    [index]="i" [pageText]="review.content" [replacement]="replacement" (fixed)="onFixed($event)"
+  <app-edit-snippet *ngFor="let replacement of page.replacements; let i = index; let first = first; let last = last"
+    [index]="i" [pageText]="page.content" [replacement]="replacement" (fixed)="onFixed($event)"
     [limitLeft]="limitLeft(i)" [limitRight]="limitRight(i)" [hidden]="!displayReplacement(i)">
   </app-edit-snippet>
 

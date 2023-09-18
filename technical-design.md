@@ -31,7 +31,7 @@ A `Cosmetic` is a special type of replacement which can be applied automatically
 
 A replacement is identified by its type and by its position (**start**) in the page content, as the tool doesn't allow that overlapping of replacements. Instead of an _end_ position, a replacement contains the text intended to be replaced, along with a collection of suggestions. Each `Suggestion` contains the proposed new text after applying the replacement and optionally a description to explain the motivation of the fix.
 
-A `Review` (or simply a **Page**) is a Wikipedia page (or section) containing one or more replacements to be reviewed. Then, a `ReviewedPage` is a page containing a collection of replacements reviewed by the user. Note that some or all these `ReviewedReplacement` might not be applied if the user has decided it that way, especially in case of doubt or false positive.
+A `Review` (or simply a `Page`) is a Wikipedia page (or section) containing one or more replacements to be reviewed. Then, a `ReviewedPage` is a page containing a collection of replacements reviewed by the user. Note that some or all these `ReviewedReplacement` might not be applied if the user has decided it that way, especially in case of doubt or false positive.
 
 ## Use cases
 
