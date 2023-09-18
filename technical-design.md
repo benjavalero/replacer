@@ -2,46 +2,43 @@
 
 ## Domain
 
-- A **Wikipedia page** is a page retrieved from Wikipedia, from any language or namespace. It contains the most important properties, in particular the text content. It is actually a snapshot, as the page content can still be modified later by any Wikipedia user.
-- A **dump page** is similar to a Wikipedia page, but retrieved from a Wikipedia dump, and therefore quite likely to be outdated depending on the dump date. A **dump** is huge XML file, generated monthly, containing all the current Wikipedia pages for a language.
-- A **Wikipedia user** is a user registered in Wikipedia. Note that not all Wikipedia users are allowed to be a Replacer user.
-- A **user** is a Wikipedia user who also has the necessary permissions in Wikipedia in order to use the tool.
+A `WikipediaPage` is a page retrieved from Wikipedia, from any language or namespace. It contains the most important properties, in particular the text content. It is actually a snapshot, as the page content can still be modified later by any Wikipedia user. It is composed at least by the following properties:
+  - `WikipediaLanguage`: the language of the Wikipedia where the page exists.
+  - `PageKey`: to identify it uniquely, composed by the language and a numeric ID.
+  - **Title** of the page. This one could also be used to identify a page, but it is easier to use the numeric ID as the page title might change.
+  - `WikipediaNamespace`: the category of the page in Wikipedia: article, annex, user page, etc. Note that, although an article is a specific type of page, it is usually used as a synonym of page, but in this application we try not to do it.
+  - **Content**: the current text of the page, also known as _wiki-text_.
+  - **Last update**: the date and time of the last update of the page.
+  - **Query timestamp**: the date and time when the page was queried and retrieved.
+  - **Redirect**: if the page is considered a redirection page.
 
+A Wikipedia page is usually divided in a collection of `WikipediaSection`. Each section on a page can be identified by its _index_. The name of the section is called the _anchor_. Note that Wikipedia allows retrieving and editing sections instead of the whole page, so in these cases the section will be added as a property of the page.
 
-## Nomenclature and use cases
+A `DumpFile` is huge XML file, generated monthly, containing all the current Wikipedia pages for a language. A `DumpPage` is similar to a Wikipedia page, but retrieved from a dump file, and therefore quite likely to be outdated depending on the dump date.
 
-Main use cases:
+A `WikipediaUser` is a user registered in Wikipedia. Note that not all Wikipedia users are allowed to be a Replacer user. The username should be enough to identify a user in Wikipedia. However, as users may have different permissions depending on the Wikipedia language, we use a `UserId` to identify a user uniquely, composed by the language and the username. A Wikipedia user may belong to several `WikipediaUserGroup` which provide different permissions: `user`, `autoconfirmed`, `bot`, etc.
+
+A `User` is a user of Replacer. It must be a Wikipedia user with the necessary permissions in Wikipedia in order to use the tool. In particular, after being authenticated in Wikipedia, a user has an `AccessToken` to perform the operations in Wikipedia in a non-anonymous way.
+
+A `Replacement` is a potential issue to be checked and fixed (replaced). For instance, the word _aproximated_ is misspelled and therefore could be proposed to be replaced with _approximated_.
+Note the importance of the _potential_ adjective, as an issue could be just a false positive. For instance, in Spanish the word _Paris_ could be misspelled if it corresponds to the French city (written correctly as _París_), but it would be correct if it refers to the mythological Trojan prince.
+
+Each replacement belongs to a `ReplacementType`, which can be a `StandardType` if it is known or a `CustomType` if it has been customized by the user. Replacement types are categorized by `ReplacementKind`. Finally, a replacement type is composed by its kind and its subtype.
+
+An `Immutable` is a section in the page contents to be left untouched, for instance a literal quote, so any replacement found within it must be ignored and not offered to the user to be reviewed.
+
+A `Cosmetic` is a special type of replacement which can be applied automatically, concerning cosmetic modifications, visible or not, e.g. replacing `[[Asia|Asia]]` by `[[Asia]]`.
+
+A replacement is identified by its type and by its position (**start**) in the page content, as the tool doesn't allow that overlapping of replacements. Instead of an _end_ position, a replacement contains the text intended to be replaced, along with a collection of suggestions. Each `Suggestion` contains the proposed new text after applying the replacement and optionally a description to explain the motivation of the fix.
+
+A `Review` (or simply a **Page**) is a Wikipedia page (or section) containing one or more replacements to be reviewed. Then, a `ReviewedPage` is a page containing a collection of replacements reviewed by the user. Note that some or all these `ReviewedReplacement` might not be applied if the user has decided it that way, especially in case of doubt or false positive.
+
+## Use cases
+
+Main use cases are:
 
 1. As a user, I want to request a random Wikipedia page containing potential issues to fix, in order to review them, discard the false positives and save the approved fixed into Wikipedia.
 2. As a system, I want to find all the existing issues in Wikipedia pages, in order to find quickly a page for the previous use case.
-
-The following concepts are used:
-
-- **Page**. A page in Wikipedia. It is composed at least by the following properties:
-  - **Namespace**. The category of the page in Wikipedia: article, annex, user page, etc. Note that, although an article is a specific type of page, it is usually used as a synonym of page, but in this application we try not to do it.
-  - **Language**. The language of the Wikipedia where the page exists.
-  - **Title**. The title of the page which identifies it uniquely.
-  - **ID**. The identifier of the page, a number for internal use that can also be used to identify it uniquely in a specific Wikipedia. Note that, used along with the language, it identifies a page completely in the tool.
-  - **Content**. The current text of the page, also known as _wiki-text_.
-  - **Last update**. The date and time of the last update of the page.
-  - **Query timestamp**. The date and time when the page was queried and retrieved.
-  - **Redirect**. If the page is considered a redirection page.
-  - **Sections**. A Wikipedia page is usually divided in sections in different levels identified by its anchor (header title). Note that Wikipedia allows editing sections instead of the whole page.
-- **Replacement**. A potential issue to be checked and fixed (replaced). For instance, the word _aproximated_ is misspelled and therefore could be proposed to be replaced with _approximated_.
-
-  Note the importance of the _potential_ adjective, as an issue could be just a false positive. For instance, in Spanish the word _Paris_ could be misspelled if it corresponds to the French city (written correctly as _París_), but it would be correct if it refers to the mythological Trojan prince.
-
-  A replacement is composed by:
-
-  - **Text**. The text to be checked and fixed. It can be a word or an expression.
-  - **Start**. A number corresponding to the position in the page contents where the text is found. Take into account that the first position is 0.
-  - **Type**. The category of the replacement. It is composed by a parent **kind** (misspelling, date format, etc.) and a child **subtype**.
-  - **Suggestions**. A list with at least one suggestion to replace the text. Each suggestion is composed by:
-    - **Text**. The new text after the replacement.
-    - **Comment**. An optional description to explain the motivation of the fix.
-- **Immutable**. A section in the page contents to be left untouched, for instance a literal quote, so any replacement found within it must be ignored and not offered to the user for revision.
-- **Cosmetic**. A special type of replacement which can be applied automatically, concerning cosmetic modifications, visible or not, e.g. replacing `[[Asia|Asia]]` by `[[Asia]]`.
-- **PageReview**. A summary of a page (or page section) with replacements to be reviewed.
 
 For the first use case, the basic steps are:
 
@@ -63,7 +60,7 @@ For the second use case:
 On an indexation, all dump pages are read but not all of them are taken into account or processed:
 
 - Pages are processable (and therefore _read_) if their namespace is one of the supported ones: articles and annexes.
-- Processable pages are to be processed if after reindexation the related replacements in database must be updated. Pages are not processed if dump page timestamp is before the last indexation in database.
+- Processable pages are to be processed if after re-indexation the related replacements in database must be updated. Pages are not processed if dump page timestamp is before the last indexation in database.
 
 
 ## Code Conventions
@@ -76,55 +73,41 @@ The code is organized in different Maven submodules, whose dependencies follow t
 
 Note it is not worth to implement the Java Module System, as it implies some modifications in order to work with JUnit and Spring: new version of Surefire, package names cannot be repeated between modules and integration tests in a different package.
 
-In general, services are created for each use case.
+In general, services are created for each use case. In general, it is not worth to create an interface for each service as there is usually only one implementation.
 
-The _ports_ (interfaces for the Wikipedia, OAuth and database adapters) are included in the same package of the adapter but in the `domain` submodule.
+_Ports_ (interfaces for the Wikipedia, OAuth and database adapters) are included in the same package of the adapter but in the `domain` submodule.
 
 Classes are usually suffixed: `Service`, `Controller`, `Repository`, etc.
 
-DTO objects are used to communicate the different layers. The suffixes `Request` and `Response` are preferred to `Dto` for the objects used to communicate the controllers with the view.
+DTO objects are used to communicate the different layers. The suffix `Dto` (also `Request` and `Response`) is usually used for the objects communicating the controllers with the view.
 
-In backend, we have the following modules:
+In backend, we have the following submodules:
 
-- `replacer-wikipedia`. Implementations (adapters) to access external resources: Wikipedia (pages, users and authentication), and Check-Wikipedia, to send notifications when some types of cosmetics are applied.
+- `replacer-app`. SpringBoot configuration and application.
+- `replacer-core`. Use cases.
+- `replacer-domain`. Domain objects and interfaces shared between modules.
+- `replacer-finder`. Adapter with the functionality of finding replacements in pages. It has been implemented as an adapter instead of in the core to improve the decoupling.
+- `replacer-repository`. Adapter with a JDBC implementation of the persistence.
+- `replacer-web`. Adapter with the REST services.
+- `replacer-wikipedia`. Adapters to access external resources: Wikipedia (pages, users and authentication), and Check-Wikipedia.
 
 And the following packages:
-
+- Configuration classes and property files are preferred to be in the base package.
+- `checkwikipedia`. To send notifications to Check-Wikipedia when some types of cosmetics are applied, and they are also supported in Check-Wikipedia, so we can help this project to keep their figures up-to-date.
+- `common`. Domain entities shared between packages, along with exceptions and utility classes used on all the tool.
 - `common.domain`. Domain entities.
-
-- `config`. Spring configuration classes, some of them with beans used in several packages.
-
-- `dump`. Helper classes to parse a dump, extract the pages, the replacements in these page, and finally add the fount replacements into the database. `DumpFinder` finds the latest dump available for a given project. `DumpManager` checks periodically the latest available dump, and indexes it, by running the job implementing `DumpJob`. Note that in the past there were two implementations: one in Spring Batch and another with SAX. Currently, there is only the last one which give better performance results. When indexing we have the typical steps:
-  - Read: the dump is read and parsed in `DumpHandler`, extracting the pages into `DumpPage`.
-  - Process: `DumpPageProcessor` transforms each dump page into a list of replacements to be saved in the database. `ReplacementCache` helps to retrieve the database replacements in chunks in order to compare them to the ones obtained in the processing.
-  - Write: `DumpWriter` inserts or updates in the database the resulting replacements from the processor.
-
-- `finder`. The core functionality of the tool is to find potential replacements in a text. This package offers several helper classes to find these and other similar useful matches in a text. Note that these match searches will be performed millions of times when indexing a whole dump, therefore the performance is critical.
-
-  - `common`. Several interfaces. `Finder` will be implemented to find specific matches: URLs, templates, misspellings, etc. `FinderService` will be implemente to find all matches of a common type: replacements, custom replacements, cosmetics and immutables.
-
-    Some finders use a list of properties which are maintained in text files (or Wikipedia pages) which need to be parsed first. These finders retrieve the properties from a manager class extending `ParseFileManager`. All of these also implement the Observable pattern. The managers reload the properties periodically, and the observer finders are notified in case of changes. The first load is done at the start of the application, and it takes few seconds, so there is a little chance that, when using the application just started, some of them is not loaded yet. Just in case we check this possibility and return no results if so.
-
-  - `util`. Several finders are based on regular expressions. We use `RegexMatchFinder` to iterate the match results of a regex. This tool uses also a _text-based_ implementation of regular expressions in `AutomatonMatchFinder`, which builds an automaton from the regex and gives performance improvements of 1 to 2 orders of magnitude for simple expressions. However, it doesn't include advanced features implying backtracking. Finally, most finders are implemented _by hand_ with `LinearMatchFinder`. This makes the implementations quite more complex but the performance improvement is worth it. *Note*: for very simple finders it is not very clear which approach is better (see _simple benchmark_) so it is recommended to implement a new finder with different approaches and test which one has better performance. In any case, sometimes it will be worth to lose some performance for the sake of maintainability.
-
-  - `replacement`. Replacement finders: misspellings, composed misspellings, dates, etc. Note that some of these finders may only work for Spanish language.
-
-  - `immutable`. Immutable finders: URLs, template parameters, HTML comments, etc.
-
+- `dump`. Helper classes to parse a dump, extract the dump pages, find the replacements in these pages, and finally add the found replacements into the database. `DumpFinder` finds the latest dump available for a given project. `DumpManager` checks periodically the latest available dump, and indexes it.
+- `finder`. A `ReplacementFinder` is a helper class to find all the replacements in a page of a specific replacement type. `ReplacementFinderService` is a helper class to find all the replacements in a page. Note that these are particular implementations of `Finder` and `FinderService`. Other implementations find all the immutables and cosmetics in a page. Note that not all the properties of a page are needed in order to find its replacements, so these finders receive a `FinderPage` with only the needed properties, being `FinderPage` an interface implemented in particular by `WikipediaPage` and `DumpPage`.
+  - `benchmark`. Performance tests for different approaches in order to find the best performant finders. Note that these finders will be performed millions of times when indexing a whole dump, so the performance is critical.
   - `cosmetic`. Cosmetic finders: links with same title and alias, file templates in lowercase, etc. These finders are used after a user reviews a page, therefore the performance is not so important as when finding replacements and immutables.
-
-  - `benchmark`. Performance tests for different approaches in order to find the best performant finders.
-
-- `page`. Helper classes to review a page, i.e. find all the related replacements to be processed by the frontend.
-
-- `replacement`. Helper classes to retrieve replacements from database, and cache proxies for some heavy operations. Currently the database has a **huge** table, represented with `ReplacementEntity`, containing all the replacements found for all Wikipedia pages, along with the review status. For performance reasons we use a direct JDBC approach in `ReplacementDao`.
-
-  When a new page is indexed, or there have been any modifications, the replacements in the database must be updated. `ReplacementIndexService` offers a method, receiving the list of the new page replacements, which adds the new replacements and marks as obsolete the ones not found in the new list.
-
+  - `immutable`. Immutable finders: URLs, template parameters, HTML comments, etc.
+  - `listing`. Some finders use a list of properties which are maintained in text files (or Wikipedia pages) which need to be parsed first. These finders retrieve the properties from a manager class extending `ParseFileManager`. All of these also implement the Observable pattern. The managers reload the properties periodically, and the observer finders are notified in case of changes. The first load is done at the start of the application, and it takes few seconds, so there is a little chance that, when using the application just started, some of them are not loaded yet. Just in case we check this possibility and return no results if so.
+  - `replacement`. Replacement finders: misspellings, composed misspellings, dates, etc. Note that some of these finders may only work for Spanish language.
+  - `util`. Several finders are based on regular expressions. We use `RegexMatchFinder` to iterate the match results of a regex. This tool uses also a _text-based_ implementation of regular expressions in `AutomatonMatchFinder`, which builds an automaton from the regex and gives performance improvements of 1 to 2 orders of magnitude for simple expressions. However, it doesn't include advanced features implying backtracking. Finally, most finders are implemented _by hand_ with `LinearMatchFinder`. This makes the implementations quite more complex but the performance improvement is worth it. *Note*: for very simple finders it is not very clear which approach is better (see _simple benchmark_) so it is recommended to implement a new finder with different approaches and test which one has better performance. In any case, sometimes it will be worth to lose some performance for the sake of maintainability.
+- `page`. Services to count, index, find/review and save pages.
+- `replacement`. Repositories to retrieve and count indexed replacements from database, and cache proxies for some heavy operations. Currently, the database has a huge table, represented with `ReplacementEntity`, containing all the replacements found for all Wikipedia pages, along with the review status.
 - `user`. Features related to user management. In particular, aspects to restrict permissions to certain operations, and authentication with OAuth 1.0a against Wikipedia.
-- `wikipedia`. Repository to perform operations on Wikipedia pages and users. Currently, these operations are implemented with requests against the [Wikipedia API](https://www.mediawiki.org/wiki/API:Main_page). The common behaviour for these API requests has been refactored to a helper class in the inner `wikipedia.api` package.
-- `check-wikipedia`. Service to notify to Check-Wikipedia about fixes performed by Replacer, which are also supported in Check-Wikipedia, so we can help this project to keep their figures up-to-date.
-
+- `wikipedia`. Repositories to perform operations on Wikipedia pages and users, implemented with requests against the [Wikipedia API](https://www.mediawiki.org/wiki/API:Main_page). The common behaviour for these API requests has been refactored to a helper class in the inner `wikipedia.api` package.
 
 ### Formatting
 
@@ -132,7 +115,7 @@ Code in TypeScript and Java is formatted with Prettier.
 
 In case of Java code, this is automatically done when compiling by a Maven plugin.
 
-In case of TypeScript code, Prettier configuration is automatically found by VS Code, and formatting can be done easilly from the IDE.
+In case of TypeScript code, Prettier configuration is automatically found by VS Code, and formatting can be done easily from the IDE.
 
 ### Annotations
 
@@ -150,9 +133,9 @@ In case a DTO is used for input and output, we will annotate it with a mix of th
 
 ### Validation
 
-All Domain Objects should always be valid. The simplest validation is about the nullable and non-nullable fields (most of them). Non-nullable fields will be annotated with `org.springframework.lang.NonNull` (we could use the Lombok one but we prefer this one for consistency). Lombok will find this annotation and generate null-checks which will throw an `IllegalArgumentException`. Nullable fields can be then annotated with `org.springframework.lang.Nullable`.
+All Domain Objects should always be valid. The simplest validation is about the nullable and non-nullable fields (most of them). Non-nullable fields will be annotated with `org.springframework.lang.NonNull` (we could use the Lombok annotation, but the Spring one is preferred for consistency). Lombok will find this annotation and generate null-checks which will throw an `IllegalArgumentException`. Nullable fields can be then annotated with `org.springframework.lang.Nullable`.
 
-To perform more complicated validations, like data integrity, we will generate a constructor for all fields (which will be eventually called with `@Value` and `@Builder` annotations) which will throw an `IllegalArgumentException` if validation fails.
+To perform more complicated validations, like data integrity, we will generate a constructor for all fields (which will be eventually called with `@Value` and `@Builder` annotations), throwing an `IllegalArgumentException` if validation fails.
 
 Again, all of this can also be applied to Output DTOs.
 
@@ -172,7 +155,9 @@ Replacer uses Logback logging, the default in Spring Boot. To initialize the log
 
 A custom `logback-spring.xml` exists to simplify the log pattern, and include a special appender to Logz.io for Production.
 
-The default logging level is DEBUG, using INFO for calls in controllers and WARNING for suspicious replacements or immutables.
+The language and the user for each call are logged as MDC.
+Most objects are printed in the logs as JSON.
+Immutable warnings are logged with the marker `IMMUTABLE`.
 
 ## Benchmarks
 
