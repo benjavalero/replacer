@@ -26,7 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Primary
 @Transactional
 @Repository
-public class PageCountCacheRepository implements PageCountRepository {
+class PageCountCacheRepository implements PageCountRepository {
 
     @Autowired
     @Qualifier("pageCountJdbcRepository")
@@ -74,15 +74,18 @@ public class PageCountCacheRepository implements PageCountRepository {
         }
     }
 
-    public void removePageCount(WikipediaLanguage lang, StandardType type) {
+    @Override
+    public void remove(WikipediaLanguage lang, StandardType type) {
         this.getCounts(lang).remove(type);
     }
 
-    public void incrementPageCount(WikipediaLanguage lang, StandardType type) {
+    @Override
+    public void increment(WikipediaLanguage lang, StandardType type) {
         this.getCounts(lang).compute(type, (t, c) -> c == null ? 1 : c + 1);
     }
 
-    public void decrementPageCount(WikipediaLanguage lang, StandardType type) {
+    @Override
+    public void decrement(WikipediaLanguage lang, StandardType type) {
         this.getCounts(lang).computeIfPresent(type, (t, c) -> c > 1 ? c - 1 : null);
     }
 

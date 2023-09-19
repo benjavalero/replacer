@@ -37,6 +37,21 @@ class PageCountJdbcRepository implements PageCountRepository {
     }
 
     @Override
+    public void remove(WikipediaLanguage lang, StandardType type) {
+        // Not implemented
+    }
+
+    @Override
+    public void increment(WikipediaLanguage lang, StandardType type) {
+        // Not implemented
+    }
+
+    @Override
+    public void decrement(WikipediaLanguage lang, StandardType type) {
+        // Not implemented
+    }
+
+    @Override
     public Collection<ResultCount<StandardType>> countNotReviewedGroupedByType(WikipediaLanguage lang) {
         // Using the index this approach is better than executing several queries by kind
         String sql =

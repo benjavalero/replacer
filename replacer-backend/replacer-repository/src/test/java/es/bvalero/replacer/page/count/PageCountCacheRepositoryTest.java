@@ -63,7 +63,7 @@ class PageCountCacheRepositoryTest {
         );
 
         // Decrease a replacement count
-        pageCountCacheRepository.decrementPageCount(lang, type1);
+        pageCountCacheRepository.decrement(lang, type1);
 
         typeCounts = pageCountCacheRepository.countNotReviewedGroupedByType(lang);
         assertEquals(2, typeCounts.size());
@@ -89,7 +89,7 @@ class PageCountCacheRepositoryTest {
         );
 
         // Decrease a replacement count emptying it
-        pageCountCacheRepository.decrementPageCount(lang, type2);
+        pageCountCacheRepository.decrement(lang, type2);
 
         typeCounts = pageCountCacheRepository.countNotReviewedGroupedByType(lang);
         assertEquals(1, typeCounts.size());
@@ -108,7 +108,7 @@ class PageCountCacheRepositoryTest {
 
         // Remove a replacement count not existing in cache
         StandardType nonExisting = StandardType.of(ReplacementKind.SIMPLE, "B");
-        pageCountCacheRepository.removePageCount(lang, nonExisting);
+        pageCountCacheRepository.remove(lang, nonExisting);
 
         typeCounts = pageCountCacheRepository.countNotReviewedGroupedByType(lang);
         assertEquals(1, typeCounts.size());
@@ -125,7 +125,7 @@ class PageCountCacheRepositoryTest {
 
         // Remove a replacement count existing in cache
         StandardType existing = StandardType.of(ReplacementKind.SIMPLE, "Y");
-        pageCountCacheRepository.removePageCount(lang, existing);
+        pageCountCacheRepository.remove(lang, existing);
 
         typeCounts = pageCountCacheRepository.countNotReviewedGroupedByType(lang);
         assertTrue(typeCounts.isEmpty());
