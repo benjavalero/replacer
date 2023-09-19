@@ -2,9 +2,7 @@ package es.bvalero.replacer.replacement;
 
 import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import es.bvalero.replacer.page.PageKey;
 import java.util.Collection;
-import org.springframework.lang.Nullable;
 
 interface ReplacementSaveRepository {
     /** Add a collection of page replacements assuming the related pages already exist */
@@ -18,9 +16,6 @@ interface ReplacementSaveRepository {
 
     /** Update the reviewer of all the replacements of the given type to review */
     void updateReviewerByType(WikipediaLanguage lang, StandardType type, String reviewer);
-
-    /** Update the reviewer of all the replacements of the given page and (optionally) type to review */
-    void updateReviewerByPageAndType(PageKey pageKey, @Nullable StandardType type, String reviewer);
 
     /**
      * Update the reviewer of a collection of replacements.

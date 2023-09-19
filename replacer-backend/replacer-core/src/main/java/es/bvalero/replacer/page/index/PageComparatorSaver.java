@@ -80,7 +80,6 @@ class PageComparatorSaver {
         }
 
         // Pages must be added before adding the related replacements
-        // Pages are removed along with their replacements
         // We assume the replacements removed correspond to not removed pages
         pageService.addPages(addPages);
         pageService.updatePages(updatePages);

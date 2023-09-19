@@ -13,7 +13,6 @@ import es.bvalero.replacer.page.PageService;
 import es.bvalero.replacer.page.count.PageCountService;
 import es.bvalero.replacer.page.index.PageIndexResult;
 import es.bvalero.replacer.page.index.PageIndexService;
-import es.bvalero.replacer.replacement.ReplacementService;
 import es.bvalero.replacer.user.User;
 import es.bvalero.replacer.wikipedia.*;
 import java.util.Collections;
@@ -70,9 +69,6 @@ class ReviewTypeFinderTest {
 
     @Mock
     private PageCountService pageCountService;
-
-    @Mock
-    private ReplacementService replacementService;
 
     @Mock
     private WikipediaPageRepository wikipediaPageRepository;

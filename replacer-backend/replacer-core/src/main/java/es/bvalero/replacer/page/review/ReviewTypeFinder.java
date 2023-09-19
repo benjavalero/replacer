@@ -5,7 +5,6 @@ import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.page.PageKey;
 import es.bvalero.replacer.page.PageService;
 import es.bvalero.replacer.page.count.PageCountService;
-import es.bvalero.replacer.replacement.ReplacementService;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
 import java.util.Collection;
 import java.util.Collections;
@@ -20,9 +19,6 @@ class ReviewTypeFinder extends ReviewFinder {
 
     @Autowired
     private PageCountService pageCountService;
-
-    @Autowired
-    private ReplacementService replacementService;
 
     @Override
     PageSearchResult findPageIdsToReview(ReviewOptions options) {
@@ -56,8 +52,6 @@ class ReviewTypeFinder extends ReviewFinder {
         Collection<Replacement> filtered = filterReplacementsByType(replacements, type);
         if (filtered.isEmpty()) {
             // No replacement to be reviewed for this page and type
-            // We remove it from the count cache by marking it as reviewed (it should not exist in DB anymore)
-            replacementService.reviewReplacementsByPageAndType(page.getPageKey(), type);
             return Collections.emptyList();
         }
 

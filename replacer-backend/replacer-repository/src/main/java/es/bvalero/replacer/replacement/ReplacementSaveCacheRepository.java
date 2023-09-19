@@ -2,16 +2,13 @@ package es.bvalero.replacer.replacement;
 
 import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import es.bvalero.replacer.page.PageKey;
 import es.bvalero.replacer.page.count.PageCountCacheRepository;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Primary;
-import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,9 +28,17 @@ class ReplacementSaveCacheRepository implements ReplacementSaveRepository {
     @Override
     public void add(Collection<IndexedReplacement> replacements) {
         // In case of batch indexing the replacements may belong to several pages
-        final Map<PageKey, StandardType> distinctPairs = new HashMap<>();
-        replacements.forEach(r -> distinctPairs.put(r.getPageKey(), r.getType()));
-        distinctPairs.forEach((pageKey, type) -> pageCountCacheRepository.incrementPageCount(pageKey.getLang(), type));
+        // Also the same may contain several replacements of the same type
+        replacements
+            .stream()
+            .collect(
+                Collectors.toMap(
+                    IndexedReplacement::getPageKey,
+                    IndexedReplacement::getType,
+                    (existing, replacement) -> existing
+                )
+            )
+            .forEach((pageKey, type) -> pageCountCacheRepository.incrementPageCount(pageKey.getLang(), type));
 
         replacementSaveRepository.add(replacements);
     }
@@ -47,9 +52,17 @@ class ReplacementSaveCacheRepository implements ReplacementSaveRepository {
     @Override
     public void remove(Collection<IndexedReplacement> replacements) {
         // In case of batch indexing the replacements may belong to several pages
-        final Map<PageKey, StandardType> distinctPairs = new HashMap<>();
-        replacements.forEach(r -> distinctPairs.put(r.getPageKey(), r.getType()));
-        distinctPairs.forEach((pageKey, type) -> pageCountCacheRepository.decrementPageCount(pageKey.getLang(), type));
+        // Also the same may contain several replacements of the same type
+        replacements
+            .stream()
+            .collect(
+                Collectors.toMap(
+                    IndexedReplacement::getPageKey,
+                    IndexedReplacement::getType,
+                    (existing, replacement) -> existing
+                )
+            )
+            .forEach((pageKey, type) -> pageCountCacheRepository.decrementPageCount(pageKey.getLang(), type));
 
         replacementSaveRepository.remove(replacements);
     }
@@ -58,15 +71,6 @@ class ReplacementSaveCacheRepository implements ReplacementSaveRepository {
     public void updateReviewerByType(WikipediaLanguage lang, StandardType type, String reviewer) {
         pageCountCacheRepository.removePageCount(lang, type);
         replacementSaveRepository.updateReviewerByType(lang, type, reviewer);
-    }
-
-    @Override
-    public void updateReviewerByPageAndType(PageKey pageKey, @Nullable StandardType type, String reviewer) {
-        if (type != null) {
-            pageCountCacheRepository.decrementPageCount(pageKey.getLang(), type);
-        }
-        // This is just to update the cache, the replacement must have been reindexed and should not exist in DB anymore.
-        replacementSaveRepository.updateReviewerByPageAndType(pageKey, type, reviewer);
     }
 
     @Override
