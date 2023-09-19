@@ -1,4 +1,5 @@
 # Technical Design
+# Technical Design
 
 ## Domain
 
@@ -30,6 +31,8 @@ An `Immutable` is a section in the page contents to be left untouched, for insta
 A `Cosmetic` is a special type of replacement which can be applied automatically, concerning cosmetic modifications, visible or not, e.g. replacing `[[Asia|Asia]]` by `[[Asia]]`.
 
 A replacement is identified by its type and by its position (**start**) in the page content, as the tool doesn't allow that overlapping of replacements. Instead of an _end_ position, a replacement contains the text intended to be replaced, along with a collection of suggestions. Each `Suggestion` contains the proposed new text after applying the replacement and optionally a description to explain the motivation of the fix.
+
+When comparing a replacement retrieved from a page with one indexed in the database, we also take into account the **context**, the text around the replacement text. This is done because sometimes a replacement has been reviewed in the past and is found again just because the start position has changed due to a page edition not related with the replacement itself. In such a case, if the replacements have the same context and are close enough, they are considered the same.
 
 A `Review` (or simply a `Page`) is a Wikipedia page (or section) containing one or more replacements to be reviewed. Then, a `ReviewedPage` is a page containing a collection of replacements reviewed by the user. Note that some or all these `ReviewedReplacement` might not be applied if the user has decided it that way, especially in case of doubt or false positive.
 

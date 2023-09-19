@@ -331,6 +331,42 @@ class PageComparatorTest {
     }
 
     @Test
+    void testDuplicatedDbReplacementsWithDifferentPositionFarEnough() {
+        Collection<Replacement> replacements = Collections.emptyList();
+
+        // Existing replacements in DB: the same replacement found in 2 different positions with same context
+        // We force a distance between the replacements so even having the same context they are not considered the same
+        IndexedReplacement r1db = IndexedReplacement
+            .builder()
+            .pageKey(page.getPageKey())
+            .type(StandardType.of(ReplacementKind.SIMPLE, "1"))
+            .start(1)
+            .context("C")
+            .reviewer("X")
+            .build();
+        IndexedReplacement r2db = IndexedReplacement
+            .builder()
+            .pageKey(page.getPageKey())
+            .type(StandardType.of(ReplacementKind.SIMPLE, "1"))
+            .start(100)
+            .context("C")
+            .reviewer("X")
+            .build();
+        IndexedPage dbPage = IndexedPage
+            .builder()
+            .pageKey(page.getPageKey())
+            .title(page.getTitle())
+            .replacements(List.of(r1db, r2db))
+            .lastUpdate(now)
+            .build();
+
+        PageComparatorResult toIndex = pageComparator.indexPageReplacements(page, replacements, dbPage);
+
+        // In this case r1db and r2db are not considered the same so none of them is removed
+        assertTrue(toIndex.isEmpty());
+    }
+
+    @Test
     void testDuplicatedDbReplacementsWithDifferentContext() {
         Replacement r1 = buildFinderReplacement(page, 1);
         Collection<Replacement> replacements = List.of(r1);

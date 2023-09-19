@@ -1,5 +1,6 @@
 package es.bvalero.replacer.page.index;
 
+import static es.bvalero.replacer.finder.Replacement.CONTEXT_THRESHOLD;
 import static es.bvalero.replacer.replacement.IndexedReplacement.REVIEWER_SYSTEM;
 
 import es.bvalero.replacer.common.domain.StandardType;
@@ -99,27 +100,35 @@ class ComparableReplacement {
      * Comparison: If two replacements have the same position or context they will be considered equivalent but NOT EQUAL.
      */
     boolean isSame(ComparableReplacement that) {
-        return (
-            getType().equals(that.getType()) &&
-            (isSameStart(getStart(), that.getStart()) || isSameContext(getContext(), that.getContext()))
-        );
+        return (getType().equals(that.type) && (hasSameStart(that) || hasSameContext(that)));
     }
 
-    private boolean isSameStart(int start1, int start2) {
+    private boolean hasSameStart(ComparableReplacement that) {
         // 0 is the default start for legacy replacements
-        if (start1 != 0 || start2 != 0) {
-            return start1 == start2;
+        if (this.start != 0 || that.start != 0) {
+            return this.start == that.start;
         } else {
             return false;
         }
     }
 
-    private boolean isSameContext(String context1, String context2) {
+    // We accept two contexts as the same if they are equal and close enough from each other
+    private boolean hasSameContext(ComparableReplacement that) {
         // An empty string is the default context for legacy or migrated replacements
-        if (StringUtils.isNotBlank(context1) || StringUtils.isNotBlank(context2)) {
-            return Objects.equals(context1, context2);
+        if (StringUtils.isNotBlank(this.context) || StringUtils.isNotBlank(that.context)) {
+            return Objects.equals(this.context, that.getContext()) && this.distance(that) <= 2 * CONTEXT_THRESHOLD;
         } else {
             return false;
         }
+    }
+
+    private int distance(ComparableReplacement that) {
+        // We don't know which one is at left or at right
+        return Math.min(Math.abs(this.start - that.getEnd()), Math.abs(that.start - this.getEnd()));
+    }
+
+    private int getEnd() {
+        // This is a maximum approximation as the replacement context could be truncated by the page content
+        return this.start + this.context.length() - 2 * CONTEXT_THRESHOLD;
     }
 }
