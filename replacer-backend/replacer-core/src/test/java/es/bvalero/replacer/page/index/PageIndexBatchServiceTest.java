@@ -58,7 +58,7 @@ class PageIndexBatchServiceTest {
         when(pageIndexValidator.isPageIndexableByNamespace(page)).thenReturn(true);
         when(pageIndexValidator.isIndexableByTimestamp(page, null)).thenReturn(true);
 
-        PageComparatorResult comparatorResult = PageComparatorResult.of();
+        PageComparatorResult comparatorResult = PageComparatorResult.of(page.getPageKey().getLang());
         IndexedPage indexedPage = IndexedPage
             .builder()
             .pageKey(page.getPageKey())

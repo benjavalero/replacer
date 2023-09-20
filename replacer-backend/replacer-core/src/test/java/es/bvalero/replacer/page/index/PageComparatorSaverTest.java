@@ -3,6 +3,7 @@ package es.bvalero.replacer.page.index;
 import static org.mockito.Mockito.anyCollection;
 import static org.mockito.Mockito.verify;
 
+import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.page.PageService;
 import es.bvalero.replacer.replacement.ReplacementService;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,7 +31,7 @@ class PageComparatorSaverTest {
 
     @Test
     void testSave() {
-        pageComparatorSaver.save(PageComparatorResult.of());
+        pageComparatorSaver.save(PageComparatorResult.of(WikipediaLanguage.getDefault()));
 
         verify(pageService).updatePages(anyCollection());
         verify(pageService).addPages(anyCollection());

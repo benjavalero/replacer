@@ -1,7 +1,9 @@
 package es.bvalero.replacer.page.index;
 
+import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.page.IndexedPage;
 import es.bvalero.replacer.page.PageService;
+import es.bvalero.replacer.page.count.PageCountRepository;
 import es.bvalero.replacer.replacement.IndexedReplacement;
 import es.bvalero.replacer.replacement.ReplacementService;
 import java.util.*;
@@ -21,6 +23,9 @@ class PageComparatorSaver {
 
     @Autowired
     private ReplacementService replacementService;
+
+    @Autowired
+    private PageCountRepository pageCountRepository;
 
     @Value("${replacer.dump.batch.chunk.size}")
     private int chunkSize;
@@ -74,6 +79,14 @@ class PageComparatorSaver {
                 addReplacements.addAll(result.getAddReplacements());
                 updateReplacements.addAll(result.getUpdateReplacements());
                 removeReplacements.addAll(result.getRemoveReplacements());
+
+                // Update page count cache
+                result
+                    .getAddReplacementTypes()
+                    .forEach(rt -> pageCountRepository.increment(result.getLang(), (StandardType) rt));
+                result
+                    .getRemoveReplacementTypes()
+                    .forEach(rt -> pageCountRepository.decrement(result.getLang(), (StandardType) rt));
             }
 
             this.batchResult.clear();

@@ -1,10 +1,12 @@
 package es.bvalero.replacer.page.index;
 
+import es.bvalero.replacer.common.domain.ReplacementType;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.page.IndexedPage;
 import java.util.*;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.jetbrains.annotations.VisibleForTesting;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
@@ -22,7 +24,7 @@ class PageComparator {
         Collection<Replacement> pageReplacements,
         @Nullable IndexedPage dbPage
     ) {
-        PageComparatorResult result = PageComparatorResult.of();
+        PageComparatorResult result = PageComparatorResult.of(page.getPageKey().getLang());
 
         // Precondition: the page to index cannot be previous to the indexed one
         if (dbPage != null && page.getLastUpdate().toLocalDate().isBefore(dbPage.getLastUpdate())) {
@@ -51,6 +53,11 @@ class PageComparator {
                 .stream()
                 .map(ComparableReplacement::of)
                 .collect(Collectors.toCollection(LinkedList::new));
+        final Collection<ReplacementType> dbReplacementTypesToReview = comparableDbReplacements
+            .stream()
+            .filter(ComparableReplacement::isToBeReviewed)
+            .map(ComparableReplacement::getType)
+            .collect(Collectors.toUnmodifiableSet());
         // Remove possible duplicates in database
         cleanDuplicatedReplacements(comparableDbReplacements).forEach(result::removeReplacement);
 
@@ -81,6 +88,20 @@ class PageComparator {
                 )
                 .collect(Collectors.toUnmodifiableList())
         );
+
+        // Calculate the new and obsolete replacement types for the page
+        final Collection<ReplacementType> actualReplacementTypesToReview = result
+            .getReplacementsToReview()
+            .stream()
+            .map(Replacement::getType)
+            .collect(Collectors.toUnmodifiableSet());
+        result.addReplacementTypes(
+            CollectionUtils.removeAll(actualReplacementTypesToReview, dbReplacementTypesToReview)
+        );
+        result.removeReplacementTypes(
+            CollectionUtils.removeAll(dbReplacementTypesToReview, actualReplacementTypesToReview)
+        );
+
         return result;
     }
 

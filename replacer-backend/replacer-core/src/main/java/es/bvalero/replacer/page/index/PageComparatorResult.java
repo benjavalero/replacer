@@ -1,5 +1,7 @@
 package es.bvalero.replacer.page.index;
 
+import es.bvalero.replacer.common.domain.ReplacementType;
+import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.page.IndexedPage;
 import es.bvalero.replacer.replacement.IndexedReplacement;
@@ -10,6 +12,8 @@ import lombok.Value;
 /** Result of comparing an indexable page with an already indexed one */
 @Value(staticConstructor = "of")
 class PageComparatorResult {
+
+    WikipediaLanguage lang;
 
     /* Changes to be applied in the database */
 
@@ -25,6 +29,10 @@ class PageComparatorResult {
     Collection<IndexedReplacement> updateReplacements = new HashSet<>();
 
     Collection<IndexedReplacement> removeReplacements = new HashSet<>();
+
+    Collection<ReplacementType> addReplacementTypes = new HashSet<>();
+
+    Collection<ReplacementType> removeReplacementTypes = new HashSet<>();
 
     /* The actual replacements to be reviewed after indexing, as some may have been discarded as already reviewed. */
 
@@ -52,6 +60,14 @@ class PageComparatorResult {
 
     void addReplacementsToReview(Collection<Replacement> replacements) {
         this.replacementsToReview.addAll(replacements);
+    }
+
+    void addReplacementTypes(Collection<ReplacementType> ReplacementTypes) {
+        this.addReplacementTypes.addAll(ReplacementTypes);
+    }
+
+    void removeReplacementTypes(Collection<ReplacementType> ReplacementTypes) {
+        this.removeReplacementTypes.addAll(ReplacementTypes);
     }
 
     int size() {

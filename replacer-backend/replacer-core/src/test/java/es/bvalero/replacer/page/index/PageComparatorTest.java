@@ -55,7 +55,7 @@ class PageComparatorTest {
 
         PageComparatorResult result = pageComparator.indexPageReplacements(page, replacements, null);
 
-        PageComparatorResult expected = PageComparatorResult.of();
+        PageComparatorResult expected = PageComparatorResult.of(page.getPageKey().getLang());
         expected.addPage(toIndexedPage(page));
 
         assertEquals(expected, result);
@@ -68,10 +68,11 @@ class PageComparatorTest {
 
         PageComparatorResult toIndex = pageComparator.indexPageReplacements(page, replacements, null);
 
-        PageComparatorResult expected = PageComparatorResult.of();
+        PageComparatorResult expected = PageComparatorResult.of(page.getPageKey().getLang());
         expected.addPage(toIndexedPage(page));
         expected.addReplacement(ComparableReplacement.of(r1));
         expected.addReplacementsToReview(replacements);
+        expected.addReplacementTypes(List.of(r1.getType()));
 
         assertEquals(expected, toIndex);
     }
@@ -90,7 +91,7 @@ class PageComparatorTest {
 
         PageComparatorResult result = pageComparator.indexPageReplacements(page, replacements, dbPage);
 
-        PageComparatorResult expected = PageComparatorResult.of();
+        PageComparatorResult expected = PageComparatorResult.of(page.getPageKey().getLang());
         assertEquals(expected, result);
     }
 
@@ -108,7 +109,7 @@ class PageComparatorTest {
 
         PageComparatorResult result = pageComparator.indexPageReplacements(page, replacements, dbPage);
 
-        PageComparatorResult expected = PageComparatorResult.of();
+        PageComparatorResult expected = PageComparatorResult.of(page.getPageKey().getLang());
         expected.updatePage(toIndexedPage(page));
 
         assertEquals(expected, result);
@@ -149,7 +150,7 @@ class PageComparatorTest {
 
         PageComparatorResult result = pageComparator.indexPageReplacements(page, replacements, dbPage);
 
-        PageComparatorResult expected = PageComparatorResult.of();
+        PageComparatorResult expected = PageComparatorResult.of(page.getPageKey().getLang());
         expected.updatePage(toIndexedPage(page));
 
         assertEquals(expected, result);
@@ -251,13 +252,15 @@ class PageComparatorTest {
 
         PageComparatorResult toIndex = pageComparator.indexPageReplacements(page, replacements, dbPage);
 
-        PageComparatorResult expected = PageComparatorResult.of();
+        PageComparatorResult expected = PageComparatorResult.of(page.getPageKey().getLang());
         expected.addReplacement(ComparableReplacement.of(r9));
         expected.updateReplacement(ComparableReplacement.of(r4));
         expected.updateReplacement(ComparableReplacement.of(r5));
         expected.removeReplacement(ComparableReplacement.of(r6db));
         expected.removeReplacement(ComparableReplacement.of(r8db));
         expected.addReplacementsToReview(Set.of(r1, r4, r5, r9));
+        expected.addReplacementTypes(List.of(r9.getType()));
+        expected.removeReplacementTypes(List.of(r6db.getType()));
 
         assertEquals(expected, toIndex);
     }
@@ -288,7 +291,7 @@ class PageComparatorTest {
 
         PageComparatorResult toIndex = pageComparator.indexPageReplacements(page, replacements, dbPage);
 
-        PageComparatorResult expected = PageComparatorResult.of();
+        PageComparatorResult expected = PageComparatorResult.of(page.getPageKey().getLang());
         expected.addReplacementsToReview(replacements);
 
         assertEquals(expected, toIndex);
@@ -398,10 +401,11 @@ class PageComparatorTest {
 
         PageComparatorResult toIndex = pageComparator.indexPageReplacements(page, replacements, dbPage);
 
-        PageComparatorResult expected = PageComparatorResult.of();
+        PageComparatorResult expected = PageComparatorResult.of(page.getPageKey().getLang());
         // In fact r1db and r2db are considered the same so any of them could be removed
         // In this case we remove the one not reviewed
         expected.removeReplacement(ComparableReplacement.of(r1db));
+        expected.removeReplacementTypes(List.of(r1db.getType()));
 
         assertEquals(expected, toIndex);
     }
