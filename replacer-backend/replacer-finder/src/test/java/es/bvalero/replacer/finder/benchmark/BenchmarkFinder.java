@@ -22,10 +22,6 @@ public interface BenchmarkFinder extends Finder<BenchmarkResult> {
 
     @Override
     default BenchmarkResult convert(MatchResult match, FinderPage page) {
-        return convert(match);
-    }
-
-    default BenchmarkResult convert(MatchResult match) {
         return BenchmarkResult.of(match.start(), match.group());
     }
 }

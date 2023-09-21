@@ -31,7 +31,7 @@ class CompleteTagRegexIteratedFinder implements BenchmarkFinder {
         Set<BenchmarkResult> results = new HashSet<>();
         for (Pattern pattern : patterns) {
             for (MatchResult matchResult : RegexMatchFinder.find(text, pattern)) {
-                results.add(convert(matchResult));
+                results.add(convert(matchResult, page));
             }
         }
         return results;

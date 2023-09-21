@@ -22,7 +22,7 @@ class CursiveAutomatonFinder implements BenchmarkFinder {
     }
 
     @Override
-    public BenchmarkResult convert(MatchResult match) {
+    public BenchmarkResult convert(MatchResult match, FinderPage page) {
         int start = match.start() + 1;
         int end = match.group().endsWith("\n") ? match.group().length() : match.group().length() - 1;
         String group = match.group().substring(1, end);

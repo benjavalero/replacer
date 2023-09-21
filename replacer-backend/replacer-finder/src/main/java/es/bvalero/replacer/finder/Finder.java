@@ -22,7 +22,7 @@ public interface Finder<T extends FinderResult> extends Comparable<Finder<T>> {
 
     Iterable<MatchResult> findMatchResults(FinderPage page);
 
-    default Iterable<MatchResult> filterValidMatchResults(Iterable<MatchResult> matchResults, FinderPage page) {
+    private Iterable<MatchResult> filterValidMatchResults(Iterable<MatchResult> matchResults, FinderPage page) {
         return IterableUtils.filteredIterable(matchResults, matchResult -> validate(matchResult, page));
     }
 
@@ -31,7 +31,7 @@ public interface Finder<T extends FinderResult> extends Comparable<Finder<T>> {
         return true;
     }
 
-    default Iterable<T> convertMatchResults(Iterable<MatchResult> matchResults, FinderPage page) {
+    private Iterable<T> convertMatchResults(Iterable<MatchResult> matchResults, FinderPage page) {
         return IterableUtils.transformedIterable(matchResults, m -> convert(m, page));
     }
 
