@@ -230,11 +230,9 @@ class TemplateFinder implements ImmutableFinder {
     private int findStartParameter(LinearMatchResult template, String parameter, String key) {
         return (
             template.start() +
-            (
-                template.group().contains(PIPE + parameter)
+            (template.group().contains(PIPE + parameter)
                     ? template.group().indexOf(PIPE + parameter)
-                    : template.group().indexOf(PIPE + key)
-            ) +
+                    : template.group().indexOf(PIPE + key)) +
             1
         );
     }

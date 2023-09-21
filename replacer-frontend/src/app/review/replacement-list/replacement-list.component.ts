@@ -17,7 +17,10 @@ import { ReplacementTableComponent } from './replacement-table.component';
 export class ReplacementListComponent implements OnInit {
   kindCounts$!: Observable<KindCount[] | null>;
 
-  constructor(private titleService: Title, private replacementListService: ReplacementListService) {}
+  constructor(
+    private titleService: Title,
+    private replacementListService: ReplacementListService
+  ) {}
 
   ngOnInit() {
     this.titleService.setTitle('Replacer - Lista de reemplazos');

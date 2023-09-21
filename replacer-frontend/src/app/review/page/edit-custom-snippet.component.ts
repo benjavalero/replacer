@@ -14,7 +14,10 @@ export class EditCustomSnippetComponent implements OnInit {
   private newText!: string;
   userLang!: string;
 
-  constructor(public activeModal: NgbActiveModal, private userConfigService: UserConfigService) {}
+  constructor(
+    public activeModal: NgbActiveModal,
+    private userConfigService: UserConfigService
+  ) {}
 
   ngOnInit(): void {
     this.newText = this.snippet.text;

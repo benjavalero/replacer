@@ -18,7 +18,11 @@ export class FindCustomComponent implements OnInit {
   suggestion: string;
   caseSensitive: boolean;
 
-  constructor(private router: Router, private alertService: AlertService, private titleService: Title) {
+  constructor(
+    private router: Router,
+    private alertService: AlertService,
+    private titleService: Title
+  ) {
     this.replacement = '';
     this.suggestion = '';
     this.caseSensitive = false;

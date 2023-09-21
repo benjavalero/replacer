@@ -186,10 +186,8 @@ class PageComparator {
         // At this point we assume both replacements are the "same"
         return (
             dbReplacement.isToBeReviewed() &&
-            (
-                !Objects.equals(replacement.getStart(), dbReplacement.getStart()) ||
-                !Objects.equals(replacement.getContext(), dbReplacement.getContext())
-            )
+            (!Objects.equals(replacement.getStart(), dbReplacement.getStart()) ||
+                !Objects.equals(replacement.getContext(), dbReplacement.getContext()))
         );
     }
 

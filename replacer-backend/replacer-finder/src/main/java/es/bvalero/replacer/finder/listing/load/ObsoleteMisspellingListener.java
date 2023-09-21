@@ -44,8 +44,14 @@ class ObsoleteMisspellingListener implements PropertyChangeListener, ObsoleteRep
     @SuppressWarnings("unchecked")
     public void propertyChange(PropertyChangeEvent evt) {
         // This should work for both types of misspellings
-        SetValuedMap<WikipediaLanguage, StandardMisspelling> oldItems = (SetValuedMap<WikipediaLanguage, StandardMisspelling>) evt.getOldValue();
-        SetValuedMap<WikipediaLanguage, StandardMisspelling> newItems = (SetValuedMap<WikipediaLanguage, StandardMisspelling>) evt.getNewValue();
+        SetValuedMap<WikipediaLanguage, StandardMisspelling> oldItems = (SetValuedMap<
+                WikipediaLanguage,
+                StandardMisspelling
+            >) evt.getOldValue();
+        SetValuedMap<WikipediaLanguage, StandardMisspelling> newItems = (SetValuedMap<
+                WikipediaLanguage,
+                StandardMisspelling
+            >) evt.getNewValue();
         this.changeSupport.firePropertyChange(
                 "types",
                 Collections.emptyList(),

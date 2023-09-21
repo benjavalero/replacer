@@ -42,7 +42,10 @@ class FalsePositiveFinder implements ImmutableFinder, PropertyChangeListener {
     @Override
     @SuppressWarnings("unchecked")
     public void propertyChange(PropertyChangeEvent evt) {
-        final SetValuedMap<WikipediaLanguage, FalsePositive> falsePositives = (SetValuedMap<WikipediaLanguage, FalsePositive>) evt.getNewValue();
+        final SetValuedMap<WikipediaLanguage, FalsePositive> falsePositives = (SetValuedMap<
+                WikipediaLanguage,
+                FalsePositive
+            >) evt.getNewValue();
         this.falsePositivesAutomata = buildFalsePositivesAutomata(falsePositives);
     }
 

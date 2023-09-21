@@ -148,10 +148,8 @@ public abstract class MisspellingFinder implements ReplacementFinder {
         StandardType type = null;
         if (
             misspelling.isPresent() &&
-            (
-                (misspelling.get().isCaseSensitive() && caseSensitive) ||
-                (!misspelling.get().isCaseSensitive() && !caseSensitive)
-            )
+            ((misspelling.get().isCaseSensitive() && caseSensitive) ||
+                (!misspelling.get().isCaseSensitive() && !caseSensitive))
         ) {
             type = StandardType.of(misspelling.get().getReplacementKind(), misspelling.get().getWord());
         }
