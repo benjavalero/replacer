@@ -66,11 +66,15 @@ class PageComparator {
         // Meanwhile we also modify the set of DB replacements to eventually contain the final result
         // All replacements modified in the DB set are marked as "touched".
         // In case a replacement is kept as is, we also mark it as "touched".
-        // Replacements with the same position or context are considered equal and only one will be indexed
         final List<ComparableReplacement> comparablePageReplacements = pageReplacements
             .stream()
             .map(ComparableReplacement::of)
-            .collect(Collectors.toUnmodifiableList());
+            .collect(Collectors.toCollection(LinkedList::new));
+        // Replacements with the same type and position are considered equal
+        // If they have different position but same context, and they are close enough,
+        // they are also considered equal and only one will be indexed and returned to the user to be reviewed.
+        cleanDuplicatedReplacements(comparablePageReplacements);
+
         for (ComparableReplacement comparablePageReplacement : comparablePageReplacements) {
             handleReplacement(comparablePageReplacement, comparableDbReplacements, result);
         }

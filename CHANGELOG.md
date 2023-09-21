@@ -8,6 +8,7 @@
 - Fix: reload empty cache to find pages left to review after
 - Consider replacements with the same context but far enough as different
 - Fix: update page count cache when indexing by type and not by replacement
+- Fix: discard replacements with the same context and close enough making pages to be re-indexed every time
 
 ## 2.23.6 (8 May 2023)
 - Fix regression: dropdown to change language
@@ -25,7 +26,7 @@
 
 ## 2.23.2 (22 Feb 2023)
 - Fix: don't remove obsolete items if the load of a listing fails
-- Fix: cosmetic replacement when the space word has uppercases in the middle
+- Fix: cosmetic replacement when the space word has uppercase characters in the middle
 
 ## 2.23.1 (13 Feb 2023)
 - Fix: count pages when there are none to review for a specific type
