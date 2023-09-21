@@ -28,12 +28,13 @@
              rel="noopener noreferrer" title="Abrir página de la herramienta en Wikipedia">Ayuda</a>
         </li>
         <li class="nav-item" ngbDropdown *ngIf="user.admin">
-          <a class="nav-link" style="cursor: pointer;" ngbDropdownToggle id="navbarDropdownAdmin" role="button"
+          <a class="nav-link" [ngClass]="{ 'active': indexing.isActive || unreviewed.isActive }" style="cursor: pointer;"
+             ngbDropdownToggle id="navbarDropdownAdmin" role="button"
              title="Tareas de administración">Administración</a>
           <div ngbDropdownMenu aria-labelledby="navbarDropdownAdmin">
-            <button ngbDropdownItem routerLinkActive="active" routerLink="/admin/dump-indexing"
+            <button ngbDropdownItem routerLinkActive="active" routerLink="/admin/dump-indexing" #indexing="routerLinkActive"
                     (click)="isNavCollapsed = true" title="Indexación">Indexación</button>
-            <button ngbDropdownItem routerLinkActive="active" routerLink="/admin/unreviewed"
+            <button ngbDropdownItem routerLinkActive="active" routerLink="/admin/unreviewed" #unreviewed="routerLinkActive"
                     (click)="isNavCollapsed = true" title="Páginas con más reemplazos">Páginas con más reemplazos</button>
           </div>
         </li>
