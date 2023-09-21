@@ -41,8 +41,8 @@ export const routes: Routes = [
       { path: 'list', component: ReplacementListComponent },
       { path: ':kind/:subtype', component: FindRandomComponent },
       { path: ':kind/:subtype/:id', component: FindRandomComponent },
-      { path: ':id', component: FindRandomComponent },
-      { path: '', component: FindRandomComponent }
+      { path: 'notype', component: FindRandomComponent },
+      { path: 'notype/:id', component: FindRandomComponent }
     ]
   },
   { path: 'stats', component: StatsComponent, canActivate: [authenticationGuard] },

@@ -9,6 +9,7 @@
 - Consider replacements with the same context but far enough as different
 - Fix: update page count cache when indexing by type and not by replacement
 - Fix: discard replacements with the same context and close enough making pages to be re-indexed every time
+- Fix: random page header should only be active for random pages with no type
 
 ## 2.23.6 (8 May 2023)
 - Fix regression: dropdown to change language

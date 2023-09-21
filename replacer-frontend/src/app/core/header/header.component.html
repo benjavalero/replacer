@@ -8,7 +8,7 @@
     <div id="navbarSupportedContent" class="navbar-collapse" [ngbCollapse]="isNavCollapsed" *ngIf="user$ | async as user">
       <ul class="navbar-nav mr-auto" *ngIf="user.hasRights">
         <li class="nav-item">
-          <a class="nav-link" routerLinkActive="active" routerLink="/review" (click)="isNavCollapsed = true"
+          <a class="nav-link" routerLinkActive="active" routerLink="/review/notype" (click)="isNavCollapsed = true"
              title="Revisa todos los posibles reemplazos de un artículo aleatorio">Artículo aleatorio</a>
         </li>
         <li class="nav-item">

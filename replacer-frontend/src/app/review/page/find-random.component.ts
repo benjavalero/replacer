@@ -174,7 +174,7 @@ export class FindRandomComponent implements OnInit {
         path = `/review/${options.kind}/${options.subtype}`;
       }
     } else {
-      path = '/review';
+      path = '/review/notype';
     }
 
     if (pageId) {
