@@ -1,15 +1,15 @@
 # Versions
 
-## 2.23.7 (??)
-- Fix: intercept any 401 error in a response
-- Upgrade frontend to Angular 16
-- Remove feature: Public IP
-- Make Admin menu in frontend a dropdown
-- Fix: reload empty cache to find pages left to review after
+## 2.24.0 (22 Sep 2023)
 - Consider replacements with the same context but far enough as different
+- Upgrade frontend to Angular 16
+- Remove Administration feature: Public IP
+- Make Administration menu in frontend a dropdown
+- Fix: intercept any 401 error in a response
+- Fix: reload empty cache to find pages left to review after
 - Fix: update page count cache when indexing by type and not by replacement
 - Fix: discard replacements with the same context and close enough making pages to be re-indexed every time
-- Fix: random page header should only be active for random pages with no type
+- Fix: random page header in frontend should only be active for random pages with no type
 
 ## 2.23.6 (8 May 2023)
 - Fix regression: dropdown to change language
