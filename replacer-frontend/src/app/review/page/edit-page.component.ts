@@ -179,7 +179,7 @@ export class EditPageComponent implements OnChanges {
     } else {
       reviewedPage = {
         title: this.page.title,
-        content: this.page.content,
+        content: content,
         sectionId: this.page.section?.id,
         sectionOffset: this.page.section?.offset,
         queryTimestamp: this.page.queryTimestamp,

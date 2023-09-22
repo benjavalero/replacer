@@ -1,5 +1,9 @@
 # Versions
 
+## 2.24.1 (??)
+- Fix regression: content to save is the original one and not the one with the applied replacements
+- Fix: no type routes have preference over kind-subtype routes
+
 ## 2.24.0 (22 Sep 2023)
 - Consider replacements with the same context but far enough as different
 - Upgrade frontend to Angular 16
