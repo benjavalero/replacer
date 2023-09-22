@@ -35,14 +35,14 @@ export const routes: Routes = [
     canActivate: [authenticationGuard],
     canActivateChild: [authenticationGuard],
     children: [
+      { path: 'notype', component: FindRandomComponent },
+      { path: 'notype/:id', component: FindRandomComponent },
       { path: 'custom', component: FindCustomComponent },
       { path: 'custom/:subtype/:suggestion/:cs', component: FindRandomComponent },
       { path: 'custom/:subtype/:suggestion/:cs/:id', component: FindRandomComponent },
       { path: 'list', component: ReplacementListComponent },
       { path: ':kind/:subtype', component: FindRandomComponent },
-      { path: ':kind/:subtype/:id', component: FindRandomComponent },
-      { path: 'notype', component: FindRandomComponent },
-      { path: 'notype/:id', component: FindRandomComponent }
+      { path: ':kind/:subtype/:id', component: FindRandomComponent }
     ]
   },
   { path: 'stats', component: StatsComponent, canActivate: [authenticationGuard] },
