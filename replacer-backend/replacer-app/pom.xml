@@ -12,6 +12,10 @@
 
     <artifactId>replacer-app</artifactId>
 
+    <properties>
+        <h2.version>2.1.214</h2.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>es.bvalero.replacer</groupId>
@@ -114,7 +118,7 @@
                 <dependency>
                     <groupId>com.h2database</groupId>
                     <artifactId>h2</artifactId>
-                    <version>2.0.206</version>
+                    <version>${h2.version}</version>
                     <scope>runtime</scope>
                 </dependency>
             </dependencies>
@@ -138,6 +142,7 @@
                 <dependency>
                     <groupId>com.h2database</groupId>
                     <artifactId>h2</artifactId>
+                    <version>${h2.version}</version>
                     <scope>runtime</scope>
                 </dependency>
             </dependencies>
