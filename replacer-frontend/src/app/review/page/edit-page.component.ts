@@ -174,6 +174,7 @@ export class EditPageComponent implements OnChanges {
     let reviewedPage: ReviewedPage;
     if (content === null) {
       reviewedPage = {
+        sectionOffset: this.page.section?.offset,
         reviewedReplacements: reviewedReplacements
       } as ReviewedPage;
     } else {

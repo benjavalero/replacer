@@ -1,5 +1,8 @@
 # Versions
 
+## 2.24.2 (24 Sep 2023)
+- Fix regression: replacements not marked as reviewed when they are contained in a section
+
 ## 2.24.1 (22 Sep 2023)
 - Fix regression: content to save is the original one and not the one with the applied replacements
 - Fix: no type routes have preference over kind-subtype routes

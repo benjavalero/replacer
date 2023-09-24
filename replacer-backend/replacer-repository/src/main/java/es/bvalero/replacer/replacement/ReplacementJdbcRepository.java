@@ -12,6 +12,7 @@ import java.util.Collection;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -21,6 +22,7 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSourceUtils;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Qualifier("replacementJdbcRepository")
 @Transactional
 @Repository
@@ -164,7 +166,10 @@ class ReplacementJdbcRepository implements ReplacementSaveRepository, Replacemen
             .addValue("kind", replacement.getType().getKind().getCode())
             .addValue("subtype", replacement.getType().getSubtype())
             .addValue("start", replacement.getStart());
-        jdbcTemplate.update(sql, namedParameters);
+        int numRows = jdbcTemplate.update(sql, namedParameters);
+        if (numRows != 1) {
+            LOGGER.warn("Indexed Replacement reviewer not updated: {}", replacement);
+        }
     }
 
     @Override

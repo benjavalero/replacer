@@ -67,13 +67,7 @@ public class ReviewedPage {
 
     void validate() {
         if (isReviewedWithoutChanges()) {
-            if (
-                this.content != null ||
-                this.title != null ||
-                this.sectionId != null ||
-                this.sectionOffset != null ||
-                this.queryTimestamp != null
-            ) {
+            if (this.content != null || this.title != null || this.sectionId != null || this.queryTimestamp != null) {
                 throw new IllegalArgumentException("Unnecessary fields to save a reviewed page without changes");
             }
         } else {
