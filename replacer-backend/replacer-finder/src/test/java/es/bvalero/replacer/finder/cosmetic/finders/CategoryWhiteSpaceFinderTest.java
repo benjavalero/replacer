@@ -3,18 +3,20 @@ package es.bvalero.replacer.finder.cosmetic.finders;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import es.bvalero.replacer.XmlConfiguration;
+import es.bvalero.replacer.FinderProperties;
 import es.bvalero.replacer.finder.Cosmetic;
 import java.util.List;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
 @ActiveProfiles("offline")
-@SpringBootTest(classes = { CategoryWhiteSpaceFinder.class, XmlConfiguration.class })
+@EnableConfigurationProperties(FinderProperties.class)
+@SpringBootTest(classes = CategoryWhiteSpaceFinder.class)
 class CategoryWhiteSpaceFinderTest {
 
     @Autowired

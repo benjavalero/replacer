@@ -2,20 +2,24 @@ package es.bvalero.replacer.finder.benchmark.completetag;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import es.bvalero.replacer.XmlConfiguration;
+import es.bvalero.replacer.FinderProperties;
 import es.bvalero.replacer.finder.BenchmarkResult;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
 import java.util.Set;
 import java.util.stream.Collectors;
-import javax.annotation.Resource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest(classes = XmlConfiguration.class)
+@EnableConfigurationProperties(FinderProperties.class)
+@SpringBootTest(classes = BenchmarkFinder.class)
 class CompleteTagFinderTest {
 
-    @Resource
+    @Autowired
+    private FinderProperties finderProperties;
+
     private Set<String> completeTags;
 
     private String text;
@@ -23,6 +27,8 @@ class CompleteTagFinderTest {
 
     @BeforeEach
     public void setUp() {
+        this.completeTags = this.finderProperties.getCompleteTags();
+
         String tag1 = "<math class=\"latex\">An <i>example</i>\n in LaTeX</math>";
         String tag2 = "<math>To test repeated tags</math>";
         String tag3 = "<source>Another example</source>";

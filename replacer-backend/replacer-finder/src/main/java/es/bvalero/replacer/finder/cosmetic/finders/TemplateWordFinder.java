@@ -1,24 +1,24 @@
 package es.bvalero.replacer.finder.cosmetic.finders;
 
+import es.bvalero.replacer.FinderProperties;
 import es.bvalero.replacer.checkwikipedia.CheckWikipediaAction;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.cosmetic.CosmeticCheckedFinder;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.RegexMatchFinder;
-import java.util.Map;
 import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
 import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
 import org.intellij.lang.annotations.RegExp;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /** Templates containing the useless "template" word, e.g. `{{plantilla:DGRG}} ==> {{DGRG}}` */
 @Component
 class TemplateWordFinder implements CosmeticCheckedFinder {
 
-    @Resource
-    private Map<String, String> templateWords;
+    @Autowired
+    private FinderProperties finderProperties;
 
     @RegExp
     private static final String REGEX_TEMPLATE_WORD = "\\{\\{(%s):(\\w.+?)}}";
@@ -27,7 +27,7 @@ class TemplateWordFinder implements CosmeticCheckedFinder {
 
     @PostConstruct
     public void init() {
-        String alternate = FinderUtils.joinAlternate(this.templateWords.values());
+        String alternate = FinderUtils.joinAlternate(this.finderProperties.getTemplateWords().values());
         String regex = String.format(REGEX_TEMPLATE_WORD, alternate);
         this.patternTemplateWord = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
     }

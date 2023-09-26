@@ -1,14 +1,14 @@
 package es.bvalero.replacer.finder.immutable.finders;
 
+import es.bvalero.replacer.FinderProperties;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.FinderPriority;
 import es.bvalero.replacer.finder.immutable.ImmutableFinder;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
 import es.bvalero.replacer.finder.util.LinearMatchResult;
-import java.util.Set;
 import java.util.regex.MatchResult;
-import javax.annotation.Resource;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
@@ -20,8 +20,8 @@ class IgnorableSectionFinder implements ImmutableFinder {
     private static final String START_HEADER = "==";
     private static final char NEW_LINE = '\n';
 
-    @Resource
-    private Set<String> ignorableSections;
+    @Autowired
+    private FinderProperties finderProperties;
 
     @Override
     public FinderPriority getPriority() {
@@ -96,6 +96,6 @@ class IgnorableSectionFinder implements ImmutableFinder {
     }
 
     private boolean isValidHeaderLabel(String label) {
-        return this.ignorableSections.stream().anyMatch(label::startsWith);
+        return this.finderProperties.getIgnorableSections().stream().anyMatch(label::startsWith);
     }
 }

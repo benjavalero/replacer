@@ -3,6 +3,7 @@ package es.bvalero.replacer.finder.immutable.finders;
 import static es.bvalero.replacer.finder.util.TemplateUtils.END_TEMPLATE;
 import static es.bvalero.replacer.finder.util.TemplateUtils.START_TEMPLATE;
 
+import es.bvalero.replacer.FinderProperties;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.FinderPriority;
@@ -13,7 +14,6 @@ import es.bvalero.replacer.finder.util.TemplateUtils;
 import java.util.*;
 import java.util.regex.MatchResult;
 import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
 import org.apache.commons.collections4.SetValuedMap;
 import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
 import org.apache.commons.lang3.StringUtils;
@@ -34,15 +34,11 @@ import org.springframework.stereotype.Component;
 @Component
 class TemplateFinder implements ImmutableFinder {
 
-    private static final String WILDCARD = "*";
     private static final char PIPE = '|';
     private static final char COLON = ':';
 
-    @Resource
-    private Set<String> ignorableTemplates;
-
-    @Resource
-    private List<String> templateParams;
+    @Autowired
+    private FinderProperties finderProperties;
 
     @Autowired
     private UppercaseFinder uppercaseFinder;
@@ -62,22 +58,22 @@ class TemplateFinder implements ImmutableFinder {
 
     @PostConstruct
     public void initTemplateParams() {
-        for (String pair : this.templateParams) {
-            final String[] tokens = StringUtils.split(pair, '|');
-            if (tokens.length == 2) {
-                final String name = FinderUtils.toLowerCase(tokens[0].trim());
-                final String param = FinderUtils.toLowerCase(tokens[1].trim());
-                if (WILDCARD.equals(param)) {
-                    if (name.endsWith(WILDCARD)) {
-                        this.templateNamesPartial.add(StringUtils.chop(name));
-                    } else {
-                        this.templateNames.add(name);
-                    }
-                } else if (WILDCARD.equals(name)) {
-                    this.paramNames.add(param);
+        for (FinderProperties.TemplateParam templateParam : this.finderProperties.getTemplateParams()) {
+            assert templateParam.getTemplate() != null || templateParam.getParam() != null;
+            if (templateParam.getParam() == null) {
+                String name = FinderUtils.toLowerCase(templateParam.getTemplate());
+                if (templateParam.isPartial()) {
+                    this.templateNamesPartial.add(name);
                 } else {
-                    this.templateParamPairs.put(name, param);
+                    this.templateNames.add(name);
                 }
+            } else if (templateParam.getTemplate() == null) {
+                this.paramNames.add(FinderUtils.toLowerCase(templateParam.getParam()));
+            } else {
+                this.templateParamPairs.put(
+                        FinderUtils.toLowerCase(templateParam.getTemplate()),
+                        FinderUtils.toLowerCase(templateParam.getParam())
+                    );
             }
         }
     }
@@ -208,7 +204,7 @@ class TemplateFinder implements ImmutableFinder {
     }
 
     private boolean ignoreCompletePage(String templateName) {
-        return this.ignorableTemplates.contains(templateName);
+        return this.finderProperties.getIgnorableTemplates().contains(templateName);
     }
 
     private boolean ignoreCompleteTemplate(String templateName) {

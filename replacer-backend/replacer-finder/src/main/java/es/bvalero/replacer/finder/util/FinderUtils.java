@@ -5,9 +5,9 @@ import static org.apache.commons.lang3.StringUtils.SPACE;
 
 import es.bvalero.replacer.common.util.ReplacerUtils;
 import es.bvalero.replacer.finder.FinderPage;
-import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Set;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -311,24 +311,6 @@ public class FinderUtils {
 
     public String joinAlternate(Iterable<String> items) {
         return String.join(ALTERNATE_SEPARATOR, items);
-    }
-
-    // Get the items in a collection of strings where each string is a comma-separated list itself
-    public Set<String> getItemsInCollection(Collection<String> collection) {
-        return collection.stream().flatMap(val -> splitList(val).stream()).collect(Collectors.toUnmodifiableSet());
-    }
-
-    public Stream<String> splitListAsStream(String list) {
-        return Arrays.stream(StringUtils.split(list, ","));
-    }
-
-    // Get items in a comma-separated list
-    public List<String> splitList(String list) {
-        return splitListAsStream(list).collect(Collectors.toUnmodifiableList());
-    }
-
-    public String getFirstItemInList(String list) {
-        return splitList(list).get(0);
     }
 
     /***** LOGGING UTILS *****/

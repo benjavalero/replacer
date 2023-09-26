@@ -1,5 +1,6 @@
 package es.bvalero.replacer.finder.immutable.finders;
 
+import es.bvalero.replacer.FinderProperties;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.FinderPriority;
 import es.bvalero.replacer.finder.immutable.ImmutableFinder;
@@ -11,15 +12,15 @@ import java.util.Set;
 import java.util.regex.MatchResult;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /** Find redirection templates. In case they are found the complete text must be ignored. */
 @Component
 class RedirectionFinder implements ImmutableFinder {
 
-    @Resource
-    private Set<String> ignorableTemplates;
+    @Autowired
+    private FinderProperties finderProperties;
 
     private final Set<String> redirectionTemplates = new HashSet<>();
 
@@ -33,7 +34,8 @@ class RedirectionFinder implements ImmutableFinder {
     @PostConstruct
     public void init() {
         this.redirectionTemplates.addAll(
-                this.ignorableTemplates.stream()
+                this.finderProperties.getIgnorableTemplates()
+                    .stream()
                     .filter(s -> s.contains("#"))
                     .map(FinderUtils::toLowerCase)
                     .collect(Collectors.toUnmodifiableSet())

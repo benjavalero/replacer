@@ -3,6 +3,8 @@ package es.bvalero.replacer.finder.immutable.finders;
 import dk.brics.automaton.DatatypesAutomatonProvider;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
+import es.bvalero.replacer.FinderProperties;
+import es.bvalero.replacer.FinderPropertiesConfiguration;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.FinderPriority;
 import es.bvalero.replacer.finder.Immutable;
@@ -13,7 +15,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.MatchResult;
 import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -25,8 +27,8 @@ class PersonSurnameFinder implements ImmutableFinder {
 
     private RunAutomaton automaton;
 
-    @Resource
-    private Set<String> personSurnames;
+    @Autowired
+    private FinderProperties finderProperties;
 
     private final Set<String> completeSurnames = new HashSet<>();
 
@@ -39,13 +41,11 @@ class PersonSurnameFinder implements ImmutableFinder {
     @PostConstruct
     public void init() {
         final Set<String> surnames = new HashSet<>();
-        for (String personSurname : this.personSurnames) {
-            if (personSurname.startsWith("*")) {
-                final String surname = personSurname.substring(1);
-                surnames.add(surname);
+        for (FinderProperties.PersonSurname personSurname : this.finderProperties.getPersonSurnames()) {
+            final String surname = personSurname.getSurname();
+            surnames.add(surname);
+            if (personSurname.isIgnoreName()) {
                 this.completeSurnames.add(surname);
-            } else {
-                surnames.add(personSurname);
             }
         }
 

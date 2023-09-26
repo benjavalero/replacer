@@ -1,18 +1,17 @@
 package es.bvalero.replacer.finder.cosmetic.finders;
 
+import es.bvalero.replacer.FinderProperties;
 import es.bvalero.replacer.checkwikipedia.CheckWikipediaAction;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.cosmetic.CosmeticCheckedFinder;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.RegexMatchFinder;
-import java.util.Map;
-import java.util.Set;
 import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
 import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
 import org.apache.commons.lang3.StringUtils;
 import org.intellij.lang.annotations.RegExp;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
@@ -20,8 +19,8 @@ import org.springframework.stereotype.Component;
 @Component
 class CategoryWhiteSpaceFinder implements CosmeticCheckedFinder {
 
-    @Resource
-    private Map<String, String> categoryWords;
+    @Autowired
+    private FinderProperties finderProperties;
 
     @RegExp
     private static final String REGEX_CATEGORY_SPACE = "\\[\\[(\\s*%s\\s*):(.+?)(\\|.+?)?]]";
@@ -30,8 +29,10 @@ class CategoryWhiteSpaceFinder implements CosmeticCheckedFinder {
 
     @PostConstruct
     public void init() {
-        Set<String> words = FinderUtils.getItemsInCollection(this.categoryWords.values());
-        String alternate = String.format("(?:%s)", FinderUtils.joinAlternate(words));
+        String alternate = String.format(
+            "(?:%s)",
+            FinderUtils.joinAlternate(this.finderProperties.getAllCategoryWords())
+        );
         String regex = String.format(REGEX_CATEGORY_SPACE, alternate);
         this.patternCategorySpace = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
     }
@@ -91,9 +92,8 @@ class CategoryWhiteSpaceFinder implements CosmeticCheckedFinder {
 
     @Override
     public String getFix(MatchResult match, FinderPage page) {
-        String defaultCategoryWord = FinderUtils.getFirstItemInList(
-            this.categoryWords.get(page.getPageKey().getLang().getCode())
-        );
+        String defaultCategoryWord =
+            this.finderProperties.getCategoryWords().get(page.getPageKey().getLang().getCode()).get(0);
         String fixedCategoryName = match.group(2).trim();
         String fixedCategoryAlias = match.group(3) == null ? "" : "|" + match.group(3).substring(1).trim();
         return String.format("[[%s:%s%s]]", defaultCategoryWord, fixedCategoryName, fixedCategoryAlias);

@@ -2,7 +2,7 @@ package es.bvalero.replacer.finder.immutable.finders;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import es.bvalero.replacer.XmlConfiguration;
+import es.bvalero.replacer.FinderProperties;
 import es.bvalero.replacer.finder.Immutable;
 import es.bvalero.replacer.finder.listing.find.ListingOfflineFinder;
 import es.bvalero.replacer.finder.listing.load.SimpleMisspellingLoader;
@@ -18,10 +18,12 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
 @ActiveProfiles("offline")
+@EnableConfigurationProperties(FinderProperties.class)
 @SpringBootTest(
     classes = {
         TemplateFinder.class,
@@ -29,7 +31,6 @@ import org.springframework.test.context.ActiveProfiles;
         SimpleMisspellingLoader.class,
         ListingOfflineFinder.class,
         SimpleMisspellingParser.class,
-        XmlConfiguration.class,
     }
 )
 class TemplateFinderTest {

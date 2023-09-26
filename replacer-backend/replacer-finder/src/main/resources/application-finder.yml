@@ -1,0 +1,431 @@
+replacer.finder:
+  # LISTINGS
+  simpleMisspellingPages:
+    es: Wikipedia:Corrector ortográfico/Listado
+    gl: Wikipedia:Revisor ortográfico/Listaxe
+  composedMisspellingPages:
+    es: Usuario:Benjavalero/ComposedMisspellings
+    gl: Usuario:Benjavalero/ComposedMisspellings
+  falsePositivePages:
+    es: Usuario:Benjavalero/FalsePositives
+    gl: Usuario:Benjavalero/FalsePositives
+
+  # SPACES
+  templateWords:
+    es: Plantilla
+    gl: Modelo
+
+  # The following maps contain the magical words for some concepts in the different languages
+  # The words will be listed being the first one the standard option
+  fileWords:
+    es:
+      - Archivo
+      - File
+    gl:
+      - Ficheiro
+      - Arquivo
+      - File
+  imageWords:
+    es:
+      - Imagen
+      - Image
+    gl:
+      - Imaxe
+      - Image
+  annexWords:
+    es:
+      - Anexo
+      - Annex
+    gl:
+      - Anexo
+      - Annex
+  categoryWords:
+    es:
+      - Categoría
+      - Category
+    gl:
+      - Categoría
+      - Category
+
+  # NAMES
+
+  # The list contains "names" which will be ignored when followed by an uppercase word,
+  # e.g. Los Angeles in Los Angeles Lakers.
+  personNames:
+    - Basket
+    - Canada
+    - Division
+    - Domingo
+    - Frances
+    - Julio de la
+    - Julio de
+    - Julio
+    - Junio
+    - Latin
+    - Los Angeles
+    - Manchester
+    - Master
+    - Masters
+    - Milan
+    - Missouri
+    - Octubre
+    - Online
+    - Sky
+    - Sidney
+    - Television
+    - Tokyo
+
+  # The list contains "surnames" which will be ignored when preceded by an uppercase word,
+  # e.g. Domingo in Plácido Domingo.
+  # If option `ignoreName` is true the whole name-surname will be ignored.
+  personSurnames:
+    # Spanish months
+    # Note that cases like "Av. 8 de Octubre" are not captured
+    - surname: ([0-9]{1,2} )?de (Enero|Febrero|Marzo|Abril|Mayo|Junio|Julio|Agosto|Septiembre|Octubre|Noviembre|Diciembre)
+
+    - surname: Abril
+    - surname: Airlines
+      ignoreName: true
+    - surname: Airways
+      ignoreName: true
+    - surname: Albums
+    - surname: America
+    - surname: Basket
+    - surname: Canada
+    - surname: Carter
+    - surname: de Catalunya
+    - surname: Comics
+    - surname: Domingo
+    - surname: de Invierno
+    - surname: Julio
+    - surname: Junio
+    - surname: Latin
+    - surname: League
+      ignoreName: true
+    - surname: Link
+    - surname: Master
+    - surname: Masters
+    - surname: Match
+    - surname: Mayo
+    - surname: Online
+    - surname: Pinto
+    - surname: Records
+    - surname: Sky
+    - surname: Television
+    - surname: Union
+    - surname: de Verano
+    - surname: Version
+
+  # IGNORE
+
+  # Pages containing these templates should not be processed
+  ignorableTemplates:
+    - "#redirect"
+    - "#redirección"
+    - "#redireccion"
+
+    # Spanish
+    - destruir
+    - delete
+    - borrar
+    - eliminar
+    - d
+
+    - copyedit
+    - ortografía
+
+    - página nueva sin referencias
+    - problemas artículo
+    - problemas
+    - pa
+
+    - nobots
+
+    - en uso
+    - enuso
+    - en desarrollo
+    - endesarrollo
+    - en obras
+    - enobras
+    - en construcción
+
+    - traducción
+    - mal traducido
+    - maltraducido
+    - mala traducción
+    - malatraducción
+    - traducción defectuosa
+    - traducción incompleta
+    - traducción inconclusa
+    - autotrad
+    - revisar traducción
+
+    - wikificar
+    - formato de referencias
+
+    # Galician
+    - en tradución
+    - entradución
+    - non galego
+    - lixo
+    - lixoporque
+    - pendente artigo
+    - formatowiki
+
+  ignorableSections:
+    - Referencias
+    - Enlaces externos
+    - Véase también
+    - Bibliografía
+    - Notas
+    - Fuentes
+    - Publicaciones
+    - Otras lecturas
+    - Lecturas
+
+    # Galician
+    - Ligazóns externas
+    - Publicacións
+
+  completeTags:
+    - ref  # 1,2M
+    - gallery  # 9K
+    - blockquote   # 3K
+    - nowiki   # 1K
+    - math # 1K
+    - cite # 900
+    - source   # 700
+    - code # 500
+    - timeline # 450
+    - poem # 300
+    - pre  # 130
+    - tt   # 120
+    - syntaxhighlight  # 100
+    - score    # 70
+
+    #  1707 <sup
+    #  315 <onlyinclude
+    #  298 <noinclude
+    #  250 <references
+    #  164 <s
+    #  155 <mapframe
+    #  131 <br
+    #  86 <sub
+    #  63 <imagemap
+    #  51 <abbr
+    #  43 <bdi
+    #  41 <graph
+    #  10 <time
+
+  # TEMPLATE PARAMETERS
+
+  # This list contains pairs template name-param for which the param values will be ignored.
+  # If no param name is given, then the complete template will be ignored.
+  # If partial, the template name will match the start of the template name.
+  # If no template name is given, then the param values will be ignored no matter the template they are in.
+
+  templateParams:
+    # Templates to be ignored completely
+    - template: AP
+    - template: bandera
+      partial: true
+    - template: cita
+      partial: true
+    - template: cite
+      partial : true
+    - template: caja de cita
+    - template: commons
+    - template: commonscat
+    - template: convertir
+    - template: coord
+    - template: DEFAULTSORT    # It usually contains words without accents for the sake of sorting
+    - template: enlace roto
+    - template: esd
+    - template: facebook
+    - template: ficha de taxón
+    - template: Fila BIC
+    - template: Fila LIC
+    - template: flag
+      partial: true
+    - template: harvnb         # Cita Harvard
+    - template: harvnp         # Cita Harvard
+    - template: imdb
+      partial: true
+    - template: lang
+      partial: true
+    - template: link
+    - template: NF             # It is converted into a category and contains person names
+    - template: nihongo        # Japanese transcriptions
+    - template: obra citada
+    - template: ORDENAR        # It usually contains words without accents for the sake of sorting
+    - template: quote
+    - template: refn           # Nested references
+    - template: sort
+    - template: sortname
+    - template: sfn            # Cita Harvard
+    - template: taxobox
+    - template: traducido ref
+    - template: twitter
+    - template: url
+    - template: versalita
+    - template: wayback
+    - template: webarchive
+    - template: Wikidata list
+    - template: "#expr"         # It contains mathematical expressions in particular the word "round"
+    - template: "#invoke"
+    - template: "#tag"
+
+    # Parameter values to be ignored no matter the template they are in
+    - param: cita
+    - param: escudo
+    - param: escudo2
+    - param: escudo3
+    - param: escudo4
+    - param: escudo5
+    - param: facebook
+    - param: imagen
+    - param: imaxe
+    - param: índice
+    - param: mapa
+    - param: página web
+    - param: reporte        # Links to reports for football matches
+    - param: reporte2
+    - param: romaji         # Japanese transcriptions
+    - param: url
+
+    # Parameter values to be ignored in the given templates
+    - template: AllMusic
+      param: class
+    - template: Certification Table Entry
+      param: type
+    - template: fs player
+      param: nat    # The value is used for the template Bandera which admits English values
+    - template: Identificador carretera española
+      param: tipo
+    - template: Jugador de fútbol
+      param: nat    # The value is used for the template Bandera which admits English values
+    - template: Medallero
+      param: var
+
+  # DATES
+
+  monthNames:
+    es:
+      - enero
+      - febrero
+      - marzo
+      - abril
+      - mayo
+      - junio
+      - julio
+      - agosto
+      - septiembre
+      - octubre
+      - noviembre
+      - diciembre
+    gl:
+      - xaneiro
+      - febreiro
+      - marzo
+      - abril
+      - maio
+      - xuño
+      - xullo
+      - agosto
+      - setembro
+      - outubro
+      - novembro
+      - decembro
+    en:
+      - January
+      - February
+      - March
+      - April
+      - May
+      - June
+      - July
+      - August
+      - September
+      - October
+      - November
+      - December
+
+  # The prepositions cannot be used as connectors
+  dateConnectors:
+    es:
+      - a
+      - desde
+      - durante
+      - el
+      - entre
+      - en
+      - hacia
+      - hasta
+      - para
+      - y
+    gl:
+      - a
+      - desde
+      - dende
+      - durante
+      - o
+      - entre
+      - en
+      - cara
+      - ata
+      - para
+      - e
+
+  # The first preposition is the default one that will be added when missing
+  yearPrepositions:
+    es:
+      - de
+      - del
+    gl:
+      - de
+      - do
+
+  # Words preceding a date to be added an article between
+  # The list is actually a list of pairs with the word and the particle + article,
+  # so we can take apply contractions or replacements.
+  dateArticles:
+    es:
+      - prep: a
+        article: al
+      - prep: desde
+        article: desde el
+      - prep: de
+        article: del
+      - prep: durante
+        article: durante el
+      - prep: entre
+        article: entre el
+      - prep: en
+        article: el
+      - prep: hacia
+        article: hacia el
+      - prep: hasta
+        article: hasta el
+      - prep: y
+        article: y el
+    gl:
+      - prep: a
+        article: ó
+      - prep: desde
+        article: desde o
+      - prep: dende
+        article: dende o
+      - prep: de
+        article: do
+      - prep: durante
+        article: durante o
+      - prep: entre
+        article: entre o
+      - prep: en
+        article: o
+      - prep: cara
+        article: cara o
+      - prep: ata
+        article: ata o
+      - prep: e
+        article: e o

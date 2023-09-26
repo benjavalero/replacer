@@ -2,15 +2,15 @@ package es.bvalero.replacer.finder.immutable.finders;
 
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
+import es.bvalero.replacer.FinderProperties;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.FinderPriority;
 import es.bvalero.replacer.finder.immutable.ImmutableFinder;
 import es.bvalero.replacer.finder.util.AutomatonMatchFinder;
 import es.bvalero.replacer.finder.util.FinderUtils;
-import java.util.Set;
 import java.util.regex.MatchResult;
 import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -26,8 +26,8 @@ class PersonNameFinder implements ImmutableFinder {
 
     private RunAutomaton automaton;
 
-    @Resource
-    private Set<String> personNames;
+    @Autowired
+    private FinderProperties finderProperties;
 
     @Override
     public FinderPriority getPriority() {
@@ -37,7 +37,7 @@ class PersonNameFinder implements ImmutableFinder {
 
     @PostConstruct
     public void init() {
-        final String alternations = "(" + FinderUtils.joinAlternate(this.personNames) + ")";
+        final String alternations = "(" + FinderUtils.joinAlternate(this.finderProperties.getPersonNames()) + ")";
         this.automaton = new RunAutomaton(new RegExp(alternations).toAutomaton());
     }
 

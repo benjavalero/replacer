@@ -3,18 +3,28 @@ package es.bvalero.replacer.finder.benchmark.redirection;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import es.bvalero.replacer.XmlConfiguration;
+import es.bvalero.replacer.FinderProperties;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
 import java.util.Set;
-import javax.annotation.Resource;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest(classes = { XmlConfiguration.class })
+@EnableConfigurationProperties(FinderProperties.class)
+@SpringBootTest(classes = BenchmarkFinder.class)
 class RedirectionFinderTest {
 
-    @Resource
+    @Autowired
+    private FinderProperties finderProperties;
+
     private Set<String> ignorableTemplates;
+
+    @BeforeEach
+    public void setUp() {
+        this.ignorableTemplates = this.finderProperties.getIgnorableTemplates();
+    }
 
     @Test
     void testRedirectionLowercaseContainsFinder() {

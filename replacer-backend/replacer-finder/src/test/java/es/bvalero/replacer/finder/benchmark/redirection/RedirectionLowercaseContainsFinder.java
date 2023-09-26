@@ -4,21 +4,16 @@ import es.bvalero.replacer.finder.BenchmarkResult;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
 import es.bvalero.replacer.finder.util.FinderUtils;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 class RedirectionLowercaseContainsFinder implements BenchmarkFinder {
 
     private final Set<String> ignorableTemplates = new HashSet<>();
 
     RedirectionLowercaseContainsFinder(Set<String> ignorableTemplates) {
-        this.ignorableTemplates.addAll(
-                ignorableTemplates
-                    .stream()
-                    .filter(s -> s.contains("#"))
-                    .map(FinderUtils::toLowerCase)
-                    .collect(Collectors.toUnmodifiableSet())
-            );
+        this.ignorableTemplates.addAll(ignorableTemplates);
     }
 
     @Override

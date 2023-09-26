@@ -1,10 +1,9 @@
 package es.bvalero.replacer.finder.listing.find;
 
+import es.bvalero.replacer.FinderProperties;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.wikipedia.WikipediaPageRepository;
-import java.util.Map;
-import javax.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
@@ -16,19 +15,13 @@ class ListingWikipediaFinder implements ListingFinder {
     @Autowired
     private WikipediaPageRepository wikipediaPageRepository;
 
-    @Resource
-    private Map<String, String> simpleMisspellingPages;
-
-    @Resource
-    private Map<String, String> composedMisspellingPages;
-
-    @Resource
-    private Map<String, String> falsePositivePages;
+    @Autowired
+    private FinderProperties finderProperties;
 
     @Override
     public String getSimpleMisspellingListing(WikipediaLanguage lang) throws ReplacerException {
         return wikipediaPageRepository
-            .findByTitle(lang, simpleMisspellingPages.get(lang.getCode()))
+            .findByTitle(lang, finderProperties.getSimpleMisspellingPages().get(lang.getCode()))
             .orElseThrow(ReplacerException::new)
             .getContent();
     }
@@ -36,7 +29,7 @@ class ListingWikipediaFinder implements ListingFinder {
     @Override
     public String getFalsePositiveListing(WikipediaLanguage lang) throws ReplacerException {
         return wikipediaPageRepository
-            .findByTitle(lang, falsePositivePages.get(lang.getCode()))
+            .findByTitle(lang, finderProperties.getFalsePositivePages().get(lang.getCode()))
             .orElseThrow(ReplacerException::new)
             .getContent();
     }
@@ -44,7 +37,7 @@ class ListingWikipediaFinder implements ListingFinder {
     @Override
     public String getComposedMisspellingListing(WikipediaLanguage lang) throws ReplacerException {
         return wikipediaPageRepository
-            .findByTitle(lang, composedMisspellingPages.get(lang.getCode()))
+            .findByTitle(lang, finderProperties.getComposedMisspellingPages().get(lang.getCode()))
             .orElseThrow(ReplacerException::new)
             .getContent();
     }

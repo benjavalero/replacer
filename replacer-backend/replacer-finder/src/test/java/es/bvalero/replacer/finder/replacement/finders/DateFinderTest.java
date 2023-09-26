@@ -3,7 +3,7 @@ package es.bvalero.replacer.finder.replacement.finders;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import es.bvalero.replacer.XmlConfiguration;
+import es.bvalero.replacer.FinderProperties;
 import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.FinderPage;
@@ -15,9 +15,11 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest(classes = { DateFinder.class, XmlConfiguration.class })
+@EnableConfigurationProperties(FinderProperties.class)
+@SpringBootTest(classes = DateFinder.class)
 class DateFinderTest {
 
     @Autowired

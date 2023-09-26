@@ -3,6 +3,7 @@ package es.bvalero.replacer.dump;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+import es.bvalero.replacer.DumpProperties;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.page.index.PageIndexBatchService;
@@ -26,7 +27,7 @@ class DumpSaxParserTest {
     private PageIndexBatchService pageIndexService;
 
     @Mock
-    private Map<String, Integer> numPagesEstimated;
+    private DumpProperties dumpProperties;
 
     @InjectMocks
     private DumpSaxParser dumpParser;
@@ -57,7 +58,7 @@ class DumpSaxParserTest {
             .thenReturn(PageIndexResult.ofNotIndexed())
             .thenReturn(PageIndexResult.ofIndexed())
             .thenReturn(PageIndexResult.ofNotIndexable());
-        when(numPagesEstimated.get(WikipediaLanguage.SPANISH.getCode())).thenReturn(150000);
+        when(dumpProperties.getNumPagesEstimated()).thenReturn(Map.of(WikipediaLanguage.SPANISH.getCode(), 150000));
 
         dumpParser.parseDumpFile(WikipediaLanguage.SPANISH, DumpFile.of(dumpFile));
 

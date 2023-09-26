@@ -19,9 +19,7 @@ class RedirectionAutomatonFinder implements BenchmarkFinder {
     RedirectionAutomatonFinder(Set<String> ignorableTemplates) {
         Set<String> fixedTemplates = ignorableTemplates
             .stream()
-            .filter(s -> s.contains("#"))
             .map(s -> s.replace("#", "\\#"))
-            .map(FinderUtils::toLowerCase)
             .collect(Collectors.toSet());
         String alternations = '(' + FinderUtils.joinAlternate(fixedTemplates) + ')';
         this.automaton = new RunAutomaton(new RegExp(alternations).toAutomaton());

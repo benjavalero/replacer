@@ -1,15 +1,14 @@
 package es.bvalero.replacer.dump;
 
+import es.bvalero.replacer.DumpProperties;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.page.index.PageIndexBatchService;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
-import java.util.Map;
 import java.util.Optional;
 import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
 import javax.xml.XMLConstants;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
@@ -28,8 +27,8 @@ class DumpSaxParser implements DumpParser {
     @Autowired
     private PageIndexBatchService pageIndexService;
 
-    @Resource
-    private Map<String, Integer> numPagesEstimated;
+    @Autowired
+    private DumpProperties dumpProperties;
 
     // Singleton properties to be set in each dump parsing
     // We assume we only parse one dump at a time
@@ -75,7 +74,9 @@ class DumpSaxParser implements DumpParser {
                     .running(this.dumpHandler.isRunning())
                     .numPagesRead(this.dumpHandler.getNumPagesRead())
                     .numPagesIndexed(this.dumpHandler.getNumPagesIndexed())
-                    .numPagesEstimated(this.numPagesEstimated.get(this.dumpHandler.getLang().getCode()))
+                    .numPagesEstimated(
+                        this.dumpProperties.getNumPagesEstimated().get(this.dumpHandler.getLang().getCode())
+                    )
                     .dumpFileName(this.dumpFile.getPath().getFileName().toString())
                     .start(this.dumpHandler.getStart())
                     .end(this.dumpHandler.getEnd())

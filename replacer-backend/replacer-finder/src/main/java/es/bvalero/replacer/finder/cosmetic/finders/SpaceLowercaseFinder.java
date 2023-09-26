@@ -1,18 +1,16 @@
 package es.bvalero.replacer.finder.cosmetic.finders;
 
+import es.bvalero.replacer.FinderProperties;
 import es.bvalero.replacer.checkwikipedia.CheckWikipediaAction;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.cosmetic.CosmeticCheckedFinder;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.RegexMatchFinder;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
 import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
 import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
 import org.intellij.lang.annotations.RegExp;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /** Space links where the space is in lowercase, e.g. `[[archivo:x.jpg]] ==> [[Archivo:x.jpg]]` */
@@ -22,29 +20,14 @@ class SpaceLowercaseFinder implements CosmeticCheckedFinder {
     @RegExp
     private static final String REGEX_SPACE = "\\[\\[(%s):(.+?)]]";
 
-    @Resource
-    private Map<String, String> fileWords;
-
-    @Resource
-    private Map<String, String> imageWords;
-
-    @Resource
-    private Map<String, String> annexWords;
-
-    @Resource
-    private Map<String, String> categoryWords;
+    @Autowired
+    private FinderProperties finderProperties;
 
     private Pattern patternLowercaseSpace;
 
     @PostConstruct
     public void init() {
-        Set<String> spaceWords = new HashSet<>();
-        spaceWords.addAll(FinderUtils.getItemsInCollection(this.fileWords.values()));
-        spaceWords.addAll(FinderUtils.getItemsInCollection(this.imageWords.values()));
-        spaceWords.addAll(FinderUtils.getItemsInCollection(this.annexWords.values()));
-        spaceWords.addAll(FinderUtils.getItemsInCollection(this.categoryWords.values()));
-
-        String concat = FinderUtils.joinAlternate(spaceWords);
+        String concat = FinderUtils.joinAlternate(this.finderProperties.getAllSpaceWords());
         String regex = String.format(REGEX_SPACE, FinderUtils.toLowerCase(concat));
         this.patternLowercaseSpace = Pattern.compile(regex);
     }

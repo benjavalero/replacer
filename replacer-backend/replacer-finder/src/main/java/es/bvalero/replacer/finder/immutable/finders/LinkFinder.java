@@ -3,6 +3,7 @@ package es.bvalero.replacer.finder.immutable.finders;
 import static es.bvalero.replacer.finder.util.LinkUtils.END_LINK;
 import static es.bvalero.replacer.finder.util.LinkUtils.START_LINK;
 
+import es.bvalero.replacer.FinderProperties;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.FinderPriority;
 import es.bvalero.replacer.finder.immutable.ImmutableCheckedFinder;
@@ -12,8 +13,8 @@ import es.bvalero.replacer.finder.util.LinkUtils;
 import java.util.*;
 import java.util.regex.MatchResult;
 import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
@@ -33,24 +34,18 @@ class LinkFinder extends ImmutableCheckedFinder {
     private static final char PIPE = '|';
     private static final char COLON = ':';
 
-    @Resource
-    private Map<String, String> fileWords;
-
-    @Resource
-    private Map<String, String> imageWords;
-
-    @Resource
-    private Map<String, String> categoryWords;
+    @Autowired
+    private FinderProperties finderProperties;
 
     private final Set<String> fileSpaces = new HashSet<>();
     private final Set<String> categorySpaces = new HashSet<>();
 
     @PostConstruct
     public void init() {
-        this.fileSpaces.addAll(FinderUtils.getItemsInCollection(this.fileWords.values()));
-        this.fileSpaces.addAll(FinderUtils.getItemsInCollection(this.imageWords.values()));
+        this.fileSpaces.addAll(this.finderProperties.getAllFileWords());
+        this.fileSpaces.addAll(this.finderProperties.getAllImageWords());
 
-        this.categorySpaces.addAll(FinderUtils.getItemsInCollection(this.categoryWords.values()));
+        this.categorySpaces.addAll(this.finderProperties.getAllCategoryWords());
     }
 
     @Override

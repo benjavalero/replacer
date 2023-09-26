@@ -1,5 +1,6 @@
 package es.bvalero.replacer.finder.cosmetic.finders;
 
+import es.bvalero.replacer.FinderProperties;
 import es.bvalero.replacer.checkwikipedia.CheckWikipediaAction;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.FinderPage;
@@ -7,16 +8,13 @@ import es.bvalero.replacer.finder.FinderPriority;
 import es.bvalero.replacer.finder.cosmetic.CosmeticCheckedFinder;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.RegexMatchFinder;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
 import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
 import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
 import org.apache.commons.collections4.SetValuedMap;
 import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
 import org.intellij.lang.annotations.RegExp;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /** Space links where the space is not translated, e.g. `[[File:x.jpg]] ==> [[Archivo:x.jpg]]` */
@@ -26,17 +24,8 @@ class SpaceNotTranslatedFinder implements CosmeticCheckedFinder {
     @RegExp
     private static final String REGEX_SPACE = "\\[\\[(%s):(.+?)]]";
 
-    @Resource
-    private Map<String, String> fileWords;
-
-    @Resource
-    private Map<String, String> imageWords;
-
-    @Resource
-    private Map<String, String> annexWords;
-
-    @Resource
-    private Map<String, String> categoryWords;
+    @Autowired
+    private FinderProperties finderProperties;
 
     private Pattern patternLowercaseSpace;
 
@@ -44,21 +33,15 @@ class SpaceNotTranslatedFinder implements CosmeticCheckedFinder {
 
     @PostConstruct
     public void init() {
-        Set<String> spaceWords = new HashSet<>();
-        spaceWords.addAll(FinderUtils.getItemsInCollection(this.fileWords.values()));
-        spaceWords.addAll(FinderUtils.getItemsInCollection(this.imageWords.values()));
-        spaceWords.addAll(FinderUtils.getItemsInCollection(this.annexWords.values()));
-        spaceWords.addAll(FinderUtils.getItemsInCollection(this.categoryWords.values()));
-
-        String concat = FinderUtils.joinAlternate(spaceWords);
+        String concat = FinderUtils.joinAlternate(this.finderProperties.getAllSpaceWords());
         String regex = String.format(REGEX_SPACE, FinderUtils.toLowerCase(concat));
         this.patternLowercaseSpace = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
 
         for (WikipediaLanguage lang : WikipediaLanguage.values()) {
-            this.firstWords.put(lang, FinderUtils.getFirstItemInList(this.fileWords.get(lang.getCode())));
-            this.firstWords.put(lang, FinderUtils.getFirstItemInList(this.imageWords.get(lang.getCode())));
-            this.firstWords.put(lang, FinderUtils.getFirstItemInList(this.annexWords.get(lang.getCode())));
-            this.firstWords.put(lang, FinderUtils.getFirstItemInList(this.categoryWords.get(lang.getCode())));
+            this.firstWords.put(lang, this.finderProperties.getFileWords().get(lang.getCode()).get(0));
+            this.firstWords.put(lang, this.finderProperties.getImageWords().get(lang.getCode()).get(0));
+            this.firstWords.put(lang, this.finderProperties.getAnnexWords().get(lang.getCode()).get(0));
+            this.firstWords.put(lang, this.finderProperties.getCategoryWords().get(lang.getCode()).get(0));
         }
     }
 
@@ -90,14 +73,14 @@ class SpaceNotTranslatedFinder implements CosmeticCheckedFinder {
         String spaceWord = FinderUtils.toFirstUpperCase(match.group(1));
         String spaceWordTranslated;
         String lang = page.getPageKey().getLang().getCode();
-        if (FinderUtils.getItemsInCollection(this.fileWords.values()).contains(spaceWord)) {
-            spaceWordTranslated = FinderUtils.getFirstItemInList(this.fileWords.get(lang));
-        } else if (FinderUtils.getItemsInCollection(this.imageWords.values()).contains(spaceWord)) {
-            spaceWordTranslated = FinderUtils.getFirstItemInList(this.imageWords.get(lang));
-        } else if (FinderUtils.getItemsInCollection(this.annexWords.values()).contains(spaceWord)) {
-            spaceWordTranslated = FinderUtils.getFirstItemInList(this.annexWords.get(lang));
-        } else if (FinderUtils.getItemsInCollection(this.categoryWords.values()).contains(spaceWord)) {
-            spaceWordTranslated = FinderUtils.getFirstItemInList(this.categoryWords.get(lang));
+        if (this.finderProperties.getAllFileWords().contains(spaceWord)) {
+            spaceWordTranslated = this.finderProperties.getFileWords().get(lang).get(0);
+        } else if (this.finderProperties.getAllImageWords().contains(spaceWord)) {
+            spaceWordTranslated = this.finderProperties.getImageWords().get(lang).get(0);
+        } else if (this.finderProperties.getAllAnnexWords().contains(spaceWord)) {
+            spaceWordTranslated = this.finderProperties.getAnnexWords().get(lang).get(0);
+        } else if (this.finderProperties.getAllCategoryWords().contains(spaceWord)) {
+            spaceWordTranslated = this.finderProperties.getCategoryWords().get(lang).get(0);
         } else {
             throw new IllegalStateException("Unexpected value: " + spaceWord);
         }

@@ -5,6 +5,7 @@ import static org.apache.commons.lang3.StringUtils.SPACE;
 import dk.brics.automaton.DatatypesAutomatonProvider;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
+import es.bvalero.replacer.FinderProperties;
 import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.FinderPage;
@@ -19,13 +20,13 @@ import java.util.*;
 import java.util.regex.MatchResult;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.ListValuedMap;
 import org.apache.commons.collections4.SetValuedMap;
 import org.apache.commons.collections4.multimap.ArrayListValuedHashMap;
 import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
@@ -38,34 +39,11 @@ public class DateFinder implements ReplacementFinder {
     private static final List<Character> YEAR_DOT = List.of('.');
     private static final int CURRENT_YEAR = LocalDate.now().getYear();
 
-    private static final List<String> ENGLISH_MONTHS = List.of(
-        "January",
-        "February",
-        "March",
-        "April",
-        "May",
-        "June",
-        "July",
-        "August",
-        "September",
-        "October",
-        "November",
-        "December"
-    );
-
-    @Resource
-    private Map<String, String> monthNames;
-
-    @Resource
-    private Map<String, String> yearPrepositions;
-
-    @Resource
-    private Map<String, String> dateConnectors;
-
-    @Resource
-    private Map<String, String> dateArticles;
+    @Autowired
+    private FinderProperties finderProperties;
 
     private static final ListValuedMap<WikipediaLanguage, String> langMonths = new ArrayListValuedHashMap<>();
+    private static final List<String> englishMonths = new ArrayList<>();
     private static final ListValuedMap<WikipediaLanguage, String> langPrepositions = new ArrayListValuedHashMap<>();
     private static final SetValuedMap<WikipediaLanguage, String> langConnectors = new HashSetValuedHashMap<>();
     private static final Map<WikipediaLanguage, Map<String, String>> langArticles = new EnumMap<>(
@@ -79,7 +57,7 @@ public class DateFinder implements ReplacementFinder {
         for (WikipediaLanguage lang : WikipediaLanguage.values()) {
             // Months: the ones for the language, in lower and uppercase, and the English ones.
             // Plus the special case of "setiembre" in Spanish
-            langMonths.putAll(lang, FinderUtils.splitList(this.monthNames.get(lang.getCode())));
+            langMonths.putAll(lang, this.finderProperties.getMonthNames().get(lang.getCode()));
             List<String> monthsLowerUpperCase = new ArrayList<>();
             langMonths
                 .get(lang)
@@ -87,7 +65,8 @@ public class DateFinder implements ReplacementFinder {
                     monthsLowerUpperCase.add(month);
                     monthsLowerUpperCase.add(FinderUtils.setFirstUpperCase(month));
                 });
-            monthsLowerUpperCase.addAll(ENGLISH_MONTHS);
+            englishMonths.addAll(this.finderProperties.getMonthNames().get("en"));
+            monthsLowerUpperCase.addAll(englishMonths);
             if (WikipediaLanguage.SPANISH.equals(lang)) {
                 // Trick only for Spanish months
                 monthsLowerUpperCase.add("setiembre");
@@ -95,7 +74,7 @@ public class DateFinder implements ReplacementFinder {
             }
 
             // Prepositions
-            langPrepositions.putAll(lang, FinderUtils.splitList(this.yearPrepositions.get(lang.getCode())));
+            langPrepositions.putAll(lang, this.finderProperties.getYearPrepositions().get(lang.getCode()));
             List<String> prepositionsLowerUpperCase = new ArrayList<>();
             langPrepositions
                 .get(lang)
@@ -105,7 +84,7 @@ public class DateFinder implements ReplacementFinder {
                 });
 
             // Connectors
-            langConnectors.putAll(lang, FinderUtils.splitList(this.dateConnectors.get(lang.getCode())));
+            langConnectors.putAll(lang, this.finderProperties.getDateConnectors().get(lang.getCode()));
             List<String> connectorsLowerUpperCase = new ArrayList<>();
             langConnectors
                 .get(lang)
@@ -116,9 +95,9 @@ public class DateFinder implements ReplacementFinder {
 
             // Articles
             langArticles.put(lang, new HashMap<>());
-            FinderUtils
-                .splitListAsStream(this.dateArticles.get(lang.getCode()))
-                .forEach(pair -> langArticles.get(lang).putAll(buildArticleMap(pair)));
+            this.finderProperties.getDateArticles()
+                .get(lang.getCode())
+                .forEach(dateArticle -> langArticles.get(lang).putAll(buildArticleMap(dateArticle)));
 
             // Regex
             String regexPrepositions = String.format("(%s)", FinderUtils.joinAlternate(prepositionsLowerUpperCase));
@@ -189,11 +168,13 @@ public class DateFinder implements ReplacementFinder {
         }
     }
 
-    private Map<String, String> buildArticleMap(String pair) {
+    private Map<String, String> buildArticleMap(FinderProperties.DateArticle dateArticle) {
         final Map<String, String> articleMap = new HashMap<>();
-        final String[] tokens = StringUtils.split(pair, "-");
-        articleMap.put(tokens[0], tokens[1]);
-        articleMap.put(FinderUtils.setFirstUpperCase(tokens[0]), FinderUtils.setFirstUpperCase(tokens[1]));
+        articleMap.put(dateArticle.getPrep(), dateArticle.getArticle());
+        articleMap.put(
+            FinderUtils.setFirstUpperCase(dateArticle.getPrep()),
+            FinderUtils.setFirstUpperCase(dateArticle.getArticle())
+        );
         return articleMap;
     }
 
@@ -533,11 +514,11 @@ public class DateFinder implements ReplacementFinder {
     }
 
     private boolean isEnglishMonth(String month) {
-        return ENGLISH_MONTHS.contains(month);
+        return englishMonths.contains(month);
     }
 
     private String fixEnglishMonth(String month, WikipediaLanguage lang) {
-        return langMonths.get(lang).get(ENGLISH_MONTHS.indexOf(month));
+        return langMonths.get(lang).get(englishMonths.indexOf(month));
     }
 
     private String fixSeptember(String month, WikipediaLanguage lang) {
@@ -602,7 +583,7 @@ public class DateFinder implements ReplacementFinder {
         }
 
         // Add a warning if the date contains an English month
-        if (ENGLISH_MONTHS.stream().anyMatch(originalDate::contains)) {
+        if (englishMonths.stream().anyMatch(originalDate::contains)) {
             suggestions.add(0, Suggestion.of(text, "no reemplazar si el contexto está en inglés"));
         }
 

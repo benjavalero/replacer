@@ -9,19 +9,13 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 class RedirectionRegexFinder implements BenchmarkFinder {
 
     private final Pattern pattern;
 
     RedirectionRegexFinder(Set<String> ignorableTemplates) {
-        Set<String> fixedTemplates = ignorableTemplates
-            .stream()
-            .filter(s -> s.contains("#"))
-            .map(FinderUtils::toLowerCase)
-            .collect(Collectors.toSet());
-        String alternations = '(' + FinderUtils.joinAlternate(fixedTemplates) + ")";
+        String alternations = '(' + FinderUtils.joinAlternate(ignorableTemplates) + ")";
         this.pattern = Pattern.compile(alternations);
     }
 

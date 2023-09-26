@@ -1,14 +1,14 @@
 package es.bvalero.replacer.finder.immutable.finders;
 
+import es.bvalero.replacer.FinderProperties;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.FinderPriority;
 import es.bvalero.replacer.finder.immutable.ImmutableCheckedFinder;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
 import es.bvalero.replacer.finder.util.LinearMatchResult;
-import java.util.Set;
 import java.util.regex.MatchResult;
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
@@ -23,8 +23,8 @@ class CompleteTagFinder extends ImmutableCheckedFinder {
     private static final String END_SELF_CLOSING_TAG = "/>";
     private static final String START_CLOSING_TAG = "</";
 
-    @Resource
-    private Set<String> completeTags;
+    @Autowired
+    private FinderProperties finderProperties;
 
     @Override
     public FinderPriority getPriority() {
@@ -102,7 +102,7 @@ class CompleteTagFinder extends ImmutableCheckedFinder {
             }
         }
         final String tag = text.substring(start, i);
-        return this.completeTags.contains(tag) ? tag : null;
+        return this.finderProperties.getCompleteTags().contains(tag) ? tag : null;
     }
 
     private int findEndTag(String text, int start) {

@@ -2,7 +2,6 @@ package es.bvalero.replacer.finder.replacement.finders;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import es.bvalero.replacer.XmlConfiguration;
 import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.finder.Finder;
 import es.bvalero.replacer.finder.benchmark.BaseFinderBenchmark;
@@ -24,7 +23,6 @@ import org.springframework.test.context.ActiveProfiles;
 @SpringBootTest(
     classes = {
         ReplacementFinder.class,
-        XmlConfiguration.class,
         AcuteOFinder.class,
         CenturyFinder.class,
         CoordinatesFinder.class,

@@ -2,16 +2,19 @@ package es.bvalero.replacer.finder.immutable.finders;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import es.bvalero.replacer.XmlConfiguration;
+import es.bvalero.replacer.FinderProperties;
+import es.bvalero.replacer.FinderPropertiesConfiguration;
 import es.bvalero.replacer.finder.Immutable;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest(classes = { IgnorableSectionFinder.class, XmlConfiguration.class })
+@EnableConfigurationProperties(FinderProperties.class)
+@SpringBootTest(classes = IgnorableSectionFinder.class)
 class IgnorableSectionFinderTest {
 
     @Autowired
