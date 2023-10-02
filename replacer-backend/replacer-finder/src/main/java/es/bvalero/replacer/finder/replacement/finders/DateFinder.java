@@ -113,8 +113,8 @@ public class DateFinder implements ReplacementFinder {
                 )
             );
 
-            String regexDay = "([012]?<N>|3[01])";
-            String regexYear = "[12]\\.?<N>{3}";
+            String regexDay = "([012]?[0-9]|3[01])";
+            String regexYear = "[12]\\.?[0-9]{3}";
             String regexLongDate = String.format(
                 "%s%s(%s%s)?%s,?%s(%s%s)?%s",
                 regexDay,
