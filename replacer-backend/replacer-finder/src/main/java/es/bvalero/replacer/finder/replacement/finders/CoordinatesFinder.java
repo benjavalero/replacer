@@ -1,6 +1,6 @@
 package es.bvalero.replacer.finder.replacement.finders;
 
-import static es.bvalero.replacer.finder.util.FinderUtils.DECIMAL_SEPARATORS;
+import static es.bvalero.replacer.finder.util.FinderUtils.*;
 
 import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.finder.FinderPage;
@@ -23,8 +23,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class CoordinatesFinder implements ReplacementFinder {
 
-    private static final char DEGREE = '\u00b0'; // °
-    private static final char MASCULINE_ORDINAL = '\u00ba'; // º
     private static final Set<Character> DEGREE_CHARS = Set.of(DEGREE, MASCULINE_ORDINAL);
     private static final char PRIME = '\u2032'; // ′
     private static final char APOSTROPHE = '\'';

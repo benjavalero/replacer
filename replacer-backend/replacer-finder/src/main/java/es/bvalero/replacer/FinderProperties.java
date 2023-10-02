@@ -1,9 +1,6 @@
 package es.bvalero.replacer;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.Data;
@@ -96,5 +93,24 @@ public class FinderProperties {
 
         private String prep;
         private String article;
+    }
+
+    // Ordinals
+
+    private Map<String, Map<Integer, OrdinalSuggestion>> ordinalSuggestions;
+    private OrdinalOption ordinalSuffixes;
+
+    @Data
+    public static class OrdinalSuggestion {
+
+        private OrdinalOption ordinal;
+        private OrdinalOption fractional;
+    }
+
+    @Data
+    public static class OrdinalOption {
+
+        private List<String> masculine;
+        private List<String> feminine;
     }
 }

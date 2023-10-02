@@ -1,6 +1,6 @@
 # Replacer
 
-**Replacer** is an online tool whose purpose is to provide a straightforward interface in order to help fixing the most common ortography or style errors in Wikipedia.
+**Replacer** is an online tool whose purpose is to provide a straightforward interface in order to help fixing the most common orthography or style errors in Wikipedia.
 
 The tool has been created on the need of reviewing manually certain corrections which are difficult to automatize due to the existence of false positives.
 
@@ -24,11 +24,11 @@ It's recommended not to perform a high amount of editions in little time in orde
 
 ## Languages
 
-Once logged in, in the upper menu (at right) the user name is displayed along with the language associated to the Wikipedia to work with, by default the Wikipedia in Spanish (_es_).
+Once logged in, in the upper menu (at right) the username is displayed along with the language associated to the Wikipedia to work with, by default the Wikipedia in Spanish (_es_).
 
-Currently there exists also the option of working with the Wikipedia in Galizian (_gl_).
+Currently, there exists also the option of working with the Wikipedia in Galizian (_gl_).
 
-Don't mistake this language with the one used in the common texts of the application: buttons, menus, etc. In this moment the application is not internationalized yet and the interface, whatever the chosen Wikipedia to work with, will be displayed in Spanish.
+Don't mistake this language with the one used in the common texts of the application: buttons, menus, etc. At this moment the application is not internationalized yet and the interface, whatever the chosen Wikipedia to work with, will be displayed in Spanish.
 
 ## Edit Pages
 
@@ -73,15 +73,16 @@ The replacement types are grouped in following categories:
 
 - **Style**
   - **ó with accent** for unnecessary uses of conjunction "ó" containing a diacritic (only in Spanish).
-  - **Century with no small caps** helps replacing centuries with the appropriate template which displays the century Roman number with small caps.
+  - **Century with no small caps** helps to replace centuries with the appropriate template which displays the century Roman number with small caps.
   - **Date** for dates with wrong format, for instance:
     - Dates with the month in uppercase: `2 de Septiembre de 2019`
     - Dates with the day starting with zero: `02 de septiembre de 2019`
     - Dates with the year containing a dot: `2 de septiembre de 2.019`
     - Dates with missing prepositions: `2 de septiembre 2019`
     - Dates with wrong order: `Mayo 3, 2020`
-    - Note: In Spanish it's recommended the cultivated use of «septiembre» instead of «setiembre». Nevertheless this replacement is only offered along with another fix in the same fix. For instance the date «2 de setiembre de 2019» is not offered to be reviewed.
+    - Note: In Spanish it's recommended the cultivated use of «septiembre» instead of «setiembre». Nevertheless, this replacement is only offered along with another fix in the same fix. For instance the date «2 de setiembre de 2019» is not offered to be reviewed.
     - Dates in format of month and year are also offered to review when preceded by certain connectors: `Desde Septiembre de 2019`
+  - **Ordinal**  for Spanish ordinals with wrong format, for instance `2º` or `1er`.
 
 ## False positives
 
@@ -122,7 +123,7 @@ When the tool applies changes in a Wikipedia page, it takes profit to perform so
 - Links with the same link and alias, e.g. `[[Coronavirus|coronavirus]] ==> [[coronavirus]]`
 - Space links where the space is in lowercase, e.g. `[[archivo:x.jpg]] ==> [[Archivo:x.jpg]]`
 - Space links where the space is not translated, e.g. `[[File:x.jpg]] ==> [[Archivo:x.jpg]]`
-- Template DEFAULTSORT including special characters, e.g. `{{ DEFAULTSORT : AES_Andes_2 }} ==> {{DEFAULTSORT:AES Andes 2}}`
+- Template `DEFAULTSORT` including special characters, e.g. `{{ DEFAULTSORT : AES_Andes_2 }} ==> {{DEFAULTSORT:AES Andes 2}}`
 - Categories containing unnecessary spaces, e.g. `[[Categoría: Animal]] ==> [[Categoría:Animal]]`
 - Unicode white-spaces, e.g. `\u2002`
 - Templates containing the useless _template_ word, e.g. `{{plantilla:DGRG}} ==> {{DGRG}}`
@@ -135,7 +136,7 @@ When the tool applies changes in a Wikipedia page, it takes profit to perform so
 - Double small tags which make the text too tiny and less accessible, e.g. `<small><small>Text</small></small> ==> <small>Text</small>`
 - External links with double HTTP, e.g. `https://https://www.linkedin.com ==> https://www.linkedin.com`
 
-If appropriate, this changes are communicated to the wikiproject _Check Wikipedia_ to update its counters.
+If appropriate, these changes are communicated to the wikiproject _Check Wikipedia_ to update its counters.
 
 ## Indexation
 

@@ -19,7 +19,10 @@ import org.springframework.lang.Nullable;
 @UtilityClass
 public class FinderUtils {
 
-    private static final char MASCULINE_ORDINAL = '\u00ba'; // º
+    public static final char MASCULINE_ORDINAL = '\u00ba'; // º
+    public static final char FEMININE_ORDINAL = '\u00aa'; // ª
+    public static final Set<Character> ORDINALS = Set.of(MASCULINE_ORDINAL, FEMININE_ORDINAL);
+    public static final char DEGREE = '\u00b0'; // °
     private static final char UNDERSCORE = '_'; // _ invalid word separator
     private static final Set<Character> URL_SEPARATORS = Set.of('/', '.');
     private static final String ALTERNATE_SEPARATOR = "|";
@@ -299,8 +302,12 @@ public class FinderUtils {
     }
 
     private boolean isWordChar(char ch) {
-        // Unicode considers the masculine ordinal as a letter
-        return Character.isLetterOrDigit(ch) && ch != MASCULINE_ORDINAL;
+        // Unicode considers the masculine/feminine ordinal as a letter
+        return Character.isLetterOrDigit(ch) && !isOrdinal(ch);
+    }
+
+    private boolean isOrdinal(char ch) {
+        return ORDINALS.contains(ch);
     }
 
     private String getTextSnippet(String text, int start, int end) {

@@ -429,3 +429,122 @@ replacer.finder:
         article: ata o
       - prep: e
         article: e o
+
+  # ORDINALS
+
+  ordinalSuggestions:
+    es:
+      1:
+        ordinal:
+          masculine: "{{ord|1.|er}}, primero, primer"
+          feminine: primera
+      2:
+        ordinal:
+          masculine: segundo
+          feminine: segunda
+      3:
+        ordinal:
+          masculine: "{{ord|3.|er}}, tercero, tercer"
+          feminine: tercera
+      4:
+        ordinal:
+          masculine: cuarto
+          feminine: cuarta
+      5:
+        ordinal:
+          masculine: quinto
+          feminine: quinta
+      6:
+        ordinal:
+          masculine: sexto
+          feminine: sexta
+      7:
+        ordinal:
+          masculine: séptimo
+          feminine: séptima
+      8:
+        ordinal:
+          masculine: octavo
+          feminine: octava
+      9:
+        ordinal:
+          masculine: noveno
+          feminine: novena
+      10:
+        ordinal:
+          masculine: décimo
+          feminine: décima
+      11:
+        ordinal:
+          masculine: "{{ord|11.|er}}, undécimo, decimoprimero, decimoprimer"
+          feminine: undécima, decimoprimera
+        fractional:
+          masculine: onceavo
+          feminine: onceava
+      12:
+        ordinal:
+          masculine: duodécimo, decimosegundo
+          feminine: duodécima, decimosegunda
+        fractional:
+          masculine: doceavo
+          feminine: doceava
+      13:
+        ordinal:
+          masculine: "{{ord|13.|er}}, decimotercero, decimotercer"
+          feminine: decimotercera
+        fractional:
+          masculine: treceavo
+          feminine: treceava
+      14:
+        ordinal:
+          masculine: decimocuarto
+          feminine: decimocuarta
+        fractional:
+          masculine: catorceavo
+          feminine: catorceava
+      15:
+        ordinal:
+          masculine: decimoquinto
+          feminine: decimoquinta
+        fractional:
+          masculine: quinceavo
+          feminine: quinceava
+      16:
+        ordinal:
+          masculine: decimosexto
+          feminine: decimosexta
+        fractional:
+          masculine: dieciseisavo
+          feminine: dieciseisava
+      17:
+        ordinal:
+          masculine: decimoséptimo
+          feminine: decimoséptima
+        fractional:
+          masculine: diecisieteavo
+          feminine: diecisieteava
+      18:
+        ordinal:
+          masculine: decimoctavo
+          feminine: decimoctava
+        fractional:
+          masculine: dieciochoavo
+          feminine: dieciochoava
+      19:
+        ordinal:
+          masculine: decimonoveno
+          feminine: decimonovena
+        fractional:
+          masculine: diecinueveavo
+          feminine: diecinueveava
+      20:
+        ordinal:
+          masculine: vigésimo
+          feminine: vigésima
+        fractional:
+          masculine: veinteavo
+          feminine: veinteava
+
+  ordinalSuffixes:
+    masculine: er,do,ro,to,vo,no,mo,avo,ero,ndo,o
+    feminine: era,da,ra,ta,va,na,ma,ava,nda,a

@@ -1,5 +1,8 @@
 # Versions
 
+## 2.25.0 (??)
+- Feature: find replacements for Spanish ordinals with wrong format
+
 ## 2.24.2 (24 Sep 2023)
 - Fix regression: replacements not marked as reviewed when they are contained in a section
 

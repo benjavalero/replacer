@@ -66,6 +66,13 @@ public abstract class MisspellingFinder implements ReplacementFinder {
     }
 
     @Override
+    public FinderPriority getPriority() {
+        // All replacement finders have more priority than the misspelling ones
+        // For instance if we detect "10º" as composed and as ordinal, we prefer the second one.
+        return FinderPriority.NONE;
+    }
+
+    @Override
     public Replacement convert(MatchResult matcher, FinderPage page) {
         final int start = matcher.start();
         final String text = matcher.group();
