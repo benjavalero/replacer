@@ -62,12 +62,12 @@ class PageComparatorResult {
         this.replacementsToReview.addAll(replacements);
     }
 
-    void addReplacementTypes(Collection<ReplacementType> ReplacementTypes) {
-        this.addReplacementTypes.addAll(ReplacementTypes);
+    void addReplacementTypes(Collection<ReplacementType> replacementTypes) {
+        this.addReplacementTypes.addAll(replacementTypes);
     }
 
-    void removeReplacementTypes(Collection<ReplacementType> ReplacementTypes) {
-        this.removeReplacementTypes.addAll(ReplacementTypes);
+    void removeReplacementTypes(Collection<ReplacementType> replacementTypes) {
+        this.removeReplacementTypes.addAll(replacementTypes);
     }
 
     int size() {

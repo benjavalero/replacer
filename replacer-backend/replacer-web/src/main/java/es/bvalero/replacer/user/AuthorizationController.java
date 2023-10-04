@@ -83,7 +83,7 @@ public class AuthorizationController {
         // SameSite is Lax by default, but it fails in some old browsers, so we set it explicitly.
         return ResponseCookie
             .from(AccessToken.COOKIE_NAME, accessToken.toCookieValue())
-            .maxAge(400 * 24 * 3600)
+            .maxAge((long) 400 * 24 * 3600)
             .path("/api")
             .secure(true)
             .httpOnly(true)

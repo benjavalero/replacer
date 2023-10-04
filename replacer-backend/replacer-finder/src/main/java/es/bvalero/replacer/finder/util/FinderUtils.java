@@ -32,8 +32,8 @@ public class FinderUtils {
     private static final char DECIMAL_COMMA = ',';
     private static final char DECIMAL_DOT = '.';
     public static final Set<Character> DECIMAL_SEPARATORS = Set.of(DECIMAL_COMMA, DECIMAL_DOT);
-    public static Marker MARKER_IMMUTABLE = MarkerFactory.getMarker("IMMUTABLE");
-    public static String ENGLISH_LANGUAGE = "en";
+    private static final Marker MARKER_IMMUTABLE = MarkerFactory.getMarker("IMMUTABLE");
+    public static final String ENGLISH_LANGUAGE = "en";
 
     /***** STRING UTILS *****/
 
