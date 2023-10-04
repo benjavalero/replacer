@@ -18,34 +18,21 @@ replacer.finder:
   # The following maps contain the magical words for some concepts in the different languages
   # The words will be listed being the first one the standard option
   fileWords:
-    es:
-      - Archivo
-      - File
-    gl:
-      - Ficheiro
-      - Arquivo
-      - File
+    es: Archivo
+    gl: Ficheiro, Arquivo
+    en: File
   imageWords:
-    es:
-      - Imagen
-      - Image
-    gl:
-      - Imaxe
-      - Image
+    es: Imagen
+    gl: Imaxe
+    en: Image
   annexWords:
-    es:
-      - Anexo
-      - Annex
-    gl:
-      - Anexo
-      - Annex
+    es: Anexo
+    gl: Anexo
+    en: Annex
   categoryWords:
-    es:
-      - Categoría
-      - Category
-    gl:
-      - Categoría
-      - Category
+    es: Categoría
+    gl: Categoría
+    en: Category
 
   # NAMES
 

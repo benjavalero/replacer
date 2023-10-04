@@ -1,5 +1,6 @@
 package es.bvalero.replacer.finder.replacement.finders;
 
+import static es.bvalero.replacer.finder.util.FinderUtils.ENGLISH_LANGUAGE;
 import static org.apache.commons.lang3.StringUtils.SPACE;
 
 import dk.brics.automaton.DatatypesAutomatonProvider;
@@ -65,7 +66,7 @@ public class DateFinder implements ReplacementFinder {
                     monthsLowerUpperCase.add(month);
                     monthsLowerUpperCase.add(FinderUtils.setFirstUpperCase(month));
                 });
-            englishMonths.addAll(this.finderProperties.getMonthNames().get("en"));
+            englishMonths.addAll(this.finderProperties.getMonthNames().get(ENGLISH_LANGUAGE));
             monthsLowerUpperCase.addAll(englishMonths);
             if (WikipediaLanguage.SPANISH.equals(lang)) {
                 // Trick only for Spanish months

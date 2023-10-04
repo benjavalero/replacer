@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
 
 /** Space links where the space is not translated, e.g. `[[File:x.jpg]] ==> [[Archivo:x.jpg]]` */
 @Component
-class SpaceNotTranslatedFinder implements CosmeticCheckedFinder {
+class SpaceIncorrectFinder implements CosmeticCheckedFinder {
 
     @RegExp
     private static final String REGEX_SPACE = "\\[\\[(%s):(.+?)]]";
@@ -29,19 +29,18 @@ class SpaceNotTranslatedFinder implements CosmeticCheckedFinder {
 
     private Pattern patternLowercaseSpace;
 
-    private final SetValuedMap<WikipediaLanguage, String> firstWords = new HashSetValuedHashMap<>();
+    private final SetValuedMap<WikipediaLanguage, String> langWords = new HashSetValuedHashMap<>();
 
     @PostConstruct
     public void init() {
-        String concat = FinderUtils.joinAlternate(this.finderProperties.getAllSpaceWords());
-        String regex = String.format(REGEX_SPACE, FinderUtils.toLowerCase(concat));
+        String regex = String.format(REGEX_SPACE, FinderUtils.joinAlternate(this.finderProperties.getAllSpaceWords()));
         this.patternLowercaseSpace = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
 
         for (WikipediaLanguage lang : WikipediaLanguage.values()) {
-            this.firstWords.put(lang, this.finderProperties.getFileWords().get(lang.getCode()).get(0));
-            this.firstWords.put(lang, this.finderProperties.getImageWords().get(lang.getCode()).get(0));
-            this.firstWords.put(lang, this.finderProperties.getAnnexWords().get(lang.getCode()).get(0));
-            this.firstWords.put(lang, this.finderProperties.getCategoryWords().get(lang.getCode()).get(0));
+            this.langWords.putAll(lang, this.finderProperties.getFileWords().get(lang.getCode()));
+            this.langWords.putAll(lang, this.finderProperties.getImageWords().get(lang.getCode()));
+            this.langWords.putAll(lang, this.finderProperties.getAnnexWords().get(lang.getCode()));
+            this.langWords.putAll(lang, this.finderProperties.getCategoryWords().get(lang.getCode()));
         }
     }
 
@@ -58,13 +57,12 @@ class SpaceNotTranslatedFinder implements CosmeticCheckedFinder {
 
     @Override
     public boolean validate(MatchResult match, FinderPage page) {
-        String spaceWord = FinderUtils.setFirstUpperCase(match.group(1));
-        return !this.firstWords.get(page.getPageKey().getLang()).contains(spaceWord);
+        String spaceWord = match.group(1);
+        return !this.langWords.get(page.getPageKey().getLang()).contains(spaceWord);
     }
 
     @Override
     public CheckWikipediaAction getCheckWikipediaAction() {
-        // We return this action if the space fixed is not a Category
         return CheckWikipediaAction.CATEGORY_IN_ENGLISH;
     }
 

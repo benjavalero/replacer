@@ -38,14 +38,11 @@ class LinkFinder extends ImmutableCheckedFinder {
     private FinderProperties finderProperties;
 
     private final Set<String> fileSpaces = new HashSet<>();
-    private final Set<String> categorySpaces = new HashSet<>();
 
     @PostConstruct
     public void init() {
         this.fileSpaces.addAll(this.finderProperties.getAllFileWords());
         this.fileSpaces.addAll(this.finderProperties.getAllImageWords());
-
-        this.categorySpaces.addAll(this.finderProperties.getAllCategoryWords());
     }
 
     @Override
@@ -90,7 +87,7 @@ class LinkFinder extends ImmutableCheckedFinder {
         final int posColon = linkTitle.indexOf(COLON);
         final String linkSpace = posColon >= 0 ? linkTitle.substring(0, posColon) : null;
 
-        // If the link space is in the list then return an immutable of the complete link
+        // If the link space is a category then return an immutable of the complete link
         if (isCategorySpace(linkSpace)) {
             return Collections.singletonList(link);
         }
@@ -127,7 +124,10 @@ class LinkFinder extends ImmutableCheckedFinder {
     }
 
     private boolean isCategorySpace(@Nullable String space) {
-        return space != null && this.categorySpaces.contains(FinderUtils.setFirstUpperCase(space.trim()));
+        return (
+            space != null &&
+            this.finderProperties.getAllCategoryWords().contains(FinderUtils.setFirstUpperCase(space.trim()))
+        );
     }
 
     private boolean isFileSpace(@Nullable String space) {

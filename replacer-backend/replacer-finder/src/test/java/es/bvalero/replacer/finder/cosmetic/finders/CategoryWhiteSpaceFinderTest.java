@@ -30,6 +30,7 @@ class CategoryWhiteSpaceFinderTest {
             "[[Categoría: Animal]], [[Categoría:Animal]]",
             "[[Categoría:Animal ]], [[Categoría:Animal]]",
             "[[Categoría:Animal| Animal ]], [[Categoría:Animal|Animal]]",
+            "[[Category:Animal ]], [[Categoría:Animal]]",
         }
     )
     void testCategoryWithSpace(String text, String fix) {
