@@ -7,6 +7,7 @@ import es.bvalero.replacer.user.AccessToken;
 import es.bvalero.replacer.user.UserId;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Primary;
@@ -14,6 +15,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Primary
 @Service
 @Profile("!offline")
@@ -27,6 +29,11 @@ class WikipediaUserCacheRepository implements WikipediaUserRepository {
     // This map can grow. We use Caffeine cache to clean periodically the old or obsolete users.
     private final Cache<AccessToken, WikipediaUser> cachedUsers = Caffeine
         .newBuilder()
+        .removalListener((key, value, cause) -> {
+            if (cause.wasEvicted() && value != null) {
+                LOGGER.info("Evicted user: {}", ((WikipediaUser) value).getId());
+            }
+        })
         .expireAfterWrite(1, TimeUnit.DAYS)
         .build();
 

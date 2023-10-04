@@ -1,5 +1,6 @@
 package es.bvalero.replacer.page.index;
 
+import es.bvalero.replacer.common.util.ReplacerUtils;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.ReplacementFindService;
 import es.bvalero.replacer.page.IndexedPage;
@@ -75,17 +76,30 @@ abstract class PageIndexAbstractService {
         // Only check if the page is indexable by namespace
         // Redirection pages should be detected before analyzing content
         // but just in case they are discarded when finding immutables
-        return pageIndexValidator.isPageIndexableByNamespace(page) && !page.isRedirect();
+        boolean isPageIndexable = pageIndexValidator.isPageIndexableByNamespace(page) && !page.isRedirect();
+        if (!isPageIndexable) {
+            LOGGER.warn(
+                "Page in DB is not indexable anymore: {}",
+                ReplacerUtils.toJson(
+                    "lang",
+                    page.getPageKey().getLang(),
+                    "pageId",
+                    page.getPageKey().getPageId(),
+                    "title",
+                    page.getTitle(),
+                    "namespace",
+                    page.getNamespace(),
+                    "redirect",
+                    page.isRedirect()
+                )
+            );
+        }
+        return isPageIndexable;
     }
 
     private void removeObsoletePage(@Nullable IndexedPage dbPage) {
         // Just in case the page already exists in database but is not indexable anymore
         if (dbPage != null) {
-            LOGGER.warn(
-                "Unexpected page in DB not indexable: {} - {}",
-                dbPage.getPageKey().getLang(),
-                dbPage.getTitle()
-            );
             pageService.removePagesByKey(Collections.singleton(dbPage.getPageKey()));
         }
     }

@@ -5,6 +5,7 @@ import com.github.benmanes.caffeine.cache.Caffeine;
 import es.bvalero.replacer.common.domain.ReplacementType;
 import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.finder.Replacement;
+import es.bvalero.replacer.page.IndexedPage;
 import es.bvalero.replacer.page.PageKey;
 import es.bvalero.replacer.page.PageService;
 import es.bvalero.replacer.page.index.PageIndexService;
@@ -183,7 +184,9 @@ abstract class ReviewFinder {
     private Optional<WikipediaPage> findPageFromWikipedia(PageKey pageKey) {
         Optional<WikipediaPage> page = wikipediaPageRepository.findByKey(pageKey);
         if (page.isEmpty()) {
-            LOGGER.warn("No page found in Wikipedia for {}", pageKey);
+            // Find the page title in the database to improve the warning
+            String pageDbTitle = pageService.findPageByKey(pageKey).map(IndexedPage::getTitle).orElse(null);
+            LOGGER.warn("No page found in Wikipedia: {} - {}", pageKey, pageDbTitle);
             pageService.removePagesByKey(Collections.singleton(pageKey));
         }
 
