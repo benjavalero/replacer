@@ -1,7 +1,6 @@
 package es.bvalero.replacer.page.save;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import es.bvalero.replacer.common.domain.*;
@@ -25,6 +24,8 @@ import org.mockito.MockitoAnnotations;
 
 class ReviewSaveServiceTest {
 
+    private static final int MAX_EDITIONS_PER_MINUTE = 5;
+
     @Mock
     private PageService pageService;
 
@@ -43,7 +44,7 @@ class ReviewSaveServiceTest {
     @BeforeEach
     public void setUp() {
         reviewSaveService = new ReviewSaveService();
-        reviewSaveService.setMaxEditionsPerMinute(5);
+        reviewSaveService.setMaxEditionsPerMinute(MAX_EDITIONS_PER_MINUTE);
         MockitoAnnotations.openMocks(this);
     }
 
@@ -114,5 +115,27 @@ class ReviewSaveServiceTest {
         assertTrue(summary.contains("«3»"));
         assertFalse(summary.contains("«Fechas»"));
         assertTrue(summary.contains("Fechas"));
+    }
+
+    @Test
+    void testMaximumEditionsPerMinute() throws WikipediaException {
+        int id = 123;
+        PageKey pageKey = PageKey.of(WikipediaLanguage.getDefault(), id);
+        WikipediaPageSave pageSave = WikipediaPageSave
+            .builder()
+            .pageKey(pageKey)
+            .content("X")
+            .editSummary("S")
+            .queryTimestamp(WikipediaTimestamp.now())
+            .build();
+        User user = User.buildTestUser();
+
+        for (int i = 0; i < MAX_EDITIONS_PER_MINUTE; i++) {
+            reviewSaveService.saveReviewContent(pageSave, user);
+        }
+
+        verify(wikipediaPageRepository, times(MAX_EDITIONS_PER_MINUTE)).save(pageSave, user.getAccessToken());
+
+        assertThrows(WikipediaException.class, () -> reviewSaveService.saveReviewContent(pageSave, user));
     }
 }

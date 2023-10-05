@@ -85,7 +85,7 @@ class ReviewSaveService {
             LOGGER.debug("Older edition: {}", older);
             LOGGER.debug("Difference in seconds: {}", ChronoUnit.SECONDS.between(older, now));
             long diffMinutes = ChronoUnit.MINUTES.between(older, now);
-            if (diffMinutes > 0) {
+            if (diffMinutes == 0) {
                 LOGGER.error(
                     "Maximum number of editions per minute is {} - {} - {}",
                     maxEditionsPerMinute,
