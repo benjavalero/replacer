@@ -10,7 +10,7 @@ import es.bvalero.replacer.page.PageService;
 import es.bvalero.replacer.replacement.CustomReplacementService;
 import es.bvalero.replacer.replacement.IndexedCustomReplacement;
 import es.bvalero.replacer.replacement.ReplacementService;
-import es.bvalero.replacer.user.AccessToken;
+import es.bvalero.replacer.user.User;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.wikipedia.WikipediaPageRepository;
 import es.bvalero.replacer.wikipedia.WikipediaPageSave;
@@ -57,10 +57,10 @@ class ReviewSaveServiceTest {
             .editSummary("S")
             .queryTimestamp(WikipediaTimestamp.now())
             .build();
-        AccessToken accessToken = AccessToken.of("A", "B");
-        reviewSaveService.saveReviewContent(pageSave, accessToken);
+        User user = User.buildTestUser();
+        reviewSaveService.saveReviewContent(pageSave, user);
 
-        verify(wikipediaPageRepository).save(pageSave, accessToken);
+        verify(wikipediaPageRepository).save(pageSave, user.getAccessToken());
     }
 
     @Test

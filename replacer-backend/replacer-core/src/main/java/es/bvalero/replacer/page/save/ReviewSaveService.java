@@ -1,5 +1,7 @@
 package es.bvalero.replacer.page.save;
 
+import com.github.benmanes.caffeine.cache.Cache;
+import com.github.benmanes.caffeine.cache.Caffeine;
 import es.bvalero.replacer.common.domain.CustomType;
 import es.bvalero.replacer.common.domain.ReplacementType;
 import es.bvalero.replacer.common.domain.StandardType;
@@ -9,17 +11,23 @@ import es.bvalero.replacer.page.PageService;
 import es.bvalero.replacer.replacement.CustomReplacementService;
 import es.bvalero.replacer.replacement.IndexedReplacement;
 import es.bvalero.replacer.replacement.ReplacementService;
-import es.bvalero.replacer.user.AccessToken;
+import es.bvalero.replacer.user.User;
+import es.bvalero.replacer.user.UserId;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.wikipedia.WikipediaPageRepository;
 import es.bvalero.replacer.wikipedia.WikipediaPageSave;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.queue.CircularFifoQueue;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -41,8 +49,47 @@ class ReviewSaveService {
     @Autowired
     private WikipediaPageRepository wikipediaPageRepository;
 
-    void saveReviewContent(WikipediaPageSave pageSave, AccessToken accessToken) throws WikipediaException {
-        wikipediaPageRepository.save(pageSave, accessToken);
+    @Value("${replacer.max-editions-per-minute}")
+    private int maxEditionsPerMinute;
+
+    private final Cache<UserId, CircularFifoQueue<LocalDateTime>> cachedUserEditions = Caffeine
+        .newBuilder()
+        .expireAfterWrite(1, TimeUnit.HOURS)
+        .build();
+
+    void saveReviewContent(WikipediaPageSave pageSave, User user) throws WikipediaException {
+        validateEditionsPerMinute(user);
+        wikipediaPageRepository.save(pageSave, user.getAccessToken());
+    }
+
+    private void validateEditionsPerMinute(User user) throws WikipediaException {
+        if (user.isBot()) {
+            // Bots are allowed to perform more editions per minute
+            return;
+        }
+
+        UserId userId = user.getId();
+        CircularFifoQueue<LocalDateTime> userEditions = cachedUserEditions.get(
+            userId,
+            id -> new CircularFifoQueue<>(maxEditionsPerMinute)
+        );
+        assert userEditions != null;
+
+        LocalDateTime now = LocalDateTime.now();
+        if (userEditions.isAtFullCapacity()) {
+            LocalDateTime older = userEditions.peek();
+            assert older != null;
+            LOGGER.debug("Older edition: {}", older);
+            LOGGER.debug("Difference in seconds: {}", ChronoUnit.SECONDS.between(older, now));
+            long diffMinutes = ChronoUnit.MINUTES.between(older, now);
+            if (diffMinutes > 0) {
+                LOGGER.error("Maximum number of editions per minute is {} - {} - {}", maxEditionsPerMinute, userId, older);
+                // The message is in Spanish to be displayed in an alert in the frontend
+                throw new WikipediaException(String.format("Ha sobrepasado el máximo de %d ediciones por minuto.", maxEditionsPerMinute));
+            }
+        }
+
+        userEditions.add(now);
     }
 
     String buildEditSummary(Collection<ReplacementType> fixedReplacementTypes, boolean applyCosmetics) {

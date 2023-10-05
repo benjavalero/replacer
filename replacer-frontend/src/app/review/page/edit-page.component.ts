@@ -1,5 +1,4 @@
 import { CommonModule } from '@angular/common';
-import { HttpStatusCode } from '@angular/common/http';
 import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faFastForward } from '@fortawesome/free-solid-svg-icons';
@@ -200,20 +199,6 @@ export class EditPageComponent implements OnChanges {
 
   private saveReview(reviewedPage: ReviewedPage): void {
     this.postSaveReview(reviewedPage).subscribe({
-      error: (err) => {
-        const errStatus = err.status;
-        if (errStatus == HttpStatusCode.Conflict) {
-          this.alertService.addErrorMessage(
-            'Esta página de Wikipedia ha sido editada por otra persona. Recargue para revisarla de nuevo.'
-          );
-        } else if (errStatus == HttpStatusCode.Unauthorized) {
-          // Clear session and reload the page
-          this.userService.clearSession();
-          window.location.reload();
-        } else {
-          this.alertService.addErrorMessage('Error al guardar la página: ' + (err.error?.message || err.message));
-        }
-      },
       complete: () => {
         // This alert will be short as it will be cleared on redirecting to next page
         this.alertService.addSuccessMessage('Cambios guardados con éxito');

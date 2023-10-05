@@ -111,7 +111,7 @@ class ReviewSaveControllerTest {
             )
             .andExpect(status().isNoContent());
 
-        verify(reviewSaveService).saveReviewContent(pageSave, user.getAccessToken());
+        verify(reviewSaveService).saveReviewContent(pageSave, user);
         verify(reviewSaveService).markAsReviewed(List.of(reviewedReplacement), true);
     }
 
@@ -130,7 +130,7 @@ class ReviewSaveControllerTest {
             )
             .andExpect(status().isNoContent());
 
-        verify(reviewSaveService, never()).saveReviewContent(any(WikipediaPageSave.class), any(AccessToken.class));
+        verify(reviewSaveService, never()).saveReviewContent(any(WikipediaPageSave.class), any(User.class));
         verify(reviewSaveService).markAsReviewed(List.of(reviewedReplacement), false);
     }
 
@@ -162,9 +162,7 @@ class ReviewSaveControllerTest {
         when(applyCosmeticsService.applyCosmeticChanges(any(FinderPage.class))).thenReturn(pageSave.getContent());
         when(reviewSaveService.buildEditSummary(anyCollection(), anyBoolean())).thenReturn(pageSave.getEditSummary());
 
-        doThrow(WikipediaConflictException.class)
-            .when(reviewSaveService)
-            .saveReviewContent(pageSave, user.getAccessToken());
+        doThrow(WikipediaConflictException.class).when(reviewSaveService).saveReviewContent(pageSave, user);
 
         mvc
             .perform(
@@ -176,7 +174,7 @@ class ReviewSaveControllerTest {
             )
             .andExpect(status().isConflict());
 
-        verify(reviewSaveService).saveReviewContent(pageSave, user.getAccessToken());
+        verify(reviewSaveService).saveReviewContent(pageSave, user);
         verify(reviewSaveService, never()).markAsReviewed(anyCollection(), anyBoolean());
     }
 
@@ -190,7 +188,7 @@ class ReviewSaveControllerTest {
 
         doThrow(new WikipediaException("mwoauth-invalid-authorization"))
             .when(reviewSaveService)
-            .saveReviewContent(pageSave, user.getAccessToken());
+            .saveReviewContent(pageSave, user);
 
         mvc
             .perform(
@@ -202,7 +200,7 @@ class ReviewSaveControllerTest {
             )
             .andExpect(status().isUnauthorized());
 
-        verify(reviewSaveService).saveReviewContent(pageSave, user.getAccessToken());
+        verify(reviewSaveService).saveReviewContent(pageSave, user);
         verify(reviewSaveService, never()).markAsReviewed(anyCollection(), anyBoolean());
     }
 
@@ -214,7 +212,7 @@ class ReviewSaveControllerTest {
         when(applyCosmeticsService.applyCosmeticChanges(any(FinderPage.class))).thenReturn(pageSave.getContent());
         when(reviewSaveService.buildEditSummary(anyCollection(), anyBoolean())).thenReturn(pageSave.getEditSummary());
 
-        doThrow(WikipediaException.class).when(reviewSaveService).saveReviewContent(pageSave, user.getAccessToken());
+        doThrow(WikipediaException.class).when(reviewSaveService).saveReviewContent(pageSave, user);
 
         mvc
             .perform(
@@ -226,7 +224,7 @@ class ReviewSaveControllerTest {
             )
             .andExpect(status().isInternalServerError());
 
-        verify(reviewSaveService).saveReviewContent(pageSave, user.getAccessToken());
+        verify(reviewSaveService).saveReviewContent(pageSave, user);
         verify(reviewSaveService, never()).markAsReviewed(anyCollection(), anyBoolean());
     }
 }

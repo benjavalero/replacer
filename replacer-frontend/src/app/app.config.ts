@@ -3,7 +3,7 @@ import { ApplicationConfig, importProvidersFrom } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { ApiModule } from './api/api.module';
 import { routes } from './app.routes';
-import { AuthInterceptor } from './core/interceptor/auth-interceptor';
+import { ErrorInterceptor } from './core/interceptor/error-interceptor';
 import { LangInterceptor } from './core/interceptor/lang-interceptor';
 import { environment } from '../environments/environment';
 
@@ -19,7 +19,7 @@ export const appConfig: ApplicationConfig = {
     },
     {
       provide: HTTP_INTERCEPTORS,
-      useClass: AuthInterceptor,
+      useClass: ErrorInterceptor,
       multi: true
     }
   ]

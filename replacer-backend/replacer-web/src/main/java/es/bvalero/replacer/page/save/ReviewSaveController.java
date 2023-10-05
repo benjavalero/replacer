@@ -81,7 +81,7 @@ public class ReviewSaveController {
                 .queryTimestamp(queryTimestamp)
                 .build();
 
-            reviewSaveService.saveReviewContent(pageSave, user.getAccessToken());
+            reviewSaveService.saveReviewContent(pageSave, user);
             reviewSaveService.markAsReviewed(reviewedReplacements, true);
         }
 

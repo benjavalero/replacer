@@ -107,11 +107,6 @@ export class FindRandomComponent implements OnInit {
               : 'No se ha encontrado ningún artículo'
           );
         }
-      },
-      error: (err) => {
-        this.alertService.addErrorMessage(
-          'Error al buscar artículos con reemplazos: ' + (err.error?.message || err.message)
-        );
       }
     });
   }
@@ -134,11 +129,6 @@ export class FindRandomComponent implements OnInit {
           );
           this.findRandomPage(options);
         }
-      },
-      error: (err) => {
-        this.alertService.addErrorMessage(
-          'Error al buscar los reemplazos en el artículo: ' + (err.error?.message || err.message)
-        );
       }
     });
   }

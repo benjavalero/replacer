@@ -54,6 +54,11 @@
             "name": "replacer.indexable.namespaces",
             "type": "java.lang.String",
             "description": "Comma-separate lists of the namespaces to be indexed"
+        },
+        {
+            "name": "replacer.max-editions-per-minute",
+            "type": "java.lang.Integer",
+            "description": "Maximum number of editions per minute allowed for a standard Wikipedia user"
         }
     ]
 }
