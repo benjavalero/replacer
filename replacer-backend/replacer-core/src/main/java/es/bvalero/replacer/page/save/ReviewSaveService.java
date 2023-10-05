@@ -23,9 +23,11 @@ import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.queue.CircularFifoQueue;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.TestOnly;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -49,6 +51,7 @@ class ReviewSaveService {
     @Autowired
     private WikipediaPageRepository wikipediaPageRepository;
 
+    @Setter(onMethod_ = @TestOnly)
     @Value("${replacer.max-editions-per-minute}")
     private int maxEditionsPerMinute;
 
@@ -83,9 +86,16 @@ class ReviewSaveService {
             LOGGER.debug("Difference in seconds: {}", ChronoUnit.SECONDS.between(older, now));
             long diffMinutes = ChronoUnit.MINUTES.between(older, now);
             if (diffMinutes > 0) {
-                LOGGER.error("Maximum number of editions per minute is {} - {} - {}", maxEditionsPerMinute, userId, older);
+                LOGGER.error(
+                    "Maximum number of editions per minute is {} - {} - {}",
+                    maxEditionsPerMinute,
+                    userId,
+                    older
+                );
                 // The message is in Spanish to be displayed in an alert in the frontend
-                throw new WikipediaException(String.format("Ha sobrepasado el máximo de %d ediciones por minuto.", maxEditionsPerMinute));
+                throw new WikipediaException(
+                    String.format("Ha sobrepasado el máximo de %d ediciones por minuto.", maxEditionsPerMinute)
+                );
             }
         }
 

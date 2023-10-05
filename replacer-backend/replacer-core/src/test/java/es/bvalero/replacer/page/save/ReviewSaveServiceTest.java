@@ -43,6 +43,7 @@ class ReviewSaveServiceTest {
     @BeforeEach
     public void setUp() {
         reviewSaveService = new ReviewSaveService();
+        reviewSaveService.setMaxEditionsPerMinute(5);
         MockitoAnnotations.openMocks(this);
     }
 
