@@ -1,6 +1,6 @@
 # Versions
 
-## 2.25.0 (??)
+## 2.25.0 (5 Oct 2023)
 - Feature: find replacements for Spanish ordinals with wrong format
 - Feature: additional check in server before saving a page that the user has not reached the maximum number of editions per minute
 - Fix: display the correct error message in the alert
