@@ -38,7 +38,10 @@ abstract class PageIndexAbstractService {
 
             // Consider as "indexable" all pages belonging to the configured namespaces
             if (!isPageIndexable(page)) {
-                removeObsoletePage(dbPage);
+                if (dbPage != null) {
+                    // Just in case the page already exists in database but is not indexable anymore
+                    removeObsoletePage(page);
+                }
                 return PageIndexResult.ofNotIndexable();
             }
 
@@ -76,32 +79,26 @@ abstract class PageIndexAbstractService {
         // Only check if the page is indexable by namespace
         // Redirection pages should be detected before analyzing content
         // but just in case they are discarded when finding immutables
-        boolean isPageIndexable = pageIndexValidator.isPageIndexableByNamespace(page) && !page.isRedirect();
-        if (!isPageIndexable) {
-            LOGGER.warn(
-                "Page in DB is not indexable anymore: {}",
-                ReplacerUtils.toJson(
-                    "lang",
-                    page.getPageKey().getLang(),
-                    "pageId",
-                    page.getPageKey().getPageId(),
-                    "title",
-                    page.getTitle(),
-                    "namespace",
-                    page.getNamespace(),
-                    "redirect",
-                    page.isRedirect()
-                )
-            );
-        }
-        return isPageIndexable;
+        return pageIndexValidator.isPageIndexableByNamespace(page) && !page.isRedirect();
     }
 
-    private void removeObsoletePage(@Nullable IndexedPage dbPage) {
-        // Just in case the page already exists in database but is not indexable anymore
-        if (dbPage != null) {
-            pageService.removePagesByKey(Collections.singleton(dbPage.getPageKey()));
-        }
+    private void removeObsoletePage(IndexablePage page) {
+        LOGGER.warn(
+            "Page in DB is not indexable anymore: {}",
+            ReplacerUtils.toJson(
+                "lang",
+                page.getPageKey().getLang(),
+                "pageId",
+                page.getPageKey().getPageId(),
+                "title",
+                page.getTitle(),
+                "namespace",
+                page.getNamespace(),
+                "redirect",
+                page.isRedirect()
+            )
+        );
+        pageService.removePagesByKey(Collections.singleton(page.getPageKey()));
     }
 
     abstract void saveResult(PageComparatorResult result);
