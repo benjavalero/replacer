@@ -57,13 +57,16 @@ spring:
     username: sa
     password: sa
     driver-class-name: org.h2.Driver
-    platform: h2
-    initialization-mode: never # Set to "always" the first time
+  sql:
+    init:
+      mode: never # Set to "always" the first time
+      platform: h2
 
 ---
 
 # Local in-memory database and mocked calls to Wikipedia API
 spring:
   config.activate.on-profile: offline
-  datasource:
-    platform: h2
+  sql:
+    init:
+      platform: h2
