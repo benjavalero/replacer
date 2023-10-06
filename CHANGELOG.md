@@ -1,5 +1,9 @@
 # Versions
 
+## 2.25.1 (6 Oct 2023)
+- Fix: only trace not indexable pages if they exist in database
+- Upgrade backend to Spring Boot 2.7
+
 ## 2.25.0 (5 Oct 2023)
 - Feature: find replacements for Spanish ordinals with wrong format
 - Feature: additional check in server before saving a page that the user has not reached the maximum number of editions per minute
