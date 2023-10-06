@@ -15,7 +15,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <java.version>11</java.version>
+        <java.version>17</java.version>
 
         <!-- Don't analyze unit tests -->
         <sonar.sources>src/main/java</sonar.sources>
