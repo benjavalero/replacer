@@ -6,7 +6,7 @@ import es.bvalero.replacer.common.util.FileOfflineUtils;
 import es.bvalero.replacer.page.PageKey;
 import es.bvalero.replacer.user.AccessToken;
 import java.util.Collection;
-import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
@@ -48,12 +48,12 @@ class WikipediaPageOfflineRepository implements WikipediaPageRepository {
 
     @Override
     public Collection<WikipediaPage> findByKeys(Collection<PageKey> pageKeys) {
-        return Collections.emptyList();
+        return List.of();
     }
 
     @Override
     public Collection<WikipediaSection> findSectionsInPage(PageKey pageKey) {
-        return Collections.emptyList();
+        return List.of();
     }
 
     @Override

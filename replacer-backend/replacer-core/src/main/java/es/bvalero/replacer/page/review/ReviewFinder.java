@@ -14,7 +14,6 @@ import es.bvalero.replacer.wikipedia.WikipediaPage;
 import es.bvalero.replacer.wikipedia.WikipediaPageRepository;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -187,7 +186,7 @@ abstract class ReviewFinder {
             // Find the page title in the database to improve the warning
             String pageDbTitle = pageService.findPageByKey(pageKey).map(IndexedPage::getTitle).orElse(null);
             LOGGER.warn("No page found in Wikipedia: {} - {}", pageKey, pageDbTitle);
-            pageService.removePagesByKey(Collections.singleton(pageKey));
+            pageService.removePagesByKey(Set.of(pageKey));
         }
 
         return page;

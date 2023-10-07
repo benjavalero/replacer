@@ -7,8 +7,8 @@ import es.bvalero.replacer.page.IndexedPage;
 import es.bvalero.replacer.page.PageKey;
 import es.bvalero.replacer.page.PageService;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Optional;
+import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
@@ -98,7 +98,7 @@ abstract class PageIndexAbstractService {
                 page.isRedirect()
             )
         );
-        pageService.removePagesByKey(Collections.singleton(page.getPageKey()));
+        pageService.removePagesByKey(Set.of(page.getPageKey()));
     }
 
     abstract void saveResult(PageComparatorResult result);

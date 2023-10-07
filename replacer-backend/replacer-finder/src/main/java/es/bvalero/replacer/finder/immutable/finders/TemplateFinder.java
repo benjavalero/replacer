@@ -11,7 +11,10 @@ import es.bvalero.replacer.finder.immutable.ImmutableFinder;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.LinearMatchResult;
 import es.bvalero.replacer.finder.util.TemplateUtils;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.regex.MatchResult;
 import javax.annotation.PostConstruct;
 import org.apache.commons.collections4.SetValuedMap;
@@ -104,7 +107,7 @@ class TemplateFinder implements ImmutableFinder {
 
         // Special case "{{|}}"
         if (!validateSpecialCharacters(templateContent)) {
-            return Collections.emptyList();
+            return List.of();
         }
 
         final String[] parameters = StringUtils.split(templateContent, PIPE);
@@ -113,11 +116,11 @@ class TemplateFinder implements ImmutableFinder {
         final String normalizedTemplateName = normalizeTemplateName(templateName);
         // If the whole page is to be ignored the return an immutable of the complete page content
         if (ignoreCompletePage(normalizedTemplateName)) {
-            return Collections.singletonList(LinearMatchResult.of(0, page.getContent()));
+            return List.of(LinearMatchResult.of(0, page.getContent()));
         }
         // If the template is to be ignored as a whole then return an immutable of the complete template
         if (ignoreCompleteTemplate(normalizedTemplateName)) {
-            return Collections.singletonList(template);
+            return List.of(template);
         }
 
         final List<MatchResult> immutables = new ArrayList<>();

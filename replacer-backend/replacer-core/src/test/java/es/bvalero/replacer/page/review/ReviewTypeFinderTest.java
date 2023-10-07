@@ -15,7 +15,6 @@ import es.bvalero.replacer.page.index.PageIndexResult;
 import es.bvalero.replacer.page.index.PageIndexService;
 import es.bvalero.replacer.user.User;
 import es.bvalero.replacer.wikipedia.*;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -59,7 +58,7 @@ class ReviewTypeFinderTest {
         .text("Y")
         .suggestions(List.of(Suggestion.ofNoComment("Z")))
         .build();
-    private final List<Replacement> replacements = Collections.singletonList(replacement);
+    private final List<Replacement> replacements = List.of(replacement);
     private final User user = User.buildTestUser();
     private final ReviewOptions options = ReviewOptions.ofType(user, simpleType);
     private final ReviewOptions options2 = ReviewOptions.ofType(user, composedType);
@@ -94,8 +93,8 @@ class ReviewTypeFinderTest {
         when(pageCountService.countNotReviewedByType(any(WikipediaLanguage.class), any(StandardType.class)))
             .thenReturn(1);
         when(pageService.findPagesToReviewByType(any(WikipediaLanguage.class), any(StandardType.class), anyInt()))
-            .thenReturn(Collections.singletonList(randomPageKey))
-            .thenReturn(Collections.emptyList());
+            .thenReturn(List.of(randomPageKey))
+            .thenReturn(List.of());
 
         // The page exists in Wikipedia
         when(wikipediaPageRepository.findByKey(randomPageKey)).thenReturn(Optional.of(page));
@@ -115,7 +114,7 @@ class ReviewTypeFinderTest {
         when(pageCountService.countNotReviewedByType(any(WikipediaLanguage.class), any(StandardType.class)))
             .thenReturn(1);
         when(pageService.findPagesToReviewByType(any(WikipediaLanguage.class), any(StandardType.class), anyInt()))
-            .thenReturn(Collections.singletonList(randomPageKey));
+            .thenReturn(List.of(randomPageKey));
 
         // The page exists in Wikipedia
         when(wikipediaPageRepository.findByKey(randomPageKey)).thenReturn(Optional.of(page));
@@ -141,11 +140,11 @@ class ReviewTypeFinderTest {
             .thenReturn(2);
         when(pageService.findPagesToReviewByType(any(WikipediaLanguage.class), any(StandardType.class), anyInt()))
             .thenReturn(List.of(randomPageKey, randomPageKey2))
-            .thenReturn(Collections.emptyList());
+            .thenReturn(List.of());
         // 1 result in DB by no type
         when(pageCountService.countNotReviewedByNoType(any(WikipediaLanguage.class))).thenReturn(1);
         when(pageService.findPagesToReviewByNoType(any(WikipediaLanguage.class), anyInt()))
-            .thenReturn(Collections.singletonList(randomPageKey2));
+            .thenReturn(List.of(randomPageKey2));
 
         // The pages exist in Wikipedia
         when(wikipediaPageRepository.findByKey(randomPageKey)).thenReturn(Optional.of(page));
@@ -231,8 +230,8 @@ class ReviewTypeFinderTest {
         when(pageCountService.countNotReviewedByType(any(WikipediaLanguage.class), any(StandardType.class)))
             .thenReturn(1);
         when(pageService.findPagesToReviewByType(any(WikipediaLanguage.class), any(StandardType.class), anyInt()))
-            .thenReturn(Collections.singletonList(randomPageKey))
-            .thenReturn(Collections.emptyList());
+            .thenReturn(List.of(randomPageKey))
+            .thenReturn(List.of());
 
         // The page exists in Wikipedia
         when(wikipediaPageRepository.findByKey(randomPageKey)).thenReturn(Optional.of(page));

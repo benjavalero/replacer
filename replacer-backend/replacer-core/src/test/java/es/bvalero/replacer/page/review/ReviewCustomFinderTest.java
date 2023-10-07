@@ -28,9 +28,7 @@ import org.mockito.MockitoAnnotations;
 class ReviewCustomFinderTest {
 
     private static final int CACHE_SIZE = 3;
-    private static final Collection<WikipediaNamespace> NAMESPACES = Collections.singleton(
-        WikipediaNamespace.getDefault()
-    );
+    private static final Collection<WikipediaNamespace> NAMESPACES = Set.of(WikipediaNamespace.getDefault());
     private static final User user = User.buildTestUser();
     private static final WikipediaLanguage lang = user.getId().getLang();
 
@@ -156,7 +154,7 @@ class ReviewCustomFinderTest {
         // Mocks
         when(wikipediaPageRepository.findByContent(any(WikipediaSearchRequest.class))).thenReturn(searchResult);
         when(customReplacementService.findPagesReviewed(any(WikipediaLanguage.class), any(CustomType.class)))
-            .thenReturn(Collections.emptyList());
+            .thenReturn(List.of());
         when(wikipediaPageRepository.findByKey(any(PageKey.class))).thenReturn(Optional.of(page));
         when(pageIndexService.indexPage(page)).thenReturn(PageIndexResult.ofIndexed());
         when(
@@ -200,13 +198,13 @@ class ReviewCustomFinderTest {
         // Mocks
         when(wikipediaPageRepository.findByContent(any(WikipediaSearchRequest.class))).thenReturn(searchResult);
         when(customReplacementService.findPagesReviewed(any(WikipediaLanguage.class), any(CustomType.class)))
-            .thenReturn(Collections.emptyList());
+            .thenReturn(List.of());
         when(wikipediaPageRepository.findByKey(any(PageKey.class))).thenReturn(Optional.of(page));
         when(pageIndexService.indexPage(page)).thenReturn(PageIndexResult.ofIndexed());
         when(
             customReplacementFindService.findCustomReplacements(any(WikipediaPage.class), any(CustomMisspelling.class))
         )
-            .thenReturn(Collections.emptyList());
+            .thenReturn(List.of());
 
         // Only call
         Optional<Review> review = pageReviewCustomService.findRandomPageReview(options);
@@ -319,7 +317,7 @@ class ReviewCustomFinderTest {
             .thenReturn(WikipediaSearchResult.builder().total(2).pageId(2).pageId(4).build()); // Call 5
 
         when(customReplacementService.findPagesReviewed(any(WikipediaLanguage.class), any(CustomType.class)))
-            .thenReturn(Collections.emptyList()) // Call 1
+            .thenReturn(List.of()) // Call 1
             .thenReturn(List.of(1, 2, 3)) // Call 4
             .thenReturn(List.of(1, 2, 3, 4)); // Call 5
 
@@ -400,7 +398,7 @@ class ReviewCustomFinderTest {
             .thenReturn(WikipediaSearchResult.builder().total(4).build());
 
         when(customReplacementService.findPagesReviewed(any(WikipediaLanguage.class), any(CustomType.class)))
-            .thenReturn(Collections.emptyList());
+            .thenReturn(List.of());
 
         when(wikipediaPageRepository.findByKey(any(PageKey.class)))
             .thenReturn(Optional.of(pages.get(1))) // Call 1
@@ -413,7 +411,7 @@ class ReviewCustomFinderTest {
         when(
             customReplacementFindService.findCustomReplacements(any(WikipediaPage.class), any(CustomMisspelling.class))
         )
-            .thenReturn(Collections.emptyList());
+            .thenReturn(List.of());
 
         // Only Call
         Optional<Review> review = pageReviewCustomService.findRandomPageReview(options);

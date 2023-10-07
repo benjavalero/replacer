@@ -6,7 +6,7 @@ import static org.apache.commons.lang3.StringUtils.SPACE;
 import es.bvalero.replacer.common.util.ReplacerUtils;
 import es.bvalero.replacer.finder.FinderPage;
 import java.util.Collection;
-import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
@@ -193,7 +193,7 @@ public class FinderUtils {
     /* Find the most close sequence of letters and digits starting at the given position */
     @Nullable
     public LinearMatchResult findWordAfter(String text, int start) {
-        return findWordAfter(text, start, Collections.emptyList());
+        return findWordAfter(text, start, List.of());
     }
 
     @Nullable
@@ -251,7 +251,7 @@ public class FinderUtils {
     /* Find the most close sequence of letters and digits ending at the given position */
     @Nullable
     public LinearMatchResult findWordBefore(String text, int start) {
-        return findWordBefore(text, start, Collections.emptyList());
+        return findWordBefore(text, start, List.of());
     }
 
     @Nullable

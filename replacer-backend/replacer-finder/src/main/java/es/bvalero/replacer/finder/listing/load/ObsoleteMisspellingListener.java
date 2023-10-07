@@ -9,7 +9,10 @@ import es.bvalero.replacer.finder.listing.StandardMisspelling;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
@@ -52,11 +55,7 @@ class ObsoleteMisspellingListener implements PropertyChangeListener, ObsoleteRep
                 WikipediaLanguage,
                 StandardMisspelling
             >) evt.getNewValue();
-        this.changeSupport.firePropertyChange(
-                "types",
-                Collections.emptyList(),
-                getObsoleteMisspellings(oldItems, newItems)
-            );
+        this.changeSupport.firePropertyChange("types", List.of(), getObsoleteMisspellings(oldItems, newItems));
     }
 
     @VisibleForTesting

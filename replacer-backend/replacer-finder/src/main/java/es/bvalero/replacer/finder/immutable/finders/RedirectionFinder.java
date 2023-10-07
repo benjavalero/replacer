@@ -6,7 +6,6 @@ import es.bvalero.replacer.finder.FinderPriority;
 import es.bvalero.replacer.finder.immutable.ImmutableFinder;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.LinearMatchResult;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.MatchResult;
@@ -51,6 +50,6 @@ class RedirectionFinder implements ImmutableFinder {
                 return Set.of(LinearMatchResult.of(0, text));
             }
         }
-        return Collections.emptySet();
+        return Set.of();
     }
 }

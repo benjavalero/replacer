@@ -4,7 +4,6 @@ import es.bvalero.replacer.finder.BenchmarkResult;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
 import es.bvalero.replacer.finder.util.FinderUtils;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -25,6 +24,6 @@ class RedirectionLowercaseContainsFinder implements BenchmarkFinder {
                 return Set.of(BenchmarkResult.of(0, text));
             }
         }
-        return Collections.emptySet();
+        return Set.of();
     }
 }

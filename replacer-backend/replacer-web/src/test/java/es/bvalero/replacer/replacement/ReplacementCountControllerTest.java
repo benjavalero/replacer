@@ -16,7 +16,9 @@ import es.bvalero.replacer.user.AccessToken;
 import es.bvalero.replacer.user.User;
 import es.bvalero.replacer.user.ValidateUserAspect;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Random;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.Test;
@@ -92,7 +94,7 @@ class ReplacementCountControllerTest {
 
         ResultCount<String> count = ResultCount.of("X", 100);
         when(replacementCountService.countReplacementsGroupedByReviewer(WikipediaLanguage.getDefault()))
-            .thenReturn(Collections.singletonList(count));
+            .thenReturn(List.of(count));
 
         mvc
             .perform(

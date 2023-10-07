@@ -12,8 +12,8 @@ import es.bvalero.replacer.finder.util.AutomatonMatchFinder;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.Collections;
 import java.util.EnumMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.MatchResult;
@@ -80,7 +80,7 @@ public class MisspellingComposedFinder extends MisspellingFinder implements Prop
         // There are hundreds of composed misspellings
         // The best approach is an automaton of oll the terms alternated with big difference against the linear approach
         final RunAutomaton automaton = this.automata.get(page.getPageKey().getLang());
-        return automaton == null ? Collections.emptyList() : AutomatonMatchFinder.find(page.getContent(), automaton);
+        return automaton == null ? List.of() : AutomatonMatchFinder.find(page.getContent(), automaton);
     }
 
     @Override

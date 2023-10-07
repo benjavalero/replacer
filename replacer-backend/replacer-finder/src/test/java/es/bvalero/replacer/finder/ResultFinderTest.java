@@ -244,7 +244,7 @@ class ResultFinderTest {
 
         Collection<Replacement> replacements = resultFinder.findReplacements(FinderPage.of(text));
 
-        assertEquals(Collections.emptySet(), new HashSet<>(replacements));
+        assertEquals(Set.of(), new HashSet<>(replacements));
     }
 
     @Test

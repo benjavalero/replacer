@@ -12,7 +12,7 @@ import es.bvalero.replacer.common.util.WebUtils;
 import es.bvalero.replacer.user.AccessToken;
 import es.bvalero.replacer.user.User;
 import java.util.Collection;
-import java.util.Collections;
+import java.util.List;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.Test;
@@ -45,7 +45,7 @@ class PageCountControllerTest {
 
         StandardType type = StandardType.of(ReplacementKind.SIMPLE, "Y");
         ResultCount<StandardType> count = ResultCount.of(type, 100);
-        Collection<ResultCount<StandardType>> counts = Collections.singletonList(count);
+        Collection<ResultCount<StandardType>> counts = List.of(count);
         when(pageCountService.countNotReviewedGroupedByType(user)).thenReturn(counts);
 
         mvc

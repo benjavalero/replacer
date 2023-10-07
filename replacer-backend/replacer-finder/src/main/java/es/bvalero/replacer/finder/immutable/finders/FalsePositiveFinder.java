@@ -13,7 +13,10 @@ import es.bvalero.replacer.finder.util.AutomatonMatchFinder;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.*;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.regex.MatchResult;
 import javax.annotation.PostConstruct;
 import org.apache.commons.collections4.SetValuedMap;
@@ -88,7 +91,7 @@ class FalsePositiveFinder implements ImmutableFinder, PropertyChangeListener {
     @Override
     public Iterable<MatchResult> findMatchResults(FinderPage page) {
         final RunAutomaton automaton = this.falsePositivesAutomata.get(page.getPageKey().getLang());
-        return automaton == null ? Collections.emptyList() : AutomatonMatchFinder.find(page.getContent(), automaton);
+        return automaton == null ? List.of() : AutomatonMatchFinder.find(page.getContent(), automaton);
     }
 
     @Override

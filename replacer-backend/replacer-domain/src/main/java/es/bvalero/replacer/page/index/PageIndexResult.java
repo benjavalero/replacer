@@ -2,7 +2,7 @@ package es.bvalero.replacer.page.index;
 
 import es.bvalero.replacer.finder.Replacement;
 import java.util.Collection;
-import java.util.Collections;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Value;
@@ -24,7 +24,7 @@ public class PageIndexResult {
 
     @NonNull
     @Builder.Default
-    Collection<Replacement> replacements = Collections.emptyList();
+    Collection<Replacement> replacements = List.of();
 
     public static PageIndexResult ofNotIndexable() {
         return PageIndexResult.builder().status(PageIndexStatus.PAGE_NOT_INDEXABLE).build();

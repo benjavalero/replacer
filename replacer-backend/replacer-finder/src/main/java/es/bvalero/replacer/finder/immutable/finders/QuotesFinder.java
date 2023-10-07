@@ -6,7 +6,6 @@ import es.bvalero.replacer.finder.immutable.ImmutableCheckedFinder;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
 import es.bvalero.replacer.finder.util.LinearMatchResult;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Set;
 import java.util.regex.MatchResult;
 import org.apache.commons.lang3.StringUtils;
@@ -120,7 +119,7 @@ abstract class QuotesFinder extends ImmutableCheckedFinder {
     }
 
     Collection<Character> getForbiddenChars() {
-        return Collections.emptySet();
+        return Set.of();
     }
 
     private boolean isEmptyQuote(String quoteText, int startQuote, String text, FinderPage page) {

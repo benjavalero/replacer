@@ -87,7 +87,7 @@ public class OrdinalFinder implements ReplacementFinder {
             // However we use the automaton approach to include more cases
             return AutomatonMatchFinder.find(page.getContent(), ordinalAutomaton);
         } else {
-            return Collections.emptyList();
+            return List.of();
         }
     }
 

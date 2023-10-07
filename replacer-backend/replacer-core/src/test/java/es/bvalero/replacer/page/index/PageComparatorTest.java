@@ -17,7 +17,10 @@ import es.bvalero.replacer.page.PageKey;
 import es.bvalero.replacer.replacement.IndexedReplacement;
 import es.bvalero.replacer.wikipedia.WikipediaTimestamp;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Random;
+import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -51,7 +54,7 @@ class PageComparatorTest {
 
     @Test
     void testNewPageWithNoReplacements() {
-        Collection<Replacement> replacements = Collections.emptyList();
+        Collection<Replacement> replacements = List.of();
 
         PageComparatorResult result = pageComparator.indexPageReplacements(page, replacements, null);
 
@@ -83,11 +86,11 @@ class PageComparatorTest {
             .builder()
             .pageKey(page.getPageKey())
             .title(page.getTitle())
-            .replacements(Collections.emptyList())
+            .replacements(List.of())
             .lastUpdate(now)
             .build();
 
-        Collection<Replacement> replacements = Collections.emptyList();
+        Collection<Replacement> replacements = List.of();
 
         PageComparatorResult result = pageComparator.indexPageReplacements(page, replacements, dbPage);
 
@@ -101,11 +104,11 @@ class PageComparatorTest {
             .builder()
             .pageKey(page.getPageKey())
             .title(page.getTitle())
-            .replacements(Collections.emptyList())
+            .replacements(List.of())
             .lastUpdate(before)
             .build();
 
-        Collection<Replacement> replacements = Collections.emptyList();
+        Collection<Replacement> replacements = List.of();
 
         PageComparatorResult result = pageComparator.indexPageReplacements(page, replacements, dbPage);
 
@@ -123,7 +126,7 @@ class PageComparatorTest {
             .builder()
             .pageKey(page.getPageKey())
             .title("T2")
-            .replacements(Collections.emptyList())
+            .replacements(List.of())
             .lastUpdate(now)
             .build();
 
@@ -142,11 +145,11 @@ class PageComparatorTest {
             .builder()
             .pageKey(page.getPageKey())
             .title("T2")
-            .replacements(Collections.emptyList())
+            .replacements(List.of())
             .lastUpdate(now)
             .build();
 
-        Collection<Replacement> replacements = Collections.emptyList();
+        Collection<Replacement> replacements = List.of();
 
         PageComparatorResult result = pageComparator.indexPageReplacements(page, replacements, dbPage);
 
@@ -299,7 +302,7 @@ class PageComparatorTest {
 
     @Test
     void testDuplicatedDbReplacementsWithDifferentPosition() {
-        Collection<Replacement> replacements = Collections.emptyList();
+        Collection<Replacement> replacements = List.of();
 
         // Existing replacements in DB: the same replacement found in 2 different positions with same context
         IndexedReplacement r1db = IndexedReplacement
@@ -335,7 +338,7 @@ class PageComparatorTest {
 
     @Test
     void testDuplicatedDbReplacementsWithDifferentPositionFarEnough() {
-        Collection<Replacement> replacements = Collections.emptyList();
+        Collection<Replacement> replacements = List.of();
 
         // Existing replacements in DB: the same replacement found in 2 different positions with same context
         // We force a distance between the replacements so even having the same context they are not considered the same

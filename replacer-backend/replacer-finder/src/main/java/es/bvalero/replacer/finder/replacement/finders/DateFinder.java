@@ -607,6 +607,6 @@ public class DateFinder implements ReplacementFinder {
                 return List.of(precedingArticle, precedingAlternative);
             }
         }
-        return Collections.emptyList();
+        return List.of();
     }
 }

@@ -10,7 +10,10 @@ import es.bvalero.replacer.finder.immutable.ImmutableCheckedFinder;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.LinearMatchResult;
 import es.bvalero.replacer.finder.util.LinkUtils;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.regex.MatchResult;
 import javax.annotation.PostConstruct;
 import org.apache.commons.lang3.StringUtils;
@@ -69,9 +72,7 @@ class LinkFinder extends ImmutableCheckedFinder {
         final String text = page.getContent();
         final int endSuffix = findEndSuffix(text, link.end());
         if (endSuffix > link.end()) {
-            return Collections.singletonList(
-                LinearMatchResult.of(link.start(), text.substring(link.start(), endSuffix))
-            );
+            return List.of(LinearMatchResult.of(link.start(), text.substring(link.start(), endSuffix)));
         }
 
         final String linkContent = link
@@ -89,26 +90,26 @@ class LinkFinder extends ImmutableCheckedFinder {
 
         // If the link space is a category then return an immutable of the complete link
         if (isCategorySpace(linkSpace)) {
-            return Collections.singletonList(link);
+            return List.of(link);
         }
 
         // If the link alias doesn't exist and the link is in file/lang space then return the complete link
         if (linkAlias == null && (isFileSpace(linkSpace) || isLangSpace(linkSpace) || isInterWikiSpace(linkSpace))) {
-            return Collections.singletonList(link);
+            return List.of(link);
         }
 
         // If the link alias exists then return the link title
         // In case the alias exists but is a parameter then return the complete link
         if (linkAlias != null) {
             if (isAliasParameter(linkAlias)) {
-                return Collections.singletonList(link);
+                return List.of(link);
             } else {
-                return Collections.singletonList(LinearMatchResult.of(link.start() + START_LINK.length(), linkTitle));
+                return List.of(LinearMatchResult.of(link.start() + START_LINK.length(), linkTitle));
             }
         }
 
         // In any other case then return no immutable
-        return Collections.emptyList();
+        return List.of();
     }
 
     // Find the end of the link suffix, i.e. lowercase chars appended to the link

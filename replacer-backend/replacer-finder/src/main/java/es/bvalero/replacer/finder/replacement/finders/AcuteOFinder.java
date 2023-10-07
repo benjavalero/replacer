@@ -9,7 +9,6 @@ import es.bvalero.replacer.finder.replacement.ReplacementFinder;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
 import es.bvalero.replacer.finder.util.LinearMatchResult;
-import java.util.Collections;
 import java.util.List;
 import java.util.regex.MatchResult;
 import org.springframework.lang.Nullable;
@@ -30,7 +29,7 @@ public class AcuteOFinder implements ReplacementFinder {
         if (WikipediaLanguage.SPANISH == page.getPageKey().getLang()) {
             return LinearMatchFinder.find(page, this::findAcuteO);
         } else {
-            return Collections.emptyList();
+            return List.of();
         }
     }
 
@@ -106,6 +105,6 @@ public class AcuteOFinder implements ReplacementFinder {
     }
 
     private List<Suggestion> findSuggestions() {
-        return Collections.singletonList(Suggestion.ofNoComment(FIX_ACUTE_O));
+        return List.of(Suggestion.ofNoComment(FIX_ACUTE_O));
     }
 }

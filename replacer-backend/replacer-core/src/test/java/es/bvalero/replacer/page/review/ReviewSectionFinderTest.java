@@ -12,7 +12,6 @@ import es.bvalero.replacer.finder.Suggestion;
 import es.bvalero.replacer.page.PageKey;
 import es.bvalero.replacer.wikipedia.*;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -50,9 +49,9 @@ class ReviewSectionFinderTest {
     @Test
     void testFindSectionReviewNoSections() {
         WikipediaPage page = buildWikipediaPage(1, "Any content");
-        List<Replacement> replacements = Collections.emptyList();
+        List<Replacement> replacements = List.of();
 
-        when(wikipediaPageRepository.findSectionsInPage(any(PageKey.class))).thenReturn(Collections.emptyList());
+        when(wikipediaPageRepository.findSectionsInPage(any(PageKey.class))).thenReturn(List.of());
 
         Review review = Review.of(page, null, replacements, 1);
         Optional<Review> sectionReview = reviewSectionFinder.findPageReviewSection(review);
@@ -70,9 +69,9 @@ class ReviewSectionFinderTest {
             .start(8)
             .text("an")
             .type(StandardType.of(ReplacementKind.SIMPLE, "an"))
-            .suggestions(Collections.singletonList(suggestion))
+            .suggestions(List.of(suggestion))
             .build();
-        List<Replacement> replacements = Collections.singletonList(replacement);
+        List<Replacement> replacements = List.of(replacement);
         WikipediaPage page = buildWikipediaPage(pageId, content);
         int numPending = 10;
         Review pageReview = Review.of(page, null, replacements, numPending);
@@ -87,8 +86,7 @@ class ReviewSectionFinderTest {
             .byteOffset(offset)
             .anchor("X")
             .build();
-        when(wikipediaPageRepository.findSectionsInPage(page.getPageKey()))
-            .thenReturn(Collections.singletonList(section));
+        when(wikipediaPageRepository.findSectionsInPage(page.getPageKey())).thenReturn(List.of(section));
 
         String sectionContent = content.substring(offset, 10);
         WikipediaPage pageSection = WikipediaPage

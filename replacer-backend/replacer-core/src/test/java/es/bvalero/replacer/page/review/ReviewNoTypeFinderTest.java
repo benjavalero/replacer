@@ -18,9 +18,9 @@ import es.bvalero.replacer.wikipedia.WikipediaPage;
 import es.bvalero.replacer.wikipedia.WikipediaPageRepository;
 import es.bvalero.replacer.wikipedia.WikipediaTimestamp;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -60,7 +60,7 @@ class ReviewNoTypeFinderTest {
         .type(StandardType.DEGREES)
         .suggestions(List.of(Suggestion.ofNoComment("Z")))
         .build();
-    private final List<Replacement> replacements = Collections.singletonList(replacement);
+    private final List<Replacement> replacements = List.of(replacement);
     private final User user = User.buildTestUser();
     private final ReviewOptions options = ReviewOptions.ofNoType(user);
 
@@ -91,8 +91,7 @@ class ReviewNoTypeFinderTest {
     @Test
     void testFindRandomPageToReviewNoTypeNoResultInDb() {
         // No results in DB
-        when(pageService.findPagesToReviewByNoType(any(WikipediaLanguage.class), anyInt()))
-            .thenReturn(Collections.emptyList());
+        when(pageService.findPagesToReviewByNoType(any(WikipediaLanguage.class), anyInt())).thenReturn(List.of());
 
         Optional<Review> review = pageReviewNoTypeService.findRandomPageReview(options);
 
@@ -103,8 +102,8 @@ class ReviewNoTypeFinderTest {
     void testFindRandomPageToReviewNoTypeNotInWikipedia() {
         // 1 result in DB
         when(pageService.findPagesToReviewByNoType(any(WikipediaLanguage.class), anyInt()))
-            .thenReturn(new ArrayList<>(Collections.singleton(randomPageKey)))
-            .thenReturn(Collections.emptyList());
+            .thenReturn(new ArrayList<>(Set.of(randomPageKey)))
+            .thenReturn(List.of());
 
         // The page doesn't exist in Wikipedia
         when(wikipediaPageRepository.findByKey(randomPageKey)).thenReturn(Optional.empty());
@@ -119,7 +118,7 @@ class ReviewNoTypeFinderTest {
         // 1 result in DB
         when(pageCountService.countNotReviewedByNoType(any(WikipediaLanguage.class))).thenReturn(1);
         when(pageService.findPagesToReviewByNoType(any(WikipediaLanguage.class), anyInt()))
-            .thenReturn(new ArrayList<>(Collections.singleton(randomPageKey)));
+            .thenReturn(new ArrayList<>(Set.of(randomPageKey)));
 
         // The page exists in Wikipedia
         when(wikipediaPageRepository.findByKey(randomPageKey)).thenReturn(Optional.of(page));
@@ -139,8 +138,8 @@ class ReviewNoTypeFinderTest {
         // 1 result in DB
         when(pageCountService.countNotReviewedByNoType(any(WikipediaLanguage.class))).thenReturn(1);
         when(pageService.findPagesToReviewByNoType(any(WikipediaLanguage.class), anyInt()))
-            .thenReturn(new ArrayList<>(Collections.singleton(randomPageKey)))
-            .thenReturn(Collections.emptyList());
+            .thenReturn(new ArrayList<>(Set.of(randomPageKey)))
+            .thenReturn(List.of());
 
         // The page exists in Wikipedia
         when(wikipediaPageRepository.findByKey(randomPageKey)).thenReturn(Optional.of(page));

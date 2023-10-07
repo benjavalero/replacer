@@ -79,7 +79,7 @@ class ResultFinder
     private Collection<Replacement> removeImmutables(FinderPage page, Collection<Replacement> resultList) {
         // No need to find the immutables if there are no results
         if (resultList.isEmpty()) {
-            return Collections.emptyList();
+            return List.of();
         }
 
         for (Immutable immutable : findImmutables(page)) {
@@ -87,7 +87,7 @@ class ResultFinder
 
             // No need to continue finding the immutables if there are no results
             if (resultList.isEmpty()) {
-                return Collections.emptyList();
+                return List.of();
             }
         }
 

@@ -29,7 +29,7 @@ public abstract class MisspellingFinder implements ReplacementFinder {
         final Map<String, StandardMisspelling> langMap = this.misspellingMap.get(lang);
         if (langMap == null) {
             LOGGER.error("No misspelling map for lang {}", lang);
-            return Collections.emptyMap();
+            return Map.of();
         } else {
             return langMap;
         }

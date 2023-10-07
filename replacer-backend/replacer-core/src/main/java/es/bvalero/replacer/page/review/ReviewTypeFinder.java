@@ -7,7 +7,7 @@ import es.bvalero.replacer.page.PageService;
 import es.bvalero.replacer.page.count.PageCountService;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
 import java.util.Collection;
-import java.util.Collections;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -52,7 +52,7 @@ class ReviewTypeFinder extends ReviewFinder {
         Collection<Replacement> filtered = filterReplacementsByType(replacements, type);
         if (filtered.isEmpty()) {
             // No replacement to be reviewed for this page and type
-            return Collections.emptyList();
+            return List.of();
         }
 
         return replacements;

@@ -12,7 +12,7 @@ import es.bvalero.replacer.wikipedia.WikipediaNamespace;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
 import es.bvalero.replacer.wikipedia.WikipediaTimestamp;
 import java.time.LocalDate;
-import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -99,7 +99,7 @@ class PageIndexServiceTest {
             .builder()
             .pageKey(page.getPageKey())
             .title("T")
-            .replacements(Collections.emptyList())
+            .replacements(List.of())
             .lastUpdate(LocalDate.now())
             .build();
         when(pageService.findPageByKey(page.getPageKey())).thenReturn(Optional.of(dbPage));

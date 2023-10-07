@@ -1,7 +1,6 @@
 package es.bvalero.replacer.finder.replacement.custom;
 
 import es.bvalero.replacer.finder.*;
-import java.util.Collections;
 import java.util.Set;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +24,6 @@ public class CustomReplacementFinderService implements FinderService<Replacement
 
     public Iterable<Replacement> findCustomReplacements(FinderPage page, CustomMisspelling customMisspelling) {
         final CustomReplacementFinder finder = CustomReplacementFinder.of(customMisspelling);
-        return findIterable(page, Collections.singleton(finder));
+        return findIterable(page, Set.of(finder));
     }
 }

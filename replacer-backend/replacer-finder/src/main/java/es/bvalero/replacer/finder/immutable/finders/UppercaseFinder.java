@@ -13,8 +13,8 @@ import es.bvalero.replacer.finder.util.AutomatonMatchFinder;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.Collections;
 import java.util.EnumMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.MatchResult;
@@ -148,7 +148,7 @@ public class UppercaseFinder implements ImmutableFinder, PropertyChangeListener 
     public Iterable<MatchResult> findMatchResults(FinderPage page) {
         final RunAutomaton automaton = this.uppercaseAutomata.get(page.getPageKey().getLang());
         // Benchmarks show similar performance with and without validation
-        return automaton == null ? Collections.emptyList() : AutomatonMatchFinder.find(page.getContent(), automaton);
+        return automaton == null ? List.of() : AutomatonMatchFinder.find(page.getContent(), automaton);
     }
 
     @Override

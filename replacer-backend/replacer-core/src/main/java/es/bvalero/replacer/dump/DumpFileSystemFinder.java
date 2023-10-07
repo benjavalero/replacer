@@ -7,6 +7,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
@@ -70,7 +71,7 @@ class DumpFileSystemFinder implements DumpFinder {
                 .toList();
         } catch (IOException e) {
             LOGGER.error("Error listing files in: {}", dumpPath, e);
-            return Collections.emptyList();
+            return List.of();
         }
     }
 

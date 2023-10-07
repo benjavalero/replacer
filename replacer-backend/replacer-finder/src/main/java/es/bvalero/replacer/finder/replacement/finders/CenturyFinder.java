@@ -16,7 +16,10 @@ import es.bvalero.replacer.finder.replacement.ReplacementFinder;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
 import es.bvalero.replacer.finder.util.LinearMatchResult;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Set;
 import java.util.regex.MatchResult;
 import java.util.stream.Collectors;
 import org.springframework.lang.Nullable;
@@ -66,7 +69,7 @@ public class CenturyFinder implements ReplacementFinder {
         if (WikipediaLanguage.SPANISH == page.getPageKey().getLang()) {
             return LinearMatchFinder.find(page, this::findCentury);
         } else {
-            return Collections.emptyList();
+            return List.of();
         }
     }
 

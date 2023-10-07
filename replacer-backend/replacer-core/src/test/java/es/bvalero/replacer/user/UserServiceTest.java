@@ -7,7 +7,6 @@ import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.wikipedia.WikipediaUser;
 import es.bvalero.replacer.wikipedia.WikipediaUserGroup;
 import es.bvalero.replacer.wikipedia.WikipediaUserRepository;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,7 +34,7 @@ class UserServiceTest {
         WikipediaLanguage lang = WikipediaLanguage.getDefault();
         AccessToken accessToken = AccessToken.of("a", "b");
 
-        WikipediaUser user = WikipediaUser.of(UserId.of(lang, "N"), Collections.emptyList());
+        WikipediaUser user = WikipediaUser.of(UserId.of(lang, "N"), List.of());
         // We pass on purpose a null access token as we are mocking the response
         when(wikipediaUserRepository.findAuthenticatedUser(lang, accessToken)).thenReturn(Optional.of(user));
 
@@ -100,7 +99,7 @@ class UserServiceTest {
         String name = "ADMIN";
 
         userService.setAdminUser(name);
-        WikipediaUser user = WikipediaUser.of(UserId.of(lang, name), Collections.emptyList());
+        WikipediaUser user = WikipediaUser.of(UserId.of(lang, name), List.of());
         // We pass on purpose a null access token as we are mocking the response
         when(wikipediaUserRepository.findAuthenticatedUser(lang, accessToken)).thenReturn(Optional.of(user));
 

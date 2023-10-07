@@ -139,7 +139,7 @@ class WikipediaPageApiRepository implements WikipediaPageRepository {
         } catch (WikipediaException e) {
             LOGGER.error("Error finding sections in page: {}", pageKey, e);
         }
-        return Collections.emptyList();
+        return List.of();
     }
 
     private Map<String, String> buildPageSectionsRequestParams(int pageId) {

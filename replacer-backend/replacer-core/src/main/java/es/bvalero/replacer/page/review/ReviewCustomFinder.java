@@ -132,7 +132,7 @@ class ReviewCustomFinder extends ReviewFinder {
         // We run a filter to check there is at least one replacement of the requested type
         Collection<Replacement> filtered = filterReplacementsByType(merged, options.getCustomType());
         if (filtered.isEmpty()) {
-            return Collections.emptyList();
+            return List.of();
         }
 
         return merged;

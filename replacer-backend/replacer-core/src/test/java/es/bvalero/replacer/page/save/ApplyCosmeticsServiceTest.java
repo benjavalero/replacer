@@ -7,7 +7,6 @@ import es.bvalero.replacer.checkwikipedia.CheckWikipediaService;
 import es.bvalero.replacer.finder.Cosmetic;
 import es.bvalero.replacer.finder.CosmeticFindService;
 import es.bvalero.replacer.finder.FinderPage;
-import java.util.Collections;
 import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -35,7 +34,7 @@ class ApplyCosmeticsServiceTest {
     @Test
     void testApplyCosmeticChanges() {
         Cosmetic cosmetic = Cosmetic.builder().start(2).text("[[Link|link]]").fix("[[link]]").build();
-        when(cosmeticFindService.findCosmetics(any(FinderPage.class))).thenReturn(Collections.singleton(cosmetic));
+        when(cosmeticFindService.findCosmetics(any(FinderPage.class))).thenReturn(Set.of(cosmetic));
 
         String text = "A [[Link|link]] to simplify.";
         String expected = "A [[link]] to simplify.";

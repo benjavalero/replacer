@@ -4,7 +4,6 @@ import es.bvalero.replacer.finder.BenchmarkResult;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
 import es.bvalero.replacer.finder.util.FinderUtils;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -26,6 +25,6 @@ class RedirectionRegexInsensitiveFinder implements BenchmarkFinder {
         if (m.find()) {
             return List.of(BenchmarkResult.of(0, text));
         }
-        return Collections.emptyList();
+        return List.of();
     }
 }

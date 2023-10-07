@@ -2,9 +2,6 @@ package es.bvalero.replacer.finder.util;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import es.bvalero.replacer.finder.util.FinderUtils;
-import es.bvalero.replacer.finder.util.LinearMatchResult;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import org.junit.jupiter.api.Test;
@@ -184,7 +181,7 @@ class FinderUtilsTest {
     @Test
     void testJoinAlternate() {
         assertEquals("a|b|c", FinderUtils.joinAlternate(List.of("a", "b", "c")));
-        assertEquals("", FinderUtils.joinAlternate(Collections.emptyList()));
-        assertEquals("x", FinderUtils.joinAlternate(Collections.singleton("x")));
+        assertEquals("", FinderUtils.joinAlternate(List.of()));
+        assertEquals("x", FinderUtils.joinAlternate(Set.of("x")));
     }
 }
