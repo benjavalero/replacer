@@ -16,37 +16,25 @@ public class ListingOfflineFinder implements ListingFinder {
 
     @Override
     public String getSimpleMisspellingListing(WikipediaLanguage lang) throws ReplacerException {
-        switch (lang) {
-            case SPANISH:
-                return FileOfflineUtils.getFileContent("offline/misspelling-list-es.txt");
-            case GALICIAN:
-                return FileOfflineUtils.getFileContent("offline/misspelling-list-gl.txt");
-            default:
-                throw new IllegalArgumentException();
-        }
+        return switch (lang) {
+            case SPANISH -> FileOfflineUtils.getFileContent("offline/misspelling-list-es.txt");
+            case GALICIAN -> FileOfflineUtils.getFileContent("offline/misspelling-list-gl.txt");
+        };
     }
 
     @Override
     public String getFalsePositiveListing(WikipediaLanguage lang) throws ReplacerException {
-        switch (lang) {
-            case SPANISH:
-                return FileOfflineUtils.getFileContent("offline/false-positives-es.txt");
-            case GALICIAN:
-                return FileOfflineUtils.getFileContent("offline/false-positives-gl.txt");
-            default:
-                throw new IllegalArgumentException();
-        }
+        return switch (lang) {
+            case SPANISH -> FileOfflineUtils.getFileContent("offline/false-positives-es.txt");
+            case GALICIAN -> FileOfflineUtils.getFileContent("offline/false-positives-gl.txt");
+        };
     }
 
     @Override
     public String getComposedMisspellingListing(WikipediaLanguage lang) throws ReplacerException {
-        switch (lang) {
-            case SPANISH:
-                return FileOfflineUtils.getFileContent("offline/composed-misspellings-es.txt");
-            case GALICIAN:
-                return FileOfflineUtils.getFileContent("offline/composed-misspellings-gl.txt");
-            default:
-                throw new IllegalArgumentException();
-        }
+        return switch (lang) {
+            case SPANISH -> FileOfflineUtils.getFileContent("offline/composed-misspellings-es.txt");
+            case GALICIAN -> FileOfflineUtils.getFileContent("offline/composed-misspellings-gl.txt");
+        };
     }
 }

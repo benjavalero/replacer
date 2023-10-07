@@ -38,18 +38,13 @@ public class ReviewFindController {
         @Valid ReviewOptionsDto optionsDto
     ) {
         LOGGER.info("START Find Random Page with Replacements. Options: {}", optionsDto);
-        Optional<Review> review;
         ReviewOptions options = ReviewMapper.fromDto(optionsDto, user);
-        switch (options.getKind()) {
-            case EMPTY:
-                review = reviewNoTypeFinder.findRandomPageReview(options);
-                break;
-            case CUSTOM:
-                review = reviewCustomFinder.findRandomPageReview(options);
-                break;
-            default:
-                review = reviewTypeFinder.findRandomPageReview(options);
-        }
+        Optional<Review> review =
+            switch (options.getKind()) {
+                case EMPTY -> reviewNoTypeFinder.findRandomPageReview(options);
+                case CUSTOM -> reviewCustomFinder.findRandomPageReview(options);
+                default -> reviewTypeFinder.findRandomPageReview(options);
+            };
         return buildResponse(review);
     }
 
@@ -61,19 +56,14 @@ public class ReviewFindController {
         @Valid ReviewOptionsDto optionsDto
     ) {
         LOGGER.info("START Find Page Review by ID {}. Options: {}", pageId, optionsDto);
-        Optional<Review> review;
         ReviewOptions options = ReviewMapper.fromDto(optionsDto, user);
         PageKey pageKey = PageKey.of(user.getId().getLang(), pageId);
-        switch (options.getKind()) {
-            case EMPTY:
-                review = reviewNoTypeFinder.findPageReview(pageKey, options);
-                break;
-            case CUSTOM:
-                review = reviewCustomFinder.findPageReview(pageKey, options);
-                break;
-            default:
-                review = reviewTypeFinder.findPageReview(pageKey, options);
-        }
+        Optional<Review> review =
+            switch (options.getKind()) {
+                case EMPTY -> reviewNoTypeFinder.findPageReview(pageKey, options);
+                case CUSTOM -> reviewCustomFinder.findPageReview(pageKey, options);
+                default -> reviewTypeFinder.findPageReview(pageKey, options);
+            };
         return buildResponse(review);
     }
 

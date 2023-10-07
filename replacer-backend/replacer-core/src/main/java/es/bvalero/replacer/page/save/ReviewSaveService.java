@@ -122,16 +122,11 @@ class ReviewSaveService {
     }
 
     private String buildSubtypeSummary(ReplacementType type) {
-        switch (type.getKind()) {
-            case SIMPLE:
-            case COMPOSED:
-            case CUSTOM:
-                return "«" + type.getSubtype() + "»";
-            case EMPTY:
-                throw new IllegalArgumentException();
-            default:
-                return type.getSubtype();
-        }
+        return switch (type.getKind()) {
+            case SIMPLE, COMPOSED, CUSTOM -> "«" + type.getSubtype() + "»";
+            case EMPTY -> throw new IllegalArgumentException();
+            default -> type.getSubtype();
+        };
     }
 
     void markAsReviewed(Collection<ReviewedReplacement> reviewedReplacements, boolean updateDate) {
