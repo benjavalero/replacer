@@ -4,7 +4,6 @@ import es.bvalero.replacer.common.domain.CustomType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.page.PageKey;
 import java.util.Collection;
-import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,10 +18,6 @@ public class CustomReplacementService {
     }
 
     public Collection<Integer> findPagesReviewed(WikipediaLanguage lang, CustomType type) {
-        return customRepository
-            .findPagesReviewed(lang, type)
-            .stream()
-            .map(PageKey::getPageId)
-            .collect(Collectors.toUnmodifiableList());
+        return customRepository.findPagesReviewed(lang, type).stream().map(PageKey::getPageId).toList();
     }
 }

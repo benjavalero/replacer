@@ -36,7 +36,7 @@ class ReviewMapper {
     }
 
     private Collection<ReplacementDto> toDto(Collection<Replacement> replacements) {
-        return replacements.stream().map(ReviewMapper::toDto).collect(Collectors.toUnmodifiableList());
+        return replacements.stream().map(ReviewMapper::toDto).toList();
     }
 
     private ReplacementDto toDto(Replacement replacement) {

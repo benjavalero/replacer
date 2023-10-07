@@ -5,7 +5,6 @@ import es.bvalero.replacer.wikipedia.WikipediaPage;
 import es.bvalero.replacer.wikipedia.WikipediaPageRepository;
 import es.bvalero.replacer.wikipedia.WikipediaSection;
 import java.util.*;
-import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
@@ -131,10 +130,7 @@ class ReviewSectionFinder {
         Collection<Replacement> replacements,
         int sectionOffset
     ) {
-        return replacements
-            .stream()
-            .map(rep -> rep.withStart(rep.getStart() - sectionOffset))
-            .collect(Collectors.toUnmodifiableList());
+        return replacements.stream().map(rep -> rep.withStart(rep.getStart() - sectionOffset)).toList();
     }
 
     private boolean validateTranslatedReplacements(Collection<Replacement> replacements, WikipediaPage pageSection) {

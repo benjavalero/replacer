@@ -5,7 +5,6 @@ import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.user.User;
 import java.util.Collection;
-import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +22,7 @@ public class PageCountService {
             .stream()
             .map(rc -> ResultCount.of(rc.getKey(), rc.getCount()))
             .filter(rc -> !rc.getKey().isTypeForbidden(user))
-            .collect(Collectors.toUnmodifiableList());
+            .toList();
     }
 
     /** Count the number of pages to review */

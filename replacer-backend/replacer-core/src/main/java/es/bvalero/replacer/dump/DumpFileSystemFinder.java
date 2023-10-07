@@ -9,7 +9,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Optional;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -68,7 +67,7 @@ class DumpFileSystemFinder implements DumpFinder {
             return listedFiles
                 .filter(folder -> DUMP_FOLDER_PATTERN.matcher(folder.getFileName().toString()).matches())
                 .sorted(Collections.reverseOrder())
-                .collect(Collectors.toUnmodifiableList());
+                .toList();
         } catch (IOException e) {
             LOGGER.error("Error listing files in: {}", dumpPath, e);
             return Collections.emptyList();

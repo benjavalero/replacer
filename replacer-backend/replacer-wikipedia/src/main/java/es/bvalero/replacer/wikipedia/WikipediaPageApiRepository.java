@@ -109,7 +109,7 @@ class WikipediaPageApiRepository implements WikipediaPageRepository {
             .filter(page -> !page.isMissing())
             .filter(page -> !page.isProtected())
             .map(page -> convert(page, lang, curtimestamp))
-            .collect(Collectors.toUnmodifiableList());
+            .toList();
     }
 
     private WikipediaPage convert(WikipediaApiResponse.Page page, WikipediaLanguage lang, String curtimestamp) {
@@ -157,7 +157,7 @@ class WikipediaPageApiRepository implements WikipediaPageRepository {
             .stream()
             .filter(this::isSectionValid)
             .map(s -> convert(s, pageKey))
-            .collect(Collectors.toUnmodifiableList());
+            .toList();
     }
 
     private boolean isSectionValid(WikipediaApiResponse.Section section) {
@@ -283,7 +283,7 @@ class WikipediaPageApiRepository implements WikipediaPageRepository {
             .getSearch()
             .stream()
             .map(WikipediaApiResponse.Search::getPageid)
-            .collect(Collectors.toUnmodifiableList());
+            .toList();
 
         // Check nullity of IDs just in case to try to reproduce a strange bug
         if (pageIds.stream().anyMatch(Objects::isNull)) {

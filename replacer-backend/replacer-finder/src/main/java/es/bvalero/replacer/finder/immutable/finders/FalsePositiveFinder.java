@@ -15,7 +15,6 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.*;
 import java.util.regex.MatchResult;
-import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import org.apache.commons.collections4.SetValuedMap;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,7 +71,7 @@ class FalsePositiveFinder implements ImmutableFinder, PropertyChangeListener {
             final List<String> falsePositiveExpressions = falsePositives
                 .stream()
                 .map(FalsePositive::getExpression)
-                .collect(Collectors.toUnmodifiableList());
+                .toList();
             final String alternations = FinderUtils.joinAlternate(falsePositiveExpressions);
             return new RunAutomaton(new RegExp(alternations).toAutomaton(new DatatypesAutomatonProvider()));
         } else {

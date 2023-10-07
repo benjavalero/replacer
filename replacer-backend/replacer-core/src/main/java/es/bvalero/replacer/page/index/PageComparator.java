@@ -90,7 +90,7 @@ class PageComparator {
                         .stream()
                         .anyMatch(cr -> cr.isToBeReviewed() && cr.equals(ComparableReplacement.of(r)))
                 )
-                .collect(Collectors.toUnmodifiableList())
+                .toList()
         );
 
         // Calculate the new and obsolete replacement types for the page
@@ -208,7 +208,7 @@ class PageComparator {
         final List<ComparableReplacement> obsolete = dbReplacements
             .stream()
             .filter(ComparableReplacement::isObsolete)
-            .collect(Collectors.toUnmodifiableList());
+            .toList();
         obsolete.forEach(dbReplacements::remove);
         return obsolete;
     }

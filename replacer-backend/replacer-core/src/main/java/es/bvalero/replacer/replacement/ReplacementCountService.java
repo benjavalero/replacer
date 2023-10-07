@@ -4,7 +4,6 @@ import es.bvalero.replacer.common.domain.ResultCount;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.page.IndexedPage;
 import java.util.Collection;
-import java.util.stream.Collectors;
 import org.jetbrains.annotations.VisibleForTesting;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,20 +33,12 @@ class ReplacementCountService {
      * grouped by reviewer in descending order by count.
      */
     Collection<ResultCount<String>> countReplacementsGroupedByReviewer(WikipediaLanguage lang) {
-        return replacementCountRepository
-            .countGroupedByReviewer(lang)
-            .stream()
-            .sorted()
-            .collect(Collectors.toUnmodifiableList());
+        return replacementCountRepository.countGroupedByReviewer(lang).stream().sorted().toList();
     }
 
     /** Count the number of replacements to review grouped by page in descending order by count */
     Collection<ResultCount<IndexedPage>> countReplacementsNotReviewedGroupedByPage(WikipediaLanguage lang) {
         // For the moment we are not going to cache it as it is used only by admins
-        return replacementCountRepository
-            .countNotReviewedGroupedByPage(lang, NUM_RESULTS)
-            .stream()
-            .sorted()
-            .collect(Collectors.toUnmodifiableList());
+        return replacementCountRepository.countNotReviewedGroupedByPage(lang, NUM_RESULTS).stream().sorted().toList();
     }
 }

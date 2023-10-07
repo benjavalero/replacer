@@ -7,7 +7,6 @@ import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import java.text.Collator;
 import java.util.Collection;
 import java.util.Objects;
-import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +22,6 @@ class PageFindByTypeService {
             .stream()
             .filter(Objects::nonNull)
             .sorted(Collator.getInstance(LOCALE_ES))
-            .collect(Collectors.toUnmodifiableList());
+            .toList();
     }
 }

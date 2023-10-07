@@ -61,7 +61,7 @@ class PageCountCacheRepository implements PageCountRepository {
             .entrySet()
             .stream()
             .map(entry -> ResultCount.of(entry.getKey(), entry.getValue()))
-            .collect(Collectors.toUnmodifiableList());
+            .toList();
     }
 
     @Override

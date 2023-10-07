@@ -19,7 +19,6 @@ import es.bvalero.replacer.finder.util.LinearMatchResult;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.regex.MatchResult;
-import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.ListValuedMap;
@@ -107,10 +106,7 @@ public class DateFinder implements ReplacementFinder {
             String regexSpaces = String.format(
                 "(%s)+",
                 FinderUtils.joinAlternate(
-                    FinderUtils.SPACES
-                        .stream()
-                        .map(s -> s.replace("{", "\\{").replace("}", "\\}"))
-                        .collect(Collectors.toUnmodifiableList())
+                    FinderUtils.SPACES.stream().map(s -> s.replace("{", "\\{").replace("}", "\\}")).toList()
                 )
             );
 

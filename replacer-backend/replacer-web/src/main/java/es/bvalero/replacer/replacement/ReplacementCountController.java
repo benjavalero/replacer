@@ -7,7 +7,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.Collection;
-import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -50,7 +49,7 @@ public class ReplacementCountController {
             .countReplacementsGroupedByReviewer(lang)
             .stream()
             .map(count -> ReviewerCount.of(count.getKey(), count.getCount()))
-            .collect(Collectors.toUnmodifiableList());
+            .toList();
         LOGGER.info("GET Count Replacements By Reviewer: {} items", counts.size());
         return counts;
     }
@@ -67,7 +66,7 @@ public class ReplacementCountController {
             .map(count ->
                 PageCount.of(count.getKey().getPageKey().getPageId(), count.getKey().getTitle(), count.getCount())
             )
-            .collect(Collectors.toUnmodifiableList());
+            .toList();
         LOGGER.info("GET Count Replacements Not Reviewed By Page: {} items", counts.size());
         return counts;
     }

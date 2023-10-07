@@ -155,7 +155,7 @@ class ReviewSaveService {
             .stream()
             .filter(r -> r.getType() instanceof StandardType)
             .map(ReviewedReplacement::toReplacement)
-            .collect(Collectors.toUnmodifiableList());
+            .toList();
         replacementService.updateReviewer(usualToReview);
     }
 

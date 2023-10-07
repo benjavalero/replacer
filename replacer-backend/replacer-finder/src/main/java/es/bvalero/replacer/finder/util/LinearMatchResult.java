@@ -3,7 +3,6 @@ package es.bvalero.replacer.finder.util;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.MatchResult;
-import java.util.stream.Collectors;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
@@ -38,7 +37,7 @@ public class LinearMatchResult implements MatchResult {
     }
 
     public Iterable<String> getGroupValues() {
-        return this.groups.stream().map(LinearMatchResult::group).collect(Collectors.toUnmodifiableList());
+        return this.groups.stream().map(LinearMatchResult::group).toList();
     }
 
     @Override

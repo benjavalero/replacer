@@ -8,7 +8,6 @@ import es.bvalero.replacer.page.PageKey;
 import es.bvalero.replacer.user.User;
 import java.util.Collection;
 import java.util.Objects;
-import java.util.stream.Collectors;
 import lombok.experimental.UtilityClass;
 import org.springframework.lang.Nullable;
 
@@ -21,10 +20,7 @@ class ReviewedMapper {
         @Nullable Integer sectionOffset,
         User user
     ) {
-        return reviewed
-            .stream()
-            .map(r -> fromDto(pageId, r, sectionOffset, user))
-            .collect(Collectors.toUnmodifiableList());
+        return reviewed.stream().map(r -> fromDto(pageId, r, sectionOffset, user)).toList();
     }
 
     private ReviewedReplacement fromDto(
