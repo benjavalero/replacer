@@ -6,7 +6,6 @@ import static org.mockito.Mockito.when;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import es.bvalero.replacer.user.AccessToken;
 import es.bvalero.replacer.user.UserId;
 import es.bvalero.replacer.wikipedia.api.WikipediaApiHelper;
 import es.bvalero.replacer.wikipedia.api.WikipediaApiRequest;
@@ -47,20 +46,22 @@ class WikipediaUserApiRepositoryTest {
     void testLoggedUserName() throws Exception {
         // API response
         String textResponse =
-            "{\n" +
-            "    \"batchcomplete\": true,\n" +
-            "    \"query\": {\n" +
-            "        \"userinfo\": {\n" +
-            "            \"id\": 24149,\n" +
-            "            \"name\": \"Benjavalero\",\n" +
-            "            \"groups\": [\n" +
-            "                \"*\",\n" +
-            "                \"user\",\n" +
-            "                \"autoconfirmed\"\n" +
-            "            ]\n" +
-            "        }\n" +
-            "    }\n" +
-            "}";
+            """
+            {
+                "batchcomplete": true,
+                "query": {
+                    "userinfo": {
+                        "id": 24149,
+                        "name": "Benjavalero",
+                        "groups": [
+                            "*",
+                            "user",
+                            "autoconfirmed"
+                        ]
+                    }
+                }
+            }
+            """;
         WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
         when(wikipediaApiHelper.executeApiRequest(any(WikipediaApiRequest.class))).thenReturn(response);
 
@@ -80,22 +81,24 @@ class WikipediaUserApiRepositoryTest {
     void testLoggedUser() throws Exception {
         // API response
         String textResponse =
-            "{\n" +
-            "    \"batchcomplete\": true,\n" +
-            "    \"query\": {\n" +
-            "        \"users\": [\n" +
-            "            {\n" +
-            "                \"userid\": 24149,\n" +
-            "                \"name\": \"Benjavalero\",\n" +
-            "                \"groups\": [\n" +
-            "                    \"*\",\n" +
-            "                    \"user\",\n" +
-            "                    \"autoconfirmed\"\n" +
-            "                ]\n" +
-            "            }\n" +
-            "        ]\n" +
-            "    }\n" +
-            "}";
+            """
+            {
+                "batchcomplete": true,
+                "query": {
+                    "users": [
+                        {
+                            "userid": 24149,
+                            "name": "Benjavalero",
+                            "groups": [
+                                "*",
+                                "user",
+                                "autoconfirmed"
+                            ]
+                        }
+                    ]
+                }
+            }
+            """;
         WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
         when(wikipediaApiHelper.executeApiRequest(any(WikipediaApiRequest.class))).thenReturn(response);
 
@@ -114,17 +117,19 @@ class WikipediaUserApiRepositoryTest {
     void testMissingUser() throws Exception {
         // API response
         String textResponse =
-            "{\n" +
-            "    \"batchcomplete\": true,\n" +
-            "    \"query\": {\n" +
-            "        \"users\": [\n" +
-            "            {\n" +
-            "                \"name\": \"Missi\",\n" +
-            "                \"missing\": true\n" +
-            "            }\n" +
-            "        ]\n" +
-            "    }\n" +
-            "}";
+            """
+            {
+                "batchcomplete": true,
+                "query": {
+                    "users": [
+                        {
+                            "name": "Missi",
+                            "missing": true
+                        }
+                    ]
+                }
+            }
+            """;
         WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
         when(wikipediaApiHelper.executeApiRequest(any(WikipediaApiRequest.class))).thenReturn(response);
 

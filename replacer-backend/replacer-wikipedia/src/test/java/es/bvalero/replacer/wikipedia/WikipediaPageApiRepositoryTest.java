@@ -9,7 +9,6 @@ import static org.mockito.Mockito.when;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.page.PageKey;
-import es.bvalero.replacer.user.AccessToken;
 import es.bvalero.replacer.wikipedia.api.WikipediaApiHelper;
 import es.bvalero.replacer.wikipedia.api.WikipediaApiRequest;
 import es.bvalero.replacer.wikipedia.api.WikipediaApiResponse;
@@ -49,26 +48,28 @@ class WikipediaPageApiRepositoryTest {
     void testGetEditToken() throws Exception {
         // API response
         String textResponse =
-            "{\n" +
-            "    \"batchcomplete\": true,\n" +
-            "    \"query\": {\n" +
-            "        \"pages\": [\n" +
-            "            {\n" +
-            "                \"pageid\": 2209245,\n" +
-            "                \"ns\": 4,\n" +
-            "                \"title\": \"Wikipedia:Zona de pruebas/5\",\n" +
-            "                \"revisions\": [\n" +
-            "                    {\n" +
-            "                        \"timestamp\": \"2023-01-18T20:40:07Z\"\n" +
-            "                    }\n" +
-            "                ]\n" +
-            "            }\n" +
-            "        ],\n" +
-            "        \"tokens\": {\n" +
-            "            \"csrftoken\": \"332bb9c55bef953f93cb8391f8e6ee9e63c8fe90+\\\\\"\n" +
-            "        }\n" +
-            "    }\n" +
-            "}";
+            """
+            {
+                "batchcomplete": true,
+                "query": {
+                    "pages": [
+                        {
+                            "pageid": 2209245,
+                            "ns": 4,
+                            "title": "Wikipedia:Zona de pruebas/5",
+                            "revisions": [
+                                {
+                                    "timestamp": "2023-01-18T20:40:07Z"
+                                }
+                            ]
+                        }
+                    ],
+                    "tokens": {
+                        "csrftoken": "332bb9c55bef953f93cb8391f8e6ee9e63c8fe90+\\\\"
+                    }
+                }
+            }
+            """;
         WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
         when(wikipediaApiHelper.executeApiRequest(any(WikipediaApiRequest.class))).thenReturn(response);
         assertTrue(response.isBatchcomplete());
@@ -85,38 +86,40 @@ class WikipediaPageApiRepositoryTest {
     void testGetPageContentByTitle() throws Exception {
         // API response
         String textResponse =
-            "{\n" +
-            "    \"batchcomplete\": true,\n" +
-            "    \"curtimestamp\": \"2023-01-19T08:30:11Z\",\n" +
-            "    \"query\": {\n" +
-            "        \"pages\": [\n" +
-            "            {\n" +
-            "                \"pageid\": 6219990,\n" +
-            "                \"ns\": 2,\n" +
-            "                \"title\": \"Usuario:Benjavalero\",\n" +
-            "                \"contentmodel\": \"wikitext\",\n" +
-            "                \"pagelanguage\": \"es\",\n" +
-            "                \"pagelanguagehtmlcode\": \"es\",\n" +
-            "                \"pagelanguagedir\": \"ltr\",\n" +
-            "                \"touched\": \"2023-01-18T11:59:55Z\",\n" +
-            "                \"lastrevid\": 135919358,\n" +
-            "                \"length\": 971,\n" +
-            "                \"revisions\": [\n" +
-            "                    {\n" +
-            "                        \"timestamp\": \"2021-05-29T07:25:16Z\",\n" +
-            "                        \"slots\": {\n" +
-            "                            \"main\": {\n" +
-            "                                \"contentmodel\": \"wikitext\",\n" +
-            "                                \"contentformat\": \"text/x-wiki\",\n" +
-            "                                \"content\": \"Soy de [[Orihuela]]\"\n" +
-            "                            }\n" +
-            "                        }\n" +
-            "                    }\n" +
-            "                ]\n" +
-            "            }\n" +
-            "        ]\n" +
-            "    }\n" +
-            "}";
+            """
+            {
+                "batchcomplete": true,
+                "curtimestamp": "2023-01-19T08:30:11Z",
+                "query": {
+                    "pages": [
+                        {
+                            "pageid": 6219990,
+                            "ns": 2,
+                            "title": "Usuario:Benjavalero",
+                            "contentmodel": "wikitext",
+                            "pagelanguage": "es",
+                            "pagelanguagehtmlcode": "es",
+                            "pagelanguagedir": "ltr",
+                            "touched": "2023-01-18T11:59:55Z",
+                            "lastrevid": 135919358,
+                            "length": 971,
+                            "revisions": [
+                                {
+                                    "timestamp": "2021-05-29T07:25:16Z",
+                                    "slots": {
+                                        "main": {
+                                            "contentmodel": "wikitext",
+                                            "contentformat": "text/x-wiki",
+                                            "content": "Soy de [[Orihuela]]"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+            """;
         WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
         when(wikipediaApiHelper.executeApiRequest(any(WikipediaApiRequest.class))).thenReturn(response);
 
@@ -137,38 +140,40 @@ class WikipediaPageApiRepositoryTest {
     void testGetPageContentById() throws Exception {
         // API response
         String textResponse =
-            "{\n" +
-            "    \"batchcomplete\": true,\n" +
-            "    \"curtimestamp\": \"2023-01-19T08:35:51Z\",\n" +
-            "    \"query\": {\n" +
-            "        \"pages\": [\n" +
-            "            {\n" +
-            "                \"pageid\": 6219990,\n" +
-            "                \"ns\": 2,\n" +
-            "                \"title\": \"Usuario:Benjavalero\",\n" +
-            "                \"contentmodel\": \"wikitext\",\n" +
-            "                \"pagelanguage\": \"es\",\n" +
-            "                \"pagelanguagehtmlcode\": \"es\",\n" +
-            "                \"pagelanguagedir\": \"ltr\",\n" +
-            "                \"touched\": \"2023-01-18T11:59:55Z\",\n" +
-            "                \"lastrevid\": 135919358,\n" +
-            "                \"length\": 971,\n" +
-            "                \"revisions\": [\n" +
-            "                    {\n" +
-            "                        \"timestamp\": \"2021-05-29T07:25:16Z\",\n" +
-            "                        \"slots\": {\n" +
-            "                            \"main\": {\n" +
-            "                                \"contentmodel\": \"wikitext\",\n" +
-            "                                \"contentformat\": \"text/x-wiki\",\n" +
-            "                                \"content\": \"Soy de [[Orihuela]]\"\n" +
-            "                            }\n" +
-            "                        }\n" +
-            "                    }\n" +
-            "                ]\n" +
-            "            }\n" +
-            "        ]\n" +
-            "    }\n" +
-            "}";
+            """
+            {
+                "batchcomplete": true,
+                "curtimestamp": "2023-01-19T08:35:51Z",
+                "query": {
+                    "pages": [
+                        {
+                            "pageid": 6219990,
+                            "ns": 2,
+                            "title": "Usuario:Benjavalero",
+                            "contentmodel": "wikitext",
+                            "pagelanguage": "es",
+                            "pagelanguagehtmlcode": "es",
+                            "pagelanguagedir": "ltr",
+                            "touched": "2023-01-18T11:59:55Z",
+                            "lastrevid": 135919358,
+                            "length": 971,
+                            "revisions": [
+                                {
+                                    "timestamp": "2021-05-29T07:25:16Z",
+                                    "slots": {
+                                        "main": {
+                                            "contentmodel": "wikitext",
+                                            "contentformat": "text/x-wiki",
+                                            "content": "Soy de [[Orihuela]]"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+            """;
         WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
         when(wikipediaApiHelper.executeApiRequest(any(WikipediaApiRequest.class))).thenReturn(response);
 
@@ -187,62 +192,64 @@ class WikipediaPageApiRepositoryTest {
     void testGetPagesContent() throws Exception {
         // API response
         String textResponse =
-            "{\n" +
-            "    \"batchcomplete\": true,\n" +
-            "    \"curtimestamp\": \"2023-01-19T08:37:13Z\",\n" +
-            "    \"query\": {\n" +
-            "        \"pages\": [\n" +
-            "            {\n" +
-            "                \"pageid\": 6219990,\n" +
-            "                \"ns\": 2,\n" +
-            "                \"title\": \"Usuario:Benjavalero\",\n" +
-            "                \"contentmodel\": \"wikitext\",\n" +
-            "                \"pagelanguage\": \"es\",\n" +
-            "                \"pagelanguagehtmlcode\": \"es\",\n" +
-            "                \"pagelanguagedir\": \"ltr\",\n" +
-            "                \"touched\": \"2023-01-18T11:59:55Z\",\n" +
-            "                \"lastrevid\": 135919358,\n" +
-            "                \"length\": 971,\n" +
-            "                \"revisions\": [\n" +
-            "                    {\n" +
-            "                        \"timestamp\": \"2021-05-29T07:25:16Z\",\n" +
-            "                        \"slots\": {\n" +
-            "                            \"main\": {\n" +
-            "                                \"contentmodel\": \"wikitext\",\n" +
-            "                                \"contentformat\": \"text/x-wiki\",\n" +
-            "                                \"content\": \"Soy de [[Orihuela]]\"\n" +
-            "                            }\n" +
-            "                        }\n" +
-            "                    }\n" +
-            "                ]\n" +
-            "            },\n" +
-            "            {\n" +
-            "                \"pageid\": 6903884,\n" +
-            "                \"ns\": 2,\n" +
-            "                \"title\": \"Usuario:Benjavalero/Taller\",\n" +
-            "                \"contentmodel\": \"wikitext\",\n" +
-            "                \"pagelanguage\": \"es\",\n" +
-            "                \"pagelanguagehtmlcode\": \"es\",\n" +
-            "                \"pagelanguagedir\": \"ltr\",\n" +
-            "                \"touched\": \"2022-12-29T13:00:35Z\",\n" +
-            "                \"lastrevid\": 147628235,\n" +
-            "                \"length\": 8248,\n" +
-            "                \"revisions\": [\n" +
-            "                    {\n" +
-            "                        \"timestamp\": \"2022-11-29T15:45:09Z\",\n" +
-            "                        \"slots\": {\n" +
-            "                            \"main\": {\n" +
-            "                                \"contentmodel\": \"wikitext\",\n" +
-            "                                \"contentformat\": \"text/x-wiki\",\n" +
-            "                                \"content\": \"Enlace a [[Pais Vasco]].\"\n" +
-            "                            }\n" +
-            "                        }\n" +
-            "                    }\n" +
-            "                ]\n" +
-            "            }\n" +
-            "        ]\n" +
-            "    }\n" +
-            "}";
+            """
+            {
+                "batchcomplete": true,
+                "curtimestamp": "2023-01-19T08:37:13Z",
+                "query": {
+                    "pages": [
+                        {
+                            "pageid": 6219990,
+                            "ns": 2,
+                            "title": "Usuario:Benjavalero",
+                            "contentmodel": "wikitext",
+                            "pagelanguage": "es",
+                            "pagelanguagehtmlcode": "es",
+                            "pagelanguagedir": "ltr",
+                            "touched": "2023-01-18T11:59:55Z",
+                            "lastrevid": 135919358,
+                            "length": 971,
+                            "revisions": [
+                                {
+                                    "timestamp": "2021-05-29T07:25:16Z",
+                                    "slots": {
+                                        "main": {
+                                            "contentmodel": "wikitext",
+                                            "contentformat": "text/x-wiki",
+                                            "content": "Soy de [[Orihuela]]"
+                                        }
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "pageid": 6903884,
+                            "ns": 2,
+                            "title": "Usuario:Benjavalero/Taller",
+                            "contentmodel": "wikitext",
+                            "pagelanguage": "es",
+                            "pagelanguagehtmlcode": "es",
+                            "pagelanguagedir": "ltr",
+                            "touched": "2022-12-29T13:00:35Z",
+                            "lastrevid": 147628235,
+                            "length": 8248,
+                            "revisions": [
+                                {
+                                    "timestamp": "2022-11-29T15:45:09Z",
+                                    "slots": {
+                                        "main": {
+                                            "contentmodel": "wikitext",
+                                            "contentformat": "text/x-wiki",
+                                            "content": "Enlace a [[Pais Vasco]]."
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+            """;
         WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
         when(wikipediaApiHelper.executeApiRequest(any(WikipediaApiRequest.class))).thenReturn(response);
 
@@ -278,23 +285,25 @@ class WikipediaPageApiRepositoryTest {
     void testGetPageContentUnavailable() throws Exception {
         // API response
         String textResponse =
-            "{\n" +
-            "    \"batchcomplete\": true,\n" +
-            "    \"curtimestamp\": \"2023-01-19T08:38:51Z\",\n" +
-            "    \"query\": {\n" +
-            "        \"pages\": [\n" +
-            "            {\n" +
-            "                \"ns\": 2,\n" +
-            "                \"title\": \"Usuario:Benjavaleroxx\",\n" +
-            "                \"missing\": true,\n" +
-            "                \"contentmodel\": \"wikitext\",\n" +
-            "                \"pagelanguage\": \"es\",\n" +
-            "                \"pagelanguagehtmlcode\": \"es\",\n" +
-            "                \"pagelanguagedir\": \"ltr\"\n" +
-            "            }\n" +
-            "        ]\n" +
-            "    }\n" +
-            "}";
+            """
+            {
+                "batchcomplete": true,
+                "curtimestamp": "2023-01-19T08:38:51Z",
+                "query": {
+                    "pages": [
+                        {
+                            "ns": 2,
+                            "title": "Usuario:Benjavaleroxx",
+                            "missing": true,
+                            "contentmodel": "wikitext",
+                            "pagelanguage": "es",
+                            "pagelanguagehtmlcode": "es",
+                            "pagelanguagedir": "ltr"
+                        }
+                    ]
+                }
+            }
+            """;
         WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
         when(wikipediaApiHelper.executeApiRequest(any(WikipediaApiRequest.class))).thenReturn(response);
 
@@ -307,55 +316,57 @@ class WikipediaPageApiRepositoryTest {
     void testGetProtectedPage() throws Exception {
         // API response
         String textResponse =
-            "{\n" +
-            "    \"batchcomplete\": true,\n" +
-            "    \"curtimestamp\": \"2023-01-19T09:07:39Z\",\n" +
-            "    \"query\": {\n" +
-            "        \"pages\": [\n" +
-            "            {\n" +
-            "                \"pageid\": 252086,\n" +
-            "                \"ns\": 0,\n" +
-            "                \"title\": \"Getxo\",\n" +
-            "                \"contentmodel\": \"wikitext\",\n" +
-            "                \"pagelanguage\": \"es\",\n" +
-            "                \"pagelanguagehtmlcode\": \"es\",\n" +
-            "                \"pagelanguagedir\": \"ltr\",\n" +
-            "                \"touched\": \"2023-01-10T23:32:55Z\",\n" +
-            "                \"lastrevid\": 8726615,\n" +
-            "                \"length\": 20,\n" +
-            "                \"redirect\": true,\n" +
-            "                \"protection\": [\n" +
-            "                    {\n" +
-            "                        \"type\": \"edit\",\n" +
-            "                        \"level\": \"sysop\",\n" +
-            "                        \"expiry\": \"infinity\"\n" +
-            "                    },\n" +
-            "                    {\n" +
-            "                        \"type\": \"move\",\n" +
-            "                        \"level\": \"sysop\",\n" +
-            "                        \"expiry\": \"infinity\"\n" +
-            "                    }\n" +
-            "                ],\n" +
-            "                \"restrictiontypes\": [\n" +
-            "                    \"edit\",\n" +
-            "                    \"move\"\n" +
-            "                ],\n" +
-            "                \"revisions\": [\n" +
-            "                    {\n" +
-            "                        \"timestamp\": \"2007-05-12T10:06:05Z\",\n" +
-            "                        \"slots\": {\n" +
-            "                            \"main\": {\n" +
-            "                                \"contentmodel\": \"wikitext\",\n" +
-            "                                \"contentformat\": \"text/x-wiki\",\n" +
-            "                                \"content\": \"#REDIRECT [[Guecho]]\"\n" +
-            "                            }\n" +
-            "                        }\n" +
-            "                    }\n" +
-            "                ]\n" +
-            "            }\n" +
-            "        ]\n" +
-            "    }\n" +
-            "}";
+            """
+            {
+                "batchcomplete": true,
+                "curtimestamp": "2023-01-19T09:07:39Z",
+                "query": {
+                    "pages": [
+                        {
+                            "pageid": 252086,
+                            "ns": 0,
+                            "title": "Getxo",
+                            "contentmodel": "wikitext",
+                            "pagelanguage": "es",
+                            "pagelanguagehtmlcode": "es",
+                            "pagelanguagedir": "ltr",
+                            "touched": "2023-01-10T23:32:55Z",
+                            "lastrevid": 8726615,
+                            "length": 20,
+                            "redirect": true,
+                            "protection": [
+                                {
+                                    "type": "edit",
+                                    "level": "sysop",
+                                    "expiry": "infinity"
+                                },
+                                {
+                                    "type": "move",
+                                    "level": "sysop",
+                                    "expiry": "infinity"
+                                }
+                            ],
+                            "restrictiontypes": [
+                                "edit",
+                                "move"
+                            ],
+                            "revisions": [
+                                {
+                                    "timestamp": "2007-05-12T10:06:05Z",
+                                    "slots": {
+                                        "main": {
+                                            "contentmodel": "wikitext",
+                                            "contentformat": "text/x-wiki",
+                                            "content": "#REDIRECT [[Guecho]]"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+            """;
         WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
         when(wikipediaApiHelper.executeApiRequest(any(WikipediaApiRequest.class))).thenReturn(response);
 
@@ -366,81 +377,83 @@ class WikipediaPageApiRepositoryTest {
     void testGetPageIdsByStringMatch() throws Exception {
         // API response
         String textResponse =
-            "{\n" +
-            "    \"batchcomplete\": true,\n" +
-            "    \"query\": {\n" +
-            "        \"searchinfo\": {\n" +
-            "            \"totalhits\": 13\n" +
-            "        },\n" +
-            "        \"search\": [\n" +
-            "            {\n" +
-            "                \"ns\": 104,\n" +
-            "                \"title\": \"Anexo:Municipios y comarcas de las Islas Baleares\",\n" +
-            "                \"pageid\": 29088\n" +
-            "            },\n" +
-            "            {\n" +
-            "                \"ns\": 104,\n" +
-            "                \"title\": \"Anexo:Red de Carreteras de la Comunidad Valenciana\",\n" +
-            "                \"pageid\": 637929\n" +
-            "            },\n" +
-            "            {\n" +
-            "                \"ns\": 104,\n" +
-            "                \"title\": \"Anexo:Armorial municipal de las Islas Baleares\",\n" +
-            "                \"pageid\": 1418604\n" +
-            "            },\n" +
-            "            {\n" +
-            "                \"ns\": 104,\n" +
-            "                \"title\": \"Anexo:Cobertura de las Demarcaciones Locales de TDT\",\n" +
-            "                \"pageid\": 2365909\n" +
-            "            },\n" +
-            "            {\n" +
-            "                \"ns\": 104,\n" +
-            "                \"title\": \"Anexo:Partidos judiciales de las Islas Baleares\",\n" +
-            "                \"pageid\": 4489346\n" +
-            "            },\n" +
-            "            {\n" +
-            "                \"ns\": 104,\n" +
-            "                \"title\": \"Anexo:Bienes de interés cultural de las Islas Baleares\",\n" +
-            "                \"pageid\": 5390126\n" +
-            "            },\n" +
-            "            {\n" +
-            "                \"ns\": 104,\n" +
-            "                \"title\": \"Anexo:The Amazing Race 21\",\n" +
-            "                \"pageid\": 5397284\n" +
-            "            },\n" +
-            "            {\n" +
-            "                \"ns\": 104,\n" +
-            "                \"title\": \"Anexo:Bienes de relevancia local de la Marina Baja\",\n" +
-            "                \"pageid\": 8684602\n" +
-            "            },\n" +
-            "            {\n" +
-            "                \"ns\": 104,\n" +
-            "                \"title\": \"Anexo:Monumentos de la comarca de la Marina Baja\",\n" +
-            "                \"pageid\": 8753312\n" +
-            "            },\n" +
-            "            {\n" +
-            "                \"ns\": 104,\n" +
-            "                \"title\": \"Anexo:Monumentos de la ciudad de Valencia (A-L)\",\n" +
-            "                \"pageid\": 8754198\n" +
-            "            },\n" +
-            "            {\n" +
-            "                \"ns\": 104,\n" +
-            "                \"title\": \"Anexo:Monumentos de la ciudad de Valencia (M-Z)\",\n" +
-            "                \"pageid\": 8755195\n" +
-            "            },\n" +
-            "            {\n" +
-            "                \"ns\": 104,\n" +
-            "                \"title\": \"Anexo:Monumentos del distrito de Poblados del Sur\",\n" +
-            "                \"pageid\": 8757203\n" +
-            "            },\n" +
-            "            {\n" +
-            "                \"ns\": 104,\n" +
-            "                \"title\": \"Anexo:Velódromos de Mallorca\",\n" +
-            "                \"pageid\": 9436640\n" +
-            "            }\n" +
-            "        ]\n" +
-            "    }\n" +
-            "}";
+            """
+            {
+                "batchcomplete": true,
+                "query": {
+                    "searchinfo": {
+                        "totalhits": 13
+                    },
+                    "search": [
+                        {
+                            "ns": 104,
+                            "title": "Anexo:Municipios y comarcas de las Islas Baleares",
+                            "pageid": 29088
+                        },
+                        {
+                            "ns": 104,
+                            "title": "Anexo:Red de Carreteras de la Comunidad Valenciana",
+                            "pageid": 637929
+                        },
+                        {
+                            "ns": 104,
+                            "title": "Anexo:Armorial municipal de las Islas Baleares",
+                            "pageid": 1418604
+                        },
+                        {
+                            "ns": 104,
+                            "title": "Anexo:Cobertura de las Demarcaciones Locales de TDT",
+                            "pageid": 2365909
+                        },
+                        {
+                            "ns": 104,
+                            "title": "Anexo:Partidos judiciales de las Islas Baleares",
+                            "pageid": 4489346
+                        },
+                        {
+                            "ns": 104,
+                            "title": "Anexo:Bienes de interés cultural de las Islas Baleares",
+                            "pageid": 5390126
+                        },
+                        {
+                            "ns": 104,
+                            "title": "Anexo:The Amazing Race 21",
+                            "pageid": 5397284
+                        },
+                        {
+                            "ns": 104,
+                            "title": "Anexo:Bienes de relevancia local de la Marina Baja",
+                            "pageid": 8684602
+                        },
+                        {
+                            "ns": 104,
+                            "title": "Anexo:Monumentos de la comarca de la Marina Baja",
+                            "pageid": 8753312
+                        },
+                        {
+                            "ns": 104,
+                            "title": "Anexo:Monumentos de la ciudad de Valencia (A-L)",
+                            "pageid": 8754198
+                        },
+                        {
+                            "ns": 104,
+                            "title": "Anexo:Monumentos de la ciudad de Valencia (M-Z)",
+                            "pageid": 8755195
+                        },
+                        {
+                            "ns": 104,
+                            "title": "Anexo:Monumentos del distrito de Poblados del Sur",
+                            "pageid": 8757203
+                        },
+                        {
+                            "ns": 104,
+                            "title": "Anexo:Velódromos de Mallorca",
+                            "pageid": 9436640
+                        }
+                    ]
+                }
+            }
+            """;
         WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
         when(wikipediaApiHelper.executeApiRequest(any(WikipediaApiRequest.class))).thenReturn(response);
 
@@ -461,15 +474,17 @@ class WikipediaPageApiRepositoryTest {
     void testGetPageIdsByStringMatchWithNoResults() throws Exception {
         // API response
         String textResponse =
-            "{\n" +
-            "    \"batchcomplete\": true,\n" +
-            "    \"query\": {\n" +
-            "        \"searchinfo\": {\n" +
-            "            \"totalhits\": 0\n" +
-            "        },\n" +
-            "        \"search\": []\n" +
-            "    }\n" +
-            "}";
+            """
+            {
+                "batchcomplete": true,
+                "query": {
+                    "searchinfo": {
+                        "totalhits": 0
+                    },
+                    "search": []
+                }
+            }
+            """;
         WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
         when(wikipediaApiHelper.executeApiRequest(any(WikipediaApiRequest.class))).thenReturn(response);
 
@@ -571,48 +586,50 @@ class WikipediaPageApiRepositoryTest {
     void testGetPageSections() throws Exception {
         // API response
         String textResponse =
-            "{\n" +
-            "    \"parse\": {\n" +
-            "        \"title\": \"Usuario:Benjavalero/Taller\",\n" +
-            "        \"pageid\": 6903884,\n" +
-            "        \"sections\": [\n" +
-            "            {\n" +
-            "                \"toclevel\": 1,\n" +
-            "                \"level\": \"2\",\n" +
-            "                \"line\": \"Pruebas con cursiva\",\n" +
-            "                \"number\": \"1\",\n" +
-            "                \"index\": \"1\",\n" +
-            "                \"fromtitle\": \"Usuario:Benjavalero/Taller\",\n" +
-            "                \"byteoffset\": 1998,\n" +
-            "                \"anchor\": \"Pruebas_con_cursiva\",\n" +
-            "                \"linkAnchor\": \"Pruebas_con_cursiva\"\n" +
-            "            },\n" +
-            "            {\n" +
-            "                \"toclevel\": 2,\n" +
-            "                \"level\": \"3\",\n" +
-            "                \"line\": \"Pruebas de subsecciones\",\n" +
-            "                \"number\": \"1.1\",\n" +
-            "                \"index\": \"2\",\n" +
-            "                \"fromtitle\": \"Usuario:Benjavalero/Taller\",\n" +
-            "                \"byteoffset\": 2275,\n" +
-            "                \"anchor\": \"Pruebas_de_subsecciones\",\n" +
-            "                \"linkAnchor\": \"Pruebas_de_subsecciones\"\n" +
-            "            },\n" +
-            "            {\n" +
-            "                \"toclevel\": 1,\n" +
-            "                \"level\": \"2\",\n" +
-            "                \"line\": \"Pruebas de banderas de la Selección Española\",\n" +
-            "                \"number\": \"2\",\n" +
-            "                \"index\": \"3\",\n" +
-            "                \"fromtitle\": \"Usuario:Benjavalero/Taller\",\n" +
-            "                \"byteoffset\": 2380,\n" +
-            "                \"anchor\": \"Pruebas_de_banderas_de_la_Selección_Española\",\n" +
-            "                \"linkAnchor\": \"Pruebas_de_banderas_de_la_Selección_Española\"\n" +
-            "            }\n" +
-            "        ],\n" +
-            "        \"showtoc\": true\n" +
-            "    }\n" +
-            "}";
+            """
+            {
+                "parse": {
+                    "title": "Usuario:Benjavalero/Taller",
+                    "pageid": 6903884,
+                    "sections": [
+                        {
+                            "toclevel": 1,
+                            "level": "2",
+                            "line": "Pruebas con cursiva",
+                            "number": "1",
+                            "index": "1",
+                            "fromtitle": "Usuario:Benjavalero/Taller",
+                            "byteoffset": 1998,
+                            "anchor": "Pruebas_con_cursiva",
+                            "linkAnchor": "Pruebas_con_cursiva"
+                        },
+                        {
+                            "toclevel": 2,
+                            "level": "3",
+                            "line": "Pruebas de subsecciones",
+                            "number": "1.1",
+                            "index": "2",
+                            "fromtitle": "Usuario:Benjavalero/Taller",
+                            "byteoffset": 2275,
+                            "anchor": "Pruebas_de_subsecciones",
+                            "linkAnchor": "Pruebas_de_subsecciones"
+                        },
+                        {
+                            "toclevel": 1,
+                            "level": "2",
+                            "line": "Pruebas de banderas de la Selección Española",
+                            "number": "2",
+                            "index": "3",
+                            "fromtitle": "Usuario:Benjavalero/Taller",
+                            "byteoffset": 2380,
+                            "anchor": "Pruebas_de_banderas_de_la_Selección_Española",
+                            "linkAnchor": "Pruebas_de_banderas_de_la_Selección_Española"
+                        }
+                    ],
+                    "showtoc": true
+                }
+            }
+            """;
         WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
         when(wikipediaApiHelper.executeApiRequest(any(WikipediaApiRequest.class))).thenReturn(response);
 
@@ -662,48 +679,50 @@ class WikipediaPageApiRepositoryTest {
     void testGetPageInvalidSections() throws Exception {
         // API response
         String textResponse =
-            "{\n" +
-            "    \"parse\": {\n" +
-            "        \"title\": \"Anexo:Asteroides (161001)–(162000)\",\n" +
-            "        \"pageid\": 6633556,\n" +
-            "        \"sections\": [\n" +
-            "            {\n" +
-            "                \"toclevel\": 1,\n" +
-            "                \"level\": \"2\",\n" +
-            "                \"line\": \"Asteroides del (161001) al (161100)\",\n" +
-            "                \"number\": \"1\",\n" +
-            "                \"index\": \"\",\n" +
-            "                \"fromtitle\": false,\n" +
-            "                \"byteoffset\": null,\n" +
-            "                \"anchor\": \"Asteroides_del_(161001)_al_(161100)\",\n" +
-            "                \"linkAnchor\": \"Asteroides_del_(161001)_al_(161100)\"\n" +
-            "            },\n" +
-            "            {\n" +
-            "                \"toclevel\": 1,\n" +
-            "                \"level\": \"2\",\n" +
-            "                \"line\": \"Asteroides del (161101) al (161200)\",\n" +
-            "                \"number\": \"2\",\n" +
-            "                \"index\": \"\",\n" +
-            "                \"fromtitle\": false,\n" +
-            "                \"byteoffset\": null,\n" +
-            "                \"anchor\": \"Asteroides_del_(161101)_al_(161200)\",\n" +
-            "                \"linkAnchor\": \"Asteroides_del_(161101)_al_(161200)\"\n" +
-            "            },\n" +
-            "            {\n" +
-            "                \"toclevel\": 1,\n" +
-            "                \"level\": \"2\",\n" +
-            "                \"line\": \"Asteroides del (161201) al (161300)\",\n" +
-            "                \"number\": \"3\",\n" +
-            "                \"index\": \"\",\n" +
-            "                \"fromtitle\": false,\n" +
-            "                \"byteoffset\": null,\n" +
-            "                \"anchor\": \"Asteroides_del_(161201)_al_(161300)\",\n" +
-            "                \"linkAnchor\": \"Asteroides_del_(161201)_al_(161300)\"\n" +
-            "            }\n" +
-            "        ],\n" +
-            "        \"showtoc\": true\n" +
-            "    }\n" +
-            "}";
+            """
+            {
+                "parse": {
+                    "title": "Anexo:Asteroides (161001)–(162000)",
+                    "pageid": 6633556,
+                    "sections": [
+                        {
+                            "toclevel": 1,
+                            "level": "2",
+                            "line": "Asteroides del (161001) al (161100)",
+                            "number": "1",
+                            "index": "",
+                            "fromtitle": false,
+                            "byteoffset": null,
+                            "anchor": "Asteroides_del_(161001)_al_(161100)",
+                            "linkAnchor": "Asteroides_del_(161001)_al_(161100)"
+                        },
+                        {
+                            "toclevel": 1,
+                            "level": "2",
+                            "line": "Asteroides del (161101) al (161200)",
+                            "number": "2",
+                            "index": "",
+                            "fromtitle": false,
+                            "byteoffset": null,
+                            "anchor": "Asteroides_del_(161101)_al_(161200)",
+                            "linkAnchor": "Asteroides_del_(161101)_al_(161200)"
+                        },
+                        {
+                            "toclevel": 1,
+                            "level": "2",
+                            "line": "Asteroides del (161201) al (161300)",
+                            "number": "3",
+                            "index": "",
+                            "fromtitle": false,
+                            "byteoffset": null,
+                            "anchor": "Asteroides_del_(161201)_al_(161300)",
+                            "linkAnchor": "Asteroides_del_(161201)_al_(161300)"
+                        }
+                    ],
+                    "showtoc": true
+                }
+            }
+            """;
         WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
         when(wikipediaApiHelper.executeApiRequest(any(WikipediaApiRequest.class))).thenReturn(response);
 
@@ -718,43 +737,45 @@ class WikipediaPageApiRepositoryTest {
     void testGetPageSection() throws Exception {
         // API response
         String textResponse =
-            "{\n" +
-            "    \"batchcomplete\": true,\n" +
-            "    \"curtimestamp\": \"2023-01-19T09:04:19Z\",\n" +
-            "    \"query\": {\n" +
-            "        \"pages\": [\n" +
-            "            {\n" +
-            "                \"pageid\": 6903884,\n" +
-            "                \"ns\": 2,\n" +
-            "                \"title\": \"Usuario:Benjavalero/Taller\",\n" +
-            "                \"contentmodel\": \"wikitext\",\n" +
-            "                \"pagelanguage\": \"es\",\n" +
-            "                \"pagelanguagehtmlcode\": \"es\",\n" +
-            "                \"pagelanguagedir\": \"ltr\",\n" +
-            "                \"touched\": \"2022-12-29T13:00:35Z\",\n" +
-            "                \"lastrevid\": 147628235,\n" +
-            "                \"length\": 8248,\n" +
-            "                \"protection\": [],\n" +
-            "                \"restrictiontypes\": [\n" +
-            "                    \"edit\",\n" +
-            "                    \"move\"\n" +
-            "                ],\n" +
-            "                \"revisions\": [\n" +
-            "                    {\n" +
-            "                        \"timestamp\": \"2022-11-29T15:45:09Z\",\n" +
-            "                        \"slots\": {\n" +
-            "                            \"main\": {\n" +
-            "                                \"contentmodel\": \"wikitext\",\n" +
-            "                                \"contentformat\": \"text/x-wiki\",\n" +
-            "                                \"content\": \"== Pruebas con cursiva ==\\n\\n* El libro ''La historia interminable''.\\n* Comillas sin cerrar: ''La historia interminable\\n* Con negrita ''La '''historia''' interminable''.\\n* Con cursiva ''La ''historia'' interminable''.\\n* Con negrita buena ''La '''''historia''''' interminable''.\\n\\n=== Pruebas de subsecciones ===\\n\\nEsta es una subsección tonta solo para probar la captura de secciones.\"\n" +
-            "                            }\n" +
-            "                        }\n" +
-            "                    }\n" +
-            "                ]\n" +
-            "            }\n" +
-            "        ]\n" +
-            "    }\n" +
-            "}";
+            """
+            {
+                "batchcomplete": true,
+                "curtimestamp": "2023-01-19T09:04:19Z",
+                "query": {
+                    "pages": [
+                        {
+                            "pageid": 6903884,
+                            "ns": 2,
+                            "title": "Usuario:Benjavalero/Taller",
+                            "contentmodel": "wikitext",
+                            "pagelanguage": "es",
+                            "pagelanguagehtmlcode": "es",
+                            "pagelanguagedir": "ltr",
+                            "touched": "2022-12-29T13:00:35Z",
+                            "lastrevid": 147628235,
+                            "length": 8248,
+                            "protection": [],
+                            "restrictiontypes": [
+                                "edit",
+                                "move"
+                            ],
+                            "revisions": [
+                                {
+                                    "timestamp": "2022-11-29T15:45:09Z",
+                                    "slots": {
+                                        "main": {
+                                            "contentmodel": "wikitext",
+                                            "contentformat": "text/x-wiki",
+                                            "content": "== Pruebas con cursiva ==\\n\\n* El libro ''La historia interminable''.\\n* Comillas sin cerrar: ''La historia interminable\\n* Con negrita ''La '''historia''' interminable''.\\n* Con cursiva ''La ''historia'' interminable''.\\n* Con negrita buena ''La '''''historia''''' interminable''.\\n\\n=== Pruebas de subsecciones ===\\n\\nEsta es una subsección tonta solo para probar la captura de secciones."
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+            """;
         WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
         when(wikipediaApiHelper.executeApiRequest(any(WikipediaApiRequest.class))).thenReturn(response);
 
