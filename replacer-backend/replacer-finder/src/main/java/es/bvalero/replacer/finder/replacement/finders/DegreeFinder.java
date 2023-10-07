@@ -1,7 +1,6 @@
 package es.bvalero.replacer.finder.replacement.finders;
 
-import static es.bvalero.replacer.finder.util.FinderUtils.DECIMAL_SEPARATORS;
-import static es.bvalero.replacer.finder.util.FinderUtils.NON_BREAKING_SPACE;
+import static es.bvalero.replacer.finder.util.FinderUtils.*;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 import es.bvalero.replacer.common.domain.StandardType;
@@ -25,8 +24,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class DegreeFinder implements ReplacementFinder {
 
-    private static final char DEGREE = '\u00b0'; // °
-    private static final char MASCULINE_ORDINAL = '\u00ba'; // º
     private static final String CELSIUS = "C";
     private static final String FAHRENHEIT = "F";
     private static final String KELVIN = "K";

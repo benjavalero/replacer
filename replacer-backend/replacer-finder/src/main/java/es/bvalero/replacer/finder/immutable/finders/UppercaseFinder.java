@@ -167,7 +167,7 @@ public class UppercaseFinder implements ImmutableFinder, PropertyChangeListener 
     }
 
     private boolean isPrecededByPunctuation(String leftText) {
-        if (leftText.length() == 0) {
+        if (leftText.isEmpty()) {
             return false;
         } else {
             final char lastChar = leftText.charAt(leftText.length() - 1);

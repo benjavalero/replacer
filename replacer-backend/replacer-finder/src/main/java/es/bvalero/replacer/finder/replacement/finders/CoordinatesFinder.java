@@ -98,7 +98,7 @@ public class CoordinatesFinder implements ReplacementFinder {
         // Prime
         final int endMinutes = matchMinutes.end();
         final char primeChar = text.charAt(endMinutes);
-        if (!isPrimeChar(primeChar)) {
+        if (isNotPrimeChar(primeChar)) {
             return null;
         }
 
@@ -262,8 +262,8 @@ public class CoordinatesFinder implements ReplacementFinder {
         return (number.length() <= 6 && FinderUtils.isDecimalNumber(number) && Double.parseDouble(number) < 60);
     }
 
-    private boolean isPrimeChar(char ch) {
-        return PRIME_CHARS.contains(ch);
+    private boolean isNotPrimeChar(char ch) {
+        return !PRIME_CHARS.contains(ch);
     }
 
     private boolean isDoublePrimeChar(char ch) {
@@ -275,7 +275,7 @@ public class CoordinatesFinder implements ReplacementFinder {
             return false;
         }
         for (int i = 0; i < str.length(); i++) {
-            if (!isPrimeChar(str.charAt(i))) {
+            if (isNotPrimeChar(str.charAt(i))) {
                 return false;
             }
         }

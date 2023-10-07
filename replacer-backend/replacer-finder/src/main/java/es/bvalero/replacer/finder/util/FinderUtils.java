@@ -70,7 +70,7 @@ public class FinderUtils {
     }
 
     public String setFirstUpperCaseClass(String word) {
-        if (word.length() >= 1) {
+        if (!word.isEmpty()) {
             final char first = word.charAt(0);
             if (Character.isLetter(first)) {
                 return String.format(

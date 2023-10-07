@@ -188,7 +188,7 @@ export class FindRandomComponent implements OnInit {
       })
       .subscribe((validateType: ReplacementType) => {
         if (validateType) {
-          this.openValidationModal$(validateType.kind, validateType.subtype).then((result) => {
+          this.openValidationModal$(validateType.kind, validateType.subtype).then(() => {
             this.router.navigate([this.getReviewUrl(validateType as ReviewOptions, null)]);
           });
         } else {

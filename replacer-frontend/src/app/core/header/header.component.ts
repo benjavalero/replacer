@@ -40,15 +40,10 @@ export class HeaderComponent implements OnInit {
     const language: Language = lang as Language;
     if (language) {
       const modalRef = this.modalService.open(ChangeLanguageComponent);
-      modalRef.result.then(
-        (result) => {
-          this.userConfigService.lang = language;
-          this.closeSession();
-        },
-        (reason) => {
-          // Nothing to do
-        }
-      );
+      modalRef.result.then(() => {
+        this.userConfigService.lang = language;
+        this.closeSession();
+      });
     }
   }
 

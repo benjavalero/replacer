@@ -161,15 +161,10 @@ export class ReplacementTableComponent implements OnInit, OnChanges {
     const modalRef = this.modalService.open(ReviewSubtypeComponent);
     modalRef.componentInstance.kind = this.label;
     modalRef.componentInstance.subtype = subtype;
-    modalRef.result.then(
-      (result) => {
-        this.replacementListService.reviewSubtype$(this.kind, subtype).subscribe(() => {
-          // Nothing to do
-        });
-      },
-      (reason) => {
+    modalRef.result.then(() => {
+      this.replacementListService.reviewSubtype$(this.kind, subtype).subscribe(() => {
         // Nothing to do
-      }
-    );
+      });
+    });
   }
 }

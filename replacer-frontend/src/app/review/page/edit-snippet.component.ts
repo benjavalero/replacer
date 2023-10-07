@@ -83,20 +83,15 @@ export class EditSnippetComponent implements OnInit {
     const modalRef = this.modalService.open(EditCustomSnippetComponent, { windowClass: 'snippet-modal' });
     const editableSnippet = this.customFix ? this.customFix : this.buildEditableSnippet();
     modalRef.componentInstance.snippet = editableSnippet;
-    modalRef.result.then(
-      (result: Snippet) => {
-        if (editableSnippet.text !== result.text) {
-          this.suggestionSelectedValue = null;
-          this.customFix = result;
+    modalRef.result.then((result: Snippet) => {
+      if (editableSnippet.text !== result.text) {
+        this.suggestionSelectedValue = null;
+        this.customFix = result;
 
-          const fixedReplacement = new FixedReplacement(this.index, result.start, this.getOriginalText(), result.text);
-          this.fixed.emit(fixedReplacement);
-        }
-      },
-      (reason) => {
-        // Nothing to do
+        const fixedReplacement = new FixedReplacement(this.index, result.start, this.getOriginalText(), result.text);
+        this.fixed.emit(fixedReplacement);
       }
-    );
+    });
   }
 
   private buildEditableSnippet(): Snippet {

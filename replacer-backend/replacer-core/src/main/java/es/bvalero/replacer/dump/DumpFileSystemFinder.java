@@ -19,16 +19,13 @@ import org.springframework.stereotype.Component;
 
 /**
  * Find the latest Wikipedia dump in the filesystem where the application runs.
- *
  * The dumps are generated monthly and placed in a shared folder in Wikipedia servers.
  * This dump base folder is structured in sub-folders corresponding to the different wiki-projects,
  * e.g. `eswiki`, which are also structured in sub-folders for each generation date, e.g. `20120120`,
  * containing finally the dump files.
- *
  * This component looks, for one project, into the date folders to find the last
  * one containing a generated dump with the pages to be indexed. It is possible
  * that the last date folder exists but not all dumps are generated within it yet.
- *
  * The path of the shared folder and the wiki-project are configured externally.
  */
 @Slf4j

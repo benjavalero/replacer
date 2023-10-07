@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AlertService } from 'src/app/shared/alert/alert.service';
-import { User } from '../../api/models/user';
 import { LoginService } from './login.service';
 
 @Component({
@@ -26,10 +25,10 @@ export class OAuthResponseComponent implements OnInit {
       const oauthVerifier: string = params['oauth_verifier'];
       if (oauthVerifier) {
         this.loginService.loginUser$(oauthVerifier).subscribe({
-          next: (user: User) => {
+          next: () => {
             this.router.navigate([this.loginService.redirectPath || 'dashboard']);
           },
-          error: (err) => {
+          error: () => {
             this.alertService.addErrorMessage('Error al solicitar un Access Token del API de MediaWiki');
           }
         });

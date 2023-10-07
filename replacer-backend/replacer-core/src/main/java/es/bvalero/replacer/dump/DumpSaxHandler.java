@@ -94,7 +94,7 @@ class DumpSaxHandler extends DefaultHandler {
                 this.currentNamespace = Integer.parseInt(this.currentChars.toString());
                 break;
             case ID_TAG:
-                // ID appears several times (contributor, revision, etc). We care about the first one.
+                // ID appears several times: contributor, revision, etc. We care about the first one.
                 if (this.currentId == 0) {
                     this.currentId = Integer.parseInt(this.currentChars.toString());
                 }
