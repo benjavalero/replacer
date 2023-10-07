@@ -1,5 +1,8 @@
 # Versions
 
+## 2.26.0 (7 Oct 2023)
+- Upgrade backend to Java 17
+
 ## 2.25.1 (6 Oct 2023)
 - Fix: only trace not indexable pages if they exist in database
 - Upgrade backend to Spring Boot 2.7

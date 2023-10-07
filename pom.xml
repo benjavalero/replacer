@@ -16,7 +16,7 @@
     <packaging>pom</packaging>
 
     <properties>
-        <revision>2.25.1</revision>
+        <revision>2.26.0</revision>
 
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
         <sonar.organization>benjavalero-github</sonar.organization>
