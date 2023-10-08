@@ -1,6 +1,7 @@
 package es.bvalero.replacer.finder.replacement.finders;
 
 import static es.bvalero.replacer.finder.util.FinderUtils.*;
+import static org.apache.commons.lang3.StringUtils.SPACE;
 
 import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.finder.FinderPage;
@@ -10,6 +11,7 @@ import es.bvalero.replacer.finder.replacement.ReplacementFinder;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
 import es.bvalero.replacer.finder.util.LinearMatchResult;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.MatchResult;
@@ -36,113 +38,89 @@ public class CoordinatesFinder implements ReplacementFinder {
 
     @Override
     public Iterable<MatchResult> findMatchResults(FinderPage page) {
-        return LinearMatchFinder.find(page, this::findCompleteCoordinates);
+        return LinearMatchFinder.find(page, this::findCoordinates);
     }
 
     @Nullable
-    private MatchResult findCompleteCoordinates(FinderPage page, int start) {
+    private MatchResult findCoordinates(FinderPage page, int start) {
         final String text = page.getContent();
         while (start >= 0 && start < text.length()) {
-            final LinearMatchResult latitudeMatch = findCoordinates(text, start);
-            if (latitudeMatch == null) {
+            // Degrees
+            final LinearMatchResult matchDegrees = findDegreeMatch(text, start);
+            if (matchDegrees == null) {
+                // No number to continue searching
                 return null;
-            } else {
-                final int endLatitude = latitudeMatch.end();
-                final LinearMatchResult longitudeMatch = findCoordinates(text, endLatitude);
-                if (longitudeMatch == null) {
-                    start = endLatitude;
-                } else {
-                    // Check the space between longitude and latitude
-                    final String space = text.substring(endLatitude, longitudeMatch.start());
-                    if (FinderUtils.isSpace(space)) {
-                        final int startLatitude = latitudeMatch.start();
-                        final int endLongitude = longitudeMatch.end();
-                        final LinearMatchResult match = LinearMatchResult.of(
-                            startLatitude,
-                            text.substring(startLatitude, endLongitude)
-                        );
-                        match.addGroups(latitudeMatch.getGroups());
-                        match.addGroups(longitudeMatch.getGroups());
-                        return match;
-                    } else {
-                        // Maybe the longitude is a valid latitude
-                        start = endLatitude;
-                    }
-                }
             }
+
+            // Degree symbol
+            final int endDegrees = matchDegrees.end();
+            final char degreeChar = text.charAt(endDegrees);
+            if (!isDegreeChar(degreeChar)) {
+                start = endDegrees + 1;
+                continue;
+            }
+
+            // Minutes
+            final LinearMatchResult matchMinutes = findMinuteMatch(text, endDegrees + 1);
+            if (matchMinutes == null) {
+                start = endDegrees + 1;
+                continue;
+            }
+
+            // Prime
+            final int endMinutes = matchMinutes.end();
+            final char primeChar = text.charAt(endMinutes);
+            if (!isPrimeChar(primeChar)) {
+                start = endMinutes + 1;
+                continue;
+            }
+
+            // Seconds
+            final LinearMatchResult matchSeconds = findSecondMatch(text, endMinutes + 1);
+            if (matchSeconds == null) {
+                start = endMinutes + 1;
+                continue;
+            }
+
+            // Double prime
+            // Let's find the next 2 characters
+            // For the sake of the tests, there could be only 1 character left in the text.
+            final int endSeconds = matchSeconds.end();
+            final String nextSecondChars = text.substring(endSeconds, Math.min(endSeconds + 2, text.length()));
+            final String doublePrime = findDoublePrime(nextSecondChars);
+            if (doublePrime == null) {
+                start = endSeconds + 1;
+                continue;
+            }
+
+            // Discard if the coordinates are not to be fixed
+            int endCoordinates = endSeconds + doublePrime.length();
+            if (isValidDegreeChar(degreeChar) && isValidPrimeChar(primeChar) && isValidDoublePrimeChar(doublePrime)) {
+                start = endCoordinates;
+                continue;
+            }
+
+            // Tokens: 0 - Degrees; 1 - Minutes; 2 - Seconds.
+            final List<LinearMatchResult> coordTokens = new ArrayList<>(
+                List.of(matchDegrees, matchMinutes, matchSeconds)
+            );
+
+            // Find if there is a cardinal direction and enlarge the match
+            final LinearMatchResult matchDirection = findDirectionMatch(text, endCoordinates);
+            if (matchDirection != null) {
+                endCoordinates = matchDirection.end();
+                coordTokens.add(matchDirection); // New token: 3 - Direction.
+            }
+
+            final int startCoordinates = matchDegrees.start();
+            LinearMatchResult coordinatesMatch = LinearMatchResult.of(
+                startCoordinates,
+                text.substring(startCoordinates, endCoordinates)
+            );
+            coordinatesMatch.addGroups(coordTokens);
+            return coordinatesMatch;
         }
         return null;
-    }
-
-    @Nullable
-    private LinearMatchResult findCoordinates(String text, int start) {
-        // Degrees
-        final LinearMatchResult matchDegrees = findDegreeMatch(text, start);
-        if (matchDegrees == null) {
-            return null;
-        }
-
-        // Degree char
-        final int endDegrees = matchDegrees.end();
-        final char degreeChar = text.charAt(endDegrees);
-        if (!isDegreeChar(degreeChar)) {
-            return null;
-        }
-
-        // Minutes
-        final LinearMatchResult matchMinutes = findMinuteMatch(text, endDegrees);
-        if (matchMinutes == null) {
-            return null;
-        }
-
-        // Prime
-        final int endMinutes = matchMinutes.end();
-        final char primeChar = text.charAt(endMinutes);
-        if (isNotPrimeChar(primeChar)) {
-            return null;
-        }
-
-        // Seconds
-        final LinearMatchResult matchSeconds = findSecondMatch(text, endMinutes);
-        if (matchSeconds == null) {
-            return null;
-        }
-
-        // Double prime
-        final int startDoublePrime = matchSeconds.end();
-        if (startDoublePrime >= text.length()) {
-            return null;
-        }
-        final char doublePrimeChar = text.charAt(startDoublePrime);
-        String doublePrime = String.valueOf(doublePrimeChar);
-        if (!isDoublePrimeChar(doublePrimeChar)) {
-            if (startDoublePrime + 1 >= text.length()) {
-                return null;
-            }
-            doublePrime = text.substring(startDoublePrime, startDoublePrime + 2);
-            if (!isDoublePrime(doublePrime)) {
-                return null;
-            }
-        }
-
-        // Cardinal Direction
-        int endDoublePrime = startDoublePrime + doublePrime.length();
-        final LinearMatchResult matchDirection = findDirectionMatch(text, endDoublePrime);
-        if (matchDirection == null) {
-            return null;
-        }
-
-        final int startCoordinates = matchDegrees.start();
-        final int endCoordinates = matchDirection.end();
-        final LinearMatchResult match = LinearMatchResult.of(
-            startCoordinates,
-            text.substring(startCoordinates, endCoordinates)
-        );
-        match.addGroup(matchDegrees);
-        match.addGroup(matchMinutes);
-        match.addGroup(matchSeconds);
-        match.addGroup(matchDirection);
-        return match;
     }
 
     @Nullable
@@ -175,31 +153,62 @@ public class CoordinatesFinder implements ReplacementFinder {
     public Replacement convert(MatchResult matchResult, FinderPage page) {
         LinearMatchResult match = (LinearMatchResult) matchResult;
 
-        final String coordParams = StringUtils.join(match.getGroupValues(), '|');
-        final String fixedCoordinates = "{{Coord|" + coordParams + "}}";
+        final String coordinates = match.group();
+        final String degrees = match.group(0);
+        final String minutes = match.group(1);
+        final String seconds = match.group(2);
+        String direction = null;
+        if (match.groupCount() > 3) {
+            direction = fixDirection(match.group(3));
+        }
+
+        // Suggestion 1: no spaces
+        String noSpaces = String.format(
+            "%s%s%s%s%s%s%s",
+            degrees,
+            DEGREE,
+            minutes,
+            PRIME,
+            seconds,
+            DOUBLE_PRIME,
+            (direction == null ? "" : NON_BREAKING_SPACE + direction)
+        );
+        final Suggestion suggestionNoSpaces = Suggestion.of(
+            noSpaces,
+            "sin espacios y con los símbolos apropiados, recomendado para coordenadas"
+        );
+
+        // Suggestion 2: with spaces
+        String withSpaces = String.format(
+            "{{esd|%s%s %s%s %s%s%s}}",
+            degrees,
+            DEGREE,
+            minutes,
+            PRIME,
+            seconds,
+            DOUBLE_PRIME,
+            (direction == null ? "" : SPACE + direction)
+        );
+        final Suggestion suggestionWithSpaces = Suggestion.of(withSpaces, "con espacios y con los símbolos apropiados");
 
         return Replacement
             .builder()
             .page(page)
             .type(StandardType.COORDINATES)
             .start(match.start())
-            .text(match.group())
-            .suggestions(List.of(Suggestion.ofNoComment(fixedCoordinates)))
+            .text(coordinates)
+            .suggestions(List.of(suggestionNoSpaces, suggestionWithSpaces))
             .build();
     }
 
-    private boolean isDegreeNumber(String number) {
-        return number.length() <= 3 && Integer.parseInt(number) < 180;
-    }
-
     @Nullable
-    private LinearMatchResult findMinuteMatch(String text, int endDegrees) {
-        final LinearMatchResult matchMinutes = FinderUtils.findWordAfter(text, endDegrees);
+    private LinearMatchResult findMinuteMatch(String text, int start) {
+        final LinearMatchResult matchMinutes = FinderUtils.findWordAfter(text, start);
         if (matchMinutes == null) {
             return null;
         } else {
             if (isMinuteNumber(matchMinutes.group())) {
-                final String space1 = text.substring(endDegrees + 1, matchMinutes.start());
+                final String space1 = text.substring(start, matchMinutes.start());
                 if (FinderUtils.isSpace(space1)) {
                     return matchMinutes;
                 } else {
@@ -212,16 +221,15 @@ public class CoordinatesFinder implements ReplacementFinder {
     }
 
     @Nullable
-    private LinearMatchResult findSecondMatch(String text, int endMinutes) {
-        final LinearMatchResult matchSeconds = FinderUtils.findWordAfter(text, endMinutes, DECIMAL_SEPARATORS);
+    private LinearMatchResult findSecondMatch(String text, int start) {
+        final LinearMatchResult matchSeconds = FinderUtils.findWordAfter(text, start, DECIMAL_SEPARATORS);
         if (matchSeconds == null) {
             return null;
         } else {
-            String normalizedSeconds = FinderUtils.normalizeDecimalNumber(matchSeconds.group());
-            if (isSecondNumber(normalizedSeconds)) {
-                final String space2 = text.substring(endMinutes + 1, matchSeconds.start());
+            if (isSecondNumber(matchSeconds.group())) {
+                final String space2 = text.substring(start, matchSeconds.start());
                 if (FinderUtils.isSpace(space2)) {
-                    return LinearMatchResult.of(matchSeconds.start(), normalizedSeconds);
+                    return matchSeconds;
                 } else {
                     return null;
                 }
@@ -236,11 +244,11 @@ public class CoordinatesFinder implements ReplacementFinder {
         final String textRight = text.substring(endCoordinates);
         final int startDirection = StringUtils.indexOfAny(textRight, CARDINAL_DIRECTIONS);
         if (startDirection >= 0) {
-            final String space = textRight.substring(0, startDirection);
-            if (FinderUtils.isSpace(space)) {
+            final String space3 = textRight.substring(0, startDirection);
+            if (FinderUtils.isSpace(space3)) {
                 return LinearMatchResult.of(
                     endCoordinates + startDirection,
-                    fixDirection(textRight.charAt(startDirection))
+                    textRight.substring(startDirection, startDirection + 1)
                 );
             } else {
                 return null;
@@ -250,40 +258,66 @@ public class CoordinatesFinder implements ReplacementFinder {
         }
     }
 
+    private boolean isDegreeNumber(String number) {
+        try {
+            return Integer.parseInt(number) < 180;
+        } catch (NumberFormatException nfe) {
+            return false;
+        }
+    }
+
     private boolean isDegreeChar(char ch) {
         return DEGREE_CHARS.contains(ch);
     }
 
     private boolean isMinuteNumber(String number) {
-        return (number.length() <= 2 && StringUtils.isNumeric(number) && Integer.parseInt(number) < 60);
+        try {
+            return Integer.parseInt(number) < 60;
+        } catch (NumberFormatException nfe) {
+            return false;
+        }
+    }
+
+    private boolean isPrimeChar(char ch) {
+        return PRIME_CHARS.contains(ch);
     }
 
     private boolean isSecondNumber(String number) {
-        return (number.length() <= 6 && FinderUtils.isDecimalNumber(number) && Double.parseDouble(number) < 60);
-    }
-
-    private boolean isNotPrimeChar(char ch) {
-        return !PRIME_CHARS.contains(ch);
-    }
-
-    private boolean isDoublePrimeChar(char ch) {
-        return DOUBLE_PRIME_CHARS.contains(ch);
-    }
-
-    private boolean isDoublePrime(String str) {
-        if (str.length() != 2) {
+        // We need to normalize the number in order to parse it as a double
+        try {
+            return Double.parseDouble(FinderUtils.normalizeDecimalNumber(number)) < 60;
+        } catch (NumberFormatException nfe) {
             return false;
         }
-        for (int i = 0; i < str.length(); i++) {
-            if (isNotPrimeChar(str.charAt(i))) {
-                return false;
-            }
-        }
-        return true;
     }
 
-    private String fixDirection(char ch) {
-        final String str = String.valueOf(ch);
-        return "O".equals(str) ? "W" : str;
+    @Nullable
+    private String findDoublePrime(String str) {
+        assert str.length() <= 2;
+        // Check first char and then check both chars
+        if (DOUBLE_PRIME_CHARS.contains(str.charAt(0))) {
+            return str.substring(0, 1);
+        } else if (isPrimeChar(str.charAt(0)) && isPrimeChar(str.charAt(1))) {
+            return str;
+        } else {
+            return null;
+        }
+    }
+
+    private boolean isValidDegreeChar(char ch) {
+        return ch == DEGREE;
+    }
+
+    private boolean isValidPrimeChar(char ch) {
+        return ch == PRIME;
+    }
+
+    private boolean isValidDoublePrimeChar(String str) {
+        return str.length() == 1 && str.charAt(0) == DOUBLE_PRIME;
+    }
+
+    private String fixDirection(String str) {
+        assert str.length() == 1;
+        return "W".equals(str) ? "O" : str;
     }
 }

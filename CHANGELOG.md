@@ -1,5 +1,8 @@
 # Versions
 
+## 2.27.0 (??)
+- Feature: revert to the old coordinates finder just to fix the degree symbols instead of using the coordinates template
+
 ## 2.26.0 (7 Oct 2023)
 - Upgrade backend to Java 17
 
