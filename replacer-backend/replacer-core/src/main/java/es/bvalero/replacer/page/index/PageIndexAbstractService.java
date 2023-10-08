@@ -40,7 +40,7 @@ abstract class PageIndexAbstractService {
             if (!isPageIndexable(page)) {
                 if (dbPage != null) {
                     // Just in case the page already exists in database but is not indexable anymore
-                    removeObsoletePage(page);
+                    removeObsoletePage(page, dbPage);
                 }
                 return PageIndexResult.ofNotIndexable();
             }
@@ -82,7 +82,8 @@ abstract class PageIndexAbstractService {
         return pageIndexValidator.isPageIndexableByNamespace(page) && !page.isRedirect();
     }
 
-    private void removeObsoletePage(IndexablePage page) {
+    private void removeObsoletePage(IndexablePage page, IndexedPage dbPage) {
+        assert page.getPageKey().equals(dbPage.getPageKey());
         LOGGER.warn(
             "Page in DB is not indexable anymore: {}",
             ReplacerUtils.toJson(
@@ -90,10 +91,12 @@ abstract class PageIndexAbstractService {
                 page.getPageKey().getLang(),
                 "pageId",
                 page.getPageKey().getPageId(),
-                "title",
-                page.getTitle(),
                 "namespace",
                 page.getNamespace(),
+                "title",
+                page.getTitle(),
+                "dbTitle",
+                dbPage.getTitle(),
                 "redirect",
                 page.isRedirect()
             )

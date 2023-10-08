@@ -28,6 +28,10 @@ public class WebUtils {
         WikipediaLanguage lang = getLanguageHeader(request);
 
         // Access Token Cookie
+        Cookie[] requestCookies = request.getCookies();
+        if (requestCookies == null) {
+            throw new IllegalArgumentException();
+        }
         String accessTokenCookie = Arrays
             .stream(request.getCookies())
             .filter(cookie -> AccessToken.COOKIE_NAME.equals(cookie.getName()))
