@@ -1,6 +1,7 @@
 package es.bvalero.replacer.page.save;
 
 import es.bvalero.replacer.checkwikipedia.CheckWikipediaService;
+import es.bvalero.replacer.common.util.ReplacerUtils;
 import es.bvalero.replacer.finder.Cosmetic;
 import es.bvalero.replacer.finder.CosmeticFindService;
 import es.bvalero.replacer.finder.FinderPage;
@@ -36,20 +37,14 @@ class ApplyCosmeticsService {
             cosmetics.sort(Collections.reverseOrder());
 
             for (Cosmetic cosmetic : cosmetics) {
-                fixedText = replaceInText(cosmetic, fixedText);
+                fixedText =
+                    ReplacerUtils.replaceInText(fixedText, cosmetic.getStart(), cosmetic.getText(), cosmetic.getFix());
                 applyCheckWikipediaAction(page, cosmetic);
                 LOGGER.debug("Cosmetic applied: {}", cosmetic);
             }
         }
 
         return fixedText;
-    }
-
-    private String replaceInText(Cosmetic cosmetic, String text) {
-        String oldText = cosmetic.getText();
-        String newText = cosmetic.getFix();
-        assert text.substring(cosmetic.getStart(), cosmetic.getEnd()).equals(oldText);
-        return text.substring(0, cosmetic.getStart()) + newText + text.substring(cosmetic.getEnd());
     }
 
     private void applyCheckWikipediaAction(FinderPage page, Cosmetic cosmetic) {

@@ -22,6 +22,12 @@ public class ReplacerUtils {
         return text.substring(limitLeft, limitRight);
     }
 
+    public String replaceInText(String text, int start, String current, String replacement) {
+        final int end = start + current.length();
+        assert text.substring(start, end).equals(current);
+        return text.substring(0, start) + replacement + text.substring(end);
+    }
+
     @Nullable
     public Long convertLocalDateTimeToMilliseconds(@Nullable LocalDateTime localDateTime) {
         if (localDateTime == null) {
