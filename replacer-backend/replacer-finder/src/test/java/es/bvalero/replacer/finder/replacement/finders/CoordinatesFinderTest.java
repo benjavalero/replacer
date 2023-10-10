@@ -6,6 +6,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.finder.Replacement;
 import java.util.List;
+
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -61,5 +63,12 @@ class CoordinatesFinderTest {
     void testValidCoordinates(String text) {
         List<Replacement> replacements = coordinatesFinder.findList(text);
         assertTrue(replacements.isEmpty());
+    }
+
+    @Test
+    void testSeveralCoordinates() {
+        String text = "At 23º14'18'' with 1978 and 123º0'15'' of latitude and longitude.";
+        List<Replacement> replacements = coordinatesFinder.findList(text);
+        assertEquals(2, replacements.size());
     }
 }

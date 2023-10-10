@@ -57,10 +57,14 @@ public class CoordinatesFinder implements ReplacementFinder {
         final String text = page.getContent();
         while (start >= 0 && start < text.length()) {
             // Degrees
-            final LinearMatchResult matchDegrees = findDegreeMatch(text, start);
+            final LinearMatchResult matchDegrees = findNumberMatch(text, start);
             if (matchDegrees == null) {
                 // No number to continue searching
                 return null;
+            }
+            if (!isDegreeNumber(matchDegrees.group())) {
+                start = matchDegrees.end();
+                continue;
             }
 
             // Degree symbol
@@ -139,16 +143,6 @@ public class CoordinatesFinder implements ReplacementFinder {
             return result;
         }
         return null;
-    }
-
-    @Nullable
-    private LinearMatchResult findDegreeMatch(String text, int start) {
-        final LinearMatchResult matchDegrees = findNumberMatch(text, start);
-        if (matchDegrees == null) {
-            return null;
-        } else {
-            return isDegreeNumber(matchDegrees.group()) ? matchDegrees : null;
-        }
     }
 
     @Nullable
