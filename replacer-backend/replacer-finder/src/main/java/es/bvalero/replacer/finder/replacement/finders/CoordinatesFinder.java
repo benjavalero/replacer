@@ -161,7 +161,12 @@ public class CoordinatesFinder implements ReplacementFinder {
                     startNumber = i;
                 }
             } else if (startNumber >= 0) {
-                return LinearMatchResult.of(startNumber, text.substring(startNumber, i));
+                // Capture negative numbers
+                if (startNumber >= 1 && text.charAt(startNumber - 1) == '-') {
+                    return LinearMatchResult.of(startNumber - 1, text.substring(startNumber - 1, i));
+                } else {
+                    return LinearMatchResult.of(startNumber, text.substring(startNumber, i));
+                }
             }
         }
         return null;
@@ -267,7 +272,7 @@ public class CoordinatesFinder implements ReplacementFinder {
 
     private boolean isDegreeNumber(String number) {
         try {
-            return Integer.parseInt(number) < 180;
+            return Math.abs(Integer.parseInt(number)) < 180;
         } catch (NumberFormatException nfe) {
             return false;
         }
