@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.MatchResult;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
@@ -34,7 +33,17 @@ public class CoordinatesFinder implements ReplacementFinder {
     private static final char DOUBLE_PRIME = '\u2033'; // ″
     private static final char DOUBLE_QUOTE = '\"';
     private static final Set<Character> DOUBLE_PRIME_CHARS = Set.of(DOUBLE_PRIME, DOUBLE_QUOTE);
-    private static final char[] CARDINAL_DIRECTIONS = new char[] { 'N', 'S', 'W', 'O', 'E' };
+    private static final Set<String> CARDINAL_DIRECTIONS = Set.of(
+        "N",
+        "S",
+        "W",
+        "O",
+        "E",
+        "Norte",
+        "Sur",
+        "Este",
+        "Oeste"
+    );
 
     @Override
     public Iterable<MatchResult> findMatchResults(FinderPage page) {
@@ -157,7 +166,7 @@ public class CoordinatesFinder implements ReplacementFinder {
         final String degrees = match.group(0);
         final String minutes = match.group(1);
         final String seconds = match.group(2);
-        String direction = null;
+        Character direction = null;
         if (match.groupCount() > 3) {
             direction = fixDirection(match.group(3));
         }
@@ -240,21 +249,21 @@ public class CoordinatesFinder implements ReplacementFinder {
     }
 
     @Nullable
-    private LinearMatchResult findDirectionMatch(String text, int endCoordinates) {
-        final String textRight = text.substring(endCoordinates);
-        final int startDirection = StringUtils.indexOfAny(textRight, CARDINAL_DIRECTIONS);
-        if (startDirection >= 0) {
-            final String space3 = textRight.substring(0, startDirection);
-            if (FinderUtils.isSpace(space3)) {
-                return LinearMatchResult.of(
-                    endCoordinates + startDirection,
-                    textRight.substring(startDirection, startDirection + 1)
-                );
+    private LinearMatchResult findDirectionMatch(String text, int start) {
+        final LinearMatchResult matchDirection = FinderUtils.findWordAfter(text, start);
+        if (matchDirection == null) {
+            return null;
+        } else {
+            if (isDirectionString(matchDirection.group())) {
+                final String space3 = text.substring(start, matchDirection.start());
+                if (FinderUtils.isSpace(space3)) {
+                    return matchDirection;
+                } else {
+                    return null;
+                }
             } else {
                 return null;
             }
-        } else {
-            return null;
         }
     }
 
@@ -304,6 +313,10 @@ public class CoordinatesFinder implements ReplacementFinder {
         }
     }
 
+    private boolean isDirectionString(String str) {
+        return CARDINAL_DIRECTIONS.contains(FinderUtils.setFirstUpperCase(str));
+    }
+
     private boolean isValidDegreeChar(char ch) {
         return ch == DEGREE;
     }
@@ -316,8 +329,8 @@ public class CoordinatesFinder implements ReplacementFinder {
         return str.length() == 1 && str.charAt(0) == DOUBLE_PRIME;
     }
 
-    private String fixDirection(String str) {
-        assert str.length() == 1;
-        return "W".equals(str) ? "O" : str;
+    private char fixDirection(String str) {
+        final char upperChar = Character.toUpperCase(str.charAt(0));
+        return upperChar == 'W' ? 'O' : upperChar;
     }
 }
