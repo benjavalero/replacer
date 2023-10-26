@@ -42,14 +42,11 @@ public class AcuteOFinder implements ReplacementFinder {
                 return null;
             }
 
-            final int endAcuteO = startAcuteO + ACUTE_O.length();
-            final LinearMatchResult match = findMatch(text, startAcuteO, endAcuteO);
-            if (match == null) {
-                start = endAcuteO;
-                continue;
+            if (isImmutable(text, startAcuteO)) {
+                return LinearMatchResult.of(startAcuteO, ACUTE_O);
+            } else {
+                start = startAcuteO + ACUTE_O.length();
             }
-
-            return match;
         }
         return null;
     }
@@ -59,37 +56,17 @@ public class AcuteOFinder implements ReplacementFinder {
         return startSearchAcuteO >= 0 ? startSearchAcuteO + 1 : -1;
     }
 
-    @Nullable
-    private LinearMatchResult findMatch(String text, int startAcuteO, int endAcuteO) {
-        final LinearMatchResult wordBefore = findWordBefore(text, startAcuteO);
-        final LinearMatchResult wordAfter = findWordAfter(text, endAcuteO);
-        if (wordBefore != null && wordAfter != null) {
-            return LinearMatchResult.of(startAcuteO, ACUTE_O);
-        } else {
-            return null;
-        }
-    }
-
-    @Nullable
-    private LinearMatchResult findWordBefore(String text, int startAcuteO) {
+    private boolean isImmutable(String text, int startAcuteO) {
+        // We need to check the words before and after
+        // The char before and after the acute-o is a white-space, but we need to check the rest of chars in the middle.
         final LinearMatchResult matchBefore = FinderUtils.findWordBefore(text, startAcuteO);
-        // The char before the acute-o is a white-space, but we need to check the rest of chars in the middle.
         if (matchBefore == null || (matchBefore.end() != startAcuteO - 1)) {
-            return null;
-        } else {
-            return matchBefore;
+            return false;
         }
-    }
 
-    @Nullable
-    private LinearMatchResult findWordAfter(String text, int endAcuteO) {
+        final int endAcuteO = startAcuteO + ACUTE_O.length();
         final LinearMatchResult matchAfter = FinderUtils.findWordAfter(text, endAcuteO);
-        // The char after the acute-o is a white-space, but we need to check the rest of chars in the middle.
-        if (matchAfter == null || (matchAfter.start() != endAcuteO + 1)) {
-            return null;
-        } else {
-            return matchAfter;
-        }
+        return matchAfter != null && (matchAfter.start() == endAcuteO + 1);
     }
 
     @Override

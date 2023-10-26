@@ -3,7 +3,6 @@ package es.bvalero.replacer.finder.benchmark.surname;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import es.bvalero.replacer.FinderProperties;
-import es.bvalero.replacer.FinderPropertiesConfiguration;
 import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.finder.Finder;
 import es.bvalero.replacer.finder.benchmark.BaseFinderBenchmark;
@@ -46,6 +45,13 @@ class SurnameFinderBenchmarkTest extends BaseFinderBenchmark {
         finders.add(new SurnameAutomatonAlternateFinder(personSurnames));
         // finders.add(new SurnameRegexAlternateCompleteFinder(personSurnames)); // Short
         finders.add(new SurnameAutomatonAlternateCompleteFinder(personSurnames));
+
+        // Use the Aho-Corasick algorithm which eventually creates an automaton
+        // The whole-word finder cannot be used here as it doesn't work for expressions
+        finders.add(new SurnameAhoCorasickFinder(personSurnames));
+        finders.add(new SurnameAhoCorasickLongestFinder(personSurnames));
+        finders.add(new SurnameAhoCorasickWholeLongestFinder(personSurnames)); // About 2x faster than the best automaton
+        // NOTE: These finders support a case-insensitive flag but the performance is reduced significantly
 
         List<Finder<?>> benchmarkFinders = new ArrayList<>(finders);
         runBenchmark(benchmarkFinders, fileName);

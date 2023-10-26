@@ -105,12 +105,13 @@ replacer.finder:
 
   # IGNORE
 
-  # Pages containing these templates should not be processed
-  ignorableTemplates:
-    - "#redirect"
+  redirectionWords:
     - "#redirección"
     - "#redireccion"
+    - "#redirect"
 
+  # Pages containing these templates should not be processed
+  ignorableTemplates:
     # Spanish
     - destruir
     - delete

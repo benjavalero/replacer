@@ -31,6 +31,10 @@ class CommentFinder extends ImmutableCheckedFinder {
 
     @Override
     public Iterable<MatchResult> findMatchResults(FinderPage page) {
+        // To match the content of the comment with a regex we cannot use a negated class,
+        // as we want to capture dashes or tags inside.
+        // The alternative is using the classic .+? approach (the lazy modifier is needed),
+        // but this modifier is only supported by the Regex matcher, which is 10x slower.
         return LinearMatchFinder.find(page, this::findComment);
     }
 
@@ -52,7 +56,7 @@ class CommentFinder extends ImmutableCheckedFinder {
                 continue;
             }
 
-            return LinearMatchResult.of(startComment, text.substring(startComment, endComment));
+            return LinearMatchResult.of(text, startComment, endComment);
         }
         return null;
     }

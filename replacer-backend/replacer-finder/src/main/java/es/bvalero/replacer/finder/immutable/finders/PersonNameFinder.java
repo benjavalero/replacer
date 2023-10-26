@@ -1,13 +1,13 @@
 package es.bvalero.replacer.finder.immutable.finders;
 
-import dk.brics.automaton.RegExp;
-import dk.brics.automaton.RunAutomaton;
+import com.roklenarcic.util.strings.StringMap;
+import com.roklenarcic.util.strings.WholeWordLongestMatchMap;
 import es.bvalero.replacer.FinderProperties;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.FinderPriority;
 import es.bvalero.replacer.finder.immutable.ImmutableFinder;
-import es.bvalero.replacer.finder.util.AutomatonMatchFinder;
 import es.bvalero.replacer.finder.util.FinderUtils;
+import es.bvalero.replacer.finder.util.ResultMatchListener;
 import java.util.regex.MatchResult;
 import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +24,7 @@ import org.springframework.stereotype.Component;
 @Component
 class PersonNameFinder implements ImmutableFinder {
 
-    private RunAutomaton automaton;
+    private StringMap<String> stringMap;
 
     @Autowired
     private FinderProperties finderProperties;
@@ -37,16 +37,23 @@ class PersonNameFinder implements ImmutableFinder {
 
     @PostConstruct
     public void init() {
-        final String alternations = "(" + FinderUtils.joinAlternate(this.finderProperties.getPersonNames()) + ")";
-        this.automaton = new RunAutomaton(new RegExp(alternations).toAutomaton());
+        char[] falseWordChars = { '-' };
+        boolean[] wordCharFlags = { false };
+        this.stringMap =
+            new WholeWordLongestMatchMap<>(
+                this.finderProperties.getPersonNames(),
+                this.finderProperties.getPersonNames(),
+                true,
+                falseWordChars,
+                wordCharFlags
+            );
     }
 
     @Override
     public Iterable<MatchResult> findMatchResults(FinderPage page) {
-        // The list will keep on growing
-        // There are now difference among the approaches,
-        // so we decide to use an automaton for the sake of simplicity.
-        return AutomatonMatchFinder.find(page.getContent(), this.automaton);
+        final ResultMatchListener listener = new ResultMatchListener();
+        this.stringMap.match(page.getContent(), listener);
+        return listener.getMatches();
     }
 
     @Override

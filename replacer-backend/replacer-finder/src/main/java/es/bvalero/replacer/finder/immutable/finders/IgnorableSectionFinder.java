@@ -1,5 +1,7 @@
 package es.bvalero.replacer.finder.immutable.finders;
 
+import static es.bvalero.replacer.finder.util.FinderUtils.NEW_LINE;
+
 import es.bvalero.replacer.FinderProperties;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.FinderPriority;
@@ -18,7 +20,6 @@ class IgnorableSectionFinder implements ImmutableFinder {
 
     private static final char HEADER_CHAR = '=';
     private static final String START_HEADER = "==";
-    private static final char NEW_LINE = '\n';
 
     @Autowired
     private FinderProperties finderProperties;
@@ -48,7 +49,9 @@ class IgnorableSectionFinder implements ImmutableFinder {
                 return null;
             }
 
-            final String header = text.substring(startHeader, endHeader);
+            // We can assume the first two characters are the start of a header
+            // There is no significant improvement by using "strip" method instead
+            final String header = text.substring(startHeader + START_HEADER.length(), endHeader);
             final String label = StringUtils.remove(header, HEADER_CHAR).trim();
             if (!isValidHeaderLabel(label)) {
                 // Not ignorable section
@@ -57,7 +60,7 @@ class IgnorableSectionFinder implements ImmutableFinder {
             }
 
             final int endSection = findNextHeader(text, endHeader, findHeaderLevel(text, startHeader));
-            return LinearMatchResult.of(startHeader, text.substring(startHeader, endSection));
+            return LinearMatchResult.of(text, startHeader, endSection);
         }
         return null;
     }
@@ -67,7 +70,8 @@ class IgnorableSectionFinder implements ImmutableFinder {
     }
 
     private int findEndHeader(String text, int start) {
-        return text.indexOf(NEW_LINE, start);
+        // We can assume the first two characters are the start of a header
+        return text.indexOf(NEW_LINE, start + START_HEADER.length());
     }
 
     private String findHeaderLevel(String text, int start) {
@@ -85,7 +89,8 @@ class IgnorableSectionFinder implements ImmutableFinder {
         if (pos >= 0) {
             final int endHeader = pos + headerLevel.length();
             // In case we find a subsection, find again.
-            if (endHeader < text.length() && text.charAt(endHeader) == '=') {
+            if (endHeader < text.length() && text.charAt(endHeader) == HEADER_CHAR) {
+                // As this is a corner-case, there is no performance penalty on using recursion here.
                 return findNextHeader(text, endHeader + 1, headerLevel);
             } else {
                 return pos;

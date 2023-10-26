@@ -7,13 +7,10 @@ import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.finder.Finder;
 import es.bvalero.replacer.finder.benchmark.BaseFinderBenchmark;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
-import es.bvalero.replacer.finder.util.FinderUtils;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -30,18 +27,23 @@ class RedirectionFinderBenchmarkTest extends BaseFinderBenchmark {
 
     @Test
     void testBenchmark() throws ReplacerException {
-        Set<String> ignorableTemplates =
-            this.finderProperties.getIgnorableTemplates()
-                .stream()
-                .filter(s -> s.contains("#"))
-                .map(FinderUtils::toLowerCase)
-                .collect(Collectors.toUnmodifiableSet());
+        List<String> redirectionWords = this.finderProperties.getRedirectionWords();
+
         // Load the finders
         List<BenchmarkFinder> finders = new ArrayList<>();
-        finders.add(new RedirectionLowercaseContainsFinder(ignorableTemplates));
-        finders.add(new RedirectionRegexFinder(ignorableTemplates));
-        finders.add(new RedirectionRegexInsensitiveFinder(ignorableTemplates));
-        finders.add(new RedirectionAutomatonFinder(ignorableTemplates));
+        finders.add(new RedirectionLowercaseContainsFinder(redirectionWords));
+        finders.add(new RedirectionRegexFinder(redirectionWords));
+        finders.add(new RedirectionRegexInsensitiveFinder(redirectionWords));
+        finders.add(new RedirectionAutomatonFinder(redirectionWords));
+
+        // Use the Aho-Corasick algorithm which eventually creates an automaton
+        // In this case, the case-insensitive option is quite better than case-sensitive,
+        // but not better than the simple index-of approach.
+        // It seems the Aho-Corasick algorithm is only worth when searching lots of words.
+        finders.add(new RedirectionAhoCorasickFinder(redirectionWords));
+        finders.add(new RedirectionAhoCorasickLongestFinder(redirectionWords));
+        finders.add(new RedirectionAhoCorasickWholeFinder(redirectionWords));
+        finders.add(new RedirectionAhoCorasickWholeLongestFinder(redirectionWords));
 
         List<Finder<?>> benchmarkFinders = new ArrayList<>(finders);
         runBenchmark(benchmarkFinders, fileName);

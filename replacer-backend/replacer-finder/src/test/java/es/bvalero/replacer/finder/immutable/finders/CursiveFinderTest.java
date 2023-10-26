@@ -24,6 +24,8 @@ class CursiveFinderTest {
             "''Beefeater's cool''",
             // Cursive with bold
             "''A '''Game''' of Thrones''",
+            // Bold with cursive
+            "'''A ''little'' bit'''",
             // Cursive with one character
             "''B''",
             // Cursive with two characters

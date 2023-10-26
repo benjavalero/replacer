@@ -54,6 +54,9 @@ class UppercaseFinderBenchmarkTest extends BaseFinderBenchmark {
         // finders.add(new UppercaseRegexAlternateFinder(words)); // Short
         finders.add(new UppercaseAutomatonAlternateFinder(words));
         // finders.add(new UppercaseRegexAlternateLookBehindFinder(words)); // Medium
+        finders.add(new UppercaseAutomatonAlternateAllFinder(words));
+        finders.add(new UppercaseAhoCorasickWholeFinder(words));
+        finders.add(new UppercaseAhoCorasickWholeLongestFinder(words));
 
         List<Finder<?>> benchmarkFinders = new ArrayList<>(finders);
         runBenchmark(benchmarkFinders, fileName);

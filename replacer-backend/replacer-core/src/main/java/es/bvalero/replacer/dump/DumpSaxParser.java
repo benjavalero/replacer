@@ -4,6 +4,7 @@ import es.bvalero.replacer.DumpProperties;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.page.index.PageIndexBatchService;
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -45,7 +46,14 @@ class DumpSaxParser implements DumpParser {
         assert getDumpStatus().isEmpty() || !getDumpStatus().get().isRunning();
 
         LOGGER.debug("START Parse dump file: {} ...", dumpFile);
-        try (InputStream xmlInput = new BZip2CompressorInputStream(Files.newInputStream(dumpFile.getPath()), true)) {
+        // The use of the buffered input stream is on purpose
+        // as it parses the dump about 5x faster
+        try (
+            InputStream xmlInput = new BZip2CompressorInputStream(
+                new BufferedInputStream(Files.newInputStream(dumpFile.getPath())),
+                true
+            )
+        ) {
             SAXParserFactory factory = SAXParserFactory.newInstance();
             SAXParser saxParser = factory.newSAXParser();
             saxParser.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "");

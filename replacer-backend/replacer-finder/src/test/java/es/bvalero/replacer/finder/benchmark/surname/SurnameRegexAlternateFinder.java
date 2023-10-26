@@ -27,7 +27,10 @@ class SurnameRegexAlternateFinder implements BenchmarkFinder {
         final Matcher m = this.words.matcher(text);
         while (m.find()) {
             final BenchmarkResult match = BenchmarkResult.of(m.start(), m.group());
-            if (FinderUtils.isWordPrecededByUpperCase(m.start(), text)) {
+            if (
+                FinderUtils.isWordCompleteInText(m.start(), m.group(), text) &&
+                FinderUtils.isWordPrecededByUpperCase(m.start(), text)
+            ) {
                 matches.add(match);
             }
         }

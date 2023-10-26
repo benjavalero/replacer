@@ -13,8 +13,8 @@ class RedirectionRegexFinder implements BenchmarkFinder {
 
     private final Pattern pattern;
 
-    RedirectionRegexFinder(Set<String> ignorableTemplates) {
-        String alternations = '(' + FinderUtils.joinAlternate(ignorableTemplates) + ")";
+    RedirectionRegexFinder(List<String> redirectionWords) {
+        String alternations = '(' + FinderUtils.joinAlternate(redirectionWords) + ")";
         this.pattern = Pattern.compile(alternations);
     }
 

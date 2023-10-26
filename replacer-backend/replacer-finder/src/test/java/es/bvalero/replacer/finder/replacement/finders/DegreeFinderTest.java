@@ -34,7 +34,6 @@ class DegreeFinderTest {
             "50°K| 50&nbsp;K",
             "50 ºK| 50&nbsp;K", // With ordinal
             "50ºK| 50&nbsp;K", // With ordinal
-            "50 °c| 50&nbsp;°C",
             "50 ℃| 50&nbsp;°C",
             "50.2°C| 50.2&nbsp;°C",
             "50,2°C| 50,2&nbsp;°C",

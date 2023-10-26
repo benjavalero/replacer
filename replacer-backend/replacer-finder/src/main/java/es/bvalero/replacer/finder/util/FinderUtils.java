@@ -5,9 +5,8 @@ import static org.apache.commons.lang3.StringUtils.SPACE;
 
 import es.bvalero.replacer.common.util.ReplacerUtils;
 import es.bvalero.replacer.finder.FinderPage;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.regex.MatchResult;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -29,9 +28,13 @@ public class FinderUtils {
     public static final String NON_BREAKING_SPACE = "&nbsp;";
     private static final String NON_BREAKING_SPACE_TEMPLATE = "{{esd}}";
     public static final Set<String> SPACES = Set.of(SPACE, NON_BREAKING_SPACE, NON_BREAKING_SPACE_TEMPLATE);
+    public static final char NEW_LINE = '\n';
+    public static final char PIPE = '|';
+    public static final String START_LINK = "[[";
+    public static final String END_LINK = "]]";
+    public static final char DOT = '.';
     private static final char DECIMAL_COMMA = ',';
-    private static final char DECIMAL_DOT = '.';
-    public static final Set<Character> DECIMAL_SEPARATORS = Set.of(DECIMAL_COMMA, DECIMAL_DOT);
+    public static final Set<Character> DECIMAL_SEPARATORS = Set.of(DOT, DECIMAL_COMMA);
     private static final Marker MARKER_IMMUTABLE = MarkerFactory.getMarker("IMMUTABLE");
     public static final String ENGLISH_LANGUAGE = "en";
 
@@ -54,7 +57,7 @@ public class FinderUtils {
     }
 
     public boolean startsWithNumber(String word) {
-        return Character.isDigit(word.charAt(0));
+        return isDigit(word.charAt(0));
     }
 
     public String setFirstUpperCase(String word) {
@@ -111,19 +114,32 @@ public class FinderUtils {
     }
 
     private boolean isDecimalNumber(char ch) {
-        return Character.isDigit(ch) || DECIMAL_SEPARATORS.contains(ch);
+        return isDigit(ch) || DECIMAL_SEPARATORS.contains(ch);
+    }
+
+    public boolean isNumeric(String word) {
+        for (int i = 0; i < word.length(); i++) {
+            if (!isDigit(word.charAt(i))) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public String normalizeDecimalNumber(String number) {
-        return number.replace(DECIMAL_COMMA, DECIMAL_DOT);
+        return number.replace(DECIMAL_COMMA, DOT);
     }
 
-    public boolean isSpace(String str) {
-        return StringUtils.isBlank(str) || isActualSpace(str);
+    public boolean isDigit(int ch) {
+        return (ch >= '0' && ch <= '9');
+    }
+
+    public boolean isBlankOrNonBreakingSpace(String str) {
+        return StringUtils.isBlank(str) || isNonBreakingSpace(str);
     }
 
     public boolean isActualSpace(String str) {
-        return FinderUtils.SPACES.contains(str);
+        return SPACES.contains(str);
     }
 
     public boolean isNonBreakingSpace(String str) {
@@ -132,6 +148,10 @@ public class FinderUtils {
 
     /***** TEXT UTILS *****/
 
+    /**
+     * Check if a word is complete in a text. In particular, check if the characters around the word are separators.
+     * In this context, we consider a word separator a character which is not alphanumeric nor an underscore.
+     */
     public boolean isWordCompleteInText(int startWord, String word, String text) {
         // We check the separators are not letters. The detected word might not be complete.
         // We check the separators are not digits. There are rare cases where the misspelling
@@ -167,8 +187,19 @@ public class FinderUtils {
         return true;
     }
 
+    private boolean isWordChar(char ch) {
+        // Unicode considers the masculine/feminine ordinal as a letter
+        // We admit the underscore as part of a complete word
+        return (Character.isLetterOrDigit(ch) && !isOrdinal(ch)) || ch == UNDERSCORE;
+    }
+
+    private boolean isOrdinal(char ch) {
+        return ORDINALS.contains(ch);
+    }
+
     private boolean isValidSeparator(char separator) {
-        return !Character.isLetterOrDigit(separator) && separator != UNDERSCORE;
+        // A word character is not a valid separator and vice versa
+        return !isWordChar(separator);
     }
 
     public boolean isUrlWord(int startWord, String word, String text) {
@@ -184,20 +215,27 @@ public class FinderUtils {
     public boolean isWordFollowedByUpperCase(int start, String word, String text) {
         final int end = start + word.length();
         return (
-            end + 1 < text.length() &&
-            Character.isWhitespace(text.charAt(end)) &&
-            Character.isUpperCase(text.charAt(end + 1))
+            end + 1 < text.length() && isValidSeparator(text.charAt(end)) && Character.isUpperCase(text.charAt(end + 1))
         );
     }
 
-    /* Find the most close sequence of letters and digits starting at the given position */
+    /** Find the most close sequence of letters and digits starting at the given position */
     @Nullable
     public LinearMatchResult findWordAfter(String text, int start) {
-        return findWordAfter(text, start, List.of());
+        return findWordAfter(text, start, List.of(), false);
     }
 
+    /**
+     * Find the most close sequence of letters and digits starting at the given position.
+     * Some additional chars are allowed, at the start or in the middle according to the configuration.
+     */
     @Nullable
-    public LinearMatchResult findWordAfter(String text, int start, Collection<Character> allowedChars) {
+    public LinearMatchResult findWordAfter(
+        String text,
+        int start,
+        Collection<Character> allowedChars,
+        boolean charsAllowedAtStart
+    ) {
         if (start >= text.length()) {
             return null;
         }
@@ -206,12 +244,12 @@ public class FinderUtils {
         int lastLetter = -1;
         for (int i = start; i < text.length(); i++) {
             final char ch = text.charAt(i);
-            if (isWordChar(ch)) {
+            if (isWordChar(ch) || (allowedChars.contains(ch) && (firstLetter >= 0 || charsAllowedAtStart))) {
                 if (firstLetter < 0) {
                     firstLetter = i;
                 }
                 lastLetter = i;
-            } else if (firstLetter >= 0 && !allowedChars.contains(ch)) {
+            } else if (firstLetter >= 0) {
                 break;
             }
         }
@@ -223,7 +261,7 @@ public class FinderUtils {
         // Check possible non-breaking space
         final String word = text.substring(firstLetter, lastLetter + 1);
         if (isSpaceWord(word)) {
-            return findWordAfter(text, lastLetter + 1, allowedChars);
+            return findWordAfter(text, lastLetter + 1, allowedChars, charsAllowedAtStart);
         } else {
             return LinearMatchResult.of(firstLetter, word);
         }
@@ -244,6 +282,9 @@ public class FinderUtils {
     }
 
     public boolean isWordPrecededByUpperCase(int start, String text) {
+        if (start < 2 || !isValidSeparator(text.charAt(start - 1))) {
+            return false;
+        }
         final LinearMatchResult wordBefore = findWordBefore(text, start);
         return wordBefore != null && startsWithUpperCase(wordBefore.group());
     }
@@ -251,11 +292,20 @@ public class FinderUtils {
     /* Find the most close sequence of letters and digits ending at the given position */
     @Nullable
     public LinearMatchResult findWordBefore(String text, int start) {
-        return findWordBefore(text, start, List.of());
+        return findWordBefore(text, start, List.of(), false);
     }
 
+    /**
+     * Find the most close sequence of letters and digits ending at the given position.
+     * Some additional chars are allowed, at the start or in the middle according to the configuration.
+     */
     @Nullable
-    public LinearMatchResult findWordBefore(String text, int start, Collection<Character> allowedChars) {
+    public LinearMatchResult findWordBefore(
+        String text,
+        int start,
+        Collection<Character> allowedChars,
+        boolean charsAllowedAtStart
+    ) {
         if (start < 1) {
             return null;
         }
@@ -264,12 +314,12 @@ public class FinderUtils {
         int lastLetter = -1;
         for (int i = start - 1; i >= 0; i--) {
             final char ch = text.charAt(i);
-            if (isWordChar(ch)) {
+            if (isWordChar(ch) || allowedChars.contains(ch)) {
                 if (lastLetter < 0) {
                     lastLetter = i;
                 }
                 firstLetter = i;
-            } else if (lastLetter >= 0 && !allowedChars.contains(ch)) {
+            } else if (lastLetter >= 0) {
                 break;
             }
         }
@@ -278,37 +328,46 @@ public class FinderUtils {
             return null;
         }
 
+        if (!charsAllowedAtStart) {
+            while (firstLetter < text.length() && allowedChars.contains(text.charAt(firstLetter))) {
+                firstLetter++;
+            }
+            if (firstLetter > lastLetter) {
+                return null;
+            }
+        }
+
         // Check possible non-breaking space
         final String word = text.substring(firstLetter, lastLetter + 1);
         if (isSpaceWord(word)) {
-            return findWordBefore(text, firstLetter, allowedChars);
+            return findWordBefore(text, firstLetter, allowedChars, charsAllowedAtStart);
         } else {
             return LinearMatchResult.of(firstLetter, word);
         }
     }
 
     @Nullable
-    public String findFirstWord(String text) {
-        int start = -1;
-        for (int i = 0; i < text.length(); i++) {
-            if (Character.isLetterOrDigit(text.charAt(i))) {
-                if (start < 0) {
-                    start = i;
+    public LinearMatchResult findNumberMatch(String text, int start, boolean allowDecimals) {
+        int startNumber = -1;
+        int endNumber = -1;
+        for (int i = start; i < text.length(); i++) {
+            final char ch = text.charAt(i);
+            if (isDigit(ch) || (allowDecimals && startNumber >= 0 && DECIMAL_SEPARATORS.contains(ch))) {
+                if (startNumber < 0) {
+                    startNumber = i;
                 }
-            } else if (start >= 0) {
-                return text.substring(start, i);
+            } else if (startNumber >= 0) {
+                endNumber = i;
+                break;
             }
         }
-        return start >= 0 ? text.substring(start) : null;
-    }
-
-    private boolean isWordChar(char ch) {
-        // Unicode considers the masculine/feminine ordinal as a letter
-        return Character.isLetterOrDigit(ch) && !isOrdinal(ch);
-    }
-
-    private boolean isOrdinal(char ch) {
-        return ORDINALS.contains(ch);
+        if (startNumber < 0) {
+            return null;
+        }
+        if (endNumber < 0) {
+            endNumber = text.length();
+        }
+        return LinearMatchResult.of(text, startNumber, endNumber);
     }
 
     private String getTextSnippet(String text, int start, int end) {
@@ -337,5 +396,100 @@ public class FinderUtils {
                 getTextSnippet(page.getContent(), start, end)
             )
         );
+    }
+
+    /***** PARSE UTILS *****/
+
+    @FunctionalInterface
+    public interface LogResultValidator {
+        boolean validate(String text, int start);
+    }
+
+    public List<LinearMatchResult> findAllStructures(FinderPage page, String startStr, String endStr) {
+        return findAllStructures(page, startStr, endStr, (text, start) -> true);
+    }
+
+    public List<LinearMatchResult> findAllStructures(
+        FinderPage page,
+        String startStr,
+        String endStr,
+        LogResultValidator logResultValidator
+    ) {
+        // A loop is a little better than recursion
+        final List<LinearMatchResult> matches = new ArrayList<>();
+
+        final String text = page.getContent();
+        // Deque implementation is a little better than old stack and recommended by Java
+        final Deque<LinearMatchResult> matchStack = new ArrayDeque<>();
+        int index = 0;
+        while (index >= 0 && index < text.length()) {
+            if (matchStack.isEmpty()) {
+                final int newStart = text.indexOf(startStr, index);
+                if (newStart < 0) {
+                    break;
+                }
+                matchStack.addLast(LinearMatchResult.ofEmpty(newStart));
+                index = newStart + startStr.length();
+            }
+
+            assert !matchStack.isEmpty();
+            final LinearMatchResult currentMatch = matchStack.getLast();
+            final int start = currentMatch.start();
+            final int end = text.indexOf(endStr, index);
+            if (end < 0) {
+                // Structure not closed. Not worth keep on searching as the next structures are considered as nested.
+                if (logResultValidator.validate(text, start)) {
+                    logFinderResult(page, start, start + startStr.length(), "Structure not closed");
+                }
+                break;
+            }
+
+            final int nextStart = text.indexOf(startStr, index);
+            if (nextStart >= 0 && nextStart < end) {
+                // Nested structure
+                final LinearMatchResult nextMatch = LinearMatchResult.ofEmpty(nextStart);
+                currentMatch.addGroup(nextMatch);
+                matchStack.addLast(nextMatch);
+                index = nextStart + startStr.length();
+            } else {
+                final int actualEnd = end + endStr.length();
+                currentMatch.setText(text.substring(start, actualEnd));
+                matches.add(currentMatch);
+                matchStack.removeLast();
+                index = actualEnd;
+            }
+        }
+        return matches;
+    }
+
+    public List<MatchResult> findAllWords(String text) {
+        final List<MatchResult> words = new ArrayList<>(100);
+        int start = 0;
+        while (start >= 0 && start < text.length()) {
+            // Find start of the word
+            int startWord = -1;
+            for (int i = start; i < text.length(); i++) {
+                if (isWordChar(text.charAt(i))) {
+                    startWord = i;
+                    break; // Exit for loop
+                }
+            }
+            if (startWord < 0) {
+                break; // Exit while loop
+            }
+
+            // Find end of the word
+            int endWord = text.length(); // Default value
+            for (int i = startWord + 1; i < text.length(); i++) {
+                if (isValidSeparator(text.charAt(i))) {
+                    endWord = i;
+                    break; // Exit for loop
+                }
+            }
+
+            words.add(LinearMatchResult.of(text, startWord, endWord));
+            start = endWord + 1;
+        }
+        return words;
     }
 }

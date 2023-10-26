@@ -12,12 +12,8 @@ import es.bvalero.replacer.finder.util.AutomatonMatchFinder;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.MatchResult;
-import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import lombok.Setter;
 import org.apache.commons.collections4.SetValuedMap;
@@ -56,19 +52,20 @@ public class MisspellingComposedFinder extends MisspellingFinder implements Prop
         final Map<WikipediaLanguage, RunAutomaton> map = new EnumMap<>(WikipediaLanguage.class);
         for (WikipediaLanguage lang : misspellings.keySet()) {
             final Set<ComposedMisspelling> langMisspellings = misspellings.get(lang);
-            final Set<String> processedMisspellings = langMisspellings
-                .stream()
-                .map(this::processComposedMisspelling)
-                .collect(Collectors.toUnmodifiableSet());
+            final Set<String> processedMisspellings = new HashSet<>();
+            for (ComposedMisspelling cm : langMisspellings) {
+                final String word = toRegex(cm.getWord());
+                if (cm.isCaseSensitive()) {
+                    processedMisspellings.add(word);
+                } else {
+                    processedMisspellings.add(FinderUtils.setFirstUpperCase(word));
+                    processedMisspellings.add(FinderUtils.setFirstLowerCase(word));
+                }
+            }
             final String alternations = FinderUtils.joinAlternate(processedMisspellings);
             map.put(lang, new RunAutomaton(new RegExp(alternations).toAutomaton()));
         }
         return map;
-    }
-
-    private String processComposedMisspelling(ComposedMisspelling misspelling) {
-        final String word = toRegex(misspelling.getWord());
-        return misspelling.isCaseSensitive() ? word : FinderUtils.setFirstUpperCaseClass(word);
     }
 
     private String toRegex(String word) {
@@ -79,6 +76,7 @@ public class MisspellingComposedFinder extends MisspellingFinder implements Prop
     public Iterable<MatchResult> findMatchResults(FinderPage page) {
         // There are hundreds of composed misspellings
         // The best approach is an automaton of oll the terms alternated with big difference against the linear approach
+        // The Aho-Corasick can be even better, but it doesn't manage well some composed cases with non-word characters.
         final RunAutomaton automaton = this.automata.get(page.getPageKey().getLang());
         return automaton == null ? List.of() : AutomatonMatchFinder.find(page.getContent(), automaton);
     }

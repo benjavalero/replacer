@@ -1,7 +1,6 @@
 package es.bvalero.replacer.finder.replacement.finders;
 
 import static es.bvalero.replacer.finder.util.FinderUtils.*;
-import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.finder.FinderPage;
@@ -24,16 +23,18 @@ import org.springframework.stereotype.Component;
 @Component
 public class DegreeFinder implements ReplacementFinder {
 
-    private static final String CELSIUS = "C";
-    private static final String FAHRENHEIT = "F";
-    private static final String KELVIN = "K";
-    private static final Set<String> DEGREE_LETTERS = Set.of(CELSIUS, FAHRENHEIT, KELVIN);
+    private static final char CELSIUS = 'C';
+    private static final char FAHRENHEIT = 'F';
+    private static final char KELVIN = 'K';
+    private static final Set<Character> DEGREE_LETTERS = Set.of(CELSIUS, FAHRENHEIT, KELVIN);
     private static final char CELSIUS_UNICODE = '\u2103'; // ℃
     private static final char FAHRENHEIT_UNICODE = '\u2109'; // ℉
+    private static final char SPACE = ' ';
 
     @Override
     public Iterable<MatchResult> findMatchResults(FinderPage page) {
         // The performance is about 5x better than an automaton approach
+        // Using an automaton or Aho-Corasick to capture the degree symbols is 3x slower
         return LinearMatchFinder.find(page, this::findDegree);
     }
 
@@ -41,61 +42,27 @@ public class DegreeFinder implements ReplacementFinder {
     private MatchResult findDegree(FinderPage page, int start) {
         final String text = page.getContent();
         while (start >= 0 && start < text.length()) {
+            // Find the degree symbol, e.g. ºC
             final LinearMatchResult matchSymbol = findDegreeSymbol(text, start);
             if (matchSymbol == null) {
                 return null;
             }
             final int startSymbol = matchSymbol.start();
+            final int endDegree = matchSymbol.end();
 
-            // They can be null if the symbol is a Unicode character
-            String space2 = null;
-            LinearMatchResult matchLetter = null;
-            if (!isUnicodeSymbol(matchSymbol.group())) {
-                matchLetter = findDegreeLetter(text, matchSymbol.end());
-                if (matchLetter == null) {
-                    start = startSymbol + 1;
-                    continue;
-                }
-
-                space2 = text.substring(matchSymbol.end(), matchLetter.start());
-                if (StringUtils.isNotBlank(space2)) {
-                    start = startSymbol + 1;
-                    continue;
-                }
-            }
-
-            final LinearMatchResult matchBefore = FinderUtils.findWordBefore(text, startSymbol, DECIMAL_SEPARATORS);
-            if (matchBefore == null) {
-                // This would only happen if the degree is at the very start of the content, but we need to check it,
-                start = startSymbol + 1;
-                continue;
-            }
-
-            final int endDegree = matchLetter == null ? matchSymbol.end() : matchLetter.end();
-            final String word = matchBefore.group();
-            final String space1 = text.substring(matchBefore.end(), startSymbol);
-            assert matchSymbol.group().length() == 1;
-            final char symbol = matchSymbol.group().charAt(0);
-            final String letter = matchLetter == null ? null : matchLetter.group();
-            if (isValidDegree(word, space1, symbol, space2, letter)) {
-                start = endDegree;
-                continue;
-            }
-            // If preceded by number the space must be valid
-            if (FinderUtils.isDecimalNumber(word) && !FinderUtils.isSpace(space1)) {
+            // Find the word before (not necessarily a number)
+            final LinearMatchResult matchWord = findDegreeWord(text, startSymbol);
+            if (matchWord == null) {
                 start = endDegree;
                 continue;
             }
 
-            final LinearMatchResult match = LinearMatchResult.of(
-                matchBefore.start(),
-                text.substring(matchBefore.start(), endDegree)
-            );
-            // 0 - word; 1 - space before; 2 - symbol; 3 - letter (or symbol again)
-            match.addGroup(matchBefore);
-            match.addGroup(LinearMatchResult.of(matchBefore.end(), space1));
+            final int startDegree = matchWord.start();
+            final LinearMatchResult match = LinearMatchResult.of(text, startDegree, endDegree);
+            // 0 - word; 1 - space before; 2 - symbol
+            match.addGroup(matchWord);
+            match.addGroup(LinearMatchResult.of(text, matchWord.end(), startSymbol));
             match.addGroup(matchSymbol);
-            match.addGroup(matchLetter == null ? matchSymbol : matchLetter);
             return match;
         }
         return null;
@@ -103,6 +70,7 @@ public class DegreeFinder implements ReplacementFinder {
 
     @Nullable
     private LinearMatchResult findDegreeSymbol(String text, int start) {
+        // First we find the initial symbol
         final String textSearchable = text.substring(start);
         int startSymbol = StringUtils.indexOfAny(
             textSearchable,
@@ -111,82 +79,89 @@ public class DegreeFinder implements ReplacementFinder {
             CELSIUS_UNICODE,
             FAHRENHEIT_UNICODE
         );
-        return startSymbol < 0
-            ? null
-            : LinearMatchResult.of(start + startSymbol, String.valueOf(textSearchable.charAt(startSymbol)));
+        if (startSymbol < 0) {
+            return null;
+        } else {
+            startSymbol = start + startSymbol;
+        }
+
+        // If it is a Unicode symbol we are done
+        final char degreeSymbol = text.charAt(startSymbol);
+        if (isUnicodeSymbol(degreeSymbol)) {
+            return LinearMatchResult.of(startSymbol, Character.toString(degreeSymbol));
+        }
+
+        // Find the degree letter. We admit a whitespace between.
+        final int startLetter = text.charAt(startSymbol + 1) == SPACE ? startSymbol + 2 : startSymbol + 1;
+        if (!DEGREE_LETTERS.contains(text.charAt(startLetter))) {
+            return null;
+        }
+
+        return LinearMatchResult.of(text, startSymbol, startLetter + 1);
     }
 
-    private boolean isUnicodeSymbol(String symbol) {
-        assert symbol.length() == 1;
-        final char symbolChar = symbol.charAt(0);
+    private boolean isUnicodeSymbol(char symbolChar) {
         return symbolChar == CELSIUS_UNICODE || symbolChar == FAHRENHEIT_UNICODE;
     }
 
     @Nullable
-    private LinearMatchResult findDegreeLetter(String text, int startSymbol) {
-        final LinearMatchResult matchAfter = FinderUtils.findWordAfter(text, startSymbol);
-        if (
-            matchAfter == null ||
-            matchAfter.group().length() != 1 ||
-            !DEGREE_LETTERS.contains(FinderUtils.toUpperCase(matchAfter.group()))
-        ) {
+    private LinearMatchResult findDegreeWord(String text, int startSymbol) {
+        final LinearMatchResult matchBefore = FinderUtils.findWordBefore(text, startSymbol, DECIMAL_SEPARATORS, false);
+        if (matchBefore == null) {
             return null;
-        } else {
-            return matchAfter;
         }
+        // If preceded by number, there must be a space (or nothing) between.
+        final String word = matchBefore.group();
+        final String space1 = text.substring(matchBefore.end(), startSymbol);
+        if (FinderUtils.isDecimalNumber(word) && !FinderUtils.isBlankOrNonBreakingSpace(space1)) {
+            return null;
+        }
+        return matchBefore;
     }
 
-    // A degree is valid if it contains a space and the symbol is correct
-    private boolean isValidDegree(
-        String word,
-        String space1,
-        char symbol,
-        @Nullable String space2,
-        @Nullable String letter
-    ) {
-        if (space2 == null || letter == null) {
-            // Unicode character
-            return false;
+    @Override
+    public boolean validate(MatchResult matchResult, FinderPage page) {
+        final LinearMatchResult match = (LinearMatchResult) matchResult;
+        final String symbol = match.group(2);
+        assert symbol.length() <= 3;
+        // Check the symbol
+        // Contains whitespace / Unicode symbol / Kelvin degree / Ordinal symbol
+        if (
+            symbol.length() == 3 ||
+            symbol.length() == 1 ||
+            symbol.charAt(symbol.length() - 1) == KELVIN ||
+            symbol.charAt(0) != DEGREE
+        ) {
+            return true;
         }
 
-        // Only check previous space if the word is a number
-        if (FinderUtils.isDecimalNumber(word)) {
-            if (letter.equalsIgnoreCase(KELVIN)) {
-                return false;
-            } else {
-                return (
-                    FinderUtils.isActualSpace(space1) &&
-                    symbol == DEGREE &&
-                    EMPTY.equals(space2) &&
-                    DEGREE_LETTERS.contains(letter)
-                );
-            }
-        } else {
-            return symbol == DEGREE && EMPTY.equals(space2) && DEGREE_LETTERS.contains(letter);
-        }
+        // If the symbol doesn't need to be fixed, we check the space before if preceded by number.
+        // Between number and degree, we don't fix actual spaces.
+        final String word = match.group(0);
+        final String space1 = match.group(1);
+        return FinderUtils.isDecimalNumber(word) && !FinderUtils.isActualSpace(space1);
     }
 
     @Override
     public Replacement convert(MatchResult matchResult, FinderPage page) {
         final LinearMatchResult match = (LinearMatchResult) matchResult;
 
-        // 0 - word; 1 - space before; 2 - symbol; 3 - letter (or symbol again)
+        // 0 - word; 1 - space before; 2 - symbol
         final String word = match.group(0);
         final String space1 = match.group(1);
         final String symbol = match.group(2);
-        final String letter = match.group(3).equals(symbol) ? null : match.group(3);
+        // final String letter = match.group(3).equals(symbol) ? null : match.group(3);
 
-        final String fixedLetter;
+        final char fixedLetter;
         final String fixedSymbol;
         String suggestion = null;
-        if (isUnicodeSymbol(symbol)) {
+        if (isUnicodeSymbol(symbol.charAt(0))) {
             fixedLetter = symbol.charAt(0) == FAHRENHEIT_UNICODE ? FAHRENHEIT : CELSIUS;
             fixedSymbol = String.valueOf(DEGREE);
             suggestion = "carácter Unicode";
         } else {
-            assert letter != null;
-            fixedLetter = FinderUtils.toUpperCase(letter);
-            if (fixedLetter.equals(KELVIN)) {
+            fixedLetter = symbol.charAt(symbol.length() - 1);
+            if (fixedLetter == KELVIN) {
                 fixedSymbol = "";
             } else {
                 fixedSymbol = String.valueOf(DEGREE);

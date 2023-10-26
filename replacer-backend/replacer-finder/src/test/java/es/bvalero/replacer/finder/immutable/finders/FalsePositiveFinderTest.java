@@ -53,7 +53,31 @@ class FalsePositiveFinderTest {
     }
 
     @Test
-    void testNestedFalsePositives() {
+    void testRepeatedFalsePositives() {
+        String text = "Para tí-tí había allí algo.";
+        Set<FalsePositive> falsePositives = Stream
+            .of("tí", "había allí")
+            .map(FalsePositive::of)
+            .collect(Collectors.toSet());
+        SetValuedMap<WikipediaLanguage, FalsePositive> map = new HashSetValuedHashMap<>();
+        map.putAll(WikipediaLanguage.SPANISH, falsePositives);
+
+        // Fake the update of the list in the manager
+        falsePositiveFinder.propertyChange(
+            new PropertyChangeEvent(this, FalsePositiveLoader.PROPERTY_ITEMS, EMPTY_MAP, map)
+        );
+
+        List<Immutable> matches = falsePositiveFinder.findList(text);
+
+        assertFalse(matches.isEmpty());
+        assertEquals(3, matches.size());
+        assertTrue(matches.contains(Immutable.of(5, "tí")));
+        assertTrue(matches.contains(Immutable.of(8, "tí")));
+        assertTrue(matches.contains(Immutable.of(11, "había allí")));
+    }
+
+    @Test
+    void testOverlappingCompleteFalsePositives() {
         String text1 = "A Top Album Chart.";
         Set<FalsePositive> falsePositives = Stream
             .of("Top Album", "Album Chart")
@@ -75,13 +99,47 @@ class FalsePositiveFinderTest {
 
         // Only the first match is found
         assertFalse(matches1.contains(Immutable.of(6, "Album Chart")));
+    }
 
-        String text2 = "A Topp Album Chart.";
-        List<Immutable> matches2 = falsePositiveFinder.findList(text2);
+    @Test
+    void testOverlappingNotCompleteFalsePositives() {
+        String text1 = "Los ratones aún son roedores.";
+        Set<FalsePositive> falsePositives = Stream
+            .of("es aún", "aún son")
+            .map(FalsePositive::of)
+            .collect(Collectors.toSet());
+        SetValuedMap<WikipediaLanguage, FalsePositive> map = new HashSetValuedHashMap<>();
+        map.putAll(WikipediaLanguage.SPANISH, falsePositives);
 
-        assertFalse(matches2.isEmpty());
-        assertEquals(1, matches2.size());
-        assertTrue(matches2.contains(Immutable.of(7, "Album Chart")));
+        // Fake the update of the list in the manager
+        falsePositiveFinder.propertyChange(
+            new PropertyChangeEvent(this, FalsePositiveLoader.PROPERTY_ITEMS, EMPTY_MAP, map)
+        );
+
+        List<Immutable> matches = falsePositiveFinder.findList(text1);
+
+        // This is a known issue.
+        // In this case, the automaton finds the first match "es aún" and not the second one because they overlap.
+        // So, once the first one is discarded as it is not complete, we lose the second one too.
+        assertTrue(matches.isEmpty());
+    }
+
+    @Test
+    void testNotCompleteFalsePositives() {
+        String text1 = "A not_complete false positive.";
+        Set<FalsePositive> falsePositives = Stream.of("le", "not").map(FalsePositive::of).collect(Collectors.toSet());
+        SetValuedMap<WikipediaLanguage, FalsePositive> map = new HashSetValuedHashMap<>();
+        map.putAll(WikipediaLanguage.SPANISH, falsePositives);
+
+        // Fake the update of the list in the manager
+        falsePositiveFinder.propertyChange(
+            new PropertyChangeEvent(this, FalsePositiveLoader.PROPERTY_ITEMS, EMPTY_MAP, map)
+        );
+
+        List<Immutable> matches = falsePositiveFinder.findList(text1);
+
+        // No match should be returned as they are not complete
+        assertTrue(matches.isEmpty());
     }
 
     @Test

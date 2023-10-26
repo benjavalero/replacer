@@ -126,6 +126,17 @@ class TemplateFinderTest {
     }
 
     @Test
+    void testValueWithSpecialTemplate() {
+        String text = "{{Template|image = x.jpg{{!}}More text}}";
+
+        List<Immutable> matches = templateFinder.findList(text);
+
+        Set<String> expected = Set.of("Template", "image ", " x.jpg");
+        Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
+        assertEquals(expected, actual);
+    }
+
+    @Test
     void testNestedTemplateValues() {
         String template2 = "{{Template2|url=value2}}";
         String template = String.format("{{Template1|param1=%s}}", template2);
@@ -161,7 +172,7 @@ class TemplateFinderTest {
 
     @Test
     void testSpecialCharacters() {
-        String text = "{{|||}}";
+        String text = "{{!!!}}";
 
         List<Immutable> matches = templateFinder.findList(text);
 
@@ -186,9 +197,7 @@ class TemplateFinderTest {
 
         List<Immutable> matches = templateFinder.findList(text);
 
-        // To calculate the parameter position we assume the parameters are not repeated in the template
-        // Therefore in this case though we find both parameters always the first position is returned
-        Set<Immutable> expected = Set.of(Immutable.of(2, "T"), Immutable.of(4, "x "));
+        Set<Immutable> expected = Set.of(Immutable.of(2, "T"), Immutable.of(4, "x "), Immutable.of(10, "x "));
         Set<Immutable> actual = new HashSet<>(matches);
         assertEquals(3, matches.size());
         assertEquals(expected, actual);
@@ -240,7 +249,7 @@ class TemplateFinderTest {
         // Load misspellings
         simpleMisspellingLoader.load();
 
-        String text = "{{T|Enero de 1980|p=Febrero de 1979}}";
+        String text = "{{T|Enero de 1980|p= Febrero de 1979}}";
 
         List<Immutable> matches = templateFinder.findList(text);
 
@@ -248,7 +257,7 @@ class TemplateFinderTest {
             Immutable.of(2, "T"),
             Immutable.of(4, "Enero"),
             Immutable.of(18, "p"),
-            Immutable.of(20, "Febrero")
+            Immutable.of(21, "Febrero")
         );
         Set<Immutable> actual = new HashSet<>(matches);
         assertEquals(expected, actual);

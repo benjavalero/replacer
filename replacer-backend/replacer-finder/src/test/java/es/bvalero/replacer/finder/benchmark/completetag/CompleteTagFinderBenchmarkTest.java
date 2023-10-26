@@ -36,6 +36,7 @@ class CompleteTagFinderBenchmarkTest extends BaseFinderBenchmark {
         finders.add(new CompleteTagRegexBackReferenceFinder(completeTags));
         finders.add(new CompleteTagLinearIteratedFinder(completeTags));
         finders.add(new CompleteTagLinearFinder(completeTags));
+        finders.add(new CompleteTagFinalFinder(completeTags));
 
         List<Finder<?>> benchmarkFinders = new ArrayList<>(finders);
         runBenchmark(benchmarkFinders, fileName);

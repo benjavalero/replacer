@@ -1,7 +1,9 @@
 package es.bvalero.replacer.finder.immutable.finders;
 
-import dk.brics.automaton.RegExp;
-import dk.brics.automaton.RunAutomaton;
+import static es.bvalero.replacer.finder.util.FinderUtils.*;
+
+import com.roklenarcic.util.strings.StringMap;
+import com.roklenarcic.util.strings.WholeWordLongestMatchMap;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.FinderPriority;
@@ -9,12 +11,11 @@ import es.bvalero.replacer.finder.MisspellingSuggestion;
 import es.bvalero.replacer.finder.immutable.ImmutableFinder;
 import es.bvalero.replacer.finder.listing.StandardMisspelling;
 import es.bvalero.replacer.finder.listing.load.SimpleMisspellingLoader;
-import es.bvalero.replacer.finder.util.AutomatonMatchFinder;
 import es.bvalero.replacer.finder.util.FinderUtils;
+import es.bvalero.replacer.finder.util.ResultMatchListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.EnumMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.MatchResult;
@@ -47,23 +48,21 @@ import org.springframework.stereotype.Component;
 @Component
 public class UppercaseFinder implements ImmutableFinder, PropertyChangeListener {
 
-    private static final String START_LINK = "[[";
-
     private static final String CAPTION_SEPARATOR = "|+";
 
     private static final String PARAGRAPH_START = "\n\n";
 
     // The pipe is not only used for tables cells, we must check is not a wiki-link!!!
     private static final Set<Character> PUNCTUATIONS = Set.of('=', '#', '*', '>', '.', '!');
-    private static final String PIPE = "|";
-    private static final char NEW_LINE = '\n';
 
     @Autowired
     private SimpleMisspellingLoader simpleMisspellingLoader;
 
-    // Regex with the misspellings which start with uppercase and are case-sensitive
-    // and starting with a special character which justifies the uppercase
-    private Map<WikipediaLanguage, RunAutomaton> uppercaseAutomata = new EnumMap<>(WikipediaLanguage.class);
+    private static final char[] falseWordChars = { '-' };
+    private static final boolean[] wordCharFlags = { false };
+
+    // StringMap with the misspellings which start with uppercase and are case-sensitive
+    private Map<WikipediaLanguage, StringMap<String>> uppercaseStringMap = new EnumMap<>(WikipediaLanguage.class);
 
     @Getter
     private SetValuedMap<WikipediaLanguage, String> uppercaseMap = new HashSetValuedHashMap<>();
@@ -78,7 +77,7 @@ public class UppercaseFinder implements ImmutableFinder, PropertyChangeListener 
     @SuppressWarnings("unchecked")
     public void propertyChange(PropertyChangeEvent evt) {
         this.uppercaseMap = getUppercaseWords((SetValuedMap<WikipediaLanguage, StandardMisspelling>) evt.getNewValue());
-        this.uppercaseAutomata = buildUppercaseAutomata(this.uppercaseMap);
+        this.uppercaseStringMap = buildUppercaseStringMap(this.uppercaseMap);
     }
 
     @VisibleForTesting
@@ -117,10 +116,10 @@ public class UppercaseFinder implements ImmutableFinder, PropertyChangeListener 
         );
     }
 
-    private Map<WikipediaLanguage, RunAutomaton> buildUppercaseAutomata(
+    private Map<WikipediaLanguage, StringMap<String>> buildUppercaseStringMap(
         SetValuedMap<WikipediaLanguage, String> uppercaseWords
     ) {
-        final Map<WikipediaLanguage, RunAutomaton> map = new EnumMap<>(WikipediaLanguage.class);
+        final Map<WikipediaLanguage, StringMap<String>> map = new EnumMap<>(WikipediaLanguage.class);
         for (WikipediaLanguage lang : uppercaseWords.keySet()) {
             map.put(lang, buildUppercaseAutomaton(uppercaseWords.get(lang)));
         }
@@ -128,12 +127,12 @@ public class UppercaseFinder implements ImmutableFinder, PropertyChangeListener 
     }
 
     @Nullable
-    private RunAutomaton buildUppercaseAutomaton(@Nullable Set<String> words) {
+    private StringMap<String> buildUppercaseAutomaton(@Nullable Set<String> words) {
         // Currently, there are about 60 uppercase case-sensitive misspellings,
-        // so the best approach is an automaton of oll the terms alternated.
+        // so the best approaches are an automaton with all the terms alternated and
+        // the Aho-Corasick algorithm. We use the last one giving a better median performance.
         if (words != null && !words.isEmpty()) {
-            final String alternations = String.format("(%s)", FinderUtils.joinAlternate(words));
-            return new RunAutomaton(new RegExp(alternations).toAutomaton());
+            return new WholeWordLongestMatchMap<>(words, words, true, falseWordChars, wordCharFlags);
         } else {
             return null;
         }
@@ -146,9 +145,10 @@ public class UppercaseFinder implements ImmutableFinder, PropertyChangeListener 
 
     @Override
     public Iterable<MatchResult> findMatchResults(FinderPage page) {
-        final RunAutomaton automaton = this.uppercaseAutomata.get(page.getPageKey().getLang());
-        // Benchmarks show similar performance with and without validation
-        return automaton == null ? List.of() : AutomatonMatchFinder.find(page.getContent(), automaton);
+        final StringMap<String> stringMap = this.uppercaseStringMap.get(page.getPageKey().getLang());
+        final ResultMatchListener listener = new ResultMatchListener();
+        stringMap.match(page.getContent(), listener);
+        return listener.getMatches();
     }
 
     @Override
@@ -176,9 +176,9 @@ public class UppercaseFinder implements ImmutableFinder, PropertyChangeListener 
     }
 
     private boolean isPrecededByPipe(String leftText) {
-        final boolean isPrecededByPipe = leftText.endsWith(PIPE);
+        final boolean isPrecededByPipe = leftText.endsWith(String.valueOf(PIPE));
         // Check the first char of the line is also a pipe
-        return isPrecededByPipe && PIPE.equals(String.valueOf(findFirstLineChar(leftText)));
+        return isPrecededByPipe && findFirstLineChar(leftText) == PIPE;
     }
 
     private boolean isPrecededByCaptionSeparator(String leftText) {

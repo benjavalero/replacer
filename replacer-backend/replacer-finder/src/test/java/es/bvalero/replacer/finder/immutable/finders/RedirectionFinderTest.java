@@ -3,7 +3,6 @@ package es.bvalero.replacer.finder.immutable.finders;
 import static org.junit.jupiter.api.Assertions.*;
 
 import es.bvalero.replacer.FinderProperties;
-import es.bvalero.replacer.FinderPropertiesConfiguration;
 import es.bvalero.replacer.finder.Immutable;
 import java.util.List;
 import org.junit.jupiter.api.Assertions;

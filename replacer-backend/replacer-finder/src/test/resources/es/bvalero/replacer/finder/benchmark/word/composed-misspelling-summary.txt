@@ -1,9 +1,7 @@
-                                                              composed-misspelling-benchmark.csv summary                                                               
-                   FINDER                    |  Mean [TIME]   |  Min [TIME]   |  First Quartile [TIME]  |  Median [TIME]  |  Third Quartile [TIME]  |   Max [TIME]    |
------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-                            WordRegexFinder  |  10090017,920  |   450746,000  |            2749061,500  |    4841849,500  |           13732377,250  |   80136392,000  |
-                        WordAutomatonFinder  |  21645096,880  |  1093096,000  |            6319359,000  |   10208919,000  |           29912723,750  |  165619235,000  |
-                           WordLinearFinder  |   1210353,620  |    83804,000  |             253864,250  |     456932,000  |            1332066,000  |   10232036,000  |
-           WordRegexAlternateCompleteFinder  |  12280417,580  |   372554,000  |            3055645,750  |    4713837,500  |           17863939,000  |  101684094,000  |
- WordRegexAlternateCompleteSeparatorsFinder  |  13646345,560  |   733451,000  |            3225547,750  |    5787070,500  |           16745103,500  |  108175787,000  |
-               WordAutomatonAlternateFinder  |     75806,720  |     1984,000  |              12671,750  |      26385,000  |             110141,250  |     675378,000  |
+                                                       composed-misspelling-benchmark.csv summary                                                        
+              FINDER                |  Mean [TIME]  |  Min [TIME]  |  First Quartile [TIME]  |  Median [TIME]  |  Third Quartile [TIME]  |  Max [TIME]  |
+---------------------------------------------------------------------------------------------------------------------------------------------------------
+      WordAutomatonAlternateFinder  |    76604,400  |    2169,000  |              15102,750  |      31459,000  |             115759,000  |  663087,000  |
+             WordAhoCorasickFinder  |    77136,120  |    2071,000  |              12354,750  |      26508,500  |             119877,250  |  723814,000  |
+      WordAhoCorasickLongestFinder  |    87764,880  |    2848,000  |              15258,250  |      33736,500  |             131723,000  |  811195,000  |
+ WordAhoCorasickWholeLongestFinder  |    29561,920  |    1048,000  |               5157,750  |       8377,000  |              44530,000  |  301925,000  |

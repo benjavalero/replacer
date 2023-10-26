@@ -26,7 +26,10 @@ class SurnameIndexOfFinder implements BenchmarkFinder {
             while (start >= 0) {
                 start = text.indexOf(word, start);
                 if (start >= 0) {
-                    if (FinderUtils.isWordPrecededByUpperCase(start, text)) {
+                    if (
+                        FinderUtils.isWordCompleteInText(start, word, text) &&
+                        FinderUtils.isWordPrecededByUpperCase(start, text)
+                    ) {
                         matches.add(BenchmarkResult.of(start, word));
                     }
                     start += word.length();

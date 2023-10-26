@@ -109,4 +109,28 @@ class SimpleMisspellingFinderTest {
         WordRegexAllCompleteSeparatorsFinder finder = new WordRegexAllCompleteSeparatorsFinder(this.words);
         assertEquals(expected, finder.findMatches(text));
     }
+
+    @Test
+    void testWordAhoCorasickFinder() {
+        WordAhoCorasickFinder finder = new WordAhoCorasickFinder(this.words);
+        assertEquals(expected, finder.findMatches(text));
+    }
+
+    @Test
+    void testWordAhoCorasickLongestFinder() {
+        WordAhoCorasickLongestFinder finder = new WordAhoCorasickLongestFinder(this.words);
+        assertEquals(expected, finder.findMatches(text));
+    }
+
+    @Test
+    void testWordAhoCorasickWholeFinder() {
+        WordAhoCorasickWholeFinder finder = new WordAhoCorasickWholeFinder(this.words);
+        assertEquals(expected, finder.findMatches(text));
+    }
+
+    @Test
+    void testWordAhoCorasickWholeLongestFinder() {
+        WordAhoCorasickWholeLongestFinder finder = new WordAhoCorasickWholeLongestFinder(this.words);
+        assertEquals(expected, finder.findMatches(text));
+    }
 }

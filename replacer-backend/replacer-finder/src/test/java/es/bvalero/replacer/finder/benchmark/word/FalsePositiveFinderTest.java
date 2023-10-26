@@ -17,12 +17,15 @@ class FalsePositiveFinderTest {
 
     @BeforeEach
     public void setUp() {
-        this.words = Set.of("Aaron Carter", "Victoria Abril");
-        this.text = "En Abril Victoria Abril salió con Aaron Carter.";
+        this.words = Set.of("tí", "Top Album", "Album Chart", "es aún", "aún son");
+        this.text = "Para tí-tí un tío. Top Album Chart, los ratones aún son roedores.";
 
         this.expected = new HashSet<>();
-        this.expected.add(BenchmarkResult.of(9, "Victoria Abril"));
-        this.expected.add(BenchmarkResult.of(34, "Aaron Carter"));
+        this.expected.add(BenchmarkResult.of(5, "tí"));
+        this.expected.add(BenchmarkResult.of(8, "tí"));
+        this.expected.add(BenchmarkResult.of(19, "Top Album"));
+        this.expected.add(BenchmarkResult.of(23, "Album Chart"));
+        this.expected.add(BenchmarkResult.of(48, "aún son"));
     }
 
     // NOTE: We can use the same finders that we use for simple misspellings just with a different set of words,
@@ -54,19 +57,42 @@ class FalsePositiveFinderTest {
 
     @Test
     void testWordRegexAlternateFinder() {
+        // Known issue. It doesn't capture overlapping cases, complete or incomplete.
         WordRegexAlternateFinder finder = new WordRegexAlternateFinder(this.words);
         assertEquals(expected, finder.findMatches(text));
     }
 
     @Test
     void testWordAutomatonAlternateFinder() {
+        // Known issue. It doesn't capture overlapping cases, complete or incomplete.
         WordAutomatonAlternateFinder finder = new WordAutomatonAlternateFinder(this.words);
         assertEquals(expected, finder.findMatches(text));
     }
 
     @Test
     void testWordRegexAlternateCompleteFinder() {
+        // Known issue. It doesn't capture overlapping complete cases.
         WordRegexAlternateCompleteFinder finder = new WordRegexAlternateCompleteFinder(this.words);
+        assertEquals(expected, finder.findMatches(text));
+    }
+
+    @Test
+    void testWordAhoCorasickFinder() {
+        WordAhoCorasickFinder finder = new WordAhoCorasickFinder(this.words);
+        assertEquals(expected, finder.findMatches(text));
+    }
+
+    @Test
+    void testWordAhoCorasickLongestFinder() {
+        // Known issue. It doesn't capture overlapping cases, complete or incomplete.
+        WordAhoCorasickLongestFinder finder = new WordAhoCorasickLongestFinder(this.words);
+        assertEquals(expected, finder.findMatches(text));
+    }
+
+    @Test
+    void testWordAhoCorasickWholeLongestFinder() {
+        // Known issue. It doesn't capture overlapping complete cases.
+        WordAhoCorasickWholeLongestFinder finder = new WordAhoCorasickWholeLongestFinder(this.words);
         assertEquals(expected, finder.findMatches(text));
     }
 }

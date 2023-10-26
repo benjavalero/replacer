@@ -1,5 +1,7 @@
 package es.bvalero.replacer.finder.replacement.finders;
 
+import static es.bvalero.replacer.finder.util.FinderUtils.END_LINK;
+import static es.bvalero.replacer.finder.util.FinderUtils.START_LINK;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 import com.roman.code.ConvertToArabic;
@@ -17,7 +19,6 @@ import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
 import es.bvalero.replacer.finder.util.LinearMatchResult;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.MatchResult;
@@ -33,6 +34,7 @@ public class CenturyFinder implements ReplacementFinder {
 
     private static final String CENTURY_WORD = "siglo";
     private static final String CENTURY_SEARCH = CENTURY_WORD.substring(1);
+    private static final char SPACE = ' ';
     private static final Set<Character> CENTURY_LETTERS = Set.of('I', 'V', 'X');
     private static final List<String> ERA_WORDS = List.of(
         "aC",
@@ -46,22 +48,27 @@ public class CenturyFinder implements ReplacementFinder {
         "d.&nbsp;C.",
         "d.{{esd}}C."
     );
-    private static final int MAX_SPACE_LENGTH = FinderUtils.SPACES
-        .stream()
-        .map(String::length)
-        .max(Comparator.comparingInt(o -> o))
-        .orElse(0);
-    private static final int MAX_ERA_LENGTH = ERA_WORDS
-        .stream()
-        .map(String::length)
-        .max(Comparator.comparingInt(o -> o))
-        .orElse(0);
 
-    private static final String REGEX_CENTURY = String.format(
+    private static final String REGEX_CENTURY_LETTERS = String.format(
         "[%s]+",
         CENTURY_LETTERS.stream().map(String::valueOf).collect(Collectors.joining())
     );
-    private static final RunAutomaton AUTOMATON_CENTURY = new RunAutomaton(new RegExp(REGEX_CENTURY).toAutomaton());
+    private static final RunAutomaton AUTOMATON_CENTURY_LETTERS = new RunAutomaton(
+        new RegExp(REGEX_CENTURY_LETTERS).toAutomaton()
+    );
+    private static final String REGEX_ERA_WORDS = String.format(
+        "(%s)",
+        FinderUtils.joinAlternate(
+            ERA_WORDS
+                .stream()
+                .map(s -> s.replace(".", "\\."))
+                .map(s -> s.replace("{", "\\{"))
+                .map(s -> s.replace("}", "\\}"))
+                .map(s -> s.replace("&", "\\&"))
+                .toList()
+        )
+    );
+    private static final RunAutomaton AUTOMATON_ERA_WORDS = new RunAutomaton(new RegExp(REGEX_ERA_WORDS).toAutomaton());
 
     @Override
     public Iterable<MatchResult> findMatchResults(FinderPage page) {
@@ -77,20 +84,16 @@ public class CenturyFinder implements ReplacementFinder {
     private MatchResult findCentury(FinderPage page, int start) {
         final String text = page.getContent();
         while (start >= 0 && start < text.length()) {
-            int startCentury = findStartCentury(text, start);
-            if (startCentury < 0) {
+            LinearMatchResult centuryWord = findCenturyWord(text, start);
+            if (centuryWord == null) {
                 return null;
             }
-
-            int endCentury = startCentury + CENTURY_WORD.length();
-            final String centuryWord = findCenturyWord(text, startCentury);
-            if (centuryWord == null) {
-                start = endCentury + 1;
-                continue;
-            }
+            int startCentury = centuryWord.start();
+            int endCentury = centuryWord.end();
 
             // Check the century number
-            final LinearMatchResult centuryNumber = findCenturyNumber(text, endCentury);
+            assert text.charAt(endCentury) == SPACE;
+            final LinearMatchResult centuryNumber = findCenturyNumber(text, endCentury + 1);
             if (centuryNumber == null) {
                 start = endCentury + 1;
                 continue;
@@ -98,7 +101,7 @@ public class CenturyFinder implements ReplacementFinder {
                 endCentury = centuryNumber.end();
             }
 
-            // Check the era
+            // Check the era (optional)
             final LinearMatchResult era = findEra(text, endCentury);
             if (era != null) {
                 endCentury = era.end();
@@ -110,15 +113,12 @@ public class CenturyFinder implements ReplacementFinder {
                 start = endCentury + 1;
                 continue;
             } else if (isLinked) {
-                startCentury -= 2;
-                endCentury += 2;
+                startCentury -= START_LINK.length();
+                endCentury += END_LINK.length();
             }
 
-            final LinearMatchResult match = LinearMatchResult.of(
-                startCentury,
-                text.substring(startCentury, endCentury)
-            );
-            match.addGroup(LinearMatchResult.of(startCentury, centuryWord)); // The start is not relevant
+            final LinearMatchResult match = LinearMatchResult.of(text, startCentury, endCentury);
+            match.addGroup(centuryWord);
             match.addGroup(centuryNumber);
             if (era != null) {
                 match.addGroup(era);
@@ -128,31 +128,38 @@ public class CenturyFinder implements ReplacementFinder {
         return null;
     }
 
-    private int findStartCentury(String text, int start) {
-        final int pos = text.indexOf(CENTURY_SEARCH, start);
-        return pos >= 1 ? pos - 1 : -1;
-    }
-
     @Nullable
-    private String findCenturyWord(String text, int start) {
-        final char firstLetter = text.charAt(start);
-        final int endCentury = start + CENTURY_WORD.length();
-        if ((firstLetter == 'S' || firstLetter == 's') && Character.isWhitespace(text.charAt(endCentury))) {
-            return firstLetter + CENTURY_SEARCH;
+    private LinearMatchResult findCenturyWord(String text, int start) {
+        // Instead of making a case-insensitive search, we find the end of the word,
+        // and then we check the word is complete. It is a little faster than finding the word with both cases.
+        final int startSuffix = text.indexOf(CENTURY_SEARCH, start);
+        if (startSuffix <= 0) { // <= 0 to be able to get the character before
+            return null;
+        }
+
+        final int startCentury = startSuffix - 1;
+        final char firstLetter = text.charAt(startCentury);
+        final String centuryWord = firstLetter + CENTURY_SEARCH;
+        final int endCentury = startCentury + centuryWord.length();
+        // We only consider the word complete and followed by a whitespace
+        if (
+            (firstLetter == 'S' || firstLetter == 's') &&
+            (FinderUtils.isWordCompleteInText(startCentury, centuryWord, text)) &&
+            text.charAt(endCentury) == SPACE
+        ) {
+            return LinearMatchResult.of(startCentury, centuryWord);
         } else {
             return null;
         }
     }
 
     @Nullable
-    private LinearMatchResult findCenturyNumber(String text, int endCentury) {
-        final LinearMatchResult centuryNumber = FinderUtils.findWordAfter(text, endCentury);
-        // The century word is followed by a white-space, but we need to check the chars in the middle.
-        if (centuryNumber == null || centuryNumber.start() != endCentury + 1) {
+    private LinearMatchResult findCenturyNumber(String text, int start) {
+        final LinearMatchResult centuryNumber = FinderUtils.findWordAfter(text, start);
+        if (centuryNumber == null || centuryNumber.start() != start || !isCenturyNumber(centuryNumber.group())) {
             return null;
-        } else {
-            return isCenturyNumber(centuryNumber.group()) ? centuryNumber : null;
         }
+        return centuryNumber;
     }
 
     private boolean isCenturyNumber(String text) {
@@ -164,33 +171,29 @@ public class CenturyFinder implements ReplacementFinder {
     }
 
     @Nullable
-    private LinearMatchResult findEra(String text, int endCenturyNumber) {
-        final String postCentury = text.substring(
-            endCenturyNumber,
-            Math.min(endCenturyNumber + MAX_SPACE_LENGTH, text.length())
-        );
-        final String eraSpace = FinderUtils.SPACES.stream().filter(postCentury::startsWith).findAny().orElse(null);
-        if (eraSpace != null) {
-            final int startEra = endCenturyNumber + eraSpace.length();
-            final String eraText = text.substring(startEra, Math.min(startEra + MAX_ERA_LENGTH, text.length()));
-            final String era = ERA_WORDS.stream().filter(eraText::startsWith).findAny().orElse(null);
-            if (era != null) {
-                return LinearMatchResult.of(startEra, era);
+    private LinearMatchResult findEra(String text, int start) {
+        // We could limit the end of the search but it is not worth to complicate the code
+        final AutomatonMatcher matcherEra = AUTOMATON_ERA_WORDS.newMatcher(text, start, text.length());
+        if (matcherEra.find()) {
+            final int startEra = start + matcherEra.start();
+            final String eraSpace = text.substring(start, startEra);
+            if (FinderUtils.isActualSpace(eraSpace)) {
+                return LinearMatchResult.of(startEra, matcherEra.group());
             }
         }
         return null;
     }
 
-    // True if linked; False if not linked; Null if linked not closed or open.
+    /** True if linked; False if not linked; Null if linked not closed or open. */
     @Nullable
     private Boolean isLinked(String text, int start, int end) {
-        final int startLink = Math.max(0, start - 2);
-        final int endLink = Math.min(text.length(), end + 2);
+        final int startLink = Math.max(0, start - START_LINK.length());
+        final int endLink = Math.min(text.length(), end + END_LINK.length());
         final String leftLink = text.substring(startLink, start);
         final String rightLink = text.substring(end, endLink);
-        if ("[[".equals(leftLink) && "]]".equals(rightLink)) {
+        if (START_LINK.equals(leftLink) && END_LINK.equals(rightLink)) {
             return true;
-        } else if ("[[".equals(leftLink) || "]]".equals(rightLink)) {
+        } else if (START_LINK.equals(leftLink) || END_LINK.equals(rightLink)) {
             return null;
         } else {
             return false;
@@ -206,10 +209,10 @@ public class CenturyFinder implements ReplacementFinder {
         final String centuryWord = match.group(0);
         final String centuryNumber = FinderUtils.toUpperCase(match.group(1));
         final String era = match.groupCount() == 3 ? match.group(2).substring(0, 1) : EMPTY;
-        final boolean linked = centuryText.startsWith("[[");
+        final boolean linked = centuryText.startsWith(START_LINK);
 
         // Try to fix simple centuries close to this one
-        String extension = "";
+        String extension = EMPTY;
         final LinearMatchResult matchNext = findNextCentury(text, match.end(), centuryNumber);
         if (matchNext != null) {
             centuryText = text.substring(match.start(), matchNext.end());
@@ -252,7 +255,7 @@ public class CenturyFinder implements ReplacementFinder {
 
     @Nullable
     private LinearMatchResult findNextCentury(String text, int endCentury, String centuryNumber) {
-        final AutomatonMatcher matcherNext = AUTOMATON_CENTURY.newMatcher(text, endCentury, text.length());
+        final AutomatonMatcher matcherNext = AUTOMATON_CENTURY_LETTERS.newMatcher(text, endCentury, text.length());
         if (matcherNext.find()) {
             final int startNext = endCentury + matcherNext.start();
             final String centuryNext = matcherNext.group();
@@ -267,7 +270,7 @@ public class CenturyFinder implements ReplacementFinder {
             }
 
             // Check we are not capturing a complete century again
-            if (FinderUtils.toLowerCase(text.substring(endCentury, startNext)).contains(CENTURY_WORD)) {
+            if (text.substring(endCentury, startNext).contains(CENTURY_SEARCH)) {
                 return null;
             }
 

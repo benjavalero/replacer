@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import es.bvalero.replacer.FinderProperties;
-import es.bvalero.replacer.FinderPropertiesConfiguration;
 import es.bvalero.replacer.finder.Immutable;
 import java.util.List;
 import org.junit.jupiter.api.Assertions;

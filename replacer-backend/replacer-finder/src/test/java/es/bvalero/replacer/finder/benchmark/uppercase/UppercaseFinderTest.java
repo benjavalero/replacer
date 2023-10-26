@@ -73,4 +73,22 @@ class UppercaseFinderTest {
         UppercaseRegexAlternateLookBehindFinder finder = new UppercaseRegexAlternateLookBehindFinder(words);
         assertEquals(expected, finder.findMatches(text));
     }
+
+    @Test
+    void testUppercaseAutomatonAlternateAllFinder() {
+        UppercaseAutomatonAlternateAllFinder finder = new UppercaseAutomatonAlternateAllFinder(words);
+        assertEquals(expected, finder.findMatches(text));
+    }
+
+    @Test
+    void testUppercaseAhoCorasickWholeFinder() {
+        UppercaseAhoCorasickWholeFinder finder = new UppercaseAhoCorasickWholeFinder(words);
+        assertEquals(expected, finder.findMatches(text));
+    }
+
+    @Test
+    void testUppercaseAhoCorasickWholeLongestFinder() {
+        UppercaseAhoCorasickWholeLongestFinder finder = new UppercaseAhoCorasickWholeLongestFinder(words);
+        assertEquals(expected, finder.findMatches(text));
+    }
 }

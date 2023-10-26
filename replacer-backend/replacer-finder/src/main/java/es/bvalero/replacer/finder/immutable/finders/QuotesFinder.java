@@ -1,11 +1,12 @@
 package es.bvalero.replacer.finder.immutable.finders;
 
+import static es.bvalero.replacer.finder.util.FinderUtils.NEW_LINE;
+
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.FinderPriority;
 import es.bvalero.replacer.finder.immutable.ImmutableCheckedFinder;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
 import es.bvalero.replacer.finder.util.LinearMatchResult;
-import java.util.Collection;
 import java.util.Set;
 import java.util.regex.MatchResult;
 import org.apache.commons.lang3.StringUtils;
@@ -18,7 +19,6 @@ abstract class QuotesFinder extends ImmutableCheckedFinder {
     protected static final char END_QUOTE_ANGULAR = '»';
     protected static final char START_QUOTE_TYPOGRAPHIC = '“';
     protected static final char END_QUOTE_TYPOGRAPHIC = '”';
-    private static final char NEW_LINE = '\n';
     private static final Set<Character> QUOTE_CHARS = Set.of(
         DOUBLE_QUOTES,
         START_QUOTE_ANGULAR,
@@ -43,6 +43,7 @@ abstract class QuotesFinder extends ImmutableCheckedFinder {
 
     @Override
     public Iterable<MatchResult> findMatchResults(FinderPage page) {
+        // The linear approach is 3x faster than the most optimized automaton
         return LinearMatchFinder.find(page, this::findQuote);
     }
 
@@ -55,9 +56,9 @@ abstract class QuotesFinder extends ImmutableCheckedFinder {
                 return null;
             }
 
-            final int startQuoteText = startQuote + 1; // 1 = start quote length
-            final int endQuoteText = findEndQuote(text, startQuoteText);
-            if (endQuoteText < 0) {
+            final int startQuoteText = startQuote + 1;
+            final int endQuote = findEndQuote(text, startQuoteText);
+            if (endQuote < 0) {
                 // No quote ending found
                 // It's possible that the quote start was a false positive or the quote contains new lines
                 logImmutableCheck(page, startQuote, startQuoteText, "Truncated quotes");
@@ -65,21 +66,11 @@ abstract class QuotesFinder extends ImmutableCheckedFinder {
                 continue;
             }
 
-            final String quoteText = text.substring(startQuoteText, endQuoteText);
-            if (!isValidQuoteText(quoteText)) {
-                start = endQuoteText;
-                continue;
-            }
-
-            final int endQuote = endQuoteText + 1; // 1 = end quote length
-            if (isEmptyQuote(quoteText, startQuote, text, page)) {
+            if (validateQuote(page, startQuote, endQuote)) {
+                return LinearMatchResult.of(text, startQuote, endQuote);
+            } else {
                 start = endQuote;
-                continue;
             }
-
-            checkRedundantQuote(quoteText, startQuote, page);
-
-            return LinearMatchResult.of(startQuote, text.substring(startQuote, endQuote));
         }
         return null;
     }
@@ -95,57 +86,45 @@ abstract class QuotesFinder extends ImmutableCheckedFinder {
                 // New lines are not allowed inside quotes
                 return -1;
             } else if (ch == getEndChar()) {
-                return i;
+                return i + 1;
             }
         }
         return -1;
     }
 
-    private boolean isValidQuoteText(String text) {
-        return !containsForbiddenChars(text);
-    }
+    protected boolean validateQuote(FinderPage page, int startQuote, int endQuote) {
+        final String quoteText = page.getContent().substring(startQuote + 1, endQuote - 1);
 
-    private boolean containsForbiddenChars(String text) {
-        for (int i = 0; i < text.length(); i++) {
-            if (isForbiddenChar(text.charAt(i))) {
-                return true;
+        // Check if the quote is empty
+        if (isEmptyQuote(quoteText)) {
+            if (isEmptyQuoteWarning(page, startQuote, endQuote)) {
+                logImmutableCheck(page, startQuote, endQuote, "Empty quoted text");
             }
+            return false;
         }
-        return false;
-    }
 
-    private boolean isForbiddenChar(char ch) {
-        return getForbiddenChars().contains(ch);
-    }
-
-    Collection<Character> getForbiddenChars() {
-        return Set.of();
-    }
-
-    private boolean isEmptyQuote(String quoteText, int startQuote, String text, FinderPage page) {
-        // Warning when empty but when it is an attribute
-        final boolean isEmpty = StringUtils.isBlank(quoteText);
-        if (isEmpty && !isAttribute(startQuote, text)) {
-            final int endQuote = startQuote + quoteText.length() + 2; // 2 = start + end quote length
-            logImmutableCheck(page, startQuote, endQuote, "Empty quoted text");
-        }
-        return isEmpty;
-    }
-
-    private boolean isAttribute(int startQuote, String text) {
-        return startQuote > 0 && text.charAt(startQuote - 1) == '=';
-    }
-
-    private void checkRedundantQuote(String quoteText, int startQuote, FinderPage page) {
         // Check the quote text is not quoted again by checking the first and last characters are not quote characters
-        if (
-            StringUtils.isNotBlank(quoteText) &&
-            isQuoteChar(quoteText.charAt(0)) &&
-            isQuoteChar(quoteText.charAt(quoteText.length() - 1))
-        ) {
-            final int endQuote = startQuote + quoteText.length() + 2; // 2 = start + end quote length
+        if (isRedundantQuote(quoteText)) {
             logImmutableCheck(page, startQuote, endQuote, "Redundant quotes");
         }
+
+        return true;
+    }
+
+    private boolean isEmptyQuote(String quoteText) {
+        return StringUtils.isBlank(quoteText);
+    }
+
+    protected boolean isEmptyQuoteWarning(FinderPage page, int startQuote, int endQuote) {
+        return true;
+    }
+
+    private boolean isRedundantQuote(String quoteText) {
+        return (
+            StringUtils.isNotEmpty(quoteText) &&
+            isQuoteChar(quoteText.charAt(0)) &&
+            isQuoteChar(quoteText.charAt(quoteText.length() - 1))
+        );
     }
 
     private boolean isQuoteChar(char ch) {

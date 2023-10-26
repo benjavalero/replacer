@@ -136,6 +136,25 @@ class MisspellingSimpleFinderTest {
     }
 
     @Test
+    void testOrdinal() {
+        String text = "Un nº bonito.";
+
+        SimpleMisspelling misspelling = SimpleMisspelling.ofCaseInsensitive("nº", "n.º");
+        fakeUpdateMisspellingList(List.of(misspelling));
+
+        List<Replacement> results = misspellingFinder.findList(text);
+
+        Replacement expected = Replacement
+            .builder()
+            .start(3)
+            .text("nº")
+            .type(StandardType.of(ReplacementKind.SIMPLE, "nº"))
+            .suggestions(List.of(Suggestion.ofNoComment("nº"), Suggestion.ofNoComment("n.º")))
+            .build();
+        assertEquals(Set.of(expected), new HashSet<>(results));
+    }
+
+    @Test
     void testCaseSensitiveUppercase() {
         String text = "En Brazil.";
 

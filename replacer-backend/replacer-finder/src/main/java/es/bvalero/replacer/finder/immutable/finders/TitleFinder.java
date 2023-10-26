@@ -2,15 +2,14 @@ package es.bvalero.replacer.finder.immutable.finders;
 
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.FinderPriority;
-import es.bvalero.replacer.finder.Immutable;
 import es.bvalero.replacer.finder.immutable.ImmutableCheckedFinder;
-import es.bvalero.replacer.finder.immutable.ImmutableFinder;
-import es.bvalero.replacer.finder.util.LinearMatchFinder;
+import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.LinearMatchResult;
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.regex.MatchResult;
-import org.apache.commons.collections4.IterableUtils;
-import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
 /** Find words in the page title */
@@ -24,55 +23,41 @@ class TitleFinder extends ImmutableCheckedFinder {
         return FinderPriority.HIGH;
     }
 
-    @SuppressWarnings("unchecked")
-    @Override
-    public Iterable<Immutable> find(FinderPage page) {
-        // As the titles are not very long, and therefore they have few words,
-        // the best approach is to iterate the list of words and find them in the text.
-        return IterableUtils.chainedIterable(
-            Arrays
-                .stream(page.getTitle().split("\\P{L}+"))
-                .filter(this::isTitleWordImmutable)
-                .map(TitleLinearFinder::new)
-                .map(finder -> finder.find(page))
-                .toArray(Iterable[]::new)
-        );
-    }
-
-    private boolean isTitleWordImmutable(@Nullable String word) {
-        return word != null && word.length() >= MIN_WORD_LENGTH;
-    }
-
     @Override
     public Iterable<MatchResult> findMatchResults(FinderPage page) {
-        // We are overriding the more general find method
-        throw new UnsupportedOperationException();
-    }
-
-    private static class TitleLinearFinder implements ImmutableFinder {
-
-        private final String word;
-
-        TitleLinearFinder(String word) {
-            this.word = word;
-        }
-
-        @Override
-        public Iterable<MatchResult> findMatchResults(FinderPage page) {
-            return LinearMatchFinder.find(page, this::findTitleWord);
-        }
-
-        @Nullable
-        private MatchResult findTitleWord(FinderPage page, int start) {
-            final String text = page.getContent();
-            if (start >= 0 && start < text.length()) {
-                // Find the word case-sensitive improves the performance
-                final int wordStart = text.indexOf(this.word, start);
+        // With few title words, the performance of the simple index-of and the Aho-Corasick is similar.
+        final List<MatchResult> matches = new ArrayList<>(100);
+        final Set<String> words = new HashSet<>();
+        FinderUtils
+            .findAllWords(page.getTitle())
+            .stream()
+            .map(MatchResult::group)
+            .filter(this::isTitleWordImmutable)
+            .forEach(words::add);
+        final String text = page.getContent();
+        for (String word : words) {
+            // Find the word case-sensitive improves the performance
+            int start = 0;
+            while (start >= 0 && start < text.length()) {
+                final int wordStart = text.indexOf(word, start);
                 if (wordStart >= 0) {
-                    return LinearMatchResult.of(wordStart, this.word);
+                    final LinearMatchResult match = LinearMatchResult.of(wordStart, word);
+                    matches.add(match);
+                    start = match.end();
+                } else {
+                    break;
                 }
             }
-            return null;
         }
+        return matches;
+    }
+
+    private boolean isTitleWordImmutable(String word) {
+        return word.length() >= MIN_WORD_LENGTH;
+    }
+
+    @Override
+    public boolean validate(MatchResult match, FinderPage page) {
+        return FinderUtils.isWordCompleteInText(match.start(), match.group(), page.getContent());
     }
 }

@@ -1,5 +1,7 @@
 package es.bvalero.replacer.finder.immutable.finders;
 
+import static es.bvalero.replacer.finder.util.FinderUtils.NEW_LINE;
+
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.immutable.ImmutableFinder;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
@@ -18,7 +20,6 @@ import org.springframework.stereotype.Component;
 @Component
 class TableFinder implements ImmutableFinder {
 
-    private static final char NEW_LINE = '\n';
     private static final String TABLE_START = "{|";
     private static final String ROW_START = "|-";
 
@@ -37,8 +38,7 @@ class TableFinder implements ImmutableFinder {
             }
 
             final int endLine = findEndLine(text, startLine);
-            // Take into account the end of file
-            final String line = endLine >= 0 ? text.substring(startLine, endLine) : text.substring(startLine);
+            final String line = text.substring(startLine, endLine);
             if (!isImmutableLine(line)) {
                 start = endLine;
                 continue;
@@ -59,7 +59,8 @@ class TableFinder implements ImmutableFinder {
     }
 
     private int findEndLine(String text, int start) {
-        return text.indexOf(NEW_LINE, start);
+        final int endLine = text.indexOf(NEW_LINE, start);
+        return endLine >= 0 ? endLine : text.length();
     }
 
     private boolean isImmutableLine(String line) {

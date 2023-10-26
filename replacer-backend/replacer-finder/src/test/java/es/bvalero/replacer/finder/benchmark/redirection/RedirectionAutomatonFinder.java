@@ -15,12 +15,12 @@ class RedirectionAutomatonFinder implements BenchmarkFinder {
 
     private final RunAutomaton automaton;
 
-    RedirectionAutomatonFinder(Set<String> ignorableTemplates) {
-        Set<String> fixedTemplates = ignorableTemplates
+    RedirectionAutomatonFinder(List<String> redirectionWords) {
+        List<String> fixedRedirectionWords = redirectionWords
             .stream()
             .map(s -> s.replace("#", "\\#"))
-            .collect(Collectors.toSet());
-        String alternations = '(' + FinderUtils.joinAlternate(fixedTemplates) + ')';
+            .collect(Collectors.toList());
+        String alternations = '(' + FinderUtils.joinAlternate(fixedRedirectionWords) + ')';
         this.automaton = new RunAutomaton(new RegExp(alternations).toAutomaton());
     }
 

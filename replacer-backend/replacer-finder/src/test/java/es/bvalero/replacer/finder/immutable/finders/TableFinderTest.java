@@ -14,12 +14,14 @@ class TableFinderTest {
     @Test
     void testTableStyles() {
         String text =
-            "\n" +
-            "{| class=\"wikitable\"\n" +
-            "|+ Caption\n" +
-            "|- style=\"bgcolor: salmon\"\n" +
-            "| Example || Example || Example\n" +
-            "|}";
+            """
+
+            {| class="wikitable"
+            |+ Caption
+            |- style="bgcolor: salmon"
+            | Example || Example || Example
+            |}
+            """;
 
         ImmutableFinder tableFinder = new TableFinder();
         List<Immutable> matches = tableFinder.findList(text);

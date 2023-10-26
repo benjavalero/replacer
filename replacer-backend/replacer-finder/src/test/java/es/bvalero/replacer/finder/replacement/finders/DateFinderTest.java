@@ -94,6 +94,7 @@ class DateFinderTest {
             "Feria de Abril ...",
             "Feria de Mayo ... ",
             "0 de septiembre de 2020",
+            "32 de septiembre de 2020",
             "7-Agosto-2019",
             "4 de septiembre, 3150",
             "10, septiembre de 2022",

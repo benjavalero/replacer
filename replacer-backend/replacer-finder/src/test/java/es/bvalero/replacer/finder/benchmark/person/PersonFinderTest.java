@@ -82,4 +82,22 @@ class PersonFinderTest {
         PersonAutomatonAlternateCompleteFinder finder = new PersonAutomatonAlternateCompleteFinder(this.words);
         assertEquals(expected, finder.findMatches(text));
     }
+
+    @Test
+    void testPersonAhoCorasickFinder() {
+        PersonAhoCorasickFinder finder = new PersonAhoCorasickFinder(this.words);
+        assertEquals(expected, finder.findMatches(text));
+    }
+
+    @Test
+    void testPersonAhoCorasickLongestFinder() {
+        PersonAhoCorasickLongestFinder finder = new PersonAhoCorasickLongestFinder(this.words);
+        assertEquals(expected, finder.findMatches(text));
+    }
+
+    @Test
+    void testPersonAhoCorasickWholeLongestFinder() {
+        PersonAhoCorasickWholeLongestFinder finder = new PersonAhoCorasickWholeLongestFinder(this.words);
+        assertEquals(expected, finder.findMatches(text));
+    }
 }

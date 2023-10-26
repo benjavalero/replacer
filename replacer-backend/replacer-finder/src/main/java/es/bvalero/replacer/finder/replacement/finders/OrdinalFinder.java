@@ -3,9 +3,6 @@ package es.bvalero.replacer.finder.replacement.finders;
 import static es.bvalero.replacer.finder.util.FinderUtils.*;
 
 import com.roman.code.ConvertToRoman;
-import dk.brics.automaton.DatatypesAutomatonProvider;
-import dk.brics.automaton.RegExp;
-import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.FinderProperties;
 import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
@@ -13,16 +10,17 @@ import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.Suggestion;
 import es.bvalero.replacer.finder.replacement.ReplacementFinder;
-import es.bvalero.replacer.finder.util.AutomatonMatchFinder;
 import es.bvalero.replacer.finder.util.FinderUtils;
+import es.bvalero.replacer.finder.util.LinearMatchFinder;
+import es.bvalero.replacer.finder.util.LinearMatchResult;
 import java.util.*;
 import java.util.regex.MatchResult;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.annotation.PostConstruct;
 import javax.naming.OperationNotSupportedException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
 /**
@@ -35,16 +33,13 @@ public class OrdinalFinder implements ReplacementFinder {
     private static final String FEMININE_LETTER = "a";
     private static final String PLURAL_LETTER = "s";
 
-    @org.intellij.lang.annotations.RegExp
-    private static final String REGEX_NUMBER = "[1-9][0-9]{0,2}";
-
     @Autowired
     private FinderProperties finderProperties;
 
-    private RunAutomaton ordinalAutomaton;
-
     private static final Set<String> MASCULINE_SUFFIXES = new HashSet<>();
     private static final Set<String> FEMININE_SUFFIXES = new HashSet<>();
+    private static final Set<String> SUFFIXES = new HashSet<>();
+    private static final Set<Character> SUFFIX_ALLOWED_CHARS = Set.of(MASCULINE_ORDINAL, FEMININE_ORDINAL);
 
     @PostConstruct
     public void init() {
@@ -55,44 +50,87 @@ public class OrdinalFinder implements ReplacementFinder {
         FEMININE_SUFFIXES.addAll(finderProperties.getOrdinalSuffixes().getFeminine());
 
         // Merge all singular suffixes
-        Set<String> suffixes = Stream
-            .of(MASCULINE_SUFFIXES, FEMININE_SUFFIXES)
-            .flatMap(Collection::stream)
-            .collect(Collectors.toSet());
+        Stream.of(MASCULINE_SUFFIXES, FEMININE_SUFFIXES).flatMap(Collection::stream).forEach(SUFFIXES::add);
 
         // Add plural forms
-        suffixes.addAll(getPluralSuffixes(suffixes));
-
-        String ordinalRegex = String.format("%s(%s)\\.?", REGEX_NUMBER, FinderUtils.joinAlternate(suffixes));
-        this.ordinalAutomaton =
-            new RunAutomaton(new RegExp(ordinalRegex).toAutomaton(new DatatypesAutomatonProvider()));
+        addPluralSuffixes();
     }
 
-    private Collection<String> getPluralSuffixes(Collection<String> singularSuffixes) {
+    private void addPluralSuffixes() {
         // Return plural forms (if applicable)
-        Set<String> pluralSuffixes = new HashSet<>();
+        Set<String> singularSuffixes = new HashSet<>(SUFFIXES); // Copy
         for (String singularSuffix : singularSuffixes) {
             String lastLetter = singularSuffix.substring(singularSuffix.length() - 1);
             if (lastLetter.equals(MASCULINE_LETTER) || lastLetter.equals(FEMININE_LETTER)) {
-                pluralSuffixes.add(singularSuffix + PLURAL_LETTER);
+                SUFFIXES.add(singularSuffix + PLURAL_LETTER);
             }
         }
-        return pluralSuffixes;
     }
 
     @Override
     public Iterable<MatchResult> findMatchResults(FinderPage page) {
         if (WikipediaLanguage.SPANISH == page.getPageKey().getLang()) {
-            // The linear approach is about 5x better than the automaton
-            // However we use the automaton approach to include more cases
-            return AutomatonMatchFinder.find(page.getContent(), ordinalAutomaton);
+            // The linear approach is about better than the automaton
+            return LinearMatchFinder.find(page, this::findOrdinal);
         } else {
             return List.of();
         }
     }
 
+    @Nullable
+    private MatchResult findOrdinal(FinderPage page, int start) {
+        final String text = page.getContent();
+        while (start >= 0 && start < text.length()) {
+            final LinearMatchResult matchNumber = FinderUtils.findNumberMatch(text, start, false);
+            if (matchNumber == null) {
+                return null;
+            }
+            final int endNumber = matchNumber.end();
+
+            // Validate here the number to skip unnecessary steps
+            if (!validateOrdinalNumber(matchNumber.group())) {
+                start = endNumber;
+                continue;
+            }
+
+            // Find the suffix, right after the number.
+            LinearMatchResult matchSuffix = FinderUtils.findWordAfter(text, endNumber, SUFFIX_ALLOWED_CHARS, true);
+            if (matchSuffix == null) {
+                start = endNumber;
+                continue;
+            } else if (matchSuffix.start() != endNumber || !SUFFIXES.contains(matchSuffix.group())) {
+                start = matchSuffix.end();
+                continue;
+            }
+
+            // Optional dot after the suffix
+            int endOrdinal = matchSuffix.end();
+            if (endOrdinal < text.length() && text.charAt(endOrdinal) == DOT) {
+                matchSuffix = LinearMatchResult.of(matchSuffix.start(), matchSuffix.group() + DOT);
+                endOrdinal += 1;
+            }
+
+            final int startOrdinal = matchNumber.start();
+            final LinearMatchResult matchResult = LinearMatchResult.of(text, startOrdinal, endOrdinal);
+            // Groups: 0 - Number; 1 - Suffix;
+            matchResult.addGroup(matchNumber);
+            matchResult.addGroup(matchSuffix);
+            return matchResult;
+        }
+        return null;
+    }
+
+    private boolean validateOrdinalNumber(String number) {
+        try {
+            return number.length() <= 3 && Integer.parseInt(number) > 0;
+        } catch (NumberFormatException nfe) {
+            return false;
+        }
+    }
+
     @Override
     public boolean validate(MatchResult match, FinderPage page) {
+        // No need to validate the number here as it has already been validated when finding
         return isWordCompleteInText(match.start(), match.group(), page.getContent());
     }
 
@@ -108,17 +146,16 @@ public class OrdinalFinder implements ReplacementFinder {
             .build();
     }
 
-    private List<Suggestion> buildSuggestions(MatchResult match, FinderPage page) {
+    private List<Suggestion> buildSuggestions(MatchResult matchResult, FinderPage page) {
         final List<Suggestion> suggestions = new ArrayList<>();
 
         // Split the number and the suffix
-        final String ordinal = match.group();
-        final int startSuffix = findStartSuffix(ordinal);
-        final int ordinalNumber = Integer.parseInt(ordinal.substring(0, startSuffix));
+        final LinearMatchResult match = (LinearMatchResult) matchResult;
+        final int ordinalNumber = Integer.parseInt(match.group(0));
 
         // We store the pure suffix, removing the final dot or the plural form.
-        String suffixStr = ordinal.substring(startSuffix);
-        if (suffixStr.endsWith(".")) {
+        String suffixStr = matchResult.group(1);
+        if (suffixStr.endsWith(String.valueOf(DOT))) {
             suffixStr = StringUtils.chop(suffixStr);
         }
         final boolean isOrdinalPlural = suffixStr.endsWith(PLURAL_LETTER);
@@ -202,20 +239,6 @@ public class OrdinalFinder implements ReplacementFinder {
         }
 
         return suggestions;
-    }
-
-    private int findStartSuffix(String ordinal) {
-        // To find the suffix start, we assume all characters at the left of the result are digits.
-        int startSuffix = 0;
-        while (startSuffix < ordinal.length()) {
-            if (!Character.isDigit(ordinal.charAt(startSuffix))) {
-                break;
-            } else {
-                startSuffix++;
-            }
-        }
-        assert startSuffix >= 1;
-        return startSuffix;
     }
 
     private char getOrdinalSymbol(String suffix) {

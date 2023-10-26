@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 class CompleteTagRegexIteratedFinder implements BenchmarkFinder {
 
@@ -21,7 +20,7 @@ class CompleteTagRegexIteratedFinder implements BenchmarkFinder {
             tags
                 .stream()
                 .map(tag -> Pattern.compile(String.format("<%s[^>/]*?>.+?</%s>", tag, tag), Pattern.DOTALL))
-                .collect(Collectors.toList())
+                .toList()
         );
     }
 

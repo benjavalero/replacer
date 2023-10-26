@@ -1,5 +1,6 @@
 package es.bvalero.replacer.finder.replacement.finders;
 
+import static es.bvalero.replacer.finder.util.FinderUtils.DOT;
 import static es.bvalero.replacer.finder.util.FinderUtils.ENGLISH_LANGUAGE;
 import static org.apache.commons.lang3.StringUtils.SPACE;
 
@@ -25,7 +26,6 @@ import org.apache.commons.collections4.ListValuedMap;
 import org.apache.commons.collections4.SetValuedMap;
 import org.apache.commons.collections4.multimap.ArrayListValuedHashMap;
 import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
@@ -36,7 +36,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class DateFinder implements ReplacementFinder {
 
-    private static final List<Character> YEAR_DOT = List.of('.');
+    private static final List<Character> YEAR_ALLOWED_CHARS = List.of(DOT);
     private static final int CURRENT_YEAR = LocalDate.now().getYear();
 
     @Autowired
@@ -110,6 +110,7 @@ public class DateFinder implements ReplacementFinder {
                 )
             );
 
+            // There is no performance gain by using more generic regex for these numbers
             String regexDay = "([012]?[0-9]|3[01])";
             String regexYear = "[12]\\.?[0-9]{3}";
             String regexLongDate = String.format(
@@ -209,7 +210,7 @@ public class DateFinder implements ReplacementFinder {
             return null;
         }
 
-        final LinearMatchResult matchWord = FinderUtils.findWordAfter(date, 0, YEAR_DOT);
+        final LinearMatchResult matchWord = FinderUtils.findWordAfter(date, 0, YEAR_ALLOWED_CHARS, false);
         assert matchWord != null;
         final String firstWord = matchWord.group();
         if (isRegexDay(firstWord)) {
@@ -229,7 +230,7 @@ public class DateFinder implements ReplacementFinder {
     }
 
     private boolean isRegexDay(String token) {
-        return StringUtils.isNumeric(token) && token.length() <= 2;
+        return token.length() <= 2 && FinderUtils.isNumeric(token);
     }
 
     private boolean isRegexConnector(String token, WikipediaLanguage lang) {
@@ -247,9 +248,9 @@ public class DateFinder implements ReplacementFinder {
 
     private boolean isRegexYear(String token) {
         if (token.length() == 4) {
-            return StringUtils.isNumeric(token);
+            return FinderUtils.isNumeric(token);
         } else if (token.length() == 5) {
-            return Character.isDigit(token.charAt(0)) && token.charAt(1) == '.';
+            return FinderUtils.isDigit(token.charAt(0)) && token.charAt(1) == '.';
         } else {
             return false;
         }
@@ -286,11 +287,12 @@ public class DateFinder implements ReplacementFinder {
             isDateValid = false;
         }
 
-        matchWord = FinderUtils.findWordAfter(date, matchWord.end(), YEAR_DOT); // Prep After or Year
+        // Prep After or Year
+        matchWord = FinderUtils.findWordAfter(date, matchWord.end(), YEAR_ALLOWED_CHARS, false);
         assert matchWord != null;
         String prepAfter = matchWord.group();
         if (isPreposition(matchWord.group(), lang)) {
-            matchWord = FinderUtils.findWordAfter(date, matchWord.end(), YEAR_DOT);
+            matchWord = FinderUtils.findWordAfter(date, matchWord.end(), YEAR_ALLOWED_CHARS, false);
             assert matchWord != null;
         } else {
             prepAfter = getPrepositionDefault(lang);
@@ -345,11 +347,12 @@ public class DateFinder implements ReplacementFinder {
             isDateValid = false;
         }
 
-        matchWord = FinderUtils.findWordAfter(date, matchWord.end(), YEAR_DOT); // Prep After or Year
+        // Prep After or Year
+        matchWord = FinderUtils.findWordAfter(date, matchWord.end(), YEAR_ALLOWED_CHARS, false);
         assert matchWord != null;
         String prepAfter = matchWord.group();
         if (isPreposition(matchWord.group(), lang)) {
-            matchWord = FinderUtils.findWordAfter(date, matchWord.end(), YEAR_DOT);
+            matchWord = FinderUtils.findWordAfter(date, matchWord.end(), YEAR_ALLOWED_CHARS, false);
             assert matchWord != null;
         } else {
             prepAfter = getPrepositionDefault(lang);
@@ -400,11 +403,12 @@ public class DateFinder implements ReplacementFinder {
             return null;
         }
 
-        matchWord = FinderUtils.findWordAfter(date, matchWord.end(), YEAR_DOT); // Prep After or Year
+        // Prep After or Year
+        matchWord = FinderUtils.findWordAfter(date, matchWord.end(), YEAR_ALLOWED_CHARS, false);
         assert matchWord != null;
         String prepAfter = matchWord.group();
         if (isPreposition(matchWord.group(), lang)) {
-            matchWord = FinderUtils.findWordAfter(date, matchWord.end(), YEAR_DOT);
+            matchWord = FinderUtils.findWordAfter(date, matchWord.end(), YEAR_ALLOWED_CHARS, false);
             assert matchWord != null;
         } else {
             prepAfter = getPrepositionDefault(lang);
@@ -439,7 +443,7 @@ public class DateFinder implements ReplacementFinder {
         final WikipediaLanguage lang = page.getPageKey().getLang();
         final String date = match.group();
 
-        LinearMatchResult matchWord = FinderUtils.findWordAfter(date, 0, YEAR_DOT);
+        LinearMatchResult matchWord = FinderUtils.findWordAfter(date, 0, YEAR_ALLOWED_CHARS, false);
         assert matchWord != null;
         String fixedYear = matchWord.group();
         if (isFixableYear(fixedYear)) {

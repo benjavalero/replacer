@@ -3,7 +3,6 @@ package es.bvalero.replacer.finder.immutable.finders;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import es.bvalero.replacer.FinderProperties;
-import es.bvalero.replacer.FinderPropertiesConfiguration;
 import es.bvalero.replacer.finder.Immutable;
 import java.util.List;
 import java.util.Set;
@@ -23,9 +22,22 @@ class IgnorableSectionFinderTest {
     @Test
     void testIgnorableSection() {
         String ignorableSection =
-            "== Bibliografía de Julio Verne ==\n" + "Ignorable Content\n === Ignorable Subsection\n";
+            """
+            == Bibliografía de Julio Verne ==
+            Ignorable Content
+            === Ignorable Subsection
+            """;
         String text =
-            "Text\n" + "== Section 1 ==\n" + "Content 1\n" + ignorableSection + "== Section 3 ==\n" + "Content 3";
+            """
+            Text
+            == Section 1 ==
+            Content 1
+            """ +
+            ignorableSection +
+            """
+            == Section 3 ==
+            Content 3
+            """;
 
         List<Immutable> matches = ignorableSectionFinder.findList(text);
 

@@ -63,13 +63,14 @@ class FalsePositiveFinder implements ImmutableFinder, PropertyChangeListener {
 
     @Nullable
     private RunAutomaton buildFalsePositivesAutomaton(@Nullable Set<FalsePositive> falsePositives) {
-        // There are hundreds of false positives
-        // The approach is an automaton with all the expressions alternated
-        // It gives the best performance with big difference, but it is not perfect though.
-        // As we check later if the match is a complete word, we could match an incomplete word
-        // that overlaps with the following word which is actually a good match.
-        // For instance, in "ratones aún son", the false positive "es aún" is matched but not valid,
-        // and it makes that the next one "aún son" is not matched.
+        // There are hundreds of false positives. The best approach is, as usual, an automaton.
+        // In this case there are two options: (a) all the expressions alternated or (b) the Aho-Corasick algorithm.
+        // Option (a) is fast, and allows to capture regular expressions. Nevertheless, it captures non-complete
+        // overlapping matches. For instance, in "ratones aún son", the false positive "es aún" is matched but not valid,
+        // as it is not complete, and it makes the next one "aún son" not to be matched.
+        // On the other hand, option (b) is even 3x faster than (a), and fixes the just mentioned overlapping issue,
+        // but it doesn't allow regular expressions.
+        // For the moment, we stay with option (a).
         if (falsePositives != null && !falsePositives.isEmpty()) {
             final List<String> falsePositiveExpressions = falsePositives
                 .stream()

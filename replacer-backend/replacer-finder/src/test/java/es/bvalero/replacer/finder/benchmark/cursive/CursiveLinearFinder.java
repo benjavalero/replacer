@@ -1,5 +1,7 @@
 package es.bvalero.replacer.finder.benchmark.cursive;
 
+import static es.bvalero.replacer.finder.util.FinderUtils.NEW_LINE;
+
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
@@ -23,7 +25,7 @@ class CursiveLinearFinder implements BenchmarkFinder {
                 int numQuotes = findNumQuotes(text, startCursive);
                 int endQuotes = findEndQuotes(text, startCursive + numQuotes, numQuotes);
                 if (endQuotes >= 0) {
-                    return LinearMatchResult.of(startCursive, text.substring(startCursive, endQuotes));
+                    return LinearMatchResult.of(text, startCursive, endQuotes);
                 } else {
                     start = startCursive + numQuotes;
                 }
@@ -56,7 +58,7 @@ class CursiveLinearFinder implements BenchmarkFinder {
         int i = start;
         for (; i < text.length(); i++) {
             char ch = text.charAt(i);
-            if (ch == '\n') {
+            if (ch == NEW_LINE) {
                 return i + 1; // To include the linebreak in the benchmark results
             } else if (ch == '\'') {
                 tagBuilder.append(ch);

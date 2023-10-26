@@ -62,6 +62,7 @@ public class FinderProperties {
     }
 
     // Ignore
+    private List<String> redirectionWords; // A list to process them with the common case first
     private Set<String> ignorableTemplates;
     private Set<String> ignorableSections;
     private Set<String> completeTags;

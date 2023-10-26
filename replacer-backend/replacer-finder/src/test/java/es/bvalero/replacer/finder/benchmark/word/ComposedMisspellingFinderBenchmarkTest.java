@@ -51,20 +51,27 @@ class ComposedMisspellingFinderBenchmarkTest extends BaseFinderBenchmark {
         List<BenchmarkFinder> finders = new ArrayList<>();
 
         // Loop over all the misspelling expressions and find them in the text with a regex
-        finders.add(new WordRegexFinder(words));
+        // finders.add(new WordRegexFinder(words)); // Very Short
         // finders.add(new WordRegexCompleteFinder(words)); // Long
         // finders.add(new WordRegexCompleteSeparatorsFinder(words)); // Very Long
-        finders.add(new WordAutomatonFinder(words));
-        finders.add(new WordLinearFinder(words));
+        // finders.add(new WordAutomatonFinder(words)); // Short
+        // finders.add(new WordLinearFinder(words)); // Very Very Short
 
         // Build an alternation with all the misspelling expressions and find the regex in the text
         // finders.add(new WordRegexAlternateFinder(words)); // Medium
-        finders.add(new WordRegexAlternateCompleteFinder(words));
-        finders.add(new WordRegexAlternateCompleteSeparatorsFinder(words));
+        // finders.add(new WordRegexAlternateCompleteFinder(words)); // Short
+        // finders.add(new WordRegexAlternateCompleteSeparatorsFinder(words)); // Short
         finders.add(new WordAutomatonAlternateFinder(words));
 
+        // Use the Aho-Corasick algorithm which eventually creates an automaton
+        // The whole-word finder cannot be used here as it doesn't work for expressions
+        finders.add(new WordAhoCorasickFinder(words));
+        finders.add(new WordAhoCorasickLongestFinder(words));
+        finders.add(new WordAhoCorasickWholeLongestFinder(words));
+        // NOTE: These finders support a case-insensitive flag but the performance is reduced significantly
+
         List<Finder<?>> benchmarkFinders = new ArrayList<>(finders);
-        runBenchmark(benchmarkFinders, WARM_UP / 10, ITERATIONS / 10, fileName);
+        runBenchmark(benchmarkFinders, fileName);
 
         assertTrue(true);
     }

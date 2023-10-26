@@ -26,6 +26,7 @@ class CursiveFinderBenchmarkTest extends BaseFinderBenchmark {
         finders.add(new CursiveRegexLookFinder());
         finders.add(new CursiveAutomatonFinder());
         finders.add(new CursiveLinearFinder());
+        finders.add(new CursiveFinalFinder());
 
         List<Finder<?>> benchmarkFinders = new ArrayList<>(finders);
         runBenchmark(benchmarkFinders, fileName);

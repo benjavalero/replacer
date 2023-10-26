@@ -62,7 +62,7 @@ class XmlTagFinder extends ImmutableCheckedFinder {
                 continue;
             }
 
-            return LinearMatchResult.of(startTag, text.substring(startTag, endTag));
+            return LinearMatchResult.of(text, startTag, endTag);
         }
         return null;
     }

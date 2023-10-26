@@ -75,4 +75,13 @@ class CompleteTagFinderTest {
             finder.findMatches(text).stream().map(BenchmarkResult::getText).collect(Collectors.toSet())
         );
     }
+
+    @Test
+    void testCompleteTagFinalFinder() {
+        BenchmarkFinder finder = new CompleteTagFinalFinder(completeTags);
+        assertEquals(
+            expected,
+            finder.findMatches(text).stream().map(BenchmarkResult::getText).collect(Collectors.toSet())
+        );
+    }
 }

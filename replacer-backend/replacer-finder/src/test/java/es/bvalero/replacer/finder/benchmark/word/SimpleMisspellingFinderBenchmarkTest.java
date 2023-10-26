@@ -67,6 +67,13 @@ class SimpleMisspellingFinderBenchmarkTest extends BaseFinderBenchmark {
         finders.add(new WordAutomatonAllFinder(words));
         finders.add(new WordLinearAllFinder(words));
 
+        // Use the Aho-Corasick algorithm which eventually creates an automaton
+        finders.add(new WordAhoCorasickFinder(words));
+        finders.add(new WordAhoCorasickLongestFinder(words));
+        finders.add(new WordAhoCorasickWholeFinder(words));
+        finders.add(new WordAhoCorasickWholeLongestFinder(words));
+        // NOTE: These finders support a case-insensitive flag but the performance is reduced significantly
+
         List<Finder<?>> benchmarkFinders = new ArrayList<>(finders);
         runBenchmark(benchmarkFinders, fileName);
 

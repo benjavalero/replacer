@@ -1,5 +1,7 @@
 package es.bvalero.replacer.finder.immutable.finders;
 
+import static es.bvalero.replacer.finder.util.FinderUtils.NEW_LINE;
+
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.FinderPriority;
 import es.bvalero.replacer.finder.immutable.ImmutableCheckedFinder;
@@ -19,7 +21,6 @@ class CursiveFinder extends ImmutableCheckedFinder {
 
     private static final String START_CURSIVE = "''";
     private static final char QUOTE = '\'';
-    private static final char NEW_LINE = '\n';
 
     @Override
     public FinderPriority getPriority() {
@@ -33,6 +34,8 @@ class CursiveFinder extends ImmutableCheckedFinder {
 
     @Override
     public Iterable<MatchResult> findMatchResults(FinderPage page) {
+        // The best option is the linear approach, in order to check truncated or empty cases,
+        // which lead to complicated regex. In comparison, the automaton approach is 10x slower.
         return LinearMatchFinder.find(page, this::findCursive);
     }
 
@@ -62,7 +65,7 @@ class CursiveFinder extends ImmutableCheckedFinder {
                 continue;
             }
 
-            return LinearMatchResult.of(startCursive, text.substring(startCursive, endCursive));
+            return LinearMatchResult.of(text, startCursive, endCursive);
         }
         return null;
     }

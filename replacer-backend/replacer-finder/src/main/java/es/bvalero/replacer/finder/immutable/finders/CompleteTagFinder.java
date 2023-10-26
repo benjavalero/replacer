@@ -38,7 +38,12 @@ class CompleteTagFinder extends ImmutableCheckedFinder {
 
     @Override
     public Iterable<MatchResult> findMatchResults(FinderPage page) {
+        // To match the content of the tag with a regex we cannot use a negated class,
+        // as we want to capture other tags inside.
+        // The alternative is using the classic .+? approach (the lazy modifier is needed),
+        // but this modifier is only supported by the Regex matcher, which is quite slower.
         // Even with more than 10 tags, the faster approach with difference is the linear search in one-pass.
+        // There is also another approach to find the opening tag with an automaton, but it is 10x slower anyway.
         return LinearMatchFinder.find(page, this::findCompleteTag);
     }
 
@@ -84,7 +89,7 @@ class CompleteTagFinder extends ImmutableCheckedFinder {
                 continue;
             }
 
-            return LinearMatchResult.of(startCompleteTag, text.substring(startCompleteTag, endCompleteTag));
+            return LinearMatchResult.of(text, startCompleteTag, endCompleteTag);
         }
         return null;
     }

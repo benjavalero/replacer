@@ -55,8 +55,8 @@ class PersonSurnameFinder implements ImmutableFinder {
     @Override
     public Iterable<MatchResult> findMatchResults(FinderPage page) {
         // The list will keep on growing
-        // The best approach is to iterate the list of words and find them in the text, but we choose
-        // the automaton because it allows regular expressions and the performance is quite good too.
+        // The best approach is to find the whole list of words with the Aho-Corasick algorithm (2x faster),
+        // but we choose the automaton because it allows regular expressions and the performance is quite good too.
         return AutomatonMatchFinder.find(page.getContent(), this.automaton);
     }
 

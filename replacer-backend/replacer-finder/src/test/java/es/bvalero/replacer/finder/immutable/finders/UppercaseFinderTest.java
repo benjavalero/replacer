@@ -53,13 +53,40 @@ class UppercaseFinderTest {
             "{{ param=Febrero }}", // Parameter value
             "{{ param = Febrero }}", // Parameter value
             "{{param=[[Febrero]] de [[1980]]}}", // Parameter value with link
-            "{|\n" + "|+ Febrero\n" + "|}", // Table row properties
-            "{|\n" + "|-\n" + "! Febrero !! Junio\n" + "|}", // Table header
-            "{|\n" + "|-\n" + "! Junio !! Febrero\n" + "|}", // Table header
-            "{|\n" + "|-\n" + "| Febrero || Junio\n" + "|}", // Table cell
-            "{|\n" + "|-\n" + "| Junio || Febrero\n" + "|}", // Table cell
-            "{|\n" + "|-\n" + "| align=\"center\" | Febrero\n" + "|}", // Table cell with style
-            "{|\n" + "|-\n" + "| [[Febrero]] || Texto\n" + "|}", // Table cell with link
+            """
+            {|
+            |+ Febrero
+            |}""", // Table row properties
+            """
+            {|
+            |-
+            ! Febrero !! Junio
+            |}""", // Table header
+            """
+            {|
+            |-
+            ! Junio !! Febrero
+            |}""", // Table header
+            """
+            {|
+            |-
+            | Febrero || Junio
+            |}""", // Table cell
+            """
+            {|
+            |-
+            | Junio || Febrero
+            |}""", // Table cell
+            """
+            {|
+            |-
+            | align="center" | Febrero
+            |}""", // Table cell with style
+            """
+            {|
+            |-
+            | [[Febrero]] || Texto
+            |}""", // Table cell with link
             "<table><tr><td>Febrero</td></tr></table>", // HTML cell
             "=== Febrero ===", // Header
             "=== [[Febrero]] ===", // Header with link

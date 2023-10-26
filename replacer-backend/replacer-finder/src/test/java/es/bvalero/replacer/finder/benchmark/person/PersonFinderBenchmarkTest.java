@@ -41,6 +41,14 @@ class PersonFinderBenchmarkTest extends BaseFinderBenchmark {
         finders.add(new PersonAutomatonAlternateFinder(personNames));
         // finders.add(new PersonRegexAlternateCompleteFinder(personNames)); // Very long
         finders.add(new PersonAutomatonAlternateCompleteFinder(personNames));
+        finders.add(new PersonAhoCorasickFinder(personNames));
+
+        // Use the Aho-Corasick algorithm which eventually creates an automaton
+        // The whole-word finder cannot be used here as it doesn't work for expressions
+        finders.add(new PersonAhoCorasickFinder(personNames));
+        finders.add(new PersonAhoCorasickLongestFinder(personNames));
+        finders.add(new PersonAhoCorasickWholeLongestFinder(personNames)); // About 2x faster than the best automaton
+        // NOTE: These finders support a case-insensitive flag but the performance is reduced significantly
 
         List<Finder<?>> benchmarkFinders = new ArrayList<>(finders);
         runBenchmark(benchmarkFinders, fileName);

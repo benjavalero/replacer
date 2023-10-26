@@ -81,4 +81,22 @@ class SurnameFinderTest {
         SurnameAutomatonAlternateCompleteFinder finder = new SurnameAutomatonAlternateCompleteFinder(this.words);
         assertEquals(expected, finder.findMatches(text));
     }
+
+    @Test
+    void testSurnameAhoCorasickFinder() {
+        SurnameAhoCorasickFinder finder = new SurnameAhoCorasickFinder(this.words);
+        assertEquals(expected, finder.findMatches(text));
+    }
+
+    @Test
+    void testSurnameAhoCorasickLongestFinder() {
+        SurnameAhoCorasickLongestFinder finder = new SurnameAhoCorasickLongestFinder(this.words);
+        assertEquals(expected, finder.findMatches(text));
+    }
+
+    @Test
+    void testSurnameAhoCorasickWholeLongestFinder() {
+        SurnameAhoCorasickWholeLongestFinder finder = new SurnameAhoCorasickWholeLongestFinder(this.words);
+        assertEquals(expected, finder.findMatches(text));
+    }
 }

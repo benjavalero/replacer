@@ -35,10 +35,7 @@ class CompleteTagLinearFinder implements BenchmarkFinder {
                     if (endOpenTag >= 0) {
                         int endCompleteTag = findEndCompleteTag(text, endOpenTag + 1, tag);
                         if (endCompleteTag >= 0) {
-                            return LinearMatchResult.of(
-                                startCompleteTag,
-                                text.substring(startCompleteTag, endCompleteTag)
-                            );
+                            return LinearMatchResult.of(text, startCompleteTag, endCompleteTag);
                         } else {
                             start = endOpenTag + 1;
                         }
