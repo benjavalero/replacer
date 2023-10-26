@@ -32,12 +32,8 @@ public class LinearMatchFinder {
 
         @Override
         public boolean hasNext() {
-            MatchResult result = null;
-            try {
-                result = this.finder.findResult(this.page, this.start);
-            } catch (Exception e) {
-                LOGGER.error("Error finding match result: {} - {}", this.start, this.page.getContent(), e);
-            }
+            // This may throw an exception, but it is eventually captured by the indexer.
+            MatchResult result = this.finder.findResult(this.page, this.start);
             if (result == null) {
                 this.next = null;
                 this.start = Integer.MAX_VALUE;
