@@ -55,7 +55,7 @@ public class CoordinatesFinder implements ReplacementFinder {
         while (start >= 0 && start < text.length()) {
             // Degrees
             LinearMatchResult matchDegrees = FinderUtils.findNumberMatch(text, start, false);
-            if (matchDegrees == null) {
+            if (matchDegrees == null || matchDegrees.end() == text.length()) {
                 // No number to continue searching
                 return null;
             }
@@ -87,7 +87,8 @@ public class CoordinatesFinder implements ReplacementFinder {
             }
             if (
                 !isMinuteNumber(matchMinutes.group()) ||
-                !FinderUtils.isBlankOrNonBreakingSpace(text.substring(endDegrees + 1, matchMinutes.start()))
+                !FinderUtils.isBlankOrNonBreakingSpace(text.substring(endDegrees + 1, matchMinutes.start())) ||
+                matchMinutes.end() >= text.length()
             ) {
                 start = matchDegrees.end();
                 continue;
@@ -191,11 +192,10 @@ public class CoordinatesFinder implements ReplacementFinder {
 
     @Nullable
     private String findDoublePrime(String str) {
-        assert str.length() <= 2;
         // Check first char and then check both chars
-        if (DOUBLE_PRIME_CHARS.contains(str.charAt(0))) {
+        if (!str.isEmpty() && DOUBLE_PRIME_CHARS.contains(str.charAt(0))) {
             return str.substring(0, 1);
-        } else if (isPrimeChar(str.charAt(0)) && isPrimeChar(str.charAt(1))) {
+        } else if (str.length() > 1 && isPrimeChar(str.charAt(0)) && isPrimeChar(str.charAt(1))) {
             return str;
         } else {
             return null;
