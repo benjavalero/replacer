@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import es.bvalero.replacer.FinderProperties;
 import es.bvalero.replacer.finder.Immutable;
 import java.util.List;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -31,16 +30,16 @@ class PersonNameFinderTest {
             "José Julio Domingo, Julio",
         }
     )
-    void testFindPersonNames(String text, String noun) {
+    void testPersonNames(String text, String noun) {
         List<Immutable> matches = personNameFinder.findList(text);
 
         assertEquals(1, matches.size());
-        Assertions.assertEquals(noun, matches.get(0).getText());
+        assertEquals(noun, matches.get(0).getText());
     }
 
     @ParameterizedTest
     @ValueSource(strings = { "En julio de 2000", "En Julio de 2000" })
-    void testFindPersonNamesNonValid(String text) {
+    void testPersonNamesNonValid(String text) {
         List<Immutable> matches = personNameFinder.findList(text);
 
         assertTrue(matches.isEmpty());

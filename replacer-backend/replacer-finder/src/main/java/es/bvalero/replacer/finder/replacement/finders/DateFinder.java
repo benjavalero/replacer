@@ -225,7 +225,7 @@ public class DateFinder implements ReplacementFinder {
         if (isRegexYear(firstWord)) {
             return convertYearMonthDay(match, page);
         } else {
-            return null;
+            throw new IllegalStateException("Unknown date first word: " + firstWord);
         }
     }
 
@@ -252,7 +252,7 @@ public class DateFinder implements ReplacementFinder {
         } else if (token.length() == 5) {
             return FinderUtils.isDigit(token.charAt(0)) && token.charAt(1) == '.';
         } else {
-            return false;
+            throw new IllegalStateException();
         }
     }
 
@@ -539,7 +539,7 @@ public class DateFinder implements ReplacementFinder {
         try {
             return Integer.parseInt(year) > CURRENT_YEAR;
         } catch (NumberFormatException nfe) {
-            return false;
+            throw new IllegalStateException();
         }
     }
 

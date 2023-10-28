@@ -100,7 +100,7 @@ class TemplateFinder implements ImmutableFinder {
             END_TEMPLATE,
             this::isNotFakeTemplate
         )) {
-            immutables.addAll(findImmutables(page, template));
+            immutables.addAll(findImmutables(template, page));
         }
         return immutables;
     }
@@ -113,24 +113,16 @@ class TemplateFinder implements ImmutableFinder {
         return Character.isLetterOrDigit(nextChar);
     }
 
-    private List<MatchResult> findImmutables(FinderPage page, LinearMatchResult template) {
+    private List<MatchResult> findImmutables(LinearMatchResult template, FinderPage page) {
         // Let's check first the easiest cases
-        final WikipediaLanguage lang = page.getPageKey().getLang();
-
         final String templateContent = getTemplateContent(template.group());
-        final int startTemplateContent = template.start() + START_TEMPLATE.length();
 
         // Special case "{{!}}" ==> no immutable
         if (!validateSpecialCharacters(templateContent)) {
             return List.of();
         }
 
-        // Link title depends on the link pipe
-        final int posContentPipe = templateContent.indexOf(PIPE);
-        final String templateTitle = posContentPipe >= 0
-            ? templateContent.substring(0, posContentPipe)
-            : templateContent;
-        final String templateName = findTemplateName(templateTitle); // In case it's followed by a colon
+        final String templateName = findTemplateName(templateContent);
         final String normalizedTemplateName = normalizeTemplateName(templateName);
 
         // If the whole page is to be ignored the return an immutable of the complete page content
@@ -147,9 +139,62 @@ class TemplateFinder implements ImmutableFinder {
         // Add the template name
         immutables.add(LinearMatchResult.of(template.start() + START_TEMPLATE.length(), templateName));
 
+        // Add the immutables from the parameters and/or values
+        immutables.addAll(findParameterImmutables(template, templateName, templateContent, page));
+
+        return immutables;
+    }
+
+    private String getTemplateContent(String template) {
+        return template.substring(START_TEMPLATE.length(), template.length() - END_TEMPLATE.length());
+    }
+
+    private boolean validateSpecialCharacters(String templateContent) {
+        // Check that not all the characters are an escaped-pipe. See: https://en.wikipedia.org/wiki/Template:!!
+        for (int i = 0; i < templateContent.length(); i++) {
+            if (templateContent.charAt(i) != '!') {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private String findTemplateName(String templateContent) {
+        final int startPipe = templateContent.indexOf(PIPE);
+        final String templateTitle = startPipe >= 0 ? templateContent.substring(0, startPipe) : templateContent;
+        final int startColon = templateTitle.indexOf(COLON);
+        return startColon >= 0 ? templateTitle.substring(0, startColon) : templateTitle;
+    }
+
+    private String normalizeTemplateName(String templateName) {
+        return FinderUtils.toLowerCase(templateName.trim()).replace('_', ' ');
+    }
+
+    private boolean ignoreCompletePage(String templateName) {
+        return this.ignorableTemplates.contains(templateName);
+    }
+
+    private boolean ignoreCompleteTemplate(String templateName) {
+        return (
+            this.templateNames.contains(templateName) ||
+            this.templateNamesPartial.stream().anyMatch(templateName::startsWith)
+        );
+    }
+
+    private List<MatchResult> findParameterImmutables(
+        LinearMatchResult template,
+        String templateName,
+        String templateContent,
+        FinderPage page
+    ) {
+        final List<MatchResult> immutables = new ArrayList<>();
+
+        final WikipediaLanguage lang = page.getPageKey().getLang();
+        final int startTemplateContent = template.start() + START_TEMPLATE.length();
+
         // Let's iterate over the template parameters (if any)
         // Note: we iterate over the template content, so we have to take this into account for the match position.
-        int index = posContentPipe;
+        int index = templateContent.indexOf(PIPE);
         while (index >= 0 && index < templateContent.length()) {
             final int startParameterPipe = templateContent.indexOf(PIPE, index); // Including the pipe
             if (template.containsNested(startTemplateContent + startParameterPipe)) {
@@ -217,70 +262,6 @@ class TemplateFinder implements ImmutableFinder {
         return immutables;
     }
 
-    private String getTemplateContent(String template) {
-        return template.substring(START_TEMPLATE.length(), template.length() - END_TEMPLATE.length());
-    }
-
-    private boolean validateSpecialCharacters(String templateContent) {
-        // Check that not all the characters are an escaped-pipe. See: https://en.wikipedia.org/wiki/Template:!!
-        for (int i = 0; i < templateContent.length(); i++) {
-            if (templateContent.charAt(i) != '!') {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private String findTemplateName(String templateTitle) {
-        String templateName = templateTitle;
-        // Check in case the template name is followed by a colon
-        final int posColon = templateName.indexOf(COLON);
-        if (posColon >= 0) {
-            templateName = templateName.substring(0, posColon);
-        }
-        return templateName;
-    }
-
-    private String normalizeTemplateName(String templateName) {
-        return FinderUtils.toLowerCase(templateName.trim()).replace('_', ' ');
-    }
-
-    private boolean ignoreCompletePage(String templateName) {
-        return this.ignorableTemplates.contains(templateName);
-    }
-
-    private boolean ignoreCompleteTemplate(String templateName) {
-        return (
-            this.templateNames.contains(templateName) ||
-            this.templateNamesPartial.stream().anyMatch(templateName::startsWith)
-        );
-    }
-
-    private boolean matchesFile(String text) {
-        final String value = text.trim();
-        final int dot = value.lastIndexOf('.');
-        if (dot >= 0) {
-            final String extension = value.substring(dot + 1);
-            return extension.length() >= 2 && extension.length() <= 4 && StringUtils.isAlpha(extension);
-        } else {
-            return false;
-        }
-    }
-
-    @Nullable
-    private MatchResult findFirstWordUpperCase(String text, WikipediaLanguage lang) {
-        final MatchResult firstWord = FinderUtils.findWordAfter(text, 0);
-        if (firstWord != null && matchesUppercase(lang, firstWord.group())) {
-            return firstWord;
-        } else {
-            return null;
-        }
-    }
-
-    private boolean matchesUppercase(WikipediaLanguage lang, String text) {
-        return uppercaseFinder.getUppercaseMap().containsMapping(lang, text);
-    }
-
     private String trimValue(String value) {
         // If the value is followed by a reference, comment or similar we ignore it
         int posLessThan = value.indexOf('<');
@@ -309,5 +290,30 @@ class TemplateFinder implements ImmutableFinder {
             this.templateParamPairs.containsMapping(FinderUtils.toLowerCase(templateName.trim()), trimmedKey) ||
             matchesFile(value)
         );
+    }
+
+    private boolean matchesFile(String text) {
+        final String value = text.trim();
+        final int dot = value.lastIndexOf('.');
+        if (dot >= 0) {
+            final String extension = value.substring(dot + 1);
+            return extension.length() >= 2 && extension.length() <= 4 && StringUtils.isAlpha(extension);
+        } else {
+            return false;
+        }
+    }
+
+    @Nullable
+    private MatchResult findFirstWordUpperCase(String text, WikipediaLanguage lang) {
+        final MatchResult firstWord = FinderUtils.findWordAfter(text, 0);
+        if (firstWord != null && matchesUppercase(lang, firstWord.group())) {
+            return firstWord;
+        } else {
+            return null;
+        }
+    }
+
+    private boolean matchesUppercase(WikipediaLanguage lang, String text) {
+        return uppercaseFinder.getUppercaseMap().containsMapping(lang, text);
     }
 }

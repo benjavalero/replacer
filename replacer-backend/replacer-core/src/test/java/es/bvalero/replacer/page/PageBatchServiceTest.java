@@ -1,5 +1,6 @@
 package es.bvalero.replacer.page;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
@@ -7,7 +8,6 @@ import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -56,7 +56,7 @@ class PageBatchServiceTest {
         assertTrue(pageDb.isEmpty());
 
         pageDb = pageBatchService.findPageByKey(PageKey.of(WikipediaLanguage.getDefault(), 1001));
-        Assertions.assertEquals(page2, pageDb.orElse(null));
+        assertEquals(page2, pageDb.orElse(null));
 
         // Check that the page 2 has been cleaned
         verify(pageRepository).removeByKey(anyCollection());
@@ -71,6 +71,6 @@ class PageBatchServiceTest {
         when(pageRepository.findPagesByIdInterval(WikipediaLanguage.getDefault(), 1, 2000)).thenReturn(List.of(page));
 
         Optional<IndexedPage> pageDb = pageBatchService.findPageByKey(PageKey.of(WikipediaLanguage.getDefault(), 1001));
-        Assertions.assertEquals(page, pageDb.orElse(null));
+        assertEquals(page, pageDb.orElse(null));
     }
 }

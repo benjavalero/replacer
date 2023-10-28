@@ -31,7 +31,7 @@ class SmallTagUnnecessaryFinderTest {
             "<ref name=\"x\"><small>Text</small></ref>, <ref name=\"x\">Text</ref>",
         }
     )
-    void testSmallTagUnnecessaryFinder(String text, String fix) {
+    void testSmallTagUnnecessary(String text, String fix) {
         List<Cosmetic> cosmetics = smallTagUnnecessaryFinder.findList(text);
 
         assertEquals(1, cosmetics.size());

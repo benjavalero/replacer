@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import es.bvalero.replacer.FinderProperties;
 import es.bvalero.replacer.finder.Immutable;
 import java.util.List;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -19,7 +18,7 @@ class RedirectionFinderTest {
     private RedirectionFinder redirectionFinder;
 
     @Test
-    void testFindIgnorableTemplate() {
+    void testRedirection() {
         assertFalse(redirectionFinder.findList("xxx #REDIRECCIÓN [[A]] yyy").isEmpty());
         assertFalse(redirectionFinder.findList("xxx #redirección [[A]] yyy").isEmpty());
         assertFalse(redirectionFinder.findList("xxx #REDIRECT [[A]] yyy").isEmpty());
@@ -30,7 +29,7 @@ class RedirectionFinderTest {
         String text = "xxx #REDIRECCIÓN [[A]] yyy";
         List<Immutable> results = redirectionFinder.findList(text);
         assertFalse(results.isEmpty());
-        Assertions.assertEquals(0, results.get(0).getStart());
-        Assertions.assertEquals(text, results.get(0).getText());
+        assertEquals(0, results.get(0).getStart());
+        assertEquals(text, results.get(0).getText());
     }
 }

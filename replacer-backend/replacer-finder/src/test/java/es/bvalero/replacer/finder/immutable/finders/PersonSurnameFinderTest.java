@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import es.bvalero.replacer.FinderProperties;
 import es.bvalero.replacer.finder.Immutable;
 import java.util.List;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -30,16 +29,16 @@ class PersonSurnameFinderTest {
             "Juegos Olímpicos de Verano, de Verano",
         }
     )
-    void testFindPersonSurnames(String text, String noun) {
+    void testPersonSurnames(String text, String noun) {
         List<Immutable> matches = personSurnameFinder.findList(text);
 
         assertEquals(1, matches.size());
-        Assertions.assertEquals(noun, matches.get(0).getText());
+        assertEquals(noun, matches.get(0).getText());
     }
 
     @ParameterizedTest
     @ValueSource(strings = { "A varios Records", "Juegos Olímpicos de verano", "A Juan Pintor" })
-    void testFindPersonSurnamesNonValid(String text) {
+    void testPersonSurnamesNonValid(String text) {
         List<Immutable> matches = personSurnameFinder.findList(text);
 
         assertTrue(matches.isEmpty());
@@ -47,19 +46,19 @@ class PersonSurnameFinderTest {
 
     @ParameterizedTest
     @CsvSource(value = { "Revolución de Octubre, de Octubre", "Estadio 12 de Octubre, 12 de Octubre" })
-    void testFindMonthsAsSurnames(String text, String noun) {
+    void testMonthsAsSurnames(String text, String noun) {
         List<Immutable> matches = personSurnameFinder.findList(text);
 
         assertEquals(1, matches.size());
-        Assertions.assertEquals(noun, matches.get(0).getText());
+        assertEquals(noun, matches.get(0).getText());
     }
 
     @ParameterizedTest
     @ValueSource(strings = { "Uzbekistan Airlines" })
-    void testFindPersonSurnamesWithNames(String text) {
+    void testPersonSurnamesWithNames(String text) {
         List<Immutable> matches = personSurnameFinder.findList(text);
 
         assertEquals(1, matches.size());
-        Assertions.assertEquals(text, matches.get(0).getText());
+        assertEquals(text, matches.get(0).getText());
     }
 }

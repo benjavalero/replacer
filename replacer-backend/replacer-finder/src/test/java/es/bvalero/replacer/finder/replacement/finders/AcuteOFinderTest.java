@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.finder.Replacement;
 import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -16,7 +17,12 @@ class AcuteOFinderTest {
     // The CSV source doesn't allow the value to be non-constant
     // even if we take the subtype from the replacement type constants
 
-    private final AcuteOFinder acuteOFinder = new AcuteOFinder();
+    private AcuteOFinder acuteOFinder;
+
+    @BeforeEach
+    public void setUp() {
+        acuteOFinder = new AcuteOFinder();
+    }
 
     @ParameterizedTest
     @CsvSource(
@@ -52,6 +58,7 @@ class AcuteOFinderTest {
     @ValueSource(strings = { "1 o 2", "1 ó.", "1, ó 2", "1  ó  2" })
     void testAcuteONotValid(String text) {
         List<Replacement> replacements = acuteOFinder.findList(text);
+
         assertTrue(replacements.isEmpty());
     }
 
@@ -60,6 +67,7 @@ class AcuteOFinderTest {
         final String text = "En dós ó ";
 
         List<Replacement> replacements = acuteOFinder.findList(text);
+
         assertTrue(replacements.isEmpty());
     }
 }

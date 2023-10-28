@@ -92,8 +92,11 @@ public class DegreeFinder implements ReplacementFinder {
         }
 
         // Find the degree letter. We admit a whitespace between.
+        if (startSymbol + 1 >= text.length()) {
+            return null;
+        }
         final int startLetter = text.charAt(startSymbol + 1) == SPACE ? startSymbol + 2 : startSymbol + 1;
-        if (!DEGREE_LETTERS.contains(text.charAt(startLetter))) {
+        if (startLetter >= text.length() || !DEGREE_LETTERS.contains(text.charAt(startLetter))) {
             return null;
         }
 

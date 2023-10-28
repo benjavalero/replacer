@@ -40,7 +40,7 @@ class OrdinalFinderTest {
             "123º, 123.º",
         }
     )
-    void testOrdinalWithoutDot(String ordinal, String expected) {
+    void testOrdinal(String ordinal, String expected) {
         List<Replacement> replacements = ordinalFinder.findList(ordinal);
 
         assertEquals(1, replacements.size());
@@ -60,7 +60,15 @@ class OrdinalFinderTest {
 
     @ParameterizedTest
     @ValueSource(strings = { "1234º", "0º" })
-    void testOrdinalTooLong(String ordinal) {
+    void testOrdinalNumberNotValid(String ordinal) {
+        List<Replacement> replacements = ordinalFinder.findList(ordinal);
+
+        assertTrue(replacements.isEmpty());
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = { "El 12" })
+    void testOrdinalTruncated(String ordinal) {
         List<Replacement> replacements = ordinalFinder.findList(ordinal);
 
         assertTrue(replacements.isEmpty());

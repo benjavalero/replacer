@@ -4,13 +4,20 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import es.bvalero.replacer.finder.Immutable;
-import es.bvalero.replacer.finder.immutable.ImmutableFinder;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class XmlTagFinderTest {
+
+    private XmlTagFinder xmlTagFinder;
+
+    @BeforeEach
+    public void setUp() {
+        xmlTagFinder = new XmlTagFinder();
+    }
 
     @Test
     void testXmlTagFinder() {
@@ -19,7 +26,6 @@ class XmlTagFinderTest {
         String tag3 = "<br />";
         String text = String.format("%s %s %s", tag1, tag2, tag3);
 
-        ImmutableFinder xmlTagFinder = new XmlTagFinder();
         List<Immutable> matches = xmlTagFinder.findList(text);
 
         Set<String> expected = Set.of(tag1, tag2, tag3);
@@ -28,31 +34,28 @@ class XmlTagFinderTest {
     }
 
     @Test
-    void testRegexCommentNotMatched() {
+    void testCommentNotMatched() {
         String comment = "<!-- Esto es un comentario -->";
         String text = "xxx " + comment + " zzz";
 
-        ImmutableFinder xmlTagFinder = new XmlTagFinder();
         List<Immutable> matches = xmlTagFinder.findList(text);
 
         assertTrue(matches.isEmpty());
     }
 
     @Test
-    void testTagNotClosed() {
+    void testXmlTagNotClosed() {
         String text = "A not closed tag <br ";
 
-        ImmutableFinder xmlTagFinder = new XmlTagFinder();
         List<Immutable> matches = xmlTagFinder.findList(text);
 
         assertTrue(matches.isEmpty());
     }
 
     @Test
-    void testTagWithForbiddenChars() {
+    void testXmlTagWithForbiddenChars() {
         String text = "A tag with forbidden chars <span #>";
 
-        ImmutableFinder xmlTagFinder = new XmlTagFinder();
         List<Immutable> matches = xmlTagFinder.findList(text);
 
         assertTrue(matches.isEmpty());

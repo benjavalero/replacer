@@ -3,7 +3,6 @@ package es.bvalero.replacer.finder.immutable.finders;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.FinderPriority;
 import es.bvalero.replacer.finder.immutable.ImmutableCheckedFinder;
-import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
 import es.bvalero.replacer.finder.util.LinearMatchResult;
 import java.util.regex.MatchResult;
@@ -41,24 +40,24 @@ class CommentFinder extends ImmutableCheckedFinder {
     @Nullable
     private MatchResult findComment(FinderPage page, int start) {
         final String text = page.getContent();
-        while (start >= 0 && start < text.length()) {
-            final int startComment = findStartComment(text, start);
-            if (startComment < 0) {
-                return null;
-            }
-
-            final int startCommentText = startComment + START_COMMENT.length();
-            final int endComment = findEndComment(text, startCommentText);
-            if (endComment < 0) {
-                // Comment not closed. Trace warning and continue.
-                FinderUtils.logFinderResult(page, startComment, startCommentText, "Comment not closed");
-                start = startCommentText;
-                continue;
-            }
-
-            return LinearMatchResult.of(text, startComment, endComment);
+        assert start >= 0;
+        if (start >= text.length()) {
+            return null;
         }
-        return null;
+
+        final int startComment = findStartComment(text, start);
+        if (startComment < 0) {
+            return null;
+        }
+
+        final int startCommentText = startComment + START_COMMENT.length();
+        final int endComment = findEndComment(text, startCommentText);
+        if (endComment < 0) {
+            logImmutableCheck(page, startComment, startCommentText, "Comment not closed");
+            return null;
+        }
+
+        return LinearMatchResult.of(text, startComment, endComment);
     }
 
     private int findStartComment(String text, int start) {
@@ -66,11 +65,7 @@ class CommentFinder extends ImmutableCheckedFinder {
     }
 
     private int findEndComment(String text, int start) {
-        final int posTagEndComment = text.indexOf(END_COMMENT, start);
-        if (posTagEndComment >= 0) {
-            return posTagEndComment + END_COMMENT.length();
-        } else {
-            return -1;
-        }
+        final int startTagEndComment = text.indexOf(END_COMMENT, start);
+        return startTagEndComment >= 0 ? startTagEndComment + END_COMMENT.length() : -1;
     }
 }

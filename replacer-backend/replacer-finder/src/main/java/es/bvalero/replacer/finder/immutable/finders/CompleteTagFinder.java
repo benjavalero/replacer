@@ -7,7 +7,10 @@ import es.bvalero.replacer.finder.immutable.ImmutableCheckedFinder;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
 import es.bvalero.replacer.finder.util.LinearMatchResult;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.regex.MatchResult;
+import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
@@ -20,11 +23,12 @@ class CompleteTagFinder extends ImmutableCheckedFinder {
 
     private static final char START_TAG = '<';
     private static final char END_TAG = '>';
-    private static final String END_SELF_CLOSING_TAG = "/>";
     private static final String START_CLOSING_TAG = "</";
 
     @Autowired
     private FinderProperties finderProperties;
+
+    private final Set<String> supportedCompleteTags = new HashSet<>();
 
     @Override
     public FinderPriority getPriority() {
@@ -34,6 +38,11 @@ class CompleteTagFinder extends ImmutableCheckedFinder {
     @Override
     public int getMaxLength() {
         return 5000;
+    }
+
+    @PostConstruct
+    public void init() {
+        this.supportedCompleteTags.addAll(this.finderProperties.getCompleteTags()); // Cache
     }
 
     @Override
@@ -51,6 +60,11 @@ class CompleteTagFinder extends ImmutableCheckedFinder {
     private MatchResult findCompleteTag(FinderPage page, int start) {
         final String text = page.getContent();
         while (start >= 0 && start < text.length()) {
+            // 1. Find start tag <
+            // 2. Find tag name and check if it is supported
+            // 3. Find end tag </tag>
+            // Note that self-closing tags are capture by XmlTagFinder
+
             final int startCompleteTag = findStartTag(text, start);
             if (startCompleteTag < 0) {
                 return null;
@@ -65,27 +79,12 @@ class CompleteTagFinder extends ImmutableCheckedFinder {
             }
 
             int endTagName = startTagName + tagName.length();
-            int endOpenTag = findEndTag(text, endTagName);
-            if (endOpenTag < 0) {
-                // Open tag not closed
-                final String message = String.format("Open tag %s not closed", tagName);
-                FinderUtils.logFinderResult(page, startCompleteTag, endTagName, message);
-                start = endTagName;
-                continue;
-            }
-
-            final String openTag = text.substring(startCompleteTag, endOpenTag);
-            if (isSelfClosingTag(openTag)) {
-                start = endOpenTag;
-                continue;
-            }
-
-            final int endCompleteTag = findEndCompleteTag(text, endOpenTag, tagName);
+            final int endCompleteTag = findEndCompleteTag(text, endTagName, tagName);
             if (endCompleteTag < 0) {
                 // Tag not closed
                 final String message = String.format("Tag %s not closed", tagName);
-                FinderUtils.logFinderResult(page, startCompleteTag, endOpenTag, message);
-                start = endOpenTag;
+                logImmutableCheck(page, startCompleteTag, endTagName, message);
+                start = endTagName;
                 continue;
             }
 
@@ -100,23 +99,18 @@ class CompleteTagFinder extends ImmutableCheckedFinder {
 
     @Nullable
     private String findSupportedTag(String text, int start) {
-        int i = start;
-        for (; i < text.length(); i++) {
-            if (!FinderUtils.isAscii(text.charAt(i))) {
+        int endSupportedTag = -1;
+        for (int i = start; i < text.length(); i++) {
+            if (!FinderUtils.isAsciiLowerCase(text.charAt(i))) {
+                endSupportedTag = i;
                 break;
             }
         }
-        final String tag = text.substring(start, i);
-        return this.finderProperties.getCompleteTags().contains(tag) ? tag : null;
-    }
-
-    private int findEndTag(String text, int start) {
-        int endTag = text.indexOf(END_TAG, start);
-        return endTag >= 0 ? endTag + 1 : -1; // 1 = end tag length
-    }
-
-    private boolean isSelfClosingTag(String tag) {
-        return tag.endsWith(END_SELF_CLOSING_TAG);
+        if (endSupportedTag < 0) {
+            return null;
+        }
+        final String tag = text.substring(start, endSupportedTag);
+        return this.supportedCompleteTags.contains(tag) ? tag : null;
     }
 
     private int findEndCompleteTag(String text, int start, String tag) {

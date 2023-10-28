@@ -6,10 +6,10 @@ import es.bvalero.replacer.finder.immutable.ImmutableCheckedFinder;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.LinearMatchResult;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.MatchResult;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
 
 /** Find words in the page title */
@@ -27,14 +27,8 @@ class TitleFinder extends ImmutableCheckedFinder {
     public Iterable<MatchResult> findMatchResults(FinderPage page) {
         // With few title words, the performance of the simple index-of and the Aho-Corasick is similar.
         final List<MatchResult> matches = new ArrayList<>(100);
-        final Set<String> words = new HashSet<>();
-        FinderUtils
-            .findAllWords(page.getTitle())
-            .stream()
-            .map(MatchResult::group)
-            .filter(this::isTitleWordImmutable)
-            .forEach(words::add);
         final String text = page.getContent();
+        final Set<String> words = findTitleWords(page.getTitle());
         for (String word : words) {
             // Find the word case-sensitive improves the performance
             int start = 0;
@@ -50,6 +44,15 @@ class TitleFinder extends ImmutableCheckedFinder {
             }
         }
         return matches;
+    }
+
+    private Set<String> findTitleWords(String title) {
+        return FinderUtils
+            .findAllWords(title)
+            .stream()
+            .map(MatchResult::group)
+            .filter(this::isTitleWordImmutable)
+            .collect(Collectors.toUnmodifiableSet());
     }
 
     private boolean isTitleWordImmutable(String word) {

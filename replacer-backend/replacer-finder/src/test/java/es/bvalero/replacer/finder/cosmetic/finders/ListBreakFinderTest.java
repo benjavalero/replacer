@@ -24,7 +24,7 @@ class ListBreakFinderTest {
 
     @ParameterizedTest
     @CsvSource(value = { "* x <br>, * x", "* z<br />, * z" })
-    void testListBreakFinder(String text, String fix) {
+    void testListBreak(String text, String fix) {
         List<Cosmetic> cosmetics = listBreakFinder.findList(text);
 
         assertEquals(1, cosmetics.size());

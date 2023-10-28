@@ -100,6 +100,12 @@ class DateFinderTest {
             "10, septiembre de 2022",
             "8 de junio de1997",
             "10 may 1995",
+            "4 de septiembre, 2150",
+            "desde Agosto de 2150",
+            "Agosto 23, 2150",
+            "2150 Agosto 23",
+            "Agosto 0, 1979",
+            "1979 Agosto 0",
         }
     )
     void testNotDate(String date) {
@@ -281,7 +287,11 @@ class DateFinderTest {
 
     @Test
     void testPrecededByArticleWithNoSpaceBetween() {
-        String text = "|'''A'''\n" + "|-\n" + "|28 octubre 2022, ";
+        String text =
+            """
+            |'''A'''
+            |-
+            |28 octubre 2022,\s""";
         String date = "28 octubre 2022";
         String expected = "28 de octubre de 2022";
 

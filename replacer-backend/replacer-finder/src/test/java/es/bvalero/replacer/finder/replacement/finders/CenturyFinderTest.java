@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.finder.Replacement;
 import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -13,7 +14,12 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 class CenturyFinderTest {
 
-    private final CenturyFinder centuryFinder = new CenturyFinder();
+    private CenturyFinder centuryFinder;
+
+    @BeforeEach
+    public void setUp() {
+        centuryFinder = new CenturyFinder();
+    }
 
     @ParameterizedTest
     @CsvSource(
@@ -99,6 +105,7 @@ class CenturyFinderTest {
     )
     void testCenturyNotValid(String text) {
         List<Replacement> replacements = centuryFinder.findList(text);
+
         assertTrue(replacements.isEmpty());
     }
 
@@ -140,8 +147,8 @@ class CenturyFinderTest {
         String text = "Entre el siglo XIX y principios del XX.";
 
         List<Replacement> replacements = centuryFinder.findList(text);
-
         assertEquals(1, replacements.size());
+
         Replacement rep = replacements.get(0);
         assertEquals(StandardType.CENTURY, rep.getType());
         assertEquals("siglo XIX y principios del XX", rep.getText());
@@ -153,8 +160,8 @@ class CenturyFinderTest {
         String text = "En el siglo XI Alfonso VI...";
 
         List<Replacement> replacements = centuryFinder.findList(text);
-
         assertEquals(1, replacements.size());
+
         Replacement rep = replacements.get(0);
         assertEquals(StandardType.CENTURY, rep.getType());
         assertEquals("siglo XI", rep.getText());

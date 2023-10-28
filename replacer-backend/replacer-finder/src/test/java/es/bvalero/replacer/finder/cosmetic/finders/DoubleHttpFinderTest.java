@@ -29,7 +29,7 @@ class DoubleHttpFinderTest {
             "http://http://marca.com, http://marca.com", "https://https://www.linkedin.com, https://www.linkedin.com",
         }
     )
-    void testDoubleHttpFinder(String text, String fix) {
+    void testDoubleHttp(String text, String fix) {
         List<Cosmetic> cosmetics = doubleHttpFinder.findList(text);
 
         assertEquals(1, cosmetics.size());

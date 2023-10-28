@@ -25,7 +25,7 @@ class BreakIncorrectFinderTest {
 
     @ParameterizedTest
     @ValueSource(strings = { "</br>", "<\\br>", "<br.>", "<br \\>", "<br >" })
-    void testBreakIncorrectFinder(String text) {
+    void testBreakIncorrect(String text) {
         List<Cosmetic> cosmetics = breakIncorrectFinder.findList(text);
 
         assertEquals(1, cosmetics.size());

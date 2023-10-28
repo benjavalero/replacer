@@ -55,7 +55,7 @@ class XmlTagFinder extends ImmutableCheckedFinder {
                 continue;
             }
 
-            final int endTag = endTagContent + 1; // 1 = end tag length
+            final int endTag = endTagContent + 1;
             final String tagContent = text.substring(startTagContent, endTagContent);
             if (!isValidTagContent(tagContent)) {
                 start = endTag;

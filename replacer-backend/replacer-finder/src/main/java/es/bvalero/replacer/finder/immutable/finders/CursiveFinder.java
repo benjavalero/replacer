@@ -59,6 +59,7 @@ class CursiveFinder extends ImmutableCheckedFinder {
                 continue;
             }
 
+            // Additional validation
             if (isEmptyCursiveText(text, startCursive, endCursive, numQuotes)) {
                 logImmutableCheck(page, startCursive, endCursive, "Empty cursive");
                 start = endCursive;
@@ -80,7 +81,6 @@ class CursiveFinder extends ImmutableCheckedFinder {
                 return i - start;
             }
         }
-        // It shouldn't get here except if the quotes are at the end of the page
         return text.length() - start;
     }
 
@@ -111,10 +111,11 @@ class CursiveFinder extends ImmutableCheckedFinder {
 
     private boolean isEmptyCursiveText(String text, int startCursive, int endCursive, int numQuotes) {
         // The cursive may end with the text end or with a new line
+        final int startCursiveText = startCursive + numQuotes;
         final int endCursiveText = text.length() == endCursive || text.charAt(endCursive) == NEW_LINE
             ? endCursive
             : endCursive - numQuotes;
-        final String cursiveText = text.substring(startCursive + numQuotes, endCursiveText);
+        final String cursiveText = text.substring(startCursiveText, endCursiveText);
         return StringUtils.isBlank(cursiveText);
     }
 }

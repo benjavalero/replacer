@@ -1,5 +1,7 @@
 package es.bvalero.replacer.finder.cosmetic.finders;
 
+import static es.bvalero.replacer.finder.util.FinderUtils.PIPE;
+
 import es.bvalero.replacer.FinderProperties;
 import es.bvalero.replacer.checkwikipedia.CheckWikipediaAction;
 import es.bvalero.replacer.finder.FinderPage;
@@ -96,7 +98,7 @@ class CategoryWhiteSpaceFinder implements CosmeticCheckedFinder {
         String defaultCategoryWord =
             this.finderProperties.getCategoryWords().get(page.getPageKey().getLang().getCode()).get(0);
         String fixedCategoryName = match.group(2).trim();
-        String fixedCategoryAlias = match.group(3) == null ? "" : "|" + match.group(3).substring(1).trim();
+        String fixedCategoryAlias = match.group(3) == null ? "" : PIPE + match.group(3).substring(1).trim();
         return String.format("[[%s:%s%s]]", defaultCategoryWord, fixedCategoryName, fixedCategoryAlias);
     }
 }

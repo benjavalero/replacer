@@ -78,25 +78,16 @@ class LinkFinder extends ImmutableCheckedFinder {
             return LinearMatchResult.of(text, link.start(), endSuffix);
         }
 
-        final String linkContent = link
-            .group()
-            .substring(START_LINK.length(), link.group().length() - END_LINK.length());
-
-        // Link title depends on the link pipe
-        final int posLastPipe = linkContent.lastIndexOf(PIPE);
-        final String linkTitle = posLastPipe >= 0 ? linkContent.substring(0, posLastPipe) : linkContent;
-
-        // There could be a link "wikispace" e.g. for interwiki links or categories
-        final int posColon = linkTitle.indexOf(COLON);
-        final String linkSpace = posColon >= 0 ? linkTitle.substring(0, posColon) : null;
+        final String linkContent = getLinkContent(link.group());
+        final String linkTitle = findLinkTitle(linkContent);
+        final String linkSpace = findLinkSpace(linkTitle);
 
         // If the link space is a category then return an immutable of the complete link
         if (isCategorySpace(linkSpace)) {
             return link;
         }
 
-        // Link alias (optional) depends on the link pipe
-        final String linkAlias = posLastPipe >= 0 ? linkContent.substring(posLastPipe + 1) : null;
+        final String linkAlias = findLinkAlias(linkContent);
 
         // Interwiki links are immutable. If alias exists, then return only the link title.
         // The same applies for interlanguage links and files
@@ -107,7 +98,8 @@ class LinkFinder extends ImmutableCheckedFinder {
             } else if (isAliasParameter(linkAlias)) {
                 return link;
             } else {
-                return LinearMatchResult.of(link.start() + START_LINK.length(), linkTitle);
+                final int startTitle = link.start() + START_LINK.length();
+                return LinearMatchResult.of(startTitle, linkTitle);
             }
         }
 
@@ -127,8 +119,29 @@ class LinkFinder extends ImmutableCheckedFinder {
         return text.length();
     }
 
+    private String getLinkContent(String link) {
+        return link.substring(START_LINK.length(), link.length() - END_LINK.length());
+    }
+
+    private String findLinkTitle(String linkContent) {
+        final int startLastPipe = linkContent.lastIndexOf(PIPE);
+        return startLastPipe >= 0 ? linkContent.substring(0, startLastPipe) : linkContent;
+    }
+
+    @Nullable
+    private String findLinkSpace(String title) {
+        final int startColon = title.indexOf(COLON);
+        return startColon >= 0 ? title.substring(0, startColon) : null;
+    }
+
     private boolean isCategorySpace(@Nullable String space) {
         return (space != null && this.categoryWords.contains(FinderUtils.setFirstUpperCase(space.trim())));
+    }
+
+    @Nullable
+    private String findLinkAlias(String linkContent) {
+        final int startLastPipe = linkContent.lastIndexOf(PIPE);
+        return startLastPipe >= 0 ? linkContent.substring(startLastPipe + 1) : null;
     }
 
     private boolean isFileSpace(@Nullable String space) {

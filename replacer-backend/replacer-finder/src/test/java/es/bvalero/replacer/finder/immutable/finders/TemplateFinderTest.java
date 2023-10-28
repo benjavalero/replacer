@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -45,7 +44,7 @@ class TemplateFinderTest {
     @CsvSource(
         value = { "{{Template1}}, Template1", "{{Template2:Text2}}, Template2", "{{Template3|param=value}}, Template3" }
     )
-    void testFindTemplateNames(String text, String templateName) {
+    void testTemplateNames(String text, String templateName) {
         List<Immutable> matches = templateFinder.findList(text);
 
         assertTrue(matches.stream().map(Immutable::getText).collect(Collectors.toSet()).contains(templateName));
@@ -61,20 +60,20 @@ class TemplateFinderTest {
             "{{lang-ho|Papua Niu Gini}}",
         }
     )
-    void testFindCompleteTemplates(String text) {
+    void testTemplateComplete(String text) {
         List<Immutable> matches = templateFinder.findList(text);
 
         assertEquals(1, matches.size());
-        Assertions.assertEquals(text, matches.get(0).getText());
+        assertEquals(text, matches.get(0).getText());
     }
 
     @ParameterizedTest
     @ValueSource(strings = { "{{Template3|param=value}}" })
-    void testFindCompleteTemplatesNotCaptured(String text) {
+    void testTemplateNotComplete(String text) {
         List<Immutable> matches = templateFinder.findList(text);
 
         assertFalse(matches.isEmpty());
-        Assertions.assertNotEquals(text, matches.get(0).getText());
+        assertFalse(matches.stream().map(Immutable::getText).collect(Collectors.toSet()).contains(text));
     }
 
     @ParameterizedTest
@@ -86,7 +85,7 @@ class TemplateFinderTest {
             "{{Fs player|nat=Brazil}}, nat, Brazil", // Param + value
         }
     )
-    void testFindParamValues(String text, String param, String value) {
+    void testParamValues(String text, String param, String value) {
         List<Immutable> matches = templateFinder.findList(text);
 
         assertFalse(matches.isEmpty());
@@ -148,23 +147,23 @@ class TemplateFinderTest {
         assertEquals(expected, actual);
 
         // Check positions
-        Assertions.assertEquals(
+        assertEquals(
             2,
             matches.stream().filter(m -> m.getText().equals("Template1")).findAny().map(Immutable::getStart).orElse(0)
         );
-        Assertions.assertEquals(
+        assertEquals(
             12,
             matches.stream().filter(m -> m.getText().equals("param1")).findAny().map(Immutable::getStart).orElse(0)
         );
-        Assertions.assertEquals(
+        assertEquals(
             21,
             matches.stream().filter(m -> m.getText().equals("Template2")).findAny().map(Immutable::getStart).orElse(0)
         );
-        Assertions.assertEquals(
+        assertEquals(
             31,
             matches.stream().filter(m -> m.getText().equals("url")).findAny().map(Immutable::getStart).orElse(0)
         );
-        Assertions.assertEquals(
+        assertEquals(
             35,
             matches.stream().filter(m -> m.getText().equals("value2")).findAny().map(Immutable::getStart).orElse(0)
         );
@@ -264,13 +263,13 @@ class TemplateFinderTest {
     }
 
     @Test
-    void testFindIgnorableTemplate() {
+    void testIgnorableTemplate() {
         assertTrue(templateFinder.findList("Otro contenido").isEmpty());
         assertFalse(templateFinder.findList("xxx {{destruir|motivo}}").isEmpty());
     }
 
     @Test
-    void testFindFakeTemplate() {
+    void testFakeTemplate() {
         String fake = "<math display=\"block\">Dw_{c,f,x}= {{\\sum(c*dw^2) \\over \\sum Dw}+10 \\over 2}</math>";
         String template1 = "{{Template1|Text1}}";
         String template2 = "{{Template2|Text2}}";
@@ -285,7 +284,7 @@ class TemplateFinderTest {
 
     @Test
     void testNestedTemplatesFirstWithNoValue() {
-        // In theory it is a bad constructed template so we should not check this
+        // In theory, it is a bad constructed template, so we should not check this.
         String template2 = "{{Template2|url=value2}}";
         String template = String.format("{{Template1|%s}}", template2);
 

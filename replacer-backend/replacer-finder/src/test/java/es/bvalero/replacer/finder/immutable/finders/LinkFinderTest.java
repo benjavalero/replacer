@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.apache.commons.collections4.IterableUtils;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -36,11 +35,11 @@ class LinkFinderTest {
             "[[categoría:Asia]]",
         }
     )
-    void testFindCategories(String text) {
+    void testCategory(String text) {
         List<Immutable> matches = linkFinder.findList(text);
 
         assertEquals(1, matches.size());
-        Assertions.assertEquals(text, matches.get(0).getText());
+        assertEquals(text, matches.get(0).getText());
     }
 
     @Test
@@ -90,11 +89,11 @@ class LinkFinderTest {
 
     @ParameterizedTest
     @ValueSource(strings = { "[[Imagen:a b.png]]", "[[archivo:Z.JPEG]]", "[[File:x.jpg]]", "[[Image:z.pdf]]" })
-    void testFindFileNames(String text) {
+    void testFileNames(String text) {
         List<Immutable> matches = linkFinder.findList(text);
 
         assertEquals(1, matches.size());
-        Assertions.assertEquals(text, matches.get(0).getText());
+        assertEquals(text, matches.get(0).getText());
     }
 
     @Test
@@ -129,16 +128,16 @@ class LinkFinderTest {
             "[[:en:Constitution of Virginia]]",
         }
     )
-    void testFindInterLanguageLink(String text) {
+    void testInterLanguageLink(String text) {
         List<Immutable> matches = linkFinder.findList(text);
 
         assertEquals(1, matches.size());
-        Assertions.assertEquals(text, matches.get(0).getText());
+        assertEquals(text, matches.get(0).getText());
     }
 
     @ParameterizedTest
     @ValueSource(strings = { "[[s:es:Corán|Corán]]", "[[dc:Tierra Uno|Tierra- 1]]" })
-    void testFindInterWikiAliased(String text) {
+    void testInterWikiAliased(String text) {
         List<Immutable> matches = linkFinder.findList(text);
 
         Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
@@ -153,6 +152,6 @@ class LinkFinderTest {
         );
 
         assertEquals(1, matches.size());
-        Assertions.assertEquals(text, matches.get(0).getText());
+        assertEquals(text, matches.get(0).getText());
     }
 }

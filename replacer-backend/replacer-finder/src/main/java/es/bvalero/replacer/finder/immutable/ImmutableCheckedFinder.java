@@ -57,7 +57,7 @@ public abstract class ImmutableCheckedFinder implements ImmutableFinder {
         logImmutableCheck(page, immutable.getStart(), immutable.getEnd(), message);
     }
 
-    protected void logImmutableCheck(FinderPage page, int start, int end, String message) {
+    public void logImmutableCheck(FinderPage page, int start, int end, String message) {
         if (this.showImmutableWarning) {
             FinderUtils.logFinderResult(page, start, end, message);
         }

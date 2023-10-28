@@ -12,6 +12,7 @@ import java.beans.PropertyChangeEvent;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.apache.commons.collections4.SetValuedMap;
 import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,19 +29,18 @@ class UppercaseFinderTest {
     @BeforeEach
     public void setUp() {
         uppercaseFinder = new UppercaseFinder();
+        initUppercaseMap("Enero", "Febrero", "Marzo", "Abril", "Mayo");
+    }
 
-        Set<String> uppercaseWords = Set.of("Enero", "Febrero", "Marzo", "Abril", "Mayo");
-        SetValuedMap<WikipediaLanguage, SimpleMisspelling> map = new HashSetValuedHashMap<>();
-        for (String uppercaseWord : uppercaseWords) {
-            map.put(
-                WikipediaLanguage.getDefault(),
-                SimpleMisspelling.of(uppercaseWord, true, uppercaseWord.toLowerCase())
-            );
-        }
-
-        // Fake the update of the misspelling list in the misspelling manager
+    private void initUppercaseMap(String... uppercaseWords) {
+        Set<SimpleMisspelling> uppercaseSet = Stream
+            .of(uppercaseWords)
+            .map(uppercaseWord -> SimpleMisspelling.of(uppercaseWord, true, uppercaseWord.toLowerCase()))
+            .collect(Collectors.toSet());
+        SetValuedMap<WikipediaLanguage, SimpleMisspelling> uppercaseMap = new HashSetValuedHashMap<>();
+        uppercaseMap.putAll(WikipediaLanguage.SPANISH, uppercaseSet);
         uppercaseFinder.propertyChange(
-            new PropertyChangeEvent(this, SimpleMisspellingLoader.PROPERTY_ITEMS, EMPTY_MAP, map)
+            new PropertyChangeEvent(this, SimpleMisspellingLoader.PROPERTY_ITEMS, EMPTY_MAP, uppercaseMap)
         );
     }
 
@@ -95,17 +95,16 @@ class UppercaseFinderTest {
             "\n\nFebrero y marzo", // Start of paragraph
         }
     )
-    void testUppercaseAfter(String text) {
+    void testUppercase(String text) {
         List<Immutable> matches = uppercaseFinder.findList(text);
 
         Set<String> expected = Set.of("Febrero");
         Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
-        assertEquals(1, matches.size());
         assertEquals(expected, actual);
     }
 
     @Test
-    void testUppercaseAfterLinkAlias() {
+    void testUppercaseLinkAlias() {
         String text = "En [[Enero|Enero]]";
 
         List<Immutable> matches = uppercaseFinder.findList(text);

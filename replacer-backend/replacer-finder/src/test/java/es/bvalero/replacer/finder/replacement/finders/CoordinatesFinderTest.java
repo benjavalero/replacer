@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.finder.Replacement;
 import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -13,7 +14,12 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 class CoordinatesFinderTest {
 
-    private final CoordinatesFinder coordinatesFinder = new CoordinatesFinder();
+    private CoordinatesFinder coordinatesFinder;
+
+    @BeforeEach
+    public void setUp() {
+        coordinatesFinder = new CoordinatesFinder();
+    }
 
     @ParameterizedTest
     @CsvSource(
@@ -33,7 +39,7 @@ class CoordinatesFinderTest {
             // "38º05′0883829879874892″|38°05′", // TODO
         }
     )
-    void testNotValidCoordinates(String text, String expected) {
+    void testCoordinates(String text, String expected) {
         List<Replacement> replacements = coordinatesFinder.findList(text);
         assertEquals(1, replacements.size());
 
@@ -58,11 +64,13 @@ class CoordinatesFinderTest {
             "38°05′",
             "38°05′08",
             "38°  05′08″",
+            "23° 14′ 18.23.42''", // Bad formatted seconds are ignored
             // "38º05′0883829879874892″ N", // TODO
         }
     )
     void testValidCoordinates(String text) {
         List<Replacement> replacements = coordinatesFinder.findList(text);
+
         assertTrue(replacements.isEmpty());
     }
 
@@ -70,6 +78,7 @@ class CoordinatesFinderTest {
     void testSeveralCoordinates() {
         String text = "At 23º14'18'' with 1978 and 123º0'15'' of latitude and longitude.";
         List<Replacement> replacements = coordinatesFinder.findList(text);
+
         assertEquals(2, replacements.size());
     }
 
@@ -77,6 +86,7 @@ class CoordinatesFinderTest {
     void testSeveralCoordinatesWithoutSeconds() {
         String text = "At 23º 14' O with 1978 and 123º0'15'' of latitude and longitude.";
         List<Replacement> replacements = coordinatesFinder.findList(text);
+
         assertEquals(2, replacements.size());
     }
 
@@ -93,6 +103,7 @@ class CoordinatesFinderTest {
     )
     void testFalseNumbersOrSymbols(String text) {
         List<Replacement> replacements = coordinatesFinder.findList(text);
+
         assertTrue(replacements.isEmpty());
     }
 }

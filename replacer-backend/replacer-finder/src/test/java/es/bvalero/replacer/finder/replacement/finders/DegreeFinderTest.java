@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.finder.Replacement;
 import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -13,33 +14,38 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 class DegreeFinderTest {
 
-    private final DegreeFinder degreeFinder = new DegreeFinder();
+    private DegreeFinder degreeFinder;
+
+    @BeforeEach
+    public void setUp() {
+        degreeFinder = new DegreeFinder();
+    }
 
     @ParameterizedTest
     @CsvSource(
         delimiter = '|',
         value = {
-            "50°C| 50&nbsp;°C",
-            "50°F| 50&nbsp;°F",
-            "50ºC| 50&nbsp;°C", // With ordinal
-            "50 ºC| 50&nbsp;°C", // With ordinal
-            "50° C| 50&nbsp;°C",
-            "50 ° C| 50&nbsp;°C",
-            "50º C| 50&nbsp;°C", // With ordinal
-            "50 º C| 50&nbsp;°C", // With ordinal
-            "50&nbsp;° C| 50&nbsp;°C",
-            "50&nbsp;ºC| 50&nbsp;°C", // With ordinal
-            "50&nbsp;º C| 50&nbsp;°C", // With ordinal
-            "50 °K| 50&nbsp;K",
-            "50°K| 50&nbsp;K",
-            "50 ºK| 50&nbsp;K", // With ordinal
-            "50ºK| 50&nbsp;K", // With ordinal
-            "50 ℃| 50&nbsp;°C",
-            "50.2°C| 50.2&nbsp;°C",
-            "50,2°C| 50,2&nbsp;°C",
-            "50{{esd}}ºC| 50{{esd}}°C",
-            "8.8{{esd}}℃|8.8{{esd}}°C",
-            "8.8&nbsp;℃|8.8&nbsp;°C",
+            "50°C|50&nbsp;°C", // No space
+            "50°F|50&nbsp;°F", // No space
+            "50ºC|50&nbsp;°C", // Ordinal + No space
+            "50 ºC|50&nbsp;°C", // Ordinal
+            "50° C|50&nbsp;°C", // Inner space
+            "50 ° C|50&nbsp;°C", // Inner space
+            "50º C|50&nbsp;°C", // Ordinal + Inner space
+            "50 º C|50&nbsp;°C", // Ordinal + Inner space
+            "50&nbsp;° C|50&nbsp;°C", // Inner space
+            "50&nbsp;ºC|50&nbsp;°C", // Ordinal
+            "50&nbsp;º C|50&nbsp;°C", // Ordinal + Inner space
+            "50 °K|50&nbsp;K", // Kelvin
+            "50°K|50&nbsp;K", // Kelvin + No space
+            "50 ºK|50&nbsp;K", // Kelvin + Ordinal
+            "50ºK|50&nbsp;K", // Kelvin + Ordinal + No space
+            "50 ℃|50&nbsp;°C", // Unicode
+            "50.2°C|50.2&nbsp;°C", // Decimal + No space
+            "50,2°C|50,2&nbsp;°C", // Decimal + No space
+            "50{{esd}}ºC|50{{esd}}°C", // Ordinal
+            "8.8{{esd}}℃|8.8{{esd}}°C", // Unicode
+            "8.8&nbsp;℃|8.8&nbsp;°C", // Unicode
         }
     )
     void testDegree(String text, String expected) {
@@ -80,6 +86,21 @@ class DegreeFinderTest {
     @ParameterizedTest
     @ValueSource(strings = { "50 °C", "En °C", "50&nbsp;°C", "50.5{{esd}}°C", "50 K", "{{unidad|−273.144|°C}})" })
     void testValidDegree(String degree) {
+        List<Replacement> replacements = degreeFinder.findList(degree);
+
+        assertTrue(replacements.isEmpty());
+    }
+
+    @ParameterizedTest
+    @ValueSource(
+        strings = {
+            "50 °L", // Not degree letter
+            "ºC", // No word before
+            "50 º", // No degree letter
+            "50 º ", // No degree letter
+        }
+    )
+    void testFalseDegree(String degree) {
         List<Replacement> replacements = degreeFinder.findList(degree);
 
         assertTrue(replacements.isEmpty());

@@ -100,7 +100,7 @@ public class FinderUtils {
         return true;
     }
 
-    private boolean isAsciiLowerCase(int ch) {
+    public boolean isAsciiLowerCase(int ch) {
         return (ch >= 'a' && ch <= 'z');
     }
 

@@ -124,7 +124,7 @@ public class OrdinalFinder implements ReplacementFinder {
         try {
             return number.length() <= 3 && Integer.parseInt(number) > 0;
         } catch (NumberFormatException nfe) {
-            return false;
+            throw new IllegalStateException(nfe);
         }
     }
 
@@ -196,6 +196,7 @@ public class OrdinalFinder implements ReplacementFinder {
             suggestions.add(Suggestion.of(ConvertToRoman.fromArabic(ordinalNumber), "números romanos"));
         } catch (OperationNotSupportedException e) {
             // Simply don't add this alternative
+            throw new IllegalStateException(e);
         }
 
         // Text alternatives (if any)

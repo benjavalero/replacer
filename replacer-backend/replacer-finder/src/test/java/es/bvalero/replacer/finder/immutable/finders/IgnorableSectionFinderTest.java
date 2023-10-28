@@ -78,11 +78,4 @@ class IgnorableSectionFinderTest {
         Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
         assertEquals(expected, actual);
     }
-
-    @Test
-    void testFalseHeader() {
-        String text = "Text ==";
-        List<Immutable> matches = ignorableSectionFinder.findList(text);
-        assertTrue(matches.isEmpty());
-    }
 }

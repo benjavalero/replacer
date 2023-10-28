@@ -32,7 +32,7 @@ class SameLinkFinderTest {
             "[[IPhone|iPhone]], [[iPhone]]",
         }
     )
-    void testSameLinkFinder(String text, String fix) {
+    void testSameLink(String text, String fix) {
         List<Cosmetic> cosmetics = sameLinkFinder.findList(text);
 
         assertEquals(1, cosmetics.size());

@@ -1,5 +1,7 @@
 package es.bvalero.replacer.finder.immutable.finders;
 
+import static org.apache.commons.lang3.StringUtils.SPACE;
+
 import dk.brics.automaton.DatatypesAutomatonProvider;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
@@ -67,13 +69,12 @@ class PersonSurnameFinder implements ImmutableFinder {
 
     @Override
     public Immutable convert(MatchResult match, FinderPage page) {
-        final int pos = match.group().indexOf(' ') + 1;
-        final String matchText = match.group().substring(pos);
-        if (this.completeSurnames.contains(matchText)) {
+        final int startSurname = match.group().indexOf(SPACE) + 1;
+        final String surname = match.group().substring(startSurname);
+        if (this.completeSurnames.contains(surname)) {
             return ImmutableFinder.super.convert(match, page);
         } else {
-            final int start = match.start() + pos;
-            return Immutable.of(start, matchText);
+            return Immutable.of(match.start() + startSurname, surname);
         }
     }
 }

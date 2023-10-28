@@ -22,7 +22,7 @@ class TemplateWordFinderTest {
 
     @ParameterizedTest
     @CsvSource(value = { "{{Plantilla:Versalita|A}}, {{Versalita|A}}", "{{plantilla:DGRG}}, {{DGRG}}" })
-    void testTemplateWordFinder(String text, String fix) {
+    void testTemplateWord(String text, String fix) {
         List<Cosmetic> cosmetics = templateWordFinder.findList(text);
 
         assertEquals(1, cosmetics.size());
