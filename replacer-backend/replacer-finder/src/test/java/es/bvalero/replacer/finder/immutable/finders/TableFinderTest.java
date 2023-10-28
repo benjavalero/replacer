@@ -30,4 +30,16 @@ class TableFinderTest {
         Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
         assertEquals(expected, actual);
     }
+
+    @Test
+    void testTableLineAtTheEnd() {
+        String text = "{| class=\"wikitable\"";
+
+        ImmutableFinder tableFinder = new TableFinder();
+        List<Immutable> matches = tableFinder.findList(text);
+
+        Set<String> expected = Set.of(text);
+        Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
+        assertEquals(expected, actual);
+    }
 }

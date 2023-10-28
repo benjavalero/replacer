@@ -121,21 +121,20 @@ public class UppercaseFinder implements ImmutableFinder, PropertyChangeListener 
     ) {
         final Map<WikipediaLanguage, StringMap<String>> map = new EnumMap<>(WikipediaLanguage.class);
         for (WikipediaLanguage lang : uppercaseWords.keySet()) {
-            map.put(lang, buildUppercaseAutomaton(uppercaseWords.get(lang)));
+            map.put(lang, buildUppercaseStringMap(uppercaseWords.get(lang)));
         }
         return map;
     }
 
     @Nullable
-    private StringMap<String> buildUppercaseAutomaton(@Nullable Set<String> words) {
+    private StringMap<String> buildUppercaseStringMap(@Nullable Set<String> words) {
         // Currently, there are about 60 uppercase case-sensitive misspellings,
         // so the best approaches are an automaton with all the terms alternated and
         // the Aho-Corasick algorithm. We use the last one giving a better median performance.
-        if (words != null && !words.isEmpty()) {
-            return new WholeWordLongestMatchMap<>(words, words, true, falseWordChars, wordCharFlags);
-        } else {
+        if (words == null || words.isEmpty()) {
             return null;
         }
+        return new WholeWordLongestMatchMap<>(words, words, true, falseWordChars, wordCharFlags);
     }
 
     @Override

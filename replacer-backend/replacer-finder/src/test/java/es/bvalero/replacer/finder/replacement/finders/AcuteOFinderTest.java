@@ -54,4 +54,12 @@ class AcuteOFinderTest {
         List<Replacement> replacements = acuteOFinder.findList(text);
         assertTrue(replacements.isEmpty());
     }
+
+    @Test
+    void testAcuteOAtTheEnd() {
+        final String text = "En dós ó ";
+
+        List<Replacement> replacements = acuteOFinder.findList(text);
+        assertTrue(replacements.isEmpty());
+    }
 }

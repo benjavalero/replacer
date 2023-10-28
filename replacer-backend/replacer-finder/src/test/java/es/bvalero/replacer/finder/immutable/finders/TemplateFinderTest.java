@@ -268,4 +268,31 @@ class TemplateFinderTest {
         assertTrue(templateFinder.findList("Otro contenido").isEmpty());
         assertFalse(templateFinder.findList("xxx {{destruir|motivo}}").isEmpty());
     }
+
+    @Test
+    void testFindFakeTemplate() {
+        String fake = "<math display=\"block\">Dw_{c,f,x}= {{\\sum(c*dw^2) \\over \\sum Dw}+10 \\over 2}</math>";
+        String template1 = "{{Template1|Text1}}";
+        String template2 = "{{Template2|Text2}}";
+        String text = String.format("%s %s %s", template1, template2, fake);
+
+        List<Immutable> matches = templateFinder.findList(text);
+
+        Set<String> expected = Set.of("Template1", "Template2");
+        Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void testNestedTemplatesFirstWithNoValue() {
+        // In theory it is a bad constructed template so we should not check this
+        String template2 = "{{Template2|url=value2}}";
+        String template = String.format("{{Template1|%s}}", template2);
+
+        List<Immutable> matches = templateFinder.findList(template);
+
+        Set<String> expected = Set.of("Template1", "Template2", "url", "value2");
+        Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
+        assertEquals(expected, actual);
+    }
 }

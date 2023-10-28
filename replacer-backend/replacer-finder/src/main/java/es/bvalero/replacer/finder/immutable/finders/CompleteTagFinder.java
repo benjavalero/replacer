@@ -56,7 +56,7 @@ class CompleteTagFinder extends ImmutableCheckedFinder {
                 return null;
             }
 
-            final int startTagName = startCompleteTag + 1; // 1 = start tag length
+            final int startTagName = startCompleteTag + 1;
             final String tagName = findSupportedTag(text, startTagName);
             if (tagName == null) {
                 // The tag name (if found) is not in the list

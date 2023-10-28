@@ -45,7 +45,7 @@ public class AcuteOFinder implements ReplacementFinder {
             if (isImmutable(text, startAcuteO)) {
                 return LinearMatchResult.of(startAcuteO, ACUTE_O);
             } else {
-                start = startAcuteO + ACUTE_O.length();
+                start = startAcuteO + 2; // As we have searched with surrounding whitespaces
             }
         }
         return null;

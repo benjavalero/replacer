@@ -41,7 +41,7 @@ class XmlTagFinder extends ImmutableCheckedFinder {
                 return null;
             }
 
-            final int startTagContent = startTag + 1; // 1 = start tag length
+            final int startTagContent = startTag + 1;
             if (!isValidFirstChar(text.charAt(startTagContent))) {
                 // Not an XML tag
                 start = startTagContent;

@@ -25,4 +25,17 @@ class CommentFinderTest {
         Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
         assertEquals(expected, actual);
     }
+
+    @Test
+    void testRegexEndingComment() {
+        String comment = "<!-- Just a comment -->";
+        String text = String.format("Text %s", comment);
+
+        ImmutableFinder commentFinder = new CommentFinder();
+        List<Immutable> matches = commentFinder.findList(text);
+
+        Set<String> expected = Set.of(comment);
+        Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
+        assertEquals(expected, actual);
+    }
 }

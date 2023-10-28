@@ -1,6 +1,7 @@
 package es.bvalero.replacer.finder.immutable.finders;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import es.bvalero.replacer.FinderProperties;
 import es.bvalero.replacer.finder.Immutable;
@@ -26,6 +27,7 @@ class IgnorableSectionFinderTest {
             == Bibliografía de Julio Verne ==
             Ignorable Content
             === Ignorable Subsection
+            Text2
             """;
         String text =
             """
@@ -44,5 +46,43 @@ class IgnorableSectionFinderTest {
         Set<String> expected = Set.of(ignorableSection);
         Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
         assertEquals(expected, actual);
+    }
+
+    @Test
+    void testIgnorableSectionNotClosed() {
+        String text = "Text == Bibliografía de Julio Verne";
+        List<Immutable> matches = ignorableSectionFinder.findList(text);
+        assertTrue(matches.isEmpty());
+    }
+
+    @Test
+    void testIgnorableSectionAtTheEnd() {
+        String ignorableSection =
+            """
+            == Bibliografía de Julio Verne ==
+            Ignorable Content
+            === Ignorable Subsection
+            Text2
+            """;
+        String text =
+            """
+            Text
+            == Section 1 ==
+            Content 1
+            """ +
+            ignorableSection;
+
+        List<Immutable> matches = ignorableSectionFinder.findList(text);
+
+        Set<String> expected = Set.of(ignorableSection);
+        Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void testFalseHeader() {
+        String text = "Text ==";
+        List<Immutable> matches = ignorableSectionFinder.findList(text);
+        assertTrue(matches.isEmpty());
     }
 }

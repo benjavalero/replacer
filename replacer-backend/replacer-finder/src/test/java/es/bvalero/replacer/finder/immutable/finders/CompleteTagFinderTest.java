@@ -37,7 +37,16 @@ class CompleteTagFinderTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = { "<ref name=NH05/>", "<ref>Unclosed tag", "<br>", "</p>", "<unknown>Unknown</unknown>" })
+    @ValueSource(
+        strings = {
+            "<ref name=NH05/>",
+            "<ref>Unclosed tag",
+            "<br>",
+            "</p>",
+            "<unknown>Unknown</unknown>",
+            "An open tag not closed.<ref",
+        }
+    )
     void testFindCompleteTagNonValid(String text) {
         List<Immutable> matches = completeTagFinder.findList(text);
 

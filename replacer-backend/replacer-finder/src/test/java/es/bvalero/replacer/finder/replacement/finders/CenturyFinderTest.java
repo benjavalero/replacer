@@ -92,7 +92,11 @@ class CenturyFinderTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = { "El siglo 20.", "Siglo 21.", "Los siglos XX y XXI.", "El siglo  XX.", "El siglo-XX." })
+    @ValueSource(
+        strings = {
+            "El siglo 20.", "Siglo 21.", "Los siglos XX y XXI.", "El siglo  XX.", "El siglo-XX.", "El [[siglo XX.",
+        }
+    )
     void testCenturyNotValid(String text) {
         List<Replacement> replacements = centuryFinder.findList(text);
         assertTrue(replacements.isEmpty());
@@ -159,12 +163,32 @@ class CenturyFinderTest {
 
     @Test
     void testCenturyWithCompleteCenturyAfter() {
-        String text = "Entre el siglo XIX y principios del siglo XX.";
+        String text = "Entre el siglo XIX y el siglo XX.";
 
         List<Replacement> replacements = centuryFinder.findList(text);
 
         assertEquals(2, replacements.size());
         assertEquals("siglo XIX", replacements.get(0).getText());
         assertEquals("siglo XX", replacements.get(1).getText());
+    }
+
+    @Test
+    void testCenturyWithCenturyAfterTooFar() {
+        String text = "Entre el siglo XIX y los comienzos del XX.";
+
+        List<Replacement> replacements = centuryFinder.findList(text);
+
+        assertEquals(1, replacements.size());
+        assertEquals("siglo XIX", replacements.get(0).getText());
+    }
+
+    @Test
+    void testCenturyWithCompleteCenturyAfterInvalid() {
+        String text = "Entre el siglo XIX y principios del siglo XXL";
+
+        List<Replacement> replacements = centuryFinder.findList(text);
+
+        assertEquals(1, replacements.size());
+        assertEquals("siglo XIX", replacements.get(0).getText());
     }
 }

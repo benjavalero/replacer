@@ -71,16 +71,15 @@ class FalsePositiveFinder implements ImmutableFinder, PropertyChangeListener {
         // On the other hand, option (b) is even 3x faster than (a), and fixes the just mentioned overlapping issue,
         // but it doesn't allow regular expressions.
         // For the moment, we stay with option (a).
-        if (falsePositives != null && !falsePositives.isEmpty()) {
-            final List<String> falsePositiveExpressions = falsePositives
-                .stream()
-                .map(FalsePositive::getExpression)
-                .toList();
-            final String alternations = FinderUtils.joinAlternate(falsePositiveExpressions);
-            return new RunAutomaton(new RegExp(alternations).toAutomaton(new DatatypesAutomatonProvider()));
-        } else {
+        if (falsePositives == null || falsePositives.isEmpty()) {
             return null;
         }
+        final List<String> falsePositiveExpressions = falsePositives
+            .stream()
+            .map(FalsePositive::getExpression)
+            .toList();
+        final String alternations = FinderUtils.joinAlternate(falsePositiveExpressions);
+        return new RunAutomaton(new RegExp(alternations).toAutomaton(new DatatypesAutomatonProvider()));
     }
 
     @Override

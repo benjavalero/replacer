@@ -37,4 +37,24 @@ class XmlTagFinderTest {
 
         assertTrue(matches.isEmpty());
     }
+
+    @Test
+    void testTagNotClosed() {
+        String text = "A not closed tag <br ";
+
+        ImmutableFinder xmlTagFinder = new XmlTagFinder();
+        List<Immutable> matches = xmlTagFinder.findList(text);
+
+        assertTrue(matches.isEmpty());
+    }
+
+    @Test
+    void testTagWithForbiddenChars() {
+        String text = "A tag with forbidden chars <span #>";
+
+        ImmutableFinder xmlTagFinder = new XmlTagFinder();
+        List<Immutable> matches = xmlTagFinder.findList(text);
+
+        assertTrue(matches.isEmpty());
+    }
 }

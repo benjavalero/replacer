@@ -30,6 +30,7 @@ class CoordinatesFinderTest {
             "38º05′08″ norte|38°05′08″&nbsp;N",
             "38º05′ N|38°05′&nbsp;N",
             "-38°05′08\"|-38°05′08″",
+            // "38º05′0883829879874892″|38°05′", // TODO
         }
     )
     void testNotValidCoordinates(String text, String expected) {
@@ -57,6 +58,7 @@ class CoordinatesFinderTest {
             "38°05′",
             "38°05′08",
             "38°  05′08″",
+            // "38º05′0883829879874892″ N", // TODO
         }
     )
     void testValidCoordinates(String text) {
@@ -76,5 +78,21 @@ class CoordinatesFinderTest {
         String text = "At 23º 14' O with 1978 and 123º0'15'' of latitude and longitude.";
         List<Replacement> replacements = coordinatesFinder.findList(text);
         assertEquals(2, replacements.size());
+    }
+
+    @ParameterizedTest
+    @ValueSource(
+        strings = {
+            "23o 14' 18''",
+            "23º 14` 18''",
+            "230º 14' 18''",
+            "23º 140' 18''",
+            "230512373828282º 14' 18''",
+            "23º 14058383822737373' 18''",
+        }
+    )
+    void testFalseNumbersOrSymbols(String text) {
+        List<Replacement> replacements = coordinatesFinder.findList(text);
+        assertTrue(replacements.isEmpty());
     }
 }

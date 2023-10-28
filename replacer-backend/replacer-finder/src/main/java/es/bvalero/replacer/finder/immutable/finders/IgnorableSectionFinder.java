@@ -80,8 +80,7 @@ class IgnorableSectionFinder implements ImmutableFinder {
                 return text.substring(start, i);
             }
         }
-        // Just in case
-        return text.substring(start);
+        throw new IllegalStateException();
     }
 
     private int findNextHeader(String text, int start, String headerLevel) {
