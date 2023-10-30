@@ -3,8 +3,8 @@ package es.bvalero.replacer.finder.immutable.finders;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.FinderPriority;
 import es.bvalero.replacer.finder.immutable.ImmutableCheckedFinder;
+import es.bvalero.replacer.finder.util.FinderMatchResult;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
-import es.bvalero.replacer.finder.util.LinearMatchResult;
 import java.util.regex.MatchResult;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
@@ -57,7 +57,7 @@ class CommentFinder extends ImmutableCheckedFinder {
             return null;
         }
 
-        return LinearMatchResult.of(text, startComment, endComment);
+        return FinderMatchResult.of(text, startComment, endComment);
     }
 
     private int findStartComment(String text, int start) {

@@ -2,9 +2,9 @@ package es.bvalero.replacer.finder.benchmark.word;
 
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
+import es.bvalero.replacer.finder.util.FinderMatchResult;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
-import es.bvalero.replacer.finder.util.LinearMatchResult;
 import java.util.*;
 import java.util.regex.MatchResult;
 import org.springframework.lang.Nullable;
@@ -32,7 +32,7 @@ class WordLinearAllFinder implements BenchmarkFinder {
                 final String word = text.substring(startWord, endWord);
                 // The word is wrapped by non-letters, so we still need to validate the separators.
                 if (words.contains(word) && FinderUtils.isWordCompleteInText(startWord, word, text)) {
-                    return LinearMatchResult.of(startWord, word);
+                    return FinderMatchResult.of(startWord, word);
                 } else {
                     // The char after the word is a non-letter, so we can start searching the next word one position after.
                     start = endWord + 1;

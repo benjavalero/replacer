@@ -6,8 +6,8 @@ import es.bvalero.replacer.FinderProperties;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.FinderPriority;
 import es.bvalero.replacer.finder.immutable.ImmutableCheckedFinder;
+import es.bvalero.replacer.finder.util.FinderMatchResult;
 import es.bvalero.replacer.finder.util.FinderUtils;
-import es.bvalero.replacer.finder.util.LinearMatchResult;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -61,21 +61,21 @@ class LinkFinder extends ImmutableCheckedFinder {
     @Override
     public Iterable<MatchResult> findMatchResults(FinderPage page) {
         final List<MatchResult> immutables = new ArrayList<>(100);
-        for (LinearMatchResult template : FinderUtils.findAllStructures(page, START_LINK, END_LINK)) {
+        for (MatchResult template : FinderUtils.findAllStructures(page, START_LINK, END_LINK)) {
             CollectionUtils.addIgnoreNull(immutables, findImmutable(template, page));
         }
         return immutables;
     }
 
     @Nullable
-    private MatchResult findImmutable(LinearMatchResult link, FinderPage page) {
+    private MatchResult findImmutable(MatchResult link, FinderPage page) {
         // Let's check first the easiest cases
         final String text = page.getContent();
 
         // If the link is suffixed then return the complete link
         final int endSuffix = findEndSuffix(text, link.end());
         if (endSuffix > link.end()) {
-            return LinearMatchResult.of(text, link.start(), endSuffix);
+            return FinderMatchResult.of(text, link.start(), endSuffix);
         }
 
         final String linkContent = getLinkContent(link.group());
@@ -99,7 +99,7 @@ class LinkFinder extends ImmutableCheckedFinder {
                 return link;
             } else {
                 final int startTitle = link.start() + START_LINK.length();
-                return LinearMatchResult.of(startTitle, linkTitle);
+                return FinderMatchResult.of(startTitle, linkTitle);
             }
         }
 

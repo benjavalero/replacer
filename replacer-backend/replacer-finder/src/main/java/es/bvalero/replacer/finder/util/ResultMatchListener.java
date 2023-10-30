@@ -14,7 +14,7 @@ public class ResultMatchListener implements MapMatchListener<String> {
 
     @Override
     public boolean match(String text, int start, int end, String word) {
-        matches.add(LinearMatchResult.of(start, word));
+        matches.add(FinderMatchResult.of(start, word));
         return true;
     }
 }

@@ -5,8 +5,8 @@ import static es.bvalero.replacer.finder.util.FinderUtils.NEW_LINE;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.FinderPriority;
 import es.bvalero.replacer.finder.immutable.ImmutableCheckedFinder;
+import es.bvalero.replacer.finder.util.FinderMatchResult;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
-import es.bvalero.replacer.finder.util.LinearMatchResult;
 import java.util.Set;
 import java.util.regex.MatchResult;
 import org.apache.commons.lang3.StringUtils;
@@ -67,7 +67,7 @@ abstract class QuotesFinder extends ImmutableCheckedFinder {
             }
 
             if (validateQuote(page, startQuote, endQuote)) {
-                return LinearMatchResult.of(text, startQuote, endQuote);
+                return FinderMatchResult.of(text, startQuote, endQuote);
             } else {
                 start = endQuote;
             }

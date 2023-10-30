@@ -4,9 +4,9 @@ import es.bvalero.replacer.FinderProperties;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.FinderPriority;
 import es.bvalero.replacer.finder.immutable.ImmutableCheckedFinder;
+import es.bvalero.replacer.finder.util.FinderMatchResult;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
-import es.bvalero.replacer.finder.util.LinearMatchResult;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.MatchResult;
@@ -88,7 +88,7 @@ class CompleteTagFinder extends ImmutableCheckedFinder {
                 continue;
             }
 
-            return LinearMatchResult.of(text, startCompleteTag, endCompleteTag);
+            return FinderMatchResult.of(text, startCompleteTag, endCompleteTag);
         }
         return null;
     }

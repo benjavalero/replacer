@@ -6,9 +6,9 @@ import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.Suggestion;
 import es.bvalero.replacer.finder.replacement.ReplacementFinder;
+import es.bvalero.replacer.finder.util.FinderMatchResult;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
-import es.bvalero.replacer.finder.util.LinearMatchResult;
 import java.util.List;
 import java.util.regex.MatchResult;
 import org.springframework.lang.Nullable;
@@ -43,7 +43,7 @@ public class AcuteOFinder implements ReplacementFinder {
             }
 
             if (isImmutable(text, startAcuteO)) {
-                return LinearMatchResult.of(startAcuteO, ACUTE_O);
+                return FinderMatchResult.of(startAcuteO, ACUTE_O);
             } else {
                 start = startAcuteO + 2; // As we have searched with surrounding whitespaces
             }
@@ -59,13 +59,13 @@ public class AcuteOFinder implements ReplacementFinder {
     private boolean isImmutable(String text, int startAcuteO) {
         // We need to check the words before and after
         // The char before and after the acute-o is a white-space, but we need to check the rest of chars in the middle.
-        final LinearMatchResult matchBefore = FinderUtils.findWordBefore(text, startAcuteO);
+        final MatchResult matchBefore = FinderUtils.findWordBefore(text, startAcuteO);
         if (matchBefore == null || (matchBefore.end() != startAcuteO - 1)) {
             return false;
         }
 
         final int endAcuteO = startAcuteO + ACUTE_O.length();
-        final LinearMatchResult matchAfter = FinderUtils.findWordAfter(text, endAcuteO);
+        final MatchResult matchAfter = FinderUtils.findWordAfter(text, endAcuteO);
         return matchAfter != null && (matchAfter.start() == endAcuteO + 1);
     }
 

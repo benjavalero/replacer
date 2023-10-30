@@ -7,8 +7,8 @@ import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.FinderPriority;
 import es.bvalero.replacer.finder.immutable.ImmutableFinder;
+import es.bvalero.replacer.finder.util.FinderMatchResult;
 import es.bvalero.replacer.finder.util.FinderUtils;
-import es.bvalero.replacer.finder.util.LinearMatchResult;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -94,7 +94,7 @@ class TemplateFinder implements ImmutableFinder {
     @Override
     public Iterable<MatchResult> findMatchResults(FinderPage page) {
         final List<MatchResult> immutables = new ArrayList<>(100);
-        for (LinearMatchResult template : FinderUtils.findAllStructures(
+        for (FinderMatchResult template : FinderUtils.findAllStructures(
             page,
             START_TEMPLATE,
             END_TEMPLATE,
@@ -113,7 +113,7 @@ class TemplateFinder implements ImmutableFinder {
         return Character.isLetterOrDigit(nextChar);
     }
 
-    private List<MatchResult> findImmutables(LinearMatchResult template, FinderPage page) {
+    private List<MatchResult> findImmutables(FinderMatchResult template, FinderPage page) {
         // Let's check first the easiest cases
         final String templateContent = getTemplateContent(template.group());
 
@@ -127,7 +127,7 @@ class TemplateFinder implements ImmutableFinder {
 
         // If the whole page is to be ignored the return an immutable of the complete page content
         if (ignoreCompletePage(normalizedTemplateName)) {
-            return List.of(LinearMatchResult.of(0, page.getContent()));
+            return List.of(FinderMatchResult.of(0, page.getContent()));
         }
         // If the template is to be ignored as a whole then return an immutable of the complete template
         if (ignoreCompleteTemplate(normalizedTemplateName)) {
@@ -137,7 +137,7 @@ class TemplateFinder implements ImmutableFinder {
         final List<MatchResult> immutables = new ArrayList<>();
 
         // Add the template name
-        immutables.add(LinearMatchResult.of(template.start() + START_TEMPLATE.length(), templateName));
+        immutables.add(FinderMatchResult.of(template.start() + START_TEMPLATE.length(), templateName));
 
         // Add the immutables from the parameters and/or values
         immutables.addAll(findParameterImmutables(template, templateName, templateContent, page));
@@ -182,7 +182,7 @@ class TemplateFinder implements ImmutableFinder {
     }
 
     private List<MatchResult> findParameterImmutables(
-        LinearMatchResult template,
+        FinderMatchResult template,
         String templateName,
         String templateContent,
         FinderPage page
@@ -235,19 +235,19 @@ class TemplateFinder implements ImmutableFinder {
 
             // Always return template parameters as immutables
             if (parameter != null) {
-                immutables.add(LinearMatchResult.of(startTemplateContent + startParameter, parameter));
+                immutables.add(FinderMatchResult.of(startTemplateContent + startParameter, parameter));
             }
 
             if (StringUtils.isNotBlank(value)) {
                 final String trimmedValue = trimValue(value);
                 if (isValueImmutable(trimmedValue, parameter, templateName)) {
-                    immutables.add(LinearMatchResult.of(startTemplateContent + startValue, trimmedValue));
+                    immutables.add(FinderMatchResult.of(startTemplateContent + startValue, trimmedValue));
                 } else {
                     // If the value starts with an uppercase word then we return this word
                     final MatchResult firstWordUpperCase = findFirstWordUpperCase(value, lang);
                     if (firstWordUpperCase != null) {
                         immutables.add(
-                            LinearMatchResult.of(
+                            FinderMatchResult.of(
                                 startTemplateContent + startValue + firstWordUpperCase.start(),
                                 firstWordUpperCase.group()
                             )

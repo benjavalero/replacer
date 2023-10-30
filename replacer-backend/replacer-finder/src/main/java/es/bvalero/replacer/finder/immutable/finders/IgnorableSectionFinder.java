@@ -6,8 +6,8 @@ import es.bvalero.replacer.FinderProperties;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.FinderPriority;
 import es.bvalero.replacer.finder.immutable.ImmutableFinder;
+import es.bvalero.replacer.finder.util.FinderMatchResult;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
-import es.bvalero.replacer.finder.util.LinearMatchResult;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.MatchResult;
@@ -66,7 +66,7 @@ class IgnorableSectionFinder implements ImmutableFinder {
             }
 
             final int endSection = findStartNextHeader(text, startHeader, endHeader);
-            return LinearMatchResult.of(text, startHeader, endSection);
+            return FinderMatchResult.of(text, startHeader, endSection);
         }
         return null;
     }

@@ -3,6 +3,7 @@ package es.bvalero.replacer.finder.util;
 import static org.junit.jupiter.api.Assertions.*;
 
 import es.bvalero.replacer.finder.FinderPage;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -121,24 +122,24 @@ class FinderUtilsTest {
 
     @Test
     void testFindWordAfter() {
-        assertEquals(LinearMatchResult.of(5, "Mundo"), FinderUtils.findWordAfter("Hola Mundo", 4));
-        assertEquals(LinearMatchResult.of(5, "Mundo"), FinderUtils.findWordAfter("Hola Mundo", 5));
-        assertEquals(LinearMatchResult.of(8, "Mundo"), FinderUtils.findWordAfter("Un Hola Mundo", 7));
-        assertEquals(LinearMatchResult.of(8, "Mundo"), FinderUtils.findWordAfter("Un Hola Mundo", 8));
-        assertEquals(LinearMatchResult.of(5, "mundo"), FinderUtils.findWordAfter("Hola mundo", 4));
-        assertEquals(LinearMatchResult.of(6, "Mundo"), FinderUtils.findWordAfter("Hola, Mundo", 4));
-        assertEquals(LinearMatchResult.of(6, "Mundo"), FinderUtils.findWordAfter("Hola, Mundo", 5));
-        assertEquals(LinearMatchResult.of(5, "Mundo"), FinderUtils.findWordAfter("Hola-Mundo", 4));
+        assertEquals(FinderMatchResult.of(5, "Mundo"), FinderUtils.findWordAfter("Hola Mundo", 4));
+        assertEquals(FinderMatchResult.of(5, "Mundo"), FinderUtils.findWordAfter("Hola Mundo", 5));
+        assertEquals(FinderMatchResult.of(8, "Mundo"), FinderUtils.findWordAfter("Un Hola Mundo", 7));
+        assertEquals(FinderMatchResult.of(8, "Mundo"), FinderUtils.findWordAfter("Un Hola Mundo", 8));
+        assertEquals(FinderMatchResult.of(5, "mundo"), FinderUtils.findWordAfter("Hola mundo", 4));
+        assertEquals(FinderMatchResult.of(6, "Mundo"), FinderUtils.findWordAfter("Hola, Mundo", 4));
+        assertEquals(FinderMatchResult.of(6, "Mundo"), FinderUtils.findWordAfter("Hola, Mundo", 5));
+        assertEquals(FinderMatchResult.of(5, "Mundo"), FinderUtils.findWordAfter("Hola-Mundo", 4));
         assertNull(FinderUtils.findWordAfter("Hola", 4));
         assertNull(FinderUtils.findWordAfter("Hola ", 4));
-        assertEquals(LinearMatchResult.of(0, "Hola"), FinderUtils.findWordAfter("Hola", 0));
-        assertEquals(LinearMatchResult.of(5, "A"), FinderUtils.findWordAfter("Hola A", 4));
-        assertEquals(LinearMatchResult.of(6, "A"), FinderUtils.findWordAfter("Hola  A", 4));
-        assertEquals(LinearMatchResult.of(7, "A"), FinderUtils.findWordAfter("Hola . A", 4));
-        assertEquals(LinearMatchResult.of(5, "23.5"), FinderUtils.findWordAfter("Hola 23.5", 4, Set.of('.'), false));
-        assertEquals(LinearMatchResult.of(5, "..."), FinderUtils.findWordAfter("Hola ...", 4, Set.of('.'), true));
+        assertEquals(FinderMatchResult.of(0, "Hola"), FinderUtils.findWordAfter("Hola", 0));
+        assertEquals(FinderMatchResult.of(5, "A"), FinderUtils.findWordAfter("Hola A", 4));
+        assertEquals(FinderMatchResult.of(6, "A"), FinderUtils.findWordAfter("Hola  A", 4));
+        assertEquals(FinderMatchResult.of(7, "A"), FinderUtils.findWordAfter("Hola . A", 4));
+        assertEquals(FinderMatchResult.of(5, "23.5"), FinderUtils.findWordAfter("Hola 23.5", 4, Set.of('.'), false));
+        assertEquals(FinderMatchResult.of(5, "..."), FinderUtils.findWordAfter("Hola ...", 4, Set.of('.'), true));
         assertNull(FinderUtils.findWordAfter("Hola ...", 4, Set.of('.'), false));
-        assertEquals(LinearMatchResult.of(10, "Mundo"), FinderUtils.findWordAfter("Hola&nbsp;Mundo", 4));
+        assertEquals(FinderMatchResult.of(10, "Mundo"), FinderUtils.findWordAfter("Hola&nbsp;Mundo", 4));
     }
 
     @Test
@@ -166,29 +167,29 @@ class FinderUtilsTest {
 
     @Test
     void testFindWordBefore() {
-        assertEquals(LinearMatchResult.of(0, "Hola"), FinderUtils.findWordBefore("Hola mundo", 5));
-        assertEquals(LinearMatchResult.of(0, "Hola"), FinderUtils.findWordBefore("Hola mundo", 4));
-        assertEquals(LinearMatchResult.of(0, "Hola"), FinderUtils.findWordBefore("Hola-mundo", 5));
+        assertEquals(FinderMatchResult.of(0, "Hola"), FinderUtils.findWordBefore("Hola mundo", 5));
+        assertEquals(FinderMatchResult.of(0, "Hola"), FinderUtils.findWordBefore("Hola mundo", 4));
+        assertEquals(FinderMatchResult.of(0, "Hola"), FinderUtils.findWordBefore("Hola-mundo", 5));
         assertNull(FinderUtils.findWordBefore("Hola", 0));
-        assertEquals(LinearMatchResult.of(0, "Hola"), FinderUtils.findWordBefore("HolaMundo", 4));
-        assertEquals(LinearMatchResult.of(0, "Hola"), FinderUtils.findWordBefore("Hola", 4));
-        assertEquals(LinearMatchResult.of(0, "Hola"), FinderUtils.findWordBefore("Hola  mundo", 6));
-        assertEquals(LinearMatchResult.of(3, "Hola"), FinderUtils.findWordBefore("Un Hola, mundo", 9));
-        assertEquals(LinearMatchResult.of(3, "Hola"), FinderUtils.findWordBefore("Un Hola , mundo", 10));
+        assertEquals(FinderMatchResult.of(0, "Hola"), FinderUtils.findWordBefore("HolaMundo", 4));
+        assertEquals(FinderMatchResult.of(0, "Hola"), FinderUtils.findWordBefore("Hola", 4));
+        assertEquals(FinderMatchResult.of(0, "Hola"), FinderUtils.findWordBefore("Hola  mundo", 6));
+        assertEquals(FinderMatchResult.of(3, "Hola"), FinderUtils.findWordBefore("Un Hola, mundo", 9));
+        assertEquals(FinderMatchResult.of(3, "Hola"), FinderUtils.findWordBefore("Un Hola , mundo", 10));
         assertEquals(
-            LinearMatchResult.of(3, "23.5"),
+            FinderMatchResult.of(3, "23.5"),
             FinderUtils.findWordBefore("Un 23.5 , mundo", 10, Set.of('.'), false)
         );
         assertEquals(
-            LinearMatchResult.of(3, "...."),
+            FinderMatchResult.of(3, "...."),
             FinderUtils.findWordBefore("Un .... , mundo", 10, Set.of('.'), true)
         );
         assertEquals(
-            LinearMatchResult.of(6, "x"),
+            FinderMatchResult.of(6, "x"),
             FinderUtils.findWordBefore("Un ...x , mundo", 10, Set.of('.'), false)
         );
         assertNull(FinderUtils.findWordBefore("Un .... , mundo", 10, Set.of('.'), false));
-        assertEquals(LinearMatchResult.of(0, "Hola"), FinderUtils.findWordBefore("Hola&nbsp;mundo", 10));
+        assertEquals(FinderMatchResult.of(0, "Hola"), FinderUtils.findWordBefore("Hola&nbsp;mundo", 10));
     }
 
     @Test
@@ -200,8 +201,8 @@ class FinderUtilsTest {
 
     /***** PARSE UTILS *****/
 
-    private List<LinearMatchResult> findAllLinks(FinderPage page) {
-        return FinderUtils.findAllStructures(page, FinderUtils.START_LINK, FinderUtils.END_LINK);
+    private List<FinderMatchResult> findAllLinks(FinderPage page) {
+        return new ArrayList<>(FinderUtils.findAllStructures(page, FinderUtils.START_LINK, FinderUtils.END_LINK));
     }
 
     @Test
@@ -209,7 +210,7 @@ class FinderUtilsTest {
         String link = "[[Link|Text]]";
 
         FinderPage page = FinderPage.of(link);
-        List<LinearMatchResult> matches = findAllLinks(page);
+        List<FinderMatchResult> matches = findAllLinks(page);
 
         assertEquals(1, matches.size());
         assertEquals(link, matches.get(0).group());
@@ -220,7 +221,7 @@ class FinderUtilsTest {
         String link = "[[Link|Text";
 
         FinderPage page = FinderPage.of(link);
-        List<LinearMatchResult> matches = findAllLinks(page);
+        List<FinderMatchResult> matches = findAllLinks(page);
 
         assertTrue(matches.isEmpty());
     }
@@ -231,7 +232,7 @@ class FinderUtilsTest {
         String link = String.format("[[Link|Text %s Text]]", link2);
 
         FinderPage page = FinderPage.of(link);
-        List<LinearMatchResult> matches = findAllLinks(page);
+        List<FinderMatchResult> matches = findAllLinks(page);
 
         Set<String> links = Set.of(link, link2);
         assertEquals(links, matches.stream().map(MatchResult::group).collect(Collectors.toSet()));
@@ -244,19 +245,19 @@ class FinderUtilsTest {
         String link = String.format("[[Link|Text %s Text %s Text]]", link2, link3);
 
         FinderPage page = FinderPage.of(link);
-        List<LinearMatchResult> matches = findAllLinks(page);
+        List<FinderMatchResult> matches = findAllLinks(page);
 
         Set<String> links = Set.of(link, link2, link3);
         assertEquals(links, matches.stream().map(MatchResult::group).collect(Collectors.toSet()));
 
-        LinearMatchResult matchLink = matches.stream().filter(m -> m.group().equals(link)).findAny().get();
-        LinearMatchResult matchLink2 = matches.stream().filter(m -> m.group().equals(link2)).findAny().get();
-        LinearMatchResult matchLink3 = matches.stream().filter(m -> m.group().equals(link3)).findAny().get();
-        assertEquals(2, matchLink.getGroups().size());
-        assertEquals(matchLink2, matchLink.getGroups().get(0));
-        assertEquals(matchLink3, matchLink.getGroups().get(1));
-        assertTrue(matchLink2.getGroups().isEmpty());
-        assertTrue(matchLink3.getGroups().isEmpty());
+        FinderMatchResult matchLink = matches.stream().filter(m -> m.group().equals(link)).findAny().get();
+        MatchResult matchLink2 = matches.stream().filter(m -> m.group().equals(link2)).findAny().get();
+        MatchResult matchLink3 = matches.stream().filter(m -> m.group().equals(link3)).findAny().get();
+        assertEquals(2, matchLink.groupCount());
+        assertEquals(matchLink2, matchLink.getGroups().get(1));
+        assertEquals(matchLink3, matchLink.getGroups().get(2));
+        assertEquals(0, matchLink2.groupCount());
+        assertEquals(0, matchLink3.groupCount());
     }
 
     @Test
@@ -266,19 +267,19 @@ class FinderUtilsTest {
         String link = String.format("[[Link|Text %s Text]]", link2);
 
         FinderPage page = FinderPage.of(link);
-        List<LinearMatchResult> matches = findAllLinks(page);
+        List<FinderMatchResult> matches = findAllLinks(page);
 
         Set<String> links = Set.of(link, link2, link3);
         assertEquals(links, matches.stream().map(MatchResult::group).collect(Collectors.toSet()));
 
-        LinearMatchResult matchLink = matches.stream().filter(m -> m.group().equals(link)).findAny().get();
-        LinearMatchResult matchLink2 = matches.stream().filter(m -> m.group().equals(link2)).findAny().get();
-        LinearMatchResult matchLink3 = matches.stream().filter(m -> m.group().equals(link3)).findAny().get();
-        assertEquals(1, matchLink.getGroups().size());
-        assertEquals(matchLink2, matchLink.getGroups().get(0));
-        assertEquals(1, matchLink2.getGroups().size());
-        assertEquals(matchLink3, matchLink2.getGroups().get(0));
-        assertTrue(matchLink3.getGroups().isEmpty());
+        FinderMatchResult matchLink = matches.stream().filter(m -> m.group().equals(link)).findAny().get();
+        FinderMatchResult matchLink2 = matches.stream().filter(m -> m.group().equals(link2)).findAny().get();
+        MatchResult matchLink3 = matches.stream().filter(m -> m.group().equals(link3)).findAny().get();
+        assertEquals(1, matchLink.groupCount());
+        assertEquals(matchLink2, matchLink.getGroups().get(1));
+        assertEquals(1, matchLink2.groupCount());
+        assertEquals(matchLink3, matchLink2.getGroups().get(1));
+        assertEquals(0, matchLink3.groupCount());
     }
 
     @Test
@@ -288,7 +289,7 @@ class FinderUtilsTest {
         String link = String.format("[[Link|Text %s Text", link2);
 
         FinderPage page = FinderPage.of(link);
-        List<LinearMatchResult> matches = findAllLinks(page);
+        List<FinderMatchResult> matches = findAllLinks(page);
 
         Set<String> links = Set.of(link2, link3);
         assertEquals(links, matches.stream().map(MatchResult::group).collect(Collectors.toSet()));
@@ -299,7 +300,7 @@ class FinderUtilsTest {
         String link = "[[Link|Text [[Link2|Text2 Text]] [[Link3]]";
 
         FinderPage page = FinderPage.of(link);
-        List<LinearMatchResult> matches = findAllLinks(page);
+        List<FinderMatchResult> matches = findAllLinks(page);
 
         Set<String> links = Set.of("[[Link2|Text2 Text]]", "[[Link3]]");
         assertEquals(links, matches.stream().map(MatchResult::group).collect(Collectors.toSet()));
@@ -312,14 +313,14 @@ class FinderUtilsTest {
         String text = String.format("%s %s", link1, link2);
 
         FinderPage page = FinderPage.of(text);
-        List<LinearMatchResult> matches = findAllLinks(page);
+        List<FinderMatchResult> matches = findAllLinks(page);
 
         List<String> expected = List.of(link1, link2);
         assertEquals(expected, matches.stream().map(MatchResult::group).collect(Collectors.toList()));
     }
 
-    private List<LinearMatchResult> findAllTemplates(FinderPage page) {
-        return FinderUtils.findAllStructures(page, "{{", "}}");
+    private List<FinderMatchResult> findAllTemplates(FinderPage page) {
+        return new ArrayList<>(FinderUtils.findAllStructures(page, "{{", "}}"));
     }
 
     @Test
@@ -327,7 +328,7 @@ class FinderUtilsTest {
         String template = "{{Template|Text}}";
 
         FinderPage page = FinderPage.of(template);
-        List<LinearMatchResult> matches = findAllTemplates(page);
+        List<FinderMatchResult> matches = findAllTemplates(page);
 
         assertEquals(1, matches.size());
         assertEquals(template, matches.get(0).group());
@@ -338,7 +339,7 @@ class FinderUtilsTest {
         String template = "{{Template|Text";
 
         FinderPage page = FinderPage.of(template);
-        List<LinearMatchResult> matches = findAllTemplates(page);
+        List<FinderMatchResult> matches = findAllTemplates(page);
 
         assertTrue(matches.isEmpty());
     }
@@ -349,7 +350,7 @@ class FinderUtilsTest {
         String template = String.format("{{Template|Text %s Text}}", template2);
 
         FinderPage page = FinderPage.of(template);
-        List<LinearMatchResult> matches = findAllTemplates(page);
+        List<FinderMatchResult> matches = findAllTemplates(page);
 
         Set<String> templates = Set.of(template, template2);
         assertEquals(templates, matches.stream().map(MatchResult::group).collect(Collectors.toSet()));
@@ -362,7 +363,7 @@ class FinderUtilsTest {
         String template = String.format("{{Template|Text %s Text %s Text}}", template2, template3);
 
         FinderPage page = FinderPage.of(template);
-        List<LinearMatchResult> matches = findAllTemplates(page);
+        List<FinderMatchResult> matches = findAllTemplates(page);
 
         Set<String> templates = Set.of(template, template2, template3);
         assertEquals(templates, matches.stream().map(MatchResult::group).collect(Collectors.toSet()));
@@ -375,7 +376,7 @@ class FinderUtilsTest {
         String template = String.format("{{Template|Text %s Text}}", template2);
 
         FinderPage page = FinderPage.of(template);
-        List<LinearMatchResult> matches = findAllTemplates(page);
+        List<FinderMatchResult> matches = findAllTemplates(page);
 
         Set<String> templates = Set.of(template, template2, template3);
         assertEquals(templates, matches.stream().map(MatchResult::group).collect(Collectors.toSet()));
@@ -388,7 +389,7 @@ class FinderUtilsTest {
         String template = String.format("{{Template|Text %s Text", template2);
 
         FinderPage page = FinderPage.of(template);
-        List<LinearMatchResult> matches = findAllTemplates(page);
+        List<FinderMatchResult> matches = findAllTemplates(page);
 
         Set<String> templates = Set.of(template2, template3);
         assertEquals(templates, matches.stream().map(MatchResult::group).collect(Collectors.toSet()));
@@ -401,7 +402,7 @@ class FinderUtilsTest {
         String text = String.format("%s %s", template1, template2);
 
         FinderPage page = FinderPage.of(text);
-        List<LinearMatchResult> matches = findAllTemplates(page);
+        List<FinderMatchResult> matches = findAllTemplates(page);
 
         List<String> expected = List.of(template1, template2);
         assertEquals(expected, matches.stream().map(MatchResult::group).collect(Collectors.toList()));
@@ -415,7 +416,7 @@ class FinderUtilsTest {
         String text = String.format("%s %s %s", fake, template1, template2);
 
         FinderPage page = FinderPage.of(text);
-        List<LinearMatchResult> matches = findAllTemplates(page);
+        List<FinderMatchResult> matches = findAllTemplates(page);
 
         Set<String> expected = Set.of(template1, template2);
         assertEquals(expected, matches.stream().map(MatchResult::group).collect(Collectors.toSet()));
@@ -426,12 +427,12 @@ class FinderUtilsTest {
         String text = "In the town where I_was born.";
 
         Set<MatchResult> expected = new HashSet<>();
-        expected.add(LinearMatchResult.of(0, "In"));
-        expected.add(LinearMatchResult.of(3, "the"));
-        expected.add(LinearMatchResult.of(7, "town"));
-        expected.add(LinearMatchResult.of(12, "where"));
-        expected.add(LinearMatchResult.of(18, "I_was"));
-        expected.add(LinearMatchResult.of(24, "born"));
+        expected.add(FinderMatchResult.of(0, "In"));
+        expected.add(FinderMatchResult.of(3, "the"));
+        expected.add(FinderMatchResult.of(7, "town"));
+        expected.add(FinderMatchResult.of(12, "where"));
+        expected.add(FinderMatchResult.of(18, "I_was"));
+        expected.add(FinderMatchResult.of(24, "born"));
 
         List<MatchResult> matches = FinderUtils.findAllWords(text);
         assertEquals(expected, new HashSet<>(matches));

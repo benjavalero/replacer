@@ -221,7 +221,7 @@ public class FinderUtils {
 
     /** Find the most close sequence of letters and digits starting at the given position */
     @Nullable
-    public LinearMatchResult findWordAfter(String text, int start) {
+    public MatchResult findWordAfter(String text, int start) {
         return findWordAfter(text, start, List.of(), false);
     }
 
@@ -230,7 +230,7 @@ public class FinderUtils {
      * Some additional chars are allowed, at the start or in the middle according to the configuration.
      */
     @Nullable
-    public LinearMatchResult findWordAfter(
+    public MatchResult findWordAfter(
         String text,
         int start,
         Collection<Character> allowedChars,
@@ -263,13 +263,13 @@ public class FinderUtils {
         if (isSpaceWord(word)) {
             return findWordAfter(text, lastLetter + 1, allowedChars, charsAllowedAtStart);
         } else {
-            return LinearMatchResult.of(firstLetter, word);
+            return FinderMatchResult.of(firstLetter, word);
         }
     }
 
     public int countWords(String text, int start, int end) {
         int count = 0;
-        LinearMatchResult matchWord = findWordAfter(text, start);
+        MatchResult matchWord = findWordAfter(text, start);
         while (matchWord != null && matchWord.end() <= end) {
             count++;
             matchWord = findWordAfter(text, matchWord.end());
@@ -285,13 +285,13 @@ public class FinderUtils {
         if (start < 2 || !isValidSeparator(text.charAt(start - 1))) {
             return false;
         }
-        final LinearMatchResult wordBefore = findWordBefore(text, start);
+        final MatchResult wordBefore = findWordBefore(text, start);
         return wordBefore != null && startsWithUpperCase(wordBefore.group());
     }
 
     /* Find the most close sequence of letters and digits ending at the given position */
     @Nullable
-    public LinearMatchResult findWordBefore(String text, int start) {
+    public MatchResult findWordBefore(String text, int start) {
         return findWordBefore(text, start, List.of(), false);
     }
 
@@ -300,7 +300,7 @@ public class FinderUtils {
      * Some additional chars are allowed, at the start or in the middle according to the configuration.
      */
     @Nullable
-    public LinearMatchResult findWordBefore(
+    public MatchResult findWordBefore(
         String text,
         int start,
         Collection<Character> allowedChars,
@@ -342,12 +342,12 @@ public class FinderUtils {
         if (isSpaceWord(word)) {
             return findWordBefore(text, firstLetter, allowedChars, charsAllowedAtStart);
         } else {
-            return LinearMatchResult.of(firstLetter, word);
+            return FinderMatchResult.of(firstLetter, word);
         }
     }
 
     @Nullable
-    public LinearMatchResult findNumberMatch(String text, int start, boolean allowDecimals) {
+    public MatchResult findNumberMatch(String text, int start, boolean allowDecimals) {
         int startNumber = -1;
         int endNumber = -1;
         for (int i = start; i < text.length(); i++) {
@@ -367,7 +367,7 @@ public class FinderUtils {
         if (endNumber < 0) {
             endNumber = text.length();
         }
-        return LinearMatchResult.of(text, startNumber, endNumber);
+        return FinderMatchResult.of(text, startNumber, endNumber);
     }
 
     private String getTextSnippet(String text, int start, int end) {
@@ -405,22 +405,34 @@ public class FinderUtils {
         boolean validate(String text, int start);
     }
 
-    public List<LinearMatchResult> findAllStructures(FinderPage page, String startStr, String endStr) {
+    /* Temporary match result when we only know the match start */
+    private class TempMatchResult extends FinderMatchResult {
+
+        TempMatchResult(int start) {
+            super(start, "");
+        }
+
+        static TempMatchResult of(int start) {
+            return new TempMatchResult(start);
+        }
+    }
+
+    public Collection<FinderMatchResult> findAllStructures(FinderPage page, String startStr, String endStr) {
         return findAllStructures(page, startStr, endStr, (text, start) -> true);
     }
 
-    public List<LinearMatchResult> findAllStructures(
+    public Collection<FinderMatchResult> findAllStructures(
         FinderPage page,
         String startStr,
         String endStr,
         LogResultValidator logResultValidator
     ) {
         // A loop is a little better than recursion
-        final List<LinearMatchResult> matches = new ArrayList<>();
+        final List<FinderMatchResult> matches = new ArrayList<>();
 
         final String text = page.getContent();
         // Deque implementation is a little better than old stack and recommended by Java
-        final Deque<LinearMatchResult> matchStack = new ArrayDeque<>();
+        final Deque<TempMatchResult> matchStack = new ArrayDeque<>();
         int index = 0;
         while (index >= 0 && index < text.length()) {
             if (matchStack.isEmpty()) {
@@ -428,12 +440,12 @@ public class FinderUtils {
                 if (newStart < 0) {
                     break;
                 }
-                matchStack.addLast(LinearMatchResult.ofEmpty(newStart));
+                matchStack.addLast(TempMatchResult.of(newStart));
                 index = newStart + startStr.length();
             }
 
             assert !matchStack.isEmpty();
-            final LinearMatchResult currentMatch = matchStack.getLast();
+            final TempMatchResult currentMatch = matchStack.getLast();
             final int start = currentMatch.start();
             final int end = text.indexOf(endStr, index);
             if (end < 0) {
@@ -447,7 +459,7 @@ public class FinderUtils {
             final int nextStart = text.indexOf(startStr, index);
             if (nextStart >= 0 && nextStart < end) {
                 // Nested structure
-                final LinearMatchResult nextMatch = LinearMatchResult.ofEmpty(nextStart);
+                final TempMatchResult nextMatch = TempMatchResult.of(nextStart);
                 currentMatch.addGroup(nextMatch);
                 matchStack.addLast(nextMatch);
                 index = nextStart + startStr.length();
@@ -487,7 +499,7 @@ public class FinderUtils {
                 }
             }
 
-            words.add(LinearMatchResult.of(text, startWord, endWord));
+            words.add(FinderMatchResult.of(text, startWord, endWord));
             start = endWord + 1;
         }
         return words;

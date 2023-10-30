@@ -7,9 +7,9 @@ import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.Suggestion;
 import es.bvalero.replacer.finder.replacement.ReplacementFinder;
+import es.bvalero.replacer.finder.util.FinderMatchResult;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
-import es.bvalero.replacer.finder.util.LinearMatchResult;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.MatchResult;
@@ -43,7 +43,7 @@ public class DegreeFinder implements ReplacementFinder {
         final String text = page.getContent();
         while (start >= 0 && start < text.length()) {
             // Find the degree symbol, e.g. ºC
-            final LinearMatchResult matchSymbol = findDegreeSymbol(text, start);
+            final MatchResult matchSymbol = findDegreeSymbol(text, start);
             if (matchSymbol == null) {
                 return null;
             }
@@ -51,17 +51,17 @@ public class DegreeFinder implements ReplacementFinder {
             final int endDegree = matchSymbol.end();
 
             // Find the word before (not necessarily a number)
-            final LinearMatchResult matchWord = findDegreeWord(text, startSymbol);
+            final MatchResult matchWord = findDegreeWord(text, startSymbol);
             if (matchWord == null) {
                 start = endDegree;
                 continue;
             }
 
             final int startDegree = matchWord.start();
-            final LinearMatchResult match = LinearMatchResult.of(text, startDegree, endDegree);
-            // 0 - word; 1 - space before; 2 - symbol
+            final FinderMatchResult match = FinderMatchResult.of(text, startDegree, endDegree);
+            // 1 - word; 2 - space before; 3 - symbol
             match.addGroup(matchWord);
-            match.addGroup(LinearMatchResult.of(text, matchWord.end(), startSymbol));
+            match.addGroup(FinderMatchResult.of(text, matchWord.end(), startSymbol));
             match.addGroup(matchSymbol);
             return match;
         }
@@ -69,7 +69,7 @@ public class DegreeFinder implements ReplacementFinder {
     }
 
     @Nullable
-    private LinearMatchResult findDegreeSymbol(String text, int start) {
+    private MatchResult findDegreeSymbol(String text, int start) {
         // First we find the initial symbol
         final String textSearchable = text.substring(start);
         int startSymbol = StringUtils.indexOfAny(
@@ -88,7 +88,7 @@ public class DegreeFinder implements ReplacementFinder {
         // If it is a Unicode symbol we are done
         final char degreeSymbol = text.charAt(startSymbol);
         if (isUnicodeSymbol(degreeSymbol)) {
-            return LinearMatchResult.of(startSymbol, Character.toString(degreeSymbol));
+            return FinderMatchResult.of(startSymbol, Character.toString(degreeSymbol));
         }
 
         // Find the degree letter. We admit a whitespace between.
@@ -100,7 +100,7 @@ public class DegreeFinder implements ReplacementFinder {
             return null;
         }
 
-        return LinearMatchResult.of(text, startSymbol, startLetter + 1);
+        return FinderMatchResult.of(text, startSymbol, startLetter + 1);
     }
 
     private boolean isUnicodeSymbol(char symbolChar) {
@@ -108,8 +108,8 @@ public class DegreeFinder implements ReplacementFinder {
     }
 
     @Nullable
-    private LinearMatchResult findDegreeWord(String text, int startSymbol) {
-        final LinearMatchResult matchBefore = FinderUtils.findWordBefore(text, startSymbol, DECIMAL_SEPARATORS, false);
+    private MatchResult findDegreeWord(String text, int startSymbol) {
+        final MatchResult matchBefore = FinderUtils.findWordBefore(text, startSymbol, DECIMAL_SEPARATORS, false);
         if (matchBefore == null) {
             return null;
         }
@@ -123,9 +123,8 @@ public class DegreeFinder implements ReplacementFinder {
     }
 
     @Override
-    public boolean validate(MatchResult matchResult, FinderPage page) {
-        final LinearMatchResult match = (LinearMatchResult) matchResult;
-        final String symbol = match.group(2);
+    public boolean validate(MatchResult match, FinderPage page) {
+        final String symbol = match.group(3);
         assert symbol.length() <= 3;
         // Check the symbol
         // Contains whitespace / Unicode symbol / Kelvin degree / Ordinal symbol
@@ -140,20 +139,17 @@ public class DegreeFinder implements ReplacementFinder {
 
         // If the symbol doesn't need to be fixed, we check the space before if preceded by number.
         // Between number and degree, we don't fix actual spaces.
-        final String word = match.group(0);
-        final String space1 = match.group(1);
+        final String word = match.group(1);
+        final String space1 = match.group(2);
         return FinderUtils.isDecimalNumber(word) && !FinderUtils.isActualSpace(space1);
     }
 
     @Override
-    public Replacement convert(MatchResult matchResult, FinderPage page) {
-        final LinearMatchResult match = (LinearMatchResult) matchResult;
-
-        // 0 - word; 1 - space before; 2 - symbol
-        final String word = match.group(0);
-        final String space1 = match.group(1);
-        final String symbol = match.group(2);
-        // final String letter = match.group(3).equals(symbol) ? null : match.group(3);
+    public Replacement convert(MatchResult match, FinderPage page) {
+        // 1 - word; 2 - space before; 3 - symbol
+        final String word = match.group(1);
+        final String space1 = match.group(2);
+        final String symbol = match.group(3);
 
         final char fixedLetter;
         final String fixedSymbol;

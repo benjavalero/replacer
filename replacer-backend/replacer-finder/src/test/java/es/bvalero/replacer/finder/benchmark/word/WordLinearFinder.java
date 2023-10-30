@@ -2,9 +2,9 @@ package es.bvalero.replacer.finder.benchmark.word;
 
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
+import es.bvalero.replacer.finder.util.FinderMatchResult;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
-import es.bvalero.replacer.finder.util.LinearMatchResult;
 import java.util.Collection;
 import java.util.regex.MatchResult;
 import org.apache.commons.collections4.IterableUtils;
@@ -46,7 +46,7 @@ class WordLinearFinder implements BenchmarkFinder {
                 final int startMisspelling = findStartMisspelling(text, start);
                 if (startMisspelling >= 0) {
                     if (FinderUtils.isWordCompleteInText(startMisspelling, misspelling, text)) {
-                        return LinearMatchResult.of(startMisspelling, misspelling);
+                        return FinderMatchResult.of(startMisspelling, misspelling);
                     } else {
                         // The char after the word is a non-letter, so we can start searching the next word one position after.
                         start = startMisspelling + misspelling.length() + 1;

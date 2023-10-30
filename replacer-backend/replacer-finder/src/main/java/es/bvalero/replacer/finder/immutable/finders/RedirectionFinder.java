@@ -4,8 +4,8 @@ import es.bvalero.replacer.FinderProperties;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.FinderPriority;
 import es.bvalero.replacer.finder.immutable.ImmutableFinder;
+import es.bvalero.replacer.finder.util.FinderMatchResult;
 import es.bvalero.replacer.finder.util.FinderUtils;
-import es.bvalero.replacer.finder.util.LinearMatchResult;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -44,7 +44,7 @@ class RedirectionFinder implements ImmutableFinder {
         final String lowerCaseText = FinderUtils.toLowerCase(text);
         for (String redirectionWord : this.redirectionWords) {
             if (lowerCaseText.contains(redirectionWord)) {
-                return Set.of(LinearMatchResult.of(0, text));
+                return Set.of(FinderMatchResult.of(0, text));
             }
         }
         return Set.of();

@@ -4,8 +4,8 @@ import static es.bvalero.replacer.finder.util.FinderUtils.NEW_LINE;
 
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
+import es.bvalero.replacer.finder.util.FinderMatchResult;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
-import es.bvalero.replacer.finder.util.LinearMatchResult;
 import java.util.regex.MatchResult;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.Nullable;
@@ -48,7 +48,7 @@ class CursiveFinalFinder implements BenchmarkFinder {
                 continue;
             }
 
-            return LinearMatchResult.of(text, startCursive, endCursive);
+            return FinderMatchResult.of(text, startCursive, endCursive);
         }
         return null;
     }

@@ -4,8 +4,8 @@ import static es.bvalero.replacer.finder.util.FinderUtils.NEW_LINE;
 
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.immutable.ImmutableFinder;
+import es.bvalero.replacer.finder.util.FinderMatchResult;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
-import es.bvalero.replacer.finder.util.LinearMatchResult;
 import java.util.regex.MatchResult;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
@@ -44,7 +44,7 @@ class TableFinder implements ImmutableFinder {
                 continue;
             }
 
-            return LinearMatchResult.of(startLine, line);
+            return FinderMatchResult.of(startLine, line);
         }
         return null;
     }

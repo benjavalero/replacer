@@ -5,7 +5,7 @@ import com.roklenarcic.util.strings.MapMatchListener;
 import com.roklenarcic.util.strings.StringMap;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
-import es.bvalero.replacer.finder.util.LinearMatchResult;
+import es.bvalero.replacer.finder.util.FinderMatchResult;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -34,7 +34,7 @@ class RedirectionAhoCorasickFinder implements BenchmarkFinder {
 
         @Override
         public boolean match(String text, int start, int end, String word) {
-            matches.add(LinearMatchResult.of(0, text));
+            matches.add(FinderMatchResult.of(0, text));
             return false;
         }
     }

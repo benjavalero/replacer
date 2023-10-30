@@ -15,8 +15,8 @@ import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.Suggestion;
 import es.bvalero.replacer.finder.replacement.ReplacementFinder;
 import es.bvalero.replacer.finder.util.AutomatonMatchFinder;
+import es.bvalero.replacer.finder.util.FinderMatchResult;
 import es.bvalero.replacer.finder.util.FinderUtils;
-import es.bvalero.replacer.finder.util.LinearMatchResult;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.regex.MatchResult;
@@ -210,7 +210,7 @@ public class DateFinder implements ReplacementFinder {
             return null;
         }
 
-        final LinearMatchResult matchWord = FinderUtils.findWordAfter(date, 0, YEAR_ALLOWED_CHARS, false);
+        final MatchResult matchWord = FinderUtils.findWordAfter(date, 0, YEAR_ALLOWED_CHARS, false);
         assert matchWord != null;
         final String firstWord = matchWord.group();
         if (isRegexDay(firstWord)) {
@@ -262,7 +262,7 @@ public class DateFinder implements ReplacementFinder {
         final String date = match.group();
         boolean isDateValid = true;
 
-        LinearMatchResult matchWord = FinderUtils.findWordAfter(date, 0);
+        MatchResult matchWord = FinderUtils.findWordAfter(date, 0);
         assert matchWord != null;
         String fixedDay = matchWord.group();
         if (isFixableDay(fixedDay)) {
@@ -335,7 +335,7 @@ public class DateFinder implements ReplacementFinder {
         boolean isDateValid = true;
 
         final String date = match.group();
-        LinearMatchResult matchWord = FinderUtils.findWordAfter(date, 0);
+        MatchResult matchWord = FinderUtils.findWordAfter(date, 0);
         assert matchWord != null;
         final String connector = matchWord.group();
 
@@ -386,7 +386,7 @@ public class DateFinder implements ReplacementFinder {
         final WikipediaLanguage lang = page.getPageKey().getLang();
         final String date = match.group();
 
-        LinearMatchResult matchWord = FinderUtils.findWordAfter(date, 0);
+        MatchResult matchWord = FinderUtils.findWordAfter(date, 0);
         assert matchWord != null;
         String fixedMonth = matchWord.group();
         if (isFixableMonth(fixedMonth)) {
@@ -443,7 +443,7 @@ public class DateFinder implements ReplacementFinder {
         final WikipediaLanguage lang = page.getPageKey().getLang();
         final String date = match.group();
 
-        LinearMatchResult matchWord = FinderUtils.findWordAfter(date, 0, YEAR_ALLOWED_CHARS, false);
+        MatchResult matchWord = FinderUtils.findWordAfter(date, 0, YEAR_ALLOWED_CHARS, false);
         assert matchWord != null;
         String fixedYear = matchWord.group();
         if (isFixableYear(fixedYear)) {
@@ -601,7 +601,7 @@ public class DateFinder implements ReplacementFinder {
     // Return the appropriate article for the date
     private List<String> getFixArticle(FinderPage page, int start) {
         final String text = page.getContent();
-        final LinearMatchResult preceding = FinderUtils.findWordBefore(text, start);
+        final MatchResult preceding = FinderUtils.findWordBefore(text, start);
         final WikipediaLanguage lang = page.getPageKey().getLang();
         // Check there is a space between the article and the date
         if (preceding != null && SPACE.equals(text.substring(preceding.end(), start))) {

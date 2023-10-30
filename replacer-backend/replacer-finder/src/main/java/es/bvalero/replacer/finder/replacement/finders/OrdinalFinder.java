@@ -10,9 +10,9 @@ import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.Suggestion;
 import es.bvalero.replacer.finder.replacement.ReplacementFinder;
+import es.bvalero.replacer.finder.util.FinderMatchResult;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
-import es.bvalero.replacer.finder.util.LinearMatchResult;
 import java.util.*;
 import java.util.regex.MatchResult;
 import java.util.stream.Stream;
@@ -81,7 +81,7 @@ public class OrdinalFinder implements ReplacementFinder {
     private MatchResult findOrdinal(FinderPage page, int start) {
         final String text = page.getContent();
         while (start >= 0 && start < text.length()) {
-            final LinearMatchResult matchNumber = FinderUtils.findNumberMatch(text, start, false);
+            final MatchResult matchNumber = FinderUtils.findNumberMatch(text, start, false);
             if (matchNumber == null) {
                 return null;
             }
@@ -94,7 +94,7 @@ public class OrdinalFinder implements ReplacementFinder {
             }
 
             // Find the suffix, right after the number.
-            LinearMatchResult matchSuffix = FinderUtils.findWordAfter(text, endNumber, SUFFIX_ALLOWED_CHARS, true);
+            MatchResult matchSuffix = FinderUtils.findWordAfter(text, endNumber, SUFFIX_ALLOWED_CHARS, true);
             if (matchSuffix == null) {
                 start = endNumber;
                 continue;
@@ -106,13 +106,13 @@ public class OrdinalFinder implements ReplacementFinder {
             // Optional dot after the suffix
             int endOrdinal = matchSuffix.end();
             if (endOrdinal < text.length() && text.charAt(endOrdinal) == DOT) {
-                matchSuffix = LinearMatchResult.of(matchSuffix.start(), matchSuffix.group() + DOT);
+                matchSuffix = FinderMatchResult.of(matchSuffix.start(), matchSuffix.group() + DOT);
                 endOrdinal += 1;
             }
 
             final int startOrdinal = matchNumber.start();
-            final LinearMatchResult matchResult = LinearMatchResult.of(text, startOrdinal, endOrdinal);
-            // Groups: 0 - Number; 1 - Suffix;
+            final FinderMatchResult matchResult = FinderMatchResult.of(text, startOrdinal, endOrdinal);
+            // Groups: 1 - Number; 2 - Suffix;
             matchResult.addGroup(matchNumber);
             matchResult.addGroup(matchSuffix);
             return matchResult;
@@ -146,15 +146,14 @@ public class OrdinalFinder implements ReplacementFinder {
             .build();
     }
 
-    private List<Suggestion> buildSuggestions(MatchResult matchResult, FinderPage page) {
+    private List<Suggestion> buildSuggestions(MatchResult match, FinderPage page) {
         final List<Suggestion> suggestions = new ArrayList<>();
 
         // Split the number and the suffix
-        final LinearMatchResult match = (LinearMatchResult) matchResult;
-        final int ordinalNumber = Integer.parseInt(match.group(0));
+        final int ordinalNumber = Integer.parseInt(match.group(1));
 
         // We store the pure suffix, removing the final dot or the plural form.
-        String suffixStr = matchResult.group(1);
+        String suffixStr = match.group(2);
         if (suffixStr.endsWith(String.valueOf(DOT))) {
             suffixStr = StringUtils.chop(suffixStr);
         }

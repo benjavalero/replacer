@@ -5,9 +5,9 @@ import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.listing.StandardMisspelling;
 import es.bvalero.replacer.finder.listing.load.SimpleMisspellingLoader;
+import es.bvalero.replacer.finder.util.FinderMatchResult;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
-import es.bvalero.replacer.finder.util.LinearMatchResult;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.regex.MatchResult;
@@ -58,7 +58,7 @@ public class MisspellingSimpleFinder extends MisspellingFinder implements Proper
                 final int endWord = findEndWord(text, startWord);
                 final String word = text.substring(startWord, endWord);
                 if (isValid(word, startWord, text, lang)) {
-                    return LinearMatchResult.of(startWord, word);
+                    return FinderMatchResult.of(startWord, word);
                 } else {
                     // The char after the word is a non-letter, so we can start searching the next word one position after.
                     start = endWord + 1;

@@ -8,9 +8,9 @@ import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.Suggestion;
 import es.bvalero.replacer.finder.replacement.ReplacementFinder;
+import es.bvalero.replacer.finder.util.FinderMatchResult;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
-import es.bvalero.replacer.finder.util.LinearMatchResult;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.MatchResult;
@@ -54,7 +54,7 @@ public class CoordinatesFinder implements ReplacementFinder {
         final String text = page.getContent();
         while (start >= 0 && start < text.length()) {
             // Degrees
-            LinearMatchResult matchDegrees = FinderUtils.findNumberMatch(text, start, false);
+            MatchResult matchDegrees = FinderUtils.findNumberMatch(text, start, false);
             if (matchDegrees == null || matchDegrees.end() == text.length()) {
                 // No number to continue searching
                 return null;
@@ -68,7 +68,7 @@ public class CoordinatesFinder implements ReplacementFinder {
             // Degrees can be negative
             if (startCoordinates > 0 && text.charAt(startCoordinates - 1) == '-') {
                 startCoordinates -= 1;
-                matchDegrees = LinearMatchResult.of(startCoordinates, '-' + matchDegrees.group());
+                matchDegrees = FinderMatchResult.of(startCoordinates, '-' + matchDegrees.group());
             }
 
             // Degree symbol
@@ -80,7 +80,7 @@ public class CoordinatesFinder implements ReplacementFinder {
             }
 
             // Minutes
-            final LinearMatchResult matchMinutes = FinderUtils.findNumberMatch(text, endDegrees + 1, false);
+            final MatchResult matchMinutes = FinderUtils.findNumberMatch(text, endDegrees + 1, false);
             if (matchMinutes == null) {
                 start = endDegrees + 1;
                 continue;
@@ -103,7 +103,7 @@ public class CoordinatesFinder implements ReplacementFinder {
             }
 
             // Seconds (optional)
-            final LinearMatchResult matchSeconds = FinderUtils.findNumberMatch(text, endMinutes + 1, true);
+            final MatchResult matchSeconds = FinderUtils.findNumberMatch(text, endMinutes + 1, true);
             String doublePrime = null;
             int endCoordinates = endMinutes + 1;
             if (matchSeconds != null) {
@@ -130,7 +130,7 @@ public class CoordinatesFinder implements ReplacementFinder {
             }
 
             // Find if there is a cardinal direction and enlarge the match
-            LinearMatchResult matchDirection = FinderUtils.findWordAfter(text, endCoordinates);
+            MatchResult matchDirection = FinderUtils.findWordAfter(text, endCoordinates);
             if (matchDirection != null) {
                 if (
                     isDirectionString(matchDirection.group()) &&
@@ -142,8 +142,8 @@ public class CoordinatesFinder implements ReplacementFinder {
                 }
             }
 
-            final LinearMatchResult result = LinearMatchResult.of(text, startCoordinates, endCoordinates);
-            // Groups: 0 - Degrees; 1 - Minutes; 2 - Seconds (optional); 3 - Direction (optional)
+            final FinderMatchResult result = FinderMatchResult.of(text, startCoordinates, endCoordinates);
+            // Groups: 1 - Degrees; 2 - Minutes; 3 - Seconds (optional); 4 - Direction (optional)
             result.addGroup(matchDegrees);
             result.addGroup(matchMinutes);
             if (doublePrime != null) {
@@ -219,18 +219,16 @@ public class CoordinatesFinder implements ReplacementFinder {
     }
 
     @Override
-    public Replacement convert(MatchResult matchResult, FinderPage page) {
-        LinearMatchResult match = (LinearMatchResult) matchResult;
-
-        final String matchDegrees = match.group(0);
-        final String matchMinutes = match.group(1);
+    public Replacement convert(MatchResult match, FinderPage page) {
+        final String matchDegrees = match.group(1);
+        final String matchMinutes = match.group(2);
         String matchSeconds = null;
         String matchDirection = null;
         if (match.groupCount() == 4) {
-            matchSeconds = match.group(2);
-            matchDirection = match.group(3);
+            matchSeconds = match.group(3);
+            matchDirection = match.group(4);
         } else if (match.groupCount() == 3) {
-            final String match3 = match.group(2);
+            final String match3 = match.group(3);
             if (isDirectionString(match3)) {
                 matchDirection = match3;
             } else {

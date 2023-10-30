@@ -1,9 +1,9 @@
 package es.bvalero.replacer.finder.benchmark.uppercase;
 
 import es.bvalero.replacer.finder.FinderPage;
+import es.bvalero.replacer.finder.util.FinderMatchResult;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
-import es.bvalero.replacer.finder.util.LinearMatchResult;
 import java.util.*;
 import java.util.regex.MatchResult;
 import org.springframework.lang.Nullable;
@@ -36,7 +36,7 @@ class UppercaseAllWordsFinder extends UppercaseBenchmarkFinder {
                     FinderUtils.isWordCompleteInText(startWord, word, text) &&
                     isWordPrecededByPunctuation(startWord, text)
                 ) {
-                    return LinearMatchResult.of(startWord, word);
+                    return FinderMatchResult.of(startWord, word);
                 } else {
                     // The char after the word is a non-letter, so we can start searching the next word one position after.
                     start = endWord + 1;

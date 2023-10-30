@@ -2,8 +2,8 @@ package es.bvalero.replacer.finder.benchmark.simple;
 
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
+import es.bvalero.replacer.finder.util.FinderMatchResult;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
-import es.bvalero.replacer.finder.util.LinearMatchResult;
 import java.util.regex.MatchResult;
 import org.springframework.lang.Nullable;
 
@@ -26,7 +26,7 @@ class SimpleLinearFinder implements BenchmarkFinder {
         if (start >= 0 && start < text.length()) {
             final int startMatch = findStartMatch(text, start);
             if (startMatch >= 0) {
-                return LinearMatchResult.of(startMatch, word);
+                return FinderMatchResult.of(startMatch, word);
             } else {
                 return null;
             }
