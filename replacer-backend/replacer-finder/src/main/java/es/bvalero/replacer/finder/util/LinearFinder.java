@@ -11,8 +11,10 @@ public interface LinearFinder {
      */
     @Nullable
     MatchResult findResult(FinderPage page, int start);
-    // For the moment we keep this interface as functional,
-    // except if finally we see that most implementations are similar.
+    // We keep this interface as functional.
+    // Most implementations are similar, but just in the global "while" loop.
+    // Besides, we should create fake matches to implement the "continue" feature
+    //
     // The general structure of this method will be:
     // final String text = page.getContent();
     // while (start < text.length()) {
