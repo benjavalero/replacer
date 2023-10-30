@@ -6,13 +6,16 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Value;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
 /** Suggestion for a replacement found in the content of a page */
-@Value(staticConstructor = "of")
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Value
 public class Suggestion {
 
     @NonNull
@@ -21,13 +24,11 @@ public class Suggestion {
     @Nullable
     String comment;
 
-    public Suggestion(String text, @Nullable String comment) {
+    public static Suggestion of(String text, @Nullable String comment) {
         if (StringUtils.isBlank(text)) {
             throw new IllegalArgumentException("Blank suggestion text");
         }
-
-        this.text = text;
-        this.comment = comment;
+        return new Suggestion(text, comment);
     }
 
     public static Suggestion ofNoComment(String text) {

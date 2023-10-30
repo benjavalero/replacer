@@ -14,6 +14,8 @@ public abstract class ReplacementType {
     private final String subtype;
 
     ReplacementType(ReplacementKind kind, String subtype) {
+        // Usually we perform the validations outside the constructor
+        // In this case we do it inside so the validation is performed by all the subclasses
         validateSubtype(subtype);
 
         this.kind = kind;
@@ -22,7 +24,7 @@ public abstract class ReplacementType {
 
     private void validateSubtype(String subtype) {
         if (StringUtils.isBlank(subtype)) {
-            throw new IllegalArgumentException("Invalid blank subtype for a standard type");
+            throw new IllegalArgumentException("Blank subtype");
         }
 
         if (subtype.length() > MAX_SUBTYPE_LENGTH) {

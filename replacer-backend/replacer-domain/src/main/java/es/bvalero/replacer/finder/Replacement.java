@@ -43,7 +43,15 @@ public class Replacement implements FinderResult {
     @NonNull
     Collection<Suggestion> suggestions;
 
-    Replacement(FinderPage page, int start, String text, ReplacementType type, Collection<Suggestion> suggestions) {
+    private Replacement(
+        FinderPage page,
+        int start,
+        String text,
+        ReplacementType type,
+        Collection<Suggestion> suggestions
+    ) {
+        // Implement the private constructor to perform validations when building by Lombok
+
         // Validate start
         if (start < 0) {
             throw new IllegalArgumentException("Negative replacement start: " + start);

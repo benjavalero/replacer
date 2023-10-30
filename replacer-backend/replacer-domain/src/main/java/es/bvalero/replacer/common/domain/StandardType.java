@@ -14,12 +14,8 @@ import org.jetbrains.annotations.TestOnly;
 @Getter
 public class StandardType extends ReplacementType {
 
-    private boolean forBots = false;
-    private boolean forAdmin = false;
-
-    private StandardType(ReplacementKind kind, String subtype) {
-        super(kind, subtype);
-    }
+    private final boolean forBots;
+    private final boolean forAdmin;
 
     private StandardType(ReplacementKind kind, String subtype, boolean forBots, boolean forAdmin) {
         super(kind, subtype);
@@ -75,9 +71,8 @@ public class StandardType extends ReplacementType {
     }
 
     private static StandardType getTypeFromCache(ReplacementKind kind, String subtype) {
-        assert cachedPageIds != null;
         return Objects.requireNonNull(
-            cachedPageIds.get(getCacheKey(kind, subtype), k -> new StandardType(kind, subtype))
+            cachedPageIds.get(getCacheKey(kind, subtype), k -> new StandardType(kind, subtype, false, false))
         );
     }
 

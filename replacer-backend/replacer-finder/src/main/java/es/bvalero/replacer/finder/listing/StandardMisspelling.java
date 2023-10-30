@@ -10,6 +10,8 @@ public abstract class StandardMisspelling extends Misspelling implements Listing
 
     StandardMisspelling(String word, boolean caseSensitive, String comment) {
         super(word, caseSensitive, comment);
+        // Usually we perform the validations outside the constructor
+        // In this case we do it inside so the validation is performed by all the subclasses
         validateMisspellingWord(word);
         validateWordCase();
     }
