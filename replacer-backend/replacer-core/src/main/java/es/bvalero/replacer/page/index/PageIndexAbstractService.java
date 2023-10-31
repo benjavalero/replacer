@@ -38,23 +38,23 @@ abstract class PageIndexAbstractService {
 
     /** Index a page. Replacements and details in database (if any) will be calculated. */
     public PageIndexResult indexPage(IndexablePage page) {
-        try {
-            final IndexedPage dbPage = findIndexedPage(page.getPageKey());
+        final IndexedPage dbPage = findIndexedPage(page.getPageKey());
 
-            // Consider as "indexable" all pages belonging to the configured namespaces
-            if (!isPageIndexable(page)) {
-                if (dbPage != null) {
-                    // Just in case the page already exists in database but is not indexable anymore
-                    removeObsoletePage(page, dbPage);
-                }
-                return PageIndexResult.ofNotIndexable();
+        // Consider as "indexable" all pages belonging to the configured namespaces
+        if (!isPageIndexable(page)) {
+            if (dbPage != null) {
+                // Just in case the page already exists in database but is not indexable anymore
+                removeObsoletePage(page, dbPage);
             }
+            return PageIndexResult.ofNotIndexable();
+        }
 
+        try {
             return indexPage(page, dbPage);
         } catch (Exception e) {
             // Just in case capture possible exceptions to continue indexing other pages
-            LOGGER.error("Page not indexed: {}", page, e);
-            return PageIndexResult.ofNotIndexable();
+            LOGGER.error("Error indexing page: {}", page, e);
+            return PageIndexResult.ofNotIndexed();
         }
     }
 
