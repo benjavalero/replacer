@@ -6,20 +6,19 @@ import es.bvalero.replacer.finder.listing.FalsePositive;
 import es.bvalero.replacer.finder.listing.find.ListingFinder;
 import es.bvalero.replacer.finder.listing.parse.FalsePositiveParser;
 import java.util.Set;
-import lombok.Setter;
-import org.jetbrains.annotations.TestOnly;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class FalsePositiveLoader extends ListingLoader<FalsePositive> {
 
-    @Autowired
-    private ListingFinder listingFinder;
+    // Dependency injection
+    private final ListingFinder listingFinder;
+    private final FalsePositiveParser falsePositiveParser;
 
-    @Setter(onMethod_ = @TestOnly)
-    @Autowired
-    private FalsePositiveParser falsePositiveParser;
+    public FalsePositiveLoader(ListingFinder listingFinder, FalsePositiveParser falsePositiveParser) {
+        this.listingFinder = listingFinder;
+        this.falsePositiveParser = falsePositiveParser;
+    }
 
     @Override
     public String getLabel() {

@@ -9,18 +9,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.mockito.InjectMocks;
-import org.mockito.MockitoAnnotations;
 
 class HeadlineBoldFinderTest {
 
-    @InjectMocks
     private HeadlineBoldFinder headlineBoldFinder;
 
     @BeforeEach
     public void setUp() {
         headlineBoldFinder = new HeadlineBoldFinder();
-        MockitoAnnotations.openMocks(this);
     }
 
     @ParameterizedTest

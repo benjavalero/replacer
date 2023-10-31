@@ -19,16 +19,20 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.mockito.Mock;
 
 class UppercaseFinderTest {
 
     private static final SetValuedMap<WikipediaLanguage, SimpleMisspelling> EMPTY_MAP = new HashSetValuedHashMap<>();
 
+    @Mock
+    private SimpleMisspellingLoader simpleMisspellingLoader;
+
     private UppercaseFinder uppercaseFinder;
 
     @BeforeEach
     public void setUp() {
-        uppercaseFinder = new UppercaseFinder();
+        uppercaseFinder = new UppercaseFinder(simpleMisspellingLoader);
         initUppercaseMap("Enero", "Febrero", "Marzo", "Abril", "Mayo");
     }
 

@@ -10,25 +10,20 @@ import es.bvalero.replacer.finder.FinderPage;
 import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 
 class ApplyCosmeticsServiceTest {
 
-    @Mock
+    // Dependency injection
     private CosmeticFindService cosmeticFindService;
-
-    @Mock
     private CheckWikipediaService checkWikipediaService;
 
-    @InjectMocks
     private ApplyCosmeticsService applyCosmeticsService;
 
     @BeforeEach
     public void setUp() {
-        applyCosmeticsService = new ApplyCosmeticsService();
-        MockitoAnnotations.openMocks(this);
+        cosmeticFindService = mock(CosmeticFindService.class);
+        checkWikipediaService = mock(CheckWikipediaService.class);
+        applyCosmeticsService = new ApplyCosmeticsService(cosmeticFindService, checkWikipediaService);
     }
 
     @Test

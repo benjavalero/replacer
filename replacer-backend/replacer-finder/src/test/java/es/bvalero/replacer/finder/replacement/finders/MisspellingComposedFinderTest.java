@@ -2,6 +2,7 @@ package es.bvalero.replacer.finder.replacement.finders;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
 
 import es.bvalero.replacer.common.domain.ReplacementKind;
 import es.bvalero.replacer.common.domain.StandardType;
@@ -9,7 +10,9 @@ import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.Suggestion;
 import es.bvalero.replacer.finder.listing.ComposedMisspelling;
+import es.bvalero.replacer.finder.listing.find.ListingFinder;
 import es.bvalero.replacer.finder.listing.load.ComposedMisspellingLoader;
+import es.bvalero.replacer.finder.listing.parse.ComposedMisspellingParser;
 import java.beans.PropertyChangeEvent;
 import java.util.HashSet;
 import java.util.List;
@@ -21,14 +24,18 @@ import org.junit.jupiter.api.Test;
 
 class MisspellingComposedFinderTest {
 
+    // Dependency injection
+    private ListingFinder listingFinder;
+    private ComposedMisspellingParser composedMisspellingParser;
     private ComposedMisspellingLoader composedMisspellingLoader;
     private MisspellingComposedFinder misspellingComposedFinder;
 
     @BeforeEach
     public void setUp() {
-        composedMisspellingLoader = new ComposedMisspellingLoader();
-        misspellingComposedFinder = new MisspellingComposedFinder();
-        misspellingComposedFinder.setComposedMisspellingLoader(composedMisspellingLoader);
+        listingFinder = mock(ListingFinder.class);
+        composedMisspellingParser = new ComposedMisspellingParser();
+        composedMisspellingLoader = new ComposedMisspellingLoader(listingFinder, composedMisspellingParser);
+        misspellingComposedFinder = new MisspellingComposedFinder(composedMisspellingLoader);
     }
 
     private void fakeUpdateMisspellingList(List<ComposedMisspelling> misspellings) {

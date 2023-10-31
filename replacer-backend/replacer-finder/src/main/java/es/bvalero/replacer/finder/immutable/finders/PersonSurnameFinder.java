@@ -16,7 +16,6 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.MatchResult;
 import javax.annotation.PostConstruct;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -26,17 +25,14 @@ import org.springframework.stereotype.Component;
 @Component
 class PersonSurnameFinder implements ImmutableFinder {
 
+    // Dependency injection
+    private final FinderProperties finderProperties;
+
     private RunAutomaton automaton;
-
-    @Autowired
-    private FinderProperties finderProperties;
-
     private final Set<String> completeSurnames = new HashSet<>();
 
-    @Override
-    public FinderPriority getPriority() {
-        // It should be High for number of matches, but it is quite slow, so it is better to have lower priority.
-        return FinderPriority.LOW;
+    PersonSurnameFinder(FinderProperties finderProperties) {
+        this.finderProperties = finderProperties;
     }
 
     @PostConstruct
@@ -52,6 +48,12 @@ class PersonSurnameFinder implements ImmutableFinder {
 
         final String alternations = "<Lu><L>+ (" + FinderUtils.joinAlternate(surnames) + ")";
         this.automaton = new RunAutomaton(new RegExp(alternations).toAutomaton(new DatatypesAutomatonProvider()));
+    }
+
+    @Override
+    public FinderPriority getPriority() {
+        // It should be High for number of matches, but it is quite slow, so it is better to have lower priority.
+        return FinderPriority.LOW;
     }
 
     @Override

@@ -10,7 +10,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import javax.annotation.PostConstruct;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -22,8 +21,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class ReplacementFinderService implements FinderService<Replacement> {
 
-    @Autowired
-    private List<ReplacementFinder> replacementFinders;
+    // Dependency injection
+    private final List<ReplacementFinder> replacementFinders;
+
+    public ReplacementFinderService(List<ReplacementFinder> replacementFinders) {
+        this.replacementFinders = replacementFinders;
+    }
 
     @PostConstruct
     public void sortReplacementFinders() {

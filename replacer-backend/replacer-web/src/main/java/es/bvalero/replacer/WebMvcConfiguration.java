@@ -4,7 +4,6 @@ import es.bvalero.replacer.user.AuthenticatedUserArgumentResolver;
 import es.bvalero.replacer.user.UserLanguageArgumentResolver;
 import java.io.IOException;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,14 +27,20 @@ public class WebMvcConfiguration {
     @Value("${replacer.cors.allowed.origins}")
     private String corsAllowedOrigins;
 
-    @Autowired
-    private AuthenticatedUserArgumentResolver authenticatedUserArgumentResolver;
+    // Dependency injection
+    private final AuthenticatedUserArgumentResolver authenticatedUserArgumentResolver;
+    private final UserLanguageArgumentResolver userLanguageArgumentResolver;
+    private final MdcInterceptor mdcInterceptor;
 
-    @Autowired
-    private UserLanguageArgumentResolver userLanguageArgumentResolver;
-
-    @Autowired
-    private MdcInterceptor mdcInterceptor;
+    public WebMvcConfiguration(
+        AuthenticatedUserArgumentResolver authenticatedUserArgumentResolver,
+        UserLanguageArgumentResolver userLanguageArgumentResolver,
+        MdcInterceptor mdcInterceptor
+    ) {
+        this.authenticatedUserArgumentResolver = authenticatedUserArgumentResolver;
+        this.userLanguageArgumentResolver = userLanguageArgumentResolver;
+        this.mdcInterceptor = mdcInterceptor;
+    }
 
     @Bean
     public WebMvcConfigurer webMvcConfigurer() {

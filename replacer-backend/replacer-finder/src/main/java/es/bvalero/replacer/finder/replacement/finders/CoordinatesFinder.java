@@ -21,7 +21,7 @@ import org.springframework.stereotype.Component;
  * Find coordinates with wrong degree, minute or second symbols.
  */
 @Component
-public class CoordinatesFinder implements ReplacementFinder {
+class CoordinatesFinder implements ReplacementFinder {
 
     private static final Set<Character> DEGREE_CHARS = Set.of(DEGREE, MASCULINE_ORDINAL);
     private static final char PRIME = '\u2032'; // ′

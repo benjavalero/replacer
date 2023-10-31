@@ -5,20 +5,31 @@ import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.page.PageKey;
 import es.bvalero.replacer.page.PageService;
 import es.bvalero.replacer.page.count.PageCountService;
+import es.bvalero.replacer.page.index.PageIndexService;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
+import es.bvalero.replacer.wikipedia.WikipediaPageRepository;
 import java.util.Collection;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 class ReviewTypeFinder extends ReviewFinder {
 
-    @Autowired
-    private PageService pageService;
+    // Dependency injection
+    private final PageService pageService;
+    private final PageCountService pageCountService;
 
-    @Autowired
-    private PageCountService pageCountService;
+    ReviewTypeFinder(
+        WikipediaPageRepository wikipediaPageRepository,
+        PageIndexService pageIndexService,
+        PageService pageService,
+        ReviewSectionFinder reviewSectionFinder,
+        PageCountService pageCountService
+    ) {
+        super(wikipediaPageRepository, pageIndexService, pageService, reviewSectionFinder);
+        this.pageService = pageService;
+        this.pageCountService = pageCountService;
+    }
 
     @Override
     PageSearchResult findPageIdsToReview(ReviewOptions options) {

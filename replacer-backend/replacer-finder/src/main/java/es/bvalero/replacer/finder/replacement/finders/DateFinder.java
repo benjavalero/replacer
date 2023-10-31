@@ -15,7 +15,6 @@ import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.Suggestion;
 import es.bvalero.replacer.finder.replacement.ReplacementFinder;
 import es.bvalero.replacer.finder.util.AutomatonMatchFinder;
-import es.bvalero.replacer.finder.util.FinderMatchResult;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import java.time.LocalDate;
 import java.util.*;
@@ -26,7 +25,6 @@ import org.apache.commons.collections4.ListValuedMap;
 import org.apache.commons.collections4.SetValuedMap;
 import org.apache.commons.collections4.multimap.ArrayListValuedHashMap;
 import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
@@ -34,13 +32,13 @@ import org.springframework.stereotype.Component;
  * Find dates to be corrected, e.g. with the month in uppercase.
  */
 @Component
-public class DateFinder implements ReplacementFinder {
+class DateFinder implements ReplacementFinder {
 
     private static final List<Character> YEAR_ALLOWED_CHARS = List.of(DOT);
     private static final int CURRENT_YEAR = LocalDate.now().getYear();
 
-    @Autowired
-    private FinderProperties finderProperties;
+    // Dependency injection
+    private final FinderProperties finderProperties;
 
     private static final ListValuedMap<WikipediaLanguage, String> langMonths = new ArrayListValuedHashMap<>();
     private static final List<String> englishMonths = new ArrayList<>();
@@ -49,8 +47,11 @@ public class DateFinder implements ReplacementFinder {
     private static final Map<WikipediaLanguage, Map<String, String>> langArticles = new EnumMap<>(
         WikipediaLanguage.class
     );
-
     private static final Map<WikipediaLanguage, RunAutomaton> automata = new EnumMap<>(WikipediaLanguage.class);
+
+    DateFinder(FinderProperties finderProperties) {
+        this.finderProperties = finderProperties;
+    }
 
     @PostConstruct
     public void init() {

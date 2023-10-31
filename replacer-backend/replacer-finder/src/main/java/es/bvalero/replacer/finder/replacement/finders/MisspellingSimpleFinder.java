@@ -12,10 +12,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.regex.MatchResult;
 import javax.annotation.PostConstruct;
-import lombok.Setter;
 import org.apache.commons.collections4.SetValuedMap;
-import org.jetbrains.annotations.TestOnly;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
@@ -25,9 +22,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class MisspellingSimpleFinder extends MisspellingFinder implements PropertyChangeListener {
 
-    @Setter(onMethod_ = @TestOnly)
-    @Autowired
-    private SimpleMisspellingLoader simpleMisspellingLoader;
+    // Dependency injection
+    private final SimpleMisspellingLoader simpleMisspellingLoader;
+
+    public MisspellingSimpleFinder(SimpleMisspellingLoader simpleMisspellingLoader) {
+        this.simpleMisspellingLoader = simpleMisspellingLoader;
+    }
 
     @PostConstruct
     public void init() {

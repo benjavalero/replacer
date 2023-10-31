@@ -1,32 +1,29 @@
 package es.bvalero.replacer.page.index;
 
-import static org.mockito.Mockito.anyCollection;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.page.PageService;
+import es.bvalero.replacer.page.count.PageCountRepository;
 import es.bvalero.replacer.replacement.ReplacementService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 
 class PageComparatorSaverTest {
 
-    @Mock
+    // Dependency injection
     private PageService pageService;
-
-    @Mock
     private ReplacementService replacementService;
+    private PageCountRepository pageCountRepository;
 
-    @InjectMocks
     private PageComparatorSaver pageComparatorSaver;
 
     @BeforeEach
     void setUp() {
-        pageComparatorSaver = new PageComparatorSaver();
-        MockitoAnnotations.openMocks(this);
+        pageService = mock(PageService.class);
+        replacementService = mock(ReplacementService.class);
+        pageCountRepository = mock(PageCountRepository.class);
+        pageComparatorSaver = new PageComparatorSaver(pageService, replacementService, pageCountRepository);
     }
 
     @Test

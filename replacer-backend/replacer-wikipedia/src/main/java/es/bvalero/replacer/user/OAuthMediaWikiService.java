@@ -6,7 +6,6 @@ import com.github.scribejava.core.oauth.OAuth10aService;
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
@@ -16,9 +15,12 @@ import org.springframework.stereotype.Service;
 @Profile("!offline")
 class OAuthMediaWikiService implements OAuthService {
 
-    @Autowired
-    @Qualifier("mediaWikiService")
-    private OAuth10aService mediaWikiService;
+    // Dependency injection
+    private final OAuth10aService mediaWikiService;
+
+    OAuthMediaWikiService(@Qualifier("mediaWikiService") OAuth10aService mediaWikiService) {
+        this.mediaWikiService = mediaWikiService;
+    }
 
     @Override
     public RequestToken getRequestToken() {

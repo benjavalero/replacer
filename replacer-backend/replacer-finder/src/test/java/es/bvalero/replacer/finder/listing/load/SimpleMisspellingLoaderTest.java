@@ -8,25 +8,20 @@ import es.bvalero.replacer.finder.listing.find.ListingFinder;
 import es.bvalero.replacer.finder.listing.parse.SimpleMisspellingParser;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 
 class SimpleMisspellingLoaderTest {
 
-    @Mock
+    // Dependency injection
     private ListingFinder listingFinder;
-
-    @Mock
     private SimpleMisspellingParser simpleMisspellingParser;
 
-    @InjectMocks
     private SimpleMisspellingLoader simpleMisspellingLoader;
 
     @BeforeEach
     public void setUp() {
-        simpleMisspellingLoader = new SimpleMisspellingLoader();
-        MockitoAnnotations.openMocks(this);
+        listingFinder = mock(ListingFinder.class);
+        simpleMisspellingParser = mock(SimpleMisspellingParser.class);
+        simpleMisspellingLoader = new SimpleMisspellingLoader(listingFinder, simpleMisspellingParser);
     }
 
     @Test

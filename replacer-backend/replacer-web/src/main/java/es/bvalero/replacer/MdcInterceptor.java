@@ -6,7 +6,6 @@ import es.bvalero.replacer.user.User;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.slf4j.MDC;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -14,8 +13,12 @@ import org.springframework.web.servlet.HandlerInterceptor;
 @Component
 public class MdcInterceptor implements HandlerInterceptor {
 
-    @Autowired
-    private WebUtils webUtils;
+    // Dependency injection
+    private final WebUtils webUtils;
+
+    public MdcInterceptor(WebUtils webUtils) {
+        this.webUtils = webUtils;
+    }
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {

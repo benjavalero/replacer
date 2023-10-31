@@ -20,7 +20,6 @@ import java.util.Set;
 import java.util.regex.MatchResult;
 import javax.annotation.PostConstruct;
 import org.apache.commons.collections4.SetValuedMap;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
@@ -31,10 +30,14 @@ import org.springframework.stereotype.Component;
 @Component
 class FalsePositiveFinder implements ImmutableFinder, PropertyChangeListener {
 
-    @Autowired
-    private FalsePositiveLoader falsePositiveLoader;
+    // Dependency injection
+    private final FalsePositiveLoader falsePositiveLoader;
 
     private Map<WikipediaLanguage, RunAutomaton> falsePositivesAutomata = new EnumMap<>(WikipediaLanguage.class);
+
+    FalsePositiveFinder(FalsePositiveLoader falsePositiveLoader) {
+        this.falsePositiveLoader = falsePositiveLoader;
+    }
 
     @PostConstruct
     public void init() {

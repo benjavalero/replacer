@@ -11,7 +11,6 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.MatchResult;
 import javax.annotation.PostConstruct;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
@@ -25,10 +24,19 @@ class CompleteTagFinder extends ImmutableCheckedFinder {
     private static final char END_TAG = '>';
     private static final String START_CLOSING_TAG = "</";
 
-    @Autowired
-    private FinderProperties finderProperties;
+    // Dependency injection
+    private final FinderProperties finderProperties;
 
     private final Set<String> supportedCompleteTags = new HashSet<>();
+
+    CompleteTagFinder(FinderProperties finderProperties) {
+        this.finderProperties = finderProperties;
+    }
+
+    @PostConstruct
+    public void init() {
+        this.supportedCompleteTags.addAll(this.finderProperties.getCompleteTags()); // Cache
+    }
 
     @Override
     public FinderPriority getPriority() {
@@ -38,11 +46,6 @@ class CompleteTagFinder extends ImmutableCheckedFinder {
     @Override
     public int getMaxLength() {
         return 5000;
-    }
-
-    @PostConstruct
-    public void init() {
-        this.supportedCompleteTags.addAll(this.finderProperties.getCompleteTags()); // Cache
     }
 
     @Override

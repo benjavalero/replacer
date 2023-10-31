@@ -21,7 +21,7 @@ import org.springframework.stereotype.Component;
  * Find temperature degrees with the wrong symbol
  */
 @Component
-public class DegreeFinder implements ReplacementFinder {
+class DegreeFinder implements ReplacementFinder {
 
     private static final char CELSIUS = 'C';
     private static final char FAHRENHEIT = 'F';

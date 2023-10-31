@@ -8,25 +8,20 @@ import es.bvalero.replacer.finder.listing.find.ListingFinder;
 import es.bvalero.replacer.finder.listing.parse.FalsePositiveParser;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 
 class FalsePositiveLoaderTest {
 
-    @Mock
+    // Dependency injection
     private ListingFinder listingFinder;
-
-    @Mock
     private FalsePositiveParser falsePositiveParser;
 
-    @InjectMocks
     private FalsePositiveLoader falsePositiveLoader;
 
     @BeforeEach
     public void setUp() {
-        falsePositiveLoader = new FalsePositiveLoader();
-        MockitoAnnotations.openMocks(this);
+        listingFinder = mock(ListingFinder.class);
+        falsePositiveParser = mock(FalsePositiveParser.class);
+        falsePositiveLoader = new FalsePositiveLoader(listingFinder, falsePositiveParser);
     }
 
     @Test

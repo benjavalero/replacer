@@ -1,7 +1,6 @@
 package es.bvalero.replacer.checkwikipedia;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -13,8 +12,12 @@ class CheckWikipediaRestService implements CheckWikipediaService {
 
     private static final String CHECK_WIKIPEDIA_URL = "https://checkwiki.toolforge.org/cgi-bin/checkwiki.cgi";
 
-    @Autowired
-    private RestTemplate restTemplate;
+    // Dependency injection
+    private final RestTemplate restTemplate;
+
+    CheckWikipediaRestService(RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
+    }
 
     @Async
     public void reportFix(WikipediaLanguage lang, String pageTitle, CheckWikipediaAction action) {

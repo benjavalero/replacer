@@ -5,7 +5,6 @@ import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.page.IndexedPage;
 import java.util.Collection;
 import org.jetbrains.annotations.VisibleForTesting;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /** Service to retrieve the replacement counts for statistics */
@@ -15,8 +14,12 @@ class ReplacementCountService {
     @VisibleForTesting
     static final int NUM_RESULTS = 20;
 
-    @Autowired
-    private ReplacementCountRepository replacementCountRepository;
+    // Dependency injection
+    private final ReplacementCountRepository replacementCountRepository;
+
+    ReplacementCountService(ReplacementCountRepository replacementCountRepository) {
+        this.replacementCountRepository = replacementCountRepository;
+    }
 
     /** Count the number of replacements reviewed including the custom ones */
     int countReplacementsReviewed(WikipediaLanguage lang) {

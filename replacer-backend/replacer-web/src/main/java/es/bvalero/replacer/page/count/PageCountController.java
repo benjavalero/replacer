@@ -8,7 +8,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.Collection;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,8 +18,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("api/page")
 public class PageCountController {
 
-    @Autowired
-    private PageCountService pageCountService;
+    // Dependency injection
+    private final PageCountService pageCountService;
+
+    public PageCountController(PageCountService pageCountService) {
+        this.pageCountService = pageCountService;
+    }
 
     @Operation(summary = "Count the number of pages to review grouped by replacement type")
     @GetMapping(value = "/type/count")

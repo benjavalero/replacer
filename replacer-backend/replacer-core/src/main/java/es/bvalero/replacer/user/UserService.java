@@ -8,7 +8,6 @@ import java.util.Objects;
 import java.util.Optional;
 import lombok.Setter;
 import org.jetbrains.annotations.TestOnly;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -16,12 +15,16 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserService {
 
-    @Autowired
-    private WikipediaUserRepository wikipediaUserRepository;
+    // Dependency injection
+    private final WikipediaUserRepository wikipediaUserRepository;
 
     @Setter(onMethod_ = @TestOnly)
     @Value("${replacer.admin.user}")
     private String adminUser;
+
+    public UserService(WikipediaUserRepository wikipediaUserRepository) {
+        this.wikipediaUserRepository = wikipediaUserRepository;
+    }
 
     public Optional<User> findAuthenticatedUser(WikipediaLanguage lang, AccessToken accessToken) {
         return wikipediaUserRepository.findAuthenticatedUser(lang, accessToken).map(u -> convert(u, accessToken));

@@ -13,22 +13,18 @@ import java.util.List;
 import java.util.Random;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 
 class ReplacementCountServiceTest {
 
-    @Mock
+    // Dependency injection
     private ReplacementCountRepository replacementCountRepository;
 
-    @InjectMocks
     private ReplacementCountService replacementCountService;
 
     @BeforeEach
     public void setUp() {
-        replacementCountService = new ReplacementCountService();
-        MockitoAnnotations.openMocks(this);
+        replacementCountRepository = mock(ReplacementCountRepository.class);
+        replacementCountService = new ReplacementCountService(replacementCountRepository);
     }
 
     @Test

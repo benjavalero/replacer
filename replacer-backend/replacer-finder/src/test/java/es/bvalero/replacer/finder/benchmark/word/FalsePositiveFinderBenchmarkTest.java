@@ -27,9 +27,8 @@ class FalsePositiveFinderBenchmarkTest extends BaseFinderBenchmark {
     @Test
     void testBenchmark() throws ReplacerException {
         // Load the false positives
-        FalsePositiveLoader falsePositiveLoader = new FalsePositiveLoader();
         ListingFinder listingFinder = new ListingOfflineFinder();
-        falsePositiveLoader.setFalsePositiveParser(new FalsePositiveParser());
+        FalsePositiveLoader falsePositiveLoader = new FalsePositiveLoader(listingFinder, new FalsePositiveParser());
         Set<FalsePositive> falsePositives = falsePositiveLoader.parseListing(
             listingFinder.getFalsePositiveListing(WikipediaLanguage.getDefault())
         );

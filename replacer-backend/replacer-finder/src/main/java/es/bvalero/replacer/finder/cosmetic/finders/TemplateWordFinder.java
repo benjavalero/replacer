@@ -10,20 +10,23 @@ import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
 import javax.annotation.PostConstruct;
 import org.intellij.lang.annotations.RegExp;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /** Templates containing the useless "template" word, e.g. `{{plantilla:DGRG}} ==> {{DGRG}}` */
 @Component
 class TemplateWordFinder implements CosmeticCheckedFinder {
 
-    @Autowired
-    private FinderProperties finderProperties;
-
     @RegExp
     private static final String REGEX_TEMPLATE_WORD = "\\{\\{(%s):(\\w.+?)}}";
 
+    // Dependency injection
+    private final FinderProperties finderProperties;
+
     private Pattern patternTemplateWord;
+
+    TemplateWordFinder(FinderProperties finderProperties) {
+        this.finderProperties = finderProperties;
+    }
 
     @PostConstruct
     public void init() {

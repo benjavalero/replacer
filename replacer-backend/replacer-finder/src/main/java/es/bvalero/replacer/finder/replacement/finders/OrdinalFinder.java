@@ -19,7 +19,6 @@ import java.util.stream.Stream;
 import javax.annotation.PostConstruct;
 import javax.naming.OperationNotSupportedException;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
@@ -27,19 +26,23 @@ import org.springframework.stereotype.Component;
  * Find ordinals to be corrected in Spanish, e.g. without the dot between the number and the symbol.
  */
 @Component
-public class OrdinalFinder implements ReplacementFinder {
+class OrdinalFinder implements ReplacementFinder {
 
     private static final String MASCULINE_LETTER = "o";
     private static final String FEMININE_LETTER = "a";
     private static final String PLURAL_LETTER = "s";
+    private static final Set<Character> SUFFIX_ALLOWED_CHARS = Set.of(MASCULINE_ORDINAL, FEMININE_ORDINAL);
 
-    @Autowired
-    private FinderProperties finderProperties;
+    // Dependency injection
+    private final FinderProperties finderProperties;
 
     private static final Set<String> MASCULINE_SUFFIXES = new HashSet<>();
     private static final Set<String> FEMININE_SUFFIXES = new HashSet<>();
     private static final Set<String> SUFFIXES = new HashSet<>();
-    private static final Set<Character> SUFFIX_ALLOWED_CHARS = Set.of(MASCULINE_ORDINAL, FEMININE_ORDINAL);
+
+    OrdinalFinder(FinderProperties finderProperties) {
+        this.finderProperties = finderProperties;
+    }
 
     @PostConstruct
     public void init() {

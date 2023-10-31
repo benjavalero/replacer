@@ -26,7 +26,6 @@ import org.apache.commons.collections4.SetValuedMap;
 import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.VisibleForTesting;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
@@ -49,23 +48,24 @@ import org.springframework.stereotype.Component;
 public class UppercaseFinder implements ImmutableFinder, PropertyChangeListener {
 
     private static final String CAPTION_SEPARATOR = "|+";
-
     private static final String PARAGRAPH_START = "\n\n";
-
     // The pipe is not only used for tables cells, we must check is not a wiki-link!!!
     private static final Set<Character> PUNCTUATIONS = Set.of('=', '#', '*', '>', '.', '!');
-
-    @Autowired
-    private SimpleMisspellingLoader simpleMisspellingLoader;
-
     private static final char[] falseWordChars = { '-' };
     private static final boolean[] wordCharFlags = { false };
+
+    // Dependency injection
+    private final SimpleMisspellingLoader simpleMisspellingLoader;
 
     // StringMap with the misspellings which start with uppercase and are case-sensitive
     private Map<WikipediaLanguage, StringMap<String>> uppercaseStringMap = new EnumMap<>(WikipediaLanguage.class);
 
     @Getter
     private SetValuedMap<WikipediaLanguage, String> uppercaseMap = new HashSetValuedHashMap<>();
+
+    public UppercaseFinder(SimpleMisspellingLoader simpleMisspellingLoader) {
+        this.simpleMisspellingLoader = simpleMisspellingLoader;
+    }
 
     @PostConstruct
     public void init() {

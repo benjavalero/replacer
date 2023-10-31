@@ -20,23 +20,16 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.TestOnly;
 import org.jetbrains.annotations.VisibleForTesting;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /** Template class to find a review. There are different implementations according to the different search options. */
 @Slf4j
 abstract class ReviewFinder {
 
-    @Autowired
-    private WikipediaPageRepository wikipediaPageRepository;
-
-    @Autowired
-    private PageIndexService pageIndexService;
-
-    @Autowired
-    private PageService pageService;
-
-    @Autowired
-    private ReviewSectionFinder reviewSectionFinder;
+    // Dependency injection
+    private final WikipediaPageRepository wikipediaPageRepository;
+    private final PageIndexService pageIndexService;
+    private final PageService pageService;
+    private final ReviewSectionFinder reviewSectionFinder;
 
     // Maximum 500 as it is used as page size when searching in Wikipedia
     // If too big it may produce out-of-memory issues with the cached page contents
@@ -52,6 +45,18 @@ abstract class ReviewFinder {
         .newBuilder()
         .expireAfterAccess(1, TimeUnit.HOURS)
         .build();
+
+    ReviewFinder(
+        WikipediaPageRepository wikipediaPageRepository,
+        PageIndexService pageIndexService,
+        PageService pageService,
+        ReviewSectionFinder reviewSectionFinder
+    ) {
+        this.wikipediaPageRepository = wikipediaPageRepository;
+        this.pageIndexService = pageIndexService;
+        this.pageService = pageService;
+        this.reviewSectionFinder = reviewSectionFinder;
+    }
 
     /** Find a page/section review for the given search options (if any) */
     Optional<Review> findRandomPageReview(ReviewOptions options) {

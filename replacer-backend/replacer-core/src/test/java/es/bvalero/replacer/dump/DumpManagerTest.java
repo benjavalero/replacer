@@ -10,24 +10,20 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 
 class DumpManagerTest {
 
-    @Mock
+    // Dependency injection
     private DumpFinder dumpFinder;
-
-    @Mock
     private DumpParser dumpParser;
 
-    @InjectMocks
     private DumpManager dumpManager;
 
     @BeforeEach
     public void setUp() {
-        MockitoAnnotations.openMocks(this);
+        dumpFinder = mock(DumpFinder.class);
+        dumpParser = mock(DumpParser.class);
+        dumpManager = new DumpManager(dumpFinder, dumpParser);
     }
 
     @Test

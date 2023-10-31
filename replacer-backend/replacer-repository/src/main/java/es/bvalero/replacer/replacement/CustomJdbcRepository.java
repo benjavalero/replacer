@@ -5,7 +5,6 @@ import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.page.PageKey;
 import java.util.Collection;
 import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.*;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,8 +13,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 class CustomJdbcRepository implements CustomRepository {
 
-    @Autowired
-    private NamedParameterJdbcTemplate jdbcTemplate;
+    // Dependency injection
+    private final NamedParameterJdbcTemplate jdbcTemplate;
+
+    CustomJdbcRepository(NamedParameterJdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     @Override
     public void add(IndexedCustomReplacement customReplacement) {

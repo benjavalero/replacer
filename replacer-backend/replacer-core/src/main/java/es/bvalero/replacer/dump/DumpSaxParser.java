@@ -16,7 +16,6 @@ import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.xml.sax.SAXException;
 
@@ -25,16 +24,19 @@ import org.xml.sax.SAXException;
 @Component
 class DumpSaxParser implements DumpParser {
 
-    @Autowired
-    private PageIndexBatchService pageIndexService;
-
-    @Autowired
-    private DumpProperties dumpProperties;
+    // Dependency injection
+    private final PageIndexBatchService pageIndexService;
+    private final DumpProperties dumpProperties;
 
     // Singleton properties to be set in each dump parsing
     // We assume we only parse one dump at a time
     private DumpSaxHandler dumpHandler;
     private DumpFile dumpFile;
+
+    DumpSaxParser(PageIndexBatchService pageIndexService, DumpProperties dumpProperties) {
+        this.pageIndexService = pageIndexService;
+        this.dumpProperties = dumpProperties;
+    }
 
     @PostConstruct
     void setProperty() {

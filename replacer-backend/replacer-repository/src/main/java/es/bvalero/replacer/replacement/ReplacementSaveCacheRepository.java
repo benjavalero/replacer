@@ -5,7 +5,6 @@ import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.page.count.PageCountRepository;
 import java.util.Collection;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
@@ -17,12 +16,17 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 class ReplacementSaveCacheRepository implements ReplacementSaveRepository {
 
-    @Autowired
-    @Qualifier("replacementJdbcRepository")
-    private ReplacementSaveRepository replacementSaveRepository;
+    // Dependency injection
+    private final ReplacementSaveRepository replacementSaveRepository;
+    private final PageCountRepository pageCountRepository;
 
-    @Autowired
-    private PageCountRepository pageCountRepository;
+    ReplacementSaveCacheRepository(
+        @Qualifier("replacementJdbcRepository") ReplacementSaveRepository replacementSaveRepository,
+        PageCountRepository pageCountRepository
+    ) {
+        this.replacementSaveRepository = replacementSaveRepository;
+        this.pageCountRepository = pageCountRepository;
+    }
 
     @Override
     public void add(Collection<IndexedReplacement> replacements) {

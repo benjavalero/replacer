@@ -13,7 +13,6 @@ import java.util.Set;
 import java.util.regex.MatchResult;
 import javax.annotation.PostConstruct;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
@@ -24,19 +23,23 @@ class IgnorableSectionFinder implements ImmutableFinder {
     private static final char HEADER_CHAR = '=';
     private static final String START_HEADER = "==";
 
-    @Autowired
-    private FinderProperties finderProperties;
+    // Dependency injection
+    private final FinderProperties finderProperties;
 
     private final Set<String> ignorableSections = new HashSet<>();
 
-    @Override
-    public FinderPriority getPriority() {
-        return FinderPriority.HIGH;
+    IgnorableSectionFinder(FinderProperties finderProperties) {
+        this.finderProperties = finderProperties;
     }
 
     @PostConstruct
     public void init() {
         this.ignorableSections.addAll(this.finderProperties.getIgnorableSections()); // Cache
+    }
+
+    @Override
+    public FinderPriority getPriority() {
+        return FinderPriority.HIGH;
     }
 
     @Override

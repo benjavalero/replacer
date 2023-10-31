@@ -5,7 +5,6 @@ import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Optional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -15,8 +14,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class PageService {
 
-    @Autowired
-    private PageRepository pageRepository;
+    // Dependency injection
+    private final PageRepository pageRepository;
+
+    public PageService(PageRepository pageRepository) {
+        this.pageRepository = pageRepository;
+    }
 
     public Optional<IndexedPage> findPageByKey(PageKey pageKey) {
         return pageRepository.findPageByKey(pageKey);

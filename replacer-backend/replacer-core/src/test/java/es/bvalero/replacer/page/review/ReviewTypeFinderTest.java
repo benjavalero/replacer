@@ -19,9 +19,6 @@ import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 
 class ReviewTypeFinderTest {
 
@@ -63,28 +60,30 @@ class ReviewTypeFinderTest {
     private final ReviewOptions options = ReviewOptions.ofType(user, simpleType);
     private final ReviewOptions options2 = ReviewOptions.ofType(user, composedType);
 
-    @Mock
+    // Dependency injection
+    private WikipediaPageRepository wikipediaPageRepository;
+    private PageIndexService pageIndexService;
     private PageService pageService;
-
-    @Mock
+    private ReviewSectionFinder reviewSectionFinder;
     private PageCountService pageCountService;
 
-    @Mock
-    private WikipediaPageRepository wikipediaPageRepository;
-
-    @Mock
-    private PageIndexService pageIndexService;
-
-    @Mock
-    private ReviewSectionFinder reviewSectionFinder;
-
-    @InjectMocks
     private ReviewTypeFinder pageReviewTypeSubtypeService;
 
     @BeforeEach
     public void setUp() {
-        pageReviewTypeSubtypeService = new ReviewTypeFinder();
-        MockitoAnnotations.openMocks(this);
+        wikipediaPageRepository = mock(WikipediaPageRepository.class);
+        pageIndexService = mock(PageIndexService.class);
+        pageService = mock(PageService.class);
+        reviewSectionFinder = mock(ReviewSectionFinder.class);
+        pageCountService = mock(PageCountService.class);
+        pageReviewTypeSubtypeService =
+            new ReviewTypeFinder(
+                wikipediaPageRepository,
+                pageIndexService,
+                pageService,
+                reviewSectionFinder,
+                pageCountService
+            );
     }
 
     @Test

@@ -9,18 +9,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.mockito.InjectMocks;
-import org.mockito.MockitoAnnotations;
 
 class DoubleHttpFinderTest {
 
-    @InjectMocks
     private DoubleHttpFinder doubleHttpFinder;
 
     @BeforeEach
     public void setUp() {
         doubleHttpFinder = new DoubleHttpFinder();
-        MockitoAnnotations.openMocks(this);
     }
 
     @ParameterizedTest

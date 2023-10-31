@@ -2,7 +2,6 @@ package es.bvalero.replacer.user;
 
 import es.bvalero.replacer.common.util.WebUtils;
 import javax.servlet.http.HttpServletRequest;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
@@ -14,8 +13,12 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 @Component
 public class UserLanguageArgumentResolver implements HandlerMethodArgumentResolver {
 
-    @Autowired
-    private WebUtils webUtils;
+    // Dependency injection
+    private final WebUtils webUtils;
+
+    public UserLanguageArgumentResolver(WebUtils webUtils) {
+        this.webUtils = webUtils;
+    }
 
     @Override
     public boolean supportsParameter(MethodParameter methodParameter) {

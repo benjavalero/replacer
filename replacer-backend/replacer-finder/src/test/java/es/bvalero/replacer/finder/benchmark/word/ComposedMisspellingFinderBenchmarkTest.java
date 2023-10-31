@@ -30,15 +30,17 @@ class ComposedMisspellingFinderBenchmarkTest extends BaseFinderBenchmark {
     @Test
     void testBenchmark() throws ReplacerException {
         // Load the misspellings
-        ComposedMisspellingLoader composedMisspellingLoader = new ComposedMisspellingLoader();
         ListingFinder listingFinder = new ListingOfflineFinder();
-        composedMisspellingLoader.setComposedMisspellingParser(new ComposedMisspellingParser());
+        ComposedMisspellingLoader composedMisspellingLoader = new ComposedMisspellingLoader(
+            listingFinder,
+            new ComposedMisspellingParser()
+        );
         Set<ComposedMisspelling> misspellings = composedMisspellingLoader.parseListing(
             listingFinder.getComposedMisspellingListing(WikipediaLanguage.getDefault())
         );
 
         // Extract the misspelling words
-        MisspellingComposedFinder misspellingComposedFinder = new MisspellingComposedFinder();
+        MisspellingComposedFinder misspellingComposedFinder = new MisspellingComposedFinder(composedMisspellingLoader);
         Map<String, StandardMisspelling> misspellingMap = misspellingComposedFinder.buildMisspellingMap(
             misspellings.stream().map(cm -> (StandardMisspelling) cm).collect(Collectors.toSet())
         );

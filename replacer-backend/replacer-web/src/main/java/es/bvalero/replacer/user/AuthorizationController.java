@@ -5,7 +5,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
@@ -18,11 +17,14 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("api/user")
 public class AuthorizationController {
 
-    @Autowired
-    private AuthorizationService authorizationService;
+    // Dependency injection
+    private final AuthorizationService authorizationService;
+    private final UserService userService;
 
-    @Autowired
-    private UserService userService;
+    public AuthorizationController(AuthorizationService authorizationService, UserService userService) {
+        this.authorizationService = authorizationService;
+        this.userService = userService;
+    }
 
     // The usual OAuth1 workflow consists in 3 steps:
     // See: https://oauth1.wp-api.org/docs/basics/Auth-Flow.html

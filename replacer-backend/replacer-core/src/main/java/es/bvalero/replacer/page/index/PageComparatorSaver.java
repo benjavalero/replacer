@@ -7,7 +7,6 @@ import es.bvalero.replacer.page.count.PageCountRepository;
 import es.bvalero.replacer.replacement.IndexedReplacement;
 import es.bvalero.replacer.replacement.ReplacementService;
 import java.util.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -18,20 +17,26 @@ import org.springframework.stereotype.Component;
 @Component
 class PageComparatorSaver {
 
-    @Autowired
-    private PageService pageService;
-
-    @Autowired
-    private ReplacementService replacementService;
-
-    @Autowired
-    private PageCountRepository pageCountRepository;
+    // Dependency injection
+    private final PageService pageService;
+    private final ReplacementService replacementService;
+    private final PageCountRepository pageCountRepository;
 
     @Value("${replacer.dump.batch.chunk.size}")
     private int chunkSize;
 
     // Singleton field to add the items until the batch limit is reached
     private final List<PageComparatorResult> batchResult = Collections.synchronizedList(new ArrayList<>());
+
+    PageComparatorSaver(
+        PageService pageService,
+        ReplacementService replacementService,
+        PageCountRepository pageCountRepository
+    ) {
+        this.pageService = pageService;
+        this.replacementService = replacementService;
+        this.pageCountRepository = pageCountRepository;
+    }
 
     /* Save in DB the result of a page indexing no matter the size of the result */
     void save(PageComparatorResult pageComparatorResult) {

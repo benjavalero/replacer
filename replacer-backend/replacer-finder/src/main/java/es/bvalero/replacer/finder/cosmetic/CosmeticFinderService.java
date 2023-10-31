@@ -7,14 +7,17 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import javax.annotation.PostConstruct;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class CosmeticFinderService implements FinderService<Cosmetic> {
 
-    @Autowired
-    private List<CosmeticFinder> cosmeticFinders;
+    // Dependency injection
+    private final List<CosmeticFinder> cosmeticFinders;
+
+    public CosmeticFinderService(List<CosmeticFinder> cosmeticFinders) {
+        this.cosmeticFinders = cosmeticFinders;
+    }
 
     @PostConstruct
     public void sortImmutableFinders() {

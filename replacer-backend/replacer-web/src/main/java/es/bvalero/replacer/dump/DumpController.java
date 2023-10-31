@@ -6,7 +6,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,8 +17,12 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("api/dump")
 public class DumpController {
 
-    @Autowired
-    private DumpManager dumpManager;
+    // Dependency injection
+    private final DumpManager dumpManager;
+
+    public DumpController(DumpManager dumpManager) {
+        this.dumpManager = dumpManager;
+    }
 
     @Operation(summary = "Find the status of the current (or the last) dump indexing")
     @ValidateAdminUser

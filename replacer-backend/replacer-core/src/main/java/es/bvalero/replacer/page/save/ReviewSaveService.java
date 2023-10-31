@@ -28,7 +28,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.queue.CircularFifoQueue;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.TestOnly;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -39,17 +38,11 @@ class ReviewSaveService {
     private static final String EDIT_SUMMARY = "Reemplazos con [[Usuario:Benjavalero/Replacer|Replacer]]";
     private static final String COSMETIC_CHANGES = "mejoras cosméticas";
 
-    @Autowired
-    private PageService pageService;
-
-    @Autowired
-    private ReplacementService replacementService;
-
-    @Autowired
-    private CustomReplacementService customReplacementService;
-
-    @Autowired
-    private WikipediaPageRepository wikipediaPageRepository;
+    // Dependency injection
+    private final PageService pageService;
+    private final ReplacementService replacementService;
+    private final CustomReplacementService customReplacementService;
+    private final WikipediaPageRepository wikipediaPageRepository;
 
     @Setter(onMethod_ = @TestOnly)
     @Value("${replacer.max-editions-per-minute}")
@@ -59,6 +52,18 @@ class ReviewSaveService {
         .newBuilder()
         .expireAfterWrite(1, TimeUnit.HOURS)
         .build();
+
+    ReviewSaveService(
+        PageService pageService,
+        ReplacementService replacementService,
+        CustomReplacementService customReplacementService,
+        WikipediaPageRepository wikipediaPageRepository
+    ) {
+        this.pageService = pageService;
+        this.replacementService = replacementService;
+        this.customReplacementService = customReplacementService;
+        this.wikipediaPageRepository = wikipediaPageRepository;
+    }
 
     void saveReviewContent(WikipediaPageSave pageSave, User user) throws WikipediaException {
         validateEditionsPerMinute(user);

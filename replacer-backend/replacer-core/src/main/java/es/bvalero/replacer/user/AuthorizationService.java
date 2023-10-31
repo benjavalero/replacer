@@ -1,13 +1,16 @@
 package es.bvalero.replacer.user;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 class AuthorizationService {
 
-    @Autowired
-    private OAuthService oAuthService;
+    // Dependency injection
+    private final OAuthService oAuthService;
+
+    AuthorizationService(OAuthService oAuthService) {
+        this.oAuthService = oAuthService;
+    }
 
     RequestToken getRequestToken() {
         return this.oAuthService.getRequestToken();

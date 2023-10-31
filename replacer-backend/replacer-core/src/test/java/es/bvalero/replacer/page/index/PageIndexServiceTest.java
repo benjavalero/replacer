@@ -16,29 +16,8 @@ import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 
 class PageIndexServiceTest {
-
-    @Mock
-    private PageService pageService;
-
-    @Mock
-    private PageIndexValidator pageIndexValidator;
-
-    @Mock
-    private ReplacementFindService replacementFindService;
-
-    @Mock
-    private PageComparator pageComparator;
-
-    @Mock
-    private PageComparatorSaver pageComparatorSaver;
-
-    @InjectMocks
-    private PageIndexService pageIndexService;
 
     private final WikipediaPage page = WikipediaPage
         .builder()
@@ -50,10 +29,30 @@ class PageIndexServiceTest {
         .queryTimestamp(WikipediaTimestamp.now())
         .build();
 
+    // Dependency injection
+    private PageService pageService;
+    private PageIndexValidator pageIndexValidator;
+    private ReplacementFindService replacementFindService;
+    private PageComparator pageComparator;
+    private PageComparatorSaver pageComparatorSaver;
+
+    private PageIndexService pageIndexService;
+
     @BeforeEach
     void setUp() {
-        pageIndexService = new PageIndexService();
-        MockitoAnnotations.openMocks(this);
+        pageService = mock(PageService.class);
+        pageIndexValidator = mock(PageIndexValidator.class);
+        replacementFindService = mock(ReplacementFindService.class);
+        pageComparator = mock(PageComparator.class);
+        pageComparatorSaver = mock(PageComparatorSaver.class);
+        pageIndexService =
+            new PageIndexService(
+                pageService,
+                pageIndexValidator,
+                replacementFindService,
+                pageComparator,
+                pageComparatorSaver
+            );
     }
 
     @Test

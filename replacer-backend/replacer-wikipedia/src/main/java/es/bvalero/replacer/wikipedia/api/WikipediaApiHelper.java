@@ -12,7 +12,6 @@ import es.bvalero.replacer.wikipedia.WikipediaException;
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
@@ -21,12 +20,17 @@ import org.springframework.stereotype.Component;
 @Component
 public class WikipediaApiHelper {
 
-    @Autowired
-    @Qualifier("mediaWikiService")
-    private OAuth10aService mediaWikiService;
+    // Dependency injection
+    private final OAuth10aService mediaWikiService;
+    private final ObjectMapper jsonMapper;
 
-    @Autowired
-    private ObjectMapper jsonMapper;
+    public WikipediaApiHelper(
+        @Qualifier("mediaWikiService") OAuth10aService mediaWikiService,
+        ObjectMapper jsonMapper
+    ) {
+        this.mediaWikiService = mediaWikiService;
+        this.jsonMapper = jsonMapper;
+    }
 
     public WikipediaApiResponse executeApiRequest(WikipediaApiRequest apiRequest) throws WikipediaException {
         // Add common parameters to receive a JSON response from Wikipedia API

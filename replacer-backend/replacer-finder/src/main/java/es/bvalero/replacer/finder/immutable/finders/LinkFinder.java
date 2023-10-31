@@ -16,7 +16,6 @@ import java.util.regex.MatchResult;
 import javax.annotation.PostConstruct;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
@@ -35,11 +34,15 @@ class LinkFinder extends ImmutableCheckedFinder {
 
     private static final char COLON = ':';
 
-    @Autowired
-    private FinderProperties finderProperties;
+    // Dependency injection
+    private final FinderProperties finderProperties;
 
     private final Set<String> categoryWords = new HashSet<>();
     private final Set<String> fileSpaces = new HashSet<>();
+
+    LinkFinder(FinderProperties finderProperties) {
+        this.finderProperties = finderProperties;
+    }
 
     @PostConstruct
     public void init() {

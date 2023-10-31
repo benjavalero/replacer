@@ -1,8 +1,7 @@
 package es.bvalero.replacer.finder;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 import es.bvalero.replacer.common.domain.ReplacementKind;
 import es.bvalero.replacer.common.domain.StandardType;
@@ -13,31 +12,30 @@ import es.bvalero.replacer.finder.replacement.custom.CustomReplacementFinderServ
 import java.util.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 
 class ResultFinderTest {
 
-    @Mock
+    // Dependency injection
     private CosmeticFinderService cosmeticFinderService;
-
-    @Mock
     private ReplacementFinderService replacementFinderService;
-
-    @Mock
     private ImmutableFinderService immutableFinderService;
-
-    @Mock
     private CustomReplacementFinderService customReplacementFinderService;
 
-    @InjectMocks
     private ResultFinder resultFinder;
 
     @BeforeEach
     public void setUp() {
-        resultFinder = new ResultFinder();
-        MockitoAnnotations.openMocks(this);
+        cosmeticFinderService = mock(CosmeticFinderService.class);
+        replacementFinderService = mock(ReplacementFinderService.class);
+        immutableFinderService = mock(ImmutableFinderService.class);
+        customReplacementFinderService = mock(CustomReplacementFinderService.class);
+        resultFinder =
+            new ResultFinder(
+                cosmeticFinderService,
+                replacementFinderService,
+                immutableFinderService,
+                customReplacementFinderService
+            );
     }
 
     @Test

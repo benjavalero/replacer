@@ -10,7 +10,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.Optional;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,8 +21,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("api/type")
 public class ReplacementTypeController {
 
-    @Autowired
-    private ReplacementTypeMatchService replacementTypeMatchService;
+    // Dependency injection
+    private final ReplacementTypeMatchService replacementTypeMatchService;
+
+    public ReplacementTypeController(ReplacementTypeMatchService replacementTypeMatchService) {
+        this.replacementTypeMatchService = replacementTypeMatchService;
+    }
 
     @Operation(summary = "Validate if the custom replacement matches with a known replacement type")
     @GetMapping(value = "/validate")

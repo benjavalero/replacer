@@ -10,7 +10,6 @@ import java.util.Objects;
 import java.util.Optional;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,14 +21,20 @@ public class ReviewFindController {
 
     static final String TOTAL_PAGES_HEADER = "X-Pagination-Total-Pages";
 
-    @Autowired
-    private ReviewNoTypeFinder reviewNoTypeFinder;
+    // Dependency injection
+    private final ReviewNoTypeFinder reviewNoTypeFinder;
+    private final ReviewTypeFinder reviewTypeFinder;
+    private final ReviewCustomFinder reviewCustomFinder;
 
-    @Autowired
-    private ReviewTypeFinder reviewTypeFinder;
-
-    @Autowired
-    private ReviewCustomFinder reviewCustomFinder;
+    public ReviewFindController(
+        ReviewNoTypeFinder reviewNoTypeFinder,
+        ReviewTypeFinder reviewTypeFinder,
+        ReviewCustomFinder reviewCustomFinder
+    ) {
+        this.reviewNoTypeFinder = reviewNoTypeFinder;
+        this.reviewTypeFinder = reviewTypeFinder;
+        this.reviewCustomFinder = reviewCustomFinder;
+    }
 
     @Operation(summary = "Find a random page and the replacements to review")
     @GetMapping(value = "/random")

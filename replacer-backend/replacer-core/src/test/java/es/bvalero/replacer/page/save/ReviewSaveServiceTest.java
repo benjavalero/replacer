@@ -18,34 +18,28 @@ import java.time.LocalDate;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 
 class ReviewSaveServiceTest {
 
     private static final int MAX_EDITIONS_PER_MINUTE = 5;
 
-    @Mock
+    // Dependency injection
     private PageService pageService;
-
-    @Mock
     private ReplacementService replacementService;
-
-    @Mock
     private CustomReplacementService customReplacementService;
-
-    @Mock
     private WikipediaPageRepository wikipediaPageRepository;
 
-    @InjectMocks
     private ReviewSaveService reviewSaveService;
 
     @BeforeEach
     public void setUp() {
-        reviewSaveService = new ReviewSaveService();
+        pageService = mock(PageService.class);
+        replacementService = mock(ReplacementService.class);
+        customReplacementService = mock(CustomReplacementService.class);
+        wikipediaPageRepository = mock(WikipediaPageRepository.class);
+        reviewSaveService =
+            new ReviewSaveService(pageService, replacementService, customReplacementService, wikipediaPageRepository);
         reviewSaveService.setMaxEditionsPerMinute(MAX_EDITIONS_PER_MINUTE);
-        MockitoAnnotations.openMocks(this);
     }
 
     @Test

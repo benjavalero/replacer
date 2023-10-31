@@ -14,7 +14,6 @@ import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.VisibleForTesting;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
@@ -28,8 +27,12 @@ class WikipediaPageApiRepository implements WikipediaPageRepository {
     private static final int MAX_SEARCH_RESULTS = 500; // MediaWiki API allows at most 500 pages in a search result
     private static final int MAX_OFFSET_LIMIT = 10000;
 
-    @Autowired
-    private WikipediaApiHelper wikipediaApiHelper;
+    // Dependency injection
+    private final WikipediaApiHelper wikipediaApiHelper;
+
+    WikipediaPageApiRepository(WikipediaApiHelper wikipediaApiHelper) {
+        this.wikipediaApiHelper = wikipediaApiHelper;
+    }
 
     @Override
     public Optional<WikipediaPage> findByTitle(WikipediaLanguage lang, String pageTitle) {

@@ -10,18 +10,20 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
 class ApplyCosmeticsService {
 
-    @Autowired
-    private CosmeticFindService cosmeticFindService;
+    // Dependency injection
+    private final CosmeticFindService cosmeticFindService;
+    private final CheckWikipediaService checkWikipediaService;
 
-    @Autowired
-    private CheckWikipediaService checkWikipediaService;
+    ApplyCosmeticsService(CosmeticFindService cosmeticFindService, CheckWikipediaService checkWikipediaService) {
+        this.cosmeticFindService = cosmeticFindService;
+        this.checkWikipediaService = checkWikipediaService;
+    }
 
     /** Return the new content of the page after applying all the cosmetic changes */
     String applyCosmeticChanges(FinderPage page) {

@@ -7,24 +7,29 @@ import es.bvalero.replacer.finder.immutable.ImmutableFinderService;
 import es.bvalero.replacer.finder.replacement.ReplacementFinderService;
 import es.bvalero.replacer.finder.replacement.custom.CustomReplacementFinderService;
 import java.util.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 class ResultFinder
     implements CosmeticFindService, ReplacementFindService, CustomReplacementFindService, ReplacementTypeMatchService {
 
-    @Autowired
-    private CosmeticFinderService cosmeticFinderService;
+    // Dependency injection
+    private final CosmeticFinderService cosmeticFinderService;
+    private final ReplacementFinderService replacementFinderService;
+    private final ImmutableFinderService immutableFinderService;
+    private final CustomReplacementFinderService customReplacementFinderService;
 
-    @Autowired
-    private ReplacementFinderService replacementFinderService;
-
-    @Autowired
-    private ImmutableFinderService immutableFinderService;
-
-    @Autowired
-    private CustomReplacementFinderService customReplacementFinderService;
+    public ResultFinder(
+        CosmeticFinderService cosmeticFinderService,
+        ReplacementFinderService replacementFinderService,
+        ImmutableFinderService immutableFinderService,
+        CustomReplacementFinderService customReplacementFinderService
+    ) {
+        this.cosmeticFinderService = cosmeticFinderService;
+        this.replacementFinderService = replacementFinderService;
+        this.immutableFinderService = immutableFinderService;
+        this.customReplacementFinderService = customReplacementFinderService;
+    }
 
     @Override
     public Collection<Cosmetic> findCosmetics(FinderPage page) {

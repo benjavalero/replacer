@@ -6,7 +6,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -16,8 +15,12 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 @Component
 public class ValidateUserAspect {
 
-    @Autowired
-    private WebUtils webUtils;
+    // Dependency injection
+    private final WebUtils webUtils;
+
+    public ValidateUserAspect(WebUtils webUtils) {
+        this.webUtils = webUtils;
+    }
 
     @Around("@annotation(es.bvalero.replacer.user.ValidateAdminUser)")
     Object validateAdminUser(ProceedingJoinPoint joinPoint) throws Throwable {

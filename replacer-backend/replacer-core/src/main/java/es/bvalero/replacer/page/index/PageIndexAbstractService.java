@@ -10,7 +10,6 @@ import java.util.Collection;
 import java.util.Optional;
 import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 
@@ -19,17 +18,23 @@ import org.springframework.stereotype.Service;
 @Service
 abstract class PageIndexAbstractService {
 
-    @Autowired
-    private PageService pageService;
+    // Dependency injection
+    private final PageService pageService;
+    private final PageIndexValidator pageIndexValidator;
+    private final ReplacementFindService replacementFindService;
+    private final PageComparator pageComparator;
 
-    @Autowired
-    private PageIndexValidator pageIndexValidator;
-
-    @Autowired
-    private ReplacementFindService replacementFindService;
-
-    @Autowired
-    private PageComparator pageComparator;
+    PageIndexAbstractService(
+        PageService pageService,
+        PageIndexValidator pageIndexValidator,
+        ReplacementFindService replacementFindService,
+        PageComparator pageComparator
+    ) {
+        this.pageService = pageService;
+        this.pageIndexValidator = pageIndexValidator;
+        this.replacementFindService = replacementFindService;
+        this.pageComparator = pageComparator;
+    }
 
     /** Index a page. Replacements and details in database (if any) will be calculated. */
     public PageIndexResult indexPage(IndexablePage page) {

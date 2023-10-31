@@ -12,7 +12,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Objects;
 import javax.annotation.PostConstruct;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
@@ -23,13 +22,13 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 class ReplacementCountCacheRepository implements ReplacementCountRepository {
 
-    @Autowired
-    @Qualifier("replacementJdbcRepository")
+    private final Duration refreshTime = Duration.of(5, MINUTES);
+
+    // Dependency injection
     private ReplacementCountRepository replacementCountRepository;
 
     // Statistics caches
     // The queries in database can be heavy, so we preload the counts on start and refresh them periodically.
-    private final Duration refreshTime = Duration.of(5, MINUTES);
     private final LoadingCache<WikipediaLanguage, Integer> countReviewed = Caffeine
         .newBuilder()
         .refreshAfterWrite(refreshTime)
@@ -42,6 +41,12 @@ class ReplacementCountCacheRepository implements ReplacementCountRepository {
         .newBuilder()
         .refreshAfterWrite(refreshTime)
         .build(l -> replacementCountRepository.countGroupedByReviewer(l));
+
+    ReplacementCountCacheRepository(
+        @Qualifier("replacementJdbcRepository") ReplacementCountRepository replacementCountRepository
+    ) {
+        this.replacementCountRepository = replacementCountRepository;
+    }
 
     @PostConstruct
     public void init() {

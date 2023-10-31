@@ -1,24 +1,34 @@
 package es.bvalero.replacer.page.index;
 
+import es.bvalero.replacer.finder.ReplacementFindService;
 import es.bvalero.replacer.page.IndexedPage;
 import es.bvalero.replacer.page.PageBatchService;
 import es.bvalero.replacer.page.PageKey;
+import es.bvalero.replacer.page.PageService;
 import java.util.Optional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 
 @Service
 public class PageIndexBatchService extends PageIndexAbstractService {
 
-    @Autowired
-    private PageBatchService pageBatchService;
+    // Dependency injection
+    private final PageBatchService pageBatchService;
+    private final PageIndexValidator pageIndexValidator;
+    private final PageComparatorSaver pageComparatorSaver;
 
-    @Autowired
-    private PageComparatorSaver pageComparatorSaver;
-
-    @Autowired
-    private PageIndexValidator pageIndexValidator;
+    public PageIndexBatchService(
+        PageBatchService pageBatchService,
+        PageIndexValidator pageIndexValidator,
+        ReplacementFindService replacementFindService,
+        PageComparator pageComparator,
+        PageComparatorSaver pageComparatorSaver
+    ) {
+        super(pageBatchService, pageIndexValidator, replacementFindService, pageComparator);
+        this.pageBatchService = pageBatchService;
+        this.pageComparatorSaver = pageComparatorSaver;
+        this.pageIndexValidator = pageIndexValidator;
+    }
 
     @Override
     Optional<IndexedPage> findIndexedPageByKey(PageKey pageKey) {

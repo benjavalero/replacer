@@ -10,7 +10,6 @@ import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.ResultMatchListener;
 import java.util.regex.MatchResult;
 import javax.annotation.PostConstruct;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -24,15 +23,13 @@ import org.springframework.stereotype.Component;
 @Component
 class PersonNameFinder implements ImmutableFinder {
 
+    // Dependency injection
+    private final FinderProperties finderProperties;
+
     private StringMap<String> stringMap;
 
-    @Autowired
-    private FinderProperties finderProperties;
-
-    @Override
-    public FinderPriority getPriority() {
-        // It should be High for number of matches, but it is slow, so it is better to have lower priority.
-        return FinderPriority.MEDIUM;
+    PersonNameFinder(FinderProperties finderProperties) {
+        this.finderProperties = finderProperties;
     }
 
     @PostConstruct
@@ -47,6 +44,12 @@ class PersonNameFinder implements ImmutableFinder {
                 falseWordChars,
                 wordCharFlags
             );
+    }
+
+    @Override
+    public FinderPriority getPriority() {
+        // It should be High for number of matches, but it is slow, so it is better to have lower priority.
+        return FinderPriority.MEDIUM;
     }
 
     @Override

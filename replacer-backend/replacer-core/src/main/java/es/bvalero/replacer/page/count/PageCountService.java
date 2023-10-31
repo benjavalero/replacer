@@ -5,14 +5,17 @@ import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.user.User;
 import java.util.Collection;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class PageCountService {
 
-    @Autowired
-    private PageCountRepository pageCountRepository;
+    // Dependency injection
+    private final PageCountRepository pageCountRepository;
+
+    public PageCountService(PageCountRepository pageCountRepository) {
+        this.pageCountRepository = pageCountRepository;
+    }
 
     /** Count the number of pages to review grouped by replacement type */
     public Collection<ResultCount<StandardType>> countNotReviewedGroupedByType(User user) {

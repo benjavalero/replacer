@@ -8,18 +8,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import org.mockito.InjectMocks;
-import org.mockito.MockitoAnnotations;
 
 class ListBreakFinderTest {
 
-    @InjectMocks
     private ListBreakFinder listBreakFinder;
 
     @BeforeEach
     public void setUp() {
         listBreakFinder = new ListBreakFinder();
-        MockitoAnnotations.openMocks(this);
     }
 
     @ParameterizedTest

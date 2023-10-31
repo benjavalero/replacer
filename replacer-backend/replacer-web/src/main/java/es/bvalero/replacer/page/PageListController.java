@@ -13,7 +13,6 @@ import java.util.Collection;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -25,11 +24,14 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("api/page/type")
 public class PageListController {
 
-    @Autowired
-    private PageFindByTypeService pageFindByTypeService;
+    // Dependency injection
+    private final PageFindByTypeService pageFindByTypeService;
+    private final ReplacementService replacementService;
 
-    @Autowired
-    private ReplacementService replacementService;
+    public PageListController(PageFindByTypeService pageFindByTypeService, ReplacementService replacementService) {
+        this.pageFindByTypeService = pageFindByTypeService;
+        this.replacementService = replacementService;
+    }
 
     @Operation(summary = "List the pages to review containing the given replacement type")
     @GetMapping(value = "", produces = MediaType.TEXT_PLAIN_VALUE)

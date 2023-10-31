@@ -6,7 +6,6 @@ import es.bvalero.replacer.wikipedia.WikipediaPageRepository;
 import es.bvalero.replacer.wikipedia.WikipediaSection;
 import java.util.*;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
@@ -14,8 +13,12 @@ import org.springframework.stereotype.Component;
 @Component
 class ReviewSectionFinder {
 
-    @Autowired
-    private WikipediaPageRepository wikipediaPageRepository;
+    // Dependency injection
+    private final WikipediaPageRepository wikipediaPageRepository;
+
+    ReviewSectionFinder(WikipediaPageRepository wikipediaPageRepository) {
+        this.wikipediaPageRepository = wikipediaPageRepository;
+    }
 
     /**
      * Find (if any) the smallest section in a page containing the given replacements.

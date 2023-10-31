@@ -10,7 +10,6 @@ import es.bvalero.replacer.wikipedia.api.WikipediaApiVerb;
 import java.util.*;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Profile;
 import org.springframework.lang.Nullable;
@@ -22,8 +21,12 @@ import org.springframework.stereotype.Service;
 @Profile("!offline")
 class WikipediaUserApiRepository implements WikipediaUserRepository {
 
-    @Autowired
-    private WikipediaApiHelper wikipediaApiHelper;
+    // Dependency injection
+    private final WikipediaApiHelper wikipediaApiHelper;
+
+    WikipediaUserApiRepository(WikipediaApiHelper wikipediaApiHelper) {
+        this.wikipediaApiHelper = wikipediaApiHelper;
+    }
 
     @Override
     public Optional<WikipediaUser> findAuthenticatedUser(WikipediaLanguage lang, AccessToken accessToken) {

@@ -4,7 +4,6 @@ import es.bvalero.replacer.FinderProperties;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.wikipedia.WikipediaPageRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
@@ -12,11 +11,14 @@ import org.springframework.stereotype.Component;
 @Profile("!offline")
 class ListingWikipediaFinder implements ListingFinder {
 
-    @Autowired
-    private WikipediaPageRepository wikipediaPageRepository;
+    // Dependency injection
+    private final WikipediaPageRepository wikipediaPageRepository;
+    private final FinderProperties finderProperties;
 
-    @Autowired
-    private FinderProperties finderProperties;
+    ListingWikipediaFinder(WikipediaPageRepository wikipediaPageRepository, FinderProperties finderProperties) {
+        this.wikipediaPageRepository = wikipediaPageRepository;
+        this.finderProperties = finderProperties;
+    }
 
     @Override
     public String getSimpleMisspellingListing(WikipediaLanguage lang) throws ReplacerException {

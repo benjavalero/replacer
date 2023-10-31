@@ -1,8 +1,7 @@
 package es.bvalero.replacer.page.review;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 import es.bvalero.replacer.common.domain.ReplacementKind;
 import es.bvalero.replacer.common.domain.StandardType;
@@ -16,22 +15,18 @@ import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 
 class ReviewSectionFinderTest {
 
-    @Mock
+    // Dependency injection
     private WikipediaPageRepository wikipediaPageRepository;
 
-    @InjectMocks
     private ReviewSectionFinder reviewSectionFinder;
 
     @BeforeEach
     public void setUp() {
-        reviewSectionFinder = new ReviewSectionFinder();
-        MockitoAnnotations.openMocks(this);
+        wikipediaPageRepository = mock(WikipediaPageRepository.class);
+        reviewSectionFinder = new ReviewSectionFinder(wikipediaPageRepository);
     }
 
     private WikipediaPage buildWikipediaPage(int pageId, String content) {

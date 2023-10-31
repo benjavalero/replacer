@@ -4,7 +4,6 @@ import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.exception.ReplacerException;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -20,11 +19,14 @@ import org.springframework.stereotype.Service;
 @Service
 class DumpManager {
 
-    @Autowired
-    private DumpFinder dumpFinder;
+    // Dependency injection
+    private final DumpFinder dumpFinder;
+    private final DumpParser dumpParser;
 
-    @Autowired
-    private DumpParser dumpParser;
+    DumpManager(DumpFinder dumpFinder, DumpParser dumpParser) {
+        this.dumpFinder = dumpFinder;
+        this.dumpParser = dumpParser;
+    }
 
     /**
      * Find the latest dump files for each language and index them.

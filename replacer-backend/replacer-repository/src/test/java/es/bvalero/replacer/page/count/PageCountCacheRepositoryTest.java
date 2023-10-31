@@ -2,6 +2,7 @@ package es.bvalero.replacer.page.count;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import es.bvalero.replacer.common.domain.*;
@@ -9,22 +10,18 @@ import java.util.Collection;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 
 class PageCountCacheRepositoryTest {
 
-    @Mock
+    // Dependency injection
     private PageCountRepository pageCountRepository;
 
-    @InjectMocks
     private PageCountCacheRepository pageCountCacheRepository;
 
     @BeforeEach
     public void setUp() {
-        pageCountCacheRepository = new PageCountCacheRepository();
-        MockitoAnnotations.openMocks(this);
+        pageCountRepository = mock(PageCountRepository.class);
+        pageCountCacheRepository = new PageCountCacheRepository(pageCountRepository);
     }
 
     @Test

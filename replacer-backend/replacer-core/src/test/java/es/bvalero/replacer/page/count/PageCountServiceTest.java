@@ -3,28 +3,27 @@ package es.bvalero.replacer.page.count;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
-import es.bvalero.replacer.common.domain.*;
+import es.bvalero.replacer.common.domain.ReplacementKind;
+import es.bvalero.replacer.common.domain.ResultCount;
+import es.bvalero.replacer.common.domain.StandardType;
+import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.user.User;
 import java.util.Collection;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 
 class PageCountServiceTest {
 
-    @Mock
+    // Dependency injection
     private PageCountRepository pageCountRepository;
 
-    @InjectMocks
     private PageCountService pageCountService;
 
     @BeforeEach
     public void setUp() {
-        pageCountService = new PageCountService();
-        MockitoAnnotations.openMocks(this);
+        pageCountRepository = mock(PageCountRepository.class);
+        pageCountService = new PageCountService(pageCountRepository);
     }
 
     @Test

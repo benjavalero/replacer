@@ -7,7 +7,6 @@ import java.util.Collection;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -26,8 +25,12 @@ class PageJdbcRepository implements PageRepository {
     private static final String FROM_REPLACEMENT_JOIN_PAGE =
         "FROM page p LEFT JOIN replacement r ON p.lang = r.lang AND p.page_id = r.page_id ";
 
-    @Autowired
-    private NamedParameterJdbcTemplate jdbcTemplate;
+    // Dependency injection
+    private final NamedParameterJdbcTemplate jdbcTemplate;
+
+    PageJdbcRepository(NamedParameterJdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     @Override
     public Optional<IndexedPage> findPageByKey(PageKey pageKey) {

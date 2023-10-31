@@ -1,6 +1,7 @@
 package es.bvalero.replacer.finder.replacement.finders;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
 
 import es.bvalero.replacer.common.domain.ReplacementKind;
 import es.bvalero.replacer.common.domain.StandardType;
@@ -8,6 +9,7 @@ import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.Suggestion;
 import es.bvalero.replacer.finder.listing.SimpleMisspelling;
+import es.bvalero.replacer.finder.listing.find.ListingFinder;
 import es.bvalero.replacer.finder.listing.load.SimpleMisspellingLoader;
 import es.bvalero.replacer.finder.listing.parse.SimpleMisspellingParser;
 import java.beans.PropertyChangeEvent;
@@ -24,16 +26,19 @@ import org.junit.jupiter.params.provider.CsvSource;
 
 class MisspellingSimpleFinderTest {
 
-    private SimpleMisspellingLoader simpleMisspellingLoader;
+    // Dependency injection
+    private ListingFinder listingFinder;
     private SimpleMisspellingParser simpleMisspellingParser;
+    private SimpleMisspellingLoader simpleMisspellingLoader;
+
     private MisspellingSimpleFinder misspellingFinder;
 
     @BeforeEach
     void setUp() {
-        simpleMisspellingLoader = new SimpleMisspellingLoader();
+        listingFinder = mock(ListingFinder.class);
         simpleMisspellingParser = new SimpleMisspellingParser();
-        misspellingFinder = new MisspellingSimpleFinder();
-        misspellingFinder.setSimpleMisspellingLoader(simpleMisspellingLoader);
+        simpleMisspellingLoader = new SimpleMisspellingLoader(listingFinder, simpleMisspellingParser);
+        misspellingFinder = new MisspellingSimpleFinder(simpleMisspellingLoader);
     }
 
     private void fakeUpdateMisspellingList(List<SimpleMisspelling> misspellings) {

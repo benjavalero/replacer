@@ -5,7 +5,6 @@ import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import java.util.Collection;
 import java.util.Objects;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -20,8 +19,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 class PageCountJdbcRepository implements PageCountRepository {
 
-    @Autowired
-    private NamedParameterJdbcTemplate jdbcTemplate;
+    // Dependency injection
+    private final NamedParameterJdbcTemplate jdbcTemplate;
+
+    PageCountJdbcRepository(NamedParameterJdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     @Override
     public int countNotReviewedByType(WikipediaLanguage lang, @Nullable StandardType type) {

@@ -6,7 +6,6 @@ import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import java.util.Collection;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -17,8 +16,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class ReplacementService {
 
-    @Autowired
-    private ReplacementSaveRepository replacementSaveRepository;
+    // Dependency injection
+    private final ReplacementSaveRepository replacementSaveRepository;
+
+    public ReplacementService(ReplacementSaveRepository replacementSaveRepository) {
+        this.replacementSaveRepository = replacementSaveRepository;
+    }
 
     public void addReplacements(Collection<IndexedReplacement> replacements) {
         replacementSaveRepository.add(replacements);

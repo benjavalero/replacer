@@ -8,18 +8,14 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.mockito.InjectMocks;
-import org.mockito.MockitoAnnotations;
 
 class TagEmptyFinderTest {
 
-    @InjectMocks
     private TagEmptyFinder tagEmptyFinder;
 
     @BeforeEach
     public void setUp() {
         tagEmptyFinder = new TagEmptyFinder();
-        MockitoAnnotations.openMocks(this);
     }
 
     @ParameterizedTest

@@ -13,7 +13,6 @@ import java.util.regex.Pattern;
 import javax.annotation.PostConstruct;
 import org.apache.commons.lang3.StringUtils;
 import org.intellij.lang.annotations.RegExp;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
@@ -21,13 +20,17 @@ import org.springframework.stereotype.Component;
 @Component
 class CategoryWhiteSpaceFinder implements CosmeticCheckedFinder {
 
-    @Autowired
-    private FinderProperties finderProperties;
-
     @RegExp
     private static final String REGEX_CATEGORY_SPACE = "\\[\\[(\\s*%s\\s*):(.+?)(\\|.+?)?]]";
 
+    // Dependency injection
+    private final FinderProperties finderProperties;
+
     private Pattern patternCategorySpace;
+
+    CategoryWhiteSpaceFinder(FinderProperties finderProperties) {
+        this.finderProperties = finderProperties;
+    }
 
     @PostConstruct
     public void init() {

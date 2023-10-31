@@ -6,20 +6,19 @@ import es.bvalero.replacer.finder.listing.SimpleMisspelling;
 import es.bvalero.replacer.finder.listing.find.ListingFinder;
 import es.bvalero.replacer.finder.listing.parse.SimpleMisspellingParser;
 import java.util.Set;
-import lombok.Setter;
-import org.jetbrains.annotations.TestOnly;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class SimpleMisspellingLoader extends ListingLoader<SimpleMisspelling> {
 
-    @Autowired
+    // Dependency injection
     private ListingFinder listingFinder;
-
-    @Setter(onMethod_ = @TestOnly)
-    @Autowired
     private SimpleMisspellingParser simpleMisspellingParser;
+
+    public SimpleMisspellingLoader(ListingFinder listingFinder, SimpleMisspellingParser simpleMisspellingParser) {
+        this.listingFinder = listingFinder;
+        this.simpleMisspellingParser = simpleMisspellingParser;
+    }
 
     @Override
     public String getLabel() {

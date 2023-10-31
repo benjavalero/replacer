@@ -1,6 +1,7 @@
 package es.bvalero.replacer.user;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
@@ -11,22 +12,18 @@ import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 
 class UserServiceTest {
 
-    @Mock
+    // Dependency injection
     private WikipediaUserRepository wikipediaUserRepository;
 
-    @InjectMocks
     private UserService userService;
 
     @BeforeEach
     public void setUp() {
-        userService = new UserService();
-        MockitoAnnotations.openMocks(this);
+        wikipediaUserRepository = mock(WikipediaUserRepository.class);
+        userService = new UserService(wikipediaUserRepository);
     }
 
     @Test

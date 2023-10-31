@@ -12,6 +12,7 @@ import es.bvalero.replacer.finder.CustomReplacementFindService;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.Suggestion;
 import es.bvalero.replacer.page.PageKey;
+import es.bvalero.replacer.page.PageService;
 import es.bvalero.replacer.page.index.PageIndexResult;
 import es.bvalero.replacer.page.index.PageIndexService;
 import es.bvalero.replacer.replacement.CustomReplacementService;
@@ -21,9 +22,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 
 class ReviewCustomFinderTest {
 
@@ -37,32 +35,37 @@ class ReviewCustomFinderTest {
     private static final ReviewOptions options = ReviewOptions.ofCustom(user, replacement, true, suggestion);
     private static final CustomType customType = options.getCustomType();
 
-    @Mock
-    private CustomReplacementService customReplacementService;
-
-    @Mock
+    // Dependency injection
     private WikipediaPageRepository wikipediaPageRepository;
-
-    @Mock
+    private PageIndexService pageIndexService;
+    private PageService pageService;
+    private ReviewSectionFinder reviewSectionFinder;
+    private CustomReplacementService customReplacementService;
     private CustomReplacementFindService customReplacementFindService;
 
-    @Mock
-    private ReviewSectionFinder reviewSectionFinder;
-
-    @Mock
-    private PageIndexService pageIndexService;
-
-    @InjectMocks
     private ReviewCustomFinder pageReviewCustomService;
 
     @BeforeEach
     public void setUp() {
-        pageReviewCustomService = new ReviewCustomFinder();
+        wikipediaPageRepository = mock(WikipediaPageRepository.class);
+        pageIndexService = mock(PageIndexService.class);
+        pageService = mock(PageService.class);
+        reviewSectionFinder = mock(ReviewSectionFinder.class);
+        customReplacementService = mock(CustomReplacementService.class);
+        customReplacementFindService = mock(CustomReplacementFindService.class);
+        pageReviewCustomService =
+            new ReviewCustomFinder(
+                wikipediaPageRepository,
+                pageIndexService,
+                pageService,
+                reviewSectionFinder,
+                customReplacementService,
+                customReplacementFindService
+            );
         pageReviewCustomService.setCacheSize(CACHE_SIZE);
         pageReviewCustomService.setIndexableNamespaces(
             NAMESPACES.stream().map(WikipediaNamespace::getValue).collect(Collectors.toUnmodifiableSet())
         );
-        MockitoAnnotations.openMocks(this);
     }
 
     private WikipediaPage buildWikipediaPage(int pageId, String content) {

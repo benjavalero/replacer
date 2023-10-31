@@ -18,7 +18,6 @@ import javax.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.SetValuedMap;
 import org.jetbrains.annotations.VisibleForTesting;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Slf4j
@@ -27,11 +26,17 @@ class ObsoleteMisspellingListener implements PropertyChangeListener, ObsoleteRep
 
     private final PropertyChangeSupport changeSupport = new PropertyChangeSupport(this);
 
-    @Autowired
-    private SimpleMisspellingLoader simpleMisspellingLoader;
+    // Dependency injection
+    private final SimpleMisspellingLoader simpleMisspellingLoader;
+    private final ComposedMisspellingLoader composedMisspellingLoader;
 
-    @Autowired
-    private ComposedMisspellingLoader composedMisspellingLoader;
+    ObsoleteMisspellingListener(
+        SimpleMisspellingLoader simpleMisspellingLoader,
+        ComposedMisspellingLoader composedMisspellingLoader
+    ) {
+        this.simpleMisspellingLoader = simpleMisspellingLoader;
+        this.composedMisspellingLoader = composedMisspellingLoader;
+    }
 
     @PostConstruct
     public void init() {

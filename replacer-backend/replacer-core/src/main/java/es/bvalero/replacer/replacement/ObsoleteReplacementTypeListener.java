@@ -6,22 +6,27 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Collection;
 import javax.annotation.PostConstruct;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 class ObsoleteReplacementTypeListener implements PropertyChangeListener {
 
-    @Autowired
-    private ObsoleteReplacementTypeObservable obsoleteReplacementTypeObservable;
+    // Dependency injection
+    private final ObsoleteReplacementTypeObservable obsoleteReplacementTypeObservable;
+    private final ReplacementService replacementService;
+
+    ObsoleteReplacementTypeListener(
+        ObsoleteReplacementTypeObservable obsoleteReplacementTypeObservable,
+        ReplacementService replacementService
+    ) {
+        this.obsoleteReplacementTypeObservable = obsoleteReplacementTypeObservable;
+        this.replacementService = replacementService;
+    }
 
     @PostConstruct
     public void init() {
         obsoleteReplacementTypeObservable.addPropertyChangeListener(this);
     }
-
-    @Autowired
-    private ReplacementService replacementService;
 
     @SuppressWarnings("unchecked")
     @Override

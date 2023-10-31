@@ -1,8 +1,7 @@
 package es.bvalero.replacer.user;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 import com.github.scribejava.core.model.OAuth1AccessToken;
 import com.github.scribejava.core.model.OAuth1RequestToken;
@@ -11,25 +10,20 @@ import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 
 class OAuthMediaWikiServiceTest {
 
-    @Mock
+    // Dependency injection
     private OAuth10aService mediaWikiService;
 
-    @InjectMocks
     private OAuthService oAuthMediaWikiService;
-
     private OAuthService oAuthOfflineService;
 
     @BeforeEach
     public void setUp() {
-        oAuthMediaWikiService = new OAuthMediaWikiService();
+        mediaWikiService = mock(OAuth10aService.class);
+        oAuthMediaWikiService = new OAuthMediaWikiService(mediaWikiService);
         oAuthOfflineService = new OAuthOfflineService();
-        MockitoAnnotations.openMocks(this);
     }
 
     @Test

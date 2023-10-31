@@ -29,9 +29,11 @@ class UppercaseFinderBenchmarkTest extends BaseFinderBenchmark {
     @Test
     void testBenchmark() throws ReplacerException {
         // Load the uppercase misspellings
-        SimpleMisspellingLoader simpleMisspellingLoader = new SimpleMisspellingLoader();
         ListingFinder listingFinder = new ListingOfflineFinder();
-        simpleMisspellingLoader.setSimpleMisspellingParser(new SimpleMisspellingParser());
+        SimpleMisspellingLoader simpleMisspellingLoader = new SimpleMisspellingLoader(
+            listingFinder,
+            new SimpleMisspellingParser()
+        );
         SetValuedMap<WikipediaLanguage, StandardMisspelling> misspellings = new HashSetValuedHashMap<>();
         misspellings.putAll(
             WikipediaLanguage.getDefault(),
@@ -41,7 +43,7 @@ class UppercaseFinderBenchmarkTest extends BaseFinderBenchmark {
         );
 
         // Extract the uppercase words
-        UppercaseFinder uppercaseFinder = new UppercaseFinder();
+        UppercaseFinder uppercaseFinder = new UppercaseFinder(simpleMisspellingLoader);
         Set<String> words = uppercaseFinder.getUppercaseWords(misspellings).get(WikipediaLanguage.getDefault());
 
         // Load the finders

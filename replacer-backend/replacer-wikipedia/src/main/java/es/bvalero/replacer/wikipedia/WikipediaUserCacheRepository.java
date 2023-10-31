@@ -8,7 +8,6 @@ import es.bvalero.replacer.user.UserId;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
@@ -21,9 +20,8 @@ import org.springframework.stereotype.Service;
 @Profile("!offline")
 class WikipediaUserCacheRepository implements WikipediaUserRepository {
 
-    @Autowired
-    @Qualifier("wikipediaUserApiRepository")
-    private WikipediaUserRepository wikipediaUserRepository;
+    // Dependency injection
+    private final WikipediaUserRepository wikipediaUserRepository;
 
     // Cache the users which try to access features needing special rights
     // This map can grow. We use Caffeine cache to clean periodically the old or obsolete users.
@@ -36,6 +34,12 @@ class WikipediaUserCacheRepository implements WikipediaUserRepository {
         })
         .expireAfterWrite(1, TimeUnit.DAYS)
         .build();
+
+    WikipediaUserCacheRepository(
+        @Qualifier("wikipediaUserApiRepository") WikipediaUserRepository wikipediaUserRepository
+    ) {
+        this.wikipediaUserRepository = wikipediaUserRepository;
+    }
 
     @Override
     public Optional<WikipediaUser> findAuthenticatedUser(WikipediaLanguage lang, AccessToken accessToken) {

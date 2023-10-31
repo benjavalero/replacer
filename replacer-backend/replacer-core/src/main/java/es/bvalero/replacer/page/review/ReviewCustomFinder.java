@@ -5,6 +5,8 @@ import es.bvalero.replacer.finder.CustomMisspelling;
 import es.bvalero.replacer.finder.CustomReplacementFindService;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.page.PageKey;
+import es.bvalero.replacer.page.PageService;
+import es.bvalero.replacer.page.index.PageIndexService;
 import es.bvalero.replacer.replacement.CustomReplacementService;
 import es.bvalero.replacer.wikipedia.*;
 import java.util.*;
@@ -13,7 +15,6 @@ import java.util.stream.Stream;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.TestOnly;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -21,18 +22,28 @@ import org.springframework.stereotype.Component;
 @Component
 class ReviewCustomFinder extends ReviewFinder {
 
-    @Autowired
-    private CustomReplacementService customReplacementService;
-
-    @Autowired
-    private WikipediaPageRepository wikipediaPageRepository;
-
-    @Autowired
-    private CustomReplacementFindService customReplacementFindService;
+    // Dependency injection
+    private final CustomReplacementService customReplacementService;
+    private final WikipediaPageRepository wikipediaPageRepository;
+    private final CustomReplacementFindService customReplacementFindService;
 
     @Setter(onMethod_ = @TestOnly)
     @Value("${replacer.indexable.namespaces}")
     private Set<Integer> indexableNamespaces;
+
+    public ReviewCustomFinder(
+        WikipediaPageRepository wikipediaPageRepository,
+        PageIndexService pageIndexService,
+        PageService pageService,
+        ReviewSectionFinder reviewSectionFinder,
+        CustomReplacementService customReplacementService,
+        CustomReplacementFindService customReplacementFindService
+    ) {
+        super(wikipediaPageRepository, pageIndexService, pageService, reviewSectionFinder);
+        this.customReplacementService = customReplacementService;
+        this.wikipediaPageRepository = wikipediaPageRepository;
+        this.customReplacementFindService = customReplacementFindService;
+    }
 
     @Override
     boolean reloadIfCacheIsEmpty() {

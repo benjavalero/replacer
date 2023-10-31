@@ -14,7 +14,6 @@ import javax.annotation.PostConstruct;
 import org.apache.commons.collections4.SetValuedMap;
 import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
 import org.intellij.lang.annotations.RegExp;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /** Space links where the space is not translated, e.g. `[[File:x.jpg]] ==> [[Archivo:x.jpg]]` */
@@ -24,12 +23,15 @@ class SpaceIncorrectFinder implements CosmeticCheckedFinder {
     @RegExp
     private static final String REGEX_SPACE = "\\[\\[(%s):(.+?)]]";
 
-    @Autowired
-    private FinderProperties finderProperties;
+    // Dependency injection
+    private final FinderProperties finderProperties;
 
     private Pattern patternLowercaseSpace;
-
     private final SetValuedMap<WikipediaLanguage, String> langWords = new HashSetValuedHashMap<>();
+
+    SpaceIncorrectFinder(FinderProperties finderProperties) {
+        this.finderProperties = finderProperties;
+    }
 
     @PostConstruct
     public void init() {

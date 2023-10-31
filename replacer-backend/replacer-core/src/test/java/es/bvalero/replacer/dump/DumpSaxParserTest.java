@@ -17,24 +17,20 @@ import java.util.Objects;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 
 class DumpSaxParserTest {
 
-    @Mock
+    // Dependency injection
     private PageIndexBatchService pageIndexService;
-
-    @Mock
     private DumpProperties dumpProperties;
 
-    @InjectMocks
     private DumpSaxParser dumpParser;
 
     @BeforeEach
     public void setUp() {
-        MockitoAnnotations.openMocks(this);
+        pageIndexService = mock(PageIndexBatchService.class);
+        dumpProperties = mock(DumpProperties.class);
+        dumpParser = new DumpSaxParser(pageIndexService, dumpProperties);
     }
 
     @Test

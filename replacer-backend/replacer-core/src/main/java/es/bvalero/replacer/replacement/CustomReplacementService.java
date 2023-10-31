@@ -4,14 +4,17 @@ import es.bvalero.replacer.common.domain.CustomType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.page.PageKey;
 import java.util.Collection;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class CustomReplacementService {
 
-    @Autowired
-    private CustomRepository customRepository;
+    // Dependency injection
+    private final CustomRepository customRepository;
+
+    public CustomReplacementService(CustomRepository customRepository) {
+        this.customRepository = customRepository;
+    }
 
     public void addCustomReplacement(IndexedCustomReplacement customReplacement) {
         customRepository.add(customReplacement);

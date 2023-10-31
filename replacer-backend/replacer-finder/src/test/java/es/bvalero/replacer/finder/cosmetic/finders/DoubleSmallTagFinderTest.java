@@ -9,18 +9,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.mockito.InjectMocks;
-import org.mockito.MockitoAnnotations;
 
 class DoubleSmallTagFinderTest {
 
-    @InjectMocks
     private DoubleSmallTagFinder doubleSmallTagFinder;
 
     @BeforeEach
     public void setUp() {
         doubleSmallTagFinder = new DoubleSmallTagFinder();
-        MockitoAnnotations.openMocks(this);
     }
 
     @ParameterizedTest

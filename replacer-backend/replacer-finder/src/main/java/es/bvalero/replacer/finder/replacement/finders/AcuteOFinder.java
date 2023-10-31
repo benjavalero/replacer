@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
  * Find character "ó" between numbers, e.g. `2 ó 3`
  */
 @Component
-public class AcuteOFinder implements ReplacementFinder {
+class AcuteOFinder implements ReplacementFinder {
 
     static final String SEARCH_ACUTE_O = " ó ";
     static final String ACUTE_O = "ó";

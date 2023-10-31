@@ -16,7 +16,6 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,11 +25,14 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("api/page")
 public class ReviewSaveController {
 
-    @Autowired
-    private ApplyCosmeticsService applyCosmeticsService;
+    // Dependency injection
+    private final ApplyCosmeticsService applyCosmeticsService;
+    private final ReviewSaveService reviewSaveService;
 
-    @Autowired
-    private ReviewSaveService reviewSaveService;
+    public ReviewSaveController(ApplyCosmeticsService applyCosmeticsService, ReviewSaveService reviewSaveService) {
+        this.applyCosmeticsService = applyCosmeticsService;
+        this.reviewSaveService = reviewSaveService;
+    }
 
     @Operation(summary = "Save a review: update page contents and mark as reviewed")
     @PostMapping(value = "/{id}")

@@ -10,23 +10,19 @@ import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 
 class PageBatchServiceTest {
 
-    @Mock
+    // Dependency injection
     private PageRepository pageRepository;
 
-    @InjectMocks
     private PageBatchService pageBatchService;
 
     @BeforeEach
     public void setUp() {
-        pageBatchService = new PageBatchService();
+        pageRepository = mock(PageRepository.class);
+        pageBatchService = new PageBatchService(pageRepository);
         pageBatchService.setChunkSize(1000);
-        MockitoAnnotations.openMocks(this);
     }
 
     private IndexedPage buildIndexedPage(int pageId) {

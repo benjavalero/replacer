@@ -12,26 +12,20 @@ import es.bvalero.replacer.user.AccessToken;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.mockito.Spy;
 
 class WikipediaApiHelperTest {
 
-    @Mock
+    // Dependency injection
     private OAuth10aService mediaWikiService;
-
-    @Spy
     private ObjectMapper jsonMapper;
 
-    @InjectMocks
     private WikipediaApiHelper wikipediaApiHelper;
 
     @BeforeEach
     public void setUp() {
-        wikipediaApiHelper = new WikipediaApiHelper();
-        MockitoAnnotations.openMocks(this);
+        mediaWikiService = mock(OAuth10aService.class);
+        jsonMapper = spy(ObjectMapper.class);
+        wikipediaApiHelper = new WikipediaApiHelper(mediaWikiService, jsonMapper);
     }
 
     @Test

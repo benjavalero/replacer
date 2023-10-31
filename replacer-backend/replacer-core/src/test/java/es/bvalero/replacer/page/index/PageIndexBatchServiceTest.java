@@ -13,29 +13,8 @@ import es.bvalero.replacer.wikipedia.WikipediaPage;
 import es.bvalero.replacer.wikipedia.WikipediaTimestamp;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 
 class PageIndexBatchServiceTest {
-
-    @Mock
-    private PageBatchService pageBatchService;
-
-    @Mock
-    private PageIndexValidator pageIndexValidator;
-
-    @Mock
-    private ReplacementFindService replacementFindService;
-
-    @Mock
-    private PageComparator pageComparator;
-
-    @Mock
-    private PageComparatorSaver pageComparatorSaver;
-
-    @InjectMocks
-    private PageIndexBatchService pageIndexBatchService;
 
     private final WikipediaPage page = WikipediaPage
         .builder()
@@ -47,10 +26,30 @@ class PageIndexBatchServiceTest {
         .queryTimestamp(WikipediaTimestamp.now())
         .build();
 
+    // Dependency injection
+    private PageBatchService pageBatchService;
+    private PageIndexValidator pageIndexValidator;
+    private ReplacementFindService replacementFindService;
+    private PageComparator pageComparator;
+    private PageComparatorSaver pageComparatorSaver;
+
+    private PageIndexBatchService pageIndexBatchService;
+
     @BeforeEach
     void setUp() {
-        pageIndexBatchService = new PageIndexBatchService();
-        MockitoAnnotations.openMocks(this);
+        pageBatchService = mock(PageBatchService.class);
+        pageIndexValidator = mock(PageIndexValidator.class);
+        replacementFindService = mock(ReplacementFindService.class);
+        pageComparator = mock(PageComparator.class);
+        pageComparatorSaver = mock(PageComparatorSaver.class);
+        pageIndexBatchService =
+            new PageIndexBatchService(
+                pageBatchService,
+                pageIndexValidator,
+                replacementFindService,
+                pageComparator,
+                pageComparatorSaver
+            );
     }
 
     @Test

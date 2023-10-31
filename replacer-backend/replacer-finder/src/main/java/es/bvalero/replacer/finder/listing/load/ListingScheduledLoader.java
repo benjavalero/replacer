@@ -3,7 +3,6 @@ package es.bvalero.replacer.finder.listing.load;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -12,8 +11,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class ListingScheduledLoader {
 
-    @Autowired
-    private List<ListingLoader> listingLoaders;
+    // Dependency injection
+    private final List<ListingLoader> listingLoaders;
+
+    public ListingScheduledLoader(List<ListingLoader> listingLoaders) {
+        this.listingLoaders = listingLoaders;
+    }
 
     @Scheduled(fixedDelayString = "${replacer.parse.file.delay}")
     public void scheduledItemListUpdate() {

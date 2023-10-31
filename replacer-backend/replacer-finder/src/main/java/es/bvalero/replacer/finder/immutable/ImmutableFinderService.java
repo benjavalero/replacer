@@ -7,14 +7,17 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import javax.annotation.PostConstruct;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ImmutableFinderService implements FinderService<Immutable> {
 
-    @Autowired
-    private List<ImmutableFinder> immutableFinders;
+    // Dependency injection
+    private final List<ImmutableFinder> immutableFinders;
+
+    public ImmutableFinderService(List<ImmutableFinder> immutableFinders) {
+        this.immutableFinders = immutableFinders;
+    }
 
     @PostConstruct
     public void sortImmutableFinders() {

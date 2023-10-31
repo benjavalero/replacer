@@ -1,6 +1,7 @@
 package es.bvalero.replacer.finder.listing.load;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.mock;
 
 import es.bvalero.replacer.common.domain.ReplacementKind;
 import es.bvalero.replacer.common.domain.StandardType;
@@ -13,11 +14,24 @@ import java.util.List;
 import java.util.Set;
 import org.apache.commons.collections4.SetValuedMap;
 import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class ObsoleteMisspellingListenerTest {
 
-    private final ObsoleteMisspellingListener obsoleteMisspellingListener = new ObsoleteMisspellingListener();
+    // Dependency injection
+    private SimpleMisspellingLoader simpleMisspellingLoader;
+    private ComposedMisspellingLoader composedMisspellingLoader;
+
+    private ObsoleteMisspellingListener obsoleteMisspellingListener;
+
+    @BeforeEach
+    public void setUp() {
+        simpleMisspellingLoader = mock(SimpleMisspellingLoader.class);
+        composedMisspellingLoader = mock(ComposedMisspellingLoader.class);
+        obsoleteMisspellingListener =
+            new ObsoleteMisspellingListener(simpleMisspellingLoader, composedMisspellingLoader);
+    }
 
     @Test
     void testGetObsoleteMisspellings() {

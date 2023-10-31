@@ -8,15 +8,18 @@ import es.bvalero.replacer.user.UserService;
 import java.util.Arrays;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 
 @Component
 public class WebUtils {
 
-    @Autowired
-    private UserService userService;
+    // Dependency injection
+    private final UserService userService;
+
+    public WebUtils(UserService userService) {
+        this.userService = userService;
+    }
 
     public WikipediaLanguage getLanguageHeader(HttpServletRequest request) {
         String langHeader = request.getHeader(HttpHeaders.ACCEPT_LANGUAGE);

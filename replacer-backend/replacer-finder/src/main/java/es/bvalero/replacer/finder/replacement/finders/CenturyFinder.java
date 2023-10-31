@@ -30,7 +30,7 @@ import org.springframework.stereotype.Component;
  * Find a century and replace it with the template
  */
 @Component
-public class CenturyFinder implements ReplacementFinder {
+class CenturyFinder implements ReplacementFinder {
 
     private static final String CENTURY_WORD = "siglo";
     private static final String CENTURY_SEARCH = CENTURY_WORD.substring(1);

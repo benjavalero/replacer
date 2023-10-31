@@ -15,16 +15,20 @@ import org.apache.commons.collections4.SetValuedMap;
 import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 
 class FalsePositiveFinderTest {
 
     private static final SetValuedMap<WikipediaLanguage, String> EMPTY_MAP = new HashSetValuedHashMap<>();
 
+    @Mock
+    private FalsePositiveLoader falsePositiveLoader;
+
     private FalsePositiveFinder falsePositiveFinder;
 
     @BeforeEach
     public void setUp() {
-        falsePositiveFinder = new FalsePositiveFinder();
+        falsePositiveFinder = new FalsePositiveFinder(falsePositiveLoader);
     }
 
     private void initFalsePositiveMap(String... falsePositives) {

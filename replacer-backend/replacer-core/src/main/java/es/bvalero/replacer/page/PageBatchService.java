@@ -8,7 +8,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.Setter;
 import org.jetbrains.annotations.TestOnly;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -16,8 +15,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class PageBatchService extends PageService {
 
-    @Autowired
-    private PageRepository pageRepository;
+    // Dependency injection
+    private final PageRepository pageRepository;
 
     @Setter(onMethod_ = @TestOnly)
     @Value("${replacer.dump.batch.chunk.size}")
@@ -28,6 +27,11 @@ public class PageBatchService extends PageService {
 
     private int minCachedId = 0;
     private int maxCachedId = 0;
+
+    public PageBatchService(PageRepository pageRepository) {
+        super(pageRepository);
+        this.pageRepository = pageRepository;
+    }
 
     @Override
     public Optional<IndexedPage> findPageByKey(PageKey pageKey) {

@@ -18,7 +18,6 @@ import javax.annotation.PostConstruct;
 import org.apache.commons.collections4.SetValuedMap;
 import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
@@ -40,11 +39,9 @@ class TemplateFinder implements ImmutableFinder {
     private static final char COLON = ':';
     private static final char EQUALS = '=';
 
-    @Autowired
-    private FinderProperties finderProperties;
-
-    @Autowired
-    private UppercaseFinder uppercaseFinder;
+    // Dependency injection
+    private final FinderProperties finderProperties;
+    private final UppercaseFinder uppercaseFinder;
 
     // Set with the names of the templates making the whole page to be ignored
     private final Set<String> ignorableTemplates = new HashSet<>();
@@ -61,6 +58,11 @@ class TemplateFinder implements ImmutableFinder {
     // Map with the pairs (template name-param) whose values will be ignored
     // Take into account that there might be several param names for the same template name
     private final SetValuedMap<String, String> templateParamPairs = new HashSetValuedHashMap<>();
+
+    TemplateFinder(FinderProperties finderProperties, UppercaseFinder uppercaseFinder) {
+        this.finderProperties = finderProperties;
+        this.uppercaseFinder = uppercaseFinder;
+    }
 
     @PostConstruct
     public void initTemplateParams() {

@@ -15,7 +15,6 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Primary;
 import org.springframework.lang.Nullable;
@@ -28,9 +27,10 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 class PageCountCacheRepository implements PageCountRepository {
 
-    @Autowired
-    @Qualifier("pageCountJdbcRepository")
-    private PageCountRepository pageCountRepository;
+    private final Duration refreshTime = Duration.of(1, HOURS);
+
+    // Dependency injection
+    private final PageCountRepository pageCountRepository;
 
     // Counts cache
     // It's a heavy query in database (several seconds), so we load the counts the first time and refresh them periodically.
@@ -38,14 +38,13 @@ class PageCountCacheRepository implements PageCountRepository {
     // as modifications in the cache may happen while the count query is in progress.
     // We could lock the cache while querying but the query takes too long.
     // In theory this cache is mirroring the database reality so in the future the duration could be even longer.
-    private final Duration refreshTime = Duration.of(1, HOURS);
     private final LoadingCache<WikipediaLanguage, Map<StandardType, Integer>> counts = Caffeine
         .newBuilder()
         .refreshAfterWrite(refreshTime)
         .build(this::loadReplacementTypeCounts);
 
-    private Map<StandardType, Integer> getCounts(WikipediaLanguage lang) {
-        return Objects.requireNonNull(this.counts.get(lang));
+    public PageCountCacheRepository(@Qualifier("pageCountJdbcRepository") PageCountRepository pageCountRepository) {
+        this.pageCountRepository = pageCountRepository;
     }
 
     @PostConstruct
@@ -62,6 +61,10 @@ class PageCountCacheRepository implements PageCountRepository {
             .stream()
             .map(entry -> ResultCount.of(entry.getKey(), entry.getValue()))
             .toList();
+    }
+
+    private Map<StandardType, Integer> getCounts(WikipediaLanguage lang) {
+        return Objects.requireNonNull(this.counts.get(lang));
     }
 
     @Override

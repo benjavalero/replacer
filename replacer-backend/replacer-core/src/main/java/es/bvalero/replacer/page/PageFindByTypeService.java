@@ -7,14 +7,17 @@ import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import java.text.Collator;
 import java.util.Collection;
 import java.util.Objects;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 class PageFindByTypeService {
 
-    @Autowired
-    private PageRepository pageRepository;
+    // Dependency injection
+    private final PageRepository pageRepository;
+
+    PageFindByTypeService(PageRepository pageRepository) {
+        this.pageRepository = pageRepository;
+    }
 
     Collection<String> findPagesToReviewByType(WikipediaLanguage lang, StandardType type) {
         return pageRepository

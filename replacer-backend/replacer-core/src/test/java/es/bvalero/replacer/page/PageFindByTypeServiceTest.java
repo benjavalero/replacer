@@ -1,11 +1,8 @@
 package es.bvalero.replacer.page;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
-import es.bvalero.replacer.common.domain.ReplacementKind;
-import es.bvalero.replacer.common.domain.ReplacementType;
 import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import java.util.Arrays;
@@ -13,22 +10,18 @@ import java.util.Collection;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 
 class PageFindByTypeServiceTest {
 
-    @Mock
+    // Dependency injection
     private PageRepository pageRepository;
 
-    @InjectMocks
     private PageFindByTypeService pageFindByTypeService;
 
     @BeforeEach
     public void setUp() {
-        pageFindByTypeService = new PageFindByTypeService();
-        MockitoAnnotations.openMocks(this);
+        pageRepository = mock(PageRepository.class);
+        pageFindByTypeService = new PageFindByTypeService(pageRepository);
     }
 
     @Test

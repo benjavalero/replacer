@@ -11,23 +11,19 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.MatchResult;
 import javax.annotation.PostConstruct;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /** Find redirection templates. In case they are found the complete text must be ignored. */
 @Component
 class RedirectionFinder implements ImmutableFinder {
 
-    @Autowired
-    private FinderProperties finderProperties;
+    // Dependency injection
+    private final FinderProperties finderProperties;
 
     private final List<String> redirectionWords = new ArrayList<>();
 
-    @Override
-    public FinderPriority getPriority() {
-        // Redirections should be discarded using the information in the dump
-        // This is run lastly just in case
-        return FinderPriority.NONE;
+    RedirectionFinder(FinderProperties finderProperties) {
+        this.finderProperties = finderProperties;
     }
 
     @PostConstruct
@@ -35,6 +31,13 @@ class RedirectionFinder implements ImmutableFinder {
         this.redirectionWords.addAll(
                 this.finderProperties.getRedirectionWords().stream().map(FinderUtils::toLowerCase).toList()
             );
+    }
+
+    @Override
+    public FinderPriority getPriority() {
+        // Redirections should be discarded using the information in the dump
+        // This is run lastly just in case
+        return FinderPriority.NONE;
     }
 
     @Override

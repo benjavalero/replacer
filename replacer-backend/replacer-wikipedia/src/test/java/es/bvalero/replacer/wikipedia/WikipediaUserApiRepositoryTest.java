@@ -1,8 +1,7 @@
 package es.bvalero.replacer.wikipedia;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
@@ -17,29 +16,22 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.mockito.Spy;
 
 class WikipediaUserApiRepositoryTest {
 
-    @Spy
+    // Dependency injection
     private ObjectMapper jsonMapper;
-
-    @Mock
     private WikipediaApiHelper wikipediaApiHelper;
 
-    @InjectMocks
     private WikipediaUserApiRepository wikipediaUserApiRepository;
-
     private WikipediaUserRepository wikipediaUserRepository;
 
     @BeforeEach
     void setUp() {
-        wikipediaUserApiRepository = new WikipediaUserApiRepository();
+        jsonMapper = spy(ObjectMapper.class);
+        wikipediaApiHelper = mock(WikipediaApiHelper.class);
+        wikipediaUserApiRepository = new WikipediaUserApiRepository(wikipediaApiHelper);
         wikipediaUserRepository = new WikipediaUserOfflineRepository();
-        MockitoAnnotations.openMocks(this);
     }
 
     @Test
