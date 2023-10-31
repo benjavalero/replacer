@@ -5,7 +5,7 @@ import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.finder.listing.ListingItem;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.Map;
 import java.util.Set;
 import lombok.AccessLevel;
@@ -55,7 +55,7 @@ abstract class ListingLoader<T extends ListingItem> {
     }
 
     private Map<WikipediaLanguage, String> findListingsForAllLanguages() {
-        Map<WikipediaLanguage, String> map = new HashMap<>();
+        Map<WikipediaLanguage, String> map = new EnumMap<>(WikipediaLanguage.class);
         for (WikipediaLanguage wikipediaLanguage : WikipediaLanguage.values()) {
             try {
                 map.put(wikipediaLanguage, findListingContentByLang(wikipediaLanguage));

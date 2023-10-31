@@ -24,7 +24,9 @@ public class ReplacerUtils {
 
     public String replaceInText(String text, int start, String current, String replacement) {
         final int end = start + current.length();
-        assert text.substring(start, end).equals(current);
+        if (!text.substring(start, end).equals(current)) {
+            throw new IllegalArgumentException();
+        }
         return text.substring(0, start) + replacement + text.substring(end);
     }
 
@@ -47,9 +49,9 @@ public class ReplacerUtils {
     }
 
     public String toJson(Object... objs) {
-        Map<String, Object> map = new LinkedHashMap<>();
-        for (int i = 0; i < objs.length;) {
-            map.put(objs[i++].toString(), objs[i++]);
+        final Map<String, Object> map = new LinkedHashMap<>();
+        for (int i = 0; i < objs.length; i += 2) {
+            map.put(objs[i].toString(), objs[i + 1]);
         }
         return toJson(map);
     }

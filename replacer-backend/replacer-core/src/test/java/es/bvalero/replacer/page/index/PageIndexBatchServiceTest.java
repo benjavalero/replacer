@@ -64,7 +64,7 @@ class PageIndexBatchServiceTest {
             .title(page.getTitle())
             .lastUpdate(page.getLastUpdate().toLocalDate())
             .build();
-        comparatorResult.addPage(indexedPage); // Any change
+        comparatorResult.addPageToCreate(indexedPage); // Any change
         when(pageComparator.indexPageReplacements(any(IndexablePage.class), anyCollection(), isNull()))
             .thenReturn(comparatorResult);
 

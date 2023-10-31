@@ -39,10 +39,10 @@ class PageComparator {
         // Check changes in the page
         if (dbPage == null) {
             // New page
-            result.addPage(toIndexedPage(page));
+            result.addPageToCreate(toIndexedPage(page));
         } else if (isUpdatePage(page, dbPage)) {
             // Update page if needed
-            result.updatePage(toIndexedPage(page));
+            result.addPageToUpdate(toIndexedPage(page));
         }
 
         // Wrap the indexed replacements to compare them
@@ -59,7 +59,7 @@ class PageComparator {
             .map(ComparableReplacement::getType)
             .collect(Collectors.toUnmodifiableSet());
         // Remove possible duplicates in database
-        cleanDuplicatedReplacements(comparableDbReplacements).forEach(result::removeReplacement);
+        cleanDuplicatedReplacements(comparableDbReplacements).forEach(result::addReplacementToDelete);
 
         // We compare each replacement found in the page to index with the ones existing in database
         // We add to the result the needed modifications to align the database with the actual replacements
@@ -79,7 +79,7 @@ class PageComparator {
             handleReplacement(comparablePageReplacement, comparableDbReplacements, result);
         }
 
-        cleanUpDbReplacements(comparableDbReplacements).forEach(result::removeReplacement);
+        cleanUpDbReplacements(comparableDbReplacements).forEach(result::addReplacementToDelete);
 
         // At this point the collection of DB replacements contains only reviewed items and the ones to review
         result.addReplacementsToReview(
@@ -99,10 +99,10 @@ class PageComparator {
             .stream()
             .map(Replacement::getType)
             .collect(Collectors.toUnmodifiableSet());
-        result.addReplacementTypes(
+        result.addReplacementTypesToCreate(
             CollectionUtils.removeAll(actualReplacementTypesToReview, dbReplacementTypesToReview)
         );
-        result.removeReplacementTypes(
+        result.addReplacementTypesToDelete(
             CollectionUtils.removeAll(dbReplacementTypesToReview, actualReplacementTypesToReview)
         );
 
@@ -165,12 +165,12 @@ class PageComparator {
                 .withTouched(true);
             dbReplacements.add(updatedReplacement);
             if (handleReplacement) {
-                result.updateReplacement(updatedReplacement);
+                result.addReplacementToUpdate(updatedReplacement);
             }
         } else {
             // New replacement
             dbReplacements.add(pageReplacement.withTouched(true));
-            result.addReplacement(pageReplacement);
+            result.addReplacementToCreate(pageReplacement);
         }
     }
 

@@ -242,14 +242,11 @@ abstract class ReviewFinder {
     }
 
     /* Apply different actions to the standard replacements depending on the type of review */
-    Collection<Replacement> decorateReplacements(
+    abstract Collection<Replacement> decorateReplacements(
         WikipediaPage page,
         ReviewOptions options,
         Collection<Replacement> replacements
-    ) {
-        // No decoration by default
-        return replacements;
-    }
+    );
 
     Collection<Replacement> filterReplacementsByType(Collection<Replacement> replacements, ReplacementType type) {
         return replacements.stream().filter(replacement -> Objects.equals(replacement.getType(), type)).toList();
@@ -265,7 +262,7 @@ abstract class ReviewFinder {
     }
 
     private boolean isTypeForbidden(ReplacementType type, User user) {
-        return type instanceof StandardType && ((StandardType) type).isTypeForbidden(user);
+        return type instanceof StandardType standardType && standardType.isTypeForbidden(user);
     }
 
     private Optional<Integer> findTotalResultsFromCache(ReviewOptions options) {

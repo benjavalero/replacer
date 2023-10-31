@@ -423,7 +423,7 @@ class FinderUtilsTest {
     }
 
     @Test
-    public void testFindAllWords() {
+    void testFindAllWords() {
         String text = "In the town where I_was born.";
 
         Set<MatchResult> expected = new HashSet<>();

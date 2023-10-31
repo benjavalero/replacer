@@ -66,8 +66,8 @@ public class WikipediaApiHelper {
             return response.getBody();
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            LOGGER.error("Error executing OAuth request", e);
-            throw new WikipediaException("Error executing OAuth request");
+            LOGGER.error("Thread Error executing OAuth request", e);
+            throw new WikipediaException("Thread Error executing OAuth request");
         } catch (ExecutionException | IOException | IllegalArgumentException | NullPointerException e) {
             LOGGER.error("Error executing OAuth request", e);
             throw new WikipediaException("Error executing OAuth request");

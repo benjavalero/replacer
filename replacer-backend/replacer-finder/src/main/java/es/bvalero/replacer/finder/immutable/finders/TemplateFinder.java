@@ -183,6 +183,7 @@ class TemplateFinder implements ImmutableFinder {
         );
     }
 
+    // TODO: Reduce cyclomatic complexity
     private List<MatchResult> findParameterImmutables(
         FinderMatchResult template,
         String templateName,

@@ -35,6 +35,7 @@ class XmlTagFinder extends ImmutableCheckedFinder {
     @Nullable
     private MatchResult findTag(FinderPage page, int start) {
         final String text = page.getContent();
+        // TODO: Reduce cyclomatic complexity
         while (start >= 0 && start < text.length()) {
             final int startTag = findStartTag(text, start);
             if (startTag < 0) {

@@ -42,6 +42,7 @@ class CursiveFinder extends ImmutableCheckedFinder {
     @Nullable
     private MatchResult findCursive(FinderPage page, int start) {
         final String text = page.getContent();
+        // TODO: Reduce cyclomatic complexity
         while (start >= 0 && start < text.length()) {
             final int startCursive = findStartCursive(text, start);
             if (startCursive < 0) {

@@ -62,6 +62,7 @@ class CompleteTagFinder extends ImmutableCheckedFinder {
     @Nullable
     private MatchResult findCompleteTag(FinderPage page, int start) {
         final String text = page.getContent();
+        // TODO: Reduce cyclomatic complexity
         while (start >= 0 && start < text.length()) {
             // 1. Find start tag <
             // 2. Find tag name and check if it is supported

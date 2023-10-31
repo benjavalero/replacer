@@ -83,6 +83,7 @@ class OrdinalFinder implements ReplacementFinder {
     @Nullable
     private MatchResult findOrdinal(FinderPage page, int start) {
         final String text = page.getContent();
+        // TODO: Reduce cyclomatic complexity
         while (start >= 0 && start < text.length()) {
             final MatchResult matchNumber = FinderUtils.findNumberMatch(text, start, false);
             if (matchNumber == null) {
@@ -115,7 +116,6 @@ class OrdinalFinder implements ReplacementFinder {
 
             final int startOrdinal = matchNumber.start();
             final FinderMatchResult matchResult = FinderMatchResult.of(text, startOrdinal, endOrdinal);
-            // Groups: 1 - Number; 2 - Suffix;
             matchResult.addGroup(matchNumber);
             matchResult.addGroup(matchSuffix);
             return matchResult;
@@ -149,6 +149,7 @@ class OrdinalFinder implements ReplacementFinder {
             .build();
     }
 
+    // TODO: Reduce cyclomatic complexity
     private List<Suggestion> buildSuggestions(MatchResult match, FinderPage page) {
         final List<Suggestion> suggestions = new ArrayList<>();
 

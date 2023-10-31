@@ -4,12 +4,15 @@ import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
 import es.bvalero.replacer.wikipedia.WikipediaSection;
 import java.util.Collection;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Value;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
 /** Review of a page */
-@Value(staticConstructor = "of")
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Value
 class Review {
 
     @NonNull
@@ -24,7 +27,7 @@ class Review {
     @Nullable
     Integer numPending;
 
-    private Review(
+    public static Review of(
         WikipediaPage page,
         @Nullable WikipediaSection section,
         Collection<Replacement> replacements,
@@ -33,9 +36,6 @@ class Review {
         // Validate replacement positions
         replacements.forEach(replacement -> replacement.validate(page.getContent()));
 
-        this.page = page;
-        this.section = section;
-        this.replacements = replacements;
-        this.numPending = numPending;
+        return new Review(page, section, replacements, numPending);
     }
 }

@@ -299,6 +299,7 @@ public class FinderUtils {
      * Find the most close sequence of letters and digits ending at the given position.
      * Some additional chars are allowed, at the start or in the middle according to the configuration.
      */
+    // TODO: Reduce cyclomatic complexity
     @Nullable
     public MatchResult findWordBefore(
         String text,
@@ -434,6 +435,7 @@ public class FinderUtils {
         // Deque implementation is a little better than old stack and recommended by Java
         final Deque<TempMatchResult> matchStack = new ArrayDeque<>();
         int index = 0;
+        // TODO: Reduce cyclomatic complexity
         while (index >= 0 && index < text.length()) {
             if (matchStack.isEmpty()) {
                 final int newStart = text.indexOf(startStr, index);

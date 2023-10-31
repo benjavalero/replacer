@@ -52,6 +52,7 @@ class CoordinatesFinder implements ReplacementFinder {
     @Nullable
     private MatchResult findCoordinates(FinderPage page, int start) {
         final String text = page.getContent();
+        // TODO: Reduce cyclomatic complexity
         while (start >= 0 && start < text.length()) {
             // Degrees
             MatchResult matchDegrees = FinderUtils.findNumberMatch(text, start, false);
@@ -106,20 +107,19 @@ class CoordinatesFinder implements ReplacementFinder {
             final MatchResult matchSeconds = FinderUtils.findNumberMatch(text, endMinutes + 1, true);
             String doublePrime = null;
             int endCoordinates = endMinutes + 1;
-            if (matchSeconds != null) {
-                if (
-                    isSecondNumber(matchSeconds.group()) &&
-                    FinderUtils.isBlankOrNonBreakingSpace(text.substring(endMinutes + 1, matchSeconds.start()))
-                ) {
-                    // Double prime
-                    // Let's find the next 2 characters
-                    // For the sake of the tests, there could be only 1 character left in the text.
-                    final int endSeconds = matchSeconds.end();
-                    final String nextSecondChars = text.substring(endSeconds, Math.min(endSeconds + 2, text.length()));
-                    doublePrime = findDoublePrime(nextSecondChars);
-                    if (doublePrime != null) {
-                        endCoordinates = endSeconds + doublePrime.length();
-                    }
+            if (
+                matchSeconds != null &&
+                isSecondNumber(matchSeconds.group()) &&
+                FinderUtils.isBlankOrNonBreakingSpace(text.substring(endMinutes + 1, matchSeconds.start()))
+            ) {
+                // Double prime
+                // Let's find the next 2 characters
+                // For the sake of the tests, there could be only 1 character left in the text.
+                final int endSeconds = matchSeconds.end();
+                final String nextSecondChars = text.substring(endSeconds, Math.min(endSeconds + 2, text.length()));
+                doublePrime = findDoublePrime(nextSecondChars);
+                if (doublePrime != null) {
+                    endCoordinates = endSeconds + doublePrime.length();
                 }
             }
 

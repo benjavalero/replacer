@@ -62,7 +62,7 @@ class WikipediaPageApiRepository implements WikipediaPageRepository {
         // We split the request in several sub-lists
         try {
             WikipediaLanguage lang = pageKeys.stream().map(PageKey::getLang).distinct().findAny().orElseThrow();
-            List<Integer> idList = pageKeys.stream().map(PageKey::getPageId).collect(Collectors.toList());
+            List<Integer> idList = pageKeys.stream().map(PageKey::getPageId).toList();
             int start = 0;
             while (start < idList.size()) {
                 List<Integer> subList = idList.subList(

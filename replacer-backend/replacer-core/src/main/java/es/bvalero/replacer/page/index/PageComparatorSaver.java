@@ -71,26 +71,26 @@ class PageComparatorSaver {
         // We use a thread-safe loop in order to avoid a ConcurrentModificationException
         // https://www.baeldung.com/java-synchronized-collections
         // Also use sets just in case to prevent duplicated insertions
-        final Set<IndexedPage> addPages = new HashSet<>();
-        final Set<IndexedPage> updatePages = new HashSet<>();
-        final Set<IndexedReplacement> addReplacements = new HashSet<>();
-        final Set<IndexedReplacement> updateReplacements = new HashSet<>();
-        final Set<IndexedReplacement> removeReplacements = new HashSet<>();
+        final Set<IndexedPage> pagesToCreate = new HashSet<>();
+        final Set<IndexedPage> pagesToUpdate = new HashSet<>();
+        final Set<IndexedReplacement> replacementsToCreate = new HashSet<>();
+        final Set<IndexedReplacement> replacementsToUpdate = new HashSet<>();
+        final Set<IndexedReplacement> replacementsToDelete = new HashSet<>();
 
         synchronized (this.batchResult) {
             for (PageComparatorResult result : this.batchResult) {
-                addPages.addAll(result.getAddPages());
-                updatePages.addAll(result.getUpdatePages());
-                addReplacements.addAll(result.getAddReplacements());
-                updateReplacements.addAll(result.getUpdateReplacements());
-                removeReplacements.addAll(result.getRemoveReplacements());
+                pagesToCreate.addAll(result.getPagesToCreate());
+                pagesToUpdate.addAll(result.getPagesToUpdate());
+                replacementsToCreate.addAll(result.getReplacementsToCreate());
+                replacementsToUpdate.addAll(result.getReplacementsToUpdate());
+                replacementsToDelete.addAll(result.getReplacementsToDelete());
 
                 // Update page count cache
                 result
-                    .getAddReplacementTypes()
+                    .getReplacementTypesToCreate()
                     .forEach(rt -> pageCountRepository.increment(result.getLang(), (StandardType) rt));
                 result
-                    .getRemoveReplacementTypes()
+                    .getReplacementTypesToDelete()
                     .forEach(rt -> pageCountRepository.decrement(result.getLang(), (StandardType) rt));
             }
 
@@ -99,11 +99,11 @@ class PageComparatorSaver {
 
         // Pages must be added before adding the related replacements
         // We assume the replacements removed correspond to not removed pages
-        pageService.addPages(addPages);
-        pageService.updatePages(updatePages);
-        replacementService.addReplacements(addReplacements);
-        replacementService.updateReplacements(updateReplacements);
-        replacementService.removeReplacements(removeReplacements);
+        pageService.addPages(pagesToCreate);
+        pageService.updatePages(pagesToUpdate);
+        replacementService.addReplacements(replacementsToCreate);
+        replacementService.updateReplacements(replacementsToUpdate);
+        replacementService.removeReplacements(replacementsToDelete);
     }
 
     /* Force saving what is left on the batch */

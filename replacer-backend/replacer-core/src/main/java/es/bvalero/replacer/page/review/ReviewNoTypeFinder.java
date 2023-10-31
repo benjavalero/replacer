@@ -1,10 +1,12 @@
 package es.bvalero.replacer.page.review;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
+import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.page.PageKey;
 import es.bvalero.replacer.page.PageService;
 import es.bvalero.replacer.page.count.PageCountService;
 import es.bvalero.replacer.page.index.PageIndexService;
+import es.bvalero.replacer.wikipedia.WikipediaPage;
 import es.bvalero.replacer.wikipedia.WikipediaPageRepository;
 import java.util.Collection;
 import org.springframework.stereotype.Component;
@@ -40,5 +42,15 @@ class ReviewNoTypeFinder extends ReviewFinder {
 
         Collection<PageKey> pageKeys = pageService.findPagesToReviewByNoType(lang, getCacheSize());
         return PageSearchResult.of(totalResults, pageKeys);
+    }
+
+    @Override
+    Collection<Replacement> decorateReplacements(
+        WikipediaPage page,
+        ReviewOptions options,
+        Collection<Replacement> replacements
+    ) {
+        // No decoration by default
+        return replacements;
     }
 }

@@ -83,6 +83,7 @@ class CenturyFinder implements ReplacementFinder {
     @Nullable
     private MatchResult findCentury(FinderPage page, int start) {
         final String text = page.getContent();
+        // TODO: Reduce cyclomatic complexity
         while (start >= 0 && start < text.length()) {
             MatchResult centuryWord = findCenturyWord(text, start);
             if (centuryWord == null) {

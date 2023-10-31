@@ -2,10 +2,8 @@ package es.bvalero.replacer.finder;
 
 import java.util.Objects;
 import org.apache.commons.lang3.Range;
-import org.jetbrains.annotations.VisibleForTesting;
 
 /** Base interface for the finder results: cosmetics, immutables and replacements. */
-@VisibleForTesting
 public interface FinderResult extends Comparable<FinderResult> {
     int getStart();
     String getText();

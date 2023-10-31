@@ -40,8 +40,8 @@ class ReviewMapper {
     }
 
     private ReplacementDto toDto(Replacement replacement) {
-        Boolean caseSensitive = replacement.getType() instanceof CustomType
-            ? ((CustomType) replacement.getType()).isCaseSensitive()
+        Boolean caseSensitive = replacement.getType() instanceof CustomType customType
+            ? customType.isCaseSensitive()
             : null;
         return ReplacementDto.of(
             replacement.getStart(),
