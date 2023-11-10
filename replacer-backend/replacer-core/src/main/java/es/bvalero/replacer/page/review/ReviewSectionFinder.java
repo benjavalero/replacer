@@ -49,9 +49,9 @@ class ReviewSectionFinder {
                 );
 
                 // We need to check some rare cases where the byte-offset doesn't match with the section position,
-                // usually because of emojis or other strange Unicode characters
+                // usually because of emojis or other strange Unicode characters like runes.
                 if (!validateTranslatedReplacements(sectionReplacements, pageSection.get())) {
-                    LOGGER.warn(
+                    LOGGER.info(
                         "Not valid byte-offset in page section: {} - {}",
                         pageSection.get().getPageKey(),
                         pageSection.get().getTitle()
