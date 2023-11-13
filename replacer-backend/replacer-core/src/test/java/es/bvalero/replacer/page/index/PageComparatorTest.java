@@ -212,7 +212,7 @@ class PageComparatorTest {
             .builder()
             .pageKey(page.getPageKey())
             .type((StandardType) r4.getType())
-            .start(40)
+            .start(5)
             .context(r4.getContext())
             .build();
         IndexedReplacement r5db = IndexedReplacement
@@ -305,12 +305,13 @@ class PageComparatorTest {
         Collection<Replacement> replacements = List.of();
 
         // Existing replacements in DB: the same replacement found in 2 different positions with same context
+        String context = "1234567890";
         IndexedReplacement r1db = IndexedReplacement
             .builder()
             .pageKey(page.getPageKey())
             .type(StandardType.of(ReplacementKind.SIMPLE, "1"))
             .start(1)
-            .context("C")
+            .context(context)
             .reviewer("X")
             .build();
         IndexedReplacement r2db = IndexedReplacement
@@ -318,7 +319,7 @@ class PageComparatorTest {
             .pageKey(page.getPageKey())
             .type(StandardType.of(ReplacementKind.SIMPLE, "1"))
             .start(5)
-            .context("C")
+            .context(context)
             .reviewer("X")
             .build();
         IndexedPage dbPage = IndexedPage
@@ -411,5 +412,78 @@ class PageComparatorTest {
         expected.addReplacementTypesToDelete(List.of(r1db.getType()));
 
         assertEquals(expected, toIndex);
+    }
+
+    @Test
+    void testComparableReplacementNotCloseEnough() {
+        String text =
+            "abcde" +
+            "12345678902134567890" +
+            "words" +
+            "12345678901234567890" +
+            "other" +
+            "12345678902134567890" +
+            "words" +
+            "12345678901234567890" +
+            "xyz";
+        when(page.getContent()).thenReturn(text);
+
+        Replacement r1 = Replacement
+            .builder()
+            .page(page)
+            .start(25)
+            .text("words")
+            .type(StandardType.of(ReplacementKind.SIMPLE, "words"))
+            .suggestions(List.of(Suggestion.ofNoComment("Words")))
+            .build();
+        ComparableReplacement cr1 = ComparableReplacement.of(r1);
+        Replacement r2 = Replacement
+            .builder()
+            .page(page)
+            .start(75)
+            .text("words")
+            .type(StandardType.of(ReplacementKind.SIMPLE, "words"))
+            .suggestions(List.of(Suggestion.ofNoComment("Words")))
+            .build();
+        ComparableReplacement cr2 = ComparableReplacement.of(r2);
+
+        assertFalse(cr1.isContextCloseEnough(cr2));
+        assertFalse(cr2.isContextCloseEnough(cr1));
+    }
+
+    @Test
+    void testComparableReplacementCloseEnough() {
+        String text =
+            "abcde" +
+            "12345678902134567890" +
+            "words" +
+            "12345678901234567890" +
+            "12345678902134567890" +
+            "words" +
+            "12345678901234567890" +
+            "xyz";
+        when(page.getContent()).thenReturn(text);
+
+        Replacement r1 = Replacement
+            .builder()
+            .page(page)
+            .start(25)
+            .text("words")
+            .type(StandardType.of(ReplacementKind.SIMPLE, "words"))
+            .suggestions(List.of(Suggestion.ofNoComment("Words")))
+            .build();
+        ComparableReplacement cr1 = ComparableReplacement.of(r1);
+        Replacement r2 = Replacement
+            .builder()
+            .page(page)
+            .start(70)
+            .text("words")
+            .type(StandardType.of(ReplacementKind.SIMPLE, "words"))
+            .suggestions(List.of(Suggestion.ofNoComment("Words")))
+            .build();
+        ComparableReplacement cr2 = ComparableReplacement.of(r2);
+
+        assertTrue(cr1.isContextCloseEnough(cr2));
+        assertTrue(cr2.isContextCloseEnough(cr1));
     }
 }

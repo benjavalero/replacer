@@ -1,6 +1,5 @@
 package es.bvalero.replacer.page.index;
 
-import static es.bvalero.replacer.finder.Replacement.CONTEXT_THRESHOLD;
 import static es.bvalero.replacer.replacement.IndexedReplacement.REVIEWER_SYSTEM;
 
 import es.bvalero.replacer.common.domain.StandardType;
@@ -10,6 +9,7 @@ import es.bvalero.replacer.replacement.IndexedReplacement;
 import java.util.Objects;
 import lombok.*;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.VisibleForTesting;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
@@ -116,19 +116,23 @@ class ComparableReplacement {
     private boolean hasSameContext(ComparableReplacement that) {
         // An empty string is the default context for legacy or migrated replacements
         if (StringUtils.isNotBlank(this.context) || StringUtils.isNotBlank(that.context)) {
-            return Objects.equals(this.context, that.getContext()) && this.distance(that) <= 2 * CONTEXT_THRESHOLD;
+            return Objects.equals(this.context, that.getContext()) && this.isContextCloseEnough(that);
         } else {
             return false;
         }
     }
 
-    private int distance(ComparableReplacement that) {
-        // We don't know which one is at left or at right
-        return Math.min(Math.abs(this.start - that.getEnd()), Math.abs(that.start - this.getEnd()));
-    }
+    // We consider two contexts close enough if the distance of replacements is lower than the double of the threshold
+    @VisibleForTesting
+    boolean isContextCloseEnough(ComparableReplacement that) {
+        assert this.start != that.start;
+        assert Objects.equals(this.context, that.getContext());
 
-    private int getEnd() {
-        // This is a maximum approximation as the replacement context could be truncated by the page content
-        return this.start + this.context.length() - 2 * CONTEXT_THRESHOLD;
+        // As the contexts are equal, we can assume they have not been truncated at the start or end of the text.
+        // Also, we can assume the length of the replacement word is the same for both replacements.
+        // The distance can be calculated this way:
+        // Math.abs(this.start - that.start) - (this.context.length() - 2 * CONTEXT_THRESHOLD);
+        // Verifying that this distance is lower than the double of the threshold is then equivalent to:
+        return Math.abs(this.start - that.start) <= this.context.length();
     }
 }

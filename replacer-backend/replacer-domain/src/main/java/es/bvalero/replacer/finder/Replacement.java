@@ -23,7 +23,7 @@ import org.springframework.lang.NonNull;
 @Builder
 public class Replacement implements FinderResult {
 
-    public static final int CONTEXT_THRESHOLD = 20;
+    private static final int CONTEXT_THRESHOLD = 20;
     private static final int MAX_CONTEXT_LENGTH = 255; // Constrained by the database
 
     @NonNull
