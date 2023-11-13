@@ -1,8 +1,8 @@
                                                              complete-tag-benchmark.csv summary                                                             
                FINDER                 |  Mean [TIME]  |  Min [TIME]  |  First Quartile [TIME]  |  Median [TIME]  |  Third Quartile [TIME]  |  Max [TIME]   |
 ------------------------------------------------------------------------------------------------------------------------------------------------------------
-      CompleteTagRegexIteratedFinder  |   142949,560  |    6216,000  |              37254,250  |      66302,500  |             194425,750  |  1171588,000  |
- CompleteTagRegexBackReferenceFinder  |    37069,940  |    1580,000  |               9450,250  |      16008,000  |              49235,500  |   326787,000  |
-     CompleteTagLinearIteratedFinder  |    22626,440  |    4667,000  |               7648,750  |      11274,000  |              25528,500  |   177874,000  |
-             CompleteTagLinearFinder  |     1498,960  |     100,000  |                216,000  |        582,000  |               1337,750  |    23535,000  |
-              CompleteTagFinalFinder  |     1361,420  |      87,000  |                224,750  |        594,000  |               1235,750  |    20281,000  |
+      CompleteTagRegexIteratedFinder  |   154218,300  |    7414,000  |              40468,500  |      69830,500  |             208982,250  |  1257615,000  |
+ CompleteTagRegexBackReferenceFinder  |    36065,680  |    1489,000  |               9162,750  |      16829,000  |              48626,500  |   307685,000  |
+     CompleteTagLinearIteratedFinder  |    21500,400  |    4531,000  |               7619,500  |      11413,000  |              24747,500  |   154049,000  |
+             CompleteTagLinearFinder  |     1469,780  |      87,000  |                229,250  |        634,000  |               1312,750  |    19373,000  |
+              CompleteTagFinalFinder  |     1306,100  |      81,000  |                199,000  |        551,000  |               1240,500  |    17649,000  |

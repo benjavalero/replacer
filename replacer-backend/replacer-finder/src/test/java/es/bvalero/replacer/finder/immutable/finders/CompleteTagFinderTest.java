@@ -67,13 +67,15 @@ class CompleteTagFinderTest {
 
     @Test
     void testSeveralCompleteTags() {
-        String tag1 = "<ref>A</ref>";
+        String tag1 = "<ref name=\"A\" />";
         String tag2 = "<ref>B</ref>";
-        String text = String.format("A %s and %s.", tag1, tag2);
+        String tag3 = "<ref name=\"C\" />";
+        String tag4 = "<ref>D</ref>";
+        String text = String.format("A %s and %s, and %s and %s.", tag1, tag2, tag3, tag4);
 
         List<Immutable> matches = completeTagFinder.findList(text);
 
-        Set<String> expected = Set.of(tag1, tag2);
+        Set<String> expected = Set.of(tag2, tag4);
         Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
         assertEquals(expected, actual);
     }

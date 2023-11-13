@@ -41,12 +41,16 @@ class CompleteTagFinalFinder implements BenchmarkFinder {
     private MatchResult findCompleteTag(FinderPage page, int start) {
         final String text = page.getContent();
         while (start >= 0 && start < text.length()) {
+            // 1. Find start tag <
+            // 2. Find tag name and check if it is supported
+            // 3. Find end tag </tag>
+
             final int startCompleteTag = findStartTag(text, start);
             if (startCompleteTag < 0) {
                 return null;
             }
 
-            final int startTagName = startCompleteTag + 1; // 1 = start tag length
+            final int startTagName = startCompleteTag + 1;
             final String tagName = findSupportedTag(text, startTagName);
             if (tagName == null) {
                 // The tag name (if found) is not in the list
@@ -58,24 +62,20 @@ class CompleteTagFinalFinder implements BenchmarkFinder {
             int endOpenTag = findEndTag(text, endTagName);
             if (endOpenTag < 0) {
                 // Open tag not closed
-                final String message = String.format("Open tag %s not closed", tagName);
-                FinderUtils.logFinderResult(page, startCompleteTag, endTagName, message);
                 start = endTagName;
                 continue;
             }
 
-            final String openTag = text.substring(startCompleteTag, endOpenTag);
-            if (isSelfClosingTag(openTag)) {
+            // Discard self-closing tags as they are captured by XmlTagFinder
+            if (isSelfClosingTag(text, endOpenTag)) {
                 start = endOpenTag;
                 continue;
             }
 
-            final int endCompleteTag = findEndCompleteTag(text, endOpenTag, tagName);
+            final int endCompleteTag = findEndCompleteTag(text, endTagName, tagName);
             if (endCompleteTag < 0) {
                 // Tag not closed
-                final String message = String.format("Tag %s not closed", tagName);
-                FinderUtils.logFinderResult(page, startCompleteTag, endOpenTag, message);
-                start = endOpenTag;
+                start = endTagName;
                 continue;
             }
 
@@ -90,23 +90,27 @@ class CompleteTagFinalFinder implements BenchmarkFinder {
 
     @Nullable
     private String findSupportedTag(String text, int start) {
-        int i = start;
-        for (; i < text.length(); i++) {
-            if (!FinderUtils.isAscii(text.charAt(i))) {
+        int endSupportedTag = -1;
+        for (int i = start; i < text.length(); i++) {
+            if (!FinderUtils.isAsciiLowerCase(text.charAt(i))) {
+                endSupportedTag = i;
                 break;
             }
         }
-        final String tag = text.substring(start, i);
+        if (endSupportedTag < 0) {
+            return null;
+        }
+        final String tag = text.substring(start, endSupportedTag);
         return this.tags.contains(tag) ? tag : null;
     }
 
     private int findEndTag(String text, int start) {
         int endTag = text.indexOf(END_TAG, start);
-        return endTag >= 0 ? endTag + 1 : -1; // 1 = end tag length
+        return endTag >= 0 ? endTag + 1 : -1;
     }
 
-    private boolean isSelfClosingTag(String tag) {
-        return tag.endsWith(END_SELF_CLOSING_TAG);
+    private boolean isSelfClosingTag(String text, int endOpenTag) {
+        return endOpenTag >= 2 && END_SELF_CLOSING_TAG.equals(text.substring(endOpenTag - 2, endOpenTag));
     }
 
     private int findEndCompleteTag(String text, int start, String tag) {
