@@ -263,6 +263,22 @@ class TemplateFinderTest {
     }
 
     @Test
+    void testArgumentWithReference() {
+        // Load misspellings
+        simpleMisspellingLoader.load();
+
+        String text = "{{T|argument<ref name=\"X\" />}}";
+
+        List<Immutable> matches = templateFinder.findList(text);
+
+        // The '=' should be detected as belonging to the reference,
+        // and therefore the argument must be treated as a value
+        Set<String> expected = Set.of("T");
+        Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
+        assertEquals(expected, actual);
+    }
+
+    @Test
     void testIgnorableTemplate() {
         assertTrue(templateFinder.findList("Otro contenido").isEmpty());
         assertFalse(templateFinder.findList("xxx {{destruir|motivo}}").isEmpty());

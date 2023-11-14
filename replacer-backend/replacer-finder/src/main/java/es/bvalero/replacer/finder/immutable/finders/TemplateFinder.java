@@ -39,6 +39,9 @@ class TemplateFinder implements ImmutableFinder {
     private static final char COLON = ':';
     private static final char EQUALS = '=';
 
+    // We want to avoid the '=' in references to be mistaken by the one of the parameter
+    private static final Set<Character> FORBIDDEN_CHARS = Set.of('<');
+
     // Dependency injection
     private final FinderProperties finderProperties;
     private final UppercaseFinder uppercaseFinder;
@@ -221,6 +224,9 @@ class TemplateFinder implements ImmutableFinder {
             } else if (template.containsNested(startTemplateContent + startValueEquals)) {
                 // The equals symbol belongs to a nested template, so we ignore it.
                 startValueEquals = -1;
+            } else if (!isValidParameterEquals(templateContent, startParameter, startValueEquals)) {
+                // The equals symbol is not the parameter one, so we ignore it.
+                startValueEquals = -1;
             }
 
             String parameter = null;
@@ -263,6 +269,19 @@ class TemplateFinder implements ImmutableFinder {
         }
 
         return immutables;
+    }
+
+    private boolean isValidParameterEquals(String text, int startParameter, int startEquals) {
+        for (int i = startParameter; i < startEquals; i++) {
+            if (isForbiddenChar(text.charAt(i))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean isForbiddenChar(char ch) {
+        return FORBIDDEN_CHARS.contains(ch);
     }
 
     private String trimValue(String value) {
