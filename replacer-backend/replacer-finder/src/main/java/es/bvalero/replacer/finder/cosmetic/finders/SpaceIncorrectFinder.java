@@ -70,7 +70,7 @@ class SpaceIncorrectFinder implements CosmeticCheckedFinder {
 
     @Override
     public String getFix(MatchResult match, FinderPage page) {
-        String spaceWord = FinderUtils.toFirstUpperCase(match.group(1));
+        String spaceWord = FinderUtils.setFirstUpperCaseFully(match.group(1));
         String spaceWordTranslated;
         String lang = page.getPageKey().getLang().getCode();
         if (this.finderProperties.getAllFileWords().contains(spaceWord)) {

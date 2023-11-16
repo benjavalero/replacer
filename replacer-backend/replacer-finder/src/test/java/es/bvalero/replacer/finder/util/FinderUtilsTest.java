@@ -21,13 +21,6 @@ class FinderUtilsTest {
     }
 
     @Test
-    void testToUpperCase() {
-        assertEquals("HOLA", FinderUtils.toUpperCase("HOLA"));
-        assertEquals("¡HOLA, GAÑÁN!", FinderUtils.toUpperCase("¡Hola, gañán!"));
-        assertEquals("1234", FinderUtils.toUpperCase("1234"));
-    }
-
-    @Test
     void testStartsWithLowerCase() {
         assertFalse(FinderUtils.startsWithLowerCase("Álvaro"));
         assertTrue(FinderUtils.startsWithLowerCase("úlcera"));
@@ -48,14 +41,6 @@ class FinderUtilsTest {
         assertFalse(FinderUtils.startsWithNumber("Álvaro"));
         assertFalse(FinderUtils.startsWithNumber("úlcera"));
         assertTrue(FinderUtils.startsWithNumber("1234"));
-    }
-
-    @Test
-    void testSetFirstUpperCase() {
-        assertEquals("Álvaro", FinderUtils.setFirstUpperCase("Álvaro"));
-        assertEquals("Úlcera", FinderUtils.setFirstUpperCase("úlcera"));
-        assertEquals("1234", FinderUtils.setFirstUpperCase("1234"));
-        assertEquals("", FinderUtils.setFirstUpperCase(""));
     }
 
     @Test

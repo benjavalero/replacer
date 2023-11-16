@@ -9,12 +9,15 @@ import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
 import lombok.experimental.UtilityClass;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.Nullable;
 
 @UtilityClass
 public class ReplacerUtils {
 
     public final Locale LOCALE_ES = Locale.forLanguageTag("es");
+
+    //region String Utils
 
     public String getContextAroundWord(String text, int start, int end, int threshold) {
         int limitLeft = Math.max(0, start - threshold);
@@ -30,6 +33,53 @@ public class ReplacerUtils {
         return text.substring(0, start) + replacement + text.substring(end);
     }
 
+    /**
+     * Capitalizes a string changing the first letter appearing in the text to title case,
+     * e.g. to capitalize a text enclosed by quotes.
+     */
+    public String setFirstUpperCaseIgnoringNonLetters(String text) {
+        if (StringUtils.isEmpty(text) || Character.isUpperCase(text.charAt(0))) {
+            return text;
+        }
+
+        if (Character.isLetterOrDigit(text.charAt(0))) {
+            return setFirstUpperCase(text);
+        }
+
+        // Find the first letter
+        int startFirstLetter = -1;
+        for (int i = 0; i < text.length(); i++) {
+            if (Character.isLetterOrDigit(text.charAt(i))) {
+                startFirstLetter = i;
+                break;
+            }
+        }
+        if (startFirstLetter < 0) {
+            // No letters in the text
+            return text;
+        } else {
+            return text.substring(0, startFirstLetter) + setFirstUpperCase(text.substring(startFirstLetter));
+        }
+    }
+
+    /** Capitalizes a string changing the first character of the text to uppercase */
+    public String setFirstUpperCase(String text) {
+        if (StringUtils.isEmpty(text) || Character.isUpperCase(text.charAt(0))) {
+            return text;
+        }
+
+        return toUpperCase(text.substring(0, 1)) + text.substring(1);
+    }
+
+    /** Converts all the characters in this text to upper case */
+    public String toUpperCase(String text) {
+        return text.toUpperCase(LOCALE_ES);
+    }
+
+    //endregion
+
+    //region Date Utils
+
     @Nullable
     public Long convertLocalDateTimeToMilliseconds(@Nullable LocalDateTime localDateTime) {
         if (localDateTime == null) {
@@ -38,6 +88,10 @@ public class ReplacerUtils {
         ZonedDateTime zdt = ZonedDateTime.of(localDateTime, ZoneId.systemDefault());
         return zdt.toInstant().toEpochMilli();
     }
+
+    //endregion
+
+    //region Logging Utils
 
     public String toJson(Object obj) {
         ObjectMapper mapper = new ObjectMapper();
@@ -55,4 +109,5 @@ public class ReplacerUtils {
         }
         return toJson(map);
     }
+    //endregion
 }

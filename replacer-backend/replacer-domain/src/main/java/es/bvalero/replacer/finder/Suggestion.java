@@ -1,5 +1,6 @@
 package es.bvalero.replacer.finder;
 
+import es.bvalero.replacer.common.util.ReplacerUtils;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -36,7 +37,7 @@ public class Suggestion {
     }
 
     public Suggestion toUpperCase() {
-        return Suggestion.of(StringUtils.capitalize(this.text), this.comment);
+        return Suggestion.of(ReplacerUtils.setFirstUpperCaseIgnoringNonLetters(this.text), this.comment);
     }
 
     static Collection<Suggestion> mergeSuggestions(Collection<Suggestion> suggestions) {

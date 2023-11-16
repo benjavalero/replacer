@@ -2,6 +2,12 @@
 
 ## 2.27.0 (??)
 - Feature: revert to the old coordinates finder just to fix the degree symbols instead of using the coordinates template
+- Improve the performance of several finders and especially of the dump parser
+- Improve check to find similar replacements close enough
+- Add new ignorable section `Obras`
+- Fix: count as read an indexable page which has not been indexed because of an expected exception
+- Fix: template arguments (no equals symbol) containing references are mistaken with parameters and captured as immutables
+- Fix: capitalize the suggestion also when it is enclosed by quotes e.g. a cursive suggestion alternative
 
 ## 2.26.0 (7 Oct 2023)
 - Upgrade backend to Java 17

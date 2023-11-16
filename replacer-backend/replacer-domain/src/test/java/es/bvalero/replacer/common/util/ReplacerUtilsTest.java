@@ -17,4 +17,21 @@ class ReplacerUtilsTest {
         assertEquals(" nombre no quiero acordarme.", ReplacerUtils.getContextAroundWord(text, 43, 49, 11));
         assertEquals("cuyo nombre no quiero acordarme.", ReplacerUtils.getContextAroundWord(text, 43, 49, 15));
     }
+
+    @Test
+    void testSetFirstUpperCase() {
+        assertEquals("Álvaro", ReplacerUtils.setFirstUpperCaseIgnoringNonLetters("Álvaro"));
+        assertEquals("Úlcera", ReplacerUtils.setFirstUpperCaseIgnoringNonLetters("úlcera"));
+        assertEquals("1234", ReplacerUtils.setFirstUpperCaseIgnoringNonLetters("1234"));
+        assertEquals("", ReplacerUtils.setFirstUpperCaseIgnoringNonLetters(""));
+        assertEquals("A", ReplacerUtils.setFirstUpperCaseIgnoringNonLetters("a"));
+        assertEquals("''Marketing''", ReplacerUtils.setFirstUpperCaseIgnoringNonLetters("''marketing''"));
+    }
+
+    @Test
+    void testToUpperCase() {
+        assertEquals("HOLA", ReplacerUtils.toUpperCase("HOLA"));
+        assertEquals("¡HOLA, GAÑÁN!", ReplacerUtils.toUpperCase("¡Hola, gañán!"));
+        assertEquals("1234", ReplacerUtils.toUpperCase("1234"));
+    }
 }

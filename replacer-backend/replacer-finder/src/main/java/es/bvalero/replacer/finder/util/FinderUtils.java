@@ -38,14 +38,15 @@ public class FinderUtils {
     private static final Marker MARKER_IMMUTABLE = MarkerFactory.getMarker("IMMUTABLE");
     public static final String ENGLISH_LANGUAGE = "en";
 
-    /***** STRING UTILS *****/
+    //region String Utils
 
     public String toLowerCase(String text) {
         return text.toLowerCase(LOCALE_ES);
     }
 
+    /** Converts all the characters in this text to upper case */
     public String toUpperCase(String text) {
-        return text.toUpperCase(LOCALE_ES);
+        return ReplacerUtils.toUpperCase(text);
     }
 
     public boolean startsWithLowerCase(String word) {
@@ -60,11 +61,13 @@ public class FinderUtils {
         return isDigit(word.charAt(0));
     }
 
+    /** Capitalizes a string changing the first character of the text to uppercase */
     public String setFirstUpperCase(String word) {
-        return StringUtils.capitalize(word);
+        return ReplacerUtils.setFirstUpperCase(word);
     }
 
-    public String toFirstUpperCase(String word) {
+    /** Capitalizes a string changing the first character of the text to uppercase and the rest to lowercase */
+    public String setFirstUpperCaseFully(String word) {
         return toUpperCase(word.substring(0, 1)) + toLowerCase(word.substring(1));
     }
 
@@ -146,7 +149,9 @@ public class FinderUtils {
         return NON_BREAKING_SPACE.equals(str) || NON_BREAKING_SPACE_TEMPLATE.equals(str);
     }
 
-    /***** TEXT UTILS *****/
+    //endregion
+
+    //region Text Utils
 
     /**
      * Check if a word is complete in a text. In particular, check if the characters around the word are separators.
@@ -375,13 +380,17 @@ public class FinderUtils {
         return ReplacerUtils.getContextAroundWord(text, start, end, 50);
     }
 
-    /***** COLLECTION UTILS *****/
+    //endregion
+
+    //region Collection Utils
 
     public String joinAlternate(Iterable<String> items) {
         return String.join(ALTERNATE_SEPARATOR, items);
     }
 
-    /***** LOGGING UTILS *****/
+    //endregion
+
+    //region Logging Utils
 
     public void logFinderResult(FinderPage page, int start, int end, String message) {
         LOGGER.debug(
@@ -399,7 +408,9 @@ public class FinderUtils {
         );
     }
 
-    /***** PARSE UTILS *****/
+    //endregion
+
+    //region Parse Utils
 
     @FunctionalInterface
     public interface LogResultValidator {
@@ -506,4 +517,5 @@ public class FinderUtils {
         }
         return words;
     }
+    //endregion
 }
