@@ -4,7 +4,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Replacement } from '../../api/models/replacement';
 import { Suggestion } from '../../api/models/suggestion';
 import { EditCustomSnippetComponent } from './edit-custom-snippet.component';
-import { FixedReplacement, getReplacementEnd, Snippet } from './page-replacement.model';
+import { FixedReplacement, Snippet, getReplacementEnd } from './page-replacement.model';
 
 @Component({
   standalone: true,

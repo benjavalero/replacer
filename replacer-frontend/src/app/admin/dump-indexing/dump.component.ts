@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
-import { interval, Observable, Subscription } from 'rxjs';
+import { Observable, Subscription, interval } from 'rxjs';
 import { AlertComponent } from '../../shared/alert/alert.component';
 import { sleep } from '../../shared/util/sleep';
 import { DumpAdapterService } from './dump-adapter.service';

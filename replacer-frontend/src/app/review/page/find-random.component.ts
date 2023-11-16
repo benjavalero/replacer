@@ -5,13 +5,13 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Page } from '../../api/models/page';
 import { ReplacementType } from '../../api/models/replacement-type';
-import { ReplacementTypeApiService } from '../../api/services/replacement-type-api.service';
 import { PageApiService } from '../../api/services/page-api.service';
+import { ReplacementTypeApiService } from '../../api/services/replacement-type-api.service';
+import { StrictHttpResponse } from '../../api/strict-http-response';
 import { AlertService } from '../../shared/alert/alert.service';
 import { EditPageComponent } from './edit-page.component';
 import { ReviewOptions } from './review-options.model';
 import { ValidateCustomComponent } from './validate-custom.component';
-import { StrictHttpResponse } from '../../api/strict-http-response';
 
 export const kindLabel: { [key: number]: string } = {
   1: 'Personalizado',

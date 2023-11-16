@@ -1,11 +1,11 @@
 import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { ApplicationConfig, importProvidersFrom } from '@angular/core';
 import { provideRouter } from '@angular/router';
+import { environment } from '../environments/environment';
 import { ApiModule } from './api/api.module';
 import { routes } from './app.routes';
 import { ErrorInterceptor } from './core/interceptor/error-interceptor';
 import { LangInterceptor } from './core/interceptor/lang-interceptor';
-import { environment } from '../environments/environment';
 
 export const appConfig: ApplicationConfig = {
   providers: [

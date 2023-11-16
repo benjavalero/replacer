@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { InitiateAuthorizationResponse } from '../../api/models/initiate-authorization-response';
 import { RequestToken } from '../../api/models/request-token';
 import { User } from '../../api/models/user';
-import { UserService } from '../user/user.service';
-import { UserApiService } from '../../api/services/user-api.service';
-import { InitiateAuthorizationResponse } from '../../api/models/initiate-authorization-response';
 import { VerifyAuthorizationRequest } from '../../api/models/verify-authorization-request';
+import { UserApiService } from '../../api/services/user-api.service';
+import { UserService } from '../user/user.service';
 
 @Injectable({
   providedIn: 'root'

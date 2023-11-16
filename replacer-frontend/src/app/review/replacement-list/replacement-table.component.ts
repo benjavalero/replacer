@@ -15,7 +15,7 @@ import StringUtils from '../../shared/util/string-utils';
 import { kindLabel } from '../page/find-random.component';
 import { ReplacementListService } from './replacement-list.service';
 import { ReviewSubtypeComponent } from './review-subtype.component';
-import { rotate, SortDirection } from './sort-direction.model';
+import { SortDirection, rotate } from './sort-direction.model';
 
 @Component({
   standalone: true,
