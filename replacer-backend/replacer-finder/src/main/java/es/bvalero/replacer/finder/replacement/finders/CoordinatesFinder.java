@@ -55,7 +55,7 @@ class CoordinatesFinder implements ReplacementFinder {
         // TODO: Reduce cyclomatic complexity
         while (start >= 0 && start < text.length()) {
             // Degrees
-            MatchResult matchDegrees = FinderUtils.findNumberMatch(text, start, false);
+            MatchResult matchDegrees = FinderUtils.findNumber(text, start, false, true);
             if (matchDegrees == null || matchDegrees.end() == text.length()) {
                 // No number to continue searching
                 return null;
@@ -66,12 +66,6 @@ class CoordinatesFinder implements ReplacementFinder {
             }
             int startCoordinates = matchDegrees.start();
 
-            // Degrees can be negative
-            if (startCoordinates > 0 && text.charAt(startCoordinates - 1) == '-') {
-                startCoordinates -= 1;
-                matchDegrees = FinderMatchResult.of(startCoordinates, '-' + matchDegrees.group());
-            }
-
             // Degree symbol
             final int endDegrees = matchDegrees.end();
             final char degreeChar = text.charAt(endDegrees);
@@ -81,7 +75,7 @@ class CoordinatesFinder implements ReplacementFinder {
             }
 
             // Minutes
-            final MatchResult matchMinutes = FinderUtils.findNumberMatch(text, endDegrees + 1, false);
+            final MatchResult matchMinutes = FinderUtils.findNumber(text, endDegrees + 1, false, false);
             if (matchMinutes == null) {
                 start = endDegrees + 1;
                 continue;
@@ -104,7 +98,7 @@ class CoordinatesFinder implements ReplacementFinder {
             }
 
             // Seconds (optional)
-            final MatchResult matchSeconds = FinderUtils.findNumberMatch(text, endMinutes + 1, true);
+            final MatchResult matchSeconds = FinderUtils.findNumber(text, endMinutes + 1, true, false);
             String doublePrime = null;
             int endCoordinates = endMinutes + 1;
             if (
@@ -159,7 +153,7 @@ class CoordinatesFinder implements ReplacementFinder {
 
     private boolean isDegreeNumber(String number) {
         try {
-            return Integer.parseInt(number) < 180;
+            return Math.abs(Integer.parseInt(number)) < 180;
         } catch (NumberFormatException nfe) {
             return false;
         }

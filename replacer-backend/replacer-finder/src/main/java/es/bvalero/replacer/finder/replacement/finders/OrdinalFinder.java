@@ -85,7 +85,7 @@ class OrdinalFinder implements ReplacementFinder {
         final String text = page.getContent();
         // TODO: Reduce cyclomatic complexity
         while (start >= 0 && start < text.length()) {
-            final MatchResult matchNumber = FinderUtils.findNumberMatch(text, start, false);
+            final MatchResult matchNumber = FinderUtils.findNumber(text, start, false, false);
             if (matchNumber == null) {
                 return null;
             }

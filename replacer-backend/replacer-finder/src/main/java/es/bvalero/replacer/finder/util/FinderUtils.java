@@ -34,6 +34,7 @@ public class FinderUtils {
     public static final String END_LINK = "]]";
     public static final char DOT = '.';
     private static final char DECIMAL_COMMA = ',';
+    private static final char NEGATIVE_SYMBOL = '-';
     public static final Set<Character> DECIMAL_SEPARATORS = Set.of(DOT, DECIMAL_COMMA);
     private static final Marker MARKER_IMMUTABLE = MarkerFactory.getMarker("IMMUTABLE");
     public static final String ENGLISH_LANGUAGE = "en";
@@ -353,12 +354,11 @@ public class FinderUtils {
     }
 
     @Nullable
-    public MatchResult findNumberMatch(String text, int start, boolean allowDecimals) {
+    public MatchResult findNumber(String text, int start, boolean allowDecimals, boolean allowNegativeNumbers) {
         int startNumber = -1;
-        int endNumber = -1;
+        int endNumber = text.length();
         for (int i = start; i < text.length(); i++) {
-            final char ch = text.charAt(i);
-            if (isDigit(ch) || (allowDecimals && startNumber >= 0 && DECIMAL_SEPARATORS.contains(ch))) {
+            if (isDigit(text.charAt(i))) {
                 if (startNumber < 0) {
                     startNumber = i;
                 }
@@ -370,10 +370,29 @@ public class FinderUtils {
         if (startNumber < 0) {
             return null;
         }
-        if (endNumber < 0) {
-            endNumber = text.length();
+
+        // Check for decimals
+        if (allowDecimals && endNumber < text.length() && isDecimalSeparator(text.charAt(endNumber))) {
+            final MatchResult decimalMatch = findNumber(text, endNumber + 1, false, false);
+            if (decimalMatch != null && decimalMatch.start() == endNumber + 1) {
+                endNumber = decimalMatch.end();
+            }
         }
+
+        // Check for negative numbers
+        if (allowNegativeNumbers && startNumber > 0 && isNegativeSymbol(text.charAt(startNumber - 1))) {
+            startNumber -= 1;
+        }
+
         return FinderMatchResult.of(text, startNumber, endNumber);
+    }
+
+    private boolean isDecimalSeparator(char ch) {
+        return ch == DOT || ch == DECIMAL_COMMA;
+    }
+
+    private boolean isNegativeSymbol(char ch) {
+        return ch == NEGATIVE_SYMBOL;
     }
 
     private String getTextSnippet(String text, int start, int end) {
