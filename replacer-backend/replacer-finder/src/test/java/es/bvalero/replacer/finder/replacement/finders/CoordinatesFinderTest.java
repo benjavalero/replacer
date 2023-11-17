@@ -36,7 +36,6 @@ class CoordinatesFinderTest {
             "38º05′08″ norte|38°05′08″&nbsp;N",
             "38º05′ N|38°05′&nbsp;N",
             "-38°05′08\"|-38°05′08″",
-            // "38º05′0883829879874892″|38°05′", // TODO
         }
     )
     void testCoordinates(String text, String expected) {
@@ -65,7 +64,7 @@ class CoordinatesFinderTest {
             "38°05′08",
             "38°  05′08″",
             "23° 14′ 18.23.42''", // Bad formatted seconds are ignored
-            // "38º05′0883829879874892″ N", // TODO
+            "38°05′0883829879874892″ N",
         }
     )
     void testValidCoordinates(String text) {
@@ -88,6 +87,20 @@ class CoordinatesFinderTest {
         List<Replacement> replacements = coordinatesFinder.findList(text);
 
         assertEquals(2, replacements.size());
+    }
+
+    @Test
+    void testCoordinatesSuggestions() {
+        String text = "At 23º 14'.";
+        List<Replacement> replacements = coordinatesFinder.findList(text);
+
+        assertEquals(1, replacements.size());
+
+        Replacement rep = replacements.get(0);
+        assertEquals("23º 14'", rep.getText());
+        assertEquals("23º 14'", rep.getSuggestions().get(0).getText());
+        assertEquals("23°14′", rep.getSuggestions().get(1).getText());
+        assertEquals("{{esd|23° 14′}}", rep.getSuggestions().get(2).getText());
     }
 
     @ParameterizedTest

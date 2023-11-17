@@ -23,7 +23,6 @@ import org.springframework.stereotype.Component;
 @Component
 class CoordinatesFinder implements ReplacementFinder {
 
-    private static final Set<Character> DEGREE_CHARS = Set.of(DEGREE, MASCULINE_ORDINAL);
     private static final char PRIME = '\u2032'; // ′
     private static final char APOSTROPHE = '\'';
     private static final char SINGLE_QUOTE = '\u2019'; // ’
@@ -52,91 +51,55 @@ class CoordinatesFinder implements ReplacementFinder {
     @Nullable
     private MatchResult findCoordinates(FinderPage page, int start) {
         final String text = page.getContent();
-        // TODO: Reduce cyclomatic complexity
         while (start >= 0 && start < text.length()) {
+            boolean isValidCoordinates = true;
+
             // Degrees
-            MatchResult matchDegrees = FinderUtils.findNumber(text, start, false, true);
-            if (matchDegrees == null || matchDegrees.end() == text.length()) {
-                // No number to continue searching
+            final MatchResult matchDegrees = findDegrees(text, start);
+            if (matchDegrees == null) {
                 return null;
             }
-            if (!isDegreeNumber(matchDegrees.group())) {
-                start = matchDegrees.end();
-                continue;
-            }
-            int startCoordinates = matchDegrees.start();
-
-            // Degree symbol
-            final int endDegrees = matchDegrees.end();
-            final char degreeChar = text.charAt(endDegrees);
-            if (!isDegreeChar(degreeChar)) {
-                start = endDegrees + 1;
-                continue;
+            final char degreeChar = text.charAt(matchDegrees.end());
+            if (!isValidDegreeChar(degreeChar)) {
+                isValidCoordinates = false;
             }
 
             // Minutes
-            final MatchResult matchMinutes = FinderUtils.findNumber(text, endDegrees + 1, false, false);
+            final MatchResult matchMinutes = findMinutes(text, matchDegrees.end() + 1);
             if (matchMinutes == null) {
-                start = endDegrees + 1;
+                start = matchDegrees.end() + 1;
                 continue;
             }
-            if (
-                !isMinuteNumber(matchMinutes.group()) ||
-                !FinderUtils.isBlankOrNonBreakingSpace(text.substring(endDegrees + 1, matchMinutes.start())) ||
-                matchMinutes.end() >= text.length()
-            ) {
-                start = matchDegrees.end();
-                continue;
-            }
-
-            // Prime
-            final int endMinutes = matchMinutes.end();
-            final char primeChar = text.charAt(endMinutes);
-            if (!isPrimeChar(primeChar)) {
-                start = endMinutes + 1;
-                continue;
+            final char primeChar = text.charAt(matchMinutes.end());
+            if (!isValidPrimeChar(primeChar)) {
+                isValidCoordinates = false;
             }
 
             // Seconds (optional)
-            final MatchResult matchSeconds = FinderUtils.findNumber(text, endMinutes + 1, true, false);
+            final MatchResult matchSeconds = findSeconds(text, matchMinutes.end() + 1);
             String doublePrime = null;
-            int endCoordinates = endMinutes + 1;
-            if (
-                matchSeconds != null &&
-                isSecondNumber(matchSeconds.group()) &&
-                FinderUtils.isBlankOrNonBreakingSpace(text.substring(endMinutes + 1, matchSeconds.start()))
-            ) {
-                // Double prime
-                // Let's find the next 2 characters
-                // For the sake of the tests, there could be only 1 character left in the text.
-                final int endSeconds = matchSeconds.end();
-                final String nextSecondChars = text.substring(endSeconds, Math.min(endSeconds + 2, text.length()));
-                doublePrime = findDoublePrime(nextSecondChars);
-                if (doublePrime != null) {
-                    endCoordinates = endSeconds + doublePrime.length();
+            int endCoordinates = matchMinutes.end() + 1;
+            if (matchSeconds != null) {
+                doublePrime = matchSeconds.group(1);
+                endCoordinates = matchSeconds.end() + doublePrime.length();
+                if (!isValidDoublePrimeChar(doublePrime)) {
+                    isValidCoordinates = false;
                 }
             }
 
-            // Discard if the coordinates are not to be fixed
-            if (isValidDegreeChar(degreeChar) && isValidPrimeChar(primeChar) && isValidDoublePrimeChar(doublePrime)) {
+            if (isValidCoordinates) {
+                // Nothing to fix
                 start = endCoordinates;
                 continue;
             }
 
             // Find if there is a cardinal direction and enlarge the match
-            MatchResult matchDirection = FinderUtils.findWordAfter(text, endCoordinates);
+            MatchResult matchDirection = findDirection(text, endCoordinates);
             if (matchDirection != null) {
-                if (
-                    isDirectionString(matchDirection.group()) &&
-                    FinderUtils.isBlankOrNonBreakingSpace(text.substring(endCoordinates, matchDirection.start()))
-                ) {
-                    endCoordinates = matchDirection.end();
-                } else {
-                    matchDirection = null;
-                }
+                endCoordinates = matchDirection.end();
             }
 
-            final FinderMatchResult result = FinderMatchResult.of(text, startCoordinates, endCoordinates);
+            final FinderMatchResult result = FinderMatchResult.of(text, matchDegrees.start(), endCoordinates);
             // Groups: 1 - Degrees; 2 - Minutes; 3 - Seconds (optional); 4 - Direction (optional)
             result.addGroup(matchDegrees);
             result.addGroup(matchMinutes);
@@ -151,6 +114,30 @@ class CoordinatesFinder implements ReplacementFinder {
         return null;
     }
 
+    /* Find a degrees match corresponding to a number followed by a degree symbol */
+    @Nullable
+    private MatchResult findDegrees(String text, int start) {
+        while (start >= 0 && start < text.length()) {
+            final MatchResult matchNumber = FinderUtils.findNumber(text, start, false, true);
+            if (matchNumber == null || matchNumber.end() >= text.length()) {
+                // No number to continue searching
+                return null;
+            }
+            if (!isDegreeNumber(matchNumber.group())) {
+                start = matchNumber.end();
+                continue;
+            }
+
+            if (!isDegreeChar(text.charAt(matchNumber.end()))) {
+                start = matchNumber.end() + 1;
+                continue;
+            }
+
+            return matchNumber;
+        }
+        return null;
+    }
+
     private boolean isDegreeNumber(String number) {
         try {
             return Math.abs(Integer.parseInt(number)) < 180;
@@ -160,7 +147,37 @@ class CoordinatesFinder implements ReplacementFinder {
     }
 
     private boolean isDegreeChar(char ch) {
-        return DEGREE_CHARS.contains(ch);
+        return ch == DEGREE || ch == MASCULINE_ORDINAL;
+    }
+
+    private boolean isValidDegreeChar(char ch) {
+        return ch == DEGREE;
+    }
+
+    /* Find a minutes match corresponding to a number followed by a minutes symbol */
+    @Nullable
+    private MatchResult findMinutes(String text, int start) {
+        final MatchResult matchNumber = FinderUtils.findNumber(text, start, false, false);
+        if (matchNumber == null || matchNumber.end() >= text.length()) {
+            // No number to continue searching
+            return null;
+        }
+
+        if (!isMinuteNumber(matchNumber.group())) {
+            return null;
+        }
+
+        if (!isPrimeChar(text.charAt(matchNumber.end()))) {
+            return null;
+        }
+
+        final String space = text.substring(start, matchNumber.start());
+        if (!FinderUtils.isBlankOrNonBreakingSpace(space)) {
+            // Not a valid space between the previous match and the number match
+            return null;
+        }
+
+        return matchNumber;
     }
 
     private boolean isMinuteNumber(String number) {
@@ -175,6 +192,48 @@ class CoordinatesFinder implements ReplacementFinder {
         return PRIME_CHARS.contains(ch);
     }
 
+    private boolean isValidPrimeChar(char ch) {
+        return ch == PRIME;
+    }
+
+    /*
+     * Find a seconds match corresponding to a number followed by a seconds symbol.
+     * The seconds symbol is included as a nested match.
+     */
+    @Nullable
+    private MatchResult findSeconds(String text, int start) {
+        final FinderMatchResult matchNumber = (FinderMatchResult) FinderUtils.findNumber(text, start, true, false);
+        if (matchNumber == null || matchNumber.end() >= text.length()) {
+            // No number to continue searching
+            return null;
+        }
+
+        if (!isSecondNumber(matchNumber.group())) {
+            return null;
+        }
+
+        // Let's find the seconds symbol, which might have 2 characters.
+        String doublePrime;
+        final String nextChars = text.substring(matchNumber.end(), Math.min(matchNumber.end() + 2, text.length()));
+        if (!nextChars.isEmpty() && DOUBLE_PRIME_CHARS.contains(nextChars.charAt(0))) {
+            doublePrime = nextChars.substring(0, 1);
+        } else if (nextChars.length() > 1 && isPrimeChar(nextChars.charAt(0)) && isPrimeChar(nextChars.charAt(1))) {
+            doublePrime = nextChars;
+        } else {
+            return null;
+        }
+
+        final String space = text.substring(start, matchNumber.start());
+        if (!FinderUtils.isBlankOrNonBreakingSpace(space)) {
+            // Not a valid space between the previous match and the number match
+            return null;
+        }
+
+        final MatchResult doublePrimeMatch = FinderMatchResult.of(matchNumber.end(), doublePrime);
+        matchNumber.addGroup(doublePrimeMatch);
+        return matchNumber;
+    }
+
     private boolean isSecondNumber(String number) {
         // We need to normalize the number in order to parse it as a double
         try {
@@ -184,28 +243,29 @@ class CoordinatesFinder implements ReplacementFinder {
         }
     }
 
-    @Nullable
-    private String findDoublePrime(String str) {
-        // Check first char and then check both chars
-        if (!str.isEmpty() && DOUBLE_PRIME_CHARS.contains(str.charAt(0))) {
-            return str.substring(0, 1);
-        } else if (str.length() > 1 && isPrimeChar(str.charAt(0)) && isPrimeChar(str.charAt(1))) {
-            return str;
-        } else {
-            return null;
-        }
-    }
-
-    private boolean isValidDegreeChar(char ch) {
-        return ch == DEGREE;
-    }
-
-    private boolean isValidPrimeChar(char ch) {
-        return ch == PRIME;
-    }
-
     private boolean isValidDoublePrimeChar(@Nullable String str) {
         return str == null || (str.length() == 1 && str.charAt(0) == DOUBLE_PRIME);
+    }
+
+    @Nullable
+    private MatchResult findDirection(String text, int start) {
+        // Find if there is a cardinal direction and enlarge the match
+        final MatchResult matchDirection = FinderUtils.findWordAfter(text, start);
+        if (matchDirection == null) {
+            return null;
+        }
+
+        if (!isDirectionString(matchDirection.group())) {
+            return null;
+        }
+
+        final String space = text.substring(start, matchDirection.start());
+        if (!FinderUtils.isBlankOrNonBreakingSpace(space)) {
+            // Not a valid space between the previous match and the number match
+            return null;
+        }
+
+        return matchDirection;
     }
 
     private boolean isDirectionString(String str) {
@@ -247,12 +307,12 @@ class CoordinatesFinder implements ReplacementFinder {
 
         // Suggestion 2: with spaces
         String withSpaces = String.format(
-            "{{esd|%s%s %s%s %s%s}}",
+            "{{esd|%s%s %s%s%s%s}}",
             matchDegrees,
             DEGREE,
             matchMinutes,
             PRIME,
-            (matchSeconds == null ? "" : matchSeconds + DOUBLE_PRIME),
+            (matchSeconds == null ? "" : SPACE + matchSeconds + DOUBLE_PRIME),
             (matchDirection == null ? "" : SPACE + fixDirection(matchDirection))
         );
         final Suggestion suggestionWithSpaces = Suggestion.of(withSpaces, "con espacios y con los símbolos apropiados");
