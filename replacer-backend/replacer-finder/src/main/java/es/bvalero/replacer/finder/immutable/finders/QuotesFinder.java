@@ -1,6 +1,6 @@
 package es.bvalero.replacer.finder.immutable.finders;
 
-import static es.bvalero.replacer.finder.util.FinderUtils.NEW_LINE;
+import static es.bvalero.replacer.finder.util.FinderUtils.*;
 
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.FinderPriority;
@@ -17,8 +17,6 @@ abstract class QuotesFinder extends ImmutableCheckedFinder {
     protected static final char DOUBLE_QUOTES = '\"';
     protected static final char START_QUOTE_ANGULAR = '«';
     protected static final char END_QUOTE_ANGULAR = '»';
-    protected static final char START_QUOTE_TYPOGRAPHIC = '“';
-    protected static final char END_QUOTE_TYPOGRAPHIC = '”';
     private static final Set<Character> QUOTE_CHARS = Set.of(
         DOUBLE_QUOTES,
         START_QUOTE_ANGULAR,

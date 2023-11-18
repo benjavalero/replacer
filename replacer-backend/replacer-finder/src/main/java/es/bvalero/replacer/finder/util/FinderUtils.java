@@ -18,24 +18,30 @@ import org.springframework.lang.Nullable;
 @UtilityClass
 public class FinderUtils {
 
+    // Common characters
     public static final char MASCULINE_ORDINAL = '\u00ba'; // º
     public static final char FEMININE_ORDINAL = '\u00aa'; // ª
-    public static final Set<Character> ORDINALS = Set.of(MASCULINE_ORDINAL, FEMININE_ORDINAL);
     public static final char DEGREE = '\u00b0'; // °
     private static final char UNDERSCORE = '_'; // _ invalid word separator
-    private static final Set<Character> URL_SEPARATORS = Set.of('/', '.');
-    private static final String ALTERNATE_SEPARATOR = "|";
-    public static final String NON_BREAKING_SPACE = "&nbsp;";
-    private static final String NON_BREAKING_SPACE_TEMPLATE = "{{esd}}";
-    public static final Set<String> SPACES = Set.of(SPACE, NON_BREAKING_SPACE, NON_BREAKING_SPACE_TEMPLATE);
+    public static final char START_QUOTE_TYPOGRAPHIC = '“';
+    public static final char END_QUOTE_TYPOGRAPHIC = '”';
     public static final char NEW_LINE = '\n';
     public static final char PIPE = '|';
-    public static final String START_LINK = "[[";
-    public static final String END_LINK = "]]";
     public static final char DOT = '.';
     private static final char DECIMAL_COMMA = ',';
     private static final char NEGATIVE_SYMBOL = '-';
+
+    // Character combinations
+    public static final Set<Character> ORDINALS = Set.of(MASCULINE_ORDINAL, FEMININE_ORDINAL);
+    private static final Set<Character> URL_SEPARATORS = Set.of('/', '.');
+    private static final String ALTERNATE_SEPARATOR = Character.toString(PIPE);
+    public static final String NON_BREAKING_SPACE = "&nbsp;";
+    private static final String NON_BREAKING_SPACE_TEMPLATE = "{{esd}}";
+    public static final Set<String> SPACES = Set.of(SPACE, NON_BREAKING_SPACE, NON_BREAKING_SPACE_TEMPLATE);
+    public static final String START_LINK = "[[";
+    public static final String END_LINK = "]]";
     public static final Set<Character> DECIMAL_SEPARATORS = Set.of(DOT, DECIMAL_COMMA);
+
     private static final Marker MARKER_IMMUTABLE = MarkerFactory.getMarker("IMMUTABLE");
     public static final String ENGLISH_LANGUAGE = "en";
 

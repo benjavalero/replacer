@@ -1,5 +1,8 @@
 package es.bvalero.replacer.finder.immutable.finders;
 
+import static es.bvalero.replacer.finder.util.FinderUtils.END_QUOTE_TYPOGRAPHIC;
+import static es.bvalero.replacer.finder.util.FinderUtils.START_QUOTE_TYPOGRAPHIC;
+
 import es.bvalero.replacer.finder.immutable.ImmutableFinder;
 import org.springframework.stereotype.Component;
 

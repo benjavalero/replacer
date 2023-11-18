@@ -30,7 +30,12 @@ class CoordinatesFinder implements ReplacementFinder {
     private static final Set<Character> PRIME_CHARS = Set.of(PRIME, APOSTROPHE, SINGLE_QUOTE, ACUTE_ACCENT);
     private static final char DOUBLE_PRIME = '\u2033'; // ″
     private static final char DOUBLE_QUOTE = '\"';
-    private static final Set<Character> DOUBLE_PRIME_CHARS = Set.of(DOUBLE_PRIME, DOUBLE_QUOTE);
+    private static final Set<Character> DOUBLE_PRIME_CHARS = Set.of(
+        DOUBLE_PRIME,
+        DOUBLE_QUOTE,
+        START_QUOTE_TYPOGRAPHIC,
+        END_QUOTE_TYPOGRAPHIC
+    );
     private static final Set<String> CARDINAL_DIRECTIONS = Set.of(
         "N",
         "S",
