@@ -31,7 +31,7 @@ public class StandardType extends ReplacementType {
 
     public static final StandardType DATE = ofStyle("Fechas");
     public static final StandardType ACUTE_O = ofStyle("ó con tilde");
-    public static final StandardType CENTURY = ofStyleForBots("Siglo sin versalitas");
+    public static final StandardType CENTURY = ofStyle("Siglo sin versalitas");
     public static final StandardType COORDINATES = ofStyleForBots("Coordenadas");
     public static final StandardType DEGREES = ofStyle("Grados");
     public static final StandardType ORDINAL = ofStyleForBots("Ordinales");
