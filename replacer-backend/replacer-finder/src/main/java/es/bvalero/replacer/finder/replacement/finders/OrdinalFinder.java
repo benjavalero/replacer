@@ -31,6 +31,7 @@ class OrdinalFinder implements ReplacementFinder {
     private static final String MASCULINE_LETTER = "o";
     private static final String FEMININE_LETTER = "a";
     private static final String PLURAL_LETTER = "s";
+    private static final Set<Character> SUFFIX_ALLOWED_CHARS = Set.of(DEGREE);
 
     // Dependency injection
     private final FinderProperties finderProperties;
@@ -47,6 +48,7 @@ class OrdinalFinder implements ReplacementFinder {
     public void init() {
         // Load masculine and feminine suffixes
         MASCULINE_SUFFIXES.add(Character.toString(MASCULINE_ORDINAL));
+        MASCULINE_SUFFIXES.add(Character.toString(DEGREE));
         MASCULINE_SUFFIXES.addAll(finderProperties.getOrdinalSuffixes().getMasculine());
         FEMININE_SUFFIXES.add(Character.toString(FEMININE_ORDINAL));
         FEMININE_SUFFIXES.addAll(finderProperties.getOrdinalSuffixes().getFeminine());
@@ -140,39 +142,44 @@ class OrdinalFinder implements ReplacementFinder {
             return null;
         }
 
-        MatchResult matchSuffix;
+        final MatchResult matchSuffix;
         if (isOrdinalLetter(text.charAt(start))) {
             matchSuffix = FinderMatchResult.of(start, text.substring(start, start + 1));
         } else {
-            matchSuffix = FinderUtils.findWordAfter(text, start);
+            matchSuffix = FinderUtils.findWordAfter(text, start, SUFFIX_ALLOWED_CHARS, true);
         }
 
-        if (matchSuffix == null || matchSuffix.start() != start || !SUFFIXES.contains(matchSuffix.group())) {
+        if (matchSuffix == null || !SUFFIXES.contains(matchSuffix.group())) {
+            return null;
+        }
+
+        // Suffix must be right after the number
+        // We only allow an optional dot before
+        if (matchSuffix.start() > start + 1 || (matchSuffix.start() == start + 1 && text.charAt(start) != DOT)) {
             return null;
         }
 
         // Optional dot after the suffix
-        int endOrdinal = matchSuffix.end();
-        if (endOrdinal < text.length() && text.charAt(endOrdinal) == DOT) {
-            return FinderMatchResult.of(matchSuffix.start(), matchSuffix.group() + DOT);
-        } else {
-            return matchSuffix;
+        int endSuffix = matchSuffix.end();
+        if (endSuffix < text.length() && text.charAt(endSuffix) == DOT) {
+            endSuffix += 1;
         }
+        return FinderMatchResult.of(text, start, endSuffix);
     }
 
     private boolean isOrdinalLetter(char ch) {
+        // The degree symbol is not an ordinal letter but in this case it applies
         return ch == MASCULINE_ORDINAL || ch == FEMININE_ORDINAL;
     }
 
     @Override
     public boolean validate(MatchResult match, FinderPage page) {
-        // Check the match is complete but when it ends with an ordinal letter
-        // No need to validate the number here as it has already been validated when finding
-        final String text = match.group();
-        return (
-            isOrdinalLetter(text.charAt(text.length() - 1)) ||
-            isWordCompleteInText(match.start(), text, page.getContent())
-        );
+        final String suffix = ((FinderMatchResult) match).group(2);
+        return switch (suffix.length()) {
+            case 2 -> suffix.charAt(0) != DOT || !isOrdinalLetter(suffix.charAt(1));
+            case 1 -> suffix.charAt(0) != DEGREE;
+            default -> true;
+        };
     }
 
     @Override
@@ -194,11 +201,8 @@ class OrdinalFinder implements ReplacementFinder {
         // Split the number and the suffix
         final int ordinalNumber = Integer.parseInt(match.group(1));
 
-        // We store the pure suffix, removing the final dot or the plural form.
-        String suffixStr = match.group(2);
-        if (suffixStr.endsWith(String.valueOf(DOT))) {
-            suffixStr = StringUtils.chop(suffixStr);
-        }
+        // We store the pure suffix, removing the initial/final dot or the plural form.
+        String suffixStr = StringUtils.strip(match.group(2), String.valueOf(DOT));
         final boolean isOrdinalPlural = suffixStr.endsWith(PLURAL_LETTER);
         if (isOrdinalPlural) {
             suffixStr = StringUtils.chop(suffixStr);

@@ -25,19 +25,21 @@ class OrdinalFinderTest {
     @ParameterizedTest
     @CsvSource(
         {
-            "2º, 2.º",
-            "13º, 13.º",
-            "4ª, 4.ª",
-            "1er, 1.º",
-            "3er, 3.º",
-            "2do, 2.º",
-            "1ra, 1.ª",
-            "3ra, 3.ª",
-            "6tos, {{ord|6.|os}}",
-            "1er., 1.º",
-            "2nda., 2.ª",
-            "1o., 1.º",
-            "123º, 123.º",
+            "2º, 2.º", // Masculine ordinal
+            "13º, 13.º", // Masculine ordinal 2 digits
+            "4ª, 4.ª", // Feminine ordinal
+            "1er, 1.º", // Masculine suffix
+            "3er, 3.º", // Masculine suffix
+            "2do, 2.º", // Masculine suffix
+            "2.do, 2.º", // Masculine suffix with dot before
+            "4.°, 4.º", // Degree with dot before
+            "1ra, 1.ª", // Feminine suffix
+            "3ra, 3.ª", // Feminine suffix
+            "6tos, {{ord|6.|os}}", // Masculine plural suffix
+            "1er., 1.º", // Masculine suffix with dot after
+            "2nda., 2.ª", // Feminine suffix with dot after
+            "1o., 1.º", // Masculine suffix with dot after
+            "123º, 123.º", // Masculine ordinal 3 digits
         }
     )
     void testOrdinal(String ordinal, String expected) {
@@ -59,8 +61,15 @@ class OrdinalFinderTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = { "1234º", "0º" })
-    void testOrdinalNumberNotValid(String ordinal) {
+    @ValueSource(
+        strings = {
+            "1234º", // Masculine ordinal 4 digits
+            "0º", // Masculine ordinal invalid number
+            "20°", // Degree
+            "2don", // Invalid suffix
+        }
+    )
+    void testFalseOrdinal(String ordinal) {
         List<Replacement> replacements = ordinalFinder.findList(ordinal);
 
         assertTrue(replacements.isEmpty());
