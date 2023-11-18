@@ -2,6 +2,8 @@ package es.bvalero.replacer.page.count;
 
 import static java.util.stream.Collectors.*;
 
+import es.bvalero.replacer.common.domain.ResultCount;
+import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.user.AuthenticatedUser;
 import es.bvalero.replacer.user.User;
 import io.swagger.v3.oas.annotations.Operation;
@@ -31,12 +33,7 @@ public class PageCountController {
         Collection<KindCount> counts = pageCountService
             .countNotReviewedGroupedByType(user)
             .stream()
-            .collect(
-                groupingBy(
-                    rc -> rc.getKey().getKind(),
-                    mapping(rc -> SubtypeCount.of(rc.getKey().getSubtype(), rc.getCount()), toList())
-                )
-            )
+            .collect(groupingBy(rc -> rc.getKey().getKind(), mapping(this::mapResultCount, toList())))
             .entrySet()
             .stream()
             .map(entry -> KindCount.of(entry.getKey().getCode(), entry.getValue()))
@@ -44,5 +41,12 @@ public class PageCountController {
             .collect(toList());
         LOGGER.info("GET Count Pages Not Reviewed By Type: {}", counts);
         return counts;
+    }
+
+    private SubtypeCount mapResultCount(ResultCount<StandardType> rc) {
+        StandardType type = rc.getKey();
+        Boolean forBots = type.isForBots() ? true : null;
+        Boolean forAdmin = type.isForAdmin() ? true : null;
+        return SubtypeCount.of(rc.getKey().getSubtype(), rc.getCount(), forBots, forAdmin);
     }
 }

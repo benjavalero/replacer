@@ -256,9 +256,7 @@ abstract class ReviewFinder {
         Collection<Replacement> replacements,
         ReviewOptions options
     ) {
-        List<Replacement> toReview = new LinkedList<>(replacements);
-        toReview.removeIf(r -> isTypeForbidden(r.getType(), options.getUser()));
-        return toReview;
+        return replacements.stream().filter(r -> !isTypeForbidden(r.getType(), options.getUser())).toList();
     }
 
     private boolean isTypeForbidden(ReplacementType type, User user) {

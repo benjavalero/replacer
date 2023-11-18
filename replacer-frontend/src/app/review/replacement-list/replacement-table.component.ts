@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCheckDouble, faList } from '@fortawesome/free-solid-svg-icons';
-import { NgbModal, NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbPaginationModule, NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { SubtypeCount } from '../../api/models/subtype-count';
@@ -20,7 +20,15 @@ import { SortDirection, rotate } from './sort-direction.model';
 @Component({
   standalone: true,
   selector: 'app-replacement-table',
-  imports: [CommonModule, FormsModule, RouterModule, FontAwesomeModule, NgbPaginationModule, ReviewSubtypeComponent],
+  imports: [
+    CommonModule,
+    FormsModule,
+    RouterModule,
+    FontAwesomeModule,
+    NgbPaginationModule,
+    NgbTooltip,
+    ReviewSubtypeComponent
+  ],
   templateUrl: './replacement-table.component.html',
   styleUrls: ['./replacement-table.component.css']
 })
@@ -155,6 +163,10 @@ export class ReplacementTableComponent implements OnInit, OnChanges {
 
   get filtrable(): boolean {
     return this.subtypeCounts.length > this.PAGE_SIZE;
+  }
+
+  isEditable(count: SubtypeCount, user: User): boolean {
+    return count.c > 0 && (!count.forBots || user.bot);
   }
 
   reviewPages(subtype: string): void {

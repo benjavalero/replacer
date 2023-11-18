@@ -31,10 +31,10 @@ public class StandardType extends ReplacementType {
 
     public static final StandardType DATE = ofStyle("Fechas");
     public static final StandardType ACUTE_O = ofStyle("ó con tilde");
-    public static final StandardType CENTURY = ofStyle("Siglo sin versalitas");
-    public static final StandardType COORDINATES = ofStyle("Coordenadas");
+    public static final StandardType CENTURY = ofStyleForBots("Siglo sin versalitas");
+    public static final StandardType COORDINATES = ofStyleForBots("Coordenadas");
     public static final StandardType DEGREES = ofStyle("Grados");
-    public static final StandardType ORDINAL = ofStyle("Ordinales");
+    public static final StandardType ORDINAL = ofStyleForBots("Ordinales");
 
     private static final Set<String> STYLE_SUBTYPES = Set
         .of(DATE, ACUTE_O, CENTURY, COORDINATES, DEGREES, ORDINAL)
@@ -53,16 +53,15 @@ public class StandardType extends ReplacementType {
             throw new IllegalArgumentException("Invalid subtype for a style type: " + subtype);
         }
 
-        return getTypeFromCache(kind, subtype);
+        return getTypeFromCache(kind, subtype, false);
     }
 
     private static StandardType ofStyle(String subtype) {
-        return getTypeFromCache(ReplacementKind.STYLE, subtype);
+        return getTypeFromCache(ReplacementKind.STYLE, subtype, false);
     }
 
-    @TestOnly
-    public static StandardType ofForBots(ReplacementKind kind, String subtype) {
-        return new StandardType(kind, subtype, true, false);
+    private static StandardType ofStyleForBots(String subtype) {
+        return getTypeFromCache(ReplacementKind.STYLE, subtype, true);
     }
 
     @TestOnly
@@ -70,9 +69,9 @@ public class StandardType extends ReplacementType {
         return new StandardType(kind, subtype, false, true);
     }
 
-    private static StandardType getTypeFromCache(ReplacementKind kind, String subtype) {
+    private static StandardType getTypeFromCache(ReplacementKind kind, String subtype, boolean forBots) {
         return Objects.requireNonNull(
-            cachedPageIds.get(getCacheKey(kind, subtype), k -> new StandardType(kind, subtype, false, false))
+            cachedPageIds.get(getCacheKey(kind, subtype), k -> new StandardType(kind, subtype, forBots, false))
         );
     }
 
@@ -85,7 +84,7 @@ public class StandardType extends ReplacementType {
     }
 
     public boolean isTypeForbidden(User user) {
-        return (isForBots() && !user.isBot()) || (isForAdmin() && !user.isAdmin());
+        return isForAdmin() && !user.isAdmin();
     }
 
     @Override

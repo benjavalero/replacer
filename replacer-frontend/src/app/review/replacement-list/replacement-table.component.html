@@ -24,8 +24,13 @@
         <tr *ngFor="let item of filteredItems">
           <td class="w-75">
             <!-- No link in case of zero count after reviewing a subtype -->
-            <a *ngIf="item.c" routerLink="/review/{{ kind }}/{{ item.s }}" class="no-underline">{{ item.s }}</a>
-            <span *ngIf="!item.c">{{ item.s }}</span>
+            <!-- No link in case of replacement type for bots -->
+            <a *ngIf="isEditable(item, user)" routerLink="/review/{{ kind }}/{{ item.s }}" class="no-underline">{{ item.s }}</a>
+            <span *ngIf="!isEditable(item, user)">{{ item.s }}</span>
+            &nbsp;
+            <span *ngIf="item.forBots" class="badge text-bg-light"
+               ngbTooltip="Este tipo de reemplazo solo es editable directamente por usuarios con permisos de bot,
+                  aunque es editable por usuarios normales junto con otras ediciones.">bot</span>
           </td>
           <td class="w-25">{{ item.c }}</td>
           <td class="d-none d-sm-table-cell text-nowrap" *ngIf="user.bot">

@@ -27,22 +27,22 @@ class PageCountServiceTest {
     }
 
     @Test
-    void testCountNotReviewedGroupedByTypeForBots() {
+    void testCountNotReviewedGroupedByTypeForAdmin() {
         WikipediaLanguage lang = WikipediaLanguage.getDefault();
 
         StandardType type = StandardType.DATE;
         ResultCount<StandardType> count = ResultCount.of(type, 100);
-        StandardType typeForBots = StandardType.ofForBots(ReplacementKind.SIMPLE, "x");
-        ResultCount<StandardType> count2 = ResultCount.of(typeForBots, 200);
+        StandardType typeForAdmin = StandardType.ofForAdmin(ReplacementKind.SIMPLE, "x");
+        ResultCount<StandardType> count2 = ResultCount.of(typeForAdmin, 200);
         Collection<ResultCount<StandardType>> counts = List.of(count, count2);
 
         User user = User.buildTestUser();
-        User bot = User.buildTestBotUser();
+        User admin = User.buildTestAdminUser();
 
         when(pageCountRepository.countNotReviewedGroupedByType(lang)).thenReturn(counts);
 
         assertEquals(List.of(count), pageCountService.countNotReviewedGroupedByType(user));
-        assertEquals(counts, pageCountService.countNotReviewedGroupedByType(bot));
+        assertEquals(counts, pageCountService.countNotReviewedGroupedByType(admin));
 
         verify(pageCountRepository, times(2)).countNotReviewedGroupedByType(lang);
     }

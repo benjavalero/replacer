@@ -6,6 +6,7 @@
 - Improve check to find similar replacements close enough
 - Add new ignorable section `Obras`
 - Ordinal finder: allow dot before the suffix and degree as a suffix
+- Disable direct editing of some style replacement types except for bot users
 - Fix: count as read an indexable page which has not been indexed because of an expected exception
 - Fix: template arguments (no equals symbol) containing references are mistaken with parameters and captured as immutables
 - Fix: capitalize the suggestion also when it is enclosed by quotes e.g. a cursive suggestion alternative

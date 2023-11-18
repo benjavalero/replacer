@@ -10,6 +10,8 @@ export interface SubtypeCount {
    * Count of pages to review containing this subtype
    */
   c: number;
+  forAdmin?: boolean;
+  forBots?: boolean;
 
   /**
    * Replacement subtype
