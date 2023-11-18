@@ -8,6 +8,7 @@
 - Fix: count as read an indexable page which has not been indexed because of an expected exception
 - Fix: template arguments (no equals symbol) containing references are mistaken with parameters and captured as immutables
 - Fix: capitalize the suggestion also when it is enclosed by quotes e.g. a cursive suggestion alternative
+- Fix: ordinal letters not captured when followed by standard letter
 
 ## 2.26.0 (7 Oct 2023)
 - Upgrade backend to Java 17

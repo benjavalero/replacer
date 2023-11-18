@@ -31,7 +31,6 @@ class OrdinalFinder implements ReplacementFinder {
     private static final String MASCULINE_LETTER = "o";
     private static final String FEMININE_LETTER = "a";
     private static final String PLURAL_LETTER = "s";
-    private static final Set<Character> SUFFIX_ALLOWED_CHARS = Set.of(MASCULINE_ORDINAL, FEMININE_ORDINAL);
 
     // Dependency injection
     private final FinderProperties finderProperties;
@@ -83,38 +82,22 @@ class OrdinalFinder implements ReplacementFinder {
     @Nullable
     private MatchResult findOrdinal(FinderPage page, int start) {
         final String text = page.getContent();
-        // TODO: Reduce cyclomatic complexity
         while (start >= 0 && start < text.length()) {
-            final MatchResult matchNumber = FinderUtils.findNumber(text, start, false, false);
+            final MatchResult matchNumber = findOrdinalNumber(text, start);
             if (matchNumber == null) {
                 return null;
             }
             final int endNumber = matchNumber.end();
 
-            // Validate here the number to skip unnecessary steps
-            if (!validateOrdinalNumber(matchNumber.group())) {
-                start = endNumber;
-                continue;
-            }
-
             // Find the suffix, right after the number.
-            MatchResult matchSuffix = FinderUtils.findWordAfter(text, endNumber, SUFFIX_ALLOWED_CHARS, true);
+            final MatchResult matchSuffix = findOrdinalSuffix(text, endNumber);
             if (matchSuffix == null) {
                 start = endNumber;
                 continue;
-            } else if (matchSuffix.start() != endNumber || !SUFFIXES.contains(matchSuffix.group())) {
-                start = matchSuffix.end();
-                continue;
-            }
-
-            // Optional dot after the suffix
-            int endOrdinal = matchSuffix.end();
-            if (endOrdinal < text.length() && text.charAt(endOrdinal) == DOT) {
-                matchSuffix = FinderMatchResult.of(matchSuffix.start(), matchSuffix.group() + DOT);
-                endOrdinal += 1;
             }
 
             final int startOrdinal = matchNumber.start();
+            final int endOrdinal = matchSuffix.end();
             final FinderMatchResult matchResult = FinderMatchResult.of(text, startOrdinal, endOrdinal);
             matchResult.addGroup(matchNumber);
             matchResult.addGroup(matchSuffix);
@@ -123,7 +106,26 @@ class OrdinalFinder implements ReplacementFinder {
         return null;
     }
 
-    private boolean validateOrdinalNumber(String number) {
+    @Nullable
+    private MatchResult findOrdinalNumber(String text, int start) {
+        while (start >= 0 && start < text.length()) {
+            final MatchResult matchNumber = FinderUtils.findNumber(text, start, false, false);
+            if (matchNumber == null) {
+                return null;
+            }
+
+            // Validate here the number to skip unnecessary steps
+            if (!isOrdinalNumber(matchNumber.group())) {
+                start = matchNumber.end();
+                continue;
+            }
+
+            return matchNumber;
+        }
+        return null;
+    }
+
+    private boolean isOrdinalNumber(String number) {
         try {
             return number.length() <= 3 && Integer.parseInt(number) > 0;
         } catch (NumberFormatException nfe) {
@@ -131,10 +133,46 @@ class OrdinalFinder implements ReplacementFinder {
         }
     }
 
+    @Nullable
+    private MatchResult findOrdinalSuffix(String text, int start) {
+        // Find the suffix, right after the number.
+        if (start >= text.length()) {
+            return null;
+        }
+
+        MatchResult matchSuffix;
+        if (isOrdinalLetter(text.charAt(start))) {
+            matchSuffix = FinderMatchResult.of(start, text.substring(start, start + 1));
+        } else {
+            matchSuffix = FinderUtils.findWordAfter(text, start);
+        }
+
+        if (matchSuffix == null || matchSuffix.start() != start || !SUFFIXES.contains(matchSuffix.group())) {
+            return null;
+        }
+
+        // Optional dot after the suffix
+        int endOrdinal = matchSuffix.end();
+        if (endOrdinal < text.length() && text.charAt(endOrdinal) == DOT) {
+            return FinderMatchResult.of(matchSuffix.start(), matchSuffix.group() + DOT);
+        } else {
+            return matchSuffix;
+        }
+    }
+
+    private boolean isOrdinalLetter(char ch) {
+        return ch == MASCULINE_ORDINAL || ch == FEMININE_ORDINAL;
+    }
+
     @Override
     public boolean validate(MatchResult match, FinderPage page) {
+        // Check the match is complete but when it ends with an ordinal letter
         // No need to validate the number here as it has already been validated when finding
-        return isWordCompleteInText(match.start(), match.group(), page.getContent());
+        final String text = match.group();
+        return (
+            isOrdinalLetter(text.charAt(text.length() - 1)) ||
+            isWordCompleteInText(match.start(), text, page.getContent())
+        );
     }
 
     @Override

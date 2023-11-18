@@ -74,12 +74,16 @@ class OrdinalFinderTest {
         assertTrue(replacements.isEmpty());
     }
 
-    @ParameterizedTest
-    @ValueSource(strings = { "2ºC", "25.ºF" })
-    void testDegreeReplacement(String ordinal) {
-        List<Replacement> replacements = ordinalFinder.findList(ordinal);
+    @Test
+    void testOrdinalWithLetterAfter() {
+        String text = "En 2ªB.";
 
-        assertTrue(replacements.isEmpty());
+        List<Replacement> replacements = ordinalFinder.findList(text);
+
+        assertEquals(1, replacements.size());
+        Replacement rep = replacements.get(0);
+        assertEquals("2ª", rep.getText());
+        assertEquals("2.ª", rep.getSuggestions().get(1).getText());
     }
 
     @Test

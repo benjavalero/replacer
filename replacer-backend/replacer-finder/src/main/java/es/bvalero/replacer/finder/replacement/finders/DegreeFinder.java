@@ -185,10 +185,19 @@ class DegreeFinder implements ReplacementFinder {
             text = match.group().substring(offset);
         }
 
-        final List<Suggestion> suggestions = List.of(
-            Suggestion.of(text, suggestion),
-            Suggestion.ofNoComment(fixedDegree)
-        );
+        final List<Suggestion> suggestions = new java.util.ArrayList<>();
+        suggestions.add(Suggestion.of(text, suggestion));
+        suggestions.add(Suggestion.of(fixedDegree, "grados"));
+
+        // Excepcion: sometimes 1ºC might be an ordinal, e.g. the group of a sports competition.
+        if (
+            isNumeric(word) &&
+            StringUtils.isEmpty(space1) &&
+            symbol.charAt(0) == MASCULINE_ORDINAL &&
+            DEGREE_LETTERS.contains(symbol.charAt(1))
+        ) {
+            suggestions.add(Suggestion.of(word + DOT + symbol, "ordinal"));
+        }
 
         return Replacement
             .builder()
