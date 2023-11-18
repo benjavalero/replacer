@@ -265,6 +265,7 @@ replacer.finder:
     - template: "#tag"
 
     # Parameter values to be ignored no matter the template they are in
+    - param: capital_coor   # Coordinates
     - param: cita
     - param: escudo
     - param: escudo2
