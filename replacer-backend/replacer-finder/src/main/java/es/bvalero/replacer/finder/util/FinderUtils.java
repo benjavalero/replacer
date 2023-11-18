@@ -28,7 +28,7 @@ public class FinderUtils {
     public static final char NEW_LINE = '\n';
     public static final char PIPE = '|';
     public static final char DOT = '.';
-    private static final char DECIMAL_COMMA = ',';
+    public static final char DECIMAL_COMMA = ',';
     private static final char NEGATIVE_SYMBOL = '-';
 
     // Character combinations

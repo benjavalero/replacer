@@ -279,8 +279,8 @@ class CoordinatesFinder implements ReplacementFinder {
 
     @Override
     public Replacement convert(MatchResult match, FinderPage page) {
-        final String matchDegrees = match.group(1);
-        final String matchMinutes = match.group(2);
+        final int matchDegrees = Integer.parseInt(match.group(1));
+        final int matchMinutes = Integer.parseInt(match.group(2));
         String matchSeconds = null;
         String matchDirection = null;
         if (match.groupCount() == 4) {
@@ -302,7 +302,7 @@ class CoordinatesFinder implements ReplacementFinder {
             DEGREE,
             matchMinutes,
             PRIME,
-            (matchSeconds == null ? "" : matchSeconds + DOUBLE_PRIME),
+            (matchSeconds == null ? "" : fixSeconds(matchSeconds) + DOUBLE_PRIME),
             (matchDirection == null ? "" : NON_BREAKING_SPACE + fixDirection(matchDirection))
         );
         final Suggestion suggestionNoSpaces = Suggestion.of(
@@ -330,6 +330,20 @@ class CoordinatesFinder implements ReplacementFinder {
             .text(match.group())
             .suggestions(List.of(suggestionNoSpaces, suggestionWithSpaces))
             .build();
+    }
+
+    private String fixSeconds(String str) {
+        // First try to parse them as an integer and then as a double trying to keep the decimal comma if existing
+        try {
+            return Integer.toString(Integer.parseInt(str));
+        } catch (NumberFormatException nfe) {
+            final String s = Float.toString(Float.parseFloat(FinderUtils.normalizeDecimalNumber(str)));
+            if (str.indexOf(DECIMAL_COMMA) >= 0) {
+                return s.replace(DOT, DECIMAL_COMMA);
+            } else {
+                return s;
+            }
+        }
     }
 
     private Character fixDirection(String str) {
