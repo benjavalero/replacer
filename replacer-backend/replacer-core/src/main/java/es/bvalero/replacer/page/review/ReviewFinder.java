@@ -178,11 +178,17 @@ abstract class ReviewFinder {
 
     /** This step can be called independently in case we already know the ID of the page to review */
     Optional<Review> findPageReview(PageKey pageKey, ReviewOptions options) {
-        // STEP 2.1: Load the page from Wikipedia
-        Optional<WikipediaPage> wikipediaPage = findPageFromWikipedia(pageKey);
+        try {
+            // STEP 2.1: Load the page from Wikipedia
+            Optional<WikipediaPage> wikipediaPage = findPageFromWikipedia(pageKey);
 
-        // STEP 2.2: Build the review for the page, or return an empty review in case the page doesn't exist.
-        return wikipediaPage.flatMap(page -> buildPageReview(page, options));
+            // STEP 2.2: Build the review for the page, or return an empty review in case the page doesn't exist.
+            return wikipediaPage.flatMap(page -> buildPageReview(page, options));
+        } catch (Exception e) {
+            LOGGER.error("Error finding page review: {}", pageKey);
+            pageService.removePagesByKey(Set.of(pageKey));
+            return Optional.empty();
+        }
     }
 
     private Optional<WikipediaPage> findPageFromWikipedia(PageKey pageKey) {
