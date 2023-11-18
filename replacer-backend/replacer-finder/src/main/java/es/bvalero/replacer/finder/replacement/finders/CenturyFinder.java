@@ -227,20 +227,19 @@ class CenturyFinder implements ReplacementFinder {
         final List<Suggestion> suggestions = new ArrayList<>(4);
         // Not linked centuries are recommended
         // Offer always the lowercase alternative
+        final String linkedComment = "enlazado —solo para temas relacionados con el calendario—";
         final boolean uppercase = FinderUtils.startsWithUpperCase(centuryWord);
         if (uppercase) {
             suggestions.add(Suggestion.of(templateUpperNoLink, "siglo en versalitas; con mayúscula; sin enlazar"));
             if (linked) {
                 suggestions.add(
-                    Suggestion.of(templateUpperLink, "siglo en versalitas; con mayúscula; enlazado —no recomendado—")
+                    Suggestion.of(templateUpperLink, "siglo en versalitas; con mayúscula; " + linkedComment)
                 );
             }
         }
         suggestions.add(Suggestion.of(templateLowerNoLink, "siglo en versalitas; con minúscula; sin enlazar"));
         if (linked) {
-            suggestions.add(
-                Suggestion.of(templateLowerLink, "siglo en versalitas; con minúscula; enlazado —no recomendado—")
-            );
+            suggestions.add(Suggestion.of(templateLowerLink, "siglo en versalitas; con minúscula; " + linkedComment));
         }
 
         return Replacement
