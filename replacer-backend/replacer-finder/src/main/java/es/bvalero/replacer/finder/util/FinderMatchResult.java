@@ -79,7 +79,7 @@ public class FinderMatchResult implements MatchResult {
 
     public boolean containsNested(int position) {
         for (MatchResult m : this.groups) {
-            if (m != null && position >= m.start() && position <= m.end()) {
+            if (m != null && position >= m.start() && position < m.end()) {
                 return true;
             }
         }

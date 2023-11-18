@@ -205,7 +205,8 @@ class TemplateFinder implements ImmutableFinder {
             final int startParameterPipe = templateContent.indexOf(PIPE, index); // Including the pipe
             if (template.containsNested(startTemplateContent + startParameterPipe)) {
                 // The template has no pipe and the pipe belongs to a nested template
-                throw new IllegalStateException();
+                index = startParameterPipe + 1;
+                continue;
             }
             final int startParameter = startParameterPipe + 1;
             int endParameter = templateContent.indexOf(PIPE, startParameter);

@@ -310,4 +310,15 @@ class TemplateFinderTest {
         Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
         assertEquals(expected, actual);
     }
+
+    @Test
+    void testNestedTemplateBeforeParameter() {
+        String template = "{{#ifeq:{{NAMESPACE}}|Anexo}}";
+
+        List<Immutable> matches = templateFinder.findList(template);
+
+        Set<String> expected = Set.of("#ifeq", "NAMESPACE");
+        Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
+        assertEquals(expected, actual);
+    }
 }
