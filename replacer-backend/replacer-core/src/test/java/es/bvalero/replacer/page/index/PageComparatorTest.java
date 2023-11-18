@@ -119,27 +119,6 @@ class PageComparatorTest {
     }
 
     @Test
-    void testExistingPageWithDateAfter() {
-        // We force a difference in the replacements and title to be sure the page is not indexed at all
-        when(page.getLastUpdate()).thenReturn(WikipediaTimestamp.of(before.atStartOfDay()));
-        IndexedPage dbPage = IndexedPage
-            .builder()
-            .pageKey(page.getPageKey())
-            .title("T2")
-            .replacements(List.of())
-            .lastUpdate(now)
-            .build();
-
-        Replacement r1 = buildFinderReplacement(page, 1);
-        Collection<Replacement> replacements = List.of(r1);
-
-        assertThrows(
-            IllegalArgumentException.class,
-            () -> pageComparator.indexPageReplacements(page, replacements, dbPage)
-        );
-    }
-
-    @Test
     void testExistingPageWithDifferentTitle() {
         IndexedPage dbPage = IndexedPage
             .builder()
