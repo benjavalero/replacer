@@ -1,6 +1,6 @@
 # Versions
 
-## 2.27.0 (??)
+## 2.27.0 (19 Nov 2023)
 - Feature: revert to the old coordinates finder just to fix the degree symbols instead of using the coordinates template
 - Improve the performance of several finders and especially of the dump parser
 - Improve check to find similar replacements close enough
