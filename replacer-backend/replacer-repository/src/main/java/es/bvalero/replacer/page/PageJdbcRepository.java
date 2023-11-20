@@ -33,7 +33,7 @@ class PageJdbcRepository implements PageRepository {
     }
 
     @Override
-    public Optional<IndexedPage> findPageByKey(PageKey pageKey) {
+    public Optional<IndexedPage> findByKey(PageKey pageKey) {
         String sql =
             "SELECT p.lang, p.page_id, p.title, p.last_update, " +
             "r.id, r.kind, r.subtype, r.start, r.context, r.reviewer " +
@@ -47,7 +47,7 @@ class PageJdbcRepository implements PageRepository {
     }
 
     @Override
-    public Collection<IndexedPage> findPagesByIdInterval(WikipediaLanguage lang, int minPageId, int maxPageId) {
+    public Collection<IndexedPage> findByIdRange(WikipediaLanguage lang, int minPageId, int maxPageId) {
         String sql =
             "SELECT p.lang, p.page_id, p.title, p.last_update, " +
             "r.id, r.kind, r.subtype, r.start, r.context, r.reviewer " +
@@ -100,12 +100,16 @@ class PageJdbcRepository implements PageRepository {
     }
 
     @Override
-    public Collection<PageKey> findNotReviewed(WikipediaLanguage lang, @Nullable StandardType type, int numResults) {
+    public Collection<PageKey> findNotReviewedByType(
+        WikipediaLanguage lang,
+        @Nullable StandardType type,
+        int numResults
+    ) {
         // For the sake of optimization, we use different queries to find by type or by no-type.
         if (type == null) {
             return findNotReviewedByNoType(lang, numResults);
         } else {
-            return findNotReviewedByType(lang, type, numResults);
+            return findNotReviewedByStandardType(lang, type, numResults);
         }
     }
 
@@ -142,7 +146,11 @@ class PageJdbcRepository implements PageRepository {
         return Objects.requireNonNullElse(result, 0);
     }
 
-    private Collection<PageKey> findNotReviewedByType(WikipediaLanguage lang, StandardType type, int numResults) {
+    private Collection<PageKey> findNotReviewedByStandardType(
+        WikipediaLanguage lang,
+        StandardType type,
+        int numResults
+    ) {
         // When filtering by type/subtype ORDER BY RAND() still takes a while, but it is admissible.
         // Not worth to DISTINCT. Instead, we return the results as a set to avoid duplicates.
         String sql =
@@ -163,7 +171,7 @@ class PageJdbcRepository implements PageRepository {
     }
 
     @Override
-    public Collection<String> findPageTitlesNotReviewedByType(WikipediaLanguage lang, StandardType type) {
+    public Collection<String> findTitlesNotReviewedByType(WikipediaLanguage lang, StandardType type) {
         String sql =
             "SELECT p.title FROM page p " +
             "WHERE p.lang = :lang AND EXISTS " +

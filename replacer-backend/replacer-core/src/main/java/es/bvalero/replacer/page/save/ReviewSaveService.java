@@ -7,7 +7,7 @@ import es.bvalero.replacer.common.domain.ReplacementType;
 import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.page.IndexedPage;
 import es.bvalero.replacer.page.PageKey;
-import es.bvalero.replacer.page.PageService;
+import es.bvalero.replacer.page.PageRepository;
 import es.bvalero.replacer.replacement.CustomReplacementService;
 import es.bvalero.replacer.replacement.IndexedReplacement;
 import es.bvalero.replacer.replacement.ReplacementSaveRepository;
@@ -39,7 +39,7 @@ class ReviewSaveService {
     private static final String COSMETIC_CHANGES = "mejoras cosméticas";
 
     // Dependency injection
-    private final PageService pageService;
+    private final PageRepository pageRepository;
     private final ReplacementSaveRepository replacementSaveRepository;
     private final CustomReplacementService customReplacementService;
     private final WikipediaPageRepository wikipediaPageRepository;
@@ -54,12 +54,12 @@ class ReviewSaveService {
         .build();
 
     ReviewSaveService(
-        PageService pageService,
+        PageRepository pageRepository,
         ReplacementSaveRepository replacementSaveRepository,
         CustomReplacementService customReplacementService,
         WikipediaPageRepository wikipediaPageRepository
     ) {
-        this.pageService = pageService;
+        this.pageRepository = pageRepository;
         this.replacementSaveRepository = replacementSaveRepository;
         this.customReplacementService = customReplacementService;
         this.wikipediaPageRepository = wikipediaPageRepository;
@@ -141,7 +141,7 @@ class ReviewSaveService {
                 .findAny()
                 .orElseThrow(IllegalArgumentException::new)
                 .getPageKey();
-            pageService.updatePageLastUpdate(pageKey, LocalDate.now());
+            pageRepository.updateLastUpdate(pageKey, LocalDate.now());
         }
 
         // Mark the custom replacements as reviewed
@@ -161,14 +161,14 @@ class ReviewSaveService {
 
     private void markCustomAsReviewed(ReviewedReplacement reviewed) {
         // Add the page to the database in case it doesn't exist yet
-        if (pageService.findPageByKey(reviewed.getPageKey()).isEmpty()) {
+        if (pageRepository.findByKey(reviewed.getPageKey()).isEmpty()) {
             IndexedPage indexedPage = IndexedPage
                 .builder()
                 .pageKey(reviewed.getPageKey())
                 .title("") // It will be set in a next indexation
                 .lastUpdate(LocalDate.now())
                 .build();
-            pageService.addPages(List.of(indexedPage));
+            pageRepository.add(List.of(indexedPage));
         }
         customReplacementService.addCustomReplacement(reviewed.toCustomReplacement());
     }

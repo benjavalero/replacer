@@ -7,12 +7,12 @@ import java.util.Collection;
 import java.util.Optional;
 import org.springframework.lang.Nullable;
 
-interface PageRepository {
-    /** Find a page including all the replacements */
-    Optional<IndexedPage> findPageByKey(PageKey pageKey);
+public interface PageRepository {
+    /** Find a page by key including all the replacements */
+    Optional<IndexedPage> findByKey(PageKey pageKey);
 
     /** Find pages, including all the replacements, by a range of page IDs. */
-    Collection<IndexedPage> findPagesByIdInterval(WikipediaLanguage lang, int minPageId, int maxPageId);
+    Collection<IndexedPage> findByIdRange(WikipediaLanguage lang, int minPageId, int maxPageId);
 
     /** Add a collection of pages without adding the replacements */
     void add(Collection<IndexedPage> pages);
@@ -27,8 +27,8 @@ interface PageRepository {
     void removeByKey(Collection<PageKey> pageKeys);
 
     /** Find a random batch of pages to review (optionally for a given type) and return the keys */
-    Collection<PageKey> findNotReviewed(WikipediaLanguage lang, @Nullable StandardType type, int numResults);
+    Collection<PageKey> findNotReviewedByType(WikipediaLanguage lang, @Nullable StandardType type, int numResults);
 
     /** Find the pages to review by the given type and return the titles */
-    Collection<String> findPageTitlesNotReviewedByType(WikipediaLanguage lang, StandardType type);
+    Collection<String> findTitlesNotReviewedByType(WikipediaLanguage lang, StandardType type);
 }

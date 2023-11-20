@@ -5,7 +5,7 @@ import static org.mockito.Mockito.*;
 
 import es.bvalero.replacer.common.domain.*;
 import es.bvalero.replacer.page.PageKey;
-import es.bvalero.replacer.page.PageService;
+import es.bvalero.replacer.page.PageRepository;
 import es.bvalero.replacer.replacement.CustomReplacementService;
 import es.bvalero.replacer.replacement.IndexedCustomReplacement;
 import es.bvalero.replacer.replacement.ReplacementSaveRepository;
@@ -24,7 +24,7 @@ class ReviewSaveServiceTest {
     private static final int MAX_EDITIONS_PER_MINUTE = 5;
 
     // Dependency injection
-    private PageService pageService;
+    private PageRepository pageRepository;
     private ReplacementSaveRepository replacementSaveRepository;
     private CustomReplacementService customReplacementService;
     private WikipediaPageRepository wikipediaPageRepository;
@@ -33,13 +33,13 @@ class ReviewSaveServiceTest {
 
     @BeforeEach
     public void setUp() {
-        pageService = mock(PageService.class);
+        pageRepository = mock(PageRepository.class);
         replacementSaveRepository = mock(ReplacementSaveRepository.class);
         customReplacementService = mock(CustomReplacementService.class);
         wikipediaPageRepository = mock(WikipediaPageRepository.class);
         reviewSaveService =
             new ReviewSaveService(
-                pageService,
+                pageRepository,
                 replacementSaveRepository,
                 customReplacementService,
                 wikipediaPageRepository
@@ -95,7 +95,7 @@ class ReviewSaveServiceTest {
 
         reviewSaveService.markAsReviewed(reviewedReplacements, true);
 
-        verify(pageService).updatePageLastUpdate(pageKey, LocalDate.now());
+        verify(pageRepository).updateLastUpdate(pageKey, LocalDate.now());
         verify(replacementSaveRepository).updateReviewer(anyCollection());
         verify(customReplacementService).addCustomReplacement(any(IndexedCustomReplacement.class));
     }

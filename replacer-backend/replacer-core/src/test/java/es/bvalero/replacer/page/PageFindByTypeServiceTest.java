@@ -32,11 +32,11 @@ class PageFindByTypeServiceTest {
 
         WikipediaLanguage lang = WikipediaLanguage.getDefault();
         StandardType type = StandardType.DATE;
-        when(pageRepository.findPageTitlesNotReviewedByType(lang, type)).thenReturn(list);
+        when(pageRepository.findTitlesNotReviewedByType(lang, type)).thenReturn(list);
 
-        Collection<String> result = pageFindByTypeService.findPagesToReviewByType(lang, type);
+        Collection<String> result = pageFindByTypeService.findPageTitlesNotReviewedByType(lang, type);
         assertEquals(sorted, result);
 
-        verify(pageRepository).findPageTitlesNotReviewedByType(lang, type);
+        verify(pageRepository).findTitlesNotReviewedByType(lang, type);
     }
 }

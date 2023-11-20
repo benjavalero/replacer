@@ -7,7 +7,7 @@ import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.ReplacementFindService;
 import es.bvalero.replacer.page.IndexedPage;
 import es.bvalero.replacer.page.PageKey;
-import es.bvalero.replacer.page.PageService;
+import es.bvalero.replacer.page.PageRepository;
 import es.bvalero.replacer.wikipedia.WikipediaNamespace;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
 import es.bvalero.replacer.wikipedia.WikipediaTimestamp;
@@ -30,7 +30,7 @@ class PageIndexServiceTest {
         .build();
 
     // Dependency injection
-    private PageService pageService;
+    private PageRepository pageRepository;
     private PageIndexValidator pageIndexValidator;
     private ReplacementFindService replacementFindService;
     private PageComparator pageComparator;
@@ -40,14 +40,14 @@ class PageIndexServiceTest {
 
     @BeforeEach
     void setUp() {
-        pageService = mock(PageService.class);
+        pageRepository = mock(PageRepository.class);
         pageIndexValidator = mock(PageIndexValidator.class);
         replacementFindService = mock(ReplacementFindService.class);
         pageComparator = mock(PageComparator.class);
         pageComparatorSaver = mock(PageComparatorSaver.class);
         pageIndexService =
             new PageIndexService(
-                pageService,
+                pageRepository,
                 pageIndexValidator,
                 replacementFindService,
                 pageComparator,
@@ -101,7 +101,7 @@ class PageIndexServiceTest {
             .replacements(List.of())
             .lastUpdate(LocalDate.now())
             .build();
-        when(pageService.findPageByKey(page.getPageKey())).thenReturn(Optional.of(dbPage));
+        when(pageRepository.findByKey(page.getPageKey())).thenReturn(Optional.of(dbPage));
 
         when(pageIndexValidator.isPageIndexableByNamespace(page)).thenReturn(false);
 
@@ -113,6 +113,6 @@ class PageIndexServiceTest {
         verify(pageIndexValidator, never()).isIndexableByTimestamp(page, null);
         verify(replacementFindService, never()).findReplacements(any(WikipediaPage.class));
         verify(pageComparatorSaver, never()).save(any(PageComparatorResult.class));
-        verify(pageService).removePagesByKey(anyCollection());
+        verify(pageRepository).removeByKey(anyCollection());
     }
 }

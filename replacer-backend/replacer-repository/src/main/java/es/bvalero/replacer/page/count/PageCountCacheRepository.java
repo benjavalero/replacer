@@ -78,17 +78,17 @@ class PageCountCacheRepository implements PageCountRepository {
     }
 
     @Override
-    public void remove(WikipediaLanguage lang, StandardType type) {
+    public void removePageCountByType(WikipediaLanguage lang, StandardType type) {
         this.getCounts(lang).remove(type);
     }
 
     @Override
-    public void increment(WikipediaLanguage lang, StandardType type) {
+    public void incrementPageCountByType(WikipediaLanguage lang, StandardType type) {
         this.getCounts(lang).compute(type, (t, c) -> c == null ? 1 : c + 1);
     }
 
     @Override
-    public void decrement(WikipediaLanguage lang, StandardType type) {
+    public void decrementPageCountByType(WikipediaLanguage lang, StandardType type) {
         this.getCounts(lang).computeIfPresent(type, (t, c) -> c > 1 ? c - 1 : null);
     }
 

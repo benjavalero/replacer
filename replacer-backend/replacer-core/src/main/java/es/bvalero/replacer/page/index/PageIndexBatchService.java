@@ -2,8 +2,8 @@ package es.bvalero.replacer.page.index;
 
 import es.bvalero.replacer.finder.ReplacementFindService;
 import es.bvalero.replacer.page.IndexedPage;
-import es.bvalero.replacer.page.PageBatchService;
 import es.bvalero.replacer.page.PageKey;
+import es.bvalero.replacer.page.PageRepository;
 import java.util.Optional;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
@@ -18,12 +18,13 @@ public class PageIndexBatchService extends PageIndexAbstractService {
 
     public PageIndexBatchService(
         PageBatchService pageBatchService,
+        PageRepository pageRepository,
         PageIndexValidator pageIndexValidator,
         ReplacementFindService replacementFindService,
         PageComparator pageComparator,
         PageComparatorSaver pageComparatorSaver
     ) {
-        super(pageBatchService, pageIndexValidator, replacementFindService, pageComparator);
+        super(pageRepository, pageIndexValidator, replacementFindService, pageComparator);
         this.pageBatchService = pageBatchService;
         this.pageComparatorSaver = pageComparatorSaver;
         this.pageIndexValidator = pageIndexValidator;
@@ -31,7 +32,7 @@ public class PageIndexBatchService extends PageIndexAbstractService {
 
     @Override
     Optional<IndexedPage> findIndexedPageByKey(PageKey pageKey) {
-        return pageBatchService.findPageByKey(pageKey);
+        return pageBatchService.findByKey(pageKey);
     }
 
     @Override

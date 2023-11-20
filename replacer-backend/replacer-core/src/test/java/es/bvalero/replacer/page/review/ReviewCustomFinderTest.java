@@ -12,7 +12,7 @@ import es.bvalero.replacer.finder.CustomReplacementFindService;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.Suggestion;
 import es.bvalero.replacer.page.PageKey;
-import es.bvalero.replacer.page.PageService;
+import es.bvalero.replacer.page.PageRepository;
 import es.bvalero.replacer.page.index.PageIndexResult;
 import es.bvalero.replacer.page.index.PageIndexService;
 import es.bvalero.replacer.replacement.CustomReplacementService;
@@ -38,7 +38,7 @@ class ReviewCustomFinderTest {
     // Dependency injection
     private WikipediaPageRepository wikipediaPageRepository;
     private PageIndexService pageIndexService;
-    private PageService pageService;
+    private PageRepository pageRepository;
     private ReviewSectionFinder reviewSectionFinder;
     private CustomReplacementService customReplacementService;
     private CustomReplacementFindService customReplacementFindService;
@@ -49,7 +49,7 @@ class ReviewCustomFinderTest {
     public void setUp() {
         wikipediaPageRepository = mock(WikipediaPageRepository.class);
         pageIndexService = mock(PageIndexService.class);
-        pageService = mock(PageService.class);
+        pageRepository = mock(PageRepository.class);
         reviewSectionFinder = mock(ReviewSectionFinder.class);
         customReplacementService = mock(CustomReplacementService.class);
         customReplacementFindService = mock(CustomReplacementFindService.class);
@@ -57,7 +57,7 @@ class ReviewCustomFinderTest {
             new ReviewCustomFinder(
                 wikipediaPageRepository,
                 pageIndexService,
-                pageService,
+                pageRepository,
                 reviewSectionFinder,
                 customReplacementService,
                 customReplacementFindService

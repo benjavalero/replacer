@@ -6,8 +6,8 @@ import static org.mockito.Mockito.*;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.ReplacementFindService;
 import es.bvalero.replacer.page.IndexedPage;
-import es.bvalero.replacer.page.PageBatchService;
 import es.bvalero.replacer.page.PageKey;
+import es.bvalero.replacer.page.PageRepository;
 import es.bvalero.replacer.wikipedia.WikipediaNamespace;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
 import es.bvalero.replacer.wikipedia.WikipediaTimestamp;
@@ -28,6 +28,7 @@ class PageIndexBatchServiceTest {
 
     // Dependency injection
     private PageBatchService pageBatchService;
+    private PageRepository pageRepository;
     private PageIndexValidator pageIndexValidator;
     private ReplacementFindService replacementFindService;
     private PageComparator pageComparator;
@@ -38,6 +39,7 @@ class PageIndexBatchServiceTest {
     @BeforeEach
     void setUp() {
         pageBatchService = mock(PageBatchService.class);
+        pageRepository = mock(PageRepository.class);
         pageIndexValidator = mock(PageIndexValidator.class);
         replacementFindService = mock(ReplacementFindService.class);
         pageComparator = mock(PageComparator.class);
@@ -45,6 +47,7 @@ class PageIndexBatchServiceTest {
         pageIndexBatchService =
             new PageIndexBatchService(
                 pageBatchService,
+                pageRepository,
                 pageIndexValidator,
                 replacementFindService,
                 pageComparator,

@@ -1,6 +1,9 @@
-package es.bvalero.replacer.page;
+package es.bvalero.replacer.page.index;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
+import es.bvalero.replacer.page.IndexedPage;
+import es.bvalero.replacer.page.PageKey;
+import es.bvalero.replacer.page.PageRepository;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -13,7 +16,7 @@ import org.springframework.stereotype.Service;
 
 /** Extension of page service to find pages to review in batch to reduce database calls */
 @Service
-public class PageBatchService extends PageService {
+class PageBatchService {
 
     // Dependency injection
     private final PageRepository pageRepository;
@@ -29,12 +32,10 @@ public class PageBatchService extends PageService {
     private int maxCachedId = 0;
 
     public PageBatchService(PageRepository pageRepository) {
-        super(pageRepository);
         this.pageRepository = pageRepository;
     }
 
-    @Override
-    public Optional<IndexedPage> findPageByKey(PageKey pageKey) {
+    public Optional<IndexedPage> findByKey(PageKey pageKey) {
         // If the page ID is lower than the minimum ID then we are in a new indexing
         if (pageKey.getPageId() < this.minCachedId) {
             resetCache();
@@ -58,7 +59,7 @@ public class PageBatchService extends PageService {
     private void load(int minId, int maxId, WikipediaLanguage lang) {
         assert this.pageMap.isEmpty();
         pageRepository
-            .findPagesByIdInterval(lang, minId, maxId)
+            .findByIdRange(lang, minId, maxId)
             .forEach(page -> this.pageMap.put(page.getPageKey().getPageId(), page));
     }
 
@@ -79,6 +80,6 @@ public class PageBatchService extends PageService {
     }
 
     private void removePages(Collection<IndexedPage> pages) {
-        removePagesByKey(pages.stream().map(IndexedPage::getPageKey).collect(Collectors.toUnmodifiableSet()));
+        pageRepository.removeByKey(pages.stream().map(IndexedPage::getPageKey).collect(Collectors.toUnmodifiableSet()));
     }
 }

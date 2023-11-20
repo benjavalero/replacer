@@ -5,7 +5,7 @@ import es.bvalero.replacer.finder.CustomMisspelling;
 import es.bvalero.replacer.finder.CustomReplacementFindService;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.page.PageKey;
-import es.bvalero.replacer.page.PageService;
+import es.bvalero.replacer.page.PageRepository;
 import es.bvalero.replacer.page.index.PageIndexService;
 import es.bvalero.replacer.replacement.CustomReplacementService;
 import es.bvalero.replacer.wikipedia.*;
@@ -34,12 +34,12 @@ class ReviewCustomFinder extends ReviewFinder {
     public ReviewCustomFinder(
         WikipediaPageRepository wikipediaPageRepository,
         PageIndexService pageIndexService,
-        PageService pageService,
+        PageRepository pageRepository,
         ReviewSectionFinder reviewSectionFinder,
         CustomReplacementService customReplacementService,
         CustomReplacementFindService customReplacementFindService
     ) {
-        super(wikipediaPageRepository, pageIndexService, pageService, reviewSectionFinder);
+        super(wikipediaPageRepository, pageIndexService, pageRepository, reviewSectionFinder);
         this.customReplacementService = customReplacementService;
         this.wikipediaPageRepository = wikipediaPageRepository;
         this.customReplacementFindService = customReplacementFindService;

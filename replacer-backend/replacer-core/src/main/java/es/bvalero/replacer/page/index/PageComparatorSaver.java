@@ -2,7 +2,7 @@ package es.bvalero.replacer.page.index;
 
 import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.page.IndexedPage;
-import es.bvalero.replacer.page.PageService;
+import es.bvalero.replacer.page.PageRepository;
 import es.bvalero.replacer.page.count.PageCountRepository;
 import es.bvalero.replacer.replacement.IndexedReplacement;
 import es.bvalero.replacer.replacement.ReplacementSaveRepository;
@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
 class PageComparatorSaver {
 
     // Dependency injection
-    private final PageService pageService;
+    private final PageRepository pageRepository;
     private final PageCountRepository pageCountRepository;
     private final ReplacementSaveRepository replacementSaveRepository;
 
@@ -29,11 +29,11 @@ class PageComparatorSaver {
     private final List<PageComparatorResult> batchResult = Collections.synchronizedList(new ArrayList<>());
 
     PageComparatorSaver(
-        PageService pageService,
+        PageRepository pageRepository,
         PageCountRepository pageCountRepository,
         ReplacementSaveRepository replacementSaveRepository
     ) {
-        this.pageService = pageService;
+        this.pageRepository = pageRepository;
         this.pageCountRepository = pageCountRepository;
         this.replacementSaveRepository = replacementSaveRepository;
     }
@@ -88,10 +88,10 @@ class PageComparatorSaver {
                 // Update page count cache
                 result
                     .getReplacementTypesToCreate()
-                    .forEach(rt -> pageCountRepository.increment(result.getLang(), (StandardType) rt));
+                    .forEach(rt -> pageCountRepository.incrementPageCountByType(result.getLang(), (StandardType) rt));
                 result
                     .getReplacementTypesToDelete()
-                    .forEach(rt -> pageCountRepository.decrement(result.getLang(), (StandardType) rt));
+                    .forEach(rt -> pageCountRepository.decrementPageCountByType(result.getLang(), (StandardType) rt));
             }
 
             this.batchResult.clear();
@@ -99,8 +99,8 @@ class PageComparatorSaver {
 
         // Pages must be added before adding the related replacements
         // We assume the replacements removed correspond to not removed pages
-        pageService.addPages(pagesToCreate);
-        pageService.updatePages(pagesToUpdate);
+        pageRepository.add(pagesToCreate);
+        pageRepository.update(pagesToUpdate);
         replacementSaveRepository.add(replacementsToCreate);
         replacementSaveRepository.update(replacementsToUpdate);
         replacementSaveRepository.remove(replacementsToDelete);

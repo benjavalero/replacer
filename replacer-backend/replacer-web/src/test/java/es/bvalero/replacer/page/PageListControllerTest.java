@@ -55,7 +55,10 @@ class PageListControllerTest {
             .andExpect(status().isOk());
 
         verify(pageFindByTypeService)
-            .findPagesToReviewByType(WikipediaLanguage.getDefault(), StandardType.of(ReplacementKind.SIMPLE, "Africa"));
+            .findPageTitlesNotReviewedByType(
+                WikipediaLanguage.getDefault(),
+                StandardType.of(ReplacementKind.SIMPLE, "Africa")
+            );
     }
 
     @Test

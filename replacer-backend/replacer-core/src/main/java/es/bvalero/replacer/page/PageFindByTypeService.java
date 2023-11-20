@@ -19,9 +19,10 @@ class PageFindByTypeService {
         this.pageRepository = pageRepository;
     }
 
-    Collection<String> findPagesToReviewByType(WikipediaLanguage lang, StandardType type) {
+    /** Find the pages to review by the given type and return the titles sorted alphabetically */
+    Collection<String> findPageTitlesNotReviewedByType(WikipediaLanguage lang, StandardType type) {
         return pageRepository
-            .findPageTitlesNotReviewedByType(lang, type)
+            .findTitlesNotReviewedByType(lang, type)
             .stream()
             .filter(Objects::nonNull)
             .sorted(Collator.getInstance(LOCALE_ES))

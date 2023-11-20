@@ -3,7 +3,7 @@ package es.bvalero.replacer.page.index;
 import es.bvalero.replacer.finder.ReplacementFindService;
 import es.bvalero.replacer.page.IndexedPage;
 import es.bvalero.replacer.page.PageKey;
-import es.bvalero.replacer.page.PageService;
+import es.bvalero.replacer.page.PageRepository;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -13,24 +13,24 @@ import org.springframework.stereotype.Service;
 public class PageIndexService extends PageIndexAbstractService {
 
     // Dependency injection
-    private final PageService pageService;
+    private final PageRepository pageRepository;
     private final PageComparatorSaver pageComparatorSaver;
 
     public PageIndexService(
-        PageService pageService,
+        PageRepository pageRepository,
         PageIndexValidator pageIndexValidator,
         ReplacementFindService replacementFindService,
         PageComparator pageComparator,
         PageComparatorSaver pageComparatorSaver
     ) {
-        super(pageService, pageIndexValidator, replacementFindService, pageComparator);
-        this.pageService = pageService;
+        super(pageRepository, pageIndexValidator, replacementFindService, pageComparator);
+        this.pageRepository = pageRepository;
         this.pageComparatorSaver = pageComparatorSaver;
     }
 
     @Override
     Optional<IndexedPage> findIndexedPageByKey(PageKey pageKey) {
-        return pageService.findPageByKey(pageKey);
+        return pageRepository.findByKey(pageKey);
     }
 
     @Override

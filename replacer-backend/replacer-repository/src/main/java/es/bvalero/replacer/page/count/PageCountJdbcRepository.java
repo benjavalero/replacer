@@ -40,17 +40,17 @@ class PageCountJdbcRepository implements PageCountRepository {
     }
 
     @Override
-    public void remove(WikipediaLanguage lang, StandardType type) {
+    public void removePageCountByType(WikipediaLanguage lang, StandardType type) {
         // Not implemented
     }
 
     @Override
-    public void increment(WikipediaLanguage lang, StandardType type) {
+    public void incrementPageCountByType(WikipediaLanguage lang, StandardType type) {
         // Not implemented
     }
 
     @Override
-    public void decrement(WikipediaLanguage lang, StandardType type) {
+    public void decrementPageCountByType(WikipediaLanguage lang, StandardType type) {
         // Not implemented
     }
 

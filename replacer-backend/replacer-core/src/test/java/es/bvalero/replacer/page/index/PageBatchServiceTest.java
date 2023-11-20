@@ -1,10 +1,13 @@
-package es.bvalero.replacer.page;
+package es.bvalero.replacer.page.index;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
+import es.bvalero.replacer.page.IndexedPage;
+import es.bvalero.replacer.page.PageKey;
+import es.bvalero.replacer.page.PageRepository;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -44,14 +47,13 @@ class PageBatchServiceTest {
         int pageId2 = 1001;
         IndexedPage page2 = buildIndexedPage(pageId2);
 
-        when(pageRepository.findPagesByIdInterval(WikipediaLanguage.getDefault(), 1, 1000)).thenReturn(List.of(page1));
-        when(pageRepository.findPagesByIdInterval(WikipediaLanguage.getDefault(), 1001, 2000))
-            .thenReturn(List.of(page2));
+        when(pageRepository.findByIdRange(WikipediaLanguage.getDefault(), 1, 1000)).thenReturn(List.of(page1));
+        when(pageRepository.findByIdRange(WikipediaLanguage.getDefault(), 1001, 2000)).thenReturn(List.of(page2));
 
-        Optional<IndexedPage> pageDb = pageBatchService.findPageByKey(PageKey.of(WikipediaLanguage.getDefault(), 1));
+        Optional<IndexedPage> pageDb = pageBatchService.findByKey(PageKey.of(WikipediaLanguage.getDefault(), 1));
         assertTrue(pageDb.isEmpty());
 
-        pageDb = pageBatchService.findPageByKey(PageKey.of(WikipediaLanguage.getDefault(), 1001));
+        pageDb = pageBatchService.findByKey(PageKey.of(WikipediaLanguage.getDefault(), 1001));
         assertEquals(page2, pageDb.orElse(null));
 
         // Check that the page 2 has been cleaned
@@ -64,9 +66,9 @@ class PageBatchServiceTest {
         // So the first load is enlarged
         int pageId = 1001;
         IndexedPage page = buildIndexedPage(pageId);
-        when(pageRepository.findPagesByIdInterval(WikipediaLanguage.getDefault(), 1, 2000)).thenReturn(List.of(page));
+        when(pageRepository.findByIdRange(WikipediaLanguage.getDefault(), 1, 2000)).thenReturn(List.of(page));
 
-        Optional<IndexedPage> pageDb = pageBatchService.findPageByKey(PageKey.of(WikipediaLanguage.getDefault(), 1001));
+        Optional<IndexedPage> pageDb = pageBatchService.findByKey(PageKey.of(WikipediaLanguage.getDefault(), 1001));
         assertEquals(page, pageDb.orElse(null));
     }
 }

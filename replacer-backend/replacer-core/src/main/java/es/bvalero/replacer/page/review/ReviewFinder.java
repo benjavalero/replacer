@@ -7,7 +7,7 @@ import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.page.IndexedPage;
 import es.bvalero.replacer.page.PageKey;
-import es.bvalero.replacer.page.PageService;
+import es.bvalero.replacer.page.PageRepository;
 import es.bvalero.replacer.page.index.PageIndexService;
 import es.bvalero.replacer.user.User;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
@@ -28,7 +28,7 @@ abstract class ReviewFinder {
     // Dependency injection
     private final WikipediaPageRepository wikipediaPageRepository;
     private final PageIndexService pageIndexService;
-    private final PageService pageService;
+    private final PageRepository pageRepository;
     private final ReviewSectionFinder reviewSectionFinder;
 
     // Maximum 500 as it is used as page size when searching in Wikipedia
@@ -49,12 +49,12 @@ abstract class ReviewFinder {
     ReviewFinder(
         WikipediaPageRepository wikipediaPageRepository,
         PageIndexService pageIndexService,
-        PageService pageService,
+        PageRepository pageRepository,
         ReviewSectionFinder reviewSectionFinder
     ) {
         this.wikipediaPageRepository = wikipediaPageRepository;
         this.pageIndexService = pageIndexService;
-        this.pageService = pageService;
+        this.pageRepository = pageRepository;
         this.reviewSectionFinder = reviewSectionFinder;
     }
 
@@ -186,7 +186,7 @@ abstract class ReviewFinder {
             return wikipediaPage.flatMap(page -> buildPageReview(page, options));
         } catch (Exception e) {
             LOGGER.error("Error finding page review: {}", pageKey);
-            pageService.removePagesByKey(Set.of(pageKey));
+            pageRepository.removeByKey(Set.of(pageKey));
             return Optional.empty();
         }
     }
@@ -195,9 +195,9 @@ abstract class ReviewFinder {
         Optional<WikipediaPage> page = wikipediaPageRepository.findByKey(pageKey);
         if (page.isEmpty()) {
             // Find the page title in the database to improve the warning
-            String pageDbTitle = pageService.findPageByKey(pageKey).map(IndexedPage::getTitle).orElse(null);
+            String pageDbTitle = pageRepository.findByKey(pageKey).map(IndexedPage::getTitle).orElse(null);
             LOGGER.warn("No page found in Wikipedia: {} - {}", pageKey, pageDbTitle);
-            pageService.removePagesByKey(Set.of(pageKey));
+            pageRepository.removeByKey(Set.of(pageKey));
         }
 
         return page;

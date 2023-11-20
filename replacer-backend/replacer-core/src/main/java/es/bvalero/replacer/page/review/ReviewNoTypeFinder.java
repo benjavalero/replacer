@@ -3,8 +3,8 @@ package es.bvalero.replacer.page.review;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.page.PageKey;
-import es.bvalero.replacer.page.PageService;
-import es.bvalero.replacer.page.count.PageCountService;
+import es.bvalero.replacer.page.PageRepository;
+import es.bvalero.replacer.page.count.PageCountRepository;
 import es.bvalero.replacer.page.index.PageIndexService;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
 import es.bvalero.replacer.wikipedia.WikipediaPageRepository;
@@ -15,19 +15,19 @@ import org.springframework.stereotype.Component;
 class ReviewNoTypeFinder extends ReviewFinder {
 
     // Dependency injection
-    private final PageService pageService;
-    private final PageCountService pageCountService;
+    private final PageRepository pageRepository;
+    private final PageCountRepository pageCountRepository;
 
     ReviewNoTypeFinder(
         WikipediaPageRepository wikipediaPageRepository,
         PageIndexService pageIndexService,
-        PageService pageService,
+        PageRepository pageRepository,
         ReviewSectionFinder reviewSectionFinder,
-        PageCountService pageCountService
+        PageCountRepository pageCountRepository
     ) {
-        super(wikipediaPageRepository, pageIndexService, pageService, reviewSectionFinder);
-        this.pageService = pageService;
-        this.pageCountService = pageCountService;
+        super(wikipediaPageRepository, pageIndexService, pageRepository, reviewSectionFinder);
+        this.pageRepository = pageRepository;
+        this.pageCountRepository = pageCountRepository;
     }
 
     @Override
@@ -35,12 +35,12 @@ class ReviewNoTypeFinder extends ReviewFinder {
         // Find a random page without filtering by type takes a lot
         // Instead find a random replacement and then the following pages
         WikipediaLanguage lang = options.getUser().getId().getLang();
-        int totalResults = pageCountService.countNotReviewedByNoType(lang);
+        int totalResults = pageCountRepository.countNotReviewedByType(lang, null);
         if (totalResults == 0) {
             return PageSearchResult.ofEmpty();
         }
 
-        Collection<PageKey> pageKeys = pageService.findPagesToReviewByNoType(lang, getCacheSize());
+        Collection<PageKey> pageKeys = pageRepository.findNotReviewedByType(lang, null, getCacheSize());
         return PageSearchResult.of(totalResults, pageKeys);
     }
 

@@ -5,7 +5,7 @@ import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.ReplacementFindService;
 import es.bvalero.replacer.page.IndexedPage;
 import es.bvalero.replacer.page.PageKey;
-import es.bvalero.replacer.page.PageService;
+import es.bvalero.replacer.page.PageRepository;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.Set;
@@ -19,18 +19,18 @@ import org.springframework.stereotype.Service;
 abstract class PageIndexAbstractService {
 
     // Dependency injection
-    private final PageService pageService;
+    private final PageRepository pageRepository;
     private final PageIndexValidator pageIndexValidator;
     private final ReplacementFindService replacementFindService;
     private final PageComparator pageComparator;
 
     PageIndexAbstractService(
-        PageService pageService,
+        PageRepository pageRepository,
         PageIndexValidator pageIndexValidator,
         ReplacementFindService replacementFindService,
         PageComparator pageComparator
     ) {
-        this.pageService = pageService;
+        this.pageRepository = pageRepository;
         this.pageIndexValidator = pageIndexValidator;
         this.replacementFindService = replacementFindService;
         this.pageComparator = pageComparator;
@@ -106,7 +106,7 @@ abstract class PageIndexAbstractService {
                 page.isRedirect()
             )
         );
-        pageService.removePagesByKey(Set.of(page.getPageKey()));
+        pageRepository.removeByKey(Set.of(page.getPageKey()));
     }
 
     abstract void saveResult(PageComparatorResult result);
