@@ -1,18 +1,20 @@
 /* tslint:disable */
 /* eslint-disable */
-import { HttpClient, HttpContext, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpContext } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { filter, map } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 
 import { BaseService } from '../base-service';
 import { ApiConfiguration } from '../api-configuration';
 import { StrictHttpResponse } from '../strict-http-response';
-import { RequestBuilder } from '../request-builder';
 
+import { initiateAuthorization } from '../fn/user/initiate-authorization';
+import { InitiateAuthorization$Params } from '../fn/user/initiate-authorization';
 import { InitiateAuthorizationResponse } from '../models/initiate-authorization-response';
 import { User } from '../models/user';
-import { VerifyAuthorizationRequest } from '../models/verify-authorization-request';
+import { verifyAuthorization } from '../fn/user/verify-authorization';
+import { VerifyAuthorization$Params } from '../fn/user/verify-authorization';
 
 @Injectable({ providedIn: 'root' })
 export class UserApiService extends BaseService {
@@ -33,25 +35,8 @@ export class UserApiService extends BaseService {
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  verifyAuthorization$Response(
-    params: {
-      body: VerifyAuthorizationRequest
-    },
-    context?: HttpContext
-  ): Observable<StrictHttpResponse<User>> {
-    const rb = new RequestBuilder(this.rootUrl, UserApiService.VerifyAuthorizationPath, 'post');
-    if (params) {
-      rb.body(params.body, 'application/json');
-    }
-
-    return this.http.request(
-      rb.build({ responseType: 'json', accept: 'application/json', context })
-    ).pipe(
-      filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<User>;
-      })
-    );
+  verifyAuthorization$Response(params: VerifyAuthorization$Params, context?: HttpContext): Observable<StrictHttpResponse<User>> {
+    return verifyAuthorization(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -64,12 +49,7 @@ export class UserApiService extends BaseService {
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  verifyAuthorization(
-    params: {
-      body: VerifyAuthorizationRequest
-    },
-    context?: HttpContext
-  ): Observable<User> {
+  verifyAuthorization(params: VerifyAuthorization$Params, context?: HttpContext): Observable<User> {
     return this.verifyAuthorization$Response(params, context).pipe(
       map((r: StrictHttpResponse<User>): User => r.body)
     );
@@ -88,23 +68,8 @@ export class UserApiService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  initiateAuthorization$Response(
-    params?: {
-    },
-    context?: HttpContext
-  ): Observable<StrictHttpResponse<InitiateAuthorizationResponse>> {
-    const rb = new RequestBuilder(this.rootUrl, UserApiService.InitiateAuthorizationPath, 'get');
-    if (params) {
-    }
-
-    return this.http.request(
-      rb.build({ responseType: 'json', accept: 'application/json', context })
-    ).pipe(
-      filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<InitiateAuthorizationResponse>;
-      })
-    );
+  initiateAuthorization$Response(params?: InitiateAuthorization$Params, context?: HttpContext): Observable<StrictHttpResponse<InitiateAuthorizationResponse>> {
+    return initiateAuthorization(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -117,11 +82,7 @@ export class UserApiService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  initiateAuthorization(
-    params?: {
-    },
-    context?: HttpContext
-  ): Observable<InitiateAuthorizationResponse> {
+  initiateAuthorization(params?: InitiateAuthorization$Params, context?: HttpContext): Observable<InitiateAuthorizationResponse> {
     return this.initiateAuthorization$Response(params, context).pipe(
       map((r: StrictHttpResponse<InitiateAuthorizationResponse>): InitiateAuthorizationResponse => r.body)
     );

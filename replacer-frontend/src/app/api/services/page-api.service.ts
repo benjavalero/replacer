@@ -1,17 +1,21 @@
 /* tslint:disable */
 /* eslint-disable */
-import { HttpClient, HttpContext, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpContext } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { filter, map } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 
 import { BaseService } from '../base-service';
 import { ApiConfiguration } from '../api-configuration';
 import { StrictHttpResponse } from '../strict-http-response';
-import { RequestBuilder } from '../request-builder';
 
+import { findPageReviewById } from '../fn/page/find-page-review-by-id';
+import { FindPageReviewById$Params } from '../fn/page/find-page-review-by-id';
+import { findRandomPageWithReplacements } from '../fn/page/find-random-page-with-replacements';
+import { FindRandomPageWithReplacements$Params } from '../fn/page/find-random-page-with-replacements';
 import { Page } from '../models/page';
-import { ReviewedPage } from '../models/reviewed-page';
+import { saveReview } from '../fn/page/save-review';
+import { SaveReview$Params } from '../fn/page/save-review';
 
 @Injectable({ providedIn: 'root' })
 export class PageApiService extends BaseService {
@@ -32,53 +36,8 @@ export class PageApiService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  findPageReviewById$Response(
-    params: {
-
-    /**
-     * Page ID
-     */
-      id: number;
-
-    /**
-     * Replacement kind code
-     */
-      kind?: number;
-
-    /**
-     * Replacement subtype
-     */
-      subtype?: string;
-
-    /**
-     * If the custom replacement is case-sensitive
-     */
-      cs?: boolean;
-
-    /**
-     * Custom replacement suggestion
-     */
-      suggestion?: string;
-    },
-    context?: HttpContext
-  ): Observable<StrictHttpResponse<Page>> {
-    const rb = new RequestBuilder(this.rootUrl, PageApiService.FindPageReviewByIdPath, 'get');
-    if (params) {
-      rb.path('id', params.id, {});
-      rb.query('kind', params.kind, {});
-      rb.query('subtype', params.subtype, {});
-      rb.query('cs', params.cs, {});
-      rb.query('suggestion', params.suggestion, {});
-    }
-
-    return this.http.request(
-      rb.build({ responseType: 'json', accept: 'application/json', context })
-    ).pipe(
-      filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<Page>;
-      })
-    );
+  findPageReviewById$Response(params: FindPageReviewById$Params, context?: HttpContext): Observable<StrictHttpResponse<Page>> {
+    return findPageReviewById(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -91,36 +50,7 @@ export class PageApiService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  findPageReviewById(
-    params: {
-
-    /**
-     * Page ID
-     */
-      id: number;
-
-    /**
-     * Replacement kind code
-     */
-      kind?: number;
-
-    /**
-     * Replacement subtype
-     */
-      subtype?: string;
-
-    /**
-     * If the custom replacement is case-sensitive
-     */
-      cs?: boolean;
-
-    /**
-     * Custom replacement suggestion
-     */
-      suggestion?: string;
-    },
-    context?: HttpContext
-  ): Observable<Page> {
+  findPageReviewById(params: FindPageReviewById$Params, context?: HttpContext): Observable<Page> {
     return this.findPageReviewById$Response(params, context).pipe(
       map((r: StrictHttpResponse<Page>): Page => r.body)
     );
@@ -139,31 +69,8 @@ export class PageApiService extends BaseService {
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  saveReview$Response(
-    params: {
-
-    /**
-     * Page ID
-     */
-      id: number;
-      body: ReviewedPage
-    },
-    context?: HttpContext
-  ): Observable<StrictHttpResponse<void>> {
-    const rb = new RequestBuilder(this.rootUrl, PageApiService.SaveReviewPath, 'post');
-    if (params) {
-      rb.path('id', params.id, {});
-      rb.body(params.body, 'application/json');
-    }
-
-    return this.http.request(
-      rb.build({ responseType: 'text', accept: '*/*', context })
-    ).pipe(
-      filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
-      })
-    );
+  saveReview$Response(params: SaveReview$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+    return saveReview(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -176,17 +83,7 @@ export class PageApiService extends BaseService {
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  saveReview(
-    params: {
-
-    /**
-     * Page ID
-     */
-      id: number;
-      body: ReviewedPage
-    },
-    context?: HttpContext
-  ): Observable<void> {
+  saveReview(params: SaveReview$Params, context?: HttpContext): Observable<void> {
     return this.saveReview$Response(params, context).pipe(
       map((r: StrictHttpResponse<void>): void => r.body)
     );
@@ -205,47 +102,8 @@ export class PageApiService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  findRandomPageWithReplacements$Response(
-    params?: {
-
-    /**
-     * Replacement kind code
-     */
-      kind?: number;
-
-    /**
-     * Replacement subtype
-     */
-      subtype?: string;
-
-    /**
-     * If the custom replacement is case-sensitive
-     */
-      cs?: boolean;
-
-    /**
-     * Custom replacement suggestion
-     */
-      suggestion?: string;
-    },
-    context?: HttpContext
-  ): Observable<StrictHttpResponse<Page>> {
-    const rb = new RequestBuilder(this.rootUrl, PageApiService.FindRandomPageWithReplacementsPath, 'get');
-    if (params) {
-      rb.query('kind', params.kind, {});
-      rb.query('subtype', params.subtype, {});
-      rb.query('cs', params.cs, {});
-      rb.query('suggestion', params.suggestion, {});
-    }
-
-    return this.http.request(
-      rb.build({ responseType: 'json', accept: 'application/json', context })
-    ).pipe(
-      filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<Page>;
-      })
-    );
+  findRandomPageWithReplacements$Response(params?: FindRandomPageWithReplacements$Params, context?: HttpContext): Observable<StrictHttpResponse<Page>> {
+    return findRandomPageWithReplacements(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -258,31 +116,7 @@ export class PageApiService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  findRandomPageWithReplacements(
-    params?: {
-
-    /**
-     * Replacement kind code
-     */
-      kind?: number;
-
-    /**
-     * Replacement subtype
-     */
-      subtype?: string;
-
-    /**
-     * If the custom replacement is case-sensitive
-     */
-      cs?: boolean;
-
-    /**
-     * Custom replacement suggestion
-     */
-      suggestion?: string;
-    },
-    context?: HttpContext
-  ): Observable<Page> {
+  findRandomPageWithReplacements(params?: FindRandomPageWithReplacements$Params, context?: HttpContext): Observable<Page> {
     return this.findRandomPageWithReplacements$Response(params, context).pipe(
       map((r: StrictHttpResponse<Page>): Page => r.body)
     );

@@ -1,6 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
-import { Suggestion } from './suggestion';
+import { Suggestion } from '../models/suggestion';
 
 /**
  * Replacement to review

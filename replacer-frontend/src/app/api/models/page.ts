@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
-import { Replacement } from './replacement';
-import { Section } from './section';
+import { Replacement } from '../models/replacement';
+import { Section } from '../models/section';
 
 /**
  * Page to review

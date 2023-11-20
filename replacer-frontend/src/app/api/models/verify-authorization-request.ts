@@ -1,6 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
-import { RequestToken } from './request-token';
+import { RequestToken } from '../models/request-token';
 
 /**
  * Request token and OAuth verifier to complete the authorization process

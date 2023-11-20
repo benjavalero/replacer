@@ -22,7 +22,7 @@ export class UnreviewedComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.unreviewed$ = this.replacementApiService.countReplacementsNotReviewedGroupedByPage();
+    this.unreviewed$ = this.replacementApiService.countNotReviewedReplacementsGroupedByPage();
   }
 
   get wikipediaUrl(): string {

@@ -38,6 +38,6 @@ export class StatsComponent implements OnInit {
     this.numNotReviewed$ = this.replacementApiService.countReplacements({
       reviewed: false
     });
-    this.numReviewedGrouped$ = this.replacementApiService.countReplacementsGroupedByReviewer();
+    this.numReviewedGrouped$ = this.replacementApiService.countReviewedReplacementsGroupedByReviewer();
   }
 }

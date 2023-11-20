@@ -1,16 +1,19 @@
 /* tslint:disable */
 /* eslint-disable */
-import { HttpClient, HttpContext, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpContext } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { filter, map } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 
 import { BaseService } from '../base-service';
 import { ApiConfiguration } from '../api-configuration';
 import { StrictHttpResponse } from '../strict-http-response';
-import { RequestBuilder } from '../request-builder';
 
 import { DumpStatus } from '../models/dump-status';
+import { getDumpStatus } from '../fn/dump/get-dump-status';
+import { GetDumpStatus$Params } from '../fn/dump/get-dump-status';
+import { manualStartDumpIndexing } from '../fn/dump/manual-start-dump-indexing';
+import { ManualStartDumpIndexing$Params } from '../fn/dump/manual-start-dump-indexing';
 
 @Injectable({ providedIn: 'root' })
 export class DumpApiService extends BaseService {
@@ -31,23 +34,8 @@ export class DumpApiService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getDumpStatus$Response(
-    params?: {
-    },
-    context?: HttpContext
-  ): Observable<StrictHttpResponse<DumpStatus>> {
-    const rb = new RequestBuilder(this.rootUrl, DumpApiService.GetDumpStatusPath, 'get');
-    if (params) {
-    }
-
-    return this.http.request(
-      rb.build({ responseType: 'json', accept: 'application/json', context })
-    ).pipe(
-      filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<DumpStatus>;
-      })
-    );
+  getDumpStatus$Response(params?: GetDumpStatus$Params, context?: HttpContext): Observable<StrictHttpResponse<DumpStatus>> {
+    return getDumpStatus(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -60,11 +48,7 @@ export class DumpApiService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getDumpStatus(
-    params?: {
-    },
-    context?: HttpContext
-  ): Observable<DumpStatus> {
+  getDumpStatus(params?: GetDumpStatus$Params, context?: HttpContext): Observable<DumpStatus> {
     return this.getDumpStatus$Response(params, context).pipe(
       map((r: StrictHttpResponse<DumpStatus>): DumpStatus => r.body)
     );
@@ -83,23 +67,8 @@ export class DumpApiService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  manualStartDumpIndexing$Response(
-    params?: {
-    },
-    context?: HttpContext
-  ): Observable<StrictHttpResponse<void>> {
-    const rb = new RequestBuilder(this.rootUrl, DumpApiService.ManualStartDumpIndexingPath, 'post');
-    if (params) {
-    }
-
-    return this.http.request(
-      rb.build({ responseType: 'text', accept: '*/*', context })
-    ).pipe(
-      filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
-      })
-    );
+  manualStartDumpIndexing$Response(params?: ManualStartDumpIndexing$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+    return manualStartDumpIndexing(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -112,11 +81,7 @@ export class DumpApiService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  manualStartDumpIndexing(
-    params?: {
-    },
-    context?: HttpContext
-  ): Observable<void> {
+  manualStartDumpIndexing(params?: ManualStartDumpIndexing$Params, context?: HttpContext): Observable<void> {
     return this.manualStartDumpIndexing$Response(params, context).pipe(
       map((r: StrictHttpResponse<void>): void => r.body)
     );

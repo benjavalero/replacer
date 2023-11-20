@@ -1,6 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
-import { ReviewedReplacement } from './reviewed-replacement';
+import { ReviewedReplacement } from '../models/reviewed-replacement';
 
 /**
  * Reviewed page. The page fields are only mandatory when saving the page with changes.

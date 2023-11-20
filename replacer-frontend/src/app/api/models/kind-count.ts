@@ -1,6 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
-import { SubtypeCount } from './subtype-count';
+import { SubtypeCount } from '../models/subtype-count';
 
 /**
  * Count of pages to review grouped by kind
