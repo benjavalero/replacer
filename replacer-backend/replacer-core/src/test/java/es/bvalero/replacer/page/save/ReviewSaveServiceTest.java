@@ -8,7 +8,7 @@ import es.bvalero.replacer.page.PageKey;
 import es.bvalero.replacer.page.PageService;
 import es.bvalero.replacer.replacement.CustomReplacementService;
 import es.bvalero.replacer.replacement.IndexedCustomReplacement;
-import es.bvalero.replacer.replacement.ReplacementService;
+import es.bvalero.replacer.replacement.ReplacementSaveRepository;
 import es.bvalero.replacer.user.User;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.wikipedia.WikipediaPageRepository;
@@ -25,7 +25,7 @@ class ReviewSaveServiceTest {
 
     // Dependency injection
     private PageService pageService;
-    private ReplacementService replacementService;
+    private ReplacementSaveRepository replacementSaveRepository;
     private CustomReplacementService customReplacementService;
     private WikipediaPageRepository wikipediaPageRepository;
 
@@ -34,11 +34,16 @@ class ReviewSaveServiceTest {
     @BeforeEach
     public void setUp() {
         pageService = mock(PageService.class);
-        replacementService = mock(ReplacementService.class);
+        replacementSaveRepository = mock(ReplacementSaveRepository.class);
         customReplacementService = mock(CustomReplacementService.class);
         wikipediaPageRepository = mock(WikipediaPageRepository.class);
         reviewSaveService =
-            new ReviewSaveService(pageService, replacementService, customReplacementService, wikipediaPageRepository);
+            new ReviewSaveService(
+                pageService,
+                replacementSaveRepository,
+                customReplacementService,
+                wikipediaPageRepository
+            );
         reviewSaveService.setMaxEditionsPerMinute(MAX_EDITIONS_PER_MINUTE);
     }
 
@@ -91,7 +96,7 @@ class ReviewSaveServiceTest {
         reviewSaveService.markAsReviewed(reviewedReplacements, true);
 
         verify(pageService).updatePageLastUpdate(pageKey, LocalDate.now());
-        verify(replacementService).updateReviewer(anyCollection());
+        verify(replacementSaveRepository).updateReviewer(anyCollection());
         verify(customReplacementService).addCustomReplacement(any(IndexedCustomReplacement.class));
     }
 

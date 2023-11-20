@@ -21,13 +21,13 @@ class ReplacementCountService {
         this.replacementCountRepository = replacementCountRepository;
     }
 
-    /** Count the number of replacements reviewed including the custom ones */
-    int countReplacementsReviewed(WikipediaLanguage lang) {
+    /** Count the number of reviewed replacements including the custom ones */
+    int countReviewed(WikipediaLanguage lang) {
         return replacementCountRepository.countReviewed(lang);
     }
 
     /** Count the number of replacements to review */
-    int countReplacementsNotReviewed(WikipediaLanguage lang) {
+    int countNotReviewed(WikipediaLanguage lang) {
         return replacementCountRepository.countNotReviewed(lang);
     }
 
@@ -35,12 +35,12 @@ class ReplacementCountService {
      * Count the number of reviewed replacements, including the custom ones,
      * grouped by reviewer in descending order by count.
      */
-    Collection<ResultCount<String>> countReplacementsGroupedByReviewer(WikipediaLanguage lang) {
-        return replacementCountRepository.countGroupedByReviewer(lang).stream().sorted().toList();
+    Collection<ResultCount<String>> countReviewedGroupedByReviewer(WikipediaLanguage lang) {
+        return replacementCountRepository.countReviewedGroupedByReviewer(lang).stream().sorted().toList();
     }
 
     /** Count the number of replacements to review grouped by page in descending order by count */
-    Collection<ResultCount<IndexedPage>> countReplacementsNotReviewedGroupedByPage(WikipediaLanguage lang) {
+    Collection<ResultCount<IndexedPage>> countNotReviewedGroupedByPage(WikipediaLanguage lang) {
         // For the moment we are not going to cache it as it is used only by admins
         return replacementCountRepository.countNotReviewedGroupedByPage(lang, NUM_RESULTS).stream().sorted().toList();
     }

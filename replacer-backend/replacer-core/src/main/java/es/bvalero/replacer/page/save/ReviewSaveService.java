@@ -10,7 +10,7 @@ import es.bvalero.replacer.page.PageKey;
 import es.bvalero.replacer.page.PageService;
 import es.bvalero.replacer.replacement.CustomReplacementService;
 import es.bvalero.replacer.replacement.IndexedReplacement;
-import es.bvalero.replacer.replacement.ReplacementService;
+import es.bvalero.replacer.replacement.ReplacementSaveRepository;
 import es.bvalero.replacer.user.User;
 import es.bvalero.replacer.user.UserId;
 import es.bvalero.replacer.wikipedia.WikipediaException;
@@ -40,7 +40,7 @@ class ReviewSaveService {
 
     // Dependency injection
     private final PageService pageService;
-    private final ReplacementService replacementService;
+    private final ReplacementSaveRepository replacementSaveRepository;
     private final CustomReplacementService customReplacementService;
     private final WikipediaPageRepository wikipediaPageRepository;
 
@@ -55,12 +55,12 @@ class ReviewSaveService {
 
     ReviewSaveService(
         PageService pageService,
-        ReplacementService replacementService,
+        ReplacementSaveRepository replacementSaveRepository,
         CustomReplacementService customReplacementService,
         WikipediaPageRepository wikipediaPageRepository
     ) {
         this.pageService = pageService;
-        this.replacementService = replacementService;
+        this.replacementSaveRepository = replacementSaveRepository;
         this.customReplacementService = customReplacementService;
         this.wikipediaPageRepository = wikipediaPageRepository;
     }
@@ -156,7 +156,7 @@ class ReviewSaveService {
             .filter(r -> r.getType() instanceof StandardType)
             .map(ReviewedReplacement::toReplacement)
             .toList();
-        replacementService.updateReviewer(usualToReview);
+        replacementSaveRepository.updateReviewer(usualToReview);
     }
 
     private void markCustomAsReviewed(ReviewedReplacement reviewed) {

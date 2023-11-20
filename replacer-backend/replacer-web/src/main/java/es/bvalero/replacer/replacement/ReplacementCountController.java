@@ -36,20 +36,22 @@ public class ReplacementCountController {
     ) {
         ReplacementCount count;
         if (reviewed) {
-            count = ReplacementCount.of(replacementCountService.countReplacementsReviewed(lang));
+            count = ReplacementCount.of(replacementCountService.countReviewed(lang));
             LOGGER.info("GET Count Reviewed Replacements: {}", count);
         } else {
-            count = ReplacementCount.of(replacementCountService.countReplacementsNotReviewed(lang));
+            count = ReplacementCount.of(replacementCountService.countNotReviewed(lang));
             LOGGER.info("GET Count Not Reviewed Replacements: {}", count);
         }
         return count;
     }
 
-    @Operation(summary = "Count the number of reviewed replacements grouped by reviewer in descending order by count")
+    @Operation(
+        summary = "Count the number of reviewed replacements, including the custom ones, grouped by reviewer in descending order by count"
+    )
     @GetMapping(value = "/user/count")
-    public Collection<ReviewerCount> countReplacementsGroupedByReviewer(@UserLanguage WikipediaLanguage lang) {
+    public Collection<ReviewerCount> countReviewedReplacementsGroupedByReviewer(@UserLanguage WikipediaLanguage lang) {
         Collection<ReviewerCount> counts = replacementCountService
-            .countReplacementsGroupedByReviewer(lang)
+            .countReviewedGroupedByReviewer(lang)
             .stream()
             .map(count -> ReviewerCount.of(count.getKey(), count.getCount()))
             .toList();
@@ -62,9 +64,9 @@ public class ReplacementCountController {
     )
     @ValidateAdminUser
     @GetMapping(value = "/page/count")
-    public Collection<PageCount> countReplacementsNotReviewedGroupedByPage(@UserLanguage WikipediaLanguage lang) {
+    public Collection<PageCount> countNotReviewedReplacementsGroupedByPage(@UserLanguage WikipediaLanguage lang) {
         Collection<PageCount> counts = replacementCountService
-            .countReplacementsNotReviewedGroupedByPage(lang)
+            .countNotReviewedGroupedByPage(lang)
             .stream()
             .map(count ->
                 PageCount.of(count.getKey().getPageKey().getPageId(), count.getKey().getTitle(), count.getCount())

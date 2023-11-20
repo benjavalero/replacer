@@ -87,7 +87,7 @@ class ReplacementJdbcRepository implements ReplacementSaveRepository, Replacemen
     }
 
     @Override
-    public Collection<ResultCount<String>> countGroupedByReviewer(WikipediaLanguage lang) {
+    public Collection<ResultCount<String>> countReviewedGroupedByReviewer(WikipediaLanguage lang) {
         String sqlReplacement =
             "SELECT reviewer, COUNT(*) AS num FROM replacement " +
             "WHERE lang = :lang AND reviewer IS NOT NULL AND reviewer <> :system " +

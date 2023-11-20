@@ -4,7 +4,7 @@ import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import java.util.Collection;
 
-interface ReplacementSaveRepository {
+public interface ReplacementSaveRepository {
     /** Add a collection of page replacements assuming the related pages already exist */
     void add(Collection<IndexedReplacement> replacements);
 
@@ -20,7 +20,7 @@ interface ReplacementSaveRepository {
     /**
      * Update the reviewer of a collection of replacements.
      * Only the replacements to review are updated.
-     * The replacements to update are not identified by ID, but by page-key, type and start.
+     * Note that the replacements to update are not identified by ID, but by page-key, type and start.
      */
     void updateReviewer(Collection<IndexedReplacement> replacements);
 

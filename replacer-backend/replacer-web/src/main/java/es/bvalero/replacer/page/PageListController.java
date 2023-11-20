@@ -4,7 +4,7 @@ import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.dto.ReplacementTypeDto;
 import es.bvalero.replacer.common.util.ReplacerUtils;
-import es.bvalero.replacer.replacement.ReplacementService;
+import es.bvalero.replacer.replacement.ReplacementSaveService;
 import es.bvalero.replacer.user.UserLanguage;
 import es.bvalero.replacer.user.ValidateBotUser;
 import io.swagger.v3.oas.annotations.Operation;
@@ -26,11 +26,14 @@ public class PageListController {
 
     // Dependency injection
     private final PageFindByTypeService pageFindByTypeService;
-    private final ReplacementService replacementService;
+    private final ReplacementSaveService replacementSaveService;
 
-    public PageListController(PageFindByTypeService pageFindByTypeService, ReplacementService replacementService) {
+    public PageListController(
+        PageFindByTypeService pageFindByTypeService,
+        ReplacementSaveService replacementSaveService
+    ) {
         this.pageFindByTypeService = pageFindByTypeService;
-        this.replacementService = replacementService;
+        this.replacementSaveService = replacementSaveService;
     }
 
     @Operation(summary = "List the pages to review containing the given replacement type")
@@ -59,6 +62,6 @@ public class PageListController {
     public void reviewPagesByType(@UserLanguage WikipediaLanguage lang, @Valid ReplacementTypeDto request) {
         LOGGER.info("POST Review pages by type {}", request);
         StandardType type = request.toStandardType();
-        replacementService.reviewReplacementsByType(lang, type);
+        replacementSaveService.updateSystemReviewerByType(lang, type);
     }
 }

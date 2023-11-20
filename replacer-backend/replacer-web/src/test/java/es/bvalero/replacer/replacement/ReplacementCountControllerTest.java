@@ -53,7 +53,7 @@ class ReplacementCountControllerTest {
         when(webUtils.getLanguageHeader(any(HttpServletRequest.class))).thenReturn(lang);
 
         int count = new Random().nextInt();
-        when(replacementCountService.countReplacementsNotReviewed(WikipediaLanguage.getDefault())).thenReturn(count);
+        when(replacementCountService.countNotReviewed(WikipediaLanguage.getDefault())).thenReturn(count);
 
         mvc
             .perform(
@@ -64,7 +64,7 @@ class ReplacementCountControllerTest {
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.count", is(count)));
 
-        verify(replacementCountService).countReplacementsNotReviewed(WikipediaLanguage.getDefault());
+        verify(replacementCountService).countNotReviewed(WikipediaLanguage.getDefault());
     }
 
     @Test
@@ -73,7 +73,7 @@ class ReplacementCountControllerTest {
         when(webUtils.getLanguageHeader(any(HttpServletRequest.class))).thenReturn(lang);
 
         int count = new Random().nextInt();
-        when(replacementCountService.countReplacementsReviewed(WikipediaLanguage.getDefault())).thenReturn(count);
+        when(replacementCountService.countReviewed(WikipediaLanguage.getDefault())).thenReturn(count);
 
         mvc
             .perform(
@@ -84,7 +84,7 @@ class ReplacementCountControllerTest {
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.count", is(count)));
 
-        verify(replacementCountService).countReplacementsReviewed(WikipediaLanguage.getDefault());
+        verify(replacementCountService).countReviewed(WikipediaLanguage.getDefault());
     }
 
     @Test
@@ -93,7 +93,7 @@ class ReplacementCountControllerTest {
         when(webUtils.getLanguageHeader(any(HttpServletRequest.class))).thenReturn(lang);
 
         ResultCount<String> count = ResultCount.of("X", 100);
-        when(replacementCountService.countReplacementsGroupedByReviewer(WikipediaLanguage.getDefault()))
+        when(replacementCountService.countReviewedGroupedByReviewer(WikipediaLanguage.getDefault()))
             .thenReturn(List.of(count));
 
         mvc
@@ -106,7 +106,7 @@ class ReplacementCountControllerTest {
             .andExpect(jsonPath("$[0].reviewer", is("X")))
             .andExpect(jsonPath("$[0].count", is(100)));
 
-        verify(replacementCountService).countReplacementsGroupedByReviewer(WikipediaLanguage.getDefault());
+        verify(replacementCountService).countReviewedGroupedByReviewer(WikipediaLanguage.getDefault());
     }
 
     @Test
@@ -124,8 +124,7 @@ class ReplacementCountControllerTest {
             .build();
         Collection<ResultCount<IndexedPage>> counts = List.of(ResultCount.of(page, 100));
 
-        when(replacementCountService.countReplacementsNotReviewedGroupedByPage(WikipediaLanguage.getDefault()))
-            .thenReturn(counts);
+        when(replacementCountService.countNotReviewedGroupedByPage(WikipediaLanguage.getDefault())).thenReturn(counts);
 
         mvc
             .perform(
@@ -139,7 +138,7 @@ class ReplacementCountControllerTest {
             .andExpect(jsonPath("$[0].title", is(page.getTitle())))
             .andExpect(jsonPath("$[0].count", is(100)));
 
-        verify(replacementCountService).countReplacementsNotReviewedGroupedByPage(WikipediaLanguage.getDefault());
+        verify(replacementCountService).countNotReviewedGroupedByPage(WikipediaLanguage.getDefault());
     }
 
     @Test
@@ -156,7 +155,6 @@ class ReplacementCountControllerTest {
             )
             .andExpect(status().isForbidden());
 
-        verify(replacementCountService, never())
-            .countReplacementsNotReviewedGroupedByPage(WikipediaLanguage.getDefault());
+        verify(replacementCountService, never()).countNotReviewedGroupedByPage(WikipediaLanguage.getDefault());
     }
 }

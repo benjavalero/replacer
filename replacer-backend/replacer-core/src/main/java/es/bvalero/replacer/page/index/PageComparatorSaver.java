@@ -5,7 +5,7 @@ import es.bvalero.replacer.page.IndexedPage;
 import es.bvalero.replacer.page.PageService;
 import es.bvalero.replacer.page.count.PageCountRepository;
 import es.bvalero.replacer.replacement.IndexedReplacement;
-import es.bvalero.replacer.replacement.ReplacementService;
+import es.bvalero.replacer.replacement.ReplacementSaveRepository;
 import java.util.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -19,8 +19,8 @@ class PageComparatorSaver {
 
     // Dependency injection
     private final PageService pageService;
-    private final ReplacementService replacementService;
     private final PageCountRepository pageCountRepository;
+    private final ReplacementSaveRepository replacementSaveRepository;
 
     @Value("${replacer.dump.batch.chunk.size}")
     private int chunkSize;
@@ -30,12 +30,12 @@ class PageComparatorSaver {
 
     PageComparatorSaver(
         PageService pageService,
-        ReplacementService replacementService,
-        PageCountRepository pageCountRepository
+        PageCountRepository pageCountRepository,
+        ReplacementSaveRepository replacementSaveRepository
     ) {
         this.pageService = pageService;
-        this.replacementService = replacementService;
         this.pageCountRepository = pageCountRepository;
+        this.replacementSaveRepository = replacementSaveRepository;
     }
 
     /* Save in DB the result of a page indexing no matter the size of the result */
@@ -101,9 +101,9 @@ class PageComparatorSaver {
         // We assume the replacements removed correspond to not removed pages
         pageService.addPages(pagesToCreate);
         pageService.updatePages(pagesToUpdate);
-        replacementService.addReplacements(replacementsToCreate);
-        replacementService.updateReplacements(replacementsToUpdate);
-        replacementService.removeReplacements(replacementsToDelete);
+        replacementSaveRepository.add(replacementsToCreate);
+        replacementSaveRepository.update(replacementsToUpdate);
+        replacementSaveRepository.remove(replacementsToDelete);
     }
 
     /* Force saving what is left on the batch */

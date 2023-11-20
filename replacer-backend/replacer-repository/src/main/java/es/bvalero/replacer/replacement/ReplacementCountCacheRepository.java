@@ -40,7 +40,7 @@ class ReplacementCountCacheRepository implements ReplacementCountRepository {
     private final LoadingCache<WikipediaLanguage, Collection<ResultCount<String>>> countGroupedByReviewer = Caffeine
         .newBuilder()
         .refreshAfterWrite(refreshTime)
-        .build(l -> replacementCountRepository.countGroupedByReviewer(l));
+        .build(l -> replacementCountRepository.countReviewedGroupedByReviewer(l));
 
     ReplacementCountCacheRepository(
         @Qualifier("replacementJdbcRepository") ReplacementCountRepository replacementCountRepository
@@ -68,7 +68,7 @@ class ReplacementCountCacheRepository implements ReplacementCountRepository {
     }
 
     @Override
-    public Collection<ResultCount<String>> countGroupedByReviewer(WikipediaLanguage lang) {
+    public Collection<ResultCount<String>> countReviewedGroupedByReviewer(WikipediaLanguage lang) {
         return Objects.requireNonNull(this.countGroupedByReviewer.get(lang));
     }
 

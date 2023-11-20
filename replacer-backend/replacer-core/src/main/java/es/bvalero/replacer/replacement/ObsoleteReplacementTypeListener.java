@@ -13,14 +13,14 @@ class ObsoleteReplacementTypeListener implements PropertyChangeListener {
 
     // Dependency injection
     private final ObsoleteReplacementTypeObservable obsoleteReplacementTypeObservable;
-    private final ReplacementService replacementService;
+    private final ReplacementSaveRepository replacementSaveRepository;
 
     ObsoleteReplacementTypeListener(
         ObsoleteReplacementTypeObservable obsoleteReplacementTypeObservable,
-        ReplacementService replacementService
+        ReplacementSaveRepository replacementSaveRepository
     ) {
         this.obsoleteReplacementTypeObservable = obsoleteReplacementTypeObservable;
-        this.replacementService = replacementService;
+        this.replacementSaveRepository = replacementSaveRepository;
     }
 
     @PostConstruct
@@ -32,8 +32,7 @@ class ObsoleteReplacementTypeListener implements PropertyChangeListener {
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         Collection<ObsoleteReplacementType> obsoleteList = (Collection<ObsoleteReplacementType>) evt.getNewValue();
-        obsoleteList.forEach(obsolete ->
-            replacementService.removeReplacementsByType(obsolete.getLang(), obsolete.getType())
+        obsoleteList.forEach(obsolete -> replacementSaveRepository.removeByType(obsolete.getLang(), obsolete.getType())
         );
     }
 }

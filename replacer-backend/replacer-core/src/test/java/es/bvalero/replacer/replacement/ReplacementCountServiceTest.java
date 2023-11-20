@@ -34,7 +34,7 @@ class ReplacementCountServiceTest {
 
         when(replacementCountRepository.countReviewed(lang)).thenReturn(count);
 
-        assertEquals(count, replacementCountService.countReplacementsReviewed(lang));
+        assertEquals(count, replacementCountService.countReviewed(lang));
 
         verify(replacementCountRepository).countReviewed(lang);
     }
@@ -46,7 +46,7 @@ class ReplacementCountServiceTest {
 
         when(replacementCountRepository.countNotReviewed(lang)).thenReturn(count);
 
-        assertEquals(count, replacementCountService.countReplacementsNotReviewed(lang));
+        assertEquals(count, replacementCountService.countNotReviewed(lang));
 
         verify(replacementCountRepository).countNotReviewed(lang);
     }
@@ -55,11 +55,11 @@ class ReplacementCountServiceTest {
     void testCountReplacementsGroupedByReviewer() {
         WikipediaLanguage lang = WikipediaLanguage.getDefault();
         Collection<ResultCount<String>> counts = List.of(ResultCount.of("A", 10));
-        when(replacementCountRepository.countGroupedByReviewer(lang)).thenReturn(counts);
+        when(replacementCountRepository.countReviewedGroupedByReviewer(lang)).thenReturn(counts);
 
-        assertEquals(counts, replacementCountService.countReplacementsGroupedByReviewer(lang));
+        assertEquals(counts, replacementCountService.countReviewedGroupedByReviewer(lang));
 
-        verify(replacementCountRepository).countGroupedByReviewer(lang);
+        verify(replacementCountRepository).countReviewedGroupedByReviewer(lang);
     }
 
     @Test
@@ -75,7 +75,7 @@ class ReplacementCountServiceTest {
         when(replacementCountRepository.countNotReviewedGroupedByPage(lang, ReplacementCountService.NUM_RESULTS))
             .thenReturn(counts);
 
-        assertEquals(counts, replacementCountService.countReplacementsNotReviewedGroupedByPage(lang));
+        assertEquals(counts, replacementCountService.countNotReviewedGroupedByPage(lang));
 
         verify(replacementCountRepository).countNotReviewedGroupedByPage(lang, ReplacementCountService.NUM_RESULTS);
     }

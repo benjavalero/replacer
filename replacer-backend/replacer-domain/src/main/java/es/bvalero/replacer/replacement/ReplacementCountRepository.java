@@ -7,14 +7,14 @@ import java.util.Collection;
 
 /** Repository to retrieve (and cache) the replacement counts for statistics */
 interface ReplacementCountRepository {
-    /** Count the number of replacements reviewed including the custom ones */
+    /** Count the number of reviewed replacements including the custom ones */
     int countReviewed(WikipediaLanguage lang);
 
     /** Count the number of replacements to review */
     int countNotReviewed(WikipediaLanguage lang);
 
     /** Count the number of reviewed replacements, including the custom ones, grouped by reviewer */
-    Collection<ResultCount<String>> countGroupedByReviewer(WikipediaLanguage lang);
+    Collection<ResultCount<String>> countReviewedGroupedByReviewer(WikipediaLanguage lang);
 
     /** Count the number of replacements to review grouped by page in descending order by count */
     Collection<ResultCount<IndexedPage>> countNotReviewedGroupedByPage(WikipediaLanguage lang, int numResults);
