@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Observable } from 'rxjs';
 import { KindCount } from '../../api/models/kind-count';
-import { AlertComponent } from '../../shared/alert/alert.component';
+import { AlertComponent } from '../../shared/alerts/alert-container/alert/alert.component';
 import { ReplacementListService } from './replacement-list.service';
 import { ReplacementTableComponent } from './replacement-table.component';
 

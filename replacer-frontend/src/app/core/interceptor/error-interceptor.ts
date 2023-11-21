@@ -2,7 +2,7 @@ import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HttpStatusCode } 
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { AlertService } from '../../shared/alert/alert.service';
+import { AlertService } from '../../shared/alerts/alert.service';
 import { UserService } from '../user/user.service';
 
 @Injectable()

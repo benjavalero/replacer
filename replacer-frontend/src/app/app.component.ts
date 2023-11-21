@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { HeaderComponent } from './core/header/header.component';
-import { AlertContainerComponent } from './shared/alert/alert-container.component';
+import { AlertContainerComponent } from './shared/alerts/alert-container/alert-container.component';
 
 @Component({
   selector: 'app-root',

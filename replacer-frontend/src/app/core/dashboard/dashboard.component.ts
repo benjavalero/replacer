@@ -4,7 +4,7 @@ import { Title } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
 import { Observable } from 'rxjs';
 import { User } from '../../api/models/user';
-import { AlertComponent } from '../../shared/alert/alert.component';
+import { AlertComponent } from '../../shared/alerts/alert-container/alert/alert.component';
 import { LoginComponent } from '../authentication/login.component';
 import { UserService } from '../user/user.service';
 

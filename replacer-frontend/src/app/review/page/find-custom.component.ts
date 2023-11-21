@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
-import { AlertComponent } from '../../shared/alert/alert.component';
-import { AlertService } from '../../shared/alert/alert.service';
+import { AlertComponent } from '../../shared/alerts/alert-container/alert/alert.component';
+import { AlertService } from '../../shared/alerts/alert.service';
 import StringUtils from '../../shared/util/string-utils';
 
 @Component({

@@ -6,7 +6,7 @@ import { ReplacementCount } from '../api/models/replacement-count';
 import { ReviewerCount } from '../api/models/reviewer-count';
 import { ReplacementApiService } from '../api/services/replacement-api.service';
 import { UserConfigService } from '../core/user/user-config.service';
-import { AlertComponent } from '../shared/alert/alert.component';
+import { AlertComponent } from '../shared/alerts/alert-container/alert/alert.component';
 
 @Component({
   standalone: true,

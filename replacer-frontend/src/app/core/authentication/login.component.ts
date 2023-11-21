@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { AlertComponent } from '../../shared/alert/alert.component';
+import { AlertComponent } from '../../shared/alerts/alert-container/alert/alert.component';
 import { LoginService } from './login.service';
 
 @Component({

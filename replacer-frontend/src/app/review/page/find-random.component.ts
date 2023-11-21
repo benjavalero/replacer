@@ -8,7 +8,7 @@ import { ReplacementType } from '../../api/models/replacement-type';
 import { PageApiService } from '../../api/services/page-api.service';
 import { ReplacementTypeApiService } from '../../api/services/replacement-type-api.service';
 import { StrictHttpResponse } from '../../api/strict-http-response';
-import { AlertService } from '../../shared/alert/alert.service';
+import { AlertService } from '../../shared/alerts/alert.service';
 import { EditPageComponent } from './edit-page.component';
 import { ReviewOptions } from './review-options.model';
 import { ValidateCustomComponent } from './validate-custom.component';

@@ -1,6 +1,6 @@
 import { inject } from '@angular/core';
 import { ActivatedRouteSnapshot, Router, RouterStateSnapshot } from '@angular/router';
-import { AlertService } from '../../shared/alert/alert.service';
+import { AlertService } from '../../shared/alerts/alert.service';
 import { LoginService } from '../authentication/login.service';
 import { UserService } from '../user/user.service';
 

@@ -3,7 +3,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
 import { Observable, Subscription, interval } from 'rxjs';
-import { AlertComponent } from '../../shared/alert/alert.component';
+import { AlertComponent } from '../../shared/alerts/alert-container/alert/alert.component';
 import { sleep } from '../../shared/util/sleep';
 import { DumpAdapterService } from './dump-adapter.service';
 import { DumpAdapterStatus } from './dump.model';

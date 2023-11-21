@@ -1,27 +1,18 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { Injectable, signal } from '@angular/core';
 import { AlertMessage } from './alert-message.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AlertService {
-  readonly alerts$ = new BehaviorSubject<AlertMessage[]>([]);
-
-  private get alerts(): AlertMessage[] {
-    return this.alerts$.getValue();
-  }
-
-  private set alerts(alerts: AlertMessage[]) {
-    this.alerts$.next(alerts);
-  }
+  readonly alerts = signal<AlertMessage[]>([]);
 
   private addAlertMessage(alert: AlertMessage) {
-    this.alerts = [...this.alerts, alert];
+    this.alerts.mutate((v) => v.push(alert));
   }
 
   clearAlertMessages() {
-    this.alerts = [];
+    this.alerts.set([]);
   }
 
   addInfoMessage(msg: string) {
