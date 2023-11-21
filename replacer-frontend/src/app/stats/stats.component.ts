@@ -16,7 +16,7 @@ import { AlertComponent } from '../shared/alerts/alert-container/alert/alert.com
   styleUrls: []
 })
 export class StatsComponent implements OnInit {
-  lang!: string;
+  lang = this.userConfigService.lang;
   numReviewed$!: Observable<ReplacementCount>;
   numNotReviewed$!: Observable<ReplacementCount>;
   numReviewedGrouped$!: Observable<ReviewerCount[]>;
@@ -29,8 +29,6 @@ export class StatsComponent implements OnInit {
 
   ngOnInit() {
     this.titleService.setTitle('Replacer - Estadísticas');
-
-    this.lang = this.userConfigService.lang;
 
     this.numReviewed$ = this.replacementApiService.countReplacements({
       reviewed: true

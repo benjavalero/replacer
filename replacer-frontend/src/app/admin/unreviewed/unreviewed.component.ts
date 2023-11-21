@@ -26,6 +26,6 @@ export class UnreviewedComponent implements OnInit {
   }
 
   get wikipediaUrl(): string {
-    return `https://${this.userConfigService.lang}.wikipedia.org/wiki/`;
+    return `https://${this.userConfigService.lang()}.wikipedia.org/wiki/`;
   }
 }

@@ -12,7 +12,7 @@ import { Snippet } from './page-replacement.model';
 export class EditCustomSnippetComponent implements OnInit {
   @Input() snippet!: Snippet;
   private newText!: string;
-  userLang!: string;
+  userLang = this.userConfigService.lang;
 
   constructor(
     public activeModal: NgbActiveModal,
@@ -21,7 +21,6 @@ export class EditCustomSnippetComponent implements OnInit {
 
   ngOnInit(): void {
     this.newText = this.snippet.text;
-    this.userLang = this.userConfigService.lang;
   }
 
   onChange(event: any) {

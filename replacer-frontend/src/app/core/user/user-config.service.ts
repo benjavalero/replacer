@@ -1,7 +1,5 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
-import { Language } from './language.model';
-import { UserConfig } from './user-config.model';
+import { computed, Injectable, signal } from '@angular/core';
+import { Language, UserConfig } from './user-config.model';
 
 @Injectable({
   providedIn: 'root'
@@ -10,23 +8,20 @@ export class UserConfigService {
   private readonly LANG_DEFAULT: Language = Language.SPANISH;
 
   private readonly userConfigKey = 'userConfig';
-  readonly config$ = new BehaviorSubject<UserConfig>(this.emptyConfig());
 
-  constructor() {
-    this.loadConfig();
-  }
+  readonly config = signal<UserConfig>(this.loadConfig());
+  readonly lang = computed(() => this.config().lang);
 
-  private loadConfig(): void {
+  private loadConfig(): UserConfig {
     let config = this.emptyConfig();
     const localUserConfig = localStorage.getItem(this.userConfigKey);
-    if (localUserConfig) {
+    if (localUserConfig !== null) {
       const localConfig: UserConfig = JSON.parse(localUserConfig);
       if (this.isValid(localConfig)) {
         config = localConfig;
       }
     }
-
-    this.config$.next(config);
+    return config;
   }
 
   private emptyConfig(): UserConfig {
@@ -37,15 +32,8 @@ export class UserConfigService {
     return config != null && config.lang != null;
   }
 
-  get lang(): Language {
-    return this.config$.getValue().lang;
-  }
-
-  set lang(lang: Language) {
-    const currentConfig = this.config$.getValue();
-    const newConfig = { ...currentConfig, lang: lang };
-
-    localStorage.setItem(this.userConfigKey, JSON.stringify(newConfig));
-    this.config$.next(newConfig);
+  setLang(lang: Language) {
+    this.config.mutate((c) => (c.lang = lang));
+    localStorage.setItem(this.userConfigKey, JSON.stringify(this.config()));
   }
 }
