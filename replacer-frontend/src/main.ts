@@ -7,8 +7,8 @@ import { provideRouter } from '@angular/router';
 import { ApiModule } from './app/api/api.module';
 import { AppComponent } from './app/app.component';
 import { routes } from './app/app.routes';
-import { ErrorInterceptor } from './app/core/interceptor/error-interceptor';
-import { LangInterceptor } from './app/core/interceptor/lang-interceptor';
+import { ErrorInterceptor } from './app/core/interceptors/error-interceptor';
+import { LangInterceptor } from './app/core/interceptors/lang-interceptor';
 import { environment } from './environments/environment';
 
 bootstrapApplication(AppComponent, {
