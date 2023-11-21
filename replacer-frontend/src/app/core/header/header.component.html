@@ -5,8 +5,8 @@
             aria-controls="navbarSupportedContent" [attr.aria-expanded]="!isNavCollapsed" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
-    <div id="navbarSupportedContent" class="navbar-collapse" [ngbCollapse]="isNavCollapsed" *ngIf="user$ | async as user">
-      <ul class="navbar-nav mr-auto" *ngIf="user.hasRights">
+    <div id="navbarSupportedContent" class="navbar-collapse" [ngbCollapse]="isNavCollapsed" *ngIf="isValidUser()">
+      <ul class="navbar-nav mr-auto" *ngIf="hasRightsUser()">
         <li class="nav-item">
           <a class="nav-link" routerLinkActive="active" routerLink="/review/notype" (click)="isNavCollapsed = true"
              title="Revisa todos los posibles reemplazos de un artículo aleatorio">Artículo aleatorio</a>
@@ -27,7 +27,7 @@
           <a class="nav-link" href="https://es.wikipedia.org/wiki/Usuario:Benjavalero/Replacer" target="_blank"
              rel="noopener noreferrer" title="Abrir página de la herramienta en Wikipedia">Ayuda</a>
         </li>
-        <li class="nav-item" ngbDropdown *ngIf="user.admin">
+        <li class="nav-item" ngbDropdown *ngIf="isAdminUser()">
           <a class="nav-link" [ngClass]="{ 'active': indexing.isActive || unreviewed.isActive }" style="cursor: pointer;"
              ngbDropdownToggle id="navbarDropdownAdmin" role="button"
              title="Tareas de administración">Administración</a>
@@ -40,10 +40,10 @@
         </li>
       </ul>
       <hr />
-      <ul class="navbar-nav ml-auto justify-content-end" *ngIf="user.name">
+      <ul class="navbar-nav ml-auto justify-content-end">
         <li class="nav-item" ngbDropdown>
           <a class="nav-link" style="cursor: pointer;" ngbDropdownToggle id="navbarDropdownUser" role="button">
-            <em>{{ user.name }} - {{ lang$ | async }}</em>
+            <em>{{ userName() }} - {{ lang$ | async }}</em>
           </a>
           <div ngbDropdownMenu aria-labelledby="navbarDropdownUser" class="dropdown-menu-right">
             <button ngbDropdownItem (click)="onSelectLang('es')">

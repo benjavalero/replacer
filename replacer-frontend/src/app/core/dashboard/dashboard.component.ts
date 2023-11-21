@@ -2,8 +2,6 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
-import { Observable } from 'rxjs';
-import { User } from '../../api/models/user';
 import { AlertComponent } from '../../shared/alerts/alert-container/alert/alert.component';
 import { LoginComponent } from '../authentication/login.component';
 import { UserService } from '../user/user.service';
@@ -16,7 +14,8 @@ import { UserService } from '../user/user.service';
   styleUrls: []
 })
 export class DashboardComponent implements OnInit {
-  user$!: Observable<User | null>;
+  isValidUser = this.userService.isValidUser;
+  hasRightsUser = this.userService.hasRightsUser;
 
   constructor(
     private userService: UserService,
@@ -25,7 +24,5 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit() {
     this.titleService.setTitle('Replacer - Reemplazador de la Wikipedia');
-
-    this.user$ = this.userService.user$;
   }
 }

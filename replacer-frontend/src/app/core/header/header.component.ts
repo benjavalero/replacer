@@ -4,7 +4,6 @@ import { Router, RouterModule } from '@angular/router';
 import { NgbCollapseModule, NgbDropdownModule, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { User } from '../../api/models/user';
 import { Language } from '../user/language.model';
 import { UserConfig } from '../user/user-config.model';
 import { UserConfigService } from '../user/user-config.service';
@@ -20,7 +19,10 @@ import { ChangeLanguageComponent } from './change-language.component';
 })
 export class HeaderComponent implements OnInit {
   isNavCollapsed = true;
-  user$!: Observable<User | null>;
+  isValidUser = this.userService.isValidUser;
+  hasRightsUser = this.userService.hasRightsUser;
+  isAdminUser = this.userService.isAdminUser;
+  userName = this.userService.userName;
   lang$!: Observable<Language>;
 
   constructor(
@@ -31,7 +33,6 @@ export class HeaderComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.user$ = this.userService.user$;
     this.lang$ = this.userConfigService.config$.pipe(map((config: UserConfig) => config.lang));
   }
 

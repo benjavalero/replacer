@@ -5,10 +5,8 @@ import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCheckDouble, faList } from '@fortawesome/free-solid-svg-icons';
 import { NgbModal, NgbPaginationModule, NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
-import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { SubtypeCount } from '../../api/models/subtype-count';
-import { User } from '../../api/models/user';
 import { UserConfigService } from '../../core/user/user-config.service';
 import { UserService } from '../../core/user/user.service';
 import StringUtils from '../../shared/util/string-utils';
@@ -41,7 +39,7 @@ export class ReplacementTableComponent implements OnInit, OnChanges {
 
   filteredItems: SubtypeCount[];
 
-  user$!: Observable<User | null>;
+  isBotUser = this.userService.isBotUser;
   label!: string;
 
   // Filters
@@ -78,7 +76,6 @@ export class ReplacementTableComponent implements OnInit, OnChanges {
   }
 
   ngOnInit() {
-    this.user$ = this.userService.user$;
     this.label = kindLabel[this.kind];
   }
 
@@ -165,8 +162,8 @@ export class ReplacementTableComponent implements OnInit, OnChanges {
     return this.subtypeCounts.length > this.PAGE_SIZE;
   }
 
-  isEditable(count: SubtypeCount, user: User): boolean {
-    return count.c > 0 && (!count.forBots || user.bot);
+  isEditable(count: SubtypeCount): boolean {
+    return count.c > 0 && (!count.forBots || this.isBotUser());
   }
 
   reviewPages(subtype: string): void {

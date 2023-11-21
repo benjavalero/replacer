@@ -7,13 +7,13 @@
   </div>
 
   <div *ngIf="filteredItems.length">
-    <table class="table" *ngIf="user$ | async as user"
+    <table class="table"
       aria-describedby="Lista de potenciales reemplazos sin revisar y la cantidad estimada de páginas que los contienen">
       <thead>
         <tr>
           <th scope="col" class="{{ columnDirection('s') }}" (click)="sort('s')">Subtipo</th>
           <th scope="col" class="{{ columnDirection('c') }}" (click)="sort('c')">N.º</th>
-          <th scope="col" class="d-none d-sm-table-cell text-nowrap" *ngIf="user.bot">
+          <th scope="col" class="d-none d-sm-table-cell text-nowrap" *ngIf="isBotUser()">
             Lista de
             <br />
             páginas
@@ -25,15 +25,15 @@
           <td class="w-75">
             <!-- No link in case of zero count after reviewing a subtype -->
             <!-- No link in case of replacement type for bots -->
-            <a *ngIf="isEditable(item, user)" routerLink="/review/{{ kind }}/{{ item.s }}" class="no-underline">{{ item.s }}</a>
-            <span *ngIf="!isEditable(item, user)">{{ item.s }}</span>
+            <a *ngIf="isEditable(item)" routerLink="/review/{{ kind }}/{{ item.s }}" class="no-underline">{{ item.s }}</a>
+            <span *ngIf="!isEditable(item)">{{ item.s }}</span>
             &nbsp;
             <span *ngIf="item.forBots" class="badge text-bg-light"
                ngbTooltip="Este tipo de reemplazo solo es editable directamente por usuarios con permisos de bot,
                   aunque es editable por usuarios normales junto con otras ediciones.">bot</span>
           </td>
           <td class="w-25">{{ item.c }}</td>
-          <td class="d-none d-sm-table-cell text-nowrap" *ngIf="user.bot">
+          <td class="d-none d-sm-table-cell text-nowrap" *ngIf="isBotUser()">
             <a class="btn btn-outline-secondary" role="button"
                href="{{ pageListUrl }}&kind={{ kind }}&subtype={{ item.s }}" target="_blank" rel="noopener noreferrer"
                title="Abrir lista de páginas" [ngClass]="{'disabled': item.c === 0}">

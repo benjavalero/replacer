@@ -9,8 +9,8 @@
   </div>
 </div>
 
-<div *ngIf="user$ | async as user; else login">
-  <div class="row" *ngIf="user.hasRights">
+<div *ngIf="isValidUser(); else login">
+  <div class="row" *ngIf="hasRightsUser()">
     <div class="col-md-6 col-lg-4 py-1">
       <div class="card h-100 bg-light">
         <div class="card-body">
@@ -52,7 +52,7 @@
     </div>
   </div>
 
-  <app-alert type="danger" *ngIf="!user.hasRights">
+  <app-alert type="danger" *ngIf="!hasRightsUser()">
     <p>Es necesario ser un usuario <a href="https://es.wikipedia.org/wiki/Wikipedia:Autoconfirmados" target="_blank"
         rel="noopener noreferrer">autoconfirmado</a> para utilizar Replacer.</p>
   </app-alert>

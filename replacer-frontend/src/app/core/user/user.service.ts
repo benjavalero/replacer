@@ -1,5 +1,4 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { computed, Injectable, signal } from '@angular/core';
 import { User } from '../../api/models/user';
 
 @Injectable({
@@ -7,36 +6,29 @@ import { User } from '../../api/models/user';
 })
 export class UserService {
   private readonly wikipediaUserKey = 'wikipediaUser';
-  readonly user$ = new BehaviorSubject<User | null>(null);
+  private readonly user = signal<User>(this.loadCurrentUser());
+  readonly isValidUser = computed(() => this.user().name !== '');
+  readonly hasRightsUser = computed(() => this.user().hasRights);
+  readonly isBotUser = computed(() => this.user().bot);
+  readonly isAdminUser = computed(() => this.user().admin);
+  readonly userName = computed(() => this.user().name);
 
-  constructor() {
-    this.loadUser();
-  }
-
-  get userName(): string | undefined {
-    return this.user$.getValue()?.name;
-  }
-
-  private loadUser(): void {
-    let user: User | null = null;
+  private loadCurrentUser(): User {
     const localWikipediaUser = localStorage.getItem(this.wikipediaUserKey);
-    if (localWikipediaUser) {
-      user = JSON.parse(localWikipediaUser) as User;
+    if (localWikipediaUser !== null) {
+      return JSON.parse(localWikipediaUser) as User;
+    } else {
+      return this.buildNotValidUser();
     }
-
-    this.user$.next(user);
   }
 
-  isValidUser(): boolean {
-    return this.user$.getValue() !== null;
-  }
-
-  hasRightsUser(): boolean {
-    return this.user$.getValue()?.hasRights || false;
-  }
-
-  isBotUser(): boolean {
-    return this.user$.getValue()?.bot || false;
+  private buildNotValidUser(): User {
+    return {
+      name: '',
+      hasRights: false,
+      bot: false,
+      admin: false
+    } as User;
   }
 
   clearSession(): void {
@@ -44,11 +36,12 @@ export class UserService {
   }
 
   setUser(user: User | null): void {
-    if (user) {
+    if (user !== null) {
       localStorage.setItem(this.wikipediaUserKey, JSON.stringify(user));
+      this.user.set(user);
     } else {
       localStorage.removeItem(this.wikipediaUserKey);
+      this.user.set(this.buildNotValidUser());
     }
-    this.user$.next(user);
   }
 }
