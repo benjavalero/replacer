@@ -1,5 +1,6 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
   <div class="container-fluid">
+    <!-- Brand name and hamburger button (when collapsed) -->
     <a class="navbar-brand" routerLink="/">Replacer</a>
     <button
       type="button"
@@ -10,7 +11,9 @@
       aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
+
     <div id="navbarSupportedContent" class="navbar-collapse" [ngbCollapse]="isNavCollapsed" *ngIf="isValidUser()">
+      <!-- Navigation links are only available for valid users -->
       <ul class="navbar-nav mr-auto" *ngIf="hasRightsUser()">
         <li class="nav-item">
           <a
@@ -95,20 +98,11 @@
           </div>
         </li>
       </ul>
+
       <hr />
-      <ul class="navbar-nav ml-auto justify-content-end">
-        <li class="nav-item" ngbDropdown>
-          <a class="nav-link" style="cursor: pointer" ngbDropdownToggle id="navbarDropdownUser" role="button">
-            <em>{{ userName() }} - {{ lang() }}</em>
-          </a>
-          <div ngbDropdownMenu aria-labelledby="navbarDropdownUser" class="dropdown-menu-right">
-            <button ngbDropdownItem (click)="onSelectLang('es')">En español (es.wikipedia.org)</button>
-            <button ngbDropdownItem (click)="onSelectLang('gl')">En galego (gl.wikipedia.org)</button>
-            <div class="dropdown-divider"></div>
-            <button ngbDropdownItem (click)="onCloseSession()">Cerrar sesión</button>
-          </div>
-        </li>
-      </ul>
+
+      <!-- User menu. Currently only with language options. -->
+      <app-header-user-menu></app-header-user-menu>
     </div>
   </div>
 </nav>

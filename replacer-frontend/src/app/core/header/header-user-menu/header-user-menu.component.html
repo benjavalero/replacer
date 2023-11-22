@@ -1,0 +1,13 @@
+<ul class="navbar-nav ml-auto justify-content-end">
+  <li class="nav-item" ngbDropdown>
+    <a class="nav-link" style="cursor: pointer" ngbDropdownToggle id="navbarDropdownUser" role="button">
+      <em>{{ userName() }} - {{ lang() }}</em>
+    </a>
+    <div ngbDropdownMenu aria-labelledby="navbarDropdownUser" class="dropdown-menu-right">
+      <button ngbDropdownItem (click)="onSelectLang('es')">En español (es.wikipedia.org)</button>
+      <button ngbDropdownItem (click)="onSelectLang('gl')">En galego (gl.wikipedia.org)</button>
+      <div class="dropdown-divider"></div>
+      <button ngbDropdownItem (click)="onCloseSession()">Cerrar sesión</button>
+    </div>
+  </li>
+</ul>
