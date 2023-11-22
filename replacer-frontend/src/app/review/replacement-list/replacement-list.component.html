@@ -6,8 +6,10 @@
     de páginas que los contienen.
   </p>
 
-  <app-replacement-table *ngFor="let kindCount of kindCounts" [kind]="kindCount.k" [subtypeCounts]="kindCount.l">
-  </app-replacement-table>
+  <app-replacement-table
+    *ngFor="let kindCount of kindCounts"
+    [kind]="kindCount.k"
+    [subtypeCounts]="kindCount.l"></app-replacement-table>
   <app-alert type="warning" *ngIf="kindCounts.length === 0">No se ha encontrado ningún artículo</app-alert>
 </div>
 <ng-template #loading>

@@ -1,44 +1,66 @@
 <h3>Reemplazo personalizado</h3>
 
-<p>Las reglas para definir un reemplazo personalizado son las mismas que para los errores ortográficos de los listados
+<p>
+  Las reglas para definir un reemplazo personalizado son las mismas que para los errores ortográficos de los listados
   generales: un texto a reemplazar, si se quiere distinguir mayúsculas en dicho texto y una sugerencia para reemplazar
-  el texto.</p>
+  el texto.
+</p>
 
 <form (ngSubmit)="onSubmit()" class="mt-4">
   <div class="form-group row">
     <label for="text-replacement" class="col-sm-2 col-form-label">Texto a reemplazar:</label>
     <div class="col-sm-10">
-      <input id="text-replacement" name="text-replacement" class="form-control" type="text" maxlength="100"
-        placeholder="Texto a reemplazar" [(ngModel)]="replacement" autocomplete="off" />
+      <input
+        id="text-replacement"
+        name="text-replacement"
+        class="form-control"
+        type="text"
+        maxlength="100"
+        placeholder="Texto a reemplazar"
+        [(ngModel)]="replacement"
+        autocomplete="off" />
     </div>
   </div>
   <div class="form-check">
-    <input class="form-check-input" type="checkbox" [(ngModel)]="caseSensitive" id="case-sensitive"
-      name="case-sensitive">
-    <label class="form-check-label" for="case-sensitive">
-      Distinguir mayúsculas en el texto a reemplazar
-    </label>
+    <input
+      class="form-check-input"
+      type="checkbox"
+      [(ngModel)]="caseSensitive"
+      id="case-sensitive"
+      name="case-sensitive" />
+    <label class="form-check-label" for="case-sensitive">Distinguir mayúsculas en el texto a reemplazar</label>
   </div>
   <div class="form-group row mt-4">
     <label for="text-suggestion" class="col-sm-2 col-form-label">Texto sugerido:</label>
     <div class="col-sm-10">
-      <input id="text-suggestion" name="text-suggestion" class="form-control" type="text" placeholder="Texto sugerido"
-        [(ngModel)]="suggestion" autocomplete="off" />
-      <small class="form-text text-muted">
-        Puede introducir varias sugerencias separadas por comas
-      </small>
+      <input
+        id="text-suggestion"
+        name="text-suggestion"
+        class="form-control"
+        type="text"
+        placeholder="Texto sugerido"
+        [(ngModel)]="suggestion"
+        autocomplete="off" />
+      <small class="form-text text-muted">Puede introducir varias sugerencias separadas por comas</small>
     </div>
   </div>
 
-  <button type="submit" class="btn btn-primary mt-2" id="button-search">
-    Buscar
-  </button>
+  <button type="submit" class="btn btn-primary mt-2" id="button-search">Buscar</button>
 </form>
 
 <app-alert type="warning" [icon]="true" class="alert-small">
-  <p>El propósito de los reemplazos personalizados es facilitar aquellas correcciones con pocas ocurrencias y que por
-    tanto no figuran en los listados generales.</p>
-  <p>Si un reemplazo tiene muchas ocurrencias, se recomienda añadirlo a los <a
-      href="https://es.wikipedia.org/wiki/Usuario:Benjavalero/Replacer#Tipos_de_reemplazos" target="_blank"
-      rel="noopener noreferrer">listados generales</a> para un mantenimiento más óptimo.</p>
+  <p>
+    El propósito de los reemplazos personalizados es facilitar aquellas correcciones con pocas ocurrencias y que por
+    tanto no figuran en los listados generales.
+  </p>
+  <p>
+    Si un reemplazo tiene muchas ocurrencias, se recomienda añadirlo a los
+    <a
+      href="https://es.wikipedia.org/wiki/Usuario:Benjavalero/Replacer#Tipos_de_reemplazos"
+      target="_blank"
+      rel="noopener noreferrer">
+      listados generales
+    </a>
+    para un mantenimiento más óptimo.
+  </p>
 </app-alert>

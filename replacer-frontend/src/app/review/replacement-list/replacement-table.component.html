@@ -2,12 +2,18 @@
   <h4>{{ label }}</h4>
 
   <div *ngIf="filtrable" class="form-group mt-4">
-    <input class="form-control" type="text" [ngModel]="filterValue" autocomplete="off"
-      (ngModelChange)="onFilter($event)" placeholder="Filtrar por subtipo (ignora mayúsculas y acentos)" />
+    <input
+      class="form-control"
+      type="text"
+      [ngModel]="filterValue"
+      autocomplete="off"
+      (ngModelChange)="onFilter($event)"
+      placeholder="Filtrar por subtipo (ignora mayúsculas y acentos)" />
   </div>
 
   <div *ngIf="filteredItems.length">
-    <table class="table"
+    <table
+      class="table"
       aria-describedby="Lista de potenciales reemplazos sin revisar y la cantidad estimada de páginas que los contienen">
       <thead>
         <tr>
@@ -25,23 +31,38 @@
           <td class="w-75">
             <!-- No link in case of zero count after reviewing a subtype -->
             <!-- No link in case of replacement type for bots -->
-            <a *ngIf="isEditable(item)" routerLink="/review/{{ kind }}/{{ item.s }}" class="no-underline">{{ item.s }}</a>
+            <a *ngIf="isEditable(item)" routerLink="/review/{{ kind }}/{{ item.s }}" class="no-underline">
+              {{ item.s }}
+            </a>
             <span *ngIf="!isEditable(item)">{{ item.s }}</span>
             &nbsp;
-            <span *ngIf="item.forBots" class="badge text-bg-light"
-               ngbTooltip="Este tipo de reemplazo solo es editable directamente por usuarios con permisos de bot,
-                  aunque es editable por usuarios normales junto con otras ediciones.">bot</span>
+            <span
+              *ngIf="item.forBots"
+              class="badge text-bg-light"
+              ngbTooltip="Este tipo de reemplazo solo es editable directamente por usuarios con permisos de bot,
+                  aunque es editable por usuarios normales junto con otras ediciones.">
+              bot
+            </span>
           </td>
           <td class="w-25">{{ item.c }}</td>
           <td class="d-none d-sm-table-cell text-nowrap" *ngIf="isBotUser()">
-            <a class="btn btn-outline-secondary" role="button"
-               href="{{ pageListUrl }}&kind={{ kind }}&subtype={{ item.s }}" target="_blank" rel="noopener noreferrer"
-               title="Abrir lista de páginas" [ngClass]="{'disabled': item.c === 0}">
+            <a
+              class="btn btn-outline-secondary"
+              role="button"
+              href="{{ pageListUrl }}&kind={{ kind }}&subtype={{ item.s }}"
+              target="_blank"
+              rel="noopener noreferrer"
+              title="Abrir lista de páginas"
+              [ngClass]="{ disabled: item.c === 0 }">
               <fa-icon [icon]="listIcon"></fa-icon>
             </a>
             &nbsp;
-            <a class="btn btn-outline-secondary" role="button" (click)="reviewPages(item.s)"
-              title="Marcar todas como revisadas" [ngClass]="{'disabled': item.c === 0}">
+            <a
+              class="btn btn-outline-secondary"
+              role="button"
+              (click)="reviewPages(item.s)"
+              title="Marcar todas como revisadas"
+              [ngClass]="{ disabled: item.c === 0 }">
               <fa-icon [icon]="checkIcon"></fa-icon>
             </a>
           </td>
@@ -49,9 +70,14 @@
       </tbody>
     </table>
 
-    <ngb-pagination *ngIf="collectionSize > pageSize" [collectionSize]="collectionSize" [(page)]="page"
-      [pageSize]="pageSize" [maxSize]="maxSize" [rotate]="true" class="d-flex justify-content-center">
-    </ngb-pagination>
+    <ngb-pagination
+      *ngIf="collectionSize > pageSize"
+      [collectionSize]="collectionSize"
+      [(page)]="page"
+      [pageSize]="pageSize"
+      [maxSize]="maxSize"
+      [rotate]="true"
+      class="d-flex justify-content-center"></ngb-pagination>
   </div>
   <p *ngIf="!filteredItems.length">No hay reemplazos que cumplan los filtros de búsqueda.</p>
 </div>

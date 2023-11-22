@@ -30,8 +30,7 @@ export const kindLabel: { [key: number]: string } = {
       [page]="page"
       [options]="options"
       [numPending]="numPending"
-      (saved)="onSaved($event)"
-    ></app-edit-page>
+      (saved)="onSaved($event)"></app-edit-page>
   `,
   styleUrls: []
 })

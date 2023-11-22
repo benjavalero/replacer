@@ -1,16 +1,11 @@
 <div class="card bg-light">
   <div class="card-body">
-    <p class="card-text">
-      Necesita autenticarse en la Wikipedia para guardar los cambios con su usuario.
-    </p>
+    <p class="card-text">Necesita autenticarse en la Wikipedia para guardar los cambios con su usuario.</p>
     <div *ngIf="authorizationUrl$ | async as url; else loading">
-      <a class="btn btn-primary w-100" href="{{ url }}">
-        Iniciar sesión</a>
+      <a class="btn btn-primary w-100" href="{{ url }}">Iniciar sesión</a>
     </div>
     <ng-template #loading>
-      <app-alert>
-        Comprobando autenticación…
-      </app-alert>
+      <app-alert>Comprobando autenticación…</app-alert>
     </ng-template>
   </div>
 </div>

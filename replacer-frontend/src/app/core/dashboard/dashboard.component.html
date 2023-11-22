@@ -53,8 +53,13 @@
   </div>
 
   <app-alert type="danger" *ngIf="!hasRightsUser()">
-    <p>Es necesario ser un usuario <a href="https://es.wikipedia.org/wiki/Wikipedia:Autoconfirmados" target="_blank"
-        rel="noopener noreferrer">autoconfirmado</a> para utilizar Replacer.</p>
+    <p>
+      Es necesario ser un usuario
+      <a href="https://es.wikipedia.org/wiki/Wikipedia:Autoconfirmados" target="_blank" rel="noopener noreferrer">
+        autoconfirmado
+      </a>
+      para utilizar Replacer.
+    </p>
   </app-alert>
 
   <app-alert type="warning" [icon]="true" class="alert-small">
