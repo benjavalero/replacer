@@ -1,5 +1,5 @@
 dist
 node
 node_modules
+src/app/api
 *.html
-*.css

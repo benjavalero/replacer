@@ -2,6 +2,6 @@
 nav ol {
   --bs-breadcrumb-bg: #e9ecef;
   --bs-breadcrumb-padding-x: 1rem;
-  --bs-breadcrumb-padding-y: .75rem;
-  --bs-breadcrumb-border-radius: .25rem;
+  --bs-breadcrumb-padding-y: 0.75rem;
+  --bs-breadcrumb-border-radius: 0.25rem;
 }

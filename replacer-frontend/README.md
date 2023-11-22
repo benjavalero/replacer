@@ -29,11 +29,15 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 ## OpenAPI generation
 
 Install [ng-openapi-gen](https://github.com/cyclosproject/ng-openapi-gen) to generate the frontend code based on the OpenAPI specification of the backend:
+
 ```
 npm install -g ng-openapi-gen
 ```
+
 and then we just run:
+
 ```
 ng-openapi-gen
 ```
+
 based on the configuration in `ng-openapi-gen.json`.
