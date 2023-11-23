@@ -10,7 +10,7 @@
 </div>
 
 <div *ngIf="isValidUser(); else login">
-  <div class="row" *ngIf="hasRightsUser()">
+  <div class="row" *ngIf="hasRightsUser(); else noRightsAlert">
     <div class="col-md-6 col-lg-4 py-1">
       <div class="card h-100 bg-light">
         <div class="card-body">
@@ -52,15 +52,17 @@
     </div>
   </div>
 
-  <app-alert type="danger" *ngIf="!hasRightsUser()">
-    <p>
-      Es necesario ser un usuario
-      <a href="https://es.wikipedia.org/wiki/Wikipedia:Autoconfirmados" target="_blank" rel="noopener noreferrer">
-        autoconfirmado
-      </a>
-      para utilizar Replacer.
-    </p>
-  </app-alert>
+  <ng-template #noRightsAlert>
+    <app-alert type="danger">
+      <p>
+        Es necesario ser un usuario
+        <a href="https://es.wikipedia.org/wiki/Wikipedia:Autoconfirmados" target="_blank" rel="noopener noreferrer">
+          autoconfirmado
+        </a>
+        para utilizar Replacer.
+      </p>
+    </app-alert>
+  </ng-template>
 
   <app-alert type="warning" [icon]="true" class="alert-small">
     <p><strong>Usa Replacer de forma responsable</strong></p>
@@ -68,6 +70,7 @@
     <p>Hay muchísimos falsos positivos; en caso de duda, elige la opción de guardar sin cambios.</p>
   </app-alert>
 </div>
+
 <ng-template #login>
   <app-login></app-login>
 </ng-template>

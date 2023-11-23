@@ -1,5 +1,6 @@
 import { computed, Injectable, signal } from '@angular/core';
-import { Language, UserConfig } from './user-config.model';
+import { Language } from '../model/language.model';
+import { UserConfig } from './user-config.model';
 
 @Injectable({
   providedIn: 'root'

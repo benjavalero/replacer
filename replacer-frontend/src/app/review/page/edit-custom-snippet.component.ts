@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { UserConfigService } from '../../core/user/user-config.service';
+import { UserConfigService } from '../../core/services/user-config.service';
 import { Snippet } from './page-replacement.model';
 
 @Component({

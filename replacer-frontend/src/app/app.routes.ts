@@ -1,8 +1,8 @@
 import { Routes } from '@angular/router';
 import { DumpComponent } from './admin/dump-indexing/dump.component';
 import { UnreviewedComponent } from './admin/unreviewed/unreviewed.component';
-import { OAuthResponseComponent } from './core/authentication/oauth-response.component';
 import { DashboardComponent } from './core/dashboard/dashboard.component';
+import { OAuthResponseComponent } from './core/dashboard/oauth-response/oauth-response.component';
 import { authenticationGuard } from './core/guards/authentication.guard';
 import { FindCustomComponent } from './review/page/find-custom.component';
 import { FindRandomComponent } from './review/page/find-random.component';

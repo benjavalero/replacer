@@ -1,13 +1,13 @@
 import { inject } from '@angular/core';
 import { ActivatedRouteSnapshot, Router, RouterStateSnapshot } from '@angular/router';
 import { AlertService } from '../../shared/alerts/alert.service';
-import { LoginService } from '../authentication/login.service';
-import { UserService } from '../user/user.service';
+import { UserLoginService } from '../services/user-login.service';
+import { UserService } from '../services/user.service';
 
 export const authenticationGuard = (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
   const alertService: AlertService = inject(AlertService);
   const userService: UserService = inject(UserService);
-  const loginService: LoginService = inject(LoginService);
+  const loginService: UserLoginService = inject(UserLoginService);
   const router: Router = inject(Router);
 
   // Clear all alerts

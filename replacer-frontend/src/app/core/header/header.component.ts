@@ -8,7 +8,7 @@ import {
   NgbDropdownMenu,
   NgbDropdownToggle
 } from '@ng-bootstrap/ng-bootstrap';
-import { UserService } from '../user/user.service';
+import { UserService } from '../services/user.service';
 import { HeaderUserMenuComponent } from './header-user-menu/header-user-menu.component';
 
 @Component({

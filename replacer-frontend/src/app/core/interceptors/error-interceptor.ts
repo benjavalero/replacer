@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { AlertService } from '../../shared/alerts/alert.service';
-import { UserService } from '../user/user.service';
+import { UserService } from '../services/user.service';
 
 @Injectable()
 export class ErrorInterceptor implements HttpInterceptor {

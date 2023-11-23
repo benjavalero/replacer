@@ -1,7 +1,4 @@
-export enum Language {
-  SPANISH = 'es',
-  GALICIAN = 'gl'
-}
+import { Language } from '../model/language.model';
 
 export class UserConfig {
   lang: Language;

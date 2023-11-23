@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbDropdown, NgbDropdownItem, NgbDropdownMenu, NgbDropdownToggle, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Language } from '../../user/user-config.model';
-import { UserConfigService } from '../../user/user-config.service';
-import { UserService } from '../../user/user.service';
+import { Language } from '../../model/language.model';
+import { UserConfigService } from '../../services/user-config.service';
+import { UserService } from '../../services/user.service';
 import { ChangeLanguageComponent } from './change-language/change-language.component';
 
 @Component({

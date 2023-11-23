@@ -1,15 +1,15 @@
-import { CommonModule } from '@angular/common';
+import { NgIf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { RouterModule } from '@angular/router';
+import { RouterLink } from '@angular/router';
 import { AlertComponent } from '../../shared/alerts/alert-container/alert/alert.component';
-import { LoginComponent } from '../authentication/login.component';
-import { UserService } from '../user/user.service';
+import { UserService } from '../services/user.service';
+import { LoginComponent } from './login/login.component';
 
 @Component({
-  standalone: true,
   selector: 'app-dashboard',
-  imports: [CommonModule, RouterModule, AlertComponent, LoginComponent],
+  standalone: true,
+  imports: [NgIf, RouterLink, AlertComponent, LoginComponent],
   templateUrl: './dashboard.component.html',
   styleUrls: []
 })

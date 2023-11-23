@@ -8,7 +8,7 @@ import { Replacement } from '../../api/models/replacement';
 import { ReviewedPage } from '../../api/models/reviewed-page';
 import { ReviewedReplacement } from '../../api/models/reviewed-replacement';
 import { PageApiService } from '../../api/services/page-api.service';
-import { UserService } from '../../core/user/user.service';
+import { UserService } from '../../core/services/user.service';
 import { AlertComponent } from '../../shared/alerts/alert-container/alert/alert.component';
 import { AlertService } from '../../shared/alerts/alert.service';
 import { sleep } from '../../shared/util/sleep';

@@ -6,12 +6,12 @@ import { RequestToken } from '../../api/models/request-token';
 import { User } from '../../api/models/user';
 import { VerifyAuthorizationRequest } from '../../api/models/verify-authorization-request';
 import { UserApiService } from '../../api/services/user-api.service';
-import { UserService } from '../user/user.service';
+import { UserService } from './user.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class LoginService {
+export class UserLoginService {
   private readonly requestTokenKey = 'requestToken';
   private readonly redirectPathKey = 'redirectPath';
 
