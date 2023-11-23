@@ -1,6 +1,6 @@
 # Versions
 
-## 2.27.1 (??)
+## 2.27.1 (23 Nov 2023)
 - Fix: ignore false degrees where the degree letter belongs to a word and therefore are likely to be ordinals
 
 ## 2.27.0 (19 Nov 2023)
