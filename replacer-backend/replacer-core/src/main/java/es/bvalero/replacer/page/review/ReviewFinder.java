@@ -185,7 +185,7 @@ abstract class ReviewFinder {
             // STEP 2.2: Build the review for the page, or return an empty review in case the page doesn't exist.
             return wikipediaPage.flatMap(page -> buildPageReview(page, options));
         } catch (Exception e) {
-            LOGGER.error("Error finding page review: {}", pageKey);
+            LOGGER.error("Error finding page review: {}", pageKey, e);
             pageRepository.removeByKey(Set.of(pageKey));
             return Optional.empty();
         }
