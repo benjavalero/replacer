@@ -84,6 +84,7 @@ abstract class ReviewFinder {
         }
 
         // If we get here, there are no more pages to review for the given options.
+        removePageCounts(options);
         return Optional.empty();
     }
 
@@ -173,6 +174,10 @@ abstract class ReviewFinder {
     }
 
     abstract PageSearchResult findPageIdsToReview(ReviewOptions options);
+
+    void removePageCounts(ReviewOptions options) {
+        // Do nothing by default
+    }
 
     ///// STEP 2 /////
 

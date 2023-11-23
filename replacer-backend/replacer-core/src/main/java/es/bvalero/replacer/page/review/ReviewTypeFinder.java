@@ -55,6 +55,11 @@ class ReviewTypeFinder extends ReviewFinder {
     }
 
     @Override
+    void removePageCounts(ReviewOptions options) {
+        pageCountRepository.removePageCountByType(options.getUser().getId().getLang(), options.getStandardType());
+    }
+
+    @Override
     Collection<Replacement> decorateReplacements(
         WikipediaPage page,
         ReviewOptions options,
