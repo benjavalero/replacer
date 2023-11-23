@@ -116,4 +116,29 @@ class DegreeFinderTest {
 
         assertEquals(3, replacements.size());
     }
+
+    @Test
+    void testDegreePossiblyOrdinal() {
+        String text = "En el grupo 1ºC.";
+
+        List<Replacement> replacements = degreeFinder.findList(text);
+
+        assertEquals(1, replacements.size());
+        Replacement rep = replacements.get(0);
+        assertEquals(3, rep.getSuggestions().size());
+        assertEquals("1ºC", rep.getSuggestions().get(0).getText());
+        assertEquals("1&nbsp;°C", rep.getSuggestions().get(1).getText());
+        assertEquals("grados", rep.getSuggestions().get(1).getComment());
+        assertEquals("1.ºC", rep.getSuggestions().get(2).getText());
+        assertEquals("ordinal", rep.getSuggestions().get(2).getComment());
+    }
+
+    @Test
+    void testFalseDegreeActuallyOrdinal() {
+        String text = "En el 1º Campeonato.";
+
+        List<Replacement> replacements = degreeFinder.findList(text);
+
+        assertTrue(replacements.isEmpty());
+    }
 }

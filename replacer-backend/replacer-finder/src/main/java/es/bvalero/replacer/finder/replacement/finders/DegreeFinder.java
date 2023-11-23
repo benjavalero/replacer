@@ -96,7 +96,11 @@ class DegreeFinder implements ReplacementFinder {
             return null;
         }
         final int startLetter = text.charAt(startSymbol + 1) == SPACE ? startSymbol + 2 : startSymbol + 1;
-        if (startLetter >= text.length() || !DEGREE_LETTERS.contains(text.charAt(startLetter))) {
+        if (
+            startLetter >= text.length() ||
+            !DEGREE_LETTERS.contains(text.charAt(startLetter)) ||
+            !FinderUtils.isWordCompleteInText(startLetter, text.substring(startLetter, startLetter + 1), text)
+        ) {
             return null;
         }
 
@@ -189,7 +193,7 @@ class DegreeFinder implements ReplacementFinder {
         suggestions.add(Suggestion.of(text, suggestion));
         suggestions.add(Suggestion.of(fixedDegree, "grados"));
 
-        // Excepcion: sometimes 1ºC might be an ordinal, e.g. the group of a sports competition.
+        // Exception: sometimes 1ºC might be an ordinal, e.g. the group of a sports competition.
         if (
             isNumeric(word) &&
             StringUtils.isEmpty(space1) &&
