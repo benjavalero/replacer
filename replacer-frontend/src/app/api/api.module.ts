@@ -6,7 +6,6 @@ import { ApiConfiguration, ApiConfigurationParams } from './api-configuration';
 
 import { UserApiService } from './services/user-api.service';
 import { PageApiService } from './services/page-api.service';
-import { PagesApiService } from './services/pages-api.service';
 import { DumpApiService } from './services/dump-api.service';
 import { ReplacementTypeApiService } from './services/replacement-type-api.service';
 import { ReplacementApiService } from './services/replacement-api.service';
@@ -21,7 +20,6 @@ import { ReplacementApiService } from './services/replacement-api.service';
   providers: [
     UserApiService,
     PageApiService,
-    PagesApiService,
     DumpApiService,
     ReplacementTypeApiService,
     ReplacementApiService,

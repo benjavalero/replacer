@@ -18,7 +18,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@Tag(name = "Pages")
+@Tag(name = "Page")
 @Slf4j
 @RestController
 @RequestMapping("api/page/type")
