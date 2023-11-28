@@ -1,10 +1,8 @@
-package es.bvalero.replacer.wikipedia;
+package es.bvalero.replacer.user;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import es.bvalero.replacer.user.AccessToken;
-import es.bvalero.replacer.user.UserId;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import lombok.extern.slf4j.Slf4j;
@@ -25,11 +23,11 @@ class WikipediaUserCacheRepository implements WikipediaUserRepository {
 
     // Cache the users which try to access features needing special rights
     // This map can grow. We use Caffeine cache to clean periodically the old or obsolete users.
-    private final Cache<AccessToken, WikipediaUser> cachedUsers = Caffeine
+    private final Cache<AccessToken, User> cachedUsers = Caffeine
         .newBuilder()
         .removalListener((key, value, cause) -> {
             if (cause.wasEvicted() && value != null) {
-                LOGGER.info("Evicted user: {}", ((WikipediaUser) value).getId());
+                LOGGER.info("Evicted user: {}", ((User) value).getId());
             }
         })
         .expireAfterWrite(1, TimeUnit.DAYS)
@@ -42,17 +40,12 @@ class WikipediaUserCacheRepository implements WikipediaUserRepository {
     }
 
     @Override
-    public Optional<WikipediaUser> findAuthenticatedUser(WikipediaLanguage lang, AccessToken accessToken) {
+    public Optional<User> findAuthenticatedUser(WikipediaLanguage lang, AccessToken accessToken) {
         return Optional.ofNullable(this.cachedUsers.get(accessToken, token -> getAuthenticatedUser(lang, token)));
     }
 
-    @Override
-    public Optional<WikipediaUser> findById(UserId userId) {
-        return wikipediaUserRepository.findById(userId);
-    }
-
     @Nullable
-    private WikipediaUser getAuthenticatedUser(WikipediaLanguage lang, AccessToken accessToken) {
+    private User getAuthenticatedUser(WikipediaLanguage lang, AccessToken accessToken) {
         // In case of empty result return a fake user with no groups
         return wikipediaUserRepository.findAuthenticatedUser(lang, accessToken).orElse(null);
     }

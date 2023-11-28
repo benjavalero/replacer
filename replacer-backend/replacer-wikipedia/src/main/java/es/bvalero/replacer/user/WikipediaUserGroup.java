@@ -1,4 +1,4 @@
-package es.bvalero.replacer.wikipedia;
+package es.bvalero.replacer.user;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -13,7 +13,7 @@ import org.springframework.lang.Nullable;
 @Slf4j
 @Getter
 @AllArgsConstructor
-public enum WikipediaUserGroup {
+enum WikipediaUserGroup {
     GENERIC("*"), // All users even the unregistered ones
     USER("user"), // Registered users
     AUTO_CONFIRMED("autoconfirmed"), // Low seniority or number of editions

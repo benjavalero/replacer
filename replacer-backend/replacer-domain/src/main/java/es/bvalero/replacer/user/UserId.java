@@ -20,7 +20,7 @@ public class UserId {
     @NonNull
     String username;
 
-    public static UserId of(WikipediaLanguage lang, String username) {
+    static UserId of(WikipediaLanguage lang, String username) {
         if (username.length() > MAX_USERNAME_LENGTH) {
             throw new IllegalArgumentException("Too long username: " + username);
         }

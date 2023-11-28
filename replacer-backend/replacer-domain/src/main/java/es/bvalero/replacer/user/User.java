@@ -1,8 +1,10 @@
 package es.bvalero.replacer.user;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Value;
+import lombok.With;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.TestOnly;
 import org.springframework.lang.NonNull;
@@ -38,12 +40,17 @@ public class User {
     boolean bot = false;
 
     /** It the user is allowed to perform tasks in the application restricted to administrators */
+    @With(AccessLevel.PRIVATE)
     @Builder.Default
     boolean admin = false;
 
     @Override
     public String toString() {
         return this.id.toString();
+    }
+
+    static User ofAdmin(User user, boolean isAdmin) {
+        return user.withAdmin(isAdmin);
     }
 
     @TestOnly
