@@ -9,7 +9,7 @@ import org.springframework.lang.NonNull;
 
 @Schema(description = "Request token and authorization URL to initiate an authorization process")
 @Value(staticConstructor = "of")
-public class InitiateAuthorizationResponse {
+class InitiateAuthorizationResponse {
 
     @Schema
     @NonNull

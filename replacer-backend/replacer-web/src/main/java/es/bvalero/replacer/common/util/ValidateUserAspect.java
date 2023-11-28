@@ -1,6 +1,6 @@
-package es.bvalero.replacer.user;
+package es.bvalero.replacer.common.util;
 
-import es.bvalero.replacer.common.util.WebUtils;
+import es.bvalero.replacer.user.User;
 import javax.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -22,8 +22,8 @@ public class ValidateUserAspect {
         this.webUtils = webUtils;
     }
 
-    @Around("@annotation(es.bvalero.replacer.user.ValidateAdminUser)")
-    Object validateAdminUser(ProceedingJoinPoint joinPoint) throws Throwable {
+    @Around("@annotation(es.bvalero.replacer.common.util.ValidateAdminUser)")
+    public Object validateAdminUser(ProceedingJoinPoint joinPoint) throws Throwable {
         HttpServletRequest request =
             ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
         User user = webUtils.getAuthenticatedUser(request);
@@ -38,8 +38,8 @@ public class ValidateUserAspect {
         return joinPoint.proceed();
     }
 
-    @Around("@annotation(es.bvalero.replacer.user.ValidateBotUser)")
-    Object validateBotUser(ProceedingJoinPoint joinPoint) throws Throwable {
+    @Around("@annotation(es.bvalero.replacer.common.util.ValidateBotUser)")
+    public Object validateBotUser(ProceedingJoinPoint joinPoint) throws Throwable {
         HttpServletRequest request =
             ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
         User user = webUtils.getAuthenticatedUser(request);

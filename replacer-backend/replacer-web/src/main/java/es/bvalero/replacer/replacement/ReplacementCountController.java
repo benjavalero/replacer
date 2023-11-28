@@ -1,32 +1,34 @@
 package es.bvalero.replacer.replacement;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import es.bvalero.replacer.user.UserLanguage;
-import es.bvalero.replacer.user.ValidateAdminUser;
+import es.bvalero.replacer.common.util.UserLanguage;
+import es.bvalero.replacer.common.util.ValidateAdminUser;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.Collection;
 import lombok.extern.slf4j.Slf4j;
+import org.jmolecules.architecture.hexagonal.PrimaryAdapter;
 import org.springframework.web.bind.annotation.*;
 
 /** REST controller to get different counts of replacements */
 @Tag(name = "Replacement")
 @Slf4j
+@PrimaryAdapter
 @RestController
 @RequestMapping("api/replacement")
-public class ReplacementCountController {
+class ReplacementCountController {
 
     // Dependency injection
     private final ReplacementCountService replacementCountService;
 
-    public ReplacementCountController(ReplacementCountService replacementCountService) {
+    ReplacementCountController(ReplacementCountService replacementCountService) {
         this.replacementCountService = replacementCountService;
     }
 
     @Operation(summary = "Count the number of reviewed/unreviewed replacements including the custom ones")
     @GetMapping(value = "/count")
-    public ReplacementCount countReplacements(
+    ReplacementCount countReplacements(
         @UserLanguage WikipediaLanguage lang,
         @Parameter(
             description = "Filter by reviewed/unreviewed replacements",
@@ -49,7 +51,7 @@ public class ReplacementCountController {
         summary = "Count the number of reviewed replacements, including the custom ones, grouped by reviewer in descending order by count"
     )
     @GetMapping(value = "/user/count")
-    public Collection<ReviewerCount> countReviewedReplacementsGroupedByReviewer(@UserLanguage WikipediaLanguage lang) {
+    Collection<ReviewerCount> countReviewedReplacementsGroupedByReviewer(@UserLanguage WikipediaLanguage lang) {
         Collection<ReviewerCount> counts = replacementCountService
             .countReviewedGroupedByReviewer(lang)
             .stream()
@@ -64,7 +66,7 @@ public class ReplacementCountController {
     )
     @ValidateAdminUser
     @GetMapping(value = "/page/count")
-    public Collection<PageCount> countNotReviewedReplacementsGroupedByPage(@UserLanguage WikipediaLanguage lang) {
+    Collection<PageCount> countNotReviewedReplacementsGroupedByPage(@UserLanguage WikipediaLanguage lang) {
         Collection<PageCount> counts = replacementCountService
             .countNotReviewedGroupedByPage(lang)
             .stream()

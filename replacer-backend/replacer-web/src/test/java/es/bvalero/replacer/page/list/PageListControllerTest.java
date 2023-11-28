@@ -1,4 +1,4 @@
-package es.bvalero.replacer.page;
+package es.bvalero.replacer.page.list;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -9,11 +9,10 @@ import es.bvalero.replacer.WebMvcConfiguration;
 import es.bvalero.replacer.common.domain.ReplacementKind;
 import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
+import es.bvalero.replacer.common.util.ValidateUserAspect;
 import es.bvalero.replacer.common.util.WebUtils;
-import es.bvalero.replacer.replacement.ReplacementSaveService;
 import es.bvalero.replacer.user.AccessToken;
 import es.bvalero.replacer.user.User;
-import es.bvalero.replacer.user.ValidateUserAspect;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.Test;
@@ -40,10 +39,7 @@ class PageListControllerTest {
     private WebUtils webUtils;
 
     @MockBean
-    private PageFindByTypeService pageFindByTypeService;
-
-    @MockBean
-    private ReplacementSaveService replacementSaveService;
+    private PageListService pageListService;
 
     @Test
     void testFindPagesToReviewByType() throws Exception {
@@ -54,7 +50,7 @@ class PageListControllerTest {
             .perform(get("/api/page/type?lang=es&kind=2&subtype=Africa").contentType(MediaType.TEXT_PLAIN_VALUE))
             .andExpect(status().isOk());
 
-        verify(pageFindByTypeService)
+        verify(pageListService)
             .findPageTitlesNotReviewedByType(
                 WikipediaLanguage.getDefault(),
                 StandardType.of(ReplacementKind.SIMPLE, "Africa")
@@ -77,7 +73,7 @@ class PageListControllerTest {
             )
             .andExpect(status().isNoContent());
 
-        verify(replacementSaveService)
+        verify(pageListService)
             .updateSystemReviewerByType(
                 WikipediaLanguage.getDefault(),
                 StandardType.of(ReplacementKind.SIMPLE, "Africa")
@@ -98,7 +94,7 @@ class PageListControllerTest {
             )
             .andExpect(status().isForbidden());
 
-        verify(replacementSaveService, never())
+        verify(pageListService, never())
             .updateSystemReviewerByType(
                 WikipediaLanguage.getDefault(),
                 StandardType.of(ReplacementKind.SIMPLE, "Africa")

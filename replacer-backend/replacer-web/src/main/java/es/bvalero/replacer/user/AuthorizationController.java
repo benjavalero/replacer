@@ -1,10 +1,12 @@
 package es.bvalero.replacer.user;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
+import es.bvalero.replacer.common.util.UserLanguage;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
+import org.jmolecules.architecture.hexagonal.PrimaryAdapter;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
@@ -13,15 +15,16 @@ import org.springframework.web.bind.annotation.*;
 /** REST controller to perform user authorization operations */
 @Tag(name = "User")
 @Slf4j
+@PrimaryAdapter
 @RestController
 @RequestMapping("api/user")
-public class AuthorizationController {
+class AuthorizationController {
 
     // Dependency injection
     private final AuthorizationService authorizationService;
     private final UserService userService;
 
-    public AuthorizationController(AuthorizationService authorizationService, UserService userService) {
+    AuthorizationController(AuthorizationService authorizationService, UserService userService) {
         this.authorizationService = authorizationService;
         this.userService = userService;
     }
@@ -46,7 +49,7 @@ public class AuthorizationController {
 
     @Operation(summary = "Initiate an authorization process")
     @GetMapping(value = "/initiate-authorization")
-    public InitiateAuthorizationResponse initiateAuthorization() {
+    InitiateAuthorizationResponse initiateAuthorization() {
         LOGGER.info("START Initiate Authorization");
         RequestToken requestToken = authorizationService.getRequestToken();
         String authorizationUrl = authorizationService.getAuthorizationUrl(requestToken);
@@ -60,7 +63,7 @@ public class AuthorizationController {
 
     @Operation(summary = "Verify the authorization process")
     @PostMapping(value = "/verify-authorization")
-    public ResponseEntity<UserDto> verifyAuthorization(
+    ResponseEntity<UserDto> verifyAuthorization(
         @UserLanguage WikipediaLanguage lang,
         @Valid @RequestBody VerifyAuthorizationRequest verifyAuthorizationRequest
     ) {

@@ -1,9 +1,9 @@
 package es.bvalero.replacer.page.save;
 
 import es.bvalero.replacer.common.domain.ReplacementType;
+import es.bvalero.replacer.common.util.AuthenticatedUser;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.page.PageKey;
-import es.bvalero.replacer.user.AuthenticatedUser;
 import es.bvalero.replacer.user.User;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.wikipedia.WikipediaPageSave;
@@ -16,27 +16,29 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
+import org.jmolecules.architecture.hexagonal.PrimaryAdapter;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "Page")
 @Slf4j
+@PrimaryAdapter
 @RestController
 @RequestMapping("api/page")
-public class ReviewSaveController {
+class ReviewSaveController {
 
     // Dependency injection
     private final ApplyCosmeticsService applyCosmeticsService;
     private final ReviewSaveService reviewSaveService;
 
-    public ReviewSaveController(ApplyCosmeticsService applyCosmeticsService, ReviewSaveService reviewSaveService) {
+    ReviewSaveController(ApplyCosmeticsService applyCosmeticsService, ReviewSaveService reviewSaveService) {
         this.applyCosmeticsService = applyCosmeticsService;
         this.reviewSaveService = reviewSaveService;
     }
 
     @Operation(summary = "Save a review: update page contents and mark as reviewed")
     @PostMapping(value = "/{id}")
-    public ResponseEntity<Void> saveReview(
+    ResponseEntity<Void> saveReview(
         @Parameter(description = "Page ID", example = "1") @PathVariable("id") int pageId,
         @AuthenticatedUser User user,
         @Valid @RequestBody ReviewedPage reviewedPage

@@ -11,19 +11,19 @@ import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class DumpManagerTest {
+class DumpIndexServiceTest {
 
     // Dependency injection
     private DumpFinder dumpFinder;
     private DumpParser dumpParser;
 
-    private DumpManager dumpManager;
+    private DumpIndexService dumpIndexService;
 
     @BeforeEach
     public void setUp() {
         dumpFinder = mock(DumpFinder.class);
         dumpParser = mock(DumpParser.class);
-        dumpManager = new DumpManager(dumpFinder, dumpParser);
+        dumpIndexService = new DumpIndexService(dumpFinder, dumpParser);
     }
 
     @Test
@@ -34,7 +34,7 @@ class DumpManagerTest {
         DumpFile dumpFile = DumpFile.of(dumpPath);
         when(dumpFinder.findLatestDumpFile(any(WikipediaLanguage.class))).thenReturn(Optional.of(dumpFile));
 
-        dumpManager.indexLatestDumpFiles();
+        dumpIndexService.indexLatestDumpFiles();
 
         // 2 executions, one per language.
         verify(dumpFinder, times(2)).findLatestDumpFile(any(WikipediaLanguage.class));
@@ -52,7 +52,7 @@ class DumpManagerTest {
             .when(dumpParser)
             .parseDumpFile(any(WikipediaLanguage.class), any(DumpFile.class));
 
-        dumpManager.indexLatestDumpFiles();
+        dumpIndexService.indexLatestDumpFiles();
 
         // 2 executions, one per language.
         verify(dumpFinder, times(2)).findLatestDumpFile(any(WikipediaLanguage.class));
@@ -74,7 +74,7 @@ class DumpManagerTest {
         );
         when(dumpParser.getDumpStatus()).thenReturn(dumpStatus);
 
-        dumpManager.indexLatestDumpFiles();
+        dumpIndexService.indexLatestDumpFiles();
 
         // 2 executions, one per language.
         verify(dumpFinder, never()).findLatestDumpFile(any(WikipediaLanguage.class));
@@ -99,7 +99,7 @@ class DumpManagerTest {
 
         when(dumpParser.getDumpStatus()).thenReturn(expected);
 
-        Optional<DumpStatus> actual = dumpManager.getDumpStatus();
+        Optional<DumpStatus> actual = dumpIndexService.getDumpStatus();
 
         assertEquals(expected, actual);
         verify(dumpParser).getDumpStatus();

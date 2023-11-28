@@ -1,27 +1,31 @@
-package es.bvalero.replacer.page;
+package es.bvalero.replacer.page.list;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
+import es.bvalero.replacer.page.PageRepository;
+import es.bvalero.replacer.replacement.ReplacementSaveRepository;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class PageFindByTypeServiceTest {
+class PageListServiceTest {
 
     // Dependency injection
     private PageRepository pageRepository;
+    private ReplacementSaveRepository replacementSaveRepository;
 
-    private PageFindByTypeService pageFindByTypeService;
+    private PageListService pageListService;
 
     @BeforeEach
     public void setUp() {
         pageRepository = mock(PageRepository.class);
-        pageFindByTypeService = new PageFindByTypeService(pageRepository);
+        replacementSaveRepository = mock(ReplacementSaveRepository.class);
+        pageListService = new PageListService(pageRepository, replacementSaveRepository);
     }
 
     @Test
@@ -34,7 +38,7 @@ class PageFindByTypeServiceTest {
         StandardType type = StandardType.DATE;
         when(pageRepository.findTitlesNotReviewedByType(lang, type)).thenReturn(list);
 
-        Collection<String> result = pageFindByTypeService.findPageTitlesNotReviewedByType(lang, type);
+        Collection<String> result = pageListService.findPageTitlesNotReviewedByType(lang, type);
         assertEquals(sorted, result);
 
         verify(pageRepository).findTitlesNotReviewedByType(lang, type);

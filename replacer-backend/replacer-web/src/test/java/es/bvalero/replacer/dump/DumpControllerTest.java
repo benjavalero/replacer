@@ -11,10 +11,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import es.bvalero.replacer.WebMvcConfiguration;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.util.ReplacerUtils;
+import es.bvalero.replacer.common.util.ValidateUserAspect;
 import es.bvalero.replacer.common.util.WebUtils;
 import es.bvalero.replacer.user.AccessToken;
 import es.bvalero.replacer.user.User;
-import es.bvalero.replacer.user.ValidateUserAspect;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import javax.servlet.http.Cookie;
@@ -43,7 +43,7 @@ class DumpControllerTest {
     private WebUtils webUtils;
 
     @MockBean
-    private DumpManager dumpManager;
+    private DumpIndexService dumpIndexService;
 
     @Test
     void testGetDumpStatus() throws Exception {
@@ -66,7 +66,7 @@ class DumpControllerTest {
             start,
             end
         );
-        when(dumpManager.getDumpStatus()).thenReturn(Optional.of(dumpStatus));
+        when(dumpIndexService.getDumpStatus()).thenReturn(Optional.of(dumpStatus));
 
         mvc
             .perform(
@@ -84,7 +84,7 @@ class DumpControllerTest {
             .andExpect(jsonPath("$.start", is(ReplacerUtils.convertLocalDateTimeToMilliseconds(start))))
             .andExpect(jsonPath("$.end", is(ReplacerUtils.convertLocalDateTimeToMilliseconds(end))));
 
-        verify(dumpManager).getDumpStatus();
+        verify(dumpIndexService).getDumpStatus();
     }
 
     @Test
@@ -92,7 +92,7 @@ class DumpControllerTest {
         User user = User.buildTestAdminUser();
         when(webUtils.getAuthenticatedUser(any(HttpServletRequest.class))).thenReturn(user);
 
-        when(dumpManager.getDumpStatus()).thenReturn(Optional.empty());
+        when(dumpIndexService.getDumpStatus()).thenReturn(Optional.empty());
 
         mvc
             .perform(
@@ -103,7 +103,7 @@ class DumpControllerTest {
             )
             .andExpect(status().isNoContent());
 
-        verify(dumpManager).getDumpStatus();
+        verify(dumpIndexService).getDumpStatus();
     }
 
     @Test
@@ -120,7 +120,7 @@ class DumpControllerTest {
             )
             .andExpect(status().isForbidden());
 
-        verify(dumpManager, never()).indexLatestDumpFiles();
+        verify(dumpIndexService, never()).indexLatestDumpFiles();
     }
 
     @Test
@@ -137,7 +137,7 @@ class DumpControllerTest {
             )
             .andExpect(status().isAccepted());
 
-        verify(dumpManager).indexLatestDumpFiles();
+        verify(dumpIndexService).indexLatestDumpFiles();
     }
 
     @Test
@@ -154,6 +154,6 @@ class DumpControllerTest {
             )
             .andExpect(status().isForbidden());
 
-        verify(dumpManager, never()).indexLatestDumpFiles();
+        verify(dumpIndexService, never()).indexLatestDumpFiles();
     }
 }

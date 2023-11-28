@@ -1,7 +1,7 @@
 package es.bvalero.replacer.page.review;
 
+import es.bvalero.replacer.common.util.AuthenticatedUser;
 import es.bvalero.replacer.page.PageKey;
-import es.bvalero.replacer.user.AuthenticatedUser;
 import es.bvalero.replacer.user.User;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -10,14 +10,16 @@ import java.util.Objects;
 import java.util.Optional;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
+import org.jmolecules.architecture.hexagonal.PrimaryAdapter;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "Page")
 @Slf4j
+@PrimaryAdapter
 @RestController
 @RequestMapping("api/page")
-public class ReviewFindController {
+class ReviewFindController {
 
     static final String TOTAL_PAGES_HEADER = "X-Pagination-Total-Pages";
 
@@ -26,7 +28,7 @@ public class ReviewFindController {
     private final ReviewTypeFinder reviewTypeFinder;
     private final ReviewCustomFinder reviewCustomFinder;
 
-    public ReviewFindController(
+    ReviewFindController(
         ReviewNoTypeFinder reviewNoTypeFinder,
         ReviewTypeFinder reviewTypeFinder,
         ReviewCustomFinder reviewCustomFinder
@@ -38,7 +40,7 @@ public class ReviewFindController {
 
     @Operation(summary = "Find a random page and the replacements to review")
     @GetMapping(value = "/random")
-    public ResponseEntity<Page> findRandomPageWithReplacements(
+    ResponseEntity<Page> findRandomPageWithReplacements(
         @AuthenticatedUser User user,
         @Valid ReviewOptionsDto optionsDto
     ) {
@@ -55,7 +57,7 @@ public class ReviewFindController {
 
     @Operation(summary = "Find a page and the replacements to review")
     @GetMapping(value = "/{id}")
-    public ResponseEntity<Page> findPageReviewById(
+    ResponseEntity<Page> findPageReviewById(
         @Parameter(description = "Page ID", example = "6980716") @PathVariable("id") int pageId,
         @AuthenticatedUser User user,
         @Valid ReviewOptionsDto optionsDto

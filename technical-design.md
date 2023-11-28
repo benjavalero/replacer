@@ -76,10 +76,11 @@ The code is organized in different Maven submodules, whose dependencies follow t
 
 Note it is not worth to implement the Java Module System, as it implies some modifications in order to work with JUnit and Spring: new version of Surefire, package names cannot be repeated between modules and integration tests in a different package.
 
-In general, services are created for each use case. In general, it is not worth to create an interface for each service as there is usually only one implementation.
+Output/Secondary ports (e.g. interfaces for the Wikipedia, OAuth and database adapters) are included in the same package of the implementation but in the `domain` submodule.Therefore, all adapter modules must depend only on `domain` and not on `core`.
+Input/Primary ports, currently only the services for the REST API use cases, don't need an interface as there is only one implementation. Therefore, for the sake of simplicity, we let the input ports in the `core` module, so the `web` module is allowed to depend on `core`. 
+Additionally, with these modules, we want to avoid that an input adapter calls an output port, for instance a controller calling directly a repository. We check this with an architecture test using the JMolecule annotations  `@PrimaryAdapter` and `@SecondaryPort`.
 
-_Ports_ (interfaces for the Wikipedia, OAuth and database adapters) are included in the same package of the adapter but in the `domain` submodule.
-
+In general, services are created for each use case following the Single Responsibility Principle.
 Classes are usually suffixed: `Service`, `Controller`, `Repository`, etc.
 
 DTO objects are used to communicate the different layers. The suffix `Dto` (also `Request` and `Response`) is usually used for the objects communicating the controllers with the view.

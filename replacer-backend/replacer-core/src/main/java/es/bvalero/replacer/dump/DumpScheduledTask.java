@@ -7,21 +7,21 @@ import org.springframework.stereotype.Component;
 /** Task to index the latest dumps periodically */
 @Slf4j
 @Component
-public class DumpScheduledTask {
+class DumpScheduledTask {
 
     // Dependency injection
-    private final DumpManager dumpManager;
+    private final DumpIndexService dumpIndexService;
 
-    public DumpScheduledTask(DumpManager dumpManager) {
-        this.dumpManager = dumpManager;
+    DumpScheduledTask(DumpIndexService dumpIndexService) {
+        this.dumpIndexService = dumpIndexService;
     }
 
     @Scheduled(
         initialDelayString = "${replacer.dump.batch.delay.initial}",
         fixedDelayString = "${replacer.dump.batch.delay}"
     )
-    public void scheduledStartDumpIndexing() {
+    void scheduledStartDumpIndexing() {
         LOGGER.debug("START Scheduled Dump Indexing...");
-        dumpManager.indexLatestDumpFiles();
+        dumpIndexService.indexLatestDumpFiles();
     }
 }

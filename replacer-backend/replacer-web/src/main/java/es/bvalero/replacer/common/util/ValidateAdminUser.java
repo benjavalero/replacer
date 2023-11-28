@@ -1,4 +1,4 @@
-package es.bvalero.replacer.user;
+package es.bvalero.replacer.common.util;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

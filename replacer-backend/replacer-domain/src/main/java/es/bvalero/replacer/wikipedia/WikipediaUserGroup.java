@@ -34,7 +34,7 @@ public enum WikipediaUserGroup {
     // We cannot override the static method "valueOf(String)"
     // It is nullable because there are lots of groups and some of them even depend on the Wikipedia language
     @Nullable
-    public static WikipediaUserGroup valueOfLabel(String group) {
+    static WikipediaUserGroup valueOfLabel(String group) {
         if (!map.containsKey(group)) {
             LOGGER.warn("Unknown group label: " + group);
         }

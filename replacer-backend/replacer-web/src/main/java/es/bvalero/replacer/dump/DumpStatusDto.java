@@ -13,7 +13,7 @@ import org.springframework.lang.Nullable;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Value
 @Builder
-public class DumpStatusDto {
+class DumpStatusDto {
 
     // Even when it is quite similar to the domain object
     // we prefer to create this copy without the logic and with the different response types

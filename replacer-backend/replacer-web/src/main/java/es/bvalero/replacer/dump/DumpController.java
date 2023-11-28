@@ -1,11 +1,12 @@
 package es.bvalero.replacer.dump;
 
 import es.bvalero.replacer.common.util.ReplacerUtils;
-import es.bvalero.replacer.user.ValidateAdminUser;
+import es.bvalero.replacer.common.util.ValidateAdminUser;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
+import org.jmolecules.architecture.hexagonal.PrimaryAdapter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,22 +14,23 @@ import org.springframework.web.bind.annotation.*;
 /** REST controller to perform actions related to the dump indexing process */
 @Tag(name = "Dump")
 @Slf4j
+@PrimaryAdapter
 @RestController
 @RequestMapping("api/dump")
-public class DumpController {
+class DumpController {
 
     // Dependency injection
-    private final DumpManager dumpManager;
+    private final DumpIndexService dumpIndexService;
 
-    public DumpController(DumpManager dumpManager) {
-        this.dumpManager = dumpManager;
+    DumpController(DumpIndexService dumpIndexService) {
+        this.dumpIndexService = dumpIndexService;
     }
 
     @Operation(summary = "Find the status of the current (or the last) dump indexing")
     @ValidateAdminUser
     @GetMapping(value = "")
-    public ResponseEntity<DumpStatusDto> getDumpStatus() {
-        Optional<DumpStatus> dumpStatus = dumpManager.getDumpStatus();
+    ResponseEntity<DumpStatusDto> getDumpStatus() {
+        Optional<DumpStatus> dumpStatus = dumpIndexService.getDumpStatus();
         if (dumpStatus.isPresent()) {
             DumpStatusDto dto = toDto(dumpStatus.get());
             LOGGER.debug("GET Dump Indexing Status: {}", dto);
@@ -43,9 +45,9 @@ public class DumpController {
     @ValidateAdminUser
     @ResponseStatus(HttpStatus.ACCEPTED)
     @PostMapping(value = "")
-    public void manualStartDumpIndexing() {
+    void manualStartDumpIndexing() {
         LOGGER.info("START Manual Dump Indexing...");
-        dumpManager.indexLatestDumpFiles();
+        dumpIndexService.indexLatestDumpFiles();
     }
 
     private DumpStatusDto toDto(DumpStatus status) {

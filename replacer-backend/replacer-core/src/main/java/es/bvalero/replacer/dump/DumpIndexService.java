@@ -8,31 +8,28 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 /**
- * Service to manage the dump indexing tasks,
- * in particular to get the status of the current (or latest) indexing
- * and start a new one.
+ * Service to manage the dump indexing tasks, in particular to get the status
+ * of the current (or latest) indexing and start a new one.
  * The indexing will be executed periodically in @{@link DumpScheduledTask},
  * or manually from DumpController.
  * The dumps are parsed with @{@link DumpParser}.
  */
 @Slf4j
 @Service
-class DumpManager {
+class DumpIndexService {
 
     // Dependency injection
     private final DumpFinder dumpFinder;
     private final DumpParser dumpParser;
 
-    DumpManager(DumpFinder dumpFinder, DumpParser dumpParser) {
+    DumpIndexService(DumpFinder dumpFinder, DumpParser dumpParser) {
         this.dumpFinder = dumpFinder;
         this.dumpParser = dumpParser;
     }
 
-    /**
-     * Find the latest dump files for each language and index them.
-     * In order to be asynchronous it must be public and called externally:
-     * https://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/scheduling/annotation/EnableAsync.html
-     */
+    /** Find the latest dump files for each language and index them */
+    // In order to be asynchronous it must be public and called externally:
+    // https://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/scheduling/annotation/EnableAsync.html
     @Async
     public void indexLatestDumpFiles() {
         LOGGER.debug("START dump indexing...");
@@ -58,6 +55,7 @@ class DumpManager {
         LOGGER.debug("END dump indexing...");
     }
 
+    /** Find the status of the current (or the last) dump indexing */
     Optional<DumpStatus> getDumpStatus() {
         return dumpParser.getDumpStatus();
     }

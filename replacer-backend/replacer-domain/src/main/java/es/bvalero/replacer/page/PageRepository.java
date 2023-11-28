@@ -5,8 +5,10 @@ import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Optional;
+import org.jmolecules.architecture.hexagonal.SecondaryPort;
 import org.springframework.lang.Nullable;
 
+@SecondaryPort
 public interface PageRepository {
     /** Find a page by key including all the replacements */
     Optional<IndexedPage> findByKey(PageKey pageKey);

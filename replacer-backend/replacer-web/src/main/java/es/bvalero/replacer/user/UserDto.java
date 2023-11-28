@@ -12,7 +12,7 @@ import org.springframework.lang.NonNull;
 @Schema(description = "Application user after completing the authorization verification", name = "User")
 @Value
 @Builder(access = AccessLevel.PRIVATE)
-public class UserDto {
+class UserDto {
 
     @Schema(description = "Name of the user in Wikipedia", requiredMode = REQUIRED, example = "Benjavalero")
     @NonNull

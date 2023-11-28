@@ -11,7 +11,7 @@ import lombok.Data;
 
 @Schema(description = "Request token and OAuth verifier to complete the authorization process")
 @Data
-public class VerifyAuthorizationRequest {
+class VerifyAuthorizationRequest {
 
     @Schema
     @Valid

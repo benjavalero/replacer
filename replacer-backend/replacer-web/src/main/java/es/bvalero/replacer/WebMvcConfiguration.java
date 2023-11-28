@@ -1,7 +1,7 @@
 package es.bvalero.replacer;
 
-import es.bvalero.replacer.user.AuthenticatedUserArgumentResolver;
-import es.bvalero.replacer.user.UserLanguageArgumentResolver;
+import es.bvalero.replacer.common.util.AuthenticatedUserArgumentResolver;
+import es.bvalero.replacer.common.util.UserLanguageArgumentResolver;
 import java.io.IOException;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Value;

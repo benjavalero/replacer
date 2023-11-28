@@ -1,8 +1,6 @@
-package es.bvalero.replacer.user;
+package es.bvalero.replacer.common.util;
 
-import es.bvalero.replacer.common.util.WebUtils;
 import javax.servlet.http.HttpServletRequest;
-import lombok.SneakyThrows;
 import org.springframework.core.MethodParameter;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
@@ -12,21 +10,20 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
 @Component
-public class AuthenticatedUserArgumentResolver implements HandlerMethodArgumentResolver {
+public class UserLanguageArgumentResolver implements HandlerMethodArgumentResolver {
 
     // Dependency injection
     private final WebUtils webUtils;
 
-    public AuthenticatedUserArgumentResolver(WebUtils webUtils) {
+    public UserLanguageArgumentResolver(WebUtils webUtils) {
         this.webUtils = webUtils;
     }
 
     @Override
     public boolean supportsParameter(MethodParameter methodParameter) {
-        return methodParameter.getParameterAnnotation(AuthenticatedUser.class) != null;
+        return methodParameter.getParameterAnnotation(UserLanguage.class) != null;
     }
 
-    @SneakyThrows
     @Override
     public Object resolveArgument(
         MethodParameter methodParameter,
@@ -35,6 +32,6 @@ public class AuthenticatedUserArgumentResolver implements HandlerMethodArgumentR
         @Nullable WebDataBinderFactory webDataBinderFactory
     ) {
         HttpServletRequest request = (HttpServletRequest) nativeWebRequest.getNativeRequest();
-        return webUtils.getAuthenticatedUser(request);
+        return webUtils.getLanguageHeader(request);
     }
 }

@@ -3,7 +3,9 @@ package es.bvalero.replacer.replacement;
 import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import java.util.Collection;
+import org.jmolecules.architecture.hexagonal.SecondaryPort;
 
+@SecondaryPort
 public interface ReplacementSaveRepository {
     /** Add a collection of page replacements assuming the related pages already exist */
     void add(Collection<IndexedReplacement> replacements);

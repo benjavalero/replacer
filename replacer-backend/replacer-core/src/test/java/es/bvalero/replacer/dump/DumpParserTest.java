@@ -18,19 +18,19 @@ import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class DumpSaxParserTest {
+class DumpParserTest {
 
     // Dependency injection
     private PageIndexBatchService pageIndexService;
     private DumpProperties dumpProperties;
 
-    private DumpSaxParser dumpParser;
+    private DumpParser dumpParser;
 
     @BeforeEach
     public void setUp() {
         pageIndexService = mock(PageIndexBatchService.class);
         dumpProperties = mock(DumpProperties.class);
-        dumpParser = new DumpSaxParser(pageIndexService, dumpProperties);
+        dumpParser = new DumpParser(pageIndexService, dumpProperties);
     }
 
     @Test
