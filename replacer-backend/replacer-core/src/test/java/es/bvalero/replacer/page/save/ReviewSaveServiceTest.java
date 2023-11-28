@@ -4,16 +4,14 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import es.bvalero.replacer.common.domain.*;
+import es.bvalero.replacer.common.exception.WikipediaException;
 import es.bvalero.replacer.page.PageKey;
 import es.bvalero.replacer.page.PageRepository;
+import es.bvalero.replacer.page.find.WikipediaTimestamp;
 import es.bvalero.replacer.replacement.CustomReplacementService;
 import es.bvalero.replacer.replacement.IndexedCustomReplacement;
 import es.bvalero.replacer.replacement.ReplacementSaveRepository;
 import es.bvalero.replacer.user.User;
-import es.bvalero.replacer.wikipedia.WikipediaException;
-import es.bvalero.replacer.wikipedia.WikipediaPageRepository;
-import es.bvalero.replacer.wikipedia.WikipediaPageSave;
-import es.bvalero.replacer.wikipedia.WikipediaTimestamp;
 import java.time.LocalDate;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,7 +25,7 @@ class ReviewSaveServiceTest {
     private PageRepository pageRepository;
     private ReplacementSaveRepository replacementSaveRepository;
     private CustomReplacementService customReplacementService;
-    private WikipediaPageRepository wikipediaPageRepository;
+    private WikipediaPageSaveRepository wikipediaPageSaveRepository;
 
     private ReviewSaveService reviewSaveService;
 
@@ -36,13 +34,13 @@ class ReviewSaveServiceTest {
         pageRepository = mock(PageRepository.class);
         replacementSaveRepository = mock(ReplacementSaveRepository.class);
         customReplacementService = mock(CustomReplacementService.class);
-        wikipediaPageRepository = mock(WikipediaPageRepository.class);
+        wikipediaPageSaveRepository = mock(WikipediaPageSaveRepository.class);
         reviewSaveService =
             new ReviewSaveService(
                 pageRepository,
                 replacementSaveRepository,
                 customReplacementService,
-                wikipediaPageRepository
+                wikipediaPageSaveRepository
             );
         reviewSaveService.setMaxEditionsPerMinute(MAX_EDITIONS_PER_MINUTE);
     }
@@ -51,7 +49,7 @@ class ReviewSaveServiceTest {
     void testSaveWithChanges() throws WikipediaException {
         int id = 123;
         PageKey pageKey = PageKey.of(WikipediaLanguage.getDefault(), id);
-        WikipediaPageSave pageSave = WikipediaPageSave
+        WikipediaPageSaveCommand pageSave = WikipediaPageSaveCommand
             .builder()
             .pageKey(pageKey)
             .content("X")
@@ -61,7 +59,7 @@ class ReviewSaveServiceTest {
         User user = User.buildTestUser();
         reviewSaveService.saveReviewContent(pageSave, user);
 
-        verify(wikipediaPageRepository).save(pageSave, user.getAccessToken());
+        verify(wikipediaPageSaveRepository).save(pageSave, user.getAccessToken());
     }
 
     @Test
@@ -120,7 +118,7 @@ class ReviewSaveServiceTest {
     void testMaximumEditionsPerMinute() throws WikipediaException {
         int id = 123;
         PageKey pageKey = PageKey.of(WikipediaLanguage.getDefault(), id);
-        WikipediaPageSave pageSave = WikipediaPageSave
+        WikipediaPageSaveCommand pageSave = WikipediaPageSaveCommand
             .builder()
             .pageKey(pageKey)
             .content("X")
@@ -133,7 +131,7 @@ class ReviewSaveServiceTest {
             reviewSaveService.saveReviewContent(pageSave, user);
         }
 
-        verify(wikipediaPageRepository, times(MAX_EDITIONS_PER_MINUTE)).save(pageSave, user.getAccessToken());
+        verify(wikipediaPageSaveRepository, times(MAX_EDITIONS_PER_MINUTE)).save(pageSave, user.getAccessToken());
 
         assertThrows(WikipediaException.class, () -> reviewSaveService.saveReviewContent(pageSave, user));
     }

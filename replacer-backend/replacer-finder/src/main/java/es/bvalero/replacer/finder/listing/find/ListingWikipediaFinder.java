@@ -3,7 +3,7 @@ package es.bvalero.replacer.finder.listing.find;
 import es.bvalero.replacer.FinderProperties;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.exception.ReplacerException;
-import es.bvalero.replacer.wikipedia.WikipediaPageRepository;
+import es.bvalero.replacer.page.find.WikipediaPageRepository;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 class ListingWikipediaFinder implements ListingFinder {
 
     // Dependency injection
+    // TODO: Try to remove the dependency on this repository in order to make it package-private
     private final WikipediaPageRepository wikipediaPageRepository;
     private final FinderProperties finderProperties;
 

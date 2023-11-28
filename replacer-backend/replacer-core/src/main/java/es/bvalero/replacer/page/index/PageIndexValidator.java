@@ -1,7 +1,7 @@
 package es.bvalero.replacer.page.index;
 
 import es.bvalero.replacer.page.IndexedPage;
-import es.bvalero.replacer.wikipedia.WikipediaNamespace;
+import es.bvalero.replacer.page.find.WikipediaNamespace;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;

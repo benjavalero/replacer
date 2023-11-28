@@ -4,10 +4,10 @@ import static tech.tablesaw.aggregate.AggregateFunctions.*;
 import static tech.tablesaw.aggregate.AggregateFunctions.max;
 
 import es.bvalero.replacer.common.exception.ReplacerException;
+import es.bvalero.replacer.common.exception.WikipediaException;
 import es.bvalero.replacer.finder.Finder;
 import es.bvalero.replacer.finder.benchmark.util.BenchmarkUtils;
-import es.bvalero.replacer.wikipedia.WikipediaException;
-import es.bvalero.replacer.wikipedia.WikipediaPage;
+import es.bvalero.replacer.page.find.WikipediaPage;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;

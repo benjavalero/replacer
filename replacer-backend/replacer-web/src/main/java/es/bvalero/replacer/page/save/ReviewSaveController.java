@@ -1,13 +1,12 @@
 package es.bvalero.replacer.page.save;
 
 import es.bvalero.replacer.common.domain.ReplacementType;
+import es.bvalero.replacer.common.exception.WikipediaException;
 import es.bvalero.replacer.common.util.AuthenticatedUser;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.page.PageKey;
+import es.bvalero.replacer.page.find.WikipediaTimestamp;
 import es.bvalero.replacer.user.User;
-import es.bvalero.replacer.wikipedia.WikipediaException;
-import es.bvalero.replacer.wikipedia.WikipediaPageSave;
-import es.bvalero.replacer.wikipedia.WikipediaTimestamp;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -76,7 +75,7 @@ class ReviewSaveController {
             WikipediaTimestamp queryTimestamp = WikipediaTimestamp.of(
                 Objects.requireNonNull(reviewedPage.getQueryTimestamp())
             );
-            WikipediaPageSave pageSave = WikipediaPageSave
+            WikipediaPageSaveCommand pageSave = WikipediaPageSaveCommand
                 .builder()
                 .pageKey(pageKey)
                 .sectionId(reviewedPage.getSectionId())

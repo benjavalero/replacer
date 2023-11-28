@@ -9,15 +9,13 @@ import es.bvalero.replacer.WebMvcConfiguration;
 import es.bvalero.replacer.common.domain.ReplacementKind;
 import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
+import es.bvalero.replacer.common.exception.WikipediaException;
 import es.bvalero.replacer.common.util.WebUtils;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.page.PageKey;
+import es.bvalero.replacer.page.find.WikipediaTimestamp;
 import es.bvalero.replacer.user.AccessToken;
 import es.bvalero.replacer.user.User;
-import es.bvalero.replacer.wikipedia.WikipediaConflictException;
-import es.bvalero.replacer.wikipedia.WikipediaException;
-import es.bvalero.replacer.wikipedia.WikipediaPageSave;
-import es.bvalero.replacer.wikipedia.WikipediaTimestamp;
 import java.util.List;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -49,7 +47,7 @@ class ReviewSaveControllerTest {
         .reviewer("x")
         .fixed(true)
         .build();
-    private static final WikipediaPageSave pageSave = WikipediaPageSave
+    private static final WikipediaPageSaveCommand pageSave = WikipediaPageSaveCommand
         .builder()
         .pageKey(pageKey)
         .content(content)
@@ -130,7 +128,7 @@ class ReviewSaveControllerTest {
             )
             .andExpect(status().isNoContent());
 
-        verify(reviewSaveService, never()).saveReviewContent(any(WikipediaPageSave.class), any(User.class));
+        verify(reviewSaveService, never()).saveReviewContent(any(WikipediaPageSaveCommand.class), any(User.class));
         verify(reviewSaveService).markAsReviewed(List.of(reviewedReplacement), false);
     }
 

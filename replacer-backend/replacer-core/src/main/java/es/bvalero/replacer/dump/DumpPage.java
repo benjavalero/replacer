@@ -1,9 +1,9 @@
 package es.bvalero.replacer.dump;
 
 import es.bvalero.replacer.page.PageKey;
+import es.bvalero.replacer.page.find.WikipediaNamespace;
+import es.bvalero.replacer.page.find.WikipediaTimestamp;
 import es.bvalero.replacer.page.index.IndexablePage;
-import es.bvalero.replacer.wikipedia.WikipediaNamespace;
-import es.bvalero.replacer.wikipedia.WikipediaTimestamp;
 import lombok.Builder;
 import lombok.ToString;
 import lombok.Value;

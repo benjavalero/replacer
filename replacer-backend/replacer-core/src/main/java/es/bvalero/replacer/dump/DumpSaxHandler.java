@@ -2,10 +2,10 @@ package es.bvalero.replacer.dump;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.page.PageKey;
+import es.bvalero.replacer.page.find.WikipediaNamespace;
+import es.bvalero.replacer.page.find.WikipediaTimestamp;
 import es.bvalero.replacer.page.index.PageIndexBatchService;
 import es.bvalero.replacer.page.index.PageIndexStatus;
-import es.bvalero.replacer.wikipedia.WikipediaNamespace;
-import es.bvalero.replacer.wikipedia.WikipediaTimestamp;
 import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;

@@ -1,10 +1,10 @@
 package es.bvalero.replacer;
 
+import es.bvalero.replacer.common.exception.WikipediaException;
 import es.bvalero.replacer.common.util.ForbiddenException;
+import es.bvalero.replacer.page.save.WikipediaConflictException;
 import es.bvalero.replacer.user.AccessToken;
 import es.bvalero.replacer.user.AuthorizationException;
-import es.bvalero.replacer.wikipedia.WikipediaConflictException;
-import es.bvalero.replacer.wikipedia.WikipediaException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;

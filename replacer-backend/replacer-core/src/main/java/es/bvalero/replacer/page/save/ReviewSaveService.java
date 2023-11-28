@@ -5,6 +5,7 @@ import com.github.benmanes.caffeine.cache.Caffeine;
 import es.bvalero.replacer.common.domain.CustomType;
 import es.bvalero.replacer.common.domain.ReplacementType;
 import es.bvalero.replacer.common.domain.StandardType;
+import es.bvalero.replacer.common.exception.WikipediaException;
 import es.bvalero.replacer.page.IndexedPage;
 import es.bvalero.replacer.page.PageKey;
 import es.bvalero.replacer.page.PageRepository;
@@ -13,9 +14,6 @@ import es.bvalero.replacer.replacement.IndexedReplacement;
 import es.bvalero.replacer.replacement.ReplacementSaveRepository;
 import es.bvalero.replacer.user.User;
 import es.bvalero.replacer.user.UserId;
-import es.bvalero.replacer.wikipedia.WikipediaException;
-import es.bvalero.replacer.wikipedia.WikipediaPageRepository;
-import es.bvalero.replacer.wikipedia.WikipediaPageSave;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -42,7 +40,7 @@ class ReviewSaveService {
     private final PageRepository pageRepository;
     private final ReplacementSaveRepository replacementSaveRepository;
     private final CustomReplacementService customReplacementService;
-    private final WikipediaPageRepository wikipediaPageRepository;
+    private final WikipediaPageSaveRepository wikipediaPageSaveRepository;
 
     @Setter(onMethod_ = @TestOnly)
     @Value("${replacer.max-editions-per-minute}")
@@ -57,17 +55,17 @@ class ReviewSaveService {
         PageRepository pageRepository,
         ReplacementSaveRepository replacementSaveRepository,
         CustomReplacementService customReplacementService,
-        WikipediaPageRepository wikipediaPageRepository
+        WikipediaPageSaveRepository wikipediaPageSaveRepository
     ) {
         this.pageRepository = pageRepository;
         this.replacementSaveRepository = replacementSaveRepository;
         this.customReplacementService = customReplacementService;
-        this.wikipediaPageRepository = wikipediaPageRepository;
+        this.wikipediaPageSaveRepository = wikipediaPageSaveRepository;
     }
 
-    void saveReviewContent(WikipediaPageSave pageSave, User user) throws WikipediaException {
+    void saveReviewContent(WikipediaPageSaveCommand pageSave, User user) throws WikipediaException {
         validateEditionsPerMinute(user);
-        wikipediaPageRepository.save(pageSave, user.getAccessToken());
+        wikipediaPageSaveRepository.save(pageSave, user.getAccessToken());
     }
 
     private void validateEditionsPerMinute(User user) throws WikipediaException {
