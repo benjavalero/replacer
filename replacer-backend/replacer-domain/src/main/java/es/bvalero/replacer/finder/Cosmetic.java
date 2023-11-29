@@ -8,8 +8,8 @@ import org.springframework.lang.NonNull;
 
 /**
  * A <strong>cosmetic</strong> is a special type of replacement which can be applied automatically,
- * concerning cosmetic modifications, visible or not, e.g. replacing <code>[[Asia|Asia]]</code>
- * by <code>[[Asia]]</code>.
+ * concerning cosmetic modifications, visible or not,
+ * e.g. replacing <code>[[Asia|Asia]]</code> by <code>[[Asia]]</code>.
  */
 @Value
 @Builder

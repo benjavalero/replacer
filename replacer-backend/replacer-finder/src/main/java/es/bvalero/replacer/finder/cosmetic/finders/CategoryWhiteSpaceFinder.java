@@ -5,7 +5,7 @@ import static es.bvalero.replacer.finder.util.FinderUtils.PIPE;
 import es.bvalero.replacer.FinderProperties;
 import es.bvalero.replacer.checkwikipedia.CheckWikipediaAction;
 import es.bvalero.replacer.finder.FinderPage;
-import es.bvalero.replacer.finder.cosmetic.CosmeticCheckedFinder;
+import es.bvalero.replacer.finder.cosmetic.CosmeticFinder;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.RegexMatchFinder;
 import java.util.regex.MatchResult;
@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
 
 /** Categories containing unnecessary spaces, e.g. `[[Categoría: Animal]] ==> [[Categoría:Animal]]` */
 @Component
-class CategoryWhiteSpaceFinder implements CosmeticCheckedFinder {
+class CategoryWhiteSpaceFinder implements CosmeticFinder {
 
     @RegExp
     private static final String REGEX_CATEGORY_SPACE = "\\[\\[(\\s*%s\\s*):(.+?)(\\|.+?)?]]";

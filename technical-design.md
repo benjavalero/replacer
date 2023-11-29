@@ -1,5 +1,4 @@
 # Technical Design
-# Technical Design
 
 ## Domain
 
@@ -93,7 +92,7 @@ In backend, we have the following submodules:
 - `replacer-finder`. Adapter with the functionality of finding replacements in pages. It has been implemented as an adapter instead of in the core to improve the decoupling.
 - `replacer-repository`. Adapter with a JDBC implementation of the persistence.
 - `replacer-web`. Adapter with the REST services.
-- `replacer-wikipedia`. Adapters to access external resources: Wikipedia (pages, users and authentication), and Check-Wikipedia.
+- `replacer-wikipedia`. Adapters to access external resources: Wikipedia (pages, users and authorization), and Check-Wikipedia.
 
 And the following packages:
 - Configuration classes and property files are preferred to be in the base package.

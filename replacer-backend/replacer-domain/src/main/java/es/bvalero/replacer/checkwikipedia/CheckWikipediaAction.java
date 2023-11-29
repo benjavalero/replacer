@@ -3,7 +3,7 @@ package es.bvalero.replacer.checkwikipedia;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-/** An action on Check Wikipedia supported by the application */
+/** An action on Check-Wikipedia supported by the application */
 @Getter
 @AllArgsConstructor
 public enum CheckWikipediaAction {

@@ -2,7 +2,7 @@ package es.bvalero.replacer.finder.cosmetic.finders;
 
 import es.bvalero.replacer.checkwikipedia.CheckWikipediaAction;
 import es.bvalero.replacer.finder.FinderPage;
-import es.bvalero.replacer.finder.cosmetic.CosmeticCheckedFinder;
+import es.bvalero.replacer.finder.cosmetic.CosmeticFinder;
 import es.bvalero.replacer.finder.util.RegexMatchFinder;
 import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 /** Headlines with the complete text in bold, e.g. `== '''Asia''' ==` */
 @Component
-class HeadlineBoldFinder implements CosmeticCheckedFinder {
+class HeadlineBoldFinder implements CosmeticFinder {
 
     @RegExp
     private static final String REGEX_HEADLINE_BOLD = "^(={2,})\\s*'''([^=']+?)'''\\s*\\1$";

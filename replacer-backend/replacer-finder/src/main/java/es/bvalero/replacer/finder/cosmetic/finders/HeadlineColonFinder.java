@@ -2,7 +2,7 @@ package es.bvalero.replacer.finder.cosmetic.finders;
 
 import es.bvalero.replacer.checkwikipedia.CheckWikipediaAction;
 import es.bvalero.replacer.finder.FinderPage;
-import es.bvalero.replacer.finder.cosmetic.CosmeticCheckedFinder;
+import es.bvalero.replacer.finder.cosmetic.CosmeticFinder;
 import es.bvalero.replacer.finder.util.RegexMatchFinder;
 import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 /** Headlines ending with a colon, e.g. `== Asia: ==` */
 @Component
-class HeadlineColonFinder implements CosmeticCheckedFinder {
+class HeadlineColonFinder implements CosmeticFinder {
 
     @RegExp
     private static final String REGEX_HEADLINE_COLON = "^(={2,5})\\s*([^\\s=:]+?):\\s*\\1$";

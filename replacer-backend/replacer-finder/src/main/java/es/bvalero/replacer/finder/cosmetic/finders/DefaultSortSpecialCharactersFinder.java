@@ -2,7 +2,7 @@ package es.bvalero.replacer.finder.cosmetic.finders;
 
 import es.bvalero.replacer.checkwikipedia.CheckWikipediaAction;
 import es.bvalero.replacer.finder.FinderPage;
-import es.bvalero.replacer.finder.cosmetic.CosmeticCheckedFinder;
+import es.bvalero.replacer.finder.cosmetic.CosmeticFinder;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.RegexMatchFinder;
 import java.util.List;
@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
  * We also find and fix cases with a whitespace after the colon though they are not reported (action 88).
  */
 @Component
-class DefaultSortSpecialCharactersFinder implements CosmeticCheckedFinder {
+class DefaultSortSpecialCharactersFinder implements CosmeticFinder {
 
     private static final List<String> SORT_TEMPLATES = List.of("DEFAULTSORT", "ORDENAR");
 

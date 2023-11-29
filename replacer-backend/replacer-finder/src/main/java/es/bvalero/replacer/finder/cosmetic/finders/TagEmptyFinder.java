@@ -2,7 +2,7 @@ package es.bvalero.replacer.finder.cosmetic.finders;
 
 import es.bvalero.replacer.checkwikipedia.CheckWikipediaAction;
 import es.bvalero.replacer.finder.FinderPage;
-import es.bvalero.replacer.finder.cosmetic.CosmeticCheckedFinder;
+import es.bvalero.replacer.finder.cosmetic.CosmeticFinder;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.RegexMatchFinder;
 import java.util.Set;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 
 /** Tags with no content, e.g. `<div style="text-align: right; font-size: 85%;"></div>` */
 @Component
-class TagEmptyFinder implements CosmeticCheckedFinder {
+class TagEmptyFinder implements CosmeticFinder {
 
     private static final Set<String> TAGS = Set.of(
         "span",

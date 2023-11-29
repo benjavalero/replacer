@@ -5,7 +5,7 @@ import es.bvalero.replacer.checkwikipedia.CheckWikipediaAction;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.FinderPriority;
-import es.bvalero.replacer.finder.cosmetic.CosmeticCheckedFinder;
+import es.bvalero.replacer.finder.cosmetic.CosmeticFinder;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.RegexMatchFinder;
 import java.util.regex.MatchResult;
@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
 
 /** Space links where the space is not translated, e.g. `[[File:x.jpg]] ==> [[Archivo:x.jpg]]` */
 @Component
-class SpaceIncorrectFinder implements CosmeticCheckedFinder {
+class SpaceIncorrectFinder implements CosmeticFinder {
 
     @RegExp
     private static final String REGEX_SPACE = "\\[\\[(%s):(.+?)]]";
