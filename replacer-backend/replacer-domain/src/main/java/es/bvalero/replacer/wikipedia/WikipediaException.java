@@ -1,4 +1,4 @@
-package es.bvalero.replacer.common.exception;
+package es.bvalero.replacer.wikipedia;
 
 import lombok.experimental.StandardException;
 

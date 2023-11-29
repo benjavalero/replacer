@@ -2,6 +2,10 @@ package es.bvalero.replacer.user;
 
 import org.springframework.stereotype.Service;
 
+/**
+ * Service to perform OAuth authorization operations.
+ * It is just a proxy so the web adapter cannot call directly to the OAuth adapter.
+ */
 @Service
 class AuthorizationService {
 

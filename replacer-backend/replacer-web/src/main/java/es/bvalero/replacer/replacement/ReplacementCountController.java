@@ -1,8 +1,8 @@
 package es.bvalero.replacer.replacement;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import es.bvalero.replacer.common.util.UserLanguage;
-import es.bvalero.replacer.common.util.ValidateAdminUser;
+import es.bvalero.replacer.common.resolver.UserLanguage;
+import es.bvalero.replacer.common.security.ValidateAdminUser;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;

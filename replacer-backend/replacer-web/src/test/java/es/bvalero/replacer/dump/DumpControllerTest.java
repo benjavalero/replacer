@@ -10,8 +10,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import es.bvalero.replacer.WebMvcConfiguration;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
+import es.bvalero.replacer.common.security.ValidateUserAspect;
 import es.bvalero.replacer.common.util.ReplacerUtils;
-import es.bvalero.replacer.common.util.ValidateUserAspect;
 import es.bvalero.replacer.common.util.WebUtils;
 import es.bvalero.replacer.user.AccessToken;
 import es.bvalero.replacer.user.User;

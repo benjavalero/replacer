@@ -1,7 +1,7 @@
 package es.bvalero.replacer.page.save;
 
-import es.bvalero.replacer.common.exception.WikipediaException;
 import es.bvalero.replacer.user.AccessToken;
+import es.bvalero.replacer.wikipedia.WikipediaException;
 import org.jmolecules.architecture.hexagonal.SecondaryPort;
 
 @SecondaryPort

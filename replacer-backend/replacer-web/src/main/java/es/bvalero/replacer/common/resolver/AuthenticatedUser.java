@@ -1,11 +1,13 @@
-package es.bvalero.replacer.common.util;
+package es.bvalero.replacer.common.resolver;
 
+import io.swagger.v3.oas.annotations.Parameter;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Target(ElementType.METHOD)
+@Parameter(hidden = true)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface ValidateBotUser {
+@Target(ElementType.PARAMETER)
+public @interface AuthenticatedUser {
 }

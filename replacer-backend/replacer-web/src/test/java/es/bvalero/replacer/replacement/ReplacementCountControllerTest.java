@@ -9,7 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import es.bvalero.replacer.WebMvcConfiguration;
 import es.bvalero.replacer.common.domain.ResultCount;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import es.bvalero.replacer.common.util.ValidateUserAspect;
+import es.bvalero.replacer.common.security.ValidateUserAspect;
 import es.bvalero.replacer.common.util.WebUtils;
 import es.bvalero.replacer.page.IndexedPage;
 import es.bvalero.replacer.page.PageKey;

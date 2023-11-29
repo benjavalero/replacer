@@ -1,7 +1,7 @@
 package es.bvalero.replacer.dump;
 
+import es.bvalero.replacer.common.security.ValidateAdminUser;
 import es.bvalero.replacer.common.util.ReplacerUtils;
-import es.bvalero.replacer.common.util.ValidateAdminUser;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.Optional;

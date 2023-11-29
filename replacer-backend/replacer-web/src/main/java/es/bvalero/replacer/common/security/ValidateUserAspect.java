@@ -1,5 +1,6 @@
-package es.bvalero.replacer.common.util;
+package es.bvalero.replacer.common.security;
 
+import es.bvalero.replacer.common.util.WebUtils;
 import es.bvalero.replacer.user.User;
 import javax.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +23,7 @@ public class ValidateUserAspect {
         this.webUtils = webUtils;
     }
 
-    @Around("@annotation(es.bvalero.replacer.common.util.ValidateAdminUser)")
+    @Around("@annotation(es.bvalero.replacer.common.security.ValidateAdminUser)")
     public Object validateAdminUser(ProceedingJoinPoint joinPoint) throws Throwable {
         HttpServletRequest request =
             ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
@@ -38,7 +39,7 @@ public class ValidateUserAspect {
         return joinPoint.proceed();
     }
 
-    @Around("@annotation(es.bvalero.replacer.common.util.ValidateBotUser)")
+    @Around("@annotation(es.bvalero.replacer.common.security.ValidateBotUser)")
     public Object validateBotUser(ProceedingJoinPoint joinPoint) throws Throwable {
         HttpServletRequest request =
             ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();

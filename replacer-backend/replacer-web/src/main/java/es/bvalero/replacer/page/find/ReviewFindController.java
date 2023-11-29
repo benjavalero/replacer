@@ -1,6 +1,6 @@
 package es.bvalero.replacer.page.find;
 
-import es.bvalero.replacer.common.util.AuthenticatedUser;
+import es.bvalero.replacer.common.resolver.AuthenticatedUser;
 import es.bvalero.replacer.page.PageKey;
 import es.bvalero.replacer.user.User;
 import io.swagger.v3.oas.annotations.Operation;

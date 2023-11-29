@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import es.bvalero.replacer.common.domain.*;
-import es.bvalero.replacer.common.exception.WikipediaException;
 import es.bvalero.replacer.page.PageKey;
 import es.bvalero.replacer.page.PageRepository;
 import es.bvalero.replacer.page.find.WikipediaTimestamp;
@@ -12,6 +11,7 @@ import es.bvalero.replacer.replacement.CustomReplacementService;
 import es.bvalero.replacer.replacement.IndexedCustomReplacement;
 import es.bvalero.replacer.replacement.ReplacementSaveRepository;
 import es.bvalero.replacer.user.User;
+import es.bvalero.replacer.wikipedia.WikipediaException;
 import java.time.LocalDate;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;

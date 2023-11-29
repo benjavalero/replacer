@@ -9,7 +9,7 @@ import es.bvalero.replacer.WebMvcConfiguration;
 import es.bvalero.replacer.common.domain.ReplacementKind;
 import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import es.bvalero.replacer.common.util.ValidateUserAspect;
+import es.bvalero.replacer.common.security.ValidateUserAspect;
 import es.bvalero.replacer.common.util.WebUtils;
 import es.bvalero.replacer.user.AccessToken;
 import es.bvalero.replacer.user.User;
