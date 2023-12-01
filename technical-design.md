@@ -73,28 +73,26 @@ The tool is composed by two independent modules, both in the same repository: th
 
 The code is organized in different Maven submodules, whose dependencies follow the principles of Clean Architecture.
 
-Note it is not worth to implement the Java Module System, as it implies some modifications in order to work with JUnit and Spring: new version of Surefire, package names cannot be repeated between modules and integration tests in a different package.
+Note it is not worth to implement the Java Module System, as it implies some modifications in order to work with JUnit and Spring, in particular: new version of Surefire, package names cannot be repeated between modules and integration tests in a different package.
 
-Output/Secondary ports (e.g. interfaces for the Wikipedia, OAuth and database adapters) are included in the same package of the implementation but in the `domain` submodule.Therefore, all adapter modules must depend only on `domain` and not on `core`.
-Input/Primary ports, currently only the services for the REST API use cases, don't need an interface as there is only one implementation. Therefore, for the sake of simplicity, we let the input ports in the `core` module, so the `web` module is allowed to depend on `core`. 
-Additionally, with these modules, we want to avoid that an input adapter calls an output port, for instance a controller calling directly a repository. We check this with an architecture test using the JMolecule annotations  `@PrimaryAdapter` and `@SecondaryPort`.
+Instead, we define modules _by layer_ trying to achieve unnecessary dependencies between them:
+- `replacer-app`. SpringBoot configuration and application.
+- `replacer-core`. Business logic.
+- `replacer-domain`. Domain model and interfaces shared between modules.
+- `replacer-finder`. Output adapter with the functionality of finding replacements in pages. It has been implemented as an adapter instead of in the core to improve the decoupling.
+- `replacer-repository`. Output adapter with a JDBC implementation of the persistence.
+- `replacer-web`. Input adapter with the REST services.
+- `replacer-wikipedia`. Output adapters to access external resources: Wikipedia (pages, users and authorization), and Check-Wikipedia.
 
-In general, services are created for each use case following the Single Responsibility Principle.
-Classes are usually suffixed: `Service`, `Controller`, `Repository`, etc.
+This way, the `core` module is isolated and depends on the `domain`. The rest of modules are input/output adapters and depend only on the `domain`.
+
+Note that we could have created 3 different modules/layers for domain model, input ports and output ports, but they are merged into one module for simplicity. Also note that, with this simplification, an input adapter can access an output adapter via its interface but, as we are defining the interfaces decoupled from their implementations, we can consider output interfaces as core services, so there is no issue.
 
 DTO objects are used to communicate the different layers. The suffix `Dto` (also `Request` and `Response`) is usually used for the objects communicating the controllers with the view.
 
-In backend, we have the following submodules:
+Classes are organized _by component_. When possible, all related classes belong to the same package, even in different modules, and have package-private visibility.
 
-- `replacer-app`. SpringBoot configuration and application.
-- `replacer-core`. Use cases.
-- `replacer-domain`. Domain objects and interfaces shared between modules.
-- `replacer-finder`. Adapter with the functionality of finding replacements in pages. It has been implemented as an adapter instead of in the core to improve the decoupling.
-- `replacer-repository`. Adapter with a JDBC implementation of the persistence.
-- `replacer-web`. Adapter with the REST services.
-- `replacer-wikipedia`. Adapters to access external resources: Wikipedia (pages, users and authorization), and Check-Wikipedia.
-
-And the following packages:
+In particular, we consider the following packages:
 - Configuration classes and property files are preferred to be in the base package.
 - `checkwikipedia`. To send notifications to Check-Wikipedia when some types of cosmetics are applied, and they are also supported in Check-Wikipedia, so we can help this project to keep their figures up-to-date.
 - `common`. Domain entities shared between packages, along with exceptions and utility classes used on all the tool.

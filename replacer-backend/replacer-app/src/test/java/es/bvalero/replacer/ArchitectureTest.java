@@ -8,6 +8,10 @@ import org.jmolecules.archunit.JMoleculesArchitectureRules;
 @AnalyzeClasses(packages = "es.bvalero.replacer")
 class ArchitectureTest {
 
+    // TODO: All core use cases must implement an interface which will belong to the domain module
+    // TODO: Adapter modules (in particular, Web) will only depend on domain module
+    // TODO: We don't need architecture tests anymore
+
     @ArchTest
     ArchRule hexagonal = JMoleculesArchitectureRules.ensureHexagonal();
 }
