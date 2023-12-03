@@ -1,6 +1,6 @@
 package es.bvalero.replacer;
 
-import es.bvalero.replacer.user.AccessToken;
+import es.bvalero.replacer.user.WebUtils;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.servers.Server;
 import io.swagger.v3.oas.models.parameters.Parameter;
@@ -18,6 +18,6 @@ public class OpenApiConfiguration {
         return (operation, handlerMethod) ->
             operation
                 .addParametersItem(new Parameter().in("header").name(HttpHeaders.ACCEPT_LANGUAGE))
-                .addParametersItem(new Parameter().in("cookie").name(AccessToken.COOKIE_NAME));
+                .addParametersItem(new Parameter().in("cookie").name(WebUtils.ACCESS_TOKEN_COOKIE));
     }
 }

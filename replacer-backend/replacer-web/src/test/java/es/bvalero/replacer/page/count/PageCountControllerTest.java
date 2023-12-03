@@ -8,12 +8,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import es.bvalero.replacer.WebMvcConfiguration;
 import es.bvalero.replacer.common.domain.*;
-import es.bvalero.replacer.common.util.WebUtils;
-import es.bvalero.replacer.user.AccessToken;
 import es.bvalero.replacer.user.User;
+import es.bvalero.replacer.user.WebUtils;
 import java.util.Collection;
 import java.util.List;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -52,7 +50,7 @@ class PageCountControllerTest {
             .perform(
                 get("/api/page/type/count")
                     .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
-                    .cookie(new Cookie(AccessToken.COOKIE_NAME, user.getAccessToken().toCookieValue()))
+                    .cookie(WebUtils.buildAccessTokenCookie(user.getAccessToken()))
                     .contentType(MediaType.APPLICATION_JSON)
             )
             .andExpect(status().isOk())

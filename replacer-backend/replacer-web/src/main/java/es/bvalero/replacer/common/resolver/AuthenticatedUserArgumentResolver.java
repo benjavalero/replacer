@@ -1,6 +1,6 @@
 package es.bvalero.replacer.common.resolver;
 
-import es.bvalero.replacer.common.util.WebUtils;
+import es.bvalero.replacer.user.WebUtils;
 import javax.servlet.http.HttpServletRequest;
 import lombok.SneakyThrows;
 import org.springframework.core.MethodParameter;

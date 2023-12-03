@@ -87,7 +87,7 @@ class AuthorizationController {
         // Domain: default
         // SameSite is Lax by default, but it fails in some old browsers, so we set it explicitly.
         return ResponseCookie
-            .from(AccessToken.COOKIE_NAME, accessToken.toCookieValue())
+            .from(WebUtils.ACCESS_TOKEN_COOKIE, accessToken.toCookieValue())
             .maxAge((long) 400 * 24 * 3600)
             .path("/api")
             .secure(true)

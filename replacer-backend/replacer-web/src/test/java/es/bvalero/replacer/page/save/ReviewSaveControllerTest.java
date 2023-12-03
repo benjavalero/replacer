@@ -9,15 +9,13 @@ import es.bvalero.replacer.WebMvcConfiguration;
 import es.bvalero.replacer.common.domain.ReplacementKind;
 import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import es.bvalero.replacer.common.util.WebUtils;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.page.PageKey;
 import es.bvalero.replacer.page.find.WikipediaTimestamp;
-import es.bvalero.replacer.user.AccessToken;
 import es.bvalero.replacer.user.User;
+import es.bvalero.replacer.user.WebUtils;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import java.util.List;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -103,7 +101,7 @@ class ReviewSaveControllerTest {
             .perform(
                 post("/api/page/123")
                     .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
-                    .cookie(new Cookie(AccessToken.COOKIE_NAME, user.getAccessToken().toCookieValue()))
+                    .cookie(WebUtils.buildAccessTokenCookie(user.getAccessToken()))
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(reviewedPageWithChanges))
             )
@@ -122,7 +120,7 @@ class ReviewSaveControllerTest {
             .perform(
                 post("/api/page/123")
                     .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
-                    .cookie(new Cookie(AccessToken.COOKIE_NAME, user.getAccessToken().toCookieValue()))
+                    .cookie(WebUtils.buildAccessTokenCookie(user.getAccessToken()))
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(reviewedPageWithoutChanges))
             )
@@ -143,7 +141,7 @@ class ReviewSaveControllerTest {
             .perform(
                 post("/api/page/123")
                     .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
-                    .cookie(new Cookie(AccessToken.COOKIE_NAME, user.getAccessToken().toCookieValue()))
+                    .cookie(WebUtils.buildAccessTokenCookie(user.getAccessToken()))
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(reviewedPageWithoutChanges))
             )
@@ -166,7 +164,7 @@ class ReviewSaveControllerTest {
             .perform(
                 post("/api/page/123")
                     .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
-                    .cookie(new Cookie(AccessToken.COOKIE_NAME, user.getAccessToken().toCookieValue()))
+                    .cookie(WebUtils.buildAccessTokenCookie(user.getAccessToken()))
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(reviewedPageWithChanges))
             )
@@ -192,7 +190,7 @@ class ReviewSaveControllerTest {
             .perform(
                 post("/api/page/123")
                     .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
-                    .cookie(new Cookie(AccessToken.COOKIE_NAME, user.getAccessToken().toCookieValue()))
+                    .cookie(WebUtils.buildAccessTokenCookie(user.getAccessToken()))
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(reviewedPageWithChanges))
             )
@@ -216,7 +214,7 @@ class ReviewSaveControllerTest {
             .perform(
                 post("/api/page/123")
                     .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
-                    .cookie(new Cookie(AccessToken.COOKIE_NAME, user.getAccessToken().toCookieValue()))
+                    .cookie(WebUtils.buildAccessTokenCookie(user.getAccessToken()))
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(reviewedPageWithChanges))
             )

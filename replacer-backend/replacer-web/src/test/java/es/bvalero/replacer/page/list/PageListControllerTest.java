@@ -10,10 +10,8 @@ import es.bvalero.replacer.common.domain.ReplacementKind;
 import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.security.ValidateUserAspect;
-import es.bvalero.replacer.common.util.WebUtils;
-import es.bvalero.replacer.user.AccessToken;
 import es.bvalero.replacer.user.User;
-import javax.servlet.http.Cookie;
+import es.bvalero.replacer.user.WebUtils;
 import javax.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -68,7 +66,7 @@ class PageListControllerTest {
             .perform(
                 post("/api/page/type?kind=2&subtype=Africa")
                     .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
-                    .cookie(new Cookie(AccessToken.COOKIE_NAME, user.getAccessToken().toCookieValue()))
+                    .cookie(WebUtils.buildAccessTokenCookie(user.getAccessToken()))
                     .contentType(MediaType.APPLICATION_JSON)
             )
             .andExpect(status().isNoContent());
@@ -89,7 +87,7 @@ class PageListControllerTest {
             .perform(
                 post("/api/page/type?kind=2&subtype=Africa")
                     .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
-                    .cookie(new Cookie(AccessToken.COOKIE_NAME, user.getAccessToken().toCookieValue()))
+                    .cookie(WebUtils.buildAccessTokenCookie(user.getAccessToken()))
                     .contentType(MediaType.APPLICATION_JSON)
             )
             .andExpect(status().isForbidden());

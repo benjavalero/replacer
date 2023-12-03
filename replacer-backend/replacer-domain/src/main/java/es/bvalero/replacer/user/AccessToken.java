@@ -8,7 +8,6 @@ import org.springframework.lang.NonNull;
 @Value(staticConstructor = "of")
 public class AccessToken {
 
-    public static final String COOKIE_NAME = "access-token";
     private static final char SEPARATOR = '*';
 
     @NonNull
@@ -18,11 +17,11 @@ public class AccessToken {
     String tokenSecret;
 
     // Simple methods to "stringify" the access token
-    public String toCookieValue() {
+    String toCookieValue() {
         return token + SEPARATOR + tokenSecret;
     }
 
-    public static AccessToken fromCookieValue(String cookieValue) {
+    static AccessToken fromCookieValue(String cookieValue) {
         String[] tokens = StringUtils.split(cookieValue, SEPARATOR);
         return AccessToken.of(tokens[0], tokens[1]);
     }

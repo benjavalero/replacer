@@ -12,12 +12,10 @@ import es.bvalero.replacer.WebMvcConfiguration;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.security.ValidateUserAspect;
 import es.bvalero.replacer.common.util.ReplacerUtils;
-import es.bvalero.replacer.common.util.WebUtils;
-import es.bvalero.replacer.user.AccessToken;
 import es.bvalero.replacer.user.User;
+import es.bvalero.replacer.user.WebUtils;
 import java.time.LocalDateTime;
 import java.util.Optional;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -72,7 +70,7 @@ class DumpControllerTest {
             .perform(
                 get("/api/dump")
                     .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
-                    .cookie(new Cookie(AccessToken.COOKIE_NAME, user.getAccessToken().toCookieValue()))
+                    .cookie(WebUtils.buildAccessTokenCookie(user.getAccessToken()))
                     .contentType(MediaType.APPLICATION_JSON)
             )
             .andExpect(status().isOk())
@@ -98,7 +96,7 @@ class DumpControllerTest {
             .perform(
                 get("/api/dump")
                     .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
-                    .cookie(new Cookie(AccessToken.COOKIE_NAME, user.getAccessToken().toCookieValue()))
+                    .cookie(WebUtils.buildAccessTokenCookie(user.getAccessToken()))
                     .contentType(MediaType.APPLICATION_JSON)
             )
             .andExpect(status().isNoContent());
@@ -115,7 +113,7 @@ class DumpControllerTest {
             .perform(
                 get("/api/dump")
                     .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
-                    .cookie(new Cookie(AccessToken.COOKIE_NAME, user.getAccessToken().toCookieValue()))
+                    .cookie(WebUtils.buildAccessTokenCookie(user.getAccessToken()))
                     .contentType(MediaType.APPLICATION_JSON)
             )
             .andExpect(status().isForbidden());
@@ -132,7 +130,7 @@ class DumpControllerTest {
             .perform(
                 post("/api/dump")
                     .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
-                    .cookie(new Cookie(AccessToken.COOKIE_NAME, user.getAccessToken().toCookieValue()))
+                    .cookie(WebUtils.buildAccessTokenCookie(user.getAccessToken()))
                     .contentType(MediaType.APPLICATION_JSON)
             )
             .andExpect(status().isAccepted());
@@ -149,7 +147,7 @@ class DumpControllerTest {
             .perform(
                 post("/api/dump")
                     .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
-                    .cookie(new Cookie(AccessToken.COOKIE_NAME, user.getAccessToken().toCookieValue()))
+                    .cookie(WebUtils.buildAccessTokenCookie(user.getAccessToken()))
                     .contentType(MediaType.APPLICATION_JSON)
             )
             .andExpect(status().isForbidden());

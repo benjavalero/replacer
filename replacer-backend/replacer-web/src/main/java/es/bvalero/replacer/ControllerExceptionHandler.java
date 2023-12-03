@@ -2,8 +2,8 @@ package es.bvalero.replacer;
 
 import es.bvalero.replacer.common.security.ForbiddenException;
 import es.bvalero.replacer.page.save.WikipediaConflictException;
-import es.bvalero.replacer.user.AccessToken;
 import es.bvalero.replacer.user.AuthorizationException;
+import es.bvalero.replacer.user.WebUtils;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -27,7 +27,7 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleAuthorizationException(AuthorizationException e) {
         return ResponseEntity
             .status(HttpStatus.UNAUTHORIZED)
-            .header(HttpHeaders.SET_COOKIE, buildAccessTokenCookie().toString())
+            .header(HttpHeaders.SET_COOKIE, buildAccessTokenEmptyCookie().toString())
             .body(e);
     }
 
@@ -45,7 +45,7 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
             LOGGER.warn("Authorization error saving page content: " + e.getMessage());
             return ResponseEntity
                 .status(HttpStatus.UNAUTHORIZED)
-                .header(HttpHeaders.SET_COOKIE, buildAccessTokenCookie().toString())
+                .header(HttpHeaders.SET_COOKIE, buildAccessTokenEmptyCookie().toString())
                 .body(e);
         } else {
             LOGGER.error("Error saving page content", e);
@@ -59,7 +59,7 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    private ResponseCookie buildAccessTokenCookie() {
-        return ResponseCookie.from(AccessToken.COOKIE_NAME, "").maxAge(0).build();
+    private ResponseCookie buildAccessTokenEmptyCookie() {
+        return ResponseCookie.from(WebUtils.ACCESS_TOKEN_COOKIE, "").maxAge(0).build();
     }
 }

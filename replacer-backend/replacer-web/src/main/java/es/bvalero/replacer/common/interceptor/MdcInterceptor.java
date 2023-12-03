@@ -1,8 +1,8 @@
 package es.bvalero.replacer.common.interceptor;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import es.bvalero.replacer.common.util.WebUtils;
 import es.bvalero.replacer.user.User;
+import es.bvalero.replacer.user.WebUtils;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.slf4j.MDC;
