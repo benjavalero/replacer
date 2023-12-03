@@ -3,7 +3,7 @@ package es.bvalero.replacer.user;
 import lombok.Value;
 import org.springframework.lang.NonNull;
 
-/** Wikipedia OAuth request token */
+/** Request token with an authorization URL to initiate an authorization process */
 @Value(staticConstructor = "of")
 class RequestToken {
 
@@ -12,4 +12,7 @@ class RequestToken {
 
     @NonNull
     String tokenSecret;
+
+    @NonNull
+    String authorizationUrl;
 }

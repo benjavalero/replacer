@@ -6,12 +6,12 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { InitiateAuthorizationResponse } from '../../models/initiate-authorization-response';
+import { RequestToken } from '../../models/request-token';
 
 export interface InitiateAuthorization$Params {
 }
 
-export function initiateAuthorization(http: HttpClient, rootUrl: string, params?: InitiateAuthorization$Params, context?: HttpContext): Observable<StrictHttpResponse<InitiateAuthorizationResponse>> {
+export function initiateAuthorization(http: HttpClient, rootUrl: string, params?: InitiateAuthorization$Params, context?: HttpContext): Observable<StrictHttpResponse<RequestToken>> {
   const rb = new RequestBuilder(rootUrl, initiateAuthorization.PATH, 'get');
   if (params) {
   }
@@ -21,7 +21,7 @@ export function initiateAuthorization(http: HttpClient, rootUrl: string, params?
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<InitiateAuthorizationResponse>;
+      return r as StrictHttpResponse<RequestToken>;
     })
   );
 }

@@ -1,7 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
 export { DumpStatus } from './models/dump-status';
-export { InitiateAuthorizationResponse } from './models/initiate-authorization-response';
 export { KindCount } from './models/kind-count';
 export { Page } from './models/page';
 export { PageCount } from './models/page-count';

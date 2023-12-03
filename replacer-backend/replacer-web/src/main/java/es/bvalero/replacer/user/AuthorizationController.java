@@ -21,10 +21,10 @@ import org.springframework.web.bind.annotation.*;
 class AuthorizationController {
 
     // Dependency injection
-    private final AuthorizationService authorizationService;
+    private final AuthorizationApi authorizationService;
     private final UserService userService;
 
-    AuthorizationController(AuthorizationService authorizationService, UserService userService) {
+    AuthorizationController(AuthorizationApi authorizationService, UserService userService) {
         this.authorizationService = authorizationService;
         this.userService = userService;
     }
@@ -47,18 +47,13 @@ class AuthorizationController {
 
     // Note these are the only REST endpoints which don't expect to receive the language header and the token cookie
 
-    @Operation(summary = "Initiate an authorization process")
+    @Operation(summary = "Get a request token with an authorization URL to initiate an authorization process")
     @GetMapping(value = "/initiate-authorization")
-    InitiateAuthorizationResponse initiateAuthorization() {
+    RequestTokenDto initiateAuthorization() {
         LOGGER.info("START Initiate Authorization");
-        RequestToken requestToken = authorizationService.getRequestToken();
-        String authorizationUrl = authorizationService.getAuthorizationUrl(requestToken);
-        InitiateAuthorizationResponse initiateAuthorizationResponse = InitiateAuthorizationResponse.of(
-            RequestTokenDto.of(requestToken),
-            authorizationUrl
-        );
-        LOGGER.info("END Initiate Authorization: {}", initiateAuthorizationResponse);
-        return initiateAuthorizationResponse;
+        RequestTokenDto requestToken = RequestTokenDto.of(authorizationService.getRequestToken());
+        LOGGER.info("END Initiate Authorization: {}", requestToken);
+        return requestToken;
     }
 
     @Operation(summary = "Verify the authorization process")

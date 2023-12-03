@@ -11,7 +11,7 @@ import { StrictHttpResponse } from '../strict-http-response';
 
 import { initiateAuthorization } from '../fn/user/initiate-authorization';
 import { InitiateAuthorization$Params } from '../fn/user/initiate-authorization';
-import { InitiateAuthorizationResponse } from '../models/initiate-authorization-response';
+import { RequestToken } from '../models/request-token';
 import { User } from '../models/user';
 import { verifyAuthorization } from '../fn/user/verify-authorization';
 import { VerifyAuthorization$Params } from '../fn/user/verify-authorization';
@@ -68,7 +68,7 @@ export class UserApiService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  initiateAuthorization$Response(params?: InitiateAuthorization$Params, context?: HttpContext): Observable<StrictHttpResponse<InitiateAuthorizationResponse>> {
+  initiateAuthorization$Response(params?: InitiateAuthorization$Params, context?: HttpContext): Observable<StrictHttpResponse<RequestToken>> {
     return initiateAuthorization(this.http, this.rootUrl, params, context);
   }
 
@@ -82,9 +82,9 @@ export class UserApiService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  initiateAuthorization(params?: InitiateAuthorization$Params, context?: HttpContext): Observable<InitiateAuthorizationResponse> {
+  initiateAuthorization(params?: InitiateAuthorization$Params, context?: HttpContext): Observable<RequestToken> {
     return this.initiateAuthorization$Response(params, context).pipe(
-      map((r: StrictHttpResponse<InitiateAuthorizationResponse>): InitiateAuthorizationResponse => r.body)
+      map((r: StrictHttpResponse<RequestToken>): RequestToken => r.body)
     );
   }
 

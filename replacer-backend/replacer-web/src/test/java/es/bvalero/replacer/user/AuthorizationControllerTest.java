@@ -37,7 +37,7 @@ class AuthorizationControllerTest {
     private WebUtils webUtils;
 
     @MockBean
-    private AuthorizationService authorizationService;
+    private AuthorizationApi authorizationService;
 
     @MockBean
     private UserService userService;
@@ -47,20 +47,17 @@ class AuthorizationControllerTest {
         WikipediaLanguage lang = WikipediaLanguage.getDefault();
         when(webUtils.getLanguageHeader(any(HttpServletRequest.class))).thenReturn(lang);
 
-        RequestToken requestToken = RequestToken.of("R", "S");
-        String authorizationUrl = "Z";
+        RequestToken requestToken = RequestToken.of("R", "S", "Z");
         when(authorizationService.getRequestToken()).thenReturn(requestToken);
-        when(authorizationService.getAuthorizationUrl(requestToken)).thenReturn(authorizationUrl);
 
         mvc
             .perform(get("/api/user/initiate-authorization").contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.requestToken.token", is(requestToken.getToken())))
-            .andExpect(jsonPath("$.requestToken.tokenSecret", is(requestToken.getTokenSecret())))
-            .andExpect(jsonPath("$.authorizationUrl", is(authorizationUrl)));
+            .andExpect(jsonPath("$.token", is(requestToken.getToken())))
+            .andExpect(jsonPath("$.tokenSecret", is(requestToken.getTokenSecret())))
+            .andExpect(jsonPath("$.authorizationUrl", is(requestToken.getAuthorizationUrl())));
 
         verify(authorizationService).getRequestToken();
-        verify(authorizationService).getAuthorizationUrl(requestToken);
     }
 
     @Test
@@ -79,7 +76,7 @@ class AuthorizationControllerTest {
 
     @Test
     void testVerifyAuthorization() throws Exception {
-        RequestToken requestToken = RequestToken.of("R", "S");
+        RequestToken requestToken = RequestToken.of("R", "S", "Z");
         String oAuthVerifier = "V";
 
         WikipediaLanguage lang = WikipediaLanguage.getDefault();
@@ -114,7 +111,7 @@ class AuthorizationControllerTest {
         WikipediaLanguage lang = WikipediaLanguage.getDefault();
         when(webUtils.getLanguageHeader(any(HttpServletRequest.class))).thenReturn(lang);
 
-        RequestToken requestToken = RequestToken.of("R", "S");
+        RequestToken requestToken = RequestToken.of("R", "S", "Z");
         String oAuthVerifier = "";
 
         VerifyAuthorizationRequest verifyAuthorizationRequest = new VerifyAuthorizationRequest();

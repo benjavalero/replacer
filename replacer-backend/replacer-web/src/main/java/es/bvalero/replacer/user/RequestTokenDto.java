@@ -8,7 +8,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.lang.NonNull;
 
-@Schema(description = "Request token to initiate an authorization process", name = "RequestToken")
+@Schema(
+    description = "Request token with an authorization URL to initiate an authorization process",
+    name = "RequestToken"
+)
 @Data
 @NoArgsConstructor
 class RequestTokenDto {
@@ -23,14 +26,23 @@ class RequestTokenDto {
     @NotNull
     String tokenSecret;
 
+    @Schema(
+        requiredMode = REQUIRED,
+        example = "https://meta.wikimedia.org/wiki/Special:OAuth/authorize?oauth_token=b3cecd4b16ecde45d9fd1a0ce68a4091"
+    )
+    @NonNull
+    @NotNull
+    String authorizationUrl;
+
     static RequestTokenDto of(RequestToken requestToken) {
         RequestTokenDto dto = new RequestTokenDto();
         dto.setToken(requestToken.getToken());
         dto.setTokenSecret(requestToken.getTokenSecret());
+        dto.setAuthorizationUrl(requestToken.getAuthorizationUrl());
         return dto;
     }
 
     static RequestToken toDomain(RequestTokenDto dto) {
-        return RequestToken.of(dto.getToken(), dto.getTokenSecret());
+        return RequestToken.of(dto.getToken(), dto.getTokenSecret(), dto.getAuthorizationUrl());
     }
 }

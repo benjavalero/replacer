@@ -30,8 +30,9 @@ class OAuthMediaWikiServiceTest {
     void testGetRequestToken() throws IOException, ExecutionException, InterruptedException, AuthorizationException {
         OAuth1RequestToken requestToken = new OAuth1RequestToken("A", "B");
         when(mediaWikiService.getRequestToken()).thenReturn(requestToken);
+        when(mediaWikiService.getAuthorizationUrl(any(OAuth1RequestToken.class))).thenReturn("Z");
 
-        RequestToken expected = RequestToken.of("A", "B");
+        RequestToken expected = RequestToken.of("A", "B", "Z");
         RequestToken actual = oAuthMediaWikiService.getRequestToken();
         assertEquals(expected, actual);
 
@@ -46,20 +47,8 @@ class OAuthMediaWikiServiceTest {
     }
 
     @Test
-    void testGetAuthorizationUrl() {
-        RequestToken requestToken = RequestToken.of("A", "B");
-        OAuth1RequestToken oAuth1RequestToken = new OAuth1RequestToken("A", "B");
-        String authorizationUrl = "Z";
-        when(mediaWikiService.getAuthorizationUrl(oAuth1RequestToken)).thenReturn(authorizationUrl);
-
-        assertEquals(authorizationUrl, oAuthMediaWikiService.getAuthorizationUrl(requestToken));
-
-        verify(mediaWikiService).getAuthorizationUrl(oAuth1RequestToken);
-    }
-
-    @Test
     void testGetAccessToken() throws IOException, ExecutionException, InterruptedException, AuthorizationException {
-        RequestToken requestToken = RequestToken.of("R", "S");
+        RequestToken requestToken = RequestToken.of("R", "S", "Z");
         String oAuthVerifier = "V";
 
         OAuth1RequestToken oAuth1RequestToken = new OAuth1RequestToken("R", "S");
@@ -76,7 +65,7 @@ class OAuthMediaWikiServiceTest {
 
     @Test
     void testGetAccessTokenWithException() throws IOException, ExecutionException, InterruptedException {
-        RequestToken requestToken = RequestToken.of("R", "S");
+        RequestToken requestToken = RequestToken.of("R", "S", "Z");
         String oAuthVerifier = "V";
 
         OAuth1RequestToken oAuth1RequestToken = new OAuth1RequestToken("R", "S");
@@ -92,7 +81,6 @@ class OAuthMediaWikiServiceTest {
     void testOAuthServiceOffline() throws AuthorizationException {
         RequestToken requestToken = oAuthOfflineService.getRequestToken();
         assertNotNull(requestToken);
-        assertFalse(oAuthOfflineService.getAuthorizationUrl(requestToken).isEmpty());
         String authorizationUrl = "Z";
         assertNotNull(oAuthOfflineService.getAccessToken(requestToken, authorizationUrl));
     }

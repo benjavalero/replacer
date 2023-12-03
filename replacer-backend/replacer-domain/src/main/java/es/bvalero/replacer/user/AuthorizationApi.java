@@ -1,10 +1,7 @@
 package es.bvalero.replacer.user;
 
-import org.jmolecules.architecture.hexagonal.SecondaryPort;
-
-/** Service to perform OAuth authorization operations */
-@SecondaryPort
-interface OAuthService {
+/** Service to perform authorization operations */
+interface AuthorizationApi {
     /** Get a request token with an authorization URL to initiate an authorization process */
     RequestToken getRequestToken();
 

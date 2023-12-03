@@ -25,7 +25,9 @@ class OAuthMediaWikiService implements OAuthService {
     @Override
     public RequestToken getRequestToken() {
         try {
-            return convertRequestToken(mediaWikiService.getRequestToken());
+            OAuth1RequestToken oAuth1RequestToken = mediaWikiService.getRequestToken();
+            String authorizationUrl = mediaWikiService.getAuthorizationUrl(oAuth1RequestToken);
+            return buildRequestToken(oAuth1RequestToken, authorizationUrl);
         } catch (InterruptedException e) {
             // This cannot be unit-tested because the mocked InterruptedException make other tests fail
             Thread.currentThread().interrupt();
@@ -37,13 +39,8 @@ class OAuthMediaWikiService implements OAuthService {
         }
     }
 
-    private RequestToken convertRequestToken(OAuth1RequestToken oAuth1RequestToken) {
-        return RequestToken.of(oAuth1RequestToken.getToken(), oAuth1RequestToken.getTokenSecret());
-    }
-
-    @Override
-    public String getAuthorizationUrl(RequestToken requestToken) {
-        return mediaWikiService.getAuthorizationUrl(convertToRequestToken(requestToken));
+    private RequestToken buildRequestToken(OAuth1RequestToken oAuth1RequestToken, String authorizationUrl) {
+        return RequestToken.of(oAuth1RequestToken.getToken(), oAuth1RequestToken.getTokenSecret(), authorizationUrl);
     }
 
     private OAuth1RequestToken convertToRequestToken(RequestToken authorizationToken) {

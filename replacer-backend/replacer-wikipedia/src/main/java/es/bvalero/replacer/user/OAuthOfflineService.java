@@ -15,12 +15,7 @@ class OAuthOfflineService implements OAuthService {
 
     @Override
     public RequestToken getRequestToken() {
-        return RequestToken.of(OFFLINE_REQUEST_TOKEN, OFFLINE_REQUEST_TOKEN_SECRET);
-    }
-
-    @Override
-    public String getAuthorizationUrl(RequestToken requestToken) {
-        return AUTHORIZATION_URL;
+        return RequestToken.of(OFFLINE_REQUEST_TOKEN, OFFLINE_REQUEST_TOKEN_SECRET, AUTHORIZATION_URL);
     }
 
     @Override
