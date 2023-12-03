@@ -75,7 +75,7 @@ The code is organized in different Maven submodules, whose dependencies follow t
 
 Note it is not worth to implement the Java Module System, as it implies some modifications in order to work with JUnit and Spring, in particular: new version of Surefire, package names cannot be repeated between modules and integration tests in a different package.
 
-Instead, we define modules _by layer_ trying to achieve unnecessary dependencies between them:
+Instead, we define modules _by layer_ trying to avoid unnecessary dependencies between them:
 - `replacer-app`. SpringBoot configuration and application.
 - `replacer-core`. Business logic.
 - `replacer-domain`. Domain model and interfaces shared between modules.
@@ -86,7 +86,7 @@ Instead, we define modules _by layer_ trying to achieve unnecessary dependencies
 
 This way, the `core` module is isolated and depends on the `domain`. The rest of modules are input/output adapters and depend only on the `domain`.
 
-Note that we could have created 3 different modules/layers for domain model, input ports and output ports, but they are merged into one module for simplicity. Also note that, with this simplification, an input adapter can access an output adapter via its interface but, as we are defining the interfaces decoupled from their implementations, we can consider output interfaces as core services, so there is no issue.
+Note that there could be 3 different modules/layers for domain model, input ports and output ports, but they are merged into one module for simplicity. Also note that, with this simplification, an input adapter can access an output adapter via its interface but, as we are defining the interfaces decoupled from their implementations, we can consider output interfaces as core services, so there is no issue.
 
 DTO objects are used to communicate the different layers. The suffix `Dto` (also `Request` and `Response`) is usually used for the objects communicating the controllers with the view.
 
