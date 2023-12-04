@@ -53,30 +53,28 @@ class WikipediaUserApiRepositoryTest {
         when(wikipediaApiHelper.executeApiRequest(any(WikipediaApiRequest.class))).thenReturn(response);
 
         AccessToken accessToken = AccessToken.of("a", "b");
-        User user = wikipediaUserApiRepository
+        WikipediaUser user = wikipediaUserApiRepository
             .findAuthenticatedUser(WikipediaLanguage.getDefault(), accessToken)
             .orElse(null);
         assertNotNull(user);
         assertEquals("Benjavalero", user.getId().getUsername());
-        assertTrue(user.hasRights());
+        assertTrue(user.isAutoConfirmed());
         assertFalse(user.isBot());
-        assertFalse(user.isAdmin());
     }
 
     @Test
     void testWikipediaServiceOffline() {
         // Offline user
         AccessToken accessToken = AccessToken.of("a", "b");
-        Optional<User> user = wikipediaUserRepository.findAuthenticatedUser(
+        Optional<WikipediaUser> user = wikipediaUserRepository.findAuthenticatedUser(
             WikipediaLanguage.getDefault(),
             accessToken
         );
         assertTrue(user.isPresent());
         user.ifPresent(u -> {
             assertEquals("offline", u.getId().getUsername());
-            assertTrue(u.hasRights());
+            assertTrue(u.isAutoConfirmed());
             assertFalse(u.isBot());
-            assertTrue(u.isAdmin());
         });
     }
 }

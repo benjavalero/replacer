@@ -23,11 +23,11 @@ class WikipediaUserCacheRepository implements WikipediaUserRepository {
 
     // Cache the users which try to access features needing special rights
     // This map can grow. We use Caffeine cache to clean periodically the old or obsolete users.
-    private final Cache<AccessToken, User> cachedUsers = Caffeine
+    private final Cache<AccessToken, WikipediaUser> cachedUsers = Caffeine
         .newBuilder()
         .removalListener((key, value, cause) -> {
             if (cause.wasEvicted() && value != null) {
-                LOGGER.info("Evicted user: {}", ((User) value).getId());
+                LOGGER.info("Evicted user: {}", ((WikipediaUser) value).getId());
             }
         })
         .expireAfterWrite(1, TimeUnit.DAYS)
@@ -40,12 +40,12 @@ class WikipediaUserCacheRepository implements WikipediaUserRepository {
     }
 
     @Override
-    public Optional<User> findAuthenticatedUser(WikipediaLanguage lang, AccessToken accessToken) {
+    public Optional<WikipediaUser> findAuthenticatedUser(WikipediaLanguage lang, AccessToken accessToken) {
         return Optional.ofNullable(this.cachedUsers.get(accessToken, token -> getAuthenticatedUser(lang, token)));
     }
 
     @Nullable
-    private User getAuthenticatedUser(WikipediaLanguage lang, AccessToken accessToken) {
+    private WikipediaUser getAuthenticatedUser(WikipediaLanguage lang, AccessToken accessToken) {
         // In case of empty result return a fake user with no groups
         return wikipediaUserRepository.findAuthenticatedUser(lang, accessToken).orElse(null);
     }

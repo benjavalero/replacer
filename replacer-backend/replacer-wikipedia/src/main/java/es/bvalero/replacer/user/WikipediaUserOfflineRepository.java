@@ -12,8 +12,8 @@ import org.springframework.stereotype.Service;
 class WikipediaUserOfflineRepository implements WikipediaUserRepository {
 
     @Override
-    public Optional<User> findAuthenticatedUser(WikipediaLanguage lang, AccessToken accessToken) {
+    public Optional<WikipediaUser> findAuthenticatedUser(WikipediaLanguage lang, AccessToken accessToken) {
         UserId userId = UserId.of(lang, "offline");
-        return Optional.of(User.builder().id(userId).accessToken(accessToken).hasRights(true).admin(true).build());
+        return Optional.of(WikipediaUser.of(userId, true, false));
     }
 }

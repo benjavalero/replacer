@@ -1,6 +1,5 @@
 package es.bvalero.replacer.user;
 
-import java.util.Collection;
 import lombok.Value;
 import org.springframework.lang.NonNull;
 
@@ -14,6 +13,6 @@ class WikipediaUser {
     @NonNull
     UserId id;
 
-    @NonNull
-    Collection<WikipediaUserGroup> groups;
+    boolean autoConfirmed;
+    boolean bot;
 }

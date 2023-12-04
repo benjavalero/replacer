@@ -7,11 +7,6 @@ import org.jmolecules.architecture.hexagonal.SecondaryPort;
 /** Repository to retrieve a Wikipedia user */
 @SecondaryPort
 interface WikipediaUserRepository {
-    /**
-     * Find a user authenticated in Wikipedia.
-     * Note that we are returning an application user.
-     * The application permissions derived from the Wikipedia groups are calculated here.
-     * The other application permissions, like the administration role, have to be decorated later.
-     */
-    Optional<User> findAuthenticatedUser(WikipediaLanguage lang, AccessToken accessToken);
+    /** Find a user authenticated in Wikipedia */
+    Optional<WikipediaUser> findAuthenticatedUser(WikipediaLanguage lang, AccessToken accessToken);
 }

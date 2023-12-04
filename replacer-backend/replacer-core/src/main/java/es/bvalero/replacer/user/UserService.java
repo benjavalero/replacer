@@ -24,14 +24,23 @@ class UserService implements UserApi {
 
     @Override
     public Optional<User> findAuthenticatedUser(WikipediaLanguage lang, AccessToken accessToken) {
-        return wikipediaUserRepository.findAuthenticatedUser(lang, accessToken).map(this::decorateAdminRole);
+        return wikipediaUserRepository
+            .findAuthenticatedUser(lang, accessToken)
+            .map(wu -> convertWikipediaUser(wu, accessToken));
     }
 
-    private User decorateAdminRole(User wikipediaUser) {
-        return User.ofAdmin(wikipediaUser, isAdmin(wikipediaUser));
+    private User convertWikipediaUser(WikipediaUser wikipediaUser, AccessToken accessToken) {
+        return User
+            .builder()
+            .id(wikipediaUser.getId())
+            .accessToken(accessToken)
+            .hasRights(wikipediaUser.isAutoConfirmed())
+            .bot(wikipediaUser.isBot())
+            .admin(isAdmin(wikipediaUser))
+            .build();
     }
 
-    private boolean isAdmin(User user) {
+    private boolean isAdmin(WikipediaUser user) {
         return Objects.equals(this.adminUser, user.getId().getUsername());
     }
 }

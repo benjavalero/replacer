@@ -49,10 +49,6 @@ public class User {
         return this.id.toString();
     }
 
-    static User ofAdmin(User user, boolean isAdmin) {
-        return user.withAdmin(isAdmin);
-    }
-
     @TestOnly
     public static User buildTestUser() {
         UserId userId = UserId.of(WikipediaLanguage.getDefault(), "x");

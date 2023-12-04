@@ -23,11 +23,30 @@ class UserServiceTest {
     }
 
     @Test
+    void testFindUserByToken() {
+        WikipediaLanguage lang = WikipediaLanguage.getDefault();
+        AccessToken accessToken = AccessToken.of("a", "b");
+
+        WikipediaUser user = WikipediaUser.of(UserId.of(lang, "N"), false, false);
+        when(wikipediaUserRepository.findAuthenticatedUser(lang, accessToken)).thenReturn(Optional.of(user));
+
+        Optional<User> result = userService.findAuthenticatedUser(lang, accessToken);
+
+        assertTrue(result.isPresent());
+        result.ifPresent(u -> {
+            assertEquals(user.getId(), u.getId());
+            assertFalse(u.hasRights());
+            assertFalse(u.isBot());
+            assertFalse(u.isAdmin());
+        });
+    }
+
+    @Test
     void testFindUserWithRights() {
         WikipediaLanguage lang = WikipediaLanguage.getDefault();
         AccessToken accessToken = AccessToken.of("a", "b");
 
-        User user = User.buildTestUser();
+        WikipediaUser user = WikipediaUser.of(UserId.of(lang, "N"), true, false);
         when(wikipediaUserRepository.findAuthenticatedUser(lang, accessToken)).thenReturn(Optional.of(user));
 
         Optional<User> result = userService.findAuthenticatedUser(lang, accessToken);
@@ -46,7 +65,7 @@ class UserServiceTest {
         WikipediaLanguage lang = WikipediaLanguage.getDefault();
         AccessToken accessToken = AccessToken.of("a", "b");
 
-        User user = User.buildTestBotUser();
+        WikipediaUser user = WikipediaUser.of(UserId.of(lang, "N"), true, true);
         when(wikipediaUserRepository.findAuthenticatedUser(lang, accessToken)).thenReturn(Optional.of(user));
 
         Optional<User> result = userService.findAuthenticatedUser(lang, accessToken);
@@ -64,9 +83,10 @@ class UserServiceTest {
     void testFindAdminUser() {
         WikipediaLanguage lang = WikipediaLanguage.getDefault();
         AccessToken accessToken = AccessToken.of("a", "b");
+        String name = "ADMIN";
 
-        User user = User.buildTestUser();
-        userService.setAdminUser(user.getId().getUsername());
+        userService.setAdminUser(name);
+        WikipediaUser user = WikipediaUser.of(UserId.of(lang, name), false, false);
         when(wikipediaUserRepository.findAuthenticatedUser(lang, accessToken)).thenReturn(Optional.of(user));
 
         Optional<User> result = userService.findAuthenticatedUser(lang, accessToken);
@@ -74,7 +94,7 @@ class UserServiceTest {
         assertTrue(result.isPresent());
         result.ifPresent(u -> {
             assertEquals(user.getId(), u.getId());
-            assertTrue(u.hasRights());
+            assertFalse(u.hasRights());
             assertFalse(u.isBot());
             assertTrue(u.isAdmin());
         });
