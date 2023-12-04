@@ -1,14 +1,13 @@
 package es.bvalero.replacer;
 
 import es.bvalero.replacer.common.security.ForbiddenException;
+import es.bvalero.replacer.common.util.WebUtils;
 import es.bvalero.replacer.page.save.WikipediaConflictException;
 import es.bvalero.replacer.user.AuthorizationException;
-import es.bvalero.replacer.user.WebUtils;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -27,7 +26,7 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleAuthorizationException(AuthorizationException e) {
         return ResponseEntity
             .status(HttpStatus.UNAUTHORIZED)
-            .header(HttpHeaders.SET_COOKIE, buildAccessTokenEmptyCookie().toString())
+            .header(HttpHeaders.SET_COOKIE, WebUtils.buildAccessTokenEmptyCookie().toString())
             .body(e);
     }
 
@@ -45,7 +44,7 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
             LOGGER.warn("Authorization error saving page content: " + e.getMessage());
             return ResponseEntity
                 .status(HttpStatus.UNAUTHORIZED)
-                .header(HttpHeaders.SET_COOKIE, buildAccessTokenEmptyCookie().toString())
+                .header(HttpHeaders.SET_COOKIE, WebUtils.buildAccessTokenEmptyCookie().toString())
                 .body(e);
         } else {
             LOGGER.error("Error saving page content", e);
@@ -57,9 +56,5 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleOtherException(Exception e) {
         LOGGER.warn("Handle unmanaged exception", e);
         return new ResponseEntity<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-
-    private ResponseCookie buildAccessTokenEmptyCookie() {
-        return ResponseCookie.from(WebUtils.ACCESS_TOKEN_COOKIE, "").maxAge(0).build();
     }
 }

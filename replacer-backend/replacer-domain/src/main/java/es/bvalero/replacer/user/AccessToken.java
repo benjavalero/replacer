@@ -17,11 +17,11 @@ public class AccessToken {
     String tokenSecret;
 
     // Simple methods to "stringify" the access token
-    String toCookieValue() {
+    public String toCookieValue() {
         return token + SEPARATOR + tokenSecret;
     }
 
-    static AccessToken fromCookieValue(String cookieValue) {
+    public static AccessToken fromCookieValue(String cookieValue) {
         String[] tokens = StringUtils.split(cookieValue, SEPARATOR);
         return AccessToken.of(tokens[0], tokens[1]);
     }

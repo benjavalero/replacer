@@ -1,6 +1,6 @@
 package es.bvalero.replacer;
 
-import es.bvalero.replacer.user.WebUtils;
+import es.bvalero.replacer.common.util.WebUtils;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.servers.Server;
 import io.swagger.v3.oas.models.parameters.Parameter;

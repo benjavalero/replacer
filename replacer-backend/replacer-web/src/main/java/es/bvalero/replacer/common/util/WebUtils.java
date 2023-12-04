@@ -1,6 +1,10 @@
-package es.bvalero.replacer.user;
+package es.bvalero.replacer.common.util;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
+import es.bvalero.replacer.user.AccessToken;
+import es.bvalero.replacer.user.AuthorizationException;
+import es.bvalero.replacer.user.User;
+import es.bvalero.replacer.user.UserApi;
 import java.util.Arrays;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -47,7 +51,7 @@ public class WebUtils {
     }
 
     /** Build the response cookie after the verification of the user authorization process */
-    static ResponseCookie buildAccessTokenResponseCookie(AccessToken accessToken) {
+    public static ResponseCookie buildAccessTokenResponseCookie(AccessToken accessToken) {
         // Max age 400 days: https://developer.chrome.com/blog/cookie-max-age-expires/
         // Domain: default
         // SameSite is Lax by default, but it fails in some old browsers, so we set it explicitly.
@@ -59,6 +63,10 @@ public class WebUtils {
             .httpOnly(true)
             .sameSite("Lax")
             .build();
+    }
+
+    public static ResponseCookie buildAccessTokenEmptyCookie() {
+        return ResponseCookie.from(ACCESS_TOKEN_COOKIE, "").maxAge(0).build();
     }
 
     /** Build a cookie with an access token in order to test the REST controllers */

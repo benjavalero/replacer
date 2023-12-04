@@ -12,11 +12,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import es.bvalero.replacer.WebMvcConfiguration;
 import es.bvalero.replacer.common.domain.*;
+import es.bvalero.replacer.common.util.WebUtils;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.Suggestion;
 import es.bvalero.replacer.page.PageKey;
 import es.bvalero.replacer.user.User;
-import es.bvalero.replacer.user.WebUtils;
 import java.util.List;
 import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
