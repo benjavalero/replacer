@@ -8,9 +8,8 @@ import org.jetbrains.annotations.TestOnly;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-/** Service to retrieve details about the users of the application */
 @Service
-public class UserService {
+class UserService implements UserApi {
 
     // Dependency injection
     private final WikipediaUserRepository wikipediaUserRepository;
@@ -23,6 +22,7 @@ public class UserService {
         this.wikipediaUserRepository = wikipediaUserRepository;
     }
 
+    @Override
     public Optional<User> findAuthenticatedUser(WikipediaLanguage lang, AccessToken accessToken) {
         return wikipediaUserRepository.findAuthenticatedUser(lang, accessToken).map(this::decorateAdminRole);
     }

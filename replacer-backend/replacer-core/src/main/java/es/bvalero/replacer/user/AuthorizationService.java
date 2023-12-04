@@ -1,5 +1,6 @@
 package es.bvalero.replacer.user;
 
+import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import org.springframework.stereotype.Service;
 
 /** Service to perform authorization operations */
@@ -8,9 +9,11 @@ class AuthorizationService implements AuthorizationApi {
 
     // Dependency injection
     private final OAuthService oAuthService;
+    private final UserApi userApi;
 
-    AuthorizationService(OAuthService oAuthService) {
+    AuthorizationService(OAuthService oAuthService, UserApi userApi) {
         this.oAuthService = oAuthService;
+        this.userApi = userApi;
     }
 
     @Override
@@ -19,7 +22,8 @@ class AuthorizationService implements AuthorizationApi {
     }
 
     @Override
-    public AccessToken getAccessToken(RequestToken requestToken, String oAuthVerifier) {
-        return this.oAuthService.getAccessToken(requestToken, oAuthVerifier);
+    public User getAuthenticatedUser(WikipediaLanguage lang, RequestToken requestToken, String oAuthVerifier) {
+        AccessToken accessToken = oAuthService.getAccessToken(requestToken, oAuthVerifier);
+        return userApi.findAuthenticatedUser(lang, accessToken).orElseThrow(AuthorizationException::new);
     }
 }

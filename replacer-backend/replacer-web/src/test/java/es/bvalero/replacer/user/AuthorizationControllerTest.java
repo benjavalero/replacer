@@ -11,7 +11,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import es.bvalero.replacer.WebMvcConfiguration;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -37,10 +36,7 @@ class AuthorizationControllerTest {
     private WebUtils webUtils;
 
     @MockBean
-    private AuthorizationApi authorizationService;
-
-    @MockBean
-    private UserService userService;
+    private AuthorizationApi authorizationApi;
 
     @Test
     void testInitiateAuthentication() throws Exception {
@@ -48,7 +44,7 @@ class AuthorizationControllerTest {
         when(webUtils.getLanguageHeader(any(HttpServletRequest.class))).thenReturn(lang);
 
         RequestToken requestToken = RequestToken.of("R", "S", "Z");
-        when(authorizationService.getRequestToken()).thenReturn(requestToken);
+        when(authorizationApi.getRequestToken()).thenReturn(requestToken);
 
         mvc
             .perform(get("/api/user/initiate-authorization").contentType(MediaType.APPLICATION_JSON))
@@ -57,7 +53,7 @@ class AuthorizationControllerTest {
             .andExpect(jsonPath("$.tokenSecret", is(requestToken.getTokenSecret())))
             .andExpect(jsonPath("$.authorizationUrl", is(requestToken.getAuthorizationUrl())));
 
-        verify(authorizationService).getRequestToken();
+        verify(authorizationApi).getRequestToken();
     }
 
     @Test
@@ -65,13 +61,13 @@ class AuthorizationControllerTest {
         WikipediaLanguage lang = WikipediaLanguage.getDefault();
         when(webUtils.getLanguageHeader(any(HttpServletRequest.class))).thenReturn(lang);
 
-        when(authorizationService.getRequestToken()).thenThrow(new AuthorizationException());
+        when(authorizationApi.getRequestToken()).thenThrow(new AuthorizationException());
 
         mvc
             .perform(get("/api/user/initiate-authorization").contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isUnauthorized());
 
-        verify(authorizationService).getRequestToken();
+        verify(authorizationApi).getRequestToken();
     }
 
     @Test
@@ -82,8 +78,7 @@ class AuthorizationControllerTest {
         WikipediaLanguage lang = WikipediaLanguage.getDefault();
         when(webUtils.getLanguageHeader(any(HttpServletRequest.class))).thenReturn(lang);
         User user = User.buildTestAdminUser();
-        when(authorizationService.getAccessToken(requestToken, oAuthVerifier)).thenReturn(user.getAccessToken());
-        when(userService.findAuthenticatedUser(lang, user.getAccessToken())).thenReturn(Optional.of(user));
+        when(authorizationApi.getAuthenticatedUser(lang, requestToken, oAuthVerifier)).thenReturn(user);
 
         VerifyAuthorizationRequest verifyAuthorizationRequest = new VerifyAuthorizationRequest();
         verifyAuthorizationRequest.setRequestToken(RequestTokenDto.of(requestToken));
@@ -102,8 +97,7 @@ class AuthorizationControllerTest {
             .andExpect(jsonPath("$.bot", equalTo(user.isBot())))
             .andExpect(jsonPath("$.admin", equalTo(user.isAdmin())));
 
-        verify(authorizationService).getAccessToken(requestToken, oAuthVerifier);
-        verify(userService).findAuthenticatedUser(lang, user.getAccessToken());
+        verify(authorizationApi).getAuthenticatedUser(lang, requestToken, oAuthVerifier);
     }
 
     @Test
@@ -126,6 +120,6 @@ class AuthorizationControllerTest {
             )
             .andExpect(status().isBadRequest());
 
-        verify(authorizationService, never()).getAccessToken(requestToken, oAuthVerifier);
+        verify(authorizationApi, never()).getAuthenticatedUser(lang, requestToken, oAuthVerifier);
     }
 }

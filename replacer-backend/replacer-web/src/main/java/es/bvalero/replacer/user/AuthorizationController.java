@@ -8,7 +8,6 @@ import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.jmolecules.architecture.hexagonal.PrimaryAdapter;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,12 +20,10 @@ import org.springframework.web.bind.annotation.*;
 class AuthorizationController {
 
     // Dependency injection
-    private final AuthorizationApi authorizationService;
-    private final UserService userService;
+    private final AuthorizationApi authorizationApi;
 
-    AuthorizationController(AuthorizationApi authorizationService, UserService userService) {
-        this.authorizationService = authorizationService;
-        this.userService = userService;
+    AuthorizationController(AuthorizationApi authorizationApi) {
+        this.authorizationApi = authorizationApi;
     }
 
     // The usual OAuth1 workflow consists in 3 steps:
@@ -41,8 +38,6 @@ class AuthorizationController {
     // For the sake of simplicity, and to reduce the amount of calls, we only serve 2 endpoints/steps:
     // A. Initiate (steps 1 and 2)
     // B. Verify (steps 3 and 4)
-    // We also orchestrate the steps in the controller,
-    // but we create a simple service to keep right directions in module dependencies.
     // We include the endpoints under the User resource, with custom verbs for both actions.
 
     // Note these are the only REST endpoints which don't expect to receive the language header and the token cookie
@@ -51,12 +46,12 @@ class AuthorizationController {
     @GetMapping(value = "/initiate-authorization")
     RequestTokenDto initiateAuthorization() {
         LOGGER.info("START Initiate Authorization");
-        RequestTokenDto requestToken = RequestTokenDto.of(authorizationService.getRequestToken());
+        RequestTokenDto requestToken = RequestTokenDto.of(authorizationApi.getRequestToken());
         LOGGER.info("END Initiate Authorization: {}", requestToken);
         return requestToken;
     }
 
-    @Operation(summary = "Verify the authorization process")
+    @Operation(summary = "Verify the authorization process and get the authenticated user")
     @PostMapping(value = "/verify-authorization")
     ResponseEntity<UserDto> verifyAuthorization(
         @UserLanguage WikipediaLanguage lang,
@@ -65,29 +60,15 @@ class AuthorizationController {
         LOGGER.info("START Verify Authorization: {}", verifyAuthorizationRequest);
         RequestToken requestToken = RequestTokenDto.toDomain(verifyAuthorizationRequest.getRequestToken());
         String oAuthVerifier = verifyAuthorizationRequest.getOauthVerifier();
-        AccessToken accessToken = authorizationService.getAccessToken(requestToken, oAuthVerifier);
-        User authenticatedUser = userService
-            .findAuthenticatedUser(lang, accessToken)
-            .orElseThrow(AuthorizationException::new);
+        User authenticatedUser = authorizationApi.getAuthenticatedUser(lang, requestToken, oAuthVerifier);
         UserDto authenticatedUserDto = UserDto.of(authenticatedUser);
         LOGGER.info("END Verify Authorization: {}", authenticatedUserDto);
         return ResponseEntity
             .ok()
-            .header(HttpHeaders.SET_COOKIE, buildAccessTokenCookie(accessToken).toString())
+            .header(
+                HttpHeaders.SET_COOKIE,
+                WebUtils.buildAccessTokenResponseCookie(authenticatedUser.getAccessToken()).toString()
+            )
             .body(authenticatedUserDto);
-    }
-
-    private ResponseCookie buildAccessTokenCookie(AccessToken accessToken) {
-        // Max age 400 days: https://developer.chrome.com/blog/cookie-max-age-expires/
-        // Domain: default
-        // SameSite is Lax by default, but it fails in some old browsers, so we set it explicitly.
-        return ResponseCookie
-            .from(WebUtils.ACCESS_TOKEN_COOKIE, accessToken.toCookieValue())
-            .maxAge((long) 400 * 24 * 3600)
-            .path("/api")
-            .secure(true)
-            .httpOnly(true)
-            .sameSite("Lax")
-            .build();
     }
 }

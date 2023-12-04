@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { InitiateAuthorizationResponse } from '../../api/models/initiate-authorization-response';
 import { RequestToken } from '../../api/models/request-token';
 import { User } from '../../api/models/user';
 import { VerifyAuthorizationRequest } from '../../api/models/verify-authorization-request';
@@ -22,9 +21,9 @@ export class UserLoginService {
 
   getAuthorizationUrl$(): Observable<string> {
     return this.userApiService.initiateAuthorization().pipe(
-      map((token: InitiateAuthorizationResponse) => {
+      map((token: RequestToken) => {
         // We keep the request token for further use on verification
-        localStorage.setItem(this.requestTokenKey, JSON.stringify(token.requestToken));
+        localStorage.setItem(this.requestTokenKey, JSON.stringify(token));
 
         return token.authorizationUrl;
       })

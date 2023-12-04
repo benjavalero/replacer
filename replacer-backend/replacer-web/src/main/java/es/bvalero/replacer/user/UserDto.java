@@ -9,7 +9,7 @@ import lombok.Builder;
 import lombok.Value;
 import org.springframework.lang.NonNull;
 
-@Schema(description = "Application user after completing the authorization verification", name = "User")
+@Schema(description = "Authenticated application user", name = "User")
 @Value
 @Builder(access = AccessLevel.PRIVATE)
 class UserDto {
@@ -19,16 +19,13 @@ class UserDto {
     String name;
 
     @Schema(description = "If the user the rights to use the tool", requiredMode = REQUIRED, example = "true")
-    @NonNull
-    Boolean hasRights;
+    boolean hasRights;
 
     @Schema(description = "If the user is a bot", requiredMode = REQUIRED, example = "true")
-    @NonNull
-    Boolean bot;
+    boolean bot;
 
     @Schema(description = "If the user is administrator of Replacer", requiredMode = REQUIRED, example = "false")
-    @NonNull
-    Boolean admin;
+    boolean admin;
 
     static UserDto of(User user) {
         return UserDto

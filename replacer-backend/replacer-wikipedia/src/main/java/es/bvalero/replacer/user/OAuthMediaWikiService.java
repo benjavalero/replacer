@@ -43,10 +43,6 @@ class OAuthMediaWikiService implements OAuthService {
         return RequestToken.of(oAuth1RequestToken.getToken(), oAuth1RequestToken.getTokenSecret(), authorizationUrl);
     }
 
-    private OAuth1RequestToken convertToRequestToken(RequestToken authorizationToken) {
-        return new OAuth1RequestToken(authorizationToken.getToken(), authorizationToken.getTokenSecret());
-    }
-
     @Override
     public AccessToken getAccessToken(RequestToken requestToken, String oAuthVerifier) {
         try {
@@ -62,6 +58,10 @@ class OAuthMediaWikiService implements OAuthService {
             LOGGER.error("Error getting the access token", e);
             throw new AuthorizationException();
         }
+    }
+
+    private OAuth1RequestToken convertToRequestToken(RequestToken authorizationToken) {
+        return new OAuth1RequestToken(authorizationToken.getToken(), authorizationToken.getTokenSecret());
     }
 
     private AccessToken convertAccessToken(OAuth1AccessToken oAuth1AccessToken) {

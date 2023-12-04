@@ -2,7 +2,7 @@
 /* eslint-disable */
 
 /**
- * Request token to initiate an authorization process
+ * Request token with an authorization URL to initiate an authorization process
  */
 export interface RequestToken {
   authorizationUrl: string;

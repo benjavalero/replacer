@@ -4,7 +4,9 @@ import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import java.util.Arrays;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import org.jetbrains.annotations.TestOnly;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -13,10 +15,10 @@ public class WebUtils {
     public static final String ACCESS_TOKEN_COOKIE = "access-token";
 
     // Dependency injection
-    private final UserService userService;
+    private final UserApi userApi;
 
-    public WebUtils(UserService userService) {
-        this.userService = userService;
+    public WebUtils(UserApi userApi) {
+        this.userApi = userApi;
     }
 
     public WikipediaLanguage getLanguageHeader(HttpServletRequest request) {
@@ -41,10 +43,27 @@ public class WebUtils {
             .orElseThrow(IllegalArgumentException::new);
         AccessToken accessToken = AccessToken.fromCookieValue(accessTokenCookie);
 
-        return userService.findAuthenticatedUser(lang, accessToken).orElseThrow(AuthorizationException::new);
+        return userApi.findAuthenticatedUser(lang, accessToken).orElseThrow(AuthorizationException::new);
     }
 
+    /** Build the response cookie after the verification of the user authorization process */
+    static ResponseCookie buildAccessTokenResponseCookie(AccessToken accessToken) {
+        // Max age 400 days: https://developer.chrome.com/blog/cookie-max-age-expires/
+        // Domain: default
+        // SameSite is Lax by default, but it fails in some old browsers, so we set it explicitly.
+        return ResponseCookie
+            .from(ACCESS_TOKEN_COOKIE, accessToken.toCookieValue())
+            .maxAge((long) 400 * 24 * 3600)
+            .path("/api")
+            .secure(true)
+            .httpOnly(true)
+            .sameSite("Lax")
+            .build();
+    }
+
+    /** Build a cookie with an access token in order to test the REST controllers */
+    @TestOnly
     public static Cookie buildAccessTokenCookie(AccessToken accessToken) {
-        return new Cookie(WebUtils.ACCESS_TOKEN_COOKIE, accessToken.toCookieValue());
+        return new Cookie(ACCESS_TOKEN_COOKIE, accessToken.toCookieValue());
     }
 }
