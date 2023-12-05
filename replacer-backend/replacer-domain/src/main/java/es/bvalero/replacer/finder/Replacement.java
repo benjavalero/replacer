@@ -82,7 +82,7 @@ public class Replacement implements FinderResult {
         return Suggestion.sortSuggestions(merged, this.text);
     }
 
-    public static void removeNested(Collection<? extends FinderResult> results) {
+    public static void removeNested(Collection<Replacement> results) {
         // Filter to return the results which are NOT strictly contained in any other
         results.removeIf(r -> results.stream().anyMatch(r2 -> r2.containsStrictly(r)));
     }

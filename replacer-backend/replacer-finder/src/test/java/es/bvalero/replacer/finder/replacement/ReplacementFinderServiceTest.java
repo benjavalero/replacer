@@ -239,28 +239,6 @@ class ReplacementFinderServiceTest {
     }
 
     @Test
-    void testImmutableIntersects() {
-        String text = "An example or two.";
-
-        Replacement replacement = Replacement
-            .builder()
-            .start(0)
-            .text("An example")
-            .type(StandardType.of(ReplacementKind.COMPOSED, "an example"))
-            .suggestions(List.of(Suggestion.ofNoComment("Un ejemplo")))
-            .build();
-        Immutable immutable = Immutable.of(3, "example or");
-
-        when(replacementFinder.find(any(FinderPage.class))).thenReturn(new HashSet<>(List.of(replacement)));
-        when(immutableFinderService.findIterable(any(FinderPage.class))).thenReturn(List.of(immutable));
-
-        Collection<Replacement> replacements = replacementFinderService.findReplacements(FinderPage.of(text));
-
-        Collection<Replacement> expected = List.of(replacement);
-        assertEquals(new HashSet<>(expected), new HashSet<>(replacements));
-    }
-
-    @Test
     void testContains() {
         Replacement result1 = Replacement
             .builder()
@@ -306,17 +284,13 @@ class ReplacementFinderServiceTest {
             .build();
 
         assertTrue(result1.contains(result1));
-        assertTrue(result1.intersects(result1));
         assertFalse(result1.containsStrictly(result1));
 
-        assertTrue(result2.intersects(result3));
         assertTrue(result2.contains(result3));
         assertTrue(result2.containsStrictly(result3));
-        assertTrue(result3.intersects(result3));
         assertFalse(result3.contains(result2));
         assertFalse(result3.containsStrictly(result2));
 
-        assertTrue(result2.intersects(result4));
         assertFalse(result2.contains(result4));
         assertFalse(result4.contains(result2));
         assertTrue(result4.contains(result1));

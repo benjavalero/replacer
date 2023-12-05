@@ -12,6 +12,7 @@ public interface FinderResult extends Comparable<FinderResult> {
         return getStart() + getText().length();
     }
 
+    @Override
     default int compareTo(FinderResult o) {
         // Compare by start and then by end
         return Objects.equals(getStart(), o.getStart())
@@ -21,10 +22,6 @@ public interface FinderResult extends Comparable<FinderResult> {
 
     private Range<Integer> getRange() {
         return Range.between(getStart(), getEnd() - 1);
-    }
-
-    default boolean intersects(FinderResult r) {
-        return getRange().isOverlappedBy(r.getRange());
     }
 
     /** @return if a result contains strictly, i.e. not been equal, another result. */
