@@ -26,6 +26,7 @@ public class Replacement implements FinderResult {
     private static final int CONTEXT_THRESHOLD = 20;
     private static final int MAX_CONTEXT_LENGTH = 255; // Constrained by the database
 
+    // TODO: To be removed once the replacements always go along with a page as an aggregate
     @NonNull
     FinderPage page;
 

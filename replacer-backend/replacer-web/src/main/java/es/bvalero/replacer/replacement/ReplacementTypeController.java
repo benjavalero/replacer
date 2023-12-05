@@ -4,7 +4,7 @@ import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.dto.ReplacementTypeDto;
 import es.bvalero.replacer.common.resolver.UserLanguage;
-import es.bvalero.replacer.finder.ReplacementTypeMatchService;
+import es.bvalero.replacer.finder.ReplacementTypeFindService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.Optional;
@@ -24,10 +24,10 @@ import org.springframework.web.bind.annotation.RestController;
 class ReplacementTypeController {
 
     // Dependency injection
-    private final ReplacementTypeMatchService replacementTypeMatchService;
+    private final ReplacementTypeFindService replacementTypeFindService;
 
-    ReplacementTypeController(ReplacementTypeMatchService replacementTypeMatchService) {
-        this.replacementTypeMatchService = replacementTypeMatchService;
+    ReplacementTypeController(ReplacementTypeFindService replacementTypeFindService) {
+        this.replacementTypeFindService = replacementTypeFindService;
     }
 
     @Operation(summary = "Validate if the custom replacement matches with a known replacement type")
@@ -36,7 +36,7 @@ class ReplacementTypeController {
         @UserLanguage WikipediaLanguage lang,
         @Valid ReplacementTypeValidationRequest validationRequest
     ) {
-        Optional<StandardType> type = replacementTypeMatchService.findMatchingReplacementType(
+        Optional<StandardType> type = replacementTypeFindService.findReplacementType(
             lang,
             validationRequest.getReplacement(),
             validationRequest.isCs()

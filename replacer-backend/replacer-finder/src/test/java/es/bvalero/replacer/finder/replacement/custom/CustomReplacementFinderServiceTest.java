@@ -1,26 +1,28 @@
 package es.bvalero.replacer.finder.replacement.custom;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
 
 import es.bvalero.replacer.finder.CustomMisspelling;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.Replacement;
+import es.bvalero.replacer.finder.immutable.ImmutableFinderService;
+import es.bvalero.replacer.finder.replacement.ReplacementFinder;
 import java.util.List;
 import org.apache.commons.collections4.IterableUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.MockitoAnnotations;
 
 class CustomReplacementFinderServiceTest {
 
-    @InjectMocks
     private CustomReplacementFinderService customReplacementFinderService;
 
     @BeforeEach
     public void setUp() {
-        customReplacementFinderService = new CustomReplacementFinderService();
-        MockitoAnnotations.openMocks(this);
+        ReplacementFinder replacementFinder = mock(ReplacementFinder.class);
+        ImmutableFinderService immutableFinderService = mock(ImmutableFinderService.class);
+        customReplacementFinderService =
+            new CustomReplacementFinderService(List.of(replacementFinder), immutableFinderService);
     }
 
     @Test

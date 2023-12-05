@@ -12,7 +12,7 @@ import es.bvalero.replacer.common.domain.ReplacementKind;
 import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.util.WebUtils;
-import es.bvalero.replacer.finder.ReplacementTypeMatchService;
+import es.bvalero.replacer.finder.ReplacementTypeFindService;
 import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.Test;
@@ -39,7 +39,7 @@ class ReplacementTypeControllerTest {
     private WebUtils webUtils;
 
     @MockBean
-    private ReplacementTypeMatchService replacementTypeMatchService;
+    private ReplacementTypeFindService replacementTypeFindService;
 
     @Test
     void testValidateCustomReplacement() throws Exception {
@@ -47,7 +47,7 @@ class ReplacementTypeControllerTest {
         when(webUtils.getLanguageHeader(any(HttpServletRequest.class))).thenReturn(lang);
 
         final String replacement = "Africa";
-        when(replacementTypeMatchService.findMatchingReplacementType(WikipediaLanguage.getDefault(), replacement, true))
+        when(replacementTypeFindService.findReplacementType(WikipediaLanguage.getDefault(), replacement, true))
             .thenReturn(Optional.of(StandardType.of(ReplacementKind.SIMPLE, replacement)));
 
         mvc
@@ -60,8 +60,7 @@ class ReplacementTypeControllerTest {
             .andExpect(jsonPath("$.kind", is(Byte.valueOf(ReplacementKind.SIMPLE.getCode()).intValue())))
             .andExpect(jsonPath("$.subtype", is(replacement)));
 
-        verify(replacementTypeMatchService)
-            .findMatchingReplacementType(WikipediaLanguage.getDefault(), replacement, true);
+        verify(replacementTypeFindService).findReplacementType(WikipediaLanguage.getDefault(), replacement, true);
     }
 
     @Test
@@ -70,7 +69,7 @@ class ReplacementTypeControllerTest {
         when(webUtils.getLanguageHeader(any(HttpServletRequest.class))).thenReturn(lang);
 
         final String replacement = "African";
-        when(replacementTypeMatchService.findMatchingReplacementType(WikipediaLanguage.getDefault(), replacement, true))
+        when(replacementTypeFindService.findReplacementType(WikipediaLanguage.getDefault(), replacement, true))
             .thenReturn(Optional.empty());
 
         mvc
@@ -83,7 +82,6 @@ class ReplacementTypeControllerTest {
             .andExpect(jsonPath("$.kind").doesNotExist())
             .andExpect(jsonPath("$.subtype").doesNotExist());
 
-        verify(replacementTypeMatchService)
-            .findMatchingReplacementType(WikipediaLanguage.getDefault(), replacement, true);
+        verify(replacementTypeFindService).findReplacementType(WikipediaLanguage.getDefault(), replacement, true);
     }
 }
