@@ -16,7 +16,7 @@ A Wikipedia page is usually divided in a collection of `WikipediaSection`. Each 
 
 A `DumpFile` is huge XML file, generated monthly, containing all the current Wikipedia pages for a language. A `DumpPage` is similar to a Wikipedia page, but retrieved from a dump file, and therefore quite likely to be outdated depending on the dump date.
 
-A `WikipediaUser` is a user registered in Wikipedia. Note that not all Wikipedia users are allowed to be a Replacer user. The username should be enough to identify a user in Wikipedia. However, as users may have different permissions depending on the Wikipedia language, we use a `UserId` to identify a user uniquely, composed by the language and the username. A Wikipedia user may belong to several `WikipediaUserGroup` which provide different permissions: `user`, `autoconfirmed`, `bot`, etc.
+A `WikipediaUser` is a user registered in Wikipedia. Note that not all Wikipedia users are allowed to be a Replacer user. The username should be enough to identify a user in Wikipedia. However, as users may have different permissions depending on the Wikipedia language, we use a `UserId` to identify a user uniquely, composed by the language and the username. A Wikipedia user may belong to several groups which provide different permissions: auto-confirmed, bot, etc.
 
 A `User` is a user of Replacer. It must be a Wikipedia user with the necessary permissions in Wikipedia in order to use the tool. In particular, after being authenticated in Wikipedia, a user has an `AccessToken` to perform the operations in Wikipedia in a non-anonymous way.
 
