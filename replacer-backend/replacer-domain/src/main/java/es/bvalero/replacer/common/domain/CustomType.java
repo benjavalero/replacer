@@ -1,6 +1,7 @@
 package es.bvalero.replacer.common.domain;
 
 import es.bvalero.replacer.finder.CustomMisspelling;
+import java.util.Objects;
 import lombok.Getter;
 
 @Getter
@@ -19,6 +20,20 @@ public class CustomType extends ReplacementType {
 
     public static CustomType of(CustomMisspelling customMisspelling) {
         return CustomType.of(customMisspelling.getWord(), customMisspelling.isCaseSensitive());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        CustomType that = (CustomType) o;
+        return caseSensitive == that.caseSensitive;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), caseSensitive);
     }
 
     @Override
