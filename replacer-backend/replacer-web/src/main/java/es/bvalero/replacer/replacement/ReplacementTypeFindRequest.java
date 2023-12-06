@@ -8,13 +8,13 @@ import org.springdoc.api.annotations.ParameterObject;
 
 @ParameterObject
 @Data
-public class ReplacementTypeValidationRequest {
+public class ReplacementTypeFindRequest {
 
-    @Parameter(description = "Replacement to validate", required = true, example = "aún")
+    @Parameter(description = "Text to replace", required = true, example = "aún")
     @NotBlank
     String replacement;
 
-    @Parameter(description = "If the custom replacement is case-sensitive", required = true, example = "false")
+    @Parameter(description = "If the replacement is case-sensitive", required = true, example = "false")
     boolean cs;
 
     @Override

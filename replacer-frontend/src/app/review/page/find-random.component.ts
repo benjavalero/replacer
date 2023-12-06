@@ -181,14 +181,14 @@ export class FindRandomComponent implements OnInit {
   private validateCustomReplacement(options: ReviewOptions): void {
     const replacement = options.subtype!.trim();
     this.replacementTypeApiService
-      .validateCustomReplacement({
+      .findReplacementType({
         replacement: replacement,
         cs: options.cs!
       })
-      .subscribe((validateType: ReplacementType) => {
-        if (validateType) {
-          this.openValidationModal$(validateType.kind, validateType.subtype).then(() => {
-            this.router.navigate([this.getReviewUrl(validateType as ReviewOptions, null)]);
+      .subscribe((replacementType: ReplacementType) => {
+        if (replacementType) {
+          this.openValidationModal$(replacementType.kind, replacementType.subtype).then(() => {
+            this.router.navigate([this.getReviewUrl(replacementType as ReviewOptions, null)]);
           });
         } else {
           this.findRandomPage(options);

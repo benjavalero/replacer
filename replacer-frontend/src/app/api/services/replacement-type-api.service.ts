@@ -9,9 +9,9 @@ import { BaseService } from '../base-service';
 import { ApiConfiguration } from '../api-configuration';
 import { StrictHttpResponse } from '../strict-http-response';
 
+import { findReplacementType } from '../fn/replacement-type/find-replacement-type';
+import { FindReplacementType$Params } from '../fn/replacement-type/find-replacement-type';
 import { ReplacementType } from '../models/replacement-type';
-import { validateCustomReplacement } from '../fn/replacement-type/validate-custom-replacement';
-import { ValidateCustomReplacement$Params } from '../fn/replacement-type/validate-custom-replacement';
 
 @Injectable({ providedIn: 'root' })
 export class ReplacementTypeApiService extends BaseService {
@@ -19,35 +19,35 @@ export class ReplacementTypeApiService extends BaseService {
     super(config, http);
   }
 
-  /** Path part for operation `validateCustomReplacement()` */
-  static readonly ValidateCustomReplacementPath = '/api/type/validate';
+  /** Path part for operation `findReplacementType()` */
+  static readonly FindReplacementTypePath = '/api/type';
 
   /**
-   * Validate if the custom replacement matches with a known replacement type.
+   * Find a known standard type matching with the given replacement and case-sensitive option.
    *
    *
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `validateCustomReplacement()` instead.
+   * To access only the response body, use `findReplacementType()` instead.
    *
    * This method doesn't expect any request body.
    */
-  validateCustomReplacement$Response(params: ValidateCustomReplacement$Params, context?: HttpContext): Observable<StrictHttpResponse<ReplacementType>> {
-    return validateCustomReplacement(this.http, this.rootUrl, params, context);
+  findReplacementType$Response(params: FindReplacementType$Params, context?: HttpContext): Observable<StrictHttpResponse<ReplacementType>> {
+    return findReplacementType(this.http, this.rootUrl, params, context);
   }
 
   /**
-   * Validate if the custom replacement matches with a known replacement type.
+   * Find a known standard type matching with the given replacement and case-sensitive option.
    *
    *
    *
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `validateCustomReplacement$Response()` instead.
+   * To access the full response (for headers, for example), `findReplacementType$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  validateCustomReplacement(params: ValidateCustomReplacement$Params, context?: HttpContext): Observable<ReplacementType> {
-    return this.validateCustomReplacement$Response(params, context).pipe(
+  findReplacementType(params: FindReplacementType$Params, context?: HttpContext): Observable<ReplacementType> {
+    return this.findReplacementType$Response(params, context).pipe(
       map((r: StrictHttpResponse<ReplacementType>): ReplacementType => r.body)
     );
   }

@@ -8,21 +8,21 @@ import { RequestBuilder } from '../../request-builder';
 
 import { ReplacementType } from '../../models/replacement-type';
 
-export interface ValidateCustomReplacement$Params {
+export interface FindReplacementType$Params {
 
 /**
- * Replacement to validate
+ * Text to replace
  */
   replacement: string;
 
 /**
- * If the custom replacement is case-sensitive
+ * If the replacement is case-sensitive
  */
   cs: boolean;
 }
 
-export function validateCustomReplacement(http: HttpClient, rootUrl: string, params: ValidateCustomReplacement$Params, context?: HttpContext): Observable<StrictHttpResponse<ReplacementType>> {
-  const rb = new RequestBuilder(rootUrl, validateCustomReplacement.PATH, 'get');
+export function findReplacementType(http: HttpClient, rootUrl: string, params: FindReplacementType$Params, context?: HttpContext): Observable<StrictHttpResponse<ReplacementType>> {
+  const rb = new RequestBuilder(rootUrl, findReplacementType.PATH, 'get');
   if (params) {
     rb.query('replacement', params.replacement, {});
     rb.query('cs', params.cs, {});
@@ -38,4 +38,4 @@ export function validateCustomReplacement(http: HttpClient, rootUrl: string, par
   );
 }
 
-validateCustomReplacement.PATH = '/api/type/validate';
+findReplacementType.PATH = '/api/type';

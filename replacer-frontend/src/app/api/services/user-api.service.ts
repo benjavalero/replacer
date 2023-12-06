@@ -26,7 +26,7 @@ export class UserApiService extends BaseService {
   static readonly VerifyAuthorizationPath = '/api/user/verify-authorization';
 
   /**
-   * Verify the authorization process.
+   * Verify the authorization process and get the authenticated user.
    *
    *
    *
@@ -40,7 +40,7 @@ export class UserApiService extends BaseService {
   }
 
   /**
-   * Verify the authorization process.
+   * Verify the authorization process and get the authenticated user.
    *
    *
    *
@@ -59,7 +59,7 @@ export class UserApiService extends BaseService {
   static readonly InitiateAuthorizationPath = '/api/user/initiate-authorization';
 
   /**
-   * Initiate an authorization process.
+   * Get a request token with an authorization URL to initiate an authorization process.
    *
    *
    *
@@ -73,7 +73,7 @@ export class UserApiService extends BaseService {
   }
 
   /**
-   * Initiate an authorization process.
+   * Get a request token with an authorization URL to initiate an authorization process.
    *
    *
    *

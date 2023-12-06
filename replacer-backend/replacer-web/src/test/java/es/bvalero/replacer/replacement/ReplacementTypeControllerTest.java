@@ -42,7 +42,7 @@ class ReplacementTypeControllerTest {
     private ReplacementTypeFindService replacementTypeFindService;
 
     @Test
-    void testValidateCustomReplacement() throws Exception {
+    void testFindReplacementType() throws Exception {
         WikipediaLanguage lang = WikipediaLanguage.getDefault();
         when(webUtils.getLanguageHeader(any(HttpServletRequest.class))).thenReturn(lang);
 
@@ -52,7 +52,7 @@ class ReplacementTypeControllerTest {
 
         mvc
             .perform(
-                get("/api/type/validate?replacement=Africa&cs=true")
+                get("/api/type?replacement=Africa&cs=true")
                     .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
                     .contentType(MediaType.APPLICATION_JSON)
             )
@@ -64,7 +64,7 @@ class ReplacementTypeControllerTest {
     }
 
     @Test
-    void testValidateCustomReplacementEmpty() throws Exception {
+    void testFindReplacementTypeEmpty() throws Exception {
         WikipediaLanguage lang = WikipediaLanguage.getDefault();
         when(webUtils.getLanguageHeader(any(HttpServletRequest.class))).thenReturn(lang);
 
@@ -74,7 +74,7 @@ class ReplacementTypeControllerTest {
 
         mvc
             .perform(
-                get("/api/type/validate?replacement=African&cs=true")
+                get("/api/type?replacement=African&cs=true")
                     .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
                     .contentType(MediaType.APPLICATION_JSON)
             )

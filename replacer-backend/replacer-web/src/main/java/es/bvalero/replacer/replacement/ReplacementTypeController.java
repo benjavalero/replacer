@@ -30,23 +30,23 @@ class ReplacementTypeController {
         this.replacementTypeFindService = replacementTypeFindService;
     }
 
-    @Operation(summary = "Validate if the custom replacement matches with a known replacement type")
-    @GetMapping(value = "/validate")
-    ResponseEntity<ReplacementTypeDto> validateCustomReplacement(
+    @Operation(summary = "Find a known standard type matching with the given replacement and case-sensitive option")
+    @GetMapping(value = "")
+    ResponseEntity<ReplacementTypeDto> findReplacementType(
         @UserLanguage WikipediaLanguage lang,
-        @Valid ReplacementTypeValidationRequest validationRequest
+        @Valid ReplacementTypeFindRequest replacementTypeFindRequest
     ) {
         Optional<StandardType> type = replacementTypeFindService.findReplacementType(
             lang,
-            validationRequest.getReplacement(),
-            validationRequest.isCs()
+            replacementTypeFindRequest.getReplacement(),
+            replacementTypeFindRequest.isCs()
         );
         if (type.isPresent()) {
             ReplacementTypeDto typeDto = ReplacementTypeDto.of(type.get());
-            LOGGER.info("GET Validate Custom Replacement: {} => {}", validationRequest, typeDto);
+            LOGGER.info("GET Find Replacement Type: {} => {}", replacementTypeFindRequest, typeDto);
             return ResponseEntity.ok(typeDto);
         } else {
-            LOGGER.info("GET Validate Custom Replacement: {} => {}", validationRequest, "No Content");
+            LOGGER.info("GET Find Replacement Type: {} => {}", replacementTypeFindRequest, "No Content");
             return ResponseEntity.noContent().build();
         }
     }
