@@ -1,7 +1,7 @@
 package es.bvalero.replacer.page.find;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import es.bvalero.replacer.finder.CustomMisspelling;
+import es.bvalero.replacer.finder.CustomReplacementFindRequest;
 import es.bvalero.replacer.finder.CustomReplacementFindService;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.page.*;
@@ -101,7 +101,7 @@ class ReviewCustomFinder extends ReviewFinder {
 
     private WikipediaSearchResult findWikipediaResults(ReviewOptions options, int offset) {
         WikipediaLanguage lang = options.getUser().getId().getLang();
-        CustomMisspelling customMisspelling = options.getCustomMisspelling();
+        CustomReplacementFindRequest customMisspelling = options.getCustomReplacementFindRequest();
         WikipediaSearchRequest searchRequest = WikipediaSearchRequest
             .builder()
             .lang(lang)
@@ -126,7 +126,7 @@ class ReviewCustomFinder extends ReviewFinder {
     ) {
         Collection<Replacement> customReplacements = customReplacementFindService.findCustomReplacements(
             page,
-            options.getCustomMisspelling()
+            options.getCustomReplacementFindRequest()
         );
 
         // Add the custom replacements to the standard ones preferring the custom ones

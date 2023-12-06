@@ -3,7 +3,7 @@ package es.bvalero.replacer.finder.replacement.custom;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 
-import es.bvalero.replacer.finder.CustomMisspelling;
+import es.bvalero.replacer.finder.CustomReplacementFindRequest;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.immutable.ImmutableFinderService;
@@ -25,7 +25,7 @@ class CustomReplacementFinderServiceTest {
     @Test
     void testFindCustomReplacements() {
         FinderPage page = FinderPage.of("A X C");
-        CustomMisspelling options = CustomMisspelling.of("X", true, "Y");
+        CustomReplacementFindRequest options = CustomReplacementFindRequest.of("X", true, "Y");
 
         List<Replacement> replacements = IterableUtils.toList(
             customReplacementFinderService.findCustomReplacements(page, options)
@@ -39,7 +39,7 @@ class CustomReplacementFinderServiceTest {
     @Test
     void testFindCustomReplacementsWithNoResults() {
         FinderPage page = FinderPage.of("AXC");
-        CustomMisspelling options = CustomMisspelling.of("X", true, "Y");
+        CustomReplacementFindRequest options = CustomReplacementFindRequest.of("X", true, "Y");
 
         List<Replacement> replacements = IterableUtils.toList(
             customReplacementFinderService.findCustomReplacements(page, options)

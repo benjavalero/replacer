@@ -102,7 +102,7 @@ public class MisspellingSimpleFinder extends MisspellingFinder implements Proper
     }
 
     @Override
-    ReplacementKind getType() {
+    public ReplacementKind getType() {
         return ReplacementKind.SIMPLE;
     }
 }

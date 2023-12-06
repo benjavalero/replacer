@@ -33,11 +33,18 @@ public class CustomReplacementFinderService
     }
 
     @Override
-    public Collection<Replacement> findCustomReplacements(FinderPage page, CustomMisspelling customMisspelling) {
+    public Collection<Replacement> findCustomReplacements(
+        FinderPage page,
+        CustomReplacementFindRequest customReplacementFindRequest
+    ) {
         // There will usually be much more immutables found than results.
         // Thus, it is better to obtain first all the results, and then obtain the immutables one by one,
         // aborting in case the replacement list gets empty. This way we can avoid lots of immutable calculations.
-        final CustomReplacementFinder finder = CustomReplacementFinder.of(customMisspelling);
+        final CustomReplacementFinder finder = CustomReplacementFinder.of(
+            customReplacementFindRequest.getWord(),
+            customReplacementFindRequest.isCaseSensitive(),
+            customReplacementFindRequest.getComment()
+        );
         Iterable<Replacement> customResults = findIterable(page, Set.of(finder));
         Set<Replacement> sortedResults = new TreeSet<>();
         customResults.forEach(sortedResults::add);

@@ -86,7 +86,7 @@ public abstract class MisspellingFinder implements ReplacementFinder {
             .build();
     }
 
-    abstract ReplacementKind getType();
+    protected abstract ReplacementKind getType();
 
     String getSubtype(String text, WikipediaLanguage lang) {
         // We are sure in this point that the Misspelling exists
@@ -108,7 +108,7 @@ public abstract class MisspellingFinder implements ReplacementFinder {
         return applyMisspellingSuggestions(originalWord, misspelling);
     }
 
-    public static List<Suggestion> applyMisspellingSuggestions(String word, Misspelling misspelling) {
+    protected List<Suggestion> applyMisspellingSuggestions(String word, Misspelling misspelling) {
         final List<Suggestion> suggestions = new ArrayList<>();
         for (MisspellingSuggestion misspellingSuggestion : misspelling.getSuggestions()) {
             final Suggestion suggestion = convertSuggestion(misspellingSuggestion);

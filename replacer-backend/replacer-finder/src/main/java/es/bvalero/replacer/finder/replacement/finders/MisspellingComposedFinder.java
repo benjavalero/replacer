@@ -87,7 +87,7 @@ public class MisspellingComposedFinder extends MisspellingFinder implements Prop
     }
 
     @Override
-    ReplacementKind getType() {
+    public ReplacementKind getType() {
         return ReplacementKind.COMPOSED;
     }
 }

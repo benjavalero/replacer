@@ -3,7 +3,7 @@ package es.bvalero.replacer.page.find;
 import es.bvalero.replacer.common.domain.CustomType;
 import es.bvalero.replacer.common.domain.ReplacementKind;
 import es.bvalero.replacer.common.domain.StandardType;
-import es.bvalero.replacer.finder.CustomMisspelling;
+import es.bvalero.replacer.finder.CustomReplacementFindRequest;
 import es.bvalero.replacer.user.User;
 import java.util.ArrayList;
 import java.util.List;
@@ -111,16 +111,20 @@ class ReviewOptions {
         return StandardType.of(this.kind, this.subtype);
     }
 
-    public CustomMisspelling getCustomMisspelling() {
+    public CustomReplacementFindRequest getCustomReplacementFindRequest() {
         assert this.kind == ReplacementKind.CUSTOM;
         assert this.subtype != null;
         assert this.cs != null;
         assert this.suggestion != null;
-        return CustomMisspelling.of(this.subtype, this.cs, this.suggestion);
+        return CustomReplacementFindRequest.of(this.subtype, this.cs, this.suggestion);
     }
 
     public CustomType getCustomType() {
-        return CustomType.of(this.getCustomMisspelling());
+        assert this.kind == ReplacementKind.CUSTOM;
+        assert this.subtype != null;
+        assert this.cs != null;
+        assert this.suggestion != null;
+        return CustomType.of(this.subtype, this.cs);
     }
 
     @Override

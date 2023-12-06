@@ -1,7 +1,6 @@
 package es.bvalero.replacer.finder.replacement.custom;
 
-import es.bvalero.replacer.common.domain.CustomType;
-import es.bvalero.replacer.finder.CustomMisspelling;
+import es.bvalero.replacer.common.domain.ReplacementKind;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.Suggestion;
@@ -17,15 +16,15 @@ import lombok.AllArgsConstructor;
 
 /** Special case of Replacement Finder where the options are set at runtime */
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-class CustomReplacementFinder implements ReplacementFinder {
+class CustomReplacementFinder extends MisspellingFinder implements ReplacementFinder {
 
     private final CustomMisspelling customMisspelling;
     private final Pattern pattern;
 
-    static CustomReplacementFinder of(CustomMisspelling customMisspelling) {
+    static CustomReplacementFinder of(String replacement, boolean caseSensitive, String comment) {
         return new CustomReplacementFinder(
-            customMisspelling,
-            buildCustomRegex(customMisspelling.getWord(), customMisspelling.isCaseSensitive())
+            CustomMisspelling.of(replacement, caseSensitive, comment),
+            buildCustomRegex(replacement, caseSensitive)
         );
     }
 
@@ -54,7 +53,7 @@ class CustomReplacementFinder implements ReplacementFinder {
         return Replacement
             .builder()
             .page(page)
-            .type(CustomType.of(this.customMisspelling))
+            .type(this.customMisspelling.toCustomType())
             .start(start)
             .text(text)
             .suggestions(findSuggestions(text))
@@ -62,6 +61,11 @@ class CustomReplacementFinder implements ReplacementFinder {
     }
 
     private List<Suggestion> findSuggestions(String text) {
-        return MisspellingFinder.applyMisspellingSuggestions(text, this.customMisspelling);
+        return applyMisspellingSuggestions(text, this.customMisspelling);
+    }
+
+    @Override
+    protected ReplacementKind getType() {
+        return ReplacementKind.CUSTOM;
     }
 }
