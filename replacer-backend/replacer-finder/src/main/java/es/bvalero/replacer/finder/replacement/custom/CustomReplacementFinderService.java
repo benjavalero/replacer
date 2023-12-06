@@ -2,24 +2,19 @@ package es.bvalero.replacer.finder.replacement.custom;
 
 import es.bvalero.replacer.finder.*;
 import es.bvalero.replacer.finder.immutable.ImmutableFinderService;
-import es.bvalero.replacer.finder.replacement.ReplacementFinder;
-import es.bvalero.replacer.finder.replacement.ReplacementFinderService;
+import es.bvalero.replacer.finder.replacement.ReplacementFinderAbstractService;
 import java.util.Collection;
-import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 import org.springframework.stereotype.Service;
 
 @Service
 public class CustomReplacementFinderService
-    extends ReplacementFinderService
+    extends ReplacementFinderAbstractService
     implements FinderService<Replacement>, CustomReplacementFindService {
 
-    public CustomReplacementFinderService(
-        List<ReplacementFinder> replacementFinders,
-        ImmutableFinderService immutableFinderService
-    ) {
-        super(replacementFinders, immutableFinderService);
+    public CustomReplacementFinderService(ImmutableFinderService immutableFinderService) {
+        super(immutableFinderService);
     }
 
     @Override
@@ -46,6 +41,6 @@ public class CustomReplacementFinderService
         Iterable<Replacement> customResults = findIterable(page, Set.of(finder));
         Set<Replacement> sortedResults = new TreeSet<>();
         customResults.forEach(sortedResults::add);
-        return filterResults(page, sortedResults);
+        return super.filterResults(page, sortedResults);
     }
 }
