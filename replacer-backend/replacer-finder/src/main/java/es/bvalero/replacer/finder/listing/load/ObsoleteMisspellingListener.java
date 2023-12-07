@@ -3,12 +3,10 @@ package es.bvalero.replacer.finder.listing.load;
 import es.bvalero.replacer.common.domain.ReplacementKind;
 import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import es.bvalero.replacer.finder.ObsoleteReplacementType;
-import es.bvalero.replacer.finder.ObsoleteReplacementTypeObservable;
 import es.bvalero.replacer.finder.listing.StandardMisspelling;
+import es.bvalero.replacer.replacement.type.ReplacementTypeSaveApi;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -22,30 +20,27 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-class ObsoleteMisspellingListener implements PropertyChangeListener, ObsoleteReplacementTypeObservable {
-
-    private final PropertyChangeSupport changeSupport = new PropertyChangeSupport(this);
+class ObsoleteMisspellingListener implements PropertyChangeListener {
 
     // Dependency injection
     private final SimpleMisspellingLoader simpleMisspellingLoader;
     private final ComposedMisspellingLoader composedMisspellingLoader;
+    private final ReplacementTypeSaveApi replacementTypeSaveApi;
 
     ObsoleteMisspellingListener(
         SimpleMisspellingLoader simpleMisspellingLoader,
-        ComposedMisspellingLoader composedMisspellingLoader
+        ComposedMisspellingLoader composedMisspellingLoader,
+        ReplacementTypeSaveApi replacementTypeSaveApi
     ) {
         this.simpleMisspellingLoader = simpleMisspellingLoader;
         this.composedMisspellingLoader = composedMisspellingLoader;
+        this.replacementTypeSaveApi = replacementTypeSaveApi;
     }
 
     @PostConstruct
     public void init() {
         simpleMisspellingLoader.addPropertyChangeListener(this);
         composedMisspellingLoader.addPropertyChangeListener(this);
-    }
-
-    public final void addPropertyChangeListener(PropertyChangeListener listener) {
-        this.changeSupport.addPropertyChangeListener(listener);
     }
 
     @Override
@@ -60,7 +55,8 @@ class ObsoleteMisspellingListener implements PropertyChangeListener, ObsoleteRep
                 WikipediaLanguage,
                 StandardMisspelling
             >) evt.getNewValue();
-        this.changeSupport.firePropertyChange("types", List.of(), getObsoleteMisspellings(oldItems, newItems));
+        getObsoleteMisspellings(oldItems, newItems)
+            .forEach(obsolete -> replacementTypeSaveApi.remove(obsolete.getLang(), obsolete.getType()));
     }
 
     @VisibleForTesting

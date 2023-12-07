@@ -6,9 +6,9 @@ import static org.mockito.Mockito.mock;
 import es.bvalero.replacer.common.domain.ReplacementKind;
 import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import es.bvalero.replacer.finder.ObsoleteReplacementType;
 import es.bvalero.replacer.finder.listing.SimpleMisspelling;
 import es.bvalero.replacer.finder.listing.StandardMisspelling;
+import es.bvalero.replacer.replacement.type.ReplacementTypeSaveApi;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -22,6 +22,7 @@ class ObsoleteMisspellingListenerTest {
     // Dependency injection
     private SimpleMisspellingLoader simpleMisspellingLoader;
     private ComposedMisspellingLoader composedMisspellingLoader;
+    private ReplacementTypeSaveApi replacementTypeSaveApi;
 
     private ObsoleteMisspellingListener obsoleteMisspellingListener;
 
@@ -29,8 +30,9 @@ class ObsoleteMisspellingListenerTest {
     public void setUp() {
         simpleMisspellingLoader = mock(SimpleMisspellingLoader.class);
         composedMisspellingLoader = mock(ComposedMisspellingLoader.class);
+        replacementTypeSaveApi = mock(ReplacementTypeSaveApi.class);
         obsoleteMisspellingListener =
-            new ObsoleteMisspellingListener(simpleMisspellingLoader, composedMisspellingLoader);
+            new ObsoleteMisspellingListener(simpleMisspellingLoader, composedMisspellingLoader, replacementTypeSaveApi);
     }
 
     @Test

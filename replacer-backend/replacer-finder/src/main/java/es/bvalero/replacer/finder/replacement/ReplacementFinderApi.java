@@ -2,8 +2,13 @@ package es.bvalero.replacer.finder.replacement;
 
 import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import es.bvalero.replacer.finder.*;
+import es.bvalero.replacer.finder.Finder;
+import es.bvalero.replacer.finder.FinderPage;
+import es.bvalero.replacer.finder.FinderService;
+import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.immutable.ImmutableFinderService;
+import es.bvalero.replacer.page.index.ReplacementFindService;
+import es.bvalero.replacer.replacement.type.ReplacementTypeFindApi;
 import java.util.*;
 import javax.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
@@ -15,14 +20,14 @@ import org.springframework.stereotype.Service;
  * The service applies all these specific finders and returns the collected results.
  */
 @Service
-public class ReplacementFinderService
+public class ReplacementFinderApi
     extends ReplacementFinderAbstractService
-    implements FinderService<Replacement>, ReplacementFindService, ReplacementTypeFindService {
+    implements FinderService<Replacement>, ReplacementFindService, ReplacementTypeFindApi {
 
     // Dependency injection
     private final List<ReplacementFinder> replacementFinders;
 
-    public ReplacementFinderService(
+    public ReplacementFinderApi(
         List<ReplacementFinder> replacementFinders,
         ImmutableFinderService immutableFinderService
     ) {

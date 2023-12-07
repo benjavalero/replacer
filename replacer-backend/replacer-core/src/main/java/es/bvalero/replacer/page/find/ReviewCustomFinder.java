@@ -1,8 +1,6 @@
 package es.bvalero.replacer.page.find;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import es.bvalero.replacer.finder.CustomReplacementFindRequest;
-import es.bvalero.replacer.finder.CustomReplacementFindService;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.page.*;
 import es.bvalero.replacer.page.index.PageIndexService;

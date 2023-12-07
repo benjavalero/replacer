@@ -1,4 +1,4 @@
-package es.bvalero.replacer.finder;
+package es.bvalero.replacer.page.find;
 
 import lombok.Value;
 

@@ -22,13 +22,13 @@ class ReplacementFinderServiceTest {
     private ReplacementFinder replacementFinder;
     private ImmutableFinderService immutableFinderService;
 
-    private ReplacementFinderService replacementFinderService;
+    private ReplacementFinderApi replacementFinderService;
 
     @BeforeEach
     public void setUp() {
         replacementFinder = mock(ReplacementFinder.class);
         immutableFinderService = mock(ImmutableFinderService.class);
-        replacementFinderService = new ReplacementFinderService(List.of(replacementFinder), immutableFinderService);
+        replacementFinderService = new ReplacementFinderApi(List.of(replacementFinder), immutableFinderService);
     }
 
     @Test

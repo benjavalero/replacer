@@ -1,6 +1,10 @@
 package es.bvalero.replacer.finder.cosmetic;
 
-import es.bvalero.replacer.finder.*;
+import es.bvalero.replacer.finder.Cosmetic;
+import es.bvalero.replacer.finder.Finder;
+import es.bvalero.replacer.finder.FinderPage;
+import es.bvalero.replacer.finder.FinderService;
+import es.bvalero.replacer.page.save.CosmeticFindService;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;

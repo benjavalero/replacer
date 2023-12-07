@@ -1,5 +1,7 @@
-package es.bvalero.replacer.finder;
+package es.bvalero.replacer.page.index;
 
+import es.bvalero.replacer.finder.FinderPage;
+import es.bvalero.replacer.finder.Replacement;
 import java.util.Collection;
 import org.jmolecules.architecture.hexagonal.SecondaryPort;
 

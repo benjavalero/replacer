@@ -1,4 +1,4 @@
-package es.bvalero.replacer.replacement;
+package es.bvalero.replacer.replacement.type;
 
 import es.bvalero.replacer.common.util.ReplacerUtils;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -8,7 +8,7 @@ import org.springdoc.api.annotations.ParameterObject;
 
 @ParameterObject
 @Data
-public class ReplacementTypeFindRequest {
+class ReplacementTypeFindRequest {
 
     @Parameter(description = "Text to replace", required = true, example = "aún")
     @NotBlank

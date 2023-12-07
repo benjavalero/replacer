@@ -2,7 +2,6 @@ package es.bvalero.replacer.page.index;
 
 import es.bvalero.replacer.common.util.ReplacerUtils;
 import es.bvalero.replacer.finder.Replacement;
-import es.bvalero.replacer.finder.ReplacementFindService;
 import es.bvalero.replacer.page.IndexedPage;
 import es.bvalero.replacer.page.PageKey;
 import es.bvalero.replacer.page.PageRepository;

@@ -1,10 +1,9 @@
-package es.bvalero.replacer.replacement;
+package es.bvalero.replacer.replacement.type;
 
 import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.dto.ReplacementTypeDto;
 import es.bvalero.replacer.common.resolver.UserLanguage;
-import es.bvalero.replacer.finder.ReplacementTypeFindService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.Optional;
@@ -24,10 +23,10 @@ import org.springframework.web.bind.annotation.RestController;
 class ReplacementTypeController {
 
     // Dependency injection
-    private final ReplacementTypeFindService replacementTypeFindService;
+    private final ReplacementTypeFindApi replacementTypeFindApi;
 
-    ReplacementTypeController(ReplacementTypeFindService replacementTypeFindService) {
-        this.replacementTypeFindService = replacementTypeFindService;
+    ReplacementTypeController(ReplacementTypeFindApi replacementTypeFindApi) {
+        this.replacementTypeFindApi = replacementTypeFindApi;
     }
 
     @Operation(summary = "Find a known standard type matching with the given replacement and case-sensitive option")
@@ -36,7 +35,7 @@ class ReplacementTypeController {
         @UserLanguage WikipediaLanguage lang,
         @Valid ReplacementTypeFindRequest replacementTypeFindRequest
     ) {
-        Optional<StandardType> type = replacementTypeFindService.findReplacementType(
+        Optional<StandardType> type = replacementTypeFindApi.findReplacementType(
             lang,
             replacementTypeFindRequest.getReplacement(),
             replacementTypeFindRequest.isCs()

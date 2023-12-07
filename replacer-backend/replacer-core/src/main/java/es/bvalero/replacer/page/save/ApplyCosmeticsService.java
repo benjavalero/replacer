@@ -3,7 +3,6 @@ package es.bvalero.replacer.page.save;
 import es.bvalero.replacer.checkwikipedia.CheckWikipediaService;
 import es.bvalero.replacer.common.util.ReplacerUtils;
 import es.bvalero.replacer.finder.Cosmetic;
-import es.bvalero.replacer.finder.CosmeticFindService;
 import es.bvalero.replacer.finder.FinderPage;
 import java.util.Collection;
 import java.util.Collections;
