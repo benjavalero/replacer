@@ -46,11 +46,6 @@ class WikipediaPageOfflineRepository implements WikipediaPageRepository {
     }
 
     @Override
-    public Collection<WikipediaPage> findByKeys(Collection<PageKey> pageKeys) {
-        return List.of();
-    }
-
-    @Override
     public Collection<WikipediaSection> findSectionsInPage(PageKey pageKey) {
         return List.of();
     }

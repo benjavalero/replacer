@@ -25,7 +25,7 @@ class WikipediaPageApiRepositoryTest {
     private WikipediaApiHelper wikipediaApiHelper;
 
     private WikipediaPageApiRepository wikipediaPageRepository;
-    private WikipediaPageRepository wikipediaPageOfflineRepository;
+    private WikipediaPageOfflineRepository wikipediaPageOfflineRepository;
 
     @BeforeEach
     void setUp() {
@@ -710,11 +710,6 @@ class WikipediaPageApiRepositoryTest {
                 WikipediaSection.builder().pageKey(pageKey).anchor("").build()
             );
             assertEquals(p, pageSection.orElse(null));
-
-            Collection<WikipediaPage> pages = wikipediaPageOfflineRepository.findByKeys(
-                List.of(PageKey.of(WikipediaLanguage.getDefault(), pageId))
-            );
-            assertTrue(pages.isEmpty());
         });
 
         assertFalse(
