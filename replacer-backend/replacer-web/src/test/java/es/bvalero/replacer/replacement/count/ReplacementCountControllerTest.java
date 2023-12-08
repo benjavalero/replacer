@@ -1,4 +1,4 @@
-package es.bvalero.replacer.replacement;
+package es.bvalero.replacer.replacement.count;
 
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.*;

@@ -1,4 +1,4 @@
-package es.bvalero.replacer.replacement;
+package es.bvalero.replacer.replacement.count;
 
 import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
 
@@ -8,7 +8,7 @@ import org.springframework.lang.NonNull;
 
 @Schema(description = "Count of reviewed replacements by page")
 @Value(staticConstructor = "of")
-public class PageCount {
+class PageCount {
 
     @Schema(requiredMode = REQUIRED, example = "1")
     int pageId;

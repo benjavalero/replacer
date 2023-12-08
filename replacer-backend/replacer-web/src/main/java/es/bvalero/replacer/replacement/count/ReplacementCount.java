@@ -1,4 +1,4 @@
-package es.bvalero.replacer.replacement;
+package es.bvalero.replacer.replacement.count;
 
 import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
 
@@ -7,7 +7,7 @@ import lombok.Value;
 
 @Schema(description = "Count of reviewed/unreviewed replacements")
 @Value(staticConstructor = "of")
-public class ReplacementCount {
+class ReplacementCount {
 
     @Schema(requiredMode = REQUIRED, example = "1")
     int count;

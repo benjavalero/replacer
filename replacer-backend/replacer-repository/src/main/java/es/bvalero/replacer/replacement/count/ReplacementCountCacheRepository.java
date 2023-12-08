@@ -1,4 +1,4 @@
-package es.bvalero.replacer.replacement;
+package es.bvalero.replacer.replacement.count;
 
 import static java.time.temporal.ChronoUnit.MINUTES;
 
@@ -43,7 +43,7 @@ class ReplacementCountCacheRepository implements ReplacementCountRepository {
         .build(l -> replacementCountRepository.countReviewedGroupedByReviewer(l));
 
     ReplacementCountCacheRepository(
-        @Qualifier("replacementJdbcRepository") ReplacementCountRepository replacementCountRepository
+        @Qualifier("replacementCountJdbcRepository") ReplacementCountRepository replacementCountRepository
     ) {
         this.replacementCountRepository = replacementCountRepository;
     }

@@ -1,4 +1,4 @@
-package es.bvalero.replacer.replacement;
+package es.bvalero.replacer.replacement.count;
 
 import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
 
@@ -8,7 +8,7 @@ import org.springframework.lang.NonNull;
 
 @Schema(description = "Count of reviewed replacements by reviewer")
 @Value(staticConstructor = "of")
-public class ReviewerCount {
+class ReviewerCount {
 
     @Schema(requiredMode = REQUIRED, example = "Benjavalero")
     @NonNull
