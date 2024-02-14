@@ -91,7 +91,7 @@ class ReviewSaveServiceTest {
             .build();
         List<ReviewedReplacement> reviewedReplacements = List.of(r1, r2, r3);
 
-        reviewSaveService.markAsReviewed(reviewedReplacements, true);
+        reviewSaveService.markAsReviewed(reviewedReplacements, WikipediaTimestamp.now());
 
         verify(pageRepository).updateLastUpdate(pageKey, LocalDate.now());
         verify(replacementSaveRepository).updateReviewer(anyCollection());

@@ -8,6 +8,7 @@ import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.page.IndexedPage;
 import es.bvalero.replacer.page.PageKey;
 import es.bvalero.replacer.page.PageRepository;
+import es.bvalero.replacer.page.find.WikipediaTimestamp;
 import es.bvalero.replacer.replacement.CustomReplacementService;
 import es.bvalero.replacer.replacement.IndexedReplacement;
 import es.bvalero.replacer.replacement.ReplacementSaveRepository;
@@ -27,6 +28,7 @@ import org.apache.commons.collections4.queue.CircularFifoQueue;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.TestOnly;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -63,9 +65,9 @@ class ReviewSaveService {
         this.wikipediaPageSaveRepository = wikipediaPageSaveRepository;
     }
 
-    void saveReviewContent(WikipediaPageSaveCommand pageSave, User user) throws WikipediaException {
+    WikipediaPageSaveResult saveReviewContent(WikipediaPageSaveCommand pageSave, User user) throws WikipediaException {
         validateEditionsPerMinute(user);
-        wikipediaPageSaveRepository.save(pageSave, user.getAccessToken());
+        return wikipediaPageSaveRepository.save(pageSave, user.getAccessToken());
     }
 
     private void validateEditionsPerMinute(User user) throws WikipediaException {
@@ -132,14 +134,14 @@ class ReviewSaveService {
         };
     }
 
-    void markAsReviewed(Collection<ReviewedReplacement> reviewedReplacements, boolean updateDate) {
-        if (updateDate) {
+    void markAsReviewed(Collection<ReviewedReplacement> reviewedReplacements, @Nullable WikipediaTimestamp updateDate) {
+        if (updateDate != null) {
             PageKey pageKey = reviewedReplacements
                 .stream()
                 .findAny()
                 .orElseThrow(IllegalArgumentException::new)
                 .getPageKey();
-            pageRepository.updateLastUpdate(pageKey, LocalDate.now());
+            pageRepository.updateLastUpdate(pageKey, updateDate.toLocalDate());
         }
 
         // Mark the custom replacements as reviewed

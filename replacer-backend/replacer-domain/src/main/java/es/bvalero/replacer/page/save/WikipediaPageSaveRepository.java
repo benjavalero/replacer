@@ -6,5 +6,5 @@ import org.jmolecules.architecture.hexagonal.SecondaryPort;
 
 @SecondaryPort
 interface WikipediaPageSaveRepository {
-    void save(WikipediaPageSaveCommand pageSave, AccessToken accessToken) throws WikipediaException;
+    WikipediaPageSaveResult save(WikipediaPageSaveCommand pageSave, AccessToken accessToken) throws WikipediaException;
 }

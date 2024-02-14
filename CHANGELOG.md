@@ -2,6 +2,7 @@
 
 ## 2.28.0 (??)
 - Feature: new cosmetic finder to fix cursive within links
+- Fix: save the timestamp returned by Wikipedia API instead of the local date
 
 ## 2.27.1 (23 Nov 2023)
 - Fix: ignore false degrees where the degree letter belongs to a word and therefore are likely to be ordinals

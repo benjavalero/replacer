@@ -26,6 +26,8 @@ public class WikipediaApiResponse {
 
     private Parse parse;
 
+    private Edit edit;
+
     /**
      * @throws WikipediaException if the response contains an error.
      */
@@ -179,5 +181,14 @@ public class WikipediaApiResponse {
         private String name;
         private boolean missing;
         private Collection<String> groups;
+    }
+
+    @Data
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static class Edit {
+
+        private int oldrevid;
+        private int newrevid;
+        private String newtimestamp;
     }
 }

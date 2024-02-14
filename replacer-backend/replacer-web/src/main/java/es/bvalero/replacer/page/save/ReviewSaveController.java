@@ -54,7 +54,7 @@ class ReviewSaveController {
             user
         );
         if (reviewedPage.isReviewedWithoutChanges()) {
-            reviewSaveService.markAsReviewed(reviewedReplacements, false);
+            reviewSaveService.markAsReviewed(reviewedReplacements, null);
         } else {
             PageKey pageKey = PageKey.of(user.getId().getLang(), pageId);
             FinderPage page = reviewedPage.toFinderPage(pageKey);
@@ -84,8 +84,8 @@ class ReviewSaveController {
                 .queryTimestamp(queryTimestamp)
                 .build();
 
-            reviewSaveService.saveReviewContent(pageSave, user);
-            reviewSaveService.markAsReviewed(reviewedReplacements, true);
+            WikipediaPageSaveResult pageSaveResult = reviewSaveService.saveReviewContent(pageSave, user);
+            reviewSaveService.markAsReviewed(reviewedReplacements, pageSaveResult.getNewTimestamp());
         }
 
         return ResponseEntity.noContent().build();

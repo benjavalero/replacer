@@ -1,0 +1,20 @@
+package es.bvalero.replacer.page.save;
+
+import es.bvalero.replacer.page.find.WikipediaTimestamp;
+import lombok.Builder;
+import lombok.Value;
+import org.springframework.lang.NonNull;
+
+@Value
+@Builder
+public class WikipediaPageSaveResult {
+
+    @NonNull
+    int oldRevisionId;
+
+    @NonNull
+    int newRevisionId;
+
+    @NonNull
+    WikipediaTimestamp newTimestamp;
+}

@@ -29,7 +29,8 @@ class WikipediaPageSaveApiRepository implements WikipediaPageSaveRepository {
     }
 
     @Override
-    public void save(WikipediaPageSaveCommand pageSave, AccessToken accessToken) throws WikipediaException {
+    public WikipediaPageSaveResult save(WikipediaPageSaveCommand pageSave, AccessToken accessToken)
+        throws WikipediaException {
         EditToken editToken = getEditToken(pageSave.getPageKey(), accessToken);
         validateEditTimestamp(pageSave.getPageKey(), editToken.getTimestamp(), pageSave.getQueryTimestamp());
 
@@ -40,7 +41,8 @@ class WikipediaPageSaveApiRepository implements WikipediaPageSaveRepository {
             .params(buildSavePageContentRequestParams(pageSave, editToken))
             .accessToken(accessToken)
             .build();
-        wikipediaApiHelper.executeApiRequest(apiRequest);
+        WikipediaApiResponse apiResponse = wikipediaApiHelper.executeApiRequest(apiRequest);
+        return extractEditResultFromJson(apiResponse.getEdit());
     }
 
     private void validateEditTimestamp(
@@ -123,5 +125,14 @@ class WikipediaPageSaveApiRepository implements WikipediaPageSaveRepository {
                     .getTimestamp()
             )
         );
+    }
+
+    private WikipediaPageSaveResult extractEditResultFromJson(WikipediaApiResponse.Edit edit) {
+        return WikipediaPageSaveResult
+            .builder()
+            .oldRevisionId(edit.getOldrevid())
+            .newRevisionId(edit.getNewrevid())
+            .newTimestamp(WikipediaTimestamp.of(edit.getNewtimestamp()))
+            .build();
     }
 }

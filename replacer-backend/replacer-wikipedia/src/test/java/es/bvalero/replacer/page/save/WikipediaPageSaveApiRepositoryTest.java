@@ -93,10 +93,31 @@ class WikipediaPageSaveApiRepositoryTest {
     @Test
     void testSavePageContent() throws Exception {
         // API response for the EditToken request
-        String textResponse =
+        String editTokenJson =
             "{\"batchcomplete\":true,\"query\":{\"pages\":[{\"pageid\":2209245,\"ns\":4,\"title\":\"Wikipedia:Zona de pruebas/5\",\"revisions\":[{\"timestamp\":\"2019-06-24T21:24:09Z\"}]}],\"tokens\":{\"csrftoken\":\"+\\\\\"}}}";
-        WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
-        when(wikipediaApiHelper.executeApiRequest(any(WikipediaApiRequest.class))).thenReturn(response);
+        WikipediaApiResponse editTokenResponse = jsonMapper.readValue(editTokenJson, WikipediaApiResponse.class);
+        String editResultJson =
+            """
+            {
+                "edit": {
+                    "result": "Success",
+                    "pageid": 94542,
+                    "title": "Wikipedia:Sandbox",
+                    "contentmodel": "wikitext",
+                    "oldrevid": 371705,
+                    "newrevid": 371707,
+                    "newtimestamp": "2018-12-18T16:59:42Z"
+                }
+            }
+            """;
+        WikipediaApiResponse editResultResponse = jsonMapper.readValue(editResultJson, WikipediaApiResponse.class);
+        when(wikipediaApiHelper.executeApiRequest(any(WikipediaApiRequest.class)))
+            .thenReturn(editTokenResponse)
+            .thenReturn(editResultResponse)
+            .thenReturn(editTokenResponse)
+            .thenReturn(editResultResponse)
+            .thenReturn(editTokenResponse)
+            .thenReturn(editTokenResponse);
 
         // We use a timestamp AFTER the timestamp of the last edition (from the edit token)
         WikipediaTimestamp currentTimestamp = WikipediaTimestamp.of("2019-06-25T21:24:09Z");
