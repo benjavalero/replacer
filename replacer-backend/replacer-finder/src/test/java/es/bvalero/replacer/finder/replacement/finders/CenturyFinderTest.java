@@ -198,4 +198,14 @@ class CenturyFinderTest {
         assertEquals(1, replacements.size());
         assertEquals("siglo XIX", replacements.get(0).getText());
     }
+
+    @Test
+    void testCenturyAfterFalsePositive() {
+        String text = "Los siglos y el siglo XIX.";
+
+        List<Replacement> replacements = centuryFinder.findList(text);
+
+        assertEquals(1, replacements.size());
+        assertEquals("siglo XIX", replacements.get(0).getText());
+    }
 }

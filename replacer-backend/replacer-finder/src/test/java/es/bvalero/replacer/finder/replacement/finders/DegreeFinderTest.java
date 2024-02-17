@@ -118,6 +118,16 @@ class DegreeFinderTest {
     }
 
     @Test
+    void testDegreeAfterFalsePositive() {
+        String text = "Coord: 18°55' Temp: 34ºC";
+
+        List<Replacement> replacements = degreeFinder.findList(text);
+
+        assertEquals(1, replacements.size());
+        assertEquals("34ºC", replacements.get(0).getText());
+    }
+
+    @Test
     void testDegreePossiblyOrdinal() {
         String text = "En el grupo 1ºC.";
 

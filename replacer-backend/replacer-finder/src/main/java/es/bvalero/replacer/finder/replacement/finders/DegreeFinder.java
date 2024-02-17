@@ -70,41 +70,46 @@ class DegreeFinder implements ReplacementFinder {
 
     @Nullable
     private MatchResult findDegreeSymbol(String text, int start) {
-        // First we find the initial symbol
-        final String textSearchable = text.substring(start);
-        int startSymbol = StringUtils.indexOfAny(
-            textSearchable,
-            DEGREE,
-            MASCULINE_ORDINAL,
-            CELSIUS_UNICODE,
-            FAHRENHEIT_UNICODE
-        );
-        if (startSymbol < 0) {
-            return null;
-        } else {
-            startSymbol = start + startSymbol;
-        }
+        while (start >= 0 && start < text.length()) {
+            // First we find the initial symbol
+            final String textSearchable = text.substring(start);
+            int startSymbol = StringUtils.indexOfAny(
+                textSearchable,
+                DEGREE,
+                MASCULINE_ORDINAL,
+                CELSIUS_UNICODE,
+                FAHRENHEIT_UNICODE
+            );
+            if (startSymbol < 0) {
+                return null;
+            } else {
+                startSymbol = start + startSymbol;
+            }
 
-        // If it is a Unicode symbol we are done
-        final char degreeSymbol = text.charAt(startSymbol);
-        if (isUnicodeSymbol(degreeSymbol)) {
-            return FinderMatchResult.of(startSymbol, Character.toString(degreeSymbol));
-        }
+            // If it is a Unicode symbol we are done
+            final char degreeSymbol = text.charAt(startSymbol);
+            if (isUnicodeSymbol(degreeSymbol)) {
+                return FinderMatchResult.of(startSymbol, Character.toString(degreeSymbol));
+            }
 
-        // Find the degree letter. We admit a whitespace between.
-        if (startSymbol + 1 >= text.length()) {
-            return null;
-        }
-        final int startLetter = text.charAt(startSymbol + 1) == SPACE ? startSymbol + 2 : startSymbol + 1;
-        if (
-            startLetter >= text.length() ||
-            !DEGREE_LETTERS.contains(text.charAt(startLetter)) ||
-            !FinderUtils.isWordCompleteInText(startLetter, text.substring(startLetter, startLetter + 1), text)
-        ) {
-            return null;
-        }
+            // Find the degree letter. We admit a whitespace between.
+            if (startSymbol + 1 >= text.length()) {
+                return null;
+            }
+            final int startLetter = text.charAt(startSymbol + 1) == SPACE ? startSymbol + 2 : startSymbol + 1;
+            if (
+                startLetter >= text.length() ||
+                !DEGREE_LETTERS.contains(text.charAt(startLetter)) ||
+                !FinderUtils.isWordCompleteInText(startLetter, text.substring(startLetter, startLetter + 1), text)
+            ) {
+                // Keep on searching
+                start = startSymbol + 1;
+                continue;
+            }
 
-        return FinderMatchResult.of(text, startSymbol, startLetter + 1);
+            return FinderMatchResult.of(text, startSymbol, startLetter + 1);
+        }
+        return null;
     }
 
     private boolean isUnicodeSymbol(char symbolChar) {

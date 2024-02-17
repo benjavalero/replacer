@@ -131,27 +131,31 @@ class CenturyFinder implements ReplacementFinder {
 
     @Nullable
     private MatchResult findCenturyWord(String text, int start) {
-        // Instead of making a case-insensitive search, we find the end of the word,
-        // and then we check the word is complete. It is a little faster than finding the word with both cases.
-        final int startSuffix = text.indexOf(CENTURY_SEARCH, start);
-        if (startSuffix <= 0) { // <= 0 to be able to get the character before
-            return null;
-        }
+        while (start >= 0 && start < text.length()) {
+            // Instead of making a case-insensitive search, we find the end of the word,
+            // and then we check the word is complete. It is a little faster than finding the word with both cases.
+            final int startSuffix = text.indexOf(CENTURY_SEARCH, start);
+            if (startSuffix <= 0) { // <= 0 to be able to get the character before
+                return null;
+            }
 
-        final int startCentury = startSuffix - 1;
-        final char firstLetter = text.charAt(startCentury);
-        final String centuryWord = firstLetter + CENTURY_SEARCH;
-        final int endCentury = startCentury + centuryWord.length();
-        // We only consider the word complete and followed by a whitespace
-        if (
-            (firstLetter == 'S' || firstLetter == 's') &&
-            (FinderUtils.isWordCompleteInText(startCentury, centuryWord, text)) &&
-            text.charAt(endCentury) == SPACE
-        ) {
-            return FinderMatchResult.of(startCentury, centuryWord);
-        } else {
-            return null;
+            final int startCentury = startSuffix - 1;
+            final char firstLetter = text.charAt(startCentury);
+            final String centuryWord = firstLetter + CENTURY_SEARCH;
+            final int endCentury = startCentury + centuryWord.length();
+            // We only consider the word complete and followed by a whitespace
+            if (
+                (firstLetter == 'S' || firstLetter == 's') &&
+                (FinderUtils.isWordCompleteInText(startCentury, centuryWord, text)) &&
+                text.charAt(endCentury) == SPACE
+            ) {
+                return FinderMatchResult.of(startCentury, centuryWord);
+            } else {
+                // Keep on searching
+                start = endCentury;
+            }
         }
+        return null;
     }
 
     @Nullable
