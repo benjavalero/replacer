@@ -96,8 +96,7 @@ class ReviewSaveControllerTest {
 
         when(applyCosmeticsService.applyCosmeticChanges(any(FinderPage.class))).thenReturn(pageSave.getContent());
         when(reviewSaveService.buildEditSummary(anyCollection(), anyBoolean())).thenReturn(pageSave.getEditSummary());
-        WikipediaTimestamp now = WikipediaTimestamp.now();
-        WikipediaPageSaveResult pageSaveResult = WikipediaPageSaveResult.builder().newTimestamp(now).build();
+        WikipediaPageSaveResult pageSaveResult = WikipediaPageSaveResult.ofDummy();
         when(reviewSaveService.saveReviewContent(pageSave, user)).thenReturn(pageSaveResult);
 
         mvc
@@ -111,7 +110,7 @@ class ReviewSaveControllerTest {
             .andExpect(status().isNoContent());
 
         verify(reviewSaveService).saveReviewContent(pageSave, user);
-        verify(reviewSaveService).markAsReviewed(List.of(reviewedReplacement), now);
+        verify(reviewSaveService).markAsReviewed(List.of(reviewedReplacement), pageSaveResult);
     }
 
     @Test
@@ -150,7 +149,7 @@ class ReviewSaveControllerTest {
             )
             .andExpect(status().isBadRequest());
 
-        verify(reviewSaveService, never()).markAsReviewed(anyCollection(), any(WikipediaTimestamp.class));
+        verify(reviewSaveService, never()).markAsReviewed(anyCollection(), any(WikipediaPageSaveResult.class));
     }
 
     @Test
@@ -174,7 +173,7 @@ class ReviewSaveControllerTest {
             .andExpect(status().isConflict());
 
         verify(reviewSaveService).saveReviewContent(pageSave, user);
-        verify(reviewSaveService, never()).markAsReviewed(anyCollection(), any(WikipediaTimestamp.class));
+        verify(reviewSaveService, never()).markAsReviewed(anyCollection(), any(WikipediaPageSaveResult.class));
     }
 
     @Test
@@ -200,7 +199,7 @@ class ReviewSaveControllerTest {
             .andExpect(status().isUnauthorized());
 
         verify(reviewSaveService).saveReviewContent(pageSave, user);
-        verify(reviewSaveService, never()).markAsReviewed(anyCollection(), any(WikipediaTimestamp.class));
+        verify(reviewSaveService, never()).markAsReviewed(anyCollection(), any(WikipediaPageSaveResult.class));
     }
 
     @Test
@@ -224,6 +223,6 @@ class ReviewSaveControllerTest {
             .andExpect(status().isInternalServerError());
 
         verify(reviewSaveService).saveReviewContent(pageSave, user);
-        verify(reviewSaveService, never()).markAsReviewed(anyCollection(), any(WikipediaTimestamp.class));
+        verify(reviewSaveService, never()).markAsReviewed(anyCollection(), any(WikipediaPageSaveResult.class));
     }
 }

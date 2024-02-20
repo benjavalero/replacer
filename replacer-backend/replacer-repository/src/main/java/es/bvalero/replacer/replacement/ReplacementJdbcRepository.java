@@ -77,11 +77,18 @@ class ReplacementJdbcRepository implements ReplacementSaveRepository {
 
     private void updateReviewer(IndexedReplacement replacement) {
         String sql =
-            "UPDATE replacement SET reviewer = :reviewer " +
-            "WHERE lang = :lang AND page_id = :pageId AND kind = :kind AND subtype = :subtype " +
-            "AND start = :start AND reviewer IS NULL";
+            """
+            UPDATE replacement
+            SET reviewer = :reviewer, review_type = :reviewType, review_timestamp = :reviewTimestamp, old_rev_id = :oldRevId, new_rev_id = :newRevId
+            WHERE lang = :lang AND page_id = :pageId AND kind = :kind AND subtype = :subtype
+            AND start = :start AND reviewer IS NULL
+            """;
         SqlParameterSource namedParameters = new MapSqlParameterSource()
             .addValue("reviewer", replacement.getReviewer())
+            .addValue("reviewType", replacement.getReviewType().getCode())
+            .addValue("reviewTimestamp", replacement.getReviewTimestamp())
+            .addValue("oldRevId", replacement.getOldRevId())
+            .addValue("newRevId", replacement.getNewRevId())
             .addValue("lang", replacement.getPageKey().getLang().getCode())
             .addValue("pageId", replacement.getPageKey().getPageId())
             .addValue("kind", replacement.getType().getKind().getCode())

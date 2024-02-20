@@ -8,7 +8,6 @@ import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.page.IndexedPage;
 import es.bvalero.replacer.page.PageKey;
 import es.bvalero.replacer.page.PageRepository;
-import es.bvalero.replacer.page.find.WikipediaTimestamp;
 import es.bvalero.replacer.replacement.CustomReplacementService;
 import es.bvalero.replacer.replacement.IndexedReplacement;
 import es.bvalero.replacer.replacement.ReplacementSaveRepository;
@@ -134,32 +133,35 @@ class ReviewSaveService {
         };
     }
 
-    void markAsReviewed(Collection<ReviewedReplacement> reviewedReplacements, @Nullable WikipediaTimestamp updateDate) {
-        if (updateDate != null) {
+    void markAsReviewed(
+        Collection<ReviewedReplacement> reviewedReplacements,
+        @Nullable WikipediaPageSaveResult saveResult
+    ) {
+        if (saveResult != null) {
             PageKey pageKey = reviewedReplacements
                 .stream()
                 .findAny()
                 .orElseThrow(IllegalArgumentException::new)
                 .getPageKey();
-            pageRepository.updateLastUpdate(pageKey, updateDate.toLocalDate());
+            pageRepository.updateLastUpdate(pageKey, saveResult.getNewTimestamp().toLocalDate());
         }
 
         // Mark the custom replacements as reviewed
         reviewedReplacements
             .stream()
             .filter(r -> r.getType() instanceof CustomType)
-            .forEach(this::markCustomAsReviewed);
+            .forEach(r -> markCustomAsReviewed(r, saveResult));
 
         // Mark the usual replacements as reviewed
         Collection<IndexedReplacement> usualToReview = reviewedReplacements
             .stream()
             .filter(r -> r.getType() instanceof StandardType)
-            .map(ReviewedReplacement::toReplacement)
+            .map(r -> r.toReplacement(saveResult))
             .toList();
         replacementSaveRepository.updateReviewer(usualToReview);
     }
 
-    private void markCustomAsReviewed(ReviewedReplacement reviewed) {
+    private void markCustomAsReviewed(ReviewedReplacement reviewed, @Nullable WikipediaPageSaveResult saveResult) {
         // Add the page to the database in case it doesn't exist yet
         if (pageRepository.findByKey(reviewed.getPageKey()).isEmpty()) {
             IndexedPage indexedPage = IndexedPage
@@ -170,6 +172,6 @@ class ReviewSaveService {
                 .build();
             pageRepository.add(List.of(indexedPage));
         }
-        customReplacementService.addCustomReplacement(reviewed.toCustomReplacement());
+        customReplacementService.addCustomReplacement(reviewed.toCustomReplacement(saveResult));
     }
 }

@@ -85,7 +85,7 @@ class ReviewSaveController {
                 .build();
 
             WikipediaPageSaveResult pageSaveResult = reviewSaveService.saveReviewContent(pageSave, user);
-            reviewSaveService.markAsReviewed(reviewedReplacements, pageSaveResult.getNewTimestamp());
+            reviewSaveService.markAsReviewed(reviewedReplacements, pageSaveResult);
         }
 
         return ResponseEntity.noContent().build();

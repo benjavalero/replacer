@@ -43,7 +43,6 @@ public class WikipediaTimestamp {
         return this.localDateTime.toLocalDate();
     }
 
-    @VisibleForTesting
     public LocalDateTime toLocalDateTime() {
         return this.localDateTime;
     }

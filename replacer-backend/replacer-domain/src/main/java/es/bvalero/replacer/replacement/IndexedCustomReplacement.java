@@ -2,6 +2,7 @@ package es.bvalero.replacer.replacement;
 
 import es.bvalero.replacer.common.domain.CustomType;
 import es.bvalero.replacer.page.PageKey;
+import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Value;
 import org.springframework.lang.NonNull;
@@ -25,6 +26,19 @@ public class IndexedCustomReplacement {
 
     @Nullable
     String reviewer;
+
+    @Builder.Default
+    ReviewType reviewType = ReviewType.UNKNOWN;
+
+    // This fields will be not-null for reviewed not-legacy replacements
+    @Nullable
+    LocalDateTime reviewTimestamp;
+
+    @Nullable
+    Integer oldRevId;
+
+    @Nullable
+    Integer newRevId;
 
     // Many-to-one relationship
     @NonNull

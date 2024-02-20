@@ -12,7 +12,7 @@ import es.bvalero.replacer.replacement.IndexedCustomReplacement;
 import es.bvalero.replacer.replacement.ReplacementSaveRepository;
 import es.bvalero.replacer.user.User;
 import es.bvalero.replacer.wikipedia.WikipediaException;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -91,9 +91,10 @@ class ReviewSaveServiceTest {
             .build();
         List<ReviewedReplacement> reviewedReplacements = List.of(r1, r2, r3);
 
-        reviewSaveService.markAsReviewed(reviewedReplacements, WikipediaTimestamp.now());
+        LocalDateTime now = LocalDateTime.now();
+        reviewSaveService.markAsReviewed(reviewedReplacements, WikipediaPageSaveResult.ofDummy());
 
-        verify(pageRepository).updateLastUpdate(pageKey, LocalDate.now());
+        verify(pageRepository).updateLastUpdate(pageKey, now.toLocalDate());
         verify(replacementSaveRepository).updateReviewer(anyCollection());
         verify(customReplacementService).addCustomReplacement(any(IndexedCustomReplacement.class));
     }
