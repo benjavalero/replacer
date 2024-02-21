@@ -120,4 +120,17 @@ class CoordinatesFinderTest {
 
         assertTrue(replacements.isEmpty());
     }
+
+    @ParameterizedTest
+    @CsvSource(delimiter = '|', value = { "38:05'08''|38:05′08″", "38:05'08.325''|38:05′08.325″" })
+    void testHours(String text, String expected) {
+        List<Replacement> replacements = coordinatesFinder.findList(text);
+        assertEquals(1, replacements.size());
+
+        Replacement rep = replacements.get(0);
+        assertEquals(StandardType.HOURS, rep.getType());
+        assertEquals(text, rep.getText());
+        assertEquals(text, rep.getSuggestions().get(0).getText());
+        assertEquals(expected, rep.getSuggestions().get(1).getText());
+    }
 }

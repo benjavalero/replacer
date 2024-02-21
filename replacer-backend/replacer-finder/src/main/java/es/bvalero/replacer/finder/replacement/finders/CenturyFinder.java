@@ -20,6 +20,7 @@ import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.regex.MatchResult;
 import java.util.stream.Collectors;
@@ -121,9 +122,7 @@ class CenturyFinder implements ReplacementFinder {
             final FinderMatchResult match = FinderMatchResult.of(text, startCentury, endCentury);
             match.addGroup(centuryWord);
             match.addGroup(centuryNumber);
-            if (era != null) {
-                match.addGroup(era);
-            }
+            match.addGroup(Objects.requireNonNullElseGet(era, FinderMatchResult::ofEmpty));
             return match;
         }
         return null;
@@ -212,7 +211,7 @@ class CenturyFinder implements ReplacementFinder {
         String centuryText = match.group();
         final String centuryWord = match.group(1);
         final String centuryNumber = FinderUtils.toUpperCase(match.group(2));
-        final String era = match.groupCount() == 3 ? match.group(3).substring(0, 1) : EMPTY;
+        final String era = match.group(3).isEmpty() ? EMPTY : match.group(3).substring(0, 1);
         final boolean linked = centuryText.startsWith(START_LINK);
 
         // Try to fix simple centuries close to this one

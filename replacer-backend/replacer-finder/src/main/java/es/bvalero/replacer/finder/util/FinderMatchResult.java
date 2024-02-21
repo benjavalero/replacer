@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.MatchResult;
 import lombok.*;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.TestOnly;
 
 /**
@@ -13,6 +14,8 @@ import org.jetbrains.annotations.TestOnly;
 @ToString
 @EqualsAndHashCode
 public class FinderMatchResult implements MatchResult {
+
+    private static final FinderMatchResult EMPTY = FinderMatchResult.of(0, StringUtils.EMPTY);
 
     private final int start;
 
@@ -36,6 +39,10 @@ public class FinderMatchResult implements MatchResult {
 
     public static FinderMatchResult of(String text, int start, int end) {
         return FinderMatchResult.of(start, text.substring(start, end));
+    }
+
+    public static FinderMatchResult ofEmpty() {
+        return EMPTY;
     }
 
     public void addGroup(MatchResult group) {

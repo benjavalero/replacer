@@ -33,11 +33,12 @@ public class StandardType extends ReplacementType {
     public static final StandardType ACUTE_O = ofStyle("ó con tilde");
     public static final StandardType CENTURY = ofStyle("Siglo sin versalitas");
     public static final StandardType COORDINATES = ofStyleForBots("Coordenadas");
+    public static final StandardType HOURS = ofStyleForBots("Horas");
     public static final StandardType DEGREES = ofStyle("Grados");
     public static final StandardType ORDINAL = ofStyleForBots("Ordinales");
 
     private static final Set<String> STYLE_SUBTYPES = Set
-        .of(DATE, ACUTE_O, CENTURY, COORDINATES, DEGREES, ORDINAL)
+        .of(DATE, ACUTE_O, CENTURY, COORDINATES, HOURS, DEGREES, ORDINAL)
         .stream()
         .map(ReplacementType::getSubtype)
         .collect(Collectors.toUnmodifiableSet());
