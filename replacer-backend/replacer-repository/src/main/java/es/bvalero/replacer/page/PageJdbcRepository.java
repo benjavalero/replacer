@@ -36,7 +36,8 @@ class PageJdbcRepository implements PageRepository {
     public Optional<IndexedPage> findByKey(PageKey pageKey) {
         String sql =
             "SELECT p.lang, p.page_id, p.title, p.last_update, " +
-            "r.id, r.kind, r.subtype, r.start, r.context, r.reviewer " +
+            "r.id, r.kind, r.subtype, r.start, r.context, r.reviewer, " +
+            "r.review_type, r.review_timestamp, r.old_rev_id, r.new_rev_id " +
             FROM_REPLACEMENT_JOIN_PAGE +
             "WHERE p.lang = :lang AND p.page_id = :pageId";
         SqlParameterSource namedParameters = new MapSqlParameterSource()
@@ -50,7 +51,8 @@ class PageJdbcRepository implements PageRepository {
     public Collection<IndexedPage> findByIdRange(WikipediaLanguage lang, int minPageId, int maxPageId) {
         String sql =
             "SELECT p.lang, p.page_id, p.title, p.last_update, " +
-            "r.id, r.kind, r.subtype, r.start, r.context, r.reviewer " +
+            "r.id, r.kind, r.subtype, r.start, r.context, r.reviewer, " +
+            "r.review_type, r.review_timestamp, r.old_rev_id, r.new_rev_id " +
             FROM_REPLACEMENT_JOIN_PAGE +
             "WHERE p.lang = :lang AND p.page_id BETWEEN :minPageId AND :maxPageId";
         SqlParameterSource namedParameters = new MapSqlParameterSource()
