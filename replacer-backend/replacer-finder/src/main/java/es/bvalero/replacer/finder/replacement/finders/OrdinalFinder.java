@@ -18,6 +18,7 @@ import java.util.regex.MatchResult;
 import java.util.stream.Stream;
 import javax.annotation.PostConstruct;
 import javax.naming.OperationNotSupportedException;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
@@ -135,38 +136,39 @@ class OrdinalFinder implements ReplacementFinder {
             return (
                 number.length() <= 3 &&
                 Integer.parseInt(number) > 0 &&
-                (numberMatch.start() == 0 || FinderUtils.isValidSeparator(text.charAt(numberMatch.start() - 1)))
+                (numberMatch.start() == 0 || FinderUtils.isValidSeparator(text.charAt(numberMatch.start() - 1))) &&
+                numberMatch.end() < text.length()
             );
         } catch (NumberFormatException nfe) {
             throw new IllegalStateException(nfe);
         }
     }
 
+    /* Find an ordinal suffix right after the number match */
     @Nullable
     private MatchResult findOrdinalSuffix(String text, int start) {
-        // Find the suffix, right after the number.
-        if (start >= text.length()) {
-            return null;
-        }
-
+        assert start < text.length();
         final MatchResult matchSuffix;
         if (isOrdinalLetter(text.charAt(start))) {
             matchSuffix = FinderMatchResult.of(start, text.substring(start, start + 1));
         } else {
             matchSuffix = FinderUtils.findWordAfter(text, start, SUFFIX_ALLOWED_CHARS, true);
-        }
-
-        if (matchSuffix == null || !SUFFIXES.contains(matchSuffix.group())) {
-            return null;
+            // It must be a known suffix
+            if (matchSuffix == null || !SUFFIXES.contains(matchSuffix.group())) {
+                return null;
+            }
         }
 
         // Suffix must be right after the number
         // We only allow an optional dot before
-        if (matchSuffix.start() > start + 1 || (matchSuffix.start() == start + 1 && text.charAt(start) != DOT)) {
+        // Exception: an ordinal symbol preceded by a dot must not be fixed
+        final int startSuffix = matchSuffix.start();
+        if (startSuffix > start + 1 || (startSuffix == start + 1 && text.charAt(start) != DOT)) {
             return null;
         }
 
         // Optional dot after the suffix
+        // Always return the match starting right after the number
         int endSuffix = matchSuffix.end();
         if (endSuffix < text.length() && text.charAt(endSuffix) == DOT) {
             endSuffix += 1;
@@ -181,6 +183,9 @@ class OrdinalFinder implements ReplacementFinder {
 
     @Override
     public boolean validate(MatchResult match, FinderPage page) {
+        // Not to be fixed:
+        // - dot + ordinal symbol
+        // - degree symbol
         final String suffix = ((FinderMatchResult) match).group(2);
         return switch (suffix.length()) {
             case 2 -> suffix.charAt(0) != DOT || !isOrdinalLetter(suffix.charAt(1));
@@ -201,110 +206,150 @@ class OrdinalFinder implements ReplacementFinder {
             .build();
     }
 
-    // TODO: Reduce cyclomatic complexity
     private List<Suggestion> buildSuggestions(MatchResult match, FinderPage page) {
         final List<Suggestion> suggestions = new ArrayList<>();
 
         // Split the number and the suffix
         final int ordinalNumber = Integer.parseInt(match.group(1));
+        final String ordinalSuffix = stripSuffix(match.group(2));
 
-        // We store the pure suffix, removing the initial/final dot or the plural form.
-        String suffixStr = StringUtils.strip(match.group(2), String.valueOf(DOT));
-        final boolean isOrdinalPlural = suffixStr.endsWith(PLURAL_LETTER);
-        if (isOrdinalPlural) {
-            suffixStr = StringUtils.chop(suffixStr);
-        }
-        final String ordinalSuffix = suffixStr;
+        // 1. Fixed ordinal
+        suggestions.add(buildFixedOrdinalSuggestion(ordinalNumber, ordinalSuffix));
 
-        // Calculate the ordinal symbol and the letter
-        final char ordinalSymbol = this.getOrdinalSymbol(ordinalSuffix);
-        final String ordinalLetter = this.getOrdinalLetter(ordinalSuffix);
-        final boolean isOrdinalMasculine = (ordinalSymbol == MASCULINE_ORDINAL);
+        // 2. Cardinal
+        suggestions.add(buildCardinalSuggestion(ordinalNumber));
 
-        // Dot + original letter
-        if (isOrdinalPlural) {
-            suggestions.add(
-                Suggestion.ofNoComment(String.format("{{ord|%d.|%s%s}}", ordinalNumber, ordinalLetter, PLURAL_LETTER))
-            );
-        } else {
-            suggestions.add(
-                Suggestion.of(
-                    ordinalNumber + "." + ordinalSymbol,
-                    "se escribe punto antes de la " + ordinalLetter + " volada"
-                )
-            );
-        }
+        // 3. Degrees (only for masculine ordinals)
+        CollectionUtils.addIgnoreNull(suggestions, buildDegreeSuggestion(ordinalNumber, ordinalSuffix));
 
-        // Cardinal
-        suggestions.add(Suggestion.of(Integer.toString(ordinalNumber), "cardinal"));
+        // 4. Roman number
+        suggestions.add(buildRomanNumberSuggestion(ordinalNumber));
 
-        // Degrees (only for masculine ordinals)
-        if (isOrdinalMasculine) {
-            suggestions.add(Suggestion.of(Integer.toString(ordinalNumber) + DEGREE, "grados"));
-        }
-
-        // Roman
-        try {
-            suggestions.add(Suggestion.of(ConvertToRoman.fromArabic(ordinalNumber), "números romanos"));
-        } catch (OperationNotSupportedException e) {
-            // Simply don't add this alternative
-            throw new IllegalStateException(e);
-        }
-
-        // Text alternatives (if any)
-        String lang = page.getPageKey().getLang().getCode();
-        final FinderProperties.OrdinalSuggestion ordinalSuggestion =
-            this.finderProperties.getOrdinalSuggestions().get(lang).get(ordinalNumber);
-        if (ordinalSuggestion != null) {
-            // Ordinal
-            final FinderProperties.OrdinalOption ordinalOption = ordinalSuggestion.getOrdinal();
-            final List<String> ordinalOptions = isOrdinalMasculine
-                ? ordinalOption.getMasculine()
-                : ordinalOption.getFeminine();
-            if (isOrdinalPlural) {
-                ordinalOptions
-                    .stream()
-                    .filter(opt -> opt.endsWith(ordinalLetter))
-                    .map(opt -> opt + PLURAL_LETTER)
-                    .map(Suggestion::ofNoComment)
-                    .forEach(suggestions::add);
-            } else {
-                ordinalOptions.stream().map(Suggestion::ofNoComment).forEach(suggestions::add);
-            }
-
-            // Fractional
-            final FinderProperties.OrdinalOption fractionalOption = ordinalSuggestion.getFractional();
-            if (fractionalOption != null) {
-                final List<String> fractionalOptions = isOrdinalMasculine
-                    ? fractionalOption.getMasculine()
-                    : fractionalOption.getFeminine();
-                if (isOrdinalPlural) {
-                    fractionalOptions
-                        .stream()
-                        .filter(opt -> opt.endsWith(ordinalLetter))
-                        .map(opt -> opt + PLURAL_LETTER)
-                        .map(s -> Suggestion.of(s, "fraccionario"))
-                        .forEach(suggestions::add);
-                } else {
-                    fractionalOptions.stream().map(s -> Suggestion.of(s, "fraccionario")).forEach(suggestions::add);
-                }
-            }
-        }
+        // 5. Text alternatives (if any)
+        final WikipediaLanguage lang = page.getPageKey().getLang();
+        suggestions.addAll(buildTextSuggestions(ordinalNumber, ordinalSuffix, lang));
 
         return suggestions;
     }
 
+    /* Remove the initial/final dot */
+    private String stripSuffix(String suffix) {
+        return StringUtils.strip(suffix, String.valueOf(DOT));
+    }
+
+    private boolean isOrdinalPlural(String suffix) {
+        return suffix.endsWith(PLURAL_LETTER);
+    }
+
+    /* Remove the plural form */
+    private String getSingularSuffix(String suffix) {
+        return isOrdinalPlural(suffix) ? StringUtils.chop(suffix) : suffix;
+    }
+
     private char getOrdinalSymbol(String suffix) {
-        if (FEMININE_SUFFIXES.contains(suffix)) {
+        // The suffix is stripped but can be plural
+        final String bareSuffix = getSingularSuffix(suffix);
+        if (FEMININE_SUFFIXES.contains(bareSuffix)) {
             return FEMININE_ORDINAL;
-        } else if (MASCULINE_SUFFIXES.contains(suffix)) {
+        } else if (MASCULINE_SUFFIXES.contains(bareSuffix)) {
             return MASCULINE_ORDINAL;
         } else {
             throw new IllegalArgumentException("Unknown suffix: " + suffix);
         }
     }
 
-    private String getOrdinalLetter(String suffix) {
-        return getOrdinalSymbol(suffix) == FEMININE_ORDINAL ? FEMININE_LETTER : MASCULINE_LETTER;
+    private String getOrdinalLetter(char ordinalSymbol) {
+        return ordinalSymbol == FEMININE_ORDINAL ? FEMININE_LETTER : MASCULINE_LETTER;
+    }
+
+    private Suggestion buildFixedOrdinalSuggestion(int ordinalNumber, String ordinalSuffix) {
+        // The suffix is stripped but can be plural
+        final char ordinalSymbol = this.getOrdinalSymbol(ordinalSuffix);
+        final String ordinalLetter = this.getOrdinalLetter(ordinalSymbol);
+
+        if (isOrdinalPlural(ordinalSuffix)) {
+            return Suggestion.ofNoComment(
+                String.format("{{ord|%d.|%s%s}}", ordinalNumber, ordinalLetter, PLURAL_LETTER)
+            );
+        } else {
+            return Suggestion.of(
+                ordinalNumber + "." + ordinalSymbol,
+                "se escribe punto antes de la " + ordinalLetter + " volada"
+            );
+        }
+    }
+
+    private Suggestion buildCardinalSuggestion(int ordinalNumber) {
+        return Suggestion.of(Integer.toString(ordinalNumber), "cardinal");
+    }
+
+    @Nullable
+    private Suggestion buildDegreeSuggestion(int ordinalNumber, String ordinalSuffix) {
+        final char ordinalSymbol = this.getOrdinalSymbol(ordinalSuffix);
+        final boolean isOrdinalMasculine = (ordinalSymbol == MASCULINE_ORDINAL);
+        return isOrdinalMasculine ? Suggestion.of(Integer.toString(ordinalNumber) + DEGREE, "grados") : null;
+    }
+
+    private Suggestion buildRomanNumberSuggestion(int ordinalNumber) {
+        try {
+            return Suggestion.of(ConvertToRoman.fromArabic(ordinalNumber), "números romanos");
+        } catch (OperationNotSupportedException e) {
+            throw new IllegalStateException("Ordinal number not convertible into Roman: " + ordinalNumber, e);
+        }
+    }
+
+    private Collection<Suggestion> buildTextSuggestions(
+        int ordinalNumber,
+        String ordinalSuffix,
+        WikipediaLanguage lang
+    ) {
+        final List<Suggestion> suggestions = new ArrayList<>();
+
+        final FinderProperties.OrdinalSuggestion ordinalSuggestion =
+            this.finderProperties.getOrdinalSuggestions().get(lang.getCode()).get(ordinalNumber);
+        if (ordinalSuggestion == null) {
+            return suggestions;
+        }
+
+        final char ordinalSymbol = this.getOrdinalSymbol(ordinalSuffix);
+        final String ordinalLetter = this.getOrdinalLetter(ordinalSymbol);
+        final boolean isOrdinalMasculine = (ordinalSymbol == MASCULINE_ORDINAL);
+        final boolean isOrdinalPlural = isOrdinalPlural(ordinalSuffix);
+
+        // Ordinal
+        final FinderProperties.OrdinalOption ordinalOption = ordinalSuggestion.getOrdinal();
+        final List<String> ordinalOptions = isOrdinalMasculine
+            ? ordinalOption.getMasculine()
+            : ordinalOption.getFeminine();
+        if (isOrdinalPlural) {
+            ordinalOptions
+                .stream()
+                .filter(opt -> opt.endsWith(ordinalLetter))
+                .map(opt -> opt + PLURAL_LETTER)
+                .map(Suggestion::ofNoComment)
+                .forEach(suggestions::add);
+        } else {
+            ordinalOptions.stream().map(Suggestion::ofNoComment).forEach(suggestions::add);
+        }
+
+        // Fractional
+        final FinderProperties.OrdinalOption fractionalOption = ordinalSuggestion.getFractional();
+        if (fractionalOption != null) {
+            final List<String> fractionalOptions = isOrdinalMasculine
+                ? fractionalOption.getMasculine()
+                : fractionalOption.getFeminine();
+            if (isOrdinalPlural) {
+                fractionalOptions
+                    .stream()
+                    .filter(opt -> opt.endsWith(ordinalLetter))
+                    .map(opt -> opt + PLURAL_LETTER)
+                    .map(s -> Suggestion.of(s, "fraccionario"))
+                    .forEach(suggestions::add);
+            } else {
+                fractionalOptions.stream().map(s -> Suggestion.of(s, "fraccionario")).forEach(suggestions::add);
+            }
+        }
+
+        return suggestions;
     }
 }
