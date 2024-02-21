@@ -108,6 +108,7 @@ class OrdinalFinder implements ReplacementFinder {
         return null;
     }
 
+    /* Find the next number candidate to be the number of an ordinal */
     @Nullable
     private MatchResult findOrdinalNumber(String text, int start) {
         while (start >= 0 && start < text.length()) {
@@ -116,20 +117,26 @@ class OrdinalFinder implements ReplacementFinder {
                 return null;
             }
 
-            // Validate here the number to skip unnecessary steps
-            if (!isOrdinalNumber(matchNumber.group())) {
+            if (isOrdinalNumber(matchNumber, text)) {
+                return matchNumber;
+            } else {
                 start = matchNumber.end();
-                continue;
             }
-
-            return matchNumber;
         }
         return null;
     }
 
-    private boolean isOrdinalNumber(String number) {
+    /* Validate if the number is candidate to be the number of an ordinal */
+    private boolean isOrdinalNumber(MatchResult numberMatch, String text) {
         try {
-            return number.length() <= 3 && Integer.parseInt(number) > 0;
+            // Max. 3 digits allowed
+            // Not preceded by letter, e.g. a3o
+            final String number = numberMatch.group();
+            return (
+                number.length() <= 3 &&
+                Integer.parseInt(number) > 0 &&
+                (numberMatch.start() == 0 || FinderUtils.isValidSeparator(text.charAt(numberMatch.start() - 1)))
+            );
         } catch (NumberFormatException nfe) {
             throw new IllegalStateException(nfe);
         }

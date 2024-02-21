@@ -67,6 +67,7 @@ class OrdinalFinderTest {
             "0º", // Masculine ordinal invalid number
             "20°", // Degree
             "2don", // Invalid suffix
+            "a3o", // Preceded by letter
         }
     )
     void testFalseOrdinal(String ordinal) {

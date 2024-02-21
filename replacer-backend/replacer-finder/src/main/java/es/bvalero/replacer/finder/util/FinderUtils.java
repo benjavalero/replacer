@@ -209,7 +209,7 @@ public class FinderUtils {
         return ORDINALS.contains(ch);
     }
 
-    private boolean isValidSeparator(char separator) {
+    public boolean isValidSeparator(char separator) {
         // A word character is not a valid separator and vice versa
         return !isWordChar(separator);
     }
