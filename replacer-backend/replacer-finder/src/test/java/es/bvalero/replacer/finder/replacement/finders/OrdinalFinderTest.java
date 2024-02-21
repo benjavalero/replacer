@@ -106,7 +106,7 @@ class OrdinalFinderTest {
         Replacement rep = replacements.get(0);
         assertEquals(StandardType.ORDINAL, rep.getType());
 
-        assertEquals(6, rep.getSuggestions().size());
+        assertEquals(7, rep.getSuggestions().size());
         List<Suggestion> sug = rep.getSuggestions();
 
         // Original
@@ -117,21 +117,25 @@ class OrdinalFinderTest {
         assertEquals("2.º", sug.get(1).getText());
         assertEquals("se escribe punto antes de la o volada", sug.get(1).getComment());
 
+        // Feminine
+        assertEquals("2.ª", sug.get(2).getText());
+        assertEquals("se escribe punto antes de la a volada", sug.get(2).getComment());
+
         // Cardinal
-        assertEquals("2", sug.get(2).getText());
-        assertEquals("cardinal", sug.get(2).getComment());
+        assertEquals("2", sug.get(3).getText());
+        assertEquals("cardinal", sug.get(3).getComment());
 
         // Degrees
-        assertEquals("2°", sug.get(3).getText());
-        assertEquals("grados", sug.get(3).getComment());
+        assertEquals("2°", sug.get(4).getText());
+        assertEquals("grados", sug.get(4).getComment());
 
         // Roman
-        assertEquals("II", sug.get(4).getText());
-        assertEquals("números romanos", sug.get(4).getComment());
+        assertEquals("II", sug.get(5).getText());
+        assertEquals("números romanos", sug.get(5).getComment());
 
         // Text alternatives
-        assertEquals("segundo", sug.get(5).getText());
-        assertNull(sug.get(5).getComment());
+        assertEquals("segundo", sug.get(6).getText());
+        assertNull(sug.get(6).getComment());
     }
 
     @Test
@@ -218,7 +222,7 @@ class OrdinalFinderTest {
         Replacement rep = replacements.get(0);
         assertEquals(StandardType.ORDINAL, rep.getType());
 
-        assertEquals(6, rep.getSuggestions().size());
+        assertEquals(7, rep.getSuggestions().size());
         List<Suggestion> sug = rep.getSuggestions();
 
         // Original
@@ -229,20 +233,24 @@ class OrdinalFinderTest {
         assertEquals("{{ord|1.|os}}", sug.get(1).getText());
         assertNull(sug.get(1).getComment());
 
+        // Dot added
+        assertEquals("{{ord|1.|as}}", sug.get(2).getText());
+        assertNull(sug.get(2).getComment());
+
         // Cardinal
-        assertEquals("1", sug.get(2).getText());
-        assertEquals("cardinal", sug.get(2).getComment());
+        assertEquals("1", sug.get(3).getText());
+        assertEquals("cardinal", sug.get(3).getComment());
 
         // Degrees
-        assertEquals("1°", sug.get(3).getText());
-        assertEquals("grados", sug.get(3).getComment());
+        assertEquals("1°", sug.get(4).getText());
+        assertEquals("grados", sug.get(4).getComment());
 
         // Roman
-        assertEquals("I", sug.get(4).getText());
-        assertEquals("números romanos", sug.get(4).getComment());
+        assertEquals("I", sug.get(5).getText());
+        assertEquals("números romanos", sug.get(5).getComment());
 
         // Text alternatives
-        assertEquals("primeros", sug.get(5).getText());
-        assertNull(sug.get(5).getComment());
+        assertEquals("primeros", sug.get(6).getText());
+        assertNull(sug.get(6).getComment());
     }
 }

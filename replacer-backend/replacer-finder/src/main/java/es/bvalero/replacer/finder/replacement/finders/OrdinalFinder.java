@@ -214,7 +214,8 @@ class OrdinalFinder implements ReplacementFinder {
         final String ordinalSuffix = stripSuffix(match.group(2));
 
         // 1. Fixed ordinal
-        suggestions.add(buildFixedOrdinalSuggestion(ordinalNumber, ordinalSuffix));
+        // Including the feminine fix only for masculine ordinals
+        suggestions.addAll(buildFixedOrdinalSuggestions(ordinalNumber, ordinalSuffix));
 
         // 2. Cardinal
         suggestions.add(buildCardinalSuggestion(ordinalNumber));
@@ -262,12 +263,29 @@ class OrdinalFinder implements ReplacementFinder {
         return ordinalSymbol == FEMININE_ORDINAL ? FEMININE_LETTER : MASCULINE_LETTER;
     }
 
-    private Suggestion buildFixedOrdinalSuggestion(int ordinalNumber, String ordinalSuffix) {
-        // The suffix is stripped but can be plural
-        final char ordinalSymbol = this.getOrdinalSymbol(ordinalSuffix);
-        final String ordinalLetter = this.getOrdinalLetter(ordinalSymbol);
+    private Collection<Suggestion> buildFixedOrdinalSuggestions(int ordinalNumber, String ordinalSuffix) {
+        final List<Suggestion> suggestions = new ArrayList<>();
 
-        if (isOrdinalPlural(ordinalSuffix)) {
+        // In case of a masculine ordinal, we include also the fix in feminine.
+        final char ordinalSymbol = this.getOrdinalSymbol(ordinalSuffix);
+        final boolean isOrdinalMasculine = (ordinalSymbol == MASCULINE_ORDINAL);
+        final boolean isOrdinalPlural = isOrdinalPlural(ordinalSuffix);
+        if (isOrdinalMasculine) {
+            suggestions.add(buildFixedOrdinalSuggestion(ordinalNumber, true, isOrdinalPlural));
+        }
+        suggestions.add(buildFixedOrdinalSuggestion(ordinalNumber, false, isOrdinalPlural));
+
+        return suggestions;
+    }
+
+    private Suggestion buildFixedOrdinalSuggestion(
+        int ordinalNumber,
+        boolean isOrdinalMasculine,
+        boolean isOrdinalPlural
+    ) {
+        final char ordinalSymbol = isOrdinalMasculine ? MASCULINE_ORDINAL : FEMININE_ORDINAL;
+        final String ordinalLetter = getOrdinalLetter(ordinalSymbol);
+        if (isOrdinalPlural) {
             return Suggestion.ofNoComment(
                 String.format("{{ord|%d.|%s%s}}", ordinalNumber, ordinalLetter, PLURAL_LETTER)
             );
