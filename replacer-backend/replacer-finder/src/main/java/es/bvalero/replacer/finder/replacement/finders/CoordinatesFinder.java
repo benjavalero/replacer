@@ -12,21 +12,17 @@ import es.bvalero.replacer.finder.util.FinderMatchResult;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 import java.util.regex.MatchResult;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
 /**
  * Find coordinates with wrong degree, minute or second symbols.
- * As they are quite similar, the same finder is used to find hours with minutes and seconds.
  */
 @Component
 class CoordinatesFinder implements ReplacementFinder {
 
-    private static final char HOURS = ':';
     private static final char PRIME = '\u2032'; // ′
     private static final char APOSTROPHE = '\'';
     private static final char SINGLE_QUOTE = '\u2019'; // ’
@@ -109,18 +105,21 @@ class CoordinatesFinder implements ReplacementFinder {
             }
 
             final FinderMatchResult result = FinderMatchResult.of(text, matchDegrees.start(), endCoordinates);
-            // Groups: 1 - Degrees; 2 - Minutes; 3 - Seconds (optional); 4 - Direction (optional); 5 - Degree symbol
+            // Groups: 1 - Degrees; 2 - Minutes; 3 - Seconds (optional); 4 - Direction (optional)
             result.addGroup(matchDegrees);
             result.addGroup(matchMinutes);
-            result.addGroup(doublePrime != null ? matchSeconds : FinderMatchResult.ofEmpty());
-            result.addGroup(Objects.requireNonNullElseGet(matchDirection, FinderMatchResult::ofEmpty));
-            result.addGroup(FinderMatchResult.of(matchDegrees.end(), String.valueOf(degreeChar)));
+            if (doublePrime != null) {
+                result.addGroup(matchSeconds);
+            }
+            if (matchDirection != null) {
+                result.addGroup(matchDirection);
+            }
             return result;
         }
         return null;
     }
 
-    /* Find a degrees match corresponding to a number, which must be followed by a degree symbol. */
+    /* Find a degrees match corresponding to a number followed by a degree symbol */
     @Nullable
     private MatchResult findDegrees(String text, int start) {
         while (start >= 0 && start < text.length()) {
@@ -153,12 +152,11 @@ class CoordinatesFinder implements ReplacementFinder {
     }
 
     private boolean isDegreeChar(char ch) {
-        return ch == DEGREE || ch == MASCULINE_ORDINAL || ch == HOURS;
+        return ch == DEGREE || ch == MASCULINE_ORDINAL;
     }
 
     private boolean isValidDegreeChar(char ch) {
-        assert isDegreeChar(ch);
-        return ch != MASCULINE_ORDINAL;
+        return ch == DEGREE;
     }
 
     /* Find a minutes match corresponding to a number followed by a minutes symbol */
@@ -283,24 +281,28 @@ class CoordinatesFinder implements ReplacementFinder {
     public Replacement convert(MatchResult match, FinderPage page) {
         final int matchDegrees = Integer.parseInt(match.group(1));
         final int matchMinutes = Integer.parseInt(match.group(2));
-        final String matchSeconds = match.group(3).isEmpty() ? null : match.group(3);
-        final String matchDirection = match.group(4).isEmpty() ? null : match.group(4);
-        final char matchDegreeSymbol = match.group(5).charAt(0);
-
-        // Fixes
-        final StandardType type = matchDegreeSymbol == HOURS ? StandardType.HOURS : StandardType.COORDINATES;
-        final char fixedDegreeSymbol = type == StandardType.HOURS ? HOURS : DEGREE;
-        final String fixedMinutes = fixMinutes(matchMinutes, type);
-        final String fixedSeconds = fixSeconds(matchSeconds, type);
+        String matchSeconds = null;
+        String matchDirection = null;
+        if (match.groupCount() == 4) {
+            matchSeconds = match.group(3);
+            matchDirection = match.group(4);
+        } else if (match.groupCount() == 3) {
+            final String match3 = match.group(3);
+            if (isDirectionString(match3)) {
+                matchDirection = match3;
+            } else {
+                matchSeconds = match3;
+            }
+        }
 
         // Suggestion 1: no spaces
         String noSpaces = String.format(
             "%s%s%s%s%s%s",
             matchDegrees,
-            fixedDegreeSymbol,
-            fixedMinutes,
+            DEGREE,
+            matchMinutes,
             PRIME,
-            (matchSeconds == null ? "" : fixedSeconds + DOUBLE_PRIME),
+            (matchSeconds == null ? "" : fixSeconds(matchSeconds) + DOUBLE_PRIME),
             (matchDirection == null ? "" : NON_BREAKING_SPACE + fixDirection(matchDirection))
         );
         final Suggestion suggestionNoSpaces = Suggestion.of(
@@ -312,10 +314,10 @@ class CoordinatesFinder implements ReplacementFinder {
         String withSpaces = String.format(
             "{{esd|%s%s %s%s%s%s}}",
             matchDegrees,
-            fixedDegreeSymbol,
-            fixedMinutes,
+            DEGREE,
+            matchMinutes,
             PRIME,
-            (matchSeconds == null ? "" : SPACE + fixedSeconds + DOUBLE_PRIME),
+            (matchSeconds == null ? "" : SPACE + matchSeconds + DOUBLE_PRIME),
             (matchDirection == null ? "" : SPACE + fixDirection(matchDirection))
         );
         final Suggestion suggestionWithSpaces = Suggestion.of(withSpaces, "con espacios y con los símbolos apropiados");
@@ -323,43 +325,29 @@ class CoordinatesFinder implements ReplacementFinder {
         return Replacement
             .builder()
             .page(page)
-            .type(type)
+            .type(StandardType.COORDINATES)
             .start(match.start())
             .text(match.group())
             .suggestions(List.of(suggestionNoSpaces, suggestionWithSpaces))
             .build();
     }
 
-    private String fixMinutes(int minutes, StandardType type) {
-        return type == StandardType.HOURS ? fillNumberWithZeros(minutes) : Integer.toString(minutes);
-    }
-
-    private String fixSeconds(@Nullable String str, StandardType type) {
-        if (StringUtils.isEmpty(str)) {
-            return StringUtils.EMPTY;
-        }
-
+    private String fixSeconds(String str) {
         // First try to parse them as an integer and then as a double trying to keep the decimal comma if existing
-        final int posDot = FinderUtils.normalizeDecimalNumber(str).indexOf(DOT);
-        if (posDot < 0) {
-            final int seconds = Integer.parseInt(str);
-            return type == StandardType.HOURS ? fillNumberWithZeros(seconds) : Integer.toString(seconds);
-        } else {
-            final int seconds = Integer.parseInt(str.substring(0, posDot));
-            final String milliseconds = str.substring(posDot + 1);
-            final String secondsStr = type == StandardType.HOURS
-                ? fillNumberWithZeros(seconds)
-                : Integer.toString(seconds);
-            return secondsStr + str.charAt(posDot) + milliseconds;
+        try {
+            return Integer.toString(Integer.parseInt(str));
+        } catch (NumberFormatException nfe) {
+            final String s = Float.toString(Float.parseFloat(FinderUtils.normalizeDecimalNumber(str)));
+            if (str.indexOf(DECIMAL_COMMA) >= 0) {
+                return s.replace(DOT, DECIMAL_COMMA);
+            } else {
+                return s;
+            }
         }
     }
 
     private Character fixDirection(String str) {
         final char upperChar = Character.toUpperCase(str.charAt(0));
         return upperChar == 'W' ? 'O' : upperChar;
-    }
-
-    private String fillNumberWithZeros(int n) {
-        return String.format("%02d", n);
     }
 }
