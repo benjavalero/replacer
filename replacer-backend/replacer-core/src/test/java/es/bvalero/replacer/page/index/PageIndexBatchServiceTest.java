@@ -15,8 +15,7 @@ import org.junit.jupiter.api.Test;
 
 class PageIndexBatchServiceTest {
 
-    private final WikipediaPage page = WikipediaPage
-        .builder()
+    private final WikipediaPage page = WikipediaPage.builder()
         .pageKey(PageKey.of(WikipediaLanguage.getDefault(), 1))
         .namespace(WikipediaNamespace.ARTICLE)
         .title("T")
@@ -43,15 +42,14 @@ class PageIndexBatchServiceTest {
         replacementFindService = mock(ReplacementFindService.class);
         pageComparator = mock(PageComparator.class);
         pageComparatorSaver = mock(PageComparatorSaver.class);
-        pageIndexBatchService =
-            new PageIndexBatchService(
-                pageBatchService,
-                pageRepository,
-                pageIndexValidator,
-                replacementFindService,
-                pageComparator,
-                pageComparatorSaver
-            );
+        pageIndexBatchService = new PageIndexBatchService(
+            pageBatchService,
+            pageRepository,
+            pageIndexValidator,
+            replacementFindService,
+            pageComparator,
+            pageComparatorSaver
+        );
     }
 
     @Test
@@ -60,15 +58,15 @@ class PageIndexBatchServiceTest {
         when(pageIndexValidator.isIndexableByTimestamp(page, null)).thenReturn(true);
 
         PageComparatorResult comparatorResult = PageComparatorResult.of(page.getPageKey().getLang());
-        IndexedPage indexedPage = IndexedPage
-            .builder()
+        IndexedPage indexedPage = IndexedPage.builder()
             .pageKey(page.getPageKey())
             .title(page.getTitle())
             .lastUpdate(page.getLastUpdate().toLocalDate())
             .build();
         comparatorResult.addPageToCreate(indexedPage); // Any change
-        when(pageComparator.indexPageReplacements(any(IndexablePage.class), anyCollection(), isNull()))
-            .thenReturn(comparatorResult);
+        when(pageComparator.indexPageReplacements(any(IndexablePage.class), anyCollection(), isNull())).thenReturn(
+            comparatorResult
+        );
 
         PageIndexResult result = pageIndexBatchService.indexPage(page);
 
@@ -92,7 +90,10 @@ class PageIndexBatchServiceTest {
         verify(pageIndexValidator).isPageIndexableByNamespace(page);
         verify(pageIndexValidator).isIndexableByTimestamp(page, null);
         verify(replacementFindService, never()).findReplacements(any(WikipediaPage.class));
-        verify(pageComparator, never())
-            .indexPageReplacements(any(IndexablePage.class), anyCollection(), any(IndexedPage.class));
+        verify(pageComparator, never()).indexPageReplacements(
+            any(IndexablePage.class),
+            anyCollection(),
+            any(IndexedPage.class)
+        );
     }
 }

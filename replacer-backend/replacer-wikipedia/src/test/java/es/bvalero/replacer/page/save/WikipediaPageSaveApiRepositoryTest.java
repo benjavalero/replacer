@@ -78,8 +78,7 @@ class WikipediaPageSaveApiRepositoryTest {
         // We use a timestamp BEFORE the timestamp of the last edition (from the edit token)
         WikipediaTimestamp currentTimestamp = WikipediaTimestamp.of("2019-06-23T21:24:09Z");
 
-        WikipediaPageSaveCommand pageSave = WikipediaPageSaveCommand
-            .builder()
+        WikipediaPageSaveCommand pageSave = WikipediaPageSaveCommand.builder()
             .pageKey(PageKey.of(WikipediaLanguage.SPANISH, 1))
             .content("")
             .editSummary("")
@@ -121,8 +120,7 @@ class WikipediaPageSaveApiRepositoryTest {
 
         // We use a timestamp AFTER the timestamp of the last edition (from the edit token)
         WikipediaTimestamp currentTimestamp = WikipediaTimestamp.of("2019-06-25T21:24:09Z");
-        WikipediaPageSaveCommand pageSave = WikipediaPageSaveCommand
-            .builder()
+        WikipediaPageSaveCommand pageSave = WikipediaPageSaveCommand.builder()
             .pageKey(PageKey.of(WikipediaLanguage.SPANISH, 1))
             .content("")
             .editSummary("")
@@ -138,15 +136,13 @@ class WikipediaPageSaveApiRepositoryTest {
         // Save a section
         // We use a timestamp AFTER the timestamp of the last edition (from the edit token)
         currentTimestamp = WikipediaTimestamp.of("2019-06-26T21:24:09Z");
-        pageSave =
-            WikipediaPageSaveCommand
-                .builder()
-                .pageKey(PageKey.of(WikipediaLanguage.SPANISH, 1))
-                .sectionId(2)
-                .content("")
-                .editSummary("")
-                .queryTimestamp(currentTimestamp)
-                .build();
+        pageSave = WikipediaPageSaveCommand.builder()
+            .pageKey(PageKey.of(WikipediaLanguage.SPANISH, 1))
+            .sectionId(2)
+            .content("")
+            .editSummary("")
+            .queryTimestamp(currentTimestamp)
+            .build();
 
         // We pass on purpose a null access token to perform an anonymous edit
         wikipediaPageSaveRepository.save(pageSave, null);

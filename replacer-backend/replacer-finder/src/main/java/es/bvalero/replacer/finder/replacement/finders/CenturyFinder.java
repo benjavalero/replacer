@@ -59,8 +59,7 @@ class CenturyFinder implements ReplacementFinder {
     private static final String REGEX_ERA_WORDS = String.format(
         "(%s)",
         FinderUtils.joinAlternate(
-            ERA_WORDS
-                .stream()
+            ERA_WORDS.stream()
                 .map(s -> s.replace(".", "\\."))
                 .map(s -> s.replace("{", "\\{"))
                 .map(s -> s.replace("}", "\\}"))
@@ -246,8 +245,7 @@ class CenturyFinder implements ReplacementFinder {
             suggestions.add(Suggestion.of(templateLowerLink, "siglo en versalitas; con minúscula; " + linkedComment));
         }
 
-        return Replacement
-            .builder()
+        return Replacement.builder()
             .page(page)
             .type(StandardType.CENTURY)
             .start(match.start())

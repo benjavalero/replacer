@@ -70,8 +70,7 @@ class MisspellingComposedFinderTest {
 
         List<Replacement> results = misspellingComposedFinder.findList(text);
 
-        Replacement expected = Replacement
-            .builder()
+        Replacement expected = Replacement.builder()
             .start(2)
             .text("aún así")
             .type(StandardType.of(ReplacementKind.COMPOSED, "aún así"))
@@ -90,8 +89,7 @@ class MisspellingComposedFinderTest {
 
         List<Replacement> results = misspellingComposedFinder.findList(text);
 
-        Replacement expected = Replacement
-            .builder()
+        Replacement expected = Replacement.builder()
             .start(2)
             .text("aún así")
             .type(StandardType.of(ReplacementKind.COMPOSED, "aún así"))
@@ -109,8 +107,7 @@ class MisspellingComposedFinderTest {
 
         List<Replacement> results = misspellingComposedFinder.findList(text);
 
-        Replacement expected = Replacement
-            .builder()
+        Replacement expected = Replacement.builder()
             .start(4)
             .text("mas.")
             .type(StandardType.of(ReplacementKind.COMPOSED, "mas."))
@@ -128,8 +125,7 @@ class MisspellingComposedFinderTest {
 
         List<Replacement> results = misspellingComposedFinder.findList(text);
 
-        Replacement expected = Replacement
-            .builder()
+        Replacement expected = Replacement.builder()
             .start(4)
             .text("aun,")
             .type(StandardType.of(ReplacementKind.COMPOSED, "aun,"))
@@ -147,8 +143,7 @@ class MisspellingComposedFinderTest {
 
         List<Replacement> results = misspellingComposedFinder.findList(text);
 
-        Replacement expected = Replacement
-            .builder()
+        Replacement expected = Replacement.builder()
             .start(3)
             .text("Rio 2016")
             .type(StandardType.of(ReplacementKind.COMPOSED, "Rio 2016"))
@@ -178,8 +173,7 @@ class MisspellingComposedFinderTest {
 
         List<Replacement> results = misspellingComposedFinder.findList(text);
 
-        Replacement expected = Replacement
-            .builder()
+        Replacement expected = Replacement.builder()
             .start(0)
             .text("Parque Nacional")
             .type(StandardType.of(ReplacementKind.COMPOSED, "Parque Nacional"))
@@ -203,8 +197,7 @@ class MisspellingComposedFinderTest {
 
         List<Replacement> results = misspellingComposedFinder.findList(text);
 
-        Replacement expected = Replacement
-            .builder()
+        Replacement expected = Replacement.builder()
             .start(3)
             .text("1º")
             .type(StandardType.of(ReplacementKind.COMPOSED, "1º"))
@@ -222,8 +215,7 @@ class MisspellingComposedFinderTest {
 
         List<Replacement> results = misspellingComposedFinder.findList(text);
 
-        Replacement expected = Replacement
-            .builder()
+        Replacement expected = Replacement.builder()
             .start(3)
             .text("1°")
             .type(StandardType.of(ReplacementKind.COMPOSED, "1°"))
@@ -241,8 +233,7 @@ class MisspellingComposedFinderTest {
 
         List<Replacement> results = misspellingComposedFinder.findList(text);
 
-        Replacement expected = Replacement
-            .builder()
+        Replacement expected = Replacement.builder()
             .start(3)
             .text("anti-ruso")
             .type(StandardType.of(ReplacementKind.COMPOSED, "anti-ruso"))
@@ -260,8 +251,7 @@ class MisspellingComposedFinderTest {
 
         List<Replacement> results = misspellingComposedFinder.findList(text);
 
-        Replacement expected = Replacement
-            .builder()
+        Replacement expected = Replacement.builder()
             .start(3)
             .text("C's")
             .type(StandardType.of(ReplacementKind.COMPOSED, "C's"))
@@ -279,8 +269,7 @@ class MisspellingComposedFinderTest {
 
         List<Replacement> results = misspellingComposedFinder.findList(text);
 
-        Replacement expected = Replacement
-            .builder()
+        Replacement expected = Replacement.builder()
             .start(3)
             .text("[[siglo X]]")
             .type(StandardType.of(ReplacementKind.COMPOSED, "[[siglo X]]"))
@@ -299,8 +288,7 @@ class MisspellingComposedFinderTest {
 
         List<Replacement> results = misspellingComposedFinder.findList(text);
 
-        Replacement expected = Replacement
-            .builder()
+        Replacement expected = Replacement.builder()
             .start(3)
             .text(cm2.getWord())
             .type(StandardType.of(ReplacementKind.COMPOSED, cm2.getWord()))
@@ -324,8 +312,7 @@ class MisspellingComposedFinderTest {
 
         List<Replacement> results = misspellingComposedFinder.findList(text);
 
-        Replacement expected = Replacement
-            .builder()
+        Replacement expected = Replacement.builder()
             .start(15)
             .text("''', es")
             .type(StandardType.of(ReplacementKind.COMPOSED, "''', es"))

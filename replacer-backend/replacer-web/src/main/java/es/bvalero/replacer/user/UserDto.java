@@ -28,8 +28,7 @@ class UserDto {
     boolean admin;
 
     static UserDto of(User user) {
-        return UserDto
-            .builder()
+        return UserDto.builder()
             .name(user.getId().getUsername())
             .hasRights(user.hasRights())
             .bot(user.isBot())

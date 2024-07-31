@@ -64,8 +64,7 @@ class AuthorizationController {
         User authenticatedUser = authorizationApi.getAuthenticatedUser(lang, requestToken, oAuthVerifier);
         UserDto authenticatedUserDto = UserDto.of(authenticatedUser);
         LOGGER.info("END Verify Authorization: {}", authenticatedUserDto);
-        return ResponseEntity
-            .ok()
+        return ResponseEntity.ok()
             .header(
                 HttpHeaders.SET_COOKIE,
                 WebUtils.buildAccessTokenResponseCookie(authenticatedUser.getAccessToken()).toString()

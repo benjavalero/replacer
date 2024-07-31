@@ -15,12 +15,11 @@ public interface FinderService<T extends FinderResult> {
     default Set<T> find(FinderPage page) {
         // Build the sorted set from the results of the more generic iterable finder
         final Set<T> results = new TreeSet<>();
-        findIterable(page)
-            .forEach(r -> {
-                if (!results.add(r)) {
-                    FinderService.LogHolder.LOGGER.warn("Duplicated finder result: {}", r);
-                }
-            });
+        findIterable(page).forEach(r -> {
+            if (!results.add(r)) {
+                FinderService.LogHolder.LOGGER.warn("Duplicated finder result: {}", r);
+            }
+        });
         return results;
     }
 

@@ -36,8 +36,11 @@ class ApplyCosmeticsServiceTest {
         assertEquals(expected, applyCosmeticsService.applyCosmeticChanges(page));
 
         verify(cosmeticFindService).findCosmetics(any(FinderPage.class));
-        verify(checkWikipediaService)
-            .reportFix(page.getPageKey().getLang(), page.getTitle(), cosmetic.getCheckWikipediaAction());
+        verify(checkWikipediaService).reportFix(
+            page.getPageKey().getLang(),
+            page.getTitle(),
+            cosmetic.getCheckWikipediaAction()
+        );
     }
 
     private FinderPage buildFinderPage(String content) {
@@ -49,8 +52,9 @@ class ApplyCosmeticsServiceTest {
         Cosmetic cosmetic = Cosmetic.builder().start(2).text("[[Link|link]]").fix("[[link]]").build();
         Cosmetic cosmetic2 = Cosmetic.builder().start(29).text("archivo").fix("Archivo").build();
         Cosmetic cosmetic3 = Cosmetic.builder().start(19).text("</br>").fix("<br>").build();
-        when(cosmeticFindService.findCosmetics(any(FinderPage.class)))
-            .thenReturn(Set.of(cosmetic, cosmetic2, cosmetic3));
+        when(cosmeticFindService.findCosmetics(any(FinderPage.class))).thenReturn(
+            Set.of(cosmetic, cosmetic2, cosmetic3)
+        );
 
         String text = "A [[Link|link]] to </br> a [[archivo:x.jpeg]].";
         String expected = "A [[link]] to <br> a [[Archivo:x.jpeg]].";
@@ -58,7 +62,10 @@ class ApplyCosmeticsServiceTest {
         assertEquals(expected, applyCosmeticsService.applyCosmeticChanges(page));
 
         verify(cosmeticFindService).findCosmetics(any(FinderPage.class));
-        verify(checkWikipediaService, times(3))
-            .reportFix(page.getPageKey().getLang(), page.getTitle(), cosmetic.getCheckWikipediaAction());
+        verify(checkWikipediaService, times(3)).reportFix(
+            page.getPageKey().getLang(),
+            page.getTitle(),
+            cosmetic.getCheckWikipediaAction()
+        );
     }
 }

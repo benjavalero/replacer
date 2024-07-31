@@ -135,8 +135,7 @@ class DumpSaxHandler extends DefaultHandler {
     }
 
     private void indexPage() {
-        final DumpPage page = DumpPage
-            .builder()
+        final DumpPage page = DumpPage.builder()
             .pageKey(PageKey.of(this.lang, this.currentId))
             .namespace(WikipediaNamespace.valueOf(this.currentNamespace))
             .title(this.currentTitle)

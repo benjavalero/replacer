@@ -58,8 +58,7 @@ class ReviewFindControllerTest {
     private final String content = "ABCDE";
     private final WikipediaTimestamp now = WikipediaTimestamp.now();
     private final WikipediaTimestamp queryTimestamp = now;
-    private final WikipediaPage page = WikipediaPage
-        .builder()
+    private final WikipediaPage page = WikipediaPage.builder()
         .pageKey(PageKey.of(WikipediaLanguage.getDefault(), pageId))
         .namespace(WikipediaNamespace.getDefault())
         .title(title)
@@ -69,8 +68,7 @@ class ReviewFindControllerTest {
         .build();
     private final int sectionId = 2;
     private final String anchor = "S";
-    private final WikipediaSection section = WikipediaSection
-        .builder()
+    private final WikipediaSection section = WikipediaSection.builder()
         .pageKey(page.getPageKey())
         .index(sectionId)
         .level(2)
@@ -80,8 +78,7 @@ class ReviewFindControllerTest {
     private final int start = 2;
     private final String rep = "C";
     private final Suggestion suggestion = Suggestion.of("c", "ç");
-    private final Replacement replacement = Replacement
-        .builder()
+    private final Replacement replacement = Replacement.builder()
         .start(start)
         .text(rep)
         .type(StandardType.of(ReplacementKind.SIMPLE, rep))

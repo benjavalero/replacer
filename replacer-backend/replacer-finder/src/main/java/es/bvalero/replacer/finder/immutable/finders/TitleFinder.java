@@ -47,8 +47,7 @@ class TitleFinder extends ImmutableCheckedFinder {
     }
 
     private Set<String> findTitleWords(String title) {
-        return FinderUtils
-            .findAllWords(title)
+        return FinderUtils.findAllWords(title)
             .stream()
             .map(MatchResult::group)
             .filter(this::isTitleWordImmutable)

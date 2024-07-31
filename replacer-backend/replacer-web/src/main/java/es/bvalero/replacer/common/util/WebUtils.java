@@ -39,8 +39,7 @@ public class WebUtils {
         if (requestCookies == null) {
             throw new IllegalArgumentException();
         }
-        String accessTokenCookie = Arrays
-            .stream(request.getCookies())
+        String accessTokenCookie = Arrays.stream(request.getCookies())
             .filter(cookie -> ACCESS_TOKEN_COOKIE.equals(cookie.getName()))
             .map(Cookie::getValue)
             .findAny()
@@ -55,8 +54,7 @@ public class WebUtils {
         // Max age 400 days: https://developer.chrome.com/blog/cookie-max-age-expires/
         // Domain: default
         // SameSite is Lax by default, but it fails in some old browsers, so we set it explicitly.
-        return ResponseCookie
-            .from(ACCESS_TOKEN_COOKIE, accessToken.toCookieValue())
+        return ResponseCookie.from(ACCESS_TOKEN_COOKIE, accessToken.toCookieValue())
             .maxAge((long) 400 * 24 * 3600)
             .path("/api")
             .secure(true)

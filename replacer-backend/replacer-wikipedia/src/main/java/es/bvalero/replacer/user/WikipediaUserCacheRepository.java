@@ -23,8 +23,7 @@ class WikipediaUserCacheRepository implements WikipediaUserRepository {
 
     // Cache the users which try to access features needing special rights
     // This map can grow. We use Caffeine cache to clean periodically the old or obsolete users.
-    private final Cache<AccessToken, WikipediaUser> cachedUsers = Caffeine
-        .newBuilder()
+    private final Cache<AccessToken, WikipediaUser> cachedUsers = Caffeine.newBuilder()
         .removalListener((key, value, cause) -> {
             if (cause.wasEvicted() && value != null) {
                 LOGGER.info("Evicted user: {}", ((WikipediaUser) value).getId());

@@ -39,8 +39,7 @@ class PageResultExtractor implements ResultSetExtractor<Collection<IndexedPage>>
                 final Timestamp sqlTimestamp = rs.getTimestamp("REVIEW_TIMESTAMP");
                 final LocalDateTime reviewTimestamp = sqlTimestamp == null ? null : sqlTimestamp.toLocalDateTime();
                 page.addReplacement(
-                    IndexedReplacement
-                        .builder()
+                    IndexedReplacement.builder()
                         .id(rs.getInt("ID"))
                         .pageKey(pageKey)
                         .type(StandardType.of(kind, rs.getString("SUBTYPE")))

@@ -32,8 +32,7 @@ class FalsePositiveFinderTest {
     }
 
     private void initFalsePositiveMap(String... falsePositives) {
-        Set<FalsePositive> falsePositiveSet = Stream
-            .of(falsePositives)
+        Set<FalsePositive> falsePositiveSet = Stream.of(falsePositives)
             .map(FalsePositive::of)
             .collect(Collectors.toSet());
         SetValuedMap<WikipediaLanguage, FalsePositive> falsePositiveMap = new HashSetValuedHashMap<>();

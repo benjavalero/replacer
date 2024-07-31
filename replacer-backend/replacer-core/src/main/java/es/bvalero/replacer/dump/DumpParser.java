@@ -77,8 +77,7 @@ class DumpParser {
             return Optional.empty();
         } else {
             return Optional.of(
-                DumpStatus
-                    .builder()
+                DumpStatus.builder()
                     .running(this.dumpHandler.isRunning())
                     .numPagesRead(this.dumpHandler.getNumPagesRead())
                     .numPagesIndexed(this.dumpHandler.getNumPagesIndexed())

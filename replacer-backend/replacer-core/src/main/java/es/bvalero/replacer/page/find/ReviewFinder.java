@@ -39,8 +39,7 @@ abstract class ReviewFinder {
     // Cache the found pages candidates to be reviewed
     // to find faster the next one after the user reviews one.
     // This map can grow a lot. We use Caffeine cache to clean periodically the old or obsolete lists.
-    private final Cache<String, PageSearchResult> cachedPageIds = Caffeine
-        .newBuilder()
+    private final Cache<String, PageSearchResult> cachedPageIds = Caffeine.newBuilder()
         .expireAfterAccess(1, TimeUnit.HOURS)
         .build();
 

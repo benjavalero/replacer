@@ -42,8 +42,7 @@ class PageComparatorTest {
     }
 
     private static Replacement buildFinderReplacement(FinderPage page, int index) {
-        return Replacement
-            .builder()
+        return Replacement.builder()
             .page(page)
             .start(index)
             .text(String.valueOf(index))
@@ -82,8 +81,7 @@ class PageComparatorTest {
 
     @Test
     void testExistingPageWithSameDetails() {
-        IndexedPage dbPage = IndexedPage
-            .builder()
+        IndexedPage dbPage = IndexedPage.builder()
             .pageKey(page.getPageKey())
             .title(page.getTitle())
             .replacements(List.of())
@@ -100,8 +98,7 @@ class PageComparatorTest {
 
     @Test
     void testExistingPageWithDateBefore() {
-        IndexedPage dbPage = IndexedPage
-            .builder()
+        IndexedPage dbPage = IndexedPage.builder()
             .pageKey(page.getPageKey())
             .title(page.getTitle())
             .replacements(List.of())
@@ -120,8 +117,7 @@ class PageComparatorTest {
 
     @Test
     void testExistingPageWithDifferentTitle() {
-        IndexedPage dbPage = IndexedPage
-            .builder()
+        IndexedPage dbPage = IndexedPage.builder()
             .pageKey(page.getPageKey())
             .title("T2")
             .replacements(List.of())
@@ -164,68 +160,59 @@ class PageComparatorTest {
         Collection<Replacement> replacements = List.of(r1, r2, r3, r4, r5, r9);
 
         // Existing replacements in DB
-        IndexedReplacement r1db = IndexedReplacement
-            .builder()
+        IndexedReplacement r1db = IndexedReplacement.builder()
             .pageKey(page.getPageKey())
             .type((StandardType) r1.getType())
             .start(r1.getStart())
             .context(r1.getContext())
             .build();
-        IndexedReplacement r2db = IndexedReplacement
-            .builder()
+        IndexedReplacement r2db = IndexedReplacement.builder()
             .pageKey(page.getPageKey())
             .type((StandardType) r2.getType())
             .start(r2.getStart())
             .context(r2.getContext())
             .reviewer("User")
             .build();
-        IndexedReplacement r3db = IndexedReplacement
-            .builder()
+        IndexedReplacement r3db = IndexedReplacement.builder()
             .pageKey(page.getPageKey())
             .type((StandardType) r3.getType())
             .start(r3.getStart())
             .context(r3.getContext())
             .reviewer(REVIEWER_SYSTEM)
             .build();
-        IndexedReplacement r4db = IndexedReplacement
-            .builder()
+        IndexedReplacement r4db = IndexedReplacement.builder()
             .pageKey(page.getPageKey())
             .type((StandardType) r4.getType())
             .start(5)
             .context(r4.getContext())
             .build();
-        IndexedReplacement r5db = IndexedReplacement
-            .builder()
+        IndexedReplacement r5db = IndexedReplacement.builder()
             .pageKey(page.getPageKey())
             .type((StandardType) r5.getType())
             .start(r5.getStart())
             .context("50")
             .build();
-        IndexedReplacement r6db = IndexedReplacement
-            .builder()
+        IndexedReplacement r6db = IndexedReplacement.builder()
             .pageKey(page.getPageKey())
             .type(StandardType.of(ReplacementKind.SIMPLE, "6"))
             .start(6)
             .context("6")
             .build();
-        IndexedReplacement r7db = IndexedReplacement
-            .builder()
+        IndexedReplacement r7db = IndexedReplacement.builder()
             .pageKey(page.getPageKey())
             .type(StandardType.of(ReplacementKind.SIMPLE, "7"))
             .start(7)
             .context("7")
             .reviewer("User")
             .build();
-        IndexedReplacement r8db = IndexedReplacement
-            .builder()
+        IndexedReplacement r8db = IndexedReplacement.builder()
             .pageKey(page.getPageKey())
             .type(StandardType.of(ReplacementKind.SIMPLE, "8"))
             .start(8)
             .context("8")
             .reviewer(REVIEWER_SYSTEM)
             .build();
-        IndexedPage dbPage = IndexedPage
-            .builder()
+        IndexedPage dbPage = IndexedPage.builder()
             .pageKey(page.getPageKey())
             .title(page.getTitle())
             .replacements(List.of(r1db, r2db, r3db, r4db, r5db, r6db, r7db, r8db))
@@ -256,15 +243,13 @@ class PageComparatorTest {
         Collection<Replacement> replacements = List.of(r1);
 
         // Existing replacements in DB
-        IndexedReplacement r1db = IndexedReplacement
-            .builder()
+        IndexedReplacement r1db = IndexedReplacement.builder()
             .pageKey(page.getPageKey())
             .type((StandardType) r1.getType())
             .start(r1.getStart())
             .context(r1.getContext())
             .build();
-        IndexedPage dbPage = IndexedPage
-            .builder()
+        IndexedPage dbPage = IndexedPage.builder()
             .pageKey(page.getPageKey())
             .title(page.getTitle())
             .replacements(List.of(r1db))
@@ -285,24 +270,21 @@ class PageComparatorTest {
 
         // Existing replacements in DB: the same replacement found in 2 different positions with same context
         String context = "1234567890";
-        IndexedReplacement r1db = IndexedReplacement
-            .builder()
+        IndexedReplacement r1db = IndexedReplacement.builder()
             .pageKey(page.getPageKey())
             .type(StandardType.of(ReplacementKind.SIMPLE, "1"))
             .start(1)
             .context(context)
             .reviewer("X")
             .build();
-        IndexedReplacement r2db = IndexedReplacement
-            .builder()
+        IndexedReplacement r2db = IndexedReplacement.builder()
             .pageKey(page.getPageKey())
             .type(StandardType.of(ReplacementKind.SIMPLE, "1"))
             .start(5)
             .context(context)
             .reviewer("X")
             .build();
-        IndexedPage dbPage = IndexedPage
-            .builder()
+        IndexedPage dbPage = IndexedPage.builder()
             .pageKey(page.getPageKey())
             .title(page.getTitle())
             .replacements(List.of(r1db, r2db))
@@ -322,24 +304,21 @@ class PageComparatorTest {
 
         // Existing replacements in DB: the same replacement found in 2 different positions with same context
         // We force a distance between the replacements so even having the same context they are not considered the same
-        IndexedReplacement r1db = IndexedReplacement
-            .builder()
+        IndexedReplacement r1db = IndexedReplacement.builder()
             .pageKey(page.getPageKey())
             .type(StandardType.of(ReplacementKind.SIMPLE, "1"))
             .start(1)
             .context("C")
             .reviewer("X")
             .build();
-        IndexedReplacement r2db = IndexedReplacement
-            .builder()
+        IndexedReplacement r2db = IndexedReplacement.builder()
             .pageKey(page.getPageKey())
             .type(StandardType.of(ReplacementKind.SIMPLE, "1"))
             .start(100)
             .context("C")
             .reviewer("X")
             .build();
-        IndexedPage dbPage = IndexedPage
-            .builder()
+        IndexedPage dbPage = IndexedPage.builder()
             .pageKey(page.getPageKey())
             .title(page.getTitle())
             .replacements(List.of(r1db, r2db))
@@ -359,23 +338,20 @@ class PageComparatorTest {
 
         // Existing replacements in DB: the same replacement found in the same position with different context
         // but one is not reviewed matching with the found one in the page
-        IndexedReplacement r1db = IndexedReplacement
-            .builder()
+        IndexedReplacement r1db = IndexedReplacement.builder()
             .pageKey(page.getPageKey())
             .type((StandardType) r1.getType())
             .start(r1.getStart())
             .context("1")
             .build();
-        IndexedReplacement r2db = IndexedReplacement
-            .builder()
+        IndexedReplacement r2db = IndexedReplacement.builder()
             .pageKey(page.getPageKey())
             .type((StandardType) r1.getType())
             .start(r1.getStart())
             .context("")
             .reviewer("X")
             .build();
-        IndexedPage dbPage = IndexedPage
-            .builder()
+        IndexedPage dbPage = IndexedPage.builder()
             .pageKey(page.getPageKey())
             .title(page.getTitle())
             .replacements(List.of(r2db, r1db)) // Force a different order
@@ -407,8 +383,7 @@ class PageComparatorTest {
             "xyz";
         when(page.getContent()).thenReturn(text);
 
-        Replacement r1 = Replacement
-            .builder()
+        Replacement r1 = Replacement.builder()
             .page(page)
             .start(25)
             .text("words")
@@ -416,8 +391,7 @@ class PageComparatorTest {
             .suggestions(List.of(Suggestion.ofNoComment("Words")))
             .build();
         ComparableReplacement cr1 = ComparableReplacement.of(r1);
-        Replacement r2 = Replacement
-            .builder()
+        Replacement r2 = Replacement.builder()
             .page(page)
             .start(75)
             .text("words")
@@ -443,8 +417,7 @@ class PageComparatorTest {
             "xyz";
         when(page.getContent()).thenReturn(text);
 
-        Replacement r1 = Replacement
-            .builder()
+        Replacement r1 = Replacement.builder()
             .page(page)
             .start(25)
             .text("words")
@@ -452,8 +425,7 @@ class PageComparatorTest {
             .suggestions(List.of(Suggestion.ofNoComment("Words")))
             .build();
         ComparableReplacement cr1 = ComparableReplacement.of(r1);
-        Replacement r2 = Replacement
-            .builder()
+        Replacement r2 = Replacement.builder()
             .page(page)
             .start(70)
             .text("words")

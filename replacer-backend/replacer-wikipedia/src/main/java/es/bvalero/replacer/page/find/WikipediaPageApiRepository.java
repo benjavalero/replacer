@@ -79,8 +79,7 @@ public class WikipediaPageApiRepository implements WikipediaPageRepository {
 
     private Collection<WikipediaPage> getPagesByIds(String pagesParam, String pagesValue, WikipediaLanguage lang)
         throws WikipediaException {
-        WikipediaApiRequest apiRequest = WikipediaApiRequest
-            .builder()
+        WikipediaApiRequest apiRequest = WikipediaApiRequest.builder()
             .verb(WikipediaApiVerb.GET)
             .lang(lang)
             .params(buildPageIdsRequestParams(pagesParam, pagesValue))
@@ -115,8 +114,7 @@ public class WikipediaPageApiRepository implements WikipediaPageRepository {
     }
 
     private WikipediaPage convert(WikipediaApiResponse.Page page, WikipediaLanguage lang, String curtimestamp) {
-        return WikipediaPage
-            .builder()
+        return WikipediaPage.builder()
             .pageKey(PageKey.of(lang, page.getPageid()))
             .namespace(WikipediaNamespace.valueOf(page.getNs()))
             .title(page.getTitle())
@@ -129,8 +127,7 @@ public class WikipediaPageApiRepository implements WikipediaPageRepository {
 
     @Override
     public Collection<WikipediaSection> findSectionsInPage(PageKey pageKey) {
-        WikipediaApiRequest apiRequest = WikipediaApiRequest
-            .builder()
+        WikipediaApiRequest apiRequest = WikipediaApiRequest.builder()
             .verb(WikipediaApiVerb.GET)
             .lang(pageKey.getLang())
             .params(buildPageSectionsRequestParams(pageKey.getPageId()))
@@ -172,8 +169,7 @@ public class WikipediaPageApiRepository implements WikipediaPageRepository {
     }
 
     private WikipediaSection convert(WikipediaApiResponse.Section section, PageKey pageKey) {
-        return WikipediaSection
-            .builder()
+        return WikipediaSection.builder()
             .pageKey(pageKey)
             .index(Integer.parseInt(section.getIndex()))
             .level(Integer.parseInt(section.getLevel()))
@@ -186,8 +182,7 @@ public class WikipediaPageApiRepository implements WikipediaPageRepository {
     public Optional<WikipediaPage> findPageSection(WikipediaSection section) {
         try {
             PageKey pageKey = section.getPageKey();
-            WikipediaApiRequest apiRequest = WikipediaApiRequest
-                .builder()
+            WikipediaApiRequest apiRequest = WikipediaApiRequest.builder()
                 .verb(WikipediaApiVerb.GET)
                 .lang(pageKey.getLang())
                 .params(buildPageIdsAndSectionRequestParams(pageKey.getPageId(), section.getIndex()))
@@ -227,8 +222,7 @@ public class WikipediaPageApiRepository implements WikipediaPageRepository {
             return WikipediaSearchResult.ofEmpty();
         }
 
-        WikipediaApiRequest apiRequest = WikipediaApiRequest
-            .builder()
+        WikipediaApiRequest apiRequest = WikipediaApiRequest.builder()
             .verb(WikipediaApiVerb.GET)
             .lang(searchRequest.getLang())
             .params(buildPageIdsByStringMatchRequestParams(searchRequest))
@@ -292,8 +286,7 @@ public class WikipediaPageApiRepository implements WikipediaPageRepository {
             throw new IllegalArgumentException("Null page ID in API response: " + response);
         }
 
-        return WikipediaSearchResult
-            .builder()
+        return WikipediaSearchResult.builder()
             .total(response.getQuery().getSearchinfo().getTotalhits())
             .pageIds(pageIds)
             .build();

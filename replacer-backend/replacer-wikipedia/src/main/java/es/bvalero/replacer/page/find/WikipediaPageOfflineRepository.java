@@ -24,8 +24,7 @@ class WikipediaPageOfflineRepository implements WikipediaPageRepository {
     private Optional<WikipediaPage> buildFakePage(int pageId) {
         try {
             return Optional.of(
-                WikipediaPage
-                    .builder()
+                WikipediaPage.builder()
                     .pageKey(PageKey.of(WikipediaLanguage.SPANISH, pageId))
                     .namespace(WikipediaNamespace.ARTICLE)
                     .title("América del Norte")

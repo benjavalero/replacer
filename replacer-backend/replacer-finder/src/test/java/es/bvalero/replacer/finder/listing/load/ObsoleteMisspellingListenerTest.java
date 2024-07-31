@@ -31,8 +31,11 @@ class ObsoleteMisspellingListenerTest {
         simpleMisspellingLoader = mock(SimpleMisspellingLoader.class);
         composedMisspellingLoader = mock(ComposedMisspellingLoader.class);
         replacementTypeSaveApi = mock(ReplacementTypeSaveApi.class);
-        obsoleteMisspellingListener =
-            new ObsoleteMisspellingListener(simpleMisspellingLoader, composedMisspellingLoader, replacementTypeSaveApi);
+        obsoleteMisspellingListener = new ObsoleteMisspellingListener(
+            simpleMisspellingLoader,
+            composedMisspellingLoader,
+            replacementTypeSaveApi
+        );
     }
 
     @Test

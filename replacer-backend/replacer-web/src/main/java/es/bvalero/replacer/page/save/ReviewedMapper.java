@@ -34,8 +34,7 @@ class ReviewedMapper {
             ? CustomType.of(reviewed.getSubtype(), Objects.requireNonNull(reviewed.getCs()))
             : StandardType.of(replacementKind, reviewed.getSubtype());
         int offset = Objects.requireNonNullElse(sectionOffset, 0);
-        return ReviewedReplacement
-            .builder()
+        return ReviewedReplacement.builder()
             .pageKey(PageKey.of(user.getId().getLang(), pageId))
             .type(replacementType)
             .start(offset + reviewed.getStart())

@@ -28,8 +28,7 @@ class ReviewNoTypeFinderTest {
     private final String content2 = "AYB";
     private final PageKey randomPageKey = PageKey.of(WikipediaLanguage.getDefault(), randomId);
     private final PageKey randomPageKey2 = PageKey.of(WikipediaLanguage.getDefault(), randomId2);
-    private final WikipediaPage page = WikipediaPage
-        .builder()
+    private final WikipediaPage page = WikipediaPage.builder()
         .pageKey(randomPageKey)
         .namespace(WikipediaNamespace.ARTICLE)
         .title("Title1")
@@ -37,8 +36,7 @@ class ReviewNoTypeFinderTest {
         .lastUpdate(WikipediaTimestamp.now())
         .queryTimestamp(WikipediaTimestamp.now())
         .build();
-    private final WikipediaPage page2 = WikipediaPage
-        .builder()
+    private final WikipediaPage page2 = WikipediaPage.builder()
         .pageKey(randomPageKey2)
         .namespace(WikipediaNamespace.ANNEX)
         .title("Title2")
@@ -46,8 +44,7 @@ class ReviewNoTypeFinderTest {
         .lastUpdate(WikipediaTimestamp.now())
         .queryTimestamp(WikipediaTimestamp.now())
         .build();
-    private final Replacement replacement = Replacement
-        .builder()
+    private final Replacement replacement = Replacement.builder()
         .start(1)
         .text("Y")
         .type(StandardType.DEGREES)
@@ -73,21 +70,21 @@ class ReviewNoTypeFinderTest {
         pageRepository = mock(PageRepository.class);
         reviewSectionFinder = mock(ReviewSectionFinder.class);
         pageCountRepository = mock(PageCountRepository.class);
-        pageReviewNoTypeService =
-            new ReviewNoTypeFinder(
-                wikipediaPageRepository,
-                pageIndexService,
-                pageRepository,
-                reviewSectionFinder,
-                pageCountRepository
-            );
+        pageReviewNoTypeService = new ReviewNoTypeFinder(
+            wikipediaPageRepository,
+            pageIndexService,
+            pageRepository,
+            reviewSectionFinder,
+            pageCountRepository
+        );
     }
 
     @Test
     void testFindRandomPageToReviewNoTypeNoResultInDb() {
         // No results in DB
-        when(pageRepository.findNotReviewedByType(any(WikipediaLanguage.class), isNull(), anyInt()))
-            .thenReturn(List.of());
+        when(pageRepository.findNotReviewedByType(any(WikipediaLanguage.class), isNull(), anyInt())).thenReturn(
+            List.of()
+        );
 
         Optional<Review> review = pageReviewNoTypeService.findRandomPageReview(options);
 
@@ -113,8 +110,9 @@ class ReviewNoTypeFinderTest {
     void testFindRandomPageToReviewNoTypeWithReplacements() {
         // 1 result in DB
         when(pageCountRepository.countNotReviewedByType(any(WikipediaLanguage.class), isNull())).thenReturn(1);
-        when(pageRepository.findNotReviewedByType(any(WikipediaLanguage.class), isNull(), anyInt()))
-            .thenReturn(new ArrayList<>(Set.of(randomPageKey)));
+        when(pageRepository.findNotReviewedByType(any(WikipediaLanguage.class), isNull(), anyInt())).thenReturn(
+            new ArrayList<>(Set.of(randomPageKey))
+        );
 
         // The page exists in Wikipedia
         when(wikipediaPageRepository.findByKey(randomPageKey)).thenReturn(Optional.of(page));
@@ -154,8 +152,9 @@ class ReviewNoTypeFinderTest {
     void testFindRandomPageToReviewNoTypeSecondResult() {
         // 2 results in DB
         when(pageCountRepository.countNotReviewedByType(any(WikipediaLanguage.class), isNull())).thenReturn(2);
-        when(pageRepository.findNotReviewedByType(any(WikipediaLanguage.class), isNull(), anyInt()))
-            .thenReturn(List.of(randomPageKey, randomPageKey2));
+        when(pageRepository.findNotReviewedByType(any(WikipediaLanguage.class), isNull(), anyInt())).thenReturn(
+            List.of(randomPageKey, randomPageKey2)
+        );
 
         // Only the page 2 exists in Wikipedia
         when(wikipediaPageRepository.findByKey(randomPageKey)).thenReturn(Optional.empty());
@@ -180,8 +179,9 @@ class ReviewNoTypeFinderTest {
 
         // First load of cache
         when(pageCountRepository.countNotReviewedByType(any(WikipediaLanguage.class), isNull())).thenReturn(1);
-        when(pageRepository.findNotReviewedByType(any(WikipediaLanguage.class), isNull(), anyInt()))
-            .thenReturn(List.of(randomPageKey));
+        when(pageRepository.findNotReviewedByType(any(WikipediaLanguage.class), isNull(), anyInt())).thenReturn(
+            List.of(randomPageKey)
+        );
 
         when(wikipediaPageRepository.findByKey(randomPageKey)).thenReturn(Optional.of(page));
 

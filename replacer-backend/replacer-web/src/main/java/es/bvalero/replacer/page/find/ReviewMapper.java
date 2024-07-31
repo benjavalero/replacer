@@ -13,8 +13,7 @@ import org.springframework.lang.Nullable;
 class ReviewMapper {
 
     Page toDto(Review review) {
-        return Page
-            .builder()
+        return Page.builder()
             .lang(review.getPage().getPageKey().getLang().getCode())
             .pageId(review.getPage().getPageKey().getPageId())
             .title(review.getPage().getTitle())

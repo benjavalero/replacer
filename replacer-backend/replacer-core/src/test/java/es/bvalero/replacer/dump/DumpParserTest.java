@@ -37,12 +37,10 @@ class DumpParserTest {
     void testParseDumpFile() throws ReplacerException, URISyntaxException {
         // We need a real dump file to create the input stream
         Path dumpFile = Paths.get(
-            Objects
-                .requireNonNull(
-                    getClass()
-                        .getResource("/es/bvalero/replacer/dump/eswiki/20170101/eswiki-20170101-pages-articles.xml.bz2")
-                )
-                .toURI()
+            Objects.requireNonNull(
+                getClass()
+                    .getResource("/es/bvalero/replacer/dump/eswiki/20170101/eswiki-20170101-pages-articles.xml.bz2")
+            ).toURI()
         );
         assertNotNull(dumpFile);
         assertTrue(Files.exists(dumpFile));

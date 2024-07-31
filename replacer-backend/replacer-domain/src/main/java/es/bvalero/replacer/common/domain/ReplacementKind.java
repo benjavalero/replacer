@@ -15,8 +15,7 @@ public enum ReplacementKind {
     STYLE((byte) 5),
     EMPTY((byte) 99); // To be used but not meant to be serialized
 
-    private static final Map<Byte, ReplacementKind> map = Arrays
-        .stream(ReplacementKind.values())
+    private static final Map<Byte, ReplacementKind> map = Arrays.stream(ReplacementKind.values())
         .filter(k -> k != EMPTY)
         .collect(Collectors.toUnmodifiableMap(ReplacementKind::getCode, Function.identity()));
 

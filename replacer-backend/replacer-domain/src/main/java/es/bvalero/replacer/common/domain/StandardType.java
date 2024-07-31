@@ -24,8 +24,7 @@ public class StandardType extends ReplacementType {
     }
 
     // Cache the known types to reuse them and save memory
-    private static final Cache<String, StandardType> cachedPageIds = Caffeine
-        .newBuilder()
+    private static final Cache<String, StandardType> cachedPageIds = Caffeine.newBuilder()
         .expireAfterAccess(1, TimeUnit.DAYS)
         .build();
 
@@ -36,8 +35,7 @@ public class StandardType extends ReplacementType {
     public static final StandardType DEGREES = ofStyle("Grados");
     public static final StandardType ORDINAL = ofStyleForBots("Ordinales");
 
-    private static final Set<String> STYLE_SUBTYPES = Set
-        .of(DATE, ACUTE_O, CENTURY, COORDINATES, DEGREES, ORDINAL)
+    private static final Set<String> STYLE_SUBTYPES = Set.of(DATE, ACUTE_O, CENTURY, COORDINATES, DEGREES, ORDINAL)
         .stream()
         .map(ReplacementType::getSubtype)
         .collect(Collectors.toUnmodifiableSet());

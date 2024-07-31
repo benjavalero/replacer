@@ -38,8 +38,12 @@ class ApplyCosmeticsService {
             cosmetics.sort(Collections.reverseOrder());
 
             for (Cosmetic cosmetic : cosmetics) {
-                fixedText =
-                    ReplacerUtils.replaceInText(fixedText, cosmetic.getStart(), cosmetic.getText(), cosmetic.getFix());
+                fixedText = ReplacerUtils.replaceInText(
+                    fixedText,
+                    cosmetic.getStart(),
+                    cosmetic.getText(),
+                    cosmetic.getFix()
+                );
                 applyCheckWikipediaAction(page, cosmetic);
                 LOGGER.debug("Cosmetic applied: {}", cosmetic);
             }

@@ -76,8 +76,7 @@ public abstract class MisspellingFinder implements ReplacementFinder {
     public Replacement convert(MatchResult matcher, FinderPage page) {
         final int start = matcher.start();
         final String text = matcher.group();
-        return Replacement
-            .builder()
+        return Replacement.builder()
             .page(page)
             .type(StandardType.of(getType(), getSubtype(text, page.getPageKey().getLang())))
             .start(start)
@@ -103,8 +102,9 @@ public abstract class MisspellingFinder implements ReplacementFinder {
     // Transform the case of the suggestion, e.g. "Habia" -> "Había"
     private List<Suggestion> findSuggestions(String originalWord, WikipediaLanguage lang) {
         // We are sure in this point that the Misspelling exists
-        final StandardMisspelling misspelling = findMisspellingByWord(originalWord, lang)
-            .orElseThrow(IllegalArgumentException::new);
+        final StandardMisspelling misspelling = findMisspellingByWord(originalWord, lang).orElseThrow(
+            IllegalArgumentException::new
+        );
         return applyMisspellingSuggestions(originalWord, misspelling);
     }
 

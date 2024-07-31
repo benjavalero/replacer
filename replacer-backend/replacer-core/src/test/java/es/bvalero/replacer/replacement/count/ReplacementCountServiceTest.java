@@ -65,15 +65,15 @@ class ReplacementCountServiceTest {
     @Test
     void testCountReplacementsGroupedByPage() {
         WikipediaLanguage lang = WikipediaLanguage.getDefault();
-        IndexedPage page = IndexedPage
-            .builder()
+        IndexedPage page = IndexedPage.builder()
             .pageKey(PageKey.of(lang, 1))
             .title("T")
             .lastUpdate(LocalDate.now())
             .build();
         Collection<ResultCount<IndexedPage>> counts = List.of(ResultCount.of(page, 10));
-        when(replacementCountRepository.countNotReviewedGroupedByPage(lang, ReplacementCountService.NUM_RESULTS))
-            .thenReturn(counts);
+        when(
+            replacementCountRepository.countNotReviewedGroupedByPage(lang, ReplacementCountService.NUM_RESULTS)
+        ).thenReturn(counts);
 
         assertEquals(counts, replacementCountService.countNotReviewedGroupedByPage(lang));
 

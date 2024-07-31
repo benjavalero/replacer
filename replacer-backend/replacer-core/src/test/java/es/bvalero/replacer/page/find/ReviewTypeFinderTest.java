@@ -26,8 +26,7 @@ class ReviewTypeFinderTest {
     private final String content2 = "AYB";
     private final PageKey randomPageKey = PageKey.of(WikipediaLanguage.getDefault(), randomId);
     private final PageKey randomPageKey2 = PageKey.of(WikipediaLanguage.getDefault(), randomId2);
-    private final WikipediaPage page = WikipediaPage
-        .builder()
+    private final WikipediaPage page = WikipediaPage.builder()
         .pageKey(randomPageKey)
         .namespace(WikipediaNamespace.ARTICLE)
         .title("Title1")
@@ -35,8 +34,7 @@ class ReviewTypeFinderTest {
         .lastUpdate(WikipediaTimestamp.now())
         .queryTimestamp(WikipediaTimestamp.now())
         .build();
-    private final WikipediaPage page2 = WikipediaPage
-        .builder()
+    private final WikipediaPage page2 = WikipediaPage.builder()
         .pageKey(randomPageKey2)
         .namespace(WikipediaNamespace.ANNEX)
         .title("Title2")
@@ -46,8 +44,7 @@ class ReviewTypeFinderTest {
         .build();
     private final StandardType simpleType = StandardType.of(ReplacementKind.SIMPLE, "Y");
     private final StandardType composedType = StandardType.of(ReplacementKind.COMPOSED, "B");
-    private final Replacement replacement = Replacement
-        .builder()
+    private final Replacement replacement = Replacement.builder()
         .start(1)
         .type(StandardType.of(ReplacementKind.SIMPLE, "Y"))
         .text("Y")
@@ -74,21 +71,21 @@ class ReviewTypeFinderTest {
         pageRepository = mock(PageRepository.class);
         reviewSectionFinder = mock(ReviewSectionFinder.class);
         pageCountRepository = mock(PageCountRepository.class);
-        pageReviewTypeSubtypeService =
-            new ReviewTypeFinder(
-                wikipediaPageRepository,
-                pageIndexService,
-                pageRepository,
-                reviewSectionFinder,
-                pageCountRepository
-            );
+        pageReviewTypeSubtypeService = new ReviewTypeFinder(
+            wikipediaPageRepository,
+            pageIndexService,
+            pageRepository,
+            reviewSectionFinder,
+            pageCountRepository
+        );
     }
 
     @Test
     void testFindRandomPageToReviewTypeNotFiltered() {
         // 1 result in DB
-        when(pageCountRepository.countNotReviewedByType(any(WikipediaLanguage.class), any(StandardType.class)))
-            .thenReturn(1);
+        when(
+            pageCountRepository.countNotReviewedByType(any(WikipediaLanguage.class), any(StandardType.class))
+        ).thenReturn(1);
         when(pageRepository.findNotReviewedByType(any(WikipediaLanguage.class), any(StandardType.class), anyInt()))
             .thenReturn(List.of(randomPageKey))
             .thenReturn(List.of());
@@ -108,10 +105,12 @@ class ReviewTypeFinderTest {
     @Test
     void testFindRandomPageToReviewTypeFiltered() {
         // 1 result in DB
-        when(pageCountRepository.countNotReviewedByType(any(WikipediaLanguage.class), any(StandardType.class)))
-            .thenReturn(1);
-        when(pageRepository.findNotReviewedByType(any(WikipediaLanguage.class), any(StandardType.class), anyInt()))
-            .thenReturn(List.of(randomPageKey));
+        when(
+            pageCountRepository.countNotReviewedByType(any(WikipediaLanguage.class), any(StandardType.class))
+        ).thenReturn(1);
+        when(
+            pageRepository.findNotReviewedByType(any(WikipediaLanguage.class), any(StandardType.class), anyInt())
+        ).thenReturn(List.of(randomPageKey));
 
         // The page exists in Wikipedia
         when(wikipediaPageRepository.findByKey(randomPageKey)).thenReturn(Optional.of(page));
@@ -133,15 +132,17 @@ class ReviewTypeFinderTest {
         // 3. Find a random page by type. In DB there is no page.
 
         // 2 results in DB by type, no results the second time.
-        when(pageCountRepository.countNotReviewedByType(any(WikipediaLanguage.class), any(StandardType.class)))
-            .thenReturn(2);
+        when(
+            pageCountRepository.countNotReviewedByType(any(WikipediaLanguage.class), any(StandardType.class))
+        ).thenReturn(2);
         when(pageRepository.findNotReviewedByType(any(WikipediaLanguage.class), any(StandardType.class), anyInt()))
             .thenReturn(List.of(randomPageKey, randomPageKey2))
             .thenReturn(List.of());
         // 1 result in DB by no type
         when(pageCountRepository.countNotReviewedByType(any(WikipediaLanguage.class), isNull())).thenReturn(1);
-        when(pageRepository.findNotReviewedByType(any(WikipediaLanguage.class), isNull(), anyInt()))
-            .thenReturn(List.of(randomPageKey2));
+        when(pageRepository.findNotReviewedByType(any(WikipediaLanguage.class), isNull(), anyInt())).thenReturn(
+            List.of(randomPageKey2)
+        );
 
         // The pages exist in Wikipedia
         when(wikipediaPageRepository.findByKey(randomPageKey)).thenReturn(Optional.of(page));
@@ -174,8 +175,7 @@ class ReviewTypeFinderTest {
         pageReviewTypeSubtypeService.loadCache(options);
 
         // The page has sections
-        WikipediaSection section = WikipediaSection
-            .builder()
+        WikipediaSection section = WikipediaSection.builder()
             .pageKey(page.getPageKey())
             .index(sectionId)
             .level(2)
@@ -224,8 +224,9 @@ class ReviewTypeFinderTest {
     @Test
     void testFindReplacementFilteredAndReviewed() {
         // 1 result in DB
-        when(pageCountRepository.countNotReviewedByType(any(WikipediaLanguage.class), any(StandardType.class)))
-            .thenReturn(1);
+        when(
+            pageCountRepository.countNotReviewedByType(any(WikipediaLanguage.class), any(StandardType.class))
+        ).thenReturn(1);
         when(pageRepository.findNotReviewedByType(any(WikipediaLanguage.class), any(StandardType.class), anyInt()))
             .thenReturn(List.of(randomPageKey))
             .thenReturn(List.of());
@@ -233,8 +234,7 @@ class ReviewTypeFinderTest {
         // The page exists in Wikipedia
         when(wikipediaPageRepository.findByKey(randomPageKey)).thenReturn(Optional.of(page));
 
-        final Replacement replacement2 = Replacement
-            .builder()
+        final Replacement replacement2 = Replacement.builder()
             .start(2)
             .type(StandardType.of(ReplacementKind.SIMPLE, "Z"))
             .text("Z")

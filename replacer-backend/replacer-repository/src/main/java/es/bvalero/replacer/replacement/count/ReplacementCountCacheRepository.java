@@ -29,18 +29,16 @@ class ReplacementCountCacheRepository implements ReplacementCountRepository {
 
     // Statistics caches
     // The queries in database can be heavy, so we preload the counts on start and refresh them periodically.
-    private final LoadingCache<WikipediaLanguage, Integer> countReviewed = Caffeine
-        .newBuilder()
+    private final LoadingCache<WikipediaLanguage, Integer> countReviewed = Caffeine.newBuilder()
         .refreshAfterWrite(refreshTime)
         .build(l -> replacementCountRepository.countReviewed(l));
-    private final LoadingCache<WikipediaLanguage, Integer> countNotReviewed = Caffeine
-        .newBuilder()
+    private final LoadingCache<WikipediaLanguage, Integer> countNotReviewed = Caffeine.newBuilder()
         .refreshAfterWrite(refreshTime)
         .build(l -> replacementCountRepository.countNotReviewed(l));
-    private final LoadingCache<WikipediaLanguage, Collection<ResultCount<String>>> countGroupedByReviewer = Caffeine
-        .newBuilder()
-        .refreshAfterWrite(refreshTime)
-        .build(l -> replacementCountRepository.countReviewedGroupedByReviewer(l));
+    private final LoadingCache<WikipediaLanguage, Collection<ResultCount<String>>> countGroupedByReviewer =
+        Caffeine.newBuilder()
+            .refreshAfterWrite(refreshTime)
+            .build(l -> replacementCountRepository.countReviewedGroupedByReviewer(l));
 
     ReplacementCountCacheRepository(
         @Qualifier("replacementCountJdbcRepository") ReplacementCountRepository replacementCountRepository

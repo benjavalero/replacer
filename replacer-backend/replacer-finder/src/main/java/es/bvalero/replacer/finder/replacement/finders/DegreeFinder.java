@@ -208,8 +208,7 @@ class DegreeFinder implements ReplacementFinder {
             suggestions.add(Suggestion.of(word + DOT + symbol, "ordinal"));
         }
 
-        return Replacement
-            .builder()
+        return Replacement.builder()
             .page(page)
             .type(StandardType.DEGREES)
             .start(start)

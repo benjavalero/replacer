@@ -91,8 +91,9 @@ class ReplacementCountControllerTest {
         when(webUtils.getLanguageHeader(any(HttpServletRequest.class))).thenReturn(lang);
 
         ResultCount<String> count = ResultCount.of("X", 100);
-        when(replacementCountService.countReviewedGroupedByReviewer(WikipediaLanguage.getDefault()))
-            .thenReturn(List.of(count));
+        when(replacementCountService.countReviewedGroupedByReviewer(WikipediaLanguage.getDefault())).thenReturn(
+            List.of(count)
+        );
 
         mvc
             .perform(
@@ -114,8 +115,7 @@ class ReplacementCountControllerTest {
         WikipediaLanguage lang = WikipediaLanguage.getDefault();
         when(webUtils.getLanguageHeader(any(HttpServletRequest.class))).thenReturn(lang);
 
-        IndexedPage page = IndexedPage
-            .builder()
+        IndexedPage page = IndexedPage.builder()
             .pageKey(PageKey.of(WikipediaLanguage.getDefault(), 2))
             .title("T")
             .lastUpdate(LocalDate.now())

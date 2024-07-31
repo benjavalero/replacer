@@ -24,8 +24,7 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(value = { AuthorizationException.class })
     protected ResponseEntity<Object> handleAuthorizationException(AuthorizationException e) {
-        return ResponseEntity
-            .status(HttpStatus.UNAUTHORIZED)
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
             .header(HttpHeaders.SET_COOKIE, WebUtils.buildAccessTokenEmptyCookie().toString())
             .body(e);
     }
@@ -42,8 +41,7 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         } else if (e.getMessage() != null && e.getMessage().contains("mwoauth-invalid-authorization")) {
             LOGGER.warn("Authorization error saving page content: " + e.getMessage());
-            return ResponseEntity
-                .status(HttpStatus.UNAUTHORIZED)
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                 .header(HttpHeaders.SET_COOKIE, WebUtils.buildAccessTokenEmptyCookie().toString())
                 .body(e);
         } else {

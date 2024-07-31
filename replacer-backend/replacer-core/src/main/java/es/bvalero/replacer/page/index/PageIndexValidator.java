@@ -27,8 +27,9 @@ class PageIndexValidator {
 
     @PostConstruct
     public void init() {
-        this.indexableWikipediaNamespaces =
-            this.indexableNamespaces.stream().map(WikipediaNamespace::valueOf).collect(Collectors.toUnmodifiableSet());
+        this.indexableWikipediaNamespaces = this.indexableNamespaces.stream()
+            .map(WikipediaNamespace::valueOf)
+            .collect(Collectors.toUnmodifiableSet());
     }
 
     boolean isPageIndexableByNamespace(IndexablePage page) {

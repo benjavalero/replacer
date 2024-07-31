@@ -34,8 +34,7 @@ public class BenchmarkUtils {
     }
 
     private WikipediaPage convert(WikipediaApiResponse.Page page) {
-        return WikipediaPage
-            .builder()
+        return WikipediaPage.builder()
             .pageKey(PageKey.of(WikipediaLanguage.getDefault(), page.getPageid()))
             .namespace(WikipediaNamespace.valueOf(page.getNs()))
             .title(page.getTitle())

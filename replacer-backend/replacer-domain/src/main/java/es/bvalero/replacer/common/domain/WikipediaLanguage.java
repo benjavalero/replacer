@@ -16,9 +16,9 @@ public enum WikipediaLanguage {
     GALICIAN("gl"),
     SPANISH("es");
 
-    private static final Map<String, WikipediaLanguage> map = Arrays
-        .stream(WikipediaLanguage.values())
-        .collect(Collectors.toUnmodifiableMap(WikipediaLanguage::getCode, Function.identity()));
+    private static final Map<String, WikipediaLanguage> map = Arrays.stream(WikipediaLanguage.values()).collect(
+        Collectors.toUnmodifiableMap(WikipediaLanguage::getCode, Function.identity())
+    );
 
     private final String code;
 

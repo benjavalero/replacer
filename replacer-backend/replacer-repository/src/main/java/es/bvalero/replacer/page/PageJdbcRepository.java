@@ -59,8 +59,7 @@ class PageJdbcRepository implements PageRepository {
             .addValue("lang", lang.getCode())
             .addValue("minPageId", minPageId)
             .addValue("maxPageId", maxPageId);
-        return Objects
-            .requireNonNull(jdbcTemplate.query(sql, namedParameters, new PageResultExtractor()))
+        return Objects.requireNonNull(jdbcTemplate.query(sql, namedParameters, new PageResultExtractor()))
             .stream()
             .collect(Collectors.toUnmodifiableSet());
     }

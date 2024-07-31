@@ -71,8 +71,7 @@ class AcuteOFinder implements ReplacementFinder {
 
     @Override
     public Replacement convert(MatchResult match, FinderPage page) {
-        return Replacement
-            .builder()
+        return Replacement.builder()
             .page(page)
             .type(StandardType.ACUTE_O)
             .start(match.start())

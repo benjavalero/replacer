@@ -62,8 +62,7 @@ class DumpIndexServiceTest {
     @Test
     void testProcessLatestDumpFilesAlreadyRunning() throws ReplacerException {
         Optional<DumpStatus> dumpStatus = Optional.of(
-            DumpStatus
-                .builder()
+            DumpStatus.builder()
                 .running(true)
                 .dumpFileName("X")
                 .numPagesRead(1)
@@ -85,8 +84,7 @@ class DumpIndexServiceTest {
     void testGetDumpIndexingStatus() {
         LocalDateTime now = LocalDateTime.now();
         Optional<DumpStatus> expected = Optional.of(
-            DumpStatus
-                .builder()
+            DumpStatus.builder()
                 .running(true)
                 .dumpFileName("X")
                 .numPagesRead(1)

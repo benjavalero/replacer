@@ -48,11 +48,10 @@ class PageListControllerTest {
             .perform(get("/api/page/type?lang=es&kind=2&subtype=Africa").contentType(MediaType.TEXT_PLAIN_VALUE))
             .andExpect(status().isOk());
 
-        verify(pageListService)
-            .findPageTitlesNotReviewedByType(
-                WikipediaLanguage.getDefault(),
-                StandardType.of(ReplacementKind.SIMPLE, "Africa")
-            );
+        verify(pageListService).findPageTitlesNotReviewedByType(
+            WikipediaLanguage.getDefault(),
+            StandardType.of(ReplacementKind.SIMPLE, "Africa")
+        );
     }
 
     @Test
@@ -71,11 +70,10 @@ class PageListControllerTest {
             )
             .andExpect(status().isNoContent());
 
-        verify(pageListService)
-            .updateSystemReviewerByType(
-                WikipediaLanguage.getDefault(),
-                StandardType.of(ReplacementKind.SIMPLE, "Africa")
-            );
+        verify(pageListService).updateSystemReviewerByType(
+            WikipediaLanguage.getDefault(),
+            StandardType.of(ReplacementKind.SIMPLE, "Africa")
+        );
     }
 
     @Test
@@ -92,10 +90,9 @@ class PageListControllerTest {
             )
             .andExpect(status().isForbidden());
 
-        verify(pageListService, never())
-            .updateSystemReviewerByType(
-                WikipediaLanguage.getDefault(),
-                StandardType.of(ReplacementKind.SIMPLE, "Africa")
-            );
+        verify(pageListService, never()).updateSystemReviewerByType(
+            WikipediaLanguage.getDefault(),
+            StandardType.of(ReplacementKind.SIMPLE, "Africa")
+        );
     }
 }

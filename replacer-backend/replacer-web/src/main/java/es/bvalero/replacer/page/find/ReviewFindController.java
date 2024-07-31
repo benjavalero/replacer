@@ -78,8 +78,7 @@ class ReviewFindController {
         if (review.isPresent()) {
             Page response = ReviewMapper.toDto(review.get());
             LOGGER.info("END Find Random Page with Replacements: {}", response);
-            return ResponseEntity
-                .ok()
+            return ResponseEntity.ok()
                 .header(TOTAL_PAGES_HEADER, String.valueOf(Objects.requireNonNullElse(review.get().getNumPending(), 0)))
                 .body(response);
         } else {

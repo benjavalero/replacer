@@ -112,8 +112,7 @@ class MisspellingSimpleFinderTest {
 
         List<Replacement> results = misspellingFinder.findList(text);
 
-        Replacement expected = Replacement
-            .builder()
+        Replacement expected = Replacement.builder()
             .start(4)
             .text("abadia")
             .type(StandardType.of(ReplacementKind.SIMPLE, "abadia"))
@@ -132,15 +131,13 @@ class MisspellingSimpleFinderTest {
 
         List<Replacement> results = misspellingFinder.findList(text);
 
-        Replacement expected1 = Replacement
-            .builder()
+        Replacement expected1 = Replacement.builder()
             .start(4)
             .text("abadia")
             .type(StandardType.of(ReplacementKind.SIMPLE, "abadia"))
             .suggestions(List.of(Suggestion.ofNoComment("abadia"), Suggestion.ofNoComment("abadía")))
             .build();
-        Replacement expected2 = Replacement
-            .builder()
+        Replacement expected2 = Replacement.builder()
             .start(11)
             .text("online")
             .type(StandardType.of(ReplacementKind.SIMPLE, "online"))
@@ -158,8 +155,7 @@ class MisspellingSimpleFinderTest {
 
         List<Replacement> results = misspellingFinder.findList(text);
 
-        Replacement expected = Replacement
-            .builder()
+        Replacement expected = Replacement.builder()
             .start(4)
             .text("Abadia")
             .type(StandardType.of(ReplacementKind.SIMPLE, "abadia"))
@@ -177,8 +173,7 @@ class MisspellingSimpleFinderTest {
 
         List<Replacement> results = misspellingFinder.findList(text);
 
-        Replacement expected = Replacement
-            .builder()
+        Replacement expected = Replacement.builder()
             .start(3)
             .text("nº")
             .type(StandardType.of(ReplacementKind.SIMPLE, "nº"))
@@ -196,8 +191,7 @@ class MisspellingSimpleFinderTest {
 
         List<Replacement> results = misspellingFinder.findList(text);
 
-        Replacement expected = Replacement
-            .builder()
+        Replacement expected = Replacement.builder()
             .start(3)
             .text("Brazil")
             .type(StandardType.of(ReplacementKind.SIMPLE, "Brazil"))
@@ -215,8 +209,7 @@ class MisspellingSimpleFinderTest {
 
         List<Replacement> results = misspellingFinder.findList(text);
 
-        Replacement expected = Replacement
-            .builder()
+        Replacement expected = Replacement.builder()
             .start(3)
             .text("Enero")
             .type(StandardType.of(ReplacementKind.SIMPLE, "Enero"))
@@ -234,8 +227,7 @@ class MisspellingSimpleFinderTest {
 
         List<Replacement> results = misspellingFinder.findList(text);
 
-        Replacement expected = Replacement
-            .builder()
+        Replacement expected = Replacement.builder()
             .start(3)
             .text("ves")
             .type(StandardType.of(ReplacementKind.SIMPLE, "ves"))
@@ -253,8 +245,7 @@ class MisspellingSimpleFinderTest {
 
         List<Replacement> results = misspellingFinder.findList(text);
 
-        Replacement expected = Replacement
-            .builder()
+        Replacement expected = Replacement.builder()
             .start(3)
             .text("angola")
             .type(StandardType.of(ReplacementKind.SIMPLE, "angola"))
@@ -272,8 +263,7 @@ class MisspellingSimpleFinderTest {
 
         List<Replacement> results = misspellingFinder.findList(text);
 
-        Replacement expected = Replacement
-            .builder()
+        Replacement expected = Replacement.builder()
             .start(3)
             .text("OVNI")
             .type(StandardType.of(ReplacementKind.SIMPLE, "OVNI"))
@@ -291,8 +281,7 @@ class MisspellingSimpleFinderTest {
 
         List<Replacement> results = misspellingFinder.findList(text);
 
-        Replacement expected = Replacement
-            .builder()
+        Replacement expected = Replacement.builder()
             .start(21)
             .text("Text")
             .type(StandardType.of(ReplacementKind.SIMPLE, "text"))
@@ -312,8 +301,7 @@ class MisspellingSimpleFinderTest {
 
         List<Replacement> results = misspellingFinder.findList(text);
 
-        Replacement expected = Replacement
-            .builder()
+        Replacement expected = Replacement.builder()
             .start(3)
             .text("entreno")
             .type(StandardType.of(ReplacementKind.SIMPLE, "entreno"))
@@ -337,8 +325,7 @@ class MisspellingSimpleFinderTest {
 
         List<Replacement> results = misspellingFinder.findList(text);
 
-        Replacement expected = Replacement
-            .builder()
+        Replacement expected = Replacement.builder()
             .start(3)
             .text("avion")
             .type(StandardType.of(ReplacementKind.SIMPLE, "avion"))
@@ -362,8 +349,7 @@ class MisspellingSimpleFinderTest {
 
         List<Replacement> results = misspellingFinder.findList(text);
 
-        Replacement expected = Replacement
-            .builder()
+        Replacement expected = Replacement.builder()
             .start(3)
             .text("Avion")
             .type(StandardType.of(ReplacementKind.SIMPLE, "avion"))
@@ -390,8 +376,7 @@ class MisspellingSimpleFinderTest {
 
         List<Replacement> results = misspellingFinder.findList(text);
 
-        Replacement expected = Replacement
-            .builder()
+        Replacement expected = Replacement.builder()
             .start(6)
             .text("am")
             .type(StandardType.of(ReplacementKind.SIMPLE, "am"))
@@ -411,8 +396,7 @@ class MisspellingSimpleFinderTest {
 
         List<Replacement> results = misspellingFinder.findList(text);
 
-        Replacement expected = Replacement
-            .builder()
+        Replacement expected = Replacement.builder()
             .start(3)
             .text("Julio")
             .type(StandardType.of(ReplacementKind.SIMPLE, "Julio"))
@@ -432,8 +416,7 @@ class MisspellingSimpleFinderTest {
 
         List<Replacement> results = misspellingFinder.findList(text);
 
-        Replacement expected = Replacement
-            .builder()
+        Replacement expected = Replacement.builder()
             .start(3)
             .text("brazil")
             .type(StandardType.of(ReplacementKind.SIMPLE, "Brazil"))
@@ -454,8 +437,7 @@ class MisspellingSimpleFinderTest {
 
         List<Replacement> results = misspellingFinder.findList(text);
 
-        Replacement expected = Replacement
-            .builder()
+        Replacement expected = Replacement.builder()
             .start(3)
             .text("Márketing")
             .type(StandardType.of(ReplacementKind.SIMPLE, "márketing"))
@@ -480,8 +462,7 @@ class MisspellingSimpleFinderTest {
 
         List<Replacement> results = misspellingFinder.findList(text);
 
-        Replacement expected = Replacement
-            .builder()
+        Replacement expected = Replacement.builder()
             .start(7)
             .text("Vario")
             .type(StandardType.of(ReplacementKind.SIMPLE, "vario"))
@@ -504,8 +485,7 @@ class MisspellingSimpleFinderTest {
 
         List<Replacement> results = misspellingFinder.findList(text);
 
-        Replacement expected = Replacement
-            .builder()
+        Replacement expected = Replacement.builder()
             .start(6)
             .text("Barbara")
             .type(StandardType.of(ReplacementKind.SIMPLE, "barbara"))

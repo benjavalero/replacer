@@ -39,8 +39,7 @@ class WikipediaApiHelperTest {
         when(response.getBody()).thenReturn(textResponse);
 
         try {
-            WikipediaApiRequest apiRequest = WikipediaApiRequest
-                .builder()
+            WikipediaApiRequest apiRequest = WikipediaApiRequest.builder()
                 .verb(WikipediaApiVerb.GET)
                 .lang(WikipediaLanguage.getDefault())
                 .build();
@@ -57,8 +56,7 @@ class WikipediaApiHelperTest {
         when(mediaWikiService.execute(any(OAuthRequest.class))).thenReturn(response);
         when(response.isSuccessful()).thenReturn(false);
 
-        WikipediaApiRequest apiRequest = WikipediaApiRequest
-            .builder()
+        WikipediaApiRequest apiRequest = WikipediaApiRequest.builder()
             .verb(WikipediaApiVerb.GET)
             .lang(WikipediaLanguage.getDefault())
             .build();
@@ -75,8 +73,7 @@ class WikipediaApiHelperTest {
         when(response.isSuccessful()).thenReturn(true);
         when(response.getBody()).thenReturn(textResponse);
 
-        WikipediaApiRequest apiRequest = WikipediaApiRequest
-            .builder()
+        WikipediaApiRequest apiRequest = WikipediaApiRequest.builder()
             .verb(WikipediaApiVerb.POST)
             .lang(WikipediaLanguage.getDefault())
             .accessToken(AccessToken.of("A", "B"))

@@ -16,9 +16,9 @@ public enum ReviewType {
     NOT_MODIFIED((byte) 2),
     IGNORED((byte) 3);
 
-    private static final Map<Byte, ReviewType> map = Arrays
-        .stream(ReviewType.values())
-        .collect(Collectors.toUnmodifiableMap(ReviewType::getCode, Function.identity()));
+    private static final Map<Byte, ReviewType> map = Arrays.stream(ReviewType.values()).collect(
+        Collectors.toUnmodifiableMap(ReviewType::getCode, Function.identity())
+    );
 
     private final byte code;
 

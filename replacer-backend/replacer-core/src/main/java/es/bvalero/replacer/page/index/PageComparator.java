@@ -84,10 +84,11 @@ class PageComparator {
         result.addReplacementsToReview(
             pageReplacements
                 .stream()
-                .filter(r ->
-                    comparableDbReplacements
-                        .stream()
-                        .anyMatch(cr -> cr.isToBeReviewed() && cr.equals(ComparableReplacement.of(r)))
+                .filter(
+                    r ->
+                        comparableDbReplacements
+                            .stream()
+                            .anyMatch(cr -> cr.isToBeReviewed() && cr.equals(ComparableReplacement.of(r)))
                 )
                 .toList()
         );
@@ -110,8 +111,7 @@ class PageComparator {
 
     @VisibleForTesting
     static IndexedPage toIndexedPage(IndexablePage indexablePage) {
-        return IndexedPage
-            .builder()
+        return IndexedPage.builder()
             .pageKey(indexablePage.getPageKey())
             .title(indexablePage.getTitle())
             .lastUpdate(indexablePage.getLastUpdate().toLocalDate())

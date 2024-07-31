@@ -35,13 +35,12 @@ class ReviewSaveServiceTest {
         replacementSaveRepository = mock(ReplacementSaveRepository.class);
         customReplacementService = mock(CustomReplacementService.class);
         wikipediaPageSaveRepository = mock(WikipediaPageSaveRepository.class);
-        reviewSaveService =
-            new ReviewSaveService(
-                pageRepository,
-                replacementSaveRepository,
-                customReplacementService,
-                wikipediaPageSaveRepository
-            );
+        reviewSaveService = new ReviewSaveService(
+            pageRepository,
+            replacementSaveRepository,
+            customReplacementService,
+            wikipediaPageSaveRepository
+        );
         reviewSaveService.setMaxEditionsPerMinute(MAX_EDITIONS_PER_MINUTE);
     }
 
@@ -49,8 +48,7 @@ class ReviewSaveServiceTest {
     void testSaveWithChanges() throws WikipediaException {
         int id = 123;
         PageKey pageKey = PageKey.of(WikipediaLanguage.getDefault(), id);
-        WikipediaPageSaveCommand pageSave = WikipediaPageSaveCommand
-            .builder()
+        WikipediaPageSaveCommand pageSave = WikipediaPageSaveCommand.builder()
             .pageKey(pageKey)
             .content("X")
             .editSummary("S")
@@ -68,22 +66,19 @@ class ReviewSaveServiceTest {
         PageKey pageKey = PageKey.of(WikipediaLanguage.getDefault(), pageId);
         String reviewer = "X";
 
-        ReviewedReplacement r1 = ReviewedReplacement
-            .builder()
+        ReviewedReplacement r1 = ReviewedReplacement.builder()
             .pageKey(pageKey)
             .type(StandardType.of(ReplacementKind.SIMPLE, "1"))
             .start(1)
             .reviewer(reviewer)
             .build();
-        ReviewedReplacement r2 = ReviewedReplacement
-            .builder()
+        ReviewedReplacement r2 = ReviewedReplacement.builder()
             .pageKey(pageKey)
             .type(StandardType.of(ReplacementKind.COMPOSED, "2"))
             .start(2)
             .reviewer(reviewer)
             .build();
-        ReviewedReplacement r3 = ReviewedReplacement
-            .builder()
+        ReviewedReplacement r3 = ReviewedReplacement.builder()
             .pageKey(pageKey)
             .type(CustomType.of("3", false))
             .start(3)
@@ -119,8 +114,7 @@ class ReviewSaveServiceTest {
     void testMaximumEditionsPerMinute() throws WikipediaException {
         int id = 123;
         PageKey pageKey = PageKey.of(WikipediaLanguage.getDefault(), id);
-        WikipediaPageSaveCommand pageSave = WikipediaPageSaveCommand
-            .builder()
+        WikipediaPageSaveCommand pageSave = WikipediaPageSaveCommand.builder()
             .pageKey(pageKey)
             .content("X")
             .editSummary("S")

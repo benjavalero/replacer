@@ -322,8 +322,7 @@ class CoordinatesFinder implements ReplacementFinder {
         );
         final Suggestion suggestionWithSpaces = Suggestion.of(withSpaces, "con espacios y con los símbolos apropiados");
 
-        return Replacement
-            .builder()
+        return Replacement.builder()
             .page(page)
             .type(StandardType.COORDINATES)
             .start(match.start())

@@ -18,8 +18,7 @@ public class ListingSorter {
         final Collator collator = Collator.getInstance(LOCALE_ES);
         collator.setStrength(Collator.PRIMARY);
         try {
-            Files
-                .readAllLines(Paths.get(Objects.requireNonNull(FileOfflineUtils.class.getResource(fileName)).toURI()))
+            Files.readAllLines(Paths.get(Objects.requireNonNull(FileOfflineUtils.class.getResource(fileName)).toURI()))
                 .stream()
                 .filter(line -> line.startsWith(SPACE))
                 .sorted(collator::compare)

@@ -31,9 +31,9 @@ public enum WikipediaNamespace {
     TIMED_TEXT(710),
     MODULE(828);
 
-    private static final Map<Integer, WikipediaNamespace> map = Arrays
-        .stream(WikipediaNamespace.values())
-        .collect(Collectors.toUnmodifiableMap(WikipediaNamespace::getValue, Function.identity()));
+    private static final Map<Integer, WikipediaNamespace> map = Arrays.stream(WikipediaNamespace.values()).collect(
+        Collectors.toUnmodifiableMap(WikipediaNamespace::getValue, Function.identity())
+    );
 
     private final int value;
 

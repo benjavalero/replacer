@@ -36,14 +36,13 @@ class PersonNameFinder implements ImmutableFinder {
     public void init() {
         char[] falseWordChars = { '-' };
         boolean[] wordCharFlags = { false };
-        this.stringMap =
-            new WholeWordLongestMatchMap<>(
-                this.finderProperties.getPersonNames(),
-                this.finderProperties.getPersonNames(),
-                true,
-                falseWordChars,
-                wordCharFlags
-            );
+        this.stringMap = new WholeWordLongestMatchMap<>(
+            this.finderProperties.getPersonNames(),
+            this.finderProperties.getPersonNames(),
+            true,
+            falseWordChars,
+            wordCharFlags
+        );
     }
 
     @Override

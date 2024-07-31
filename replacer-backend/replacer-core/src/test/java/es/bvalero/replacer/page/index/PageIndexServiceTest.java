@@ -18,8 +18,7 @@ import org.junit.jupiter.api.Test;
 
 class PageIndexServiceTest {
 
-    private final WikipediaPage page = WikipediaPage
-        .builder()
+    private final WikipediaPage page = WikipediaPage.builder()
         .pageKey(PageKey.of(WikipediaLanguage.getDefault(), 1))
         .namespace(WikipediaNamespace.ARTICLE)
         .title("T")
@@ -44,14 +43,13 @@ class PageIndexServiceTest {
         replacementFindService = mock(ReplacementFindService.class);
         pageComparator = mock(PageComparator.class);
         pageComparatorSaver = mock(PageComparatorSaver.class);
-        pageIndexService =
-            new PageIndexService(
-                pageRepository,
-                pageIndexValidator,
-                replacementFindService,
-                pageComparator,
-                pageComparatorSaver
-            );
+        pageIndexService = new PageIndexService(
+            pageRepository,
+            pageIndexValidator,
+            replacementFindService,
+            pageComparator,
+            pageComparatorSaver
+        );
     }
 
     @Test
@@ -69,8 +67,7 @@ class PageIndexServiceTest {
 
     @Test
     void testPageNotIndexableByRedirection() {
-        final WikipediaPage page = WikipediaPage
-            .builder()
+        final WikipediaPage page = WikipediaPage.builder()
             .pageKey(PageKey.of(WikipediaLanguage.getDefault(), 1))
             .namespace(WikipediaNamespace.ARTICLE)
             .title("T")
@@ -93,8 +90,7 @@ class PageIndexServiceTest {
 
     @Test
     void testObsoletePageNotIndexable() {
-        IndexedPage dbPage = IndexedPage
-            .builder()
+        IndexedPage dbPage = IndexedPage.builder()
             .pageKey(page.getPageKey())
             .title("T")
             .replacements(List.of())

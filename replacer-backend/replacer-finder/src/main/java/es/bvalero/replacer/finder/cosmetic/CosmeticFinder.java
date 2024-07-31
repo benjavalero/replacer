@@ -9,8 +9,7 @@ import java.util.regex.MatchResult;
 public interface CosmeticFinder extends Finder<Cosmetic> {
     @Override
     default Cosmetic convert(MatchResult match, FinderPage page) {
-        return Cosmetic
-            .builder()
+        return Cosmetic.builder()
             .start(match.start())
             .text(match.group())
             .fix(getFix(match, page))

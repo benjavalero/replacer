@@ -45,8 +45,7 @@ class ComparableReplacement {
     boolean touched;
 
     static ComparableReplacement of(IndexedReplacement replacement) {
-        return ComparableReplacement
-            .builder()
+        return ComparableReplacement.builder()
             .id(replacement.getId())
             .pageKey(replacement.getPageKey())
             .type(replacement.getType())
@@ -60,8 +59,7 @@ class ComparableReplacement {
     static ComparableReplacement of(Replacement replacement) {
         assert replacement.getType() instanceof StandardType;
         return of(
-            IndexedReplacement
-                .builder()
+            IndexedReplacement.builder()
                 .pageKey(replacement.getPage().getPageKey())
                 .type((StandardType) replacement.getType())
                 .start(replacement.getStart())
@@ -71,8 +69,7 @@ class ComparableReplacement {
     }
 
     IndexedReplacement toDomain() {
-        return IndexedReplacement
-            .builder()
+        return IndexedReplacement.builder()
             .id(id)
             .pageKey(pageKey)
             .type(type)

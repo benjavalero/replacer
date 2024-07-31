@@ -17,8 +17,7 @@ class WikipediaPageSaveOfflineRepository implements WikipediaPageSaveRepository 
     }
 
     private WikipediaPageSaveResult buildOfflineSaveResult() {
-        return WikipediaPageSaveResult
-            .builder()
+        return WikipediaPageSaveResult.builder()
             .oldRevisionId(1)
             .oldRevisionId(2)
             .newTimestamp(WikipediaTimestamp.now())

@@ -46,8 +46,9 @@ class ReplacementTypeControllerTest {
         when(webUtils.getLanguageHeader(any(HttpServletRequest.class))).thenReturn(lang);
 
         final String replacement = "Africa";
-        when(replacementTypeFindApi.findReplacementType(WikipediaLanguage.getDefault(), replacement, true))
-            .thenReturn(Optional.of(StandardType.of(ReplacementKind.SIMPLE, replacement)));
+        when(replacementTypeFindApi.findReplacementType(WikipediaLanguage.getDefault(), replacement, true)).thenReturn(
+            Optional.of(StandardType.of(ReplacementKind.SIMPLE, replacement))
+        );
 
         mvc
             .perform(
@@ -68,8 +69,9 @@ class ReplacementTypeControllerTest {
         when(webUtils.getLanguageHeader(any(HttpServletRequest.class))).thenReturn(lang);
 
         final String replacement = "African";
-        when(replacementTypeFindApi.findReplacementType(WikipediaLanguage.getDefault(), replacement, true))
-            .thenReturn(Optional.empty());
+        when(replacementTypeFindApi.findReplacementType(WikipediaLanguage.getDefault(), replacement, true)).thenReturn(
+            Optional.empty()
+        );
 
         mvc
             .perform(

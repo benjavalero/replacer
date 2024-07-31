@@ -32,8 +32,7 @@ class WikipediaUserApiRepository implements WikipediaUserRepository {
 
     @Override
     public Optional<WikipediaUser> findAuthenticatedUser(WikipediaLanguage lang, AccessToken accessToken) {
-        WikipediaApiRequest apiRequest = WikipediaApiRequest
-            .builder()
+        WikipediaApiRequest apiRequest = WikipediaApiRequest.builder()
             .verb(WikipediaApiVerb.GET)
             .lang(lang)
             .params(buildUserInfoRequestParams())

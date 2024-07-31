@@ -42,8 +42,9 @@ public class MisspellingComposedFinder extends MisspellingFinder implements Prop
     @SuppressWarnings("unchecked")
     public void propertyChange(PropertyChangeEvent evt) {
         buildMisspellingMaps((SetValuedMap<WikipediaLanguage, StandardMisspelling>) evt.getNewValue());
-        this.automata =
-            buildComposedMisspellingAutomata((SetValuedMap<WikipediaLanguage, ComposedMisspelling>) evt.getNewValue());
+        this.automata = buildComposedMisspellingAutomata(
+            (SetValuedMap<WikipediaLanguage, ComposedMisspelling>) evt.getNewValue()
+        );
     }
 
     private Map<WikipediaLanguage, RunAutomaton> buildComposedMisspellingAutomata(

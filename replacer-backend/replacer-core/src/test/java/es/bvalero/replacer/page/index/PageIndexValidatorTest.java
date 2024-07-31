@@ -36,8 +36,7 @@ class PageIndexValidatorTest {
     }
 
     private WikipediaPage buildWikipediaPage(WikipediaNamespace namespace) {
-        return WikipediaPage
-            .builder()
+        return WikipediaPage.builder()
             .pageKey(PageKey.of(WikipediaLanguage.getDefault(), 1))
             .namespace(namespace)
             .title("T")
@@ -69,8 +68,7 @@ class PageIndexValidatorTest {
     }
 
     private WikipediaPage buildWikipediaPage(LocalDateTime lastUpdate) {
-        return WikipediaPage
-            .builder()
+        return WikipediaPage.builder()
             .pageKey(PageKey.of(WikipediaLanguage.getDefault(), 1))
             .namespace(WikipediaNamespace.ARTICLE)
             .title("T")
@@ -81,8 +79,7 @@ class PageIndexValidatorTest {
     }
 
     private IndexedPage buildIndexedPage(LocalDateTime lastUpdate) {
-        return IndexedPage
-            .builder()
+        return IndexedPage.builder()
             .pageKey(PageKey.of(WikipediaLanguage.getDefault(), 1))
             .title("T")
             .lastUpdate(lastUpdate.toLocalDate())

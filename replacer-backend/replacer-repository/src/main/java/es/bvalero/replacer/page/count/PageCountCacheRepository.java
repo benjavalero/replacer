@@ -38,8 +38,7 @@ class PageCountCacheRepository implements PageCountRepository {
     // as modifications in the cache may happen while the count query is in progress.
     // We could lock the cache while querying but the query takes too long.
     // In theory this cache is mirroring the database reality so in the future the duration could be even longer.
-    private final LoadingCache<WikipediaLanguage, Map<StandardType, Integer>> counts = Caffeine
-        .newBuilder()
+    private final LoadingCache<WikipediaLanguage, Map<StandardType, Integer>> counts = Caffeine.newBuilder()
         .refreshAfterWrite(refreshTime)
         .build(this::loadReplacementTypeCounts);
 

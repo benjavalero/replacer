@@ -55,8 +55,9 @@ class ObsoleteMisspellingListener implements PropertyChangeListener {
                 WikipediaLanguage,
                 StandardMisspelling
             >) evt.getNewValue();
-        getObsoleteMisspellings(oldItems, newItems)
-            .forEach(obsolete -> replacementTypeSaveApi.remove(obsolete.getLang(), obsolete.getType()));
+        getObsoleteMisspellings(oldItems, newItems).forEach(
+            obsolete -> replacementTypeSaveApi.remove(obsolete.getLang(), obsolete.getType())
+        );
     }
 
     @VisibleForTesting

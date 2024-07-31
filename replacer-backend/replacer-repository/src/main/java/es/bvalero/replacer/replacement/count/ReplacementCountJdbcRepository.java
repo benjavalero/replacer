@@ -94,8 +94,7 @@ class ReplacementCountJdbcRepository implements ReplacementCountRepository {
                 namedParameters,
                 (resultSet, rowNum) ->
                     ResultCount.of(
-                        IndexedPage
-                            .builder()
+                        IndexedPage.builder()
                             .pageKey(PageKey.of(lang, resultSet.getInt("PAGE_ID")))
                             .title(resultSet.getString("TITLE"))
                             .lastUpdate(LocalDate.now()) // Not relevant in this method

@@ -47,8 +47,7 @@ class ReviewSaveService {
     @Value("${replacer.max-editions-per-minute}")
     private int maxEditionsPerMinute;
 
-    private final Cache<UserId, CircularFifoQueue<LocalDateTime>> cachedUserEditions = Caffeine
-        .newBuilder()
+    private final Cache<UserId, CircularFifoQueue<LocalDateTime>> cachedUserEditions = Caffeine.newBuilder()
         .expireAfterWrite(1, TimeUnit.HOURS)
         .build();
 
@@ -164,8 +163,7 @@ class ReviewSaveService {
     private void markCustomAsReviewed(ReviewedReplacement reviewed, @Nullable WikipediaPageSaveResult saveResult) {
         // Add the page to the database in case it doesn't exist yet
         if (pageRepository.findByKey(reviewed.getPageKey()).isEmpty()) {
-            IndexedPage indexedPage = IndexedPage
-                .builder()
+            IndexedPage indexedPage = IndexedPage.builder()
                 .pageKey(reviewed.getPageKey())
                 .title("") // It will be set in a next indexation
                 .lastUpdate(LocalDate.now())

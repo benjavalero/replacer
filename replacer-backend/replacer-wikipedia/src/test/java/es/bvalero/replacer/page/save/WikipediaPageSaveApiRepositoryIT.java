@@ -54,8 +54,7 @@ class WikipediaPageSaveApiRepositoryIT {
         String conflictContent = originalContent + "\nOtra edición sencilla para probar conflictos de edición.";
 
         // Save the new content
-        WikipediaPageSaveCommand pageSave = WikipediaPageSaveCommand
-            .builder()
+        WikipediaPageSaveCommand pageSave = WikipediaPageSaveCommand.builder()
             .pageKey(page.getPageKey())
             .content(newContent)
             .editSummary("Replacer Integration Test")
@@ -66,8 +65,7 @@ class WikipediaPageSaveApiRepositoryIT {
 
         // Save the conflict content started 1 day before
         LocalDateTime before = page.getQueryTimestamp().toLocalDateTime().minusDays(1);
-        WikipediaPageSaveCommand pageConflictSave = WikipediaPageSaveCommand
-            .builder()
+        WikipediaPageSaveCommand pageConflictSave = WikipediaPageSaveCommand.builder()
             .pageKey(page.getPageKey())
             .content(conflictContent)
             .editSummary("Replacer Integration Test")

@@ -49,15 +49,14 @@ class ReviewCustomFinderTest {
         reviewSectionFinder = mock(ReviewSectionFinder.class);
         customReplacementService = mock(CustomReplacementService.class);
         customReplacementFindService = mock(CustomReplacementFindService.class);
-        pageReviewCustomService =
-            new ReviewCustomFinder(
-                wikipediaPageRepository,
-                pageIndexService,
-                pageRepository,
-                reviewSectionFinder,
-                customReplacementService,
-                customReplacementFindService
-            );
+        pageReviewCustomService = new ReviewCustomFinder(
+            wikipediaPageRepository,
+            pageIndexService,
+            pageRepository,
+            reviewSectionFinder,
+            customReplacementService,
+            customReplacementFindService
+        );
         pageReviewCustomService.setCacheSize(CACHE_SIZE);
         pageReviewCustomService.setIndexableNamespaces(
             NAMESPACES.stream().map(WikipediaNamespace::getValue).collect(Collectors.toUnmodifiableSet())
@@ -65,8 +64,7 @@ class ReviewCustomFinderTest {
     }
 
     private WikipediaPage buildWikipediaPage(int pageId, String content) {
-        return WikipediaPage
-            .builder()
+        return WikipediaPage.builder()
             .pageKey(PageKey.of(WikipediaLanguage.getDefault(), pageId))
             .namespace(WikipediaNamespace.getDefault())
             .title("Title")
@@ -81,8 +79,7 @@ class ReviewCustomFinderTest {
     }
 
     private WikipediaSearchRequest buildWikipediaSearchRequest(String replacement, int offset) {
-        return WikipediaSearchRequest
-            .builder()
+        return WikipediaSearchRequest.builder()
             .lang(WikipediaLanguage.getDefault())
             .namespaces(NAMESPACES)
             .text(replacement)
@@ -96,16 +93,19 @@ class ReviewCustomFinderTest {
     void testNoResults() {
         // No results in Wikipedia Search ==> Return an empty review
 
-        when(wikipediaPageRepository.findByContent(any(WikipediaSearchRequest.class)))
-            .thenReturn(WikipediaSearchResult.ofEmpty());
+        when(wikipediaPageRepository.findByContent(any(WikipediaSearchRequest.class))).thenReturn(
+            WikipediaSearchResult.ofEmpty()
+        );
 
         Optional<Review> review = pageReviewCustomService.findRandomPageReview(options);
 
         assertTrue(review.isEmpty());
 
         verify(wikipediaPageRepository).findByContent(buildWikipediaSearchRequest(replacement));
-        verify(customReplacementService, never())
-            .findPagesReviewed(any(WikipediaLanguage.class), any(CustomType.class));
+        verify(customReplacementService, never()).findPagesReviewed(
+            any(WikipediaLanguage.class),
+            any(CustomType.class)
+        );
     }
 
     @Test
@@ -118,8 +118,9 @@ class ReviewCustomFinderTest {
 
         // Mocks
         when(wikipediaPageRepository.findByContent(any(WikipediaSearchRequest.class))).thenReturn(searchResult);
-        when(customReplacementService.findPagesReviewed(any(WikipediaLanguage.class), any(CustomType.class)))
-            .thenReturn(List.of(pageId));
+        when(
+            customReplacementService.findPagesReviewed(any(WikipediaLanguage.class), any(CustomType.class))
+        ).thenReturn(List.of(pageId));
 
         // Only one call
         Optional<Review> review = pageReviewCustomService.findRandomPageReview(options);
@@ -139,8 +140,7 @@ class ReviewCustomFinderTest {
 
         final int pageId = 123;
         final String content = "A R";
-        final Replacement customRep = Replacement
-            .builder()
+        final Replacement customRep = Replacement.builder()
             .start(2)
             .type(customType)
             .text(replacement)
@@ -152,8 +152,9 @@ class ReviewCustomFinderTest {
 
         // Mocks
         when(wikipediaPageRepository.findByContent(any(WikipediaSearchRequest.class))).thenReturn(searchResult);
-        when(customReplacementService.findPagesReviewed(any(WikipediaLanguage.class), any(CustomType.class)))
-            .thenReturn(List.of());
+        when(
+            customReplacementService.findPagesReviewed(any(WikipediaLanguage.class), any(CustomType.class))
+        ).thenReturn(List.of());
         when(wikipediaPageRepository.findByKey(any(PageKey.class))).thenReturn(Optional.of(page));
         when(pageIndexService.indexPage(page)).thenReturn(PageIndexResult.ofIndexed());
         when(
@@ -161,8 +162,7 @@ class ReviewCustomFinderTest {
                 any(WikipediaPage.class),
                 any(CustomReplacementFindRequest.class)
             )
-        )
-            .thenReturn(List.of(customRep));
+        ).thenReturn(List.of(customRep));
 
         // First call
         Optional<Review> review1 = pageReviewCustomService.findRandomPageReview(options);
@@ -199,8 +199,9 @@ class ReviewCustomFinderTest {
 
         // Mocks
         when(wikipediaPageRepository.findByContent(any(WikipediaSearchRequest.class))).thenReturn(searchResult);
-        when(customReplacementService.findPagesReviewed(any(WikipediaLanguage.class), any(CustomType.class)))
-            .thenReturn(List.of());
+        when(
+            customReplacementService.findPagesReviewed(any(WikipediaLanguage.class), any(CustomType.class))
+        ).thenReturn(List.of());
         when(wikipediaPageRepository.findByKey(any(PageKey.class))).thenReturn(Optional.of(page));
         when(pageIndexService.indexPage(page)).thenReturn(PageIndexResult.ofIndexed());
         when(
@@ -208,8 +209,7 @@ class ReviewCustomFinderTest {
                 any(WikipediaPage.class),
                 any(CustomReplacementFindRequest.class)
             )
-        )
-            .thenReturn(List.of());
+        ).thenReturn(List.of());
 
         // Only call
         Optional<Review> review = pageReviewCustomService.findRandomPageReview(options);
@@ -229,15 +229,13 @@ class ReviewCustomFinderTest {
         final int pageId1 = 123;
         final int pageId2 = 456;
         final String content = "A R";
-        final Replacement customRep = Replacement
-            .builder()
+        final Replacement customRep = Replacement.builder()
             .start(2)
             .type(customType)
             .text(replacement)
             .suggestions(List.of(Suggestion.ofNoComment(suggestion)))
             .build();
-        final WikipediaSearchResult searchResult = WikipediaSearchResult
-            .builder()
+        final WikipediaSearchResult searchResult = WikipediaSearchResult.builder()
             .total(2)
             .pageId(pageId1)
             .pageId(pageId2)
@@ -247,8 +245,9 @@ class ReviewCustomFinderTest {
 
         // Mocks
         when(wikipediaPageRepository.findByContent(any(WikipediaSearchRequest.class))).thenReturn(searchResult);
-        when(customReplacementService.findPagesReviewed(any(WikipediaLanguage.class), any(CustomType.class)))
-            .thenReturn(List.of(pageId1));
+        when(
+            customReplacementService.findPagesReviewed(any(WikipediaLanguage.class), any(CustomType.class))
+        ).thenReturn(List.of(pageId1));
         when(wikipediaPageRepository.findByKey(any(PageKey.class))).thenReturn(Optional.of(page));
         when(pageIndexService.indexPage(page)).thenReturn(PageIndexResult.ofIndexed());
         when(
@@ -256,8 +255,7 @@ class ReviewCustomFinderTest {
                 any(WikipediaPage.class),
                 any(CustomReplacementFindRequest.class)
             )
-        )
-            .thenReturn(List.of(customRep));
+        ).thenReturn(List.of(customRep));
 
         // Only call
         Optional<Review> review = pageReviewCustomService.findRandomPageReview(options);
@@ -285,8 +283,9 @@ class ReviewCustomFinderTest {
         when(wikipediaPageRepository.findByContent(any(WikipediaSearchRequest.class)))
             .thenReturn(WikipediaSearchResult.builder().total(4).pageId(12).pageId(23).pageId(34).build())
             .thenReturn(WikipediaSearchResult.builder().total(4).pageId(45).build());
-        when(customReplacementService.findPagesReviewed(any(WikipediaLanguage.class), any(CustomType.class)))
-            .thenReturn(List.of(12, 23, 34, 45));
+        when(
+            customReplacementService.findPagesReviewed(any(WikipediaLanguage.class), any(CustomType.class))
+        ).thenReturn(List.of(12, 23, 34, 45));
 
         // Only call
         Optional<Review> review = pageReviewCustomService.findRandomPageReview(options);
@@ -306,8 +305,7 @@ class ReviewCustomFinderTest {
         // The user will review with no changes the rest, i.e. 2, 4
 
         final String content = "A R";
-        final Replacement customRep = Replacement
-            .builder()
+        final Replacement customRep = Replacement.builder()
             .start(2)
             .type(customType)
             .text(replacement)
@@ -342,8 +340,7 @@ class ReviewCustomFinderTest {
                 any(WikipediaPage.class),
                 any(CustomReplacementFindRequest.class)
             )
-        )
-            .thenReturn(List.of(customRep));
+        ).thenReturn(List.of(customRep));
 
         // We cannot use the same options object for all calls as it is mutable (and mutated)
         // Call 1
@@ -408,8 +405,9 @@ class ReviewCustomFinderTest {
             .thenReturn(WikipediaSearchResult.builder().total(4).pageId(4).build())
             .thenReturn(WikipediaSearchResult.builder().total(4).build());
 
-        when(customReplacementService.findPagesReviewed(any(WikipediaLanguage.class), any(CustomType.class)))
-            .thenReturn(List.of());
+        when(
+            customReplacementService.findPagesReviewed(any(WikipediaLanguage.class), any(CustomType.class))
+        ).thenReturn(List.of());
 
         when(wikipediaPageRepository.findByKey(any(PageKey.class)))
             .thenReturn(Optional.of(pages.get(1))) // Call 1
@@ -424,8 +422,7 @@ class ReviewCustomFinderTest {
                 any(WikipediaPage.class),
                 any(CustomReplacementFindRequest.class)
             )
-        )
-            .thenReturn(List.of());
+        ).thenReturn(List.of());
 
         // Only Call
         Optional<Review> review = pageReviewCustomService.findRandomPageReview(options);
@@ -449,8 +446,7 @@ class ReviewCustomFinderTest {
         ReviewOptions options = ReviewOptions.ofCustom(user, subtype, true, comment);
 
         Suggestion suggestion = Suggestion.ofNoComment(comment);
-        Replacement replacement = Replacement
-            .builder()
+        Replacement replacement = Replacement.builder()
             .start(2)
             .text(subtype)
             .type(StandardType.of(ReplacementKind.SIMPLE, subtype))
@@ -458,15 +454,15 @@ class ReviewCustomFinderTest {
             .build();
         Collection<Replacement> replacements = List.of(replacement);
 
-        Replacement custom = Replacement
-            .builder()
+        Replacement custom = Replacement.builder()
             .start(2)
             .text(subtype)
             .type(options.getCustomType())
             .suggestions(List.of(suggestion))
             .build();
-        when(customReplacementFindService.findCustomReplacements(page, options.getCustomReplacementFindRequest()))
-            .thenReturn(List.of(custom));
+        when(
+            customReplacementFindService.findCustomReplacements(page, options.getCustomReplacementFindRequest())
+        ).thenReturn(List.of(custom));
 
         Collection<Replacement> result = pageReviewCustomService.decorateReplacements(page, options, replacements);
 
@@ -484,8 +480,7 @@ class ReviewCustomFinderTest {
         String comment = "Seat León";
         ReviewOptions options = ReviewOptions.ofCustom(user, subtype, true, comment);
 
-        Replacement replacement = Replacement
-            .builder()
+        Replacement replacement = Replacement.builder()
             .start(8)
             .text("Leon")
             .type(StandardType.of(ReplacementKind.SIMPLE, "leon"))
@@ -493,15 +488,15 @@ class ReviewCustomFinderTest {
             .build();
         Collection<Replacement> replacements = List.of(replacement);
 
-        Replacement custom = Replacement
-            .builder()
+        Replacement custom = Replacement.builder()
             .start(3)
             .text(subtype)
             .type(options.getCustomType())
             .suggestions(List.of(Suggestion.ofNoComment(comment)))
             .build();
-        when(customReplacementFindService.findCustomReplacements(page, options.getCustomReplacementFindRequest()))
-            .thenReturn(List.of(custom));
+        when(
+            customReplacementFindService.findCustomReplacements(page, options.getCustomReplacementFindRequest())
+        ).thenReturn(List.of(custom));
 
         Collection<Replacement> result = pageReviewCustomService.decorateReplacements(page, options, replacements);
 
@@ -519,8 +514,7 @@ class ReviewCustomFinderTest {
         String comment = "En septiembre";
         ReviewOptions options = ReviewOptions.ofCustom(user, subtype, true, comment);
 
-        Replacement replacement = Replacement
-            .builder()
+        Replacement replacement = Replacement.builder()
             .start(0)
             .text("En Septiembre de 2020")
             .type(StandardType.DATE)
@@ -528,15 +522,15 @@ class ReviewCustomFinderTest {
             .build();
         Collection<Replacement> replacements = List.of(replacement);
 
-        Replacement custom = Replacement
-            .builder()
+        Replacement custom = Replacement.builder()
             .start(0)
             .text(subtype)
             .type(options.getCustomType())
             .suggestions(List.of(Suggestion.ofNoComment("En septiembre")))
             .build();
-        when(customReplacementFindService.findCustomReplacements(page, options.getCustomReplacementFindRequest()))
-            .thenReturn(List.of(custom));
+        when(
+            customReplacementFindService.findCustomReplacements(page, options.getCustomReplacementFindRequest())
+        ).thenReturn(List.of(custom));
 
         Collection<Replacement> result = pageReviewCustomService.decorateReplacements(page, options, replacements);
 

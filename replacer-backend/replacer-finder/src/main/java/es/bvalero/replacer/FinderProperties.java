@@ -44,8 +44,7 @@ public class FinderProperties {
     }
 
     public Set<String> getAllSpaceWords() {
-        return Stream
-            .of(getAllFileWords(), getAllImageWords(), getAllAnnexWords(), getAllCategoryWords())
+        return Stream.of(getAllFileWords(), getAllImageWords(), getAllAnnexWords(), getAllCategoryWords())
             .flatMap(Collection::stream)
             .collect(Collectors.toUnmodifiableSet());
     }

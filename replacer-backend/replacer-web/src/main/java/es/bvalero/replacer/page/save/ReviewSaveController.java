@@ -75,8 +75,7 @@ class ReviewSaveController {
             WikipediaTimestamp queryTimestamp = WikipediaTimestamp.of(
                 Objects.requireNonNull(reviewedPage.getQueryTimestamp())
             );
-            WikipediaPageSaveCommand pageSave = WikipediaPageSaveCommand
-                .builder()
+            WikipediaPageSaveCommand pageSave = WikipediaPageSaveCommand.builder()
                 .pageKey(pageKey)
                 .sectionId(reviewedPage.getSectionId())
                 .content(textToSave)

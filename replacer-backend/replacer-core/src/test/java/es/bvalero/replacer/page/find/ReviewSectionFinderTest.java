@@ -29,8 +29,7 @@ class ReviewSectionFinderTest {
     }
 
     private WikipediaPage buildWikipediaPage(int pageId, String content) {
-        return WikipediaPage
-            .builder()
+        return WikipediaPage.builder()
             .pageKey(PageKey.of(WikipediaLanguage.getDefault(), pageId))
             .namespace(WikipediaNamespace.getDefault())
             .title("T")
@@ -58,8 +57,7 @@ class ReviewSectionFinderTest {
         int pageId = 1;
         String content = "This is an sample content.";
         Suggestion suggestion = Suggestion.ofNoComment("a");
-        Replacement replacement = Replacement
-            .builder()
+        Replacement replacement = Replacement.builder()
             .start(8)
             .text("an")
             .type(StandardType.of(ReplacementKind.SIMPLE, "an"))
@@ -72,8 +70,7 @@ class ReviewSectionFinderTest {
 
         int sectionId = 3;
         int offset = 5;
-        WikipediaSection section = WikipediaSection
-            .builder()
+        WikipediaSection section = WikipediaSection.builder()
             .pageKey(page.getPageKey())
             .index(sectionId)
             .level(2)
@@ -83,8 +80,7 @@ class ReviewSectionFinderTest {
         when(wikipediaPageRepository.findSectionsInPage(page.getPageKey())).thenReturn(List.of(section));
 
         String sectionContent = content.substring(offset, 10);
-        WikipediaPage pageSection = WikipediaPage
-            .builder()
+        WikipediaPage pageSection = WikipediaPage.builder()
             .pageKey(page.getPageKey())
             .namespace(page.getNamespace())
             .title(page.getTitle())

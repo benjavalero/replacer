@@ -39,8 +39,7 @@ class ReviewedReplacement {
     }
 
     private IndexedReplacement toModifiedReplacement(WikipediaPageSaveResult saveResult) {
-        return IndexedReplacement
-            .builder()
+        return IndexedReplacement.builder()
             .type((StandardType) type)
             .start(start)
             .context("") // It is not important when saving a review as we only want to update the reviewer
@@ -54,8 +53,7 @@ class ReviewedReplacement {
     }
 
     private IndexedReplacement toNotModifiedReplacement() {
-        return IndexedReplacement
-            .builder()
+        return IndexedReplacement.builder()
             .type((StandardType) type)
             .start(start)
             .context("") // It is not important when saving a review as we only want to update the reviewer
@@ -72,8 +70,7 @@ class ReviewedReplacement {
     }
 
     IndexedCustomReplacement toModifiedCustomReplacement(WikipediaPageSaveResult saveResult) {
-        return IndexedCustomReplacement
-            .builder()
+        return IndexedCustomReplacement.builder()
             .type((CustomType) type)
             .start(start)
             .reviewer(reviewer)
@@ -86,8 +83,7 @@ class ReviewedReplacement {
     }
 
     IndexedCustomReplacement toNotModifiedCustomReplacement() {
-        return IndexedCustomReplacement
-            .builder()
+        return IndexedCustomReplacement.builder()
             .type((CustomType) type)
             .start(start)
             .reviewer(reviewer)

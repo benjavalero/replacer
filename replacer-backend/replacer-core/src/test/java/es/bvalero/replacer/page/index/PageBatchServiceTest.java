@@ -29,8 +29,7 @@ class PageBatchServiceTest {
     }
 
     private IndexedPage buildIndexedPage(int pageId) {
-        return IndexedPage
-            .builder()
+        return IndexedPage.builder()
             .pageKey(PageKey.of(WikipediaLanguage.getDefault(), pageId))
             .title("T" + pageId)
             .lastUpdate(LocalDate.now())

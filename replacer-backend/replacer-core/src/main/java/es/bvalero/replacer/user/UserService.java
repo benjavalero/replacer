@@ -30,8 +30,7 @@ class UserService implements UserApi {
     }
 
     private User convertWikipediaUser(WikipediaUser wikipediaUser, AccessToken accessToken) {
-        return User
-            .builder()
+        return User.builder()
             .id(wikipediaUser.getId())
             .accessToken(accessToken)
             .hasRights(wikipediaUser.isAutoConfirmed())

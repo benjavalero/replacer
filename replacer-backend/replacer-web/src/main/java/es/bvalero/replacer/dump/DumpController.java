@@ -51,8 +51,7 @@ class DumpController {
     }
 
     private DumpStatusDto toDto(DumpStatus status) {
-        return DumpStatusDto
-            .builder()
+        return DumpStatusDto.builder()
             .running(status.isRunning())
             .numPagesRead(status.getNumPagesRead())
             .numPagesIndexed(status.getNumPagesIndexed())

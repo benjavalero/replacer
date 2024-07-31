@@ -589,8 +589,7 @@ class DateFinder implements ReplacementFinder {
             suggestions.add(0, Suggestion.of(text, "no reemplazar si el contexto está en inglés"));
         }
 
-        return Replacement
-            .builder()
+        return Replacement.builder()
             .page(page)
             .type(StandardType.DATE)
             .start(start)

@@ -37,16 +37,14 @@ class ReviewSaveControllerTest {
     private static final String title = "T";
     private static final String content = "X";
     private static final WikipediaTimestamp timestamp = WikipediaTimestamp.now();
-    private static final ReviewedReplacement reviewedReplacement = ReviewedReplacement
-        .builder()
+    private static final ReviewedReplacement reviewedReplacement = ReviewedReplacement.builder()
         .pageKey(pageKey)
         .type(StandardType.of(ReplacementKind.SIMPLE, "1"))
         .start(1)
         .reviewer("x")
         .fixed(true)
         .build();
-    private static final WikipediaPageSaveCommand pageSave = WikipediaPageSaveCommand
-        .builder()
+    private static final WikipediaPageSaveCommand pageSave = WikipediaPageSaveCommand.builder()
         .pageKey(pageKey)
         .content(content)
         .editSummary("S")

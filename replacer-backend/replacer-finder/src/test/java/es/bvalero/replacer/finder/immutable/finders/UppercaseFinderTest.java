@@ -37,8 +37,7 @@ class UppercaseFinderTest {
     }
 
     private void initUppercaseMap(String... uppercaseWords) {
-        Set<SimpleMisspelling> uppercaseSet = Stream
-            .of(uppercaseWords)
+        Set<SimpleMisspelling> uppercaseSet = Stream.of(uppercaseWords)
             .map(uppercaseWord -> SimpleMisspelling.of(uppercaseWord, true, uppercaseWord.toLowerCase()))
             .collect(Collectors.toSet());
         SetValuedMap<WikipediaLanguage, SimpleMisspelling> uppercaseMap = new HashSetValuedHashMap<>();
