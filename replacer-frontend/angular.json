@@ -85,10 +85,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "replacer-frontend:build:production"
+              "buildTarget": "replacer-frontend:build:production"
             },
             "development": {
-              "browserTarget": "replacer-frontend:build:development"
+              "buildTarget": "replacer-frontend:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -96,7 +96,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "replacer-frontend:build"
+            "buildTarget": "replacer-frontend:build"
           }
         },
         "test": {

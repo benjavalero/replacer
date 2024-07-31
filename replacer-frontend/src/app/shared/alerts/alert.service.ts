@@ -8,7 +8,7 @@ export class AlertService {
   readonly alerts = signal<AlertMessage[]>([]);
 
   private addAlertMessage(alert: AlertMessage) {
-    this.alerts.mutate((v) => v.push(alert));
+    this.alerts.update((v) => [...v, alert]);
   }
 
   clearAlertMessages() {

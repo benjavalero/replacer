@@ -34,7 +34,7 @@ export class UserConfigService {
   }
 
   setLang(lang: Language) {
-    this.config.mutate((c) => (c.lang = lang));
+    this.config.update((c) => ({ ...c, lang: lang }));
     localStorage.setItem(this.userConfigKey, JSON.stringify(this.config()));
   }
 }
