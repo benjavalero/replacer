@@ -1,7 +1,7 @@
 /// <reference types="@angular/localize" />
 
 import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
-import { importProvidersFrom } from '@angular/core';
+import { importProvidersFrom, provideZoneChangeDetection } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
 import { provideRouter } from '@angular/router';
 import { ApiModule } from './app/api/api.module';
@@ -13,6 +13,7 @@ import { environment } from './environments/environment';
 
 bootstrapApplication(AppComponent, {
   providers: [
+    provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
     importProvidersFrom(ApiModule.forRoot({ rootUrl: environment.baseUrl })),
     provideHttpClient(withInterceptorsFromDi()),

@@ -191,7 +191,7 @@
                             <outputDirectory>${project.build.directory}/classes/static/</outputDirectory>
                             <resources>
                                 <resource>
-                                    <directory>${basedir}/../../replacer-frontend/dist/replacer-frontend/</directory>
+                                    <directory>${basedir}/../../replacer-frontend/dist/replacer-frontend/browser</directory>
                                     <filtering>true</filtering>
                                 </resource>
                             </resources>
