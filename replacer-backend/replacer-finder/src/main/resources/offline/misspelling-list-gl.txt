@@ -2436,6 +2436,7 @@
  churumes||chorumes
  chuva||chuvia
  chuvas||chuvias
+ cián||ciano
  ciapio||sipaio
  ciapios||sipaios
  ciar||cear
@@ -3438,6 +3439,8 @@
  conxugandoos||conxugándoos
  conxuxe||cónxuxe
  conxuxes||cónxuxes
+ coñecimento||coñecemento
+ coñecimentos||coñecementos
  cooperacion||cooperación
  cooperacions||cooperacións
  cooproduccion||coprodución
@@ -3720,6 +3723,8 @@
  cuas||cúas
  cuaderna||caderna
  cuadernas||cadernas
+ cuaderno||caderno
+ cuadernos||cadernos
  cuadno||cando
  cuado||cando, cadro
  cuados||candos, cadros
@@ -3814,6 +3819,10 @@
  cuartanas||cuartás
  cuarteiron||cuarteirón
  cuarteirons||cuarteiróns
+ cuartelada||acuartelada
+ cuarteladas||acuarteladas
+ cuartelado||acuartelado
+ cuartelados||acuartelados
  cuatro||catro
  cuátro||catro
  cuatros||catros
@@ -4625,11 +4634,17 @@
  destornillador||desaparafusador
  destornilladores||desaparafusadores
  destos||destes
+ destroza||esnaquiza
+ destrozaba||esnaquizaba
+ destrozaban||esnaquizaban
+ destrozan||esnaquizan
  destrozada||esnaquizada
  destrozado||esnaquizado
  destrozadas||esnaquizadas
  destrozados||esnaquizados
+ destrozando||esnaquizando
  destrozar||esnaquizar
+ destrozou||esnaquizou
  destrucción||destrución
  destruccións||destrucións
  destruida||destruída
@@ -4769,6 +4784,10 @@
  dictados||ditados
  dictadura||ditadura
  dictaduras||ditaduras
+ dictaminando||ditaminando
+ dictaminar||ditaminar
+ dictaminaron||ditaminaron
+ dictaminou||ditaminou
  dictar||ditar
  didactica||didáctica
  didacticas||didácticas
@@ -5520,6 +5539,10 @@
  encaixonamento||encaixe
  encaixonamentos||encaixes
  encanto||en canto (cando é locución), encanto (é correcto como substantivo)
+ encarcelada||encarcerada
+ encarceladas||encarceradas
+ encarcelado||encarcerado
+ encarcelados||encarcerados
  encaustica||encáustica
  encausticas||encáusticas
  encaustico||encáustico
@@ -5558,13 +5581,12 @@
  endorréico||endorreico
  endorréicos||endorreicos
  endulzar||adozar
+ eneágono||enneágono
+ eneágonos||enneágonos
  enegrecida||ennegrecida
  enegrecidas||ennegrecidas
  enegrecido||ennegrecido
  enegrecidos||ennegrecidos
- engadíu||engadiu
- engrova||engroba
- engrovas||engrobas
  enemiga||inimiga (substantivo), pon a mal (cando é o verbo)
  enemigando||poñendo a mal
  enemigar||poñer a mal
@@ -5733,6 +5755,7 @@
  engadirianse||engadiríanse
  engadiriase||engadiríase
  engadironse||engadíronse
+ engadíu||engadiu
  engreida||fachendosa, presumida, presuntuosa, vaidosa, xactanciosa
  engreída||fachendosa, presumida, presuntuosa, vaidosa, xactanciosa
  engreidas||fachendosas, presumidas, presuntuosas, vaidosas, xactanciosas
@@ -5768,6 +5791,8 @@
  engranaxes||engrenaxes
  engrenaria||engrenaría
  engrenarian||engrenarían
+ engrova||engroba
+ engrovas||engrobas
  enlaze||enlace
  enlazes||enlaces
  enmenda||emenda
@@ -6710,6 +6735,8 @@
  estudiadas||estudadas
  estudiado||estudado
  estudiados||estudados
+ estudiantil||estudantil
+ estudiantís||estudantís
  estudiar||estudar (''estudio'', cun ''i'', é o lugar onde se realizan actividades intelectuais ou profesionais)
  estudio||estudo (se é de estudar), estudio (é correcto se é o local)
  estudios||estudos (se é de estudar), estudios (é correcto se son os locais)
@@ -7576,6 +7603,7 @@
  fuciños||fociños
  fucion||función, fusión
  fución||función, fusión
+ fue||foi
  fuente||fonte
  fuentes||fontes
  fueron||foron
@@ -7695,6 +7723,10 @@
  galapagos||Galápagos
  galápagos|cs|Galápagos
  galardon||galardón
+ galardonada||galardoada
+ galardonadas||galardoadas
+ galardonado||galardoado
+ galardonados||galardoados
  galeira||galera
  galeiras||galeras
  galeria||galería
@@ -10965,6 +10997,10 @@
  noros||xenros
  noruego||noruegués
  noruegos||noruegueses
+ notra||noutra
+ notras||noutras
+ notro||noutro
+ notros||noutros
  november||novembro
  Novembro|cs|novembro
  novicia||noviza
@@ -10997,6 +11033,10 @@
  oberturas||aberturas
  obispo||bispo
  obispos||bispos
+ oblícua||oblicua
+ oblícuas||oblicuas
+ oblícuo||oblicuo
+ oblícuos||oblicuos
  obligación||obriga, obrigación
  obligada||obrigada
  obligadas||obrigadas
@@ -11040,6 +11080,7 @@
  oferece||ofrece
  oferecer||ofrecer
  ofereceu||ofreceu
+ oficiales||oficiais
  oficiña||oficina
  oficiñas||oficinas
  ola||onda, ola (é correcto se é saúdo ou recipiente)
@@ -11256,7 +11297,7 @@
  parpadexar||escintilar, pestanexar
  parpadexo||pestanexo
  Parides|cs|París (tradución errónea da capital
- paris||París
+ paris||Paris (personaxe da Ilíada), París (capital de Francia)
  parís|cs|París
  parisina||parisiense
  parisinas||parisienses
@@ -11550,6 +11591,8 @@
  playback||son pregravado
  plaza||praza
  plazas||prazas
+ plegaria||pregaria
+ plegarias||pregarias
  pleistoceno||plistoceno
  pleito||preito
  pleitos||preitos
@@ -11792,6 +11835,18 @@
  preconcebidos||preconcibidos
  precurar||procurar
  precura||procura
+ predecir||predicir
+ predeciron||predixeron
+ predeciu||predixo
+ predecíu||predixo
+ predicción||predición
+ prediccións||predicións
+ predice||predí
+ predicen||predín
+ prediciría||prediría
+ predicirían||predirían
+ prediciron||predixeron
+ prediciu||predixo
  preeliminar||preliminar
  preeliminares||preliminares
  pregrado||pregrao
@@ -11930,6 +11985,10 @@
  psicoanalíticas||psicanalíticas
  psicoanalizar||psicanalizar
  psoriase||psoríase
+ púbica||pubiana
+ púbicas||pubianas
+ púbico||pubiano
+ púbicos||pubianos
  públicamente||publicamente
  pubrico||público, publico (é correcto se é de publicar)
  pubricos||públicos
@@ -12044,6 +12103,8 @@
  radiactividade||radioactividade
  raiña||raíña
  raiñas||raíñas
+ raiz||raíz
+ raices||raíces
  rampa||rampla
  rampas||ramplas
  ranking||clasificación
@@ -12375,6 +12436,9 @@
  requeridas||requiridas
  requerido||requirido
  requeridos||requiridos
+ requerimento||requirimento
+ requerimentos||requirimentos
+ requerindo||requirindo
  requerir||requirir
  requeriu||requiriu
  requeriume||requiriume
@@ -12428,6 +12492,8 @@
  respiradeiro||respiro, respiradoiro
  respiradeiros||respiros, respiradoiros
  respostar||responder
+ respostou||respondeu
+ respostaron||responderon
  resquicio||físgoa
  resquicios||físgoas
  restregar||refregar
@@ -12588,6 +12654,7 @@
  Sahara|cs|Sáhara
  saindo||saíndo
  sair||saír
+ saiu||saíu
  salgue||sae
  salguen||saen
  salir||saír
@@ -13411,6 +13478,8 @@
  terraplenos||terrapléns
  terraza||socalco (terra de cultivo contida por un valado), terraza (é correcto se é a cuberta dun edificio ou a parte dun bar)
  terrazas||socalcos (terras de cultivo contidas por valados), terrazas (é correcto se é a cuberta dun edificio ou a parte dun bar)
+ terrenal||terreal
+ terrenais||terreais
  terreno||terreo
  terrenos||terreos
  terron||terrón
@@ -13439,6 +13508,8 @@
  timados||estafados
  timar||estafar
  timo||estafa, timo (é correcto se é a glándula do pescozo)
+ timón||temón
+ timóns||temóns
  timos||estafas, timos (é correcto se é a glándula do pescozo)
  tina||talla (cántaro de barro)
  tinas||tallas (cántaro de barro)
@@ -13452,6 +13523,8 @@
  tiroides||tiroide
  títere||monicreque
  títeres||monicreques
+ titulo||título
+ titulos||títulos
  tixeira||tesoira
  tixeiras||tesoiras
  tixera||tesoira
@@ -13617,6 +13690,12 @@
  trasatlánticos||transatlánticos
  trascendencia||transcendencia
  trascendencias||transcendencias
+ trascende||transcende
+ trascenden||transcenden
+ trascenderon||transcenderon
+ trascender||transcender
+ trascendeu||transcendeu
+ trasposición||transposición
  travesaño||traveseiro
  travesaños||traveseiros
  trebo||trevo
@@ -13852,7 +13931,6 @@
  vasoconstrictoras||vasoconstritoras
  vaxilla||vaixela
  vaxillas||vaixelas
-
  véaxse||véxase
  veber||beber
  vecindade||veciñanza
@@ -13947,6 +14025,10 @@
  vestíu||vestiu
  vestuario||vestiario
  vestuarios||vestiarios
+ veterá||veterana
+ veterán||veterano
+ veteráns||veteranos
+ veterás||veteranas
  vetis||Betis
  vever||beber
  véxse||véxase
@@ -14020,6 +14102,7 @@
  viscondesas||vizcondesa
  visillo||cortina
  visillos||cortinas
+ vislumbrar||albiscar
  víspera||véspera
  vísperas||vésperas
  vispera||véspera
@@ -14056,6 +14139,8 @@
  voltaría||volvería
  voltaron||volveron
  voltou||volveu
+ volumen||volume
+ volúmenes||volumes
  volvoreta||bolboreta
  volvoretas||bolboretas
  vorágine||voráxine
@@ -14305,4 +14390,5 @@
  zumbidos||zunidos
  zumo||zume
  zumos||zumes
- zurich||Zúric
+ zuric||Zürich
+ zurich||Zürich

@@ -56,17 +56,17 @@ class ComposedMisspellingFinderBenchmarkTest extends BaseFinderBenchmark {
         // finders.add(new WordRegexFinder(words)); // Very Short
         // finders.add(new WordRegexCompleteFinder(words)); // Long
         // finders.add(new WordRegexCompleteSeparatorsFinder(words)); // Very Long
-        // finders.add(new WordAutomatonFinder(words)); // Short
+        // finders.add(new WordAutomatonFinder(words)); // Short - Heap space issues
         // finders.add(new WordLinearFinder(words)); // Very Very Short
 
         // Build an alternation with all the misspelling expressions and find the regex in the text
         // finders.add(new WordRegexAlternateFinder(words)); // Medium
         // finders.add(new WordRegexAlternateCompleteFinder(words)); // Short
         // finders.add(new WordRegexAlternateCompleteSeparatorsFinder(words)); // Short
-        finders.add(new WordAutomatonAlternateFinder(words));
+        // finders.add(new WordAutomatonAlternateFinder(words)); // Heap space issues
 
         // Use the Aho-Corasick algorithm which eventually creates an automaton
-        // The whole-word finder cannot be used here as it doesn't work for expressions
+        // The whole-word finder cannot be used here as it doesn't work for composed with spaces within
         finders.add(new WordAhoCorasickFinder(words));
         finders.add(new WordAhoCorasickLongestFinder(words));
         finders.add(new WordAhoCorasickWholeLongestFinder(words));

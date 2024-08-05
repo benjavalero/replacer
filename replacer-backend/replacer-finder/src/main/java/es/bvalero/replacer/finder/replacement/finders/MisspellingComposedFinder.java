@@ -1,15 +1,15 @@
 package es.bvalero.replacer.finder.replacement.finders;
 
-import dk.brics.automaton.RegExp;
-import dk.brics.automaton.RunAutomaton;
+import com.roklenarcic.util.strings.LongestMatchMap;
+import com.roklenarcic.util.strings.StringMap;
 import es.bvalero.replacer.common.domain.ReplacementKind;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.listing.ComposedMisspelling;
 import es.bvalero.replacer.finder.listing.StandardMisspelling;
 import es.bvalero.replacer.finder.listing.load.ComposedMisspellingLoader;
-import es.bvalero.replacer.finder.util.AutomatonMatchFinder;
 import es.bvalero.replacer.finder.util.FinderUtils;
+import es.bvalero.replacer.finder.util.ResultMatchListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.*;
@@ -27,7 +27,7 @@ public class MisspellingComposedFinder extends MisspellingFinder implements Prop
     // Dependency injection
     private final ComposedMisspellingLoader composedMisspellingLoader;
 
-    private Map<WikipediaLanguage, RunAutomaton> automata = new EnumMap<>(WikipediaLanguage.class);
+    private Map<WikipediaLanguage, LongestMatchMap<String>> stringMaps = new EnumMap<>(WikipediaLanguage.class);
 
     public MisspellingComposedFinder(ComposedMisspellingLoader composedMisspellingLoader) {
         this.composedMisspellingLoader = composedMisspellingLoader;
@@ -42,20 +42,20 @@ public class MisspellingComposedFinder extends MisspellingFinder implements Prop
     @SuppressWarnings("unchecked")
     public void propertyChange(PropertyChangeEvent evt) {
         buildMisspellingMaps((SetValuedMap<WikipediaLanguage, StandardMisspelling>) evt.getNewValue());
-        this.automata = buildComposedMisspellingAutomata(
+        this.stringMaps = buildComposedMisspellingStringMap(
             (SetValuedMap<WikipediaLanguage, ComposedMisspelling>) evt.getNewValue()
         );
     }
 
-    private Map<WikipediaLanguage, RunAutomaton> buildComposedMisspellingAutomata(
+    private Map<WikipediaLanguage, LongestMatchMap<String>> buildComposedMisspellingStringMap(
         SetValuedMap<WikipediaLanguage, ComposedMisspelling> misspellings
     ) {
-        final Map<WikipediaLanguage, RunAutomaton> map = new EnumMap<>(WikipediaLanguage.class);
+        final Map<WikipediaLanguage, LongestMatchMap<String>> map = new EnumMap<>(WikipediaLanguage.class);
         for (WikipediaLanguage lang : misspellings.keySet()) {
             final Set<ComposedMisspelling> langMisspellings = misspellings.get(lang);
             final Set<String> processedMisspellings = new HashSet<>();
             for (ComposedMisspelling cm : langMisspellings) {
-                final String word = toRegex(cm.getWord());
+                final String word = cm.getWord();
                 if (cm.isCaseSensitive()) {
                     processedMisspellings.add(word);
                 } else {
@@ -63,23 +63,25 @@ public class MisspellingComposedFinder extends MisspellingFinder implements Prop
                     processedMisspellings.add(FinderUtils.setFirstLowerCase(word));
                 }
             }
-            final String alternations = FinderUtils.joinAlternate(processedMisspellings);
-            map.put(lang, new RunAutomaton(new RegExp(alternations).toAutomaton()));
+            map.put(lang, new LongestMatchMap<>(processedMisspellings, processedMisspellings, true));
         }
         return map;
-    }
-
-    private String toRegex(String word) {
-        return word.replace("[", "\\[").replace("]", "\\]").replace(".", "\\.");
     }
 
     @Override
     public Iterable<MatchResult> findMatchResults(FinderPage page) {
         // There are hundreds of composed misspellings
         // The best approach is an automaton of oll the terms alternated with big difference against the linear approach
-        // The Aho-Corasick can be even better, but it doesn't manage well some composed cases with non-word characters.
-        final RunAutomaton automaton = this.automata.get(page.getPageKey().getLang());
-        return automaton == null ? List.of() : AutomatonMatchFinder.find(page.getContent(), automaton);
+        // The Aho-Corasick algorithm can be even better, but it doesn't manage well some composed cases with non-word characters.
+        // Finally, we use Aho-Corasick "longest" algorithm not to capture overlapping results,
+        // which gives a similar performance to the automaton approach but with less memory consumption.
+        final StringMap<String> stringMap = this.stringMaps.get(page.getPageKey().getLang());
+        if (stringMap == null) {
+            return List.of();
+        }
+        final ResultMatchListener listener = new ResultMatchListener();
+        stringMap.match(page.getContent(), listener);
+        return listener.getMatches();
     }
 
     @Override

@@ -7,6 +7,7 @@
 - Fix: save the timestamp returned by Wikipedia API instead of the local date
 - Fix: some finders stop finding after the first false positive
 - Fix: ignore ordinals preceded by letter
+- Fix: change the algorithm to capture composed misspellings in order to avoid heap space issues
 
 ## 2.27.1 (23 Nov 2023)
 - Fix: ignore false degrees where the degree letter belongs to a word and therefore are likely to be ordinals

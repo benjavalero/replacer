@@ -8,10 +8,10 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
 == 0-9 ==
 
  1 sólo||un solo, Un solo, 1 solamente, uno solamente
- 1º de Agosto|cs|1 de Agosto, Primero de Agosto
- 1º de Mayo|cs|1 de Mayo, Primero de Mayo
- 1° de Mayo|cs|1 de Mayo, Primero de Mayo
- 1ro de Mayo|cs|1 de Mayo, Primero de Mayo
+ 1º de Agosto|cs|1.º de Agosto, Primero de Agosto
+ 1º de Mayo|cs|1.º de Mayo, Primero de Mayo
+ 1° de Mayo|cs|1.º de Mayo, Primero de Mayo
+ 1ro de Mayo|cs|1.º de Mayo, Primero de Mayo
  50 m.||50&nbsp;m (los símbolos de medida se escriben sin punto —cuidado si es fin de frase—), 50&nbsp;m. (para fin de frase)
  60 m.||60&nbsp;m (los símbolos de medida se escriben sin punto —cuidado si es fin de frase—), 60&nbsp;m. (para fin de frase)
  100 m.||100&nbsp;m (los símbolos de medida se escriben sin punto —cuidado si es fin de frase—), 100&nbsp;m. (para fin de frase frase)
@@ -31,10 +31,15 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  15.000 m.||15&nbsp;000&nbsp;m (los símbolos de medida se escriben sin punto —cuidado si es fin de frase—), 15&nbsp;000&nbsp;m. (para fin de frase)
 
 == A ==
+ a alturas||a altitudes («altitud» es sobre el nivel del mar), a alturas («altura» es sobre el terreno o superficie inmediatamente inferior)
+ aC.|cs|a.&nbsp;C. (con espacio duro)
  a.C.|cs|a.&nbsp;C. (con espacio duro)
  a.C|cs|a.&nbsp;C. (con espacio duro)
  a. C.|cs|a.&nbsp;C. (con espacio duro)
- a. de C.|cs|a.&nbsp;C. (con espacio duro)
+ a cambió||a cambio
+ a de C.||a.&nbsp;C. (con espacio duro)
+ a. de C.||a.&nbsp;C. (con espacio duro)
+ a capella||a&nbsp;capela (en español), ''a&nbsp;cappella'' (en italiano, en cursiva, solamente para partituras)
  actualmente en vigor||en vigor, vigente, vigentes
  adc|cs|a.&nbsp;C. (con espacio duro)
  AdC|cs|a.&nbsp;C. (con espacio duro)
@@ -53,9 +58,26 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  ad-hoc||''ad hoc''
  Administración Publica|cs|Administración Pública
  a el||al, a él, a El
+ afro americana||afroamericana
+ afro-americana||afroamericana
+ afro americanas|afroamericanas
+ afro-americanas|afroamericanas
+ afro americano||afroamericano
+ afro-americano||afroamericano
+ afro americanos|afroamericanos
+ afro-americanos|afroamericanos
+ afro descendiente||afrodescendiente
+ afro-descendiente||afrodescendiente
+ afro descendientes||afrodescendientes
+ afro-descendientes||afrodescendientes
  a la alza||al alza
+ al Andalus|cs|al-Ándalus, Al-Ándalus (para inicios de frase o columnas de tablas), el Ándalus, Ándalus (después de artículo)
+ al-Andalus|cs|al-Ándalus, Al-Ándalus (para inicios de frase o columnas de tablas), el Ándalus, Ándalus (después de artículo)
+ Al Andalus|cs|al-Ándalus, Al-Ándalus (para inicios de frase o columnas de tablas), el Ándalus, Ándalus (después de artículo)
+ Al-Andalus|cs|al-Ándalus, Al-Ándalus (para inicios de frase o columnas de tablas), el Ándalus, Ándalus (después de artículo)
  Alberto Del Río|cs|Alberto Del Rio (nombre comercial del luchador, sin tilde)
- al Andalus||al-Ándalus, Al-Ándalus (para inicios de frase o columnas de tablas), el Ándalus
+ al la||a la
+ al las||a las
  alma mater||''alma mater''
  alma-mater||''alma mater''
  alma máter||''alma mater''
@@ -72,7 +94,7 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  Alma-Mater|cs|''alma mater''
  Alma Máter|cs|''alma mater''
  Alma-Máter|cs|''alma mater''
- al rededor||alrededor
+ al los||a los
  alta edad media|cs|Alta Edad Media
  alta edad Media|cs|Alta Edad Media
  alta Edad media|cs|Alta Edad Media
@@ -90,6 +112,7 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  álter-egos||''alter ego''
  al al|cs|al, a la
  al top ten||a la lista de los diez primeros, a la lista de las diez primeras, a la lista de los diez mejores, a la lista de las diez mejores, a la lista de los diez más populares, a la lista de las diez más populares, entre los diez primeros, entre las diez primeras, entre los diez mejores, entre las diez mejores, entre los diez más populares, entre las diez más populares
+ altura promedio||altitud promedio («altitud» es sobre el nivel del mar), altura promedio («altura» es un tamaño o indica distancia sobre el terreno o superficie inmediatamente inferior)
  a mas||a más
  America Latina|cs|América Latina
  Angel Nieto|cs|Ángel Nieto (piloto español)
@@ -133,6 +156,16 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  anti-esclavistas||antiesclavistas
  anti esclavitud||antiesclavitud
  anti-esclavitud||antiesclavitud
+ anti frances||antifrancés
+ anti francés||antifrancés
+ anti-frances||antifrancés
+ anti-francés||antifrancés
+ anti francesa||antifrancesa
+ anti-francesa||antifrancesa
+ anti francesas||antifrancesas
+ anti-francesas||antifrancesas
+ anti franceses||antifranceses
+ anti-franceses||antifranceses
  anti gas||antigás
  anti-gas||antigás
  anti guerra||antiguerra
@@ -225,6 +258,7 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  a-priori||''a priori'' (en cursiva)
  aproximadamente unos||aproximadamente, unos
  aún así||aun así (equivale a «pese a eso» o «sin embargo»), aún así (equivale a «todavía así»)
+ a una altura de||a una altitud de («altitud» es sobre el nivel del mar), a una altura de («altura» es sobre el terreno o superficie inmediatamente inferior)
  auto ayuda||autoayuda
  auto-ayuda||autoayuda
  auto control||autocontrol
@@ -253,6 +287,9 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
 == C ==
 
  C's|cs|Cs (Ciudadanos, partido político español)
+ caben destacar||cabe destacar
+ caben mencionar||cabe mencionar
+ caben señalar||cabe señalar
  canta autor||cantautor
  canta-autor||cantautor
  canta autores||cantautores
@@ -271,9 +308,12 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  Ché Guevara|cs|Che Guevara
  ciencia-ficcion||ciencia ficción
  ciencia-ficción||ciencia ficción
+ Círculo Polar Antártico|cs|círculo polar antártico, Círculo polar antártico (para inicios de frase o columnas de tablas)
+ Círculo Polar Ártico|cs|círculo polar ártico, Círculo polar ártico (para inicios de frase o columnas de tablas)
+ ciudad de México|cs|Ciudad de México
  cm. de||cm de (símbolo de centímetros —no lleva punto—)
- cm2||cm{{Exp|2}} (centímetro cuadrado), centímetro cuadrado, centímetros cuadrados
- cm3||cm{{Exp|3}} (centímetro cúbico), centímetro cúbico, centímetros cúbicos
+ cm2||cm² (centímetro cuadrado), centímetro cuadrado, centímetros cuadrados
+ cm3||cm³ (centímetro cúbico), centímetro cúbico, centímetros cúbicos
  co anima||coanima
  co-anima||coanima
  co animacion||coanimación
@@ -402,6 +442,10 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  co-descubridoras||codescubridoras
  co descubridores||codescubridores
  co-descubridores||codescubridores
+ co direccion||codirección
+ co-direccion||codirección
+ co dirección||codirección
+ co-dirección||codirección
  co director||codirector
  co-director||codirector
  co directora||codirectora
@@ -410,6 +454,32 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  co-directoras||codirectoras
  co directores||codirectores
  co-directores||codirectores
+ co dirige||codirige
+ co-dirige||codirige
+ co dirigen||codirigen
+ co-dirigen||codirigen
+ co dirigida||codirigida
+ co-dirigida||codirigida
+ co dirigidas||codirigidas
+ co-dirigidas||codirigidas
+ co dirigido||codirigido
+ co-dirigido||codirigido
+ co dirigidos||codirigidos
+ co-dirigidos||codirigidos
+ co dirigiendo||codirigiendo
+ co-dirigiendo||codirigiendo
+ co dirigieron||codirigieron
+ co-dirigieron||codirigieron
+ co dirigio||codirigió
+ co-dirigio||codirigió
+ co dirigió||codirigió
+ co-dirigió||codirigió
+ co dirigir||codirigir
+ co-dirigir||codirigir
+ co dirija||codirija
+ co-dirija||codirija
+ co dirijan||codirijan
+ co-dirijan||codirijan
  co diseñada||codiseñada
  co-diseñada||codiseñada
  co diseñadas||codiseñadas
@@ -436,6 +506,42 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  co-diseño||codiseño (1.ª persona), codiseñó (3.ª persona)
  co diseñó||codiseñó (3.ª persona), codiseño (1.ª persona)
  co-diseñó||codiseñó (3.ª persona), codiseño (1.ª persona)
+ co edicion||coedición
+ co-edicion||coedición
+ co edición||coedición
+ co-edición||coedición
+ co ediciones||coediciones
+ co-ediciones||coediciones
+ co edita||coedita
+ co-edita||coedita
+ co editada||coeditada
+ co-editada||coeditada
+ co editadas||coeditadas
+ co-editadas||coeditadas
+ co editado||coeditado
+ co-editado||coeditado
+ co editados||coeditados
+ co-editados||coeditados
+ co editan||coeditan
+ co-editan||coeditan
+ co editando||coeditando
+ co-editando||coeditando
+ co editar||coeditar
+ co-editar||coeditar
+ co editaron||coeditaron
+ co-editaron||coeditaron
+ co edito||coeditó (3.ª persona), coedito (1.ª persona)
+ co-edito||coeditó (3.ª persona), coedito (1.ª persona)
+ co editó||coeditó (3.ª persona), coedito (1.ª persona)
+ co-editó||coeditó (3.ª persona), coedito (1.ª persona)
+ co editor||coeditor
+ co-editor||coeditor
+ co editora||coeditora
+ co-editora||coeditora
+ co editoras||coeditoras
+ co-editoras||coeditoras
+ co editores||coeditores
+ co-editores||coeditores
  co escriba||coescriba
  co-escriba||coescriba
  co escriban||coescriban
@@ -454,6 +560,10 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  co-escribió||coescribió
  co escribir||coescribir
  co-escribir||coescribir
+ co escrita||coescrita
+ co-escrita||coescrita
+ co escritas||coescritas
+ co-escritas||coescritas
  co escrito||coescrito
  co-escrito||coescrito
  co escritor||coescritor
@@ -641,6 +751,10 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  co-presidio||copresidió
  co presidir||copresidir
  co-presidir||copresidir
+ co principal||coprincipal
+ co-principal||coprincipal
+ co principales||coprincipales
+ co-principales||coprincipales
  co produccion||coproducción
  co-produccion||coproducción
  co producción||coproducción
@@ -729,25 +843,39 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  co-protagonizo||coprotagonizó (3.ª persona), coprotagonizo (1.ª persona)
  co protagonizó||coprotagonizó (3.ª persona), coprotagonizo (1.ª persona)
  co-protagonizó||coprotagonizó (3.ª persona), coprotagonizo (1.ª persona)
+ cum laude||''cum laude''
+ cum laudem||''cum laude''
  curriculum vitae||''curriculum vitae''
  currículum vitae||''curriculum vitae''
 
 == D ==
  dado a que||dado que
  dado cuenta que||dado cuenta de que
- dam2||dam{{Exp|2}} (decámetro cuadrado), decámetro cuadrado, decámetros cuadrados
- dam3||dam{{Exp|3}} (decámetro cúbico), decámetro cúbico, decámetros cúbicos
+ dam2||dam² (decámetro cuadrado), decámetro cuadrado, decámetros cuadrados
+ dam3||dam³ (decámetro cúbico), decámetro cúbico, decámetros cúbicos
  dandose cuenta que||dándose cuenta de que
  dándose cuenta que||dándose cuenta de que
  darse cuenta que||darse cuenta de que
+ dC.|cs|d.&nbsp;C. (con espacio duro)
  d.C|cs|d.&nbsp;C. (con espacio duro)
  d.C.|cs|d.&nbsp;C. (con espacio duro)
  d. C.|cs|d.&nbsp;C. (con espacio duro)
- d. de C.|cs|d.&nbsp;C. (con espacio duro)
+ d de C.||d.&nbsp;C. (con espacio duro)
+ d. de C.||d.&nbsp;C. (con espacio duro)
  de Cordoba||de Córdoba
  de de|cs|de
+ de del|cs|del, de, del de
  de el||del, de él, de El, dé el, dé él
+ de el bosco|cs|del Bosco
+ de el Bosco|cs|del Bosco
+ de El bosco|cs|del Bosco
+ de El Bosco|cs|del Bosco
+ de el greco|cs|del Greco
+ de el Greco|cs|del Greco
+ de El greco|cs|del Greco
+ de El Greco|cs|del Greco
  de estás||de estas
+ de por si||de por sí
  décima cuartas||decimocuartas (uso mayoritario), décimas cuartas
  decima cuartas||decimocuartas (uso mayoritario), décimas cuartas
  décima novenas||decimonovenas (uso mayoritario), décimas novenas
@@ -810,7 +938,13 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  décimo tercera||decimotercera (uso mayoritario), décima tercera
  décimo terceras||decimoterceras (uso mayoritario), décimas terceras
  décimo terceros||decimoterceros (uso mayoritario), décimos terceros
+ Decreto de Necesidad y Urgencia|cs|decreto de necesidad y urgencia, Decreto de necesidad y urgencia (para inicios de frase o columnas de tablas)
+ decreto de Necesidad y Urgencia|cs|decreto de necesidad y urgencia, Decreto de necesidad y urgencia (para inicios de frase o columnas de tablas)
+ Decretos de Necesidad y Urgencia|cs|decretos de necesidad y urgencia, Decretos de necesidad y urgencia (para inicios de frase o columnas de tablas)
+ decretos de Necesidad y Urgencia|cs|decretos de necesidad y urgencia, Decretos de necesidad y urgencia (para inicios de frase o columnas de tablas)
+ de esté||de este
  dejo el||dejó el
+ del al-Ándalus||del Ándalus, de al-Ándalus
  del celebre||del célebre
  del cuál||del cual
  del genero||del género
@@ -820,7 +954,7 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  delirium trémens||''delirium tremens'' (locución en latín), Delirium Tremens (grupo musical, marca), «Delirium tremens» (canción)
  del la|cs|de la
  del top ten||de la lista de los diez primeros, de la lista de las diez primeras, de la lista de los diez mejores, de la lista de las diez mejores, de la lista de los diez más populares, de la lista de las diez más populares, entre los diez primeros, entre las diez primeras, entre los diez mejores, entre las diez mejores, entre los diez más populares, entre las diez más populares
- de mas||de más
+ de mas||de más, demás
  de Mexico||de México
  desarrollo un||desarrolló un (verbo)
  delante suyo||delante de él, delante de ella, delante de sí
@@ -841,14 +975,16 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  discrepa con||discrepa de, discrepa sobre, discrepa en, discrepa con (no censurable en Argentina, úsese solamente en artículos relacionados con este)
  discrepó con||discrepó de, discrepó sobre, discrepó en, discrepó con (no censurable en Argentina, úsese solamente en artículos relacionados con este)
  distrito de Verdun||distrito de Verdún
- dm2||dm{{Exp|2}} (decímetro cuadrado), decímetro cuadrado, decímetros cuadrados
- dm3||dm{{Exp|3}} (decímetro cúbico), decímetro cúbico, decímetros cúbicos
+ dm2||dm² (decímetro cuadrado), decímetro cuadrado, decímetros cuadrados
+ dm3||dm³ (decímetro cúbico), decímetro cúbico, decímetros cúbicos
  donde paso||donde pasó
  drop shot||dejada (tenis)
 
 == E ==
  e.c.||d.&nbsp;C. (con espacio duro; abreviatura de «después de Cristo»; recomendada), e.&nbsp;c. (con espacio duro; abreviatura de «de la era común» o abreviatura de gol «en contra» —o autogol—)
  e. c.||d.&nbsp;C. (con espacio duro; abreviatura de «después de Cristo»; recomendada), e.&nbsp;c. (con espacio duro; abreviatura de «de la era común» o abreviatura de gol «en contra» —o autogol—)
+ E.E.U.U.|cs|EE.&nbsp;UU. (con espacio duro), EUA, Estados Unidos
+ EE.UU.|cs|EE.&nbsp;UU. (con espacio duro), EUA, Estados Unidos
  edad antigua|cs|Edad Antigua
  edad Antigua|cs|Edad Antigua
  Edad antigua|cs|Edad Antigua
@@ -880,7 +1016,7 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  edad Moderna|cs|Edad Moderna
  Edad moderna|cs|Edad Moderna
  Educación Publica|cs|Educación Pública
- e iones||y iones
+ el al-Ándalus||el Ándalus, al-Ándalus
  el alma mater||la ''alma mater''
  el autoestima||la autoestima
  el cuál||el cual
@@ -895,17 +1031,21 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  e-mails||mensajes de correo electrónico, correos electrónicos
  en base a||con base en (construcción recomendada), basándose en (construcción recomendada), sobre la base de (construcción recomendada)
  en caso que||en caso de que
+ en de|cs|en, de, el de, es de
  en el caso que||en el caso de que
+ en el en el||en el
+ en el la|cs|en el, en la
  en el qué||en el que
  en en||en, en el
  en estás||en estas
+ en la en la||en la
  Enlace externos|cs|Enlaces externos
  Enlaces externo|cs|Enlaces externos
  Enlaces Externos|cs|Enlaces externos
  en la qué||en la que
  en perdida||en pérdida
- en relación a||en relación con, con relación a
- en relación al||en relación con el, con relación al
+ en relación a||con relación a, en relación con
+ en relación al||con relación al, en relación con el
  enterada que||enterada de que
  enteradas que||enteradas de que
  enterado que||enterado de que
@@ -917,11 +1057,24 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  entre medias||entremedias (entre dos lugares, cosas o tiempos)
  entre si||entre sí (pronombre), entre si (conjunción, o nota musical)
  es mas||es más
+ esta a cargo||está a cargo
  ésta área||esta área
+ esta ausente||está ausente
+ esta basada||está basada
+ esta basado||está basado
  ésta canción||esta canción
  ésta ciudad||esta ciudad
  esta compuesta||está compuesta
  esta compuesto||está compuesto
+ esta conformada||está conformada
+ esta conformado||está conformado
+ esta considerada||está considerada
+ esta considerado||está considerado
+ esta construida||está construida
+ esta construido||está construido
+ esta disponible||está disponible
+ esta dividida||está dividida
+ esta dividido||está dividido
  Estado de Bienestar|cs|estado de bienestar
  Estado de bienestar|cs|estado de bienestar
  estado de Bienestar|cs|estado de bienestar
@@ -937,12 +1090,23 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  ésta especie||esta especie
  ésta estación||esta estación
  ésta etapa||esta etapa
+ esta formada||está formada
+ esta formado||está formado
+ esta incluida||está incluida
+ esta incluido||está incluido
  ésta información||esta información
+ esta inspirada||está inspirada
+ esta inspirado||está inspirado
+ esta integrada||está integrada
+ esta integrado||está integrado
  esta libre||está libre
  ésta línea||esta línea
  ésta localidad||esta localidad
+ esta localizada||está localizada
+ esta localizado||está localizado
  ésta manera||esta manera
  ésta misma||esta misma
+ esta muy||está muy
  ésta obra||esta obra
  ésta ocasión||esta ocasión
  ésta parte||esta parte
@@ -950,16 +1114,22 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  ésta población||esta población
  ésta producción||esta producción
  ésta región||esta región
+ esta representada||está representada
+ esta representado||está representado
  éstas dos||estas dos
  ésta serie||esta serie
  esta siendo||está siendo
  ésta situación||esta situación
+ esta situada||está situada
+ esta situado||está situado
  éstas tierras||estas tierras
  éstas últimas||estas últimas
  ésta técnica||esta técnica
  ésta temporada||esta temporada
  estatu quo||''statu quo''
  estatus quo||''statu quo''
+ esta ubicada||está ubicada
+ esta ubicado||está ubicado
  ésta última|| esta última
  ésta versión||esta versión
  ésta vez||esta vez
@@ -985,6 +1155,8 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  éste último|| este último
  éstos dos||estos dos
  éstos últimos||estos últimos
+ es un es un||es un
+ es una es una||es una
  ex agente||exagente
  ex-agente||exagente
  ex agentes||exagentes
@@ -1005,6 +1177,14 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  ex-asesoras||exasesoras
  ex asesores||exasesores
  ex-asesores||exasesores
+ ex candidata||excandidata
+ ex-candidata||excandidata
+ ex candidatas||excandidatas
+ ex-candidatas||excandidatas
+ ex candidato||excandidato
+ ex-candidato||excandidato
+ ex candidatos||excandidatos
+ ex-candidatos||excandidatos
  ex capitan||excapitán
  ex-capitan||excapitán
  ex capitán||excapitán
@@ -1053,6 +1233,14 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  ex-futbolista||exfutbolista
  ex futbolistas||exfutbolistas
  ex-futbolistas||exfutbolistas
+ ex gobernador||exgobernador
+ ex-gobernador||exgobernador
+ ex gobernadora||exgobernadora
+ ex-gobernadora||exgobernadora
+ ex gobernadoras||exgobernadoras
+ ex-gobernadoras||exgobernadoras
+ ex gobernadores||exgobernadores
+ ex-gobernadores||exgobernadores
  ex integrante||exintegrante
  ex-integrante||exintegrante
  ex integrantes||exintegrantes
@@ -1089,6 +1277,8 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  ex-ministro||exministro
  ex ministros||exministros
  ex-ministros||exministros
+ ex-modelo||exmodelo
+ ex-modelos||exmodelos
  ex novia||exnovia
  ex-novia||exnovia
  ex novias||exnovias
@@ -1145,6 +1335,14 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  ex-secretario de Estado||ex secretario de Estado
  exsecretarios de Estado||ex secretarios de Estado
  ex-secretarios de Estado||ex secretarios de Estado
+ ex senador||exsenador
+ ex-senador||exsenador
+ ex senadora||exsenadora
+ ex-senadora||exsenadora
+ ex senadoras||exsenadoras
+ ex-senadoras||exsenadoras
+ ex senadores||exsenadores
+ ex-senadores||exsenadores
  ex vice presidenta||exvicepresidenta
  ex-vice-presidenta||exvicepresidenta
  ex vicepresidenta||exvicepresidenta
@@ -1164,6 +1362,12 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  Golpe de estado|cs|Golpe de Estado
  grandes perdidas||grandes pérdidas
  gr. de||g de (símbolo de gramos —no lleva punto—)
+ Guerra Civil Española|cs|guerra civil española
+ Guerra Civil española|cs|guerra civil española
+ Guerra civil Española|cs|guerra civil española
+ Guerra Civil Estadounidense|cs|guerra civil estadounidense
+ Guerra Civil estadounidense|cs|guerra civil estadounidense
+ Guerra civil Estadounidense|cs|guerra civil estadounidense
  Guerra de las Malvinas|cs|guerra de las Malvinas
 
 == H ==
@@ -1171,15 +1375,29 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  Ha.|cs|ha (símbolo de hectárea —va en minúscula y sin punto—), ha. (para final de frase), hectáreas (texto)
  habeas corpus||''habeas corpus'' (locución en latín), Habeas Corpus (grupo musical)
  hábeas corpus||''habeas corpus'' (locución en latín), Habeas Corpus (grupo musical)
+ hacía abajo||hacia abajo
+ hacía adelante||hacia delante, hacia adelante
+ hacía arriba||hacia arriba
+ hacía atras||hacia atrás
+ hacía atrás||hacia atrás
+ hacía delante||hacia delante
+ hacía el este||hacia el este
+ hacía el norte||hacia el norte
+ hacía el oeste||hacia el oeste
+ hacía el sur||hacia el sur
  han habido||ha habido
  hawk-eye||ojo de halcón
  hay mas||hay más
- hm2||hm{{Exp|2}} (hectómetro cuadrado), hectómetro cuadrado, hectómetros cuadrados
- hm3||hm{{Exp|3}} (hectómetro cúbico), hectómetro cúbico, hectómetros cúbicos
+ hm2||hm² (hectómetro cuadrado), hectómetro cuadrado, hectómetros cuadrados
+ hm3||hm³ (hectómetro cúbico), hectómetro cúbico, hectómetros cúbicos
+ Honoris Causa|cs|''honoris causa'', ''Honoris causa'' (para inicios de frase o columnas de tablas)
+ Honoris causa|cs|''honoris causa'', ''Honoris causa'' (para inicios de frase o columnas de tablas)
+ honoris Causa|cs|''honoris causa'', ''Honoris causa'' (para inicios de frase o columnas de tablas)
  Hugo Chavez|cs|Hugo Chávez
 
 == I ==
-
+ infanto juvenil||infantojuvenil
+ infanto-juvenil||infantojuvenil
  infra especifica||infraespecífica
  infra-especifica||infraespecífica
  infra específica||infraespecífica
@@ -1212,13 +1430,18 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  inter-continentales||intercontinentales
 
 == J ==
-
  Jefe de estado|cs|jefe de Estado
  Jefe de Estado|cs|jefe de Estado
  jefe de estado|cs|jefe de Estado
  Jefes de estado|cs|jefes de Estado
  Jefes de Estado|cs|jefes de Estado
  jefes de estado|cs|jefes de Estado
+ Jefe de gobierno|cs|jefe de Gobierno
+ Jefe de Gobierno|cs|jefe de Gobierno
+ jefe de gobierno|cs|jefe de Gobierno
+ Jefes de gobierno|cs|jefes de Gobierno
+ Jefes de Gobierno|cs|jefes de Gobierno
+ jefes de gobierno|cs|jefes de Gobierno
  Jose Antonio|cs|José Antonio (nombre de pila español)
  Jose Manuel|cs|José Manuel (nombre de pila español y portugués)
  Jose Maria|cs|José María (nombre de pila español)
@@ -1243,25 +1466,45 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  km. de|cs|km de (símbolo de kilómetros —no lleva punto—)
  km. del|cs|km del (símbolo de kilómetros —no lleva punto—)
  km. marcha|cs|km marcha (símbolo de kilómetros —no lleva punto—)
- km2|cs|km{{Exp|2}} (kilómetro cuadrado), kilómetro cuadrado, kilómetros cuadrados
- km3|cs|km{{Exp|3}} (kilómetro cúbico), kilómetro cúbico, kilómetros cúbicos
+ km2|cs|km² (kilómetro cuadrado), kilómetro cuadrado, kilómetros cuadrados
+ km3|cs|km³ (kilómetro cúbico), kilómetro cúbico, kilómetros cúbicos
 
 == L ==
 
+ la acta||el acta
+ la aguila||el águila
+ la águila||el águila
+ la area||el área
+ la área||el área
+ la arma||el arma
+ la aula||el aula
  la cuál||la cual
+ la fuerzas||la fuerza, las fuerzas, la Fuerza, las Fuerzas
+ la Habana|cs|La Habana
+ la hada||el hada
+ la Haya|cs|La Haya (ciudad), la Haya (apellido)
  la hidromiel||el hidromiel (es masculino)
  la la||la, La
+ la las||la, las
  la mas||la más
  laminas de||láminas de
+ la Meca|cs|La Meca (ciudad), la meca (sustantivo común)
+ la mismas||la misma, las mismas
  la perdida||la pérdida
  la practica||la practica (verbo), la práctica (sustantivo)
  la primer||la primera, el primero, lo primero, el primer
+ la primeras||las primeras, la primera
  lanza-misiles||lanzamisiles
  lanza misiles||lanzamisiles
  lanza-cohetes||lanzacohetes
  lanza cohetes||lanzacohetes
+ las fuerza||la fuerza, las fuerzas, la Fuerza, las Fuerzas
+ las la||la, las
+ las las||las, Las
  las mas||las más
  las miles||los miles, los millares
+ las misma||la misma, las mismas
+ las primera||las primeras, la primera
  la tercer||la tercera, el tercero, el tercer
  Latino América|cs|Latinoamérica
  la version||la versión
@@ -1273,31 +1516,44 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  lo cuál||lo cual
  logro ganar||logró ganar
  lo mas||lo más
+ lo primeros||los primeros, lo primero
  los los||los (artículo repetido)
+ los mapuche||los mapuches
  los mas||los más
  los mismo||lo mismo, los mismos
+ los primero||los primeros, lo primero
+ los tuareg||los tuaregs
  lucky loser||perdedor afortunado (deporte), perdedores afortunados (deporte), perdedora afortunada (deporte), perdedoras afortunadas (deporte)
  luego paso||luego pasó
 
 == M ==
 
  m. al||m al (símbolo de metros —no lleva punto—)
- m. de|cs|m de (símbolo de metros —no lleva punto—)
- m. del||m del (símbolo de metros —no lleva punto—)
+ m. de ancho|cs|m de ancho (símbolo de metros —no lleva punto—)
+ m. de altitud|cs|m de altitud (símbolo de metros —no lleva punto—)
+ m. de anchura|cs|m de anchura (símbolo de metros —no lleva punto—)
+ m. de distancia|cs|m de distancia (símbolo de metros —no lleva punto—)
+ m. de largo|cs|m de largo (símbolo de metros —no lleva punto—)
+ m. de longitud|cs|m de longitud (símbolo de metros —no lleva punto—)
+ m. de profundidad|cs|m de profundidad (símbolo de metros —no lleva punto—)
  m. braza||m braza (símbolo de metros —no lleva punto—)
  m. espalda||m espalda (símbolo de metros —no lleva punto—)
  m. estilos||m estilos (símbolo de metros —no lleva punto—)
  m. lisos||m lisos (símbolo de metros —no lleva punto—)
  m. vallas||m vallas (símbolo de metros —no lleva punto—)
  m. obstáculos||m obstáculos (símbolo de metros —no lleva punto—)
- m2|cs|m{{Exp|2}} (metro cuadrado), m2 (variable, nombre propio o para plantilla convertir), metro cuadrado, metros cuadrados
- m3|cs|m{{Exp|3}} (metro cúbico), m3 (variable, nombre propio o para plantilla convertir), metro cúbico, metros cúbicos
+ m2|cs|m² (metro cuadrado), m2 (variable, nombre propio o para plantilla convertir), metro cuadrado, metros cuadrados
+ m3|cs|m³ (metro cúbico), m3 (variable, nombre propio o para plantilla convertir), metro cúbico, metros cúbicos
  macro region||macrorregión
  macro-region||macrorregión
  macro región||macrorregión
  macro-región||macrorregión
  main draw||cuadro principal
  mal entendido||mal entendido (adjetivo), malentendido (sustantivo)
+ mal herida||malherida
+ mal heridas||malheridas
+ mal herido||malherido
+ mal heridos||malheridos
  Maria Antonia|cs|María Antonia (nombre de pila español)
  Maria Antonieta|cs|María Antonieta (entre otros, nombre de pila en español de la consorte de Francia)
  Maria Cristina|cs|María Cristina (entre otros, nombre de pila en español de varios miembros de la realeza)
@@ -1327,6 +1583,7 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  mas grande||más grande
  mas importante||más importante
  mas importantes||más importantes
+ mas o menos||más o menos
  mas populares||más populares
  mas que||más que
  mas tarde||más tarde
@@ -1337,6 +1594,8 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  maxi-sencillo||maxisencillo
  maxi sencillos||maxisencillos
  maxi-sencillos||maxisencillos
+ mejor conocida como||más conocida como (expresión correcta en español)
+ mejor conocido como||más conocido como (expresión correcta en español)
  Metro de Paris|cs|Metro de París (en español), Métro de Paris (en francés)
  micro region||microrregión
  micro-region||microrregión
@@ -1365,18 +1624,20 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  mini usb|cs|mini-USB
  mini-usb|cs|mini-USB
  motu propio||motu proprio
- mm2|cs|mm{{Exp|2}} (milímetro cuadrado), milímetro cuadrado, milímetros cuadrados
- mm3|cs|mm{{Exp|3}} (milímetro cúbico), milímetro cúbico, milímetros cúbicos
+ mm2|cs|mm² (milímetro cuadrado), milímetro cuadrado, milímetros cuadrados
+ mm3|cs|mm³ (milímetro cúbico), milímetro cúbico, milímetros cúbicos
  mm. de|cs| mm de  (símbolo de milímetros —no lleva punto—)
  m.s.n.m.||{{esd|m s. n. m.}} (con espacios duros —el símbolo de metro no lleva punto—), {{esd|[[m s. n. m.]]}} (con espacios duros y enlace al artículo en Wikipedia —el símbolo de metro no lleva punto—)
  m. s. n. m.||{{esd|m s. n. m.}} (con espacios duros —el símbolo de metro no lleva punto—), {{esd|[[m s. n. m.]]}} (con espacios duros y enlace al artículo en Wikipedia —el símbolo de metro no lleva punto—)
  [[msnm]]||{{esd|m s. n. m.}} (con espacios duros —el símbolo de metro no lleva punto—), {{esd|[[m s. n. m.]]}} (con espacios duros y enlace al artículo en Wikipedia —el símbolo de metro no lleva punto—)
  msnm.||{{esd|m s. n. m.}} (con espacios duros —el símbolo de metro no lleva punto—), {{esd|[[m s. n. m.]]}} (con espacios duros y enlace al artículo en Wikipedia —el símbolo de metro no lleva punto—)
+ m s. n. m. de altitud||{{esd|m s. n. m.}} (con espacios duros —el símbolo de metro no lleva punto—), {{esd|[[m s. n. m.]]}} (con espacios duros y enlace al artículo en Wikipedia —el símbolo de metro no lleva punto—)
  mucho mas||mucho más
  multa economica||multa
  multa económica||multa
  multas economicas||multas
  multas económicas||multas
+ multi-media||multimedia
  multi-uso||multiuso, multiusos
 
 == N ==
@@ -1425,7 +1686,7 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  por el cuál||por el cual
  por la cuál||por la cual
  por por||por
- por que||por que (preposición + relativo o conjunción), porque (conjunción causal), por qué (interrogación o exclamación), porqué (sustantivo, causa)
+ por que||porque (conjunción causal), por que (preposición + relativo o conjunción), para que (alternativa preferible a veces), por qué (interrogación o exclamación), porqué (sustantivo, causa)
  pos guerra||posguerra
  pos-guerra||posguerra
  pos guerras||posguerras
@@ -1707,6 +1968,7 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  psico sociales||psicosociales
  psico-sociales||psicosociales
  punto de break||punto de rotura
+ punto y final||punto final
 
 == Q ==
 
@@ -1721,6 +1983,7 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
 
 == R ==
 
+ r.p.m.||r.&nbsp;p.&nbsp;m. (con espacios duros)
  Ramón Llull|cs|Ramon Llull
  red carpet||alfombra roja, alfombras rojas
  re eleccion||reelección
@@ -1903,12 +2166,15 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  re-ubico||reubicó (3.ª persona), reubico (1.ª persona)
  re ubicó||reubicó (3.ª persona), reubico (1.ª persona)
  re-ubicó||reubicó (3.ª persona), reubico (1.ª persona)
- el remake||la versión, la adaptación
  revelarse contra||rebelarse contra
  Rimsky-Korsakov|cs|Rimski-Kórsakov (transliteración correcta al español)
  Rio 2016|cs|Río 2016 (Juegos Olímpicos de Verano)
  Rio Claro|cs|Río Claro (región o río en varios países de lengua española y Brasil), Rio Claro (en portugués)
  Rio de Janeiro|cs|Río de Janeiro (en español), Rio de Janeiro (en portugués y otros idiomas)
+ rio de la Plata|cs|Río de la Plata
+ río de la Plata|cs|Río de la Plata
+ rio de la plata|cs|Río de la Plata
+ río de la plata|cs|Río de la Plata
  Rio Negro|cs|Río Negro (región o río en varios países de lengua española, Estados Unidos y Brasil), Rio Negro (en portugués e inglés)
  round robin||todos contra todos, fase de liguilla
 
@@ -1928,6 +2194,7 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  se cambio||se cambió
  se caso||se casó
  se continuo||se continuó
+ se creo||se creó
  se da cuenta que||se da cuenta de que
  se dan cuenta que||se dan cuenta de que
  se desarrollo||se desarrolló
@@ -1951,9 +2218,28 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  seg.||s (símbolo de la unidad temporal segundo), s. (para final de frase)
  Segunda Division|cs|Segunda División
  Seguridad Publica|cs|Seguridad Pública
+ se haya bajo||se halla bajo
+ se haya el||se halla el
+ se haya en||se halla en
+ se haya la||se halla la
+ se haya más||se halla más
+ se haya sobre||se halla sobre
+ se haya un||se halla un
+ se haya una||se halla una
+ se hayan bajo||se hallan bajo
+ se hayan las||se hallan las
+ se hayan los||se hallan los
+ se hayan más||se hallan más
+ se hayan sobre||se hallan sobre
+ se hayan unas||se hallan unas
+ se hayan unos||se hallan unos
  se ira||se irá
  se jugo||se jugó
  se llamo||se llamó
+ se llevo||se llevó
+ semana santa|cs|Semana Santa
+ semana Santa|cs|Semana Santa
+ Semana santa|cs|Semana Santa
  semi automatico||semiautomático
  semi-automatico||semiautomático
  semi automático||semiautomático
@@ -1970,6 +2256,32 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  semi-circulo||semicírculo
  semi círculo||semicírculo
  semi-círculo||semicírculo
+ semi retirada||semirretirada
+ semi-retirada||semirretirada
+ semiretirada||semirretirada
+ semi retiradas||semirretiradas
+ semi-retiradas||semirretiradas
+ semiretiradas||semirretiradas
+ semi retirado||semirretirado
+ semi-retirado||semirretirado
+ semiretirado||semirretirado
+ semi retirados||semirretirados
+ semi-retirados||semirretirados
+ semiretirados||semirretirados
+ semi rural||semirrural
+ semi-rural||semirrural
+ semirural||semirrural
+ semi rurales||semirrurales
+ semi-rurales||semirrurales
+ semirurales||semirrurales
+ semi urbana||semiurbana
+ semi-urbana||semiurbana
+ semi urbanas||semiurbanas
+ semi-urbanas||semiurbanas
+ semi urbano||semiurbano
+ semi-urbano||semiurbano
+ semi urbanos||semiurbanos
+ semi-urbanos||semiurbanos
  se probo||se probó
  se publico||se publicó
  se puedo||se puede (presente), se pudo (pretérito)
@@ -1981,6 +2293,7 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  Serguei Prokófiev|cs|Serguéi Prokófiev
  Serguéi Prokofiev|cs|Serguéi Prokófiev
  se registro||se registró
+ se reporto||se reportó
  se revela contra||se rebela contra
  se revelaba contra||se rebelaba contra
  se revelaban contra||se rebelaban contra
@@ -1990,14 +2303,20 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  ser mas||ser más
  set ball||pelota de set
  set point||punto de set
+ se traslado||se trasladó
+ se trato||se trató
  se uso||se usó
  sí bien||si bien (locución conjuntiva)
- si misma||sí misma
- si mismas||sí mismas
- si mismo||sí mismo
- si mismos||sí mismos
+ si misma||sí misma, ella misma
+ si mismas||sí mismas, ellas mismas
+ si mismo||sí mismo, él mismo
+ si mismos||sí mismos, ellos mismos
+ siglos XIX y XX||siglos {{siglo|XIX}} y {{siglo|XX}}
  Simon Bolivar|cs|Simón Bolívar
  Simon Bolívar|cs|Simón Bolívar
+ Sistema Solar|cs|sistema solar, Sistema solar (para inicios de frase o columnas de tablas)
+ sistema Solar|cs|sistema solar, Sistema solar (para inicios de frase o columnas de tablas)
+ sito web||sitio web
  sobre sobre||sobre
  Sociedad Deportiva Éibar|cs|Sociedad Deportiva Eibar
  socio cultural||sociocultural
@@ -2239,6 +2558,7 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  super producciones||superproducciones
  super-producciones||superproducciones
  super tiebreak||superdesempate
+ su principales||sus principales, su principal
 
 == T ==
 
@@ -2267,6 +2587,7 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  ultra-izquierdista||ultraizquierdista
  ultra izquierdistas||ultraizquierdistas
  ultra-izquierdistas||ultraizquierdistas
+ una una||una
  una nuevo||un nuevo, una nueva
  una perdida||una pérdida
  unas miles||unos miles
@@ -2282,6 +2603,8 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  Universidad de Paris|cs|Universidad de París
  un sin fin||un sinfín
  un sólo||un solo
+ un un||un
+ un una||un, una, en una
  ut-supra||''ut supra''
 
 == V ==
@@ -2292,6 +2615,18 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  vease tambien||Véase también
  veáse también||Véase también
  vez mas||vez más
+ via lactea|cs|Vía Láctea
+ vía lactea|cs|Vía Láctea
+ via láctea|cs|Vía Láctea
+ vía láctea|cs|Vía Láctea
+ via Lactea|cs|Vía Láctea
+ vía Lactea|cs|Vía Láctea
+ via Láctea|cs|Vía Láctea
+ vía Láctea|cs|Vía Láctea
+ Via lactea|cs|Vía Láctea
+ Vía lactea|cs|Vía Láctea
+ Via láctea|cs|Vía Láctea
+ Vía láctea|cs|Vía Láctea
  via publica||vía pública
  via pública||vía pública
  vía publica||vía pública
@@ -2511,6 +2846,5 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  zona Euro|cs|zona euro
 
 == !$@ ==
-
- ''', es||''' es (muchos inicios de artículo tienen coma entre sujeto y verbo; hay que comprobar que no haya oración subordinada entremedias)
- ''', fue||''' fue (muchos inicios de artículo tienen coma entre sujeto y verbo; hay que comprobar que no haya oración subordinada entremedias)
+ # Actualmente Replacer no permite que el término contenga corchetes
+ # [[apartheid]], ''[[apartheid]]'' (vocablo en afrikáans, en cursivas y con enlace)
