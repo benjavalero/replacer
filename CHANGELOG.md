@@ -1,9 +1,9 @@
 # Versions
 
-## 2.28.0 (??)
+## 2.28.0 (4 Aug 2024)
 - Feature: new cosmetic finder to fix cursive within links
-- Save more details about a reviewed replacement. Save if the replacement has been modified or not during the review, along with the timestamp and the revisions before and after in case we need to revert it.
-- Ordinal finder: suggest always the feminine fix
+- Feature: Save more details about a reviewed replacement. Save if the replacement has been modified or not during the review, along with the timestamp and the revisions before and after in case we need to revert it.
+- Feature: suggest always the feminine fix in the ordinal finder
 - Fix: save the timestamp returned by Wikipedia API instead of the local date
 - Fix: some finders stop finding after the first false positive
 - Fix: ignore ordinals preceded by letter
