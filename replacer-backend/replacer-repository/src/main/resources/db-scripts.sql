@@ -51,8 +51,8 @@ CREATE TABLE replacement (
     reviewer VARCHAR(40),
     review_type TINYINT NOT NULL DEFAULT 0,
     review_timestamp TIMESTAMP,
-    old_rev_id MEDIUMINT UNSIGNED,
-    new_rev_id MEDIUMINT UNSIGNED,
+    old_rev_id INTEGER UNSIGNED,
+    new_rev_id INTEGER UNSIGNED,
     PRIMARY KEY (id)
 );
 
@@ -82,8 +82,8 @@ CREATE TABLE custom (
     reviewer VARCHAR(40) NOT NULL,
     review_type TINYINT NOT NULL DEFAULT 0,
     review_timestamp TIMESTAMP,
-    old_rev_id MEDIUMINT UNSIGNED,
-    new_rev_id MEDIUMINT UNSIGNED,
+    old_rev_id INTEGER UNSIGNED,
+    new_rev_id INTEGER UNSIGNED,
     PRIMARY KEY (id)
 );
 
