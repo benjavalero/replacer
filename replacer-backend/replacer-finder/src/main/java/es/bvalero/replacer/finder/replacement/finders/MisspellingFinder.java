@@ -12,7 +12,6 @@ import java.util.regex.MatchResult;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.SetValuedMap;
 import org.apache.commons.lang3.StringUtils;
-import org.jetbrains.annotations.VisibleForTesting;
 
 /**
  * Abstract class for the common functionality of the misspelling finders.
@@ -44,20 +43,10 @@ public abstract class MisspellingFinder implements ReplacementFinder {
         this.misspellingMap = map;
     }
 
-    @VisibleForTesting
-    public Map<String, StandardMisspelling> buildMisspellingMap(Set<StandardMisspelling> misspellings) {
+    private Map<String, StandardMisspelling> buildMisspellingMap(Set<StandardMisspelling> misspellings) {
         // Build a map to quick access the misspellings by word
         final Map<String, StandardMisspelling> map = new HashMap<>(misspellings.size());
-        misspellings.forEach(misspelling -> {
-            final String word = misspelling.getWord();
-            if (misspelling.isCaseSensitive()) {
-                map.put(word, misspelling);
-            } else {
-                // If case-insensitive, we add to the map "word" and "Word".
-                map.put(FinderUtils.setFirstLowerCase(word), misspelling);
-                map.put(FinderUtils.setFirstUpperCase(word), misspelling);
-            }
-        });
+        misspellings.forEach(misspelling -> misspelling.getTerms().forEach(term -> map.put(term, misspelling)));
         return map;
     }
 
@@ -87,7 +76,7 @@ public abstract class MisspellingFinder implements ReplacementFinder {
 
     protected abstract ReplacementKind getType();
 
-    String getSubtype(String text, WikipediaLanguage lang) {
+    private String getSubtype(String text, WikipediaLanguage lang) {
         // We are sure in this point that the Misspelling exists
         return findMisspellingByWord(text, lang)
             .map(StandardMisspelling::getWord)

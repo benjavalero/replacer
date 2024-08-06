@@ -8,17 +8,14 @@ import es.bvalero.replacer.finder.Finder;
 import es.bvalero.replacer.finder.benchmark.BaseFinderBenchmark;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
 import es.bvalero.replacer.finder.listing.SimpleMisspelling;
-import es.bvalero.replacer.finder.listing.StandardMisspelling;
 import es.bvalero.replacer.finder.listing.find.ListingFinder;
 import es.bvalero.replacer.finder.listing.find.ListingOfflineFinder;
 import es.bvalero.replacer.finder.listing.load.SimpleMisspellingLoader;
 import es.bvalero.replacer.finder.listing.parse.SimpleMisspellingParser;
-import es.bvalero.replacer.finder.replacement.finders.MisspellingSimpleFinder;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
@@ -40,11 +37,7 @@ class SimpleMisspellingFinderBenchmarkTest extends BaseFinderBenchmark {
         );
 
         // Extract the misspelling words
-        MisspellingSimpleFinder misspellingSimpleFinder = new MisspellingSimpleFinder(simpleMisspellingLoader);
-        Map<String, StandardMisspelling> misspellingMap = misspellingSimpleFinder.buildMisspellingMap(
-            misspellings.stream().map(sm -> (StandardMisspelling) sm).collect(Collectors.toSet())
-        );
-        Set<String> words = misspellingMap.keySet();
+        Set<String> words = misspellings.stream().flatMap(cm -> cm.getTerms().stream()).collect(Collectors.toSet());
 
         // Load the finders
         List<BenchmarkFinder> finders = new ArrayList<>();

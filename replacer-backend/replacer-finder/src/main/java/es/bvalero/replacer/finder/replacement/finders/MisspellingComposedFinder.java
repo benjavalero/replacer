@@ -14,6 +14,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.*;
 import java.util.regex.MatchResult;
+import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import org.apache.commons.collections4.SetValuedMap;
 import org.springframework.stereotype.Component;
@@ -52,18 +53,12 @@ public class MisspellingComposedFinder extends MisspellingFinder implements Prop
     ) {
         final Map<WikipediaLanguage, LongestMatchMap<String>> map = new EnumMap<>(WikipediaLanguage.class);
         for (WikipediaLanguage lang : misspellings.keySet()) {
-            final Set<ComposedMisspelling> langMisspellings = misspellings.get(lang);
-            final Set<String> processedMisspellings = new HashSet<>();
-            for (ComposedMisspelling cm : langMisspellings) {
-                final String word = cm.getWord();
-                if (cm.isCaseSensitive()) {
-                    processedMisspellings.add(word);
-                } else {
-                    processedMisspellings.add(FinderUtils.setFirstUpperCase(word));
-                    processedMisspellings.add(FinderUtils.setFirstLowerCase(word));
-                }
-            }
-            map.put(lang, new LongestMatchMap<>(processedMisspellings, processedMisspellings, true));
+            final Set<String> misspellingTerms = misspellings
+                .get(lang)
+                .stream()
+                .flatMap(cm -> cm.getTerms().stream())
+                .collect(Collectors.toSet());
+            map.put(lang, new LongestMatchMap<>(misspellingTerms, misspellingTerms, true));
         }
         return map;
     }

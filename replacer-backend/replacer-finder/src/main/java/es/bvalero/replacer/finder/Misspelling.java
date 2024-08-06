@@ -1,7 +1,10 @@
 package es.bvalero.replacer.finder;
 
+import es.bvalero.replacer.finder.util.FinderUtils;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import lombok.EqualsAndHashCode;
@@ -26,6 +29,10 @@ public abstract class Misspelling {
     private final String word;
     private final boolean caseSensitive;
     private final List<MisspellingSuggestion> suggestions;
+
+    // Singleton property only when requested
+    // Store the terms covered by the word
+    private final Set<String> terms = new HashSet<>();
 
     protected Misspelling(String word, boolean caseSensitive, String comment) {
         this.word = word;
@@ -73,5 +80,18 @@ public abstract class Misspelling {
             explanation = brackets.substring(1, brackets.length() - 1).trim();
         }
         return MisspellingSuggestion.of(text, explanation);
+    }
+
+    public Set<String> getTerms() {
+        if (this.terms.isEmpty()) {
+            if (this.isCaseSensitive()) {
+                this.terms.add(word);
+            } else {
+                // If case-insensitive, we add "word" and "Word".
+                this.terms.add(FinderUtils.setFirstLowerCase(word));
+                this.terms.add(FinderUtils.setFirstUpperCase(word));
+            }
+        }
+        return this.terms;
     }
 }

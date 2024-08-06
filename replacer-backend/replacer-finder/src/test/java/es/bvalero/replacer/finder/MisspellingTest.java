@@ -2,8 +2,10 @@ package es.bvalero.replacer.finder;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import es.bvalero.replacer.finder.listing.ComposedMisspelling;
 import es.bvalero.replacer.finder.listing.SimpleMisspelling;
 import java.util.List;
+import java.util.Set;
 import org.junit.jupiter.api.Test;
 
 class MisspellingTest {
@@ -85,5 +87,47 @@ class MisspellingTest {
     @Test
     void testSuggestionEqualsWord() {
         assertThrows(IllegalArgumentException.class, () -> SimpleMisspelling.ofCaseInsensitive("a", "a"));
+    }
+
+    @Test
+    void testSimpleCaseSensitiveTermsLowercase() {
+        String word = "paris";
+        SimpleMisspelling m = SimpleMisspelling.of(word, true, "X");
+        assertEquals(Set.of(word), m.getTerms());
+    }
+
+    @Test
+    void testSimpleCaseSensitiveTermsUppercase() {
+        String word = "Paris";
+        SimpleMisspelling m = SimpleMisspelling.of(word, true, "X");
+        assertEquals(Set.of(word), m.getTerms());
+    }
+
+    @Test
+    void testComposedCaseSensitiveTermsLowercase() {
+        String word = "ad hoc";
+        ComposedMisspelling m = ComposedMisspelling.of(word, true, "X");
+        assertEquals(Set.of(word), m.getTerms());
+    }
+
+    @Test
+    void testComposedCaseSensitiveTermsUppercase() {
+        String word = "Administración pública";
+        ComposedMisspelling m = ComposedMisspelling.of(word, true, "X");
+        assertEquals(Set.of(word), m.getTerms());
+    }
+
+    @Test
+    void testSimpleCaseInsensitiveTermsLowercase() {
+        String word = "paris";
+        SimpleMisspelling m = SimpleMisspelling.of(word, false, "X");
+        assertEquals(Set.of("paris", "Paris"), m.getTerms());
+    }
+
+    @Test
+    void testSimpleCaseInsensitiveTermsUppercase() {
+        String word = "Paris";
+        SimpleMisspelling m = SimpleMisspelling.of(word, false, "X");
+        assertEquals(Set.of("paris", "Paris"), m.getTerms());
     }
 }
