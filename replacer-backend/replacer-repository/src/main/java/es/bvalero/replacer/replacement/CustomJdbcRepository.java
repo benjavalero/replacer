@@ -32,9 +32,7 @@ class CustomJdbcRepository implements CustomRepository {
     // Using DISTINCT makes the query not to use to wanted index "idx_count"
     @Override
     public Collection<PageKey> findPagesReviewed(WikipediaLanguage lang, CustomType type) {
-        String sql =
-            "SELECT page_id FROM custom " +
-            "WHERE lang = :lang AND replacement = :replacement AND cs = :cs AND reviewer IS NOT NULL";
+        String sql = "SELECT page_id FROM custom WHERE lang = :lang AND replacement = :replacement AND cs = :cs";
         SqlParameterSource namedParameters = new MapSqlParameterSource()
             .addValue("lang", lang.getCode())
             .addValue("replacement", type.getSubtype())
