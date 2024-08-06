@@ -51,7 +51,8 @@ public class WikipediaPageApiRepository implements WikipediaPageRepository {
         return findByKeys(List.of(pageKey)).stream().findAny();
     }
 
-    Collection<WikipediaPage> findByKeys(Collection<PageKey> pageKeys) {
+    @Override
+    public Collection<WikipediaPage> findByKeys(Collection<PageKey> pageKeys) {
         if (pageKeys.stream().map(PageKey::getLang).distinct().count() > 1) {
             throw new IllegalArgumentException("All pages have to share the same language");
         }
@@ -234,7 +235,7 @@ public class WikipediaPageApiRepository implements WikipediaPageRepository {
         } catch (WikipediaException e) {
             LOGGER.error("Error finding pages by content", e);
         }
-        LOGGER.debug("END Find Page by Content: {}", result);
+        LOGGER.debug("END Find Page by Content: {} results", result.getTotal());
         return result;
     }
 

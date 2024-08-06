@@ -60,7 +60,7 @@ class ReviewCustomFinder extends ReviewFinder {
         // Find all the pages already reviewed for this custom replacement
         // Make it out of the loop as we are not taking into account the offset for this
         List<Integer> reviewedIds = new ArrayList<>();
-        if (!pageIds.isEmpty()) {
+        if (!searchResult.isEmpty()) {
             reviewedIds.addAll(customReplacementService.findPagesReviewed(lang, options.getCustomType()));
         }
 
@@ -73,6 +73,20 @@ class ReviewCustomFinder extends ReviewFinder {
                     totalToReview--;
                 }
             }
+            LOGGER.debug("After discarding reviewed: {}", totalToReview);
+
+            // Also discard the pages not containing the custom replacement according to the rules of the tool.
+            // For that, we retrieve the potential custom replacements in the pages found by the Wikipedia search.
+            final List<PageKey> keys = pageIds.stream().map(id -> PageKey.of(lang, id)).toList();
+            final Collection<WikipediaPage> pages = wikipediaPageRepository.findByKeys(keys);
+            for (WikipediaPage page : pages) {
+                final Collection<Replacement> customReplacements = findCustomReplacements(page, options);
+                if (customReplacements.isEmpty()) {
+                    pageIds.remove(page.getPageId());
+                    totalToReview--;
+                }
+            }
+            LOGGER.debug("After discarding without replacements: {}", totalToReview);
 
             if (pageIds.isEmpty()) {
                 offset += getCacheSize();
@@ -115,16 +129,17 @@ class ReviewCustomFinder extends ReviewFinder {
         return wikipediaPageRepository.findByContent(searchRequest);
     }
 
+    private Collection<Replacement> findCustomReplacements(WikipediaPage page, ReviewOptions options) {
+        return customReplacementFindService.findCustomReplacements(page, options.getCustomReplacementFindRequest());
+    }
+
     @Override
     Collection<Replacement> decorateReplacements(
         WikipediaPage page,
         ReviewOptions options,
         Collection<Replacement> replacements
     ) {
-        Collection<Replacement> customReplacements = customReplacementFindService.findCustomReplacements(
-            page,
-            options.getCustomReplacementFindRequest()
-        );
+        Collection<Replacement> customReplacements = findCustomReplacements(page, options);
 
         // Add the custom replacements to the standard ones preferring the custom ones
         // Return the merged collection as a TreeSet to keep the order and discard duplicates

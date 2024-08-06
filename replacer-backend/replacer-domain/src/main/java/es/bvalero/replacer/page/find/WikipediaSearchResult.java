@@ -4,7 +4,6 @@ import java.util.Collection;
 import lombok.Builder;
 import lombok.Singular;
 import lombok.Value;
-import org.jetbrains.annotations.TestOnly;
 
 /**
  * A collection of page IDs as a result from a search request,
@@ -26,7 +25,6 @@ class WikipediaSearchResult {
         return WikipediaSearchResult.builder().total(0).build();
     }
 
-    @TestOnly
     public boolean isEmpty() {
         return this.pageIds.isEmpty();
     }

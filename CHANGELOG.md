@@ -1,6 +1,7 @@
 # Versions
 
 ## 2.28.1 (??)
+- Feature: pre-check which pages actually contain a custom replacement for a more accurate result count
 - Fix: find all uppercase variants of a composed misspelling
 
 ## 2.28.0 (4 Aug 2024)

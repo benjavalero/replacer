@@ -13,6 +13,8 @@ public interface WikipediaPageRepository {
 
     Optional<WikipediaPage> findByKey(PageKey pageKey);
 
+    Collection<WikipediaPage> findByKeys(Collection<PageKey> pageKeys);
+
     Collection<WikipediaSection> findSectionsInPage(PageKey pageKey);
 
     Optional<WikipediaPage> findPageSection(WikipediaSection section);
