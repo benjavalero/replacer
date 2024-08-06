@@ -83,15 +83,31 @@ public abstract class Misspelling {
     }
 
     public Set<String> getTerms() {
-        if (this.terms.isEmpty()) {
-            if (this.isCaseSensitive()) {
-                this.terms.add(word);
+        if (terms.isEmpty()) {
+            if (isCaseSensitive()) {
+                terms.add(word);
             } else {
                 // If case-insensitive, we add "word" and "Word".
-                this.terms.add(FinderUtils.setFirstLowerCase(word));
-                this.terms.add(FinderUtils.setFirstUpperCase(word));
+                String[] tokens = word.split("\\b");
+                addTerms(tokens, 0);
             }
         }
-        return this.terms;
+        return terms;
+    }
+
+    private void addTerms(String[] tokens, int pos) {
+        if (pos >= tokens.length) {
+            return;
+        }
+
+        String[] lowercase = tokens.clone();
+        lowercase[pos] = FinderUtils.setFirstLowerCase(lowercase[pos]);
+        terms.add(StringUtils.join(lowercase));
+        addTerms(lowercase, pos + 1);
+
+        String[] uppercase = tokens.clone();
+        uppercase[pos] = FinderUtils.setFirstUpperCase(uppercase[pos]);
+        terms.add(StringUtils.join(uppercase));
+        addTerms(uppercase, pos + 1);
     }
 }

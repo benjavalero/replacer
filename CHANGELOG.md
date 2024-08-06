@@ -1,5 +1,8 @@
 # Versions
 
+## 2.28.1 (??)
+- Fix: find all uppercase variants of a composed misspelling
+
 ## 2.28.0 (4 Aug 2024)
 - Feature: new cosmetic finder to fix cursive within links
 - Feature: Save more details about a reviewed replacement. Save if the replacement has been modified or not during the review, along with the timestamp and the revisions before and after in case we need to revert it.

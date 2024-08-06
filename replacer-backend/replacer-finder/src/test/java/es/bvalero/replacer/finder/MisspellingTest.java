@@ -130,4 +130,18 @@ class MisspellingTest {
         SimpleMisspelling m = SimpleMisspelling.of(word, false, "X");
         assertEquals(Set.of("paris", "Paris"), m.getTerms());
     }
+
+    @Test
+    void testComposedCaseInsensitiveTermsLowercase() {
+        String word = "ad-hoc";
+        ComposedMisspelling m = ComposedMisspelling.of(word, false, "X");
+        assertEquals(Set.of("ad-hoc", "Ad-Hoc", "Ad-hoc", "ad-Hoc"), m.getTerms());
+    }
+
+    @Test
+    void testComposedCaseInsensitiveTermsUppercase() {
+        String word = "Ad Hoc";
+        ComposedMisspelling m = ComposedMisspelling.of(word, false, "X");
+        assertEquals(Set.of("ad hoc", "Ad Hoc", "Ad hoc", "ad Hoc"), m.getTerms());
+    }
 }

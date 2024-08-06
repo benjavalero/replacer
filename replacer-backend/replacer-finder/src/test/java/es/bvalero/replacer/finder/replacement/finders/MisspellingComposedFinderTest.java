@@ -320,4 +320,22 @@ class MisspellingComposedFinderTest {
             .build();
         assertEquals(Set.of(expected), new HashSet<>(results));
     }
+
+    @Test
+    void testMisspellingWithUppercase() {
+        String text = "El Anti-Ruso.";
+
+        ComposedMisspelling misspelling = ComposedMisspelling.of("anti-ruso", false, "antirruso");
+        fakeUpdateMisspellingList(List.of(misspelling));
+
+        List<Replacement> results = misspellingComposedFinder.findList(text);
+
+        Replacement expected = Replacement.builder()
+            .start(3)
+            .text("Anti-Ruso")
+            .type(StandardType.of(ReplacementKind.COMPOSED, "anti-ruso"))
+            .suggestions(List.of(Suggestion.ofNoComment("anti-ruso"), Suggestion.ofNoComment("Antirruso")))
+            .build();
+        assertEquals(Set.of(expected), new HashSet<>(results));
+    }
 }
