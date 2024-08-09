@@ -34,7 +34,7 @@ abstract class ReviewFinder {
     // For the sake of the tests, we implement it as a variable.
     @Getter(AccessLevel.PACKAGE)
     @Setter(onMethod_ = @TestOnly)
-    private int cacheSize = 500;
+    private int cacheSize = WikipediaPageRepository.MAX_SEARCH_RESULTS;
 
     // Cache the found pages candidates to be reviewed
     // to find faster the next one after the user reviews one.

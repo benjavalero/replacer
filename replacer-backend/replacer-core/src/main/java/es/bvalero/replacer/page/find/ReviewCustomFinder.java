@@ -1,5 +1,6 @@
 package es.bvalero.replacer.page.find;
 
+import es.bvalero.replacer.common.domain.CustomType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.page.*;
@@ -113,7 +114,7 @@ class ReviewCustomFinder extends ReviewFinder {
 
     private WikipediaSearchResult findWikipediaResults(ReviewOptions options, int offset) {
         WikipediaLanguage lang = options.getUser().getId().getLang();
-        CustomReplacementFindRequest customMisspelling = options.getCustomReplacementFindRequest();
+        CustomType customType = options.getCustomType();
         WikipediaSearchRequest searchRequest = WikipediaSearchRequest.builder()
             .lang(lang)
             .namespaces(
@@ -121,8 +122,8 @@ class ReviewCustomFinder extends ReviewFinder {
                     .map(WikipediaNamespace::valueOf)
                     .collect(Collectors.toUnmodifiableSet())
             )
-            .text(customMisspelling.getWord())
-            .caseSensitive(customMisspelling.isCaseSensitive())
+            .text(customType.getSubtype())
+            .caseSensitive(customType.isCaseSensitive())
             .offset(offset)
             .limit(getCacheSize())
             .build();

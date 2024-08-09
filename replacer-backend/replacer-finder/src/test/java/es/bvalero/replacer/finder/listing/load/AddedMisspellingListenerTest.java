@@ -1,6 +1,7 @@
 package es.bvalero.replacer.finder.listing.load;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 
 import es.bvalero.replacer.common.domain.ReplacementKind;
@@ -17,21 +18,21 @@ import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class ObsoleteMisspellingListenerTest {
+class AddedMisspellingListenerTest {
 
     // Dependency injection
     private SimpleMisspellingLoader simpleMisspellingLoader;
     private ComposedMisspellingLoader composedMisspellingLoader;
     private ReplacementTypeSaveApi replacementTypeSaveApi;
 
-    private ObsoleteMisspellingListener obsoleteMisspellingListener;
+    private AddedMisspellingListener addedMisspellingListener;
 
     @BeforeEach
     public void setUp() {
         simpleMisspellingLoader = mock(SimpleMisspellingLoader.class);
         composedMisspellingLoader = mock(ComposedMisspellingLoader.class);
         replacementTypeSaveApi = mock(ReplacementTypeSaveApi.class);
-        obsoleteMisspellingListener = new ObsoleteMisspellingListener(
+        addedMisspellingListener = new AddedMisspellingListener(
             simpleMisspellingLoader,
             composedMisspellingLoader,
             replacementTypeSaveApi
@@ -39,7 +40,7 @@ class ObsoleteMisspellingListenerTest {
     }
 
     @Test
-    void testGetObsoleteMisspellings() {
+    void testGetAddedMisspellings() {
         SimpleMisspelling misspelling1 = SimpleMisspelling.ofCaseInsensitive("A", "B");
         SimpleMisspelling misspelling2 = SimpleMisspelling.ofCaseInsensitive("B", "C");
         SetValuedMap<WikipediaLanguage, StandardMisspelling> map1 = new HashSetValuedHashMap<>();
@@ -50,8 +51,19 @@ class ObsoleteMisspellingListenerTest {
         map2.putAll(WikipediaLanguage.getDefault(), List.of(misspelling2, misspelling3));
 
         Set<ChangedReplacementType> expected = Set.of(
-            ChangedReplacementType.of(WikipediaLanguage.getDefault(), StandardType.of(ReplacementKind.SIMPLE, "A"))
+            ChangedReplacementType.of(WikipediaLanguage.getDefault(), StandardType.of(ReplacementKind.SIMPLE, "C"))
         );
-        assertEquals(expected, new HashSet<>(obsoleteMisspellingListener.getObsoleteMisspellings(map1, map2)));
+        assertEquals(expected, new HashSet<>(addedMisspellingListener.getAddedMisspellings(map1, map2)));
+    }
+
+    @Test
+    void testGetAddedMisspellingsFirstTime() {
+        SetValuedMap<WikipediaLanguage, StandardMisspelling> map1 = new HashSetValuedHashMap<>();
+
+        SimpleMisspelling misspelling = SimpleMisspelling.ofCaseInsensitive("C", "D");
+        SetValuedMap<WikipediaLanguage, StandardMisspelling> map2 = new HashSetValuedHashMap<>();
+        map2.putAll(WikipediaLanguage.getDefault(), List.of(misspelling));
+
+        assertTrue(addedMisspellingListener.getAddedMisspellings(map1, map2).isEmpty());
     }
 }

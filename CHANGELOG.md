@@ -1,5 +1,8 @@
 # Versions
 
+## 2.28.2 (??)
+- Feature: force index for new types in the listings
+
 ## 2.28.1 (7 Aug 2024)
 - Feature: pre-check which pages actually contain a custom replacement for a more accurate result count
 - Fix: find all uppercase variants of a composed misspelling

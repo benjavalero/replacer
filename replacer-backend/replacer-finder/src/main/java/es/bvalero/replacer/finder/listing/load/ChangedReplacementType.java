@@ -5,7 +5,7 @@ import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import lombok.Value;
 
 @Value(staticConstructor = "of")
-class ObsoleteReplacementType {
+class ChangedReplacementType {
 
     WikipediaLanguage lang;
     StandardType type;

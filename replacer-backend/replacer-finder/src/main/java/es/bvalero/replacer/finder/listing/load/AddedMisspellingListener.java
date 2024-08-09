@@ -7,10 +7,7 @@ import es.bvalero.replacer.finder.listing.StandardMisspelling;
 import es.bvalero.replacer.replacement.type.ReplacementTypeSaveApi;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
@@ -20,14 +17,14 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-class ObsoleteMisspellingListener implements PropertyChangeListener {
+class AddedMisspellingListener implements PropertyChangeListener {
 
     // Dependency injection
     private final SimpleMisspellingLoader simpleMisspellingLoader;
     private final ComposedMisspellingLoader composedMisspellingLoader;
     private final ReplacementTypeSaveApi replacementTypeSaveApi;
 
-    ObsoleteMisspellingListener(
+    AddedMisspellingListener(
         SimpleMisspellingLoader simpleMisspellingLoader,
         ComposedMisspellingLoader composedMisspellingLoader,
         ReplacementTypeSaveApi replacementTypeSaveApi
@@ -55,44 +52,48 @@ class ObsoleteMisspellingListener implements PropertyChangeListener {
                 WikipediaLanguage,
                 StandardMisspelling
             >) evt.getNewValue();
-        getObsoleteMisspellings(oldItems, newItems).forEach(
-            obsolete -> replacementTypeSaveApi.remove(obsolete.getLang(), obsolete.getType())
+        getAddedMisspellings(oldItems, newItems).forEach(
+            added -> replacementTypeSaveApi.index(added.getLang(), added.getType())
         );
     }
 
     @VisibleForTesting
-    Collection<ChangedReplacementType> getObsoleteMisspellings(
+    Collection<ChangedReplacementType> getAddedMisspellings(
         SetValuedMap<WikipediaLanguage, StandardMisspelling> oldItems,
         SetValuedMap<WikipediaLanguage, StandardMisspelling> newItems
     ) {
+        if (oldItems.isEmpty()) {
+            return Collections.emptyList();
+        }
+
         List<ChangedReplacementType> types = new ArrayList<>();
-        // Find the misspellings removed from the list to remove them from the database
+        // Find the misspellings added to the list to index them
         for (WikipediaLanguage lang : WikipediaLanguage.values()) {
             Set<String> oldWords = oldItems
                 .get(lang)
                 .stream()
                 .map(StandardMisspelling::getWord)
-                .collect(Collectors.toSet());
+                .collect(Collectors.toUnmodifiableSet());
             Set<String> newWords = newItems
                 .get(lang)
                 .stream()
                 .map(StandardMisspelling::getWord)
-                .collect(Collectors.toUnmodifiableSet());
-            oldWords.removeAll(newWords);
-            if (!oldWords.isEmpty()) {
-                ReplacementKind misspellingType = oldItems
+                .collect(Collectors.toSet());
+            newWords.removeAll(oldWords);
+            if (!newWords.isEmpty()) {
+                ReplacementKind misspellingType = newItems
                     .get(lang)
                     .stream()
                     .findAny()
                     .map(StandardMisspelling::getReplacementKind)
                     .orElseThrow(IllegalArgumentException::new);
                 LOGGER.warn(
-                    "Deleting from database obsolete misspellings: {} - {} - {}",
+                    "Adding to database added misspellings (by indexing): {} - {} - {}",
                     lang,
                     misspellingType,
-                    oldWords
+                    newWords
                 );
-                oldWords
+                newWords
                     .stream()
                     .map(word -> StandardType.of(misspellingType, word))
                     .forEach(type -> types.add(ChangedReplacementType.of(lang, type)));

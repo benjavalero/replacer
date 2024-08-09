@@ -63,4 +63,15 @@ class WikipediaPageOfflineRepository implements WikipediaPageRepository {
     public WikipediaSearchResult findByContent(WikipediaSearchRequest searchRequest) {
         return WikipediaSearchResult.builder().total(1).pageId(1).build();
     }
+
+    @Override
+    public Collection<WikipediaPage> findByContent(WikipediaLanguage lang, String content) {
+        WikipediaSearchRequest request = WikipediaSearchRequest.builder().lang(lang).text(content).build();
+        Collection<PageKey> pageKeys = findByContent(request)
+            .getPageIds()
+            .stream()
+            .map(pageId -> PageKey.of(lang, pageId))
+            .toList();
+        return findByKeys(pageKeys);
+    }
 }

@@ -9,6 +9,8 @@ import org.jmolecules.architecture.hexagonal.SecondaryPort;
 /** Repository to perform operations on Wikipedia pages */
 @SecondaryPort
 public interface WikipediaPageRepository {
+    int MAX_SEARCH_RESULTS = 500; // MediaWiki API allows at most 500 pages in a search result
+
     Optional<WikipediaPage> findByTitle(WikipediaLanguage lang, String pageTitle);
 
     Optional<WikipediaPage> findByKey(PageKey pageKey);
@@ -19,5 +21,9 @@ public interface WikipediaPageRepository {
 
     Optional<WikipediaPage> findPageSection(WikipediaSection section);
 
+    /** Find the IDs of the pages containing the given content */
     WikipediaSearchResult findByContent(WikipediaSearchRequest searchRequest);
+
+    /** Find the pages containing the given content, using the default search options. */
+    Collection<WikipediaPage> findByContent(WikipediaLanguage lang, String content);
 }

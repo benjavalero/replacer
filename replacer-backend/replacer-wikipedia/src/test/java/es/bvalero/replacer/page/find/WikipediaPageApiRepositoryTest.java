@@ -415,8 +415,6 @@ class WikipediaPageApiRepositoryTest {
                 .lang(WikipediaLanguage.SPANISH)
                 .namespaces(List.of(WikipediaNamespace.ANNEX))
                 .text("Campaneta")
-                .offset(0)
-                .limit(100)
                 .build()
         );
         assertEquals(13, pageIds.getTotal());
@@ -441,13 +439,7 @@ class WikipediaPageApiRepositoryTest {
         when(wikipediaApiHelper.executeApiRequest(any(WikipediaApiRequest.class))).thenReturn(response);
 
         WikipediaSearchResult pageIds = wikipediaPageRepository.findByContent(
-            WikipediaSearchRequest.builder()
-                .lang(WikipediaLanguage.SPANISH)
-                .namespaces(List.of(WikipediaNamespace.getDefault()))
-                .text("jsdfslkdfjhow")
-                .offset(0)
-                .limit(100)
-                .build()
+            WikipediaSearchRequest.builder().lang(WikipediaLanguage.SPANISH).text("jsdfslkdfjhow").build()
         );
         assertTrue(pageIds.isEmpty());
     }
@@ -711,15 +703,7 @@ class WikipediaPageApiRepositoryTest {
 
         assertFalse(
             wikipediaPageOfflineRepository
-                .findByContent(
-                    WikipediaSearchRequest.builder()
-                        .lang(WikipediaLanguage.getDefault())
-                        .namespaces(List.of(WikipediaNamespace.getDefault()))
-                        .text("")
-                        .offset(0)
-                        .limit(100)
-                        .build()
-                )
+                .findByContent(WikipediaSearchRequest.builder().lang(WikipediaLanguage.getDefault()).text("").build())
                 .isEmpty()
         );
         assertTrue(

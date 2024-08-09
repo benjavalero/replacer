@@ -24,7 +24,6 @@ import org.springframework.stereotype.Service;
 public class WikipediaPageApiRepository implements WikipediaPageRepository {
 
     private static final int MAX_PAGES_REQUESTED = 50; // MediaWiki API allows to retrieve the content of maximum 50 pages
-    private static final int MAX_SEARCH_RESULTS = 500; // MediaWiki API allows at most 500 pages in a search result
     private static final int MAX_OFFSET_LIMIT = 10000;
 
     // Dependency injection
@@ -237,6 +236,17 @@ public class WikipediaPageApiRepository implements WikipediaPageRepository {
         }
         LOGGER.debug("END Find Page by Content: {} results", result.getTotal());
         return result;
+    }
+
+    @Override
+    public Collection<WikipediaPage> findByContent(WikipediaLanguage lang, String content) {
+        WikipediaSearchRequest request = WikipediaSearchRequest.builder().lang(lang).text(content).build();
+        Collection<PageKey> pageKeys = findByContent(request)
+            .getPageIds()
+            .stream()
+            .map(pageId -> PageKey.of(lang, pageId))
+            .toList();
+        return findByKeys(pageKeys);
     }
 
     private Map<String, String> buildPageIdsByStringMatchRequestParams(WikipediaSearchRequest searchRequest) {
