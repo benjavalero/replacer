@@ -10,8 +10,8 @@ import { ReplacementTypeApiService } from '../../api/services/replacement-type-a
 import { StrictHttpResponse } from '../../api/strict-http-response';
 import { AlertService } from '../../shared/alerts/alert.service';
 import { EditPageComponent } from './edit-page.component';
+import { ExistingCustomComponent } from './existing-custom/existing-custom.component';
 import { ReviewOptions } from './review-options.model';
-import { ValidateCustomComponent } from './validate-custom.component';
 
 export const kindLabel: { [key: number]: string } = {
   1: 'Personalizado',
@@ -23,7 +23,7 @@ export const kindLabel: { [key: number]: string } = {
 @Component({
   standalone: true,
   selector: 'app-find-random',
-  imports: [CommonModule, EditPageComponent, ValidateCustomComponent],
+  imports: [CommonModule, EditPageComponent, ExistingCustomComponent],
   template: `
     <app-edit-page
       *ngIf="page && options"
@@ -60,6 +60,8 @@ export class FindRandomComponent implements OnInit {
     const subtypeParam = this.route.snapshot.paramMap.get('subtype');
     const suggestionParam = this.route.snapshot.paramMap.get('suggestion');
     const csParam = this.route.snapshot.paramMap.get('cs');
+
+    // Build review-options object
     const options = {} as ReviewOptions;
     if (subtypeParam !== null) {
       options.subtype = subtypeParam;
@@ -77,8 +79,8 @@ export class FindRandomComponent implements OnInit {
 
     if (idParam !== null) {
       this.findPageReview(+idParam, options);
-    } else if (options.suggestion !== undefined) {
-      this.validateCustomReplacement(options);
+    } else if (this.isCustomType(options)) {
+      this.validateExistingReplacement(options);
     } else {
       this.findRandomPage(options);
     }
@@ -178,16 +180,19 @@ export class FindRandomComponent implements OnInit {
     this.findRandomPage(options);
   }
 
-  private validateCustomReplacement(options: ReviewOptions): void {
-    const replacement = options.subtype!.trim();
+  private isCustomType(options: ReviewOptions): boolean {
+    return options.kind === 1;
+  }
+
+  private validateExistingReplacement(options: ReviewOptions): void {
     this.replacementTypeApiService
       .findReplacementType({
-        replacement: replacement,
+        replacement: options.subtype!.trim(),
         cs: options.cs!
       })
       .subscribe((replacementType: ReplacementType) => {
         if (replacementType) {
-          this.openValidationModal$(replacementType.kind, replacementType.subtype).then(() => {
+          this.openExistingCustomModal$(replacementType.kind, replacementType.subtype).then(() => {
             this.router.navigate([this.getReviewUrl(replacementType as ReviewOptions, null)]);
           });
         } else {
@@ -196,8 +201,8 @@ export class FindRandomComponent implements OnInit {
       });
   }
 
-  private openValidationModal$(kind: number, subtype: string): Promise<any> {
-    const modalRef = this.modalService.open(ValidateCustomComponent);
+  private openExistingCustomModal$(kind: number, subtype: string): Promise<any> {
+    const modalRef = this.modalService.open(ExistingCustomComponent);
     modalRef.componentInstance.kind = kindLabel[kind];
     modalRef.componentInstance.subtype = subtype;
     return modalRef.result;

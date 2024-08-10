@@ -4,10 +4,10 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 @Component({
   standalone: true,
   selector: 'app-validate-custom',
-  templateUrl: './validate-custom.component.html',
+  templateUrl: './existing-custom.component.html',
   styles: []
 })
-export class ValidateCustomComponent {
+export class ExistingCustomComponent {
   @Input() kind!: number;
   @Input() subtype!: string;
 
