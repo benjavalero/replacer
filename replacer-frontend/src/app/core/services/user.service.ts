@@ -10,6 +10,7 @@ export class UserService {
   readonly isValidUser = computed(() => this.user().name !== '');
   readonly hasRightsUser = computed(() => this.user().hasRights);
   readonly isBotUser = computed(() => this.user().bot);
+  readonly isSpecialUser = computed(() => this.user().specialUser);
   readonly isAdminUser = computed(() => this.user().admin);
   readonly userName = computed(() => this.user().name);
 
@@ -27,6 +28,7 @@ export class UserService {
       name: '',
       hasRights: false,
       bot: false,
+      specialUser: false,
       admin: false
     } as User;
   }

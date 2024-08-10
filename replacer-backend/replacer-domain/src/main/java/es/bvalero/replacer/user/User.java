@@ -39,6 +39,10 @@ public class User {
     @Builder.Default
     boolean bot = false;
 
+    /** If the user is allowed to perform tasks in the application restricted to special uses, e.g. patrollers. */
+    @Builder.Default
+    boolean specialUser = false;
+
     /** It the user is allowed to perform tasks in the application restricted to administrators */
     @With(AccessLevel.PRIVATE)
     @Builder.Default

@@ -9,6 +9,7 @@ import es.bvalero.replacer.wikipedia.api.WikipediaApiVerb;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Profile;
@@ -22,6 +23,21 @@ class WikipediaUserApiRepository implements WikipediaUserRepository {
 
     private static final String GROUP_AUTO_CONFIRMED = "autoconfirmed";
     private static final String GROUP_BOT = "bot";
+
+    // Special users
+    private static final String ROLL_BACKER = "rollbacker";
+    private static final String AUTO_VERIFIED = "autopatrolled";
+    private static final String VERIFIER = "patroller";
+    private static final String BUREAUCRAT = "bureaucrat";
+    private static final String SYSOP = "sysop";
+    private static final Set<String> SPECIAL_GROUPS = Set.of(
+        ROLL_BACKER,
+        AUTO_VERIFIED,
+        VERIFIER,
+        BUREAUCRAT,
+        SYSOP,
+        GROUP_BOT
+    );
 
     // Dependency injection
     private final WikipediaApiHelper wikipediaApiHelper;
@@ -63,6 +79,12 @@ class WikipediaUserApiRepository implements WikipediaUserRepository {
         UserId userId = UserId.of(lang, userInfo.getName());
         boolean isAutoConfirmed = userInfo.getGroups().contains(GROUP_AUTO_CONFIRMED);
         boolean isBot = userInfo.getGroups().contains(GROUP_BOT);
-        return WikipediaUser.of(userId, isAutoConfirmed, isBot);
+        boolean isSpecialUser = userInfo.getGroups().stream().anyMatch(SPECIAL_GROUPS::contains);
+        return WikipediaUser.builder()
+            .id(userId)
+            .autoConfirmed(isAutoConfirmed)
+            .bot(isBot)
+            .specialUser(isSpecialUser)
+            .build();
     }
 }

@@ -14,6 +14,6 @@ class WikipediaUserOfflineRepository implements WikipediaUserRepository {
     @Override
     public Optional<WikipediaUser> findAuthenticatedUser(WikipediaLanguage lang, AccessToken accessToken) {
         UserId userId = UserId.of(lang, "offline");
-        return Optional.of(WikipediaUser.of(userId, true, false));
+        return Optional.of(WikipediaUser.builder().id(userId).autoConfirmed(true).build());
     }
 }

@@ -21,6 +21,9 @@ class UserDto {
     @Schema(description = "If the user the rights to use the tool", requiredMode = REQUIRED, example = "true")
     boolean hasRights;
 
+    @Schema(description = "If the user is a special user, e.g. a patroller", requiredMode = REQUIRED, example = "true")
+    boolean specialUser;
+
     @Schema(description = "If the user is a bot", requiredMode = REQUIRED, example = "true")
     boolean bot;
 
@@ -32,6 +35,7 @@ class UserDto {
             .name(user.getId().getUsername())
             .hasRights(user.hasRights())
             .bot(user.isBot())
+            .specialUser(user.isSpecialUser())
             .admin(user.isAdmin())
             .build();
     }

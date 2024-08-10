@@ -27,7 +27,7 @@ class UserServiceTest {
         WikipediaLanguage lang = WikipediaLanguage.getDefault();
         AccessToken accessToken = AccessToken.of("a", "b");
 
-        WikipediaUser user = WikipediaUser.of(UserId.of(lang, "N"), false, false);
+        WikipediaUser user = WikipediaUser.builder().id(UserId.of(lang, "N")).build();
         when(wikipediaUserRepository.findAuthenticatedUser(lang, accessToken)).thenReturn(Optional.of(user));
 
         Optional<User> result = userService.findAuthenticatedUser(lang, accessToken);
@@ -46,7 +46,7 @@ class UserServiceTest {
         WikipediaLanguage lang = WikipediaLanguage.getDefault();
         AccessToken accessToken = AccessToken.of("a", "b");
 
-        WikipediaUser user = WikipediaUser.of(UserId.of(lang, "N"), true, false);
+        WikipediaUser user = WikipediaUser.builder().id(UserId.of(lang, "N")).autoConfirmed(true).build();
         when(wikipediaUserRepository.findAuthenticatedUser(lang, accessToken)).thenReturn(Optional.of(user));
 
         Optional<User> result = userService.findAuthenticatedUser(lang, accessToken);
@@ -65,7 +65,7 @@ class UserServiceTest {
         WikipediaLanguage lang = WikipediaLanguage.getDefault();
         AccessToken accessToken = AccessToken.of("a", "b");
 
-        WikipediaUser user = WikipediaUser.of(UserId.of(lang, "N"), true, true);
+        WikipediaUser user = WikipediaUser.builder().id(UserId.of(lang, "N")).autoConfirmed(true).bot(true).build();
         when(wikipediaUserRepository.findAuthenticatedUser(lang, accessToken)).thenReturn(Optional.of(user));
 
         Optional<User> result = userService.findAuthenticatedUser(lang, accessToken);
@@ -86,7 +86,7 @@ class UserServiceTest {
         String name = "ADMIN";
 
         userService.setAdminUser(name);
-        WikipediaUser user = WikipediaUser.of(UserId.of(lang, name), false, false);
+        WikipediaUser user = WikipediaUser.builder().id(UserId.of(lang, name)).build();
         when(wikipediaUserRepository.findAuthenticatedUser(lang, accessToken)).thenReturn(Optional.of(user));
 
         Optional<User> result = userService.findAuthenticatedUser(lang, accessToken);

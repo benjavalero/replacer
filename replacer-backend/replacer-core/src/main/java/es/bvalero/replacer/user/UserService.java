@@ -35,6 +35,7 @@ class UserService implements UserApi {
             .accessToken(accessToken)
             .hasRights(wikipediaUser.isAutoConfirmed())
             .bot(wikipediaUser.isBot())
+            .specialUser(wikipediaUser.isSpecialUser())
             .admin(isAdmin(wikipediaUser))
             .build();
     }

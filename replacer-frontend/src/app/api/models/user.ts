@@ -25,4 +25,9 @@ export interface User {
    * Name of the user in Wikipedia
    */
   name: string;
+
+  /**
+   * If the user is a special user, e.g. a patroller
+   */
+  specialUser: boolean;
 }
