@@ -53,6 +53,7 @@ public class WebMvcConfiguration {
                     .addMapping("/api/**")
                     .allowCredentials(true)
                     .allowedOrigins(corsAllowedOrigins)
+                    .exposedHeaders("X-Pagination-Total-Pages")
                     .allowedMethods("GET", "POST");
             }
 
