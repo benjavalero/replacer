@@ -61,17 +61,4 @@
     </p>
     <button type="button" class="btn btn-info w-100" (click)="onReviewAllTypes()">Mostrar todos los reemplazos</button>
   </app-alert>
-
-  <app-alert type="warning" [icon]="true" class="alert-small" *ngIf="options.kind === 1 && numPending > 50">
-    <p>
-      El reemplazo personalizado introducido tiene muchas ocurrencias. Se recomienda añadirlo a los
-      <a
-        href="https://es.wikipedia.org/wiki/Usuario:Benjavalero/Replacer#Tipos_de_reemplazos"
-        target="_blank"
-        rel="noopener noreferrer">
-        listados generales
-      </a>
-      para un mantenimiento más óptimo.
-    </p>
-  </app-alert>
 </div>

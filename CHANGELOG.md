@@ -3,6 +3,7 @@
 ## 2.28.2 (??)
 - Feature: force index for new types in the listings
 - Feature: add role for users with special Wikipedia rights, e.g. patrollers.
+- Feature: check if a custom replacement has many occurrences and allow editing only to special users
 
 ## 2.28.1 (7 Aug 2024)
 - Feature: pre-check which pages actually contain a custom replacement for a more accurate result count

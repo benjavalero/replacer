@@ -8,6 +8,8 @@ import { ReplacementType } from '../../api/models/replacement-type';
 import { PageApiService } from '../../api/services/page-api.service';
 import { ReplacementTypeApiService } from '../../api/services/replacement-type-api.service';
 import { StrictHttpResponse } from '../../api/strict-http-response';
+import { UserService } from '../../core/services/user.service';
+import { AlertComponent } from '../../shared/alerts/alert-container/alert/alert.component';
 import { AlertService } from '../../shared/alerts/alert.service';
 import { EditPageComponent } from './edit-page.component';
 import { ExistingCustomComponent } from './existing-custom/existing-custom.component';
@@ -23,21 +25,18 @@ export const kindLabel: { [key: number]: string } = {
 @Component({
   standalone: true,
   selector: 'app-find-random',
-  imports: [CommonModule, EditPageComponent, ExistingCustomComponent],
-  template: `
-    <app-edit-page
-      *ngIf="page && options"
-      [page]="page"
-      [options]="options"
-      [numPending]="numPending"
-      (saved)="onSaved($event)"></app-edit-page>
-  `,
+  imports: [CommonModule, EditPageComponent, ExistingCustomComponent, AlertComponent],
+  templateUrl: './find-random.component.html',
   styleUrls: []
 })
 export class FindRandomComponent implements OnInit {
   page: Page | null;
   options: ReviewOptions | null;
   numPending: number = 0;
+
+  displayCustomWarning: boolean = false;
+  /* Maximum number of occurrences allowed for a custom replacement */
+  maxCustomOccurrences = 50;
 
   constructor(
     private alertService: AlertService,
@@ -47,7 +46,8 @@ export class FindRandomComponent implements OnInit {
     private route: ActivatedRoute,
     private titleService: Title,
     private location: Location,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private userService: UserService
   ) {
     this.page = null;
     this.options = null;
@@ -76,6 +76,7 @@ export class FindRandomComponent implements OnInit {
         options.kind = +kindParam!;
       }
     }
+    this.options = options;
 
     if (idParam !== null) {
       this.findPageReview(+idParam, options);
@@ -98,9 +99,12 @@ export class FindRandomComponent implements OnInit {
     this.pageApiService.findRandomPageWithReplacements$Response({ ...options }).subscribe({
       next: (response: StrictHttpResponse<Page>) => {
         const page: Page | null = response.body;
-        const numPending: number = Number(response.headers.get('X-Pagination-Total-Pages') ?? '0');
-        if (page !== null) {
-          this.manageReview(page, options, numPending);
+        this.numPending = Number(response.headers.get('X-Pagination-Total-Pages') ?? '0');
+        if (this.hasCustomReplacementManyOccurrences(options, this.numPending)) {
+          this.alertService.clearAlertMessages();
+          this.displayCustomWarning = true;
+        } else if (page !== null) {
+          this.manageReview(page, options);
         } else {
           this.alertService.addWarningMessage(
             options.kind && options.subtype
@@ -120,9 +124,12 @@ export class FindRandomComponent implements OnInit {
     this.pageApiService.findPageReviewById$Response({ ...options, id: pageId }).subscribe({
       next: (response: StrictHttpResponse<Page>) => {
         const page: Page | null = response.body;
-        const numPending: number = Number(response.headers.get('X-Pagination-Total-Pages') ?? '0');
-        if (page) {
-          this.manageReview(page, options, numPending);
+        this.numPending = Number(response.headers.get('X-Pagination-Total-Pages') ?? '0');
+        if (this.hasCustomReplacementManyOccurrences(options, this.numPending)) {
+          this.alertService.clearAlertMessages();
+          this.displayCustomWarning = true;
+        } else if (page) {
+          this.manageReview(page, options);
         } else {
           // This alert will be short as it will be cleared on redirecting to next page
           this.alertService.addWarningMessage(
@@ -134,12 +141,10 @@ export class FindRandomComponent implements OnInit {
     });
   }
 
-  private manageReview(page: Page, options: ReviewOptions, numPending: number): void {
+  private manageReview(page: Page, options: ReviewOptions): void {
     this.alertService.clearAlertMessages();
 
-    this.options = options;
     this.page = page;
-    this.numPending = numPending;
 
     // Modify title
     let htmlTitle = 'Replacer - ';
@@ -206,5 +211,10 @@ export class FindRandomComponent implements OnInit {
     modalRef.componentInstance.kind = kindLabel[kind];
     modalRef.componentInstance.subtype = subtype;
     return modalRef.result;
+  }
+
+  private hasCustomReplacementManyOccurrences(options: ReviewOptions, numPending: number): boolean {
+    const isSpecialUser: boolean = this.userService.isSpecialUser();
+    return this.isCustomType(options) && numPending > this.maxCustomOccurrences && !isSpecialUser;
   }
 }
