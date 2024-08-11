@@ -1,6 +1,6 @@
 # Versions
 
-## 2.28.2 (??)
+## 2.29.0 (11 Aug 2024)
 - Feature: force index for new types in the listings
 - Feature: add role for users with special Wikipedia rights, e.g. patrollers.
 - Feature: check if a custom replacement has many occurrences and allow editing only to special users
