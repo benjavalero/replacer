@@ -19,6 +19,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.MatchResult;
 import javax.annotation.PostConstruct;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.SetValuedMap;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
@@ -27,6 +28,7 @@ import org.springframework.stereotype.Component;
  * Find known expressions which are (almost) always false positives,
  * e.g. in Spanish `aun así` which hides the potential replacement `aun`
  */
+@Slf4j
 @Component
 class FalsePositiveFinder implements ImmutableFinder, PropertyChangeListener {
 
@@ -57,10 +59,12 @@ class FalsePositiveFinder implements ImmutableFinder, PropertyChangeListener {
     private Map<WikipediaLanguage, RunAutomaton> buildFalsePositivesAutomata(
         SetValuedMap<WikipediaLanguage, FalsePositive> falsePositives
     ) {
+        LOGGER.debug("START Building False Positive automata…");
         final Map<WikipediaLanguage, RunAutomaton> map = new EnumMap<>(WikipediaLanguage.class);
         for (WikipediaLanguage lang : falsePositives.keySet()) {
             map.put(lang, buildFalsePositivesAutomaton(falsePositives.get(lang)));
         }
+        LOGGER.debug("END Building False Positive automata");
         return map;
     }
 

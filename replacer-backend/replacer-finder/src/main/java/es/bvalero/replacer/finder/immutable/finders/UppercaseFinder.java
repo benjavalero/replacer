@@ -22,6 +22,7 @@ import java.util.regex.MatchResult;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.SetValuedMap;
 import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
 import org.apache.commons.lang3.StringUtils;
@@ -44,6 +45,7 @@ import org.springframework.stereotype.Component;
  *   <li>Starting a header</li>
  * </ul>
  */
+@Slf4j
 @Component
 public class UppercaseFinder implements ImmutableFinder, PropertyChangeListener {
 
@@ -119,10 +121,12 @@ public class UppercaseFinder implements ImmutableFinder, PropertyChangeListener 
     private Map<WikipediaLanguage, StringMap<String>> buildUppercaseStringMap(
         SetValuedMap<WikipediaLanguage, String> uppercaseWords
     ) {
+        LOGGER.debug("START Building Uppercase string map…");
         final Map<WikipediaLanguage, StringMap<String>> map = new EnumMap<>(WikipediaLanguage.class);
         for (WikipediaLanguage lang : uppercaseWords.keySet()) {
             map.put(lang, buildUppercaseStringMap(uppercaseWords.get(lang)));
         }
+        LOGGER.debug("END Building Uppercase string map");
         return map;
     }
 

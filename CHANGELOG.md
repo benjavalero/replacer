@@ -2,6 +2,7 @@
 
 ## 2.29.1 (??)
 - Fix: escape some special characters before sending a regular expression to Wikipedia search
+- Performance: load the listings after the application has started to improve the deployment times in Toolforge
 
 ## 2.29.0 (11 Aug 2024)
 - Feature: force index for new types in the listings

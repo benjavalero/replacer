@@ -18,7 +18,7 @@ public class ListingScheduledLoader {
         this.listingLoaders = listingLoaders;
     }
 
-    @Scheduled(fixedDelayString = "${replacer.parse.file.delay}")
+    @Scheduled(initialDelay = 0, fixedDelayString = "${replacer.parse.file.delay}")
     public void scheduledItemListUpdate() {
         MDC.put("user", "system");
         LOGGER.debug("START Scheduled Item List update...");

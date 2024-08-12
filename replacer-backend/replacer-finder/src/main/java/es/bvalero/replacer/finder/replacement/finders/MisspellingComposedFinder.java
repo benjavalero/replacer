@@ -16,12 +16,14 @@ import java.util.*;
 import java.util.regex.MatchResult;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.SetValuedMap;
 import org.springframework.stereotype.Component;
 
 /**
  * Find misspellings with more than one word, e.g. `aún así` in Spanish
  */
+@Slf4j
 @Component
 public class MisspellingComposedFinder extends MisspellingFinder implements PropertyChangeListener {
 
@@ -51,6 +53,7 @@ public class MisspellingComposedFinder extends MisspellingFinder implements Prop
     private Map<WikipediaLanguage, LongestMatchMap<String>> buildComposedMisspellingStringMap(
         SetValuedMap<WikipediaLanguage, ComposedMisspelling> misspellings
     ) {
+        LOGGER.debug("START Building Composed Misspelling string map…");
         final Map<WikipediaLanguage, LongestMatchMap<String>> map = new EnumMap<>(WikipediaLanguage.class);
         for (WikipediaLanguage lang : misspellings.keySet()) {
             final Set<String> misspellingTerms = misspellings
@@ -60,6 +63,7 @@ public class MisspellingComposedFinder extends MisspellingFinder implements Prop
                 .collect(Collectors.toSet());
             map.put(lang, new LongestMatchMap<>(misspellingTerms, misspellingTerms, true));
         }
+        LOGGER.debug("END Building Composed Misspelling string map");
         return map;
     }
 
