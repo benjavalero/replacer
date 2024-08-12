@@ -3,6 +3,7 @@ package es.bvalero.replacer.page.find;
 import static org.apache.commons.lang3.StringUtils.SPACE;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
+import es.bvalero.replacer.common.util.ReplacerUtils;
 import es.bvalero.replacer.page.PageKey;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.wikipedia.api.WikipediaApiHelper;
@@ -282,8 +283,10 @@ public class WikipediaPageApiRepository implements WikipediaPageRepository {
         // Wikipedia recommends searching the term as usual
         // and then narrow the results with "insource"
         // We use a regex for the case-sensitive and a regular quote for case-insensitive
-        char delimiter = caseSensitive ? '/' : '"';
-        String quoted = String.format("\"%s\" insource:%s%s%s", text, delimiter, text, delimiter);
+        String insource = caseSensitive
+            ? String.format("insource:/%s/", ReplacerUtils.escapeRegexChars(text))
+            : String.format("insource:\"%s\"", text);
+        String quoted = String.format("\"%s\" %s", text, insource);
         LOGGER.debug("Search expression: {} - {} ==> {}", text, caseSensitive, quoted);
         return quoted;
     }

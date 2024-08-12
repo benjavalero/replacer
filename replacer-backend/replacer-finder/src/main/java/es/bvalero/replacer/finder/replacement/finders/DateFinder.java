@@ -10,6 +10,7 @@ import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.FinderProperties;
 import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
+import es.bvalero.replacer.common.util.ReplacerUtils;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.Suggestion;
@@ -106,9 +107,7 @@ class DateFinder implements ReplacementFinder {
             String regexMonthsLowerUpperCase = String.format("(%s)", FinderUtils.joinAlternate(monthsLowerUpperCase));
             String regexSpaces = String.format(
                 "(%s)+",
-                FinderUtils.joinAlternate(
-                    FinderUtils.SPACES.stream().map(s -> s.replace("{", "\\{").replace("}", "\\}")).toList()
-                )
+                FinderUtils.joinAlternate(FinderUtils.SPACES.stream().map(ReplacerUtils::escapeRegexChars).toList())
             );
 
             // There is no performance gain by using more generic regex for these numbers

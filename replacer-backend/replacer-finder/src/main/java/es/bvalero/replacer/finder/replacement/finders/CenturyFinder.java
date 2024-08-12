@@ -11,6 +11,7 @@ import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
+import es.bvalero.replacer.common.util.ReplacerUtils;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.Suggestion;
@@ -58,14 +59,7 @@ class CenturyFinder implements ReplacementFinder {
     );
     private static final String REGEX_ERA_WORDS = String.format(
         "(%s)",
-        FinderUtils.joinAlternate(
-            ERA_WORDS.stream()
-                .map(s -> s.replace(".", "\\."))
-                .map(s -> s.replace("{", "\\{"))
-                .map(s -> s.replace("}", "\\}"))
-                .map(s -> s.replace("&", "\\&"))
-                .toList()
-        )
+        FinderUtils.joinAlternate(ERA_WORDS.stream().map(ReplacerUtils::escapeRegexChars).toList())
     );
     private static final RunAutomaton AUTOMATON_ERA_WORDS = new RunAutomaton(new RegExp(REGEX_ERA_WORDS).toAutomaton());
 

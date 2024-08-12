@@ -76,6 +76,16 @@ public class ReplacerUtils {
         return text.toUpperCase(LOCALE_ES);
     }
 
+    public String escapeRegexChars(String text) {
+        return text
+            .replace(".", "\\.")
+            .replace("{", "\\{")
+            .replace("}", "\\}")
+            .replace("[", "\\[")
+            .replace("]", "\\]")
+            .replace("&", "\\&");
+    }
+
     //endregion
 
     //region Date Utils
