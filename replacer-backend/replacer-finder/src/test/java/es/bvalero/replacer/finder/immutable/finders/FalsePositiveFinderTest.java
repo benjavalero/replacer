@@ -38,7 +38,7 @@ class FalsePositiveFinderTest {
         SetValuedMap<WikipediaLanguage, FalsePositive> falsePositiveMap = new HashSetValuedHashMap<>();
         falsePositiveMap.putAll(WikipediaLanguage.SPANISH, falsePositiveSet);
         falsePositiveFinder.propertyChange(
-            new PropertyChangeEvent(this, FalsePositiveLoader.PROPERTY_ITEMS, EMPTY_MAP, falsePositiveMap)
+            new PropertyChangeEvent(this, FalsePositiveLoader.LABEL_FALSE_POSITIVE, EMPTY_MAP, falsePositiveMap)
         );
     }
 

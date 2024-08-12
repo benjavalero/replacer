@@ -19,9 +19,6 @@ import org.jetbrains.annotations.VisibleForTesting;
 @Slf4j
 abstract class ListingLoader<T extends ListingItem> {
 
-    @VisibleForTesting
-    public static final String PROPERTY_ITEMS = "items";
-
     private final PropertyChangeSupport changeSupport = new PropertyChangeSupport(this);
 
     @Getter(AccessLevel.PROTECTED)
@@ -29,7 +26,7 @@ abstract class ListingLoader<T extends ListingItem> {
 
     @VisibleForTesting
     public final void setItems(SetValuedMap<WikipediaLanguage, T> items) {
-        this.changeSupport.firePropertyChange(PROPERTY_ITEMS, this.items, items);
+        this.changeSupport.firePropertyChange(getLabel(), this.items, items);
         this.items = items;
     }
 
@@ -41,7 +38,7 @@ abstract class ListingLoader<T extends ListingItem> {
         setItems(findItemsForAllLanguages());
     }
 
-    abstract String getLabel(); // For tracing purposes
+    abstract String getLabel();
 
     private SetValuedMap<WikipediaLanguage, T> findItemsForAllLanguages() {
         SetValuedMap<WikipediaLanguage, T> map = new HashSetValuedHashMap<>();

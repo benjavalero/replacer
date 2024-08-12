@@ -46,7 +46,7 @@ class MisspellingSimpleFinderTest {
         simpleMisspellingLoader.setItems(map);
         SetValuedMap<WikipediaLanguage, SimpleMisspelling> emptyMap = new HashSetValuedHashMap<>();
         misspellingFinder.propertyChange(
-            new PropertyChangeEvent(this, SimpleMisspellingLoader.PROPERTY_ITEMS, emptyMap, map)
+            new PropertyChangeEvent(this, SimpleMisspellingLoader.LABEL_SIMPLE_MISSPELLING, emptyMap, map)
         );
     }
 

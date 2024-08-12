@@ -43,7 +43,7 @@ class UppercaseFinderTest {
         SetValuedMap<WikipediaLanguage, SimpleMisspelling> uppercaseMap = new HashSetValuedHashMap<>();
         uppercaseMap.putAll(WikipediaLanguage.SPANISH, uppercaseSet);
         uppercaseFinder.propertyChange(
-            new PropertyChangeEvent(this, SimpleMisspellingLoader.PROPERTY_ITEMS, EMPTY_MAP, uppercaseMap)
+            new PropertyChangeEvent(this, SimpleMisspellingLoader.LABEL_SIMPLE_MISSPELLING, EMPTY_MAP, uppercaseMap)
         );
     }
 

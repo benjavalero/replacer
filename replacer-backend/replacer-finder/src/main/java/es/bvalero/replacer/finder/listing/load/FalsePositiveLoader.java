@@ -11,6 +11,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class FalsePositiveLoader extends ListingLoader<FalsePositive> {
 
+    public static final String LABEL_FALSE_POSITIVE = "False Positive";
+
     // Dependency injection
     private final ListingFinder listingFinder;
     private final FalsePositiveParser falsePositiveParser;
@@ -22,7 +24,7 @@ public class FalsePositiveLoader extends ListingLoader<FalsePositive> {
 
     @Override
     public String getLabel() {
-        return "False Positive";
+        return LABEL_FALSE_POSITIVE;
     }
 
     @Override

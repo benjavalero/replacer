@@ -11,6 +11,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class SimpleMisspellingLoader extends ListingLoader<SimpleMisspelling> {
 
+    public static final String LABEL_SIMPLE_MISSPELLING = "Simple Misspelling";
+
     // Dependency injection
     private ListingFinder listingFinder;
     private SimpleMisspellingParser simpleMisspellingParser;
@@ -22,7 +24,7 @@ public class SimpleMisspellingLoader extends ListingLoader<SimpleMisspelling> {
 
     @Override
     public String getLabel() {
-        return "Simple Misspelling";
+        return LABEL_SIMPLE_MISSPELLING;
     }
 
     @Override

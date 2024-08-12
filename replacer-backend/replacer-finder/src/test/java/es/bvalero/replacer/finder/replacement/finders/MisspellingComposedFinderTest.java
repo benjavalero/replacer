@@ -45,7 +45,7 @@ class MisspellingComposedFinderTest {
         composedMisspellingLoader.setItems(map);
         SetValuedMap<WikipediaLanguage, ComposedMisspelling> emptyMap = new HashSetValuedHashMap<>();
         misspellingComposedFinder.propertyChange(
-            new PropertyChangeEvent(this, ComposedMisspellingLoader.PROPERTY_ITEMS, emptyMap, map)
+            new PropertyChangeEvent(this, ComposedMisspellingLoader.LABEL_COMPOSED_MISSPELLING, emptyMap, map)
         );
     }
 
