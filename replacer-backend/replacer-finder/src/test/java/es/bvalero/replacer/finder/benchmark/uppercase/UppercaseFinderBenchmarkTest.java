@@ -11,7 +11,9 @@ import es.bvalero.replacer.finder.immutable.finders.UppercaseFinder;
 import es.bvalero.replacer.finder.listing.StandardMisspelling;
 import es.bvalero.replacer.finder.listing.find.ListingFinder;
 import es.bvalero.replacer.finder.listing.find.ListingOfflineFinder;
+import es.bvalero.replacer.finder.listing.load.ComposedMisspellingLoader;
 import es.bvalero.replacer.finder.listing.load.SimpleMisspellingLoader;
+import es.bvalero.replacer.finder.listing.parse.ComposedMisspellingParser;
 import es.bvalero.replacer.finder.listing.parse.SimpleMisspellingParser;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -34,6 +36,10 @@ class UppercaseFinderBenchmarkTest extends BaseFinderBenchmark {
             listingFinder,
             new SimpleMisspellingParser()
         );
+        ComposedMisspellingLoader composedMisspellingLoader = new ComposedMisspellingLoader(
+            listingFinder,
+            new ComposedMisspellingParser()
+        );
         SetValuedMap<WikipediaLanguage, StandardMisspelling> misspellings = new HashSetValuedHashMap<>();
         misspellings.putAll(
             WikipediaLanguage.getDefault(),
@@ -41,9 +47,15 @@ class UppercaseFinderBenchmarkTest extends BaseFinderBenchmark {
                 listingFinder.getSimpleMisspellingListing(WikipediaLanguage.getDefault())
             )
         );
+        misspellings.putAll(
+            WikipediaLanguage.getDefault(),
+            composedMisspellingLoader.parseListing(
+                listingFinder.getComposedMisspellingListing(WikipediaLanguage.getDefault())
+            )
+        );
 
         // Extract the uppercase words
-        UppercaseFinder uppercaseFinder = new UppercaseFinder(simpleMisspellingLoader);
+        UppercaseFinder uppercaseFinder = new UppercaseFinder(simpleMisspellingLoader, composedMisspellingLoader);
         Set<String> words = uppercaseFinder.getUppercaseWords(misspellings).get(WikipediaLanguage.getDefault());
 
         // Load the finders

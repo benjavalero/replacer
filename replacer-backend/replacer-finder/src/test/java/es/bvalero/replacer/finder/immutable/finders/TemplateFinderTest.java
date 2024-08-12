@@ -5,7 +5,9 @@ import static org.junit.jupiter.api.Assertions.*;
 import es.bvalero.replacer.FinderProperties;
 import es.bvalero.replacer.finder.Immutable;
 import es.bvalero.replacer.finder.listing.find.ListingOfflineFinder;
+import es.bvalero.replacer.finder.listing.load.ComposedMisspellingLoader;
 import es.bvalero.replacer.finder.listing.load.SimpleMisspellingLoader;
+import es.bvalero.replacer.finder.listing.parse.ComposedMisspellingParser;
 import es.bvalero.replacer.finder.listing.parse.SimpleMisspellingParser;
 import java.util.HashSet;
 import java.util.List;
@@ -28,8 +30,10 @@ import org.springframework.test.context.ActiveProfiles;
         TemplateFinder.class,
         UppercaseFinder.class,
         SimpleMisspellingLoader.class,
+        ComposedMisspellingLoader.class,
         ListingOfflineFinder.class,
         SimpleMisspellingParser.class,
+        ComposedMisspellingParser.class,
     }
 )
 class TemplateFinderTest {

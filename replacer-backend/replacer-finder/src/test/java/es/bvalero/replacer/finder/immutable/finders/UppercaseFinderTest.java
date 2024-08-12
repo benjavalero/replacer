@@ -5,9 +5,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.Immutable;
+import es.bvalero.replacer.finder.listing.ComposedMisspelling;
 import es.bvalero.replacer.finder.listing.SimpleMisspelling;
 import es.bvalero.replacer.finder.listing.StandardMisspelling;
+import es.bvalero.replacer.finder.listing.load.ComposedMisspellingLoader;
 import es.bvalero.replacer.finder.listing.load.SimpleMisspellingLoader;
+import es.bvalero.replacer.finder.util.FinderUtils;
 import java.beans.PropertyChangeEvent;
 import java.util.List;
 import java.util.Set;
@@ -28,22 +31,42 @@ class UppercaseFinderTest {
     @Mock
     private SimpleMisspellingLoader simpleMisspellingLoader;
 
+    @Mock
+    private ComposedMisspellingLoader composedMisspellingLoader;
+
     private UppercaseFinder uppercaseFinder;
 
     @BeforeEach
     public void setUp() {
-        uppercaseFinder = new UppercaseFinder(simpleMisspellingLoader);
-        initUppercaseMap("Enero", "Febrero", "Marzo", "Abril", "Mayo");
+        uppercaseFinder = new UppercaseFinder(simpleMisspellingLoader, composedMisspellingLoader);
+        initSimpleUppercaseMap("Enero", "Febrero", "Marzo", "Abril", "Mayo");
+        initComposedUppercaseMap("Jefe de Estado");
     }
 
-    private void initUppercaseMap(String... uppercaseWords) {
+    private void initSimpleUppercaseMap(String... uppercaseWords) {
         Set<SimpleMisspelling> uppercaseSet = Stream.of(uppercaseWords)
-            .map(uppercaseWord -> SimpleMisspelling.of(uppercaseWord, true, uppercaseWord.toLowerCase()))
+            .map(
+                uppercaseWord -> SimpleMisspelling.of(uppercaseWord, true, FinderUtils.setFirstLowerCase(uppercaseWord))
+            )
             .collect(Collectors.toSet());
         SetValuedMap<WikipediaLanguage, SimpleMisspelling> uppercaseMap = new HashSetValuedHashMap<>();
         uppercaseMap.putAll(WikipediaLanguage.SPANISH, uppercaseSet);
         uppercaseFinder.propertyChange(
             new PropertyChangeEvent(this, SimpleMisspellingLoader.LABEL_SIMPLE_MISSPELLING, EMPTY_MAP, uppercaseMap)
+        );
+    }
+
+    private void initComposedUppercaseMap(String... uppercaseWords) {
+        Set<ComposedMisspelling> uppercaseSet = Stream.of(uppercaseWords)
+            .map(
+                uppercaseWord ->
+                    ComposedMisspelling.of(uppercaseWord, true, FinderUtils.setFirstLowerCase(uppercaseWord))
+            )
+            .collect(Collectors.toSet());
+        SetValuedMap<WikipediaLanguage, ComposedMisspelling> uppercaseMap = new HashSetValuedHashMap<>();
+        uppercaseMap.putAll(WikipediaLanguage.SPANISH, uppercaseSet);
+        uppercaseFinder.propertyChange(
+            new PropertyChangeEvent(this, ComposedMisspellingLoader.LABEL_COMPOSED_MISSPELLING, EMPTY_MAP, uppercaseMap)
         );
     }
 
@@ -113,6 +136,17 @@ class UppercaseFinderTest {
         List<Immutable> matches = uppercaseFinder.findList(text);
 
         assertTrue(matches.isEmpty());
+    }
+
+    @Test
+    void testUppercaseComposedValue() {
+        String text = "{{T|param = Jefe de Estado }}";
+
+        List<Immutable> matches = uppercaseFinder.findList(text);
+
+        Set<String> expected = Set.of("Jefe de Estado");
+        Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
+        assertEquals(expected, actual);
     }
 
     @Test

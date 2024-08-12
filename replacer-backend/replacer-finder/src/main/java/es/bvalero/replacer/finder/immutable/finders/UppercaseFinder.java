@@ -10,6 +10,7 @@ import es.bvalero.replacer.finder.FinderPriority;
 import es.bvalero.replacer.finder.MisspellingSuggestion;
 import es.bvalero.replacer.finder.immutable.ImmutableFinder;
 import es.bvalero.replacer.finder.listing.StandardMisspelling;
+import es.bvalero.replacer.finder.listing.load.ComposedMisspellingLoader;
 import es.bvalero.replacer.finder.listing.load.SimpleMisspellingLoader;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.ResultMatchListener;
@@ -58,27 +59,52 @@ public class UppercaseFinder implements ImmutableFinder, PropertyChangeListener 
 
     // Dependency injection
     private final SimpleMisspellingLoader simpleMisspellingLoader;
+    private final ComposedMisspellingLoader composedMisspellingLoader;
 
+    // Uppercase words for simple and composed misspellings
+    private SetValuedMap<WikipediaLanguage, String> simpleUppercaseMap = new HashSetValuedHashMap<>();
+    private SetValuedMap<WikipediaLanguage, String> composedUppercaseMap = new HashSetValuedHashMap<>();
     // StringMap with the misspellings which start with uppercase and are case-sensitive
     private Map<WikipediaLanguage, StringMap<String>> uppercaseStringMap = new EnumMap<>(WikipediaLanguage.class);
 
     @Getter
     private SetValuedMap<WikipediaLanguage, String> uppercaseMap = new HashSetValuedHashMap<>();
 
-    public UppercaseFinder(SimpleMisspellingLoader simpleMisspellingLoader) {
+    public UppercaseFinder(
+        SimpleMisspellingLoader simpleMisspellingLoader,
+        ComposedMisspellingLoader composedMisspellingLoader
+    ) {
         this.simpleMisspellingLoader = simpleMisspellingLoader;
+        this.composedMisspellingLoader = composedMisspellingLoader;
     }
 
     @PostConstruct
     public void init() {
         // Only detect uppercase in simple misspellings
         simpleMisspellingLoader.addPropertyChangeListener(this);
+        composedMisspellingLoader.addPropertyChangeListener(this);
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public void propertyChange(PropertyChangeEvent evt) {
-        this.uppercaseMap = getUppercaseWords((SetValuedMap<WikipediaLanguage, StandardMisspelling>) evt.getNewValue());
+        switch (evt.getPropertyName()) {
+            case SimpleMisspellingLoader.LABEL_SIMPLE_MISSPELLING -> this.simpleUppercaseMap = getUppercaseWords(
+                (SetValuedMap<WikipediaLanguage, StandardMisspelling>) evt.getNewValue()
+            );
+            case ComposedMisspellingLoader.LABEL_COMPOSED_MISSPELLING -> this.composedUppercaseMap = getUppercaseWords(
+                (SetValuedMap<WikipediaLanguage, StandardMisspelling>) evt.getNewValue()
+            );
+            default -> {
+                return;
+            }
+        }
+
+        final SetValuedMap<WikipediaLanguage, String> mergedUppercaseMap = new HashSetValuedHashMap<>();
+        mergedUppercaseMap.putAll(this.simpleUppercaseMap);
+        mergedUppercaseMap.putAll(this.composedUppercaseMap);
+        this.uppercaseMap = mergedUppercaseMap;
+
         this.uppercaseStringMap = buildUppercaseStringMap(this.uppercaseMap);
     }
 
@@ -106,7 +132,7 @@ public class UppercaseFinder implements ImmutableFinder, PropertyChangeListener 
 
     private boolean isUppercaseMisspelling(StandardMisspelling misspelling) {
         final String word = misspelling.getWord();
-        // Any of the suggestions is the misspelling word in lowercase
+        // Any of the suggestions is the misspelling word with the first letter in lowercase
         return (
             misspelling.isCaseSensitive() &&
             FinderUtils.startsWithUpperCase(word) &&
@@ -114,7 +140,7 @@ public class UppercaseFinder implements ImmutableFinder, PropertyChangeListener 
                 .getSuggestions()
                 .stream()
                 .map(MisspellingSuggestion::getText)
-                .anyMatch(text -> text.equals(FinderUtils.toLowerCase(word)))
+                .anyMatch(text -> text.equals(FinderUtils.setFirstLowerCase(word)))
         );
     }
 
