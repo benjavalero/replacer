@@ -218,6 +218,7 @@ replacer.finder:
     - template: AP
     - template: bandera
       partial: true
+    - template: blockquote
     - template: cita
       partial: true
     - template: cite
