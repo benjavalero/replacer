@@ -4,10 +4,8 @@ import es.bvalero.replacer.page.IndexedPage;
 import es.bvalero.replacer.page.PageKey;
 import es.bvalero.replacer.page.PageRepository;
 import java.util.Optional;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-@Slf4j
 @Service
 public class PageIndexService extends PageIndexAbstractService {
 

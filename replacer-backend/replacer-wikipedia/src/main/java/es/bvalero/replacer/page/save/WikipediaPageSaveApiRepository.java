@@ -10,13 +10,11 @@ import es.bvalero.replacer.wikipedia.api.WikipediaApiResponse;
 import es.bvalero.replacer.wikipedia.api.WikipediaApiVerb;
 import java.util.HashMap;
 import java.util.Map;
-import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.VisibleForTesting;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 @SuppressWarnings("java:S1192")
-@Slf4j
 @Service
 @Profile("!offline")
 class WikipediaPageSaveApiRepository implements WikipediaPageSaveRepository {

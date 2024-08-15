@@ -13,9 +13,7 @@ import es.bvalero.replacer.wikipedia.WikipediaException;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.experimental.UtilityClass;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @UtilityClass
 public class BenchmarkUtils {
 
