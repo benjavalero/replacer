@@ -32,6 +32,7 @@ class ReplacementCountJdbcRepository implements ReplacementCountRepository {
 
     @Override
     public int countReviewed(WikipediaLanguage lang) {
+        LOGGER.debug("START Counting reviewed pages - {}…", lang);
         String sqlReplacement =
             "SELECT COUNT(*) AS num FROM replacement WHERE lang = :lang AND reviewer IS NOT NULL AND reviewer <> :system";
         String sqlCustom = "SELECT COUNT(*) AS num FROM custom WHERE lang = :lang";
@@ -42,19 +43,23 @@ class ReplacementCountJdbcRepository implements ReplacementCountRepository {
             .addValue("lang", lang.getCode())
             .addValue("system", REVIEWER_SYSTEM);
         Integer result = jdbcTemplate.queryForObject(sql, namedParameters, Integer.class);
+        LOGGER.debug("END Counting reviewed pages - {}", lang);
         return Objects.requireNonNullElse(result, 0);
     }
 
     @Override
     public int countNotReviewed(WikipediaLanguage lang) {
+        LOGGER.debug("START Counting not reviewed pages - {}…", lang);
         String sql = "SELECT COUNT(*) FROM replacement WHERE lang = :lang AND reviewer IS NULL";
         SqlParameterSource namedParameters = new MapSqlParameterSource().addValue("lang", lang.getCode());
         Integer result = jdbcTemplate.queryForObject(sql, namedParameters, Integer.class);
+        LOGGER.debug("END Counting not reviewed pages - {}", lang);
         return Objects.requireNonNullElse(result, 0);
     }
 
     @Override
     public Collection<ResultCount<String>> countReviewedGroupedByReviewer(WikipediaLanguage lang) {
+        LOGGER.debug("START Counting reviewed pages grouped by reviewer - {}…", lang);
         String sqlReplacement =
             "SELECT reviewer, COUNT(*) AS num FROM replacement " +
             "WHERE lang = :lang AND reviewer IS NOT NULL AND reviewer <> :system " +
@@ -68,13 +73,15 @@ class ReplacementCountJdbcRepository implements ReplacementCountRepository {
         SqlParameterSource namedParameters = new MapSqlParameterSource()
             .addValue("lang", lang.getCode())
             .addValue("system", REVIEWER_SYSTEM);
-        return Objects.requireNonNull(
+        Collection<ResultCount<String>> counts = Objects.requireNonNull(
             jdbcTemplate.query(
                 sql,
                 namedParameters,
                 (resultSet, rowNum) -> ResultCount.of(resultSet.getString("REVIEWER"), resultSet.getInt("NUMSUM"))
             )
         );
+        LOGGER.debug("END Counting reviewed pages grouped by reviewer - {}", lang);
+        return counts;
     }
 
     @Override

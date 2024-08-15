@@ -11,9 +11,9 @@ import java.time.Duration;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Objects;
-import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Primary;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,7 +46,7 @@ class ReplacementCountCacheRepository implements ReplacementCountRepository {
         this.replacementCountRepository = replacementCountRepository;
     }
 
-    @PostConstruct
+    @Scheduled(initialDelay = 0, fixedDelay = Long.MAX_VALUE)
     public void init() {
         // Initial population of the caches
         Iterable<WikipediaLanguage> keys = Arrays.asList(WikipediaLanguage.values());

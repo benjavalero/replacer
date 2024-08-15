@@ -13,11 +13,11 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
-import javax.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Primary;
 import org.springframework.lang.Nullable;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,7 +46,7 @@ class PageCountCacheRepository implements PageCountRepository {
         this.pageCountRepository = pageCountRepository;
     }
 
-    @PostConstruct
+    @Scheduled(initialDelay = 0, fixedDelay = Long.MAX_VALUE)
     public void init() {
         // Initial population of the caches
         Iterable<WikipediaLanguage> keys = Arrays.asList(WikipediaLanguage.values());
@@ -92,9 +92,12 @@ class PageCountCacheRepository implements PageCountRepository {
     }
 
     private Map<StandardType, Integer> loadReplacementTypeCounts(WikipediaLanguage lang) {
-        return pageCountRepository
+        LOGGER.debug("START Loading Replacement Type counts - {}…", lang);
+        Map<StandardType, Integer> counts = pageCountRepository
             .countNotReviewedGroupedByType(lang)
             .stream()
             .collect(Collectors.toConcurrentMap(ResultCount::getKey, ResultCount::getCount));
+        LOGGER.debug("END Loading Replacement Type counts - {}", lang);
+        return counts;
     }
 }
