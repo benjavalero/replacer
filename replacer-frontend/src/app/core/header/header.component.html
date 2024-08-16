@@ -1,10 +1,10 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
   <div class="container-fluid">
     <!-- Brand name and hamburger button (when collapsed) -->
     <a class="navbar-brand" routerLink="/">Replacer</a>
     <button
       type="button"
-      class="navbar-toggler navbar-toggler-right"
+      class="navbar-toggler"
       (click)="isNavCollapsed = !isNavCollapsed"
       aria-controls="navbarSupportedContent"
       [attr.aria-expanded]="!isNavCollapsed"
@@ -14,7 +14,7 @@
 
     <div id="navbarSupportedContent" class="navbar-collapse" [ngbCollapse]="isNavCollapsed" *ngIf="isValidUser()">
       <!-- Navigation links are only available for valid users -->
-      <ul class="navbar-nav mr-auto" *ngIf="hasRightsUser()">
+      <ul class="navbar-nav me-auto" *ngIf="hasRightsUser()">
         <li class="nav-item">
           <a
             class="nav-link"
