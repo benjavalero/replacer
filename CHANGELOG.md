@@ -2,6 +2,7 @@
 
 ## 2.29.2 (??)
 - Feature: ignore template `blockquote`
+- Fix: merge suggestions with same text and empty comments
 
 ## 2.29.1 (12 Aug 2024)
 - Feature: take into account composed misspellings in the uppercase finder

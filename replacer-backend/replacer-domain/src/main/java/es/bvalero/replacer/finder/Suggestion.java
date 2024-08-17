@@ -1,12 +1,10 @@
 package es.bvalero.replacer.finder;
 
 import es.bvalero.replacer.common.util.ReplacerUtils;
-import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Value;
@@ -29,7 +27,7 @@ public class Suggestion {
         if (StringUtils.isBlank(text)) {
             throw new IllegalArgumentException("Blank suggestion text");
         }
-        return new Suggestion(text, comment);
+        return new Suggestion(text, StringUtils.isBlank(comment) ? null : comment);
     }
 
     public static Suggestion ofNoComment(String text) {
@@ -53,7 +51,10 @@ public class Suggestion {
             throw new IllegalArgumentException();
         }
 
-        String mergedComment = String.format("%s; %s", this.comment, suggestion.getComment());
+        // Only merge the non-null comments
+        List<String> comments = Stream.of(this.comment, suggestion.getComment()).filter(Objects::nonNull).toList();
+
+        String mergedComment = String.join("; ", comments);
         return Suggestion.of(this.text, mergedComment);
     }
 

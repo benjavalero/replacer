@@ -338,4 +338,40 @@ class MisspellingComposedFinderTest {
             .build();
         assertEquals(Set.of(expected), new HashSet<>(results));
     }
+
+    @Test
+    void testMergeSuggestionsWithNoComment() {
+        String text = "El Sistema Solar.";
+
+        ComposedMisspelling misspelling = ComposedMisspelling.of("Sistema Solar", false, "sistema solar, Sistema solar (para inicios de frase o columnas de tablas)");
+        fakeUpdateMisspellingList(List.of(misspelling));
+
+        List<Replacement> results = misspellingComposedFinder.findList(text);
+        assertEquals(1, results.size());
+
+        Replacement rep = results.get(0);
+        assertEquals(StandardType.of(ReplacementKind.COMPOSED, "Sistema Solar"), rep.getType());
+        assertEquals("Sistema Solar", rep.getText());
+        assertEquals(2, rep.getSuggestions().size());
+        assertEquals(Suggestion.ofNoComment("Sistema Solar"), rep.getSuggestions().get(0));
+        assertEquals(Suggestion.of("Sistema solar", "para inicios de frase o columnas de tablas"), rep.getSuggestions().get(1));
+    }
+
+    @Test
+    void testMergeSuggestionsWithNoComments() {
+        String text = "El Sistema Solar.";
+
+        ComposedMisspelling misspelling = ComposedMisspelling.of("Sistema Solar", false, "sistema solar, Sistema solar");
+        fakeUpdateMisspellingList(List.of(misspelling));
+
+        List<Replacement> results = misspellingComposedFinder.findList(text);
+        assertEquals(1, results.size());
+
+        Replacement rep = results.get(0);
+        assertEquals(StandardType.of(ReplacementKind.COMPOSED, "Sistema Solar"), rep.getType());
+        assertEquals("Sistema Solar", rep.getText());
+        assertEquals(2, rep.getSuggestions().size());
+        assertEquals(Suggestion.ofNoComment("Sistema Solar"), rep.getSuggestions().get(0));
+        assertEquals(Suggestion.ofNoComment("Sistema solar"), rep.getSuggestions().get(1));
+    }
 }
