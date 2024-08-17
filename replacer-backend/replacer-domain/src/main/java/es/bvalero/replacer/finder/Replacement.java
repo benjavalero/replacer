@@ -3,7 +3,10 @@ package es.bvalero.replacer.finder;
 import es.bvalero.replacer.common.domain.ReplacementType;
 import es.bvalero.replacer.common.util.ReplacerUtils;
 import java.util.Collection;
+import java.util.Comparator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
@@ -91,6 +94,36 @@ public class Replacement implements FinderResult {
         return StringUtils.truncate(
             ReplacerUtils.getContextAroundWord(page.getContent(), start, getEnd(), CONTEXT_THRESHOLD),
             MAX_CONTEXT_LENGTH
+        );
+    }
+
+    // We consider two replacements equal if they have the same start and end (or text).
+    // For the sake of the tests, we will perform a deep comparison.
+    public static boolean compareReplacements(Collection<Replacement> expected, Collection<Replacement> actual) {
+        if (expected.size() != actual.size()) {
+            return false;
+        }
+        List<Replacement> expectedList = expected
+            .stream()
+            .sorted(Comparator.comparingInt(Replacement::getStart))
+            .collect(Collectors.toCollection(LinkedList::new));
+        List<Replacement> actualList = actual
+            .stream()
+            .sorted(Comparator.comparingInt(Replacement::getStart))
+            .collect(Collectors.toCollection(LinkedList::new));
+        for (int i = 0; i < expected.size(); i++) {
+            if (!compareReplacement(expectedList.get(i), actualList.get(i))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private static boolean compareReplacement(Replacement expected, Replacement actual) {
+        return (
+            expected.equals(actual) &&
+            expected.getType().equals(actual.getType()) &&
+            expected.getSuggestions().equals(actual.getSuggestions())
         );
     }
 }

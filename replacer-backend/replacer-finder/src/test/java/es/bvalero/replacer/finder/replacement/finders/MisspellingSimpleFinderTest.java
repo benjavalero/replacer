@@ -50,36 +50,6 @@ class MisspellingSimpleFinderTest {
         );
     }
 
-    // We consider two replacements equal if they have the same start and end (or text).
-    // For the sake of the tests, we will perform a deep comparison.
-    private boolean compareReplacements(Collection<Replacement> expected, Collection<Replacement> actual) {
-        if (expected.size() != actual.size()) {
-            return false;
-        }
-        List<Replacement> expectedList = expected
-            .stream()
-            .sorted(Comparator.comparingInt(Replacement::getStart))
-            .collect(Collectors.toCollection(LinkedList::new));
-        List<Replacement> actualList = actual
-            .stream()
-            .sorted(Comparator.comparingInt(Replacement::getStart))
-            .collect(Collectors.toCollection(LinkedList::new));
-        for (int i = 0; i < expected.size(); i++) {
-            if (!compareReplacement(expectedList.get(i), actualList.get(i))) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    private boolean compareReplacement(Replacement expected, Replacement actual) {
-        return (
-            expected.equals(actual) &&
-            expected.getType().equals(actual.getType()) &&
-            expected.getSuggestions().equals(actual.getSuggestions())
-        );
-    }
-
     @ParameterizedTest
     @CsvSource(
         {
@@ -118,7 +88,7 @@ class MisspellingSimpleFinderTest {
             .type(StandardType.of(ReplacementKind.SIMPLE, "abadia"))
             .suggestions(List.of(Suggestion.ofNoComment("abadia"), Suggestion.ofNoComment("abadía")))
             .build();
-        assertTrue(compareReplacements(Set.of(expected), results));
+        assertTrue(Replacement.compareReplacements(Set.of(expected), results));
     }
 
     @Test
@@ -143,7 +113,7 @@ class MisspellingSimpleFinderTest {
             .type(StandardType.of(ReplacementKind.SIMPLE, "online"))
             .suggestions(List.of(Suggestion.ofNoComment("online"), Suggestion.ofNoComment("en línea")))
             .build();
-        assertTrue(compareReplacements(Set.of(expected1, expected2), results));
+        assertTrue(Replacement.compareReplacements(Set.of(expected1, expected2), results));
     }
 
     @Test
@@ -161,7 +131,7 @@ class MisspellingSimpleFinderTest {
             .type(StandardType.of(ReplacementKind.SIMPLE, "abadia"))
             .suggestions(List.of(Suggestion.ofNoComment("Abadia"), Suggestion.ofNoComment("Abadía")))
             .build();
-        assertTrue(compareReplacements(Set.of(expected), results));
+        assertTrue(Replacement.compareReplacements(Set.of(expected), results));
     }
 
     @Test
@@ -179,7 +149,7 @@ class MisspellingSimpleFinderTest {
             .type(StandardType.of(ReplacementKind.SIMPLE, "nº"))
             .suggestions(List.of(Suggestion.ofNoComment("nº"), Suggestion.ofNoComment("n.º")))
             .build();
-        assertTrue(compareReplacements(Set.of(expected), results));
+        assertTrue(Replacement.compareReplacements(Set.of(expected), results));
     }
 
     @Test
@@ -197,7 +167,7 @@ class MisspellingSimpleFinderTest {
             .type(StandardType.of(ReplacementKind.SIMPLE, "Brazil"))
             .suggestions(List.of(Suggestion.ofNoComment("Brazil"), Suggestion.ofNoComment("Brasil")))
             .build();
-        assertTrue(compareReplacements(Set.of(expected), results));
+        assertTrue(Replacement.compareReplacements(Set.of(expected), results));
     }
 
     @Test
@@ -215,7 +185,7 @@ class MisspellingSimpleFinderTest {
             .type(StandardType.of(ReplacementKind.SIMPLE, "Enero"))
             .suggestions(List.of(Suggestion.ofNoComment("Enero"), Suggestion.ofNoComment("enero")))
             .build();
-        assertTrue(compareReplacements(Set.of(expected), results));
+        assertTrue(Replacement.compareReplacements(Set.of(expected), results));
     }
 
     @Test
@@ -233,7 +203,7 @@ class MisspellingSimpleFinderTest {
             .type(StandardType.of(ReplacementKind.SIMPLE, "ves"))
             .suggestions(List.of(Suggestion.ofNoComment("ves"), Suggestion.ofNoComment("vez")))
             .build();
-        assertTrue(compareReplacements(Set.of(expected), results));
+        assertTrue(Replacement.compareReplacements(Set.of(expected), results));
     }
 
     @Test
@@ -251,7 +221,7 @@ class MisspellingSimpleFinderTest {
             .type(StandardType.of(ReplacementKind.SIMPLE, "angola"))
             .suggestions(List.of(Suggestion.ofNoComment("angola"), Suggestion.ofNoComment("Angola")))
             .build();
-        assertTrue(compareReplacements(Set.of(expected), results));
+        assertTrue(Replacement.compareReplacements(Set.of(expected), results));
     }
 
     @Test
@@ -269,7 +239,7 @@ class MisspellingSimpleFinderTest {
             .type(StandardType.of(ReplacementKind.SIMPLE, "OVNI"))
             .suggestions(List.of(Suggestion.ofNoComment("OVNI"), Suggestion.ofNoComment("ovni")))
             .build();
-        assertTrue(compareReplacements(Set.of(expected), results));
+        assertTrue(Replacement.compareReplacements(Set.of(expected), results));
     }
 
     @Test
@@ -287,7 +257,7 @@ class MisspellingSimpleFinderTest {
             .type(StandardType.of(ReplacementKind.SIMPLE, "text"))
             .suggestions(List.of(Suggestion.ofNoComment("Text"), Suggestion.ofNoComment("Texto")))
             .build();
-        assertTrue(compareReplacements(Set.of(expected), results));
+        assertTrue(Replacement.compareReplacements(Set.of(expected), results));
     }
 
     @Test
@@ -307,7 +277,7 @@ class MisspellingSimpleFinderTest {
             .type(StandardType.of(ReplacementKind.SIMPLE, "entreno"))
             .suggestions(List.of(Suggestion.of("entreno", "sustantivo"), Suggestion.of("entrenó", "verbo")))
             .build();
-        assertTrue(compareReplacements(Set.of(expected), results));
+        assertTrue(Replacement.compareReplacements(Set.of(expected), results));
     }
 
     @ParameterizedTest
@@ -337,7 +307,7 @@ class MisspellingSimpleFinderTest {
                 )
             )
             .build();
-        assertTrue(compareReplacements(Set.of(expected), results));
+        assertTrue(Replacement.compareReplacements(Set.of(expected), results));
     }
 
     @Test
@@ -361,7 +331,7 @@ class MisspellingSimpleFinderTest {
                 )
             )
             .build();
-        assertTrue(compareReplacements(Set.of(expected), results));
+        assertTrue(Replacement.compareReplacements(Set.of(expected), results));
     }
 
     @Test
@@ -384,7 +354,7 @@ class MisspellingSimpleFinderTest {
                 List.of(Suggestion.of("am", "idioma"), Suggestion.of("AM", "sigla"), Suggestion.of("a. m.", "hora"))
             )
             .build();
-        assertTrue(compareReplacements(Set.of(expected), results));
+        assertTrue(Replacement.compareReplacements(Set.of(expected), results));
     }
 
     @Test
@@ -402,7 +372,7 @@ class MisspellingSimpleFinderTest {
             .type(StandardType.of(ReplacementKind.SIMPLE, "Julio"))
             .suggestions(List.of(Suggestion.of("Julio", "nombre"), Suggestion.of("julio", "mes")))
             .build();
-        assertTrue(compareReplacements(Set.of(expected), results));
+        assertTrue(Replacement.compareReplacements(Set.of(expected), results));
     }
 
     @Test
@@ -422,7 +392,7 @@ class MisspellingSimpleFinderTest {
             .type(StandardType.of(ReplacementKind.SIMPLE, "Brazil"))
             .suggestions(List.of(Suggestion.ofNoComment("brazil"), Suggestion.ofNoComment("Brasil")))
             .build();
-        assertTrue(compareReplacements(Set.of(expected), results));
+        assertTrue(Replacement.compareReplacements(Set.of(expected), results));
     }
 
     @Test
@@ -445,7 +415,7 @@ class MisspellingSimpleFinderTest {
                 List.of(Suggestion.ofNoComment("Márketing"), Suggestion.of("''Marketing''", "en cursiva y sin tilde"))
             )
             .build();
-        assertTrue(compareReplacements(Set.of(expected), results));
+        assertTrue(Replacement.compareReplacements(Set.of(expected), results));
     }
 
     @Test
@@ -468,7 +438,7 @@ class MisspellingSimpleFinderTest {
             .type(StandardType.of(ReplacementKind.SIMPLE, "vario"))
             .suggestions(List.of(Suggestion.of("Vario", "adjetivo; nombre propio"), Suggestion.of("Varío", "verbo")))
             .build();
-        assertTrue(compareReplacements(Set.of(expected), results));
+        assertTrue(Replacement.compareReplacements(Set.of(expected), results));
     }
 
     @Test
@@ -497,7 +467,7 @@ class MisspellingSimpleFinderTest {
                 )
             )
             .build();
-        assertTrue(compareReplacements(Set.of(expected), results));
+        assertTrue(Replacement.compareReplacements(Set.of(expected), results));
     }
 
     @Test
