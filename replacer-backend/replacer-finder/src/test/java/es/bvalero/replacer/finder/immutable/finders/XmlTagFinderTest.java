@@ -5,10 +5,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import es.bvalero.replacer.finder.Immutable;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 class XmlTagFinderTest {
 
@@ -19,43 +18,26 @@ class XmlTagFinderTest {
         xmlTagFinder = new XmlTagFinder();
     }
 
-    @Test
-    void testXmlTagFinder() {
-        String tag1 = "<span style=\"color:green;\">";
-        String tag2 = "</span>";
-        String tag3 = "<br />";
-        String text = String.format("%s %s %s", tag1, tag2, tag3);
-
+    @ParameterizedTest
+    @CsvSource(
+        value = {
+            "<span style=\"color:green;\">",
+            "</span>",
+            "<br />",
+            "<hr style='margin-left:0;width:52px;background:#80BFFF'/>",
+        }
+    )
+    void testXmlTagFinder(String text) {
         List<Immutable> matches = xmlTagFinder.findList(text);
+        assertEquals(1, matches.size());
 
-        Set<String> expected = Set.of(tag1, tag2, tag3);
-        Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
-        assertEquals(expected, actual);
+        assertEquals(0, matches.get(0).getStart());
+        assertEquals(text, matches.get(0).getText());
     }
 
-    @Test
-    void testCommentNotMatched() {
-        String comment = "<!-- Esto es un comentario -->";
-        String text = "xxx " + comment + " zzz";
-
-        List<Immutable> matches = xmlTagFinder.findList(text);
-
-        assertTrue(matches.isEmpty());
-    }
-
-    @Test
-    void testXmlTagNotClosed() {
-        String text = "A not closed tag <br ";
-
-        List<Immutable> matches = xmlTagFinder.findList(text);
-
-        assertTrue(matches.isEmpty());
-    }
-
-    @Test
-    void testXmlTagWithForbiddenChars() {
-        String text = "A tag with forbidden chars <span #>";
-
+    @ParameterizedTest
+    @CsvSource(value = { "<!-- Esto es un comentario -->", "A not closed tag <br ", "A <false\npositive tag>" })
+    void testXmlTagFinderNotMatched(String text) {
         List<Immutable> matches = xmlTagFinder.findList(text);
 
         assertTrue(matches.isEmpty());

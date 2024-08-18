@@ -1,5 +1,7 @@
 package es.bvalero.replacer.finder.immutable.finders;
 
+import static es.bvalero.replacer.finder.util.FinderUtils.NEW_LINE;
+
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.immutable.ImmutableCheckedFinder;
 import es.bvalero.replacer.finder.util.FinderMatchResult;
@@ -19,8 +21,8 @@ class XmlTagFinder extends ImmutableCheckedFinder {
     private static final char END_TAG = '>';
     private static final char END_TAG_SLASH = '/';
 
-    // We want to avoid the XML comments to be captured by this
-    private static final Set<Character> FORBIDDEN_CHARS = Set.of('#', '{', '}', START_TAG, END_TAG);
+    // We want to avoid some mathematical expressions with the "less than" sign
+    private static final Set<Character> FORBIDDEN_CHARS = Set.of(NEW_LINE, START_TAG, END_TAG);
 
     @Override
     public int getMaxLength() {
