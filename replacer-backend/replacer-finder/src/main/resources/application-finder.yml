@@ -292,6 +292,8 @@ replacer.finder:
     - template: fs player
       param: nat    # The value is used for the template Bandera which admits English values
     - template: Identificador carretera española
+      param: id
+    - template: Identificador carretera española
       param: tipo
     - template: Jugador de fútbol
       param: nat    # The value is used for the template Bandera which admits English values
