@@ -19,6 +19,8 @@ import org.apache.commons.collections4.SetValuedMap;
 import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 class MisspellingComposedFinderTest {
 
@@ -333,6 +335,23 @@ class MisspellingComposedFinderTest {
             .text("Anti-Ruso")
             .type(StandardType.of(ReplacementKind.COMPOSED, "anti-ruso"))
             .suggestions(List.of(Suggestion.ofNoComment("Anti-Ruso"), Suggestion.ofNoComment("Antirruso")))
+            .build();
+        assertTrue(Replacement.compareReplacements(Set.of(expected), results));
+    }
+
+    @ParameterizedTest
+    @CsvSource(value = { "rio de la plata", "rio de la Plata" })
+    void testMisspellingWithUppercaseSuggestion(String text) {
+        ComposedMisspelling misspelling = ComposedMisspelling.of("rio de la plata", false, "Río de la Plata");
+        fakeUpdateMisspellingList(List.of(misspelling));
+
+        List<Replacement> results = misspellingComposedFinder.findList(text);
+
+        Replacement expected = Replacement.builder()
+            .start(0)
+            .text(text)
+            .type(StandardType.of(ReplacementKind.COMPOSED, "rio de la plata"))
+            .suggestions(List.of(Suggestion.ofNoComment(text), Suggestion.ofNoComment("Río de la Plata")))
             .build();
         assertTrue(Replacement.compareReplacements(Set.of(expected), results));
     }
