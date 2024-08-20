@@ -10,15 +10,17 @@ import org.jetbrains.annotations.TestOnly;
 import org.springframework.lang.NonNull;
 
 /**
- * A user of the application, which has also to be a Wikipedia user.
+ * <p>A user of the application, which has also to be a Wikipedia user.
  * Note that a Wikipedia user belongs to several groups allowing to perform different tasks.
  * A Replacer user also has rights to perform different tasks, being these rights inferred
- * from the Wikipedia groups but also by configuration.
- * Therefore, it is better the keep two different classes for Wikipedia and application users,
+ * from the Wikipedia groups but also by configuration.</p>
+ *
+ * <p> Therefore, it is better the keep two different classes for Wikipedia and application users,
  * to separate clearly the Wikipedia rights logic from the on in Replacer rights.
  * Precisely because of this access to the configuration, the logic is not implemented
- * in the domain object itself, but in a related but separated service.
- * A user of the application must always be authenticated, so we also store here the access token.
+ * in the domain object itself, but in a related but separated service.</p>
+ *
+ * <p>A user of the application must always be authenticated, so we also store here the access token.</p>
  */
 @Value
 @Builder

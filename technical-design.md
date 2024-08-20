@@ -88,6 +88,8 @@ This way, the `core` module is isolated and depends on the `domain`. The rest of
 
 Note that there could be 3 different modules/layers for domain model, input ports and output ports, but they are merged into one module for simplicity. Also note that, with this simplification, an input adapter can access an output adapter via its interface but, as we are defining the interfaces decoupled from their implementations, we can consider output interfaces as core services, so there is no issue.
 
+Ports are usually suffixed with `Api` or `Repository`, while adapters are usually suffixed with `Service`, containing the `@Service` Spring annotation.
+
 DTO objects are used to communicate the different layers. The suffix `Dto` (also `Request` and `Response`) is usually used for the objects communicating the controllers with the view.
 
 Classes are organized _by component_. When possible, all related classes belong to the same package, even in different modules, and have package-private visibility.

@@ -3,7 +3,6 @@ package es.bvalero.replacer.user;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import org.springframework.stereotype.Service;
 
-/** Service to perform authorization operations */
 @Service
 class AuthorizationService implements AuthorizationApi {
 
