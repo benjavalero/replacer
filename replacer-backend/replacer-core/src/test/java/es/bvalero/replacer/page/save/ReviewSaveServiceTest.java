@@ -5,11 +5,11 @@ import static org.mockito.Mockito.*;
 
 import es.bvalero.replacer.common.domain.*;
 import es.bvalero.replacer.page.PageKey;
-import es.bvalero.replacer.page.PageRepository;
+import es.bvalero.replacer.page.find.PageRepository;
 import es.bvalero.replacer.page.find.WikipediaTimestamp;
 import es.bvalero.replacer.replacement.CustomReplacementService;
 import es.bvalero.replacer.replacement.IndexedCustomReplacement;
-import es.bvalero.replacer.replacement.ReplacementSaveRepository;
+import es.bvalero.replacer.replacement.save.ReplacementSaveRepository;
 import es.bvalero.replacer.user.User;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import java.time.LocalDateTime;
@@ -23,6 +23,7 @@ class ReviewSaveServiceTest {
 
     // Dependency injection
     private PageRepository pageRepository;
+    private PageSaveRepository pageSaveRepository;
     private ReplacementSaveRepository replacementSaveRepository;
     private CustomReplacementService customReplacementService;
     private WikipediaPageSaveRepository wikipediaPageSaveRepository;
@@ -32,11 +33,13 @@ class ReviewSaveServiceTest {
     @BeforeEach
     public void setUp() {
         pageRepository = mock(PageRepository.class);
+        pageSaveRepository = mock(PageSaveRepository.class);
         replacementSaveRepository = mock(ReplacementSaveRepository.class);
         customReplacementService = mock(CustomReplacementService.class);
         wikipediaPageSaveRepository = mock(WikipediaPageSaveRepository.class);
         reviewSaveService = new ReviewSaveService(
             pageRepository,
+            pageSaveRepository,
             replacementSaveRepository,
             customReplacementService,
             wikipediaPageSaveRepository
@@ -89,7 +92,7 @@ class ReviewSaveServiceTest {
         LocalDateTime now = LocalDateTime.now();
         reviewSaveService.markAsReviewed(reviewedReplacements, WikipediaPageSaveResult.ofDummy());
 
-        verify(pageRepository).updateLastUpdate(pageKey, now.toLocalDate());
+        verify(pageSaveRepository).updateLastUpdate(pageKey, now.toLocalDate());
         verify(replacementSaveRepository).updateReviewer(anyCollection());
         verify(customReplacementService).addCustomReplacement(any(IndexedCustomReplacement.class));
     }

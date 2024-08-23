@@ -5,6 +5,7 @@ import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.page.*;
 import es.bvalero.replacer.page.index.PageIndexService;
+import es.bvalero.replacer.page.save.PageSaveRepository;
 import es.bvalero.replacer.replacement.CustomReplacementService;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -20,8 +21,8 @@ import org.springframework.stereotype.Component;
 class ReviewCustomFinder extends ReviewFinder {
 
     // Dependency injection
-    private final CustomReplacementService customReplacementService;
     private final WikipediaPageRepository wikipediaPageRepository;
+    private final CustomReplacementService customReplacementService;
     private final CustomReplacementFindService customReplacementFindService;
 
     @Setter(onMethod_ = @TestOnly)
@@ -32,13 +33,14 @@ class ReviewCustomFinder extends ReviewFinder {
         WikipediaPageRepository wikipediaPageRepository,
         PageIndexService pageIndexService,
         PageRepository pageRepository,
+        PageSaveRepository pageSaveRepository,
         ReviewSectionFinder reviewSectionFinder,
         CustomReplacementService customReplacementService,
         CustomReplacementFindService customReplacementFindService
     ) {
-        super(wikipediaPageRepository, pageIndexService, pageRepository, reviewSectionFinder);
-        this.customReplacementService = customReplacementService;
+        super(wikipediaPageRepository, pageIndexService, pageRepository, pageSaveRepository, reviewSectionFinder);
         this.wikipediaPageRepository = wikipediaPageRepository;
+        this.customReplacementService = customReplacementService;
         this.customReplacementFindService = customReplacementFindService;
     }
 

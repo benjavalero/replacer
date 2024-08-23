@@ -1,5 +1,6 @@
 package es.bvalero.replacer.page;
 
+import es.bvalero.replacer.page.save.IndexedPageStatus;
 import es.bvalero.replacer.replacement.IndexedReplacement;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -29,13 +30,16 @@ public class IndexedPage {
     @NonNull
     LocalDate lastUpdate;
 
+    @Builder.Default
+    IndexedPageStatus status = IndexedPageStatus.UNDEFINED;
+
     // One-to-many relationship
     @NonNull
     @Builder.Default
     Collection<IndexedReplacement> replacements = new ArrayList<>();
 
     // Helper method to add replacements after creating the object while extracting the results from database
-    void addReplacement(IndexedReplacement replacement) {
+    public void addReplacement(IndexedReplacement replacement) {
         this.replacements.add(replacement);
     }
 }

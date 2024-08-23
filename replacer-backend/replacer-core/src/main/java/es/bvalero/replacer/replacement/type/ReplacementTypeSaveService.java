@@ -6,7 +6,7 @@ import es.bvalero.replacer.page.PageKey;
 import es.bvalero.replacer.page.find.WikipediaPageRepository;
 import es.bvalero.replacer.page.find.WikipediaSearchRequest;
 import es.bvalero.replacer.page.index.PageIndexService;
-import es.bvalero.replacer.replacement.ReplacementSaveRepository;
+import es.bvalero.replacer.replacement.save.ReplacementSaveRepository;
 import java.util.Collection;
 import org.springframework.stereotype.Service;
 

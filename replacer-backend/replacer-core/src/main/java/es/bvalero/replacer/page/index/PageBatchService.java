@@ -3,7 +3,8 @@ package es.bvalero.replacer.page.index;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.page.IndexedPage;
 import es.bvalero.replacer.page.PageKey;
-import es.bvalero.replacer.page.PageRepository;
+import es.bvalero.replacer.page.find.PageRepository;
+import es.bvalero.replacer.page.save.PageSaveRepository;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -20,6 +21,7 @@ class PageBatchService {
 
     // Dependency injection
     private final PageRepository pageRepository;
+    private final PageSaveRepository pageSaveRepository;
 
     @Setter(onMethod_ = @TestOnly)
     @Value("${replacer.dump.batch.chunk.size}")
@@ -31,8 +33,9 @@ class PageBatchService {
     private int minCachedId = 0;
     private int maxCachedId = 0;
 
-    public PageBatchService(PageRepository pageRepository) {
+    public PageBatchService(PageRepository pageRepository, PageSaveRepository pageSaveRepository) {
         this.pageRepository = pageRepository;
+        this.pageSaveRepository = pageSaveRepository;
     }
 
     public Optional<IndexedPage> findByKey(PageKey pageKey) {
@@ -80,6 +83,8 @@ class PageBatchService {
     }
 
     private void removePages(Collection<IndexedPage> pages) {
-        pageRepository.removeByKey(pages.stream().map(IndexedPage::getPageKey).collect(Collectors.toUnmodifiableSet()));
+        pageSaveRepository.removeByKey(
+            pages.stream().map(IndexedPage::getPageKey).collect(Collectors.toUnmodifiableSet())
+        );
     }
 }

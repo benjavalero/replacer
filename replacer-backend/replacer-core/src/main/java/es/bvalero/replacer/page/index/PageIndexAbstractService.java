@@ -4,7 +4,7 @@ import es.bvalero.replacer.common.util.ReplacerUtils;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.page.IndexedPage;
 import es.bvalero.replacer.page.PageKey;
-import es.bvalero.replacer.page.PageRepository;
+import es.bvalero.replacer.page.find.PageRepository;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.Set;

@@ -8,6 +8,8 @@ import es.bvalero.replacer.replacement.IndexedReplacement;
 import java.util.Collection;
 import java.util.HashSet;
 import lombok.Value;
+import lombok.With;
+import org.springframework.lang.Nullable;
 
 /** Result of comparing an indexable page with an already indexed one */
 @Value(staticConstructor = "of")
@@ -83,4 +85,9 @@ class PageComparatorResult {
     boolean isEmpty() {
         return size() == 0;
     }
+
+    // TODO: Not Null and not default to include it in the "of" constructor
+    @Nullable
+    @With
+    IndexedPage pageToSave = null;
 }

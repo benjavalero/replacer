@@ -1,8 +1,9 @@
-package es.bvalero.replacer.page;
+package es.bvalero.replacer.page.find;
 
 import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import java.time.LocalDate;
+import es.bvalero.replacer.page.IndexedPage;
+import es.bvalero.replacer.page.PageKey;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.Optional;
@@ -11,7 +12,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
-import org.springframework.jdbc.core.namedparam.SqlParameterSourceUtils;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -62,42 +62,6 @@ class PageJdbcRepository implements PageRepository {
         return Objects.requireNonNull(jdbcTemplate.query(sql, namedParameters, new PageResultExtractor()))
             .stream()
             .collect(Collectors.toUnmodifiableSet());
-    }
-
-    @Override
-    public void add(Collection<IndexedPage> pages) {
-        String sql =
-            "INSERT INTO page (lang, page_id, title, last_update) " +
-            "VALUES (:pageKey.lang.code, :pageKey.pageId, :title, :lastUpdate)";
-        SqlParameterSource[] namedParameters = SqlParameterSourceUtils.createBatch(pages.toArray());
-        jdbcTemplate.batchUpdate(sql, namedParameters);
-    }
-
-    @Override
-    public void update(Collection<IndexedPage> pages) {
-        String sql =
-            "UPDATE page SET title = :title, last_update = :lastUpdate " +
-            "WHERE lang = :pageKey.lang.code AND page_id = :pageKey.pageId";
-        SqlParameterSource[] namedParameters = SqlParameterSourceUtils.createBatch(pages.toArray());
-        jdbcTemplate.batchUpdate(sql, namedParameters);
-    }
-
-    @Override
-    public void updateLastUpdate(PageKey pageKey, LocalDate lastUpdate) {
-        String sql = "UPDATE page SET last_update = :lastUpdate WHERE lang = :lang AND page_id = :pageId";
-        SqlParameterSource namedParameters = new MapSqlParameterSource()
-            .addValue("lastUpdate", lastUpdate)
-            .addValue("lang", pageKey.getLang().getCode())
-            .addValue("pageId", pageKey.getPageId());
-        jdbcTemplate.update(sql, namedParameters);
-    }
-
-    @Override
-    public void removeByKey(Collection<PageKey> pageKeys) {
-        // No need to delete first the replacements as they are deleted on cascade by the database
-        SqlParameterSource[] namedParameters = SqlParameterSourceUtils.createBatch(pageKeys.toArray());
-        String sqlPages = "DELETE FROM page WHERE lang = :lang.code AND page_id = :pageId";
-        jdbcTemplate.batchUpdate(sqlPages, namedParameters);
     }
 
     @Override

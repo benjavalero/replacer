@@ -7,10 +7,10 @@ import es.bvalero.replacer.common.domain.ReplacementType;
 import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.page.IndexedPage;
 import es.bvalero.replacer.page.PageKey;
-import es.bvalero.replacer.page.PageRepository;
+import es.bvalero.replacer.page.find.PageRepository;
 import es.bvalero.replacer.replacement.CustomReplacementService;
 import es.bvalero.replacer.replacement.IndexedReplacement;
-import es.bvalero.replacer.replacement.ReplacementSaveRepository;
+import es.bvalero.replacer.replacement.save.ReplacementSaveRepository;
 import es.bvalero.replacer.user.User;
 import es.bvalero.replacer.user.UserId;
 import es.bvalero.replacer.wikipedia.WikipediaException;
@@ -39,6 +39,7 @@ class ReviewSaveService {
 
     // Dependency injection
     private final PageRepository pageRepository;
+    private final PageSaveRepository pageSaveRepository;
     private final ReplacementSaveRepository replacementSaveRepository;
     private final CustomReplacementService customReplacementService;
     private final WikipediaPageSaveRepository wikipediaPageSaveRepository;
@@ -53,11 +54,13 @@ class ReviewSaveService {
 
     ReviewSaveService(
         PageRepository pageRepository,
+        PageSaveRepository pageSaveRepository,
         ReplacementSaveRepository replacementSaveRepository,
         CustomReplacementService customReplacementService,
         WikipediaPageSaveRepository wikipediaPageSaveRepository
     ) {
         this.pageRepository = pageRepository;
+        this.pageSaveRepository = pageSaveRepository;
         this.replacementSaveRepository = replacementSaveRepository;
         this.customReplacementService = customReplacementService;
         this.wikipediaPageSaveRepository = wikipediaPageSaveRepository;
@@ -142,7 +145,7 @@ class ReviewSaveService {
                 .findAny()
                 .orElseThrow(IllegalArgumentException::new)
                 .getPageKey();
-            pageRepository.updateLastUpdate(pageKey, saveResult.getNewTimestamp().toLocalDate());
+            pageSaveRepository.updateLastUpdate(pageKey, saveResult.getNewTimestamp().toLocalDate());
         }
 
         // Mark the custom replacements as reviewed
@@ -168,7 +171,7 @@ class ReviewSaveService {
                 .title("") // It will be set in a next indexation
                 .lastUpdate(LocalDate.now())
                 .build();
-            pageRepository.add(List.of(indexedPage));
+            pageSaveRepository.save(List.of(indexedPage));
         }
         customReplacementService.addCustomReplacement(reviewed.toCustomReplacement(saveResult));
     }

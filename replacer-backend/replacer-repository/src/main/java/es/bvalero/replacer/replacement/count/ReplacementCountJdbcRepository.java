@@ -61,9 +61,11 @@ class ReplacementCountJdbcRepository implements ReplacementCountRepository {
     public Collection<ResultCount<String>> countReviewedGroupedByReviewer(WikipediaLanguage lang) {
         LOGGER.debug("START Counting reviewed pages grouped by reviewer - {}…", lang);
         String sqlReplacement =
-            "SELECT reviewer, COUNT(*) AS num FROM replacement " +
-            "WHERE lang = :lang AND reviewer IS NOT NULL AND reviewer <> :system " +
-            "GROUP BY reviewer";
+            """
+            SELECT reviewer, COUNT(*) AS num FROM replacement
+            WHERE lang = :lang AND reviewer IS NOT NULL AND reviewer <> :system
+            GROUP BY reviewer
+            """;
         String sqlCustom = "SELECT reviewer, COUNT(*) AS num FROM custom WHERE lang = :lang GROUP BY reviewer";
         String sqlUnion = String.format("(%s UNION %s) AS sqlUnion", sqlReplacement, sqlCustom);
         String sql =
@@ -86,6 +88,7 @@ class ReplacementCountJdbcRepository implements ReplacementCountRepository {
 
     @Override
     public Collection<ResultCount<IndexedPage>> countNotReviewedGroupedByPage(WikipediaLanguage lang, int numResults) {
+        // TODO: We could limit also by number of replacement, e.g. more than 50 and use a HAVING clause
         String sql =
             "SELECT p.page_id, p.title, COUNT(*) AS num " +
             "FROM replacement r JOIN page p ON p.lang = r.lang AND p.page_id = r.page_id " +

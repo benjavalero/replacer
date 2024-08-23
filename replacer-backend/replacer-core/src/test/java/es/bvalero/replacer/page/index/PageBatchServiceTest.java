@@ -7,7 +7,8 @@ import static org.mockito.Mockito.*;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.page.IndexedPage;
 import es.bvalero.replacer.page.PageKey;
-import es.bvalero.replacer.page.PageRepository;
+import es.bvalero.replacer.page.find.PageRepository;
+import es.bvalero.replacer.page.save.PageSaveRepository;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -18,13 +19,15 @@ class PageBatchServiceTest {
 
     // Dependency injection
     private PageRepository pageRepository;
+    private PageSaveRepository pageSaveRepository;
 
     private PageBatchService pageBatchService;
 
     @BeforeEach
     public void setUp() {
         pageRepository = mock(PageRepository.class);
-        pageBatchService = new PageBatchService(pageRepository);
+        pageSaveRepository = mock(PageSaveRepository.class);
+        pageBatchService = new PageBatchService(pageRepository, pageSaveRepository);
         pageBatchService.setChunkSize(1000);
     }
 
@@ -56,7 +59,7 @@ class PageBatchServiceTest {
         assertEquals(page2, pageDb.orElse(null));
 
         // Check that the page 2 has been cleaned
-        verify(pageRepository).removeByKey(anyCollection());
+        verify(pageSaveRepository).removeByKey(anyCollection());
     }
 
     @Test

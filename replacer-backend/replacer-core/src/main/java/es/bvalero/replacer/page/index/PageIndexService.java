@@ -2,7 +2,7 @@ package es.bvalero.replacer.page.index;
 
 import es.bvalero.replacer.page.IndexedPage;
 import es.bvalero.replacer.page.PageKey;
-import es.bvalero.replacer.page.PageRepository;
+import es.bvalero.replacer.page.find.PageRepository;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
 

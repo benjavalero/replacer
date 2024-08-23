@@ -3,9 +3,10 @@ package es.bvalero.replacer.page.find;
 import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.page.PageKey;
-import es.bvalero.replacer.page.PageRepository;
 import es.bvalero.replacer.page.count.PageCountRepository;
 import es.bvalero.replacer.page.index.PageIndexService;
+import es.bvalero.replacer.page.save.PageSaveRepository;
+import es.bvalero.replacer.replacement.save.ReplacementSaveRepository;
 import java.util.Collection;
 import java.util.List;
 import org.springframework.stereotype.Component;
@@ -15,18 +16,24 @@ class ReviewTypeFinder extends ReviewFinder {
 
     // Dependency injection
     private final PageRepository pageRepository;
+    private final PageSaveRepository pageSaveRepository;
     private final PageCountRepository pageCountRepository;
+    private final ReplacementSaveRepository replacementSaveRepository;
 
     ReviewTypeFinder(
         WikipediaPageRepository wikipediaPageRepository,
         PageIndexService pageIndexService,
         PageRepository pageRepository,
+        PageSaveRepository pageSaveRepository,
         ReviewSectionFinder reviewSectionFinder,
-        PageCountRepository pageCountRepository
+        PageCountRepository pageCountRepository,
+        ReplacementSaveRepository replacementSaveRepository
     ) {
-        super(wikipediaPageRepository, pageIndexService, pageRepository, reviewSectionFinder);
+        super(wikipediaPageRepository, pageIndexService, pageRepository, pageSaveRepository, reviewSectionFinder);
         this.pageRepository = pageRepository;
+        this.pageSaveRepository = pageSaveRepository;
         this.pageCountRepository = pageCountRepository;
+        this.replacementSaveRepository = replacementSaveRepository;
     }
 
     @Override
@@ -54,7 +61,7 @@ class ReviewTypeFinder extends ReviewFinder {
 
     @Override
     void removePageCounts(ReviewOptions options) {
-        pageCountRepository.removePageCountByType(options.getUser().getId().getLang(), options.getStandardType());
+        replacementSaveRepository.removeByType(options.getUser().getId().getLang(), options.getStandardType());
     }
 
     @Override

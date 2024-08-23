@@ -8,10 +8,10 @@ import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.Suggestion;
 import es.bvalero.replacer.page.PageKey;
-import es.bvalero.replacer.page.PageRepository;
 import es.bvalero.replacer.page.count.PageCountRepository;
 import es.bvalero.replacer.page.index.PageIndexResult;
 import es.bvalero.replacer.page.index.PageIndexService;
+import es.bvalero.replacer.page.save.PageSaveRepository;
 import es.bvalero.replacer.user.User;
 import java.util.ArrayList;
 import java.util.List;
@@ -58,6 +58,7 @@ class ReviewNoTypeFinderTest {
     private WikipediaPageRepository wikipediaPageRepository;
     private PageIndexService pageIndexService;
     private PageRepository pageRepository;
+    private PageSaveRepository pageSaveRepository;
     private ReviewSectionFinder reviewSectionFinder;
     private PageCountRepository pageCountRepository;
 
@@ -68,12 +69,14 @@ class ReviewNoTypeFinderTest {
         wikipediaPageRepository = mock(WikipediaPageRepository.class);
         pageIndexService = mock(PageIndexService.class);
         pageRepository = mock(PageRepository.class);
+        pageSaveRepository = mock(PageSaveRepository.class);
         reviewSectionFinder = mock(ReviewSectionFinder.class);
         pageCountRepository = mock(PageCountRepository.class);
         pageReviewNoTypeService = new ReviewNoTypeFinder(
             wikipediaPageRepository,
             pageIndexService,
             pageRepository,
+            pageSaveRepository,
             reviewSectionFinder,
             pageCountRepository
         );

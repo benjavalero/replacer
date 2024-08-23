@@ -12,6 +12,8 @@ import es.bvalero.replacer.page.*;
 import es.bvalero.replacer.page.count.PageCountRepository;
 import es.bvalero.replacer.page.index.PageIndexResult;
 import es.bvalero.replacer.page.index.PageIndexService;
+import es.bvalero.replacer.page.save.PageSaveRepository;
+import es.bvalero.replacer.replacement.save.ReplacementSaveRepository;
 import es.bvalero.replacer.user.User;
 import java.util.List;
 import java.util.Optional;
@@ -59,8 +61,10 @@ class ReviewTypeFinderTest {
     private WikipediaPageRepository wikipediaPageRepository;
     private PageIndexService pageIndexService;
     private PageRepository pageRepository;
+    private PageSaveRepository pageSaveRepository;
     private ReviewSectionFinder reviewSectionFinder;
     private PageCountRepository pageCountRepository;
+    private ReplacementSaveRepository replacementSaveRepository;
 
     private ReviewTypeFinder pageReviewTypeSubtypeService;
 
@@ -69,14 +73,18 @@ class ReviewTypeFinderTest {
         wikipediaPageRepository = mock(WikipediaPageRepository.class);
         pageIndexService = mock(PageIndexService.class);
         pageRepository = mock(PageRepository.class);
+        pageSaveRepository = mock(PageSaveRepository.class);
         reviewSectionFinder = mock(ReviewSectionFinder.class);
         pageCountRepository = mock(PageCountRepository.class);
+        replacementSaveRepository = mock(ReplacementSaveRepository.class);
         pageReviewTypeSubtypeService = new ReviewTypeFinder(
             wikipediaPageRepository,
             pageIndexService,
             pageRepository,
+            pageSaveRepository,
             reviewSectionFinder,
-            pageCountRepository
+            pageCountRepository,
+            replacementSaveRepository
         );
     }
 

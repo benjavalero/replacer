@@ -25,7 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Primary
 @Transactional
 @Repository
-class PageCountCacheRepository implements PageCountRepository {
+public class PageCountCacheRepository implements PageCountRepository {
 
     private final Duration refreshTime = Duration.of(1, HOURS);
 
@@ -76,17 +76,14 @@ class PageCountCacheRepository implements PageCountRepository {
         }
     }
 
-    @Override
     public void removePageCountByType(WikipediaLanguage lang, StandardType type) {
         this.getCounts(lang).remove(type);
     }
 
-    @Override
     public void incrementPageCountByType(WikipediaLanguage lang, StandardType type) {
         this.getCounts(lang).compute(type, (t, c) -> c == null ? 1 : c + 1);
     }
 
-    @Override
     public void decrementPageCountByType(WikipediaLanguage lang, StandardType type) {
         this.getCounts(lang).computeIfPresent(type, (t, c) -> c > 1 ? c - 1 : null);
     }

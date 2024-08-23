@@ -7,8 +7,8 @@ import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.page.IndexedPage;
 import es.bvalero.replacer.page.PageKey;
-import es.bvalero.replacer.page.PageRepository;
 import es.bvalero.replacer.page.index.PageIndexService;
+import es.bvalero.replacer.page.save.PageSaveRepository;
 import es.bvalero.replacer.user.User;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -27,6 +27,7 @@ abstract class ReviewFinder {
     private final WikipediaPageRepository wikipediaPageRepository;
     private final PageIndexService pageIndexService;
     private final PageRepository pageRepository;
+    private final PageSaveRepository pageSaveRepository;
     private final ReviewSectionFinder reviewSectionFinder;
 
     // Maximum 500 as it is used as page size when searching in Wikipedia
@@ -47,11 +48,13 @@ abstract class ReviewFinder {
         WikipediaPageRepository wikipediaPageRepository,
         PageIndexService pageIndexService,
         PageRepository pageRepository,
+        PageSaveRepository pageSaveRepository,
         ReviewSectionFinder reviewSectionFinder
     ) {
         this.wikipediaPageRepository = wikipediaPageRepository;
         this.pageIndexService = pageIndexService;
         this.pageRepository = pageRepository;
+        this.pageSaveRepository = pageSaveRepository;
         this.reviewSectionFinder = reviewSectionFinder;
     }
 
@@ -188,7 +191,7 @@ abstract class ReviewFinder {
             return wikipediaPage.flatMap(page -> buildPageReview(page, options));
         } catch (Exception e) {
             LOGGER.error("Error finding page review: {}", pageKey, e);
-            pageRepository.removeByKey(Set.of(pageKey));
+            pageSaveRepository.removeByKey(Set.of(pageKey));
             return Optional.empty();
         }
     }
@@ -199,7 +202,7 @@ abstract class ReviewFinder {
             // Find the page title in the database to improve the warning
             String pageDbTitle = pageRepository.findByKey(pageKey).map(IndexedPage::getTitle).orElse(null);
             LOGGER.warn("No page found in Wikipedia: {} - {}", pageKey, pageDbTitle);
-            pageRepository.removeByKey(Set.of(pageKey));
+            pageSaveRepository.removeByKey(Set.of(pageKey));
         }
 
         return page;

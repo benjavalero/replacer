@@ -1,12 +1,12 @@
 package es.bvalero.replacer.page.index;
 
-import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.page.IndexedPage;
-import es.bvalero.replacer.page.PageRepository;
-import es.bvalero.replacer.page.count.PageCountRepository;
-import es.bvalero.replacer.replacement.IndexedReplacement;
-import es.bvalero.replacer.replacement.ReplacementSaveRepository;
-import java.util.*;
+import es.bvalero.replacer.page.save.IndexedPageStatus;
+import es.bvalero.replacer.page.save.PageSaveRepository;
+import es.bvalero.replacer.replacement.save.IndexedReplacementStatus;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -18,24 +18,16 @@ import org.springframework.stereotype.Component;
 class PageComparatorSaver {
 
     // Dependency injection
-    private final PageRepository pageRepository;
-    private final PageCountRepository pageCountRepository;
-    private final ReplacementSaveRepository replacementSaveRepository;
+    private final PageSaveRepository pageSaveRepository;
 
     @Value("${replacer.dump.batch.chunk.size}")
     private int chunkSize;
 
     // Singleton field to add the items until the batch limit is reached
-    private final List<PageComparatorResult> batchResult = Collections.synchronizedList(new ArrayList<>());
+    private final List<IndexedPage> batchResult = Collections.synchronizedList(new ArrayList<>());
 
-    PageComparatorSaver(
-        PageRepository pageRepository,
-        PageCountRepository pageCountRepository,
-        ReplacementSaveRepository replacementSaveRepository
-    ) {
-        this.pageRepository = pageRepository;
-        this.pageCountRepository = pageCountRepository;
-        this.replacementSaveRepository = replacementSaveRepository;
+    PageComparatorSaver(PageSaveRepository pageSaveRepository) {
+        this.pageSaveRepository = pageSaveRepository;
     }
 
     /* Save in DB the result of a page indexing no matter the size of the result */
@@ -47,63 +39,34 @@ class PageComparatorSaver {
     /* Save in DB the results of page indexing when the result size is large enough */
     void saveBatch(PageComparatorResult pageComparatorResult) {
         addResultToBatch(pageComparatorResult);
-        if (getBatchSize() >= this.chunkSize) {
+        if (this.batchResult.size() >= this.chunkSize) {
             saveBatchResult();
         }
     }
 
     private void addResultToBatch(PageComparatorResult pageComparatorResult) {
-        // Add all the items to the batch result
-        // Just in case we check it is not empty,
+        // Add the indexed page to the batch result
+        // Just in case we check it the page will actually be saved,
         // not to increase unnecessarily the heap use.
-        if (!pageComparatorResult.isEmpty()) {
-            this.batchResult.add(pageComparatorResult);
+        IndexedPage pageToSave = pageComparatorResult.getPageToSave();
+        if (isPageToSave(pageToSave)) {
+            this.batchResult.add(pageToSave);
         }
     }
 
-    private int getBatchSize() {
-        synchronized (this.batchResult) {
-            return this.batchResult.stream().mapToInt(PageComparatorResult::size).sum();
-        }
+    private boolean isPageToSave(IndexedPage page) {
+        // TODO Not Null
+        return (
+            (page != null && page.getStatus() != IndexedPageStatus.UNDEFINED) ||
+            page.getReplacements().stream().anyMatch(r -> r.getStatus() != IndexedReplacementStatus.UNDEFINED)
+        );
     }
 
     private void saveBatchResult() {
-        // We use a thread-safe loop in order to avoid a ConcurrentModificationException
-        // https://www.baeldung.com/java-synchronized-collections
-        // Also use sets just in case to prevent duplicated insertions
-        final Set<IndexedPage> pagesToCreate = new HashSet<>();
-        final Set<IndexedPage> pagesToUpdate = new HashSet<>();
-        final Set<IndexedReplacement> replacementsToCreate = new HashSet<>();
-        final Set<IndexedReplacement> replacementsToUpdate = new HashSet<>();
-        final Set<IndexedReplacement> replacementsToDelete = new HashSet<>();
-
         synchronized (this.batchResult) {
-            for (PageComparatorResult result : this.batchResult) {
-                pagesToCreate.addAll(result.getPagesToCreate());
-                pagesToUpdate.addAll(result.getPagesToUpdate());
-                replacementsToCreate.addAll(result.getReplacementsToCreate());
-                replacementsToUpdate.addAll(result.getReplacementsToUpdate());
-                replacementsToDelete.addAll(result.getReplacementsToDelete());
-
-                // Update page count cache
-                result
-                    .getReplacementTypesToCreate()
-                    .forEach(rt -> pageCountRepository.incrementPageCountByType(result.getLang(), (StandardType) rt));
-                result
-                    .getReplacementTypesToDelete()
-                    .forEach(rt -> pageCountRepository.decrementPageCountByType(result.getLang(), (StandardType) rt));
-            }
-
+            pageSaveRepository.save(this.batchResult);
             this.batchResult.clear();
         }
-
-        // Pages must be added before adding the related replacements
-        // We assume the replacements removed correspond to not removed pages
-        pageRepository.add(pagesToCreate);
-        pageRepository.update(pagesToUpdate);
-        replacementSaveRepository.add(replacementsToCreate);
-        replacementSaveRepository.update(replacementsToUpdate);
-        replacementSaveRepository.remove(replacementsToDelete);
     }
 
     /* Force saving what is left on the batch */

@@ -1,7 +1,8 @@
-package es.bvalero.replacer.replacement;
+package es.bvalero.replacer.replacement.save;
 
 import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
+import es.bvalero.replacer.replacement.IndexedReplacement;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.Set;
@@ -16,20 +17,21 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
-@Qualifier("replacementJdbcRepository")
+@Qualifier("replacementSaveJdbcRepository")
 @Transactional
 @Repository
-class ReplacementJdbcRepository implements ReplacementSaveRepository {
+class ReplacementSaveJdbcRepository implements ReplacementSaveRepository {
 
     // Dependency injection
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
-    ReplacementJdbcRepository(NamedParameterJdbcTemplate jdbcTemplate) {
+    ReplacementSaveJdbcRepository(NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override
     public void add(Collection<IndexedReplacement> replacements) {
+        assert replacements.stream().allMatch(r -> r.getStatus() == IndexedReplacementStatus.ADD);
         String sql =
             "INSERT INTO replacement (page_id, lang, kind, subtype, start, context, reviewer) " +
             "VALUES (:pageKey.pageId, :pageKey.lang.code, :type.kind.code, :type.subtype, :start, :context, :reviewer)";
@@ -39,6 +41,7 @@ class ReplacementJdbcRepository implements ReplacementSaveRepository {
 
     @Override
     public void update(Collection<IndexedReplacement> replacements) {
+        assert replacements.stream().allMatch(r -> r.getStatus() == IndexedReplacementStatus.UPDATE);
         String sql = "UPDATE replacement SET start = :start, context = :context WHERE id = :id";
         SqlParameterSource[] namedParameters = SqlParameterSourceUtils.createBatch(replacements.toArray());
         jdbcTemplate.batchUpdate(sql, namedParameters);
@@ -46,15 +49,19 @@ class ReplacementJdbcRepository implements ReplacementSaveRepository {
 
     @Override
     public void remove(Collection<IndexedReplacement> replacements) {
-        if (!replacements.isEmpty()) {
-            String sql = "DELETE FROM replacement WHERE id IN (:ids)";
-            Set<Integer> ids = replacements
-                .stream()
-                .map(r -> Objects.requireNonNull(r.getId()))
-                .collect(Collectors.toUnmodifiableSet());
-            SqlParameterSource namedParameters = new MapSqlParameterSource().addValue("ids", ids);
-            jdbcTemplate.update(sql, namedParameters);
+        assert replacements.stream().allMatch(r -> r.getStatus() == IndexedReplacementStatus.REMOVE);
+        if (replacements.isEmpty()) {
+            // We need to check this so the "IN" clause in the query doesn't fail
+            return;
         }
+
+        String sql = "DELETE FROM replacement WHERE id IN (:ids)";
+        Set<Integer> ids = replacements
+            .stream()
+            .map(r -> Objects.requireNonNull(r.getId()))
+            .collect(Collectors.toUnmodifiableSet());
+        SqlParameterSource namedParameters = new MapSqlParameterSource().addValue("ids", ids);
+        jdbcTemplate.update(sql, namedParameters);
     }
 
     @Override

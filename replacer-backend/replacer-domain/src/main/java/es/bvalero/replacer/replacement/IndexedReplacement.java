@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.common.util.ReplacerUtils;
 import es.bvalero.replacer.page.PageKey;
+import es.bvalero.replacer.replacement.save.IndexedReplacementStatus;
 import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Value;
@@ -47,6 +48,9 @@ public class IndexedReplacement {
 
     @Nullable
     Integer newRevId;
+
+    @Builder.Default
+    IndexedReplacementStatus status = IndexedReplacementStatus.UNDEFINED;
 
     // Many-to-one relationship
     @NonNull

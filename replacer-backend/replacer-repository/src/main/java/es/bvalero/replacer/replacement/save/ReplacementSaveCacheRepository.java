@@ -1,9 +1,12 @@
-package es.bvalero.replacer.replacement;
+package es.bvalero.replacer.replacement.save;
 
 import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import es.bvalero.replacer.page.count.PageCountRepository;
+import es.bvalero.replacer.page.PageKey;
+import es.bvalero.replacer.page.count.PageCountCacheRepository;
+import es.bvalero.replacer.replacement.IndexedReplacement;
 import java.util.Collection;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
@@ -16,18 +19,19 @@ class ReplacementSaveCacheRepository implements ReplacementSaveRepository {
 
     // Dependency injection
     private final ReplacementSaveRepository replacementSaveRepository;
-    private final PageCountRepository pageCountRepository;
+    private final PageCountCacheRepository pageCountCacheRepository;
 
     ReplacementSaveCacheRepository(
-        @Qualifier("replacementJdbcRepository") ReplacementSaveRepository replacementSaveRepository,
-        PageCountRepository pageCountRepository
+        @Qualifier("replacementSaveJdbcRepository") ReplacementSaveRepository replacementSaveRepository,
+        PageCountCacheRepository pageCountCacheRepository
     ) {
         this.replacementSaveRepository = replacementSaveRepository;
-        this.pageCountRepository = pageCountRepository;
+        this.pageCountCacheRepository = pageCountCacheRepository;
     }
 
     @Override
     public void add(Collection<IndexedReplacement> replacements) {
+        // The count cache is updated on saving the page
         replacementSaveRepository.add(replacements);
     }
 
@@ -39,12 +43,13 @@ class ReplacementSaveCacheRepository implements ReplacementSaveRepository {
 
     @Override
     public void remove(Collection<IndexedReplacement> replacements) {
+        // The count cache is updated on saving the page
         replacementSaveRepository.remove(replacements);
     }
 
     @Override
     public void updateReviewerByType(WikipediaLanguage lang, StandardType type, String reviewer) {
-        pageCountRepository.removePageCountByType(lang, type);
+        pageCountCacheRepository.removePageCountByType(lang, type);
         replacementSaveRepository.updateReviewerByType(lang, type, reviewer);
     }
 
@@ -55,22 +60,24 @@ class ReplacementSaveCacheRepository implements ReplacementSaveRepository {
         }
 
         // We can assume all replacements belong to the same page
-        final WikipediaLanguage lang = replacements
+        final Collection<PageKey> pageKeys = replacements
             .stream()
-            .map(r -> r.getPageKey().getLang())
-            .findAny()
-            .orElseThrow(IllegalArgumentException::new);
+            .map(IndexedReplacement::getPageKey)
+            .collect(Collectors.toUnmodifiableSet());
+        assert pageKeys.size() == 1;
+
+        final WikipediaLanguage lang = pageKeys.stream().findAny().orElseThrow(IllegalArgumentException::new).getLang();
         replacements
             .stream()
             .map(IndexedReplacement::getType)
             .distinct()
-            .forEach(t -> pageCountRepository.decrementPageCountByType(lang, t));
+            .forEach(t -> pageCountCacheRepository.decrementPageCountByType(lang, t));
         replacementSaveRepository.updateReviewer(replacements);
     }
 
     @Override
     public void removeByType(WikipediaLanguage lang, StandardType type) {
-        pageCountRepository.removePageCountByType(lang, type);
+        pageCountCacheRepository.removePageCountByType(lang, type);
         replacementSaveRepository.removeByType(lang, type);
     }
 }
