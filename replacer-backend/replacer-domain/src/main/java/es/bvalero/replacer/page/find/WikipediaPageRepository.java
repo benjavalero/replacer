@@ -23,7 +23,4 @@ public interface WikipediaPageRepository {
 
     /** Find the IDs of the pages containing the given content */
     WikipediaSearchResult findByContent(WikipediaSearchRequest searchRequest);
-
-    /** Find the pages containing the given content, using the default search options. */
-    Collection<WikipediaPage> findByContent(WikipediaLanguage lang, String content);
 }

@@ -15,7 +15,7 @@ import org.springframework.lang.NonNull;
  */
 @Value
 @Builder
-class WikipediaSearchRequest {
+public class WikipediaSearchRequest {
 
     @NonNull
     WikipediaLanguage lang;

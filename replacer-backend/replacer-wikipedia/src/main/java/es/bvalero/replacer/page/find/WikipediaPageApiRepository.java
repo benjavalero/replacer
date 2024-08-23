@@ -243,17 +243,6 @@ public class WikipediaPageApiRepository implements WikipediaPageRepository {
         return result;
     }
 
-    @Override
-    public Collection<WikipediaPage> findByContent(WikipediaLanguage lang, String content) {
-        WikipediaSearchRequest request = WikipediaSearchRequest.builder().lang(lang).text(content).build();
-        Collection<PageKey> pageKeys = findByContent(request)
-            .getPageIds()
-            .stream()
-            .map(pageId -> PageKey.of(lang, pageId))
-            .toList();
-        return findByKeys(pageKeys);
-    }
-
     private Map<String, String> buildPageIdsByStringMatchRequestParams(WikipediaSearchRequest searchRequest) {
         Map<String, String> params = new HashMap<>();
         params.put("action", "query");

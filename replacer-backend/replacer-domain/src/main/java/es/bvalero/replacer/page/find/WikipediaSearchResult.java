@@ -14,7 +14,7 @@ import lombok.Value;
  */
 @Value
 @Builder
-class WikipediaSearchResult {
+public class WikipediaSearchResult {
 
     int total;
 

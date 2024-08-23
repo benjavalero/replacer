@@ -2,9 +2,12 @@ package es.bvalero.replacer.replacement.type;
 
 import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
+import es.bvalero.replacer.page.PageKey;
 import es.bvalero.replacer.page.find.WikipediaPageRepository;
+import es.bvalero.replacer.page.find.WikipediaSearchRequest;
 import es.bvalero.replacer.page.index.PageIndexService;
 import es.bvalero.replacer.replacement.ReplacementSaveRepository;
+import java.util.Collection;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -33,8 +36,15 @@ class ReplacementTypeSaveService implements ReplacementTypeSaveApi {
 
     @Override
     public void index(WikipediaLanguage lang, StandardType type) {
-        // For each type, find the Wikipedia pages containing the text.
+        // For each type, find the Wikipedia pages containing the text, using the default search options.
         // At least some of them not to overload the Wikipedia search.
-        wikipediaPageRepository.findByContent(lang, type.getSubtype()).forEach(pageIndexService::indexPage);
+        WikipediaSearchRequest request = WikipediaSearchRequest.builder().lang(lang).text(type.getSubtype()).build();
+        Collection<PageKey> pageKeys = wikipediaPageRepository
+            .findByContent(request)
+            .getPageIds()
+            .stream()
+            .map(pageId -> PageKey.of(lang, pageId))
+            .toList();
+        wikipediaPageRepository.findByKeys(pageKeys).forEach(pageIndexService::indexPage);
     }
 }
