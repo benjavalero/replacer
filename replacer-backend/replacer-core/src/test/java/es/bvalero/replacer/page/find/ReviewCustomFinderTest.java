@@ -12,6 +12,7 @@ import es.bvalero.replacer.finder.Suggestion;
 import es.bvalero.replacer.page.*;
 import es.bvalero.replacer.page.index.PageIndexResult;
 import es.bvalero.replacer.page.index.PageIndexService;
+import es.bvalero.replacer.page.save.PageSaveRepository;
 import es.bvalero.replacer.replacement.CustomReplacementService;
 import es.bvalero.replacer.user.User;
 import java.util.*;
@@ -35,6 +36,7 @@ class ReviewCustomFinderTest {
     private WikipediaPageRepository wikipediaPageRepository;
     private PageIndexService pageIndexService;
     private PageRepository pageRepository;
+    private PageSaveRepository pageSaveRepository;
     private ReviewSectionFinder reviewSectionFinder;
     private CustomReplacementService customReplacementService;
     private CustomReplacementFindService customReplacementFindService;
@@ -46,6 +48,7 @@ class ReviewCustomFinderTest {
         wikipediaPageRepository = mock(WikipediaPageRepository.class);
         pageIndexService = mock(PageIndexService.class);
         pageRepository = mock(PageRepository.class);
+        pageSaveRepository = mock(PageSaveRepository.class);
         reviewSectionFinder = mock(ReviewSectionFinder.class);
         customReplacementService = mock(CustomReplacementService.class);
         customReplacementFindService = mock(CustomReplacementFindService.class);
@@ -53,6 +56,7 @@ class ReviewCustomFinderTest {
             wikipediaPageRepository,
             pageIndexService,
             pageRepository,
+            pageSaveRepository,
             reviewSectionFinder,
             customReplacementService,
             customReplacementFindService

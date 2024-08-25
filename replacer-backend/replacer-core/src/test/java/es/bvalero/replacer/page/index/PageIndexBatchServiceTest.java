@@ -1,15 +1,17 @@
 package es.bvalero.replacer.page.index;
 
+import static es.bvalero.replacer.page.index.PageComparator.toIndexedPage;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.page.IndexedPage;
 import es.bvalero.replacer.page.PageKey;
-import es.bvalero.replacer.page.find.PageRepository;
 import es.bvalero.replacer.page.find.WikipediaNamespace;
 import es.bvalero.replacer.page.find.WikipediaPage;
 import es.bvalero.replacer.page.find.WikipediaTimestamp;
+import es.bvalero.replacer.page.save.IndexedPageStatus;
+import es.bvalero.replacer.page.save.PageSaveRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -25,29 +27,29 @@ class PageIndexBatchServiceTest {
         .build();
 
     // Dependency injection
-    private PageBatchService pageBatchService;
-    private PageRepository pageRepository;
+    private PageSaveRepository pageSaveRepository;
     private PageIndexValidator pageIndexValidator;
     private ReplacementFindService replacementFindService;
     private PageComparator pageComparator;
+    private PageBatchService pageBatchService;
     private PageComparatorSaver pageComparatorSaver;
 
     private PageIndexBatchService pageIndexBatchService;
 
     @BeforeEach
     void setUp() {
-        pageBatchService = mock(PageBatchService.class);
-        pageRepository = mock(PageRepository.class);
+        pageSaveRepository = mock(PageSaveRepository.class);
         pageIndexValidator = mock(PageIndexValidator.class);
         replacementFindService = mock(ReplacementFindService.class);
         pageComparator = mock(PageComparator.class);
+        pageBatchService = mock(PageBatchService.class);
         pageComparatorSaver = mock(PageComparatorSaver.class);
         pageIndexBatchService = new PageIndexBatchService(
-            pageBatchService,
-            pageRepository,
+            pageSaveRepository,
             pageIndexValidator,
             replacementFindService,
             pageComparator,
+            pageBatchService,
             pageComparatorSaver
         );
     }
@@ -57,13 +59,12 @@ class PageIndexBatchServiceTest {
         when(pageIndexValidator.isPageIndexableByNamespace(page)).thenReturn(true);
         when(pageIndexValidator.isIndexableByTimestamp(page, null)).thenReturn(true);
 
-        PageComparatorResult comparatorResult = PageComparatorResult.of(page.getPageKey().getLang());
         IndexedPage indexedPage = IndexedPage.builder()
             .pageKey(page.getPageKey())
             .title(page.getTitle())
             .lastUpdate(page.getLastUpdate().toLocalDate())
             .build();
-        comparatorResult.addPageToCreate(indexedPage); // Any change
+        IndexedPage comparatorResult = toIndexedPage(page, IndexedPageStatus.ADD); // Any change
         when(pageComparator.indexPageReplacements(any(IndexablePage.class), anyCollection(), isNull())).thenReturn(
             comparatorResult
         );

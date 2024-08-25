@@ -12,6 +12,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Value;
 import lombok.With;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.TestOnly;
 import org.springframework.lang.NonNull;
 
 /**
@@ -29,7 +30,6 @@ public class Replacement implements FinderResult {
     private static final int CONTEXT_THRESHOLD = 20;
     private static final int MAX_CONTEXT_LENGTH = 255; // Constrained by the database
 
-    // TODO: To be removed once the replacements always go along with a page as an aggregate
     @NonNull
     FinderPage page;
 
@@ -99,6 +99,7 @@ public class Replacement implements FinderResult {
 
     // We consider two replacements equal if they have the same start and end (or text).
     // For the sake of the tests, we will perform a deep comparison.
+    @TestOnly
     public static boolean compareReplacements(Collection<Replacement> expected, Collection<Replacement> actual) {
         if (expected.size() != actual.size()) {
             return false;

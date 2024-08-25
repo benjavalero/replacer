@@ -15,12 +15,13 @@ import es.bvalero.replacer.finder.Suggestion;
 import es.bvalero.replacer.page.IndexedPage;
 import es.bvalero.replacer.page.PageKey;
 import es.bvalero.replacer.page.find.WikipediaTimestamp;
+import es.bvalero.replacer.page.save.IndexedPageStatus;
 import es.bvalero.replacer.replacement.IndexedReplacement;
+import es.bvalero.replacer.replacement.save.IndexedReplacementStatus;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 import java.util.Random;
-import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -55,12 +56,11 @@ class PageComparatorTest {
     void testNewPageWithNoReplacements() {
         Collection<Replacement> replacements = List.of();
 
-        PageComparatorResult result = pageComparator.indexPageReplacements(page, replacements, null);
+        IndexedPage result = pageComparator.indexPageReplacements(page, replacements, null);
 
-        PageComparatorResult expected = PageComparatorResult.of(page.getPageKey().getLang());
-        expected.addPageToCreate(toIndexedPage(page));
+        IndexedPage expected = toIndexedPage(page, IndexedPageStatus.ADD);
 
-        assertEquals(expected, result);
+        assertTrue(IndexedPage.compare(expected, result));
     }
 
     @Test
@@ -68,15 +68,12 @@ class PageComparatorTest {
         Replacement r1 = buildFinderReplacement(page, 1); // New => ADD
         Collection<Replacement> replacements = List.of(r1);
 
-        PageComparatorResult toIndex = pageComparator.indexPageReplacements(page, replacements, null);
+        IndexedPage result = pageComparator.indexPageReplacements(page, replacements, null);
 
-        PageComparatorResult expected = PageComparatorResult.of(page.getPageKey().getLang());
-        expected.addPageToCreate(toIndexedPage(page));
-        expected.addReplacementToCreate(ComparableReplacement.of(r1));
-        expected.addReplacementsToReview(replacements);
-        expected.addReplacementTypesToCreate(List.of(r1.getType()));
+        IndexedPage expected = toIndexedPage(page, IndexedPageStatus.ADD);
+        expected.addReplacement(ComparableReplacement.of(r1).toDomain(IndexedReplacementStatus.ADD));
 
-        assertEquals(expected, toIndex);
+        assertTrue(IndexedPage.compare(expected, result));
     }
 
     @Test
@@ -90,10 +87,11 @@ class PageComparatorTest {
 
         Collection<Replacement> replacements = List.of();
 
-        PageComparatorResult result = pageComparator.indexPageReplacements(page, replacements, dbPage);
+        IndexedPage result = pageComparator.indexPageReplacements(page, replacements, dbPage);
 
-        PageComparatorResult expected = PageComparatorResult.of(page.getPageKey().getLang());
-        assertEquals(expected, result);
+        IndexedPage expected = toIndexedPage(page, IndexedPageStatus.INDEXED);
+
+        assertTrue(IndexedPage.compare(expected, result));
     }
 
     @Test
@@ -107,12 +105,11 @@ class PageComparatorTest {
 
         Collection<Replacement> replacements = List.of();
 
-        PageComparatorResult result = pageComparator.indexPageReplacements(page, replacements, dbPage);
+        IndexedPage result = pageComparator.indexPageReplacements(page, replacements, dbPage);
 
-        PageComparatorResult expected = PageComparatorResult.of(page.getPageKey().getLang());
-        expected.addPageToUpdate(toIndexedPage(page));
+        IndexedPage expected = toIndexedPage(page, IndexedPageStatus.UPDATE);
 
-        assertEquals(expected, result);
+        assertTrue(IndexedPage.compare(expected, result));
     }
 
     @Test
@@ -126,12 +123,11 @@ class PageComparatorTest {
 
         Collection<Replacement> replacements = List.of();
 
-        PageComparatorResult result = pageComparator.indexPageReplacements(page, replacements, dbPage);
+        IndexedPage result = pageComparator.indexPageReplacements(page, replacements, dbPage);
 
-        PageComparatorResult expected = PageComparatorResult.of(page.getPageKey().getLang());
-        expected.addPageToUpdate(toIndexedPage(page));
+        IndexedPage expected = toIndexedPage(page, IndexedPageStatus.UPDATE);
 
-        assertEquals(expected, result);
+        assertTrue(IndexedPage.compare(expected, result));
     }
 
     @Test
@@ -219,19 +215,17 @@ class PageComparatorTest {
             .lastUpdate(now)
             .build();
 
-        PageComparatorResult toIndex = pageComparator.indexPageReplacements(page, replacements, dbPage);
+        IndexedPage result = pageComparator.indexPageReplacements(page, replacements, dbPage);
 
-        PageComparatorResult expected = PageComparatorResult.of(page.getPageKey().getLang());
-        expected.addReplacementToCreate(ComparableReplacement.of(r9));
-        expected.addReplacementToUpdate(ComparableReplacement.of(r4));
-        expected.addReplacementToUpdate(ComparableReplacement.of(r5));
-        expected.addReplacementToDelete(ComparableReplacement.of(r6db));
-        expected.addReplacementToDelete(ComparableReplacement.of(r8db));
-        expected.addReplacementsToReview(Set.of(r1, r4, r5, r9));
-        expected.addReplacementTypesToCreate(List.of(r9.getType()));
-        expected.addReplacementTypesToDelete(List.of(r6db.getType()));
+        IndexedPage expected = toIndexedPage(page, IndexedPageStatus.INDEXED);
+        expected.addReplacement(ComparableReplacement.of(r9).toDomain(IndexedReplacementStatus.ADD));
+        expected.addReplacement(ComparableReplacement.of(r4).toDomain(IndexedReplacementStatus.UPDATE));
+        expected.addReplacement(ComparableReplacement.of(r5).toDomain(IndexedReplacementStatus.UPDATE));
+        expected.addReplacement(ComparableReplacement.of(r6db).toDomain(IndexedReplacementStatus.REMOVE));
+        expected.addReplacement(ComparableReplacement.of(r8db).toDomain(IndexedReplacementStatus.REMOVE));
+        expected.addReplacement(ComparableReplacement.of(r1).toDomain(IndexedReplacementStatus.INDEXED));
 
-        assertEquals(expected, toIndex);
+        assertTrue(IndexedPage.compare(expected, result));
     }
 
     @Test
@@ -256,12 +250,12 @@ class PageComparatorTest {
             .lastUpdate(now)
             .build();
 
-        PageComparatorResult toIndex = pageComparator.indexPageReplacements(page, replacements, dbPage);
+        IndexedPage result = pageComparator.indexPageReplacements(page, replacements, dbPage);
 
-        PageComparatorResult expected = PageComparatorResult.of(page.getPageKey().getLang());
-        expected.addReplacementsToReview(replacements);
+        IndexedPage expected = toIndexedPage(page, IndexedPageStatus.INDEXED);
+        expected.addReplacement(ComparableReplacement.of(r1).toDomain(IndexedReplacementStatus.INDEXED));
 
-        assertEquals(expected, toIndex);
+        assertTrue(IndexedPage.compare(expected, result));
     }
 
     @Test
@@ -291,11 +285,14 @@ class PageComparatorTest {
             .lastUpdate(now)
             .build();
 
-        PageComparatorResult toIndex = pageComparator.indexPageReplacements(page, replacements, dbPage);
+        IndexedPage toIndex = pageComparator.indexPageReplacements(page, replacements, dbPage);
 
         // In fact r1db and r2db are considered the same so any of them could be removed
-        assertFalse(toIndex.isEmpty());
-        assertEquals(1, toIndex.getReplacementsToDelete().size());
+        assertFalse(toIndex.getReplacements().isEmpty());
+        assertEquals(
+            1,
+            toIndex.getReplacements().stream().filter(ir -> ir.getStatus() == IndexedReplacementStatus.REMOVE).count()
+        );
     }
 
     @Test
@@ -325,10 +322,12 @@ class PageComparatorTest {
             .lastUpdate(now)
             .build();
 
-        PageComparatorResult toIndex = pageComparator.indexPageReplacements(page, replacements, dbPage);
+        IndexedPage toIndex = pageComparator.indexPageReplacements(page, replacements, dbPage);
 
         // In this case r1db and r2db are not considered the same so none of them is removed
-        assertTrue(toIndex.isEmpty());
+        assertTrue(
+            toIndex.getReplacements().stream().noneMatch(ir -> ir.getStatus() == IndexedReplacementStatus.REMOVE)
+        );
     }
 
     @Test
@@ -358,15 +357,14 @@ class PageComparatorTest {
             .lastUpdate(now)
             .build();
 
-        PageComparatorResult toIndex = pageComparator.indexPageReplacements(page, replacements, dbPage);
+        IndexedPage result = pageComparator.indexPageReplacements(page, replacements, dbPage);
 
-        PageComparatorResult expected = PageComparatorResult.of(page.getPageKey().getLang());
+        IndexedPage expected = toIndexedPage(page, IndexedPageStatus.INDEXED);
         // In fact r1db and r2db are considered the same so any of them could be removed
         // In this case we remove the one not reviewed
-        expected.addReplacementToDelete(ComparableReplacement.of(r1db));
-        expected.addReplacementTypesToDelete(List.of(r1db.getType()));
+        expected.addReplacement(ComparableReplacement.of(r1db).toDomain(IndexedReplacementStatus.REMOVE));
 
-        assertEquals(expected, toIndex);
+        assertTrue(IndexedPage.compare(expected, result));
     }
 
     @Test

@@ -49,6 +49,7 @@ public class IndexedReplacement {
     @Nullable
     Integer newRevId;
 
+    // Indexation status
     @Builder.Default
     IndexedReplacementStatus status = IndexedReplacementStatus.UNDEFINED;
 
@@ -59,5 +60,9 @@ public class IndexedReplacement {
     @Override
     public String toString() {
         return ReplacerUtils.toJson(this);
+    }
+
+    public boolean isToBeReviewed() {
+        return this.reviewer == null && status != IndexedReplacementStatus.REMOVE;
     }
 }

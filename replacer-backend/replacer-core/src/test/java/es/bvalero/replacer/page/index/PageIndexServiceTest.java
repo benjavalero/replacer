@@ -10,6 +10,7 @@ import es.bvalero.replacer.page.find.PageRepository;
 import es.bvalero.replacer.page.find.WikipediaNamespace;
 import es.bvalero.replacer.page.find.WikipediaPage;
 import es.bvalero.replacer.page.find.WikipediaTimestamp;
+import es.bvalero.replacer.page.save.PageSaveRepository;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -28,26 +29,29 @@ class PageIndexServiceTest {
         .build();
 
     // Dependency injection
-    private PageRepository pageRepository;
+    private PageSaveRepository pageSaveRepository;
     private PageIndexValidator pageIndexValidator;
     private ReplacementFindService replacementFindService;
     private PageComparator pageComparator;
+    private PageRepository pageRepository;
     private PageComparatorSaver pageComparatorSaver;
 
     private PageIndexService pageIndexService;
 
     @BeforeEach
     void setUp() {
-        pageRepository = mock(PageRepository.class);
+        pageSaveRepository = mock(PageSaveRepository.class);
         pageIndexValidator = mock(PageIndexValidator.class);
         replacementFindService = mock(ReplacementFindService.class);
         pageComparator = mock(PageComparator.class);
+        pageRepository = mock(PageRepository.class);
         pageComparatorSaver = mock(PageComparatorSaver.class);
         pageIndexService = new PageIndexService(
-            pageRepository,
+            pageSaveRepository,
             pageIndexValidator,
             replacementFindService,
             pageComparator,
+            pageRepository,
             pageComparatorSaver
         );
     }
@@ -107,7 +111,7 @@ class PageIndexServiceTest {
         verify(pageIndexValidator).isPageIndexableByNamespace(page);
         verify(pageIndexValidator, never()).isIndexableByTimestamp(page, null);
         verify(replacementFindService, never()).findReplacements(any(WikipediaPage.class));
-        verify(pageComparatorSaver, never()).save(any(PageComparatorResult.class));
-        verify(pageRepository).removeByKey(anyCollection());
+        verify(pageComparatorSaver, never()).save(any(IndexedPage.class));
+        verify(pageSaveRepository).removeByKey(anyCollection());
     }
 }

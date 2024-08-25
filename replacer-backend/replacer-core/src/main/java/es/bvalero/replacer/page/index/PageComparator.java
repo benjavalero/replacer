@@ -1,12 +1,13 @@
 package es.bvalero.replacer.page.index;
 
-import es.bvalero.replacer.common.domain.ReplacementType;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.page.IndexedPage;
+import es.bvalero.replacer.page.save.IndexedPageStatus;
+import es.bvalero.replacer.replacement.IndexedReplacement;
+import es.bvalero.replacer.replacement.save.IndexedReplacementStatus;
 import java.util.*;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections4.CollectionUtils;
 import org.jetbrains.annotations.VisibleForTesting;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
@@ -19,13 +20,11 @@ import org.springframework.stereotype.Component;
 @Component
 class PageComparator {
 
-    PageComparatorResult indexPageReplacements(
+    IndexedPage indexPageReplacements(
         IndexablePage page,
         Collection<Replacement> pageReplacements,
         @Nullable IndexedPage dbPage
     ) {
-        PageComparatorResult result = PageComparatorResult.of(page.getPageKey().getLang());
-
         // Precondition: the page to index cannot be previous to the indexed one
         if (dbPage != null && page.getLastUpdate().toLocalDate().isBefore(dbPage.getLastUpdate())) {
             LOGGER.warn(
@@ -36,13 +35,18 @@ class PageComparator {
         }
 
         // Check changes in the page
+        IndexedPageStatus pageStatus;
         if (dbPage == null) {
             // New page
-            result.addPageToCreate(toIndexedPage(page));
+            pageStatus = IndexedPageStatus.ADD;
         } else if (isUpdatePage(page, dbPage)) {
             // Update page if needed
-            result.addPageToUpdate(toIndexedPage(page));
+            pageStatus = IndexedPageStatus.UPDATE;
+        } else {
+            pageStatus = IndexedPageStatus.INDEXED;
         }
+
+        IndexedPage indexedPage = toIndexedPage(page, pageStatus);
 
         // Wrap the indexed replacements to compare them
         final List<ComparableReplacement> comparableDbReplacements = dbPage == null
@@ -52,13 +56,10 @@ class PageComparator {
                 .stream()
                 .map(ComparableReplacement::of)
                 .collect(Collectors.toCollection(LinkedList::new));
-        final Collection<ReplacementType> dbReplacementTypesToReview = comparableDbReplacements
-            .stream()
-            .filter(ComparableReplacement::isToBeReviewed)
-            .map(ComparableReplacement::getType)
-            .collect(Collectors.toUnmodifiableSet());
         // Remove possible duplicates in database
-        cleanDuplicatedReplacements(comparableDbReplacements).forEach(result::addReplacementToDelete);
+        cleanDuplicatedReplacements(comparableDbReplacements).forEach(
+            cr -> indexedPage.addReplacement(cr.toDomain(IndexedReplacementStatus.REMOVE))
+        );
 
         // We compare each replacement found in the page to index with the ones existing in database
         // We add to the result the needed modifications to align the database with the actual replacements
@@ -75,46 +76,29 @@ class PageComparator {
         cleanDuplicatedReplacements(comparablePageReplacements);
 
         for (ComparableReplacement comparablePageReplacement : comparablePageReplacements) {
-            handleReplacement(comparablePageReplacement, comparableDbReplacements, result);
+            handleReplacement(comparablePageReplacement, comparableDbReplacements, indexedPage);
         }
 
-        cleanUpDbReplacements(comparableDbReplacements).forEach(result::addReplacementToDelete);
-
-        // At this point the collection of DB replacements contains only reviewed items and the ones to review
-        result.addReplacementsToReview(
-            pageReplacements
-                .stream()
-                .filter(
-                    r ->
-                        comparableDbReplacements
-                            .stream()
-                            .anyMatch(cr -> cr.isToBeReviewed() && cr.equals(ComparableReplacement.of(r)))
-                )
-                .toList()
+        cleanUpDbReplacements(comparableDbReplacements).forEach(
+            cr -> indexedPage.addReplacement(cr.toDomain(IndexedReplacementStatus.REMOVE))
         );
 
-        // Calculate the new and obsolete replacement types for the page
-        final Collection<ReplacementType> actualReplacementTypesToReview = result
-            .getReplacementsToReview()
+        assert indexedPage.getStatus() != IndexedPageStatus.UNDEFINED;
+        assert indexedPage
+            .getReplacements()
             .stream()
-            .map(Replacement::getType)
-            .collect(Collectors.toUnmodifiableSet());
-        result.addReplacementTypesToCreate(
-            CollectionUtils.removeAll(actualReplacementTypesToReview, dbReplacementTypesToReview)
-        );
-        result.addReplacementTypesToDelete(
-            CollectionUtils.removeAll(dbReplacementTypesToReview, actualReplacementTypesToReview)
-        );
+            .noneMatch(p -> p.getStatus() == IndexedReplacementStatus.UNDEFINED);
 
-        return result;
+        return indexedPage;
     }
 
     @VisibleForTesting
-    static IndexedPage toIndexedPage(IndexablePage indexablePage) {
+    static IndexedPage toIndexedPage(IndexablePage indexablePage, IndexedPageStatus pageStatus) {
         return IndexedPage.builder()
             .pageKey(indexablePage.getPageKey())
             .title(indexablePage.getTitle())
             .lastUpdate(indexablePage.getLastUpdate().toLocalDate())
+            .status(pageStatus)
             .build();
     }
 
@@ -147,7 +131,7 @@ class PageComparator {
     private void handleReplacement(
         ComparableReplacement pageReplacement,
         Collection<ComparableReplacement> dbReplacements,
-        PageComparatorResult result
+        IndexedPage indexedPage
     ) {
         final Optional<ComparableReplacement> existingDbReplacement = findSameReplacementInCollection(
             pageReplacement,
@@ -164,12 +148,14 @@ class PageComparator {
                 .withTouched(true);
             dbReplacements.add(updatedReplacement);
             if (handleReplacement) {
-                result.addReplacementToUpdate(updatedReplacement);
+                indexedPage.addReplacement(pageReplacement.toDomain(IndexedReplacementStatus.UPDATE));
+            } else if (dbReplacement.isToBeReviewed()) {
+                indexedPage.addReplacement(pageReplacement.toDomain(IndexedReplacementStatus.INDEXED));
             }
         } else {
             // New replacement
             dbReplacements.add(pageReplacement.withTouched(true));
-            result.addReplacementToCreate(pageReplacement);
+            indexedPage.addReplacement(pageReplacement.toDomain(IndexedReplacementStatus.ADD));
         }
     }
 
@@ -210,5 +196,26 @@ class PageComparator {
             .toList();
         obsolete.forEach(dbReplacements::remove);
         return obsolete;
+    }
+
+    static Collection<Replacement> filterReplacementsToReview(
+        Collection<Replacement> replacements,
+        IndexedPage indexedPage
+    ) {
+        Collection<IndexedReplacement> indexedReplacements = indexedPage
+            .getReplacements()
+            .stream()
+            .filter(IndexedReplacement::isToBeReviewed)
+            .toList();
+        return replacements
+            .stream()
+            .filter(r -> indexedReplacements.stream().anyMatch(ir -> PageComparator.isSameReplacement(r, ir)))
+            .toList();
+    }
+
+    private static boolean isSameReplacement(Replacement r, IndexedReplacement ir) {
+        return (
+            r.getType().equals(ir.getType()) && r.getStart() == ir.getStart() && r.getContext().equals(ir.getContext())
+        );
     }
 }

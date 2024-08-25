@@ -3,6 +3,7 @@ package es.bvalero.replacer.page.index;
 import es.bvalero.replacer.page.IndexedPage;
 import es.bvalero.replacer.page.PageKey;
 import es.bvalero.replacer.page.find.PageRepository;
+import es.bvalero.replacer.page.save.PageSaveRepository;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
 
@@ -14,13 +15,14 @@ public class PageIndexService extends PageIndexAbstractService {
     private final PageComparatorSaver pageComparatorSaver;
 
     public PageIndexService(
-        PageRepository pageRepository,
+        PageSaveRepository pageSaveRepository,
         PageIndexValidator pageIndexValidator,
         ReplacementFindService replacementFindService,
         PageComparator pageComparator,
+        PageRepository pageRepository,
         PageComparatorSaver pageComparatorSaver
     ) {
-        super(pageRepository, pageIndexValidator, replacementFindService, pageComparator);
+        super(pageSaveRepository, pageIndexValidator, replacementFindService, pageComparator);
         this.pageRepository = pageRepository;
         this.pageComparatorSaver = pageComparatorSaver;
     }
@@ -31,7 +33,7 @@ public class PageIndexService extends PageIndexAbstractService {
     }
 
     @Override
-    void saveResult(PageComparatorResult result) {
-        pageComparatorSaver.save(result);
+    void saveResult(IndexedPage indexedPage) {
+        pageComparatorSaver.save(indexedPage);
     }
 }

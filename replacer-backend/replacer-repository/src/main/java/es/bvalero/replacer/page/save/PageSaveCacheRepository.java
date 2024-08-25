@@ -9,7 +9,6 @@ import es.bvalero.replacer.replacement.IndexedReplacement;
 import es.bvalero.replacer.replacement.save.IndexedReplacementStatus;
 import java.time.LocalDate;
 import java.util.Collection;
-import java.util.Objects;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Primary;
@@ -64,7 +63,7 @@ class PageSaveCacheRepository implements PageSaveRepository {
                 .getReplacements()
                 .stream()
                 .filter(r -> r.getType().equals(type))
-                .filter(r -> Objects.isNull(r.getReviewer()))
+                .filter(IndexedReplacement::isToBeReviewed)
                 .collect(Collectors.toUnmodifiableSet());
             long toAdd = unreviewed.stream().filter(r -> r.getStatus() == IndexedReplacementStatus.ADD).count();
             long toRemove = unreviewed.stream().filter(r -> r.getStatus() == IndexedReplacementStatus.REMOVE).count();

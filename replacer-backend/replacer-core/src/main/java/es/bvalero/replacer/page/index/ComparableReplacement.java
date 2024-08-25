@@ -6,6 +6,7 @@ import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.page.PageKey;
 import es.bvalero.replacer.replacement.IndexedReplacement;
+import es.bvalero.replacer.replacement.save.IndexedReplacementStatus;
 import java.util.Objects;
 import lombok.*;
 import org.apache.commons.lang3.StringUtils;
@@ -68,7 +69,7 @@ class ComparableReplacement {
         );
     }
 
-    IndexedReplacement toDomain() {
+    IndexedReplacement toDomain(IndexedReplacementStatus status) {
         return IndexedReplacement.builder()
             .id(id)
             .pageKey(pageKey)
@@ -76,6 +77,7 @@ class ComparableReplacement {
             .start(start)
             .context(context)
             .reviewer(reviewer)
+            .status(status)
             .build();
     }
 

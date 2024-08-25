@@ -4,7 +4,7 @@ import es.bvalero.replacer.common.util.ReplacerUtils;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.page.IndexedPage;
 import es.bvalero.replacer.page.PageKey;
-import es.bvalero.replacer.page.find.PageRepository;
+import es.bvalero.replacer.page.save.PageSaveRepository;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.Set;
@@ -18,18 +18,18 @@ import org.springframework.stereotype.Service;
 abstract class PageIndexAbstractService {
 
     // Dependency injection
-    private final PageRepository pageRepository;
+    private final PageSaveRepository pageSaveRepository;
     private final PageIndexValidator pageIndexValidator;
     private final ReplacementFindService replacementFindService;
     private final PageComparator pageComparator;
 
     PageIndexAbstractService(
-        PageRepository pageRepository,
+        PageSaveRepository pageSaveRepository,
         PageIndexValidator pageIndexValidator,
         ReplacementFindService replacementFindService,
         PageComparator pageComparator
     ) {
-        this.pageRepository = pageRepository;
+        this.pageSaveRepository = pageSaveRepository;
         this.pageIndexValidator = pageIndexValidator;
         this.replacementFindService = replacementFindService;
         this.pageComparator = pageComparator;
@@ -66,14 +66,14 @@ abstract class PageIndexAbstractService {
     PageIndexResult indexPage(IndexablePage indexablePage, @Nullable IndexedPage dbPage) {
         final Collection<Replacement> replacements = replacementFindService.findReplacements(indexablePage);
 
-        final PageComparatorResult result = pageComparator.indexPageReplacements(indexablePage, replacements, dbPage);
-        if (!result.isEmpty()) {
+        final IndexedPage result = pageComparator.indexPageReplacements(indexablePage, replacements, dbPage);
+        if (result.isPageToSave()) {
             saveResult(result);
         }
 
         return PageIndexResult.of(
-            result.isEmpty() ? PageIndexStatus.PAGE_NOT_INDEXED : PageIndexStatus.PAGE_INDEXED,
-            result.getReplacementsToReview()
+            result.isPageToSave() ? PageIndexStatus.PAGE_INDEXED : PageIndexStatus.PAGE_NOT_INDEXED,
+            PageComparator.filterReplacementsToReview(replacements, result)
         );
     }
 
@@ -105,8 +105,8 @@ abstract class PageIndexAbstractService {
                 page.isRedirect()
             )
         );
-        pageRepository.removeByKey(Set.of(page.getPageKey()));
+        pageSaveRepository.removeByKey(Set.of(page.getPageKey()));
     }
 
-    abstract void saveResult(PageComparatorResult result);
+    abstract void saveResult(IndexedPage indexedPage);
 }

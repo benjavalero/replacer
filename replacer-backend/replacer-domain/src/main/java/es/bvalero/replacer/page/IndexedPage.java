@@ -2,12 +2,14 @@ package es.bvalero.replacer.page;
 
 import es.bvalero.replacer.page.save.IndexedPageStatus;
 import es.bvalero.replacer.replacement.IndexedReplacement;
+import es.bvalero.replacer.replacement.save.IndexedReplacementStatus;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.*;
+import java.util.stream.Collectors;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
+import org.jetbrains.annotations.TestOnly;
 import org.springframework.lang.NonNull;
 
 /**
@@ -30,6 +32,7 @@ public class IndexedPage {
     @NonNull
     LocalDate lastUpdate;
 
+    // Indexation status
     @Builder.Default
     IndexedPageStatus status = IndexedPageStatus.UNDEFINED;
 
@@ -41,5 +44,43 @@ public class IndexedPage {
     // Helper method to add replacements after creating the object while extracting the results from database
     public void addReplacement(IndexedReplacement replacement) {
         this.replacements.add(replacement);
+    }
+
+    public boolean isPageToSave() {
+        return (
+            this.getStatus() != IndexedPageStatus.INDEXED ||
+            this.getReplacements().stream().anyMatch(r -> r.getStatus() != IndexedReplacementStatus.INDEXED)
+        );
+    }
+
+    // For the sake of the tests, we will perform a deep comparison.
+    @TestOnly
+    public static boolean compare(IndexedPage expected, IndexedPage actual) {
+        if (
+            !expected.equals(actual) ||
+            !Objects.equals(expected.getTitle(), actual.getTitle()) ||
+            !Objects.equals(expected.getLastUpdate(), actual.getLastUpdate()) ||
+            !Objects.equals(expected.getStatus(), actual.getStatus()) ||
+            !Objects.equals(expected.getReplacements().size(), actual.getReplacements().size())
+        ) {
+            return false;
+        }
+
+        List<IndexedReplacement> expectedList = expected
+            .getReplacements()
+            .stream()
+            .sorted(Comparator.comparingInt(IndexedReplacement::getStart))
+            .collect(Collectors.toCollection(LinkedList::new));
+        List<IndexedReplacement> actualList = actual
+            .getReplacements()
+            .stream()
+            .sorted(Comparator.comparingInt(IndexedReplacement::getStart))
+            .collect(Collectors.toCollection(LinkedList::new));
+        for (int i = 0; i < expectedList.size(); i++) {
+            if (!Objects.equals(expectedList.get(i), actualList.get(i))) {
+                return false;
+            }
+        }
+        return true;
     }
 }

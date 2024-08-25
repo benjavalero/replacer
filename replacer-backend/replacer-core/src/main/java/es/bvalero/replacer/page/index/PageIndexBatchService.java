@@ -2,7 +2,7 @@ package es.bvalero.replacer.page.index;
 
 import es.bvalero.replacer.page.IndexedPage;
 import es.bvalero.replacer.page.PageKey;
-import es.bvalero.replacer.page.find.PageRepository;
+import es.bvalero.replacer.page.save.PageSaveRepository;
 import java.util.Optional;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
@@ -11,22 +11,22 @@ import org.springframework.stereotype.Service;
 public class PageIndexBatchService extends PageIndexAbstractService {
 
     // Dependency injection
-    private final PageBatchService pageBatchService;
     private final PageIndexValidator pageIndexValidator;
+    private final PageBatchService pageBatchService;
     private final PageComparatorSaver pageComparatorSaver;
 
     public PageIndexBatchService(
-        PageBatchService pageBatchService,
-        PageRepository pageRepository,
+        PageSaveRepository pageSaveRepository,
         PageIndexValidator pageIndexValidator,
         ReplacementFindService replacementFindService,
         PageComparator pageComparator,
+        PageBatchService pageBatchService,
         PageComparatorSaver pageComparatorSaver
     ) {
-        super(pageRepository, pageIndexValidator, replacementFindService, pageComparator);
+        super(pageSaveRepository, pageIndexValidator, replacementFindService, pageComparator);
+        this.pageIndexValidator = pageIndexValidator;
         this.pageBatchService = pageBatchService;
         this.pageComparatorSaver = pageComparatorSaver;
-        this.pageIndexValidator = pageIndexValidator;
     }
 
     @Override
@@ -35,8 +35,8 @@ public class PageIndexBatchService extends PageIndexAbstractService {
     }
 
     @Override
-    void saveResult(PageComparatorResult result) {
-        pageComparatorSaver.saveBatch(result);
+    void saveResult(IndexedPage indexedPage) {
+        pageComparatorSaver.saveBatch(indexedPage);
     }
 
     @Override
