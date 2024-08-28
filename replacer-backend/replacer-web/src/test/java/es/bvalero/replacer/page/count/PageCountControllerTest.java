@@ -34,7 +34,7 @@ class PageCountControllerTest {
     private WebUtils webUtils;
 
     @MockBean
-    private PageCountService pageCountService;
+    private PageCountApi pageCountApi;
 
     @Test
     void testCountNotReviewedGroupedByType() throws Exception {
@@ -44,7 +44,7 @@ class PageCountControllerTest {
         StandardType type = StandardType.of(ReplacementKind.SIMPLE, "Y");
         ResultCount<StandardType> count = ResultCount.of(type, 100);
         Collection<ResultCount<StandardType>> counts = List.of(count);
-        when(pageCountService.countNotReviewedGroupedByType(user)).thenReturn(counts);
+        when(pageCountApi.countNotReviewedGroupedByType(user)).thenReturn(counts);
 
         mvc
             .perform(
@@ -58,6 +58,6 @@ class PageCountControllerTest {
             .andExpect(jsonPath("$[0].l[0].s", is("Y")))
             .andExpect(jsonPath("$[0].l[0].c", is(100)));
 
-        verify(pageCountService).countNotReviewedGroupedByType(user);
+        verify(pageCountApi).countNotReviewedGroupedByType(user);
     }
 }

@@ -20,10 +20,10 @@ import org.springframework.web.bind.annotation.*;
 class ReplacementCountController {
 
     // Dependency injection
-    private final ReplacementCountService replacementCountService;
+    private final ReplacementCountApi replacementCountApi;
 
-    ReplacementCountController(ReplacementCountService replacementCountService) {
-        this.replacementCountService = replacementCountService;
+    ReplacementCountController(ReplacementCountApi replacementCountApi) {
+        this.replacementCountApi = replacementCountApi;
     }
 
     @Operation(summary = "Count the number of reviewed/unreviewed replacements including the custom ones")
@@ -38,10 +38,10 @@ class ReplacementCountController {
     ) {
         ReplacementCount count;
         if (reviewed) {
-            count = ReplacementCount.of(replacementCountService.countReviewed(lang));
+            count = ReplacementCount.of(replacementCountApi.countReviewed(lang));
             LOGGER.info("GET Count Reviewed Replacements: {}", count);
         } else {
-            count = ReplacementCount.of(replacementCountService.countNotReviewed(lang));
+            count = ReplacementCount.of(replacementCountApi.countNotReviewed(lang));
             LOGGER.info("GET Count Not Reviewed Replacements: {}", count);
         }
         return count;
@@ -52,7 +52,7 @@ class ReplacementCountController {
     )
     @GetMapping(value = "/user/count")
     Collection<ReviewerCount> countReviewedReplacementsGroupedByReviewer(@UserLanguage WikipediaLanguage lang) {
-        Collection<ReviewerCount> counts = replacementCountService
+        Collection<ReviewerCount> counts = replacementCountApi
             .countReviewedGroupedByReviewer(lang)
             .stream()
             .map(count -> ReviewerCount.of(count.getKey(), count.getCount()))
@@ -67,7 +67,7 @@ class ReplacementCountController {
     @ValidateAdminUser
     @GetMapping(value = "/page/count")
     Collection<PageCount> countNotReviewedReplacementsGroupedByPage(@UserLanguage WikipediaLanguage lang) {
-        Collection<PageCount> counts = replacementCountService
+        Collection<PageCount> counts = replacementCountApi
             .countNotReviewedGroupedByPage(lang)
             .stream()
             .map(

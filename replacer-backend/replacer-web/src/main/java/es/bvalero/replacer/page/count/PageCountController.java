@@ -23,16 +23,16 @@ import org.springframework.web.bind.annotation.RestController;
 class PageCountController {
 
     // Dependency injection
-    private final PageCountService pageCountService;
+    private final PageCountApi pageCountApi;
 
-    PageCountController(PageCountService pageCountService) {
-        this.pageCountService = pageCountService;
+    PageCountController(PageCountApi pageCountApi) {
+        this.pageCountApi = pageCountApi;
     }
 
     @Operation(summary = "Count the number of pages to review grouped by replacement type")
     @GetMapping(value = "/type/count")
     Collection<KindCount> countNotReviewedGroupedByType(@AuthenticatedUser User user) {
-        Collection<KindCount> counts = pageCountService
+        Collection<KindCount> counts = pageCountApi
             .countNotReviewedGroupedByType(user)
             .stream()
             .collect(groupingBy(rc -> rc.getKey().getKind(), mapping(this::mapResultCount, toList())))
@@ -40,7 +40,7 @@ class PageCountController {
             .stream()
             .map(entry -> KindCount.of(entry.getKey().getCode(), entry.getValue()))
             .sorted()
-            .collect(toList());
+            .toList();
         LOGGER.info("GET Count Pages Not Reviewed By Type: {}", counts);
         return counts;
     }

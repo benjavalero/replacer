@@ -7,7 +7,7 @@ import java.util.Collection;
 import org.springframework.stereotype.Service;
 
 @Service
-class PageCountService {
+class PageCountService implements PageCountApi {
 
     // Dependency injection
     private final PageCountRepository pageCountRepository;
@@ -16,8 +16,8 @@ class PageCountService {
         this.pageCountRepository = pageCountRepository;
     }
 
-    /** Count the number of pages to review grouped by replacement type */
-    Collection<ResultCount<StandardType>> countNotReviewedGroupedByType(User user) {
+    @Override
+    public Collection<ResultCount<StandardType>> countNotReviewedGroupedByType(User user) {
         // Filter the replacement types the user has no rights to see
         return pageCountRepository
             .countNotReviewedGroupedByType(user.getId().getLang())
