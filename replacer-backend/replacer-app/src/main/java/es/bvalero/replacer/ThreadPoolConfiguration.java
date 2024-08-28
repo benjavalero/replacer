@@ -1,4 +1,4 @@
-package es.bvalero.replacer.config;
+package es.bvalero.replacer;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
