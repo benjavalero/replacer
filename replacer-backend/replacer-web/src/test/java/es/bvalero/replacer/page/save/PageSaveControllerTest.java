@@ -10,12 +10,12 @@ import es.bvalero.replacer.common.domain.ReplacementKind;
 import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.util.WebUtils;
-import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.page.PageKey;
 import es.bvalero.replacer.page.find.WikipediaTimestamp;
 import es.bvalero.replacer.user.User;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import java.util.List;
+import java.util.Objects;
 import javax.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,14 +29,11 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
 @ExtendWith(SpringExtension.class)
-@WebMvcTest(controllers = { ReviewSaveController.class, WebMvcConfiguration.class })
-class ReviewSaveControllerTest {
+@WebMvcTest(controllers = { PageSaveController.class, WebMvcConfiguration.class })
+class PageSaveControllerTest {
 
     private static final int pageId = 123;
     private static final PageKey pageKey = PageKey.of(WikipediaLanguage.getDefault(), pageId);
-    private static final String title = "T";
-    private static final String content = "X";
-    private static final WikipediaTimestamp timestamp = WikipediaTimestamp.now();
     private static final ReviewedReplacement reviewedReplacement = ReviewedReplacement.builder()
         .pageKey(pageKey)
         .type(StandardType.of(ReplacementKind.SIMPLE, "1"))
@@ -44,11 +41,12 @@ class ReviewSaveControllerTest {
         .reviewer("x")
         .fixed(true)
         .build();
-    private static final WikipediaPageSaveCommand pageSave = WikipediaPageSaveCommand.builder()
+    private static final ReviewedPage reviewedPage = ReviewedPage.builder()
         .pageKey(pageKey)
-        .content(content)
-        .editSummary("S")
-        .queryTimestamp(timestamp)
+        .title("T")
+        .content("X")
+        .queryTimestamp(WikipediaTimestamp.now())
+        .reviewedReplacements(List.of(reviewedReplacement))
         .build();
 
     @Autowired
@@ -61,41 +59,30 @@ class ReviewSaveControllerTest {
     private WebUtils webUtils;
 
     @MockBean
-    private ApplyCosmeticsService applyCosmeticsService;
+    private PageSaveApi pageSaveApi;
 
-    @MockBean
-    private ReviewSaveService reviewSaveService;
-
-    private ReviewedPage reviewedPageWithoutChanges;
-    private ReviewedPage reviewedPageWithChanges;
+    private ReviewedReplacementDto reviewedReplacementDto;
+    private ReviewedPageDto reviewedPageWithChanges;
 
     @BeforeEach
     public void setUp() {
-        ReviewedReplacementDto reviewedDto = new ReviewedReplacementDto();
-        reviewedDto.setKind(reviewedReplacement.getType().getKind().getCode());
-        reviewedDto.setSubtype(reviewedReplacement.getType().getSubtype());
-        reviewedDto.setStart(reviewedReplacement.getStart());
-        reviewedDto.setFixed(reviewedReplacement.isFixed());
+        reviewedReplacementDto = new ReviewedReplacementDto();
+        reviewedReplacementDto.setKind(reviewedReplacement.getType().getKind().getCode());
+        reviewedReplacementDto.setSubtype(reviewedReplacement.getType().getSubtype());
+        reviewedReplacementDto.setStart(reviewedReplacement.getStart());
+        reviewedReplacementDto.setFixed(reviewedReplacement.isFixed());
 
-        reviewedPageWithoutChanges = new ReviewedPage();
-        reviewedPageWithoutChanges.setReviewedReplacements(List.of(reviewedDto));
-
-        reviewedPageWithChanges = new ReviewedPage();
-        reviewedPageWithChanges.setTitle(title);
-        reviewedPageWithChanges.setContent(content);
-        reviewedPageWithChanges.setQueryTimestamp(timestamp.toString());
-        reviewedPageWithChanges.setReviewedReplacements(List.of(reviewedDto));
+        reviewedPageWithChanges = new ReviewedPageDto();
+        reviewedPageWithChanges.setTitle(reviewedPage.getTitle());
+        reviewedPageWithChanges.setContent(reviewedPage.getContent());
+        reviewedPageWithChanges.setQueryTimestamp(Objects.requireNonNull(reviewedPage.getQueryTimestamp()).toString());
+        reviewedPageWithChanges.setReviewedReplacements(List.of(reviewedReplacementDto));
     }
 
     @Test
     void testSaveWithChanges() throws Exception {
         User user = User.buildTestUser();
         when(webUtils.getAuthenticatedUser(any(HttpServletRequest.class))).thenReturn(user);
-
-        when(applyCosmeticsService.applyCosmeticChanges(any(FinderPage.class))).thenReturn(pageSave.getContent());
-        when(reviewSaveService.buildEditSummary(anyCollection(), anyBoolean())).thenReturn(pageSave.getEditSummary());
-        WikipediaPageSaveResult pageSaveResult = WikipediaPageSaveResult.ofDummy();
-        when(reviewSaveService.saveReviewContent(pageSave, user)).thenReturn(pageSaveResult);
 
         mvc
             .perform(
@@ -107,14 +94,17 @@ class ReviewSaveControllerTest {
             )
             .andExpect(status().isNoContent());
 
-        verify(reviewSaveService).saveReviewContent(pageSave, user);
-        verify(reviewSaveService).markAsReviewed(List.of(reviewedReplacement), pageSaveResult);
+        verify(pageSaveApi).save(reviewedPage, user);
     }
 
     @Test
     void testSaveWithNoChanges() throws Exception {
         User user = User.buildTestUser();
         when(webUtils.getAuthenticatedUser(any(HttpServletRequest.class))).thenReturn(user);
+
+        ReviewedPageDto reviewedPageWithoutChanges = new ReviewedPageDto();
+        reviewedPageWithoutChanges.setReviewedReplacements(List.of(reviewedReplacementDto));
+        reviewedPageWithoutChanges.getReviewedReplacements().forEach(rr -> rr.setFixed(false));
 
         mvc
             .perform(
@@ -126,8 +116,12 @@ class ReviewSaveControllerTest {
             )
             .andExpect(status().isNoContent());
 
-        verify(reviewSaveService, never()).saveReviewContent(any(WikipediaPageSaveCommand.class), any(User.class));
-        verify(reviewSaveService).markAsReviewed(List.of(reviewedReplacement), null);
+        ReviewedPage reviewedPage = ReviewedPage.builder()
+            .pageKey(pageKey)
+            .reviewedReplacements(List.of(reviewedReplacement.withFixed(false)))
+            .build();
+
+        verify(pageSaveApi).save(reviewedPage, user);
     }
 
     @Test
@@ -135,6 +129,7 @@ class ReviewSaveControllerTest {
         User user = User.buildTestUser();
         when(webUtils.getAuthenticatedUser(any(HttpServletRequest.class))).thenReturn(user);
 
+        ReviewedPageDto reviewedPageWithoutChanges = new ReviewedPageDto();
         reviewedPageWithoutChanges.setContent("");
 
         mvc
@@ -147,7 +142,7 @@ class ReviewSaveControllerTest {
             )
             .andExpect(status().isBadRequest());
 
-        verify(reviewSaveService, never()).markAsReviewed(anyCollection(), any(WikipediaPageSaveResult.class));
+        verify(pageSaveApi, never()).save(any(ReviewedPage.class), any(User.class));
     }
 
     @Test
@@ -155,10 +150,7 @@ class ReviewSaveControllerTest {
         User user = User.buildTestUser();
         when(webUtils.getAuthenticatedUser(any(HttpServletRequest.class))).thenReturn(user);
 
-        when(applyCosmeticsService.applyCosmeticChanges(any(FinderPage.class))).thenReturn(pageSave.getContent());
-        when(reviewSaveService.buildEditSummary(anyCollection(), anyBoolean())).thenReturn(pageSave.getEditSummary());
-
-        doThrow(WikipediaConflictException.class).when(reviewSaveService).saveReviewContent(pageSave, user);
+        doThrow(WikipediaConflictException.class).when(pageSaveApi).save(reviewedPage, user);
 
         mvc
             .perform(
@@ -170,8 +162,7 @@ class ReviewSaveControllerTest {
             )
             .andExpect(status().isConflict());
 
-        verify(reviewSaveService).saveReviewContent(pageSave, user);
-        verify(reviewSaveService, never()).markAsReviewed(anyCollection(), any(WikipediaPageSaveResult.class));
+        verify(pageSaveApi).save(reviewedPage, user);
     }
 
     @Test
@@ -179,12 +170,7 @@ class ReviewSaveControllerTest {
         User user = User.buildTestUser();
         when(webUtils.getAuthenticatedUser(any(HttpServletRequest.class))).thenReturn(user);
 
-        when(applyCosmeticsService.applyCosmeticChanges(any(FinderPage.class))).thenReturn(pageSave.getContent());
-        when(reviewSaveService.buildEditSummary(anyCollection(), anyBoolean())).thenReturn(pageSave.getEditSummary());
-
-        doThrow(new WikipediaException("mwoauth-invalid-authorization"))
-            .when(reviewSaveService)
-            .saveReviewContent(pageSave, user);
+        doThrow(new WikipediaException("mwoauth-invalid-authorization")).when(pageSaveApi).save(reviewedPage, user);
 
         mvc
             .perform(
@@ -196,8 +182,7 @@ class ReviewSaveControllerTest {
             )
             .andExpect(status().isUnauthorized());
 
-        verify(reviewSaveService).saveReviewContent(pageSave, user);
-        verify(reviewSaveService, never()).markAsReviewed(anyCollection(), any(WikipediaPageSaveResult.class));
+        verify(pageSaveApi).save(reviewedPage, user);
     }
 
     @Test
@@ -205,10 +190,7 @@ class ReviewSaveControllerTest {
         User user = User.buildTestUser();
         when(webUtils.getAuthenticatedUser(any(HttpServletRequest.class))).thenReturn(user);
 
-        when(applyCosmeticsService.applyCosmeticChanges(any(FinderPage.class))).thenReturn(pageSave.getContent());
-        when(reviewSaveService.buildEditSummary(anyCollection(), anyBoolean())).thenReturn(pageSave.getEditSummary());
-
-        doThrow(WikipediaException.class).when(reviewSaveService).saveReviewContent(pageSave, user);
+        doThrow(WikipediaException.class).when(pageSaveApi).save(reviewedPage, user);
 
         mvc
             .perform(
@@ -220,7 +202,6 @@ class ReviewSaveControllerTest {
             )
             .andExpect(status().isInternalServerError());
 
-        verify(reviewSaveService).saveReviewContent(pageSave, user);
-        verify(reviewSaveService, never()).markAsReviewed(anyCollection(), any(WikipediaPageSaveResult.class));
+        verify(pageSaveApi).save(reviewedPage, user);
     }
 }

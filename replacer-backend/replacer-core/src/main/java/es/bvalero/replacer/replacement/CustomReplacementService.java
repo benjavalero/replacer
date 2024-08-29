@@ -16,10 +16,7 @@ public class CustomReplacementService {
         this.customRepository = customRepository;
     }
 
-    public void addCustomReplacement(IndexedCustomReplacement customReplacement) {
-        customRepository.add(customReplacement);
-    }
-
+    // TODO: Not worth a single service only for this method
     public Collection<Integer> findPagesReviewed(WikipediaLanguage lang, CustomType type) {
         return customRepository.findPagesReviewed(lang, type).stream().map(PageKey::getPageId).toList();
     }

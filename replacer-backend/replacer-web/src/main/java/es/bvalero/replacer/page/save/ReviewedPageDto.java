@@ -3,14 +3,10 @@ package es.bvalero.replacer.page.save;
 import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.NOT_REQUIRED;
 import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import es.bvalero.replacer.common.util.ReplacerUtils;
-import es.bvalero.replacer.finder.FinderPage;
-import es.bvalero.replacer.page.PageKey;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.Collection;
-import java.util.Objects;
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -23,7 +19,7 @@ import org.springframework.lang.Nullable;
 @Data
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor
-public class ReviewedPage {
+public class ReviewedPageDto {
 
     @Schema(description = "Page title", requiredMode = NOT_REQUIRED, example = "Artemio Zeno")
     @Nullable
@@ -59,42 +55,6 @@ public class ReviewedPage {
     @NotNull
     @NotEmpty
     private Collection<ReviewedReplacementDto> reviewedReplacements;
-
-    @JsonIgnore
-    boolean isReviewedWithoutChanges() {
-        return Objects.isNull(this.content);
-    }
-
-    void validate() {
-        if (isReviewedWithoutChanges()) {
-            if (this.content != null || this.title != null || this.sectionId != null || this.queryTimestamp != null) {
-                throw new IllegalArgumentException("Unnecessary fields to save a reviewed page without changes");
-            }
-        } else {
-            if (this.content == null || this.title == null || this.queryTimestamp == null) {
-                throw new IllegalArgumentException("Missing mandatory fields to save a reviewed page with changes");
-            }
-        }
-    }
-
-    FinderPage toFinderPage(PageKey pageKey) {
-        return new FinderPage() {
-            @Override
-            public PageKey getPageKey() {
-                return pageKey;
-            }
-
-            @Override
-            public String getTitle() {
-                return Objects.requireNonNull(title);
-            }
-
-            @Override
-            public String getContent() {
-                return Objects.requireNonNull(content);
-            }
-        };
-    }
 
     @Override
     public String toString() {

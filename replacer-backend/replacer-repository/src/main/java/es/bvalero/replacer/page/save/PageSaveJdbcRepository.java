@@ -2,12 +2,15 @@ package es.bvalero.replacer.page.save;
 
 import es.bvalero.replacer.page.IndexedPage;
 import es.bvalero.replacer.page.PageKey;
+import es.bvalero.replacer.page.find.PageRepository;
+import es.bvalero.replacer.replacement.CustomRepository;
+import es.bvalero.replacer.replacement.IndexedCustomReplacement;
 import es.bvalero.replacer.replacement.save.IndexedReplacementStatus;
 import es.bvalero.replacer.replacement.save.ReplacementSaveRepository;
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSourceUtils;
@@ -22,13 +25,19 @@ class PageSaveJdbcRepository implements PageSaveRepository {
     // Dependency injection
     private final NamedParameterJdbcTemplate jdbcTemplate;
     private final ReplacementSaveRepository replacementSaveRepository;
+    private final PageRepository pageRepository;
+    private final CustomRepository customRepository;
 
     PageSaveJdbcRepository(
         NamedParameterJdbcTemplate jdbcTemplate,
-        ReplacementSaveRepository replacementSaveRepository
+        ReplacementSaveRepository replacementSaveRepository,
+        PageRepository pageRepository,
+        CustomRepository customRepository
     ) {
         this.jdbcTemplate = jdbcTemplate;
         this.replacementSaveRepository = replacementSaveRepository;
+        this.pageRepository = pageRepository;
+        this.customRepository = customRepository;
     }
 
     @Override
@@ -67,6 +76,18 @@ class PageSaveJdbcRepository implements PageSaveRepository {
                 .toList()
         );
 
+        // Update the reviewed replacements
+        replacementSaveRepository.updateReviewer(
+            pages
+                .stream()
+                .flatMap(p -> p.getReplacements().stream())
+                .filter(p -> p.getStatus() == IndexedReplacementStatus.REVIEWED)
+                .toList()
+        );
+
+        // Update the custom replacements
+        addCustomReplacements(pages.stream().flatMap(p -> p.getCustomReplacements().stream()).toList());
+
         // Remove the replacements
         replacementSaveRepository.remove(
             pages
@@ -97,14 +118,26 @@ class PageSaveJdbcRepository implements PageSaveRepository {
         jdbcTemplate.batchUpdate(sql, namedParameters);
     }
 
-    @Override
-    public void updateLastUpdate(PageKey pageKey, LocalDate lastUpdate) {
-        String sql = "UPDATE page SET last_update = :lastUpdate WHERE lang = :lang AND page_id = :pageId";
-        SqlParameterSource namedParameters = new MapSqlParameterSource()
-            .addValue("lastUpdate", lastUpdate)
-            .addValue("lang", pageKey.getLang().getCode())
-            .addValue("pageId", pageKey.getPageId());
-        jdbcTemplate.update(sql, namedParameters);
+    /** Add a collection of custom replacements */
+    private void addCustomReplacements(Collection<IndexedCustomReplacement> customReplacements) {
+        // Add the page to the database in case it doesn't exist yet
+        customReplacements
+            .stream()
+            .map(IndexedCustomReplacement::getPageKey)
+            .distinct()
+            .forEach(pageKey -> {
+                if (pageRepository.findByKey(pageKey).isEmpty()) {
+                    IndexedPage indexedPage = IndexedPage.builder()
+                        .pageKey(pageKey)
+                        .title("") // It will be set in a next indexation
+                        .lastUpdate(LocalDate.now())
+                        .status(IndexedPageStatus.ADD)
+                        .build();
+                    save(List.of(indexedPage));
+                }
+            });
+
+        customRepository.add(customReplacements);
     }
 
     @Override

@@ -7,9 +7,12 @@ import es.bvalero.replacer.page.PageKey;
 import es.bvalero.replacer.replacement.IndexedCustomReplacement;
 import es.bvalero.replacer.replacement.IndexedReplacement;
 import es.bvalero.replacer.replacement.ReviewType;
+import es.bvalero.replacer.replacement.save.IndexedReplacementStatus;
 import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Value;
+import lombok.With;
+import org.jetbrains.annotations.TestOnly;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
@@ -31,9 +34,10 @@ class ReviewedReplacement {
 
     // True if fixed. False if reviewed with no changes.
     // It is used to know which replacement types to include in the edit summary.
+    @With(onMethod_ = @TestOnly)
     boolean fixed;
 
-    IndexedReplacement toReplacement(@Nullable WikipediaPageSaveResult saveResult) {
+    IndexedReplacement toIndexedReplacement(@Nullable WikipediaPageSaveResult saveResult) {
         assert type instanceof StandardType;
         return saveResult == null ? toNotModifiedReplacement() : toModifiedReplacement(saveResult);
     }
@@ -48,6 +52,7 @@ class ReviewedReplacement {
             .reviewTimestamp(saveResult.getNewTimestamp().toLocalDateTime())
             .oldRevId(saveResult.getOldRevisionId())
             .newRevId(saveResult.getNewRevisionId())
+            .status(IndexedReplacementStatus.REVIEWED)
             .pageKey(pageKey)
             .build();
     }
@@ -60,6 +65,7 @@ class ReviewedReplacement {
             .reviewer(reviewer)
             .reviewType(ReviewType.NOT_MODIFIED)
             .reviewTimestamp(LocalDateTime.now())
+            .status(IndexedReplacementStatus.REVIEWED)
             .pageKey(pageKey)
             .build();
     }

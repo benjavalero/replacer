@@ -7,7 +7,6 @@ import es.bvalero.replacer.page.PageKey;
 import es.bvalero.replacer.page.count.PageCountCacheRepository;
 import es.bvalero.replacer.replacement.IndexedReplacement;
 import es.bvalero.replacer.replacement.save.IndexedReplacementStatus;
-import java.time.LocalDate;
 import java.util.Collection;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -36,11 +35,6 @@ class PageSaveCacheRepository implements PageSaveRepository {
     public void save(Collection<IndexedPage> pages) {
         pages.forEach(this::handlePageCache);
         this.pageSaveRepository.save(pages);
-    }
-
-    @Override
-    public void updateLastUpdate(PageKey pageKey, LocalDate lastUpdate) {
-        this.pageSaveRepository.updateLastUpdate(pageKey, lastUpdate);
     }
 
     @Override

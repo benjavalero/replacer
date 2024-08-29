@@ -8,7 +8,7 @@ import org.springframework.lang.NonNull;
 
 @Value
 @Builder
-public class WikipediaPageSaveResult {
+class WikipediaPageSaveResult {
 
     @NonNull
     int oldRevisionId;

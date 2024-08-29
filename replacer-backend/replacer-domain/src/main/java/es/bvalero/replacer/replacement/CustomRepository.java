@@ -7,9 +7,9 @@ import java.util.Collection;
 import org.jmolecules.architecture.hexagonal.SecondaryPort;
 
 @SecondaryPort
-interface CustomRepository {
-    /** Add a custom replacement */
-    void add(IndexedCustomReplacement customReplacement);
+public interface CustomRepository {
+    /** Add a collection of custom replacements */
+    void add(Collection<IndexedCustomReplacement> customReplacements);
 
     /** Find the pages reviewed for the given custom replacement and return the IDs */
     Collection<PageKey> findPagesReviewed(WikipediaLanguage lang, CustomType type);

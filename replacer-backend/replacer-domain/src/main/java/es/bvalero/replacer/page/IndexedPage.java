@@ -1,6 +1,7 @@
 package es.bvalero.replacer.page;
 
 import es.bvalero.replacer.page.save.IndexedPageStatus;
+import es.bvalero.replacer.replacement.IndexedCustomReplacement;
 import es.bvalero.replacer.replacement.IndexedReplacement;
 import es.bvalero.replacer.replacement.save.IndexedReplacementStatus;
 import java.time.LocalDate;
@@ -40,6 +41,13 @@ public class IndexedPage {
     @NonNull
     @Builder.Default
     Collection<IndexedReplacement> replacements = new ArrayList<>();
+
+    // One-to-many relationship
+    // We will not retrieve these replacements from the database,
+    // but we will use this collection to add them.
+    @NonNull
+    @Builder.Default
+    Collection<IndexedCustomReplacement> customReplacements = new ArrayList<>();
 
     // Helper method to add replacements after creating the object while extracting the results from database
     public void addReplacement(IndexedReplacement replacement) {

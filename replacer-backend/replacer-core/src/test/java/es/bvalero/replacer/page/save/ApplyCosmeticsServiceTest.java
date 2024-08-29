@@ -35,7 +35,7 @@ class ApplyCosmeticsServiceTest {
         FinderPage page = buildFinderPage(text);
         assertEquals(expected, applyCosmeticsService.applyCosmeticChanges(page));
 
-        verify(cosmeticFindService).findCosmetics(any(FinderPage.class));
+        verify(cosmeticFindService).findCosmetics(page);
         verify(checkWikipediaService).reportFix(
             page.getPageKey().getLang(),
             page.getTitle(),
@@ -61,7 +61,7 @@ class ApplyCosmeticsServiceTest {
         FinderPage page = buildFinderPage(text);
         assertEquals(expected, applyCosmeticsService.applyCosmeticChanges(page));
 
-        verify(cosmeticFindService).findCosmetics(any(FinderPage.class));
+        verify(cosmeticFindService).findCosmetics(page);
         verify(checkWikipediaService, times(3)).reportFix(
             page.getPageKey().getLang(),
             page.getTitle(),

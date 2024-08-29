@@ -79,6 +79,7 @@ class ReplacementSaveJdbcRepository implements ReplacementSaveRepository {
 
     @Override
     public void updateReviewer(Collection<IndexedReplacement> replacements) {
+        // TODO: Update in batch or add comment to explain why not
         replacements.forEach(this::updateReviewer);
     }
 
