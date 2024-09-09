@@ -1,6 +1,9 @@
 # Versions
 
-## 2.29.2 (28 Aug 2024)
+## 2.29.3 (??)
+- Fix: vaildate empty misspelling suggestions
+
+## 2.29.2 (18 Aug 2024)
 - Feature: ignore template `blockquote`
 - Fix: merge suggestions with same text and empty comments
 - Fix: simplify the forbidden chars in an XML tag to be capture as an immutable
