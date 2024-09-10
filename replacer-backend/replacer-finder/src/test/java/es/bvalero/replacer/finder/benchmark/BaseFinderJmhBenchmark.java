@@ -1,7 +1,7 @@
 package es.bvalero.replacer.finder.benchmark;
 
 import es.bvalero.replacer.finder.Finder;
-import es.bvalero.replacer.finder.benchmark.simple.JMHSample_01_HelloWorld;
+import es.bvalero.replacer.finder.benchmark.simple.SimpleFinderJmhBenchmark;
 import es.bvalero.replacer.finder.benchmark.util.BenchmarkUtils;
 import es.bvalero.replacer.page.find.WikipediaPage;
 import es.bvalero.replacer.wikipedia.WikipediaException;
@@ -38,10 +38,10 @@ public class BaseFinderJmhBenchmark {
         sampleContents.forEach(page -> finder.find(page).forEach(bh::consume));
     }
 
-    protected static void run(String fileName) throws RunnerException {
+    protected static void run(Class<? extends BaseFinderJmhBenchmark> jmhBenchmarkClass, String fileName) throws RunnerException {
         final String testResourcesPath = "replacer-finder/src/test/resources/es/bvalero/replacer/finder/benchmark/";
         Options opt = new OptionsBuilder()
-            .include(JMHSample_01_HelloWorld.class.getSimpleName())
+            .include(jmhBenchmarkClass.getSimpleName())
             .resultFormat(ResultFormatType.TEXT)
             .result(testResourcesPath + fileName + ".txt")
             .build();

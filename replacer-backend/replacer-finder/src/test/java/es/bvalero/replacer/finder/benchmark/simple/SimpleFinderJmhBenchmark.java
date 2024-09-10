@@ -12,7 +12,9 @@ import org.openjdk.jmh.infra.Blackhole;
 import org.openjdk.jmh.runner.RunnerException;
 
 @State(Scope.Benchmark)
-public class JMHSample_01_HelloWorld extends BaseFinderJmhBenchmark {
+public class SimpleFinderJmhBenchmark extends BaseFinderJmhBenchmark {
+
+    private static final String fileName = "simple/simple-summary-jmh";
 
     private SimpleLinearFinder simpleLinearFinder;
     private SimpleRegexFinder simpleRegexFinder;
@@ -51,7 +53,6 @@ public class JMHSample_01_HelloWorld extends BaseFinderJmhBenchmark {
     }
 
     public static void main(String[] args) throws RunnerException, IOException, URISyntaxException, WikipediaException {
-        final String fileName = "simple/simple-summary-jmh";
-        run(fileName);
+        run(SimpleFinderJmhBenchmark.class, fileName);
     }
 }

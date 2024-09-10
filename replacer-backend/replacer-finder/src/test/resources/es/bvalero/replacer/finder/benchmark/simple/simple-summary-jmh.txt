@@ -1,5 +1,5 @@
-Benchmark                                      Mode  Cnt     Score     Error  Units
-JMHSample_01_HelloWorld.baseline               avgt    5     0,001 ±   0,001  us/op
-JMHSample_01_HelloWorld.simpleAutomatonFinder  avgt    5  1142,055 ± 174,155  us/op
-JMHSample_01_HelloWorld.simpleLinearFinder     avgt    5   111,813 ±  23,814  us/op
-JMHSample_01_HelloWorld.simpleRegexFinder      avgt    5   147,375 ±  36,113  us/op
+Benchmark                                       Mode  Cnt    Score    Error  Units
+SimpleFinderJmhBenchmark.baseline               avgt    5   ≈ 10⁻³           us/op
+SimpleFinderJmhBenchmark.simpleAutomatonFinder  avgt    5  647,781 ± 57,553  us/op
+SimpleFinderJmhBenchmark.simpleLinearFinder     avgt    5   73,484 ±  4,402  us/op
+SimpleFinderJmhBenchmark.simpleRegexFinder      avgt    5   99,837 ±  6,605  us/op
