@@ -8,8 +8,10 @@ import es.bvalero.replacer.finder.Finder;
 import es.bvalero.replacer.finder.benchmark.BaseFinderBenchmark;
 import es.bvalero.replacer.finder.immutable.ImmutableFinder;
 import es.bvalero.replacer.finder.listing.find.ListingOfflineFinder;
+import es.bvalero.replacer.finder.listing.load.ComposedMisspellingLoader;
 import es.bvalero.replacer.finder.listing.load.FalsePositiveLoader;
 import es.bvalero.replacer.finder.listing.load.SimpleMisspellingLoader;
+import es.bvalero.replacer.finder.listing.parse.ComposedMisspellingParser;
 import es.bvalero.replacer.finder.listing.parse.FalsePositiveParser;
 import es.bvalero.replacer.finder.listing.parse.SimpleMisspellingParser;
 import java.io.IOException;
@@ -45,6 +47,8 @@ import org.springframework.test.context.ActiveProfiles;
         TitleFinder.class,
         SimpleMisspellingParser.class,
         SimpleMisspellingLoader.class,
+        ComposedMisspellingParser.class,
+        ComposedMisspellingLoader.class,
         TableFinder.class,
         UppercaseFinder.class,
         UrlFinder.class,
@@ -63,6 +67,9 @@ class ImmutableFinderBenchmarkTest extends BaseFinderBenchmark {
     private SimpleMisspellingLoader simpleMisspellingLoader;
 
     @Autowired
+    private ComposedMisspellingLoader composedMisspellingLoader;
+
+    @Autowired
     private FalsePositiveLoader falsePositiveLoader;
 
     @Test
@@ -72,6 +79,7 @@ class ImmutableFinderBenchmarkTest extends BaseFinderBenchmark {
 
         // Load misspellings
         simpleMisspellingLoader.load();
+        composedMisspellingLoader.load();
 
         List<Finder<?>> finders = new ArrayList<>(immutableFinders);
         runBenchmark(finders, fileName);

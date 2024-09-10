@@ -34,11 +34,6 @@ public class SimpleFinderJmhBenchmarkTest extends BaseFinderJmhBenchmark {
     }
 
     @Benchmark
-    public void baseline() {
-        // Do nothing
-    }
-
-    @Benchmark
     public void simpleLinearFinder(Blackhole bh) {
         runFinder(simpleLinearFinder, bh);
     }

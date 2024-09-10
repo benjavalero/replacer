@@ -16,7 +16,7 @@ import org.openjdk.jmh.runner.RunnerException;
 import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
 
-@Fork(1)
+@Fork(value = 1, jvmArgsAppend = { "-Xmx256m", "-da" }) // 0 makes debugging possible, disable assertions just in case
 @State(Scope.Benchmark)
 @Warmup(time = 1)
 @Measurement(time = 2)
@@ -39,10 +39,17 @@ public class BaseFinderJmhBenchmark {
         sampleContents.forEach(page -> finder.find(page).forEach(bh::consume));
     }
 
+    @Benchmark
+    public void baseLine() {
+        // Do nothing
+    }
+
     protected static void run(Class<? extends BaseFinderJmhBenchmark> jmhBenchmarkClass, String fileName)
         throws RunnerException {
         Options opt = new OptionsBuilder()
             .include(jmhBenchmarkClass.getSimpleName())
+            // .addProfiler(GCProfiler.class)
+            // .addProfiler(MemPoolProfiler.class)
             .resultFormat(ResultFormatType.TEXT)
             .result(TEST_RESOURCES_PATH + fileName + ".txt")
             .build();
