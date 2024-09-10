@@ -1,9 +1,10 @@
 package es.bvalero.replacer.finder.benchmark.simple;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import es.bvalero.replacer.finder.benchmark.BaseFinderJmhBenchmark;
 import es.bvalero.replacer.wikipedia.WikipediaException;
-import java.io.IOException;
-import java.net.URISyntaxException;
+import org.junit.jupiter.api.Test;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.Setup;
@@ -12,7 +13,7 @@ import org.openjdk.jmh.infra.Blackhole;
 import org.openjdk.jmh.runner.RunnerException;
 
 @State(Scope.Benchmark)
-public class SimpleFinderJmhBenchmark extends BaseFinderJmhBenchmark {
+public class SimpleFinderJmhBenchmarkTest extends BaseFinderJmhBenchmark {
 
     private static final String fileName = "simple/simple-summary-jmh";
 
@@ -52,7 +53,10 @@ public class SimpleFinderJmhBenchmark extends BaseFinderJmhBenchmark {
         runFinder(simpleAutomatonFinder, bh);
     }
 
-    public static void main(String[] args) throws RunnerException, IOException, URISyntaxException, WikipediaException {
-        run(SimpleFinderJmhBenchmark.class, fileName);
+    @Test
+    void testBenchmark() throws RunnerException {
+        run(SimpleFinderJmhBenchmarkTest.class, fileName);
+
+        assertTrue(true);
     }
 }
