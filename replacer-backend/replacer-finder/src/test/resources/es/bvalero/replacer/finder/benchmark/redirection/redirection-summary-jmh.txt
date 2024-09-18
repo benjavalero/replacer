@@ -1,0 +1,10 @@
+Benchmark                                                                      Mode  Cnt      Score      Error  Units
+RedirectionFinderJmhBenchmarkTest.baseLine                                     avgt    5     ≈ 10⁻³             us/op
+RedirectionFinderJmhBenchmarkTest.redirectionLowercaseContainsFinder           avgt    5   1031,710 ±   27,518  us/op
+RedirectionFinderJmhBenchmarkTest.setRedirectionAhoCorasickFinder              avgt    5   1117,722 ±  153,485  us/op
+RedirectionFinderJmhBenchmarkTest.setRedirectionAhoCorasickLongestFinder       avgt    5   1290,013 ±  123,734  us/op
+RedirectionFinderJmhBenchmarkTest.setRedirectionAhoCorasickWholeFinder         avgt    5   1084,681 ±   51,989  us/op
+RedirectionFinderJmhBenchmarkTest.setRedirectionAhoCorasickWholeLongestFinder  avgt    5   1434,734 ±   80,539  us/op
+RedirectionFinderJmhBenchmarkTest.setRedirectionAutomatonFinder                avgt    5   1597,305 ±  146,564  us/op
+RedirectionFinderJmhBenchmarkTest.setRedirectionRegexFinder                    avgt    5   6589,751 ±  397,063  us/op
+RedirectionFinderJmhBenchmarkTest.setRedirectionRegexInsensitiveFinder         avgt    5  11461,539 ± 1121,772  us/op
