@@ -14,7 +14,7 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  1ro de Mayo|cs|1.º de Mayo, Primero de Mayo
  50 m.||50&nbsp;m (los símbolos de medida se escriben sin punto —cuidado si es fin de frase—), 50&nbsp;m. (para fin de frase)
  60 m.||60&nbsp;m (los símbolos de medida se escriben sin punto —cuidado si es fin de frase—), 60&nbsp;m. (para fin de frase)
- 100 m.||100&nbsp;m (los símbolos de medida se escriben sin punto —cuidado si es fin de frase—), 100&nbsp;m. (para fin de frase frase)
+ 100 m.||100&nbsp;m (los símbolos de medida se escriben sin punto —cuidado si es fin de frase—), 100&nbsp;m. (para fin de frase)
  110 m.||110&nbsp;m (los símbolos de medida se escriben sin punto —cuidado si es fin de frase—), 110&nbsp;m. (para fin de frase)
  200 m.||200&nbsp;m (los símbolos de medida se escriben sin punto —cuidado si es fin de frase—), 200&nbsp;m. (para fin de frase)
  400 m.||400&nbsp;m (los símbolos de medida se escriben sin punto —cuidado si es fin de frase—), 400&nbsp;m. (para fin de frase)
@@ -37,40 +37,37 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  a.C|cs|a.&nbsp;C. (con espacio duro)
  a. C.|cs|a.&nbsp;C. (con espacio duro)
  a cambió||a cambio
- a de C.||a.&nbsp;C. (con espacio duro)
- a. de C.||a.&nbsp;C. (con espacio duro)
  a capella||a&nbsp;capela (en español), ''a&nbsp;cappella'' (en italiano, en cursiva, solamente para partituras)
  actualmente en vigor||en vigor, vigente, vigentes
  adc|cs|a.&nbsp;C. (con espacio duro)
  AdC|cs|a.&nbsp;C. (con espacio duro)
  adC|cs|a.&nbsp;C. (con espacio duro)
- ad honorem||''ad honorem''
- ad honórem||''ad honorem''
- ad honoren||''ad honorem''
- a.m.||a.&nbsp;m. (con espacio duro)
- a. m.||a.&nbsp;m. (con espacio duro)
- a.m||a.&nbsp;m. (con espacio duro)
- a.e.c.||a.&nbsp;C. (con espacio duro; abreviatura de «antes de Cristo»; recomendada), a.&nbsp;e.&nbsp;c. (con espacios duros; abreviatura de «antes de la era común»)
- a. e. c.||a.&nbsp;C. (con espacio duro; abreviatura de «antes de Cristo»; recomendada), a.&nbsp;e.&nbsp;c. (con espacios duros; abreviatura de «antes de la era común»)
- a.n.e.||a.&nbsp;C. (con espacio duro; abreviatura de «antes de Cristo»; recomendada), a.&nbsp;e.&nbsp;c. (con espacios duros; abreviatura de «antes de la era común»), a.&nbsp;n.&nbsp;e. (con espacios duros; abreviatura de «antes de nuestra era»)
- a. n. e.||a.&nbsp;C. (con espacio duro; abreviatura de «antes de Cristo»; recomendada), a.&nbsp;e.&nbsp;c. (con espacios duros; abreviatura de «antes de la era común»), a.&nbsp;n.&nbsp;e. (con espacios duros; abreviatura de «antes de nuestra era»)
+ a de C.||a.&nbsp;C. (con espacio duro)
+ a. de C.||a.&nbsp;C. (con espacio duro)
  a demás||además (adverbio)
  ad-hoc||''ad hoc''
+ ad honorem||''ad honorem'', ''Ad honorem'' (para inicios de frase o columnas de tablas)
+ ad honórem||''ad honorem'', ''Ad honorem'' (para inicios de frase o columnas de tablas)
+ ad honoren||''ad honorem'', ''Ad honorem'' (para inicios de frase o columnas de tablas)
+ Ad honorem|cs|''ad honorem'', ''Ad honorem'' (para inicios de frase o columnas de tablas)
  Administración Publica|cs|Administración Pública
+ a.e.c.||a.&nbsp;C. (con espacio duro; abreviatura de «antes de Cristo»; recomendada), a.&nbsp;e.&nbsp;c. (con espacios duros; abreviatura de «antes de la era común»)
+ a. e. c.||a.&nbsp;C. (con espacio duro; abreviatura de «antes de Cristo»; recomendada), a.&nbsp;e.&nbsp;c. (con espacios duros; abreviatura de «antes de la era común»)
  a el||al, a él, a El
  afro americana||afroamericana
  afro-americana||afroamericana
- afro americanas|afroamericanas
- afro-americanas|afroamericanas
+ afro americanas||afroamericanas
+ afro-americanas||afroamericanas
  afro americano||afroamericano
  afro-americano||afroamericano
- afro americanos|afroamericanos
- afro-americanos|afroamericanos
+ afro americanos||afroamericanos
+ afro-americanos||afroamericanos
  afro descendiente||afrodescendiente
  afro-descendiente||afrodescendiente
  afro descendientes||afrodescendientes
  afro-descendientes||afrodescendientes
  a la alza||al alza
+ al al|cs|al, a la
  al Andalus|cs|al-Ándalus, Al-Ándalus (para inicios de frase o columnas de tablas), el Ándalus, Ándalus (después de artículo)
  al-Andalus|cs|al-Ándalus, Al-Ándalus (para inicios de frase o columnas de tablas), el Ándalus, Ándalus (después de artículo)
  Al Andalus|cs|al-Ándalus, Al-Ándalus (para inicios de frase o columnas de tablas), el Ándalus, Ándalus (después de artículo)
@@ -78,23 +75,23 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  Alberto Del Río|cs|Alberto Del Rio (nombre comercial del luchador, sin tilde)
  al la||a la
  al las||a las
- alma mater||''alma mater''
- alma-mater||''alma mater''
- alma máter||''alma mater''
- alma-máter||''alma mater''
- alma Mater|cs|''alma mater''
- alma-Mater|cs|''alma mater''
- alma Máter|cs|''alma mater''
- alma-Máter|cs|''alma mater''
- Alma mater|cs|''alma mater''
- Alma-mater|cs|''alma mater''
- Alma máter|cs|''alma mater''
- Alma-máter|cs|''alma mater''
- Alma Mater|cs|''alma mater''
- Alma-Mater|cs|''alma mater''
- Alma Máter|cs|''alma mater''
- Alma-Máter|cs|''alma mater''
  al los||a los
+ alma mater||''alma mater'', ''Alma mater'' (para inicios de frase o columnas de tablas)
+ alma-mater||''alma mater'', ''Alma mater'' (para inicios de frase o columnas de tablas)
+ alma máter||''alma mater'', ''Alma mater'' (para inicios de frase o columnas de tablas)
+ alma-máter||''alma mater'', ''Alma mater'' (para inicios de frase o columnas de tablas)
+ alma Mater|cs|''alma mater'', ''Alma mater'' (para inicios de frase o columnas de tablas)
+ alma-Mater|cs|''alma mater'', ''Alma mater'' (para inicios de frase o columnas de tablas)
+ alma Máter|cs|''alma mater'', ''Alma mater'' (para inicios de frase o columnas de tablas)
+ alma-Máter|cs|''alma mater'', ''Alma mater'' (para inicios de frase o columnas de tablas)
+ Alma mater|cs|''alma mater'', ''Alma mater'' (para inicios de frase o columnas de tablas)
+ Alma-mater|cs|''alma mater'', ''Alma mater'' (para inicios de frase o columnas de tablas)
+ Alma máter|cs|''alma mater'', ''Alma mater'' (para inicios de frase o columnas de tablas)
+ Alma-máter|cs|''alma mater'', ''Alma mater'' (para inicios de frase o columnas de tablas)
+ Alma Mater|cs|''alma mater'', ''Alma mater'' (para inicios de frase o columnas de tablas)
+ Alma-Mater|cs|''alma mater'', ''Alma mater'' (para inicios de frase o columnas de tablas)
+ Alma Máter|cs|''alma mater'', ''Alma mater'' (para inicios de frase o columnas de tablas)
+ Alma-Máter|cs|''alma mater'', ''Alma mater'' (para inicios de frase o columnas de tablas)
  alta edad media|cs|Alta Edad Media
  alta edad Media|cs|Alta Edad Media
  alta Edad media|cs|Alta Edad Media
@@ -102,19 +99,26 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  Alta edad media|cs|Alta Edad Media
  Alta edad Media|cs|Alta Edad Media
  Alta Edad media|cs|Alta Edad Media
- alter ego||''alter ego''
- alter-ego||''alter ego''
- álter ego||''alter ego''
- álter-ego||''alter ego''
- alter egos||''alter ego''
- alter-egos||''alter ego''
- álter egos||''alter ego''
- álter-egos||''alter ego''
- al al|cs|al, a la
- al top ten||a la lista de los diez primeros, a la lista de las diez primeras, a la lista de los diez mejores, a la lista de las diez mejores, a la lista de los diez más populares, a la lista de las diez más populares, entre los diez primeros, entre las diez primeras, entre los diez mejores, entre las diez mejores, entre los diez más populares, entre las diez más populares
+ [[alter ego]]||''[[alter ego]]''
+ alter ego||''alter ego'', ''Alter ego'' (para inicios de frase o columnas de tablas)
+ alter-ego||''alter ego'', ''Alter ego'' (para inicios de frase o columnas de tablas)
+ álter ego||''alter ego'', ''Alter ego'' (para inicios de frase o columnas de tablas)
+ álter-ego||''alter ego'', ''Alter ego'' (para inicios de frase o columnas de tablas)
+ Alter ego|cs|''alter ego'', ''Alter ego'' (para inicios de frase o columnas de tablas)
+ alter egos||''alter ego'', ''Alter ego'' (para inicios de frase o columnas de tablas)
+ alter-egos||''alter ego'', ''Alter ego'' (para inicios de frase o columnas de tablas)
+ álter egos||''alter ego'', ''Alter ego'' (para inicios de frase o columnas de tablas)
+ álter-egos||''alter ego'', ''Alter ego'' (para inicios de frase o columnas de tablas)
+ Alter egos|cs|''alter ego'', ''Alter ego'' (para inicios de frase o columnas de tablas)
+ al top ten||a la lista de los diez primeros, a la lista de las diez primeras, a la lista de los diez mejores, a la lista de las diez mejores, a la lista de los diez más populares, a la lista de las diez más populares
  altura promedio||altitud promedio («altitud» es sobre el nivel del mar), altura promedio («altura» es un tamaño o indica distancia sobre el terreno o superficie inmediatamente inferior)
+ a.m.||a.&nbsp;m. (con espacio duro)
+ a. m.||a.&nbsp;m. (con espacio duro)
+ a.m||a.&nbsp;m. (con espacio duro)
  a mas||a más
  America Latina|cs|América Latina
+ a.n.e.||a.&nbsp;C. (con espacio duro; abreviatura de «antes de Cristo»; recomendada), a.&nbsp;e.&nbsp;c. (con espacios duros; abreviatura de «antes de la era común»), a.&nbsp;n.&nbsp;e. (con espacios duros; abreviatura de «antes de nuestra era»)
+ a. n. e.||a.&nbsp;C. (con espacio duro; abreviatura de «antes de Cristo»; recomendada), a.&nbsp;e.&nbsp;c. (con espacios duros; abreviatura de «antes de la era común»), a.&nbsp;n.&nbsp;e. (con espacios duros; abreviatura de «antes de nuestra era»)
  Angel Nieto|cs|Ángel Nieto (piloto español)
  anti aerea||antiaérea
  anti-aerea||antiaérea
@@ -132,6 +136,10 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  anti-aereos||antiaéreos
  anti aéreos||antiaéreos
  anti-aéreos||antiaéreos
+ anti blindaje||antiblindaje
+ anti-blindaje||antiblindaje
+ anti blindajes||antiblindajes
+ anti-blindajes||antiblindajes
  anti buque||antibuque
  anti-buque||antibuque
  anti buques||antibuques
@@ -248,17 +256,20 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  anti-virus||antivirus
  anuncio que||anunció que
  anuncio su||anunció su
+ [[apartheid]]||''[[apartheid]]'' (vocablo en afrikáans, en cursivas y con enlace)
  arriba a abajo||arriba abajo
  a parte||a parte (locución), aparte (adjetivo, sustantivo, adverbio o verbo)
  a pesar que||a pesar de que
  apenas sí||apenas si
- a posteriori||''a posteriori'' (en cursiva)
- a-posteriori||''a posteriori'' (en cursiva)
- a priori||''a priori'' (en cursiva)
- a-priori||''a priori'' (en cursiva)
+ a posteriori||''a posteriori'', ''A posteriori'' (para inicios de frase o columnas de tablas)
+ a-posteriori||''a posteriori'', ''A posteriori'' (para inicios de frase o columnas de tablas)
+ A posteriori|cs|''a posteriori'', ''A posteriori'' (para inicios de frase o columnas de tablas)
+ a priori||''a priori'', ''A priori'' (para inicios de frase o columnas de tablas)
+ a-priori||''a priori'', ''A priori'' (para inicios de frase o columnas de tablas)
+ A priori|cs|''a priori'', ''A priori'' (para inicios de frase o columnas de tablas)
  aproximadamente unos||aproximadamente, unos
- aún así||aun así (equivale a «pese a eso» o «sin embargo»), aún así (equivale a «todavía así»)
  a una altura de||a una altitud de («altitud» es sobre el nivel del mar), a una altura de («altura» es sobre el terreno o superficie inmediatamente inferior)
+ aún así||aun así (equivale a «pese a eso» o «sin embargo»), aún así (equivale a «todavía así»)
  auto ayuda||autoayuda
  auto-ayuda||autoayuda
  auto control||autocontrol
@@ -295,8 +306,7 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  canta autores||cantautores
  canta-autores||cantautores
  Carlos Ménem|cs|Carlos Menem
- Castilla la Mancha|cs|Castilla-La Mancha
- Castilla La Mancha|cs|Castilla-La Mancha
+ castilla la mancha||Castilla-La Mancha
  Castilla- La Mancha|cs|Castilla-La Mancha
  Castilla-León|cs|Castilla y León
  Castilla León|cs|Castilla y León
@@ -310,7 +320,12 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  ciencia-ficción||ciencia ficción
  Círculo Polar Antártico|cs|círculo polar antártico, Círculo polar antártico (para inicios de frase o columnas de tablas)
  Círculo Polar Ártico|cs|círculo polar ártico, Círculo polar ártico (para inicios de frase o columnas de tablas)
- ciudad de México|cs|Ciudad de México
+ [[ciudad de México]]|cs|[[Ciudad de México]] (con mayúscula inicial, incluso precedida de artículo)
+ [[ciudad de Mexico]]||[[Ciudad de México]] (con mayúscula inicial, incluso precedida de artículo)
+ ciudad de México|cs|Ciudad de México (con mayúscula inicial, incluso precedida de artículo)
+ ciudad de Mexico||Ciudad de México (con mayúscula inicial, incluso precedida de artículo)
+ ciudad de Panamá|cs|Ciudad de Panamá (con mayúscula inicial, incluso precedida de artículo)
+ ciudad de Panama||Ciudad de Panamá (con mayúscula inicial, incluso precedida de artículo)
  cm. de||cm de (símbolo de centímetros —no lleva punto—)
  cm2||cm² (centímetro cuadrado), centímetro cuadrado, centímetros cuadrados
  cm3||cm³ (centímetro cúbico), centímetro cúbico, centímetros cúbicos
@@ -668,6 +683,7 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  co-líderes||colíderes
  comicios electorales||comicios
  con mas||con más
+ conocido cómo||conocido como
  continua estando||continúa estando
  continua siendo||continúa siendo
  continuo su||continuó su
@@ -689,6 +705,7 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  co-oficial||cooficial
  co oficiales||cooficiales
  co-oficiales||cooficiales
+ copa libertadores|cs|Copa Libertadores
  co presenta||copresenta
  co-presenta||copresenta
  co presentacion||copresentación
@@ -843,7 +860,12 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  co-protagonizo||coprotagonizó (3.ª persona), coprotagonizo (1.ª persona)
  co protagonizó||coprotagonizó (3.ª persona), coprotagonizo (1.ª persona)
  co-protagonizó||coprotagonizó (3.ª persona), coprotagonizo (1.ª persona)
- cum laude||''cum laude''
+ Cuartos de Final|cs|cuartos de final, Cuartos de final (para inicios de frase o columnas de tablas)
+ [[cum laude]]||''[[cum laude]]'', ''[[Cum laude]]'' (para inicios de frase o columnas de tablas)
+ [[Cum laude]]|cs|''[[cum laude]]'', ''[[Cum laude]]'' (para inicios de frase o columnas de tablas)
+ cum laude||''cum laude'', ''Cum laude'' (para inicios de frase o columnas de tablas)
+ Cum laude|cs|''cum laude'', ''Cum laude'' (para inicios de frase o columnas de tablas)
+ Cum Laude|cs|''cum laude'', ''Cum laude'' (para inicios de frase o columnas de tablas)
  cum laudem||''cum laude''
  curriculum vitae||''curriculum vitae''
  currículum vitae||''curriculum vitae''
@@ -862,20 +884,6 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  d. C.|cs|d.&nbsp;C. (con espacio duro)
  d de C.||d.&nbsp;C. (con espacio duro)
  d. de C.||d.&nbsp;C. (con espacio duro)
- de Cordoba||de Córdoba
- de de|cs|de
- de del|cs|del, de, del de
- de el||del, de él, de El, dé el, dé él
- de el bosco|cs|del Bosco
- de el Bosco|cs|del Bosco
- de El bosco|cs|del Bosco
- de El Bosco|cs|del Bosco
- de el greco|cs|del Greco
- de el Greco|cs|del Greco
- de El greco|cs|del Greco
- de El Greco|cs|del Greco
- de estás||de estas
- de por si||de por sí
  décima cuartas||decimocuartas (uso mayoritario), décimas cuartas
  decima cuartas||decimocuartas (uso mayoritario), décimas cuartas
  décima novenas||decimonovenas (uso mayoritario), décimas novenas
@@ -897,27 +905,43 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  décima terceras||decimoterceras (uso mayoritario), décimas terceras
  decima terceras||decimoterceras (uso mayoritario), décimas terceras
  décimo cuarta||decimocuarta (uso mayoritario), décima cuarta
+ decimo cuarta||decimocuarta (uso mayoritario), décima cuarta
  décimo cuartas||decimocuartas (uso mayoritario), décimas cuartas
+ decimo cuartas||decimocuartas (uso mayoritario), décimas cuartas
  décimo cuartos||decimocuartos (uso mayoritario), décimos cuartos
+ decimo cuartos||decimocuartos (uso mayoritario), décimos cuartos
  décimo novena||decimonovena (uso mayoritario), décima novena
+ decimo novena||decimonovena (uso mayoritario), décima novena
  décimo novenas||decimonovenas (uso mayoritario), décimas novenas
+ decimo novenas||decimonovenas (uso mayoritario), décimas novenas
  décimo novenos||decimonovenos (uso mayoritario), décimos novenos
+ decimo novenos||decimonovenos (uso mayoritario), décimos novenos
  décimo octava||decimoctava (uso mayoritario), décima octava
  decimo octava||decimoctava (uso mayoritario), décima octava
  décimo octavas||decimoctavas (uso mayoritario), décimas octavas
  decimo octavas||decimoctavas (uso mayoritario), décimas octavas
  décimo octavos||decimoctavos (uso mayoritario), décimos octavos
  decimo octavos||decimoctavos (uso mayoritario), décimos octavos
- décimo primer||decimoprimer
+ decimo primer||decimoprimer (uso mayoritario), décimo primer
  décimo primera||decimoprimera (uso mayoritario), décima primera
+ decimo primera||decimoprimera (uso mayoritario), décima primera
  décimo primeras||decimoprimeras (uso mayoritario), décimas primeras
+ decimo primeras||decimoprimeras (uso mayoritario), décimas primeras
+ decimo primero||decimoprimero (uso mayoritario), décimo primero, undécimo
  décimo primeros||decimoprimeros (uso mayoritario), décimos primeros
+ decimo primeros||decimoprimeros (uso mayoritario), décimos primeros
  décimo quinta||decimoquinta (uso mayoritario), décima quinta
+ decimo quinta||decimoquinta (uso mayoritario), décima quinta
  décimo quintas||decimoquintas (uso mayoritario), décimas quintas
+ decimo quintas||decimoquintas (uso mayoritario), décimas quintas
  décimo quintos||decimoquintos (uso mayoritario), décimos quintos
+ decimo quintos||decimoquintos (uso mayoritario), décimos quintos
  décimo segunda||decimosegunda (uso mayoritario), décima segunda
+ decimo segunda||decimosegunda (uso mayoritario), décima segunda
  décimo segundas||decimosegundas (uso mayoritario), décimas segundas
+ decimo segundas||decimosegundas (uso mayoritario), décimas segundas
  décimo segundos||decimosegundos (uso mayoritario), décimos segundos
+ decimo segundos||decimosegundos (uso mayoritario), décimos segundos
  décimo septima||decimoséptima (uso mayoritario), décima séptima
  decimo séptima||decimoséptima (uso mayoritario), décima séptima
  décimo séptima||decimoséptima (uso mayoritario), décima séptima
@@ -931,22 +955,42 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  décimo séptimos||decimoséptimos (uso mayoritario), décimos séptimos
  decimo septimos||decimoséptimos (uso mayoritario), décimos séptimos
  décimo sexta||decimosexta (uso mayoritario), décima sexta
+ decimo sexta||decimosexta (uso mayoritario), décima sexta
  décimo sextas||decimosextas (uso mayoritario), décimas sextas
+ decimo sextas||decimosextas (uso mayoritario), décimas sextas
  décimo sextos||decimosextos (uso mayoritario), décimos sextos
- décimo tercer||decimotercer
- decimo tercer||decimotercer
+ decimo sextos||decimosextos (uso mayoritario), décimos sextos
+ decimo tercer||decimotercer (uso mayoritario), décimo tercer
  décimo tercera||decimotercera (uso mayoritario), décima tercera
+ decimo tercera||decimotercera (uso mayoritario), décima tercera
  décimo terceras||decimoterceras (uso mayoritario), décimas terceras
+ decimo terceras||decimoterceras (uso mayoritario), décimas terceras
  décimo terceros||decimoterceros (uso mayoritario), décimos terceros
- Decreto de Necesidad y Urgencia|cs|decreto de necesidad y urgencia, Decreto de necesidad y urgencia (para inicios de frase o columnas de tablas)
- decreto de Necesidad y Urgencia|cs|decreto de necesidad y urgencia, Decreto de necesidad y urgencia (para inicios de frase o columnas de tablas)
+ decimo terceros||decimoterceros (uso mayoritario), décimos terceros
+ de Cordoba||de Córdoba
+ Decreto de Necesidad y Urgencia|cs|decreto de necesidad y urgencia (con minúsculas si no se trata de uno específico), Decreto de necesidad y urgencia (para inicios de frase o columnas de tablas), Decreto de Necesidad y Urgencia (con mayúsculas si se trata de uno específico)
+ decreto de Necesidad y Urgencia|cs|decreto de necesidad y urgencia (con minúsculas si no se trata de uno específico), Decreto de necesidad y urgencia (para inicios de frase o columnas de tablas), Decreto de Necesidad y Urgencia (con mayúsculas si se trata de uno específico)
  Decretos de Necesidad y Urgencia|cs|decretos de necesidad y urgencia, Decretos de necesidad y urgencia (para inicios de frase o columnas de tablas)
  decretos de Necesidad y Urgencia|cs|decretos de necesidad y urgencia, Decretos de necesidad y urgencia (para inicios de frase o columnas de tablas)
+ de de|cs|de
+ de del|cs|del, de, del de
+ de el|cs|del, de él, de El, dé el, dé él
+ de el bosco|cs|del Bosco (pintor)
+ de el Bosco|cs|del Bosco (pintor)
+ de El bosco|cs|del Bosco (pintor)
+ de El Bosco|cs|del Bosco (pintor)
+ de el greco|cs|del Greco (pintor)
+ de el Greco|cs|del Greco (pintor)
+ de El greco|cs|del Greco (pintor)
+ de El Greco|cs|del Greco (pintor)
+ de estás||de estas
  de esté||de este
  dejo el||dejó el
  del al-Ándalus||del Ándalus, de al-Ándalus
+ delante suyo||delante de él, delante de ella, delante de sí
  del celebre||del célebre
  del cuál||del cual
+ del Escorial|cs|de El Escorial
  del genero||del género
  delirium tremens||''delirium tremens'' (locución en latín), Delirium Tremens (grupo musical, marca), «Delirium tremens» (canción)
  delírium tremens||''delirium tremens'' (locución en latín), Delirium Tremens (grupo musical, marca), «Delirium tremens» (canción)
@@ -956,8 +1000,8 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  del top ten||de la lista de los diez primeros, de la lista de las diez primeras, de la lista de los diez mejores, de la lista de las diez mejores, de la lista de los diez más populares, de la lista de las diez más populares, entre los diez primeros, entre las diez primeras, entre los diez mejores, entre las diez mejores, entre los diez más populares, entre las diez más populares
  de mas||de más, demás
  de Mexico||de México
+ de por si||de por sí
  desarrollo un||desarrolló un (verbo)
- delante suyo||delante de él, delante de ella, delante de sí
  detrás suyo||detrás de él, detrás de ella, detrás de sí
  director General|cs|director general, Director general (para inicios de frase o columnas de tablas)
  Director General|cs|director general, Director general (para inicios de frase o columnas de tablas)
@@ -977,6 +1021,14 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  distrito de Verdun||distrito de Verdún
  dm2||dm² (decímetro cuadrado), decímetro cuadrado, decímetros cuadrados
  dm3||dm³ (decímetro cúbico), decímetro cúbico, decímetros cúbicos
+ [[Doctorado honoris causa]]|cs|doctorado ''[[honoris causa]]'', Doctorado ''[[honoris causa]]'' (para inicios de frase o columnas de tablas)
+ [[Doctorado Honoris Causa]]|cs|doctorado ''[[honoris causa]]'', Doctorado ''[[honoris causa]]'' (para inicios de frase o columnas de tablas)
+ Doctorado honoris causa|cs|doctorado ''honoris causa'', Doctorado ''honoris causa'' (para inicios de frase o columnas de tablas)
+ Doctorado Honoris Causa|cs|doctorado ''honoris causa'', Doctorado ''honoris causa'' (para inicios de frase o columnas de tablas)
+ [[Doctor honoris causa]]|cs|doctor ''[[honoris causa]]'', Doctor ''[[honoris causa]]'' (para inicios de frase o columnas de tablas)
+ [[Doctor Honoris Causa]]|cs|doctor ''[[honoris causa]]'', Doctor ''[[honoris causa]]'' (para inicios de frase o columnas de tablas)
+ Doctor Honoris Causa|cs|doctor ''honoris causa'', Doctor ''honoris causa'' (para inicios de frase o columnas de tablas)
+ Doctor honoris causa|cs|doctor ''honoris causa'', Doctor ''honoris causa'' (para inicios de frase o columnas de tablas)
  donde paso||donde pasó
  drop shot||dejada (tenis)
 
@@ -988,9 +1040,7 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  edad antigua|cs|Edad Antigua
  edad Antigua|cs|Edad Antigua
  Edad antigua|cs|Edad Antigua
- edad contemporanea|cs|Edad Contemporánea
- edad Contemporanea|cs|Edad Contemporánea
- Edad contemporanea|cs|Edad Contemporánea
+ edad contemporanea||Edad Contemporánea
  edad contemporánea|cs|Edad Contemporánea
  edad Contemporánea|cs|Edad Contemporánea
  Edad contemporánea|cs|Edad Contemporánea
@@ -1021,6 +1071,7 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  el autoestima||la autoestima
  el cuál||el cual
  el el||el, en el
+ el Escorial|cs|El Escorial
  el interfaz||la interfaz (es sustantivo femenino)
  el mas||el más
  el proximo||el próximo
@@ -1054,6 +1105,7 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  enterándose que||enterándose de que
  enterarse que||enterarse de que
  entorno a||en torno a (locución adverbial)
+ entorno al||en torno al (locución adverbial)
  entre medias||entremedias (entre dos lugares, cosas o tiempos)
  entre si||entre sí (pronombre), entre si (conjunción, o nota musical)
  es mas||es más
@@ -1075,12 +1127,12 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  esta disponible||está disponible
  esta dividida||está dividida
  esta dividido||está dividido
- Estado de Bienestar|cs|estado de bienestar
- Estado de bienestar|cs|estado de bienestar
- estado de Bienestar|cs|estado de bienestar
- Estado del Bienestar|cs|estado del bienestar
- Estado del bienestar|cs|estado del bienestar
- estado del Bienestar|cs|estado del bienestar
+ Estado de Bienestar|cs|estado de bienestar, Estado de bienestar (para inicios de frase o columnas de tablas)
+ Estado de bienestar|cs|estado de bienestar, Estado de bienestar (para inicios de frase o columnas de tablas)
+ estado de Bienestar|cs|estado de bienestar, Estado de bienestar (para inicios de frase o columnas de tablas)
+ Estado del Bienestar|cs|estado del bienestar, Estado del bienestar (para inicios de frase o columnas de tablas)
+ Estado del bienestar|cs|estado del bienestar, Estado del bienestar (para inicios de frase o columnas de tablas)
+ estado del Bienestar|cs|estado del bienestar, Estado del bienestar (para inicios de frase o columnas de tablas)
  estados miembro|cs|Estados miembro
  Estados Miembro|cs|Estados miembro
  estados miembros|cs|Estados miembros
@@ -1146,10 +1198,18 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  éste mismo||este mismo
  éste modelo||este modelo
  éste modo||este modo
+ este nordeste||estenordeste
+ este-nordeste||estenordeste
+ este noreste||estenoreste
+ este-noreste||estenoreste
  éste nuevo||este nuevo
  éste país||este país
  éste periodo||este periodo
  éste período||este período
+ este sudeste||estesudeste
+ este-sudeste||estesudeste
+ este sureste||estesureste
+ este-sureste||estesureste
  éste tema||este tema
  éste tipo||este tipo
  éste último|| este último
@@ -1157,6 +1217,21 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  éstos últimos||estos últimos
  es un es un||es un
  es una es una||es una
+ etc...||etc., etcétera.
+ etc, etc.||etc., etcétera.
+ etc, etc...||etc., etcétera.
+ etc. etc.||etc., etcétera.
+ etc. etc...||etc., etcétera.
+ etc., etc.||etc., etcétera.
+ etc., etc...||etc., etcétera.
+ etc, etc, etc.||etc., etcétera.
+ etc, etc, etc...||etc., etcétera.
+ etc. etc. etc.||etc., etcétera.
+ etc. etc. etc...||etc., etcétera.
+ etc., etc., etc.||etc., etcétera.
+ etc., etc., etc...||etc., etcétera.
+ etcetera...||etc., etcétera.
+ etcétera...||etc., etcétera.
  ex agente||exagente
  ex-agente||exagente
  ex agentes||exagentes
@@ -1319,7 +1394,7 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  ex-presidente||expresidente
  ex presidentes||expresidentes
  ex-presidentes||expresidentes
- ex preso||ex-preso
+ ex preso||ex-preso (para referirse a alguien que ya no es preso)
  ex-preso||expreso (para referirse a una vía de transporte o la rapidez de algo), ex-preso (para referirse a alguien que ya no es preso)
  exprimera dama||ex primera dama
  exprimera ministra||ex primera ministra
@@ -1343,6 +1418,14 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  ex-senadoras||exsenadoras
  ex senadores||exsenadores
  ex-senadores||exsenadores
+ extra pesada||extrapesada
+ extra-pesada||extrapesada
+ extra pesadas||extrapesadas
+ extra-pesadas||extrapesadas
+ extra pesado||extrapesado
+ extra-pesado||extrapesado
+ extra pesados||extrapesados
+ extra-pesados||extrapesados
  ex vice presidenta||exvicepresidenta
  ex-vice-presidenta||exvicepresidenta
  ex vicepresidenta||exvicepresidenta
@@ -1353,26 +1436,477 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  ex-vicepresidente||exvicepresidente
 
 == F ==
-
+ Fase de Grupos|cs|fase de grupos (en medio de oración), Fase de grupos (para inicios de frase o columnas de tablas)
+ ffaa||FF.&nbsp;AA. (Fuerzas Armadas)
+ ff.aa.||FF.&nbsp;AA. (Fuerzas Armadas)
  fue sido||fue, ha sido
 
 == G ==
 
- golpe de estado|cs|golpe de Estado
- Golpe de estado|cs|Golpe de Estado
+ golpe de estado|cs|golpe de Estado, Golpe de Estado (para inicios de frase o columnas de tablas)
+ Golpe de estado|cs|golpe de Estado, Golpe de Estado (para inicios de frase o columnas de tablas)
  grandes perdidas||grandes pérdidas
  gr. de||g de (símbolo de gramos —no lleva punto—)
- Guerra Civil Española|cs|guerra civil española
- Guerra Civil española|cs|guerra civil española
- Guerra civil Española|cs|guerra civil española
- Guerra Civil Estadounidense|cs|guerra civil estadounidense
- Guerra Civil estadounidense|cs|guerra civil estadounidense
- Guerra civil Estadounidense|cs|guerra civil estadounidense
- Guerra de las Malvinas|cs|guerra de las Malvinas
+ Guerra Angloestadounidense|cs|guerra anglo-estadounidense, Guerra anglo-estadounidense (para inicios de frase o columnas de tablas)
+ Guerra Anglo Estadounidense|cs|guerra anglo-estadounidense, Guerra anglo-estadounidense (para inicios de frase o columnas de tablas)
+ Guerra Anglo-Estadounidense|cs|guerra anglo-estadounidense, Guerra anglo-estadounidense (para inicios de frase o columnas de tablas)
+ Guerra anglo estadounidense|cs|guerra anglo-estadounidense, Guerra anglo-estadounidense (para inicios de frase o columnas de tablas)
+ Guerra anglo-estadounidense|cs|guerra anglo-estadounidense, Guerra anglo-estadounidense (para inicios de frase o columnas de tablas)
+ Guerra Anglo-Zulu|cs|guerra anglo-zulú, Guerra anglo-zulú (para inicios de frase o columnas de tablas)
+ Guerra Anglo-Zulú|cs|guerra anglo-zulú, Guerra anglo-zulú (para inicios de frase o columnas de tablas)
+ Guerra anglo-Zulu|cs|guerra anglo-zulú, Guerra anglo-zulú (para inicios de frase o columnas de tablas)
+ Guerra anglo-Zulú|cs|guerra anglo-zulú, Guerra anglo-zulú (para inicios de frase o columnas de tablas)
+ Guerra Anglo-zulu|cs|guerra anglo-zulú, Guerra anglo-zulú (para inicios de frase o columnas de tablas)
+ Guerra Anglo-zulú|cs|guerra anglo-zulú, Guerra anglo-zulú (para inicios de frase o columnas de tablas)
+ Guerra anglo-zulu|cs|guerra anglo-zulú, Guerra anglo-zulú (para inicios de frase o columnas de tablas)
+ Guerra anglo-zulú|cs|guerra anglo-zulú, Guerra anglo-zulú (para inicios de frase o columnas de tablas)
+ Guerra Árabe-Israelí|cs|guerra árabe-israelí, Guerra árabe-israelí (para inicios de frase o columnas de tablas)
+ Guerra árabe-Israelí|cs|guerra árabe-israelí, Guerra árabe-israelí (para inicios de frase o columnas de tablas)
+ Guerra Árabe-israelí|cs|guerra árabe-israelí, Guerra árabe-israelí (para inicios de frase o columnas de tablas)
+ Guerra árabe-israelí|cs|guerra árabe-israelí, Guerra árabe-israelí (para inicios de frase o columnas de tablas)
+ Guerra Austro Prusiana|cs|guerra austro-prusiana, Guerra austro-prusiana (para inicios de frase o columnas de tablas)
+ Guerra Austro-Prusiana|cs|guerra austro-prusiana, Guerra austro-prusiana (para inicios de frase o columnas de tablas)
+ Guerra austro prusiana|cs|guerra austro-prusiana, Guerra austro-prusiana (para inicios de frase o columnas de tablas)
+ Guerra austro-prusiana|cs|guerra austro-prusiana, Guerra austro-prusiana (para inicios de frase o columnas de tablas)
+ Guerra Camboyano-Vietnamita|cs|guerra camboyano-vietnamita, Guerra camboyano-vietnamita (para inicios de frase o columnas de tablas)
+ Guerra camboyano-Vietnamita|cs|guerra camboyano-vietnamita, Guerra camboyano-vietnamita (para inicios de frase o columnas de tablas)
+ Guerra Camboyano-vietnamita|cs|guerra camboyano-vietnamita, Guerra camboyano-vietnamita (para inicios de frase o columnas de tablas)
+ Guerra camboyano-vietnamita|cs|guerra camboyano-vietnamita, Guerra camboyano-vietnamita (para inicios de frase o columnas de tablas)
+ Guerra Civil Americana|cs|guerra civil americana, Guerra civil americana (para inicios de frase o columnas de tablas)
+ Guerra civil Americana|cs|guerra civil americana, Guerra civil americana (para inicios de frase o columnas de tablas)
+ Guerra Civil americana|cs|guerra civil americana, Guerra civil americana (para inicios de frase o columnas de tablas)
+ Guerra civil americana|cs|guerra civil americana, Guerra civil americana (para inicios de frase o columnas de tablas)
+ Guerra Civil Angoleña|cs|guerra civil angoleña, Guerra civil angoleña (para inicios de frase o columnas de tablas)
+ Guerra civil Angoleña|cs|guerra civil angoleña, Guerra civil angoleña (para inicios de frase o columnas de tablas)
+ Guerra Civil angoleña|cs|guerra civil angoleña, Guerra civil angoleña (para inicios de frase o columnas de tablas)
+ Guerra civil angoleña|cs|guerra civil angoleña, Guerra civil angoleña (para inicios de frase o columnas de tablas)
+ Guerra Civil Argelina|cs|guerra civil argelina, Guerra civil argelina (para inicios de frase o columnas de tablas)
+ Guerra civil Argelina|cs|guerra civil argelina, Guerra civil argelina (para inicios de frase o columnas de tablas)
+ Guerra Civil argelina|cs|guerra civil argelina, Guerra civil argelina (para inicios de frase o columnas de tablas)
+ Guerra civil argelina|cs|guerra civil argelina, Guerra civil argelina (para inicios de frase o columnas de tablas)
+ Guerra Civil Boliviana|cs|guerra civil boliviana, Guerra civil boliviana (para inicios de frase o columnas de tablas)
+ Guerra civil Boliviana|cs|guerra civil boliviana, Guerra civil boliviana (para inicios de frase o columnas de tablas)
+ Guerra Civil boliviana|cs|guerra civil boliviana, Guerra civil boliviana (para inicios de frase o columnas de tablas)
+ Guerra civil boliviana|cs|guerra civil boliviana, Guerra civil boliviana (para inicios de frase o columnas de tablas)
+ Guerra Civil Camboyana|cs|guerra civil camboyana, Guerra civil camboyana (para inicios de frase o columnas de tablas)
+ Guerra Civil camboyana|cs|guerra civil camboyana, Guerra civil camboyana (para inicios de frase o columnas de tablas)
+ Guerra civil Camboyana|cs|guerra civil camboyana, Guerra civil camboyana (para inicios de frase o columnas de tablas)
+ Guerra civil camboyana|cs|guerra civil camboyana, Guerra civil camboyana (para inicios de frase o columnas de tablas)
+ Guerra Civil Centroamericana|cs|guerra civil centroamericana, Guerra civil centroamericana (para inicios de frase o columnas de tablas)
+ Guerra civil Centroamericana|cs|guerra civil centroamericana, Guerra civil centroamericana (para inicios de frase o columnas de tablas)
+ Guerra Civil centroamericana|cs|guerra civil centroamericana, Guerra civil centroamericana (para inicios de frase o columnas de tablas)
+ Guerra civil centroamericana|cs|guerra civil centroamericana, Guerra civil centroamericana (para inicios de frase o columnas de tablas)
+ Guerra Civil Chilena|cs|guerra civil chilena, Guerra civil chilena (para inicios de frase o columnas de tablas)
+ Guerra civil Chilena|cs|guerra civil chilena, Guerra civil chilena (para inicios de frase o columnas de tablas)
+ Guerra Civil chilena|cs|guerra civil chilena, Guerra civil chilena (para inicios de frase o columnas de tablas)
+ Guerra civil chilena|cs|guerra civil chilena, Guerra civil chilena (para inicios de frase o columnas de tablas)
+ Guerra Civil China|cs|guerra civil china, Guerra civil china (para inicios de frase o columnas de tablas)
+ Guerra civil China|cs|guerra civil china, Guerra civil china (para inicios de frase o columnas de tablas)
+ Guerra Civil china|cs|guerra civil china, Guerra civil china (para inicios de frase o columnas de tablas)
+ Guerra civil china|cs|guerra civil china, Guerra civil china (para inicios de frase o columnas de tablas)
+ Guerra Civil de Angola|cs|guerra civil de Angola, Guerra civil de Angola (para inicios de frase o columnas de tablas)
+ Guerra civil de Angola|cs|guerra civil de Angola, Guerra civil de Angola (para inicios de frase o columnas de tablas)
+ Guerra Civil de Camboya|cs|guerra civil de Camboya, Guerra civil de Camboya (para inicios de frase o columnas de tablas)
+ Guerra Civil de El Salvador|cs|guerra civil de El Salvador, Guerra civil de El Salvador (para inicios de frase o columnas de tablas)
+ Guerra civil de El Salvador|cs|guerra civil de El Salvador, Guerra civil de El Salvador (para inicios de frase o columnas de tablas)
+ Guerra Civil de Laos|cs|guerra civil de Laos, Guerra civil de Laos (para inicios de frase o columnas de tablas)
+ Guerra civil de Laos|cs|guerra civil de Laos, Guerra civil de Laos (para inicios de frase o columnas de tablas)
+ Guerra Civil de Nigeria|cs|guerra civil de Nigeria, Guerra civil de Nigeria (para inicios de frase o columnas de tablas)
+ Guerra civil de Nigeria|cs|guerra civil de Nigeria, Guerra civil de Nigeria (para inicios de frase o columnas de tablas)
+ Guerra Civil de Rhodesia|cs|guerra civil de Rodesia, Guerra civil de Rodesia (para inicios de frase o columnas de tablas)
+ Guerra civil de Rhodesia|cs|guerra civil de Rodesia, Guerra civil de Rodesia (para inicios de frase o columnas de tablas)
+ Guerra Civil de Rodesia|cs|guerra civil de Rodesia, Guerra civil de Rodesia (para inicios de frase o columnas de tablas)
+ Guerra civil de Rodesia|cs|guerra civil de Rodesia, Guerra civil de Rodesia (para inicios de frase o columnas de tablas)
+ Guerra Civil de Sierra Leona|cs|guerra civil de Sierra Leona, Guerra civil de Sierra Leona (para inicios de frase o columnas de tablas)
+ Guerra civil de Sierra Leona|cs|guerra civil de Sierra Leona, Guerra civil de Sierra Leona (para inicios de frase o columnas de tablas)
+ Guerra Civil de Somalia|cs|guerra civil de Somalia, Guerra civil de Somalia (para inicios de frase o columnas de tablas)
+ Guerra civil de Somalia|cs|guerra civil de Somalia, Guerra civil de Somalia (para inicios de frase o columnas de tablas)
+ Guerra Civil de somalia|cs|guerra civil de Somalia, Guerra civil de Somalia (para inicios de frase o columnas de tablas)
+ Guerra civil de somalia|cs|guerra civil de Somalia, Guerra civil de Somalia (para inicios de frase o columnas de tablas)
+ Guerra Civil Española|cs|guerra civil española, Guerra civil española (para inicios de frase o columnas de tablas)
+ Guerra Civil española|cs|guerra civil española, Guerra civil española (para inicios de frase o columnas de tablas)
+ Guerra civil Española|cs|guerra civil española, Guerra civil española (para inicios de frase o columnas de tablas)
+ Guerra civil española|cs|guerra civil española, Guerra civil española (para inicios de frase o columnas de tablas)
+ Guerra Civil Estadounidense|cs|guerra civil estadounidense, Guerra civil estadounidense (para inicios de frase o columnas de tablas)
+ Guerra Civil estadounidense|cs|guerra civil estadounidense, Guerra civil estadounidense (para inicios de frase o columnas de tablas)
+ Guerra civil Estadounidense|cs|guerra civil estadounidense, Guerra civil estadounidense (para inicios de frase o columnas de tablas)
+ Guerra civil estadounidense|cs|guerra civil estadounidense, Guerra civil estadounidense (para inicios de frase o columnas de tablas)
+ Guerra Civil Europea|cs|guerra civil europea, Guerra civil europea (para inicios de frase o columnas de tablas)
+ Guerra civil Europea|cs|guerra civil europea, Guerra civil europea (para inicios de frase o columnas de tablas)
+ Guerra Civil europea|cs|guerra civil europea, Guerra civil europea (para inicios de frase o columnas de tablas)
+ Guerra civil europea|cs|guerra civil europea, Guerra civil europea (para inicios de frase o columnas de tablas)
+ Guerra Civil Griega|cs|guerra civil griega, Guerra civil griega (para inicios de frase o columnas de tablas)
+ Guerra civil Griega|cs|guerra civil griega, Guerra civil griega (para inicios de frase o columnas de tablas)
+ Guerra Civil griega|cs|guerra civil griega, Guerra civil griega (para inicios de frase o columnas de tablas)
+ Guerra civil griega|cs|guerra civil griega, Guerra civil griega (para inicios de frase o columnas de tablas)
+ Guerra Civil Inglesa|cs|guerra civil inglesa, Guerra civil inglesa (para inicios de frase o columnas de tablas)
+ Guerra civil Inglesa|cs|guerra civil inglesa, Guerra civil inglesa (para inicios de frase o columnas de tablas)
+ Guerra Civil inglesa|cs|guerra civil inglesa, Guerra civil inglesa (para inicios de frase o columnas de tablas)
+ Guerra civil inglesa|cs|guerra civil inglesa, Guerra civil inglesa (para inicios de frase o columnas de tablas)
+ Guerra Civil Iraquí|cs|guerra civil iraquí, Guerra civil iraquí (para inicios de frase o columnas de tablas)
+ Guerra civil Iraquí|cs|guerra civil iraquí, Guerra civil iraquí (para inicios de frase o columnas de tablas)
+ Guerra Civil iraquí|cs|guerra civil iraquí, Guerra civil iraquí (para inicios de frase o columnas de tablas)
+ Guerra civil iraquí|cs|guerra civil iraquí, Guerra civil iraquí (para inicios de frase o columnas de tablas)
+ Guerra Civil Irlandesa|cs|guerra civil irlandesa, Guerra civil irlandesa (para inicios de frase o columnas de tablas)
+ Guerra civil Irlandesa|cs|guerra civil irlandesa, Guerra civil irlandesa (para inicios de frase o columnas de tablas)
+ Guerra Civil irlandesa|cs|guerra civil irlandesa, Guerra civil irlandesa (para inicios de frase o columnas de tablas)
+ Guerra civil irlandesa|cs|guerra civil irlandesa, Guerra civil irlandesa (para inicios de frase o columnas de tablas)
+ Guerra Civil Libanesa|cs|guerra civil libanesa, Guerra civil libanesa (para inicios de frase o columnas de tablas)
+ Guerra civil Libanesa|cs|guerra civil libanesa, Guerra civil libanesa (para inicios de frase o columnas de tablas)
+ Guerra Civil libanesa|cs|guerra civil libanesa, Guerra civil libanesa (para inicios de frase o columnas de tablas)
+ Guerra civil libanesa|cs|guerra civil libanesa, Guerra civil libanesa (para inicios de frase o columnas de tablas)
+ Guerra Civil Libia|cs|guerra civil libia, Guerra civil libia (para inicios de frase o columnas de tablas)
+ Guerra civil Libia|cs|guerra civil libia, Guerra civil libia (para inicios de frase o columnas de tablas)
+ Guerra Civil libia|cs|guerra civil libia, Guerra civil libia (para inicios de frase o columnas de tablas)
+ Guerra civil libia|cs|guerra civil libia, Guerra civil libia (para inicios de frase o columnas de tablas)
+ Guerra Civil Peruana|cs|guerra civil peruana, Guerra civil peruana (para inicios de frase o columnas de tablas)
+ Guerra civil Peruana|cs|guerra civil peruana, Guerra civil peruana (para inicios de frase o columnas de tablas)
+ Guerra Civil peruana|cs|guerra civil peruana, Guerra civil peruana (para inicios de frase o columnas de tablas)
+ Guerra civil peruana|cs|guerra civil peruana, Guerra civil peruana (para inicios de frase o columnas de tablas)
+ Guerra Civil Portuguesa|cs|guerra civil portuguesa, Guerra civil portuguesa (para inicios de frase o columnas de tablas)
+ Guerra civil Portuguesa|cs|guerra civil portuguesa, Guerra civil portuguesa (para inicios de frase o columnas de tablas)
+ Guerra Civil portuguesa|cs|guerra civil portuguesa, Guerra civil portuguesa (para inicios de frase o columnas de tablas)
+ Guerra civil portuguesa|cs|guerra civil portuguesa, Guerra civil portuguesa (para inicios de frase o columnas de tablas)
+ Guerra Civil Rusa|cs|guerra civil rusa, Guerra civil rusa (para inicios de frase o columnas de tablas)
+ Guerra civil Rusa|cs|guerra civil rusa, Guerra civil rusa (para inicios de frase o columnas de tablas)
+ Guerra Civil rusa|cs|guerra civil rusa, Guerra civil rusa (para inicios de frase o columnas de tablas)
+ Guerra civil rusa|cs|guerra civil rusa, Guerra civil rusa (para inicios de frase o columnas de tablas)
+ Guerra Civil Siria|cs|guerra civil siria, Guerra civil siria (para inicios de frase o columnas de tablas)
+ Guerra civil Siria|cs|guerra civil siria, Guerra civil siria (para inicios de frase o columnas de tablas)
+ Guerra Civil siria|cs|guerra civil siria, Guerra civil siria (para inicios de frase o columnas de tablas)
+ Guerra civil siria|cs|guerra civil siria, Guerra civil siria (para inicios de frase o columnas de tablas)
+ Guerra Civil Somalí|cs|guerra civil somalí, Guerra civil somalí (para inicios de frase o columnas de tablas)
+ Guerra civil Somalí|cs|guerra civil somalí, Guerra civil somalí (para inicios de frase o columnas de tablas)
+ Guerra Civil somalí|cs|guerra civil somalí, Guerra civil somalí (para inicios de frase o columnas de tablas)
+ Guerra civil somalí|cs|guerra civil somalí, Guerra civil somalí (para inicios de frase o columnas de tablas)
+ Guerra Colombo-Peruana|cs|guerra colombo-peruana, Guerra colombo-peruana (para inicios de frase o columnas de tablas)
+ Guerra colombo-Peruana|cs|guerra colombo-peruana, Guerra colombo-peruana (para inicios de frase o columnas de tablas)
+ Guerra Colombo-peruana|cs|guerra colombo-peruana, Guerra colombo-peruana (para inicios de frase o columnas de tablas)
+ Guerra colombo-peruana|cs|guerra colombo-peruana, Guerra colombo-peruana (para inicios de frase o columnas de tablas)
+ Guerra Colonial Portuguesa|cs|guerra colonial portuguesa, Guerra colonial portuguesa (para inicios de frase o columnas de tablas)
+ Guerra colonial Portuguesa|cs|guerra colonial portuguesa, Guerra colonial portuguesa (para inicios de frase o columnas de tablas)
+ Guerra Colonial portuguesa|cs|guerra colonial portuguesa, Guerra colonial portuguesa (para inicios de frase o columnas de tablas)
+ Guerra colonial portuguesa|cs|guerra colonial portuguesa, Guerra colonial portuguesa (para inicios de frase o columnas de tablas)
+ Guerra de Abjasia|cs|guerra de Abjasia, Guerra de Abjasia (para inicios de frase o columnas de tablas)
+ Guerra de abjasia|cs|guerra de Abjasia, Guerra de Abjasia (para inicios de frase o columnas de tablas)
+ Guerra de Afganistán|cs|guerra de Afganistán, Guerra de Afganistán (para inicios de frase o columnas de tablas)
+ Guerra de África|cs|guerra de África, Guerra de África (para inicios de frase o columnas de tablas)
+ Guerra de Bosnia|cs|guerra de Bosnia, Guerra de Bosnia (para inicios de frase o columnas de tablas)
+ Guerra de Corea|cs|guerra de Corea, Guerra de Corea (para inicios de frase o columnas de tablas)
+ Guerra de Corinto|cs|guerra de Corinto, Guerra de Corinto (para inicios de frase o columnas de tablas)
+ Guerra de corinto|cs|guerra de Corinto, Guerra de Corinto (para inicios de frase o columnas de tablas)
+ Guerra de Creta|cs|guerra de Creta, Guerra de Creta (para inicios de frase o columnas de tablas)
+ Guerra de creta|cs|guerra de Creta, Guerra de Creta (para inicios de frase o columnas de tablas)
+ Guerra de Croacia|cs|guerra de Croacia, Guerra de Croacia (para inicios de frase o columnas de tablas)
+ Guerra de Cuba|cs|guerra de Cuba, Guerra de Cuba (para inicios de frase o columnas de tablas)
+ Guerra de Escania|cs|guerra de Escania, Guerra de Escania (para inicios de frase o columnas de tablas)
+ Guerra de escania|cs|guerra de Escania, Guerra de Escania (para inicios de frase o columnas de tablas)
+ Guerra de Flandes|cs|guerra de Flandes, Guerra de Flandes (para inicios de frase o columnas de tablas)
+ Guerra de flandes|cs|guerra de Flandes, Guerra de Flandes (para inicios de frase o columnas de tablas)
+ Guerra de Independencia Cubana|cs|guerra de Independencia cubana, Guerra de Independencia cubana (para inicios de frase o columnas de tablas)
+ Guerra de independencia Cubana|cs|guerra de Independencia cubana, Guerra de Independencia cubana (para inicios de frase o columnas de tablas)
+ Guerra de Independencia cubana|cs|guerra de Independencia cubana, Guerra de Independencia cubana (para inicios de frase o columnas de tablas)
+ Guerra de independencia cubana|cs|guerra de Independencia cubana, Guerra de Independencia cubana (para inicios de frase o columnas de tablas)
+ Guerra de Independencia de Argelia|cs|guerra de Independencia de Argelia, Guerra de Independencia de Argelia (para inicios de frase o columnas de tablas)
+ Guerra de independencia de Argelia|cs|guerra de Independencia de Argelia, Guerra de Independencia de Argelia (para inicios de frase o columnas de tablas)
+ Guerra de Independencia de Brasil|cs|guerra de Independencia de Brasil, Guerra de Independencia de Brasil (para inicios de frase o columnas de tablas)
+ Guerra de independencia de Brasil|cs|guerra de Independencia de Brasil, Guerra de Independencia de Brasil (para inicios de frase o columnas de tablas)
+ Guerra de Independencia de Colombia|cs|guerra de Independencia de Colombia, Guerra de Independencia de Colombia (para inicios de frase o columnas de tablas)
+ Guerra de independencia de Colombia|cs|guerra de Independencia de Colombia, Guerra de Independencia de Colombia (para inicios de frase o columnas de tablas)
+ Guerra de Independencia de Croacia|cs|guerra de Independencia de Croacia, Guerra de Independencia de Croacia (para inicios de frase o columnas de tablas)
+ Guerra de independencia de Croacia|cs|guerra de Independencia de Croacia, Guerra de Independencia de Croacia (para inicios de frase o columnas de tablas)
+ Guerra de Independencia de Estados Unidos|cs|guerra de Independencia de Estados Unidos, Guerra de Independencia de Estados Unidos (para inicios de frase o columnas de tablas)
+ Guerra de independencia de Estados Unidos|cs|guerra de Independencia de Estados Unidos, Guerra de Independencia de Estados Unidos (para inicios de frase o columnas de tablas)
+ Guerra de Independencia de Estonia|cs|guerra de Independencia de Estonia, Guerra de Independencia de Estonia (para inicios de frase o columnas de tablas)
+ Guerra de independencia de Estonia|cs|guerra de Independencia de Estonia, Guerra de Independencia de Estonia (para inicios de frase o columnas de tablas)
+ Guerra de Independencia de Grecia|cs|guerra de Independencia de Grecia, Guerra de Independencia de Grecia (para inicios de frase o columnas de tablas)
+ Guerra de independencia de Grecia|cs|guerra de Independencia de Grecia, Guerra de Independencia de Grecia (para inicios de frase o columnas de tablas)
+ Guerra de Independencia de Israel|cs|guerra de Independencia de Israel, Guerra de Independencia de Israel (para inicios de frase o columnas de tablas)
+ Guerra de independencia de Israel|cs|guerra de Independencia de Israel, Guerra de Independencia de Israel (para inicios de frase o columnas de tablas)
+ Guerra de Independencia de Letonia|cs|guerra de Independencia de Letonia, Guerra de Independencia de Letonia (para inicios de frase o columnas de tablas)
+ Guerra de independencia de Letonia|cs|guerra de Independencia de Letonia, Guerra de Independencia de Letonia (para inicios de frase o columnas de tablas)
+ Guerra de Independencia de los Estados Unidos|cs|guerra de Independencia de los Estados Unidos, Guerra de Independencia de los Estados Unidos (para inicios de frase o columnas de tablas)
+ Guerra de independencia de los Estados Unidos|cs|guerra de Independencia de los Estados Unidos, Guerra de Independencia de los Estados Unidos (para inicios de frase o columnas de tablas)
+ Guerra de Independencia de México|cs|guerra de Independencia de México, Guerra de Independencia de México (para inicios de frase o columnas de tablas)
+ Guerra de independencia de México|cs|guerra de Independencia de México, Guerra de Independencia de México (para inicios de frase o columnas de tablas)
+ Guerra de Independencia de Mozambique|cs|guerra de Independencia de Mozambique, Guerra de Independencia de Mozambique (para inicios de frase o columnas de tablas)
+ Guerra de independencia de Mozambique|cs|guerra de Independencia de Mozambique, Guerra de Independencia de Mozambique (para inicios de frase o columnas de tablas)
+ Guerra de Independencia de Rákóczi|cs|guerra de Independencia de Rákóczi, Guerra de Independencia de Rákóczi (para inicios de frase o columnas de tablas)
+ Guerra de independencia de Rákóczi|cs|guerra de Independencia de Rákóczi, Guerra de Independencia de Rákóczi (para inicios de frase o columnas de tablas)
+ Guerra de Independencia de Texas|cs|guerra de Independencia de Texas, Guerra de Independencia de Texas (para inicios de frase o columnas de tablas)
+ Guerra de independencia de Texas|cs|guerra de Independencia de Texas, Guerra de Independencia de Texas (para inicios de frase o columnas de tablas)
+ Guerra de Independencia de Venezuela|cs|guerra de Independencia de Venezuela, Guerra de Independencia de Venezuela (para inicios de frase o columnas de tablas)
+ Guerra de independencia de Venezuela|cs|guerra de Independencia de Venezuela, Guerra de Independencia de Venezuela (para inicios de frase o columnas de tablas)
+ Guerra de Independencia Irlandesa|cs|guerra de Independencia irlandesa, Guerra de Independencia irlandesa (para inicios de frase o columnas de tablas)
+ Guerra de independencia Irlandesa|cs|guerra de Independencia irlandesa, Guerra de Independencia irlandesa (para inicios de frase o columnas de tablas)
+ Guerra de Independencia irlandesa|cs|guerra de Independencia irlandesa, Guerra de Independencia irlandesa (para inicios de frase o columnas de tablas)
+ Guerra de independencia irlandesa|cs|guerra de Independencia irlandesa, Guerra de Independencia irlandesa (para inicios de frase o columnas de tablas)
+ Guerra de Independencia Turca|cs|guerra de Independencia turca, Guerra de Independencia turca (para inicios de frase o columnas de tablas)
+ Guerra de independencia Turca|cs|guerra de Independencia turca, Guerra de Independencia turca (para inicios de frase o columnas de tablas)
+ Guerra de Independencia turca|cs|guerra de Independencia turca, Guerra de Independencia turca (para inicios de frase o columnas de tablas)
+ Guerra de independencia turca|cs|guerra de Independencia turca, Guerra de Independencia turca (para inicios de frase o columnas de tablas)
+ Guerra de Indochina|cs|guerra de Indochina, Guerra de Indochina (para inicios de frase o columnas de tablas)
+ Guerra de Irak|cs|guerra de Irak, Guerra de Irak (para inicios de frase o columnas de tablas)
+ Guerra de Irán-Irak|cs|guerra entre Irán e Irak, Guerra entre Irán e Irak (para inicios de frase o columnas de tablas)
+ Guerra de Kargil|cs|guerra de Kargil, Guerra de Kargil (para inicios de frase o columnas de tablas)
+ Guerra de Kosovo|cs|guerra de Kosovo, Guerra de Kosovo (para inicios de frase o columnas de tablas)
+ Guerra de Kósovo|cs|guerra de Kosovo, Guerra de Kosovo (para inicios de frase o columnas de tablas)
+ Guerra de la Convención|cs|guerra de la Convención, Guerra de la Convención (para inicios de frase o columnas de tablas)
+ Guerra de la convención|cs|guerra de la Convención, Guerra de la Convención (para inicios de frase o columnas de tablas)
+ Guerra del Acre|cs|guerra del Acre, Guerra del Acre (para inicios de frase o columnas de tablas)
+ Guerra del acre|cs|guerra del Acre, Guerra del Acre (para inicios de frase o columnas de tablas)
+ Guerra de la Cuádruple Alianza|cs|guerra de la Cuádruple Alianza, Guerra de la Cuádruple Alianza (para inicios de frase o columnas de tablas)
+ Guerra de la cuádruple Alianza|cs|guerra de la Cuádruple Alianza, Guerra de la Cuádruple Alianza (para inicios de frase o columnas de tablas)
+ Guerra de la Cuádruple alianza|cs|guerra de la Cuádruple Alianza, Guerra de la Cuádruple Alianza (para inicios de frase o columnas de tablas)
+ Guerra de la cuádruple alianza|cs|guerra de la Cuádruple Alianza, Guerra de la Cuádruple Alianza (para inicios de frase o columnas de tablas)
+ Guerra de la Independencia de Angola|cs|guerra de la Independencia de Angola, Guerra de la Independencia de Angola (para inicios de frase o columnas de tablas)
+ Guerra de la independencia de Angola|cs|guerra de la Independencia de Angola, Guerra de la Independencia de Angola (para inicios de frase o columnas de tablas)
+ Guerra de la Independencia de Bolivia|cs|guerra de la Independencia de Bolivia, Guerra de la Independencia de Bolivia (para inicios de frase o columnas de tablas)
+ Guerra de la independencia de Bolivia|cs|guerra de la Independencia de Bolivia, Guerra de la Independencia de Bolivia (para inicios de frase o columnas de tablas)
+ Guerra de la Independencia de Chile|cs|guerra de la Independencia de Chile, Guerra de la Independencia de Chile (para inicios de frase o columnas de tablas)
+ Guerra de la independencia de Chile|cs|guerra de la Independencia de Chile, Guerra de la Independencia de Chile (para inicios de frase o columnas de tablas)
+ Guerra de la Independencia de Cuba|cs|guerra de la Independencia de Cuba, Guerra de la Independencia de Cuba (para inicios de frase o columnas de tablas)
+ Guerra de la independencia de Cuba|cs|guerra de la Independencia de Cuba, Guerra de la Independencia de Cuba (para inicios de frase o columnas de tablas)
+ Guerra de la Independencia de Eritrea|cs|guerra de la Independencia de Eritrea, Guerra de la Independencia de Eritrea (para inicios de frase o columnas de tablas)
+ Guerra de la independencia de Eritrea|cs|guerra de la Independencia de Eritrea, Guerra de la Independencia de Eritrea (para inicios de frase o columnas de tablas)
+ Guerra de la Independencia de Israel|cs|guerra de la Independencia de Israel, Guerra de la Independencia de Israel (para inicios de frase o columnas de tablas)
+ Guerra de la independencia de Israel|cs|guerra de la Independencia de Israel, Guerra de la Independencia de Israel (para inicios de frase o columnas de tablas)
+ Guerra de la Independencia de México|cs|guerra de la Independencia de México, Guerra de la Independencia de México (para inicios de frase o columnas de tablas)
+ Guerra de la independencia de México|cs|guerra de la Independencia de México, Guerra de la Independencia de México (para inicios de frase o columnas de tablas)
+ Guerra de la Independencia Estadounidense|cs|guerra de la Independencia estadounidense, Guerra de la Independencia estadounidense (para inicios de frase o columnas de tablas)
+ Guerra de la independencia Estadounidense|cs|guerra de la Independencia estadounidense, Guerra de la Independencia estadounidense (para inicios de frase o columnas de tablas)
+ Guerra de la Independencia estadounidense|cs|guerra de la Independencia estadounidense, Guerra de la Independencia estadounidense (para inicios de frase o columnas de tablas)
+ Guerra de la independencia estadounidense|cs|guerra de la Independencia estadounidense, Guerra de la Independencia estadounidense (para inicios de frase o columnas de tablas)
+ Guerra de las Dos Rosas|cs|guerra de las Dos Rosas, Guerra de las Dos Rosas (para inicios de frase o columnas de tablas)
+ Guerra de las dos rosas|cs|guerra de las Dos Rosas, Guerra de las Dos Rosas (para inicios de frase o columnas de tablas)
+ Guerra de las Galias|cs|guerra de las Galias, Guerra de las Galias (para inicios de frase o columnas de tablas)
+ Guerra de las galias|cs|guerra de las Galias, Guerra de las Galias (para inicios de frase o columnas de tablas)
+ Guerra del Asiento|cs|guerra del Asiento, Guerra del Asiento (para inicios de frase o columnas de tablas)
+ Guerra del asiento|cs|guerra del Asiento, Guerra del Asiento (para inicios de frase o columnas de tablas)
+ Guerra de las Malvinas|cs|guerra de las Malvinas, Guerra de las Malvinas (para inicios de frase o columnas de tablas)
+ Guerra de las malvinas|cs|guerra de las Malvinas, Guerra de las Malvinas (para inicios de frase o columnas de tablas)
+ Guerra de las Naranjas|cs|guerra de las Naranjas, Guerra de las Naranjas (para inicios de frase o columnas de tablas)
+ Guerra de las naranjas|cs|guerra de las Naranjas, Guerra de las Naranjas (para inicios de frase o columnas de tablas)
+ Guerra de las Rosas|cs|guerra de las Dos Rosas, Guerra de las Dos Rosas (para inicios de frase o columnas de tablas)
+ Guerra de las rosas|cs|guerra de las Dos Rosas, Guerra de las Dos Rosas (para inicios de frase o columnas de tablas)
+ Guerra de las Siete Semanas|cs|guerra de las Siete Semanas, Guerra de las Siete Semanas (para inicios de frase o columnas de tablas)
+ Guerra de las siete Semanas|cs|guerra de las Siete Semanas, Guerra de las Siete Semanas (para inicios de frase o columnas de tablas)
+ Guerra de las Siete semanas|cs|guerra de las Siete Semanas, Guerra de las Siete Semanas (para inicios de frase o columnas de tablas)
+ Guerra de las siete semanas|cs|guerra de las Siete Semanas, Guerra de las Siete Semanas (para inicios de frase o columnas de tablas)
+ Guerra de la Triple Alianza|cs|guerra de la Triple Alianza, Guerra de la Triple Alianza (para inicios de frase o columnas de tablas)
+ Guerra del Brasil|cs|guerra del Brasil, Guerra del Brasil (para inicios de frase o columnas de tablas)
+ Guerra del Cenepa|cs|guerra del Cenepa, Guerra del Cenepa (para inicios de frase o columnas de tablas)
+ Guerra del cenepa|cs|guerra del Cenepa, Guerra del Cenepa (para inicios de frase o columnas de tablas)
+ Guerra del Chaco|cs|guerra del Chaco, Guerra del Chaco (para inicios de frase o columnas de tablas)
+ Guerra del chaco|cs|guerra del Chaco, Guerra del Chaco (para inicios de frase o columnas de tablas)
+ Guerra del Donbass|cs|guerra del Dombás, Guerra del Dombás (para inicios de frase o columnas de tablas)
+ Guerra del Donbás|cs|guerra del Donbás, Guerra del Donbás (para inicios de frase o columnas de tablas)
+ Guerra del Dombás|cs|guerra del Dombás, Guerra del Dombás (para inicios de frase o columnas de tablas)
+ Guerra del Golfo|cs|guerra del Golfo, Guerra del Golfo (para inicios de frase o columnas de tablas)
+ Guerra de Liberación de Bangladés|cs|guerra de liberación de Bangladés, Guerra de liberación de Bangladés (para inicios de frase o columnas de tablas)
+ Guerra de liberación de Bangladés|cs|guerra de liberación de Bangladés, Guerra de liberación de Bangladés (para inicios de frase o columnas de tablas)
+ Guerra de Liberación de Bangladesh|cs|guerra de liberación de Bangladés, Guerra de liberación de Bangladés (para inicios de frase o columnas de tablas)
+ Guerra de liberación de Bangladesh|cs|guerra de liberación de Bangladés, Guerra de liberación de Bangladés (para inicios de frase o columnas de tablas)
+ Guerra de Libia|cs|guerra de Libia, Guerra de Libia (para inicios de frase o columnas de tablas)
+ Guerra de libia|cs|guerra de Libia, Guerra de Libia (para inicios de frase o columnas de tablas)
+ Guerra de los Cien Años|cs|guerra de los Cien Años, Guerra de los Cien Años (para inicios de frase o columnas de tablas)
+ Guerra de los cien años|cs|guerra de los Cien Años, Guerra de los Cien Años (para inicios de frase o columnas de tablas)
+ Guerra de los 100 años|cs|guerra de los Cien Años, Guerra de los Cien Años (para inicios de frase o columnas de tablas)
+ Guerra de los Diez Años|cs|guerra de los Diez Años, Guerra de los Diez Años (para inicios de frase o columnas de tablas)
+ Guerra de los diez años|cs|guerra de los Diez Años, Guerra de los Diez Años (para inicios de frase o columnas de tablas)
+ Guerra de los Farrapos|cs|guerra de los Farrapos, Guerra de los Farrapos (para inicios de frase o columnas de tablas)
+ Guerra de los Mil Días|cs|guerra de los Mil Días, Guerra de los Mil Días (para inicios de frase o columnas de tablas)
+ Guerra de los mil Días|cs|guerra de los Mil Días, Guerra de los Mil Días (para inicios de frase o columnas de tablas)
+ Guerra de los Mil días|cs|guerra de los Mil Días, Guerra de los Mil Días (para inicios de frase o columnas de tablas)
+ Guerra de los mil días|cs|guerra de los Mil Días, Guerra de los Mil Días (para inicios de frase o columnas de tablas)
+ Guerra de los Nueve Años|cs|guerra de los Nueve Años, Guerra de los Nueve Años (para inicios de frase o columnas de tablas)
+ Guerra de los nueve Años|cs|guerra de los Nueve Años, Guerra de los Nueve Años (para inicios de frase o columnas de tablas)
+ Guerra de los Nueve años|cs|guerra de los Nueve Años, Guerra de los Nueve Años (para inicios de frase o columnas de tablas)
+ Guerra de los nueve años|cs|guerra de los Nueve Años, Guerra de los Nueve Años (para inicios de frase o columnas de tablas)
+ Guerra de los Ochenta Años|cs|guerra de los Ochenta Años, Guerra de los Ochenta Años (para inicios de frase o columnas de tablas)
+ Guerra de los ochenta Años|cs|guerra de los Ochenta Años, Guerra de los Ochenta Años (para inicios de frase o columnas de tablas)
+ Guerra de los Ochenta años|cs|guerra de los Ochenta Años, Guerra de los Ochenta Años (para inicios de frase o columnas de tablas)
+ Guerra de los ochenta años|cs|guerra de los Ochenta Años, Guerra de los Ochenta Años (para inicios de frase o columnas de tablas)
+ Guerra de los Pasteles|cs|guerra de los Pasteles, Guerra de los Pasteles (para inicios de frase o columnas de tablas)
+ Guerra de los pasteles|cs|guerra de los Pasteles, Guerra de los Pasteles (para inicios de frase o columnas de tablas)
+ Guerra de los Pirineos|cs|guerra de los Pirineos, Guerra de los Pirineos (para inicios de frase o columnas de tablas)
+ Guerra de los pirineos|cs|guerra de los Pirineos, Guerra de los Pirineos (para inicios de frase o columnas de tablas)
+ Guerra de los Seis Días|cs|guerra de los Seis Días, Guerra de los Seis Días (para inicios de frase o columnas de tablas)
+ Guerra de los seis días|cs|guerra de los Seis Días, Guerra de los Seis Días (para inicios de frase o columnas de tablas)
+ Guerra de los Siete Años|cs|guerra de los Siete Años, Guerra de los Siete Años (para inicios de frase o columnas de tablas)
+ Guerra de los siete Años|cs|guerra de los Siete Años, Guerra de los Siete Años (para inicios de frase o columnas de tablas)
+ Guerra de los Siete años|cs|guerra de los Siete Años, Guerra de los Siete Años (para inicios de frase o columnas de tablas)
+ Guerra de los siete años|cs|guerra de los Siete Años, Guerra de los Siete Años (para inicios de frase o columnas de tablas)
+ Guerra de los Treinta Años|cs|guerra de los Treinta Años, Guerra de los Treinta Años (para inicios de frase o columnas de tablas)
+ Guerra del Pacífico|cs|guerra del Pacífico, Guerra del Pacífico (para inicios de frase o columnas de tablas)
+ Guerra del Paraguay|cs|guerra del Paraguay, Guerra del Paraguay (para inicios de frase o columnas de tablas)
+ Guerra del paraguay|cs|guerra del Paraguay, Guerra del Paraguay (para inicios de frase o columnas de tablas)
+ Guerra del Paraná|cs|guerra del Paraná, Guerra del Paraná (para inicios de frase o columnas de tablas)
+ Guerra del paraná|cs|guerra del Paraná, Guerra del Paraná (para inicios de frase o columnas de tablas)
+ Guerra del Peloponeso|cs|guerra del Peloponeso, Guerra del Peloponeso (para inicios de frase o columnas de tablas)
+ Guerra del peloponeso|cs|guerra del Peloponeso, Guerra del Peloponeso (para inicios de frase o columnas de tablas)
+ Guerra del Rif|cs|guerra del Rif, Guerra del Rif (para inicios de frase o columnas de tablas)
+ Guerra del rif|cs|guerra del Rif, Guerra del Rif (para inicios de frase o columnas de tablas)
+ Guerra del Rosellón|cs|guerra del Rosellón, Guerra del Rosellón (para inicios de frase o columnas de tablas)
+ Guerra del rosellón|cs|guerra del Rosellón, Guerra del Rosellón (para inicios de frase o columnas de tablas)
+ Guerra del Sahara Occidental|cs|guerra del Sahara Occidental, Guerra del Sahara Occidental (para inicios de frase o columnas de tablas)
+ Guerra del Sáhara Occidental|cs|guerra del Sáhara Occidental, Guerra del Sáhara Occidental (para inicios de frase o columnas de tablas)
+ Guerra del Sinai|cs|guerra del Sinaí, Guerra del Sinaí (para inicios de frase o columnas de tablas)
+ Guerra del sinai|cs|guerra del Sinaí, Guerra del Sinaí (para inicios de frase o columnas de tablas)
+ Guerra del Sinaí|cs|guerra del Sinaí, Guerra del Sinaí (para inicios de frase o columnas de tablas)
+ Guerra del sinaí|cs|guerra del Sinaí, Guerra del Sinaí (para inicios de frase o columnas de tablas)
+ Guerra del Yom Kipur|cs|guerra de Yom Kipur, Guerra de Yom Kipur (para inicios de frase o columnas de tablas)
+ Guerra del Yom Kippur|cs|guerra de Yom Kipur, Guerra de Yom Kipur (para inicios de frase o columnas de tablas)
+ Guerra de Mali|cs|guerra de Mali, Guerra de Mali (para inicios de frase o columnas de tablas)
+ Guerra de Malí|cs|guerra de Mali, Guerra de Mali (para inicios de frase o columnas de tablas)
+ Guerra de mali|cs|guerra de Mali, Guerra de Mali (para inicios de frase o columnas de tablas)
+ Guerra de malí|cs|guerra de Mali, Guerra de Mali (para inicios de frase o columnas de tablas)
+ Guerra de Margallo|cs|guerra de Margallo, Guerra de Margallo (para inicios de frase o columnas de tablas)
+ Guerra de margallo|cs|guerra de Margallo, Guerra de Margallo (para inicios de frase o columnas de tablas)
+ Guerra de Marruecos|cs|guerra de Marruecos, Guerra de Marruecos (para inicios de frase o columnas de tablas)
+ Guerra de marruecos|cs|guerra de Marruecos, Guerra de Marruecos (para inicios de frase o columnas de tablas)
+ Guerra de Melilla|cs|guerra de Melilla, Guerra de Melilla (para inicios de frase o columnas de tablas)
+ Guerra de melilla|cs|guerra de Melilla, Guerra de Melilla (para inicios de frase o columnas de tablas)
+ Guerra Mexicano-Estadounidense|cs|guerra mexicano-estadounidense, Guerra mexicano-estadounidense (para inicios de frase o columnas de tablas)
+ Guerra mexicano-estadounidense|cs|guerra mexicano-estadounidense, Guerra mexicano-estadounidense (para inicios de frase o columnas de tablas)
+ Guerra de Morea|cs|guerra de Morea, Guerra de Morea (para inicios de frase o columnas de tablas)
+ Guerra de morea|cs|guerra de Morea, Guerra de Morea (para inicios de frase o columnas de tablas)
+ Guerra de Ogaden|cs|guerra de Ogaden, Guerra de Ogaden (para inicios de frase o columnas de tablas)
+ Guerra de Osetia del Sur|cs|guerra de Osetia del Sur, Guerra de Osetia del Sur (para inicios de frase o columnas de tablas)
+ Guerra de Reforma|cs|guerra de Reforma, Guerra de Reforma (para inicios de frase o columnas de tablas)
+ Guerra de reforma|cs|guerra de Reforma, Guerra de Reforma (para inicios de frase o columnas de tablas)
+ Guerra de Secesión|cs|guerra de Secesión, Guerra de Secesión (para inicios de frase o columnas de tablas)
+ Guerra de Sucesión Austríaca|cs|guerra de sucesión austríaca, Guerra de sucesión austríaca (para inicios de frase o columnas de tablas)
+ Guerra de Sucesión Austriaca|cs|guerra de sucesión austriaca, Guerra de sucesión austriaca (para inicios de frase o columnas de tablas)
+ Guerra de sucesión Austríaca|cs|guerra de sucesión austríaca, Guerra de sucesión austríaca (para inicios de frase o columnas de tablas)
+ Guerra de sucesión Austriaca|cs|guerra de sucesión austriaca, Guerra de sucesión austriaca (para inicios de frase o columnas de tablas)
+ Guerra de Sucesión austríaca|cs|guerra de sucesión austríaca, Guerra de sucesión austríaca (para inicios de frase o columnas de tablas)
+ Guerra de Sucesión austriaca|cs|guerra de sucesión austriaca, Guerra de sucesión austriaca (para inicios de frase o columnas de tablas)
+ Guerra de sucesión austríaca|cs|guerra de sucesión austríaca, Guerra de sucesión austríaca (para inicios de frase o columnas de tablas)
+ Guerra de sucesión austriaca|cs|guerra de sucesión austriaca, Guerra de sucesión austriaca (para inicios de frase o columnas de tablas)
+ Guerra de Sucesión Bretona|cs|guerra de sucesión bretona, Guerra de sucesión bretona (para inicios de frase o columnas de tablas)
+ Guerra de sucesión Bretona|cs|guerra de sucesión bretona, Guerra de sucesión bretona (para inicios de frase o columnas de tablas)
+ Guerra de Sucesión bretona|cs|guerra de sucesión bretona, Guerra de sucesión bretona (para inicios de frase o columnas de tablas)
+ Guerra de sucesión bretona|cs|guerra de sucesión bretona, Guerra de sucesión bretona (para inicios de frase o columnas de tablas)
+ Guerra de Sucesión Castellana|cs|guerra de sucesión castellana, Guerra de sucesión castellana (para inicios de frase o columnas de tablas)
+ Guerra de sucesión Castellana|cs|guerra de sucesión castellana, Guerra de sucesión castellana (para inicios de frase o columnas de tablas)
+ Guerra de Sucesión castellana|cs|guerra de sucesión castellana, Guerra de sucesión castellana (para inicios de frase o columnas de tablas)
+ Guerra de sucesión castellana|cs|guerra de sucesión castellana, Guerra de sucesión castellana (para inicios de frase o columnas de tablas)
+ Guerra de Sucesión de Austria|cs|guerra de sucesión de Austria, Guerra de sucesión de Austria (para inicios de frase o columnas de tablas)
+ Guerra de sucesión de Austria|cs|guerra de sucesión de Austria, Guerra de sucesión de Austria (para inicios de frase o columnas de tablas)
+ Guerra de Sucesión de austria|cs|guerra de sucesión de Austria, Guerra de sucesión de Austria (para inicios de frase o columnas de tablas)
+ Guerra de sucesión de austria|cs|guerra de sucesión de Austria, Guerra de sucesión de Austria (para inicios de frase o columnas de tablas)
+ Guerra de Sucesión Española|cs|guerra de sucesión española, Guerra de sucesión española (para inicios de frase o columnas de tablas)
+ Guerra de Sucesión española|cs|guerra de sucesión española, Guerra de sucesión española (para inicios de frase o columnas de tablas)
+ Guerra de sucesión Española|cs|guerra de sucesión española, Guerra de sucesión española (para inicios de frase o columnas de tablas)
+ Guerra de sucesión española|cs|guerra de sucesión española, Guerra de sucesión española (para inicios de frase o columnas de tablas)
+ Guerra de Sucesión Polaca|cs|guerra de sucesión polaca, Guerra de sucesión polaca (para inicios de frase o columnas de tablas)
+ Guerra de sucesión Polaca|cs|guerra de sucesión polaca, Guerra de sucesión polaca (para inicios de frase o columnas de tablas)
+ Guerra de Sucesión polaca|cs|guerra de sucesión polaca, Guerra de sucesión polaca (para inicios de frase o columnas de tablas)
+ Guerra de sucesión polaca|cs|guerra de sucesión polaca, Guerra de sucesión polaca (para inicios de frase o columnas de tablas)
+ Guerra de Troya|cs|guerra de Troya, Guerra de Troya (para inicios de frase o columnas de tablas)
+ Guerra de Vietnam|cs|guerra de Vietnam, Guerra de Vietnam (para inicios de frase o columnas de tablas)
+ Guerra de Yom Kipur|cs|guerra de Yom Kipur, Guerra de Yom Kipur (para inicios de frase o columnas de tablas)
+ Guerra de Yom Kippur|cs|guerra de Yom Kipur, Guerra de Yom Kipur (para inicios de frase o columnas de tablas)
+ Guerra en el Donbáss|cs|guerra del Dombás, Guerra del Dombás (para inicios de frase o columnas de tablas)
+ Guerra Escanesa|cs|guerra escanesa, Guerra escanesa (para inicios de frase o columnas de tablas)
+ Guerra escanesa|cs|guerra escanesa, Guerra escanesa (para inicios de frase o columnas de tablas)
+ Guerra Filipino Estadounidense|cs|guerra filipino-estadounidense, Guerra filipino-estadounidense (para inicios de frase o columnas de tablas)
+ Guerra Filipino-Estadounidense|cs|guerra filipino-estadounidense, Guerra filipino-estadounidense (para inicios de frase o columnas de tablas)
+ Guerra filipino estadounidense|cs|guerra filipino-estadounidense, Guerra filipino-estadounidense (para inicios de frase o columnas de tablas)
+ Guerra filipino-estadounidense|cs|guerra filipino-estadounidense, Guerra filipino-estadounidense (para inicios de frase o columnas de tablas)
+ Guerra Franco-India|cs|guerra franco-india, Guerra franco-india (para inicios de frase o columnas de tablas)
+ Guerra franco-india|cs|guerra franco-india, Guerra franco-india (para inicios de frase o columnas de tablas)
+ Guerra Franco-Neerlandesa|cs|guerra franco-neerlandesa, Guerra franco-neerlandesa (para inicios de frase o columnas de tablas)
+ Guerra franco-Neerlandesa|cs|guerra franco-neerlandesa, Guerra franco-neerlandesa (para inicios de frase o columnas de tablas)
+ Guerra Franco-neerlandesa|cs|guerra franco-neerlandesa, Guerra franco-neerlandesa (para inicios de frase o columnas de tablas)
+ Guerra franco-neerlandesa|cs|guerra franco-neerlandesa, Guerra franco-neerlandesa (para inicios de frase o columnas de tablas)
+ Guerra Franco Prusiana|cs|guerra franco-prusiana, Guerra franco-prusiana (para inicios de frase o columnas de tablas)
+ Guerra Franco-Prusiana|cs|guerra franco-prusiana, Guerra franco-prusiana (para inicios de frase o columnas de tablas)
+ Guerra franco prusiana|cs|guerra franco-prusiana, Guerra franco-prusiana (para inicios de frase o columnas de tablas)
+ Guerra franco-prusiana|cs|guerra franco-prusiana, Guerra franco-prusiana (para inicios de frase o columnas de tablas)
+ Guerra Greco-Turca|cs|guerra greco-turca, Guerra greco-turca (para inicios de frase o columnas de tablas)
+ Guerra greco-Turca|cs|guerra greco-turca, Guerra greco-turca (para inicios de frase o columnas de tablas)
+ Guerra Greco-turca|cs|guerra greco-turca, Guerra greco-turca (para inicios de frase o columnas de tablas)
+ Guerra greco-turca|cs|guerra greco-turca, Guerra greco-turca (para inicios de frase o columnas de tablas)
+ Guerra Hispanoamericana|cs|guerra hispanoamericana, Guerra hispanoamericana (para inicios de frase o columnas de tablas)
+ Guerra hispanoamericana|cs|guerra hispanoamericana, Guerra hispanoamericana (para inicios de frase o columnas de tablas)
+ Guerra Hispano Estadounidense|cs|guerra hispano-estadounidense, Guerra hispano-estadounidense (para inicios de frase o columnas de tablas)
+ Guerra hispano estadounidense|cs|guerra hispano-estadounidense, Guerra hispano-estadounidense (para inicios de frase o columnas de tablas)
+ Guerra Hispano-Estadounidense|cs|guerra hispano-estadounidense, Guerra hispano-estadounidense (para inicios de frase o columnas de tablas)
+ Guerra hispano-estadounidense|cs|guerra hispano-estadounidense, Guerra hispano-estadounidense (para inicios de frase o columnas de tablas)
+ Guerra Hispano Sudamericana|cs|guerra hispano-sudamericana, Guerra hispano-sudamericana (para inicios de frase o columnas de tablas)
+ Guerra Hispano-Sudamericana|cs|guerra hispano-sudamericana, Guerra hispano-sudamericana (para inicios de frase o columnas de tablas)
+ Guerra hispano sudamericana|cs|guerra hispano-sudamericana, Guerra hispano-sudamericana (para inicios de frase o columnas de tablas)
+ Guerra hispano-sudamericana|cs|guerra hispano-sudamericana, Guerra hispano-sudamericana (para inicios de frase o columnas de tablas)
+ Guerra Indo Pakistaní|cs|guerra indo-pakistaní, Guerra indo-pakistaní (para inicios de frase o columnas de tablas)
+ Guerra Indo-Pakistaní|cs|guerra indo-pakistaní, Guerra indo-pakistaní (para inicios de frase o columnas de tablas)
+ Guerra indo pakistaní|cs|guerra indo-pakistaní, Guerra indo-pakistaní (para inicios de frase o columnas de tablas)
+ Guerra indo-pakistaní|cs|guerra indo-pakistaní, Guerra indo-pakistaní (para inicios de frase o columnas de tablas)
+ Guerra Irán-Irak|cs|guerra entre Irán e Irak, Guerra entre Irán e Irak (para inicios de frase o columnas de tablas)
+ Guerra Peruano-Ecuatoriana|cs|guerra peruano-ecuatoriana, Guerra peruano-ecuatoriana (para inicios de frase o columnas de tablas)
+ Guerra peruano-Ecuatoriana|cs|guerra peruano-ecuatoriana, Guerra peruano-ecuatoriana (para inicios de frase o columnas de tablas)
+ Guerra Peruano-ecuatoriana|cs|guerra peruano-ecuatoriana, Guerra peruano-ecuatoriana (para inicios de frase o columnas de tablas)
+ Guerra peruano-ecuatoriana|cs|guerra peruano-ecuatoriana, Guerra peruano-ecuatoriana (para inicios de frase o columnas de tablas)
+ Guerra Polaco Soviética|cs|guerra polaco-soviética, Guerra polaco-soviética (para inicios de frase o columnas de tablas)
+ Guerra Polaco-Soviética|cs|guerra polaco-soviética, Guerra polaco-soviética (para inicios de frase o columnas de tablas)
+ Guerra polaco soviética|cs|guerra polaco-soviética, Guerra polaco-soviética (para inicios de frase o columnas de tablas)
+ Guerra polaco-soviética|cs|guerra polaco-soviética, Guerra polaco-soviética (para inicios de frase o columnas de tablas)
+ Guerra Ruso-Georgiana|cs|guerra ruso-georgiana, Guerra ruso-georgiana (para inicios de frase o columnas de tablas)
+ Guerra Ruso-georgiana|cs|guerra ruso-georgiana, Guerra ruso-georgiana (para inicios de frase o columnas de tablas)
+ Guerra ruso-Georgiana|cs|guerra ruso-georgiana, Guerra ruso-georgiana (para inicios de frase o columnas de tablas)
+ Guerra ruso-georgiana|cs|guerra ruso-georgiana, Guerra ruso-georgiana (para inicios de frase o columnas de tablas)
+ Guerra Ruso Japonesa|cs|guerra ruso-japonesa, Guerra ruso-japonesa (para inicios de frase o columnas de tablas)
+ Guerra Ruso-Japonesa|cs|guerra ruso-japonesa, Guerra ruso-japonesa (para inicios de frase o columnas de tablas)
+ Guerra ruso Japonesa|cs|guerra ruso-japonesa, Guerra ruso-japonesa (para inicios de frase o columnas de tablas)
+ Guerra ruso-Japonesa|cs|guerra ruso-japonesa, Guerra ruso-japonesa (para inicios de frase o columnas de tablas)
+ Guerra Ruso japonesa|cs|guerra ruso-japonesa, Guerra ruso-japonesa (para inicios de frase o columnas de tablas)
+ Guerra Ruso-japonesa|cs|guerra ruso-japonesa, Guerra ruso-japonesa (para inicios de frase o columnas de tablas)
+ Guerra ruso japonesa|cs|guerra ruso-japonesa, Guerra ruso-japonesa (para inicios de frase o columnas de tablas)
+ Guerra ruso-japonesa|cs|guerra ruso-japonesa, Guerra ruso-japonesa (para inicios de frase o columnas de tablas)
+ Guerras Bananeras|cs|guerras bananeras, Guerras bananeras (para inicios de frase o columnas de tablas)
+ Guerras bananeras|cs|guerras bananeras, Guerras bananeras (para inicios de frase o columnas de tablas)
+ Guerras Carlistas|cs|guerras carlistas, Guerras carlistas (para inicios de frase o columnas de tablas)
+ Guerras carlistas|cs|guerras carlistas, Guerras carlistas (para inicios de frase o columnas de tablas)
+ Guerras Celtiberas|cs|guerras celtíberas, Guerras celtíberas (para inicios de frase o columnas de tablas)
+ Guerras Celtíberas|cs|guerras celtíberas, Guerras celtíberas (para inicios de frase o columnas de tablas)
+ Guerras celtiberas|cs|guerras celtíberas, Guerras celtíberas (para inicios de frase o columnas de tablas)
+ Guerras celtíberas|cs|guerras celtíberas, Guerras celtíberas (para inicios de frase o columnas de tablas)
+ Guerras Celtibericas|cs|guerras celtibéricas, Guerras celtibéricas (para inicios de frase o columnas de tablas)
+ Guerras Celtibéricas|cs|guerras celtibéricas, Guerras celtibéricas (para inicios de frase o columnas de tablas)
+ Guerras celtibericas|cs|guerras celtibéricas, Guerras celtibéricas (para inicios de frase o columnas de tablas)
+ Guerras celtibéricas|cs|guerras celtibéricas, Guerras celtibéricas (para inicios de frase o columnas de tablas)
+ Guerras de Independencia de Escocia|cs|guerras de Independencia de Escocia, Guerras de Independencia de Escocia (para inicios de frase o columnas de tablas)
+ Guerras de independencia de Escocia|cs|guerras de Independencia de Escocia, Guerras de Independencia de Escocia (para inicios de frase o columnas de tablas)
+ Guerras de Religión|cs|guerras de religión, Guerras de religión (para inicios de frase o columnas de tablas)
+ Guerras de religión|cs|guerras de religión, Guerras de religión (para inicios de frase o columnas de tablas)
+ Guerra Sino-India|cs|guerra sino-india, Guerra sino-india (para inicios de frase o columnas de tablas)
+ Guerra sino-India|cs|guerra sino-india, Guerra sino-india (para inicios de frase o columnas de tablas)
+ Guerra Sino-india|cs|guerra sino-india, Guerra sino-india (para inicios de frase o columnas de tablas)
+ Guerra sino-india|cs|guerra sino-india, Guerra sino-india (para inicios de frase o columnas de tablas)
+ Guerra Sino Vietnamita|cs|guerra sino-vietnamita, Guerra sino-vietnamita (para inicios de frase o columnas de tablas)
+ Guerra Sino-Vietnamita|cs|guerra sino-vietnamita, Guerra sino-vietnamita (para inicios de frase o columnas de tablas)
+ Guerra sino vietnamita|cs|guerra sino-vietnamita, Guerra sino-vietnamita (para inicios de frase o columnas de tablas)
+ Guerra sino-vietnamita|cs|guerra sino-vietnamita, Guerra sino-vietnamita (para inicios de frase o columnas de tablas)
+ Guerras Judeo-Romanas|cs|guerras judeo-romanas, Guerras judeo-romanas (para inicios de frase o columnas de tablas)
+ Guerras judeo-romanas|cs|guerras judeo-romanas, Guerras judeo-romanas (para inicios de frase o columnas de tablas)
+ Guerras Médicas|cs|guerras médicas, Guerras médicas (para inicios de frase o columnas de tablas)
+ Guerras médicas|cs|guerras médicas, Guerras médicas (para inicios de frase o columnas de tablas)
+ Guerras Napoleónicas|cs|guerras napoleónicas, Guerras napoleónicas (para inicios de frase o columnas de tablas)
+ Guerras napoleónicas|cs|guerras napoleónicas, Guerras napoleónicas (para inicios de frase o columnas de tablas)
+ Guerra Sueco-Danesa|cs|guerra sueco-danesa, Guerra sueco-danesa (para inicios de frase o columnas de tablas)
+ Guerra sueco-danesa|cs|guerra sueco-danesa, Guerra sueco-danesa (para inicios de frase o columnas de tablas)
+ Guerras Yugoslavas|cs|guerras yugoslavas, Guerras yugoslavas (para inicios de frase o columnas de tablas)
+ Guerras yugoslavas|cs|guerras yugoslavas, Guerras yugoslavas (para inicios de frase o columnas de tablas)
+ Guerra Turco-Veneciana|cs|guerra turco-veneciana, Guerra turco-veneciana (para inicios de frase o columnas de tablas)
+ Guerra turco-Veneciana|cs|guerra turco-veneciana, Guerra turco-veneciana (para inicios de frase o columnas de tablas)
+ Guerra Turco-veneciana|cs|guerra turco-veneciana, Guerra turco-veneciana (para inicios de frase o columnas de tablas)
+ Guerra turco-veneciana|cs|guerra turco-veneciana, Guerra turco-veneciana (para inicios de frase o columnas de tablas)
 
 == H ==
 
  Ha.|cs|ha (símbolo de hectárea —va en minúscula y sin punto—), ha. (para final de frase), hectáreas (texto)
+ [[habeas corpus]]||''[[habeas corpus]]'' (locución en latín)
  habeas corpus||''habeas corpus'' (locución en latín), Habeas Corpus (grupo musical)
  hábeas corpus||''habeas corpus'' (locución en latín), Habeas Corpus (grupo musical)
  hacía abajo||hacia abajo
@@ -1396,6 +1930,11 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  Hugo Chavez|cs|Hugo Chávez
 
 == I ==
+
+ iglesia Catolica|cs|Iglesia católica (institución), iglesia católica (edificio)
+ iglesia Católica|cs|Iglesia católica (institución), iglesia católica (edificio)
+ iglesia catolica|cs|Iglesia católica (institución), iglesia católica (edificio)
+ iglesia católica|cs|Iglesia católica (institución), iglesia católica (edificio)
  infanto juvenil||infantojuvenil
  infanto-juvenil||infantojuvenil
  infra especifica||infraespecífica
@@ -1430,18 +1969,24 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  inter-continentales||intercontinentales
 
 == J ==
- Jefe de estado|cs|jefe de Estado
- Jefe de Estado|cs|jefe de Estado
- jefe de estado|cs|jefe de Estado
- Jefes de estado|cs|jefes de Estado
- Jefes de Estado|cs|jefes de Estado
- jefes de estado|cs|jefes de Estado
- Jefe de gobierno|cs|jefe de Gobierno
- Jefe de Gobierno|cs|jefe de Gobierno
- jefe de gobierno|cs|jefe de Gobierno
- Jefes de gobierno|cs|jefes de Gobierno
- Jefes de Gobierno|cs|jefes de Gobierno
- jefes de gobierno|cs|jefes de Gobierno
+ Jefe de estado|cs|jefe de Estado, Jefe de Estado (para inicios de frase o columnas de tablas)
+ Jefe de Estado|cs|jefe de Estado, Jefe de Estado (para inicios de frase o columnas de tablas)
+ jefe de estado|cs|jefe de Estado, Jefe de Estado (para inicios de frase o columnas de tablas)
+ Jefes de estado|cs|jefes de Estado, Jefe de Estado (para inicios de frase o columnas de tablas)
+ Jefes de Estado|cs|jefes de Estado, Jefe de Estado (para inicios de frase o columnas de tablas)
+ jefes de estado|cs|jefes de Estado, Jefe de Estado (para inicios de frase o columnas de tablas)
+ Jefe de estado mayor|cs|jefe de Estado Mayor, Jefe de Estado Mayor (para inicios de frase o columnas de tablas)
+ Jefe de Estado mayor|cs|jefe de Estado Mayor, Jefe de Estado Mayor (para inicios de frase o columnas de tablas)
+ jefe de estado mayor|cs|jefe de Estado Mayor, Jefe de Estado Mayor (para inicios de frase o columnas de tablas)
+ Jefe de gobierno|cs|jefe de Gobierno, Jefe de Gobierno (para inicios de frase o columnas de tablas)
+ Jefe de Gobierno|cs|jefe de Gobierno, Jefe de Gobierno (para inicios de frase o columnas de tablas)
+ jefe de gobierno|cs|jefe de Gobierno, Jefe de Gobierno (para inicios de frase o columnas de tablas)
+ Jefes de gobierno|cs|jefes de Gobierno, Jefe de Gobierno (para inicios de frase o columnas de tablas)
+ Jefes de Gobierno|cs|jefes de Gobierno, Jefe de Gobierno (para inicios de frase o columnas de tablas)
+ jefes de gobierno|cs|jefes de Gobierno, Jefe de Gobierno (para inicios de frase o columnas de tablas)
+ J.J.O.O.|cs|JJ.&nbsp;OO. (Juegos Olímpicos)
+ J.J. O.O.|cs|JJ.&nbsp;OO. (Juegos Olímpicos)
+ JJ.OO.|cs|JJ.&nbsp;OO. (Juegos Olímpicos)
  Jose Antonio|cs|José Antonio (nombre de pila español)
  Jose Manuel|cs|José Manuel (nombre de pila español y portugués)
  Jose Maria|cs|José María (nombre de pila español)
@@ -1484,20 +2029,20 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  la hada||el hada
  la Haya|cs|La Haya (ciudad), la Haya (apellido)
  la hidromiel||el hidromiel (es masculino)
- la la||la, La
- la las||la, las
+ la la||la, La, a la
+ la las||la, las, a las
  la mas||la más
  laminas de||láminas de
  la Meca|cs|La Meca (ciudad), la meca (sustantivo común)
  la mismas||la misma, las mismas
- la perdida||la pérdida
- la practica||la practica (verbo), la práctica (sustantivo)
- la primer||la primera, el primero, lo primero, el primer
- la primeras||las primeras, la primera
  lanza-misiles||lanzamisiles
  lanza misiles||lanzamisiles
  lanza-cohetes||lanzacohetes
  lanza cohetes||lanzacohetes
+ la perdida||la pérdida
+ la practica||la practica (verbo), la práctica (sustantivo)
+ la primer||la primera, el primero, lo primero, el primer
+ la primeras||las primeras, la primera
  las fuerza||la fuerza, las fuerzas, la Fuerza, las Fuerzas
  las la||la, las
  las las||las, Las
@@ -1505,14 +2050,15 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  las miles||los miles, los millares
  las misma||la misma, las mismas
  las primera||las primeras, la primera
+ las región||la región, las regiones
  la tercer||la tercera, el tercero, el tercer
  Latino América|cs|Latinoamérica
  la version||la versión
  le a||le ha
  le hecho||el hecho, le ha hecho, le echó, le echo
- Ley seca|cs|ley seca
- Ley Seca|cs|ley seca
- ley Seca|cs|ley seca
+ Ley seca|cs|ley seca, Ley seca (para inicios de frase o columnas de tablas)
+ Ley Seca|cs|ley seca, Ley seca (para inicios de frase o columnas de tablas)
+ ley Seca|cs|ley seca, Ley seca (para inicios de frase o columnas de tablas)
  lo cuál||lo cual
  logro ganar||logró ganar
  lo mas||lo más
@@ -1548,6 +2094,8 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  macro-region||macrorregión
  macro región||macrorregión
  macro-región||macrorregión
+ Magna Cum Laude|cs|''magna cum laude'', ''Magna cum laude'' (para inicios de frase o columnas de tablas)
+ Magna cum laude|cs|''magna cum laude'', ''Magna cum laude'' (para inicios de frase o columnas de tablas)
  main draw||cuadro principal
  mal entendido||mal entendido (adjetivo), malentendido (sustantivo)
  mal herida||malherida
@@ -1597,19 +2145,31 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  mejor conocida como||más conocida como (expresión correcta en español)
  mejor conocido como||más conocido como (expresión correcta en español)
  Metro de Paris|cs|Metro de París (en español), Métro de Paris (en francés)
+ micro estadio||microestadio
+ micro-estadio||microestadio
+ micro estadios||microestadios
+ micro-estadios||microestadios
  micro region||microrregión
  micro-region||microrregión
  micro región||microrregión
  micro-región||microrregión
  Miguel Angel|cs|Miguel Ángel (nombre de pila español; en particular, castellanización del nombre de pila del artista italiano)
- mini album||miniálbum
- mini-album||miniálbum
- mini álbum||miniálbum
- mini-álbum||miniálbum
- mini albumes||miniálbumes
- mini-albumes||miniálbumes
- mini álbumes||miniálbumes
- mini-álbumes||miniálbumes
+ mini album||miniálbum, Miniálbum (para inicios de frase o columnas de tabla)
+ mini-album||miniálbum, Miniálbum (para inicios de frase o columnas de tabla)
+ mini álbum||miniálbum, Miniálbum (para inicios de frase o columnas de tabla)
+ mini-álbum||miniálbum, Miniálbum (para inicios de frase o columnas de tabla)
+ Mini album|cs|miniálbum, Miniálbum (para inicios de frase o columnas de tabla)
+ Mini-album|cs|miniálbum, Miniálbum (para inicios de frase o columnas de tabla)
+ Mini álbum|cs|miniálbum, Miniálbum (para inicios de frase o columnas de tabla)
+ Mini-álbum|cs|miniálbum, Miniálbum (para inicios de frase o columnas de tabla)
+ mini albumes||miniálbumes, Miniálbumes (para inicios de frase o columnas de tabla)
+ mini-albumes||miniálbumes, Miniálbumes (para inicios de frase o columnas de tabla)
+ mini álbumes||miniálbumes, Miniálbumes (para inicios de frase o columnas de tabla)
+ mini-álbumes||miniálbumes, Miniálbumes (para inicios de frase o columnas de tabla)
+ Mini albumes|cs|miniálbumes, Miniálbumes (para inicios de frase o columnas de tabla)
+ Mini-albumes|cs|miniálbumes, Miniálbumes (para inicios de frase o columnas de tabla)
+ Mini álbumes|cs|miniálbumes, Miniálbumes (para inicios de frase o columnas de tabla)
+ Mini-álbumes|cs|miniálbumes, Miniálbumes (para inicios de frase o columnas de tabla)
  mini albums||miniálbumes, miniálbum
  mini-albums||miniálbumes, miniálbum
  mini álbums||miniálbumes, miniálbum
@@ -1623,7 +2183,10 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  mini USB|cs|mini-USB
  mini usb|cs|mini-USB
  mini-usb|cs|mini-USB
- motu propio||motu proprio
+ [[motu propio]]||''[[motu proprio]]''
+ motu propio||''motu proprio''
+ [[motu proprio]]||''[[motu proprio]]''
+ motu proprio||''motu proprio''
  mm2|cs|mm² (milímetro cuadrado), milímetro cuadrado, milímetros cuadrados
  mm3|cs|mm³ (milímetro cúbico), milímetro cúbico, milímetros cúbicos
  mm. de|cs| mm de  (símbolo de milímetros —no lleva punto—)
@@ -1643,6 +2206,9 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
 == N ==
 
  №||N.º (abreviatura de «número» con mayúscula inicial), n.º (abreviatura de «número» sin mayúscula inicial)
+ N°|cs|N.º (abreviatura de «número» con mayúscula inicial y con «o voladita» en lugar del símbolo de grados), n.º (abreviatura de «número» sin mayúscula inicial y con «o voladita» en lugar del símbolo de grados)
+ n°|cs|n.º (abreviatura de «número»: con punto y con «o voladita» en lugar del símbolo de grados), número
+ nº.||n.º (abreviatura de «número»: el punto va entre la «ene» y la «o voladita»), número
  nada mas||nada más
  neo liberal||neoliberal
  neo-liberal||neoliberal
@@ -1657,21 +2223,44 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  No.|cs|n.º (abreviatura de «número» sin mayúscula inicial y sin estar en inglés), N.º (para inicios de frase o columnas de tablas)
  noche buena||Nochebuena (forma recomendada), Noche Buena (forma tradicional y aceptada)
  noche vieja||Nochevieja (forma recomendada), Noche Vieja (forma tradicional y aceptada)
+ nord este||nordeste
+ nord-este||nordeste
+ nor este||noreste
+ nor-este||noreste
+ nor nordeste||nornordeste
+ nor-nordeste||nornordeste
+ nor noreste||nornoreste
+ nor-noreste||nornoreste
+ nor noroeste||nornoroeste
+ nor-noroeste||nornoroeste
+ nor oeste||noroeste
+ nor-oeste||noroeste
  norte americano||norteamericano (gentilicio)
- Nouri al Maliki|cs|Nuri al Maliki
- Nouri al-Maliki|cs|Nuri al Maliki
- Nouri Al Maliki|cs|Nuri al Maliki
- Nouri Al-Maliki|cs|Nuri al Maliki
+ norte nordeste||nornordeste
+ norte-nordeste||nornordeste
+ norte noreste||nornoreste
+ norte-noreste||nornoreste
+ norte noroeste||nornoroeste
+ norte-noroeste||nornoroeste
+ nouri al maliki||Nuri al Maliki
+ nouri al-maliki||Nuri al Maliki
+ no-violencia||no violencia (excepto cuando forma parte de un nombre propio)
  nuevo mundo|cs|Nuevo Mundo (continente americano)
  Nuevo mundo|cs|Nuevo Mundo (continente americano)
- Nuri al-Maliki|cs|Nuri al Maliki
+ nuri al-maliki||Nuri al Maliki
  Nuri Al Maliki|cs|Nuri al Maliki
- Nuri Al-Maliki|cs|Nuri al Maliki
 
 == Ñ ==
 
 == O ==
 
+ Octavos de Final|cs|octavos de final, Octavos de final (para inicios de frase o columnas de tablas)
+ oeste noroeste||oesnoroeste
+ oeste-noroeste||oesnoroeste
+ oestenoroeste||oesnoroeste
+ oeste sudoeste||oesudoeste
+ oeste-sudoeste||oesudoeste
+ oestesudoeste||oesudoeste
  o mas||o más
  opera prima|cs|ópera prima (en español)
  opinión publica||opinión pública
@@ -1680,6 +2269,9 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
 
  para para||para, Para Para (baile japonés o personaje de Sailor Moon)
  paso a ser||pasó a ser
+ Península Ibérica|cs|península ibérica, Península ibérica (para inicios de frase o columnas de tablas)
+ Península ibérica|cs|península ibérica, Península ibérica (para inicios de frase o columnas de tablas)
+ península Ibérica|cs|península ibérica, Península ibérica (para inicios de frase o columnas de tablas)
  p.m||p.&nbsp;m. (con espacio duro)
  p.m.||p.&nbsp;m. (con espacio duro)
  p. m.||p.&nbsp;m. (con espacio duro)
@@ -1687,10 +2279,14 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  por la cuál||por la cual
  por por||por
  por que||porque (conjunción causal), por que (preposición + relativo o conjunción), para que (alternativa preferible a veces), por qué (interrogación o exclamación), porqué (sustantivo, causa)
+ pos doctorado||posdoctorado
+ pos-doctorado||posdoctorado
  pos guerra||posguerra
  pos-guerra||posguerra
  pos guerras||posguerras
  pos-guerras||posguerras
+ post doctorado||posdoctorado
+ post-doctorado||posdoctorado
  post guerra||posguerra
  post-guerra||posguerra
  post guerras||posguerras
@@ -1809,8 +2405,8 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  pre-estrenados||preestrenados
  pre estrenaron||preestrenaron
  pre-estrenaron||preestrenaron
- pre estreno||preestreno (1.ª persona, sustantivo), preestrenó (3.ª persona)
- pre-estreno||preestreno (1.ª persona, sustantivo), preestrenó (3.ª persona)
+ pre estreno||preestreno (verbo, 1.ª persona; sustantivo), preestrenó (verbo, 3.ª persona)
+ pre-estreno||preestreno (verbo, 1.ª persona; sustantivo), preestrenó (verbo, 3.ª persona)
  pre estrenó||preestrenó (3.ª persona), preestreno (1.ª persona)
  pre-estrenó||preestrenó (3.ª persona), preestreno (1.ª persona)
  pre estrenos||preestrenos
@@ -1915,13 +2511,165 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  pre-venta||preventa
  pre ventas||preventas
  pre-ventas||preventas
- primavera arabe|cs|Primavera Árabe
+ primavera arabe||Primavera Árabe
  primavera árabe|cs|Primavera Árabe
- Primavera arabe|cs|Primavera Árabe
  Primavera árabe|cs|Primavera Árabe
- primer vez||primera vez
  Primera Division|cs|Primera División
+ Primera Guerra Anglo Afgana|cs|primera guerra anglo-afgana, Primera guerra anglo-afgana (para inicios de frase o columnas de tablas)
+ Primera Guerra Anglo-Afgana|cs|primera guerra anglo-afgana, Primera guerra anglo-afgana (para inicios de frase o columnas de tablas)
+ Primera guerra Anglo Afgana|cs|primera guerra anglo-afgana, Primera guerra anglo-afgana (para inicios de frase o columnas de tablas)
+ Primera guerra Anglo-Afgana|cs|primera guerra anglo-afgana, Primera guerra anglo-afgana (para inicios de frase o columnas de tablas)
+ Primera Guerra anglo afgana|cs|primera guerra anglo-afgana, Primera guerra anglo-afgana (para inicios de frase o columnas de tablas)
+ Primera Guerra anglo-afgana|cs|primera guerra anglo-afgana, Primera guerra anglo-afgana (para inicios de frase o columnas de tablas)
+ Primera guerra anglo afgana|cs|primera guerra anglo-afgana, Primera guerra anglo-afgana (para inicios de frase o columnas de tablas)
+ Primera guerra anglo-afgana|cs|primera guerra anglo-afgana, Primera guerra anglo-afgana (para inicios de frase o columnas de tablas)
+ Primera Guerra Anglo-Birmana|cs|primera guerra anglo-birmana, Primera guerra anglo-birmana (para inicios de frase o columnas de tablas)
+ Primera guerra Anglo-Birmana|cs|primera guerra anglo-birmana, Primera guerra anglo-birmana (para inicios de frase o columnas de tablas)
+ Primera Guerra anglo-birmana|cs|primera guerra anglo-birmana, Primera guerra anglo-birmana (para inicios de frase o columnas de tablas)
+ Primera guerra anglo-birmana|cs|primera guerra anglo-birmana, Primera guerra anglo-birmana (para inicios de frase o columnas de tablas)
+ Primera Guerra Anglo Neerlandesa|cs|primera guerra anglo-neerlandesa, Primera guerra anglo-neerlandesa (para inicios de frase o columnas de tablas)
+ Primera Guerra Anglo-Neerlandesa|cs|primera guerra anglo-neerlandesa, Primera guerra anglo-neerlandesa (para inicios de frase o columnas de tablas)
+ Primera guerra Anglo Neerlandesa|cs|primera guerra anglo-neerlandesa, Primera guerra anglo-neerlandesa (para inicios de frase o columnas de tablas)
+ Primera guerra Anglo-Neerlandesa|cs|primera guerra anglo-neerlandesa, Primera guerra anglo-neerlandesa (para inicios de frase o columnas de tablas)
+ Primera Guerra anglo neerlandesa|cs|primera guerra anglo-neerlandesa, Primera guerra anglo-neerlandesa (para inicios de frase o columnas de tablas)
+ Primera Guerra anglo-neerlandesa|cs|primera guerra anglo-neerlandesa, Primera guerra anglo-neerlandesa (para inicios de frase o columnas de tablas)
+ Primera guerra anglo neerlandesa|cs|primera guerra anglo-neerlandesa, Primera guerra anglo-neerlandesa (para inicios de frase o columnas de tablas)
+ Primera guerra anglo-neerlandesa|cs|primera guerra anglo-neerlandesa, Primera guerra anglo-neerlandesa (para inicios de frase o columnas de tablas)
+ Primera Guerra Anglo-Sij|cs|primera guerra anglo-sij, Primera guerra anglo-sij (para inicios de frase o columnas de tablas)
+ Primera guerra Anglo-Sij|cs|primera guerra anglo-sij, Primera guerra anglo-sij (para inicios de frase o columnas de tablas)
+ Primera Guerra anglo-sij|cs|primera guerra anglo-sij, Primera guerra anglo-sij (para inicios de frase o columnas de tablas)
+ Primera guerra anglo-sij|cs|primera guerra anglo-sij, Primera guerra anglo-sij (para inicios de frase o columnas de tablas)
+ Primera Guerra Árabe-Israelí|cs|primera guerra árabe-israelí, Primera guerra árabe-israelí (para inicios de frase o columnas de tablas)
+ Primera guerra Árabe-Israelí|cs|primera guerra árabe-israelí, Primera guerra árabe-israelí (para inicios de frase o columnas de tablas)
+ Primera Guerra árabe-israelí|cs|primera guerra árabe-israelí, Primera guerra árabe-israelí (para inicios de frase o columnas de tablas)
+ Primera guerra árabe-israelí|cs|primera guerra árabe-israelí, Primera guerra árabe-israelí (para inicios de frase o columnas de tablas)
+ Primera Guerra Balcánica|cs|primera guerra balcánica, Primera guerra balcánica (para inicios de frase o columnas de tablas)
+ Primera guerra Balcánica|cs|primera guerra balcánica, Primera guerra balcánica (para inicios de frase o columnas de tablas)
+ Primera Guerra balcánica|cs|primera guerra balcánica, Primera guerra balcánica (para inicios de frase o columnas de tablas)
+ Primera guerra balcánica|cs|primera guerra balcánica, Primera guerra balcánica (para inicios de frase o columnas de tablas)
+ Primera Guerra Bóer|cs|primera guerra bóer, Primera guerra bóer (para inicios de frase o columnas de tablas)
+ Primera guerra Bóer|cs|primera guerra bóer, Primera guerra bóer (para inicios de frase o columnas de tablas)
+ Primera Guerra bóer|cs|primera guerra bóer, Primera guerra bóer (para inicios de frase o columnas de tablas)
+ Primera guerra bóer|cs|primera guerra bóer, Primera guerra bóer (para inicios de frase o columnas de tablas)
+ Primera Guerra Carlista|cs|primera guerra carlista, Primera guerra carlista (para inicios de frase o columnas de tablas)
+ Primera guerra Carlista|cs|primera guerra carlista, Primera guerra carlista (para inicios de frase o columnas de tablas)
+ Primera Guerra carlista|cs|primera guerra carlista, Primera guerra carlista (para inicios de frase o columnas de tablas)
+ Primera guerra carlista|cs|primera guerra carlista, Primera guerra carlista (para inicios de frase o columnas de tablas)
+ Primera Guerra Chechena|cs|primera guerra chechena, Primera guerra chechena (para inicios de frase o columnas de tablas)
+ Primera guerra Chechena|cs|primera guerra chechena, Primera guerra chechena (para inicios de frase o columnas de tablas)
+ Primera Guerra chechena|cs|primera guerra chechena, Primera guerra chechena (para inicios de frase o columnas de tablas)
+ Primera guerra chechena|cs|primera guerra chechena, Primera guerra chechena (para inicios de frase o columnas de tablas)
+ Primera Guerra Civil Castellana|cs|primera guerra civil castellana, Primera guerra civil castellana (para inicios de frase o columnas de tablas)
+ Primera guerra civil castellana|cs|primera guerra civil castellana, Primera guerra civil castellana (para inicios de frase o columnas de tablas)
+ Primera Guerra Civil de Honduras|cs|primera guerra civil de Honduras, Primera guerra civil de Honduras (para inicios de frase o columnas de tablas)
+ Primera guerra Civil de Honduras|cs|primera guerra civil de Honduras, Primera guerra civil de Honduras (para inicios de frase o columnas de tablas)
+ Primera Guerra civil de Honduras|cs|primera guerra civil de Honduras, Primera guerra civil de Honduras (para inicios de frase o columnas de tablas)
+ Primera guerra civil de Honduras|cs|primera guerra civil de Honduras, Primera guerra civil de Honduras (para inicios de frase o columnas de tablas)
+ Primera Guerra Civil Inglesa|cs|primera guerra civil inglesa, Primera guerra civil inglesa (para inicios de frase o columnas de tablas)
+ Primera Guerra Civil inglesa|cs|primera guerra civil inglesa, Primera guerra civil inglesa (para inicios de frase o columnas de tablas)
+ Primera Guerra civil inglesa|cs|primera guerra civil inglesa, Primera guerra civil inglesa (para inicios de frase o columnas de tablas)
+ Primera guerra civil inglesa|cs|primera guerra civil inglesa, Primera guerra civil inglesa (para inicios de frase o columnas de tablas)
+ Primera Guerra Civil Sudanesa|cs|primera guerra civil sudanesa, Primera guerra civil sudanesa (para inicios de frase o columnas de tablas)
+ Primera Guerra Civil sudanesa|cs|primera guerra civil sudanesa, Primera guerra civil sudanesa (para inicios de frase o columnas de tablas)
+ Primera guerra civil sudanesa|cs|primera guerra civil sudanesa, Primera guerra civil sudanesa (para inicios de frase o columnas de tablas)
+ Primera Guerra de Independencia Italiana|cs|primera guerra de Independencia italiana, Primera guerra de Independencia italiana (para inicios de frase o columnas de tablas)
+ Primera guerra de Independencia Italiana|cs|primera guerra de Independencia italiana, Primera guerra de Independencia italiana (para inicios de frase o columnas de tablas)
+ Primera Guerra de independencia Italiana|cs|primera guerra de Independencia italiana, Primera guerra de Independencia italiana (para inicios de frase o columnas de tablas)
+ Primera Guerra de Independencia italiana|cs|primera guerra de Independencia italiana, Primera guerra de Independencia italiana (para inicios de frase o columnas de tablas)
+ Primera guerra de independencia Italiana|cs|primera guerra de Independencia italiana, Primera guerra de Independencia italiana (para inicios de frase o columnas de tablas)
+ Primera Guerra de independencia italiana|cs|primera guerra de Independencia italiana, Primera guerra de Independencia italiana (para inicios de frase o columnas de tablas)
+ Primera guerra de Independencia italiana|cs|primera guerra de Independencia italiana, Primera guerra de Independencia italiana (para inicios de frase o columnas de tablas)
+ Primera guerra de independencia italiana|cs|primera guerra de Independencia italiana, Primera guerra de Independencia italiana (para inicios de frase o columnas de tablas)
+ Primera Guerra de Indochina|cs|primera guerra de Indochina, Primera guerra de Indochina (para inicios de frase o columnas de tablas)
+ Primera guerra de Indochina|cs|primera guerra de Indochina, Primera guerra de Indochina (para inicios de frase o columnas de tablas)
+ Primera guerra de indochina|cs|primera guerra de Indochina, Primera guerra de Indochina (para inicios de frase o columnas de tablas)
+ Primera Guerra del Alto Karabaj|cs|primera guerra del Alto Karabaj, Primera guerra del Alto Karabaj (para inicios de frase o columnas de tablas)
+ Primera guerra del Alto Karabaj|cs|primera guerra del Alto Karabaj, Primera guerra del Alto Karabaj (para inicios de frase o columnas de tablas)
+ Primera Guerra del alto karabaj|cs|primera guerra del Alto Karabaj, Primera guerra del Alto Karabaj (para inicios de frase o columnas de tablas)
+ Primera guerra del alto karabaj|cs|primera guerra del Alto Karabaj, Primera guerra del Alto Karabaj (para inicios de frase o columnas de tablas)
+ Primera Guerra del Congo|cs|primera guerra del Congo, Primera guerra del Congo (para inicios de frase o columnas de tablas)
+ Primera guerra del Congo|cs|primera guerra del Congo, Primera guerra del Congo (para inicios de frase o columnas de tablas)
+ Primera Guerra del Golfo|cs|primera guerra del Golfo, Primera guerra del Golfo (para inicios de frase o columnas de tablas)
+ Primera guerra del Golfo|cs|primera guerra del Golfo, Primera guerra del Golfo (para inicios de frase o columnas de tablas)
+ Primera Guerra del golfo|cs|primera guerra del Golfo, Primera guerra del Golfo (para inicios de frase o columnas de tablas)
+ Primera guerra del golfo|cs|primera guerra del Golfo, Primera guerra del Golfo (para inicios de frase o columnas de tablas)
+ Primera Guerra del Opio|cs|primera guerra del Opio, Primera guerra del Opio (para inicios de frase o columnas de tablas)
+ Primera guerra del Opio|cs|primera guerra del Opio, Primera guerra del Opio (para inicios de frase o columnas de tablas)
+ Primera Guerra del opio|cs|primera guerra del Opio, Primera guerra del Opio (para inicios de frase o columnas de tablas)
+ Primera guerra del opio|cs|primera guerra del Opio, Primera guerra del Opio (para inicios de frase o columnas de tablas)
+ Primera Guerra de los Barones|cs|primera guerra de los Barones, Primera guerra de los Barones (para inicios de frase o columnas de tablas)
+ Primera guerra de los Barones|cs|primera guerra de los Barones, Primera guerra de los Barones (para inicios de frase o columnas de tablas)
+ Primera Guerra de los barones|cs|primera guerra de los Barones, Primera guerra de los Barones (para inicios de frase o columnas de tablas)
+ Primera guerra de los barones|cs|primera guerra de los Barones, Primera guerra de los Barones (para inicios de frase o columnas de tablas)
+ Primera Guerra del Peloponeso|cs|primera guerra del Peloponeso, Primera guerra del Peloponeso (para inicios de frase o columnas de tablas)
+ Primera guerra del Peloponeso|cs|primera guerra del Peloponeso, Primera guerra del Peloponeso (para inicios de frase o columnas de tablas)
+ Primera Guerra de los Balcanes|cs|primera guerra de los Balcanes, Primera guerra de los Balcanes (para inicios de frase o columnas de tablas)
+ Primera guerra de los Balcanes|cs|primera guerra de los Balcanes, Primera guerra de los Balcanes (para inicios de frase o columnas de tablas)
+ Primera Guerra de los balcanes|cs|primera guerra de los Balcanes, Primera guerra de los Balcanes (para inicios de frase o columnas de tablas)
+ Primera guerra de los balcanes|cs|primera guerra de los Balcanes, Primera guerra de los Balcanes (para inicios de frase o columnas de tablas)
+ Primera Guerra de Schleswig|cs|primera guerra de Schleswig, Primera guerra de Schleswig (para inicios de frase o columnas de tablas)
+ Primera guerra de Schleswig|cs|primera guerra de Schleswig, Primera guerra de Schleswig (para inicios de frase o columnas de tablas)
+ Primera Guerra de Silesia|cs|primera guerra de Silesia, Primera guerra de Silesia (para inicios de frase o columnas de tablas)
+ Primera guerra de Silesia|cs|primera guerra de Silesia, Primera guerra de Silesia (para inicios de frase o columnas de tablas)
+ Primera Guerra de silesia|cs|primera guerra de Silesia, Primera guerra de Silesia (para inicios de frase o columnas de tablas)
+ Primera guerra de silesia|cs|primera guerra de Silesia, Primera guerra de Silesia (para inicios de frase o columnas de tablas)
+ Primera Guerra Italiana|cs|primera guerra italiana, Primera guerra italiana (para inicios de frase o columnas de tablas)
+ Primera guerra Italiana|cs|primera guerra italiana, Primera guerra italiana (para inicios de frase o columnas de tablas)
+ Primera Guerra italiana|cs|primera guerra italiana, Primera guerra italiana (para inicios de frase o columnas de tablas)
+ Primera guerra italiana|cs|primera guerra italiana, Primera guerra italiana (para inicios de frase o columnas de tablas)
+ Primera Guerra Ítalo Etíope|cs|primera guerra ítalo-etíope, Primera guerra ítalo-etíope (para inicios de frase o columnas de tablas)
+ Primera Guerra-Ítalo-Etíope|cs|primera guerra ítalo-etíope, Primera guerra ítalo-etíope (para inicios de frase o columnas de tablas)
+ Primera guerra Ítalo-Etíope|cs|primera guerra ítalo-etíope, Primera guerra ítalo-etíope (para inicios de frase o columnas de tablas)
+ Primera guerra-Ítalo-Etíope|cs|primera guerra ítalo-etíope, Primera guerra ítalo-etíope (para inicios de frase o columnas de tablas)
+ Primera Guerra ítalo-etíope|cs|primera guerra ítalo-etíope, Primera guerra ítalo-etíope (para inicios de frase o columnas de tablas)
+ Primera Guerra-ítalo-etíope|cs|primera guerra ítalo-etíope, Primera guerra ítalo-etíope (para inicios de frase o columnas de tablas)
+ Primera guerra ítalo-etíope|cs|primera guerra ítalo-etíope, Primera guerra ítalo-etíope (para inicios de frase o columnas de tablas)
+ Primera guerra-ítalo-etíope|cs|primera guerra ítalo-etíope, Primera guerra ítalo-etíope (para inicios de frase o columnas de tablas)
+ Primera Guerra Judeo Romana|cs|primera guerra judeo-romana, Primera guerra judeo-romana (para inicios de frase o columnas de tablas)
+ Primera Guerra Judeo-Romana|cs|primera guerra judeo-romana, Primera guerra judeo-romana (para inicios de frase o columnas de tablas)
+ Primera guerra judeo romana|cs|primera guerra judeo-romana, Primera guerra judeo-romana (para inicios de frase o columnas de tablas)
+ Primera guerra judeo-romana|cs|primera guerra judeo-romana, Primera guerra judeo-romana (para inicios de frase o columnas de tablas)
+ Primera Guerra Macedónica|cs|primera guerra macedónica, Primera guerra macedónica (para inicios de frase o columnas de tablas)
+ Primera guerra Macedónica|cs|primera guerra macedónica, Primera guerra macedónica (para inicios de frase o columnas de tablas)
+ Primera Guerra macedónica|cs|primera guerra macedónica, Primera guerra macedónica (para inicios de frase o columnas de tablas)
+ Primera guerra macedónica|cs|primera guerra macedónica, Primera guerra macedónica (para inicios de frase o columnas de tablas)
+ Primera Guerra Médica|cs|primera guerra médica, Primera guerra médica (para inicios de frase o columnas de tablas)
+ Primera guerra Médica|cs|primera guerra médica, Primera guerra médica (para inicios de frase o columnas de tablas)
+ Primera Guerra médica|cs|primera guerra médica, Primera guerra médica (para inicios de frase o columnas de tablas)
+ Primera guerra médica|cs|primera guerra médica, Primera guerra médica (para inicios de frase o columnas de tablas)
+ Primera Guerra Mesenia|cs|primera guerra mesenia, Primera guerra mesenia (para inicios de frase o columnas de tablas)
+ Primera guerra Mesenia|cs|primera guerra mesenia, Primera guerra mesenia (para inicios de frase o columnas de tablas)
+ Primera Guerra mesenia|cs|primera guerra mesenia, Primera guerra mesenia (para inicios de frase o columnas de tablas)
+ Primera guerra mesenia|cs|primera guerra mesenia, Primera guerra mesenia (para inicios de frase o columnas de tablas)
+ Primera Guerra Mitridática|cs|primera guerra mitridática, Primera guerra mitridática (para inicios de frase o columnas de tablas)
+ Primera guerra Mitridática|cs|primera guerra mitridática, Primera guerra mitridática (para inicios de frase o columnas de tablas)
+ Primera Guerra mitridática|cs|primera guerra mitridática, Primera guerra mitridática (para inicios de frase o columnas de tablas)
+ Primera guerra mitridática|cs|primera guerra mitridática, Primera guerra mitridática (para inicios de frase o columnas de tablas)
+ primera guerra mundial|cs|Primera Guerra Mundial
+ primera Guerra mundial|cs|Primera Guerra Mundial
+ primera guerra Mundial|cs|Primera Guerra Mundial
+ primera Guerra Mundial|cs|Primera Guerra Mundial
+ Primera guerra Mundial|cs|Primera Guerra Mundial
+ Primera Guerra mundial|cs|Primera Guerra Mundial
+ Primera guerra mundial|cs|Primera Guerra Mundial
+ Primera Guerra Púnica|cs|primera guerra púnica, Primera guerra púnica (para inicios de frase o columnas de tablas)
+ Primera guerra Púnica|cs|primera guerra púnica, Primera guerra púnica (para inicios de frase o columnas de tablas)
+ Primera Guerra púnica|cs|primera guerra púnica, Primera guerra púnica (para inicios de frase o columnas de tablas)
+ Primera guerra púnica|cs|primera guerra púnica, Primera guerra púnica (para inicios de frase o columnas de tablas)
+ Primera Guerra Samnita|cs|primera guerra samnita, Primera guerra samnita (para inicios de frase o columnas de tablas)
+ Primera guerra Samnita|cs|primera guerra samnita, Primera guerra samnita (para inicios de frase o columnas de tablas)
+ Primera Guerra samnita|cs|primera guerra samnita, Primera guerra samnita (para inicios de frase o columnas de tablas)
+ Primera guerra samnita|cs|primera guerra samnita, Primera guerra samnita (para inicios de frase o columnas de tablas)
+ Primera Guerra Sino Japonesa|cs|primera guerra sino-japonesa, Primera guerra sino-japonesa (para inicios de frase o columnas de tablas)
+ Primera Guerra Sino-Japonesa|cs|primera guerra sino-japonesa, Primera guerra sino-japonesa (para inicios de frase o columnas de tablas)
+ Primera Guerra sino japonesa|cs|primera guerra sino-japonesa, Primera guerra sino-japonesa (para inicios de frase o columnas de tablas)
+ Primera Guerra sino-japonesa|cs|primera guerra sino-japonesa, Primera guerra sino-japonesa (para inicios de frase o columnas de tablas)
+ Primera guerra Sino Japonesa|cs|primera guerra sino-japonesa, Primera guerra sino-japonesa (para inicios de frase o columnas de tablas)
+ Primera guerra Sino-Japonesa|cs|primera guerra sino-japonesa, Primera guerra sino-japonesa (para inicios de frase o columnas de tablas)
+ Primera guerra sino japonesa|cs|primera guerra sino-japonesa, Primera guerra sino-japonesa (para inicios de frase o columnas de tablas)
+ Primera guerra sino-japonesa|cs|primera guerra sino-japonesa, Primera guerra sino-japonesa (para inicios de frase o columnas de tablas)
  primer ministra||primera ministra
+ primer vez||primera vez
  pro secretaria||prosecretaria, prosecretaría
  pro-secretaria||prosecretaria, prosecretaría
  pro secretaría||prosecretaría, prosecretaria
@@ -2128,16 +2876,18 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  re-lanzo||relanzó (3.ª persona), relanzo (1.ª persona)
  re lanzó||relanzó (3.ª persona), relanzo (1.ª persona)
  re-lanzó||relanzó (3.ª persona), relanzo (1.ª persona)
- republica argentina|cs|República Argentina
+ republica argentina||República Argentina
  república argentina|cs|República Argentina
- republica Argentina|cs|República Argentina
  república Argentina|cs|República Argentina
- Republica argentina|cs|República Argentina
  República argentina|cs|República Argentina
  re-publicada||republicada
  re-publicadas||republicadas
  re-publicado||republicado
  re-publicados||republicados
+ re-reelección||rerreelección
+ re-reeleccion||rerreelección
+ re reelección||rerreelección
+ re reeleccion||rerreelección
  re ubica||reubica
  re-ubica||reubica
  re ubicaba||reubicaba
@@ -2166,24 +2916,36 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  re-ubico||reubicó (3.ª persona), reubico (1.ª persona)
  re ubicó||reubicó (3.ª persona), reubico (1.ª persona)
  re-ubicó||reubicó (3.ª persona), reubico (1.ª persona)
+ revela contra||rebela contra
+ revelaba contra||rebelaba contra
+ revelaban contra||rebelaban contra
+ revelara contra||rebelara contra
+ revelaran contra||rebelaran contra
+ revelaria contra||rebelaría contra
+ revelaría contra||rebelaría contra
+ revelarian contra||rebelarían contra
+ revelarían contra||rebelarían contra
+ revelaron contra||rebelaron contra
  revelarse contra||rebelarse contra
+ revelo contra||rebeló contra (3.ª persona), rebelo contra (1.ª persona)
+ reveló contra||rebeló contra (3.ª persona), rebelo contra (1.ª persona)
  Rimsky-Korsakov|cs|Rimski-Kórsakov (transliteración correcta al español)
  Rio 2016|cs|Río 2016 (Juegos Olímpicos de Verano)
  Rio Claro|cs|Río Claro (región o río en varios países de lengua española y Brasil), Rio Claro (en portugués)
  Rio de Janeiro|cs|Río de Janeiro (en español), Rio de Janeiro (en portugués y otros idiomas)
- rio de la Plata|cs|Río de la Plata
- río de la Plata|cs|Río de la Plata
- rio de la plata|cs|Río de la Plata
- río de la plata|cs|Río de la Plata
+ rio de la plata||Río de la Plata (estuario entre Argentina y Uruguay, con mayúscula inicial, ya que aquí «río» forma parte del nombre propio)
+ río de la Plata|cs|Río de la Plata (estuario entre Argentina y Uruguay, con mayúscula inicial, ya que aquí «río» forma parte del nombre propio)
+ río de la plata|cs|Río de la Plata (estuario entre Argentina y Uruguay, con mayúscula inicial, ya que aquí «río» forma parte del nombre propio)
  Rio Negro|cs|Río Negro (región o río en varios países de lengua española, Estados Unidos y Brasil), Rio Negro (en portugués e inglés)
  round robin||todos contra todos, fase de liguilla
 
 == S ==
 
+ s.a.d.||S.&nbsp;A.&nbsp;D. (abreviatura), SAD (siglas de sociedad anónima deportiva)
+ s. a. d.|cs|S.&nbsp;A.&nbsp;D. (abreviatura), SAD (siglas de sociedad anónima deportiva)
  S. D. Éibar|cs|S. D. Eibar
  S.D. Éibar|cs|S. D. Eibar
- Salud Publica|cs|Salud Pública
- salud publica|cs|salud pública
+ salud publica||salud pública
  San Sebastian|cs|San Sebastián
  Santa Barbara|cs|Santa Bárbara (localidad o región en varios países de lengua española y Estados Unidos), Santa Barbara (en inglés)
  Santa Monica|cs|Santa Mónica (localidad o región en varios países de lengua española y Estados Unidos), Santa Monica (en inglés)
@@ -2217,6 +2979,143 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  se fundo||se fundó
  seg.||s (símbolo de la unidad temporal segundo), s. (para final de frase)
  Segunda Division|cs|Segunda División
+ Segunda Guerra Anglo Afgana|cs|segunda guerra anglo-afgana, Segunda guerra anglo-afgana (para inicios de frase o columnas de tablas)
+ Segunda Guerra Anglo-Afgana|cs|segunda guerra anglo-afgana, Segunda guerra anglo-afgana (para inicios de frase o columnas de tablas)
+ Segunda guerra Anglo Afgana|cs|segunda guerra anglo-afgana, Segunda guerra anglo-afgana (para inicios de frase o columnas de tablas)
+ Segunda guerra Anglo-Afgana|cs|segunda guerra anglo-afgana, Segunda guerra anglo-afgana (para inicios de frase o columnas de tablas)
+ Segunda Guerra anglo afgana|cs|segunda guerra anglo-afgana, Segunda guerra anglo-afgana (para inicios de frase o columnas de tablas)
+ Segunda Guerra anglo-afgana|cs|segunda guerra anglo-afgana, Segunda guerra anglo-afgana (para inicios de frase o columnas de tablas)
+ Segunda guerra anglo afgana|cs|segunda guerra anglo-afgana, Segunda guerra anglo-afgana (para inicios de frase o columnas de tablas)
+ Segunda guerra anglo-afgana|cs|segunda guerra anglo-afgana, Segunda guerra anglo-afgana (para inicios de frase o columnas de tablas)
+ Segunda Guerra Anglo Neerlandesa|cs|segunda guerra anglo-neerlandesa, Segunda guerra anglo-neerlandesa (para inicios de frase o columnas de tablas)
+ Segunda Guerra Anglo-Neerlandesa|cs|segunda guerra anglo-neerlandesa, Segunda guerra anglo-neerlandesa (para inicios de frase o columnas de tablas)
+ Segunda guerra Anglo Neerlandesa|cs|segunda guerra anglo-neerlandesa, Segunda guerra anglo-neerlandesa (para inicios de frase o columnas de tablas)
+ Segunda guerra Anglo-Neerlandesa|cs|segunda guerra anglo-neerlandesa, Segunda guerra anglo-neerlandesa (para inicios de frase o columnas de tablas)
+ Segunda Guerra anglo neerlandesa|cs|segunda guerra anglo-neerlandesa, Segunda guerra anglo-neerlandesa (para inicios de frase o columnas de tablas)
+ Segunda Guerra anglo-neerlandesa|cs|segunda guerra anglo-neerlandesa, Segunda guerra anglo-neerlandesa (para inicios de frase o columnas de tablas)
+ Segunda guerra anglo neerlandesa|cs|segunda guerra anglo-neerlandesa, Segunda guerra anglo-neerlandesa (para inicios de frase o columnas de tablas)
+ Segunda guerra anglo-neerlandesa|cs|segunda guerra anglo-neerlandesa, Segunda guerra anglo-neerlandesa (para inicios de frase o columnas de tablas)
+ Segunda Guerra Balcánica|cs|segunda guerra balcánica, Segunda guerra balcánica (para inicios de frase o columnas de tablas)
+ Segunda guerra Balcánica|cs|segunda guerra balcánica, Segunda guerra balcánica (para inicios de frase o columnas de tablas)
+ Segunda Guerra balcánica|cs|segunda guerra balcánica, Segunda guerra balcánica (para inicios de frase o columnas de tablas)
+ Segunda guerra balcánica|cs|segunda guerra balcánica, Segunda guerra balcánica (para inicios de frase o columnas de tablas)
+ Segunda Guerra Bóer|cs|segunda guerra bóer, Segunda guerra bóer (para inicios de frase o columnas de tablas)
+ Segunda guerra Bóer|cs|segunda guerra bóer, Segunda guerra bóer (para inicios de frase o columnas de tablas)
+ Segunda Guerra bóer|cs|segunda guerra bóer, Segunda guerra bóer (para inicios de frase o columnas de tablas)
+ Segunda guerra bóer|cs|segunda guerra bóer, Segunda guerra bóer (para inicios de frase o columnas de tablas)
+ Segunda Guerra Carlista|cs|segunda guerra carlista, Segunda guerra carlista (para inicios de frase o columnas de tablas)
+ Segunda guerra Carlista|cs|segunda guerra carlista, Segunda guerra carlista (para inicios de frase o columnas de tablas)
+ Segunda Guerra carlista|cs|segunda guerra carlista, Segunda guerra carlista (para inicios de frase o columnas de tablas)
+ Segunda guerra carlista|cs|segunda guerra carlista, Segunda guerra carlista (para inicios de frase o columnas de tablas)
+ Segunda Guerra Chechena|cs|segunda guerra chechena, Segunda guerra chechena (para inicios de frase o columnas de tablas)
+ Segunda guerra Chechena|cs|segunda guerra chechena, Segunda guerra chechena (para inicios de frase o columnas de tablas)
+ Segunda Guerra chechena|cs|segunda guerra chechena, Segunda guerra chechena (para inicios de frase o columnas de tablas)
+ Segunda guerra chechena|cs|segunda guerra chechena, Segunda guerra chechena (para inicios de frase o columnas de tablas)
+ Segunda Guerra Civil de la República Romana|cs|segunda guerra civil de la República romana, Segunda guerra civil de la República romana (para inicios de frase o columnas de tablas)
+ Segunda guerra civil de la República Romana|cs|segunda guerra civil de la República romana, Segunda guerra civil de la República romana (para inicios de frase o columnas de tablas)
+ Segunda guerra civil de la República romana|cs|segunda guerra civil de la República romana, Segunda guerra civil de la República romana (para inicios de frase o columnas de tablas)
+ Segunda guerra civil de la república romana|cs|segunda guerra civil de la República romana, Segunda guerra civil de la República romana (para inicios de frase o columnas de tablas)
+ Segunda Guerra Civil Inglesa|cs|segunda guerra civil inglesa, Segunda guerra civil inglesa (para inicios de frase o columnas de tablas)
+ Segunda Guerra Civil inglesa|cs|segunda guerra civil inglesa, Segunda guerra civil inglesa (para inicios de frase o columnas de tablas)
+ Segunda Guerra civil inglesa|cs|segunda guerra civil inglesa, Segunda guerra civil inglesa (para inicios de frase o columnas de tablas)
+ Segunda guerra civil inglesa|cs|segunda guerra civil inglesa, Segunda guerra civil inglesa (para inicios de frase o columnas de tablas)
+ Segunda Guerra Civil Libia|cs|segunda guerra civil libia, Segunda guerra civil libia (para inicios de frase o columnas de tablas)
+ Segunda guerra Civil Libia|cs|segunda guerra civil libia, Segunda guerra civil libia (para inicios de frase o columnas de tablas)
+ Segunda Guerra civil Libia|cs|segunda guerra civil libia, Segunda guerra civil libia (para inicios de frase o columnas de tablas)
+ Segunda Guerra Civil libia|cs|segunda guerra civil libia, Segunda guerra civil libia (para inicios de frase o columnas de tablas)
+ Segunda guerra civil Libia|cs|segunda guerra civil libia, Segunda guerra civil libia (para inicios de frase o columnas de tablas)
+ Segunda guerra Civil libia|cs|segunda guerra civil libia, Segunda guerra civil libia (para inicios de frase o columnas de tablas)
+ Segunda Guerra civil libia|cs|segunda guerra civil libia, Segunda guerra civil libia (para inicios de frase o columnas de tablas)
+ Segunda guerra civil libia|cs|segunda guerra civil libia, Segunda guerra civil libia (para inicios de frase o columnas de tablas)
+ Segunda Guerra Civil Sudanesa|cs|segunda guerra civil sudanesa, Segunda guerra civil sudanesa (para inicios de frase o columnas de tablas)
+ Segunda guerra Civil Sudanesa|cs|segunda guerra civil sudanesa, Segunda guerra civil sudanesa (para inicios de frase o columnas de tablas)
+ Segunda Guerra civil Sudanesa|cs|segunda guerra civil sudanesa, Segunda guerra civil sudanesa (para inicios de frase o columnas de tablas)
+ Segunda Guerra Civil sudanesa|cs|segunda guerra civil sudanesa, Segunda guerra civil sudanesa (para inicios de frase o columnas de tablas)
+ Segunda guerra civil Sudanesa|cs|segunda guerra civil sudanesa, Segunda guerra civil sudanesa (para inicios de frase o columnas de tablas)
+ Segunda Guerra civil sudanesa|cs|segunda guerra civil sudanesa, Segunda guerra civil sudanesa (para inicios de frase o columnas de tablas)
+ Segunda guerra Civil sudanesa|cs|segunda guerra civil sudanesa, Segunda guerra civil sudanesa (para inicios de frase o columnas de tablas)
+ Segunda guerra civil sudanesa|cs|segunda guerra civil sudanesa, Segunda guerra civil sudanesa (para inicios de frase o columnas de tablas)
+ Segunda Guerra de Independencia Italiana|cs|segunda guerra de Independencia italiana, Segunda guerra de Independencia italiana (para inicios de frase o columnas de tablas)
+ Segunda guerra de Independencia Italiana|cs|segunda guerra de Independencia italiana, Segunda guerra de Independencia italiana (para inicios de frase o columnas de tablas)
+ Segunda Guerra de independencia Italiana|cs|segunda guerra de Independencia italiana, Segunda guerra de Independencia italiana (para inicios de frase o columnas de tablas)
+ Segunda Guerra de Independencia italiana|cs|segunda guerra de Independencia italiana, Segunda guerra de Independencia italiana (para inicios de frase o columnas de tablas)
+ Segunda guerra de independencia Italiana|cs|segunda guerra de Independencia italiana, Segunda guerra de Independencia italiana (para inicios de frase o columnas de tablas)
+ Segunda Guerra de independencia italiana|cs|segunda guerra de Independencia italiana, Segunda guerra de Independencia italiana (para inicios de frase o columnas de tablas)
+ Segunda guerra de Independencia italiana|cs|segunda guerra de Independencia italiana, Segunda guerra de Independencia italiana (para inicios de frase o columnas de tablas)
+ Segunda guerra de independencia italiana|cs|segunda guerra de Independencia italiana, Segunda guerra de Independencia italiana (para inicios de frase o columnas de tablas)
+ Segunda Guerra Ítalo-Etíope|cs|segunda guerra ítalo-etíope, Segunda guerra ítalo-etíope (para inicios de frase o columnas de tablas)
+ Segunda guerra Ítalo-Etíope|cs|segunda guerra ítalo-etíope, Segunda guerra ítalo-etíope (para inicios de frase o columnas de tablas)
+ Segunda Guerra ítalo-etíope|cs|segunda guerra ítalo-etíope, Segunda guerra ítalo-etíope (para inicios de frase o columnas de tablas)
+ Segunda guerra ítalo-etíope|cs|segunda guerra ítalo-etíope, Segunda guerra ítalo-etíope (para inicios de frase o columnas de tablas)
+ Segunda Guerra de Indochina|cs|segunda guerra de Indochina, Segunda guerra de Indochina (para inicios de frase o columnas de tablas)
+ Segunda guerra de Indochina|cs|segunda guerra de Indochina, Segunda guerra de Indochina (para inicios de frase o columnas de tablas)
+ Segunda Guerra del Alto Karabaj|cs|segunda guerra del Alto Karabaj, Segunda guerra del Alto Karabaj (para inicios de frase o columnas de tablas)
+ Segunda guerra del Alto Karabaj|cs|segunda guerra del Alto Karabaj, Segunda guerra del Alto Karabaj (para inicios de frase o columnas de tablas)
+ Segunda Guerra del alto karabaj|cs|segunda guerra del Alto Karabaj, Segunda guerra del Alto Karabaj (para inicios de frase o columnas de tablas)
+ Segunda guerra del alto karabaj|cs|segunda guerra del Alto Karabaj, Segunda guerra del Alto Karabaj (para inicios de frase o columnas de tablas)
+ Segunda Guerra del Congo|cs|segunda guerra del Congo, Segunda guerra del Congo (para inicios de frase o columnas de tablas)
+ Segunda guerra del Congo|cs|segunda guerra del Congo, Segunda guerra del Congo (para inicios de frase o columnas de tablas)
+ Segunda Guerra del congo|cs|segunda guerra del Congo, Segunda guerra del Congo (para inicios de frase o columnas de tablas)
+ Segunda guerra del congo|cs|segunda guerra del Congo, Segunda guerra del Congo (para inicios de frase o columnas de tablas)
+ Segunda Guerra del Opio|cs|segunda guerra del Opio, Segunda guerra del Opio (para inicios de frase o columnas de tablas)
+ Segunda guerra del Opio|cs|segunda guerra del Opio, Segunda guerra del Opio (para inicios de frase o columnas de tablas)
+ Segunda Guerra del opio|cs|segunda guerra del Opio, Segunda guerra del Opio (para inicios de frase o columnas de tablas)
+ Segunda guerra del opio|cs|segunda guerra del Opio, Segunda guerra del Opio (para inicios de frase o columnas de tablas)
+ Segunda Guerra de los Balcanes|cs|segunda guerra de los Balcanes, Segunda guerra de los Balcanes (para inicios de frase o columnas de tablas)
+ Segunda guerra de los Balcanes|cs|segunda guerra de los Balcanes, Segunda guerra de los Balcanes (para inicios de frase o columnas de tablas)
+ Segunda Guerra de los balcanes|cs|segunda guerra de los Balcanes, Segunda guerra de los Balcanes (para inicios de frase o columnas de tablas)
+ Segunda guerra de los balcanes|cs|segunda guerra de los Balcanes, Segunda guerra de los Balcanes (para inicios de frase o columnas de tablas)
+ Segunda Guerra de los Barones|cs|segunda guerra de los Barones, Segunda guerra de los Barones (para inicios de frase o columnas de tablas)
+ Segunda guerra de los Barones|cs|segunda guerra de los Barones, Segunda guerra de los Barones (para inicios de frase o columnas de tablas)
+ Segunda Guerra de los barones|cs|segunda guerra de los Barones, Segunda guerra de los Barones (para inicios de frase o columnas de tablas)
+ Segunda guerra de los barones|cs|segunda guerra de los Barones, Segunda guerra de los Barones (para inicios de frase o columnas de tablas)
+ Segunda Guerra de Silesia|cs|segunda guerra de Silesia, Segunda guerra de Silesia (para inicios de frase o columnas de tablas)
+ Segunda guerra de Silesia|cs|segunda guerra de Silesia, Segunda guerra de Silesia (para inicios de frase o columnas de tablas)
+ Segunda Guerra de silesia|cs|segunda guerra de Silesia, Segunda guerra de Silesia (para inicios de frase o columnas de tablas)
+ Segunda guerra de silesia|cs|segunda guerra de Silesia, Segunda guerra de Silesia (para inicios de frase o columnas de tablas)
+ Segunda Guerra Macedónica|cs|segunda guerra macedónica, Segunda guerra macedónica (para inicios de frase o columnas de tablas)
+ Segunda guerra Macedónica|cs|segunda guerra macedónica, Segunda guerra macedónica (para inicios de frase o columnas de tablas)
+ Segunda Guerra macedónica|cs|segunda guerra macedónica, Segunda guerra macedónica (para inicios de frase o columnas de tablas)
+ Segunda guerra macedónica|cs|segunda guerra macedónica, Segunda guerra macedónica (para inicios de frase o columnas de tablas)
+ Segunda Guerra Médica|cs|segunda guerra médica, Segunda guerra médica (para inicios de frase o columnas de tablas)
+ Segunda guerra Médica|cs|segunda guerra médica, Segunda guerra médica (para inicios de frase o columnas de tablas)
+ Segunda Guerra médica|cs|segunda guerra médica, Segunda guerra médica (para inicios de frase o columnas de tablas)
+ Segunda guerra médica|cs|segunda guerra médica, Segunda guerra médica (para inicios de frase o columnas de tablas)
+ Segunda Guerra Mesenia|cs|segunda guerra mesenia, Segunda guerra mesenia (para inicios de frase o columnas de tablas)
+ Segunda guerra Mesenia|cs|segunda guerra mesenia, Segunda guerra mesenia (para inicios de frase o columnas de tablas)
+ Segunda Guerra mesenia|cs|segunda guerra mesenia, Segunda guerra mesenia (para inicios de frase o columnas de tablas)
+ Segunda guerra mesenia|cs|segunda guerra mesenia, Segunda guerra mesenia (para inicios de frase o columnas de tablas)
+ Segunda Guerra Mitridática|cs|segunda guerra mitridática, Segunda guerra mitridática (para inicios de frase o columnas de tablas)
+ Segunda guerra Mitridática|cs|segunda guerra mitridática, Segunda guerra mitridática (para inicios de frase o columnas de tablas)
+ Segunda Guerra mitridática|cs|segunda guerra mitridática, Segunda guerra mitridática (para inicios de frase o columnas de tablas)
+ Segunda guerra mitridática|cs|segunda guerra mitridática, Segunda guerra mitridática (para inicios de frase o columnas de tablas)
+ segunda guerra mundial|cs|Segunda Guerra Mundial
+ segunda Guerra mundial|cs|Segunda Guerra Mundial
+ segunda guerra Mundial|cs|Segunda Guerra Mundial
+ segunda Guerra Mundial|cs|Segunda Guerra Mundial
+ Segunda guerra mundial|cs|Segunda Guerra Mundial
+ Segunda Guerra mundial|cs|Segunda Guerra Mundial
+ Segunda guerra Mundial|cs|Segunda Guerra Mundial
+ Segunda Guerra Púnica|cs|segunda guerra púnica, Segunda guerra púnica (para inicios de frase o columnas de tablas)
+ Segunda guerra Púnica|cs|segunda guerra púnica, Segunda guerra púnica (para inicios de frase o columnas de tablas)
+ Segunda Guerra púnica|cs|segunda guerra púnica, Segunda guerra púnica (para inicios de frase o columnas de tablas)
+ Segunda guerra púnica|cs|segunda guerra púnica, Segunda guerra púnica (para inicios de frase o columnas de tablas)
+ Segunda Guerra Samnita|cs|segunda guerra samnita, Segunda guerra samnita (para inicios de frase o columnas de tablas)
+ Segunda guerra Samnita|cs|segunda guerra samnita, Segunda guerra samnita (para inicios de frase o columnas de tablas)
+ Segunda Guerra samnita|cs|segunda guerra samnita, Segunda guerra samnita (para inicios de frase o columnas de tablas)
+ Segunda guerra samnita|cs|segunda guerra samnita, Segunda guerra samnita (para inicios de frase o columnas de tablas)
+ Segunda Guerra Servil|cs|segunda guerra servil, Segunda guerra servil (para inicios de frase o columnas de tablas)
+ Segunda guerra Servil|cs|segunda guerra servil, Segunda guerra servil (para inicios de frase o columnas de tablas)
+ Segunda Guerra servil|cs|segunda guerra servil, Segunda guerra servil (para inicios de frase o columnas de tablas)
+ Segunda guerra servil|cs|segunda guerra servil, Segunda guerra servil (para inicios de frase o columnas de tablas)
+ Segunda Guerra Sino Japonesa|cs|segunda guerra sino-japonesa, Segunda guerra sino-japonesa (para inicios de frase o columnas de tablas)
+ Segunda Guerra Sino-Japonesa|cs|segunda guerra sino-japonesa, Segunda guerra sino-japonesa (para inicios de frase o columnas de tablas)
+ Segunda guerra Sino Japonesa|cs|segunda guerra sino-japonesa, Segunda guerra sino-japonesa (para inicios de frase o columnas de tablas)
+ Segunda guerra Sino-Japonesa|cs|segunda guerra sino-japonesa, Segunda guerra sino-japonesa (para inicios de frase o columnas de tablas)
+ Segunda Guerra sino japonesa|cs|segunda guerra sino-japonesa, Segunda guerra sino-japonesa (para inicios de frase o columnas de tablas)
+ Segunda Guerra sino-japonesa|cs|segunda guerra sino-japonesa, Segunda guerra sino-japonesa (para inicios de frase o columnas de tablas)
+ Segunda guerra sino japonesa|cs|segunda guerra sino-japonesa, Segunda guerra sino-japonesa (para inicios de frase o columnas de tablas)
+ Segunda guerra sino-japonesa|cs|segunda guerra sino-japonesa, Segunda guerra sino-japonesa (para inicios de frase o columnas de tablas)
  Seguridad Publica|cs|Seguridad Pública
  se haya bajo||se halla bajo
  se haya el||se halla el
@@ -2318,6 +3217,7 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  sistema Solar|cs|sistema solar, Sistema solar (para inicios de frase o columnas de tablas)
  sito web||sitio web
  sobre sobre||sobre
+ Sociedad Anónima Deportiva|cs|sociedad anónima deportiva (con minúsculas, excepto cuando forma parte de un nombre propio), Sociedad anónima deportiva (para inicios de frase o columnas de tablas),
  Sociedad Deportiva Éibar|cs|Sociedad Deportiva Eibar
  socio cultural||sociocultural
  socio-cultural||sociocultural
@@ -2441,10 +3341,26 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  sub-campeonatos||subcampeonatos
  sub campeones||subcampeones
  sub-campeones||subcampeones
+ sub comisaria||subcomisaria
+ sub-comisaria||subcomisaria
+ sub comisarias||subcomisarias
+ sub-comisarias||subcomisarias
+ sub comisario||subcomisario
+ sub-comisario||subcomisario
+ sub comisarios||subcomisarios
+ sub-comisarios||subcomisarios
  sub comision||subcomisión
  sub-comision||subcomisión
  sub comisión||subcomisión
  sub-comisión||subcomisión
+ sub comisionada||subcomisionada
+ sub-comisionada||subcomisionada
+ sub comisionadas||subcomisionadas
+ sub-comisionadas||subcomisionadas
+ sub comisionado||subcomisionado
+ sub-comisionado||subcomisionado
+ sub comisionados||subcomisionados
+ sub-comisionados||subcomisionados
  sub comisiones||subcomisiones
  sub-comisiones||subcomisiones
  sub cuenca||subcuenca
@@ -2467,6 +3383,14 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  sub-grupo||subgrupo
  sub grupos||subgrupos
  sub-grupos||subgrupos
+ sub inspector||subinspector
+ sub-inspector||subinspector
+ sub inspectora||subinspectora
+ sub-inspectora||subinspectora
+ sub inspectoras||subinspectoras
+ sub-inspectoras||subinspectoras
+ sub inspectores||subinspectores
+ sub-inspectores||subinspectores
  sub jefa||subjefa
  sub-jefa||subjefa
  sub jefas||subjefas
@@ -2549,8 +3473,20 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  sub-unidad||subunidad
  sub unidades||subunidades
  sub-unidades||subunidades
- Sumo Pontifice|cs|sumo pontífice
- Sumo Pontífice|cs|sumo pontífice
+ sud este||sudeste
+ sud-este||sudeste
+ sud oeste||sudoeste
+ sud-oeste||sudoeste
+ sud sudeste||sudsudeste
+ sud-sudeste||sudsudeste
+ sud sudoeste||sudsudoeste
+ sud-sudoeste||sudsudoeste
+ suma cum laude||''summa cum laude'', ''Summa cum laude'' (para inicios de frase o columnas de tablas)
+ Suma Cum Laude|cs|''summa cum laude'', ''Summa cum laude'' (para inicios de frase o columnas de tablas)
+ Summa Cum Laude|cs|''summa cum laude'', ''Summa cum laude'' (para inicios de frase o columnas de tablas)
+ Summa cum laude|cs|''summa cum laude'', ''Summa cum laude'' (para inicios de frase o columnas de tablas)
+ Sumo Pontifice|cs|sumo pontífice, Sumo pontífice (para inicios de frase o columnas de tablas)
+ Sumo Pontífice|cs|sumo pontífice, Sumo pontífice (para inicios de frase o columnas de tablas)
  super produccion||superproducción
  super-produccion||superproducción
  super producción||superproducción
@@ -2559,15 +3495,86 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  super-producciones||superproducciones
  super tiebreak||superdesempate
  su principales||sus principales, su principal
+ sur este||sureste
+ sur-este||sureste
+ sur oeste||suroeste
+ sur-oeste||suroeste
+ sur sudeste||sursudeste
+ sur-sudeste||sursudeste
+ sur sureste||sursureste
+ sur-sureste||sursureste
+ sur suroeste||sursudoeste
+ sur-suroeste||sursudoeste
 
 == T ==
 
- tabula rasa||''tabula rasa''
- tabula-rasa||''tabula rasa''
- tábula rasa||''tabula rasa''
- tábula-rasa||''tabula rasa''
+ tabula rasa||''tabula rasa'' (locución latina), «Tábula Rasa» (capítulo), ''Tábula Rasa'' (serie, pieza musical)
+ tabula-rasa||''tabula rasa'' (locución latina), «Tábula Rasa» (capítulo), ''Tábula Rasa'' (serie, pieza musical)
+ tábula rasa||''tabula rasa'' (locución latina), «Tábula Rasa» (capítulo), ''Tábula Rasa'' (serie, pieza musical)
+ tábula-rasa||''tabula rasa'' (locución latina), «Tábula Rasa» (capítulo), ''Tábula Rasa'' (serie, pieza musical)
  tener mas||tener más
  Tercera Division|cs|Tercera División
+ Tercera Guerra Anglo Afgana|cs|tercera guerra anglo-afgana, Tercera guerra anglo-afgana (para inicios de frase o columnas de tablas)
+ Tercera Guerra Anglo-Afgana|cs|tercera guerra anglo-afgana, Tercera guerra anglo-afgana (para inicios de frase o columnas de tablas)
+ Tercera guerra Anglo Afgana|cs|tercera guerra anglo-afgana, Tercera guerra anglo-afgana (para inicios de frase o columnas de tablas)
+ Tercera guerra Anglo-Afgana|cs|tercera guerra anglo-afgana, Tercera guerra anglo-afgana (para inicios de frase o columnas de tablas)
+ Tercera Guerra anglo afgana|cs|tercera guerra anglo-afgana, Tercera guerra anglo-afgana (para inicios de frase o columnas de tablas)
+ Tercera Guerra anglo-afgana|cs|tercera guerra anglo-afgana, Tercera guerra anglo-afgana (para inicios de frase o columnas de tablas)
+ Tercera guerra anglo afgana|cs|tercera guerra anglo-afgana, Tercera guerra anglo-afgana (para inicios de frase o columnas de tablas)
+ Tercera guerra anglo-afgana|cs|tercera guerra anglo-afgana, Tercera guerra anglo-afgana (para inicios de frase o columnas de tablas)
+ Tercera Guerra Anglo Neerlandesa|cs|tercera guerra anglo-neerlandesa, Tercera guerra anglo-neerlandesa (para inicios de frase o columnas de tablas)
+ Tercera Guerra Anglo-Neerlandesa|cs|tercera guerra anglo-neerlandesa, Tercera guerra anglo-neerlandesa (para inicios de frase o columnas de tablas)
+ Tercera guerra Anglo Neerlandesa|cs|tercera guerra anglo-neerlandesa, Tercera guerra anglo-neerlandesa (para inicios de frase o columnas de tablas)
+ Tercera guerra Anglo-Neerlandesa|cs|tercera guerra anglo-neerlandesa, Tercera guerra anglo-neerlandesa (para inicios de frase o columnas de tablas)
+ Tercera Guerra anglo neerlandesa|cs|tercera guerra anglo-neerlandesa, Tercera guerra anglo-neerlandesa (para inicios de frase o columnas de tablas)
+ Tercera Guerra anglo-neerlandesa|cs|tercera guerra anglo-neerlandesa, Tercera guerra anglo-neerlandesa (para inicios de frase o columnas de tablas)
+ Tercera guerra anglo neerlandesa|cs|tercera guerra anglo-neerlandesa, Tercera guerra anglo-neerlandesa (para inicios de frase o columnas de tablas)
+ Tercera guerra anglo-neerlandesa|cs|tercera guerra anglo-neerlandesa, Tercera guerra anglo-neerlandesa (para inicios de frase o columnas de tablas)
+ Tercera Guerra Carlista|cs|tercera guerra carlista, Tercera guerra carlista (para inicios de frase o columnas de tablas)
+ Tercera guerra Carlista|cs|tercera guerra carlista, Tercera guerra carlista (para inicios de frase o columnas de tablas)
+ Tercera Guerra carlista|cs|tercera guerra carlista, Tercera guerra carlista (para inicios de frase o columnas de tablas)
+ Tercera guerra carlista|cs|tercera guerra carlista, Tercera guerra carlista (para inicios de frase o columnas de tablas)
+ Tercera Guerra Civil Sudanesa|cs|tercera guerra civil sudanesa, Tercera guerra civil sudanesa (para inicios de frase o columnas de tablas)
+ Tercera Guerra Civil sudanesa|cs|tercera guerra civil sudanesa, Tercera guerra civil sudanesa (para inicios de frase o columnas de tablas)
+ Tercera guerra civil sudanesa|cs|tercera guerra civil sudanesa, Tercera guerra civil sudanesa (para inicios de frase o columnas de tablas)
+ Tercera Guerra de Independencia Italiana|cs|tercera guerra de Independencia italiana, Tercera guerra de Independencia italiana (para inicios de frase o columnas de tablas)
+ Tercera guerra de Independencia Italiana|cs|tercera guerra de Independencia italiana, Tercera guerra de Independencia italiana (para inicios de frase o columnas de tablas)
+ Tercera guerra de independencia Italiana|cs|tercera guerra de Independencia italiana, Tercera guerra de Independencia italiana (para inicios de frase o columnas de tablas)
+ Tercera guerra de independencia italiana|cs|tercera guerra de Independencia italiana, Tercera guerra de Independencia italiana (para inicios de frase o columnas de tablas)
+ Tercera Guerra de Independencia italiana|cs|tercera guerra de Independencia italiana, Tercera guerra de Independencia italiana (para inicios de frase o columnas de tablas)
+ Tercera Guerra de independencia italiana|cs|tercera guerra de Independencia italiana, Tercera guerra de Independencia italiana (para inicios de frase o columnas de tablas)
+ Tercera guerra de Independencia italiana|cs|tercera guerra de Independencia italiana, Tercera guerra de Independencia italiana (para inicios de frase o columnas de tablas)
+ Tercera Guerra de Silesia|cs|tercera guerra de Silesia, Tercera guerra de Silesia (para inicios de frase o columnas de tablas)
+ Tercera guerra de Silesia|cs|tercera guerra de Silesia, Tercera guerra de Silesia (para inicios de frase o columnas de tablas)
+ Tercera Guerra de silesia|cs|tercera guerra de Silesia, Tercera guerra de Silesia (para inicios de frase o columnas de tablas)
+ Tercera guerra de silesia|cs|tercera guerra de Silesia, Tercera guerra de Silesia (para inicios de frase o columnas de tablas)
+ Tercera Guerra Macedónica|cs|tercera guerra macedónica, Tercera guerra macedónica (para inicios de frase o columnas de tablas)
+ Tercera guerra Macedónica|cs|tercera guerra macedónica, Tercera guerra macedónica (para inicios de frase o columnas de tablas)
+ Tercera Guerra macedónica|cs|tercera guerra macedónica, Tercera guerra macedónica (para inicios de frase o columnas de tablas)
+ Tercera guerra macedónica|cs|tercera guerra macedónica, Tercera guerra macedónica (para inicios de frase o columnas de tablas)
+ Tercera Guerra Mitridática|cs|tercera guerra mitridática, Tercera guerra mitridática (para inicios de frase o columnas de tablas)
+ Tercera guerra Mitridática|cs|tercera guerra mitridática, Tercera guerra mitridática (para inicios de frase o columnas de tablas)
+ Tercera Guerra mitridática|cs|tercera guerra mitridática, Tercera guerra mitridática (para inicios de frase o columnas de tablas)
+ Tercera guerra mitridática|cs|tercera guerra mitridática, Tercera guerra mitridática (para inicios de frase o columnas de tablas)
+ Tercera Guerra Púnica|cs|tercera guerra púnica, Tercera guerra púnica (para inicios de frase o columnas de tablas)
+ Tercera guerra Púnica|cs|tercera guerra púnica, Tercera guerra púnica (para inicios de frase o columnas de tablas)
+ Tercera Guerra púnica|cs|tercera guerra púnica, Tercera guerra púnica (para inicios de frase o columnas de tablas)
+ Tercera guerra púnica|cs|tercera guerra púnica, Tercera guerra púnica (para inicios de frase o columnas de tablas)
+ Tercera Guerra Sagrada|cs|tercera guerra sagrada, Tercera guerra sagrada (para inicios de frase o columnas de tablas)
+ Tercera guerra Sagrada|cs|tercera guerra sagrada, Tercera guerra sagrada (para inicios de frase o columnas de tablas)
+ Tercera Guerra sagrada|cs|tercera guerra sagrada, Tercera guerra sagrada (para inicios de frase o columnas de tablas)
+ Tercera guerra sagrada|cs|tercera guerra sagrada, Tercera guerra sagrada (para inicios de frase o columnas de tablas)
+ Tercera Guerra Samnita|cs|tercera guerra samnita, Tercera guerra samnita (para inicios de frase o columnas de tablas)
+ Tercera guerra Samnita|cs|tercera guerra samnita, Tercera guerra samnita (para inicios de frase o columnas de tablas)
+ Tercera Guerra samnita|cs|tercera guerra samnita, Tercera guerra samnita (para inicios de frase o columnas de tablas)
+ Tercera guerra samnita|cs|tercera guerra samnita, Tercera guerra samnita (para inicios de frase o columnas de tablas)
+ Tercera Guerra Servil|cs|tercera guerra servil, Tercera guerra servil (para inicios de frase o columnas de tablas)
+ Tercera guerra Servil|cs|tercera guerra servil, Tercera guerra servil (para inicios de frase o columnas de tablas)
+ Tercera Guerra servil|cs|tercera guerra servil, Tercera guerra servil (para inicios de frase o columnas de tablas)
+ Tercera guerra servil|cs|tercera guerra servil, Tercera guerra servil (para inicios de frase o columnas de tablas)
+ Terrorismo de estado|cs|terrorismo de Estado, Terrorismo de Estado (para inicios de frase o columnas de tablas)
+ Terrorismo de Estado|cs|terrorismo de Estado, Terrorismo de Estado (para inicios de frase o columnas de tablas)
+ terrorismo de estado|cs|terrorismo de Estado, Terrorismo de Estado (para inicios de frase o columnas de tablas)
  tomo el||tomó el
  top spin||golpe liftado
  trade deadline||cierre del mercado de traspasos (deportes)
@@ -2605,6 +3612,7 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  un sólo||un solo
  un un||un
  un una||un, una, en una
+ u.r.s.s.||URSS (Unión de Repúblicas Socialistas Soviéticas)
  ut-supra||''ut supra''
 
 == V ==
@@ -2615,17 +3623,14 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  vease tambien||Véase también
  veáse también||Véase también
  vez mas||vez más
- via lactea|cs|Vía Láctea
- vía lactea|cs|Vía Láctea
- via láctea|cs|Vía Láctea
+ via crucis||viacrucis (forma recomendada, todo junto y sin tilde), vía crucis (separado y con tilde, adaptación clásica al español de la locución latina)
+ via-crucis||viacrucis (forma recomendada, todo junto y sin tilde), vía crucis (separado y con tilde, adaptación clásica al español de la locución latina)
+ vía-crucis||viacrucis (forma recomendada, todo junto y sin tilde), vía crucis (separado y con tilde, adaptación clásica al español de la locución latina)
+ via lactea||Vía Láctea
+ vía lactea||Vía Láctea
+ via láctea||Vía Láctea
  vía láctea|cs|Vía Láctea
- via Lactea|cs|Vía Láctea
- vía Lactea|cs|Vía Láctea
- via Láctea|cs|Vía Láctea
  vía Láctea|cs|Vía Láctea
- Via lactea|cs|Vía Láctea
- Vía lactea|cs|Vía Láctea
- Via láctea|cs|Vía Láctea
  Vía láctea|cs|Vía Láctea
  via publica||vía pública
  via pública||vía pública
@@ -2704,6 +3709,10 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  vice-directoras||vicedirectoras
  vice directores||vicedirectores
  vice-directores||vicedirectores
+ vicedirector general||vice director general, Vice director general (para inicios de frase o columnas de tablas)
+ vice-director general||vice director general, Vice director general (para inicios de frase o columnas de tablas)
+ vicedirectora general||vice directora general, Vice directora general (para inicios de frase o columnas de tablas)
+ vice-directora general||vice directora general, Vice directora general (para inicios de frase o columnas de tablas)
  vice gobernacion||vicegobernación
  vice-gobernacion||vicegobernación
  vice gobernación||vicegobernación
@@ -2839,6 +3848,7 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
 == Y ==
 
  y mas||y más
+ y/o||o (recomendado), y/o (innecesaria, salvo en contextos muy técnicos)
 
 == Z ==
 
@@ -2846,5 +3856,3 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  zona Euro|cs|zona euro
 
 == !$@ ==
- # Actualmente Replacer no permite que el término contenga corchetes
- # [[apartheid]], ''[[apartheid]]'' (vocablo en afrikáans, en cursivas y con enlace)

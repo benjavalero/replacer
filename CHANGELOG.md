@@ -1,7 +1,8 @@
 # Versions
 
 ## 2.29.3 (??)
-- Fix: vaildate empty misspelling suggestions
+- Fix: validate empty misspelling suggestions
+- Fix: ignore uppercase composed misspellings which are correct according to the punctuation
 
 ## 2.29.2 (18 Aug 2024)
 - Feature: ignore template `blockquote`

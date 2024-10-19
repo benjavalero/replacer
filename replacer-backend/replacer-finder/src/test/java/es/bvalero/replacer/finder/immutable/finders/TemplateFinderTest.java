@@ -42,6 +42,9 @@ class TemplateFinderTest {
     private SimpleMisspellingLoader simpleMisspellingLoader;
 
     @Autowired
+    private ComposedMisspellingLoader composedMisspellingLoader;
+
+    @Autowired
     private TemplateFinder templateFinder;
 
     @ParameterizedTest
@@ -262,6 +265,20 @@ class TemplateFinderTest {
             Immutable.of(18, "p"),
             Immutable.of(21, "Febrero")
         );
+        Set<Immutable> actual = new HashSet<>(matches);
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void testArgumentWithUppercaseComposed() {
+        // Load misspellings
+        composedMisspellingLoader.load();
+
+        String text = "{{VT|Guerras napoleónicas}}";
+
+        List<Immutable> matches = templateFinder.findList(text);
+
+        Set<Immutable> expected = Set.of(Immutable.of(2, "VT"), Immutable.of(5, "Guerras napoleónicas"));
         Set<Immutable> actual = new HashSet<>(matches);
         assertEquals(expected, actual);
     }

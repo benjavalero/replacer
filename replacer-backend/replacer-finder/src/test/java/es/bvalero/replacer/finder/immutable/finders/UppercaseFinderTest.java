@@ -135,6 +135,7 @@ class UppercaseFinderTest {
 
         List<Immutable> matches = uppercaseFinder.findList(text);
 
+        // Uppercase preceded by link pipes are not taken into account
         assertTrue(matches.isEmpty());
     }
 
