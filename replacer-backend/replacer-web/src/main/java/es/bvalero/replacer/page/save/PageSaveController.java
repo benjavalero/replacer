@@ -42,7 +42,7 @@ class PageSaveController {
         @AuthenticatedUser User user,
         @Valid @RequestBody ReviewedPageDto reviewedPageDto
     ) throws WikipediaException {
-        LOGGER.info("POST Save Reviewed Page: {}", reviewedPageDto);
+        LOGGER.info("POST Save Reviewed Page: {} - {}", pageId, reviewedPageDto);
 
         ReviewedPage reviewedPage = mapReviewedPage(pageId, reviewedPageDto, user);
 
