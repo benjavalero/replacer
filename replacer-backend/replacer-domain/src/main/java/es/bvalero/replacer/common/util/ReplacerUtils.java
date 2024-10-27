@@ -2,6 +2,7 @@ package es.bvalero.replacer.common.util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import es.bvalero.replacer.JsonMapperConfiguration;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -104,7 +105,7 @@ public class ReplacerUtils {
     //region Logging Utils
 
     public String toJson(Object obj) {
-        ObjectMapper mapper = new ObjectMapper();
+        ObjectMapper mapper = JsonMapperConfiguration.buildJsonMapper();
         try {
             return mapper.writeValueAsString(obj);
         } catch (JsonProcessingException e) {
