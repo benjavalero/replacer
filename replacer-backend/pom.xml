@@ -33,6 +33,7 @@
         <module>replacer-repository</module>
         <module>replacer-wikipedia</module>
         <module>replacer-finder</module>
+        <module>replacer-finder-benchmark</module>
         <module>replacer-web</module>
         <module>replacer-app</module>
     </modules>
