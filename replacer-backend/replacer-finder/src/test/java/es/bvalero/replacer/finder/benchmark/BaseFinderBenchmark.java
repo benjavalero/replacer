@@ -1,7 +1,6 @@
 package es.bvalero.replacer.finder.benchmark;
 
 import static tech.tablesaw.aggregate.AggregateFunctions.*;
-import static tech.tablesaw.aggregate.AggregateFunctions.max;
 
 import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.finder.Finder;
@@ -28,6 +27,8 @@ import tech.tablesaw.plotly.components.Figure;
 
 public abstract class BaseFinderBenchmark {
 
+    static final String TEST_RESOURCES_PATH = "src/test/resources/es/bvalero/replacer/finder/benchmark/";
+
     protected static final int WARM_UP = 100;
     protected static final int ITERATIONS = 1000;
 
@@ -44,8 +45,7 @@ public abstract class BaseFinderBenchmark {
             run(finders, warmUp, sampleContents, null);
 
             // Real run
-            String testResourcesPath = "src/test/resources/es/bvalero/replacer/finder/benchmark/";
-            File csvFile = new File(testResourcesPath + fileName);
+            File csvFile = new File(TEST_RESOURCES_PATH + fileName);
             BufferedWriter writer = new BufferedWriter(new FileWriter(csvFile));
             run(finders, iterations, sampleContents, writer);
             writer.close();
@@ -111,9 +111,8 @@ public abstract class BaseFinderBenchmark {
         System.out.println(summary);
 
         String modulePath = "replacer-finder/"; // Usually we will run this test using replacer-backend as working directory
-        String testResourcesPath = "src/test/resources/es/bvalero/replacer/finder/benchmark/";
         String txtName = fileName.replace("benchmark.csv", "summary.txt");
-        File txtFile = new File(modulePath + testResourcesPath + txtName);
+        File txtFile = new File(modulePath + TEST_RESOURCES_PATH + txtName);
         BufferedWriter writer = new BufferedWriter(new FileWriter(txtFile));
         writer.write(summary.toString());
         writer.close();

@@ -1,0 +1,14 @@
+Benchmark                                                              Mode  Cnt       Score      Error  Units
+SurnameFinderJmhBenchmarkTest.baseLine                                 avgt    5      ≈ 10⁻³             us/op
+SurnameFinderJmhBenchmarkTest.surnameAhoCorasickFinder                 avgt    5    1730,778 ±   58,510  us/op
+SurnameFinderJmhBenchmarkTest.surnameAhoCorasickLongestFinder          avgt    5    1846,494 ±  171,502  us/op
+SurnameFinderJmhBenchmarkTest.surnameAhoCorasickWholeLongestFinder     avgt    5    1374,007 ±  110,807  us/op
+SurnameFinderJmhBenchmarkTest.surnameAutomatonAlternateCompleteFinder  avgt    5    1450,645 ±   65,528  us/op
+SurnameFinderJmhBenchmarkTest.surnameAutomatonAlternateFinder          avgt    5    1329,311 ±   49,024  us/op
+SurnameFinderJmhBenchmarkTest.surnameAutomatonCompleteFinder           avgt    5   37563,147 ± 1326,051  us/op
+SurnameFinderJmhBenchmarkTest.surnameAutomatonFinder                   avgt    5   24993,498 ± 1572,359  us/op
+SurnameFinderJmhBenchmarkTest.surnameIndexOfFinder                     avgt    5    1859,388 ±  187,901  us/op
+SurnameFinderJmhBenchmarkTest.surnameRegexAlternateCompleteFinder      avgt    5    5377,480 ±  154,308  us/op
+SurnameFinderJmhBenchmarkTest.surnameRegexAlternateFinder              avgt    5   55822,497 ± 3667,037  us/op
+SurnameFinderJmhBenchmarkTest.surnameRegexCompleteFinder               avgt    5  110681,887 ± 3627,600  us/op
+SurnameFinderJmhBenchmarkTest.surnameRegexFinder                       avgt    5   20206,795 ± 1404,530  us/op

@@ -1,0 +1,12 @@
+Benchmark                                                                             Mode  Cnt          Score          Error  Units
+ComposedMisspellingFinderJmhBenchmarkTest.baseLine                                    avgt    5         ≈ 10⁻³                 us/op
+ComposedMisspellingFinderJmhBenchmarkTest.wordAhoCorasickFinder                       avgt    5       5006,896 ±      253,728  us/op
+ComposedMisspellingFinderJmhBenchmarkTest.wordAhoCorasickLongestFinder                avgt    5       5356,012 ±      708,222  us/op
+ComposedMisspellingFinderJmhBenchmarkTest.wordAhoCorasickWholeLongestFinder           avgt    5       2109,825 ±      169,178  us/op
+ComposedMisspellingFinderJmhBenchmarkTest.wordLinearFinder                            avgt    5     887527,200 ±   114155,535  us/op
+ComposedMisspellingFinderJmhBenchmarkTest.wordRegexAlternateCompleteFinder            avgt    5    7501163,600 ±  3135865,313  us/op
+ComposedMisspellingFinderJmhBenchmarkTest.wordRegexAlternateCompleteSeparatorsFinder  avgt    5    7843456,420 ±   207943,173  us/op
+ComposedMisspellingFinderJmhBenchmarkTest.wordRegexAlternateFinder                    avgt    5    7970469,040 ±   213540,758  us/op
+ComposedMisspellingFinderJmhBenchmarkTest.wordRegexCompleteFinder                     avgt    5   71326639,920 ± 70987686,308  us/op
+ComposedMisspellingFinderJmhBenchmarkTest.wordRegexCompleteSeparatorsFinder           avgt    5  109196867,300 ±  4286794,750  us/op
+ComposedMisspellingFinderJmhBenchmarkTest.wordRegexFinder                             avgt    5    3630009,400 ±   245478,271  us/op

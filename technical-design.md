@@ -178,4 +178,4 @@ This is done for each page in the sample. This results into a text file with 50 
 
 The class also contains a main method which reads the previous text file a generates a boxplot which allows comparing the times of the different approaches, along with a text file containing the classic five-number summary with the most important percentiles. These statistics help us not only to compare the different approaches in general, but also how the finders behave with simple or complex pages which in theory result into lower or higher times.
 
-_Note_: after some attempts to run benchmarks with JMH library, we have found similar results. For our purposes, as the benchmarks _by hand_ already exist, JMH benchmarks don't provide any advantage, so they have eventually been discarded from the code.
+Benchmarks with JMH library throw similar results. We keep them apart to provide complementary results.

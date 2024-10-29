@@ -1,0 +1,12 @@
+Benchmark                                                                Mode  Cnt        Score        Error  Units
+UppercaseFinderJmhBenchmarkTest.baseLine                                 avgt    5       ≈ 10⁻³               us/op
+UppercaseFinderJmhBenchmarkTest.uppercaseAhoCorasickWholeLongestFinder   avgt    5     1500,146 ±     39,075  us/op
+UppercaseFinderJmhBenchmarkTest.uppercaseAllWordsFinder                  avgt    5     2490,892 ±     93,892  us/op
+UppercaseFinderJmhBenchmarkTest.uppercaseAutomatonAlternateAllFinder     avgt    5     1500,932 ±     69,090  us/op
+UppercaseFinderJmhBenchmarkTest.uppercaseAutomatonAlternateFinder        avgt    5     1325,411 ±    180,641  us/op
+UppercaseFinderJmhBenchmarkTest.uppercaseAutomatonIterateFinder          avgt    5    98560,106 ±   7277,431  us/op
+UppercaseFinderJmhBenchmarkTest.uppercaseIndexOfFinder                   avgt    5     5963,855 ±    174,377  us/op
+UppercaseFinderJmhBenchmarkTest.uppercaseRegexAlternateFinder            avgt    5    28088,624 ±   2656,290  us/op
+UppercaseFinderJmhBenchmarkTest.uppercaseRegexAlternateLookBehindFinder  avgt    5    95253,595 ±   3257,934  us/op
+UppercaseFinderJmhBenchmarkTest.uppercaseRegexIterateFinder              avgt    5  1286533,940 ±  84549,404  us/op
+UppercaseFinderJmhBenchmarkTest.uppercaseRegexLookBehindFinder           avgt    5  7280197,660 ± 829557,256  us/op
