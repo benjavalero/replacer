@@ -5,6 +5,7 @@ import es.bvalero.replacer.finder.benchmark.util.BenchmarkUtils;
 import es.bvalero.replacer.page.find.WikipediaPage;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.infra.Blackhole;
@@ -26,18 +27,35 @@ public class BaseFinderJmhBenchmark {
         "replacer-finder-benchmark/src/main/resources/es/bvalero/replacer/finder/benchmark/";
 
     private List<WikipediaPage> sampleContents;
+    private Map<Integer, Integer> samplePages;
+
+    // @Param({"1", "2", "3"})
+    public int pageId = 0;
 
     protected void setUp() throws WikipediaException {
         // The pages have been sampled so the distribution of their content lengths
         // match the one of the content lengths of all indexable pages
         sampleContents = BenchmarkUtils.findSampleContents();
+
+        // We choose 3 sample pages to represent different sizes
+        // 1: 8597062   // Small (2,5 kB)
+        // 2: 811007    // Medium (6 kB)
+        // 3: 7707926   // Large (14 kB)
+        samplePages = Map.of(1, 8597062, 2, 811007, 3, 7707926);
     }
 
     protected void runFinder(Finder<?> finder, Blackhole bh) {
-        // As the sample represents the whole dump,
-        // finding all over the sample represents the time finding all over the dump.
-        // NOTE: therefore, the average time corresponds to run the finder in the 50 sample pages.
-        sampleContents.forEach(page -> finder.find(page).forEach(bh::consume));
+        if (pageId == 0) {
+            // As the sample represents the whole dump,
+            // finding all over the sample represents the time finding all over the dump.
+            // NOTE: therefore, the average time corresponds to run the finder in the 50 sample pages.
+            sampleContents.forEach(page -> finder.find(page).forEach(bh::consume));
+        } else {
+            sampleContents
+                .stream()
+                .filter(p -> p.getPageKey().getPageId() == samplePages.get(pageId))
+                .forEach(page -> finder.find(page).forEach(bh::consume));
+        }
     }
 
     @Benchmark
