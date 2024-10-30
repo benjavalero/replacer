@@ -1,8 +1,8 @@
 package es.bvalero.replacer.finder.benchmark.person;
 
-import es.bvalero.replacer.finder.BenchmarkResult;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
+import es.bvalero.replacer.finder.benchmark.BenchmarkResult;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

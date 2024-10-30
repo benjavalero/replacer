@@ -2,7 +2,7 @@ package es.bvalero.replacer.finder.benchmark.word;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import es.bvalero.replacer.finder.BenchmarkResult;
+import es.bvalero.replacer.finder.benchmark.BenchmarkResult;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;

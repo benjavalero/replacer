@@ -3,8 +3,8 @@ package es.bvalero.replacer.finder.benchmark.completetag;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import es.bvalero.replacer.FinderProperties;
-import es.bvalero.replacer.finder.BenchmarkResult;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
+import es.bvalero.replacer.finder.benchmark.BenchmarkResult;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;

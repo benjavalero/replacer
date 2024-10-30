@@ -1,5 +1,6 @@
-package es.bvalero.replacer.finder;
+package es.bvalero.replacer.finder.benchmark;
 
+import es.bvalero.replacer.finder.FinderResult;
 import lombok.Value;
 
 @Value(staticConstructor = "of")

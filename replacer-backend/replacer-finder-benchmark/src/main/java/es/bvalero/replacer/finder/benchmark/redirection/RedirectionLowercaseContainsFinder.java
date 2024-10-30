@@ -1,8 +1,8 @@
 package es.bvalero.replacer.finder.benchmark.redirection;
 
-import es.bvalero.replacer.finder.BenchmarkResult;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
+import es.bvalero.replacer.finder.benchmark.BenchmarkResult;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import java.util.ArrayList;
 import java.util.List;

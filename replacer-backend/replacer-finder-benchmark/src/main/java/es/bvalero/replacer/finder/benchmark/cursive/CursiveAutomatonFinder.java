@@ -2,9 +2,9 @@ package es.bvalero.replacer.finder.benchmark.cursive;
 
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
-import es.bvalero.replacer.finder.BenchmarkResult;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
+import es.bvalero.replacer.finder.benchmark.BenchmarkResult;
 import es.bvalero.replacer.finder.util.AutomatonMatchFinder;
 import java.util.regex.MatchResult;
 
