@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Prettier" type="MavenRunConfiguration" factoryName="Maven">
+  <configuration default="false" name="Install Backend" type="MavenRunConfiguration" factoryName="Maven">
     <MavenSettings>
       <option name="myGeneralSettings" />
       <option name="myRunnerSettings" />
@@ -11,7 +11,8 @@
           </option>
           <option name="goals">
             <list>
-              <option value="prettier:write" />
+              <option value="clean" />
+              <option value="install" />
             </list>
           </option>
           <option name="multimoduleDir" />
@@ -23,7 +24,7 @@
             <list />
           </option>
           <option name="resolveToWorkspace" value="false" />
-          <option name="workingDirPath" value="$PROJECT_DIR$" />
+          <option name="workingDirPath" value="$PROJECT_DIR$/replacer-backend" />
         </MavenRunnerParameters>
       </option>
     </MavenSettings>

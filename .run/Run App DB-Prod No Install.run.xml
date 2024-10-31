@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Run App Offline No Install" type="MavenRunConfiguration" factoryName="Maven">
+  <configuration default="false" name="Run App DB-Prod No Install" type="MavenRunConfiguration" factoryName="Maven">
     <MavenSettings>
       <option name="myGeneralSettings" />
       <option name="myRunnerSettings" />
@@ -18,14 +18,14 @@
           <option name="pomFileName" />
           <option name="profilesMap">
             <map>
-              <entry key="offline" value="true" />
+              <entry key="db-prod" value="true" />
             </map>
           </option>
           <option name="projectsCmdOptionValues">
             <list />
           </option>
           <option name="resolveToWorkspace" value="false" />
-          <option name="workingDirPath" value="$PROJECT_DIR$/replacer-app" />
+          <option name="workingDirPath" value="$PROJECT_DIR$/replacer-backend/replacer-app" />
         </MavenRunnerParameters>
       </option>
     </MavenSettings>
