@@ -21,6 +21,7 @@ import es.bvalero.replacer.replacement.save.IndexedReplacementStatus;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -157,12 +158,14 @@ class PageComparatorTest {
 
         // Existing replacements in DB
         IndexedReplacement r1db = IndexedReplacement.builder()
+            .id(1)
             .pageKey(page.getPageKey())
             .type((StandardType) r1.getType())
             .start(r1.getStart())
             .context(r1.getContext())
             .build();
         IndexedReplacement r2db = IndexedReplacement.builder()
+            .id(2)
             .pageKey(page.getPageKey())
             .type((StandardType) r2.getType())
             .start(r2.getStart())
@@ -170,6 +173,7 @@ class PageComparatorTest {
             .reviewer("User")
             .build();
         IndexedReplacement r3db = IndexedReplacement.builder()
+            .id(3)
             .pageKey(page.getPageKey())
             .type((StandardType) r3.getType())
             .start(r3.getStart())
@@ -177,24 +181,28 @@ class PageComparatorTest {
             .reviewer(REVIEWER_SYSTEM)
             .build();
         IndexedReplacement r4db = IndexedReplacement.builder()
+            .id(4)
             .pageKey(page.getPageKey())
             .type((StandardType) r4.getType())
             .start(5)
             .context(r4.getContext())
             .build();
         IndexedReplacement r5db = IndexedReplacement.builder()
+            .id(5)
             .pageKey(page.getPageKey())
             .type((StandardType) r5.getType())
             .start(r5.getStart())
             .context("50")
             .build();
         IndexedReplacement r6db = IndexedReplacement.builder()
+            .id(6)
             .pageKey(page.getPageKey())
             .type(StandardType.of(ReplacementKind.SIMPLE, "6"))
             .start(6)
             .context("6")
             .build();
         IndexedReplacement r7db = IndexedReplacement.builder()
+            .id(7)
             .pageKey(page.getPageKey())
             .type(StandardType.of(ReplacementKind.SIMPLE, "7"))
             .start(7)
@@ -202,6 +210,7 @@ class PageComparatorTest {
             .reviewer("User")
             .build();
         IndexedReplacement r8db = IndexedReplacement.builder()
+            .id(8)
             .pageKey(page.getPageKey())
             .type(StandardType.of(ReplacementKind.SIMPLE, "8"))
             .start(8)
@@ -219,12 +228,26 @@ class PageComparatorTest {
 
         IndexedPage expected = toIndexedPage(page, IndexedPageStatus.INDEXED);
         expected.addReplacement(ComparableReplacement.of(r9).toDomain(IndexedReplacementStatus.ADD));
-        expected.addReplacement(ComparableReplacement.of(r4).toDomain(IndexedReplacementStatus.UPDATE));
-        expected.addReplacement(ComparableReplacement.of(r5).toDomain(IndexedReplacementStatus.UPDATE));
+        expected.addReplacement(ComparableReplacement.of(r4).toDomain(4, IndexedReplacementStatus.UPDATE));
+        expected.addReplacement(ComparableReplacement.of(r5).toDomain(5, IndexedReplacementStatus.UPDATE));
         expected.addReplacement(ComparableReplacement.of(r6db).toDomain(IndexedReplacementStatus.REMOVE));
         expected.addReplacement(ComparableReplacement.of(r8db).toDomain(IndexedReplacementStatus.REMOVE));
-        expected.addReplacement(ComparableReplacement.of(r1).toDomain(IndexedReplacementStatus.INDEXED));
+        expected.addReplacement(ComparableReplacement.of(r1).toDomain(1, IndexedReplacementStatus.INDEXED));
 
+        assertTrue(
+            result
+                .getReplacements()
+                .stream()
+                .map(IndexedReplacement::getStatus)
+                .noneMatch(s -> s == IndexedReplacementStatus.UNDEFINED)
+        );
+        assertTrue(
+            result
+                .getReplacements()
+                .stream()
+                .filter(r -> r.getStatus() != IndexedReplacementStatus.ADD)
+                .allMatch(r -> Objects.nonNull(r.getId()))
+        );
         assertTrue(IndexedPage.compare(expected, result));
     }
 
@@ -238,6 +261,7 @@ class PageComparatorTest {
 
         // Existing replacements in DB
         IndexedReplacement r1db = IndexedReplacement.builder()
+            .id(1)
             .pageKey(page.getPageKey())
             .type((StandardType) r1.getType())
             .start(r1.getStart())
@@ -253,7 +277,7 @@ class PageComparatorTest {
         IndexedPage result = pageComparator.indexPageReplacements(page, replacements, dbPage);
 
         IndexedPage expected = toIndexedPage(page, IndexedPageStatus.INDEXED);
-        expected.addReplacement(ComparableReplacement.of(r1).toDomain(IndexedReplacementStatus.INDEXED));
+        expected.addReplacement(ComparableReplacement.of(r1).toDomain(1, IndexedReplacementStatus.INDEXED));
 
         assertTrue(IndexedPage.compare(expected, result));
     }
@@ -265,6 +289,7 @@ class PageComparatorTest {
         // Existing replacements in DB: the same replacement found in 2 different positions with same context
         String context = "1234567890";
         IndexedReplacement r1db = IndexedReplacement.builder()
+            .id(1)
             .pageKey(page.getPageKey())
             .type(StandardType.of(ReplacementKind.SIMPLE, "1"))
             .start(1)
@@ -272,6 +297,7 @@ class PageComparatorTest {
             .reviewer("X")
             .build();
         IndexedReplacement r2db = IndexedReplacement.builder()
+            .id(2)
             .pageKey(page.getPageKey())
             .type(StandardType.of(ReplacementKind.SIMPLE, "1"))
             .start(5)
@@ -302,6 +328,7 @@ class PageComparatorTest {
         // Existing replacements in DB: the same replacement found in 2 different positions with same context
         // We force a distance between the replacements so even having the same context they are not considered the same
         IndexedReplacement r1db = IndexedReplacement.builder()
+            .id(1)
             .pageKey(page.getPageKey())
             .type(StandardType.of(ReplacementKind.SIMPLE, "1"))
             .start(1)
@@ -309,6 +336,7 @@ class PageComparatorTest {
             .reviewer("X")
             .build();
         IndexedReplacement r2db = IndexedReplacement.builder()
+            .id(2)
             .pageKey(page.getPageKey())
             .type(StandardType.of(ReplacementKind.SIMPLE, "1"))
             .start(100)
@@ -338,12 +366,14 @@ class PageComparatorTest {
         // Existing replacements in DB: the same replacement found in the same position with different context
         // but one is not reviewed matching with the found one in the page
         IndexedReplacement r1db = IndexedReplacement.builder()
+            .id(1)
             .pageKey(page.getPageKey())
             .type((StandardType) r1.getType())
             .start(r1.getStart())
             .context("1")
             .build();
         IndexedReplacement r2db = IndexedReplacement.builder()
+            .id(2)
             .pageKey(page.getPageKey())
             .type((StandardType) r1.getType())
             .start(r1.getStart())

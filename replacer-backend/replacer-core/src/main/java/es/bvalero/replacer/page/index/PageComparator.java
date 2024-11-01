@@ -147,10 +147,11 @@ class PageComparator {
                 .withContext(pageReplacement.getContext())
                 .withTouched(true);
             dbReplacements.add(updatedReplacement);
+            Integer replacementId = dbReplacement.getId();
             if (handleReplacement) {
-                indexedPage.addReplacement(pageReplacement.toDomain(IndexedReplacementStatus.UPDATE));
+                indexedPage.addReplacement(pageReplacement.toDomain(replacementId, IndexedReplacementStatus.UPDATE));
             } else if (dbReplacement.isToBeReviewed()) {
-                indexedPage.addReplacement(pageReplacement.toDomain(IndexedReplacementStatus.INDEXED));
+                indexedPage.addReplacement(pageReplacement.toDomain(replacementId, IndexedReplacementStatus.INDEXED));
             }
         } else {
             // New replacement

@@ -1,5 +1,8 @@
 # Versions
 
+## 2.29.4 (??)
+- Fix: replacements already indexed were not updated on reindexing
+
 ## 2.29.3 (23 Oct 2024)
 - Fix: validate empty misspelling suggestions
 - Fix: ignore uppercase composed misspellings which are correct according to the punctuation

@@ -70,8 +70,12 @@ class ComparableReplacement {
     }
 
     IndexedReplacement toDomain(IndexedReplacementStatus status) {
+        return toDomain(null, status);
+    }
+
+    IndexedReplacement toDomain(@Nullable Integer replacementId, IndexedReplacementStatus status) {
         return IndexedReplacement.builder()
-            .id(id)
+            .id(replacementId == null ? id : replacementId)
             .pageKey(pageKey)
             .type(type)
             .start(start)
