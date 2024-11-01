@@ -1,6 +1,6 @@
 # Versions
 
-## 2.29.4 (??)
+## 2.29.4 (1 Nov 2024)
 - Fix: replacements already indexed were not updated on reindexing
 
 ## 2.29.3 (23 Oct 2024)
