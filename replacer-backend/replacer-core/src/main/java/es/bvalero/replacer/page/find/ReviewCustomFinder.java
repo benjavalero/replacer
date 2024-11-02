@@ -7,6 +7,7 @@ import es.bvalero.replacer.page.*;
 import es.bvalero.replacer.page.index.PageIndexService;
 import es.bvalero.replacer.page.save.PageSaveRepository;
 import es.bvalero.replacer.replacement.CustomReplacementService;
+import es.bvalero.replacer.wikipedia.WikipediaException;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -90,12 +91,8 @@ class ReviewCustomFinder extends ReviewFinder {
                         totalToReview--;
                     }
                 }
-            } catch (OutOfMemoryError oome) {
-                // Sometimes (though rarely) the retrieved pages are huge (e.g. annexes) and throw an out-of-memory error
-                LOGGER.error(
-                    "Out-of-memory when retrieving page contents for custom replacement: {}",
-                    options.getCustomType()
-                );
+            } catch (WikipediaException e) {
+                // Do nothing, simply we don't discard in case we cannot retrieve the pages.
             }
             LOGGER.debug("After discarding without replacements: {}", totalToReview);
 

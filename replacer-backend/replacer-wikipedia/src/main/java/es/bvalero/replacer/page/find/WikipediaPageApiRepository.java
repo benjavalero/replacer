@@ -48,11 +48,15 @@ public class WikipediaPageApiRepository implements WikipediaPageRepository {
     @Override
     public Optional<WikipediaPage> findByKey(PageKey pageKey) {
         // Return the only value that should be in the map
-        return findByKeys(List.of(pageKey)).stream().findAny();
+        try {
+            return findByKeys(List.of(pageKey)).stream().findAny();
+        } catch (WikipediaException e) {
+            return Optional.empty();
+        }
     }
 
     @Override
-    public Collection<WikipediaPage> findByKeys(Collection<PageKey> pageKeys) {
+    public Collection<WikipediaPage> findByKeys(Collection<PageKey> pageKeys) throws WikipediaException {
         if (pageKeys.isEmpty()) {
             return Collections.emptyList();
         }
@@ -76,8 +80,13 @@ public class WikipediaPageApiRepository implements WikipediaPageRepository {
                 pages.addAll(getPagesByIds("pageids", StringUtils.join(subList, '|'), lang));
                 start += subList.size();
             }
+        } catch (OutOfMemoryError e) {
+            // Sometimes (though rarely) the retrieved pages are huge (e.g. annexes) and throw an out-of-memory error
+            LOGGER.error("Out-of-memory when retrieving pages by key: {}", StringUtils.join(pageKeys, SPACE));
+            throw new WikipediaException(e);
         } catch (Exception e) {
             LOGGER.error("Error finding pages by ID: {}", StringUtils.join(pageKeys, SPACE), e);
+            throw new WikipediaException(e);
         }
         return pages;
     }

@@ -7,6 +7,7 @@ import es.bvalero.replacer.page.find.WikipediaPageRepository;
 import es.bvalero.replacer.page.find.WikipediaSearchRequest;
 import es.bvalero.replacer.page.index.PageIndexService;
 import es.bvalero.replacer.replacement.save.ReplacementSaveRepository;
+import es.bvalero.replacer.wikipedia.WikipediaException;
 import java.util.Collection;
 import org.springframework.stereotype.Service;
 
@@ -45,6 +46,10 @@ class ReplacementTypeSaveService implements ReplacementTypeSaveApi {
             .stream()
             .map(pageId -> PageKey.of(lang, pageId))
             .toList();
-        wikipediaPageRepository.findByKeys(pageKeys).forEach(pageIndexService::indexPage);
+        try {
+            wikipediaPageRepository.findByKeys(pageKeys).forEach(pageIndexService::indexPage);
+        } catch (WikipediaException e) {
+            // Do nothing, simply we don't index in case we cannot retrieve the pages.
+        }
     }
 }
