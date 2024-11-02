@@ -80,14 +80,22 @@ class ReviewCustomFinder extends ReviewFinder {
 
             // Also discard the pages not containing the custom replacement according to the rules of the tool.
             // For that, we retrieve the potential custom replacements in the pages found by the Wikipedia search.
-            final List<PageKey> keys = pageIds.stream().map(id -> PageKey.of(lang, id)).toList();
-            final Collection<WikipediaPage> pages = wikipediaPageRepository.findByKeys(keys);
-            for (WikipediaPage page : pages) {
-                final Collection<Replacement> customReplacements = findCustomReplacements(page, options);
-                if (customReplacements.isEmpty()) {
-                    pageIds.remove(page.getPageId());
-                    totalToReview--;
+            try {
+                final List<PageKey> keys = pageIds.stream().map(id -> PageKey.of(lang, id)).toList();
+                final Collection<WikipediaPage> pages = wikipediaPageRepository.findByKeys(keys);
+                for (WikipediaPage page : pages) {
+                    final Collection<Replacement> customReplacements = findCustomReplacements(page, options);
+                    if (customReplacements.isEmpty()) {
+                        pageIds.remove(page.getPageId());
+                        totalToReview--;
+                    }
                 }
+            } catch (OutOfMemoryError oome) {
+                // Sometimes (though rarely) the retrieved pages are huge (e.g. annexes) and throw an out-of-memory error
+                LOGGER.error(
+                    "Out-of-memory when retrieving page contents for custom replacement: {}",
+                    options.getCustomType()
+                );
             }
             LOGGER.debug("After discarding without replacements: {}", totalToReview);
 
