@@ -10,6 +10,7 @@ class DumpHandler(xml.sax.ContentHandler):
         self.id = ""
         self.title = ""
         self.ns = ""
+        self.redirect = False
         self.timestamp = ""
         self.text = ""
 
@@ -27,15 +28,17 @@ class DumpHandler(xml.sax.ContentHandler):
             self.title = self.CurrentData.strip()
         elif tag == "ns":
             self.ns = self.CurrentData.strip()
+        elif tag == "redirect":
+            self.redirect = True
         elif tag == "timestamp":
             self.timestamp = self.CurrentData.strip()
         elif tag == "text":
             self.text = self.CurrentData.strip()
         elif tag == "page":
-            redirect = "#redirec" in self.text.lower()
-            str = '%s\t%s\t%s\t%s\t%s' % (self.id, self.ns, len(self.text), self.timestamp[:10], redirect)
+            str = '%s\t%s\t%s\t%s\t%s' % (self.id, self.ns, len(self.text), self.timestamp[:10], self.redirect)
             print(str)
             self.id = ""
+            self.redirect = False
 
     # Call when a character is read
     def characters(self, content):
@@ -53,4 +56,4 @@ if ( __name__ == "__main__"):
 
     print("ID\tNS\tLength\tTimestamp\tRedirect")
 
-    parser.parse(bz2.BZ2File("C:\\Users\\bvalero\\Downloads\\eswiki-20190420-pages-articles.xml.bz2", "r"))
+    parser.parse(bz2.BZ2File("/Users/benja/Developer/eswiki/20241020/eswiki-20241020-pages-articles.xml.bz2", "r"))
