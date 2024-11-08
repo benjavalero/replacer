@@ -24,7 +24,7 @@ public class StandardType extends ReplacementType {
     }
 
     // Cache the known types to reuse them and save memory
-    private static final Cache<String, StandardType> cachedPageIds = Caffeine.newBuilder()
+    private static final Cache<String, StandardType> cachedTypes = Caffeine.newBuilder()
         .expireAfterAccess(1, TimeUnit.DAYS)
         .build();
 
@@ -69,7 +69,7 @@ public class StandardType extends ReplacementType {
 
     private static StandardType getTypeFromCache(ReplacementKind kind, String subtype, boolean forBots) {
         return Objects.requireNonNull(
-            cachedPageIds.get(getCacheKey(kind, subtype), k -> new StandardType(kind, subtype, forBots, false))
+            cachedTypes.get(getCacheKey(kind, subtype), k -> new StandardType(kind, subtype, forBots, false))
         );
     }
 
