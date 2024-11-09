@@ -246,7 +246,11 @@ public class WikipediaPageApiRepository implements WikipediaPageRepository {
             WikipediaApiResponse apiResponse = wikipediaApiHelper.executeApiRequest(apiRequest);
             result = extractPageIdsFromSearchJson(apiResponse);
         } catch (WikipediaException e) {
-            LOGGER.error("Error finding pages by content", e);
+            if (e.getMessage().startsWith("cirrussearch-regex-syntax-error")) {
+                LOGGER.error("Invalid search by regex: " + apiRequest.getParams().get("srsearch"));
+            } else {
+                LOGGER.error("Error finding pages by content", e);
+            }
         }
         LOGGER.debug("END Find Page by Content: {} results", result.getTotal());
         return result;
