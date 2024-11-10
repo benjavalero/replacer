@@ -3,7 +3,7 @@ package es.bvalero.replacer.page.find;
 import es.bvalero.replacer.common.domain.CustomType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.Replacement;
-import es.bvalero.replacer.page.*;
+import es.bvalero.replacer.page.PageKey;
 import es.bvalero.replacer.page.index.PageIndexService;
 import es.bvalero.replacer.page.save.PageSaveRepository;
 import es.bvalero.replacer.replacement.CustomReplacementService;
@@ -53,20 +53,19 @@ class ReviewCustomFinder extends ReviewFinder {
     @Override
     PageSearchResult findPageIdsToReview(ReviewOptions options) {
         // Initialize search
-        WikipediaLanguage lang = options.getUser().getId().getLang();
+        final WikipediaLanguage lang = options.getUser().getId().getLang();
         int offset = findCachedResult(options).map(PageSearchResult::getOffset).orElse(0);
 
-        WikipediaSearchResult searchResult = findWikipediaResults(options, offset);
+        final WikipediaSearchResult searchResult = findWikipediaResults(options, offset);
         final int totalWikipediaResults = searchResult.getTotal();
         int totalToReview = searchResult.getTotal();
         final Set<Integer> pageIds = new HashSet<>(searchResult.getPageIds());
 
         // Find all the pages already reviewed for this custom replacement
         // Make it out of the loop as we are not taking into account the offset for this
-        List<Integer> reviewedIds = new ArrayList<>();
-        if (!searchResult.isEmpty()) {
-            reviewedIds.addAll(customReplacementService.findPagesReviewed(lang, options.getCustomType()));
-        }
+        Collection<Integer> reviewedIds = searchResult.isEmpty()
+            ? Collections.emptyList()
+            : customReplacementService.findPagesReviewed(lang, options.getCustomType());
 
         while (totalToReview >= 0) {
             // Discard the pages already reviewed
@@ -103,15 +102,18 @@ class ReviewCustomFinder extends ReviewFinder {
                     return PageSearchResult.ofEmpty();
                 }
 
-                searchResult = findWikipediaResults(options, offset);
+                // Find the next batch of results
                 // For simplicity's sake we assume the number of total results is the same
-                pageIds.addAll(searchResult.getPageIds());
+                pageIds.addAll(findWikipediaResults(options, offset).getPageIds());
             } else {
                 int nextOffset = offset + getCacheSize();
                 Collection<PageKey> pageKeys = pageIds
                     .stream()
                     .map(pageId -> PageKey.of(lang, pageId))
                     .collect(Collectors.toUnmodifiableSet());
+                // Note that the total returned is an estimation, but it is not worth to check all the results.
+                // E.g. The initial search returns 1000 results. We check the first 500 and discard 498.
+                // This method will return 2 pages and a total of 502. Maybe the rest of pages can be discarded or not.
                 return PageSearchResult.of(totalToReview, pageKeys, nextOffset);
             }
         }
