@@ -7,10 +7,13 @@ import es.bvalero.replacer.page.count.PageCountRepository;
 import es.bvalero.replacer.page.index.PageIndexService;
 import es.bvalero.replacer.page.save.PageSaveRepository;
 import es.bvalero.replacer.replacement.save.ReplacementSaveRepository;
+import es.bvalero.replacer.replacement.type.ReplacementTypeSaveApi;
 import java.util.Collection;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+@Slf4j
 @Component
 class ReviewTypeFinder extends ReviewFinder {
 
@@ -19,6 +22,7 @@ class ReviewTypeFinder extends ReviewFinder {
     private final PageSaveRepository pageSaveRepository;
     private final PageCountRepository pageCountRepository;
     private final ReplacementSaveRepository replacementSaveRepository;
+    private final ReplacementTypeSaveApi replacementTypeSaveApi;
 
     ReviewTypeFinder(
         WikipediaPageRepository wikipediaPageRepository,
@@ -27,29 +31,30 @@ class ReviewTypeFinder extends ReviewFinder {
         PageSaveRepository pageSaveRepository,
         ReviewSectionFinder reviewSectionFinder,
         PageCountRepository pageCountRepository,
-        ReplacementSaveRepository replacementSaveRepository
+        ReplacementSaveRepository replacementSaveRepository,
+        ReplacementTypeSaveApi replacementTypeSaveApi
     ) {
         super(wikipediaPageRepository, pageIndexService, pageRepository, pageSaveRepository, reviewSectionFinder);
         this.pageRepository = pageRepository;
         this.pageSaveRepository = pageSaveRepository;
         this.pageCountRepository = pageCountRepository;
         this.replacementSaveRepository = replacementSaveRepository;
+        this.replacementTypeSaveApi = replacementTypeSaveApi;
     }
 
     @Override
     PageSearchResult findPageIdsToReview(ReviewOptions options) {
         int totalResults = findTotalResults(options);
         if (totalResults == 0) {
-            return PageSearchResult.ofEmpty();
+            LOGGER.debug("No results on DB. Re-index with some Wikipedia live results and retry.");
+            forceIndex(options);
+            totalResults = findTotalResults(options);
+            if (totalResults == 0) {
+                return PageSearchResult.ofEmpty();
+            }
         }
 
-        Collection<PageKey> pageKeys = pageRepository.findNotReviewedByType(
-            options.getUser().getId().getLang(),
-            options.getStandardType(),
-            getCacheSize()
-        );
-
-        return PageSearchResult.of(totalResults, pageKeys);
+        return PageSearchResult.of(totalResults, findResults(options));
     }
 
     private int findTotalResults(ReviewOptions options) {
@@ -57,6 +62,18 @@ class ReviewTypeFinder extends ReviewFinder {
             options.getUser().getId().getLang(),
             options.getStandardType()
         );
+    }
+
+    private Collection<PageKey> findResults(ReviewOptions options) {
+        return pageRepository.findNotReviewedByType(
+            options.getUser().getId().getLang(),
+            options.getStandardType(),
+            getCacheSize()
+        );
+    }
+
+    private void forceIndex(ReviewOptions options) {
+        replacementTypeSaveApi.index(options.getUser().getId().getLang(), options.getStandardType());
     }
 
     @Override
