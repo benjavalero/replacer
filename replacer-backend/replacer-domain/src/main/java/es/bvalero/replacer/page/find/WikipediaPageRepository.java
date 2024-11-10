@@ -10,7 +10,9 @@ import org.jmolecules.architecture.hexagonal.SecondaryPort;
 /** Repository to perform operations on Wikipedia pages */
 @SecondaryPort
 public interface WikipediaPageRepository {
+    int MAX_PAGES_REQUESTED = 50; // MediaWiki API allows to retrieve the content of maximum 50 pages
     int MAX_SEARCH_RESULTS = 500; // MediaWiki API allows at most 500 pages in a search result
+    int MAX_OFFSET_LIMIT = 10000; // MediaWiki API has a maximum offset of 10000 when searching
 
     Optional<WikipediaPage> findByTitle(WikipediaLanguage lang, String pageTitle);
 

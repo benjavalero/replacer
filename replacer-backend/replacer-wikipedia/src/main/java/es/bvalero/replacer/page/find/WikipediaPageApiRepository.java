@@ -24,9 +24,6 @@ import org.springframework.stereotype.Service;
 @Profile("!offline")
 public class WikipediaPageApiRepository implements WikipediaPageRepository {
 
-    private static final int MAX_PAGES_REQUESTED = 50; // MediaWiki API allows to retrieve the content of maximum 50 pages
-    private static final int MAX_OFFSET_LIMIT = 10000;
-
     // Dependency injection
     private final WikipediaApiHelper wikipediaApiHelper;
 
@@ -37,12 +34,23 @@ public class WikipediaPageApiRepository implements WikipediaPageRepository {
     @Override
     public Optional<WikipediaPage> findByTitle(WikipediaLanguage lang, String pageTitle) {
         try {
-            // Return the only value that should be in the map
-            return getPagesByIds("titles", pageTitle, lang).stream().findAny();
+            return getPagesByTitle(lang, pageTitle);
         } catch (WikipediaException e) {
             LOGGER.error("Error finding page by title: {} - {}", lang, pageTitle, e);
             return Optional.empty();
         }
+    }
+
+    private Optional<WikipediaPage> getPagesByTitle(WikipediaLanguage lang, String pageTitle)
+        throws WikipediaException {
+        WikipediaApiRequest apiRequest = WikipediaApiRequest.builder()
+            .verb(WikipediaApiVerb.GET)
+            .lang(lang)
+            .params(buildPageIdsRequestParams("titles", pageTitle))
+            .build();
+        WikipediaApiResponse apiResponse = wikipediaApiHelper.executeApiRequest(apiRequest);
+        // Return the only value that should be in the map
+        return extractPagesFromJson(apiResponse, lang).stream().findAny();
     }
 
     @Override
@@ -57,10 +65,13 @@ public class WikipediaPageApiRepository implements WikipediaPageRepository {
 
     @Override
     public Collection<WikipediaPage> findByKeys(Collection<PageKey> pageKeys) throws WikipediaException {
-        if (pageKeys.isEmpty()) {
-            return Collections.emptyList();
-        }
-
+        // We assume all requested pages share the same language
+        WikipediaLanguage lang = pageKeys
+            .stream()
+            .map(PageKey::getLang)
+            .distinct()
+            .findAny()
+            .orElseThrow(() -> new IllegalArgumentException("All pages have to share the same language"));
         if (pageKeys.stream().map(PageKey::getLang).distinct().count() > 1) {
             throw new IllegalArgumentException("All pages have to share the same language");
         }
@@ -68,38 +79,43 @@ public class WikipediaPageApiRepository implements WikipediaPageRepository {
         List<WikipediaPage> pages = new ArrayList<>(pageKeys.size());
         // There is a maximum number of pages to request
         // We split the request in several sub-lists
-        try {
-            WikipediaLanguage lang = pageKeys.stream().map(PageKey::getLang).distinct().findAny().orElseThrow();
-            List<Integer> idList = pageKeys.stream().map(PageKey::getPageId).toList();
-            int start = 0;
-            while (start < idList.size()) {
-                List<Integer> subList = idList.subList(
-                    start,
-                    start + Math.min(idList.size() - start, MAX_PAGES_REQUESTED)
-                );
-                pages.addAll(getPagesByIds("pageids", StringUtils.join(subList, '|'), lang));
-                start += subList.size();
-            }
-        } catch (OutOfMemoryError e) {
-            // Sometimes (though rarely) the retrieved pages are huge (e.g. annexes) and throw an out-of-memory error
-            LOGGER.error("Out-of-memory when retrieving pages by key: {}", StringUtils.join(pageKeys, SPACE));
-            throw new WikipediaException(e);
-        } catch (Exception e) {
-            LOGGER.error("Error finding pages by ID: {}", StringUtils.join(pageKeys, SPACE), e);
-            throw new WikipediaException(e);
+        List<Integer> idList = pageKeys.stream().map(PageKey::getPageId).toList();
+        int start = 0;
+        while (start < idList.size()) {
+            List<Integer> subList = idList.subList(start, start + Math.min(idList.size() - start, MAX_PAGES_REQUESTED));
+            pages.addAll(getPagesByIds(lang, subList));
+            start += subList.size();
         }
         return pages;
     }
 
-    private Collection<WikipediaPage> getPagesByIds(String pagesParam, String pagesValue, WikipediaLanguage lang)
+    private Collection<WikipediaPage> getPagesByIds(WikipediaLanguage lang, List<Integer> pageIds)
         throws WikipediaException {
-        WikipediaApiRequest apiRequest = WikipediaApiRequest.builder()
-            .verb(WikipediaApiVerb.GET)
-            .lang(lang)
-            .params(buildPageIdsRequestParams(pagesParam, pagesValue))
-            .build();
-        WikipediaApiResponse apiResponse = wikipediaApiHelper.executeApiRequest(apiRequest);
-        return extractPagesFromJson(apiResponse, lang);
+        if (pageIds.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        try {
+            String pagesValue = StringUtils.join(pageIds, '|');
+            WikipediaApiRequest apiRequest = WikipediaApiRequest.builder()
+                .verb(WikipediaApiVerb.GET)
+                .lang(lang)
+                .params(buildPageIdsRequestParams("pageids", pagesValue))
+                .build();
+            WikipediaApiResponse apiResponse = wikipediaApiHelper.executeApiRequest(apiRequest);
+            return extractPagesFromJson(apiResponse, lang);
+        } catch (OutOfMemoryError e) {
+            // Sometimes (though rarely) the retrieved pages are huge (e.g. annexes) and throw an out-of-memory error
+            // Retry recursively with smaller chunks
+            LOGGER.error("Out-of-memory when retrieving pages by ID: {}", StringUtils.join(pageIds, SPACE));
+            int half = pageIds.size() / 2;
+            Collection<WikipediaPage> result = getPagesByIds(lang, pageIds.subList(0, half));
+            result.addAll(getPagesByIds(lang, pageIds.subList(half, pageIds.size())));
+            return result;
+        } catch (Exception e) {
+            LOGGER.error("Error finding pages by ID: {}", StringUtils.join(pageIds, SPACE), e);
+            throw new WikipediaException(e);
+        }
     }
 
     private Map<String, String> buildPageIdsRequestParams(String pagesParam, String pagesValue) {
