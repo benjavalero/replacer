@@ -37,7 +37,7 @@ class PageListControllerTest {
     private WebUtils webUtils;
 
     @MockBean
-    private PageListService pageListService;
+    private PageListApi pageListApi;
 
     @Test
     void testFindPagesToReviewByType() throws Exception {
@@ -48,7 +48,7 @@ class PageListControllerTest {
             .perform(get("/api/page/type?lang=es&kind=2&subtype=Africa").contentType(MediaType.TEXT_PLAIN_VALUE))
             .andExpect(status().isOk());
 
-        verify(pageListService).findPageTitlesNotReviewedByType(
+        verify(pageListApi).findPageTitlesNotReviewedByType(
             WikipediaLanguage.getDefault(),
             StandardType.of(ReplacementKind.SIMPLE, "Africa")
         );
@@ -70,7 +70,7 @@ class PageListControllerTest {
             )
             .andExpect(status().isNoContent());
 
-        verify(pageListService).updateSystemReviewerByType(
+        verify(pageListApi).updateSystemReviewerByType(
             WikipediaLanguage.getDefault(),
             StandardType.of(ReplacementKind.SIMPLE, "Africa")
         );
@@ -90,7 +90,7 @@ class PageListControllerTest {
             )
             .andExpect(status().isForbidden());
 
-        verify(pageListService, never()).updateSystemReviewerByType(
+        verify(pageListApi, never()).updateSystemReviewerByType(
             WikipediaLanguage.getDefault(),
             StandardType.of(ReplacementKind.SIMPLE, "Africa")
         );

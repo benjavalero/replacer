@@ -26,10 +26,10 @@ import org.springframework.web.bind.annotation.*;
 class PageListController {
 
     // Dependency injection
-    private final PageListService pageListService;
+    private final PageListApi pageListApi;
 
-    PageListController(PageListService pageListService) {
-        this.pageListService = pageListService;
+    PageListController(PageListApi pageListApi) {
+        this.pageListApi = pageListApi;
     }
 
     @Operation(summary = "List the pages to review containing the given replacement type")
@@ -41,7 +41,7 @@ class PageListController {
         // We cannot use the ValidateBotUser annotation because this call is made in an external tab
         WikipediaLanguage language = WikipediaLanguage.valueOfCode(lang);
         StandardType type = request.toStandardType();
-        Collection<String> pagesToReview = pageListService.findPageTitlesNotReviewedByType(language, type);
+        Collection<String> pagesToReview = pageListApi.findPageTitlesNotReviewedByType(language, type);
         String titleList = StringUtils.join(pagesToReview, "\n");
         LOGGER.info(
             "GET List of Pages to Review by Type: {} => {} items",
@@ -58,6 +58,6 @@ class PageListController {
     void reviewPagesByType(@UserLanguage WikipediaLanguage lang, @Valid ReplacementTypeDto request) {
         LOGGER.info("POST Review pages by type {}", request);
         StandardType type = request.toStandardType();
-        pageListService.updateSystemReviewerByType(lang, type);
+        pageListApi.updateSystemReviewerByType(lang, type);
     }
 }

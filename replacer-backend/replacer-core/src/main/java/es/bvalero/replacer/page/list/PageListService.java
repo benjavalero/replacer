@@ -13,7 +13,7 @@ import java.util.Objects;
 import org.springframework.stereotype.Service;
 
 @Service
-class PageListService {
+class PageListService implements PageListApi {
 
     // Dependency injection
     private final PageRepository pageRepository;
@@ -24,8 +24,8 @@ class PageListService {
         this.replacementSaveRepository = replacementSaveRepository;
     }
 
-    /** Find the pages to review by the given type and return the titles sorted alphabetically */
-    Collection<String> findPageTitlesNotReviewedByType(WikipediaLanguage lang, StandardType type) {
+    @Override
+    public Collection<String> findPageTitlesNotReviewedByType(WikipediaLanguage lang, StandardType type) {
         return pageRepository
             .findTitlesNotReviewedByType(lang, type)
             .stream()
@@ -34,8 +34,8 @@ class PageListService {
             .toList();
     }
 
-    /** Set as reviewed (by the system) all the replacements of the given type to review */
-    void updateSystemReviewerByType(WikipediaLanguage lang, StandardType type) {
+    @Override
+    public void updateSystemReviewerByType(WikipediaLanguage lang, StandardType type) {
         replacementSaveRepository.updateReviewerByType(lang, type, REVIEWER_SYSTEM);
     }
 }
