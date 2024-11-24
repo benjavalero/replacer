@@ -6,13 +6,6 @@ SimpleMisspellingFinderJmhBenchmarkTest.wordAhoCorasickWholeFinder              
 SimpleMisspellingFinderJmhBenchmarkTest.wordAhoCorasickWholeLongestFinder           avgt    5       3079,347 ±     280,350  us/op
 SimpleMisspellingFinderJmhBenchmarkTest.wordAutomatonAllFinder                      avgt    5       3551,721 ±     412,190  us/op
 SimpleMisspellingFinderJmhBenchmarkTest.wordLinearAllFinder                         avgt    5       2710,490 ±     166,535  us/op
-SimpleMisspellingFinderJmhBenchmarkTest.wordLinearFinder                            avgt    5    3088198,840 ±  155209,558  us/op
 SimpleMisspellingFinderJmhBenchmarkTest.wordRegexAllCompleteFinder                  avgt    5       7604,421 ±     872,502  us/op
 SimpleMisspellingFinderJmhBenchmarkTest.wordRegexAllCompleteSeparatorsFinder        avgt    5       8216,931 ±     314,503  us/op
 SimpleMisspellingFinderJmhBenchmarkTest.wordRegexAllFinder                          avgt    5       5319,587 ±     715,393  us/op
-SimpleMisspellingFinderJmhBenchmarkTest.wordRegexAlternateCompleteFinder            avgt    5   28567904,320 ±  774403,033  us/op
-SimpleMisspellingFinderJmhBenchmarkTest.wordRegexAlternateCompleteSeparatorsFinder  avgt    5   30490599,660 ± 1629794,546  us/op
-SimpleMisspellingFinderJmhBenchmarkTest.wordRegexAlternateFinder                    avgt    5   92535034,180 ± 1875803,874  us/op
-SimpleMisspellingFinderJmhBenchmarkTest.wordRegexCompleteFinder                     avgt    5  229096275,460 ± 3312787,886  us/op
-SimpleMisspellingFinderJmhBenchmarkTest.wordRegexCompleteSeparatorsFinder           avgt    5  318150111,400 ± 5339670,723  us/op
-SimpleMisspellingFinderJmhBenchmarkTest.wordRegexFinder                             avgt    5   12937136,220 ± 1182966,273  us/op

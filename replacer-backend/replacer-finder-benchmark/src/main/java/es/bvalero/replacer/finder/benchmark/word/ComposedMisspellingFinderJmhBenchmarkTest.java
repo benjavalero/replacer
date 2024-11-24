@@ -20,14 +20,14 @@ public class ComposedMisspellingFinderJmhBenchmarkTest extends BaseFinderJmhBenc
 
     private static final String fileName = "word/composed-misspelling-summary-jmh";
 
-    private WordRegexFinder wordRegexFinder;
-    private WordRegexCompleteFinder wordRegexCompleteFinder;
-    private WordRegexCompleteSeparatorsFinder wordRegexCompleteSeparatorsFinder;
+    // private WordRegexFinder wordRegexFinder; // Short
+    // private WordRegexCompleteFinder wordRegexCompleteFinder; // Long
+    // private WordRegexCompleteSeparatorsFinder wordRegexCompleteSeparatorsFinder; // Very Long
     // private WordAutomatonFinder wordAutomatonFinder; // Heap space issues
     private WordLinearFinder wordLinearFinder;
-    private WordRegexAlternateFinder wordRegexAlternateFinder;
-    private WordRegexAlternateCompleteFinder wordRegexAlternateCompleteFinder;
-    private WordRegexAlternateCompleteSeparatorsFinder wordRegexAlternateCompleteSeparatorsFinder;
+    // private WordRegexAlternateFinder wordRegexAlternateFinder; // Medium
+    // private WordRegexAlternateCompleteFinder wordRegexAlternateCompleteFinder; // Short
+    // private WordRegexAlternateCompleteSeparatorsFinder wordRegexAlternateCompleteSeparatorsFinder; // Short
     // private WordAutomatonAlternateFinder wordAutomatonAlternateFinder; // Heap space issues
     private WordAhoCorasickFinder wordAhoCorasickFinder;
     private WordAhoCorasickLongestFinder wordAhoCorasickLongestFinder;
@@ -57,68 +57,16 @@ public class ComposedMisspellingFinderJmhBenchmarkTest extends BaseFinderJmhBenc
         }
 
         // Initialize the finders
-        wordRegexFinder = new WordRegexFinder(words);
-        wordRegexCompleteFinder = new WordRegexCompleteFinder(words);
-        wordRegexCompleteSeparatorsFinder = new WordRegexCompleteSeparatorsFinder(words);
-        // wordAutomatonFinder = new WordAutomatonFinder(words);
         wordLinearFinder = new WordLinearFinder(words);
-        wordRegexAlternateFinder = new WordRegexAlternateFinder(words);
-        wordRegexAlternateCompleteFinder = new WordRegexAlternateCompleteFinder(words);
-        wordRegexAlternateCompleteSeparatorsFinder = new WordRegexAlternateCompleteSeparatorsFinder(words);
-        // wordAutomatonAlternateFinder = new WordAutomatonAlternateFinder(words);
         wordAhoCorasickFinder = new WordAhoCorasickFinder(words);
         wordAhoCorasickLongestFinder = new WordAhoCorasickLongestFinder(words);
         wordAhoCorasickWholeLongestFinder = new WordAhoCorasickWholeLongestFinder(words);
     }
 
     @Benchmark
-    public void wordRegexFinder(Blackhole bh) {
-        runFinder(wordRegexFinder, bh);
-    }
-
-    @Benchmark
-    public void wordRegexCompleteFinder(Blackhole bh) {
-        runFinder(wordRegexCompleteFinder, bh);
-    }
-
-    @Benchmark
-    public void wordRegexCompleteSeparatorsFinder(Blackhole bh) {
-        runFinder(wordRegexCompleteSeparatorsFinder, bh);
-    }
-
-    /*
-    @Benchmark
-    public void wordAutomatonFinder(Blackhole bh) {
-        runFinder(wordAutomatonFinder, bh);
-    }
-     */
-
-    @Benchmark
     public void wordLinearFinder(Blackhole bh) {
         runFinder(wordLinearFinder, bh);
     }
-
-    @Benchmark
-    public void wordRegexAlternateFinder(Blackhole bh) {
-        runFinder(wordRegexAlternateFinder, bh);
-    }
-
-    @Benchmark
-    public void wordRegexAlternateCompleteFinder(Blackhole bh) {
-        runFinder(wordRegexAlternateCompleteFinder, bh);
-    }
-
-    @Benchmark
-    public void wordRegexAlternateCompleteSeparatorsFinder(Blackhole bh) {
-        runFinder(wordRegexAlternateCompleteSeparatorsFinder, bh);
-    }
-
-    /*
-    @Benchmark
-    public void wordAutomatonAlternateFinder(Blackhole bh) {
-        runFinder(wordAutomatonAlternateFinder, bh);
-    }
-     */
 
     @Benchmark
     public void wordAhoCorasickFinder(Blackhole bh) {

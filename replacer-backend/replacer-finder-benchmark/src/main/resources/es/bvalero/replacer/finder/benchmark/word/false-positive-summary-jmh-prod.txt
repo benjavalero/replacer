@@ -1,0 +1,11 @@
+Benchmark                                                                       Mode  Cnt        Score        Error  Units
+FalsePositiveFinderJmhBenchmarkTest.baseLine                                    avgt    5        0.002 ±      0.001  us/op
+FalsePositiveFinderJmhBenchmarkTest.wordAhoCorasickFinder                       avgt    5    12677.750 ±   3597.709  us/op
+FalsePositiveFinderJmhBenchmarkTest.wordAhoCorasickLongestFinder                avgt    5    12195.660 ±   2199.453  us/op
+FalsePositiveFinderJmhBenchmarkTest.wordAhoCorasickWholeLongestFinder           avgt    5     5321.719 ±    648.605  us/op
+FalsePositiveFinderJmhBenchmarkTest.wordAutomatonAlternateFinder                avgt    5    11689.591 ±    989.462  us/op
+FalsePositiveFinderJmhBenchmarkTest.wordAutomatonFinder                         avgt    5  1398128.051 ± 353389.887  us/op
+FalsePositiveFinderJmhBenchmarkTest.wordLinearFinder                            avgt    5    95657.626 ±  43900.360  us/op
+FalsePositiveFinderJmhBenchmarkTest.wordRegexAlternateCompleteFinder            avgt    5  1090851.575 ±  72517.798  us/op
+FalsePositiveFinderJmhBenchmarkTest.wordRegexAlternateCompleteSeparatorsFinder  avgt    5  1099749.526 ± 175084.813  us/op
+FalsePositiveFinderJmhBenchmarkTest.wordRegexFinder                             avgt    5   744584.319 ± 100178.559  us/op

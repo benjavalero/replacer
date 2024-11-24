@@ -17,20 +17,24 @@ import org.openjdk.jmh.runner.options.OptionsBuilder;
 
 @Fork(value = 1, jvmArgsAppend = { "-Xmx256m", "-da" }) // 0 makes debugging possible, disable assertions just in case
 @State(Scope.Benchmark)
-@Warmup(time = 2)
-@Measurement(time = 2)
+@Warmup(time = 2) // Default: 5 iterations, 10 s each
+@Measurement(time = 2) // Default: 5 iterations, 10 s each
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.MICROSECONDS)
 public class BaseFinderJmhBenchmark {
 
     private static final String TEST_RESOURCES_PATH =
-        "replacer-finder-benchmark/src/main/resources/es/bvalero/replacer/finder/benchmark/";
+        "replacer-backend/replacer-finder-benchmark/src/main/resources/es/bvalero/replacer/finder/benchmark/";
 
     private List<WikipediaPage> sampleContents;
     private Map<Integer, Integer> samplePages;
 
     // @Param({"1", "2", "3"})
     public int pageId = 0;
+
+    // Note: Timeout is 10 min per iteration by default.
+    // However, it only works on the teardown phase,
+    // so it is not useful to interrupt very long benchmarks.
 
     protected void setUp() throws WikipediaException {
         // The pages have been sampled so the distribution of their content lengths

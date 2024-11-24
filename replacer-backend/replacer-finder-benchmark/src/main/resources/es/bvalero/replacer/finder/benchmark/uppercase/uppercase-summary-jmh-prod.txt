@@ -1,0 +1,9 @@
+UppercaseFinderJmhBenchmarkTest.baseLine                                 avgt    5         0.002 ±       0.001  us/op
+UppercaseFinderJmhBenchmarkTest.uppercaseAhoCorasickWholeLongestFinder   avgt    5      7097.905 ±   14711.517  us/op
+UppercaseFinderJmhBenchmarkTest.uppercaseAllWordsFinder                  avgt    5      9998.328 ±    2693.207  us/op
+UppercaseFinderJmhBenchmarkTest.uppercaseAutomatonAlternateAllFinder     avgt    5      8405.583 ±   18320.162  us/op
+UppercaseFinderJmhBenchmarkTest.uppercaseAutomatonAlternateFinder        avgt    5      4916.758 ±    1061.525  us/op
+UppercaseFinderJmhBenchmarkTest.uppercaseAutomatonIterateFinder          avgt    5   1558640.028 ±  158423.079  us/op
+UppercaseFinderJmhBenchmarkTest.uppercaseIndexOfFinder                   avgt    5     96267.543 ±   24797.606  us/op
+UppercaseFinderJmhBenchmarkTest.uppercaseRegexAlternateFinder            avgt    5    194657.522 ±   44051.560  us/op
+UppercaseFinderJmhBenchmarkTest.uppercaseRegexAlternateLookBehindFinder  avgt    5    422902.636 ±   53222.896  us/op

@@ -27,9 +27,9 @@ public class UppercaseFinderJmhBenchmarkTest extends BaseFinderJmhBenchmark {
 
     private UppercaseIndexOfFinder uppercaseIndexOfFinder;
     private UppercaseAllWordsFinder uppercaseAllWordsFinder;
-    private UppercaseRegexIterateFinder uppercaseRegexIterateFinder;
+    // private UppercaseRegexIterateFinder uppercaseRegexIterateFinder; // Long
     private UppercaseAutomatonIterateFinder uppercaseAutomatonIterateFinder;
-    private UppercaseRegexLookBehindFinder uppercaseRegexLookBehindFinder;
+    // private UppercaseRegexLookBehindFinder uppercaseRegexLookBehindFinder; // Very long
     private UppercaseRegexAlternateFinder uppercaseRegexAlternateFinder;
     private UppercaseAutomatonAlternateFinder uppercaseAutomatonAlternateFinder;
     private UppercaseRegexAlternateLookBehindFinder uppercaseRegexAlternateLookBehindFinder;
@@ -77,9 +77,7 @@ public class UppercaseFinderJmhBenchmarkTest extends BaseFinderJmhBenchmark {
         // Initialize the finders
         uppercaseIndexOfFinder = new UppercaseIndexOfFinder(words);
         uppercaseAllWordsFinder = new UppercaseAllWordsFinder(words);
-        uppercaseRegexIterateFinder = new UppercaseRegexIterateFinder(words);
         uppercaseAutomatonIterateFinder = new UppercaseAutomatonIterateFinder(words);
-        uppercaseRegexLookBehindFinder = new UppercaseRegexLookBehindFinder(words);
         uppercaseRegexAlternateFinder = new UppercaseRegexAlternateFinder(words);
         uppercaseAutomatonAlternateFinder = new UppercaseAutomatonAlternateFinder(words);
         uppercaseRegexAlternateLookBehindFinder = new UppercaseRegexAlternateLookBehindFinder(words);
@@ -98,18 +96,8 @@ public class UppercaseFinderJmhBenchmarkTest extends BaseFinderJmhBenchmark {
     }
 
     @Benchmark
-    public void uppercaseRegexIterateFinder(Blackhole bh) {
-        runFinder(uppercaseRegexIterateFinder, bh);
-    }
-
-    @Benchmark
     public void uppercaseAutomatonIterateFinder(Blackhole bh) {
         runFinder(uppercaseAutomatonIterateFinder, bh);
-    }
-
-    @Benchmark
-    public void uppercaseRegexLookBehindFinder(Blackhole bh) {
-        runFinder(uppercaseRegexLookBehindFinder, bh);
     }
 
     @Benchmark

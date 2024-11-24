@@ -1,0 +1,6 @@
+CompleteTagFinderJmhBenchmarkTest.baseLine                             avgt    5       0.002 ±      0.001  us/op
+CompleteTagFinderJmhBenchmarkTest.completeTagFinalFinder               avgt    5     340.425 ±     72.473  us/op
+CompleteTagFinderJmhBenchmarkTest.completeTagLinearFinder              avgt    5     360.891 ±     56.252  us/op
+CompleteTagFinderJmhBenchmarkTest.completeTagLinearIteratedFinder      avgt    5    5224.976 ±    960.082  us/op
+CompleteTagFinderJmhBenchmarkTest.completeTagRegexBackReferenceFinder  avgt    5    5769.799 ±    568.180  us/op
+CompleteTagFinderJmhBenchmarkTest.completeTagRegexIteratedFinder       avgt    5  163157.363 ± 495391.778  us/op

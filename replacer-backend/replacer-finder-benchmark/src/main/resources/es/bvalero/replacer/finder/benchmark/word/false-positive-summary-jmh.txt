@@ -8,7 +8,4 @@ FalsePositiveFinderJmhBenchmarkTest.wordAutomatonFinder                         
 FalsePositiveFinderJmhBenchmarkTest.wordLinearFinder                            avgt    5    24727,660 ±    733,206  us/op
 FalsePositiveFinderJmhBenchmarkTest.wordRegexAlternateCompleteFinder            avgt    5   296192,723 ±  11617,261  us/op
 FalsePositiveFinderJmhBenchmarkTest.wordRegexAlternateCompleteSeparatorsFinder  avgt    5   305654,020 ±   9082,096  us/op
-FalsePositiveFinderJmhBenchmarkTest.wordRegexAlternateFinder                    avgt    5  1030088,363 ±  63097,820  us/op
-FalsePositiveFinderJmhBenchmarkTest.wordRegexCompleteFinder                     avgt    5  1921267,280 ±  93271,517  us/op
-FalsePositiveFinderJmhBenchmarkTest.wordRegexCompleteSeparatorsFinder           avgt    5  3051857,160 ± 112277,826  us/op
 FalsePositiveFinderJmhBenchmarkTest.wordRegexFinder                             avgt    5   197959,377 ±  10771,149  us/op
