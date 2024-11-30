@@ -1,5 +1,8 @@
 # Versions
 
+## 2.29.5 (??)
+- Fix: ignore uppercase misspellings at the start of a file description
+
 ## 2.29.4 (1 Nov 2024)
 - Fix: replacements already indexed were not updated on reindexing
 

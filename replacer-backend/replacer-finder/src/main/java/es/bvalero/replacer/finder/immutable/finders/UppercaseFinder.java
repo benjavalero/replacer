@@ -12,12 +12,14 @@ import es.bvalero.replacer.finder.immutable.ImmutableFinder;
 import es.bvalero.replacer.finder.listing.StandardMisspelling;
 import es.bvalero.replacer.finder.listing.load.ComposedMisspellingLoader;
 import es.bvalero.replacer.finder.listing.load.SimpleMisspellingLoader;
+import es.bvalero.replacer.finder.util.FinderMatchResult;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.ResultMatchListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.EnumMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.regex.MatchResult;
 import java.util.stream.Collectors;
@@ -221,5 +223,32 @@ public class UppercaseFinder implements ImmutableFinder, PropertyChangeListener 
     private char findFirstLineChar(String text) {
         final int newLinePos = text.lastIndexOf(NEW_LINE);
         return newLinePos >= 0 ? text.charAt(newLinePos + 1) : 0;
+    }
+
+    /**
+     * Find the first expression in a text in case it is a known uppercase misspelling.
+     * To be used e.g. to find uppercase misspellings at the start of template values or file aliases.
+     */
+    public Optional<MatchResult> findFirstExpressionUpperCase(String text, WikipediaLanguage lang) {
+        // Find the start of the potential expression as there could be other characters like a whitespace
+        final MatchResult firstWord = FinderUtils.findWordAfter(text, 0);
+        if (firstWord == null) {
+            return Optional.empty();
+        }
+
+        // To improve the performance, first we try with the simple misspellings with an exact match.
+        if (this.getUppercaseMap().containsMapping(lang, firstWord.group())) {
+            return Optional.of(firstWord);
+        }
+
+        // Then, we try with the composed misspellings, checking if the parameter value starts with an uppercase misspelling.
+        final int valueStart = firstWord.start();
+        final String valueText = text.substring(valueStart);
+        return this.getUppercaseMap()
+            .get(lang)
+            .stream()
+            .filter(valueText::startsWith)
+            .findAny()
+            .map(s -> FinderMatchResult.of(valueStart, s));
     }
 }

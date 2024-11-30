@@ -3,18 +3,15 @@ package es.bvalero.replacer.finder.immutable.finders;
 import static es.bvalero.replacer.finder.util.FinderUtils.*;
 
 import es.bvalero.replacer.FinderProperties;
+import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.FinderPriority;
 import es.bvalero.replacer.finder.immutable.ImmutableCheckedFinder;
 import es.bvalero.replacer.finder.util.FinderMatchResult;
 import es.bvalero.replacer.finder.util.FinderUtils;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.MatchResult;
 import javax.annotation.PostConstruct;
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
@@ -36,12 +33,14 @@ class LinkFinder extends ImmutableCheckedFinder {
 
     // Dependency injection
     private final FinderProperties finderProperties;
+    private final UppercaseFinder uppercaseFinder;
 
     private final Set<String> categoryWords = new HashSet<>();
     private final Set<String> fileSpaces = new HashSet<>();
 
-    LinkFinder(FinderProperties finderProperties) {
+    LinkFinder(FinderProperties finderProperties, UppercaseFinder uppercaseFinder) {
         this.finderProperties = finderProperties;
+        this.uppercaseFinder = uppercaseFinder;
     }
 
     @PostConstruct
@@ -65,20 +64,22 @@ class LinkFinder extends ImmutableCheckedFinder {
     public Iterable<MatchResult> findMatchResults(FinderPage page) {
         final List<MatchResult> immutables = new ArrayList<>(100);
         for (MatchResult template : FinderUtils.findAllStructures(page, START_LINK, END_LINK)) {
-            CollectionUtils.addIgnoreNull(immutables, findImmutable(template, page));
+            immutables.addAll(findImmutable(template, page));
         }
         return immutables;
     }
 
-    @Nullable
-    private MatchResult findImmutable(MatchResult link, FinderPage page) {
+    private List<MatchResult> findImmutable(MatchResult link, FinderPage page) {
+        final List<MatchResult> immutables = new ArrayList<>();
+
         // Let's check first the easiest cases
+        final WikipediaLanguage lang = page.getPageKey().getLang();
         final String text = page.getContent();
 
         // If the link is suffixed then return the complete link
         final int endSuffix = findEndSuffix(text, link.end());
         if (endSuffix > link.end()) {
-            return FinderMatchResult.of(text, link.start(), endSuffix);
+            return List.of(FinderMatchResult.of(text, link.start(), endSuffix));
         }
 
         final String linkContent = getLinkContent(link.group());
@@ -87,27 +88,37 @@ class LinkFinder extends ImmutableCheckedFinder {
 
         // If the link space is a category then return an immutable of the complete link
         if (isCategorySpace(linkSpace)) {
-            return link;
+            return List.of(link);
         }
 
-        final String linkAlias = findLinkAlias(linkContent);
+        // NOTE: the positions of this result are relative to the link content not to the whole link
+        final MatchResult linkAlias = findLinkAlias(linkContent);
 
         // Interwiki links are immutable. If alias exists, then return only the link title.
         // The same applies for interlanguage links and files
         // Exception: if the alias exists but is a parameter then return the complete link
         if (linkAlias != null || isInterWikiSpace(linkSpace) || isLangSpace(linkSpace) || isFileSpace(linkSpace)) {
             if (linkAlias == null) {
-                return link;
-            } else if (isAliasParameter(linkAlias)) {
-                return link;
+                return List.of(link);
+            } else if (isAliasParameter(linkAlias.group())) {
+                return List.of(link);
             } else {
                 final int startTitle = link.start() + START_LINK.length();
-                return FinderMatchResult.of(startTitle, linkTitle);
+                immutables.add(FinderMatchResult.of(startTitle, linkTitle));
+
+                // If the alias starts with an uppercase word/expression then we return this word
+                final Optional<MatchResult> firstExpressionUpperCase = uppercaseFinder.findFirstExpressionUpperCase(
+                    linkAlias.group(),
+                    lang
+                );
+                firstExpressionUpperCase.ifPresent(uppercase -> {
+                    final int startAlias = startTitle + linkAlias.start();
+                    immutables.add(FinderMatchResult.of(startAlias + uppercase.start(), uppercase.group()));
+                });
             }
         }
 
-        // In any other case then return no immutable
-        return null;
+        return immutables;
     }
 
     // Find the end of the link suffix, i.e. lowercase chars appended to the link
@@ -142,9 +153,9 @@ class LinkFinder extends ImmutableCheckedFinder {
     }
 
     @Nullable
-    private String findLinkAlias(String linkContent) {
+    private MatchResult findLinkAlias(String linkContent) {
         final int startLastPipe = linkContent.lastIndexOf(PIPE);
-        return startLastPipe >= 0 ? linkContent.substring(startLastPipe + 1) : null;
+        return startLastPipe >= 0 ? FinderMatchResult.of(linkContent, startLastPipe + 1, linkContent.length()) : null;
     }
 
     private boolean isFileSpace(@Nullable String space) {

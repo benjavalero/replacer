@@ -9,10 +9,7 @@ import es.bvalero.replacer.finder.FinderPriority;
 import es.bvalero.replacer.finder.immutable.ImmutableFinder;
 import es.bvalero.replacer.finder.util.FinderMatchResult;
 import es.bvalero.replacer.finder.util.FinderUtils;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.MatchResult;
 import javax.annotation.PostConstruct;
 import org.apache.commons.collections4.SetValuedMap;
@@ -254,15 +251,19 @@ class TemplateFinder implements ImmutableFinder {
                     immutables.add(FinderMatchResult.of(startTemplateContent + startValue, trimmedValue));
                 } else {
                     // If the value starts with an uppercase word/expression then we return this word
-                    final MatchResult firstExpressionUpperCase = findFirstExpressionUpperCase(value, lang);
-                    if (firstExpressionUpperCase != null) {
-                        immutables.add(
-                            FinderMatchResult.of(
-                                startTemplateContent + startValue + firstExpressionUpperCase.start(),
-                                firstExpressionUpperCase.group()
+                    final Optional<MatchResult> firstExpressionUpperCase = uppercaseFinder.findFirstExpressionUpperCase(
+                        value,
+                        lang
+                    );
+                    firstExpressionUpperCase.ifPresent(
+                        uppercase ->
+                            immutables.add(
+                                FinderMatchResult.of(
+                                    startTemplateContent + startValue + uppercase.start(),
+                                    uppercase.group()
+                                )
                             )
-                        );
-                    }
+                    );
                 }
             }
 
@@ -324,31 +325,5 @@ class TemplateFinder implements ImmutableFinder {
         } else {
             return false;
         }
-    }
-
-    @Nullable
-    private MatchResult findFirstExpressionUpperCase(String text, WikipediaLanguage lang) {
-        // Find the start of the potential expression as there could be other characters like a whitespace
-        final MatchResult firstWord = FinderUtils.findWordAfter(text, 0);
-        if (firstWord == null) {
-            return null;
-        }
-
-        // To improve the performance, first we try with the simple misspellings with an exact match.
-        if (uppercaseFinder.getUppercaseMap().containsMapping(lang, firstWord.group())) {
-            return firstWord;
-        }
-
-        // Then, we try with the composed misspellings, checking if the parameter value starts with an uppercase misspelling.
-        final int valueStart = firstWord.start();
-        final String valueText = text.substring(valueStart);
-        return uppercaseFinder
-            .getUppercaseMap()
-            .get(lang)
-            .stream()
-            .filter(valueText::startsWith)
-            .findAny()
-            .map(s -> FinderMatchResult.of(valueStart, s))
-            .orElse(null);
     }
 }

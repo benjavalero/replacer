@@ -70,8 +70,6 @@ public class ImmutableFinderJmhBenchmarkTest extends BaseFinderJmhBenchmark {
         ignorableSectionFinder.init();
         redirectionFinder = new RedirectionFinder(finderProperties);
         redirectionFinder.init();
-        linkFinder = new LinkFinder(finderProperties);
-        linkFinder.init();
         personNameFinder = new PersonNameFinder(finderProperties);
         personNameFinder.init();
         personSurnameFinder = new PersonSurnameFinder(finderProperties);
@@ -92,6 +90,8 @@ public class ImmutableFinderJmhBenchmarkTest extends BaseFinderJmhBenchmark {
         uppercaseFinder.init();
         templateFinder = new TemplateFinder(finderProperties, uppercaseFinder);
         templateFinder.initTemplateParams();
+        linkFinder = new LinkFinder(finderProperties, uppercaseFinder);
+        linkFinder.init();
         titleFinder = new TitleFinder();
         tableFinder = new TableFinder();
         urlFinder = new UrlFinder();

@@ -7,6 +7,11 @@ import es.bvalero.replacer.FinderProperties;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.Immutable;
+import es.bvalero.replacer.finder.listing.find.ListingOfflineFinder;
+import es.bvalero.replacer.finder.listing.load.ComposedMisspellingLoader;
+import es.bvalero.replacer.finder.listing.load.SimpleMisspellingLoader;
+import es.bvalero.replacer.finder.listing.parse.ComposedMisspellingParser;
+import es.bvalero.replacer.finder.listing.parse.SimpleMisspellingParser;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -17,10 +22,28 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
+@ActiveProfiles("offline")
 @EnableConfigurationProperties(FinderProperties.class)
-@SpringBootTest(classes = LinkFinder.class)
+@SpringBootTest(
+    classes = {
+        LinkFinder.class,
+        UppercaseFinder.class,
+        SimpleMisspellingLoader.class,
+        ComposedMisspellingLoader.class,
+        ListingOfflineFinder.class,
+        SimpleMisspellingParser.class,
+        ComposedMisspellingParser.class,
+    }
+)
 class LinkFinderTest {
+
+    @Autowired
+    private SimpleMisspellingLoader simpleMisspellingLoader;
+
+    @Autowired
+    private ComposedMisspellingLoader composedMisspellingLoader;
 
     @Autowired
     private LinkFinder linkFinder;
@@ -115,6 +138,33 @@ class LinkFinderTest {
         List<Immutable> matches = linkFinder.findList(text);
 
         Set<String> expected = Set.of(text);
+        Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void testFileAliasedWithUppercase() {
+        // Load misspellings
+        simpleMisspellingLoader.load();
+        composedMisspellingLoader.load();
+
+        String fileUppercaseValid = "Archivo:zzz.jpg";
+        String aliasUppercaseValid = "Hola";
+        String textUppercaseValid = String.format("[[%s|%s]]", fileUppercaseValid, aliasUppercaseValid);
+
+        String fileUppercaseMisspelling = "Archivo:xxx.jpg";
+        String aliasUppercaseMisspelling = "Enero";
+        String textUppercaseMisspelling = String.format(
+            "[[%s|%s]]",
+            fileUppercaseMisspelling,
+            aliasUppercaseMisspelling
+        );
+
+        String text = String.format("%s %s", textUppercaseValid, textUppercaseMisspelling);
+
+        List<Immutable> matches = linkFinder.findList(text);
+
+        Set<String> expected = Set.of(fileUppercaseValid, fileUppercaseMisspelling, aliasUppercaseMisspelling);
         Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
         assertEquals(expected, actual);
     }
