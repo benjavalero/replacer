@@ -20,7 +20,14 @@ class LinkCursiveFinderTest {
     }
 
     @ParameterizedTest
-    @CsvSource(value = { "[[''test'']], ''[[test]]''", "[[Test|''test'']], ''[[Test|test]]''" })
+    @CsvSource(
+        quoteCharacter = '"',
+        value = {
+            "[[''test'']], ''[[test]]''",
+            "[[Test|''test'']], ''[[Test|test]]''",
+            "[[Test|'''bold''']], '''[[Test|bold]]'''",
+        }
+    )
     void testLinkCursive(String text, String fix) {
         List<Cosmetic> cosmetics = linkCursiveFinder.findList(text);
 
@@ -30,7 +37,16 @@ class LinkCursiveFinderTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = { "''[[test]]''", "[[''test]]''", "[[''Test''|test]]", "[[''Test|test'']]" })
+    @ValueSource(
+        strings = {
+            "''[[test]]''",
+            "[[''test]]''",
+            "[[''Test''|test]]",
+            "[[''Test|test'']]",
+            // Sometimes there are complex cursive in the alias
+            "[[Digitalis purpurea subsp. bocquetii|''D. purpurea'' subsp. ''bocquetii'']]",
+        }
+    )
     void testLinkCursiveNotValid(String text) {
         List<Cosmetic> cosmetics = linkCursiveFinder.findList(text);
 
