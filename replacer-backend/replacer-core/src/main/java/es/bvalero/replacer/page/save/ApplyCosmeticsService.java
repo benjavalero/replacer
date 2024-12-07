@@ -47,6 +47,9 @@ class ApplyCosmeticsService {
                 applyCheckWikipediaAction(page, cosmetic);
                 LOGGER.debug("Cosmetic applied: {}", cosmetic);
             }
+
+            // Apply cosmetics recursively in case a new one has appeared after applying others
+            fixedText = applyCosmeticChanges(FinderPage.of(fixedText));
         }
 
         return fixedText;
