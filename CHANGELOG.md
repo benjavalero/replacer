@@ -3,6 +3,7 @@
 ## 2.29.6 (??)
 - Fix: ignore links with cursive if the alias contains more styling
 - Feat: apply cosmetics recursively in case a new one has appeared after applying others
+- Feat: add surname false positives
 
 ## 2.29.5 (30 Nov 2024)
 - Fix: ignore uppercase misspellings at the start of a file description
