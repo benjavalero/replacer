@@ -83,7 +83,7 @@ package core {
 
 package secondary-port {
   +interface PageCountRepository <<page.count>> {
-    +countNotReviewedGroupedByType()
+    countNotReviewedGroupedByType()
     +countNotReviewedByType()
   }
 }
@@ -100,6 +100,44 @@ PageCountApi <|-- PageCountService
 PageCountService --> PageCountRepository
 PageCountRepository <|-- PageCountCacheRepository
 PageCountCacheRepository <-- PageCountJdbcRepository
+
+'PAGE LIST
+
+package web {
+  class PageListController <<page.list>> {
+    findPageTitlesNotReviewedByType()
+    reviewPagesByType()
+  }
+}
+
+package primary-port {
+  interface PageListApi <<page.list>> {
+    findPageTitlesNotReviewedByType()
+    updateSystemReviewerByType()
+  }
+}
+
+package core {
+  class PageListService <<page.list>>
+}
+
+PageListController --> PageListApi
+PageListApi <|-- PageListService
+
+'PAGE FIND - TODO
+'TODO PageCountRepository es usado por ReviewTypeFinder y ReviewNoTypeFinder
+
+package secondary-port {
+  +interface PageRepository <<page.find>> {
+    +findByKey()
+    +findByIdRange()
+    findNotReviewedByType()
+    +findTitlesNotReviewedByType()
+    'TODO También usan: ReviewXxxFinder y PageBatch/IndexService
+  }
+}
+
+PageListService --> PageRepository
 
 'REPLACEMENT COUNT
 
@@ -146,11 +184,21 @@ ReplacementCountService --> ReplacementCountRepository
 ReplacementCountRepository <|-- ReplacementCountCacheRepository
 ReplacementCountCacheRepository <-- ReplacementCountJdbcRepository
 
+'REPLACEMENT SAVE - TODO
 
+package secondary-port {
+  +interface ReplacementSaveRepository {
+    +add()
+    +update()
+    +remove()
+    +updateReviewerByType()
+    +updateReviewer()
+    +removeByType()
+    'TODO También lo usan ReviewTypeFinder, ReplacementTypeSaveService, PageSaveJdbcRepository
+    'TODO y  ReplacementSaveXxxRepository
+  }
+}
 
-
-'TO-DO: PAGE FIND
-' PageCountRepository es usado por ReviewTypeFinder y ReviewNoTypeFinder
-
+PageListService --> ReplacementSaveRepository
 
 @enduml
