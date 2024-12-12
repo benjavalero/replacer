@@ -1,1 +1,111 @@
-@startumlhide empty members'USERpackage web {  +class WebUtils <<common>> {    +getLanguageHeader()    +getAuthenticatedUser()    +{static}buildAccessTokenResponseCookie()  }  class AuthorizationController <<user>> {    initiateAuthorization()    verifyAuthorization()  }}package primary-port {  interface AuthorizationApi <<user>> {    getRequestToken()    getAuthenticatedUser()  }  +interface UserApi <<user>> {    +findAuthenticatedUser()  }}package core {  class AuthorizationService <<user>>  class UserService <<user>>}package secondary-port {  interface OAuthService <<user>> {    getRequestToken()    getAccessToken()  }  interface WikipediaUserRepository <<user>> {    findAuthenticatedUser()  }}package secondary-adapter {  package wikipedia {    class OAuthMediaWikiService <<user>>    class WikipediaUserApiRepository <<user>>    class WikipediaUserCacheRepository <<user>>  }}AuthorizationController --> AuthorizationApiAuthorizationApi <|-- AuthorizationServiceWebUtils --> UserApiUserApi <-- AuthorizationServiceAuthorizationService --> OAuthServiceUserApi <|-- UserServiceUserService --> WikipediaUserRepositoryOAuthService <|-- OAuthMediaWikiServiceWikipediaUserRepository <|-- WikipediaUserCacheRepositoryWikipediaUserCacheRepository <-- WikipediaUserApiRepository'REPLACEMENT COUNTpackage web {  class ReplacementCountController <<repl.count>> {    countReplacements()    countReviewedReplacementsGroupedByReviewer()    countNotReviewedReplacementsGroupedByPage()  }}package primary-port {   interface ReplacementCountApi <<repl.count>> {    countReviewed()    countNotReviewed()    countReviewedGroupedByReviewer()    countNotReviewedGroupedByPage()  }}package core {  class ReplacementCountService <<repl.count>>}package secondary-port {  interface ReplacementCountRepository <<repl.count>> {    countReviewed()    countNotReviewed()    countReviewedGroupedByReviewer()    countNotReviewedGroupedByPage()  }}package secondary-adapter {  package repository {    class ReplacementCountCacheRepository <<repl.count>>    class ReplacementCountJdbcRepository <<repl.count>>  }}ReplacementCountController --> ReplacementCountApiReplacementCountApi <|-- ReplacementCountServiceReplacementCountService --> ReplacementCountRepositoryReplacementCountRepository <|-- ReplacementCountCacheRepositoryReplacementCountCacheRepository <-- ReplacementCountJdbcRepository@enduml
+@startuml
+
+hide empty members
+
+'USER
+
+package web {
+  +class WebUtils <<common>> {
+    +getLanguageHeader()
+    +getAuthenticatedUser()
+    +{static}buildAccessTokenResponseCookie()
+  }
+
+  class AuthorizationController <<user>> {
+    initiateAuthorization()
+    verifyAuthorization()
+  }
+}
+
+package primary-port {
+  interface AuthorizationApi <<user>> {
+    getRequestToken()
+    getAuthenticatedUser()
+  }
+
+  +interface UserApi <<user>> {
+    +findAuthenticatedUser()
+  }
+}
+
+package core {
+  class AuthorizationService <<user>>
+  class UserService <<user>>
+}
+
+package secondary-port {
+  interface OAuthService <<user>> {
+    getRequestToken()
+    getAccessToken()
+  }
+
+  interface WikipediaUserRepository <<user>> {
+    findAuthenticatedUser()
+  }
+}
+
+package secondary-adapter {
+  package wikipedia {
+    class OAuthMediaWikiService <<user>>
+    class WikipediaUserApiRepository <<user>>
+    class WikipediaUserCacheRepository <<user>>
+  }
+}
+
+AuthorizationController --> AuthorizationApi
+AuthorizationApi <|-- AuthorizationService
+WebUtils --> UserApi
+UserApi <-- AuthorizationService
+AuthorizationService --> OAuthService
+UserApi <|-- UserService
+UserService --> WikipediaUserRepository
+OAuthService <|-- OAuthMediaWikiService
+WikipediaUserRepository <|-- WikipediaUserCacheRepository
+WikipediaUserCacheRepository <-- WikipediaUserApiRepository
+
+'REPLACEMENT COUNT
+
+package web {
+  class ReplacementCountController <<repl.count>> {
+    countReplacements()
+    countReviewedReplacementsGroupedByReviewer()
+    countNotReviewedReplacementsGroupedByPage()
+  }
+}
+
+package primary-port { 
+  interface ReplacementCountApi <<repl.count>> {
+    countReviewed()
+    countNotReviewed()
+    countReviewedGroupedByReviewer()
+    countNotReviewedGroupedByPage()
+  }
+}
+
+package core {
+  class ReplacementCountService <<repl.count>>
+}
+
+package secondary-port {
+  interface ReplacementCountRepository <<repl.count>> {
+    countReviewed()
+    countNotReviewed()
+    countReviewedGroupedByReviewer()
+    countNotReviewedGroupedByPage()
+  }
+}
+
+package secondary-adapter {
+  package repository {
+    class ReplacementCountCacheRepository <<repl.count>>
+    class ReplacementCountJdbcRepository <<repl.count>>
+  }
+}
+
+ReplacementCountController --> ReplacementCountApi
+ReplacementCountApi <|-- ReplacementCountService
+ReplacementCountService --> ReplacementCountRepository
+ReplacementCountRepository <|-- ReplacementCountCacheRepository
+ReplacementCountCacheRepository <-- ReplacementCountJdbcRepository
+
+@enduml
