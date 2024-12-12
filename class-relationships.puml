@@ -63,6 +63,44 @@ OAuthService <|-- OAuthMediaWikiService
 WikipediaUserRepository <|-- WikipediaUserCacheRepository
 WikipediaUserCacheRepository <-- WikipediaUserApiRepository
 
+'PAGE COUNT
+
+package web {
+  class PageCountController <<page.count>> {
+    countNotReviewedGroupedByType()
+  }
+}
+
+package primary-port {
+  interface PageCountApi <<page.count>> {
+    countNotReviewedGroupedByType()
+  }
+}
+
+package core {
+  class PageCountService <<page.count>>
+}
+
+package secondary-port {
+  +interface PageCountRepository <<page.count>> {
+    +countNotReviewedGroupedByType()
+    +countNotReviewedByType()
+  }
+}
+
+package secondary-adapter {
+  package repository {
+    class PageCountCacheRepository <<page.count>>
+    class PageCountJdbcRepository <<page.count>>
+  }
+}
+
+PageCountController --> PageCountApi
+PageCountApi <|-- PageCountService
+PageCountService --> PageCountRepository
+PageCountRepository <|-- PageCountCacheRepository
+PageCountCacheRepository <-- PageCountJdbcRepository
+
 'REPLACEMENT COUNT
 
 package web {
@@ -73,7 +111,7 @@ package web {
   }
 }
 
-package primary-port { 
+package primary-port {
   interface ReplacementCountApi <<repl.count>> {
     countReviewed()
     countNotReviewed()
@@ -107,5 +145,12 @@ ReplacementCountApi <|-- ReplacementCountService
 ReplacementCountService --> ReplacementCountRepository
 ReplacementCountRepository <|-- ReplacementCountCacheRepository
 ReplacementCountCacheRepository <-- ReplacementCountJdbcRepository
+
+
+
+
+'TO-DO: PAGE FIND
+' PageCountRepository es usado por ReviewTypeFinder y ReviewNoTypeFinder
+
 
 @enduml
