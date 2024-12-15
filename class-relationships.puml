@@ -195,10 +195,18 @@ package secondary-port {
     +updateReviewer()
     +removeByType()
     'TODO También lo usan ReviewTypeFinder, ReplacementTypeSaveService, PageSaveJdbcRepository
-    'TODO y  ReplacementSaveXxxRepository
+  }
+}
+
+package secondary-adapter {
+  package repository {
+    class ReplacementSaveCacheRepository <<repl.save>>
+    class ReplacementSaveJdbcRepository <<repl.save>>
   }
 }
 
 PageListService --> ReplacementSaveRepository
+ReplacementSaveRepository <|-- ReplacementSaveCacheRepository
+ReplacementSaveCacheRepository <-- ReplacementSaveJdbcRepository
 
 @enduml
