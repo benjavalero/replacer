@@ -1,5 +1,4 @@
 @startuml
-
 hide empty members
 
 'USER
@@ -139,6 +138,57 @@ package secondary-port {
 
 PageListService --> PageRepository
 
+'PAGE SAVE
+
+package web {
+  class PageSaveController <<page.save>> {
+    saveReview()
+  }
+}
+
+package primary-port {
+  interface PageSaveApi <<page.save>> {
+    save()
+  }
+}
+
+package core {
+  class PageSaveService <<page.save>>
+}
+
+package secondary-port {
+  +interface PageSaveRepository <<page.save>> {
+    save()
+    +removeByKey()
+  }
+
+  interface WikipediaPageSaveRepository <<page.save>> {
+    save()
+  }
+}
+
+package secondary-adapter {
+  package repository {
+    class PageSaveCacheRepository <<page.save>>
+    class PageSaveJdbcRepository <<page.save>>
+  }
+
+  package wikipedia {
+    class WikipediaPageSaveApiRepository <<page.save>>
+  }
+}
+
+PageSaveController --> PageSaveApi
+PageSaveApi <|-- PageSaveService
+PageSaveService --> PageSaveRepository
+PageSaveService --> WikipediaPageSaveRepository
+PageSaveRepository <|-- PageSaveCacheRepository
+PageSaveCacheRepository <-- PageSaveJdbcRepository
+WikipediaPageSaveRepository <|-- WikipediaPageSaveApiRepository
+
+'TODO ApplyCosmeticsService
+
+
 'REPLACEMENT COUNT
 
 package web {
@@ -208,5 +258,4 @@ package secondary-adapter {
 PageListService --> ReplacementSaveRepository
 ReplacementSaveRepository <|-- ReplacementSaveCacheRepository
 ReplacementSaveCacheRepository <-- ReplacementSaveJdbcRepository
-
 @enduml
