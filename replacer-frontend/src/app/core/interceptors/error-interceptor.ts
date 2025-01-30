@@ -15,6 +15,8 @@ export class ErrorInterceptor implements HttpInterceptor {
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     return next.handle(request).pipe(
       catchError((err: any) => {
+        console.error('ERROR', err);
+        console.error('ERROR STATUS', err.status);
         if (err.status == HttpStatusCode.Conflict) {
           this.alertService.addErrorMessage(
             'Esta página de Wikipedia ha sido editada por otra persona. Recargue para revisarla de nuevo.'
@@ -25,11 +27,7 @@ export class ErrorInterceptor implements HttpInterceptor {
           window.location.reload();
         } else {
           // Generic error. We try to get it from the response in case of an exception from the server.
-          let serverMessage;
-          if (err.error) {
-            serverMessage = JSON.parse(err.error).message;
-          }
-          this.alertService.addErrorMessage('Error: ' + (serverMessage || err.message));
+          this.alertService.addErrorMessage('Error: ' + (err.error?.message || err.message));
         }
         return throwError(() => err);
       })
