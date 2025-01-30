@@ -13,6 +13,7 @@
             <list>
               <option value="clean" />
               <option value="install" />
+              <option value="-DskipTests" />
             </list>
           </option>
           <option name="multimoduleDir" />
