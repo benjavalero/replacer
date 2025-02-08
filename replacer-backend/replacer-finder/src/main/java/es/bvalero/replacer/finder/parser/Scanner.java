@@ -1,13 +1,12 @@
 package es.bvalero.replacer.finder.parser;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static es.bvalero.replacer.finder.parser.TokenType.*;
 
 class Scanner {
+/*
     private static final Map<String, TokenType> keywords;
 
     static {
@@ -29,12 +28,12 @@ class Scanner {
         keywords.put("var",    VAR);
         keywords.put("while",  WHILE);
     }
+ */
 
     private final String source;
     private final List<Token> tokens = new ArrayList<>();
     private int start = 0;
     private int current = 0;
-    private int line = 1;
     private int startText = -1;
 
     Scanner(String source) {
@@ -48,7 +47,8 @@ class Scanner {
             scanToken();
         }
 
-        addToken(EOF, null);
+        // addToken(EOF, null);
+        addTextToken();
         return tokens;
     }
 
@@ -85,6 +85,12 @@ class Scanner {
                     break;
                 }
                 // If not treat the brace as a common character
+            case '}':
+                if (match('}')) {
+                    addToken(CLOSE_TEMPLATE);
+                    break;
+                }
+                // If not treat the brace as a common character
             case '-':
                 if (match("->")) {
                     addToken(CLOSE_COMMENT);
@@ -109,7 +115,7 @@ class Scanner {
                 break;
 */
             default:
-                if (startText < 0) startText = start;
+                text();
                 /*
                 if (isDigit(c)) {
                     number();
@@ -123,49 +129,54 @@ class Scanner {
         }
     }
 
-    private void identifier() {
-        while (isAlphaNumeric(peek())) advance();
-
-        String text = source.substring(start, current);
-        TokenType type = keywords.get(text);
-        if (type == null) type = IDENTIFIER;
-        addToken(type);
+    private void text() {
+        if (startText < 0) startText = start;
     }
 
-    private void number() {
-        while (isDigit(peek())) advance();
+    /*
+        private void identifier() {
+            while (isAlphaNumeric(peek())) advance();
 
-        // Look for a fractional part.
-        if (peek() == '.' && isDigit(peekNext())) {
-            // Consume the "."
-            advance();
+            String text = source.substring(start, current);
+            TokenType type = keywords.get(text);
+            if (type == null) type = IDENTIFIER;
+            addToken(type);
+        }
 
+        private void number() {
             while (isDigit(peek())) advance();
+
+            // Look for a fractional part.
+            if (peek() == '.' && isDigit(peekNext())) {
+                // Consume the "."
+                advance();
+
+                while (isDigit(peek())) advance();
+            }
+
+            addToken(NUMBER,
+                Double.parseDouble(source.substring(start, current)));
         }
 
-        addToken(NUMBER,
-            Double.parseDouble(source.substring(start, current)));
-    }
+        private void string() {
+            while (peek() != '"' && !isAtEnd()) {
+                if (peek() == '\n') line++;
+                advance();
+            }
 
-    private void string() {
-        while (peek() != '"' && !isAtEnd()) {
-            if (peek() == '\n') line++;
+            if (isAtEnd()) {
+                ScannerPoC.error(line, "Unterminated string.");
+                return;
+            }
+
+            // The closing ".
             advance();
+
+            // Trim the surrounding quotes.
+            String value = source.substring(start + 1, current - 1);
+            addToken(STRING, value);
         }
-
-        if (isAtEnd()) {
-            ScannerPoC.error(line, "Unterminated string.");
-            return;
-        }
-
-        // The closing ".
-        advance();
-
-        // Trim the surrounding quotes.
-        String value = source.substring(start + 1, current - 1);
-        addToken(STRING, value);
-    }
-
+    */
     private boolean match(char expected) {
         if (isAtEnd()) return false;
         if (source.charAt(current) != expected) return false;
@@ -181,7 +192,7 @@ class Scanner {
         current += expected.length();
         return true;
     }
-
+/*
     private char peek() {
         if (isAtEnd()) return '\0';
         return source.charAt(current);
@@ -205,7 +216,7 @@ class Scanner {
     private boolean isDigit(char c) {
         return c >= '0' && c <= '9';
     }
-
+*/
     private boolean isAtEnd() {
         return current >= source.length();
     }
@@ -215,24 +226,20 @@ class Scanner {
     }
 
     private void addToken(TokenType type) {
-        addToken(type, null);
-    }
-
-    private void addToken(TokenType type, Object literal) {
-        System.out.println("ADD TOKEN...");
-        System.out.println("startText: " + startText);
-        if (startText >= 0 && start > startText) {
-            String subtext = source.substring(startText, start);
-            System.out.println("subtext:**" + subtext + "**");
-            tokens.add(new Token(TEXT, subtext, subtext, line));
-            startText = -1;
-        }
-
-        System.out.println("start: " + start);
-        System.out.println("current: " + current);
+        addTextToken();
 
         String text = source.substring(start, current);
-        System.out.println("text:**" + text + "**");
-        tokens.add(new Token(type, text, literal, line));
+        tokens.add(new Token(type, text, start));
+    }
+
+    private void addTextToken() {
+        if (startText < 0) return;
+
+        String text = isAtEnd()
+            ? source.substring(startText)
+            : source.substring(startText, start);
+        tokens.add(new Token(TEXT, text, startText));
+
+        startText = -1;
     }
 }

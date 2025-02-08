@@ -4,18 +4,22 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
 public class ScannerTest {
 
     @Test
     public void testScanTokensComment() {
-        String text = "Hello <!-- comment --> and goodbye.";
+        String text = "Hello <!-- comment --> and {{ t | k = v }} goodbye.";
 
         Scanner scanner = new Scanner(text);
         List<Token> tokenList = scanner.scanTokens();
 
         assertFalse(tokenList.isEmpty());
-        tokenList.forEach(System.out::println);
+        for (Token token : tokenList) {
+            System.out.println(token);
+            assertEquals(token.lexeme, text.substring(token.start, token.end()));
+        }
     }
 }
