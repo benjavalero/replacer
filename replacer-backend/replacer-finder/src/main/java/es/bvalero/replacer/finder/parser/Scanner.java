@@ -47,8 +47,8 @@ class Scanner {
             scanToken();
         }
 
-        // addToken(EOF, null);
         addTextToken();
+        addToken(EOF);
         return tokens;
     }
 

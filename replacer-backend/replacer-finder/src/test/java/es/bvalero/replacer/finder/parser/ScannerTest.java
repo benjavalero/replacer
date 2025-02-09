@@ -11,7 +11,7 @@ public class ScannerTest {
 
     @Test
     public void testScanTokensComment() {
-        String text = "Hello <!-- comment --> and {{ t | k = v }} goodbye.";
+        String text = "Hello <!-- comment <!-- nested --> jarl --> and {{ t | k = v }} goodbye.";
 
         Scanner scanner = new Scanner(text);
         List<Token> tokenList = scanner.scanTokens();
@@ -21,5 +21,9 @@ public class ScannerTest {
             System.out.println(token);
             assertEquals(token.lexeme, text.substring(token.start, token.end()));
         }
+
+        Parser parser = new Parser(tokenList);
+        Statement statement = parser.parse();
+        System.out.println(statement);
     }
 }

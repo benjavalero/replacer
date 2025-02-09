@@ -17,4 +17,6 @@ enum TokenType {
     // Literals
     TEXT,
     IDENTIFIER, STRING, NUMBER,
+
+    EOF,
 }
