@@ -1,32 +1,29 @@
 package es.bvalero.replacer.finder.parser;
 
-import java.util.ArrayList;
 import java.util.List;
 
-abstract class Expression {
-
+interface Expression {
+    int start();
+    int end();
 }
 
-class Statement extends Expression {
-    List<Expression> expressions = new ArrayList<>();
-
-    public String toString() {
-        return String.join("\n", expressions.stream().map(Object::toString).toList());
+record Text(int start, String text) implements Expression {
+    @Override
+    public int end() {
+        return start + text.length();
     }
 }
 
-class Text extends Expression {
-    String text;
-
-    public String toString() {
-        return "TEXT " + text;
+record Statement(int start, List<Expression> expressions) implements Expression {
+    @Override
+    public int end() {
+        return this.expressions.get(this.expressions.size() - 1).end();
     }
 }
 
-class Comment extends Expression {
-    Statement content;
-
-    public String toString() {
-        return "COMMENT " + content;
+record Comment(int start, Statement content) implements Expression {
+    @Override
+    public int end() {
+        return content.end() + "-->".length();
     }
 }
