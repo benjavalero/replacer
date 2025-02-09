@@ -5,7 +5,7 @@ import static es.bvalero.replacer.finder.parser.TokenType.*;
 import java.util.ArrayList;
 import java.util.List;
 
-class Scanner {
+public class Scanner {
 
     private final String source;
     private final List<Token> tokens = new ArrayList<>();
@@ -13,18 +13,22 @@ class Scanner {
     private int current = 0;
     private int startText = -1;
 
-    Scanner(String source) {
+    public Scanner(String source) {
         this.source = source;
     }
 
-    List<Token> scanTokens() {
+    public List<Token> scanTokens() {
         while (!isAtEnd()) {
             // We are at the beginning of the next lexeme
             start = current;
             scanToken();
         }
 
-        addTextToken();
+        // Add a possible remaining text token at the end
+        if (startText >= 0) {
+            tokens.add(new Token(TEXT, startText, source.substring(startText)));
+        }
+
         return tokens;
     }
 
@@ -84,7 +88,7 @@ class Scanner {
     private void addTextToken() {
         if (startText < 0) return;
 
-        String text = isAtEnd() ? source.substring(startText) : source.substring(startText, start);
+        String text = source.substring(startText, start);
         tokens.add(new Token(TEXT, startText, text));
 
         startText = -1;

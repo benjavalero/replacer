@@ -3,17 +3,17 @@ package es.bvalero.replacer.finder.parser;
 import java.util.ArrayList;
 import java.util.List;
 
-class Parser {
+public class Parser {
 
     private final List<Token> tokens;
     private int current = 0;
 
-    Parser(List<Token> tokens) {
+    public Parser(List<Token> tokens) {
         this.tokens = tokens;
     }
 
-    List<Expression> parse() {
-        return statement().expressions();
+    public Statement parse() {
+        return statement();
     }
 
     private Statement statement() {
@@ -27,6 +27,7 @@ class Parser {
             if (token.type() == TokenType.TEXT) {
                 expressions.add(new Text(token.start(), token.text()));
             } else if (token.type() == TokenType.START_COMMENT) {
+                // TODO: Broken comments
                 expressions.add(new Comment(token.start(), statement()));
             } else {
                 break;

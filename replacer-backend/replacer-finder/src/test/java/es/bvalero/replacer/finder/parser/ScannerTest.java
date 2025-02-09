@@ -21,13 +21,13 @@ public class ScannerTest {
         tokenList.forEach(token -> assertEquals(token.text(), text.substring(token.start(), token.end())));
 
         Parser parser = new Parser(tokenList);
-        List<Expression> expressions = parser.parse();
+        Statement statement = parser.parse();
 
-        System.out.println(expressions);
+        System.out.println(statement);
 
-        assertEquals(3, expressions.size());
-        assertInstanceOf(Comment.class, expressions.get(1));
-        Comment comment = (Comment) expressions.get(1);
+        assertEquals(3, statement.expressions().size());
+        assertInstanceOf(Comment.class, statement.expressions().get(1));
+        Comment comment = (Comment) statement.expressions().get(1);
         assertEquals(3, comment.content().expressions().size());
         assertInstanceOf(Comment.class, comment.content().expressions().get(1));
     }
