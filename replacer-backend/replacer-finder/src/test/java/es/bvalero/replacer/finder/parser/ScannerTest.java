@@ -3,7 +3,8 @@ package es.bvalero.replacer.finder.parser;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 
-import java.util.List;
+import java.util.ArrayList;
+import java.util.Collection;
 import org.junit.jupiter.api.Test;
 
 public class ScannerTest {
@@ -12,14 +13,14 @@ public class ScannerTest {
     public void testScanTokensComment() {
         String text = "Hello <!-- comment <!-- nested --> jarl --> and goodbye.";
 
-        Scanner scanner = new Scanner(text);
-        List<Token> tokenList = scanner.scanTokens();
+        ScannerNoText scanner = new ScannerNoText(text);
+        Collection<Token> tokenList = scanner.scanTokens();
 
         tokenList.forEach(System.out::println);
 
-        assertEquals(9, tokenList.size());
+        assertEquals(4, tokenList.size());
 
-        Parser parser = new Parser(tokenList);
+        Parser parser = new Parser(new ArrayList<>(tokenList));
         Statement statement = parser.parse();
 
         System.out.println(statement);

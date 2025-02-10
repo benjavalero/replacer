@@ -1,5 +1,4 @@
-Benchmark                                   Mode  Cnt     Score     Error  Units
-ScannerJmhBenchmarkTest.baseLine            avgt    5    ≈ 10⁻³            us/op
-ScannerJmhBenchmarkTest.scanner             avgt    5  1450,951 ± 134,577  us/op
-ScannerJmhBenchmarkTest.scannerNoStartText  avgt    5  1262,111 ± 206,780  us/op
-ScannerJmhBenchmarkTest.scannerNoText       avgt    5  1242,186 ± 119,750  us/op
+Benchmark                              Mode  Cnt     Score     Error  Units
+ScannerJmhBenchmarkTest.baseLine       avgt    5    ≈ 10⁻³            us/op
+ScannerJmhBenchmarkTest.scanner        avgt    5  1815,298 ± 214,488  us/op
+ScannerJmhBenchmarkTest.scannerNoText  avgt    5   122,909 ±  26,675  us/op
