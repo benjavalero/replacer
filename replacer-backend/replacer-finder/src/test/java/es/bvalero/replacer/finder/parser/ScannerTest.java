@@ -20,6 +20,13 @@ public class ScannerTest {
 
         assertEquals(4, tokenList.size());
 
+        ScannerSimple scannerSimple = new ScannerSimple(text);
+        Collection<Token> tokenList2 = scannerSimple.scanTokens();
+
+        tokenList2.forEach(System.out::println);
+
+        assertEquals(4, tokenList2.size());
+
         Parser parser = new Parser(new ArrayList<>(tokenList));
         Statement statement = parser.parse();
 
