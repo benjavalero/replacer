@@ -25,7 +25,7 @@ public class Parser {
             if (start < 0) start = token.start();
 
             if (token.type() == TokenType.TEXT) {
-                expressions.add(new Text(token.start(), token.text()));
+                expressions.add(new Text(token.start(), null));
             } else if (token.type() == TokenType.START_COMMENT) {
                 // TODO: Broken comments
                 expressions.add(new Comment(token.start(), statement()));

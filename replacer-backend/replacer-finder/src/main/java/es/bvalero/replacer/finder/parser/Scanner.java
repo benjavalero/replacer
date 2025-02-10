@@ -26,7 +26,7 @@ public class Scanner {
 
         // Add a possible remaining text token at the end
         if (startText >= 0) {
-            tokens.add(new Token(TEXT, startText, source.substring(startText)));
+            tokens.add(new Token(TEXT, startText, source.length()));
         }
 
         return tokens;
@@ -41,18 +41,18 @@ public class Scanner {
         switch (c) {
             case '<':
                 if (match("!--")) {
-                    addToken(START_COMMENT, "<!--");
+                    addToken(START_COMMENT, "<!--".length());
                     break;
                 }
             // If not treat the brace as a common character
             case '-':
                 if (match("->")) {
-                    addToken(END_COMMENT, "-->");
+                    addToken(END_COMMENT, "-->".length());
                     break;
                 }
             // If not treat the brace as a common character
             default:
-                text();
+                treatText();
                 break;
         }
     }
@@ -79,22 +79,22 @@ public class Scanner {
         return true;
     }
 
-    private void addToken(TokenType type, String text) {
+    private void addToken(TokenType type, int length) {
         addTextToken();
 
-        tokens.add(new Token(type, start, text));
+        tokens.add(new Token(type, start, start + length));
     }
 
     private void addTextToken() {
-        if (startText < 0) return;
-
-        String text = source.substring(startText, start);
-        tokens.add(new Token(TEXT, startText, text));
-
-        startText = -1;
+        if (startText >= 0) {
+            tokens.add(new Token(TEXT, startText, start));
+            startText = -1;
+        }
     }
 
-    private void text() {
-        if (startText < 0) startText = start;
+    private void treatText() {
+        if (startText < 0) {
+            startText = start;
+        }
     }
 }

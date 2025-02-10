@@ -26,7 +26,7 @@ public class BaseFinderJmhBenchmark {
     private static final String TEST_RESOURCES_PATH =
         "replacer-backend/replacer-finder-benchmark/src/main/resources/es/bvalero/replacer/finder/benchmark/";
 
-    private List<WikipediaPage> sampleContents;
+    protected List<WikipediaPage> sampleContents;
     private Map<Integer, Integer> samplePages;
 
     // @Param({"1", "2", "3"})

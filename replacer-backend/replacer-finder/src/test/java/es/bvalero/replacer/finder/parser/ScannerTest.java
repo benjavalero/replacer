@@ -18,7 +18,6 @@ public class ScannerTest {
         tokenList.forEach(System.out::println);
 
         assertEquals(9, tokenList.size());
-        tokenList.forEach(token -> assertEquals(token.text(), text.substring(token.start(), token.end())));
 
         Parser parser = new Parser(tokenList);
         Statement statement = parser.parse();
