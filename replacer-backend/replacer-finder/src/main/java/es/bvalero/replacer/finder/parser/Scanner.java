@@ -1,100 +1,70 @@
 package es.bvalero.replacer.finder.parser;
 
-import static es.bvalero.replacer.finder.parser.TokenType.*;
+import static es.bvalero.replacer.finder.parser.TokenType.END_COMMENT;
+import static es.bvalero.replacer.finder.parser.TokenType.START_COMMENT;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 public class Scanner {
 
-    private final String source;
-    private final List<Token> tokens = new ArrayList<>();
-    private int start = 0;
+    private final String text;
+    private final Set<Token> tokens = new TreeSet<>();
     private int current = 0;
-    private int startText = -1;
 
-    public Scanner(String source) {
-        this.source = source;
+    public Scanner(String text) {
+        this.text = text;
     }
 
     public List<Token> scanTokens() {
+        /*
+        // Here we scan simple tokens
         while (!isAtEnd()) {
-            // We are at the beginning of the next lexeme
-            start = current;
-            scanToken();
+            char c = advance();
+            switch (c) {
+                case '<':
+                    break;
+                case '-':
+                    break;
+                default:
+                    // For the moment we don't treat text
+                    current++;
+                    break;
+            }
         }
+        */
 
-        // Add a possible remaining text token at the end
-        if (startText >= 0) {
-            tokens.add(new Token(TEXT, startText, source.length()));
-        }
+        // Here we scan large known tokens just by finding them in the text as it is way more performant
+        findTokens(START_COMMENT, END_COMMENT);
 
-        return tokens;
+        return new ArrayList<>(tokens);
     }
 
     private boolean isAtEnd() {
-        return current >= source.length();
-    }
-
-    private void scanToken() {
-        char c = advance();
-        switch (c) {
-            case '<':
-                if (match("!--")) {
-                    addToken(START_COMMENT, "<!--".length());
-                    break;
-                }
-            // If not treat the brace as a common character
-            case '-':
-                if (match("->")) {
-                    addToken(END_COMMENT, "-->".length());
-                    break;
-                }
-            // If not treat the brace as a common character
-            default:
-                treatText();
-                break;
-        }
+        return current >= text.length();
     }
 
     private char advance() {
-        return source.charAt(current++);
+        return text.charAt(current++);
     }
 
-    /*
-    private boolean match(char expected) {
-        if (isAtEnd()) return false;
-        if (source.charAt(current) != expected) return false;
-
-        current++;
-        return true;
-    }
-     */
-
-    private boolean match(String expected) {
-        if (current + expected.length() > source.length()) return false;
-        if (!source.startsWith(expected, current)) return false;
-
-        current += expected.length();
-        return true;
-    }
-
-    private void addToken(TokenType type, int length) {
-        addTextToken();
-
-        tokens.add(new Token(type, start, start + length));
-    }
-
-    private void addTextToken() {
-        if (startText >= 0) {
-            tokens.add(new Token(TEXT, startText, start));
-            startText = -1;
+    private void findTokens(TokenType... types) {
+        for (TokenType type : types) {
+            findToken(type);
         }
     }
 
-    private void treatText() {
-        if (startText < 0) {
-            startText = start;
+    private void findToken(TokenType type) {
+        int start = 0;
+        while (start >= 0) {
+            start = text.indexOf(type.literal(), start);
+            if (start >= 0) {
+                final int end = start + type.literal().length();
+                tokens.add(new Token(type, start, end));
+                start = end;
+            }
         }
     }
 }

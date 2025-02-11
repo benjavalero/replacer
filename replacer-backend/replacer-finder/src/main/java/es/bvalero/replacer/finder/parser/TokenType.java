@@ -1,8 +1,17 @@
 package es.bvalero.replacer.finder.parser;
 
-enum TokenType {
-    TEXT,
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.experimental.Accessors;
 
-    START_COMMENT,
-    END_COMMENT,
+@Getter
+@Accessors(fluent = true)
+@AllArgsConstructor
+enum TokenType {
+    TEXT(""),
+
+    START_COMMENT("<!--"),
+    END_COMMENT("-->");
+
+    private final String literal;
 }
