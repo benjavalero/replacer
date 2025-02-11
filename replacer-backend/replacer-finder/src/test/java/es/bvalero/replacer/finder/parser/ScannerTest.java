@@ -20,17 +20,18 @@ public class ScannerTest {
         assertEquals(new Token(TokenType.START_COMMENT, 19, 23), tokenList.get(1));
         assertEquals(new Token(TokenType.END_COMMENT, 31, 34), tokenList.get(2));
         assertEquals(new Token(TokenType.END_COMMENT, 40, 43), tokenList.get(3));
-        /*
-        Parser parser = new Parser(new ArrayList<>(tokenList));
-        Statement statement = parser.parse();
 
-        System.out.println(statement);
+        Parser parser = new Parser(tokenList);
+        List<Expression> expressions = parser.parse();
 
-        assertEquals(3, statement.expressions().size());
-        assertInstanceOf(Comment.class, statement.expressions().get(1));
-        Comment comment = (Comment) statement.expressions().get(1);
-        assertEquals(3, comment.content().expressions().size());
-        assertInstanceOf(Comment.class, comment.content().expressions().get(1));
-         */
+        System.out.println(expressions);
+
+        assertEquals(1, expressions.size());
+        assertEquals(ExpressionType.COMMENT, expressions.get(0).type());
+        assertInstanceOf(Comment.class, expressions.get(0));
+        Comment comment = (Comment) expressions.get(0);
+        assertEquals(1, comment.content().size());
+        assertEquals(ExpressionType.COMMENT, comment.content().get(0).type());
+        assertInstanceOf(Comment.class, comment.content().get(0));
     }
 }

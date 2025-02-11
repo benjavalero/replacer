@@ -7,34 +7,38 @@ public class Parser {
 
     private final List<Token> tokens;
     private int current = 0;
+    private ExpressionType context;
 
     public Parser(List<Token> tokens) {
         this.tokens = tokens;
     }
 
-    public Statement parse() {
-        return statement();
+    public List<Expression> parse() {
+        return findExpressions();
     }
 
-    private Statement statement() {
-        int start = -1;
-        List<Expression> expressions = new ArrayList<>();
+    private List<Expression> findExpressions() {
+        final List<Expression> expressions = new ArrayList<>();
 
         while (!isAtEnd()) {
-            Token token = advance();
-            if (start < 0) start = token.start();
-
-            if (token.type() == TokenType.TEXT) {
-                expressions.add(new Text(token.start(), null));
+            final Token token = advance();
+            if (token.type() == TokenType.END_COMMENT) {
+                if (context == ExpressionType.COMMENT) {
+                    break;
+                }
             } else if (token.type() == TokenType.START_COMMENT) {
-                // TODO: Broken comments
-                expressions.add(new Comment(token.start(), statement()));
+                context = ExpressionType.COMMENT;
+                final List<Expression> contents = findExpressions();
+                assert(previous().type() == TokenType.END_COMMENT);
+                expressions.add(new Comment(token.start(), previous().end(), contents));
+            /*
             } else {
-                break;
+                // Continue
+             */
             }
         }
 
-        return new Statement(start, expressions);
+        return expressions;
     }
 
     private boolean isAtEnd() {
@@ -43,5 +47,9 @@ public class Parser {
 
     private Token advance() {
         return tokens.get(current++);
+    }
+
+    private Token previous() {
+        return tokens.get(current - 1);
     }
 }

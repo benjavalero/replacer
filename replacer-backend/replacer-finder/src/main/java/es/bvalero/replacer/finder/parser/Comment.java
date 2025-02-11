@@ -1,16 +1,8 @@
 package es.bvalero.replacer.finder.parser;
 
-public record Comment(int start, Statement content) implements Expression {
-    @Override
-    public int end() {
-        return content.end() + "-->".length();
-    }
+import java.util.List;
 
-    @Override
-    public String text() {
-        return "<!--" + content.text() + "-->";
-    }
-
+public record Comment(int start, int end, List<Expression> content) implements Expression {
     @Override
     public ExpressionType type() {
         return ExpressionType.COMMENT;

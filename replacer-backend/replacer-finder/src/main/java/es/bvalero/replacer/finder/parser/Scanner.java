@@ -22,7 +22,7 @@ public class Scanner {
         /*
         // Here we scan simple tokens
         while (!isAtEnd()) {
-            char c = advance();
+            final char c = advance();
             switch (c) {
                 case '<':
                     break;

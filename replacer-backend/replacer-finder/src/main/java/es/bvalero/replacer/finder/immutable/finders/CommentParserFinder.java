@@ -31,11 +31,10 @@ class CommentParserFinder extends ImmutableCheckedFinder {
         List<Token> tokenList = scanner.scanTokens();
 
         Parser parser = new Parser(tokenList);
-        Statement statement = parser.parse();
+        List<Expression> expressions = parser.parse();
 
         // TODO: Iterate through all the tree
-        return statement
-            .expressions()
+        return expressions
             .stream()
             .filter(e -> e.type() == ExpressionType.COMMENT)
             .map(e -> (MatchResult) FinderMatchResult.of(page.getContent(), e.start(), e.end()))
