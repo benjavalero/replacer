@@ -11,34 +11,44 @@ import java.util.List;
 public class Parser {
 
     private final Scanner scanner = new Scanner();
-    private Token current;
-    private ExpressionType context;
+    private Iterator<Token> it;
+    private Token currentToken;
 
     public List<Expression> parse(String text) {
-        return findExpressions(scanner.scanTokens(text).iterator());
+        it = scanner.scanTokens(text).iterator();
+        return findExpressions(ExpressionType.NONE);
     }
 
-    private List<Expression> findExpressions(Iterator<Token> it) {
+    private void expect(TokenType type) {
+        assert currentToken.type() == type;
+    }
+
+    private List<Expression> findExpressions(ExpressionType context) {
         final List<Expression> expressions = new ArrayList<>();
         while (it.hasNext()) {
-            current = it.next();
-            if (current.type() == END_COMMENT) {
-                if (context == COMMENT) {
-                    break;
+            currentToken = it.next();
+            switch (currentToken.type()) {
+                case END_COMMENT -> {
+                    if (context == COMMENT) {
+                        return expressions;
+                    }
                 }
-            } else if (current.type() == START_COMMENT) {
-                context = COMMENT;
-                final int start = current.start();
-                final List<Expression> contents = findExpressions(it);
-                assert current.type() == END_COMMENT;
-                expressions.add(new Comment(start, current.end(), contents));
-                /*
-            } else {
-                // Continue
-            */
+                case START_COMMENT -> expressions.add(comment());
+                default -> {
+                    // Continue
+                }
             }
         }
 
         return expressions;
+    }
+
+    private Comment comment() {
+        expect(START_COMMENT);
+        final int start = currentToken.start();
+        final List<Expression> contents = findExpressions(COMMENT);
+        expect(END_COMMENT);
+        final int end = currentToken.end();
+        return new Comment(start, end, contents);
     }
 }
