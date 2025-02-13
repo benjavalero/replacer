@@ -1,10 +1,10 @@
 package es.bvalero.replacer.finder.parser;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 
-import java.util.ArrayList;
+import es.bvalero.replacer.finder.util.FinderMatchResult;
 import java.util.List;
+import java.util.regex.MatchResult;
 import org.apache.commons.collections4.IterableUtils;
 import org.junit.jupiter.api.Test;
 
@@ -24,26 +24,10 @@ public class ScannerTest {
         assertEquals(new Token(TokenType.END_COMMENT, 40, 43), tokenList.get(3));
 
         Parser parser = new Parser();
-        List<Expression> expressions = parser.parse(text);
+        List<MatchResult> matches = IterableUtils.toList(parser.find(text, ExpressionType.COMMENT));
 
-        System.out.println(expressions);
-
-        Iterable<Expression> flattened = parser.find(text);
-        for (Expression expression : flattened) {
-            System.out.println("--- " + expression);
-        }
-
-        /*
-
-        assertEquals(1, expressions.size());
-        assertEquals(ExpressionType.COMMENT, expressions.get(0).type());
-        assertInstanceOf(Comment.class, expressions.get(0));
-        Comment comment = (Comment) expressions.get(0);
-        assertEquals(1, comment.content().size());
-        List<Expression> subcontents = new ArrayList<>(comment.content());
-        assertEquals(ExpressionType.COMMENT, subcontents.get(0).type());
-        assertInstanceOf(Comment.class, subcontents.get(0));
-
-         */
+        assertEquals(2, matches.size());
+        assertEquals(FinderMatchResult.of(text, 6, 43), matches.get(0));
+        assertEquals(FinderMatchResult.of(text, 19, 34), matches.get(1));
     }
 }
