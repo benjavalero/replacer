@@ -27,11 +27,8 @@ class CommentParserFinder extends ImmutableCheckedFinder {
 
     @Override
     public Iterable<MatchResult> findMatchResults(FinderPage page) {
-        Scanner scanner = new Scanner(page.getContent());
-        List<Token> tokenList = scanner.scanTokens();
-
-        Parser parser = new Parser(tokenList);
-        List<Expression> expressions = parser.parse();
+        Parser parser = new Parser();
+        List<Expression> expressions = parser.parse(page.getContent());
 
         // TODO: Iterate through all the tree
         return expressions
