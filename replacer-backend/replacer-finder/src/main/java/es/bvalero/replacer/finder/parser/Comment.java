@@ -1,6 +1,6 @@
 package es.bvalero.replacer.finder.parser;
 
-public record Comment(int start, int end, Iterable<Expression> content) implements Expression {
+record Comment(int start, int end, Iterable<Expression> content) implements Expression {
     @Override
     public ExpressionType type() {
         return ExpressionType.COMMENT;

@@ -1,7 +1,6 @@
 package es.bvalero.replacer.finder.parser;
 
 import static es.bvalero.replacer.finder.parser.ExpressionType.COMMENT;
-import static es.bvalero.replacer.finder.parser.TokenType.END_COMMENT;
 import static es.bvalero.replacer.finder.parser.TokenType.START_COMMENT;
 
 import es.bvalero.replacer.finder.util.FinderMatchResult;
@@ -52,9 +51,8 @@ public class Parser {
         expect(START_COMMENT);
         final int start = currentToken.start();
         final Iterable<Expression> contents = findExpressions(COMMENT);
-        expect(END_COMMENT);
-        final int end = currentToken.end();
-        return new Comment(start, end, contents);
+        // expect(END_COMMENT); // The comment can be truncated
+        return new Comment(start, currentToken.end(), contents);
     }
 
     //endregion
