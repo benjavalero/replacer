@@ -7,6 +7,7 @@ import static es.bvalero.replacer.finder.parser.TokenType.START_COMMENT;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Stack;
 
 public class Parser {
 
@@ -50,5 +51,33 @@ public class Parser {
         expect(END_COMMENT);
         final int end = currentToken.end();
         return new Comment(start, end, contents);
+    }
+
+    public Iterable<Expression> find(String text) {
+        return () -> new ParserIterator(parse(text));
+    }
+
+    private static class ParserIterator implements Iterator<Expression> {
+        private final Stack<Expression> expressionStack = new Stack<>();
+
+        ParserIterator(List<Expression> root) {
+            pushAll(root);
+        }
+
+        @Override
+        public boolean hasNext() {
+            return !expressionStack.isEmpty();
+        }
+
+        @Override
+        public Expression next() {
+            final Expression e = expressionStack.pop();
+            pushAll(e.nested());
+            return e;
+        }
+
+        private void pushAll(List<Expression> expressions) {
+            expressions.forEach(expressionStack::push);
+        }
     }
 }
