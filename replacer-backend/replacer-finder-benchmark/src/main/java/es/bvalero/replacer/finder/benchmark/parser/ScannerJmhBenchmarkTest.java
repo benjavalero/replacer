@@ -2,7 +2,6 @@ package es.bvalero.replacer.finder.benchmark.parser;
 
 import es.bvalero.replacer.finder.benchmark.BaseFinderJmhBenchmark;
 import es.bvalero.replacer.finder.parser.Scanner;
-import es.bvalero.replacer.finder.parser.ScannerClassic;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.Setup;
@@ -21,12 +20,7 @@ public class ScannerJmhBenchmarkTest extends BaseFinderJmhBenchmark {
 
     @Benchmark
     public void scanner(Blackhole bh) {
-        sampleContents.forEach(page -> new Scanner().scanTokens(page.getContent()).forEach(bh::consume));
-    }
-
-    @Benchmark
-    public void scannerClassic(Blackhole bh) {
-        sampleContents.forEach(page -> new ScannerClassic().scanTokens(page.getContent()).forEach(bh::consume));
+        sampleContents.forEach(page -> new Scanner().scan(page.getContent()).forEach(bh::consume));
     }
 
     public static void main(String[] args) throws RunnerException {

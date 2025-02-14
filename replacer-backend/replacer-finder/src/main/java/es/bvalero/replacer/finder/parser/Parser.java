@@ -19,7 +19,7 @@ public class Parser {
     private Token currentToken;
 
     private Iterable<Expression> parse(String text) {
-        it = scanner.scanTokens(text).iterator();
+        it = scanner.scan(text).iterator();
         return findExpressions(ExpressionType.NONE);
     }
 
