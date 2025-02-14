@@ -4,11 +4,11 @@ import static es.bvalero.replacer.finder.parser.TokenType.*;
 
 import java.util.*;
 
-class Scanner {
+public class Scanner {
 
     final Set<Token> tokens = new TreeSet<>();
 
-    Iterable<Token> scanTokens(String text) {
+    public Iterable<Token> scanTokens(String text) {
         /*
         // Here we scan simple tokens
         int current = 0;
