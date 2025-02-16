@@ -10,16 +10,17 @@ import java.util.List;
 import java.util.Stack;
 import java.util.regex.MatchResult;
 import org.apache.commons.collections4.IterableUtils;
+import org.jetbrains.annotations.VisibleForTesting;
 
 public class Parser {
 
     //region Build AST
-    private final Scanner scanner = new Scanner();
     private Iterator<Token> it;
     private Token currentToken;
 
-    private Iterable<Expression> parse(String text) {
-        it = scanner.scan(text).iterator();
+    @VisibleForTesting
+    public Iterable<Expression> parse(String text) {
+        it = new Scanner().scan(text).iterator();
         return findExpressions(ExpressionType.NONE);
     }
 
@@ -58,7 +59,8 @@ public class Parser {
     //endregion
 
     //region Flatten AST
-    private Iterable<Expression> find(String text) {
+    @VisibleForTesting
+    public Iterable<Expression> find(String text) {
         return () -> new ParserIterator(parse(text));
     }
 

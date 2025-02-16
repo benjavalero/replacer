@@ -4,9 +4,7 @@ import static es.bvalero.replacer.finder.parser.TokenType.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.springframework.stereotype.Component;
 
-@Component
 public class Scanner {
 
     private final List<Token> tokenList = new ArrayList<>();

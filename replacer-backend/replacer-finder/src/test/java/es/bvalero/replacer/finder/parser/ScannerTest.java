@@ -24,14 +24,5 @@ class ScannerTest {
         assertEquals(new Token(TokenType.TEXT, 34, 40), tokenList.get(6));
         assertEquals(new Token(TokenType.END_COMMENT, 40, 43), tokenList.get(7));
         assertEquals(new Token(TokenType.TEXT, 43, 56), tokenList.get(8));
-
-        /*
-        Parser parser = new Parser();
-        List<MatchResult> matches = IterableUtils.toList(parser.find(text, ExpressionType.COMMENT));
-
-        assertEquals(2, matches.size());
-        assertEquals(FinderMatchResult.of(text, 6, 43), matches.get(0));
-        assertEquals(FinderMatchResult.of(text, 19, 34), matches.get(1));
-         */
     }
 }

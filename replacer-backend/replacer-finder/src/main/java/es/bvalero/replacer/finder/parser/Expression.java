@@ -1,8 +1,10 @@
 package es.bvalero.replacer.finder.parser;
 
-interface Expression {
+import java.util.List;
+
+public interface Expression {
     int start();
     int end();
     ExpressionType type();
-    Iterable<Expression> nested();
+    List<Expression> nested(); // So we can reverse it to traverse the AST in the right order
 }

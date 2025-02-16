@@ -1,0 +1,7 @@
+Benchmark                                 Mode  Cnt    Score    Error  Units
+ParserJmhBenchmarkTest.baseLine           avgt    5    0,001 ±  0,001  us/op
+ParserJmhBenchmarkTest.parser             avgt    5  343,029 ±  6,281  us/op
+ParserJmhBenchmarkTest.parserClassic      avgt    5  345,748 ±  8,126  us/op
+ParserJmhBenchmarkTest.parserClassicFind  avgt    5  333,735 ±  2,083  us/op
+ParserJmhBenchmarkTest.parserFind         avgt    5  330,997 ±  2,767  us/op
+ParserJmhBenchmarkTest.scanner            avgt    5  329,702 ± 11,316  us/op
