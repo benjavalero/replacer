@@ -1,7 +1,9 @@
 package es.bvalero.replacer.finder.immutable.finders;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.*;
 
+import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.Immutable;
 import java.util.List;
 import java.util.Set;
@@ -17,7 +19,7 @@ class CommentFinderTest {
 
     @BeforeEach
     public void setUp() {
-        commentFinder = new CommentFinder();
+        commentFinder = spy(new CommentFinder());
     }
 
     @ParameterizedTest
@@ -38,6 +40,7 @@ class CommentFinderTest {
 
         assertEquals(1, matches.size());
         assertEquals(comment, matches.get(0).getText());
+        verify(commentFinder).logImmutableCheck(any(FinderPage.class), anyInt(), anyInt(), anyString());
     }
 
     @Test

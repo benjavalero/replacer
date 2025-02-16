@@ -3,6 +3,7 @@ package es.bvalero.replacer.finder.immutable.finders;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.FinderPriority;
 import es.bvalero.replacer.finder.immutable.ImmutableCheckedFinder;
+import es.bvalero.replacer.finder.parser.Comment;
 import es.bvalero.replacer.finder.parser.ExpressionType;
 import es.bvalero.replacer.finder.parser.FinderParserPage;
 import es.bvalero.replacer.finder.parser.Parser;
@@ -29,6 +30,13 @@ class CommentFinder extends ImmutableCheckedFinder {
     public Iterable<MatchResult> findMatchResults(FinderPage page) {
         assert page instanceof FinderParserPage;
         final Parser parser = ((FinderParserPage) page).getParser();
-        return parser.find(page.getContent(), ExpressionType.COMMENT);
+        return parser.find(page.getContent(), ExpressionType.COMMENT, exp -> {
+            assert exp instanceof Comment;
+            final Comment comment = (Comment) exp;
+            if (comment.isTruncated()) {
+                logImmutableCheck(page, comment.start(), comment.end(), "Comment not closed");
+            }
+            return exp;
+        });
     }
 }

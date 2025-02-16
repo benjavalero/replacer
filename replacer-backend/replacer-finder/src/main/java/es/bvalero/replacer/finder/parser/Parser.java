@@ -7,6 +7,7 @@ import static es.bvalero.replacer.finder.parser.TokenType.START_COMMENT;
 
 import es.bvalero.replacer.finder.util.FinderMatchResult;
 import java.util.*;
+import java.util.function.Function;
 import java.util.regex.MatchResult;
 import org.apache.commons.collections4.IterableUtils;
 import org.jetbrains.annotations.VisibleForTesting;
@@ -26,14 +27,14 @@ public class Parser {
         // so we can cache the expression tree for further calls
         if (expressionTree.isEmpty()) {
             tokenList.addAll(new Scanner().scan(text));
-            expressionTree.addAll(findExpressionIterable(NONE));
+            expressionTree.addAll(findExpressionList(NONE));
         }
         return expressionTree;
     }
 
-    private List<Expression> findExpressionIterable(ExpressionType context) {
+    private List<Expression> findExpressionList(ExpressionType context) {
         final List<Expression> expressions = new ArrayList<>();
-        while (current < tokenList.size()) {
+        while (isNotAtEnd()) {
             TokenType currentType = currentToken().type();
             if (currentType == END_COMMENT) {
                 if (context == COMMENT) {
@@ -55,17 +56,30 @@ public class Parser {
         current++;
     }
 
+    private boolean isNotAtEnd() {
+        return current < tokenList.size();
+    }
+
+    private boolean check(TokenType type) {
+        return isNotAtEnd() && currentToken().type() == type;
+    }
+
     private void expect(TokenType type) {
-        assert currentToken().type() == type;
+        assert check(type);
     }
 
     private Comment comment() {
         expect(START_COMMENT);
         final int start = currentToken().start();
         advance();
-        final List<Expression> contents = findExpressionIterable(COMMENT);
-        // expect(END_COMMENT); // The comment can be truncated
-        return new Comment(start, currentToken().end(), contents);
+        final List<Expression> contents = findExpressionList(COMMENT);
+        if (check(END_COMMENT)) {
+            return new Comment(start, currentToken().end(), contents, false);
+        } else {
+            assert current == tokenList.size();
+            final Token lastToken = tokenList.get(current - 1);
+            return new Comment(start, lastToken.end(), contents, true);
+        }
     }
 
     //endregion
@@ -114,8 +128,22 @@ public class Parser {
         return IterableUtils.filteredIterable(expressionIterable(text), exp -> exp.type() == type);
     }
 
+    private Iterable<Expression> findDecoratedIterable(
+        Iterable<Expression> it,
+        Function<Expression, Expression> decorator
+    ) {
+        return IterableUtils.transformedIterable(it, decorator::apply);
+    }
+
+    public Iterable<MatchResult> find(String text, ExpressionType type, Function<Expression, Expression> decorator) {
+        return IterableUtils.transformedIterable(
+            findDecoratedIterable(findFilteredIterable(text, type), decorator),
+            exp -> convert(text, exp)
+        );
+    }
+
     public Iterable<MatchResult> find(String text, ExpressionType type) {
-        return IterableUtils.transformedIterable(findFilteredIterable(text, type), exp -> convert(text, exp));
+        return find(text, type, Function.identity());
     }
 
     private MatchResult convert(String text, Expression expression) {
