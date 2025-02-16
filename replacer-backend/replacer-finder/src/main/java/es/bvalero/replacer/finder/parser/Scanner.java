@@ -4,17 +4,21 @@ import static es.bvalero.replacer.finder.parser.TokenType.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.jetbrains.annotations.VisibleForTesting;
 
+@VisibleForTesting
 public class Scanner {
 
     private final List<Token> tokenList = new ArrayList<>();
 
     public List<Token> scan(String text) {
         // NOTE: Move these variables outside the method decreases the performance by 2x
+        // as they are stored in the heap instead of the stack
         int current = 0;
         int leftText = -1;
 
-        // NOTE: For some tokens we need to peek several characters ahead. The trick below is the best performant.
+        // NOTE: For some tokens we need to peek several characters ahead
+        // The trick below is the best performant
         while (current < text.length()) {
             final char c = text.charAt(current);
             if (c == '<') {
