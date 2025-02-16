@@ -4,6 +4,7 @@ import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.FinderPriority;
 import es.bvalero.replacer.finder.immutable.ImmutableCheckedFinder;
 import es.bvalero.replacer.finder.parser.ExpressionType;
+import es.bvalero.replacer.finder.parser.FinderParserPage;
 import es.bvalero.replacer.finder.parser.Parser;
 import java.util.regex.MatchResult;
 import org.springframework.stereotype.Component;
@@ -26,7 +27,8 @@ class CommentFinder extends ImmutableCheckedFinder {
 
     @Override
     public Iterable<MatchResult> findMatchResults(FinderPage page) {
-        Parser parser = new Parser();
+        assert page instanceof FinderParserPage;
+        final Parser parser = ((FinderParserPage) page).getParser();
         return parser.find(page.getContent(), ExpressionType.COMMENT);
     }
 }

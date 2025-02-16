@@ -4,6 +4,7 @@ import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.Immutable;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.immutable.ImmutableFinderService;
+import es.bvalero.replacer.finder.parser.FinderParserPage;
 import java.util.Collection;
 import java.util.List;
 
@@ -53,6 +54,7 @@ public abstract class ReplacementFinderAbstractService {
     }
 
     private Iterable<Immutable> findImmutables(FinderPage page) {
-        return immutableFinderService.findIterable(page);
+        final FinderParserPage parserPage = FinderParserPage.of(page);
+        return immutableFinderService.findIterable(parserPage);
     }
 }
