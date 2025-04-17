@@ -1,5 +1,8 @@
 # Versions
 
+## 2.29.7 (17 Apr 2024)
+- Fix: ignore user cache when language changes
+
 ## 2.29.6 (8 Dec 2024)
 - Fix: ignore links with cursive if the alias contains more styling
 - Feat: apply cosmetics recursively in case a new one has appeared after applying others
