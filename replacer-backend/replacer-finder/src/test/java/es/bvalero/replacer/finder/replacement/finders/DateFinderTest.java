@@ -163,7 +163,7 @@ class DateFinderTest {
         String date = "30 decembro do 1591";
         String expected = "30 de decembro do 1591";
 
-        FinderPage page = FinderPage.of(WikipediaLanguage.GALICIAN, "", date);
+        FinderPage page = FinderPage.of(WikipediaLanguage.GALICIAN, date);
         List<Replacement> replacements = IterableUtils.toList(dateFinder.find(page));
 
         assertEquals(1, replacements.size());

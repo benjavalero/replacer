@@ -198,7 +198,7 @@ class LinkFinderTest {
     @ValueSource(strings = { "[[Arquivo:xxx.jpg]]", "[[Ficheiro:y.pdf]]", "[[File:z.png]]", "[[imaxe:a.jpeg]]" })
     void testGalicianFile(String text) {
         List<Immutable> matches = IterableUtils.toList(
-            linkFinder.find(FinderPage.of(WikipediaLanguage.GALICIAN, "X", text))
+            linkFinder.find(FinderPage.of(WikipediaLanguage.GALICIAN, text))
         );
 
         assertEquals(1, matches.size());

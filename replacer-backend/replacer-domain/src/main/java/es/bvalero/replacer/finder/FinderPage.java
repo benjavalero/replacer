@@ -16,15 +16,29 @@ public interface FinderPage {
 
     @TestOnly
     static FinderPage of(String content) {
-        return of(WikipediaLanguage.getDefault(), "", content);
+        return of(WikipediaLanguage.getDefault(), content);
     }
 
     @TestOnly
-    static FinderPage of(WikipediaLanguage lang, String title, String content) {
+    static FinderPage of(WikipediaLanguage lang, String content) {
+        return of(lang, "", content);
+    }
+
+    @TestOnly
+    static FinderPage of(String title, String content) {
+        return of(WikipediaLanguage.getDefault(), title, content);
+    }
+
+    @TestOnly
+    private static FinderPage of(WikipediaLanguage lang, String title, String content) {
+        return of(PageKey.of(lang, 1), title, content);
+    }
+
+    private static FinderPage of(PageKey pageKey, String title, String content) {
         return new FinderPage() {
             @Override
             public PageKey getPageKey() {
-                return PageKey.of(lang, 1);
+                return pageKey;
             }
 
             @Override
@@ -37,6 +51,10 @@ public interface FinderPage {
                 return content;
             }
         };
+    }
+
+    default FinderPage withContent(String content) {
+        return of(getPageKey(), getTitle(), content);
     }
 
     default String getAbbreviatedContent() {

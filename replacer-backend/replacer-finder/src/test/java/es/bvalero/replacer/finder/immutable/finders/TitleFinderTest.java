@@ -2,7 +2,6 @@ package es.bvalero.replacer.finder.immutable.finders;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.Immutable;
 import java.util.List;
@@ -25,7 +24,7 @@ class TitleFinderTest {
         String title = "11 Paris, Hilton";
         String content = "En el hotel Hilton de Paris vivía París Hilton.";
 
-        FinderPage page = FinderPage.of(WikipediaLanguage.getDefault(), title, content);
+        FinderPage page = FinderPage.of(title, content);
         List<Immutable> matches = IterableUtils.toList(titleFinder.find(page));
 
         // Use a list to find repeated results

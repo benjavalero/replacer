@@ -31,8 +31,8 @@ class ApplyCosmeticsService {
 
         if (!cosmeticFound.isEmpty()) {
             // We can assume the collection is sorted
-            // We apply the cosmetic replacements sorted in descending order by the start
-            // Therefore we reverse the collection and just in case we sort it again
+            // We apply the cosmetic replacements sorted in descending order by the start.
+            // Therefore, we reverse the collection and just in case we sort it again.
             List<Cosmetic> cosmetics = new LinkedList<>(cosmeticFound);
             Collections.reverse(cosmetics);
             cosmetics.sort(Collections.reverseOrder());
@@ -49,7 +49,7 @@ class ApplyCosmeticsService {
             }
 
             // Apply cosmetics recursively in case a new one has appeared after applying others
-            fixedText = applyCosmeticChanges(FinderPage.of(fixedText));
+            fixedText = applyCosmeticChanges(page.withContent(fixedText));
         }
 
         return fixedText;

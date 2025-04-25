@@ -1,5 +1,8 @@
 # Versions
 
+## 2.29.8 (??)
+- Fix regression: keep language when applying cosmetics recursively
+
 ## 2.29.7 (17 Apr 2024)
 - Fix: ignore user cache when language changes
 
