@@ -6,11 +6,11 @@ import es.bvalero.replacer.finder.FinderPriority;
 import es.bvalero.replacer.finder.immutable.ImmutableFinder;
 import es.bvalero.replacer.finder.util.FinderMatchResult;
 import es.bvalero.replacer.finder.util.FinderUtils;
+import jakarta.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.MatchResult;
-import javax.annotation.PostConstruct;
 import org.springframework.stereotype.Component;
 
 /** Find redirection templates. In case they are found the complete text must be ignored. */

@@ -6,9 +6,9 @@ import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.cosmetic.CosmeticFinder;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.RegexMatchFinder;
+import jakarta.annotation.PostConstruct;
 import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
-import javax.annotation.PostConstruct;
 import org.intellij.lang.annotations.RegExp;
 import org.springframework.stereotype.Component;
 

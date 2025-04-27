@@ -71,9 +71,8 @@ class OAuthMediaWikiServiceTest {
         OAuth1RequestToken oAuth1RequestToken = new OAuth1RequestToken("R", "S");
         when(mediaWikiService.getAccessToken(oAuth1RequestToken, oAuthVerifier)).thenThrow(new IOException());
 
-        assertThrows(
-            AuthorizationException.class,
-            () -> oAuthMediaWikiService.getAccessToken(requestToken, oAuthVerifier)
+        assertThrows(AuthorizationException.class, () ->
+            oAuthMediaWikiService.getAccessToken(requestToken, oAuthVerifier)
         );
     }
 

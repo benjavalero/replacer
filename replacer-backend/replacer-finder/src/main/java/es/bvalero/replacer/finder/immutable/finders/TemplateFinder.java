@@ -9,9 +9,9 @@ import es.bvalero.replacer.finder.FinderPriority;
 import es.bvalero.replacer.finder.immutable.ImmutableFinder;
 import es.bvalero.replacer.finder.util.FinderMatchResult;
 import es.bvalero.replacer.finder.util.FinderUtils;
+import jakarta.annotation.PostConstruct;
 import java.util.*;
 import java.util.regex.MatchResult;
-import javax.annotation.PostConstruct;
 import org.apache.commons.collections4.SetValuedMap;
 import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
 import org.apache.commons.lang3.StringUtils;
@@ -255,14 +255,13 @@ class TemplateFinder implements ImmutableFinder {
                         value,
                         lang
                     );
-                    firstExpressionUpperCase.ifPresent(
-                        uppercase ->
-                            immutables.add(
-                                FinderMatchResult.of(
-                                    startTemplateContent + startValue + uppercase.start(),
-                                    uppercase.group()
-                                )
+                    firstExpressionUpperCase.ifPresent(uppercase ->
+                        immutables.add(
+                            FinderMatchResult.of(
+                                startTemplateContent + startValue + uppercase.start(),
+                                uppercase.group()
                             )
+                        )
                     );
                 }
             }

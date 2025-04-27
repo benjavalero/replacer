@@ -17,16 +17,16 @@ import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.Suggestion;
 import es.bvalero.replacer.page.PageKey;
 import es.bvalero.replacer.user.User;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Optional;
-import javax.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -41,16 +41,16 @@ class ReviewFindControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @MockBean
+    @MockitoBean
     private WebUtils webUtils;
 
-    @MockBean
+    @MockitoBean
     private ReviewNoTypeFinder reviewNoTypeFinder;
 
-    @MockBean
+    @MockitoBean
     private ReviewTypeFinder reviewTypeFinder;
 
-    @MockBean
+    @MockitoBean
     private ReviewCustomFinder reviewCustomFinder;
 
     private final int pageId = 3;

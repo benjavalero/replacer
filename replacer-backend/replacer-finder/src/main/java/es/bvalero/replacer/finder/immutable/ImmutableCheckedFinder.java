@@ -23,9 +23,8 @@ public abstract class ImmutableCheckedFinder implements ImmutableFinder {
     public Iterable<Immutable> find(FinderPage page) {
         if (this.showImmutableWarning) {
             // Trick: use iterable converter with no conversion at all but decoration
-            return IterableUtils.transformedIterable(
-                ImmutableFinder.super.find(page),
-                immutable -> check(immutable, page)
+            return IterableUtils.transformedIterable(ImmutableFinder.super.find(page), immutable ->
+                check(immutable, page)
             );
         } else {
             return ImmutableFinder.super.find(page);

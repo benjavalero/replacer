@@ -15,13 +15,13 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 
 @EnableConfigurationProperties(FinderProperties.class)
 @SpringBootTest(classes = CompleteTagFinder.class)
 class CompleteTagFinderTest {
 
-    @SpyBean
+    @MockitoSpyBean
     private CompleteTagFinder completeTagFinder;
 
     @ParameterizedTest

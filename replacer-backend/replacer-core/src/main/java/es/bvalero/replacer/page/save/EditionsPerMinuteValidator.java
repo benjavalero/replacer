@@ -35,9 +35,8 @@ class EditionsPerMinuteValidator {
         }
 
         UserId userId = user.getId();
-        CircularFifoQueue<LocalDateTime> userEditions = cachedUserEditions.get(
-            userId,
-            id -> new CircularFifoQueue<>(maxEditionsPerMinute)
+        CircularFifoQueue<LocalDateTime> userEditions = cachedUserEditions.get(userId, id ->
+            new CircularFifoQueue<>(maxEditionsPerMinute)
         );
         assert userEditions != null;
 

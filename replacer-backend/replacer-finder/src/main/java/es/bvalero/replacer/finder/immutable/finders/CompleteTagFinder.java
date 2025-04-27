@@ -7,10 +7,10 @@ import es.bvalero.replacer.finder.immutable.ImmutableCheckedFinder;
 import es.bvalero.replacer.finder.util.FinderMatchResult;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
+import jakarta.annotation.PostConstruct;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.MatchResult;
-import javax.annotation.PostConstruct;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 

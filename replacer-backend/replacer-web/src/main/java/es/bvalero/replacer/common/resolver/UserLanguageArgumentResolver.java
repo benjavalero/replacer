@@ -1,7 +1,7 @@
 package es.bvalero.replacer.common.resolver;
 
 import es.bvalero.replacer.common.util.WebUtils;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.core.MethodParameter;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;

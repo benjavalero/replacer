@@ -57,8 +57,8 @@ class PageComparator {
                 .map(ComparableReplacement::of)
                 .collect(Collectors.toCollection(LinkedList::new));
         // Remove possible duplicates in database
-        cleanDuplicatedReplacements(comparableDbReplacements).forEach(
-            cr -> indexedPage.addReplacement(cr.toDomain(IndexedReplacementStatus.REMOVE))
+        cleanDuplicatedReplacements(comparableDbReplacements).forEach(cr ->
+            indexedPage.addReplacement(cr.toDomain(IndexedReplacementStatus.REMOVE))
         );
 
         // We compare each replacement found in the page to index with the ones existing in database
@@ -79,8 +79,8 @@ class PageComparator {
             handleReplacement(comparablePageReplacement, comparableDbReplacements, indexedPage);
         }
 
-        cleanUpDbReplacements(comparableDbReplacements).forEach(
-            cr -> indexedPage.addReplacement(cr.toDomain(IndexedReplacementStatus.REMOVE))
+        cleanUpDbReplacements(comparableDbReplacements).forEach(cr ->
+            indexedPage.addReplacement(cr.toDomain(IndexedReplacementStatus.REMOVE))
         );
 
         assert indexedPage.getStatus() != IndexedPageStatus.UNDEFINED;

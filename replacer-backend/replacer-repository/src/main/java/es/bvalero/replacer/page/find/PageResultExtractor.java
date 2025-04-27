@@ -30,9 +30,8 @@ class PageResultExtractor implements ResultSetExtractor<Collection<IndexedPage>>
 
             final String title = rs.getString("TITLE");
             final LocalDate lastUpdate = rs.getDate("LAST_UPDATE").toLocalDate();
-            final IndexedPage page = pageMap.computeIfAbsent(
-                pageKey,
-                key -> IndexedPage.builder().pageKey(key).title(title).lastUpdate(lastUpdate).build()
+            final IndexedPage page = pageMap.computeIfAbsent(pageKey, key ->
+                IndexedPage.builder().pageKey(key).title(title).lastUpdate(lastUpdate).build()
             );
 
             // The page might exist without replacements. We check it with the kind, for instance.

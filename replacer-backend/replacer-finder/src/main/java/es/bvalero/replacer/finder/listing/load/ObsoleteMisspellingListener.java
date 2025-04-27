@@ -5,6 +5,7 @@ import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.listing.StandardMisspelling;
 import es.bvalero.replacer.replacement.type.ReplacementTypeSaveApi;
+import jakarta.annotation.PostConstruct;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
@@ -12,7 +13,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-import javax.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.SetValuedMap;
 import org.jetbrains.annotations.VisibleForTesting;
@@ -55,8 +55,8 @@ class ObsoleteMisspellingListener implements PropertyChangeListener {
                 WikipediaLanguage,
                 StandardMisspelling
             >) evt.getNewValue();
-        getObsoleteMisspellings(oldItems, newItems).forEach(
-            obsolete -> replacementTypeSaveApi.remove(obsolete.getLang(), obsolete.getType())
+        getObsoleteMisspellings(oldItems, newItems).forEach(obsolete ->
+            replacementTypeSaveApi.remove(obsolete.getLang(), obsolete.getType())
         );
     }
 

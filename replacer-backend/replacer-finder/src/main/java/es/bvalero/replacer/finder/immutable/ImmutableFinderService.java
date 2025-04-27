@@ -3,10 +3,10 @@ package es.bvalero.replacer.finder.immutable;
 import es.bvalero.replacer.finder.Finder;
 import es.bvalero.replacer.finder.FinderService;
 import es.bvalero.replacer.finder.Immutable;
+import jakarta.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import javax.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
 
 @Service

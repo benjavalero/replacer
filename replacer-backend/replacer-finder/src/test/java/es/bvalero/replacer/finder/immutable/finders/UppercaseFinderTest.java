@@ -45,8 +45,8 @@ class UppercaseFinderTest {
 
     private void initSimpleUppercaseMap(String... uppercaseWords) {
         Set<SimpleMisspelling> uppercaseSet = Stream.of(uppercaseWords)
-            .map(
-                uppercaseWord -> SimpleMisspelling.of(uppercaseWord, true, FinderUtils.setFirstLowerCase(uppercaseWord))
+            .map(uppercaseWord ->
+                SimpleMisspelling.of(uppercaseWord, true, FinderUtils.setFirstLowerCase(uppercaseWord))
             )
             .collect(Collectors.toSet());
         SetValuedMap<WikipediaLanguage, SimpleMisspelling> uppercaseMap = new HashSetValuedHashMap<>();
@@ -58,9 +58,8 @@ class UppercaseFinderTest {
 
     private void initComposedUppercaseMap(String... uppercaseWords) {
         Set<ComposedMisspelling> uppercaseSet = Stream.of(uppercaseWords)
-            .map(
-                uppercaseWord ->
-                    ComposedMisspelling.of(uppercaseWord, true, FinderUtils.setFirstLowerCase(uppercaseWord))
+            .map(uppercaseWord ->
+                ComposedMisspelling.of(uppercaseWord, true, FinderUtils.setFirstLowerCase(uppercaseWord))
             )
             .collect(Collectors.toSet());
         SetValuedMap<WikipediaLanguage, ComposedMisspelling> uppercaseMap = new HashSetValuedHashMap<>();
