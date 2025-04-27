@@ -27,16 +27,31 @@
         <includeSpringProfile/>
     </properties>
 
-    <modules>
-        <module>replacer-domain</module>
-        <module>replacer-core</module>
-        <module>replacer-repository</module>
-        <module>replacer-wikipedia</module>
-        <module>replacer-finder</module>
-        <module>replacer-finder-benchmark</module>
-        <module>replacer-web</module>
-        <module>replacer-app</module>
-    </modules>
+    <profiles>
+        <profile>
+            <id>default</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <modules>
+                <module>replacer-domain</module>
+                <module>replacer-core</module>
+                <module>replacer-repository</module>
+                <module>replacer-wikipedia</module>
+                <module>replacer-finder</module>
+                <module>replacer-web</module>
+                <module>replacer-app</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>benchmark</id>
+            <modules>
+                <module>replacer-domain</module>
+                <module>replacer-finder</module>
+                <module>replacer-finder-benchmark</module>
+            </modules>
+        </profile>
+    </profiles>
 
     <dependencies>
         <dependency>
