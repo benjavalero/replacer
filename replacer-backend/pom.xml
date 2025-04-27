@@ -159,14 +159,6 @@
                 <configuration>
                     <prettierJavaVersion>2.6.0</prettierJavaVersion>
                 </configuration>
-                <executions>
-                    <execution>
-                        <phase>validate</phase>
-                        <goals>
-                            <goal>write</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
     </build>
