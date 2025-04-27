@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Install Backend" type="MavenRunConfiguration" factoryName="Maven">
+  <configuration default="false" name="Build Backend" type="MavenRunConfiguration" factoryName="Maven">
     <MavenSettings>
       <option name="myGeneralSettings" />
       <option name="myRunnerSettings" />
@@ -11,9 +11,10 @@
           </option>
           <option name="goals">
             <list>
-              <option value="clean" />
               <option value="install" />
               <option value="-DskipTests" />
+              <option value="-T" />
+              <option value="2.0C" />
             </list>
           </option>
           <option name="multimoduleDir" />

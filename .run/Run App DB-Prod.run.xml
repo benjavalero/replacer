@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Run App DB-Prod No Install" type="MavenRunConfiguration" factoryName="Maven">
+  <configuration default="false" name="Run App DB-Prod" type="MavenRunConfiguration" factoryName="Maven">
     <MavenSettings>
       <option name="myGeneralSettings" />
       <option name="myRunnerSettings" />
@@ -29,6 +29,8 @@
         </MavenRunnerParameters>
       </option>
     </MavenSettings>
-    <method v="2" />
+    <method v="2">
+      <option name="RunConfigurationTask" enabled="true" run_configuration_name="Build Backend" run_configuration_type="MavenRunConfiguration" />
+    </method>
   </configuration>
 </component>

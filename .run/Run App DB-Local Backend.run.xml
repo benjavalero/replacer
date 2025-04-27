@@ -31,7 +31,7 @@
       </option>
     </MavenSettings>
     <method v="2">
-      <option name="RunConfigurationTask" enabled="false" run_configuration_name="Install Backend" run_configuration_type="MavenRunConfiguration" />
+      <option name="RunConfigurationTask" enabled="true" run_configuration_name="Build Backend" run_configuration_type="MavenRunConfiguration" />
     </method>
   </configuration>
 </component>
