@@ -70,9 +70,8 @@ class ReplacementCountController {
         Collection<PageCount> counts = replacementCountApi
             .countNotReviewedGroupedByPage(lang)
             .stream()
-            .map(
-                count ->
-                    PageCount.of(count.getKey().getPageKey().getPageId(), count.getKey().getTitle(), count.getCount())
+            .map(count ->
+                PageCount.of(count.getKey().getPageKey().getPageId(), count.getKey().getTitle(), count.getCount())
             )
             .toList();
         LOGGER.info("GET Count Replacements Not Reviewed By Page: {} items", counts.size());

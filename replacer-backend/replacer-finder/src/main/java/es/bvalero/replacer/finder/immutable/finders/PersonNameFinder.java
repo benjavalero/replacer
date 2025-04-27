@@ -8,8 +8,8 @@ import es.bvalero.replacer.finder.FinderPriority;
 import es.bvalero.replacer.finder.immutable.ImmutableFinder;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.ResultMatchListener;
+import jakarta.annotation.PostConstruct;
 import java.util.regex.MatchResult;
-import javax.annotation.PostConstruct;
 import org.springframework.stereotype.Component;
 
 /**

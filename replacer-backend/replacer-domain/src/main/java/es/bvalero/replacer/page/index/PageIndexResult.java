@@ -10,7 +10,7 @@ import org.jetbrains.annotations.TestOnly;
 import org.springframework.lang.NonNull;
 
 /** Result of indexing a page or several pages */
-@Value(staticConstructor = "of")
+@Value
 @Builder(access = AccessLevel.PRIVATE)
 public class PageIndexResult {
 

@@ -76,10 +76,8 @@ class ReplacementCountJdbcRepository implements ReplacementCountRepository {
             .addValue("lang", lang.getCode())
             .addValue("system", REVIEWER_SYSTEM);
         Collection<ResultCount<String>> counts = Objects.requireNonNull(
-            jdbcTemplate.query(
-                sql,
-                namedParameters,
-                (resultSet, rowNum) -> ResultCount.of(resultSet.getString("REVIEWER"), resultSet.getInt("NUMSUM"))
+            jdbcTemplate.query(sql, namedParameters, (resultSet, rowNum) ->
+                ResultCount.of(resultSet.getString("REVIEWER"), resultSet.getInt("NUMSUM"))
             )
         );
         LOGGER.debug("END Counting reviewed pages grouped by reviewer - {}", lang);
@@ -99,18 +97,15 @@ class ReplacementCountJdbcRepository implements ReplacementCountRepository {
             numResults;
         SqlParameterSource namedParameters = new MapSqlParameterSource().addValue("lang", lang.getCode());
         return Objects.requireNonNull(
-            jdbcTemplate.query(
-                sql,
-                namedParameters,
-                (resultSet, rowNum) ->
-                    ResultCount.of(
-                        IndexedPage.builder()
-                            .pageKey(PageKey.of(lang, resultSet.getInt("PAGE_ID")))
-                            .title(resultSet.getString("TITLE"))
-                            .lastUpdate(LocalDate.now()) // Not relevant in this method
-                            .build(),
-                        resultSet.getInt("NUM")
-                    )
+            jdbcTemplate.query(sql, namedParameters, (resultSet, rowNum) ->
+                ResultCount.of(
+                    IndexedPage.builder()
+                        .pageKey(PageKey.of(lang, resultSet.getInt("PAGE_ID")))
+                        .title(resultSet.getString("TITLE"))
+                        .lastUpdate(LocalDate.now()) // Not relevant in this method
+                        .build(),
+                    resultSet.getInt("NUM")
+                )
             )
         );
     }

@@ -47,14 +47,11 @@ class PageCountJdbcRepository implements PageCountRepository {
             "WHERE lang = :lang AND reviewer IS NULL " +
             "GROUP BY kind, subtype";
         SqlParameterSource namedParameters = new MapSqlParameterSource().addValue("lang", lang.getCode());
-        return jdbcTemplate.query(
-            sql,
-            namedParameters,
-            (resultSet, rowNum) ->
-                ResultCount.of(
-                    StandardType.of(resultSet.getByte("KIND"), resultSet.getString("SUBTYPE")),
-                    resultSet.getInt("NUM")
-                )
+        return jdbcTemplate.query(sql, namedParameters, (resultSet, rowNum) ->
+            ResultCount.of(
+                StandardType.of(resultSet.getByte("KIND"), resultSet.getString("SUBTYPE")),
+                resultSet.getInt("NUM")
+            )
         );
     }
 }

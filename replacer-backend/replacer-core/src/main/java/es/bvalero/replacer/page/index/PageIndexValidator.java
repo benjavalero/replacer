@@ -2,9 +2,9 @@ package es.bvalero.replacer.page.index;
 
 import es.bvalero.replacer.page.IndexedPage;
 import es.bvalero.replacer.page.find.WikipediaNamespace;
+import jakarta.annotation.PostConstruct;
 import java.util.Set;
 import java.util.stream.Collectors;
-import javax.annotation.PostConstruct;
 import lombok.Setter;
 import org.jetbrains.annotations.TestOnly;
 import org.springframework.beans.factory.annotation.Value;

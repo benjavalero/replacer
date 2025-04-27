@@ -2,9 +2,9 @@ package es.bvalero.replacer.replacement.type;
 
 import es.bvalero.replacer.common.util.ReplacerUtils;
 import io.swagger.v3.oas.annotations.Parameter;
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
-import org.springdoc.api.annotations.ParameterObject;
+import org.springdoc.core.annotations.ParameterObject;
 
 @ParameterObject
 @Data

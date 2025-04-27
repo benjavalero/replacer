@@ -9,8 +9,8 @@ import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.immutable.ImmutableFinderService;
 import es.bvalero.replacer.page.index.ReplacementFindService;
 import es.bvalero.replacer.replacement.type.ReplacementTypeFindApi;
+import jakarta.annotation.PostConstruct;
 import java.util.*;
-import javax.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
 
 /**

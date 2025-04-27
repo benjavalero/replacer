@@ -1,5 +1,8 @@
 # Versions
 
+## 2.30.0 (??)
+- Migrate to SpringBoot 3
+
 ## 2.29.8 (25 Apr 2025)
 - Fix regression: keep language when applying cosmetics recursively
 

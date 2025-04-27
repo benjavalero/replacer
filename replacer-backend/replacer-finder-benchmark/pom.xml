@@ -16,7 +16,7 @@
         <uberjar.name>replacer-finder-benchmark</uberjar.name>
 
         <jmh.version>1.37</jmh.version>
-        <tablesaw.version>0.43.1</tablesaw.version>
+        <tablesaw.version>0.44.1</tablesaw.version>
     </properties>
 
     <dependencies>

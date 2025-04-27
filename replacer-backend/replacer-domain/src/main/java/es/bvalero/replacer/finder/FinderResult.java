@@ -21,7 +21,7 @@ public interface FinderResult extends Comparable<FinderResult> {
     }
 
     private Range<Integer> getRange() {
-        return Range.between(getStart(), getEnd() - 1);
+        return Range.of(getStart(), getEnd() - 1);
     }
 
     /** @return if a result contains strictly, i.e. not been equal, another result. */
