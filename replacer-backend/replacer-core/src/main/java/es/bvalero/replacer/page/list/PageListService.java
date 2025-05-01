@@ -1,6 +1,6 @@
 package es.bvalero.replacer.page.list;
 
-import static es.bvalero.replacer.common.util.ReplacerUtils.LOCALE_ES;
+import static es.bvalero.replacer.common.util.ReplacerUtils.*;
 import static es.bvalero.replacer.replacement.IndexedReplacement.REVIEWER_SYSTEM;
 
 import es.bvalero.replacer.common.domain.StandardType;

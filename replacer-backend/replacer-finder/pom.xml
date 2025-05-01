@@ -15,7 +15,7 @@
     <dependencies>
         <dependency>
             <groupId>es.bvalero.replacer</groupId>
-            <artifactId>replacer-domain</artifactId>
+            <artifactId>replacer-core</artifactId>
             <version>${revision}</version>
         </dependency>
 

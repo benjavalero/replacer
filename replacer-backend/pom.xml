@@ -36,7 +36,6 @@
                 <activeByDefault>true</activeByDefault>
             </activation>
             <modules>
-                <module>replacer-domain</module>
                 <module>replacer-core</module>
                 <module>replacer-repository</module>
                 <module>replacer-wikipedia</module>
@@ -48,7 +47,7 @@
         <profile>
             <id>benchmark</id>
             <modules>
-                <module>replacer-domain</module>
+                <module>replacer-core</module>
                 <module>replacer-finder</module>
                 <module>replacer-finder-benchmark</module>
             </modules>
