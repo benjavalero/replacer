@@ -14,7 +14,10 @@ import lombok.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.Nullable;
 
-@Schema(description = "Reviewed page. The page fields are only mandatory when saving the page with changes.")
+@Schema(
+    description = "Reviewed page. The page fields are only mandatory when saving the page with changes.",
+    name = "ReviewedPage"
+)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Data
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
