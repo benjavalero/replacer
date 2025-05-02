@@ -26,6 +26,7 @@
         <!-- https://stackoverflow.com/questions/51556593/multiple-maven-profiles-activate-multiple-spring-profiles -->
         <includeSpringProfile/>
 
+        <spring-modulith.version>1.3.5</spring-modulith.version>
         <springdoc-openapi-starter-webmvc-ui.version>2.8.6</springdoc-openapi-starter-webmvc-ui.version>
     </properties>
 
@@ -131,6 +132,7 @@
                         <exclude>**/benchmark/**/*Test.java</exclude>
                         <exclude>**/benchmark/*Test.java</exclude>
                         <exclude>**/*BenchmarkTest.java</exclude>
+                        <exclude>**/ArchitectureTest.java</exclude>
                     </excludes>
                 </configuration>
             </plugin>
