@@ -36,7 +36,11 @@ class TagEmptyFinderTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = { "<span>x</span>", "<div> </div>", "<ref name=\"x\"></ref>" })
+    @ValueSource(
+        strings = {
+            "<span>x</span>", "<div> </div>", "<ref name=\"x\"></ref>", "<span class=\"anchor\" id=\"x\"></span>",
+        }
+    )
     void testSingleSmallTag(String text) {
         List<Cosmetic> cosmetics = tagEmptyFinder.findList(text);
 

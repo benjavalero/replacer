@@ -46,7 +46,13 @@ class TagEmptyFinder implements CosmeticFinder {
             final String expectedSimpleTag = String.format("<%s></%s>", tag, tag);
             return matchResult.group().equals(expectedSimpleTag);
         }
-        return true;
+        return !isAnchor(matchResult.group());
+    }
+
+    private boolean isAnchor(String text) {
+        // Some empty tags are valid as they are still used as anchors,
+        // e.g. <span class="anchor" id="x"></span>
+        return text.contains("class=\"anchor\"");
     }
 
     @Override

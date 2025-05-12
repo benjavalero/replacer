@@ -1,5 +1,8 @@
 # Versions
 
+## 2.29.9 (??)
+- Fix: ignore cosmetic replacement of empty tags when they are used as anchors 
+
 ## 2.29.8 (25 Apr 2025)
 - Fix regression: keep language when applying cosmetics recursively
 
