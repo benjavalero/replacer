@@ -69,7 +69,7 @@ class DateFinder implements ReplacementFinder {
                 });
             englishMonths.addAll(this.finderProperties.getMonthNames().get(ENGLISH_LANGUAGE));
             monthsLowerUpperCase.addAll(englishMonths);
-            if (WikipediaLanguage.SPANISH.equals(lang)) {
+            if (lang == WikipediaLanguage.SPANISH) {
                 // Trick only for Spanish months
                 monthsLowerUpperCase.add("setiembre");
                 monthsLowerUpperCase.add("Setiembre");
@@ -242,7 +242,7 @@ class DateFinder implements ReplacementFinder {
         return (
             isEnglishMonth(month) ||
             langMonths.containsMapping(lang, monthLower) ||
-            (WikipediaLanguage.SPANISH.equals(lang) && "setiembre".equals(monthLower))
+            (lang == WikipediaLanguage.SPANISH && "setiembre".equals(monthLower))
         );
     }
 
@@ -524,7 +524,7 @@ class DateFinder implements ReplacementFinder {
 
     private String fixSeptember(String month, WikipediaLanguage lang) {
         // The September fix is a trick only for Spanish months
-        return WikipediaLanguage.SPANISH.equals(lang) && "setiembre".equals(month) ? "septiembre" : month;
+        return lang == WikipediaLanguage.SPANISH && "setiembre".equals(month) ? "septiembre" : month;
     }
 
     private boolean isFixableYear(String year) {
@@ -548,9 +548,9 @@ class DateFinder implements ReplacementFinder {
     }
 
     private String fixPrepositionAfter(String prepAfter, WikipediaLanguage lang) {
-        return WikipediaLanguage.SPANISH.equals(lang)
-            ? getPrepositionDefault(lang)
-            : FinderUtils.setFirstLowerCase(prepAfter);
+        return lang != WikipediaLanguage.SPANISH
+            ? FinderUtils.setFirstLowerCase(prepAfter)
+            : getPrepositionDefault(lang);
     }
 
     private Replacement buildDateReplacement(
