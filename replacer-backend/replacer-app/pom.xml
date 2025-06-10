@@ -12,6 +12,10 @@
 
     <artifactId>replacer-app</artifactId>
 
+    <properties>
+        <org.jmolecules.integrations.version>0.26.0</org.jmolecules.integrations.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>es.bvalero.replacer</groupId>
@@ -65,7 +69,19 @@
         <dependency>
             <groupId>org.jmolecules.integrations</groupId>
             <artifactId>jmolecules-archunit</artifactId>
-            <version>0.26.0</version>
+            <version>${org.jmolecules.integrations.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jmolecules.integrations</groupId>
+            <artifactId>jmolecules-starter-ddd</artifactId>
+            <version>${org.jmolecules.integrations.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.modulith</groupId>
+            <artifactId>spring-modulith-starter-test</artifactId>
+            <version>${spring-modulith.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
