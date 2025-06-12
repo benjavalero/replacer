@@ -64,7 +64,9 @@ abstract class PageIndexAbstractService {
 
     // This method can be overridden in case we want to avoid calculating the replacements under some circumstances
     PageIndexResult indexPage(IndexablePage indexablePage, @Nullable IndexedPage dbPage) {
-        final Collection<Replacement> replacements = replacementFindService.findReplacements(indexablePage);
+        final Collection<Replacement> replacements = replacementFindService.findReplacements(
+            indexablePage.toFinderPage()
+        );
 
         final IndexedPage result = pageComparator.indexPageReplacements(indexablePage, replacements, dbPage);
         if (result.isPageToSave()) {

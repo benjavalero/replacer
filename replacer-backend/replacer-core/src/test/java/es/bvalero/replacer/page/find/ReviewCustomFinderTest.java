@@ -7,9 +7,10 @@ import es.bvalero.replacer.common.domain.CustomType;
 import es.bvalero.replacer.common.domain.ReplacementKind;
 import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
+import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.Suggestion;
-import es.bvalero.replacer.page.*;
+import es.bvalero.replacer.page.PageKey;
 import es.bvalero.replacer.page.index.PageIndexResult;
 import es.bvalero.replacer.page.index.PageIndexService;
 import es.bvalero.replacer.page.save.PageSaveRepository;
@@ -163,7 +164,7 @@ class ReviewCustomFinderTest {
         when(pageIndexService.indexPage(page)).thenReturn(PageIndexResult.ofIndexed());
         when(
             customReplacementFindService.findCustomReplacements(
-                any(WikipediaPage.class),
+                any(FinderPage.class),
                 any(CustomReplacementFindRequest.class)
             )
         ).thenReturn(List.of(customRep));
@@ -210,7 +211,7 @@ class ReviewCustomFinderTest {
         when(pageIndexService.indexPage(page)).thenReturn(PageIndexResult.ofIndexed());
         when(
             customReplacementFindService.findCustomReplacements(
-                any(WikipediaPage.class),
+                any(FinderPage.class),
                 any(CustomReplacementFindRequest.class)
             )
         ).thenReturn(List.of());
@@ -256,7 +257,7 @@ class ReviewCustomFinderTest {
         when(pageIndexService.indexPage(page)).thenReturn(PageIndexResult.ofIndexed());
         when(
             customReplacementFindService.findCustomReplacements(
-                any(WikipediaPage.class),
+                any(FinderPage.class),
                 any(CustomReplacementFindRequest.class)
             )
         ).thenReturn(List.of(customRep));
@@ -341,7 +342,7 @@ class ReviewCustomFinderTest {
 
         when(
             customReplacementFindService.findCustomReplacements(
-                any(WikipediaPage.class),
+                any(FinderPage.class),
                 any(CustomReplacementFindRequest.class)
             )
         ).thenReturn(List.of(customRep));
@@ -423,7 +424,7 @@ class ReviewCustomFinderTest {
 
         when(
             customReplacementFindService.findCustomReplacements(
-                any(WikipediaPage.class),
+                any(FinderPage.class),
                 any(CustomReplacementFindRequest.class)
             )
         ).thenReturn(List.of());
@@ -465,14 +466,20 @@ class ReviewCustomFinderTest {
             .suggestions(List.of(suggestion))
             .build();
         when(
-            customReplacementFindService.findCustomReplacements(page, options.getCustomReplacementFindRequest())
+            customReplacementFindService.findCustomReplacements(
+                page.toFinderPage(),
+                options.getCustomReplacementFindRequest()
+            )
         ).thenReturn(List.of(custom));
 
         Collection<Replacement> result = pageReviewCustomService.decorateReplacements(page, options, replacements);
 
         assertEquals(1, result.size());
 
-        verify(customReplacementFindService).findCustomReplacements(page, options.getCustomReplacementFindRequest());
+        verify(customReplacementFindService).findCustomReplacements(
+            page.toFinderPage(),
+            options.getCustomReplacementFindRequest()
+        );
     }
 
     @Test
@@ -499,14 +506,20 @@ class ReviewCustomFinderTest {
             .suggestions(List.of(Suggestion.ofNoComment(comment)))
             .build();
         when(
-            customReplacementFindService.findCustomReplacements(page, options.getCustomReplacementFindRequest())
+            customReplacementFindService.findCustomReplacements(
+                page.toFinderPage(),
+                options.getCustomReplacementFindRequest()
+            )
         ).thenReturn(List.of(custom));
 
         Collection<Replacement> result = pageReviewCustomService.decorateReplacements(page, options, replacements);
 
         assertEquals(Set.of(custom), new HashSet<>(result));
 
-        verify(customReplacementFindService).findCustomReplacements(page, options.getCustomReplacementFindRequest());
+        verify(customReplacementFindService).findCustomReplacements(
+            page.toFinderPage(),
+            options.getCustomReplacementFindRequest()
+        );
     }
 
     @Test
@@ -533,7 +546,10 @@ class ReviewCustomFinderTest {
             .suggestions(List.of(Suggestion.ofNoComment("En septiembre")))
             .build();
         when(
-            customReplacementFindService.findCustomReplacements(page, options.getCustomReplacementFindRequest())
+            customReplacementFindService.findCustomReplacements(
+                page.toFinderPage(),
+                options.getCustomReplacementFindRequest()
+            )
         ).thenReturn(List.of(custom));
 
         Collection<Replacement> result = pageReviewCustomService.decorateReplacements(page, options, replacements);
@@ -542,6 +558,9 @@ class ReviewCustomFinderTest {
         // there is no custom replacement to review.
         assertTrue(result.isEmpty());
 
-        verify(customReplacementFindService).findCustomReplacements(page, options.getCustomReplacementFindRequest());
+        verify(customReplacementFindService).findCustomReplacements(
+            page.toFinderPage(),
+            options.getCustomReplacementFindRequest()
+        );
     }
 }

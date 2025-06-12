@@ -82,22 +82,7 @@ public class ReviewedPage {
     }
 
     FinderPage toFinderPage() {
-        return new FinderPage() {
-            @Override
-            public PageKey getPageKey() {
-                return pageKey;
-            }
-
-            @Override
-            public String getTitle() {
-                return Objects.requireNonNull(title);
-            }
-
-            @Override
-            public String getContent() {
-                return Objects.requireNonNull(content);
-            }
-        };
+        return FinderPage.of(pageKey, Objects.requireNonNull(title), Objects.requireNonNull(content));
     }
 
     IndexedPage toIndexedPage(@Nullable WikipediaPageSaveResult saveResult) {

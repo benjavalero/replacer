@@ -3,7 +3,7 @@ package es.bvalero.replacer.page.index;
 import static es.bvalero.replacer.page.index.PageComparator.toIndexedPage;
 import static es.bvalero.replacer.replacement.IndexedReplacement.REVIEWER_SYSTEM;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
 import es.bvalero.replacer.common.domain.ReplacementKind;
@@ -31,7 +31,7 @@ class PageComparatorTest {
     private final PageComparator pageComparator = new PageComparator();
     private final LocalDate now = LocalDate.now();
     private final LocalDate before = now.minusDays(1);
-    private final IndexablePage page = mock(IndexablePage.class);
+    private final IndexablePage page = spy(IndexablePage.class);
 
     @BeforeEach
     public void setUp() {
@@ -43,7 +43,8 @@ class PageComparatorTest {
         when(page.getLastUpdate()).thenReturn(WikipediaTimestamp.now());
     }
 
-    private static Replacement buildFinderReplacement(FinderPage page, int index) {
+    private static Replacement buildFinderReplacement(IndexablePage indexablePage, int index) {
+        FinderPage page = indexablePage.toFinderPage();
         return Replacement.builder()
             .page(page)
             .start(index)
@@ -412,7 +413,7 @@ class PageComparatorTest {
         when(page.getContent()).thenReturn(text);
 
         Replacement r1 = Replacement.builder()
-            .page(page)
+            .page(page.toFinderPage())
             .start(25)
             .text("words")
             .type(StandardType.of(ReplacementKind.SIMPLE, "words"))
@@ -420,7 +421,7 @@ class PageComparatorTest {
             .build();
         ComparableReplacement cr1 = ComparableReplacement.of(r1);
         Replacement r2 = Replacement.builder()
-            .page(page)
+            .page(page.toFinderPage())
             .start(75)
             .text("words")
             .type(StandardType.of(ReplacementKind.SIMPLE, "words"))
@@ -446,7 +447,7 @@ class PageComparatorTest {
         when(page.getContent()).thenReturn(text);
 
         Replacement r1 = Replacement.builder()
-            .page(page)
+            .page(page.toFinderPage())
             .start(25)
             .text("words")
             .type(StandardType.of(ReplacementKind.SIMPLE, "words"))
@@ -454,7 +455,7 @@ class PageComparatorTest {
             .build();
         ComparableReplacement cr1 = ComparableReplacement.of(r1);
         Replacement r2 = Replacement.builder()
-            .page(page)
+            .page(page.toFinderPage())
             .start(70)
             .text("words")
             .type(StandardType.of(ReplacementKind.SIMPLE, "words"))

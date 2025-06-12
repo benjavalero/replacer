@@ -2,30 +2,43 @@ package es.bvalero.replacer.finder;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.page.PageKey;
-import org.apache.commons.lang3.StringUtils;
+import lombok.Value;
+import lombok.With;
+import lombok.experimental.NonFinal;
 import org.jetbrains.annotations.TestOnly;
+import org.springframework.lang.NonNull;
 
-public interface FinderPage {
-    int SHORT_CONTENT_LENGTH = 50;
+/*
+ * This class contains the minimum data to retrieve the replacements from a text.
+ * The page key contains the language of the text.
+ * The page title is also needed for tracing purposes.
+ */
+@NonFinal
+@Value
+public class FinderPage {
 
-    PageKey getPageKey();
+    @NonNull
+    PageKey pageKey;
 
-    String getTitle();
+    @NonNull
+    String title;
 
-    String getContent();
+    @NonNull
+    @With
+    String content;
 
     @TestOnly
-    static FinderPage of(String content) {
+    public static FinderPage of(String content) {
         return of(WikipediaLanguage.getDefault(), content);
     }
 
     @TestOnly
-    static FinderPage of(WikipediaLanguage lang, String content) {
+    public static FinderPage of(WikipediaLanguage lang, String content) {
         return of(lang, "", content);
     }
 
     @TestOnly
-    static FinderPage of(String title, String content) {
+    public static FinderPage of(String title, String content) {
         return of(WikipediaLanguage.getDefault(), title, content);
     }
 
@@ -34,30 +47,7 @@ public interface FinderPage {
         return of(PageKey.of(lang, 1), title, content);
     }
 
-    private static FinderPage of(PageKey pageKey, String title, String content) {
-        return new FinderPage() {
-            @Override
-            public PageKey getPageKey() {
-                return pageKey;
-            }
-
-            @Override
-            public String getTitle() {
-                return title;
-            }
-
-            @Override
-            public String getContent() {
-                return content;
-            }
-        };
-    }
-
-    default FinderPage withContent(String content) {
-        return of(getPageKey(), getTitle(), content);
-    }
-
-    default String getAbbreviatedContent() {
-        return StringUtils.abbreviate(getContent(), SHORT_CONTENT_LENGTH);
+    public static FinderPage of(PageKey pageKey, String title, String content) {
+        return new FinderPage(pageKey, title, content);
     }
 }

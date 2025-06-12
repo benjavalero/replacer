@@ -140,7 +140,10 @@ class ReviewCustomFinder extends ReviewFinder {
     }
 
     private Collection<Replacement> findCustomReplacements(WikipediaPage page, ReviewOptions options) {
-        return customReplacementFindService.findCustomReplacements(page, options.getCustomReplacementFindRequest());
+        return customReplacementFindService.findCustomReplacements(
+            page.toFinderPage(),
+            options.getCustomReplacementFindRequest()
+        );
     }
 
     @Override

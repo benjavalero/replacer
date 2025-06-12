@@ -7,8 +7,8 @@ import org.apache.commons.collections4.IterableUtils;
 import org.jetbrains.annotations.TestOnly;
 
 public interface Finder<T extends FinderResult> extends Comparable<Finder<T>> {
-    // This method returns an Iterable in case we want to retrieve the results one-by-one,
-    // for instance to improve performance.
+    // This method returns an Iterable in case we want to retrieve the result one-by-one,
+    // for instance, to improve performance.
     default Iterable<T> find(FinderPage page) {
         // The finding process consists basically in three steps:
         // 1. Find a list of all potential match results
@@ -41,7 +41,7 @@ public interface Finder<T extends FinderResult> extends Comparable<Finder<T>> {
     @TestOnly
     default List<T> findList(String text) {
         // When testing, validate the position of the match results.
-        // For the sake of the tests we use always a FinderParserPage even if we don't use the parser at all
+        // For the sake of the tests, we always use a FinderParserPage even if we don't use the parser at all
         return IterableUtils.toList(
             IterableUtils.filteredIterable(find(FinderParserPage.of(FinderPage.of(text))), m -> m.validate(text))
         );

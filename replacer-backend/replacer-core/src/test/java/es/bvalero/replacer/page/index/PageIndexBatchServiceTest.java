@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
+import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.page.IndexedPage;
 import es.bvalero.replacer.page.PageKey;
 import es.bvalero.replacer.page.find.WikipediaNamespace;
@@ -75,7 +76,7 @@ class PageIndexBatchServiceTest {
 
         verify(pageIndexValidator).isPageIndexableByNamespace(page);
         verify(pageIndexValidator).isIndexableByTimestamp(page, null);
-        verify(replacementFindService).findReplacements(page);
+        verify(replacementFindService).findReplacements(page.toFinderPage());
         verify(pageComparator).indexPageReplacements(any(IndexablePage.class), anyCollection(), isNull());
     }
 
@@ -90,7 +91,7 @@ class PageIndexBatchServiceTest {
 
         verify(pageIndexValidator).isPageIndexableByNamespace(page);
         verify(pageIndexValidator).isIndexableByTimestamp(page, null);
-        verify(replacementFindService, never()).findReplacements(any(WikipediaPage.class));
+        verify(replacementFindService, never()).findReplacements(any(FinderPage.class));
         verify(pageComparator, never()).indexPageReplacements(
             any(IndexablePage.class),
             anyCollection(),

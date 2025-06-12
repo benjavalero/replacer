@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
+import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.page.IndexedPage;
 import es.bvalero.replacer.page.PageKey;
 import es.bvalero.replacer.page.find.PageRepository;
@@ -66,7 +67,7 @@ class PageIndexServiceTest {
 
         verify(pageIndexValidator).isPageIndexableByNamespace(page);
         verify(pageIndexValidator, never()).isIndexableByTimestamp(page, null);
-        verify(replacementFindService, never()).findReplacements(any(WikipediaPage.class));
+        verify(replacementFindService, never()).findReplacements(any(FinderPage.class));
     }
 
     @Test
@@ -89,7 +90,7 @@ class PageIndexServiceTest {
 
         verify(pageIndexValidator).isPageIndexableByNamespace(page);
         verify(pageIndexValidator, never()).isIndexableByTimestamp(page, null);
-        verify(replacementFindService, never()).findReplacements(any(WikipediaPage.class));
+        verify(replacementFindService, never()).findReplacements(any(FinderPage.class));
     }
 
     @Test
@@ -110,7 +111,7 @@ class PageIndexServiceTest {
 
         verify(pageIndexValidator).isPageIndexableByNamespace(page);
         verify(pageIndexValidator, never()).isIndexableByTimestamp(page, null);
-        verify(replacementFindService, never()).findReplacements(any(WikipediaPage.class));
+        verify(replacementFindService, never()).findReplacements(any(FinderPage.class));
         verify(pageComparatorSaver, never()).save(any(IndexedPage.class));
         verify(pageSaveRepository).removeByKey(anyCollection());
     }
