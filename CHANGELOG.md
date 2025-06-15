@@ -1,6 +1,6 @@
 # Versions
 
-## 2.30.0 (??)
+## 2.30.0 (15 Jun 2025)
 - Migrate to SpringBoot 3
 - Regression: revert comment finder to the previous linear algorithm
 
