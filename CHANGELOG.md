@@ -2,12 +2,14 @@
 
 ## 2.30.0 (??)
 - Migrate to SpringBoot 3
+- Regression: revert comment finder to the previous linear algorithm
 
 ## 2.29.8 (25 Apr 2025)
 - Fix regression: keep language when applying cosmetics recursively
 
 ## 2.29.7 (17 Apr 2025)
 - Fix: ignore user cache when language changes
+- Feature: first attempt with comments to use a parser-based finder
 
 ## 2.29.6 (8 Dec 2024)
 - Fix: ignore links with cursive if the alias contains more styling
