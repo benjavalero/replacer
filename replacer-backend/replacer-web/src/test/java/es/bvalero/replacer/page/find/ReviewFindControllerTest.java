@@ -78,12 +78,13 @@ class ReviewFindControllerTest {
     private final int start = 2;
     private final String rep = "C";
     private final Suggestion suggestion = Suggestion.of("c", "ç");
-    private final Replacement replacement = Replacement.builder()
-        .start(start)
-        .text(rep)
-        .type(StandardType.of(ReplacementKind.SIMPLE, rep))
-        .suggestions(List.of(suggestion))
-        .build();
+    private final Replacement replacement = Replacement.of(
+        start,
+        rep,
+        StandardType.of(ReplacementKind.SIMPLE, rep),
+        List.of(suggestion),
+        page.getContent()
+    );
     private final int numPending = 100;
     private final Review review = Review.of(page, section, List.of(replacement), numPending);
 

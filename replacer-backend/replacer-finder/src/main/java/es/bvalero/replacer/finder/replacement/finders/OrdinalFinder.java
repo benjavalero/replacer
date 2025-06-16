@@ -196,13 +196,13 @@ class OrdinalFinder implements ReplacementFinder {
 
     @Override
     public Replacement convert(MatchResult match, FinderPage page) {
-        return Replacement.builder()
-            .page(page)
-            .type(StandardType.ORDINAL)
-            .start(match.start())
-            .text(match.group())
-            .suggestions(buildSuggestions(match, page))
-            .build();
+        return Replacement.of(
+            match.start(),
+            match.group(),
+            StandardType.ORDINAL,
+            buildSuggestions(match, page),
+            page.getContent()
+        );
     }
 
     private List<Suggestion> buildSuggestions(MatchResult match, FinderPage page) {

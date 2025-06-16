@@ -588,13 +588,7 @@ class DateFinder implements ReplacementFinder {
             suggestions.add(0, Suggestion.of(text, "no reemplazar si el contexto está en inglés"));
         }
 
-        return Replacement.builder()
-            .page(page)
-            .type(StandardType.DATE)
-            .start(start)
-            .text(text)
-            .suggestions(suggestions)
-            .build();
+        return Replacement.of(start, text, StandardType.DATE, suggestions, page.getContent());
     }
 
     // Return the appropriate article for the date

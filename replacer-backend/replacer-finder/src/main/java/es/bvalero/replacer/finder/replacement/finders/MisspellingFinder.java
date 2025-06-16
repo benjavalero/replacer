@@ -65,13 +65,13 @@ public abstract class MisspellingFinder implements ReplacementFinder {
     public Replacement convert(MatchResult matcher, FinderPage page) {
         final int start = matcher.start();
         final String text = matcher.group();
-        return Replacement.builder()
-            .page(page)
-            .type(StandardType.of(getType(), getSubtype(text, page.getPageKey().getLang())))
-            .start(start)
-            .text(text)
-            .suggestions(findSuggestions(text, page.getPageKey().getLang()))
-            .build();
+        return Replacement.of(
+            start,
+            text,
+            StandardType.of(getType(), getSubtype(text, page.getPageKey().getLang())),
+            findSuggestions(text, page.getPageKey().getLang()),
+            page.getContent()
+        );
     }
 
     protected abstract ReplacementKind getType();

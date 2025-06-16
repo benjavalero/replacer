@@ -322,13 +322,13 @@ class CoordinatesFinder implements ReplacementFinder {
         );
         final Suggestion suggestionWithSpaces = Suggestion.of(withSpaces, "con espacios y con los símbolos apropiados");
 
-        return Replacement.builder()
-            .page(page)
-            .type(StandardType.COORDINATES)
-            .start(match.start())
-            .text(match.group())
-            .suggestions(List.of(suggestionNoSpaces, suggestionWithSpaces))
-            .build();
+        return Replacement.of(
+            match.start(),
+            match.group(),
+            StandardType.COORDINATES,
+            List.of(suggestionNoSpaces, suggestionWithSpaces),
+            page.getContent()
+        );
     }
 
     private String fixSeconds(String str) {

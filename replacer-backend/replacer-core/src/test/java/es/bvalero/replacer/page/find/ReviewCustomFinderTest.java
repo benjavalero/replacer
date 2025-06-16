@@ -145,12 +145,13 @@ class ReviewCustomFinderTest {
 
         final int pageId = 123;
         final String content = "A R";
-        final Replacement customRep = Replacement.builder()
-            .start(2)
-            .type(customType)
-            .text(replacement)
-            .suggestions(List.of(Suggestion.ofNoComment(suggestion)))
-            .build();
+        final Replacement customRep = Replacement.of(
+            2,
+            replacement,
+            customType,
+            List.of(Suggestion.ofNoComment(suggestion)),
+            content
+        );
         final WikipediaSearchResult searchResult = WikipediaSearchResult.builder().total(1).pageId(pageId).build();
         final PageKey pageKey = PageKey.of(lang, pageId);
         final WikipediaPage page = buildWikipediaPage(pageId, content);
@@ -234,12 +235,13 @@ class ReviewCustomFinderTest {
         final int pageId1 = 123;
         final int pageId2 = 456;
         final String content = "A R";
-        final Replacement customRep = Replacement.builder()
-            .start(2)
-            .type(customType)
-            .text(replacement)
-            .suggestions(List.of(Suggestion.ofNoComment(suggestion)))
-            .build();
+        final Replacement customRep = Replacement.of(
+            2,
+            replacement,
+            customType,
+            List.of(Suggestion.ofNoComment(suggestion)),
+            content
+        );
         final WikipediaSearchResult searchResult = WikipediaSearchResult.builder()
             .total(2)
             .pageId(pageId1)
@@ -310,12 +312,13 @@ class ReviewCustomFinderTest {
         // The user will review with no changes the rest, i.e. 2, 4
 
         final String content = "A R";
-        final Replacement customRep = Replacement.builder()
-            .start(2)
-            .type(customType)
-            .text(replacement)
-            .suggestions(List.of(Suggestion.ofNoComment(suggestion)))
-            .build();
+        final Replacement customRep = Replacement.of(
+            2,
+            replacement,
+            customType,
+            List.of(Suggestion.ofNoComment(suggestion)),
+            content
+        );
         final Map<Integer, WikipediaPage> pages = new HashMap<>();
         for (int i = 1; i <= 4; i++) {
             pages.put(i, buildWikipediaPage(i, content));
@@ -451,20 +454,22 @@ class ReviewCustomFinderTest {
         ReviewOptions options = ReviewOptions.ofCustom(user, subtype, true, comment);
 
         Suggestion suggestion = Suggestion.ofNoComment(comment);
-        Replacement replacement = Replacement.builder()
-            .start(2)
-            .text(subtype)
-            .type(StandardType.of(ReplacementKind.SIMPLE, subtype))
-            .suggestions(List.of(suggestion))
-            .build();
+        final Replacement replacement = Replacement.of(
+            2,
+            subtype,
+            StandardType.of(ReplacementKind.SIMPLE, subtype),
+            List.of(suggestion),
+            page.getContent()
+        );
         Collection<Replacement> replacements = List.of(replacement);
 
-        Replacement custom = Replacement.builder()
-            .start(2)
-            .text(subtype)
-            .type(options.getCustomType())
-            .suggestions(List.of(suggestion))
-            .build();
+        final Replacement custom = Replacement.of(
+            2,
+            subtype,
+            options.getCustomType(),
+            List.of(suggestion),
+            page.getContent()
+        );
         when(
             customReplacementFindService.findCustomReplacements(
                 page.toFinderPage(),
@@ -491,20 +496,22 @@ class ReviewCustomFinderTest {
         String comment = "Seat León";
         ReviewOptions options = ReviewOptions.ofCustom(user, subtype, true, comment);
 
-        Replacement replacement = Replacement.builder()
-            .start(8)
-            .text("Leon")
-            .type(StandardType.of(ReplacementKind.SIMPLE, "leon"))
-            .suggestions(List.of(Suggestion.ofNoComment("León")))
-            .build();
+        final Replacement replacement = Replacement.of(
+            8,
+            "Leon",
+            StandardType.of(ReplacementKind.SIMPLE, "leon"),
+            List.of(Suggestion.ofNoComment("León")),
+            page.getContent()
+        );
         Collection<Replacement> replacements = List.of(replacement);
 
-        Replacement custom = Replacement.builder()
-            .start(3)
-            .text(subtype)
-            .type(options.getCustomType())
-            .suggestions(List.of(Suggestion.ofNoComment(comment)))
-            .build();
+        final Replacement custom = Replacement.of(
+            3,
+            subtype,
+            options.getCustomType(),
+            List.of(Suggestion.ofNoComment(comment)),
+            page.getContent()
+        );
         when(
             customReplacementFindService.findCustomReplacements(
                 page.toFinderPage(),
@@ -531,20 +538,22 @@ class ReviewCustomFinderTest {
         String comment = "En septiembre";
         ReviewOptions options = ReviewOptions.ofCustom(user, subtype, true, comment);
 
-        Replacement replacement = Replacement.builder()
-            .start(0)
-            .text("En Septiembre de 2020")
-            .type(StandardType.DATE)
-            .suggestions(List.of(Suggestion.ofNoComment("En septiembre de 2020")))
-            .build();
+        final Replacement replacement = Replacement.of(
+            0,
+            "En Septiembre de 2020",
+            StandardType.DATE,
+            List.of(Suggestion.ofNoComment("En septiembre de 2020")),
+            page.getContent()
+        );
         Collection<Replacement> replacements = List.of(replacement);
 
-        Replacement custom = Replacement.builder()
-            .start(0)
-            .text(subtype)
-            .type(options.getCustomType())
-            .suggestions(List.of(Suggestion.ofNoComment("En septiembre")))
-            .build();
+        final Replacement custom = Replacement.of(
+            0,
+            subtype,
+            options.getCustomType(),
+            List.of(Suggestion.ofNoComment("En septiembre")),
+            page.getContent()
+        );
         when(
             customReplacementFindService.findCustomReplacements(
                 page.toFinderPage(),

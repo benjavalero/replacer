@@ -208,12 +208,6 @@ class DegreeFinder implements ReplacementFinder {
             suggestions.add(Suggestion.of(word + DOT + symbol, "ordinal"));
         }
 
-        return Replacement.builder()
-            .page(page)
-            .type(StandardType.DEGREES)
-            .start(start)
-            .text(text)
-            .suggestions(suggestions)
-            .build();
+        return Replacement.of(start, text, StandardType.DEGREES, suggestions, page.getContent());
     }
 }

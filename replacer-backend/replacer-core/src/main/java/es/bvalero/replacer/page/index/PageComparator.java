@@ -68,7 +68,7 @@ class PageComparator {
         // In case a replacement is kept as is, we also mark it as "touched".
         final List<ComparableReplacement> comparablePageReplacements = pageReplacements
             .stream()
-            .map(ComparableReplacement::of)
+            .map(r -> ComparableReplacement.of(r, page.getPageKey()))
             .collect(Collectors.toCollection(LinkedList::new));
         // Replacements with the same type and position are considered equal
         // If they have different position but same context, and they are close enough,

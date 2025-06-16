@@ -7,10 +7,10 @@ import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
-import lombok.Builder;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
-import lombok.Value;
-import lombok.With;
+import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.TestOnly;
 import org.springframework.lang.NonNull;
@@ -22,40 +22,37 @@ import org.springframework.lang.NonNull;
  * For instance, in Spanish the word "Paris" could be misspelled if it corresponds to the French city
  * (written correctly as "París"), but it would be correct if it refers to the mythological Trojan prince.
  */
+@Getter
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@Value
-@Builder
-public class Replacement implements FinderResult {
+public final class Replacement implements FinderResult {
 
     private static final int CONTEXT_THRESHOLD = 20;
     private static final int MAX_CONTEXT_LENGTH = 255; // Constrained by the database
 
-    @NonNull
-    FinderPage page;
-
     @EqualsAndHashCode.Include
-    @With
-    int start;
+    private final int start;
 
     @EqualsAndHashCode.Include
     @NonNull
-    String text;
+    private final String text;
 
     @NonNull
-    ReplacementType type;
+    private final ReplacementType type;
 
     @NonNull
-    Collection<Suggestion> suggestions;
+    private final List<Suggestion> suggestions; // We use a list as the order is important
+
+    @NonNull
+    private final String context;
 
     private Replacement(
-        FinderPage page,
         int start,
         String text,
         ReplacementType type,
-        Collection<Suggestion> suggestions
+        Collection<Suggestion> suggestions,
+        String pageContent
     ) {
-        // Implement the private constructor to perform validations when building by Lombok
-
         // Validate start
         if (start < 0) {
             throw new IllegalArgumentException("Negative replacement start: " + start);
@@ -72,16 +69,28 @@ public class Replacement implements FinderResult {
             throw new IllegalArgumentException("Invalid replacement suggestions: " + msg);
         }
 
-        this.page = page;
         this.start = start;
         this.text = text;
         this.type = type;
-        this.suggestions = suggestions;
+
+        // Pre-calculate the suggestions and the context as they will always be used later
+        this.suggestions = mergeSuggestions(suggestions);
+        this.context = extractContext(pageContent);
     }
 
-    // Overwrite the getter to include the original text as the first option
-    public List<Suggestion> getSuggestions() {
-        Collection<Suggestion> merged = Suggestion.mergeSuggestions(this.suggestions);
+    public static Replacement of(
+        int start,
+        String text,
+        ReplacementType type,
+        Collection<Suggestion> suggestions,
+        String pageContent
+    ) {
+        return new Replacement(start, text, type, suggestions, pageContent);
+    }
+
+    // Include the original text as the first option
+    private List<Suggestion> mergeSuggestions(Collection<Suggestion> suggestions) {
+        Collection<Suggestion> merged = Suggestion.mergeSuggestions(suggestions);
         return Suggestion.sortSuggestions(merged, this.text);
     }
 
@@ -90,11 +99,15 @@ public class Replacement implements FinderResult {
         results.removeIf(r -> results.stream().anyMatch(r2 -> r2.containsStrictly(r)));
     }
 
-    public String getContext() {
+    private String extractContext(String pageContent) {
         return StringUtils.truncate(
-            ReplacerUtils.getContextAroundWord(page.getContent(), start, getEnd(), CONTEXT_THRESHOLD),
+            ReplacerUtils.getContextAroundWord(pageContent, start, getEnd(), CONTEXT_THRESHOLD),
             MAX_CONTEXT_LENGTH
         );
+    }
+
+    public Replacement withStart(int newStart) {
+        return new Replacement(newStart, this.text, this.type, this.suggestions, this.context);
     }
 
     // We consider two replacements equal if they have the same start and end (or text).

@@ -57,11 +57,11 @@ class ComparableReplacement {
             .build();
     }
 
-    static ComparableReplacement of(Replacement replacement) {
+    static ComparableReplacement of(Replacement replacement, PageKey pageKey) {
         assert replacement.getType() instanceof StandardType;
         return of(
             IndexedReplacement.builder()
-                .pageKey(replacement.getPage().getPageKey())
+                .pageKey(pageKey)
                 .type((StandardType) replacement.getType())
                 .start(replacement.getStart())
                 .context(replacement.getContext())

@@ -47,12 +47,13 @@ class ReviewTypeFinderTest {
         .build();
     private final StandardType simpleType = StandardType.of(ReplacementKind.SIMPLE, "Y");
     private final StandardType composedType = StandardType.of(ReplacementKind.COMPOSED, "B");
-    private final Replacement replacement = Replacement.builder()
-        .start(1)
-        .type(StandardType.of(ReplacementKind.SIMPLE, "Y"))
-        .text("Y")
-        .suggestions(List.of(Suggestion.ofNoComment("Z")))
-        .build();
+    private final Replacement replacement = Replacement.of(
+        1,
+        "Y",
+        StandardType.of(ReplacementKind.SIMPLE, "Y"),
+        List.of(Suggestion.ofNoComment("Z")),
+        content
+    );
     private final List<Replacement> replacements = List.of(replacement);
     private final User user = User.buildTestUser();
     private final ReviewOptions options = ReviewOptions.ofType(user, simpleType);
@@ -246,12 +247,13 @@ class ReviewTypeFinderTest {
         // The page exists in Wikipedia
         when(wikipediaPageRepository.findByKey(randomPageKey)).thenReturn(Optional.of(page));
 
-        final Replacement replacement2 = Replacement.builder()
-            .start(2)
-            .type(StandardType.of(ReplacementKind.SIMPLE, "Z"))
-            .text("Z")
-            .suggestions(List.of(Suggestion.ofNoComment("z")))
-            .build();
+        final Replacement replacement2 = Replacement.of(
+            2,
+            "Z",
+            StandardType.of(ReplacementKind.SIMPLE, "Z"),
+            List.of(Suggestion.ofNoComment("z")),
+            page.getContent()
+        );
         when(pageIndexService.indexPage(page)).thenReturn(PageIndexResult.ofIndexed(List.of(replacement2)));
 
         Optional<Review> review = pageReviewTypeSubtypeService.findRandomPageReview(options);

@@ -70,12 +70,13 @@ class MisspellingComposedFinderTest {
 
         List<Replacement> results = misspellingComposedFinder.findList(text);
 
-        Replacement expected = Replacement.builder()
-            .start(2)
-            .text("aún así")
-            .type(StandardType.of(ReplacementKind.COMPOSED, "aún así"))
-            .suggestions(List.of(Suggestion.ofNoComment("aún así"), Suggestion.ofNoComment("aun así")))
-            .build();
+        Replacement expected = Replacement.of(
+            2,
+            "aún así",
+            StandardType.of(ReplacementKind.COMPOSED, "aún así"),
+            List.of(Suggestion.ofNoComment("aún así"), Suggestion.ofNoComment("aun así")),
+            text
+        );
         assertTrue(Replacement.compareReplacements(Set.of(expected), results));
     }
 
@@ -89,12 +90,13 @@ class MisspellingComposedFinderTest {
 
         List<Replacement> results = misspellingComposedFinder.findList(text);
 
-        Replacement expected = Replacement.builder()
-            .start(2)
-            .text("aún así")
-            .type(StandardType.of(ReplacementKind.COMPOSED, "aún así"))
-            .suggestions(List.of(Suggestion.ofNoComment("aún así"), Suggestion.ofNoComment("aun así")))
-            .build();
+        Replacement expected = Replacement.of(
+            2,
+            "aún así",
+            StandardType.of(ReplacementKind.COMPOSED, "aún así"),
+            List.of(Suggestion.ofNoComment("aún así"), Suggestion.ofNoComment("aun así")),
+            text
+        );
         assertTrue(Replacement.compareReplacements(Set.of(expected), results));
     }
 
@@ -107,12 +109,13 @@ class MisspellingComposedFinderTest {
 
         List<Replacement> results = misspellingComposedFinder.findList(text);
 
-        Replacement expected = Replacement.builder()
-            .start(4)
-            .text("mas.")
-            .type(StandardType.of(ReplacementKind.COMPOSED, "mas."))
-            .suggestions(List.of(Suggestion.ofNoComment("mas."), Suggestion.ofNoComment("más.")))
-            .build();
+        Replacement expected = Replacement.of(
+            4,
+            "mas.",
+            StandardType.of(ReplacementKind.COMPOSED, "mas."),
+            List.of(Suggestion.ofNoComment("mas."), Suggestion.ofNoComment("más.")),
+            text
+        );
         assertTrue(Replacement.compareReplacements(Set.of(expected), results));
     }
 
@@ -125,12 +128,13 @@ class MisspellingComposedFinderTest {
 
         List<Replacement> results = misspellingComposedFinder.findList(text);
 
-        Replacement expected = Replacement.builder()
-            .start(4)
-            .text("aun,")
-            .type(StandardType.of(ReplacementKind.COMPOSED, "aun,"))
-            .suggestions(List.of(Suggestion.ofNoComment("aun,"), Suggestion.ofNoComment("aún,")))
-            .build();
+        Replacement expected = Replacement.of(
+            4,
+            "aun,",
+            StandardType.of(ReplacementKind.COMPOSED, "aun,"),
+            List.of(Suggestion.ofNoComment("aun,"), Suggestion.ofNoComment("aún,")),
+            text
+        );
         assertTrue(Replacement.compareReplacements(Set.of(expected), results));
     }
 
@@ -143,12 +147,13 @@ class MisspellingComposedFinderTest {
 
         List<Replacement> results = misspellingComposedFinder.findList(text);
 
-        Replacement expected = Replacement.builder()
-            .start(3)
-            .text("Rio 2016")
-            .type(StandardType.of(ReplacementKind.COMPOSED, "Rio 2016"))
-            .suggestions(List.of(Suggestion.ofNoComment("Rio 2016"), Suggestion.ofNoComment("Río 2016")))
-            .build();
+        Replacement expected = Replacement.of(
+            3,
+            "Rio 2016",
+            StandardType.of(ReplacementKind.COMPOSED, "Rio 2016"),
+            List.of(Suggestion.ofNoComment("Rio 2016"), Suggestion.ofNoComment("Río 2016")),
+            text
+        );
         assertTrue(Replacement.compareReplacements(Set.of(expected), results));
     }
 
@@ -173,18 +178,17 @@ class MisspellingComposedFinderTest {
 
         List<Replacement> results = misspellingComposedFinder.findList(text);
 
-        Replacement expected = Replacement.builder()
-            .start(0)
-            .text("Parque Nacional")
-            .type(StandardType.of(ReplacementKind.COMPOSED, "Parque Nacional"))
-            .suggestions(
-                List.of(
-                    Suggestion.ofNoComment("Parque Nacional"),
-                    Suggestion.ofNoComment("parque nacional"),
-                    Suggestion.ofNoComment("Parque nacional")
-                )
-            )
-            .build();
+        Replacement expected = Replacement.of(
+            0,
+            "Parque Nacional",
+            StandardType.of(ReplacementKind.COMPOSED, "Parque Nacional"),
+            List.of(
+                Suggestion.ofNoComment("Parque Nacional"),
+                Suggestion.ofNoComment("parque nacional"),
+                Suggestion.ofNoComment("Parque nacional")
+            ),
+            text
+        );
         assertTrue(Replacement.compareReplacements(Set.of(expected), results));
     }
 
@@ -197,12 +201,13 @@ class MisspellingComposedFinderTest {
 
         List<Replacement> results = misspellingComposedFinder.findList(text);
 
-        Replacement expected = Replacement.builder()
-            .start(3)
-            .text("1º")
-            .type(StandardType.of(ReplacementKind.COMPOSED, "1º"))
-            .suggestions(List.of(Suggestion.ofNoComment("1º"), Suggestion.ofNoComment("1.º")))
-            .build();
+        Replacement expected = Replacement.of(
+            3,
+            "1º",
+            StandardType.of(ReplacementKind.COMPOSED, "1º"),
+            List.of(Suggestion.ofNoComment("1º"), Suggestion.ofNoComment("1.º")),
+            text
+        );
         assertTrue(Replacement.compareReplacements(Set.of(expected), results));
     }
 
@@ -215,12 +220,13 @@ class MisspellingComposedFinderTest {
 
         List<Replacement> results = misspellingComposedFinder.findList(text);
 
-        Replacement expected = Replacement.builder()
-            .start(3)
-            .text("1°")
-            .type(StandardType.of(ReplacementKind.COMPOSED, "1°"))
-            .suggestions(List.of(Suggestion.ofNoComment("1°"), Suggestion.ofNoComment("1.º")))
-            .build();
+        Replacement expected = Replacement.of(
+            3,
+            "1°",
+            StandardType.of(ReplacementKind.COMPOSED, "1°"),
+            List.of(Suggestion.ofNoComment("1°"), Suggestion.ofNoComment("1.º")),
+            text
+        );
         assertTrue(Replacement.compareReplacements(Set.of(expected), results));
     }
 
@@ -233,12 +239,13 @@ class MisspellingComposedFinderTest {
 
         List<Replacement> results = misspellingComposedFinder.findList(text);
 
-        Replacement expected = Replacement.builder()
-            .start(3)
-            .text("anti-ruso")
-            .type(StandardType.of(ReplacementKind.COMPOSED, "anti-ruso"))
-            .suggestions(List.of(Suggestion.ofNoComment("anti-ruso"), Suggestion.ofNoComment("antirruso")))
-            .build();
+        Replacement expected = Replacement.of(
+            3,
+            "anti-ruso",
+            StandardType.of(ReplacementKind.COMPOSED, "anti-ruso"),
+            List.of(Suggestion.ofNoComment("anti-ruso"), Suggestion.ofNoComment("antirruso")),
+            text
+        );
         assertTrue(Replacement.compareReplacements(Set.of(expected), results));
     }
 
@@ -251,12 +258,13 @@ class MisspellingComposedFinderTest {
 
         List<Replacement> results = misspellingComposedFinder.findList(text);
 
-        Replacement expected = Replacement.builder()
-            .start(3)
-            .text("C's")
-            .type(StandardType.of(ReplacementKind.COMPOSED, "C's"))
-            .suggestions(List.of(Suggestion.ofNoComment("C's"), Suggestion.ofNoComment("Cs")))
-            .build();
+        Replacement expected = Replacement.of(
+            3,
+            "C's",
+            StandardType.of(ReplacementKind.COMPOSED, "C's"),
+            List.of(Suggestion.ofNoComment("C's"), Suggestion.ofNoComment("Cs")),
+            text
+        );
         assertTrue(Replacement.compareReplacements(Set.of(expected), results));
     }
 
@@ -269,12 +277,13 @@ class MisspellingComposedFinderTest {
 
         List<Replacement> results = misspellingComposedFinder.findList(text);
 
-        Replacement expected = Replacement.builder()
-            .start(3)
-            .text("[[siglo X]]")
-            .type(StandardType.of(ReplacementKind.COMPOSED, "[[siglo X]]"))
-            .suggestions(List.of(Suggestion.ofNoComment("[[siglo X]]"), Suggestion.ofNoComment("{{siglo|X||s|1}}")))
-            .build();
+        Replacement expected = Replacement.of(
+            3,
+            "[[siglo X]]",
+            StandardType.of(ReplacementKind.COMPOSED, "[[siglo X]]"),
+            List.of(Suggestion.ofNoComment("[[siglo X]]"), Suggestion.ofNoComment("{{siglo|X||s|1}}")),
+            text
+        );
         assertTrue(Replacement.compareReplacements(Set.of(expected), results));
     }
 
@@ -288,17 +297,16 @@ class MisspellingComposedFinderTest {
 
         List<Replacement> results = misspellingComposedFinder.findList(text);
 
-        Replacement expected = Replacement.builder()
-            .start(3)
-            .text(cm2.getWord())
-            .type(StandardType.of(ReplacementKind.COMPOSED, cm2.getWord()))
-            .suggestions(
-                List.of(
-                    Suggestion.ofNoComment(cm2.getWord()),
-                    Suggestion.ofNoComment(cm2.getSuggestions().get(0).getText())
-                )
-            )
-            .build();
+        Replacement expected = Replacement.of(
+            3,
+            cm2.getWord(),
+            StandardType.of(ReplacementKind.COMPOSED, cm2.getWord()),
+            List.of(
+                Suggestion.ofNoComment(cm2.getWord()),
+                Suggestion.ofNoComment(cm2.getSuggestions().get(0).getText())
+            ),
+            text
+        );
         assertTrue(Replacement.compareReplacements(Set.of(expected), results));
     }
 
@@ -312,12 +320,13 @@ class MisspellingComposedFinderTest {
 
         List<Replacement> results = misspellingComposedFinder.findList(text);
 
-        Replacement expected = Replacement.builder()
-            .start(15)
-            .text("''', es")
-            .type(StandardType.of(ReplacementKind.COMPOSED, "''', es"))
-            .suggestions(List.of(Suggestion.ofNoComment("''', es"), Suggestion.ofNoComment("''' es")))
-            .build();
+        Replacement expected = Replacement.of(
+            15,
+            "''', es",
+            StandardType.of(ReplacementKind.COMPOSED, "''', es"),
+            List.of(Suggestion.ofNoComment("''', es"), Suggestion.ofNoComment("''' es")),
+            text
+        );
         assertTrue(Replacement.compareReplacements(Set.of(expected), results));
     }
 
@@ -330,12 +339,13 @@ class MisspellingComposedFinderTest {
 
         List<Replacement> results = misspellingComposedFinder.findList(text);
 
-        Replacement expected = Replacement.builder()
-            .start(3)
-            .text("Anti-Ruso")
-            .type(StandardType.of(ReplacementKind.COMPOSED, "anti-ruso"))
-            .suggestions(List.of(Suggestion.ofNoComment("Anti-Ruso"), Suggestion.ofNoComment("Antirruso")))
-            .build();
+        Replacement expected = Replacement.of(
+            3,
+            "Anti-Ruso",
+            StandardType.of(ReplacementKind.COMPOSED, "anti-ruso"),
+            List.of(Suggestion.ofNoComment("Anti-Ruso"), Suggestion.ofNoComment("Antirruso")),
+            text
+        );
         assertTrue(Replacement.compareReplacements(Set.of(expected), results));
     }
 
@@ -347,12 +357,13 @@ class MisspellingComposedFinderTest {
 
         List<Replacement> results = misspellingComposedFinder.findList(text);
 
-        Replacement expected = Replacement.builder()
-            .start(0)
-            .text(text)
-            .type(StandardType.of(ReplacementKind.COMPOSED, "rio de la plata"))
-            .suggestions(List.of(Suggestion.ofNoComment(text), Suggestion.ofNoComment("Río de la Plata")))
-            .build();
+        Replacement expected = Replacement.of(
+            0,
+            text,
+            StandardType.of(ReplacementKind.COMPOSED, "rio de la plata"),
+            List.of(Suggestion.ofNoComment(text), Suggestion.ofNoComment("Río de la Plata")),
+            text
+        );
         assertTrue(Replacement.compareReplacements(Set.of(expected), results));
     }
 
@@ -369,17 +380,16 @@ class MisspellingComposedFinderTest {
 
         List<Replacement> results = misspellingComposedFinder.findList(text);
 
-        Replacement expected = Replacement.builder()
-            .start(3)
-            .text("Sistema Solar")
-            .type(StandardType.of(ReplacementKind.COMPOSED, "Sistema Solar"))
-            .suggestions(
-                List.of(
-                    Suggestion.ofNoComment("Sistema Solar"),
-                    Suggestion.of("Sistema solar", "para inicios de frase o columnas de tablas")
-                )
-            )
-            .build();
+        Replacement expected = Replacement.of(
+            3,
+            "Sistema Solar",
+            StandardType.of(ReplacementKind.COMPOSED, "Sistema Solar"),
+            List.of(
+                Suggestion.ofNoComment("Sistema Solar"),
+                Suggestion.of("Sistema solar", "para inicios de frase o columnas de tablas")
+            ),
+            text
+        );
         assertTrue(Replacement.compareReplacements(Set.of(expected), results));
     }
 
@@ -396,12 +406,13 @@ class MisspellingComposedFinderTest {
 
         List<Replacement> results = misspellingComposedFinder.findList(text);
 
-        Replacement expected = Replacement.builder()
-            .start(3)
-            .text("Sistema Solar")
-            .type(StandardType.of(ReplacementKind.COMPOSED, "Sistema Solar"))
-            .suggestions(List.of(Suggestion.ofNoComment("Sistema Solar"), Suggestion.ofNoComment("Sistema solar")))
-            .build();
+        Replacement expected = Replacement.of(
+            3,
+            "Sistema Solar",
+            StandardType.of(ReplacementKind.COMPOSED, "Sistema Solar"),
+            List.of(Suggestion.ofNoComment("Sistema Solar"), Suggestion.ofNoComment("Sistema solar")),
+            text
+        );
         assertTrue(Replacement.compareReplacements(Set.of(expected), results));
     }
 }

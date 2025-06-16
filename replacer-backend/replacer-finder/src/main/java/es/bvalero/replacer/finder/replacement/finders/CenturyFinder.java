@@ -239,13 +239,7 @@ class CenturyFinder implements ReplacementFinder {
             suggestions.add(Suggestion.of(templateLowerLink, "siglo en versalitas; con minúscula; " + linkedComment));
         }
 
-        return Replacement.builder()
-            .page(page)
-            .type(StandardType.CENTURY)
-            .start(match.start())
-            .text(centuryText)
-            .suggestions(suggestions)
-            .build();
+        return Replacement.of(match.start(), centuryText, StandardType.CENTURY, suggestions, page.getContent());
     }
 
     @Nullable

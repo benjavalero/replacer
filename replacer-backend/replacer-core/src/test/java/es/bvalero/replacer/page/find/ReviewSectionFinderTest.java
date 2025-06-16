@@ -57,12 +57,13 @@ class ReviewSectionFinderTest {
         int pageId = 1;
         String content = "This is an sample content.";
         Suggestion suggestion = Suggestion.ofNoComment("a");
-        Replacement replacement = Replacement.builder()
-            .start(8)
-            .text("an")
-            .type(StandardType.of(ReplacementKind.SIMPLE, "an"))
-            .suggestions(List.of(suggestion))
-            .build();
+        Replacement replacement = Replacement.of(
+            8,
+            "an",
+            StandardType.of(ReplacementKind.SIMPLE, "an"),
+            List.of(suggestion),
+            content
+        );
         List<Replacement> replacements = List.of(replacement);
         WikipediaPage page = buildWikipediaPage(pageId, content);
         int numPending = 10;

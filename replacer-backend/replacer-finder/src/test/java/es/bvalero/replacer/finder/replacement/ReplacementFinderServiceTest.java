@@ -46,12 +46,13 @@ class ReplacementFinderServiceTest {
     void testOneReplacement() {
         String text = "An example.";
 
-        Replacement replacement = Replacement.builder()
-            .start(0)
-            .text("An")
-            .type(StandardType.of(ReplacementKind.SIMPLE, "an"))
-            .suggestions(List.of(Suggestion.ofNoComment("Un")))
-            .build();
+        Replacement replacement = Replacement.of(
+            0,
+            "An",
+            StandardType.of(ReplacementKind.SIMPLE, "an"),
+            List.of(Suggestion.ofNoComment("Un")),
+            text
+        );
         when(replacementFinder.find(any(FinderPage.class))).thenReturn(new HashSet<>(List.of(replacement)));
 
         Collection<Replacement> replacements = replacementFinderService.findReplacements(FinderPage.of(text));
@@ -64,18 +65,20 @@ class ReplacementFinderServiceTest {
     void testTwoReplacements() {
         String text = "An example.";
 
-        Replacement replacement1 = Replacement.builder()
-            .start(0)
-            .text("An")
-            .type(StandardType.of(ReplacementKind.SIMPLE, "an"))
-            .suggestions(List.of(Suggestion.ofNoComment("Un")))
-            .build();
-        Replacement replacement2 = Replacement.builder()
-            .start(3)
-            .text("example")
-            .type(StandardType.of(ReplacementKind.SIMPLE, "example"))
-            .suggestions(List.of(Suggestion.ofNoComment("ejemplo")))
-            .build();
+        Replacement replacement1 = Replacement.of(
+            0,
+            "An",
+            StandardType.of(ReplacementKind.SIMPLE, "an"),
+            List.of(Suggestion.ofNoComment("Un")),
+            text
+        );
+        Replacement replacement2 = Replacement.of(
+            3,
+            "example",
+            StandardType.of(ReplacementKind.SIMPLE, "example"),
+            List.of(Suggestion.ofNoComment("ejemplo")),
+            text
+        );
         when(replacementFinder.find(any(FinderPage.class))).thenReturn(
             new HashSet<>(List.of(replacement1, replacement2))
         );
@@ -90,18 +93,20 @@ class ReplacementFinderServiceTest {
     void testEqualReplacements() {
         String text = "An example.";
 
-        Replacement replacement1 = Replacement.builder()
-            .start(0)
-            .text("An")
-            .type(StandardType.of(ReplacementKind.SIMPLE, "an"))
-            .suggestions(List.of(Suggestion.ofNoComment("Un")))
-            .build();
-        Replacement replacement2 = Replacement.builder()
-            .start(0)
-            .text("An")
-            .type(StandardType.of(ReplacementKind.SIMPLE, "an"))
-            .suggestions(List.of(Suggestion.ofNoComment("Un")))
-            .build();
+        Replacement replacement1 = Replacement.of(
+            0,
+            "An",
+            StandardType.of(ReplacementKind.SIMPLE, "an"),
+            List.of(Suggestion.ofNoComment("Un")),
+            text
+        );
+        Replacement replacement2 = Replacement.of(
+            0,
+            "An",
+            StandardType.of(ReplacementKind.SIMPLE, "an"),
+            List.of(Suggestion.ofNoComment("Un")),
+            text
+        );
         assertEquals(replacement1, replacement2);
 
         // We cannot use Set.of because it fails if there are duplicates
@@ -120,18 +125,20 @@ class ReplacementFinderServiceTest {
     void testNestedReplacements() {
         String text = "An example.";
 
-        Replacement replacement1 = Replacement.builder()
-            .start(0)
-            .text("An")
-            .type(StandardType.of(ReplacementKind.SIMPLE, "an"))
-            .suggestions(List.of(Suggestion.ofNoComment("Un")))
-            .build();
-        Replacement replacement2 = Replacement.builder()
-            .start(0)
-            .text("An example")
-            .type(StandardType.of(ReplacementKind.COMPOSED, "an example"))
-            .suggestions(List.of(Suggestion.ofNoComment("Un ejemplo")))
-            .build();
+        Replacement replacement1 = Replacement.of(
+            0,
+            "An",
+            StandardType.of(ReplacementKind.SIMPLE, "an"),
+            List.of(Suggestion.ofNoComment("Un")),
+            text
+        );
+        Replacement replacement2 = Replacement.of(
+            0,
+            "An example",
+            StandardType.of(ReplacementKind.COMPOSED, "an example"),
+            List.of(Suggestion.ofNoComment("Un ejemplo")),
+            text
+        );
         assertTrue(replacement2.containsStrictly(replacement1));
 
         when(replacementFinder.find(any(FinderPage.class))).thenReturn(
@@ -148,18 +155,20 @@ class ReplacementFinderServiceTest {
     void testImmutableNotIntersecting() {
         String text = "An example or two.";
 
-        Replacement replacement1 = Replacement.builder()
-            .start(0)
-            .text("An")
-            .type(StandardType.of(ReplacementKind.SIMPLE, "an"))
-            .suggestions(List.of(Suggestion.ofNoComment("Un")))
-            .build();
-        Replacement replacement2 = Replacement.builder()
-            .start(3)
-            .text("example")
-            .type(StandardType.of(ReplacementKind.SIMPLE, "example"))
-            .suggestions(List.of(Suggestion.ofNoComment("ejemplo")))
-            .build();
+        Replacement replacement1 = Replacement.of(
+            0,
+            "An",
+            StandardType.of(ReplacementKind.SIMPLE, "an"),
+            List.of(Suggestion.ofNoComment("Un")),
+            text
+        );
+        Replacement replacement2 = Replacement.of(
+            3,
+            "example",
+            StandardType.of(ReplacementKind.SIMPLE, "example"),
+            List.of(Suggestion.ofNoComment("ejemplo")),
+            text
+        );
         Immutable immutable = Immutable.of(14, "two");
 
         when(replacementFinder.find(any(FinderPage.class))).thenReturn(
@@ -177,18 +186,20 @@ class ReplacementFinderServiceTest {
     void testImmutableEquals() {
         String text = "An example or two.";
 
-        Replacement replacement1 = Replacement.builder()
-            .start(0)
-            .text("An")
-            .type(StandardType.of(ReplacementKind.SIMPLE, "an"))
-            .suggestions(List.of(Suggestion.ofNoComment("Un")))
-            .build();
-        Replacement replacement2 = Replacement.builder()
-            .start(3)
-            .text("example")
-            .type(StandardType.of(ReplacementKind.SIMPLE, "example"))
-            .suggestions(List.of(Suggestion.ofNoComment("ejemplo")))
-            .build();
+        Replacement replacement1 = Replacement.of(
+            0,
+            "An",
+            StandardType.of(ReplacementKind.SIMPLE, "an"),
+            List.of(Suggestion.ofNoComment("Un")),
+            text
+        );
+        Replacement replacement2 = Replacement.of(
+            3,
+            "example",
+            StandardType.of(ReplacementKind.SIMPLE, "example"),
+            List.of(Suggestion.ofNoComment("ejemplo")),
+            text
+        );
         Immutable immutable = Immutable.of(0, "An");
 
         when(replacementFinder.find(any(FinderPage.class))).thenReturn(
@@ -206,18 +217,20 @@ class ReplacementFinderServiceTest {
     void testImmutableGreater() {
         String text = "An example or two.";
 
-        Replacement replacement1 = Replacement.builder()
-            .start(0)
-            .text("An")
-            .type(StandardType.of(ReplacementKind.SIMPLE, "an"))
-            .suggestions(List.of(Suggestion.ofNoComment("Un")))
-            .build();
-        Replacement replacement2 = Replacement.builder()
-            .start(3)
-            .text("example")
-            .type(StandardType.of(ReplacementKind.SIMPLE, "ejemplo"))
-            .suggestions(List.of(Suggestion.ofNoComment("ejemplo")))
-            .build();
+        Replacement replacement1 = Replacement.of(
+            0,
+            "An",
+            StandardType.of(ReplacementKind.SIMPLE, "an"),
+            List.of(Suggestion.ofNoComment("Un")),
+            text
+        );
+        Replacement replacement2 = Replacement.of(
+            3,
+            "example",
+            StandardType.of(ReplacementKind.SIMPLE, "ejemplo"),
+            List.of(Suggestion.ofNoComment("ejemplo")),
+            text
+        );
         Immutable immutable = Immutable.of(0, "An example");
 
         when(replacementFinder.find(any(FinderPage.class))).thenReturn(
@@ -232,42 +245,49 @@ class ReplacementFinderServiceTest {
 
     @Test
     void testContains() {
-        Replacement result1 = Replacement.builder()
-            .start(0)
-            .text("A")
-            .type(StandardType.of(ReplacementKind.SIMPLE, "a"))
-            .suggestions(List.of(Suggestion.ofNoComment("x")))
-            .build();
-        Replacement result2 = Replacement.builder()
-            .start(1)
-            .text("BC")
-            .type(StandardType.of(ReplacementKind.SIMPLE, "a"))
-            .suggestions(List.of(Suggestion.ofNoComment("x")))
-            .build();
-        Replacement result3 = Replacement.builder()
-            .start(1)
-            .text("B")
-            .type(StandardType.of(ReplacementKind.SIMPLE, "a"))
-            .suggestions(List.of(Suggestion.ofNoComment("x")))
-            .build();
-        Replacement result4 = Replacement.builder()
-            .start(0)
-            .text("AB")
-            .type(StandardType.of(ReplacementKind.SIMPLE, "a"))
-            .suggestions(List.of(Suggestion.ofNoComment("x")))
-            .build();
-        Replacement result5 = Replacement.builder()
-            .start(0)
-            .text("ABC")
-            .type(StandardType.of(ReplacementKind.SIMPLE, "a"))
-            .suggestions(List.of(Suggestion.ofNoComment("x")))
-            .build();
-        Replacement result6 = Replacement.builder()
-            .start(2)
-            .text("C")
-            .type(StandardType.of(ReplacementKind.SIMPLE, "a"))
-            .suggestions(List.of(Suggestion.ofNoComment("x")))
-            .build();
+        String text = "ABCDE";
+        Replacement result1 = Replacement.of(
+            0,
+            "A",
+            StandardType.of(ReplacementKind.SIMPLE, "a"),
+            List.of(Suggestion.ofNoComment("x")),
+            text
+        );
+        Replacement result2 = Replacement.of(
+            1,
+            "BC",
+            StandardType.of(ReplacementKind.SIMPLE, "bc"),
+            List.of(Suggestion.ofNoComment("x")),
+            text
+        );
+        Replacement result3 = Replacement.of(
+            1,
+            "B",
+            StandardType.of(ReplacementKind.SIMPLE, "b"),
+            List.of(Suggestion.ofNoComment("x")),
+            text
+        );
+        Replacement result4 = Replacement.of(
+            0,
+            "AB",
+            StandardType.of(ReplacementKind.SIMPLE, "ab"),
+            List.of(Suggestion.ofNoComment("x")),
+            text
+        );
+        Replacement result5 = Replacement.of(
+            0,
+            "ABC",
+            StandardType.of(ReplacementKind.SIMPLE, "abc"),
+            List.of(Suggestion.ofNoComment("x")),
+            text
+        );
+        Replacement result6 = Replacement.of(
+            2,
+            "C",
+            StandardType.of(ReplacementKind.SIMPLE, "c"),
+            List.of(Suggestion.ofNoComment("x")),
+            text
+        );
 
         assertTrue(result1.contains(result1));
         assertFalse(result1.containsStrictly(result1));

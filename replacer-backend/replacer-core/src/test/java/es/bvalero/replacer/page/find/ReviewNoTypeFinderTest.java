@@ -44,12 +44,13 @@ class ReviewNoTypeFinderTest {
         .lastUpdate(WikipediaTimestamp.now())
         .queryTimestamp(WikipediaTimestamp.now())
         .build();
-    private final Replacement replacement = Replacement.builder()
-        .start(1)
-        .text("Y")
-        .type(StandardType.DEGREES)
-        .suggestions(List.of(Suggestion.ofNoComment("Z")))
-        .build();
+    private final Replacement replacement = Replacement.of(
+        1,
+        "Y",
+        StandardType.DEGREES,
+        List.of(Suggestion.ofNoComment("Z")),
+        content
+    );
     private final List<Replacement> replacements = List.of(replacement);
     private final User user = User.buildTestUser();
     private final ReviewOptions options = ReviewOptions.ofNoType(user);
@@ -156,21 +157,21 @@ class ReviewNoTypeFinderTest {
         // 2 results in DB
         when(pageCountRepository.countNotReviewedByType(any(WikipediaLanguage.class), isNull())).thenReturn(2);
         when(pageRepository.findNotReviewedByType(any(WikipediaLanguage.class), isNull(), anyInt())).thenReturn(
-            List.of(randomPageKey, randomPageKey2)
+            List.of(randomPageKey2, randomPageKey)
         );
 
-        // Only the page 2 exists in Wikipedia
-        when(wikipediaPageRepository.findByKey(randomPageKey)).thenReturn(Optional.empty());
-        when(wikipediaPageRepository.findByKey(randomPageKey2)).thenReturn(Optional.of(page2));
+        // Only page 1 exists in Wikipedia
+        when(wikipediaPageRepository.findByKey(randomPageKey2)).thenReturn(Optional.empty());
+        when(wikipediaPageRepository.findByKey(randomPageKey)).thenReturn(Optional.of(page));
 
-        when(pageIndexService.indexPage(page2)).thenReturn(PageIndexResult.ofIndexed(replacements));
+        when(pageIndexService.indexPage(page)).thenReturn(PageIndexResult.ofIndexed(replacements));
 
         Optional<Review> review = pageReviewNoTypeService.findRandomPageReview(options);
 
-        verify(pageIndexService).indexPage(page2);
+        verify(pageIndexService).indexPage(page);
 
         assertTrue(review.isPresent());
-        assertEquals(randomId2, review.get().getPage().getPageId());
+        assertEquals(randomId, review.get().getPage().getPageId());
     }
 
     @Test
