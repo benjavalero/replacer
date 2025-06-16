@@ -41,16 +41,16 @@ public final class Replacement implements FinderResult {
     private final ReplacementType type;
 
     @NonNull
-    private final List<Suggestion> suggestions; // We use a list as the order is important
+    private final String context;
 
     @NonNull
-    private final String context;
+    private final List<Suggestion> suggestions;
 
     private Replacement(
         int start,
         String text,
         ReplacementType type,
-        Collection<Suggestion> suggestions,
+        List<Suggestion> suggestions,
         String pageContent
     ) {
         // Validate start
@@ -73,24 +73,24 @@ public final class Replacement implements FinderResult {
         this.text = text;
         this.type = type;
 
-        // Pre-calculate the suggestions and the context as they will always be used later
-        this.suggestions = mergeSuggestions(suggestions);
+        // Pre-calculate the context and the suggestions as they will always be used later
         this.context = extractContext(pageContent);
+        this.suggestions = mergeSuggestions(suggestions);
     }
 
     public static Replacement of(
         int start,
         String text,
         ReplacementType type,
-        Collection<Suggestion> suggestions,
+        List<Suggestion> suggestions,
         String pageContent
     ) {
         return new Replacement(start, text, type, suggestions, pageContent);
     }
 
     // Include the original text as the first option
-    private List<Suggestion> mergeSuggestions(Collection<Suggestion> suggestions) {
-        Collection<Suggestion> merged = Suggestion.mergeSuggestions(suggestions);
+    private List<Suggestion> mergeSuggestions(List<Suggestion> suggestions) {
+        List<Suggestion> merged = Suggestion.mergeSuggestions(suggestions);
         return Suggestion.sortSuggestions(merged, this.text);
     }
 
@@ -107,7 +107,7 @@ public final class Replacement implements FinderResult {
     }
 
     public Replacement withStart(int newStart) {
-        return new Replacement(newStart, this.text, this.type, this.suggestions, this.context);
+        return new Replacement(newStart, this.text, this.type, this.context, this.suggestions);
     }
 
     // We consider two replacements equal if they have the same start and end (or text).

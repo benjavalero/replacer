@@ -38,14 +38,18 @@ public class Suggestion {
         return Suggestion.of(ReplacerUtils.setFirstUpperCaseIgnoringNonLetters(this.text), this.comment);
     }
 
-    static Collection<Suggestion> mergeSuggestions(Collection<Suggestion> suggestions) {
+    /** Merge the given suggestions in case some of them have the same text */
+    static List<Suggestion> mergeSuggestions(List<Suggestion> suggestions) {
         // Use a LinkedHashMap to keep the order
         return suggestions
             .stream()
             .collect(Collectors.toMap(Suggestion::getText, Function.identity(), Suggestion::merge, LinkedHashMap::new))
-            .values();
+            .values()
+            .stream()
+            .toList();
     }
 
+    /* Merge two suggestions with the same text into one suggestion with the non-null comments concatenated */
     private Suggestion merge(Suggestion suggestion) {
         if (!getText().equals(suggestion.getText())) {
             throw new IllegalArgumentException();
@@ -58,12 +62,16 @@ public class Suggestion {
         return Suggestion.of(this.text, mergedComment);
     }
 
-    static List<Suggestion> sortSuggestions(Collection<Suggestion> suggestions, String originalText) {
+    /**
+     * Return an immutable list of suggestions based on the given one
+     * but moving to the head the suggestion matching the original text if it exists
+     */
+    static List<Suggestion> sortSuggestions(List<Suggestion> suggestions, String originalText) {
         // Use a linked list to remove and rearrange easily
         List<Suggestion> sorted = new LinkedList<>();
 
-        // If any of the suggestions matches the original then move it as the first suggestion
-        // If not we add it
+        // If any of the suggestions matches the original text, then move it as the first suggestion.
+        // If not, we add it.
         boolean originalFound = false;
         for (Suggestion suggestion : suggestions) {
             if (suggestion.getText().equals(originalText)) {
@@ -77,6 +85,6 @@ public class Suggestion {
             sorted.add(0, Suggestion.ofNoComment(originalText));
         }
 
-        return sorted;
+        return List.copyOf(sorted);
     }
 }
