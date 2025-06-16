@@ -67,6 +67,32 @@ public class WebMvcConfiguration {
             public void addInterceptors(InterceptorRegistry registry) {
                 registry.addInterceptor(mdcInterceptor);
             }
+
+            // https://github.com/FraktonDevelopers/spring-boot-angular-maven-build
+            // In Angular by default all paths are supported and accessible but Spring Boot tries to manage paths by itself.
+            // The /** pattern is matched by AntPathMatcher to directories in the path,
+            // so the configuration will be applied to our project routes.
+            // Also, the PathResourceResolver will try to find any resource under the location given,
+            // so all the requests that are not handled by Spring Boot will be redirected to static/index.html
+            // giving access to Angular to manage them.
+            @Override
+            public void addResourceHandlers(ResourceHandlerRegistry registry) {
+                registry
+                    .addResourceHandler("/**")
+                    .addResourceLocations("classpath:/static/")
+                    .resourceChain(true)
+                    .addResolver(
+                        new PathResourceResolver() {
+                            @Override
+                            protected Resource getResource(String resourcePath, Resource location) throws IOException {
+                                Resource requestedResource = location.createRelative(resourcePath);
+                                return requestedResource.exists() && requestedResource.isReadable()
+                                    ? requestedResource
+                                    : new ClassPathResource("/static/index.html");
+                            }
+                        }
+                    );
+            }
         };
     }
 }

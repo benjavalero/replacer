@@ -1,5 +1,8 @@
 # Versions
 
+## 2.30.1 (16 Jun 2025)
+- Regression: add again trick to make Spring Boot compatible with Angular paths
+
 ## 2.30.0 (15 Jun 2025)
 - Migrate to SpringBoot 3
 - Regression: revert comment finder to the previous linear algorithm
