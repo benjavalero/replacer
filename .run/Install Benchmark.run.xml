@@ -12,6 +12,7 @@
           <option name="goals">
             <list>
               <option value="clean" />
+              <option value="prettier:write" />
               <option value="install" />
             </list>
           </option>

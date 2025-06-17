@@ -11,7 +11,6 @@ import es.bvalero.replacer.finder.listing.load.ComposedMisspellingLoader;
 import es.bvalero.replacer.finder.listing.load.SimpleMisspellingLoader;
 import es.bvalero.replacer.finder.listing.parse.ComposedMisspellingParser;
 import es.bvalero.replacer.finder.listing.parse.SimpleMisspellingParser;
-import es.bvalero.replacer.wikipedia.WikipediaException;
 import java.util.HashSet;
 import java.util.Set;
 import org.apache.commons.collections4.SetValuedMap;
@@ -37,42 +36,39 @@ public class UppercaseFinderJmhBenchmarkTest extends BaseFinderJmhBenchmark {
     private UppercaseAhoCorasickWholeLongestFinder uppercaseAhoCorasickWholeLongestFinder;
 
     @Setup
-    public void setUp() throws WikipediaException {
+    public void setUp() throws ReplacerException {
         // Base set-up
         super.setUp();
 
         // Load the uppercase misspellings
-        Set<String> words;
-        try {
-            ListingFinder listingFinder = new ListingOfflineFinder();
-            SimpleMisspellingLoader simpleMisspellingLoader = new SimpleMisspellingLoader(
-                listingFinder,
-                new SimpleMisspellingParser()
-            );
-            ComposedMisspellingLoader composedMisspellingLoader = new ComposedMisspellingLoader(
-                listingFinder,
-                new ComposedMisspellingParser()
-            );
-            SetValuedMap<WikipediaLanguage, StandardMisspelling> misspellings = new HashSetValuedHashMap<>();
-            misspellings.putAll(
-                WikipediaLanguage.getDefault(),
-                simpleMisspellingLoader.parseListing(
-                    listingFinder.getSimpleMisspellingListing(WikipediaLanguage.getDefault())
-                )
-            );
-            misspellings.putAll(
-                WikipediaLanguage.getDefault(),
-                composedMisspellingLoader.parseListing(
-                    listingFinder.getComposedMisspellingListing(WikipediaLanguage.getDefault())
-                )
-            );
+        ListingFinder listingFinder = new ListingOfflineFinder();
+        SimpleMisspellingLoader simpleMisspellingLoader = new SimpleMisspellingLoader(
+            listingFinder,
+            new SimpleMisspellingParser()
+        );
+        ComposedMisspellingLoader composedMisspellingLoader = new ComposedMisspellingLoader(
+            listingFinder,
+            new ComposedMisspellingParser()
+        );
+        SetValuedMap<WikipediaLanguage, StandardMisspelling> misspellings = new HashSetValuedHashMap<>();
+        misspellings.putAll(
+            WikipediaLanguage.getDefault(),
+            simpleMisspellingLoader.parseListing(
+                listingFinder.getSimpleMisspellingListing(WikipediaLanguage.getDefault())
+            )
+        );
+        misspellings.putAll(
+            WikipediaLanguage.getDefault(),
+            composedMisspellingLoader.parseListing(
+                listingFinder.getComposedMisspellingListing(WikipediaLanguage.getDefault())
+            )
+        );
 
-            // Extract the uppercase words
-            UppercaseFinder uppercaseFinder = new UppercaseFinder(simpleMisspellingLoader, composedMisspellingLoader);
-            words = new HashSet<>(uppercaseFinder.getUppercaseWords(misspellings).get(WikipediaLanguage.getDefault()));
-        } catch (ReplacerException e) {
-            throw new WikipediaException(e);
-        }
+        // Extract the uppercase words
+        UppercaseFinder uppercaseFinder = new UppercaseFinder(simpleMisspellingLoader, composedMisspellingLoader);
+        Set<String> words = new HashSet<>(
+            uppercaseFinder.getUppercaseWords(misspellings).get(WikipediaLanguage.getDefault())
+        );
 
         // Initialize the finders
         uppercaseIndexOfFinder = new UppercaseIndexOfFinder(words);

@@ -4,9 +4,8 @@ import static tech.tablesaw.aggregate.AggregateFunctions.*;
 
 import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.finder.Finder;
+import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.benchmark.util.BenchmarkUtils;
-import es.bvalero.replacer.page.find.WikipediaPage;
-import es.bvalero.replacer.wikipedia.WikipediaException;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -39,7 +38,7 @@ public abstract class BaseFinderBenchmark {
     protected void runBenchmark(List<Finder<?>> finders, int warmUp, int iterations, String fileName)
         throws ReplacerException {
         try {
-            List<WikipediaPage> sampleContents = BenchmarkUtils.findSampleContents();
+            List<FinderPage> sampleContents = BenchmarkUtils.findSampleContents();
 
             // Warm-up
             run(finders, warmUp, sampleContents, null);
@@ -49,7 +48,7 @@ public abstract class BaseFinderBenchmark {
             BufferedWriter writer = new BufferedWriter(new FileWriter(csvFile));
             run(finders, iterations, sampleContents, writer);
             writer.close();
-        } catch (WikipediaException | IOException e) {
+        } catch (IOException e) {
             throw new ReplacerException(e);
         }
     }
@@ -57,7 +56,7 @@ public abstract class BaseFinderBenchmark {
     private void run(
         List<Finder<?>> finders,
         int numIterations,
-        List<WikipediaPage> sampleContents,
+        List<FinderPage> sampleContents,
         @Nullable BufferedWriter writer
     ) {
         boolean print = (writer != null);

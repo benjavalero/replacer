@@ -5,11 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.common.util.FileOfflineUtils;
+import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.page.PageKey;
-import es.bvalero.replacer.page.find.WikipediaNamespace;
-import es.bvalero.replacer.page.find.WikipediaPage;
-import es.bvalero.replacer.page.find.WikipediaTimestamp;
-import es.bvalero.replacer.wikipedia.WikipediaException;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.experimental.UtilityClass;
@@ -17,7 +14,7 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public class BenchmarkUtils {
 
-    public List<WikipediaPage> findSampleContents() throws WikipediaException {
+    public List<FinderPage> findSampleContents() throws ReplacerException {
         try {
             String jsonResponse = FileOfflineUtils.getFileContent(
                 "es/bvalero/replacer/finder/benchmark/page-samples.json"
@@ -27,18 +24,15 @@ public class BenchmarkUtils {
             WikipediaApiResponse apiResponse = jsonMapper.readValue(jsonResponse, WikipediaApiResponse.class);
             return apiResponse.getQuery().getPages().stream().map(BenchmarkUtils::convert).collect(Collectors.toList());
         } catch (ReplacerException | JsonProcessingException e) {
-            throw new WikipediaException("Error loading sample contents", e);
+            throw new ReplacerException("Error loading sample contents", e);
         }
     }
 
-    private WikipediaPage convert(WikipediaApiResponse.Page page) {
-        return WikipediaPage.builder()
-            .pageKey(PageKey.of(WikipediaLanguage.getDefault(), page.getPageid()))
-            .namespace(WikipediaNamespace.valueOf(page.getNs()))
-            .title(page.getTitle())
-            .content(page.getRevisions().stream().findFirst().orElseThrow().getSlots().getMain().getContent())
-            .lastUpdate(WikipediaTimestamp.of(page.getRevisions().stream().findFirst().orElseThrow().getTimestamp()))
-            .queryTimestamp(WikipediaTimestamp.now())
-            .build();
+    private FinderPage convert(WikipediaApiResponse.Page page) {
+        return FinderPage.of(
+            PageKey.of(WikipediaLanguage.getDefault(), page.getPageid()),
+            page.getTitle(),
+            page.getRevisions().stream().findFirst().orElseThrow().getSlots().getMain().getContent()
+        );
     }
 }

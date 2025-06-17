@@ -1,9 +1,9 @@
 package es.bvalero.replacer.finder.benchmark;
 
+import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.finder.Finder;
+import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.benchmark.util.BenchmarkUtils;
-import es.bvalero.replacer.page.find.WikipediaPage;
-import es.bvalero.replacer.wikipedia.WikipediaException;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -26,7 +26,7 @@ public class BaseFinderJmhBenchmark {
     private static final String TEST_RESOURCES_PATH =
         "replacer-backend/replacer-finder-benchmark/src/main/resources/es/bvalero/replacer/finder/benchmark/";
 
-    protected List<WikipediaPage> sampleContents;
+    protected List<FinderPage> sampleContents;
     private Map<Integer, Integer> samplePages;
 
     // @Param({"1", "2", "3"})
@@ -36,7 +36,7 @@ public class BaseFinderJmhBenchmark {
     // However, it only works on the teardown phase,
     // so it is not useful to interrupt very long benchmarks.
 
-    protected void setUp() throws WikipediaException {
+    protected void setUp() throws ReplacerException {
         // The pages have been sampled so the distribution of their content lengths
         // match the one of the content lengths of all indexable pages
         sampleContents = BenchmarkUtils.findSampleContents();

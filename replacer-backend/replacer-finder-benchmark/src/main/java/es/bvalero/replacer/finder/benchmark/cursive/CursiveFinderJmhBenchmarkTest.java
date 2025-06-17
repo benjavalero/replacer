@@ -1,7 +1,7 @@
 package es.bvalero.replacer.finder.benchmark.cursive;
 
+import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.finder.benchmark.BaseFinderJmhBenchmark;
-import es.bvalero.replacer.wikipedia.WikipediaException;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.infra.Blackhole;
@@ -20,7 +20,7 @@ public class CursiveFinderJmhBenchmarkTest extends BaseFinderJmhBenchmark {
     private CursiveFinalFinder cursiveFinalFinder;
 
     @Setup
-    public void setUp() throws WikipediaException {
+    public void setUp() throws ReplacerException {
         // Base set-up
         super.setUp();
 

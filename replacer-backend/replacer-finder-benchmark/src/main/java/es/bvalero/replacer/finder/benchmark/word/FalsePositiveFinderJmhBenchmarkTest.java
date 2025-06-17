@@ -8,7 +8,6 @@ import es.bvalero.replacer.finder.listing.find.ListingFinder;
 import es.bvalero.replacer.finder.listing.find.ListingOfflineFinder;
 import es.bvalero.replacer.finder.listing.load.FalsePositiveLoader;
 import es.bvalero.replacer.finder.listing.parse.FalsePositiveParser;
-import es.bvalero.replacer.wikipedia.WikipediaException;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.openjdk.jmh.annotations.Benchmark;
@@ -34,24 +33,19 @@ public class FalsePositiveFinderJmhBenchmarkTest extends BaseFinderJmhBenchmark 
     private WordAhoCorasickWholeLongestFinder wordAhoCorasickWholeLongestFinder;
 
     @Setup
-    public void setUp() throws WikipediaException {
+    public void setUp() throws ReplacerException {
         // Base set-up
         super.setUp();
 
         // Load the uppercase misspellings
-        Set<String> words;
-        try {
-            ListingFinder listingFinder = new ListingOfflineFinder();
-            FalsePositiveLoader falsePositiveLoader = new FalsePositiveLoader(listingFinder, new FalsePositiveParser());
-            Set<FalsePositive> falsePositives = falsePositiveLoader.parseListing(
-                listingFinder.getFalsePositiveListing(WikipediaLanguage.getDefault())
-            );
+        ListingFinder listingFinder = new ListingOfflineFinder();
+        FalsePositiveLoader falsePositiveLoader = new FalsePositiveLoader(listingFinder, new FalsePositiveParser());
+        Set<FalsePositive> falsePositives = falsePositiveLoader.parseListing(
+            listingFinder.getFalsePositiveListing(WikipediaLanguage.getDefault())
+        );
 
-            // Extract the misspelling words
-            words = falsePositives.stream().map(FalsePositive::getExpression).collect(Collectors.toSet());
-        } catch (ReplacerException e) {
-            throw new WikipediaException(e);
-        }
+        // Extract the misspelling words
+        Set<String> words = falsePositives.stream().map(FalsePositive::getExpression).collect(Collectors.toSet());
 
         // Initialize the finders
         wordRegexFinder = new WordRegexFinder(words);

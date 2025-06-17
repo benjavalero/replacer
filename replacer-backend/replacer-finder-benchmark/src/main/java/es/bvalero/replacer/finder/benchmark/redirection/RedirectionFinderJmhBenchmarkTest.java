@@ -1,8 +1,8 @@
 package es.bvalero.replacer.finder.benchmark.redirection;
 
 import es.bvalero.replacer.FinderProperties;
+import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.finder.benchmark.BaseFinderJmhBenchmark;
-import es.bvalero.replacer.wikipedia.WikipediaException;
 import java.util.List;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.Setup;
@@ -29,7 +29,7 @@ public class RedirectionFinderJmhBenchmarkTest extends BaseFinderJmhBenchmark {
     private RedirectionAhoCorasickWholeLongestFinder redirectionAhoCorasickWholeLongestFinder;
 
     @Setup
-    public void setUp() throws WikipediaException {
+    public void setUp() throws ReplacerException {
         // Base set-up
         super.setUp();
 

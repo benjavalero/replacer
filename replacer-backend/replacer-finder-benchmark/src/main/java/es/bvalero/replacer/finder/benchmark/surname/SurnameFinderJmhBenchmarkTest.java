@@ -1,8 +1,8 @@
 package es.bvalero.replacer.finder.benchmark.surname;
 
 import es.bvalero.replacer.FinderProperties;
+import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.finder.benchmark.BaseFinderJmhBenchmark;
-import es.bvalero.replacer.wikipedia.WikipediaException;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.openjdk.jmh.annotations.Benchmark;
@@ -34,7 +34,7 @@ public class SurnameFinderJmhBenchmarkTest extends BaseFinderJmhBenchmark {
     private SurnameAhoCorasickWholeLongestFinder surnameAhoCorasickWholeLongestFinder;
 
     @Setup
-    public void setUp() throws WikipediaException {
+    public void setUp() throws ReplacerException {
         // Base set-up
         super.setUp();
 
