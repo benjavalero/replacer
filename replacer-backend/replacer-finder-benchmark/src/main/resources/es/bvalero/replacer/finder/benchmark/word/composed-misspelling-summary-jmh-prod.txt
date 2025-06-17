@@ -1,6 +1,0 @@
-Benchmark                                                                    Mode  Cnt        Score        Error  Units
-ComposedMisspellingFinderJmhBenchmarkTest.baseLine                           avgt    5        0.002 ±      0.001  us/op
-ComposedMisspellingFinderJmhBenchmarkTest.wordAhoCorasickFinder              avgt    5    20684.307 ±   3073.479  us/op
-ComposedMisspellingFinderJmhBenchmarkTest.wordAhoCorasickLongestFinder       avgt    5    20328.804 ±   2728.957  us/op
-ComposedMisspellingFinderJmhBenchmarkTest.wordAhoCorasickWholeLongestFinder  avgt    5     7909.797 ±   1401.059  us/op
-ComposedMisspellingFinderJmhBenchmarkTest.wordLinearFinder                   avgt    5  3232780.535 ± 287281.574  us/op

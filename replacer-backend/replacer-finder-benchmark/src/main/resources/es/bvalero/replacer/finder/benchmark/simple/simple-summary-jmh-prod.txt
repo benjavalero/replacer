@@ -1,5 +1,0 @@
-Benchmark                                           Mode  Cnt     Score     Error  Units
-SimpleFinderJmhBenchmarkTest.baseLine               avgt    5     0.002 ±   0.001  us/op
-SimpleFinderJmhBenchmarkTest.simpleAutomatonFinder  avgt    5  3357.251 ± 609.245  us/op
-SimpleFinderJmhBenchmarkTest.simpleLinearFinder     avgt    5   341.803 ±  72.387  us/op
-SimpleFinderJmhBenchmarkTest.simpleRegexFinder      avgt    5   481.318 ±  93.571  us/op

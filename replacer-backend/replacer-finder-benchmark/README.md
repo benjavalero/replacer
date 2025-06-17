@@ -3,7 +3,8 @@
 JMH doesn't allow a common state for all the benchmarks.
 Therefore, on benchmarks where we need to load configuration, the Spring Boot instance will be loaded for every benchmark.
 
-Times in Production are about 3 times worse compared to times obtained in standard laptop.
+Times in Production are about three times worse compared to times obtained in a standard laptop.
+Therefore, using the latter to compare algorithms is usually enough.
 
 JMH benchmarks are configured to run 2 seconds per iteration.
 However, there are some algorithms taking more than this time to run, and thus are discarded.

@@ -1,9 +1,0 @@
-Benchmark                                                   Mode  Cnt      Score      Error  Units
-CursiveFinderJmhBenchmarkTest.baseLine                      avgt    5      0.002 ±    0.001  us/op
-CursiveFinderJmhBenchmarkTest.cursiveAutomatonFinder        avgt    5   6483.869 ±  521.712  us/op
-CursiveFinderJmhBenchmarkTest.cursiveFinalFinder            avgt    5    729.528 ±  153.175  us/op
-CursiveFinderJmhBenchmarkTest.cursiveLinearFinder           avgt    5    768.943 ±  146.224  us/op
-CursiveFinderJmhBenchmarkTest.cursiveRegexDotAllLookFinder  avgt    5  17479.612 ± 1785.900  us/op
-CursiveFinderJmhBenchmarkTest.cursiveRegexDotLazyFinder     avgt    5  16159.295 ± 2920.951  us/op
-CursiveFinderJmhBenchmarkTest.cursiveRegexFinder            avgt    5  16989.513 ± 2418.240  us/op
-CursiveFinderJmhBenchmarkTest.cursiveRegexLookFinder        avgt    5  21888.053 ± 1925.121  us/op
