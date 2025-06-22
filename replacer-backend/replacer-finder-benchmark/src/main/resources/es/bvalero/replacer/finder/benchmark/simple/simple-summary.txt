@@ -1,6 +1,0 @@
-                                                        simple-benchmark.csv summary                                                         
-        FINDER          |  Mean [TIME]  |  Min [TIME]  |  First Quartile [TIME]  |  Median [TIME]  |  Third Quartile [TIME]  |  Max [TIME]  |
----------------------------------------------------------------------------------------------------------------------------------------------
-     SimpleRegexFinder  |     8205,852  |     628,400  |               2626,575  |       4118,900  |              10939,975  |   56635,500  |
- SimpleAutomatonFinder  |    19324,498  |     805,900  |               4292,700  |       7955,750  |              27539,150  |  160595,500  |
-    SimpleLinearFinder  |     1983,106  |     197,200  |                409,925  |        788,850  |               2720,275  |   13484,700  |

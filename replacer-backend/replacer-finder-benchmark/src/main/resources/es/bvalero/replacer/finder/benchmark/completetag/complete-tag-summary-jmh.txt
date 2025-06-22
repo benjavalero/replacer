@@ -1,7 +1,0 @@
-Benchmark                                                              Mode  Cnt     Score    Error  Units
-CompleteTagFinderJmhBenchmarkTest.baseLine                             avgt    5    ≈ 10⁻³           us/op
-CompleteTagFinderJmhBenchmarkTest.completeTagFinalFinder               avgt    5    66,630 ±  2,703  us/op
-CompleteTagFinderJmhBenchmarkTest.completeTagLinearFinder              avgt    5    70,862 ±  2,451  us/op
-CompleteTagFinderJmhBenchmarkTest.completeTagLinearIteratedFinder      avgt    5  1059,974 ± 28,400  us/op
-CompleteTagFinderJmhBenchmarkTest.completeTagRegexBackReferenceFinder  avgt    5  1432,877 ± 99,189  us/op
-CompleteTagFinderJmhBenchmarkTest.completeTagRegexIteratedFinder       avgt    5  7412,942 ± 81,810  us/op

@@ -1,9 +1,0 @@
-                                                                 surname-benchmark.csv summary                                                                 
-                 FINDER                   |  Mean [TIME]  |  Min [TIME]  |  First Quartile [TIME]  |  Median [TIME]  |  Third Quartile [TIME]  |  Max [TIME]  |
----------------------------------------------------------------------------------------------------------------------------------------------------------------
-                    SurnameIndexOfFinder  |    35580,980  |    1301,000  |               6376,000  |      12409,000  |              43456,000  |  310949,000  |
-         SurnameAutomatonAlternateFinder  |    24182,540  |    1263,000  |               6171,750  |      11197,500  |              32717,000  |  189563,000  |
- SurnameAutomatonAlternateCompleteFinder  |    24986,080  |    1137,000  |               6625,750  |      12042,000  |              33639,750  |  204301,000  |
-                SurnameAhoCorasickFinder  |    30051,540  |    1133,000  |               6453,000  |      11046,000  |              42048,000  |  278170,000  |
-         SurnameAhoCorasickLongestFinder  |    31773,360  |    1237,000  |               6599,500  |      11181,500  |              44294,500  |  293954,000  |
-    SurnameAhoCorasickWholeLongestFinder  |    17425,920  |     617,000  |               3476,250  |       6127,500  |              20203,000  |  212746,000  |

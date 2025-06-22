@@ -1,8 +1,0 @@
-                                                           false-positive-benchmark.csv summary                                                           
-              FINDER                |  Mean [TIME]  |  Min [TIME]  |  First Quartile [TIME]  |  Median [TIME]  |  Third Quartile [TIME]  |  Max [TIME]   |
-----------------------------------------------------------------------------------------------------------------------------------------------------------
-                  WordLinearFinder  |   488363,900  |   32187,000  |             104171,000  |     180256,500  |             588917,250  |  4049681,000  |
-      WordAutomatonAlternateFinder  |    51559,880  |    1258,000  |               8836,250  |      17500,000  |              77452,750  |   488533,000  |
-             WordAhoCorasickFinder  |    58650,520  |    1658,000  |              10239,250  |      20683,000  |              85538,750  |   581367,000  |
-      WordAhoCorasickLongestFinder  |    63687,700  |    1921,000  |              12705,250  |      22911,000  |              95794,250  |   579056,000  |
- WordAhoCorasickWholeLongestFinder  |    21672,900  |     607,000  |               4090,250  |       6783,000  |              27268,000  |   237760,000  |

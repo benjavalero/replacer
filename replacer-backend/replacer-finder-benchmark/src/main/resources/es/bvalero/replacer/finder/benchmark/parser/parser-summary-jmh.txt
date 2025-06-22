@@ -1,5 +1,0 @@
-Benchmark                                  Mode  Cnt    Score    Error  Units
-ParserJmhBenchmarkTest.baseLine            avgt    5    0,001 ±  0,001  us/op
-ParserJmhBenchmarkTest.expressionIterable  avgt    5  336,505 ± 14,618  us/op
-ParserJmhBenchmarkTest.expressionTree      avgt    5  333,723 ±  1,950  us/op
-ParserJmhBenchmarkTest.scan                avgt    5  340,085 ±  1,108  us/op

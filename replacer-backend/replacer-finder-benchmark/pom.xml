@@ -16,7 +16,6 @@
         <uberjar.name>replacer-finder-benchmark</uberjar.name>
 
         <jmh.version>1.37</jmh.version>
-        <tablesaw.version>0.44.1</tablesaw.version>
     </properties>
 
     <dependencies>
@@ -39,16 +38,9 @@
         </dependency>
 
         <dependency>
-            <groupId>tech.tablesaw</groupId>
-            <artifactId>tablesaw-core</artifactId>
-            <version>${tablesaw.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>tech.tablesaw</groupId>
-            <artifactId>tablesaw-jsplot</artifactId>
-            <version>${tablesaw.version}</version>
-            <scope>test</scope>
+            <groupId>org.jfree</groupId>
+            <artifactId>jfreechart</artifactId>
+            <version>1.5.5</version>
         </dependency>
     </dependencies>
 

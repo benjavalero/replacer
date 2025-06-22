@@ -1,7 +1,0 @@
-                                                       composed-misspelling-benchmark.csv summary                                                        
-              FINDER                |  Mean [TIME]  |  Min [TIME]  |  First Quartile [TIME]  |  Median [TIME]  |  Third Quartile [TIME]  |  Max [TIME]  |
----------------------------------------------------------------------------------------------------------------------------------------------------------
-      WordAutomatonAlternateFinder  |    76604,400  |    2169,000  |              15102,750  |      31459,000  |             115759,000  |  663087,000  |
-             WordAhoCorasickFinder  |    77136,120  |    2071,000  |              12354,750  |      26508,500  |             119877,250  |  723814,000  |
-      WordAhoCorasickLongestFinder  |    87764,880  |    2848,000  |              15258,250  |      33736,500  |             131723,000  |  811195,000  |
- WordAhoCorasickWholeLongestFinder  |    29561,920  |    1048,000  |               5157,750  |       8377,000  |              44530,000  |  301925,000  |
