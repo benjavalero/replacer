@@ -81,11 +81,6 @@ public class BaseFinderJmhBenchmark {
         }
     }
 
-    @Benchmark
-    public void baseLine() {
-        // Do nothing
-    }
-
     protected static void run(Class<? extends BaseFinderJmhBenchmark> jmhBenchmarkClass, String fileName)
         throws RunnerException {
         Options opt = new OptionsBuilder()
@@ -152,9 +147,7 @@ public class BaseFinderJmhBenchmark {
             String benchmarkName = benchmark.substring(benchmark.lastIndexOf('.') + 1);
             double score = Double.parseDouble(summary.getPrimaryMetric().getScore());
             double scoreError = Double.parseDouble(summary.getPrimaryMetric().getScoreError());
-            if (!benchmarkName.equals("baseLine")) {
-                dataset.add(score, scoreError, benchmarkName, "");
-            }
+            dataset.add(score, scoreError, benchmarkName, "");
         }
         return dataset;
     }
