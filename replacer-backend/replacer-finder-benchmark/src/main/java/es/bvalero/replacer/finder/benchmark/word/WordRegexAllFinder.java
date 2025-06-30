@@ -10,6 +10,12 @@ import java.util.Set;
 import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
 
+/**
+ * Find all the words in the text using a regex.
+ * Therefore, we can only use it for simple misspellings.
+ * Then check if it is a wanted word.
+ * Then check if it is complete in the text.
+ */
 class WordRegexAllFinder implements BenchmarkFinder {
 
     private final Pattern wordPattern;
@@ -28,7 +34,6 @@ class WordRegexAllFinder implements BenchmarkFinder {
     @Override
     public boolean validate(MatchResult match, FinderPage page) {
         final String word = match.group();
-        // The word is wrapped by non-letters, so we still need to validate the separators.
         return this.words.contains(word) && FinderUtils.isWordCompleteInText(match.start(), word, page.getContent());
     }
 }

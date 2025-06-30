@@ -9,6 +9,11 @@ import es.bvalero.replacer.finder.util.ResultMatchListener;
 import java.util.Collection;
 import java.util.regex.MatchResult;
 
+/**
+ * Finds the words/expressions in the text using the Aho-Corasick algorithm.
+ * Then it checks the results to be complete in the text.
+ * This approach matches the left-most longest non-overlapping occurrences of keywords.
+ */
 class WordAhoCorasickLongestFinder implements BenchmarkFinder {
 
     private final StringMap<String> stringMap;

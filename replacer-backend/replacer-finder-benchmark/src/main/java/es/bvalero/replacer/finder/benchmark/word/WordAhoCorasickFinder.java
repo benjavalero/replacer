@@ -9,6 +9,11 @@ import es.bvalero.replacer.finder.util.ResultMatchListener;
 import java.util.Collection;
 import java.util.regex.MatchResult;
 
+/**
+ * Finds the words/expressions in the text using the Aho-Corasick algorithm.
+ * Then it checks the results to be complete in the text.
+ * This is the simplest approach. It matches all occurrences of all strings, possibly overlapping.
+ */
 class WordAhoCorasickFinder implements BenchmarkFinder {
 
     private final StringMap<String> stringMap;

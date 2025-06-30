@@ -10,6 +10,12 @@ import java.util.Set;
 import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
 
+/**
+ * Find all the words in the text surrounded by word boundaries.
+ * Therefore, we can only use it for simple misspellings.
+ * Then check if it is a wanted word.
+ * Then check if it is complete in the text, e.g., in case of underscores.
+ */
 class WordRegexAllCompleteFinder implements BenchmarkFinder {
 
     private final Pattern wordPattern;

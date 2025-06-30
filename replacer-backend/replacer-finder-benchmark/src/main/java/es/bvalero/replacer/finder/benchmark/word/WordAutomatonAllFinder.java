@@ -12,6 +12,13 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.MatchResult;
 
+/**
+ * Find all the words in the text using an automaton.
+ * Therefore, we can only use it for simple misspellings.
+ * Then check if it is a wanted word.
+ * Then check if it is complete in the text.
+ * There is no "complete" version as the automaton doesn't allow complex regex.
+ */
 class WordAutomatonAllFinder implements BenchmarkFinder {
 
     private final RunAutomaton wordAutomaton;
@@ -30,8 +37,6 @@ class WordAutomatonAllFinder implements BenchmarkFinder {
     @Override
     public boolean validate(MatchResult match, FinderPage page) {
         final String word = match.group();
-        // Validate first that the word is complete to improve performance
-        // The word is wrapped by non-letters, so we still need to validate the separators.
         return this.words.contains(word) && FinderUtils.isWordCompleteInText(match.start(), word, page.getContent());
     }
 }

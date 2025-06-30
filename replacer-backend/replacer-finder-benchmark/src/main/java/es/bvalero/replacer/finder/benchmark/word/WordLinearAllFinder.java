@@ -9,6 +9,12 @@ import java.util.*;
 import java.util.regex.MatchResult;
 import org.springframework.lang.Nullable;
 
+/**
+ * Find all the words in the text.
+ * Therefore, we can only use it for simple misspellings.
+ * Then check if it is a wanted word.
+ * Then check if it is complete in the text.
+ */
 class WordLinearAllFinder implements BenchmarkFinder {
 
     private final Set<String> words = new HashSet<>();
@@ -30,11 +36,10 @@ class WordLinearAllFinder implements BenchmarkFinder {
             if (startWord >= 0) {
                 final int endWord = findEndWord(text, startWord);
                 final String word = text.substring(startWord, endWord);
-                // The word is wrapped by non-letters, so we still need to validate the separators.
                 if (words.contains(word) && FinderUtils.isWordCompleteInText(startWord, word, text)) {
                     return FinderMatchResult.of(startWord, word);
                 } else {
-                    // The char after the word is a non-letter, so we can start searching the next word one position after.
+                    // The char after the word is a non-letter, so we can start searching for the next word one position after.
                     start = endWord + 1;
                 }
             } else {

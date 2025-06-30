@@ -11,6 +11,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * Loop over all the words/expressions and find them in the text with a regex.
+ * Then the result is checked to be complete in the text.
+ * There is no "complete" version as the automaton doesn't allow complex regex.
+ */
 class WordAutomatonFinder implements BenchmarkFinder {
 
     private final List<RunAutomaton> automata;
@@ -25,8 +30,6 @@ class WordAutomatonFinder implements BenchmarkFinder {
     @Override
     public Iterable<BenchmarkResult> find(FinderPage page) {
         final String text = page.getContent();
-        // We loop over all the words and find them in the text with a regex
-        // We cannot use AutomatonMatchFinder in a loop
         final List<BenchmarkResult> matches = new ArrayList<>(100);
         for (RunAutomaton automaton : this.automata) {
             final AutomatonMatcher m = automaton.newMatcher(text);

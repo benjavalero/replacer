@@ -8,6 +8,11 @@ import java.util.Collection;
 import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
 
+/**
+ * Find all the words/expressions in the text with a regex.
+ * The regex contains the alternation of all the words/expressions surrounded by word boundaries.
+ * Then the result is checked to be complete in the text, e.g., in case of underscores.
+ */
 class WordRegexAlternateCompleteFinder implements BenchmarkFinder {
 
     private final Pattern pattern;

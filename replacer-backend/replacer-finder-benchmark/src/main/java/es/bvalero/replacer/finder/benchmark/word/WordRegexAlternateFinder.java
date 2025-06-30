@@ -8,6 +8,11 @@ import java.util.Collection;
 import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
 
+/**
+ * Find all the words/expressions in the text with a regex.
+ * The regex contains the alternation of all the words/expressions.
+ * Then the result is checked to be complete in the text.
+ */
 class WordRegexAlternateFinder implements BenchmarkFinder {
 
     private final Pattern pattern;

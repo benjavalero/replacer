@@ -10,6 +10,11 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Loop over all the words/expressions and find them in the text with a regex.
+ * The regex contains the word/expression surrounded by word boundaries.
+ * Then the result is checked to be complete in the text, e.g., in case of underscores.
+ */
 class WordRegexCompleteFinder implements BenchmarkFinder {
 
     private final List<Pattern> patterns;
@@ -24,8 +29,6 @@ class WordRegexCompleteFinder implements BenchmarkFinder {
     @Override
     public Iterable<BenchmarkResult> find(FinderPage page) {
         final String text = page.getContent();
-        // We loop over all the words and find them in the text with a regex
-        // We cannot use RegexMatchFinder in a loop
         final List<BenchmarkResult> matches = new ArrayList<>(100);
         for (Pattern pattern : this.patterns) {
             final Matcher m = pattern.matcher(text);

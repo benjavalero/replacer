@@ -8,6 +8,13 @@ import es.bvalero.replacer.finder.util.ResultMatchListener;
 import java.util.Collection;
 import java.util.regex.MatchResult;
 
+/**
+ * Finds the words/expressions in the text using the Aho-Corasick algorithm.
+ * There is no need to validate if the results are complete in the text.
+ * This approach matches only whole word matches, i.e., keywords surrounded by non-word characters or string boundaries.
+ * It allows non-word characters in the keywords.
+ * This means there can be overlaps, in which case the leftmost longest match will be returned.
+ */
 class WordAhoCorasickWholeLongestFinder implements BenchmarkFinder {
 
     private final StringMap<String> stringMap;

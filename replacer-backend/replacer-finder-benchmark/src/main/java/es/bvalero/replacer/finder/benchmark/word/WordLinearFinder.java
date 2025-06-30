@@ -10,6 +10,10 @@ import java.util.regex.MatchResult;
 import org.apache.commons.collections4.IterableUtils;
 import org.springframework.lang.Nullable;
 
+/**
+ * Loop over all the words/expressions and find them in the text using a simple "indexOf".
+ * Then the result is checked to be complete in the text.
+ */
 class WordLinearFinder implements BenchmarkFinder {
 
     private final Collection<String> words;
@@ -48,7 +52,7 @@ class WordLinearFinder implements BenchmarkFinder {
                     if (FinderUtils.isWordCompleteInText(startMisspelling, misspelling, text)) {
                         return FinderMatchResult.of(startMisspelling, misspelling);
                     } else {
-                        // The char after the word is a non-letter, so we can start searching the next word one position after.
+                        // The char after the word is a non-letter, so we can start searching for the next word one position after.
                         start = startMisspelling + misspelling.length() + 1;
                     }
                 } else {
