@@ -18,7 +18,7 @@ class WordRegexCompleteSeparatorsFinder implements BenchmarkFinder {
         for (String word : words) {
             final String leftSeparator = "(?<![\\p{L}\\d_])";
             final String rightSeparator = "(?![\\p{L}\\d_])";
-            final String regex = leftSeparator + word + rightSeparator;
+            final String regex = leftSeparator + cleanWord(word) + rightSeparator;
             this.patterns.add(Pattern.compile(regex));
         }
     }

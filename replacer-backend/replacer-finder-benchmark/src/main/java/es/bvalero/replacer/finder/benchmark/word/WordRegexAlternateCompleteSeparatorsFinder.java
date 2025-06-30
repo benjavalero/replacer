@@ -15,7 +15,8 @@ class WordRegexAlternateCompleteSeparatorsFinder implements BenchmarkFinder {
     WordRegexAlternateCompleteSeparatorsFinder(Collection<String> words) {
         final String leftSeparator = "(?<![\\w_])";
         final String rightSeparator = "(?![\\w_])";
-        final String alternate = '(' + FinderUtils.joinAlternate(words) + ')';
+        final Iterable<String> cleanWords = words.stream().map(this::cleanWord).toList();
+        final String alternate = '(' + FinderUtils.joinAlternate(cleanWords) + ')';
         final String regex = leftSeparator + alternate + rightSeparator;
         this.pattern = Pattern.compile(regex);
     }

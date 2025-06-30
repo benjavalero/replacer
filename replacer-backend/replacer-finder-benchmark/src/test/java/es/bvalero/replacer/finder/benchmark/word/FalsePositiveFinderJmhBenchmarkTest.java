@@ -27,13 +27,7 @@ public class FalsePositiveFinderJmhBenchmarkTest extends BaseFinderJmhBenchmark 
     // private WordRegexCompleteSeparatorsFinder wordRegexCompleteSeparatorsFinder; // Very long
     private WordAutomatonFinder wordAutomatonFinder;
     private WordLinearFinder wordLinearFinder;
-    // private WordRegexAlternateFinder wordRegexAlternateFinder; // Medium
-    private WordRegexAlternateCompleteFinder wordRegexAlternateCompleteFinder;
-    private WordRegexAlternateCompleteSeparatorsFinder wordRegexAlternateCompleteSeparatorsFinder;
-    private WordAutomatonAlternateFinder wordAutomatonAlternateFinder;
     private WordAhoCorasickFinder wordAhoCorasickFinder;
-    private WordAhoCorasickLongestFinder wordAhoCorasickLongestFinder;
-    private WordAhoCorasickWholeLongestFinder wordAhoCorasickWholeLongestFinder;
 
     @Setup
     public void setUp() throws ReplacerException {
@@ -54,12 +48,7 @@ public class FalsePositiveFinderJmhBenchmarkTest extends BaseFinderJmhBenchmark 
         wordRegexFinder = new WordRegexFinder(words);
         wordAutomatonFinder = new WordAutomatonFinder(words);
         wordLinearFinder = new WordLinearFinder(words);
-        wordRegexAlternateCompleteFinder = new WordRegexAlternateCompleteFinder(words);
-        wordRegexAlternateCompleteSeparatorsFinder = new WordRegexAlternateCompleteSeparatorsFinder(words);
-        wordAutomatonAlternateFinder = new WordAutomatonAlternateFinder(words);
         wordAhoCorasickFinder = new WordAhoCorasickFinder(words);
-        wordAhoCorasickLongestFinder = new WordAhoCorasickLongestFinder(words);
-        wordAhoCorasickWholeLongestFinder = new WordAhoCorasickWholeLongestFinder(words);
     }
 
     @Benchmark
@@ -78,33 +67,8 @@ public class FalsePositiveFinderJmhBenchmarkTest extends BaseFinderJmhBenchmark 
     }
 
     @Benchmark
-    public void wordRegexAlternateCompleteFinder(Blackhole bh) {
-        runFinder(wordRegexAlternateCompleteFinder, bh);
-    }
-
-    @Benchmark
-    public void wordRegexAlternateCompleteSeparatorsFinder(Blackhole bh) {
-        runFinder(wordRegexAlternateCompleteSeparatorsFinder, bh);
-    }
-
-    @Benchmark
-    public void wordAutomatonAlternateFinder(Blackhole bh) {
-        runFinder(wordAutomatonAlternateFinder, bh);
-    }
-
-    @Benchmark
     public void wordAhoCorasickFinder(Blackhole bh) {
         runFinder(wordAhoCorasickFinder, bh);
-    }
-
-    @Benchmark
-    public void wordAhoCorasickLongestFinder(Blackhole bh) {
-        runFinder(wordAhoCorasickLongestFinder, bh);
-    }
-
-    @Benchmark
-    public void wordAhoCorasickWholeLongestFinder(Blackhole bh) {
-        runFinder(wordAhoCorasickWholeLongestFinder, bh);
     }
 
     @Test

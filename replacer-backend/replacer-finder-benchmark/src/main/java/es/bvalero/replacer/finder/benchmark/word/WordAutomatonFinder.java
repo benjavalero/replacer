@@ -18,7 +18,7 @@ class WordAutomatonFinder implements BenchmarkFinder {
     WordAutomatonFinder(Collection<String> words) {
         this.automata = new ArrayList<>();
         for (String word : words) {
-            this.automata.add(new RunAutomaton(new RegExp(word).toAutomaton()));
+            this.automata.add(new RunAutomaton(new RegExp(cleanWord(word)).toAutomaton()));
         }
     }
 

@@ -23,17 +23,13 @@ public class ComposedMisspellingFinderJmhBenchmarkTest extends BaseFinderJmhBenc
     private static final String fileName = "word/composed-misspelling-summary-jmh";
 
     // private WordRegexFinder wordRegexFinder; // Short
-    // private WordRegexCompleteFinder wordRegexCompleteFinder; // Long
     // private WordRegexCompleteSeparatorsFinder wordRegexCompleteSeparatorsFinder; // Very Long
-    // private WordAutomatonFinder wordAutomatonFinder; // Heap space issues
-    private WordLinearFinder wordLinearFinder;
     // private WordRegexAlternateFinder wordRegexAlternateFinder; // Medium
-    // private WordRegexAlternateCompleteFinder wordRegexAlternateCompleteFinder; // Short
     // private WordRegexAlternateCompleteSeparatorsFinder wordRegexAlternateCompleteSeparatorsFinder; // Short
+    // private WordAutomatonFinder wordAutomatonFinder; // Heap space issues
     // private WordAutomatonAlternateFinder wordAutomatonAlternateFinder; // Heap space issues
-    private WordAhoCorasickFinder wordAhoCorasickFinder;
+    private WordLinearFinder wordLinearFinder;
     private WordAhoCorasickLongestFinder wordAhoCorasickLongestFinder;
-    private WordAhoCorasickWholeLongestFinder wordAhoCorasickWholeLongestFinder;
 
     @Setup
     public void setUp() throws ReplacerException {
@@ -55,9 +51,7 @@ public class ComposedMisspellingFinderJmhBenchmarkTest extends BaseFinderJmhBenc
 
         // Initialize the finders
         wordLinearFinder = new WordLinearFinder(words);
-        wordAhoCorasickFinder = new WordAhoCorasickFinder(words);
         wordAhoCorasickLongestFinder = new WordAhoCorasickLongestFinder(words);
-        wordAhoCorasickWholeLongestFinder = new WordAhoCorasickWholeLongestFinder(words);
     }
 
     @Benchmark
@@ -66,18 +60,8 @@ public class ComposedMisspellingFinderJmhBenchmarkTest extends BaseFinderJmhBenc
     }
 
     @Benchmark
-    public void wordAhoCorasickFinder(Blackhole bh) {
-        runFinder(wordAhoCorasickFinder, bh);
-    }
-
-    @Benchmark
     public void wordAhoCorasickLongestFinder(Blackhole bh) {
         runFinder(wordAhoCorasickLongestFinder, bh);
-    }
-
-    @Benchmark
-    public void wordAhoCorasickWholeLongestFinder(Blackhole bh) {
-        runFinder(wordAhoCorasickWholeLongestFinder, bh);
     }
 
     @Test

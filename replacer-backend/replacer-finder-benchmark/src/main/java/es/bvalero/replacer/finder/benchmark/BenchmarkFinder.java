@@ -23,4 +23,8 @@ public interface BenchmarkFinder extends Finder<BenchmarkResult> {
     default BenchmarkResult convert(MatchResult match, FinderPage page) {
         return BenchmarkResult.of(match.start(), match.group());
     }
+
+    default String cleanWord(String word) {
+        return word.replace("[", "\\[").replace("]", "\\]");
+    }
 }

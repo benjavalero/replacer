@@ -17,7 +17,7 @@ class WordRegexFinder implements BenchmarkFinder {
     WordRegexFinder(Collection<String> words) {
         this.patterns = new ArrayList<>();
         for (String word : words) {
-            this.patterns.add(Pattern.compile(word));
+            this.patterns.add(Pattern.compile(cleanWord(word)));
         }
     }
 

@@ -25,19 +25,19 @@ public class SimpleMisspellingFinderJmhBenchmarkTest extends BaseFinderJmhBenchm
     // private WordRegexFinder wordRegexFinder; // Medium
     // private WordRegexCompleteFinder wordRegexCompleteFinder; // Very long
     // private WordRegexCompleteSeparatorsFinder wordRegexCompleteSeparatorsFinder; // Very long
-    // private WordAutomatonFinder wordAutomatonFinder; // Discarded: we need to increase too much the heap size
-    // private WordLinearFinder wordLinearFinder; // Short
     // private WordRegexAlternateFinder wordRegexAlternateFinder; // Very long
     // private WordRegexAlternateCompleteFinder wordRegexAlternateCompleteFinder; // Long
     // private WordRegexAlternateCompleteSeparatorsFinder wordRegexAlternateCompleteSeparatorsFinder; // Long
+    // private WordRegexAllFinder wordRegexAllFinder; // Good
+    // private WordRegexAllCompleteFinder wordRegexAllCompleteFinder; // Good
+    // private WordRegexAllCompleteSeparatorsFinder wordRegexAllCompleteSeparatorsFinder; // Good
+    // private WordAutomatonFinder wordAutomatonFinder; // Discarded: we need to increase too much the heap size
     // private WordAutomatonAlternateFinder wordAutomatonAlternateFinder; // Discarded: we need to increase too much the stack size
-    private WordRegexAllFinder wordRegexAllFinder;
-    private WordRegexAllCompleteFinder wordRegexAllCompleteFinder;
-    private WordRegexAllCompleteSeparatorsFinder wordRegexAllCompleteSeparatorsFinder;
     private WordAutomatonAllFinder wordAutomatonAllFinder;
+    // private WordLinearFinder wordLinearFinder; // Short
     private WordLinearAllFinder wordLinearAllFinder;
-    private WordAhoCorasickFinder wordAhoCorasickFinder;
-    private WordAhoCorasickLongestFinder wordAhoCorasickLongestFinder;
+    // private WordAhoCorasickFinder wordAhoCorasickFinder; // Good
+    // private WordAhoCorasickLongestFinder wordAhoCorasickLongestFinder; // Good
     private WordAhoCorasickWholeFinder wordAhoCorasickWholeFinder;
     private WordAhoCorasickWholeLongestFinder wordAhoCorasickWholeLongestFinder;
 
@@ -60,30 +60,10 @@ public class SimpleMisspellingFinderJmhBenchmarkTest extends BaseFinderJmhBenchm
         Set<String> words = misspellings.stream().flatMap(cm -> cm.getTerms().stream()).collect(Collectors.toSet());
 
         // Initialize the finders
-        wordRegexAllFinder = new WordRegexAllFinder(words);
-        wordRegexAllCompleteFinder = new WordRegexAllCompleteFinder(words);
-        wordRegexAllCompleteSeparatorsFinder = new WordRegexAllCompleteSeparatorsFinder(words);
         wordAutomatonAllFinder = new WordAutomatonAllFinder(words);
         wordLinearAllFinder = new WordLinearAllFinder(words);
-        wordAhoCorasickFinder = new WordAhoCorasickFinder(words);
-        wordAhoCorasickLongestFinder = new WordAhoCorasickLongestFinder(words);
         wordAhoCorasickWholeFinder = new WordAhoCorasickWholeFinder(words);
         wordAhoCorasickWholeLongestFinder = new WordAhoCorasickWholeLongestFinder(words);
-    }
-
-    @Benchmark
-    public void wordRegexAllFinder(Blackhole bh) {
-        runFinder(wordRegexAllFinder, bh);
-    }
-
-    @Benchmark
-    public void wordRegexAllCompleteFinder(Blackhole bh) {
-        runFinder(wordRegexAllCompleteFinder, bh);
-    }
-
-    @Benchmark
-    public void wordRegexAllCompleteSeparatorsFinder(Blackhole bh) {
-        runFinder(wordRegexAllCompleteSeparatorsFinder, bh);
     }
 
     @Benchmark
@@ -94,16 +74,6 @@ public class SimpleMisspellingFinderJmhBenchmarkTest extends BaseFinderJmhBenchm
     @Benchmark
     public void wordLinearAllFinder(Blackhole bh) {
         runFinder(wordLinearAllFinder, bh);
-    }
-
-    @Benchmark
-    public void wordAhoCorasickFinder(Blackhole bh) {
-        runFinder(wordAhoCorasickFinder, bh);
-    }
-
-    @Benchmark
-    public void wordAhoCorasickLongestFinder(Blackhole bh) {
-        runFinder(wordAhoCorasickLongestFinder, bh);
     }
 
     @Benchmark

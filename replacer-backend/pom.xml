@@ -135,8 +135,6 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
                     <excludes>
-                        <exclude>**/benchmark/**/*Test.java</exclude>
-                        <exclude>**/benchmark/*Test.java</exclude>
                         <exclude>**/*BenchmarkTest.java</exclude>
                         <!-- TODO: Enable when the Modulith refactor is done -->
                         <exclude>**/ArchitectureTest.java</exclude>

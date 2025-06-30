@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import es.bvalero.replacer.finder.benchmark.BenchmarkResult;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,7 +18,7 @@ class ComposedFinderTest {
 
     @BeforeEach
     public void setUp() {
-        this.words = Set.of(
+        this.words = List.of(
             "a el",
             "ad honorem",
             "ad-hoc",
@@ -45,49 +46,72 @@ class ComposedFinderTest {
         this.expected.add(BenchmarkResult.of(54, "1º"));
         this.expected.add(BenchmarkResult.of(60, "2ª"));
         this.expected.add(BenchmarkResult.of(60, "2ª"));
-        this.expected.add(BenchmarkResult.of(85, "1°"));
+        this.expected.add(BenchmarkResult.of(85, "1°")); // Degree
         this.expected.add(BenchmarkResult.of(99, "[[apartheid]]"));
     }
 
     // NOTE: We can use the same finders that we use for simple misspellings just with a different set of words,
     // except the finders finding all the words in the text as here we might search several words.
+    // The "complete" approaches don't work as the regular expression detects some non-word characters as word boundaries.
+
+    // Loop over all the words, find them in the text with a regex, and check they are complete in the text.
+    @Test
+    void testWordRegexFinder() {
+        WordRegexFinder finder = new WordRegexFinder(this.words);
+        assertEquals(expected, finder.findMatches(text));
+    }
+
+    // Loop over all the words, find them in the text with a regex with boundaries, and check they are complete in the text.
+
+    // Loop over all the words, find them in the text with a regex with separators. No need to check they are complete in the text.
+    @Test
+    void testWordRegexCompleteSeparatorsFinder() {
+        WordRegexCompleteSeparatorsFinder finder = new WordRegexCompleteSeparatorsFinder(this.words);
+        assertEquals(expected, finder.findMatches(text));
+    }
+
+    /* Alternative using a regex containing an alternation of all the words to find */
 
     @Test
-    void testWordLinearFinder() {
-        // It captures overlapping cases, but maybe we don't want that.
-        WordLinearFinder finder = new WordLinearFinder(this.words);
+    void testWordRegexAlternateFinder() {
+        WordRegexAlternateFinder finder = new WordRegexAlternateFinder(this.words);
+        assertEquals(expected, finder.findMatches(text));
+    }
+
+    @Test
+    void testWordRegexAlternateCompleteSeparatorsFinder() {
+        WordRegexAlternateCompleteSeparatorsFinder finder = new WordRegexAlternateCompleteSeparatorsFinder(this.words);
+        assertEquals(expected, finder.findMatches(text));
+    }
+
+    /* Alternatives with an automaton. We cannot use elaborated regular expressions. */
+
+    @Test
+    void testWordAutomatonFinder() {
+        WordAutomatonFinder finder = new WordAutomatonFinder(this.words);
         assertEquals(expected, finder.findMatches(text));
     }
 
     @Test
     void testWordAutomatonAlternateFinder() {
-        // It doesn't capture overlapping cases, complete or incomplete.
         WordAutomatonAlternateFinder finder = new WordAutomatonAlternateFinder(this.words);
         assertEquals(expected, finder.findMatches(text));
     }
 
+    /* Alternative using a linear-handcrafted approach */
+
     @Test
-    void testWordAhoCorasickFinder() {
-        // It captures overlapping cases, but maybe we don't want that.
-        // It doesn't capture whole words, so we need to check the completeness.
-        WordAhoCorasickFinder finder = new WordAhoCorasickFinder(this.words);
+    void testWordLinearFinder() {
+        WordLinearFinder finder = new WordLinearFinder(this.words);
         assertEquals(expected, finder.findMatches(text));
     }
 
+    /* Aho-Corasick. Only non-overlapping. */
+
+    // Find the left-most non-overlapping matches
     @Test
     void testWordAhoCorasickLongestFinder() {
-        // It doesn't capture overlapping cases, complete or incomplete.
-        // It doesn't capture whole words, so we need to check the completeness.
         WordAhoCorasickLongestFinder finder = new WordAhoCorasickLongestFinder(this.words);
-        assertEquals(expected, finder.findMatches(text));
-    }
-
-    @Test
-    void testWordAhoCorasickWholeLongestFinder() {
-        // Known issue: it doesn't capture the character №
-        // Known issue: it doesn't capture terms between brackets (hyperlinks)
-        // It doesn't capture overlapping complete cases
-        WordAhoCorasickWholeLongestFinder finder = new WordAhoCorasickWholeLongestFinder(this.words);
         assertEquals(expected, finder.findMatches(text));
     }
 }

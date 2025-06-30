@@ -37,7 +37,7 @@ public interface FinderResult extends Comparable<FinderResult> {
 
     default boolean validate(String pageContent) {
         // Validate positions only on tests not to penalize the performance
-        if (getText().equals(pageContent.substring(getStart(), getEnd()))) {
+        if (getEnd() <= pageContent.length() && getText().equals(pageContent.substring(getStart(), getEnd()))) {
             return true;
         } else {
             String msg = String.format(
