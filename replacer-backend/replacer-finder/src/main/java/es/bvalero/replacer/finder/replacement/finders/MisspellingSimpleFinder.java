@@ -43,7 +43,7 @@ public class MisspellingSimpleFinder extends MisspellingFinder implements Proper
     @Override
     public Iterable<MatchResult> findMatchResults(FinderPage page) {
         // There are thousands of simple misspellings
-        // The best approach with big difference is to find all words in the text and check if they are in the list
+        // The best approach is to find all words in the text and check if they are in the list
         // Within this approach the linear finder gives the best performance
         return LinearMatchFinder.find(page, this::findWord);
     }
@@ -60,7 +60,7 @@ public class MisspellingSimpleFinder extends MisspellingFinder implements Proper
                 if (isValid(word, startWord, text, lang)) {
                     return FinderMatchResult.of(startWord, word);
                 } else {
-                    // The char after the word is a non-letter, so we can start searching the next word one position after.
+                    // The char after the word is a non-letter, so we can start searching for the next word one position after.
                     start = endWord + 1;
                 }
             } else {

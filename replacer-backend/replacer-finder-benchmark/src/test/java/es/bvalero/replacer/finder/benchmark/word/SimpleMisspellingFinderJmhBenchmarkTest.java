@@ -31,8 +31,8 @@ public class SimpleMisspellingFinderJmhBenchmarkTest extends BaseFinderJmhBenchm
     // private WordRegexAllFinder wordRegexAllFinder; // Good
     // private WordRegexAllCompleteFinder wordRegexAllCompleteFinder; // Good
     // private WordRegexAllCompleteSeparatorsFinder wordRegexAllCompleteSeparatorsFinder; // Good
-    // private WordAutomatonFinder wordAutomatonFinder; // Discarded: we need to increase too much the heap size
-    // private WordAutomatonAlternateFinder wordAutomatonAlternateFinder; // Discarded: we need to increase too much the stack size
+    // private WordAutomatonFinder wordAutomatonFinder; // Discarded: we need to increase the heap size too much
+    // private WordAutomatonAlternateFinder wordAutomatonAlternateFinder; // Discarded: we need to increase the stack size too much
     private WordAutomatonAllFinder wordAutomatonAllFinder;
     // private WordLinearFinder wordLinearFinder; // Short
     private WordLinearAllFinder wordLinearAllFinder;
