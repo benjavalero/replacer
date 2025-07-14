@@ -40,6 +40,9 @@ public class SimpleMisspellingFinderJmhBenchmarkTest extends BaseFinderJmhBenchm
     // private WordAhoCorasickLongestFinder wordAhoCorasickLongestFinder; // Good
     private WordAhoCorasickWholeFinder wordAhoCorasickWholeFinder;
     private WordAhoCorasickWholeLongestFinder wordAhoCorasickWholeLongestFinder;
+    // private WordTrieFinder wordTrieFinder; // Good
+    // private WordTrieNoOverlappingFinder wordTrieNoOverlappingFinder; // Good
+    // private WordTrieWholeFinder wordTrieWholeFinder; // Good
 
     @Setup
     public void setUp() throws ReplacerException {

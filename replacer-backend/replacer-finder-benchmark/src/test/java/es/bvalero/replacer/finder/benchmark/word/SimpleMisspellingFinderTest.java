@@ -139,4 +139,22 @@ class SimpleMisspellingFinderTest {
         WordAhoCorasickWholeLongestFinder finder = new WordAhoCorasickWholeLongestFinder(this.words);
         assertEquals(expected, finder.findMatches(text));
     }
+
+    @Test
+    void testWordTrieFinder() {
+        WordTrieFinder finder = new WordTrieFinder(this.words);
+        assertEquals(expected, finder.findMatches(text));
+    }
+
+    @Test
+    void testWordTrieNoOverlappingFinder() {
+        WordTrieNoOverlappingFinder finder = new WordTrieNoOverlappingFinder(this.words);
+        assertEquals(expected, finder.findMatches(text));
+    }
+
+    @Test
+    void testWordTrieWholeFinder() {
+        WordTrieWholeFinder finder = new WordTrieWholeFinder(this.words);
+        assertEquals(expected, finder.findMatches(text));
+    }
 }
