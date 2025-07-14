@@ -159,4 +159,25 @@ class WordFinderTest {
         WordAhoCorasickWholeLongestFinder finder = new WordAhoCorasickWholeLongestFinder(this.words);
         assertEquals(expected, finder.findMatches(text));
     }
+
+    // Find all matches of all strings. Possibly overlapping.
+    @Test
+    void testWordTrieFinder() {
+        WordTrieFinder finder = new WordTrieFinder(this.words);
+        assertEquals(expected, finder.findMatches(text));
+    }
+
+    // Find the left-most non-overlapping matches
+    @Test
+    void testWordTrieNoOverlappingFinder() {
+        WordTrieNoOverlappingFinder finder = new WordTrieNoOverlappingFinder(this.words);
+        assertEquals(expected, finder.findMatches(text));
+    }
+
+    // Find only whole matches. Possibly overlapping.
+    @Test
+    void testWordTrieWholeFinder() {
+        WordTrieWholeFinder finder = new WordTrieWholeFinder(this.words);
+        assertEquals(expected, finder.findMatches(text));
+    }
 }
