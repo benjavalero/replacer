@@ -19,6 +19,7 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(value = { IllegalArgumentException.class })
     protected ResponseEntity<Object> handleIllegalArgumentException(IllegalArgumentException e) {
+        LOGGER.error("Handle Illegal Argument Exception", e);
         return new ResponseEntity<>(e, HttpStatus.BAD_REQUEST);
     }
 

@@ -28,8 +28,9 @@ public class ReplacerUtils {
 
     public String replaceInText(String text, int start, String current, String replacement) {
         final int end = start + current.length();
-        if (!text.substring(start, end).equals(current)) {
-            throw new IllegalArgumentException();
+        final String actual = text.substring(start, end);
+        if (!actual.equals(current)) {
+            throw new IllegalArgumentException("Replacement mismatch: %s <> %s".formatted(actual, current));
         }
         return text.substring(0, start) + replacement + text.substring(end);
     }

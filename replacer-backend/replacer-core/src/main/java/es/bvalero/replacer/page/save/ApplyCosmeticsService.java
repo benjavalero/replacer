@@ -38,14 +38,20 @@ class ApplyCosmeticsService {
             cosmetics.sort(Collections.reverseOrder());
 
             for (Cosmetic cosmetic : cosmetics) {
-                fixedText = ReplacerUtils.replaceInText(
-                    fixedText,
-                    cosmetic.getStart(),
-                    cosmetic.getText(),
-                    cosmetic.getFix()
-                );
-                applyCheckWikipediaAction(page, cosmetic);
-                LOGGER.debug("Cosmetic applied: {}", cosmetic);
+                try {
+                    LOGGER.debug("START Apply cosmetic: {}", cosmetic);
+                    fixedText = ReplacerUtils.replaceInText(
+                        fixedText,
+                        cosmetic.getStart(),
+                        cosmetic.getText(),
+                        cosmetic.getFix()
+                    );
+                    applyCheckWikipediaAction(page, cosmetic);
+                    LOGGER.debug("END Apply cosmetic");
+                } catch (Exception e) {
+                    // Handle and continue
+                    LOGGER.error("ERROR Apply cosmetic", e);
+                }
             }
 
             // Apply cosmetics recursively in case a new one has appeared after applying others
