@@ -16,19 +16,20 @@ class SimpleMisspellingFinderTest {
 
     @BeforeEach
     public void setUp() {
-        this.words = Set.of("a", "eñe", "mí", "se", "me", "nº");
-        this.text = "A a eñe, mí se-me se_me nº a2.";
+        // We can assume all words come from the simple listing and therefore only contain Spanish letters
+        this.words = Set.of("a", "e", "ó", "ae", "nº");
+        this.text = "a eñe ó a2 a_e a-e ae nº.";
 
         this.expected = Set.of(
-            BenchmarkResult.of(2, "a"), // Case-sensitive
-            BenchmarkResult.of(4, "eñe"), // Spanish characters
-            BenchmarkResult.of(9, "mí"), // Accents
-            BenchmarkResult.of(12, "se"), // Dash separator
-            BenchmarkResult.of(15, "me"), // Dash separator
-            // BenchmarkResult.of(18, "se"), // Underscore no separator
-            // BenchmarkResult.of(21, "me") // Underscore no separator
-            BenchmarkResult.of(24, "nº") // Masculine ordinal is a letter in this context
-            // BenchmarkResult.of(27, "a2") // Digit no separator
+            BenchmarkResult.of(0, "a"),
+            // "ñ" is a word char
+            BenchmarkResult.of(6, "ó"),
+            // "a" in "a2" is not complete
+            // "a" in "a_e" is not complete
+            BenchmarkResult.of(15, "a"), // Dash separator to test Whole Aho-Corasick
+            BenchmarkResult.of(17, "e"), // Dash separator to test Whole Aho-Corasick
+            BenchmarkResult.of(19, "ae"),
+            BenchmarkResult.of(22, "nº")
         );
     }
 

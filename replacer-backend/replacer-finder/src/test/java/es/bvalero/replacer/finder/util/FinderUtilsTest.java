@@ -75,21 +75,24 @@ class FinderUtilsTest {
 
     @Test
     void testIsWordCompleteInText() {
-        String text = "Y hay/un amigo en_mí mismo, Ra'anana. X2 Z. No-way.";
+        String text = "Y hay/un amigo en_mí mismo, Ra'anana. X2 Z. No-way. 1º. a[[link]]s.";
 
         assertTrue(FinderUtils.isWordCompleteInText(0, "Y", text));
-        assertTrue(FinderUtils.isWordCompleteInText(2, "hay", text));
-        assertTrue(FinderUtils.isWordCompleteInText(6, "un", text));
+        assertTrue(FinderUtils.isWordCompleteInText(2, "hay", text)); // Slash separator
+        assertTrue(FinderUtils.isWordCompleteInText(6, "un", text)); // Slash separator
         assertTrue(FinderUtils.isWordCompleteInText(9, "amigo", text));
-        assertFalse(FinderUtils.isWordCompleteInText(10, "migo", text));
-        assertFalse(FinderUtils.isWordCompleteInText(15, "en", text));
-        assertFalse(FinderUtils.isWordCompleteInText(18, "mí", text));
-        assertTrue(FinderUtils.isWordCompleteInText(21, "mismo", text));
-        assertTrue(FinderUtils.isWordCompleteInText(31, "anana", text));
-        assertFalse(FinderUtils.isWordCompleteInText(38, "X", text));
-        assertTrue(FinderUtils.isWordCompleteInText(41, "Z", text));
-        assertTrue(FinderUtils.isWordCompleteInText(44, "No", text));
-        assertTrue(FinderUtils.isWordCompleteInText(47, "way", text));
+        assertFalse(FinderUtils.isWordCompleteInText(10, "migo", text)); // Incomplete
+        assertFalse(FinderUtils.isWordCompleteInText(15, "en", text)); // Underscore is a word char
+        assertFalse(FinderUtils.isWordCompleteInText(18, "mí", text)); // Underscore is a word char
+        assertTrue(FinderUtils.isWordCompleteInText(21, "mismo", text)); // Comma separator
+        assertTrue(FinderUtils.isWordCompleteInText(28, "Ra", text)); // Quote separator
+        assertTrue(FinderUtils.isWordCompleteInText(31, "anana", text)); // Quote separator
+        assertFalse(FinderUtils.isWordCompleteInText(38, "X", text)); // Digits are word chars
+        assertTrue(FinderUtils.isWordCompleteInText(41, "Z", text)); // Dot separator
+        assertTrue(FinderUtils.isWordCompleteInText(44, "No", text)); // Hyphen separator
+        assertTrue(FinderUtils.isWordCompleteInText(47, "way", text)); // Hyphen separator
+        assertTrue(FinderUtils.isWordCompleteInText(52, "1", text)); // Ordinals are not word chars
+        assertTrue(FinderUtils.isWordCompleteInText(57, "[[link]]", text)); // Separators in the word itself
     }
 
     @Test
@@ -409,15 +412,22 @@ class FinderUtilsTest {
 
     @Test
     void testFindAllWords() {
-        String text = "In the town where I_was born.";
+        // We consider word characters all letters and digits, and the underscore, but not the ordinals.
+        String text = "A b/c-d_e,f.g'h[í]j\"1º2ª3°";
 
         Set<MatchResult> expected = new HashSet<>();
-        expected.add(FinderMatchResult.of(0, "In"));
-        expected.add(FinderMatchResult.of(3, "the"));
-        expected.add(FinderMatchResult.of(7, "town"));
-        expected.add(FinderMatchResult.of(12, "where"));
-        expected.add(FinderMatchResult.of(18, "I_was"));
-        expected.add(FinderMatchResult.of(24, "born"));
+        expected.add(FinderMatchResult.of(0, "A"));
+        expected.add(FinderMatchResult.of(2, "b"));
+        expected.add(FinderMatchResult.of(4, "c"));
+        expected.add(FinderMatchResult.of(6, "d_e"));
+        expected.add(FinderMatchResult.of(10, "f"));
+        expected.add(FinderMatchResult.of(12, "g"));
+        expected.add(FinderMatchResult.of(14, "h"));
+        expected.add(FinderMatchResult.of(16, "í"));
+        expected.add(FinderMatchResult.of(18, "j"));
+        expected.add(FinderMatchResult.of(20, "1"));
+        expected.add(FinderMatchResult.of(22, "2"));
+        expected.add(FinderMatchResult.of(24, "3"));
 
         List<MatchResult> matches = FinderUtils.findAllWords(text);
         assertEquals(expected, new HashSet<>(matches));

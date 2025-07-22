@@ -1,6 +1,6 @@
 package es.bvalero.replacer.finder.replacement.finders;
 
-import com.roklenarcic.util.strings.LongestMatchMap;
+import com.roklenarcic.util.strings.AhoCorasickMap;
 import com.roklenarcic.util.strings.StringMap;
 import es.bvalero.replacer.common.domain.ReplacementKind;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
@@ -30,7 +30,7 @@ public class MisspellingComposedFinder extends MisspellingFinder implements Prop
     // Dependency injection
     private final ComposedMisspellingLoader composedMisspellingLoader;
 
-    private Map<WikipediaLanguage, LongestMatchMap<String>> stringMaps = new EnumMap<>(WikipediaLanguage.class);
+    private Map<WikipediaLanguage, AhoCorasickMap<String>> stringMaps = new EnumMap<>(WikipediaLanguage.class);
 
     public MisspellingComposedFinder(ComposedMisspellingLoader composedMisspellingLoader) {
         this.composedMisspellingLoader = composedMisspellingLoader;
@@ -50,18 +50,18 @@ public class MisspellingComposedFinder extends MisspellingFinder implements Prop
         );
     }
 
-    private Map<WikipediaLanguage, LongestMatchMap<String>> buildComposedMisspellingStringMap(
+    private Map<WikipediaLanguage, AhoCorasickMap<String>> buildComposedMisspellingStringMap(
         SetValuedMap<WikipediaLanguage, ComposedMisspelling> misspellings
     ) {
         LOGGER.debug("START Building Composed Misspelling string map…");
-        final Map<WikipediaLanguage, LongestMatchMap<String>> map = new EnumMap<>(WikipediaLanguage.class);
+        final Map<WikipediaLanguage, AhoCorasickMap<String>> map = new EnumMap<>(WikipediaLanguage.class);
         for (WikipediaLanguage lang : misspellings.keySet()) {
             final Set<String> misspellingTerms = misspellings
                 .get(lang)
                 .stream()
                 .flatMap(cm -> cm.getTerms().stream())
                 .collect(Collectors.toSet());
-            map.put(lang, new LongestMatchMap<>(misspellingTerms, misspellingTerms, true));
+            map.put(lang, new AhoCorasickMap<>(misspellingTerms, misspellingTerms, true));
         }
         LOGGER.debug("END Building Composed Misspelling string map");
         return map;
@@ -69,11 +69,9 @@ public class MisspellingComposedFinder extends MisspellingFinder implements Prop
 
     @Override
     public Iterable<MatchResult> findMatchResults(FinderPage page) {
-        // There are hundreds of composed misspellings
-        // The best approach is an automaton of oll the terms alternated with big difference against the linear approach
-        // The Aho-Corasick algorithm can be even better, but it doesn't manage well some composed cases with non-word characters.
-        // Finally, we use Aho-Corasick "longest" algorithm not to capture overlapping results,
-        // which gives a similar performance to the automaton approach but with less memory consumption.
+        // There are hundreds of composed misspellings.
+        // The best approach is to loop over all the misspellings and find them in the text.
+        // Nevertheless, the Aho-Corasick algorithm can be even better.
         final StringMap<String> stringMap = this.stringMaps.get(page.getPageKey().getLang());
         if (stringMap == null) {
             return List.of();

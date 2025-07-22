@@ -3,7 +3,6 @@ package es.bvalero.replacer.finder;
 import es.bvalero.replacer.common.domain.ReplacementType;
 import es.bvalero.replacer.common.util.ReplacerUtils;
 import java.util.Collection;
-import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -119,11 +118,11 @@ public final class Replacement implements FinderResult {
         }
         List<Replacement> expectedList = expected
             .stream()
-            .sorted(Comparator.comparingInt(Replacement::getStart))
+            .sorted(FinderResult::compareTo)
             .collect(Collectors.toCollection(LinkedList::new));
         List<Replacement> actualList = actual
             .stream()
-            .sorted(Comparator.comparingInt(Replacement::getStart))
+            .sorted(FinderResult::compareTo)
             .collect(Collectors.toCollection(LinkedList::new));
         for (int i = 0; i < expected.size(); i++) {
             if (!compareReplacement(expectedList.get(i), actualList.get(i))) {

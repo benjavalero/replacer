@@ -167,40 +167,34 @@ public class FinderUtils {
     public boolean isWordCompleteInText(int startWord, String word, String text) {
         // We check the separators are not letters. The detected word might not be complete.
         // We check the separators are not digits. There are rare cases where the misspelling
-        // is preceded or followed by a digit, e.g. the misspelling "Km" in "Km2".
+        // is preceded or followed by a digit e.g. the misspelling "Km" in "Km2".
         // We discard words preceded or followed by certain separators like '_'.
         final int endWord = startWord + word.length();
         if (startWord < 0 || endWord > text.length()) {
             throw new IllegalArgumentException();
         }
 
-        if (startWord >= 1) {
-            // Special case: if the start of the word is a separator then we consider it as the left separator itself
-            final char leftSeparator;
-            final char firstChar = text.charAt(startWord);
-            if (isValidSeparator(firstChar)) {
-                leftSeparator = firstChar;
-            } else {
-                leftSeparator = text.charAt(startWord - 1);
-            }
-            if (endWord < text.length()) {
-                // Usual case: word contained in the text
-                final char rightSeparator = text.charAt(endWord);
-                return isValidSeparator(leftSeparator) && isValidSeparator(rightSeparator);
-            } else {
-                // Last word in the text with no right separator
-                return isValidSeparator(leftSeparator);
-            }
-        } else if (endWord < text.length()) {
-            // First word in the text with no left separator
-            final char rightSeparator = text.charAt(endWord);
-            return isValidSeparator(rightSeparator);
-        }
-        return true;
+        return isValidLeftSeparator(startWord, text) && isValidRightSeparator(endWord, text);
+    }
+
+    private boolean isValidLeftSeparator(int startWord, String text) {
+        // Special case: if the start of the word is a separator, then we consider it as the left separator itself.
+        return (
+            startWord == 0 || isValidSeparator(text.charAt(startWord)) || isValidSeparator(text.charAt(startWord - 1))
+        );
+    }
+
+    private boolean isValidRightSeparator(int endWord, String text) {
+        // Special case: if the end of the word is a separator, then we consider it as the right separator itself.
+        return (
+            endWord == text.length() ||
+            isValidSeparator(text.charAt(endWord - 1)) ||
+            isValidSeparator(text.charAt(endWord))
+        );
     }
 
     private boolean isWordChar(char ch) {
-        // Unicode considers the masculine/feminine ordinal as a letter
+        // Unicode considers the masculine/feminine ordinal as a letter, but we discard them.
         // We admit the underscore as part of a complete word
         return (Character.isLetterOrDigit(ch) && !isOrdinal(ch)) || ch == UNDERSCORE;
     }
@@ -516,7 +510,7 @@ public class FinderUtils {
         final List<MatchResult> words = new ArrayList<>(100);
         int start = 0;
         while (start >= 0 && start < text.length()) {
-            // Find start of the word
+            // Find the start of the word
             int startWord = -1;
             for (int i = start; i < text.length(); i++) {
                 if (isWordChar(text.charAt(i))) {
@@ -528,7 +522,7 @@ public class FinderUtils {
                 break; // Exit while loop
             }
 
-            // Find end of the word
+            // Find the end of the word
             int endWord = text.length(); // Default value
             for (int i = startWord + 1; i < text.length(); i++) {
                 if (isValidSeparator(text.charAt(i))) {

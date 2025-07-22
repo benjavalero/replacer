@@ -3,7 +3,6 @@ package es.bvalero.replacer.finder.benchmark.word;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
 import es.bvalero.replacer.finder.benchmark.BenchmarkResult;
-import es.bvalero.replacer.finder.util.FinderUtils;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -22,7 +21,7 @@ class WordRegexCompleteFinder implements BenchmarkFinder {
     WordRegexCompleteFinder(Collection<String> words) {
         this.patterns = new ArrayList<>();
         for (String word : words) {
-            this.patterns.add(Pattern.compile("\\b" + word + "\\b"));
+            this.patterns.add(Pattern.compile("\\b" + cleanWord(word) + "\\b"));
         }
     }
 
@@ -35,9 +34,7 @@ class WordRegexCompleteFinder implements BenchmarkFinder {
             while (m.find()) {
                 final int start = m.start();
                 final String word = m.group();
-                if (FinderUtils.isWordCompleteInText(start, word, text)) {
-                    matches.add(BenchmarkResult.of(start, word));
-                }
+                matches.add(BenchmarkResult.of(start, word));
             }
         }
         return matches;

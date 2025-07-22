@@ -881,6 +881,8 @@
  años||anos, años (é correcto cando son crías de ovella)
  apaciguar||tranquilizar, apazugar, acougar
  apacigua||tranquiliza, apazuga, acouga
+ apagón||apagamento
+ apagóns||apagamentos
  apaixoada||apaixonada
  apaixoadas||apaixonadas
  apaixoado||apaixonado
@@ -1018,6 +1020,11 @@
  arrabaldos||arrabaldes
  arranxista||arranxador, arranxadora
  arrañar||rañar
+ arredondeada||arredondada
+ arredondeadas||arredondadas
+ arredondeado||arredondado
+ arredondeados||arredondados
+ arredondear||arredondar
  arregalar||regalar
  arreglar||arranxar, amañar
  arreglista||arranxador, arranxadora
@@ -1062,6 +1069,7 @@
  artículos||artigos
  artígo||artigo
  artígos||artigos
+ artísticamente||artisticamente
  artrigos||artigos
  arxelia||Alxeria
  arzebispado||arcebispado
@@ -1360,6 +1368,8 @@
  basados||baseados
  basadas||baseadas
  basar||basear
+ basamento||baseamento
+ basamentos||baseamentos
  basca||vasca
  bascas||vascas
  bascallo||vascallo
@@ -1589,6 +1599,8 @@
  bretonas||bretóns, bretoas
  breva||bévera
  brevas||béveras
+ brilante||brillante
+ brilantes||brillantes
  brilar||brillar
  brilo||brillo
  brindis||brinde
@@ -2360,6 +2372,7 @@
  certámen||certame
  certamenes||certames
  certámenes||certames
+ certidume||certeza
  césar|cs|César (nome propio), césar (emperador)
  cese||cesamento, cese (é correcto se é do verbo cesar)
  ceses||cesamentos, ceses (é correcto se é do verbo cesar)
@@ -3675,6 +3688,7 @@
  crimens||crimes
  crímens||crimes
  crín||crin
+ crióuse||criouse
  criptica||críptica
  cripticas||crípticas
  criptico||críptico
@@ -4139,6 +4153,8 @@
  decersions||desercións
  decersións||desercións
  decertar||desertar
+ decía||dicía
+ decían||dicían
  decicion||decisión
  decición||decisión
  decicions||decisións
@@ -4198,6 +4214,7 @@
  decimonoveno||décimo noveno
  decimonovenos||décimo novenos
  decimos||décimos
+ decindo||dicindo
  decir||dicir
  declaracion||declaración
  declaracions||declaracións
@@ -4372,6 +4389,8 @@
  desapacibles||desapracibles
  desapacibleis||desapracíbeis
  desapacíbleis||desapracíbeis
+ desaparecemento||desaparición
+ desaparecementos||desaparicións
  desaparesca||desapareza
  desaparescas||desaparezas
  desaparezca||desapareza
@@ -6121,6 +6140,9 @@
  enxabroen||enxaboen
  enxabroou||enxaboou
  enxabroouse||enxaboouse
+ enxendrar||procrear
+ enxendraron||procrearon
+ enxendrou||procreou
  enxerir||inxerir (tragar), inserir (introducir), enxerir (é correcto se é o verbo, sinónimo de enxertar)
  eolica||eólica
  eolicas||eólicas
@@ -6780,6 +6802,11 @@
  eufrates||Éufrates
  eúfrates||Éufrates
  éufrates|cs|Éufrates
+ Euroasia|cs|Eurasia
+ euroasiática||eurasiática
+ euroasiáticas||eurasiáticas
+ euroasiático||eurasiático
+ euroasiáticos||eurasiáticos
  europa|cs|Europa
  europeu||europeo
  europeus||europeos
@@ -6972,6 +6999,23 @@
  explotacion||explotación
  explotacions||explotacións
  explóte||explote
+ expoliaba||espoliaba
+ expoliaban||espoliaban
+ expoliación||espoliación
+ expoliacion||espoliación
+ expoliada||espoliada
+ expoliadas||espoliadas
+ expoliado||espoliado
+ expoliador||espoliador
+ expoliadora||espoliadora
+ expoliadoras||espoliadoras
+ expoliadores||espoliadores
+ expoliados||espoliados
+ expoliar||espoliar
+ expoliaron||espoliaron
+ expolio||espolio
+ expolios||espolios
+ expoliou||espoliou
  exportacion||exportación
  exportacions||exportacións
  exposicion||exposición
@@ -7257,9 +7301,9 @@
  fetidos||fétidos
  ficcion||ficción
  ficcions||ficcións
- fidji||Fidxi
+ fidji||Fiji
  fiéis||fieis
- fiji||Fidxi
+ fiji|cs|Fiji
  fiambre||friame
  fiambres||friames
  filantropa||filántropa
@@ -7362,7 +7406,7 @@
  fitofagas||fitófagas
  fitofago||fitófago
  fitofagos||fitófagos
- fiyi|cs|Fidxi
+ fiyi|cs|Fiji
  fraile||freire
  frailes||freires
  flamenco||flamenco (é correcto se é o canto), flamengo (ave ou de Flandres)
@@ -7570,6 +7614,8 @@
  fricións||friccións
  frio||frío
  frios||fríos
+ frotador||flotador
+ frotadores||flotadores
  frunce||engurra, prega
  fruncen||engurran, pregan
  fruncia||engurraba, pregaba
@@ -8645,6 +8691,7 @@
  interdicción||interdición
  interdiccións||interdicións
  internacionales||internacionais
+ intituto||instituto
  inusual||infrecuente
  inusualmente||infrecuentemente
  invadíu||invadiu
@@ -9237,6 +9284,8 @@
  intervencions||intervencións
  interxeccion||interxección
  interxeccions||interxeccións
+ interrumpiu||interrompeu
+ interrumpiron||interromperon
  íntimamente||intimamente
  intrepida||intrépida
  intrepidas||intrépidas
@@ -9544,10 +9593,10 @@
  kabul||Cabul
  kathmandu||Katmandú
  katmandu||Katmandú
- kazagistan||Casaquistán
- kazagistán||Casaquistán
- kazajistan||Casaquistán
- kazajistán||Casaquistán
+ kazagistan||Kazakhstán
+ kazagistán||Kazakhstán
+ kazajistan||Kazakhstán
+ kazajistán||Kazakhstán
  ke||que
  kenia||Kenya
  kermesse||quermese
@@ -9810,6 +9859,7 @@
  limonadas||limoadas
  limosna||esmola, caridade
  limosnas||esmola, caridade
+ limpiamente||limpamente
  limpida||límpida
  limpidas||límpidas
  limpido||límpido
@@ -10463,6 +10513,7 @@
  metereoloxías||meteoroloxías
  metereoloxica||meteorolóxica
  metereolóxica||meteorolóxica
+ meteorolóxicamente||meteoroloxicamente
  metereoloxicamente||meteoroloxicamente
  metereoloxicas||meteorolóxicas
  metereolóxicas||meteorolóxicas
@@ -10662,6 +10713,11 @@
  mofletes||fazulas
  moitedume||multitude
  moitedumes||multitudes
+ moldava||moldova
+ moldavas||moldovas
+ Moldavia|cs|Moldova
+ moldavo||moldovo
+ moldavos||moldovos
  molecula||molécula
  moleculas||moléculas
  momentanea||momentánea
@@ -11397,6 +11453,10 @@
  pelirroxa||roxa
  pelirroxos||roxos
  pelirroxas||roxas
+ pélvica||pelviana
+ pélvicas||pelvianas
+ pélvico||pelviano
+ pélvicos||pelvianos
  pendiente||pendente
  pendientes||pendentes
  peninsula||península
@@ -11409,6 +11469,8 @@
  percance||contratempo
  percances||contratempos
  percatarse||decatarse
+ percurso||curso
+ percursos||cursos
  percutor||percusor
  percutora||percusora
  percutoras||percusoras
@@ -11699,6 +11761,15 @@
  posgrado||posgrao
  posgrados||posgraos
  posicion||posición
+ posicionada||situada
+ posicionadas||situadas
+ posicionado||situado
+ posicionados||situados
+ posicionamento|| posición, postura, actitude, localización, situación, posto
+ posicionamentos|| posicións, posturas, actitudes, localizacións, situacións, postos
+ posicionar || situar
+ posicionaron || situaron
+ posicionou || situou
  posicions||posicións
  posoperatorio||postoperatorio
  posoperatorios||postoperatorios
@@ -12018,16 +12089,11 @@
  puocos||poucos
  purín||xurro, zurro
  puríns||xurros, zurros
- puxa||poxa
  puxaba||poxaba
  puxaban||poxaban
  puxada||poxada
  puxadas||poxadas
  puxado||poxado
- puxador||poxador
- puxadora||poxadora
- puxadoras||poxadoras
- puxadores||poxadores
  puxados||poxados
  puxan||poxan, puxan (empuxan)
  puxando||poxando, puxando (empuxando)
@@ -12589,6 +12655,7 @@
  roble||carballo
  robles||carballos
  rocío||resío, rosada
+ rodadura||rodaxe
  rodaxa||toro
  rodaxas||toros
  rodilla||xeonllo
@@ -12799,6 +12866,8 @@
  setuaxésima||septuaxésima
  setuaxésimos||septuaxésimos
  setuaxésimas||septuaxésimas
+ seudónimo||pseudónimo
+ seudónimos||pseudónimos
  sharia||xaria
  si||se (condicional), si (afirmación)
  sí||si (afirmación)
@@ -13406,6 +13475,7 @@
  tantear||tentear
  taquilla||portelo, armario
  taquillas||portelos, armarios
+ tararear||cantaruxar
  tarea||tarefa
  tareas||tarefas
  tarta||torta
@@ -13649,6 +13719,7 @@
  transcurrise||transcorrese
  transcurrisen||transcorresen
  transcurriu||transcorreu
+ transferíu||transferiu
  transladar||trasladar
  translado||traslado
  transladas||trasladas
@@ -13909,6 +13980,7 @@
  valerosas||valorosas
  valeroso||valoroso
  valerosos||valorosos
+ válidamente||validamente
  vallisoletana||valisoletana
  vallisoletanas||valisoletanas
  vallisoletano||valisoletano
@@ -14156,6 +14228,7 @@
  weblog||blog
  weblogs||blogs
  wikipedia|cs|Wikipedia
+ windsurf||wíndsurf
 
 == X ==
  xabalí||xabaril

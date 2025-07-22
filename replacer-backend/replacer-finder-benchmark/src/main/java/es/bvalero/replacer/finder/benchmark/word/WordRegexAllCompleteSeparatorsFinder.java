@@ -21,8 +21,8 @@ class WordRegexAllCompleteSeparatorsFinder implements BenchmarkFinder {
     private final Set<String> words = new HashSet<>();
 
     WordRegexAllCompleteSeparatorsFinder(Collection<String> words) {
-        final String leftSeparator = "(?<![\\d_])";
-        final String rightSeparator = "(?![\\d_])";
+        final String leftSeparator = "(?<!%s)".formatted(SEPARATOR_CLASS);
+        final String rightSeparator = "(?!%s)".formatted(SEPARATOR_CLASS);
         final String wordRegex = "\\p{L}++";
         final String regex = leftSeparator + wordRegex + rightSeparator;
         this.wordPattern = Pattern.compile(regex);

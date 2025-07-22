@@ -40,6 +40,7 @@ public class SimpleMisspellingFinderJmhBenchmarkTest extends BaseFinderJmhBenchm
     // private WordAhoCorasickLongestFinder wordAhoCorasickLongestFinder; // Good
     private WordAhoCorasickWholeFinder wordAhoCorasickWholeFinder;
     private WordAhoCorasickWholeLongestFinder wordAhoCorasickWholeLongestFinder;
+
     // private WordTrieFinder wordTrieFinder; // Good
     // private WordTrieNoOverlappingFinder wordTrieNoOverlappingFinder; // Good
     // private WordTrieWholeFinder wordTrieWholeFinder; // Good
@@ -63,21 +64,102 @@ public class SimpleMisspellingFinderJmhBenchmarkTest extends BaseFinderJmhBenchm
         Set<String> words = misspellings.stream().flatMap(cm -> cm.getTerms().stream()).collect(Collectors.toSet());
 
         // Initialize the finders
+        // wordRegexFinder = new WordRegexFinder(words);
+        // wordRegexCompleteFinder = new WordRegexCompleteFinder(words);
+        // wordRegexCompleteSeparatorsFinder = new WordRegexCompleteSeparatorsFinder(words);
+        // wordRegexAlternateFinder = new WordRegexAlternateFinder(words);
+        // wordRegexAlternateCompleteFinder = new WordRegexAlternateCompleteFinder(words);
+        // wordRegexAlternateCompleteSeparatorsFinder = new WordRegexAlternateCompleteSeparatorsFinder(words);
+        // wordRegexAllFinder = new WordRegexAllFinder(words);
+        // wordRegexAllCompleteFinder = new WordRegexAllCompleteFinder(words);
+        // wordRegexAllCompleteSeparatorsFinder = new WordRegexAllCompleteSeparatorsFinder(words);
         wordAutomatonAllFinder = new WordAutomatonAllFinder(words);
+        // wordLinearFinder = new WordLinearFinder(words);
         wordLinearAllFinder = new WordLinearAllFinder(words);
+        // wordAhoCorasickFinder = new WordAhoCorasickFinder(words);
+        // wordAhoCorasickLongestFinder = new WordAhoCorasickLongestFinder(words);
         wordAhoCorasickWholeFinder = new WordAhoCorasickWholeFinder(words);
         wordAhoCorasickWholeLongestFinder = new WordAhoCorasickWholeLongestFinder(words);
+        // wordTrieFinder = new WordTrieFinder(words);
+        // wordTrieNoOverlappingFinder = new WordTrieNoOverlappingFinder(words);
+        // wordTrieWholeFinder = new WordTrieWholeFinder(words);
     }
+
+    /*
+    @Benchmark
+    public void wordRegexFinder(Blackhole bh) {
+        runFinder(wordRegexFinder, bh);
+    }
+
+    @Benchmark
+    public void wordRegexCompleteFinder(Blackhole bh) {
+        runFinder(wordRegexCompleteFinder, bh);
+    }
+
+    @Benchmark
+    public void wordRegexCompleteSeparatorsFinder(Blackhole bh) {
+        runFinder(wordRegexCompleteSeparatorsFinder, bh);
+    }
+
+    @Benchmark
+    public void wordRegexAlternateFinder(Blackhole bh) {
+        runFinder(wordRegexAlternateFinder, bh);
+    }
+
+    @Benchmark
+    public void wordRegexAlternateCompleteFinder(Blackhole bh) {
+        runFinder(wordRegexAlternateCompleteFinder, bh);
+    }
+
+    @Benchmark
+    public void wordRegexAlternateCompleteSeparatorsFinder(Blackhole bh) {
+        runFinder(wordRegexAlternateCompleteSeparatorsFinder, bh);
+    }
+
+    @Benchmark
+    public void wordRegexAllFinder(Blackhole bh) {
+        runFinder(wordRegexAllFinder, bh);
+    }
+
+    @Benchmark
+    public void wordRegexAllCompleteFinder(Blackhole bh) {
+        runFinder(wordRegexAllCompleteFinder, bh);
+    }
+
+    @Benchmark
+    public void wordRegexAllCompleteSeparatorsFinder(Blackhole bh) {
+        runFinder(wordRegexAllCompleteSeparatorsFinder, bh);
+    }
+    */
 
     @Benchmark
     public void wordAutomatonAllFinder(Blackhole bh) {
         runFinder(wordAutomatonAllFinder, bh);
     }
 
+    /*
+    @Benchmark
+    public void wordLinearFinder(Blackhole bh) {
+        runFinder(wordLinearFinder, bh);
+    }
+     */
+
     @Benchmark
     public void wordLinearAllFinder(Blackhole bh) {
         runFinder(wordLinearAllFinder, bh);
     }
+
+    /*
+    @Benchmark
+    public void wordAhoCorasickFinder(Blackhole bh) {
+        runFinder(wordAhoCorasickFinder, bh);
+    }
+
+    @Benchmark
+    public void wordAhoCorasickLongestFinder(Blackhole bh) {
+        runFinder(wordAhoCorasickLongestFinder, bh);
+    }
+    */
 
     @Benchmark
     public void wordAhoCorasickWholeFinder(Blackhole bh) {
@@ -88,6 +170,23 @@ public class SimpleMisspellingFinderJmhBenchmarkTest extends BaseFinderJmhBenchm
     public void wordAhoCorasickWholeLongestFinder(Blackhole bh) {
         runFinder(wordAhoCorasickWholeLongestFinder, bh);
     }
+
+    /*
+    @Benchmark
+    public void wordTrieFinder(Blackhole bh) {
+        runFinder(wordTrieFinder, bh);
+    }
+
+    @Benchmark
+    public void wordTrieNoOverlappingFinder(Blackhole bh) {
+        runFinder(wordTrieNoOverlappingFinder, bh);
+    }
+
+    @Benchmark
+    public void wordTrieWholeFinder(Blackhole bh) {
+        runFinder(wordTrieWholeFinder, bh);
+    }
+    */
 
     @Test
     void testGenerateChartBoxplot() throws ReplacerException {

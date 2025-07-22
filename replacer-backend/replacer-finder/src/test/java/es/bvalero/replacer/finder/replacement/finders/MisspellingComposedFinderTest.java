@@ -90,14 +90,23 @@ class MisspellingComposedFinderTest {
 
         List<Replacement> results = misspellingComposedFinder.findList(text);
 
-        Replacement expected = Replacement.of(
+        // Both replacements are matched. The nested one will be discarded later.
+        Replacement expectedSimple = Replacement.of(
+            2,
+            "aún",
+            StandardType.of(ReplacementKind.COMPOSED, "aún"),
+            List.of(Suggestion.ofNoComment("aún"), Suggestion.ofNoComment("aun")),
+            text
+        );
+        Replacement expectedComposed = Replacement.of(
             2,
             "aún así",
             StandardType.of(ReplacementKind.COMPOSED, "aún así"),
             List.of(Suggestion.ofNoComment("aún así"), Suggestion.ofNoComment("aun así")),
             text
         );
-        assertTrue(Replacement.compareReplacements(Set.of(expected), results));
+        Set<Replacement> expected = Set.of(expectedSimple, expectedComposed);
+        assertTrue(Replacement.compareReplacements(expected, results));
     }
 
     @Test
@@ -297,7 +306,17 @@ class MisspellingComposedFinderTest {
 
         List<Replacement> results = misspellingComposedFinder.findList(text);
 
-        Replacement expected = Replacement.of(
+        Replacement expected1 = Replacement.of(
+            5,
+            cm1.getWord(),
+            StandardType.of(ReplacementKind.COMPOSED, cm1.getWord()),
+            List.of(
+                Suggestion.ofNoComment(cm1.getWord()),
+                Suggestion.ofNoComment(cm1.getSuggestions().get(0).getText())
+            ),
+            text
+        );
+        Replacement expected2 = Replacement.of(
             3,
             cm2.getWord(),
             StandardType.of(ReplacementKind.COMPOSED, cm2.getWord()),
@@ -307,7 +326,8 @@ class MisspellingComposedFinderTest {
             ),
             text
         );
-        assertTrue(Replacement.compareReplacements(Set.of(expected), results));
+        Set<Replacement> expected = Set.of(expected1, expected2);
+        assertTrue(Replacement.compareReplacements(expected, results));
     }
 
     @Test

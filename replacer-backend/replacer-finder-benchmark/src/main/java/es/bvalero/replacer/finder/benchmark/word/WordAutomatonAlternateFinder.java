@@ -7,6 +7,7 @@ import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
 import es.bvalero.replacer.finder.util.AutomatonMatchFinder;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.regex.MatchResult;
 
 /**
@@ -20,7 +21,7 @@ class WordAutomatonAlternateFinder implements BenchmarkFinder {
     private final RunAutomaton automaton;
 
     WordAutomatonAlternateFinder(Collection<String> words) {
-        Iterable<String> cleanWords = words.stream().map(this::cleanWord).toList();
+        Iterable<String> cleanWords = words.stream().sorted(Comparator.reverseOrder()).map(this::cleanWord).toList();
         String alternations = FinderUtils.joinAlternate(cleanWords);
         this.automaton = new RunAutomaton(new RegExp(alternations).toAutomaton());
     }

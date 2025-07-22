@@ -5,6 +5,7 @@ import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.RegexMatchFinder;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
 
@@ -18,7 +19,7 @@ class WordRegexAlternateFinder implements BenchmarkFinder {
     private final Pattern pattern;
 
     WordRegexAlternateFinder(Collection<String> words) {
-        Iterable<String> cleanWords = words.stream().map(this::cleanWord).toList();
+        Iterable<String> cleanWords = words.stream().sorted(Comparator.reverseOrder()).map(this::cleanWord).toList();
         String alternations = FinderUtils.joinAlternate(cleanWords);
         this.pattern = Pattern.compile(alternations);
     }
