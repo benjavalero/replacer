@@ -181,6 +181,16 @@ class FinderUtilsTest {
     }
 
     @Test
+    void testExpandRegex() {
+        assertEquals(Set.of("a"), FinderUtils.expandRegex("a"));
+        assertEquals(Set.of("abd", "acd"), FinderUtils.expandRegex("a[bc]d"));
+        assertEquals(Set.of("abdf", "acdf", "abef", "acef"), FinderUtils.expandRegex("a[bc][de]f"));
+        assertEquals(Set.of("ac", "abc"), FinderUtils.expandRegex("ab?c"));
+        assertEquals(Set.of("abcd", "abd", "acd", "ad"), FinderUtils.expandRegex("ab?c?d"));
+        assertEquals(Set.of("ad", "abd", "acd"), FinderUtils.expandRegex("a[bc]?d"));
+    }
+
+    @Test
     void testJoinAlternate() {
         assertEquals("a|b|c", FinderUtils.joinAlternate(List.of("a", "b", "c")));
         assertEquals("", FinderUtils.joinAlternate(List.of()));

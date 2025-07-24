@@ -21,7 +21,15 @@ class WordAutomatonAlternateFinder implements BenchmarkFinder {
     private final RunAutomaton automaton;
 
     WordAutomatonAlternateFinder(Collection<String> words) {
-        Iterable<String> cleanWords = words.stream().sorted(Comparator.reverseOrder()).map(this::cleanWord).toList();
+        this(words, true);
+    }
+
+    WordAutomatonAlternateFinder(Collection<String> words, boolean clean) {
+        Iterable<String> cleanWords = words
+            .stream()
+            .sorted(Comparator.reverseOrder())
+            .map(w -> clean ? this.cleanWord(w) : w)
+            .toList();
         String alternations = FinderUtils.joinAlternate(cleanWords);
         this.automaton = new RunAutomaton(new RegExp(alternations).toAutomaton());
     }

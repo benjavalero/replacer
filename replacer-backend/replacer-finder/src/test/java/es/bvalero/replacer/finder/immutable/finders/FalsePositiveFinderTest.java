@@ -75,8 +75,8 @@ class FalsePositiveFinderTest {
 
         List<Immutable> matches = falsePositiveFinder.findList(text);
 
-        // Only the first match is found
-        Set<String> expected = Set.of("Top Album");
+        // Both matches are found
+        Set<String> expected = Set.of("Top Album", "Album Chart");
         Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
         assertEquals(expected, actual);
     }
@@ -88,10 +88,13 @@ class FalsePositiveFinderTest {
 
         List<Immutable> matches = falsePositiveFinder.findList(text);
 
-        // This is a known issue.
+        // This is a known issue with some finders, in particular with the best approach according to the benchmarks.
         // In this case, the automaton finds the first match "es aún" and not the second one because they overlap.
         // So, once the first one is discarded as it is not complete, we lose the second one too.
-        assertTrue(matches.isEmpty());
+        // Using the Aho-Corasick algorithm, we can fix it.
+        Set<String> expected = Set.of("aún son");
+        Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
+        assertEquals(expected, actual);
     }
 
     @Test

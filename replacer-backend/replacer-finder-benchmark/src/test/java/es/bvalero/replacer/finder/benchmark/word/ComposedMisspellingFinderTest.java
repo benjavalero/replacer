@@ -62,67 +62,63 @@ class ComposedMisspellingFinderTest {
 
     @Test
     void testWordRegexFinder() {
-        // In the case of overlapping, it finds both matches.
+        // In the case of overlapping, it finds all complete matches.
         WordRegexFinder finder = new WordRegexFinder(this.words);
         assertEquals(expected, finder.findMatches(text));
     }
 
     @Test
     void testWordRegexAlternateFinder() {
-        // In the case of overlapping, it finds the first match.
-        // But if the first match is not complete, it hides the second one.
+        // In the case of overlapping, it finds the first match, complete or incomplete.
         WordRegexAlternateFinder finder = new WordRegexAlternateFinder(this.words);
         assertEquals(expected, finder.findMatches(text));
     }
 
     @Test
     void testWordAutomatonFinder() {
-        // In the case of overlapping, it finds both matches.
+        // In the case of overlapping, it finds all complete matches.
         WordAutomatonFinder finder = new WordAutomatonFinder(this.words);
         assertEquals(expected, finder.findMatches(text));
     }
 
     @Test
     void testWordAutomatonAlternateFinder() {
-        // In the case of overlapping, it finds the first match.
-        // But if the first match is not complete, it hides the second one.
+        // In the case of overlapping, it finds the first match, complete or incomplete.
         WordAutomatonAlternateFinder finder = new WordAutomatonAlternateFinder(this.words);
         assertEquals(expected, finder.findMatches(text));
     }
 
     @Test
     void testWordLinearFinder() {
-        // In the case of overlapping, it finds both matches.
+        // In the case of overlapping, it finds all complete matches.
         WordLinearFinder finder = new WordLinearFinder(this.words);
         assertEquals(expected, finder.findMatches(text));
     }
 
     @Test
     void testWordAhoCorasickFinder() {
-        // In the case of overlapping, it finds both matches.
+        // In the case of overlapping, it finds all complete matches.
         WordAhoCorasickFinder finder = new WordAhoCorasickFinder(this.words);
         assertEquals(expected, finder.findMatches(text));
     }
 
     @Test
     void testWordAhoCorasickLongestFinder() {
-        // In the case of overlapping, it finds the first match.
-        // But if the first match is not complete, it hides the second one.
+        // In the case of overlapping, it finds the first match, complete or incomplete.
         WordAhoCorasickLongestFinder finder = new WordAhoCorasickLongestFinder(this.words);
         assertEquals(expected, finder.findMatches(text));
     }
 
     @Test
     void testWordTrieFinder() {
-        // In the case of overlapping, it finds both matches.
+        // In the case of overlapping, it finds all complete matches.
         WordTrieFinder finder = new WordTrieFinder(this.words);
         assertEquals(expected, finder.findMatches(text));
     }
 
     @Test
     void testWordTrieNoOverlappingFinder() {
-        // In the case of overlapping, it finds the first match.
-        // But if the first match is not complete, it hides the second one.
+        // In the case of overlapping, it finds the first complete match.
         WordTrieNoOverlappingFinder finder = new WordTrieNoOverlappingFinder(this.words);
         assertEquals(expected, finder.findMatches(text));
     }
