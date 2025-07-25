@@ -24,12 +24,6 @@ public class IterableFinderJmhBenchmarkTest extends BaseFinderJmhBenchmark {
     private static final String fileName = "iterable/iterable-summary-jmh";
     private static final String word = "_";
 
-    @Setup
-    public void setUp() throws ReplacerException {
-        // Base set-up
-        super.setUp();
-    }
-
     @Benchmark
     public void linearFinder(Blackhole bh) {
         sampleContents.forEach(page -> LinearMatchFinder.find(page, this::findMatch).forEach(bh::consume));

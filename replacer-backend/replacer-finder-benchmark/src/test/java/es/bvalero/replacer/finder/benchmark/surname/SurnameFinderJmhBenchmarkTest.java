@@ -36,6 +36,7 @@ public class SurnameFinderJmhBenchmarkTest extends BaseFinderJmhBenchmark {
     private SurnameAhoCorasickLongestFinder surnameAhoCorasickLongestFinder;
     private SurnameAhoCorasickWholeLongestFinder surnameAhoCorasickWholeLongestFinder;
 
+    @Override
     @Setup
     public void setUp() throws ReplacerException {
         // Base set-up

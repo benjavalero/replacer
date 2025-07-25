@@ -28,6 +28,7 @@ public class CompleteTagFinderJmhBenchmarkTest extends BaseFinderJmhBenchmark {
     private CompleteTagLinearFinder completeTagLinearFinder;
     private CompleteTagFinalFinder completeTagFinalFinder;
 
+    @Override
     @Setup
     public void setUp() throws ReplacerException {
         // Base set-up

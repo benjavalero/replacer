@@ -38,6 +38,7 @@ public class UppercaseFinderJmhBenchmarkTest extends BaseFinderJmhBenchmark {
     private UppercaseAutomatonAlternateAllFinder uppercaseAutomatonAlternateAllFinder;
     private UppercaseAhoCorasickWholeLongestFinder uppercaseAhoCorasickWholeLongestFinder;
 
+    @Override
     @Setup
     public void setUp() throws ReplacerException {
         // Base set-up

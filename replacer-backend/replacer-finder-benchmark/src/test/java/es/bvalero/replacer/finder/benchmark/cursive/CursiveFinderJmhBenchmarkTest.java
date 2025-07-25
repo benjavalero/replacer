@@ -22,6 +22,7 @@ public class CursiveFinderJmhBenchmarkTest extends BaseFinderJmhBenchmark {
     private CursiveLinearFinder cursiveLinearFinder;
     private CursiveFinalFinder cursiveFinalFinder;
 
+    @Override
     @Setup
     public void setUp() throws ReplacerException {
         // Base set-up

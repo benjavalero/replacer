@@ -31,6 +31,7 @@ public class RedirectionFinderJmhBenchmarkTest extends BaseFinderJmhBenchmark {
     private RedirectionAhoCorasickWholeFinder redirectionAhoCorasickWholeFinder;
     private RedirectionAhoCorasickWholeLongestFinder redirectionAhoCorasickWholeLongestFinder;
 
+    @Override
     @Setup
     public void setUp() throws ReplacerException {
         // Base set-up

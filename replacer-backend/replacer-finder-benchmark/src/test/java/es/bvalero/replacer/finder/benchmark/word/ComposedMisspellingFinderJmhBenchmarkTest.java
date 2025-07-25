@@ -32,6 +32,7 @@ public class ComposedMisspellingFinderJmhBenchmarkTest extends BaseFinderJmhBenc
     private WordTrieFinder wordTrieFinder;
     private WordTrieNoOverlappingFinder wordTrieNoOverlappingFinder;
 
+    @Override
     @Setup
     public void setUp() throws ReplacerException {
         // Base set-up

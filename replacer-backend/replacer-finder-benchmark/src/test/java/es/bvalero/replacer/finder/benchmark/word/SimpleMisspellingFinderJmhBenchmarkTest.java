@@ -45,6 +45,7 @@ public class SimpleMisspellingFinderJmhBenchmarkTest extends BaseFinderJmhBenchm
     // private WordTrieNoOverlappingFinder wordTrieNoOverlappingFinder; // Good
     // private WordTrieWholeFinder wordTrieWholeFinder; // Good
 
+    @Override
     @Setup
     public void setUp() throws ReplacerException {
         // Base set-up

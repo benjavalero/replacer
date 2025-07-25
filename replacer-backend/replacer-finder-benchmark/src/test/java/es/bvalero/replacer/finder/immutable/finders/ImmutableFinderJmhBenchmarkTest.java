@@ -48,6 +48,7 @@ public class ImmutableFinderJmhBenchmarkTest extends BaseFinderJmhBenchmark {
     private UrlFinder urlFinder;
     private XmlTagFinder xmlTagFinder;
 
+    @Override
     @Setup
     public void setUp() throws ReplacerException {
         // Base set-up

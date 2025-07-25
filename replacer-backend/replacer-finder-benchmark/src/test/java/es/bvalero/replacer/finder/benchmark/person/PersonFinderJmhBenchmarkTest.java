@@ -36,6 +36,7 @@ public class PersonFinderJmhBenchmarkTest extends BaseFinderJmhBenchmark {
     private PersonAhoCorasickLongestFinder personAhoCorasickLongestFinder;
     private PersonAhoCorasickWholeLongestFinder personAhoCorasickWholeLongestFinder;
 
+    @Override
     @Setup
     public void setUp() throws ReplacerException {
         // Base set-up

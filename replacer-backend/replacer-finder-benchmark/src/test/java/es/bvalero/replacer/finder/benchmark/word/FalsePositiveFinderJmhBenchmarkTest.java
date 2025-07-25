@@ -40,6 +40,7 @@ public class FalsePositiveFinderJmhBenchmarkTest extends BaseFinderJmhBenchmark 
     // private WordTrieNoOverlappingFinder wordTrieNoOverlappingFinder; // Good - No complete overlapping
     private WordTrieWholeFinder wordTrieWholeFinder; // Good - Allows overlapping
 
+    @Override
     @Setup
     public void setUp() throws ReplacerException {
         // Base set-up

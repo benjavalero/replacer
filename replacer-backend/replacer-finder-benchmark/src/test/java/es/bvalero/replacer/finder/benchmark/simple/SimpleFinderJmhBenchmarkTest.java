@@ -18,6 +18,7 @@ public class SimpleFinderJmhBenchmarkTest extends BaseFinderJmhBenchmark {
     private SimpleRegexFinder simpleRegexFinder;
     private SimpleAutomatonFinder simpleAutomatonFinder;
 
+    @Override
     @Setup
     public void setUp() throws ReplacerException {
         // Base set-up

@@ -57,7 +57,7 @@ class ReplacementTypeControllerTest {
                     .contentType(MediaType.APPLICATION_JSON)
             )
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.kind", is(Byte.valueOf(ReplacementKind.SIMPLE.getCode()).intValue())))
+            .andExpect(jsonPath("$.kind", is((int) ReplacementKind.SIMPLE.getCode())))
             .andExpect(jsonPath("$.subtype", is(replacement)));
 
         verify(replacementTypeFindApi).findReplacementType(WikipediaLanguage.getDefault(), replacement, true);

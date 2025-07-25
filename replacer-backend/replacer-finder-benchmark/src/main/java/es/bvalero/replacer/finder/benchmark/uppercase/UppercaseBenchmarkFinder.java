@@ -32,7 +32,7 @@ class UppercaseBenchmarkFinder implements BenchmarkFinder {
     );
 
     static boolean isWordPrecededByPunctuation(int start, String text) {
-        List<String> punctuations = List.of("=", "#", "*", ".", "!", "\n|", "||", "|+", "<td>", "text:");
+        List<String> punctuations = List.of("=", "#", "*", ".", "!", "\n|", "||", "|+", "<td>", TIMELINE_TEXT);
         String textBefore = text.substring(0, start).trim();
         return punctuations.stream().anyMatch(textBefore::endsWith);
     }

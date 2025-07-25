@@ -36,6 +36,7 @@ public class ReplacementFinderJmhBenchmarkTest extends BaseFinderJmhBenchmark {
     private MisspellingComposedFinder misspellingComposedFinder;
     private MisspellingSimpleFinder misspellingSimpleFinder;
 
+    @Override
     @Setup
     public void setUp() throws ReplacerException {
         // Base set-up

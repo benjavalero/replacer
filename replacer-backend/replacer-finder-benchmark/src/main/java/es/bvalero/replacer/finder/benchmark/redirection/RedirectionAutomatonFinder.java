@@ -8,17 +8,13 @@ import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
 import es.bvalero.replacer.finder.benchmark.BenchmarkResult;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import java.util.List;
-import java.util.stream.Collectors;
 
 class RedirectionAutomatonFinder implements BenchmarkFinder {
 
     private final RunAutomaton automaton;
 
     RedirectionAutomatonFinder(List<String> redirectionWords) {
-        List<String> fixedRedirectionWords = redirectionWords
-            .stream()
-            .map(s -> s.replace("#", "\\#"))
-            .collect(Collectors.toList());
+        List<String> fixedRedirectionWords = redirectionWords.stream().map(s -> s.replace("#", "\\#")).toList();
         String alternations = '(' + FinderUtils.joinAlternate(fixedRedirectionWords) + ')';
         this.automaton = new RunAutomaton(new RegExp(alternations).toAutomaton());
     }
