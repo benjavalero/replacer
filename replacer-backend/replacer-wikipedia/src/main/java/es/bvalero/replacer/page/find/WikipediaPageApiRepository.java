@@ -66,15 +66,11 @@ public class WikipediaPageApiRepository implements WikipediaPageRepository {
     @Override
     public Collection<WikipediaPage> findByKeys(Collection<PageKey> pageKeys) throws WikipediaException {
         // We assume all requested pages share the same language
-        WikipediaLanguage lang = pageKeys
-            .stream()
-            .map(PageKey::getLang)
-            .distinct()
-            .findAny()
-            .orElseThrow(() -> new IllegalArgumentException("All pages have to share the same language"));
-        if (pageKeys.stream().map(PageKey::getLang).distinct().count() > 1) {
-            throw new IllegalArgumentException("All pages have to share the same language");
+        List<WikipediaLanguage> keyLangs = pageKeys.stream().map(PageKey::getLang).distinct().toList();
+        if (keyLangs.size() != 1) {
+            throw new IllegalArgumentException("All pages have to share the same language: " + StringUtils.join(pageKeys, ", "));
         }
+        WikipediaLanguage lang = keyLangs.get(0);
 
         List<WikipediaPage> pages = new ArrayList<>(pageKeys.size());
         // There is a maximum number of pages to request
