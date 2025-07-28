@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
-class WikipediaApiResponse {
+public class WikipediaApiResponse {
 
     // We cannot reuse the class in wikipedia submodule as submodules cannot access each other
 
