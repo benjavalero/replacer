@@ -109,7 +109,7 @@ public class WikipediaPageApiRepository implements WikipediaPageRepository {
         } catch (OutOfMemoryError e) {
             // Sometimes (though rarely) the retrieved pages are huge (e.g. annexes) and throw an out-of-memory error
             // Retry recursively with smaller chunks
-            LOGGER.error("Out-of-memory when retrieving pages by ID: {}", StringUtils.join(pageIds, SPACE));
+            LOGGER.warn("Out-of-memory when retrieving pages by ID: {}", StringUtils.join(pageIds, SPACE));
             int half = pageIds.size() / 2;
             Collection<WikipediaPage> result = getPagesByIds(lang, pageIds.subList(0, half));
             result.addAll(getPagesByIds(lang, pageIds.subList(half, pageIds.size())));
