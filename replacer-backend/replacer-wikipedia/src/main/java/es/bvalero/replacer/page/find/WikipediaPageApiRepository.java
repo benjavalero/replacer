@@ -12,6 +12,7 @@ import es.bvalero.replacer.wikipedia.api.WikipediaApiResponse;
 import es.bvalero.replacer.wikipedia.api.WikipediaApiVerb;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.VisibleForTesting;
@@ -111,9 +112,9 @@ public class WikipediaPageApiRepository implements WikipediaPageRepository {
             // Retry recursively with smaller chunks
             LOGGER.warn("Out-of-memory when retrieving pages by ID: {}", StringUtils.join(pageIds, SPACE));
             int half = pageIds.size() / 2;
-            Collection<WikipediaPage> result = getPagesByIds(lang, pageIds.subList(0, half));
-            result.addAll(getPagesByIds(lang, pageIds.subList(half, pageIds.size())));
-            return result;
+            Collection<WikipediaPage> result1 = getPagesByIds(lang, pageIds.subList(0, half));
+            Collection<WikipediaPage> result2 = getPagesByIds(lang, pageIds.subList(half, pageIds.size()));
+            return Stream.concat(result1.stream(), result2.stream()).toList();
         } catch (Exception e) {
             LOGGER.error("Error finding pages by ID: {}", StringUtils.join(pageIds, SPACE), e);
             throw new WikipediaException(e);
