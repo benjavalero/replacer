@@ -3,6 +3,7 @@ package es.bvalero.replacer.page.save;
 import es.bvalero.replacer.checkwikipedia.CheckWikipediaService;
 import es.bvalero.replacer.common.util.ReplacerUtils;
 import es.bvalero.replacer.finder.Cosmetic;
+import es.bvalero.replacer.finder.CosmeticFindApi;
 import es.bvalero.replacer.finder.FinderPage;
 import java.util.Collection;
 import java.util.Collections;
@@ -16,18 +17,18 @@ import org.springframework.stereotype.Service;
 class ApplyCosmeticsService {
 
     // Dependency injection
-    private final CosmeticFindService cosmeticFindService;
+    private final CosmeticFindApi cosmeticFindApi;
     private final CheckWikipediaService checkWikipediaService;
 
-    ApplyCosmeticsService(CosmeticFindService cosmeticFindService, CheckWikipediaService checkWikipediaService) {
-        this.cosmeticFindService = cosmeticFindService;
+    ApplyCosmeticsService(CosmeticFindApi cosmeticFindApi, CheckWikipediaService checkWikipediaService) {
+        this.cosmeticFindApi = cosmeticFindApi;
         this.checkWikipediaService = checkWikipediaService;
     }
 
     /** Return the new content of the page after applying all the cosmetic changes */
     String applyCosmeticChanges(FinderPage page) {
         String fixedText = page.getContent();
-        Collection<Cosmetic> cosmeticFound = cosmeticFindService.findCosmetics(page);
+        Collection<Cosmetic> cosmeticFound = cosmeticFindApi.findCosmetics(page);
 
         if (!cosmeticFound.isEmpty()) {
             // We can assume the collection is sorted
