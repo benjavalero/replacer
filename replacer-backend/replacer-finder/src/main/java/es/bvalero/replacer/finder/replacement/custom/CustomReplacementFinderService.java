@@ -1,7 +1,6 @@
 package es.bvalero.replacer.finder.replacement.custom;
 
 import es.bvalero.replacer.finder.*;
-import es.bvalero.replacer.finder.immutable.ImmutableFinderService;
 import es.bvalero.replacer.finder.replacement.ReplacementFinderAbstractService;
 import es.bvalero.replacer.page.find.CustomReplacementFindRequest;
 import es.bvalero.replacer.page.find.CustomReplacementFindService;
@@ -15,8 +14,8 @@ public class CustomReplacementFinderService
     extends ReplacementFinderAbstractService
     implements FinderService<Replacement>, CustomReplacementFindService {
 
-    public CustomReplacementFinderService(ImmutableFinderService immutableFinderService) {
-        super(immutableFinderService);
+    public CustomReplacementFinderService(ImmutableFindApi immutableFindApi) {
+        super(immutableFindApi);
     }
 
     @Override

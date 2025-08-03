@@ -2,8 +2,8 @@ package es.bvalero.replacer.finder.replacement;
 
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.Immutable;
+import es.bvalero.replacer.finder.ImmutableFindApi;
 import es.bvalero.replacer.finder.Replacement;
-import es.bvalero.replacer.finder.immutable.ImmutableFinderService;
 import es.bvalero.replacer.finder.parser.FinderParserPage;
 import java.util.Collection;
 import java.util.List;
@@ -11,10 +11,10 @@ import java.util.List;
 public abstract class ReplacementFinderAbstractService {
 
     // Dependency injection
-    private final ImmutableFinderService immutableFinderService;
+    private final ImmutableFindApi immutableFindApi;
 
-    public ReplacementFinderAbstractService(ImmutableFinderService immutableFinderService) {
-        this.immutableFinderService = immutableFinderService;
+    public ReplacementFinderAbstractService(ImmutableFindApi immutableFindApi) {
+        this.immutableFindApi = immutableFindApi;
     }
 
     protected Collection<Replacement> filterResults(FinderPage page, Collection<Replacement> allResults) {
@@ -55,6 +55,6 @@ public abstract class ReplacementFinderAbstractService {
 
     private Iterable<Immutable> findImmutables(FinderPage page) {
         final FinderParserPage parserPage = FinderParserPage.of(page);
-        return immutableFinderService.findIterable(parserPage);
+        return immutableFindApi.findImmutables(parserPage);
     }
 }

@@ -4,8 +4,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 
 import es.bvalero.replacer.finder.FinderPage;
+import es.bvalero.replacer.finder.ImmutableFindApi;
 import es.bvalero.replacer.finder.Replacement;
-import es.bvalero.replacer.finder.immutable.ImmutableFinderService;
 import es.bvalero.replacer.page.find.CustomReplacementFindRequest;
 import java.util.List;
 import org.apache.commons.collections4.IterableUtils;
@@ -18,8 +18,8 @@ class CustomReplacementFinderServiceTest {
 
     @BeforeEach
     public void setUp() {
-        ImmutableFinderService immutableFinderService = mock(ImmutableFinderService.class);
-        customReplacementFinderService = new CustomReplacementFinderService(immutableFinderService);
+        ImmutableFindApi immutableFindApi = mock(ImmutableFindApi.class);
+        customReplacementFinderService = new CustomReplacementFinderService(immutableFindApi);
     }
 
     @Test

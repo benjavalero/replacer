@@ -1,8 +1,6 @@
 package es.bvalero.replacer.finder.immutable;
 
-import es.bvalero.replacer.finder.Finder;
-import es.bvalero.replacer.finder.FinderService;
-import es.bvalero.replacer.finder.Immutable;
+import es.bvalero.replacer.finder.*;
 import jakarta.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -10,7 +8,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ImmutableFinderService implements FinderService<Immutable> {
+class ImmutableFinderService implements FinderService<Immutable>, ImmutableFindApi {
 
     // Dependency injection
     private final List<ImmutableFinder> immutableFinders;
@@ -27,5 +25,10 @@ public class ImmutableFinderService implements FinderService<Immutable> {
     @Override
     public Iterable<Finder<Immutable>> getFinders() {
         return new ArrayList<>(immutableFinders);
+    }
+
+    @Override
+    public Iterable<Immutable> findImmutables(FinderPage page) {
+        return this.findIterable(page);
     }
 }

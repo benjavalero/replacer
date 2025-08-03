@@ -7,11 +7,7 @@ import static org.mockito.Mockito.when;
 
 import es.bvalero.replacer.common.domain.ReplacementKind;
 import es.bvalero.replacer.common.domain.StandardType;
-import es.bvalero.replacer.finder.FinderPage;
-import es.bvalero.replacer.finder.Immutable;
-import es.bvalero.replacer.finder.Replacement;
-import es.bvalero.replacer.finder.Suggestion;
-import es.bvalero.replacer.finder.immutable.ImmutableFinderService;
+import es.bvalero.replacer.finder.*;
 import java.util.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,15 +16,15 @@ class ReplacementFinderServiceTest {
 
     // Dependency injection
     private ReplacementFinder replacementFinder;
-    private ImmutableFinderService immutableFinderService;
+    private ImmutableFindApi immutableFindApi;
 
     private ReplacementFinderApi replacementFinderService;
 
     @BeforeEach
     public void setUp() {
         replacementFinder = mock(ReplacementFinder.class);
-        immutableFinderService = mock(ImmutableFinderService.class);
-        replacementFinderService = new ReplacementFinderApi(List.of(replacementFinder), immutableFinderService);
+        immutableFindApi = mock(ImmutableFindApi.class);
+        replacementFinderService = new ReplacementFinderApi(List.of(replacementFinder), immutableFindApi);
     }
 
     @Test
@@ -174,7 +170,7 @@ class ReplacementFinderServiceTest {
         when(replacementFinder.find(any(FinderPage.class))).thenReturn(
             new HashSet<>(List.of(replacement1, replacement2))
         );
-        when(immutableFinderService.findIterable(any(FinderPage.class))).thenReturn(List.of(immutable));
+        when(immutableFindApi.findImmutables(any(FinderPage.class))).thenReturn(List.of(immutable));
 
         Collection<Replacement> replacements = replacementFinderService.findReplacements(FinderPage.of(text));
 
@@ -205,7 +201,7 @@ class ReplacementFinderServiceTest {
         when(replacementFinder.find(any(FinderPage.class))).thenReturn(
             new HashSet<>(List.of(replacement1, replacement2))
         );
-        when(immutableFinderService.findIterable(any(FinderPage.class))).thenReturn(List.of(immutable));
+        when(immutableFindApi.findImmutables(any(FinderPage.class))).thenReturn(List.of(immutable));
 
         Collection<Replacement> replacements = replacementFinderService.findReplacements(FinderPage.of(text));
 
@@ -236,7 +232,7 @@ class ReplacementFinderServiceTest {
         when(replacementFinder.find(any(FinderPage.class))).thenReturn(
             new HashSet<>(List.of(replacement1, replacement2))
         );
-        when(immutableFinderService.findIterable(any(FinderPage.class))).thenReturn(List.of(immutable));
+        when(immutableFindApi.findImmutables(any(FinderPage.class))).thenReturn(List.of(immutable));
 
         Collection<Replacement> replacements = replacementFinderService.findReplacements(FinderPage.of(text));
 

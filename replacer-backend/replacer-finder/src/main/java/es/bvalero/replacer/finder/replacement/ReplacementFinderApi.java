@@ -2,11 +2,7 @@ package es.bvalero.replacer.finder.replacement;
 
 import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import es.bvalero.replacer.finder.Finder;
-import es.bvalero.replacer.finder.FinderPage;
-import es.bvalero.replacer.finder.FinderService;
-import es.bvalero.replacer.finder.Replacement;
-import es.bvalero.replacer.finder.immutable.ImmutableFinderService;
+import es.bvalero.replacer.finder.*;
 import es.bvalero.replacer.page.index.ReplacementFindService;
 import es.bvalero.replacer.replacement.type.ReplacementTypeFindApi;
 import jakarta.annotation.PostConstruct;
@@ -27,11 +23,8 @@ public class ReplacementFinderApi
     // Dependency injection
     private final List<ReplacementFinder> replacementFinders;
 
-    public ReplacementFinderApi(
-        List<ReplacementFinder> replacementFinders,
-        ImmutableFinderService immutableFinderService
-    ) {
-        super(immutableFinderService);
+    public ReplacementFinderApi(List<ReplacementFinder> replacementFinders, ImmutableFindApi immutableFindApi) {
+        super(immutableFindApi);
         this.replacementFinders = replacementFinders;
     }
 
