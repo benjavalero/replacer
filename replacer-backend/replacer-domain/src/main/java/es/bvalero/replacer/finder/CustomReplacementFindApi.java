@@ -1,12 +1,11 @@
-package es.bvalero.replacer.page.find;
+package es.bvalero.replacer.finder;
 
-import es.bvalero.replacer.finder.FinderPage;
-import es.bvalero.replacer.finder.Replacement;
+import es.bvalero.replacer.page.find.CustomReplacementFindRequest;
 import java.util.Collection;
 import org.jmolecules.architecture.hexagonal.SecondaryPort;
 
 @SecondaryPort
-public interface CustomReplacementFindService {
+public interface CustomReplacementFindApi {
     /** Find all custom replacements in the page content ignoring the ones contained in immutables */
     Collection<Replacement> findCustomReplacements(
         FinderPage page,

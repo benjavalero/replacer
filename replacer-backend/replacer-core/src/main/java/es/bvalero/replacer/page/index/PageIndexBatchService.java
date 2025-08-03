@@ -1,5 +1,6 @@
 package es.bvalero.replacer.page.index;
 
+import es.bvalero.replacer.finder.ReplacementFindApi;
 import es.bvalero.replacer.page.IndexedPage;
 import es.bvalero.replacer.page.PageKey;
 import es.bvalero.replacer.page.save.PageSaveRepository;
@@ -18,12 +19,12 @@ public class PageIndexBatchService extends PageIndexAbstractService {
     public PageIndexBatchService(
         PageSaveRepository pageSaveRepository,
         PageIndexValidator pageIndexValidator,
-        ReplacementFindService replacementFindService,
+        ReplacementFindApi replacementFindApi,
         PageComparator pageComparator,
         PageBatchService pageBatchService,
         PageComparatorSaver pageComparatorSaver
     ) {
-        super(pageSaveRepository, pageIndexValidator, replacementFindService, pageComparator);
+        super(pageSaveRepository, pageIndexValidator, replacementFindApi, pageComparator);
         this.pageIndexValidator = pageIndexValidator;
         this.pageBatchService = pageBatchService;
         this.pageComparatorSaver = pageComparatorSaver;

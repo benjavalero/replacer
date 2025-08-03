@@ -2,6 +2,7 @@ package es.bvalero.replacer.page.find;
 
 import es.bvalero.replacer.common.domain.CustomType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
+import es.bvalero.replacer.finder.CustomReplacementFindApi;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.page.PageKey;
 import es.bvalero.replacer.page.index.PageIndexService;
@@ -24,7 +25,7 @@ class ReviewCustomFinder extends ReviewFinder {
     // Dependency injection
     private final WikipediaPageRepository wikipediaPageRepository;
     private final CustomReplacementService customReplacementService;
-    private final CustomReplacementFindService customReplacementFindService;
+    private final CustomReplacementFindApi customReplacementFindApi;
 
     @Setter(onMethod_ = @TestOnly)
     @Value("${replacer.indexable.namespaces}")
@@ -37,12 +38,12 @@ class ReviewCustomFinder extends ReviewFinder {
         PageSaveRepository pageSaveRepository,
         ReviewSectionFinder reviewSectionFinder,
         CustomReplacementService customReplacementService,
-        CustomReplacementFindService customReplacementFindService
+        CustomReplacementFindApi customReplacementFindApi
     ) {
         super(wikipediaPageRepository, pageIndexService, pageRepository, pageSaveRepository, reviewSectionFinder);
         this.wikipediaPageRepository = wikipediaPageRepository;
         this.customReplacementService = customReplacementService;
-        this.customReplacementFindService = customReplacementFindService;
+        this.customReplacementFindApi = customReplacementFindApi;
     }
 
     @Override
@@ -140,7 +141,7 @@ class ReviewCustomFinder extends ReviewFinder {
     }
 
     private Collection<Replacement> findCustomReplacements(WikipediaPage page, ReviewOptions options) {
-        return customReplacementFindService.findCustomReplacements(
+        return customReplacementFindApi.findCustomReplacements(
             page.toFinderPage(),
             options.getCustomReplacementFindRequest()
         );

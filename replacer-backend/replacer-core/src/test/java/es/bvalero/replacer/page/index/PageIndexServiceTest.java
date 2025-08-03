@@ -5,6 +5,7 @@ import static org.mockito.Mockito.*;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.FinderPage;
+import es.bvalero.replacer.finder.ReplacementFindApi;
 import es.bvalero.replacer.page.IndexedPage;
 import es.bvalero.replacer.page.PageKey;
 import es.bvalero.replacer.page.find.PageRepository;
@@ -32,7 +33,7 @@ class PageIndexServiceTest {
     // Dependency injection
     private PageSaveRepository pageSaveRepository;
     private PageIndexValidator pageIndexValidator;
-    private ReplacementFindService replacementFindService;
+    private ReplacementFindApi replacementFindApi;
     private PageComparator pageComparator;
     private PageRepository pageRepository;
     private PageComparatorSaver pageComparatorSaver;
@@ -43,14 +44,14 @@ class PageIndexServiceTest {
     void setUp() {
         pageSaveRepository = mock(PageSaveRepository.class);
         pageIndexValidator = mock(PageIndexValidator.class);
-        replacementFindService = mock(ReplacementFindService.class);
+        replacementFindApi = mock(ReplacementFindApi.class);
         pageComparator = mock(PageComparator.class);
         pageRepository = mock(PageRepository.class);
         pageComparatorSaver = mock(PageComparatorSaver.class);
         pageIndexService = new PageIndexService(
             pageSaveRepository,
             pageIndexValidator,
-            replacementFindService,
+            replacementFindApi,
             pageComparator,
             pageRepository,
             pageComparatorSaver
@@ -67,7 +68,7 @@ class PageIndexServiceTest {
 
         verify(pageIndexValidator).isPageIndexableByNamespace(page);
         verify(pageIndexValidator, never()).isIndexableByTimestamp(page, null);
-        verify(replacementFindService, never()).findReplacements(any(FinderPage.class));
+        verify(replacementFindApi, never()).findReplacements(any(FinderPage.class));
     }
 
     @Test
@@ -90,7 +91,7 @@ class PageIndexServiceTest {
 
         verify(pageIndexValidator).isPageIndexableByNamespace(page);
         verify(pageIndexValidator, never()).isIndexableByTimestamp(page, null);
-        verify(replacementFindService, never()).findReplacements(any(FinderPage.class));
+        verify(replacementFindApi, never()).findReplacements(any(FinderPage.class));
     }
 
     @Test
@@ -111,7 +112,7 @@ class PageIndexServiceTest {
 
         verify(pageIndexValidator).isPageIndexableByNamespace(page);
         verify(pageIndexValidator, never()).isIndexableByTimestamp(page, null);
-        verify(replacementFindService, never()).findReplacements(any(FinderPage.class));
+        verify(replacementFindApi, never()).findReplacements(any(FinderPage.class));
         verify(pageComparatorSaver, never()).save(any(IndexedPage.class));
         verify(pageSaveRepository).removeByKey(anyCollection());
     }

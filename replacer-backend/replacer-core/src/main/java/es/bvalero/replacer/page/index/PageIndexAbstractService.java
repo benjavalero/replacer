@@ -2,6 +2,7 @@ package es.bvalero.replacer.page.index;
 
 import es.bvalero.replacer.common.util.ReplacerUtils;
 import es.bvalero.replacer.finder.Replacement;
+import es.bvalero.replacer.finder.ReplacementFindApi;
 import es.bvalero.replacer.page.IndexedPage;
 import es.bvalero.replacer.page.PageKey;
 import es.bvalero.replacer.page.save.PageSaveRepository;
@@ -20,18 +21,18 @@ abstract class PageIndexAbstractService {
     // Dependency injection
     private final PageSaveRepository pageSaveRepository;
     private final PageIndexValidator pageIndexValidator;
-    private final ReplacementFindService replacementFindService;
+    private final ReplacementFindApi replacementFindApi;
     private final PageComparator pageComparator;
 
     PageIndexAbstractService(
         PageSaveRepository pageSaveRepository,
         PageIndexValidator pageIndexValidator,
-        ReplacementFindService replacementFindService,
+        ReplacementFindApi replacementFindApi,
         PageComparator pageComparator
     ) {
         this.pageSaveRepository = pageSaveRepository;
         this.pageIndexValidator = pageIndexValidator;
-        this.replacementFindService = replacementFindService;
+        this.replacementFindApi = replacementFindApi;
         this.pageComparator = pageComparator;
     }
 
@@ -64,9 +65,7 @@ abstract class PageIndexAbstractService {
 
     // This method can be overridden in case we want to avoid calculating the replacements under some circumstances
     PageIndexResult indexPage(IndexablePage indexablePage, @Nullable IndexedPage dbPage) {
-        final Collection<Replacement> replacements = replacementFindService.findReplacements(
-            indexablePage.toFinderPage()
-        );
+        final Collection<Replacement> replacements = replacementFindApi.findReplacements(indexablePage.toFinderPage());
 
         final IndexedPage result = pageComparator.indexPageReplacements(indexablePage, replacements, dbPage);
         if (result.isPageToSave()) {

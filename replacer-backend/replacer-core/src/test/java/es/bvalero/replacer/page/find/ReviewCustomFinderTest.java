@@ -7,6 +7,7 @@ import es.bvalero.replacer.common.domain.CustomType;
 import es.bvalero.replacer.common.domain.ReplacementKind;
 import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
+import es.bvalero.replacer.finder.CustomReplacementFindApi;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.Suggestion;
@@ -40,7 +41,7 @@ class ReviewCustomFinderTest {
     private PageSaveRepository pageSaveRepository;
     private ReviewSectionFinder reviewSectionFinder;
     private CustomReplacementService customReplacementService;
-    private CustomReplacementFindService customReplacementFindService;
+    private CustomReplacementFindApi customReplacementFindApi;
 
     private ReviewCustomFinder pageReviewCustomService;
 
@@ -52,7 +53,7 @@ class ReviewCustomFinderTest {
         pageSaveRepository = mock(PageSaveRepository.class);
         reviewSectionFinder = mock(ReviewSectionFinder.class);
         customReplacementService = mock(CustomReplacementService.class);
-        customReplacementFindService = mock(CustomReplacementFindService.class);
+        customReplacementFindApi = mock(CustomReplacementFindApi.class);
         pageReviewCustomService = new ReviewCustomFinder(
             wikipediaPageRepository,
             pageIndexService,
@@ -60,7 +61,7 @@ class ReviewCustomFinderTest {
             pageSaveRepository,
             reviewSectionFinder,
             customReplacementService,
-            customReplacementFindService
+            customReplacementFindApi
         );
         pageReviewCustomService.setCacheSize(CACHE_SIZE);
         pageReviewCustomService.setIndexableNamespaces(
@@ -164,7 +165,7 @@ class ReviewCustomFinderTest {
         when(wikipediaPageRepository.findByKey(any(PageKey.class))).thenReturn(Optional.of(page));
         when(pageIndexService.indexPage(page)).thenReturn(PageIndexResult.ofIndexed());
         when(
-            customReplacementFindService.findCustomReplacements(
+            customReplacementFindApi.findCustomReplacements(
                 any(FinderPage.class),
                 any(CustomReplacementFindRequest.class)
             )
@@ -211,7 +212,7 @@ class ReviewCustomFinderTest {
         when(wikipediaPageRepository.findByKey(any(PageKey.class))).thenReturn(Optional.of(page));
         when(pageIndexService.indexPage(page)).thenReturn(PageIndexResult.ofIndexed());
         when(
-            customReplacementFindService.findCustomReplacements(
+            customReplacementFindApi.findCustomReplacements(
                 any(FinderPage.class),
                 any(CustomReplacementFindRequest.class)
             )
@@ -258,7 +259,7 @@ class ReviewCustomFinderTest {
         when(wikipediaPageRepository.findByKey(any(PageKey.class))).thenReturn(Optional.of(page));
         when(pageIndexService.indexPage(page)).thenReturn(PageIndexResult.ofIndexed());
         when(
-            customReplacementFindService.findCustomReplacements(
+            customReplacementFindApi.findCustomReplacements(
                 any(FinderPage.class),
                 any(CustomReplacementFindRequest.class)
             )
@@ -344,7 +345,7 @@ class ReviewCustomFinderTest {
         when(pageIndexService.indexPage(any(WikipediaPage.class))).thenReturn(PageIndexResult.ofIndexed());
 
         when(
-            customReplacementFindService.findCustomReplacements(
+            customReplacementFindApi.findCustomReplacements(
                 any(FinderPage.class),
                 any(CustomReplacementFindRequest.class)
             )
@@ -426,7 +427,7 @@ class ReviewCustomFinderTest {
         when(pageIndexService.indexPage(any(WikipediaPage.class))).thenReturn(PageIndexResult.ofIndexed());
 
         when(
-            customReplacementFindService.findCustomReplacements(
+            customReplacementFindApi.findCustomReplacements(
                 any(FinderPage.class),
                 any(CustomReplacementFindRequest.class)
             )
@@ -471,7 +472,7 @@ class ReviewCustomFinderTest {
             page.getContent()
         );
         when(
-            customReplacementFindService.findCustomReplacements(
+            customReplacementFindApi.findCustomReplacements(
                 page.toFinderPage(),
                 options.getCustomReplacementFindRequest()
             )
@@ -481,7 +482,7 @@ class ReviewCustomFinderTest {
 
         assertEquals(1, result.size());
 
-        verify(customReplacementFindService).findCustomReplacements(
+        verify(customReplacementFindApi).findCustomReplacements(
             page.toFinderPage(),
             options.getCustomReplacementFindRequest()
         );
@@ -513,7 +514,7 @@ class ReviewCustomFinderTest {
             page.getContent()
         );
         when(
-            customReplacementFindService.findCustomReplacements(
+            customReplacementFindApi.findCustomReplacements(
                 page.toFinderPage(),
                 options.getCustomReplacementFindRequest()
             )
@@ -523,7 +524,7 @@ class ReviewCustomFinderTest {
 
         assertEquals(Set.of(custom), new HashSet<>(result));
 
-        verify(customReplacementFindService).findCustomReplacements(
+        verify(customReplacementFindApi).findCustomReplacements(
             page.toFinderPage(),
             options.getCustomReplacementFindRequest()
         );
@@ -555,7 +556,7 @@ class ReviewCustomFinderTest {
             page.getContent()
         );
         when(
-            customReplacementFindService.findCustomReplacements(
+            customReplacementFindApi.findCustomReplacements(
                 page.toFinderPage(),
                 options.getCustomReplacementFindRequest()
             )
@@ -567,7 +568,7 @@ class ReviewCustomFinderTest {
         // there is no custom replacement to review.
         assertTrue(result.isEmpty());
 
-        verify(customReplacementFindService).findCustomReplacements(
+        verify(customReplacementFindApi).findCustomReplacements(
             page.toFinderPage(),
             options.getCustomReplacementFindRequest()
         );
