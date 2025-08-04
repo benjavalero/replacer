@@ -1,4 +1,4 @@
-package es.bvalero.replacer.common.domain;
+package es.bvalero.replacer.finder;
 
 import java.util.Arrays;
 import java.util.Map;

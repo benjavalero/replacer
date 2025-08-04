@@ -1,8 +1,8 @@
 package es.bvalero.replacer.finder.replacement;
 
-import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.*;
+import es.bvalero.replacer.finder.StandardType;
 import jakarta.annotation.PostConstruct;
 import java.util.*;
 import org.springframework.stereotype.Service;

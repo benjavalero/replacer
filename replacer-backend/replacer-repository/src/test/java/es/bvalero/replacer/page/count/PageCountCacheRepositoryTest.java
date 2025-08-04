@@ -6,6 +6,8 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import es.bvalero.replacer.common.domain.*;
+import es.bvalero.replacer.finder.ReplacementKind;
+import es.bvalero.replacer.finder.StandardType;
 import java.util.Collection;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;

@@ -9,6 +9,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import es.bvalero.replacer.WebMvcConfiguration;
 import es.bvalero.replacer.common.domain.*;
 import es.bvalero.replacer.common.util.WebUtils;
+import es.bvalero.replacer.finder.ReplacementKind;
+import es.bvalero.replacer.finder.StandardType;
 import es.bvalero.replacer.user.User;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.Collection;

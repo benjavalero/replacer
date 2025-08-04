@@ -3,7 +3,10 @@ package es.bvalero.replacer.finder;
 import java.util.Objects;
 import org.apache.commons.lang3.Range;
 
-/** Base interface for the finder results: cosmetics, immutables and replacements. */
+/**
+ * Base interface for the finder results: cosmetics, immutables and replacements.
+ * It has to be public so the extensions can use the common methods.
+ */
 public interface FinderResult extends Comparable<FinderResult> {
     int getStart();
     String getText();

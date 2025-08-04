@@ -1,6 +1,5 @@
 package es.bvalero.replacer.finder;
 
-import es.bvalero.replacer.common.domain.ReplacementType;
 import es.bvalero.replacer.common.util.ReplacerUtils;
 import java.util.Collection;
 import java.util.LinkedList;

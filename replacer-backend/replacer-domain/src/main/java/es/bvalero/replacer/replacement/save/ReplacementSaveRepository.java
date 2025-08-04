@@ -1,7 +1,7 @@
 package es.bvalero.replacer.replacement.save;
 
-import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
+import es.bvalero.replacer.finder.StandardType;
 import es.bvalero.replacer.replacement.IndexedReplacement;
 import java.util.Collection;
 import org.jmolecules.architecture.hexagonal.SecondaryPort;

@@ -3,8 +3,8 @@ package es.bvalero.replacer.finder.replacement.finders;
 import static org.junit.jupiter.api.Assertions.*;
 
 import es.bvalero.replacer.FinderProperties;
-import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.finder.Replacement;
+import es.bvalero.replacer.finder.StandardType;
 import es.bvalero.replacer.finder.Suggestion;
 import java.util.List;
 import org.junit.jupiter.api.Test;

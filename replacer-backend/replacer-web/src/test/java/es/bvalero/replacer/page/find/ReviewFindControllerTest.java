@@ -14,6 +14,8 @@ import es.bvalero.replacer.WebMvcConfiguration;
 import es.bvalero.replacer.common.domain.*;
 import es.bvalero.replacer.common.util.WebUtils;
 import es.bvalero.replacer.finder.Replacement;
+import es.bvalero.replacer.finder.ReplacementKind;
+import es.bvalero.replacer.finder.StandardType;
 import es.bvalero.replacer.finder.Suggestion;
 import es.bvalero.replacer.page.PageKey;
 import es.bvalero.replacer.user.User;

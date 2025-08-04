@@ -1,7 +1,7 @@
 package es.bvalero.replacer.common.dto;
 
-import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.common.util.ReplacerUtils;
+import es.bvalero.replacer.finder.StandardType;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AccessLevel;

@@ -1,7 +1,7 @@
 package es.bvalero.replacer.page.count;
 
 import es.bvalero.replacer.common.domain.ResultCount;
-import es.bvalero.replacer.common.domain.StandardType;
+import es.bvalero.replacer.finder.StandardType;
 import es.bvalero.replacer.user.User;
 import java.util.Collection;
 import org.jmolecules.architecture.hexagonal.PrimaryPort;

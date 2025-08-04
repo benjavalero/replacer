@@ -1,8 +1,9 @@
 package es.bvalero.replacer.page.find;
 
-import es.bvalero.replacer.common.domain.CustomType;
-import es.bvalero.replacer.common.domain.ReplacementKind;
-import es.bvalero.replacer.common.domain.StandardType;
+import es.bvalero.replacer.finder.CustomReplacementFindRequest;
+import es.bvalero.replacer.finder.CustomType;
+import es.bvalero.replacer.finder.ReplacementKind;
+import es.bvalero.replacer.finder.StandardType;
 import es.bvalero.replacer.user.User;
 import java.util.ArrayList;
 import java.util.List;

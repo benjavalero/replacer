@@ -2,7 +2,6 @@ package es.bvalero.replacer.finder.replacement.custom;
 
 import es.bvalero.replacer.finder.*;
 import es.bvalero.replacer.finder.replacement.ReplacementFinderAbstractService;
-import es.bvalero.replacer.page.find.CustomReplacementFindRequest;
 import java.util.Collection;
 import java.util.Set;
 import java.util.TreeSet;

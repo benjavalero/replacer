@@ -1,6 +1,6 @@
 package es.bvalero.replacer.finder.listing;
 
-import es.bvalero.replacer.common.domain.ReplacementKind;
+import es.bvalero.replacer.finder.ReplacementKind;
 
 public class ComposedMisspelling extends StandardMisspelling {
 

@@ -1,8 +1,8 @@
 package es.bvalero.replacer.page.count;
 
 import es.bvalero.replacer.common.domain.ResultCount;
-import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
+import es.bvalero.replacer.finder.StandardType;
 import java.util.Collection;
 import org.jmolecules.architecture.hexagonal.SecondaryPort;
 import org.springframework.lang.Nullable;

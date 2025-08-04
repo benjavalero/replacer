@@ -3,10 +3,10 @@ package es.bvalero.replacer.finder.replacement.custom;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 
+import es.bvalero.replacer.finder.CustomReplacementFindRequest;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.ImmutableFindApi;
 import es.bvalero.replacer.finder.Replacement;
-import es.bvalero.replacer.page.find.CustomReplacementFindRequest;
 import java.util.List;
 import org.apache.commons.collections4.IterableUtils;
 import org.junit.jupiter.api.BeforeEach;

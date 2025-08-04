@@ -3,8 +3,8 @@ package es.bvalero.replacer.page.count;
 import static java.util.stream.Collectors.*;
 
 import es.bvalero.replacer.common.domain.ResultCount;
-import es.bvalero.replacer.common.domain.StandardType;
 import es.bvalero.replacer.common.resolver.AuthenticatedUser;
+import es.bvalero.replacer.finder.StandardType;
 import es.bvalero.replacer.user.User;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

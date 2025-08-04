@@ -3,10 +3,10 @@ package es.bvalero.replacer.page.save;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import es.bvalero.replacer.common.domain.CustomType;
-import es.bvalero.replacer.common.domain.ReplacementKind;
-import es.bvalero.replacer.common.domain.ReplacementType;
-import es.bvalero.replacer.common.domain.StandardType;
+import es.bvalero.replacer.finder.CustomType;
+import es.bvalero.replacer.finder.ReplacementKind;
+import es.bvalero.replacer.finder.ReplacementType;
+import es.bvalero.replacer.finder.StandardType;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 

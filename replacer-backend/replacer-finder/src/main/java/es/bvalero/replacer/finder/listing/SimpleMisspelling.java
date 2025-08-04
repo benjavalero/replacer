@@ -1,6 +1,6 @@
 package es.bvalero.replacer.finder.listing;
 
-import es.bvalero.replacer.common.domain.ReplacementKind;
+import es.bvalero.replacer.finder.ReplacementKind;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.TestOnly;
 

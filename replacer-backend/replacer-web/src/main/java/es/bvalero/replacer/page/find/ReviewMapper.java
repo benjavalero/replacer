@@ -1,6 +1,6 @@
 package es.bvalero.replacer.page.find;
 
-import es.bvalero.replacer.common.domain.CustomType;
+import es.bvalero.replacer.finder.CustomType;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.Suggestion;
 import es.bvalero.replacer.user.User;

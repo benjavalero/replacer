@@ -1,6 +1,6 @@
 package es.bvalero.replacer.page.save;
 
-import es.bvalero.replacer.common.domain.ReplacementType;
+import es.bvalero.replacer.finder.ReplacementType;
 import java.util.Collection;
 import java.util.stream.Collectors;
 import lombok.experimental.UtilityClass;

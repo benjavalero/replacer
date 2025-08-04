@@ -3,8 +3,8 @@ package es.bvalero.replacer.page.count;
 import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import es.bvalero.replacer.common.domain.ReplacementKind;
 import es.bvalero.replacer.common.util.ReplacerUtils;
+import es.bvalero.replacer.finder.ReplacementKind;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.Collection;
 import lombok.Value;

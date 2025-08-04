@@ -1,6 +1,6 @@
 package es.bvalero.replacer.finder.replacement.custom;
 
-import es.bvalero.replacer.common.domain.CustomType;
+import es.bvalero.replacer.finder.CustomType;
 import es.bvalero.replacer.finder.Misspelling;
 
 class CustomMisspelling extends Misspelling {

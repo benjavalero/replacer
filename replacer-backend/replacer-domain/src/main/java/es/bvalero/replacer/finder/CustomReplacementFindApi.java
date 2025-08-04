@@ -1,6 +1,5 @@
 package es.bvalero.replacer.finder;
 
-import es.bvalero.replacer.page.find.CustomReplacementFindRequest;
 import java.util.Collection;
 import org.jmolecules.architecture.hexagonal.SecondaryPort;
 

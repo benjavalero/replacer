@@ -1,4 +1,4 @@
-package es.bvalero.replacer.common.domain;
+package es.bvalero.replacer.finder;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
