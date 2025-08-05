@@ -1,7 +1,7 @@
 package es.bvalero.replacer.page.save;
 
-import es.bvalero.replacer.page.find.WikipediaTimestamp;
 import es.bvalero.replacer.user.AccessToken;
+import es.bvalero.replacer.wikipedia.WikipediaTimestamp;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 

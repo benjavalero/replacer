@@ -2,6 +2,7 @@ package es.bvalero.replacer.page.find;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.util.ReplacerUtils;
+import es.bvalero.replacer.wikipedia.WikipediaNamespace;
 import java.util.Collection;
 import java.util.List;
 import lombok.Builder;

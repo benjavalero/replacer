@@ -3,6 +3,7 @@ package es.bvalero.replacer.page.find;
 import es.bvalero.replacer.common.domain.PageKey;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.wikipedia.WikipediaException;
+import es.bvalero.replacer.wikipedia.WikipediaPage;
 import java.util.Collection;
 import java.util.Optional;
 import org.jmolecules.architecture.hexagonal.SecondaryPort;

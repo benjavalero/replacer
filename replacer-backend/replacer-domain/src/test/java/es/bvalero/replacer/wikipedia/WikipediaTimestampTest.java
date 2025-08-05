@@ -1,4 +1,4 @@
-package es.bvalero.replacer.page.find;
+package es.bvalero.replacer.wikipedia;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;

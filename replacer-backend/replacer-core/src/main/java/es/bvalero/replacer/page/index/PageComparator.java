@@ -2,10 +2,10 @@ package es.bvalero.replacer.page.index;
 
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.page.IndexedPage;
-import es.bvalero.replacer.page.find.WikipediaPage;
 import es.bvalero.replacer.page.save.IndexedPageStatus;
 import es.bvalero.replacer.replacement.IndexedReplacement;
 import es.bvalero.replacer.replacement.save.IndexedReplacementStatus;
+import es.bvalero.replacer.wikipedia.WikipediaPage;
 import java.util.*;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;

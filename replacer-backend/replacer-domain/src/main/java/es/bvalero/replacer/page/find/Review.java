@@ -1,6 +1,7 @@
 package es.bvalero.replacer.page.find;
 
 import es.bvalero.replacer.finder.Replacement;
+import es.bvalero.replacer.wikipedia.WikipediaPage;
 import java.util.Collection;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

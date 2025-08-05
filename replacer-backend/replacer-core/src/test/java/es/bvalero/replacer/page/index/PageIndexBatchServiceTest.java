@@ -9,11 +9,11 @@ import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.ReplacementFindApi;
 import es.bvalero.replacer.page.IndexedPage;
-import es.bvalero.replacer.page.find.WikipediaNamespace;
-import es.bvalero.replacer.page.find.WikipediaPage;
-import es.bvalero.replacer.page.find.WikipediaTimestamp;
 import es.bvalero.replacer.page.save.IndexedPageStatus;
 import es.bvalero.replacer.page.save.PageSaveRepository;
+import es.bvalero.replacer.wikipedia.WikipediaNamespace;
+import es.bvalero.replacer.wikipedia.WikipediaPage;
+import es.bvalero.replacer.wikipedia.WikipediaTimestamp;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

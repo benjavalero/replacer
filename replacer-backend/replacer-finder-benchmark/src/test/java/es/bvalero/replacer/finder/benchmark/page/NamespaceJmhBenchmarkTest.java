@@ -8,7 +8,7 @@ import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.finder.benchmark.BaseFinderJmhBenchmark;
 import es.bvalero.replacer.finder.benchmark.util.BenchmarkUtils;
 import es.bvalero.replacer.finder.benchmark.util.WikipediaApiResponse;
-import es.bvalero.replacer.page.find.WikipediaNamespace;
+import es.bvalero.replacer.wikipedia.WikipediaNamespace;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import lombok.Value;

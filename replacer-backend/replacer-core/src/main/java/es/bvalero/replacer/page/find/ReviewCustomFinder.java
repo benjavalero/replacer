@@ -9,6 +9,8 @@ import es.bvalero.replacer.page.index.PageIndexService;
 import es.bvalero.replacer.page.save.PageSaveRepository;
 import es.bvalero.replacer.replacement.CustomReplacementService;
 import es.bvalero.replacer.wikipedia.WikipediaException;
+import es.bvalero.replacer.wikipedia.WikipediaNamespace;
+import es.bvalero.replacer.wikipedia.WikipediaPage;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;

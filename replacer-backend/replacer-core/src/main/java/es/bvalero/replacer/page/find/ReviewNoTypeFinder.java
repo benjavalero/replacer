@@ -6,6 +6,7 @@ import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.page.count.PageCountRepository;
 import es.bvalero.replacer.page.index.PageIndexService;
 import es.bvalero.replacer.page.save.PageSaveRepository;
+import es.bvalero.replacer.wikipedia.WikipediaPage;
 import java.util.Collection;
 import org.springframework.stereotype.Component;
 

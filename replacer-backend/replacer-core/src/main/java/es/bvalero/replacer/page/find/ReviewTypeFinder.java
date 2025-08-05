@@ -8,6 +8,7 @@ import es.bvalero.replacer.page.index.PageIndexService;
 import es.bvalero.replacer.page.save.PageSaveRepository;
 import es.bvalero.replacer.replacement.save.ReplacementSaveRepository;
 import es.bvalero.replacer.replacement.type.ReplacementTypeSaveApi;
+import es.bvalero.replacer.wikipedia.WikipediaPage;
 import java.util.Collection;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;

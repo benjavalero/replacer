@@ -1,9 +1,9 @@
 package es.bvalero.replacer.page.save;
 
 import es.bvalero.replacer.common.domain.PageKey;
-import es.bvalero.replacer.page.find.WikipediaTimestamp;
 import es.bvalero.replacer.user.AccessToken;
 import es.bvalero.replacer.wikipedia.WikipediaException;
+import es.bvalero.replacer.wikipedia.WikipediaTimestamp;
 import es.bvalero.replacer.wikipedia.api.WikipediaApiHelper;
 import es.bvalero.replacer.wikipedia.api.WikipediaApiRequest;
 import es.bvalero.replacer.wikipedia.api.WikipediaApiResponse;

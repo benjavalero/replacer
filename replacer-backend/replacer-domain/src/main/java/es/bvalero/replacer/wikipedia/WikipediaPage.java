@@ -1,4 +1,4 @@
-package es.bvalero.replacer.page.find;
+package es.bvalero.replacer.wikipedia;
 
 import es.bvalero.replacer.common.domain.PageKey;
 import es.bvalero.replacer.finder.FinderPage;

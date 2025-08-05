@@ -10,6 +10,7 @@ import es.bvalero.replacer.page.IndexedPage;
 import es.bvalero.replacer.page.index.PageIndexService;
 import es.bvalero.replacer.page.save.PageSaveRepository;
 import es.bvalero.replacer.user.User;
+import es.bvalero.replacer.wikipedia.WikipediaPage;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import lombok.AccessLevel;
