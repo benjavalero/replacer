@@ -1,6 +1,6 @@
 package es.bvalero.replacer.page.find;
 
-import es.bvalero.replacer.page.PageKey;
+import es.bvalero.replacer.common.domain.PageKey;
 import lombok.Builder;
 import lombok.ToString;
 import lombok.Value;

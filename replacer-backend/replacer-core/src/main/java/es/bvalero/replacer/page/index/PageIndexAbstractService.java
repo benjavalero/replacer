@@ -1,10 +1,10 @@
 package es.bvalero.replacer.page.index;
 
+import es.bvalero.replacer.common.domain.PageKey;
 import es.bvalero.replacer.common.util.ReplacerUtils;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.ReplacementFindApi;
 import es.bvalero.replacer.page.IndexedPage;
-import es.bvalero.replacer.page.PageKey;
 import es.bvalero.replacer.page.save.PageSaveRepository;
 import java.util.Collection;
 import java.util.Optional;

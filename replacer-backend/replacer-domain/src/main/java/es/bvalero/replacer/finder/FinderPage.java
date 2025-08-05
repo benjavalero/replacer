@@ -1,7 +1,7 @@
 package es.bvalero.replacer.finder;
 
+import es.bvalero.replacer.common.domain.PageKey;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import es.bvalero.replacer.page.PageKey;
 import lombok.Value;
 import lombok.With;
 import lombok.experimental.NonFinal;

@@ -4,11 +4,11 @@ import static es.bvalero.replacer.page.index.PageComparator.toIndexedPage;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
+import es.bvalero.replacer.common.domain.PageKey;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.ReplacementFindApi;
 import es.bvalero.replacer.page.IndexedPage;
-import es.bvalero.replacer.page.PageKey;
 import es.bvalero.replacer.page.find.WikipediaNamespace;
 import es.bvalero.replacer.page.find.WikipediaPage;
 import es.bvalero.replacer.page.find.WikipediaTimestamp;

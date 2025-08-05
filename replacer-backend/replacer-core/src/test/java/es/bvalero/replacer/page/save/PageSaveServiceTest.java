@@ -2,12 +2,12 @@ package es.bvalero.replacer.page.save;
 
 import static org.mockito.Mockito.*;
 
+import es.bvalero.replacer.common.domain.PageKey;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.CustomType;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.ReplacementKind;
 import es.bvalero.replacer.finder.StandardType;
-import es.bvalero.replacer.page.PageKey;
 import es.bvalero.replacer.page.find.WikipediaTimestamp;
 import es.bvalero.replacer.user.AccessToken;
 import es.bvalero.replacer.user.User;

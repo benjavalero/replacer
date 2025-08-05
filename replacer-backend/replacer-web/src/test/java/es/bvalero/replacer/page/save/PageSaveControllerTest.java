@@ -6,11 +6,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import es.bvalero.replacer.WebMvcConfiguration;
+import es.bvalero.replacer.common.domain.PageKey;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.util.WebUtils;
 import es.bvalero.replacer.finder.ReplacementKind;
 import es.bvalero.replacer.finder.StandardType;
-import es.bvalero.replacer.page.PageKey;
 import es.bvalero.replacer.page.find.WikipediaTimestamp;
 import es.bvalero.replacer.user.User;
 import es.bvalero.replacer.wikipedia.WikipediaException;

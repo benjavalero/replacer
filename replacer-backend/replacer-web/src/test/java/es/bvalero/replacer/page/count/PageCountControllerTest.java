@@ -7,7 +7,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import es.bvalero.replacer.WebMvcConfiguration;
-import es.bvalero.replacer.common.domain.*;
+import es.bvalero.replacer.common.domain.ResultCount;
+import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.util.WebUtils;
 import es.bvalero.replacer.finder.ReplacementKind;
 import es.bvalero.replacer.finder.StandardType;

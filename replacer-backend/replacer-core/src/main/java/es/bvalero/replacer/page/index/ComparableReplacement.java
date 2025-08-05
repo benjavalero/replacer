@@ -2,9 +2,9 @@ package es.bvalero.replacer.page.index;
 
 import static es.bvalero.replacer.replacement.IndexedReplacement.REVIEWER_SYSTEM;
 
+import es.bvalero.replacer.common.domain.PageKey;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.StandardType;
-import es.bvalero.replacer.page.PageKey;
 import es.bvalero.replacer.replacement.IndexedReplacement;
 import es.bvalero.replacer.replacement.save.IndexedReplacementStatus;
 import java.util.Objects;

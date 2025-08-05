@@ -1,6 +1,5 @@
-package es.bvalero.replacer.page;
+package es.bvalero.replacer.common.domain;
 
-import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import lombok.Value;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.lang.NonNull;

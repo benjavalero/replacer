@@ -1,6 +1,6 @@
 package es.bvalero.replacer.page.save;
 
-import es.bvalero.replacer.page.PageKey;
+import es.bvalero.replacer.common.domain.PageKey;
 import es.bvalero.replacer.page.find.WikipediaTimestamp;
 import lombok.Builder;
 import lombok.Value;

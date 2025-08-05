@@ -4,8 +4,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import es.bvalero.replacer.JsonMapperConfiguration;
 import es.bvalero.replacer.MediaWikiConfiguration;
+import es.bvalero.replacer.common.domain.PageKey;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import es.bvalero.replacer.page.PageKey;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.wikipedia.api.WikipediaApiHelper;
 import java.util.Collection;

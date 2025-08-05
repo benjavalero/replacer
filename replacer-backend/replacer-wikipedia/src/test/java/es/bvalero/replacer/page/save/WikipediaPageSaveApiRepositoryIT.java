@@ -4,8 +4,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import es.bvalero.replacer.JsonMapperConfiguration;
 import es.bvalero.replacer.MediaWikiConfiguration;
+import es.bvalero.replacer.common.domain.PageKey;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import es.bvalero.replacer.page.PageKey;
 import es.bvalero.replacer.page.find.WikipediaPage;
 import es.bvalero.replacer.page.find.WikipediaPageApiRepository;
 import es.bvalero.replacer.page.find.WikipediaTimestamp;

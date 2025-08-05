@@ -1,7 +1,7 @@
 package es.bvalero.replacer.page.save;
 
+import es.bvalero.replacer.common.domain.PageKey;
 import es.bvalero.replacer.page.IndexedPage;
-import es.bvalero.replacer.page.PageKey;
 import java.util.Collection;
 import org.jmolecules.architecture.hexagonal.SecondaryPort;
 

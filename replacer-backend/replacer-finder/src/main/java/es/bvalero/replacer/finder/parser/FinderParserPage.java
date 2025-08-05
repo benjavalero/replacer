@@ -1,7 +1,7 @@
 package es.bvalero.replacer.finder.parser;
 
+import es.bvalero.replacer.common.domain.PageKey;
 import es.bvalero.replacer.finder.FinderPage;
-import es.bvalero.replacer.page.PageKey;
 import lombok.Getter;
 
 @Getter

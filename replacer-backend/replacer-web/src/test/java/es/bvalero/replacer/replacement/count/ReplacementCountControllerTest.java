@@ -7,12 +7,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import es.bvalero.replacer.WebMvcConfiguration;
+import es.bvalero.replacer.common.domain.PageKey;
 import es.bvalero.replacer.common.domain.ResultCount;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.security.ValidateUserAspect;
 import es.bvalero.replacer.common.util.WebUtils;
 import es.bvalero.replacer.page.IndexedPage;
-import es.bvalero.replacer.page.PageKey;
 import es.bvalero.replacer.user.User;
 import jakarta.servlet.http.HttpServletRequest;
 import java.time.LocalDate;

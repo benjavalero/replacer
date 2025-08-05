@@ -5,7 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import es.bvalero.replacer.common.domain.*;
+import es.bvalero.replacer.common.domain.ResultCount;
+import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.ReplacementKind;
 import es.bvalero.replacer.finder.StandardType;
 import java.util.Collection;

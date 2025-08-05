@@ -2,11 +2,11 @@ package es.bvalero.replacer.finder.benchmark.util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import es.bvalero.replacer.common.domain.PageKey;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.common.util.FileOfflineUtils;
 import es.bvalero.replacer.finder.FinderPage;
-import es.bvalero.replacer.page.PageKey;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.experimental.UtilityClass;

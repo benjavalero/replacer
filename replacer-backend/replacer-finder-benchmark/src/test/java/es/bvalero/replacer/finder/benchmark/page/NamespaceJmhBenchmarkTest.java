@@ -2,12 +2,12 @@ package es.bvalero.replacer.finder.benchmark.page;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import es.bvalero.replacer.common.domain.PageKey;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.finder.benchmark.BaseFinderJmhBenchmark;
 import es.bvalero.replacer.finder.benchmark.util.BenchmarkUtils;
 import es.bvalero.replacer.finder.benchmark.util.WikipediaApiResponse;
-import es.bvalero.replacer.page.PageKey;
 import es.bvalero.replacer.page.find.WikipediaNamespace;
 import java.util.List;
 import java.util.concurrent.TimeUnit;

@@ -1,7 +1,7 @@
 package es.bvalero.replacer.replacement;
 
+import es.bvalero.replacer.common.domain.PageKey;
 import es.bvalero.replacer.finder.CustomType;
-import es.bvalero.replacer.page.PageKey;
 import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Value;

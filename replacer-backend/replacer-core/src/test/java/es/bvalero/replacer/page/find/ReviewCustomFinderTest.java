@@ -3,9 +3,9 @@ package es.bvalero.replacer.page.find;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+import es.bvalero.replacer.common.domain.PageKey;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.*;
-import es.bvalero.replacer.page.PageKey;
 import es.bvalero.replacer.page.index.PageIndexResult;
 import es.bvalero.replacer.page.index.PageIndexService;
 import es.bvalero.replacer.page.save.PageSaveRepository;

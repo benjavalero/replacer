@@ -1,9 +1,9 @@
 package es.bvalero.replacer.page.find;
 
+import es.bvalero.replacer.common.domain.PageKey;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.common.util.FileOfflineUtils;
-import es.bvalero.replacer.page.PageKey;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;

@@ -2,10 +2,10 @@ package es.bvalero.replacer.replacement.count;
 
 import static es.bvalero.replacer.replacement.IndexedReplacement.REVIEWER_SYSTEM;
 
+import es.bvalero.replacer.common.domain.PageKey;
 import es.bvalero.replacer.common.domain.ResultCount;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.page.IndexedPage;
-import es.bvalero.replacer.page.PageKey;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Objects;

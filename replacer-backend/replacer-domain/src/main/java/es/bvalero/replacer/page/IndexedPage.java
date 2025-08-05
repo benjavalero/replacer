@@ -1,5 +1,6 @@
 package es.bvalero.replacer.page;
 
+import es.bvalero.replacer.common.domain.PageKey;
 import es.bvalero.replacer.page.save.IndexedPageStatus;
 import es.bvalero.replacer.replacement.IndexedCustomReplacement;
 import es.bvalero.replacer.replacement.IndexedReplacement;

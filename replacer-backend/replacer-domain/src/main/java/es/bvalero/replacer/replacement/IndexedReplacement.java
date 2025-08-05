@@ -1,9 +1,9 @@
 package es.bvalero.replacer.replacement;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import es.bvalero.replacer.common.domain.PageKey;
 import es.bvalero.replacer.common.util.ReplacerUtils;
 import es.bvalero.replacer.finder.StandardType;
-import es.bvalero.replacer.page.PageKey;
 import es.bvalero.replacer.replacement.save.IndexedReplacementStatus;
 import java.time.LocalDateTime;
 import lombok.Builder;
