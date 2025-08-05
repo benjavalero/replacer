@@ -3,6 +3,7 @@ package es.bvalero.replacer.dump;
 import es.bvalero.replacer.common.domain.PageKey;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.page.find.WikipediaNamespace;
+import es.bvalero.replacer.page.find.WikipediaPage;
 import es.bvalero.replacer.page.find.WikipediaTimestamp;
 import es.bvalero.replacer.page.index.PageIndexBatchService;
 import es.bvalero.replacer.page.index.PageIndexStatus;
@@ -135,12 +136,14 @@ class DumpSaxHandler extends DefaultHandler {
     }
 
     private void indexPage() {
-        final DumpPage page = DumpPage.builder()
+        final WikipediaTimestamp timeStamp = WikipediaTimestamp.of(this.currentTimestamp);
+        final WikipediaPage page = WikipediaPage.builder()
             .pageKey(PageKey.of(this.lang, this.currentId))
             .namespace(WikipediaNamespace.valueOf(this.currentNamespace))
             .title(this.currentTitle)
             .content(this.currentContent)
-            .lastUpdate(WikipediaTimestamp.of(this.currentTimestamp))
+            .lastUpdate(timeStamp)
+            .queryTimestamp(timeStamp)
             .redirect(this.currentRedirect)
             .build();
 
