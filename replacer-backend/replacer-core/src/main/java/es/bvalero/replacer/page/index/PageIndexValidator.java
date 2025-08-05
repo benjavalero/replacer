@@ -2,6 +2,7 @@ package es.bvalero.replacer.page.index;
 
 import es.bvalero.replacer.page.IndexedPage;
 import es.bvalero.replacer.page.find.WikipediaNamespace;
+import es.bvalero.replacer.page.find.WikipediaPage;
 import jakarta.annotation.PostConstruct;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -32,11 +33,11 @@ class PageIndexValidator {
             .collect(Collectors.toUnmodifiableSet());
     }
 
-    boolean isPageIndexableByNamespace(IndexablePage page) {
+    boolean isPageIndexableByNamespace(WikipediaPage page) {
         return this.indexableWikipediaNamespaces.contains(page.getNamespace());
     }
 
-    boolean isIndexableByTimestamp(IndexablePage page, @Nullable IndexedPage dbPage) {
+    boolean isIndexableByTimestamp(WikipediaPage page, @Nullable IndexedPage dbPage) {
         // If page modified in dump equals to the last indexing, always reindex.
         // If page modified in dump after last indexing, always reindex.
         // If page modified in dump before last indexing, do not index.

@@ -2,6 +2,7 @@ package es.bvalero.replacer.page.index;
 
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.page.IndexedPage;
+import es.bvalero.replacer.page.find.WikipediaPage;
 import es.bvalero.replacer.page.save.IndexedPageStatus;
 import es.bvalero.replacer.replacement.IndexedReplacement;
 import es.bvalero.replacer.replacement.save.IndexedReplacementStatus;
@@ -21,7 +22,7 @@ import org.springframework.stereotype.Component;
 class PageComparator {
 
     IndexedPage indexPageReplacements(
-        IndexablePage page,
+        WikipediaPage page,
         Collection<Replacement> pageReplacements,
         @Nullable IndexedPage dbPage
     ) {
@@ -93,11 +94,11 @@ class PageComparator {
     }
 
     @VisibleForTesting
-    static IndexedPage toIndexedPage(IndexablePage indexablePage, IndexedPageStatus pageStatus) {
+    static IndexedPage toIndexedPage(WikipediaPage WikipediaPage, IndexedPageStatus pageStatus) {
         return IndexedPage.builder()
-            .pageKey(indexablePage.getPageKey())
-            .title(indexablePage.getTitle())
-            .lastUpdate(indexablePage.getLastUpdate().toLocalDate())
+            .pageKey(WikipediaPage.getPageKey())
+            .title(WikipediaPage.getTitle())
+            .lastUpdate(WikipediaPage.getLastUpdate().toLocalDate())
             .status(pageStatus)
             .build();
     }
@@ -178,7 +179,7 @@ class PageComparator {
     }
 
     /* Check if it is needed to update the page in database */
-    private boolean isUpdatePage(IndexablePage page, IndexedPage dbPage) {
+    private boolean isUpdatePage(WikipediaPage page, IndexedPage dbPage) {
         if (!Objects.equals(page.getTitle(), dbPage.getTitle())) {
             // Just in case check the title as it might change with time
             return true;

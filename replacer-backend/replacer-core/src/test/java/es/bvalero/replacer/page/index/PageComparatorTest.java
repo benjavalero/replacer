@@ -3,8 +3,6 @@ package es.bvalero.replacer.page.index;
 import static es.bvalero.replacer.page.index.PageComparator.toIndexedPage;
 import static es.bvalero.replacer.replacement.IndexedReplacement.REVIEWER_SYSTEM;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.when;
 
 import es.bvalero.replacer.common.domain.PageKey;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
@@ -14,6 +12,8 @@ import es.bvalero.replacer.finder.ReplacementKind;
 import es.bvalero.replacer.finder.StandardType;
 import es.bvalero.replacer.finder.Suggestion;
 import es.bvalero.replacer.page.IndexedPage;
+import es.bvalero.replacer.page.find.WikipediaNamespace;
+import es.bvalero.replacer.page.find.WikipediaPage;
 import es.bvalero.replacer.page.find.WikipediaTimestamp;
 import es.bvalero.replacer.page.save.IndexedPageStatus;
 import es.bvalero.replacer.replacement.IndexedReplacement;
@@ -23,28 +23,25 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class PageComparatorTest {
 
     private final PageComparator pageComparator = new PageComparator();
+    private final int pageId = new Random().nextInt();
     private final LocalDate now = LocalDate.now();
     private final LocalDate before = now.minusDays(1);
-    private final IndexablePage page = spy(IndexablePage.class);
+    private final WikipediaPage page = WikipediaPage.builder()
+        .pageKey(PageKey.of(WikipediaLanguage.getDefault(), pageId))
+        .namespace(WikipediaNamespace.ARTICLE)
+        .title("T")
+        .content("123456789")
+        .lastUpdate(WikipediaTimestamp.now())
+        .queryTimestamp(WikipediaTimestamp.now())
+        .build();
 
-    @BeforeEach
-    public void setUp() {
-        // Mock a complete page
-        int pageId = new Random().nextInt();
-        when(page.getPageKey()).thenReturn(PageKey.of(WikipediaLanguage.getDefault(), pageId));
-        when(page.getTitle()).thenReturn("T");
-        when(page.getContent()).thenReturn("123456789");
-        when(page.getLastUpdate()).thenReturn(WikipediaTimestamp.now());
-    }
-
-    private static Replacement buildFinderReplacement(IndexablePage indexablePage, int index) {
-        FinderPage page = indexablePage.toFinderPage();
+    private static Replacement buildFinderReplacement(WikipediaPage WikipediaPage, int index) {
+        FinderPage page = WikipediaPage.toFinderPage();
         return Replacement.of(
             index,
             String.valueOf(index),
@@ -418,7 +415,7 @@ class PageComparatorTest {
             "words" +
             "12345678901234567890" +
             "xyz";
-        when(page.getContent()).thenReturn(text);
+        WikipediaPage page = this.page.withContent(text);
 
         Replacement r1 = Replacement.of(
             25,
@@ -452,7 +449,7 @@ class PageComparatorTest {
             "words" +
             "12345678901234567890" +
             "xyz";
-        when(page.getContent()).thenReturn(text);
+        WikipediaPage page = this.page.withContent(text);
 
         Replacement r1 = Replacement.of(
             25,

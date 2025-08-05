@@ -1,10 +1,13 @@
 package es.bvalero.replacer.page.find;
 
 import es.bvalero.replacer.common.domain.PageKey;
-import es.bvalero.replacer.page.index.IndexablePage;
+import es.bvalero.replacer.finder.FinderPage;
+import java.util.Objects;
 import lombok.Builder;
 import lombok.ToString;
 import lombok.Value;
+import lombok.With;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.TestOnly;
 import org.springframework.lang.NonNull;
 
@@ -16,7 +19,9 @@ import org.springframework.lang.NonNull;
  */
 @Value
 @Builder
-public class WikipediaPage implements IndexablePage {
+public class WikipediaPage {
+
+    private static final int SHORT_CONTENT_LENGTH = 50;
 
     @NonNull
     PageKey pageKey;
@@ -30,11 +35,14 @@ public class WikipediaPage implements IndexablePage {
 
     @NonNull
     @ToString.Exclude
+    @With(onMethod_ = @TestOnly)
     String content;
 
+    /* Store time (and not only date) in case it is needed in the future */
     @NonNull
     WikipediaTimestamp lastUpdate;
 
+    /* If the page is considered a redirection page */
     @ToString.Exclude
     boolean redirect;
 
@@ -45,8 +53,12 @@ public class WikipediaPage implements IndexablePage {
 
     // Lombok trick to print only a fragment of the page content
     @ToString.Include
-    private String shortContent() {
-        return getAbbreviatedContent();
+    private String getAbbreviatedContent() {
+        return StringUtils.abbreviate(getContent(), SHORT_CONTENT_LENGTH);
+    }
+
+    public FinderPage toFinderPage() {
+        return FinderPage.of(getPageKey(), Objects.requireNonNull(getTitle()), Objects.requireNonNull(getContent()));
     }
 
     // Shorthand to get the page ID

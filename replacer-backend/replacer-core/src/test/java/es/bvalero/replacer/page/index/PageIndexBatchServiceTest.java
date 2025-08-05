@@ -67,7 +67,7 @@ class PageIndexBatchServiceTest {
             .lastUpdate(page.getLastUpdate().toLocalDate())
             .build();
         IndexedPage comparatorResult = toIndexedPage(page, IndexedPageStatus.ADD); // Any change
-        when(pageComparator.indexPageReplacements(any(IndexablePage.class), anyCollection(), isNull())).thenReturn(
+        when(pageComparator.indexPageReplacements(any(WikipediaPage.class), anyCollection(), isNull())).thenReturn(
             comparatorResult
         );
 
@@ -78,7 +78,7 @@ class PageIndexBatchServiceTest {
         verify(pageIndexValidator).isPageIndexableByNamespace(page);
         verify(pageIndexValidator).isIndexableByTimestamp(page, null);
         verify(replacementFindApi).findReplacements(page.toFinderPage());
-        verify(pageComparator).indexPageReplacements(any(IndexablePage.class), anyCollection(), isNull());
+        verify(pageComparator).indexPageReplacements(any(WikipediaPage.class), anyCollection(), isNull());
     }
 
     @Test
@@ -94,7 +94,7 @@ class PageIndexBatchServiceTest {
         verify(pageIndexValidator).isIndexableByTimestamp(page, null);
         verify(replacementFindApi, never()).findReplacements(any(FinderPage.class));
         verify(pageComparator, never()).indexPageReplacements(
-            any(IndexablePage.class),
+            any(WikipediaPage.class),
             anyCollection(),
             any(IndexedPage.class)
         );

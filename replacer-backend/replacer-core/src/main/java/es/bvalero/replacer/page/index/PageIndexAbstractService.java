@@ -5,6 +5,7 @@ import es.bvalero.replacer.common.util.ReplacerUtils;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.ReplacementFindApi;
 import es.bvalero.replacer.page.IndexedPage;
+import es.bvalero.replacer.page.find.WikipediaPage;
 import es.bvalero.replacer.page.save.PageSaveRepository;
 import java.util.Collection;
 import java.util.Optional;
@@ -37,7 +38,7 @@ abstract class PageIndexAbstractService {
     }
 
     /** Index a page. Replacements and details in database (if any) will be calculated. */
-    public PageIndexResult indexPage(IndexablePage page) {
+    public PageIndexResult indexPage(WikipediaPage page) {
         final IndexedPage dbPage = findIndexedPage(page.getPageKey());
 
         // Consider as "indexable" all pages belonging to the configured namespaces
@@ -64,10 +65,10 @@ abstract class PageIndexAbstractService {
     }
 
     // This method can be overridden in case we want to avoid calculating the replacements under some circumstances
-    PageIndexResult indexPage(IndexablePage indexablePage, @Nullable IndexedPage dbPage) {
-        final Collection<Replacement> replacements = replacementFindApi.findReplacements(indexablePage.toFinderPage());
+    PageIndexResult indexPage(WikipediaPage WikipediaPage, @Nullable IndexedPage dbPage) {
+        final Collection<Replacement> replacements = replacementFindApi.findReplacements(WikipediaPage.toFinderPage());
 
-        final IndexedPage result = pageComparator.indexPageReplacements(indexablePage, replacements, dbPage);
+        final IndexedPage result = pageComparator.indexPageReplacements(WikipediaPage, replacements, dbPage);
         if (result.isPageToSave()) {
             saveResult(result);
         }
@@ -80,14 +81,14 @@ abstract class PageIndexAbstractService {
 
     abstract Optional<IndexedPage> findIndexedPageByKey(PageKey pageKey);
 
-    private boolean isPageIndexable(IndexablePage page) {
+    private boolean isPageIndexable(WikipediaPage page) {
         // Only check if the page is indexable by namespace
         // Redirection pages should be detected before analyzing content
         // but just in case they are discarded when finding immutables
         return pageIndexValidator.isPageIndexableByNamespace(page) && !page.isRedirect();
     }
 
-    private void removeObsoletePage(IndexablePage page, IndexedPage dbPage) {
+    private void removeObsoletePage(WikipediaPage page, IndexedPage dbPage) {
         assert page.getPageKey().equals(dbPage.getPageKey());
         LOGGER.warn(
             "Page in DB is not indexable anymore: {}",
