@@ -11,6 +11,8 @@ import es.bvalero.replacer.finder.StandardType;
 import es.bvalero.replacer.user.AccessToken;
 import es.bvalero.replacer.user.User;
 import es.bvalero.replacer.wikipedia.WikipediaException;
+import es.bvalero.replacer.wikipedia.WikipediaPageSaveCommand;
+import es.bvalero.replacer.wikipedia.WikipediaPageSaveRepository;
 import es.bvalero.replacer.wikipedia.WikipediaTimestamp;
 import java.util.Collection;
 import java.util.Collections;

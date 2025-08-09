@@ -1,10 +1,9 @@
-package es.bvalero.replacer.page.save;
+package es.bvalero.replacer.wikipedia;
 
 import es.bvalero.replacer.user.AccessToken;
-import es.bvalero.replacer.wikipedia.WikipediaException;
 import org.jmolecules.architecture.hexagonal.SecondaryPort;
 
 @SecondaryPort
-interface WikipediaPageSaveRepository {
+public interface WikipediaPageSaveRepository {
     WikipediaPageSaveResult save(WikipediaPageSaveCommand pageSave, AccessToken accessToken) throws WikipediaException;
 }

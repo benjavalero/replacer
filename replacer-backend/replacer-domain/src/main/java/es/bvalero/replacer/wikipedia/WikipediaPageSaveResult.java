@@ -1,6 +1,5 @@
-package es.bvalero.replacer.page.save;
+package es.bvalero.replacer.wikipedia;
 
-import es.bvalero.replacer.wikipedia.WikipediaTimestamp;
 import lombok.Builder;
 import lombok.Value;
 import org.jetbrains.annotations.TestOnly;
@@ -8,7 +7,7 @@ import org.springframework.lang.NonNull;
 
 @Value
 @Builder
-class WikipediaPageSaveResult {
+public class WikipediaPageSaveResult {
 
     @NonNull
     int oldRevisionId;

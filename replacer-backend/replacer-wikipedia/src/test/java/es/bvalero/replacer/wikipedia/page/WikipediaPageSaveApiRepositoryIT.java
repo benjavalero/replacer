@@ -1,4 +1,4 @@
-package es.bvalero.replacer.page.save;
+package es.bvalero.replacer.wikipedia.page;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -8,9 +8,9 @@ import es.bvalero.replacer.common.domain.PageKey;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
+import es.bvalero.replacer.wikipedia.WikipediaPageSaveCommand;
 import es.bvalero.replacer.wikipedia.WikipediaTimestamp;
 import es.bvalero.replacer.wikipedia.api.WikipediaApiHelper;
-import es.bvalero.replacer.wikipedia.page.WikipediaPageApiRepository;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

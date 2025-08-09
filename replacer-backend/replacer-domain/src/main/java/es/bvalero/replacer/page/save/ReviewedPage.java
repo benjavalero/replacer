@@ -7,6 +7,7 @@ import es.bvalero.replacer.finder.StandardType;
 import es.bvalero.replacer.page.IndexedPage;
 import es.bvalero.replacer.replacement.IndexedCustomReplacement;
 import es.bvalero.replacer.replacement.IndexedReplacement;
+import es.bvalero.replacer.wikipedia.WikipediaPageSaveResult;
 import es.bvalero.replacer.wikipedia.WikipediaTimestamp;
 import java.time.LocalDate;
 import java.util.Collection;

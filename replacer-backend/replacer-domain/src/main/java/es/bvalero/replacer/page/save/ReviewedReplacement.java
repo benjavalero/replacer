@@ -8,6 +8,7 @@ import es.bvalero.replacer.replacement.IndexedCustomReplacement;
 import es.bvalero.replacer.replacement.IndexedReplacement;
 import es.bvalero.replacer.replacement.ReviewType;
 import es.bvalero.replacer.replacement.save.IndexedReplacementStatus;
+import es.bvalero.replacer.wikipedia.WikipediaPageSaveResult;
 import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Value;

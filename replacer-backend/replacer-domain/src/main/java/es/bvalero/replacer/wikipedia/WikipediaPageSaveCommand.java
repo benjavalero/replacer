@@ -1,7 +1,6 @@
-package es.bvalero.replacer.page.save;
+package es.bvalero.replacer.wikipedia;
 
 import es.bvalero.replacer.common.domain.PageKey;
-import es.bvalero.replacer.wikipedia.WikipediaTimestamp;
 import lombok.Builder;
 import lombok.Value;
 import org.springframework.lang.NonNull;
@@ -10,7 +9,7 @@ import org.springframework.lang.Nullable;
 /** A group with all the parameters needed to save a page in Wikipedia. */
 @Value
 @Builder
-class WikipediaPageSaveCommand {
+public class WikipediaPageSaveCommand {
 
     @NonNull
     PageKey pageKey;

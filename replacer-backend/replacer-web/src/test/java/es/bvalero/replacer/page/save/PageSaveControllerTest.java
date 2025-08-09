@@ -12,6 +12,7 @@ import es.bvalero.replacer.common.util.WebUtils;
 import es.bvalero.replacer.finder.ReplacementKind;
 import es.bvalero.replacer.finder.StandardType;
 import es.bvalero.replacer.user.User;
+import es.bvalero.replacer.wikipedia.WikipediaConflictException;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.wikipedia.WikipediaTimestamp;
 import jakarta.servlet.http.HttpServletRequest;

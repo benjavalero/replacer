@@ -1,4 +1,4 @@
-package es.bvalero.replacer.page.save;
+package es.bvalero.replacer.wikipedia.page;
 
 import es.bvalero.replacer.wikipedia.WikipediaTimestamp;
 import lombok.Value;

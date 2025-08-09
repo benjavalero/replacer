@@ -1,6 +1,5 @@
-package es.bvalero.replacer.page.save;
+package es.bvalero.replacer.wikipedia;
 
-import es.bvalero.replacer.wikipedia.WikipediaException;
 import lombok.experimental.StandardException;
 
 /**
