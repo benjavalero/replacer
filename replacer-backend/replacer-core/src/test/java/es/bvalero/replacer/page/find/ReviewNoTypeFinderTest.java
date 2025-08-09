@@ -15,6 +15,7 @@ import es.bvalero.replacer.page.save.PageSaveRepository;
 import es.bvalero.replacer.user.User;
 import es.bvalero.replacer.wikipedia.WikipediaNamespace;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
+import es.bvalero.replacer.wikipedia.WikipediaPageRepository;
 import es.bvalero.replacer.wikipedia.WikipediaTimestamp;
 import java.util.ArrayList;
 import java.util.List;

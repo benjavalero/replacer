@@ -1,4 +1,4 @@
-package es.bvalero.replacer.page.find;
+package es.bvalero.replacer.wikipedia;
 
 import es.bvalero.replacer.common.domain.PageKey;
 import lombok.Builder;
@@ -14,7 +14,7 @@ import org.springframework.lang.NonNull;
  */
 @Value
 @Builder
-class WikipediaSection implements Comparable<WikipediaSection> {
+public class WikipediaSection implements Comparable<WikipediaSection> {
 
     /* ID of the Wikipedia page the section belongs to */
     @NonNull

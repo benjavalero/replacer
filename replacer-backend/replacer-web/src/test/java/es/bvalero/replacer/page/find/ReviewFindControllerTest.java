@@ -21,6 +21,7 @@ import es.bvalero.replacer.finder.Suggestion;
 import es.bvalero.replacer.user.User;
 import es.bvalero.replacer.wikipedia.WikipediaNamespace;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
+import es.bvalero.replacer.wikipedia.WikipediaSection;
 import es.bvalero.replacer.wikipedia.WikipediaTimestamp;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;

@@ -1,12 +1,10 @@
-package es.bvalero.replacer.page.find;
+package es.bvalero.replacer.wikipedia.page;
 
 import es.bvalero.replacer.common.domain.PageKey;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.common.util.FileOfflineUtils;
-import es.bvalero.replacer.wikipedia.WikipediaNamespace;
-import es.bvalero.replacer.wikipedia.WikipediaPage;
-import es.bvalero.replacer.wikipedia.WikipediaTimestamp;
+import es.bvalero.replacer.wikipedia.*;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;

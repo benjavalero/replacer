@@ -3,11 +3,11 @@ package es.bvalero.replacer.replacement.type;
 import es.bvalero.replacer.common.domain.PageKey;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.StandardType;
-import es.bvalero.replacer.page.find.WikipediaPageRepository;
-import es.bvalero.replacer.page.find.WikipediaSearchRequest;
 import es.bvalero.replacer.page.index.PageIndexService;
 import es.bvalero.replacer.replacement.save.ReplacementSaveRepository;
 import es.bvalero.replacer.wikipedia.WikipediaException;
+import es.bvalero.replacer.wikipedia.WikipediaPageRepository;
+import es.bvalero.replacer.wikipedia.WikipediaSearchRequest;
 import java.util.Collection;
 import org.springframework.stereotype.Service;
 

@@ -4,6 +4,7 @@ import es.bvalero.replacer.finder.CustomType;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.Suggestion;
 import es.bvalero.replacer.user.User;
+import es.bvalero.replacer.wikipedia.WikipediaSection;
 import java.util.Collection;
 import java.util.stream.Collectors;
 import lombok.experimental.UtilityClass;

@@ -1,4 +1,4 @@
-package es.bvalero.replacer.page.find;
+package es.bvalero.replacer.wikipedia;
 
 import java.util.Collection;
 import lombok.Builder;

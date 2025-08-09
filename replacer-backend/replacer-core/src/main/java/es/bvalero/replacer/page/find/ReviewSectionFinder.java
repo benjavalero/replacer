@@ -2,6 +2,8 @@ package es.bvalero.replacer.page.find;
 
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
+import es.bvalero.replacer.wikipedia.WikipediaPageRepository;
+import es.bvalero.replacer.wikipedia.WikipediaSection;
 import java.util.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.Nullable;
