@@ -2,6 +2,7 @@ package es.bvalero.replacer.user;
 
 import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
 
+import es.bvalero.replacer.auth.RequestToken;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;

@@ -1,5 +1,6 @@
 package es.bvalero.replacer.user;
 
+import es.bvalero.replacer.auth.AccessToken;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import lombok.AccessLevel;
 import lombok.Builder;

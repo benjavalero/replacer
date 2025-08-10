@@ -7,7 +7,7 @@ import com.github.scribejava.core.model.OAuthRequest;
 import com.github.scribejava.core.model.Response;
 import com.github.scribejava.core.model.Verb;
 import com.github.scribejava.core.oauth.OAuth10aService;
-import es.bvalero.replacer.user.AccessToken;
+import es.bvalero.replacer.auth.AccessToken;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;

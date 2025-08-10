@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import es.bvalero.replacer.auth.AccessToken;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;

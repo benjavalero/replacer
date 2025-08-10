@@ -1,5 +1,6 @@
 package es.bvalero.replacer.user;
 
+import es.bvalero.replacer.auth.RequestToken;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import org.jmolecules.architecture.hexagonal.PrimaryPort;
 

@@ -1,4 +1,4 @@
-package es.bvalero.replacer.user;
+package es.bvalero.replacer.auth;
 
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;

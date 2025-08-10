@@ -2,6 +2,7 @@ package es.bvalero.replacer.user;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
+import es.bvalero.replacer.auth.AccessToken;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;

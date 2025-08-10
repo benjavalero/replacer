@@ -1,5 +1,6 @@
 package es.bvalero.replacer.user;
 
+import es.bvalero.replacer.auth.RequestToken;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.resolver.UserLanguage;
 import es.bvalero.replacer.common.util.WebUtils;

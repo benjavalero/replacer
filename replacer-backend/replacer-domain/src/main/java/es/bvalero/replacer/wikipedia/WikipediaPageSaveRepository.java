@@ -1,6 +1,6 @@
 package es.bvalero.replacer.wikipedia;
 
-import es.bvalero.replacer.user.AccessToken;
+import es.bvalero.replacer.auth.AccessToken;
 import org.jmolecules.architecture.hexagonal.SecondaryPort;
 
 @SecondaryPort

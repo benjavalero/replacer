@@ -1,6 +1,6 @@
 package es.bvalero.replacer.wikipedia.page;
 
-import es.bvalero.replacer.user.AccessToken;
+import es.bvalero.replacer.auth.AccessToken;
 import es.bvalero.replacer.wikipedia.WikipediaPageSaveCommand;
 import es.bvalero.replacer.wikipedia.WikipediaPageSaveRepository;
 import es.bvalero.replacer.wikipedia.WikipediaPageSaveResult;
