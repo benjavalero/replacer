@@ -1,7 +1,7 @@
-package es.bvalero.replacer.common.security;
+package es.bvalero.replacer.user.security;
 
-import es.bvalero.replacer.common.util.WebUtils;
 import es.bvalero.replacer.user.User;
+import es.bvalero.replacer.user.util.WebUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;

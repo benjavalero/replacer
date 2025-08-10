@@ -13,7 +13,7 @@ import es.bvalero.replacer.WebMvcConfiguration;
 import es.bvalero.replacer.auth.AuthorizationException;
 import es.bvalero.replacer.auth.RequestToken;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import es.bvalero.replacer.common.util.WebUtils;
+import es.bvalero.replacer.user.util.WebUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

@@ -10,10 +10,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import es.bvalero.replacer.WebMvcConfiguration;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import es.bvalero.replacer.common.security.ValidateUserAspect;
 import es.bvalero.replacer.common.util.ReplacerUtils;
-import es.bvalero.replacer.common.util.WebUtils;
 import es.bvalero.replacer.user.User;
+import es.bvalero.replacer.user.security.ValidateUserAspect;
+import es.bvalero.replacer.user.util.WebUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.Optional;
