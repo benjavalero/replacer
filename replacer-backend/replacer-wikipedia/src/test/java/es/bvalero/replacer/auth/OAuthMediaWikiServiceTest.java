@@ -6,6 +6,7 @@ import static org.mockito.Mockito.*;
 import com.github.scribejava.core.model.OAuth1AccessToken;
 import com.github.scribejava.core.model.OAuth1RequestToken;
 import com.github.scribejava.core.oauth.OAuth10aService;
+import es.bvalero.replacer.common.domain.AccessToken;
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 import org.junit.jupiter.api.BeforeEach;

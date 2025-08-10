@@ -2,7 +2,7 @@ package es.bvalero.replacer.page.save;
 
 import static org.mockito.Mockito.*;
 
-import es.bvalero.replacer.auth.AccessToken;
+import es.bvalero.replacer.common.domain.AccessToken;
 import es.bvalero.replacer.common.domain.PageKey;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.CustomType;

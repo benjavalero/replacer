@@ -1,6 +1,6 @@
 package es.bvalero.replacer.wikipedia.page;
 
-import es.bvalero.replacer.auth.AccessToken;
+import es.bvalero.replacer.common.domain.AccessToken;
 import es.bvalero.replacer.common.domain.PageKey;
 import es.bvalero.replacer.wikipedia.*;
 import es.bvalero.replacer.wikipedia.api.WikipediaApiHelper;

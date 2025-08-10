@@ -1,4 +1,4 @@
-package es.bvalero.replacer.auth;
+package es.bvalero.replacer.common.domain;
 
 import lombok.Value;
 import org.apache.commons.lang3.StringUtils;

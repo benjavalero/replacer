@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import es.bvalero.replacer.auth.AccessToken;
+import es.bvalero.replacer.common.domain.AccessToken;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.wikipedia.WikipediaUser;
 import es.bvalero.replacer.wikipedia.WikipediaUserRepository;

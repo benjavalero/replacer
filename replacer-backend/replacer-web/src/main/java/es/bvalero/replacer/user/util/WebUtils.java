@@ -1,7 +1,7 @@
 package es.bvalero.replacer.user.util;
 
-import es.bvalero.replacer.auth.AccessToken;
 import es.bvalero.replacer.auth.AuthorizationException;
+import es.bvalero.replacer.common.domain.AccessToken;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.user.User;
 import es.bvalero.replacer.user.UserApi;

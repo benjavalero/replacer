@@ -1,5 +1,6 @@
 package es.bvalero.replacer.auth;
 
+import es.bvalero.replacer.common.domain.AccessToken;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 

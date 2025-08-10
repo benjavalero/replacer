@@ -2,7 +2,7 @@ package es.bvalero.replacer.wikipedia.user;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
-import es.bvalero.replacer.auth.AccessToken;
+import es.bvalero.replacer.common.domain.AccessToken;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.wikipedia.WikipediaUser;
 import es.bvalero.replacer.wikipedia.WikipediaUserRepository;

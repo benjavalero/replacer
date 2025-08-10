@@ -1,5 +1,6 @@
 package es.bvalero.replacer.auth;
 
+import es.bvalero.replacer.common.domain.AccessToken;
 import org.jmolecules.architecture.hexagonal.SecondaryPort;
 
 /** Service to perform OAuth authorization operations */

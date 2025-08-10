@@ -1,6 +1,6 @@
 package es.bvalero.replacer.wikipedia.user;
 
-import es.bvalero.replacer.auth.AccessToken;
+import es.bvalero.replacer.common.domain.AccessToken;
 import es.bvalero.replacer.common.domain.UserId;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.wikipedia.WikipediaException;
