@@ -1,8 +1,11 @@
-package es.bvalero.replacer.user;
+package es.bvalero.replacer.wikipedia.user;
 
 import es.bvalero.replacer.auth.AccessToken;
+import es.bvalero.replacer.common.domain.UserId;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.wikipedia.WikipediaException;
+import es.bvalero.replacer.wikipedia.WikipediaUser;
+import es.bvalero.replacer.wikipedia.WikipediaUserRepository;
 import es.bvalero.replacer.wikipedia.api.WikipediaApiHelper;
 import es.bvalero.replacer.wikipedia.api.WikipediaApiRequest;
 import es.bvalero.replacer.wikipedia.api.WikipediaApiResponse;

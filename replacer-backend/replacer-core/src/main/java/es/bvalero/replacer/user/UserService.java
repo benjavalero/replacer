@@ -2,6 +2,8 @@ package es.bvalero.replacer.user;
 
 import es.bvalero.replacer.auth.AccessToken;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
+import es.bvalero.replacer.wikipedia.WikipediaUser;
+import es.bvalero.replacer.wikipedia.WikipediaUserRepository;
 import java.util.Objects;
 import java.util.Optional;
 import lombok.Setter;

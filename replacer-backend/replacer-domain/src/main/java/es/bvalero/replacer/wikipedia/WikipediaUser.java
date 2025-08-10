@@ -1,5 +1,6 @@
-package es.bvalero.replacer.user;
+package es.bvalero.replacer.wikipedia;
 
+import es.bvalero.replacer.common.domain.UserId;
 import lombok.Builder;
 import lombok.Value;
 import org.springframework.lang.NonNull;
@@ -10,7 +11,7 @@ import org.springframework.lang.NonNull;
  */
 @Value
 @Builder
-class WikipediaUser {
+public class WikipediaUser {
 
     @NonNull
     UserId id;

@@ -2,8 +2,8 @@ package es.bvalero.replacer.page.save;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
+import es.bvalero.replacer.common.domain.UserId;
 import es.bvalero.replacer.user.User;
-import es.bvalero.replacer.user.UserId;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -12,7 +12,6 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.queue.CircularFifoQueue;
 import org.jetbrains.annotations.TestOnly;
-import org.jetbrains.annotations.VisibleForTesting;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 

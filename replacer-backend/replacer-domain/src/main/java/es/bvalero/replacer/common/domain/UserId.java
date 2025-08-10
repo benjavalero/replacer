@@ -1,6 +1,5 @@
-package es.bvalero.replacer.user;
+package es.bvalero.replacer.common.domain;
 
-import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Value;
@@ -20,7 +19,7 @@ public class UserId {
     @NonNull
     String username;
 
-    static UserId of(WikipediaLanguage lang, String username) {
+    public static UserId of(WikipediaLanguage lang, String username) {
         if (username.length() > MAX_USERNAME_LENGTH) {
             throw new IllegalArgumentException("Too long username: " + username);
         }

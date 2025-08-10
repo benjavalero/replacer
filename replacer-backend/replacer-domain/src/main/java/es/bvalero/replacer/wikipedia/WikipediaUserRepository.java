@@ -1,4 +1,4 @@
-package es.bvalero.replacer.user;
+package es.bvalero.replacer.wikipedia;
 
 import es.bvalero.replacer.auth.AccessToken;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
@@ -7,7 +7,7 @@ import org.jmolecules.architecture.hexagonal.SecondaryPort;
 
 /** Repository to retrieve a Wikipedia user */
 @SecondaryPort
-interface WikipediaUserRepository {
+public interface WikipediaUserRepository {
     /** Find a user authenticated in Wikipedia */
     Optional<WikipediaUser> findAuthenticatedUser(WikipediaLanguage lang, AccessToken accessToken);
 }

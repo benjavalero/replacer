@@ -5,7 +5,10 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import es.bvalero.replacer.auth.AccessToken;
+import es.bvalero.replacer.common.domain.UserId;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
+import es.bvalero.replacer.wikipedia.WikipediaUser;
+import es.bvalero.replacer.wikipedia.WikipediaUserRepository;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
