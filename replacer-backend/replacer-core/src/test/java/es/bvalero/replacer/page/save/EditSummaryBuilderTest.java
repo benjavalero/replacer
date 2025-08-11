@@ -23,7 +23,7 @@ class EditSummaryBuilderTest {
         String summary = EditSummaryBuilder.build(fixedReplacementTypes, false);
         assertTrue(summary.contains("«1»"));
         assertTrue(summary.contains("«2»"));
-        assertTrue(summary.contains("«3»"));
+        assertTrue(summary.contains("«3» (personalizado)"));
         assertFalse(summary.contains("«Fechas»"));
         assertTrue(summary.contains("Fechas"));
     }

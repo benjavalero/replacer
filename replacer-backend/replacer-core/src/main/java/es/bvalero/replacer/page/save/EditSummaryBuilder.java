@@ -34,7 +34,8 @@ class EditSummaryBuilder {
 
     private String buildSubtypeSummary(ReplacementType type) {
         return switch (type.getKind()) {
-            case SIMPLE, COMPOSED, CUSTOM -> "«" + type.getSubtype() + "»";
+            case SIMPLE, COMPOSED -> "«%s»".formatted(type.getSubtype());
+            case CUSTOM -> "«%s» (personalizado)".formatted(type.getSubtype());
             case EMPTY -> throw new IllegalArgumentException();
             default -> type.getSubtype();
         };

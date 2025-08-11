@@ -1,5 +1,11 @@
 # Versions
 
+## 2.30.2 (??)
+- Fix: improve handling issues when applying recursive cosmetics
+- Fix: don't fail when forcing index of a type with no results
+- Fix: merge results when splitting query after an out-of-memory
+- Feat: add a "custom" label to the custom replacements in the edition summary
+
 ## 2.30.1 (16 Jun 2025)
 - Regression: add again trick to make Spring Boot compatible with Angular paths
 
