@@ -40,8 +40,8 @@ class PageComparatorTest {
         .queryTimestamp(WikipediaTimestamp.now())
         .build();
 
-    private static Replacement buildFinderReplacement(WikipediaPage WikipediaPage, int index) {
-        FinderPage page = WikipediaPage.toFinderPage();
+    private static Replacement buildFinderReplacement(WikipediaPage wikipediaPage, int index) {
+        FinderPage page = FinderPage.of(wikipediaPage);
         return Replacement.of(
             index,
             String.valueOf(index),

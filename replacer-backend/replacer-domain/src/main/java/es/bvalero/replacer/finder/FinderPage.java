@@ -2,6 +2,7 @@ package es.bvalero.replacer.finder;
 
 import es.bvalero.replacer.common.domain.PageKey;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
+import es.bvalero.replacer.wikipedia.WikipediaPage;
 import lombok.Value;
 import lombok.With;
 import lombok.experimental.NonFinal;
@@ -49,5 +50,9 @@ public class FinderPage {
 
     public static FinderPage of(PageKey pageKey, String title, String content) {
         return new FinderPage(pageKey, title, content);
+    }
+
+    public static FinderPage of(WikipediaPage page) {
+        return of(page.getPageKey(), page.getTitle(), page.getContent());
     }
 }

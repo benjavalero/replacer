@@ -77,7 +77,7 @@ class PageIndexBatchServiceTest {
 
         verify(pageIndexValidator).isPageIndexableByNamespace(page);
         verify(pageIndexValidator).isIndexableByTimestamp(page, null);
-        verify(replacementFindApi).findReplacements(page.toFinderPage());
+        verify(replacementFindApi).findReplacements(FinderPage.of(page));
         verify(pageComparator).indexPageReplacements(any(WikipediaPage.class), anyCollection(), isNull());
     }
 

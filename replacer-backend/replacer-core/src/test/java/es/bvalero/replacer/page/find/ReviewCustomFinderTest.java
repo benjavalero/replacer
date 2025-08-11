@@ -468,7 +468,7 @@ class ReviewCustomFinderTest {
         );
         when(
             customReplacementFindApi.findCustomReplacements(
-                page.toFinderPage(),
+                FinderPage.of(page),
                 options.getCustomReplacementFindRequest()
             )
         ).thenReturn(List.of(custom));
@@ -478,7 +478,7 @@ class ReviewCustomFinderTest {
         assertEquals(1, result.size());
 
         verify(customReplacementFindApi).findCustomReplacements(
-            page.toFinderPage(),
+            FinderPage.of(page),
             options.getCustomReplacementFindRequest()
         );
     }
@@ -510,7 +510,7 @@ class ReviewCustomFinderTest {
         );
         when(
             customReplacementFindApi.findCustomReplacements(
-                page.toFinderPage(),
+                FinderPage.of(page),
                 options.getCustomReplacementFindRequest()
             )
         ).thenReturn(List.of(custom));
@@ -520,7 +520,7 @@ class ReviewCustomFinderTest {
         assertEquals(Set.of(custom), new HashSet<>(result));
 
         verify(customReplacementFindApi).findCustomReplacements(
-            page.toFinderPage(),
+            FinderPage.of(page),
             options.getCustomReplacementFindRequest()
         );
     }
@@ -552,7 +552,7 @@ class ReviewCustomFinderTest {
         );
         when(
             customReplacementFindApi.findCustomReplacements(
-                page.toFinderPage(),
+                FinderPage.of(page),
                 options.getCustomReplacementFindRequest()
             )
         ).thenReturn(List.of(custom));
@@ -564,7 +564,7 @@ class ReviewCustomFinderTest {
         assertTrue(result.isEmpty());
 
         verify(customReplacementFindApi).findCustomReplacements(
-            page.toFinderPage(),
+            FinderPage.of(page),
             options.getCustomReplacementFindRequest()
         );
     }

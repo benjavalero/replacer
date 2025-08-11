@@ -4,6 +4,7 @@ import es.bvalero.replacer.common.domain.PageKey;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.CustomReplacementFindApi;
 import es.bvalero.replacer.finder.CustomType;
+import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.page.index.PageIndexService;
 import es.bvalero.replacer.page.save.PageSaveRepository;
@@ -87,7 +88,7 @@ class ReviewCustomFinder extends ReviewFinder {
                 for (WikipediaPage page : pages) {
                     final Collection<Replacement> customReplacements = findCustomReplacements(page, options);
                     if (customReplacements.isEmpty()) {
-                        pageIds.remove(page.getPageId());
+                        pageIds.remove(page.getPageKey().getPageId());
                         totalToReview--;
                     }
                 }
@@ -142,7 +143,7 @@ class ReviewCustomFinder extends ReviewFinder {
 
     private Collection<Replacement> findCustomReplacements(WikipediaPage page, ReviewOptions options) {
         return customReplacementFindApi.findCustomReplacements(
-            page.toFinderPage(),
+            FinderPage.of(page),
             options.getCustomReplacementFindRequest()
         );
     }

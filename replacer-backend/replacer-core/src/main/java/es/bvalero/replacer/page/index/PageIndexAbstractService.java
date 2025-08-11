@@ -2,6 +2,7 @@ package es.bvalero.replacer.page.index;
 
 import es.bvalero.replacer.common.domain.PageKey;
 import es.bvalero.replacer.common.util.ReplacerUtils;
+import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.ReplacementFindApi;
 import es.bvalero.replacer.page.IndexedPage;
@@ -65,10 +66,10 @@ abstract class PageIndexAbstractService {
     }
 
     // This method can be overridden in case we want to avoid calculating the replacements under some circumstances
-    PageIndexResult indexPage(WikipediaPage WikipediaPage, @Nullable IndexedPage dbPage) {
-        final Collection<Replacement> replacements = replacementFindApi.findReplacements(WikipediaPage.toFinderPage());
+    PageIndexResult indexPage(WikipediaPage page, @Nullable IndexedPage dbPage) {
+        final Collection<Replacement> replacements = replacementFindApi.findReplacements(FinderPage.of(page));
 
-        final IndexedPage result = pageComparator.indexPageReplacements(WikipediaPage, replacements, dbPage);
+        final IndexedPage result = pageComparator.indexPageReplacements(page, replacements, dbPage);
         if (result.isPageToSave()) {
             saveResult(result);
         }

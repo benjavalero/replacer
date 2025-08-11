@@ -42,14 +42,14 @@ public class PageIndexBatchService extends PageIndexAbstractService {
     }
 
     @Override
-    PageIndexResult indexPage(WikipediaPage WikipediaPage, @Nullable IndexedPage dbPage) {
+    PageIndexResult indexPage(WikipediaPage page, @Nullable IndexedPage dbPage) {
         // Consider as "not indexed" all indexable pages which are not worth to be re-indexed
         // because they have already been indexed recently in the database
-        if (!isPageToBeIndexed(WikipediaPage, dbPage)) {
+        if (!isPageToBeIndexed(page, dbPage)) {
             return PageIndexResult.ofNotIndexed();
         }
 
-        return super.indexPage(WikipediaPage, dbPage);
+        return super.indexPage(page, dbPage);
     }
 
     private boolean isPageToBeIndexed(WikipediaPage page, @Nullable IndexedPage dbPage) {

@@ -1,8 +1,6 @@
 package es.bvalero.replacer.wikipedia;
 
 import es.bvalero.replacer.common.domain.PageKey;
-import es.bvalero.replacer.finder.FinderPage;
-import java.util.Objects;
 import lombok.Builder;
 import lombok.ToString;
 import lombok.Value;
@@ -55,10 +53,6 @@ public class WikipediaPage {
     @ToString.Include
     private String getAbbreviatedContent() {
         return StringUtils.abbreviate(getContent(), SHORT_CONTENT_LENGTH);
-    }
-
-    public FinderPage toFinderPage() {
-        return FinderPage.of(getPageKey(), Objects.requireNonNull(getTitle()), Objects.requireNonNull(getContent()));
     }
 
     // Shorthand to get the page ID

@@ -94,11 +94,11 @@ class PageComparator {
     }
 
     @VisibleForTesting
-    static IndexedPage toIndexedPage(WikipediaPage WikipediaPage, IndexedPageStatus pageStatus) {
+    static IndexedPage toIndexedPage(WikipediaPage page, IndexedPageStatus pageStatus) {
         return IndexedPage.builder()
-            .pageKey(WikipediaPage.getPageKey())
-            .title(WikipediaPage.getTitle())
-            .lastUpdate(WikipediaPage.getLastUpdate().toLocalDate())
+            .pageKey(page.getPageKey())
+            .title(page.getTitle())
+            .lastUpdate(page.getLastUpdate().toLocalDate())
             .status(pageStatus)
             .build();
     }
