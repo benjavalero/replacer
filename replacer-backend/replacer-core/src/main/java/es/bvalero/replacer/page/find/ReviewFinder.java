@@ -273,7 +273,7 @@ abstract class ReviewFinder {
     }
 
     private boolean isTypeForbidden(ReplacementType type, User user) {
-        return type instanceof StandardType standardType && standardType.isTypeForbidden(user);
+        return type instanceof StandardType standardType && standardType.isTypeForbidden(user.isAdmin());
     }
 
     private Optional<Integer> findTotalResultsFromCache(ReviewOptions options) {

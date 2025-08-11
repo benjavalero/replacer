@@ -23,7 +23,7 @@ class PageCountService implements PageCountApi {
             .countNotReviewedGroupedByType(user.getId().getLang())
             .stream()
             .map(rc -> ResultCount.of(rc.getKey(), rc.getCount()))
-            .filter(rc -> !rc.getKey().isTypeForbidden(user))
+            .filter(rc -> !rc.getKey().isTypeForbidden(user.isAdmin()))
             .toList();
     }
 }

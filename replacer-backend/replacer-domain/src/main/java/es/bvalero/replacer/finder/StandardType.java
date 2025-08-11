@@ -2,7 +2,6 @@ package es.bvalero.replacer.finder;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
-import es.bvalero.replacer.user.User;
 import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -81,8 +80,8 @@ public class StandardType extends ReplacementType {
         return of(ReplacementKind.valueOf(kind), subtype);
     }
 
-    public boolean isTypeForbidden(User user) {
-        return isForAdmin() && !user.isAdmin();
+    public boolean isTypeForbidden(boolean isUserAdmin) {
+        return isForAdmin() && !isUserAdmin;
     }
 
     @Override
