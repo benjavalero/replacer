@@ -1,10 +1,11 @@
 package es.bvalero.replacer.finder.listing.load;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
+import es.bvalero.replacer.finder.AddedTypeEvent;
+import es.bvalero.replacer.finder.ChangedReplacementType;
 import es.bvalero.replacer.finder.ReplacementKind;
 import es.bvalero.replacer.finder.StandardType;
 import es.bvalero.replacer.finder.listing.StandardMisspelling;
-import es.bvalero.replacer.replacement.type.ReplacementTypeSaveApi;
 import jakarta.annotation.PostConstruct;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -13,6 +14,7 @@ import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.SetValuedMap;
 import org.jetbrains.annotations.VisibleForTesting;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
 @Slf4j
@@ -22,16 +24,16 @@ class AddedMisspellingListener implements PropertyChangeListener {
     // Dependency injection
     private final SimpleMisspellingLoader simpleMisspellingLoader;
     private final ComposedMisspellingLoader composedMisspellingLoader;
-    private final ReplacementTypeSaveApi replacementTypeSaveApi;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
     AddedMisspellingListener(
         SimpleMisspellingLoader simpleMisspellingLoader,
         ComposedMisspellingLoader composedMisspellingLoader,
-        ReplacementTypeSaveApi replacementTypeSaveApi
+        ApplicationEventPublisher applicationEventPublisher
     ) {
         this.simpleMisspellingLoader = simpleMisspellingLoader;
         this.composedMisspellingLoader = composedMisspellingLoader;
-        this.replacementTypeSaveApi = replacementTypeSaveApi;
+        this.applicationEventPublisher = applicationEventPublisher;
     }
 
     @PostConstruct
@@ -53,7 +55,7 @@ class AddedMisspellingListener implements PropertyChangeListener {
                 StandardMisspelling
             >) evt.getNewValue();
         getAddedMisspellings(oldItems, newItems).forEach(added ->
-            replacementTypeSaveApi.index(added.getLang(), added.getType())
+            applicationEventPublisher.publishEvent(AddedTypeEvent.of(added))
         );
     }
 

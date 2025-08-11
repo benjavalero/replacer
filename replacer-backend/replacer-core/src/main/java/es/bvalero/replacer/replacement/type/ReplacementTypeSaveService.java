@@ -2,6 +2,8 @@ package es.bvalero.replacer.replacement.type;
 
 import es.bvalero.replacer.common.domain.PageKey;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
+import es.bvalero.replacer.finder.AddedTypeEvent;
+import es.bvalero.replacer.finder.RemovedTypeEvent;
 import es.bvalero.replacer.finder.StandardType;
 import es.bvalero.replacer.page.index.PageIndexService;
 import es.bvalero.replacer.replacement.save.ReplacementSaveRepository;
@@ -9,6 +11,7 @@ import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.wikipedia.WikipediaPageRepository;
 import es.bvalero.replacer.wikipedia.WikipediaSearchRequest;
 import java.util.Collection;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -29,10 +32,17 @@ class ReplacementTypeSaveService implements ReplacementTypeSaveApi {
         this.pageIndexService = pageIndexService;
     }
 
-    // TODO: Maybe this could be called directly from finder to repository module
-    @Override
-    public void remove(WikipediaLanguage lang, StandardType type) {
-        replacementSaveRepository.removeByType(lang, type);
+    @EventListener
+    public void onRemovedType(RemovedTypeEvent event) {
+        replacementSaveRepository.removeByType(
+            event.getReplacementType().getLang(),
+            event.getReplacementType().getType()
+        );
+    }
+
+    @EventListener
+    public void onAddedType(AddedTypeEvent event) {
+        index(event.getReplacementType().getLang(), event.getReplacementType().getType());
     }
 
     @Override

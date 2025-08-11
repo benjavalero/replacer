@@ -4,11 +4,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
+import es.bvalero.replacer.finder.ChangedReplacementType;
 import es.bvalero.replacer.finder.ReplacementKind;
 import es.bvalero.replacer.finder.StandardType;
 import es.bvalero.replacer.finder.listing.SimpleMisspelling;
 import es.bvalero.replacer.finder.listing.StandardMisspelling;
-import es.bvalero.replacer.replacement.type.ReplacementTypeSaveApi;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -16,13 +16,14 @@ import org.apache.commons.collections4.SetValuedMap;
 import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.context.ApplicationEventPublisher;
 
 class ObsoleteMisspellingListenerTest {
 
     // Dependency injection
     private SimpleMisspellingLoader simpleMisspellingLoader;
     private ComposedMisspellingLoader composedMisspellingLoader;
-    private ReplacementTypeSaveApi replacementTypeSaveApi;
+    private ApplicationEventPublisher applicationEventPublisher;
 
     private ObsoleteMisspellingListener obsoleteMisspellingListener;
 
@@ -30,11 +31,11 @@ class ObsoleteMisspellingListenerTest {
     public void setUp() {
         simpleMisspellingLoader = mock(SimpleMisspellingLoader.class);
         composedMisspellingLoader = mock(ComposedMisspellingLoader.class);
-        replacementTypeSaveApi = mock(ReplacementTypeSaveApi.class);
+        applicationEventPublisher = mock(ApplicationEventPublisher.class);
         obsoleteMisspellingListener = new ObsoleteMisspellingListener(
             simpleMisspellingLoader,
             composedMisspellingLoader,
-            replacementTypeSaveApi
+            applicationEventPublisher
         );
     }
 
