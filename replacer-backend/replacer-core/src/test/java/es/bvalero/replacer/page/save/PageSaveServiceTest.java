@@ -5,10 +5,7 @@ import static org.mockito.Mockito.*;
 import es.bvalero.replacer.common.domain.AccessToken;
 import es.bvalero.replacer.common.domain.PageKey;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import es.bvalero.replacer.finder.CustomType;
-import es.bvalero.replacer.finder.FinderPage;
-import es.bvalero.replacer.finder.ReplacementKind;
-import es.bvalero.replacer.finder.StandardType;
+import es.bvalero.replacer.finder.*;
 import es.bvalero.replacer.user.User;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.wikipedia.WikipediaPageSaveCommand;
@@ -23,7 +20,7 @@ import org.junit.jupiter.api.Test;
 class PageSaveServiceTest {
 
     // Dependency injection
-    private ApplyCosmeticsService applyCosmeticsService;
+    private CosmeticApi cosmeticApi;
     private EditionsPerMinuteValidator editionsPerMinuteValidator;
     private WikipediaPageSaveRepository wikipediaPageSaveRepository;
     private PageSaveRepository pageSaveRepository;
@@ -32,12 +29,12 @@ class PageSaveServiceTest {
 
     @BeforeEach
     public void setUp() {
-        applyCosmeticsService = mock(ApplyCosmeticsService.class);
+        cosmeticApi = mock(CosmeticApi.class);
         editionsPerMinuteValidator = mock(EditionsPerMinuteValidator.class);
         wikipediaPageSaveRepository = mock(WikipediaPageSaveRepository.class);
         pageSaveRepository = mock(PageSaveRepository.class);
         pageSaveService = new PageSaveService(
-            applyCosmeticsService,
+            cosmeticApi,
             editionsPerMinuteValidator,
             wikipediaPageSaveRepository,
             pageSaveRepository
@@ -65,11 +62,11 @@ class PageSaveServiceTest {
             .reviewedReplacements(List.of(reviewedReplacement))
             .build();
 
-        when(applyCosmeticsService.applyCosmeticChanges(any(FinderPage.class))).thenReturn(reviewedPage.getContent());
+        when(cosmeticApi.applyCosmeticChanges(any(FinderPage.class))).thenReturn(reviewedPage.toFinderPage());
         User user = User.buildTestUser();
         pageSaveService.save(reviewedPage, user);
 
-        verify(applyCosmeticsService).applyCosmeticChanges(any(FinderPage.class));
+        verify(cosmeticApi).applyCosmeticChanges(any(FinderPage.class));
 
         WikipediaPageSaveCommand pageSave = WikipediaPageSaveCommand.builder()
             .pageKey(reviewedPage.getPageKey())

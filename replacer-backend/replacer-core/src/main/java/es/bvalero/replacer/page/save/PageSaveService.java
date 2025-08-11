@@ -1,5 +1,6 @@
 package es.bvalero.replacer.page.save;
 
+import es.bvalero.replacer.finder.CosmeticApi;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.ReplacementType;
 import es.bvalero.replacer.page.IndexedPage;
@@ -20,18 +21,18 @@ import org.springframework.stereotype.Service;
 class PageSaveService implements PageSaveApi {
 
     // Dependency injection
-    private final ApplyCosmeticsService applyCosmeticsService;
+    private final CosmeticApi cosmeticApi;
     private final EditionsPerMinuteValidator editionsPerMinuteValidator;
     private final WikipediaPageSaveRepository wikipediaPageSaveRepository;
     private final PageSaveRepository pageSaveRepository;
 
     PageSaveService(
-        ApplyCosmeticsService applyCosmeticsService,
+        CosmeticApi cosmeticApi,
         EditionsPerMinuteValidator editionsPerMinuteValidator,
         WikipediaPageSaveRepository wikipediaPageSaveRepository,
         PageSaveRepository pageSaveRepository
     ) {
-        this.applyCosmeticsService = applyCosmeticsService;
+        this.cosmeticApi = cosmeticApi;
         this.editionsPerMinuteValidator = editionsPerMinuteValidator;
         this.wikipediaPageSaveRepository = wikipediaPageSaveRepository;
         this.pageSaveRepository = pageSaveRepository;
@@ -54,7 +55,7 @@ class PageSaveService implements PageSaveApi {
         FinderPage page = reviewedPage.toFinderPage();
 
         // Apply cosmetic changes
-        String textToSave = applyCosmeticsService.applyCosmeticChanges(page);
+        String textToSave = cosmeticApi.applyCosmeticChanges(page).getContent();
         boolean applyCosmetics = !textToSave.equals(reviewedPage.getContent());
 
         // Edit summary
