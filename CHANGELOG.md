@@ -1,6 +1,6 @@
 # Versions
 
-## 2.30.2 (??)
+## 2.30.2 (11 Aug 2025)
 - Fix: improve handling issues when applying recursive cosmetics
 - Fix: don't fail when forcing index of a type with no results
 - Fix: merge results when splitting query after an out-of-memory
