@@ -12,6 +12,7 @@ import es.bvalero.replacer.page.find.PageRepository;
 import es.bvalero.replacer.page.save.PageSaveRepository;
 import es.bvalero.replacer.wikipedia.WikipediaNamespace;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
+import es.bvalero.replacer.wikipedia.WikipediaPageRepository;
 import es.bvalero.replacer.wikipedia.WikipediaTimestamp;
 import java.time.LocalDate;
 import java.util.List;
@@ -31,6 +32,7 @@ class PageIndexServiceTest {
         .build();
 
     // Dependency injection
+    private WikipediaPageRepository wikipediaPageRepository;
     private PageSaveRepository pageSaveRepository;
     private PageIndexValidator pageIndexValidator;
     private ReplacementFindApi replacementFindApi;
@@ -42,6 +44,7 @@ class PageIndexServiceTest {
 
     @BeforeEach
     void setUp() {
+        wikipediaPageRepository = mock(WikipediaPageRepository.class);
         pageSaveRepository = mock(PageSaveRepository.class);
         pageIndexValidator = mock(PageIndexValidator.class);
         replacementFindApi = mock(ReplacementFindApi.class);
@@ -49,6 +52,7 @@ class PageIndexServiceTest {
         pageRepository = mock(PageRepository.class);
         pageComparatorSaver = mock(PageComparatorSaver.class);
         pageIndexService = new PageIndexService(
+            wikipediaPageRepository,
             pageSaveRepository,
             pageIndexValidator,
             replacementFindApi,

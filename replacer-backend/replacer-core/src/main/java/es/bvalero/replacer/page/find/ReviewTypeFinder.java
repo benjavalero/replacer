@@ -7,7 +7,6 @@ import es.bvalero.replacer.page.count.PageCountRepository;
 import es.bvalero.replacer.page.index.PageIndexService;
 import es.bvalero.replacer.page.save.PageSaveRepository;
 import es.bvalero.replacer.replacement.save.ReplacementSaveRepository;
-import es.bvalero.replacer.replacement.type.ReplacementTypeSaveApi;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
 import es.bvalero.replacer.wikipedia.WikipediaPageRepository;
 import java.util.Collection;
@@ -21,10 +20,10 @@ class ReviewTypeFinder extends ReviewFinder {
 
     // Dependency injection
     private final PageRepository pageRepository;
+    private final PageIndexService pageIndexService;
     private final PageSaveRepository pageSaveRepository;
     private final PageCountRepository pageCountRepository;
     private final ReplacementSaveRepository replacementSaveRepository;
-    private final ReplacementTypeSaveApi replacementTypeSaveApi;
 
     ReviewTypeFinder(
         WikipediaPageRepository wikipediaPageRepository,
@@ -33,15 +32,14 @@ class ReviewTypeFinder extends ReviewFinder {
         PageSaveRepository pageSaveRepository,
         ReviewSectionFinder reviewSectionFinder,
         PageCountRepository pageCountRepository,
-        ReplacementSaveRepository replacementSaveRepository,
-        ReplacementTypeSaveApi replacementTypeSaveApi
+        ReplacementSaveRepository replacementSaveRepository
     ) {
         super(wikipediaPageRepository, pageIndexService, pageRepository, pageSaveRepository, reviewSectionFinder);
+        this.pageIndexService = pageIndexService;
         this.pageRepository = pageRepository;
         this.pageSaveRepository = pageSaveRepository;
         this.pageCountRepository = pageCountRepository;
         this.replacementSaveRepository = replacementSaveRepository;
-        this.replacementTypeSaveApi = replacementTypeSaveApi;
     }
 
     @Override
@@ -75,7 +73,7 @@ class ReviewTypeFinder extends ReviewFinder {
     }
 
     private void forceIndex(ReviewOptions options) {
-        replacementTypeSaveApi.index(options.getUser().getId().getLang(), options.getStandardType());
+        pageIndexService.indexType(options.getUser().getId().getLang(), options.getStandardType());
     }
 
     @Override
