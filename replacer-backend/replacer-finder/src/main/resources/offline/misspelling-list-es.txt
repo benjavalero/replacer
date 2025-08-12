@@ -3383,7 +3383,6 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  catalogo||catálogo (sustantivo), catalogó (verbo, 3.ª persona), catalogo (verbo, 1.ª persona)
  cátalogo||catálogo (sustantivo), catalogó (verbo, 3.ª persona), catalogo (verbo, 1.ª persona)
  catalogos||catálogos
- catalunya||Cataluña
  cataluña|cs|Cataluña
  catamaran||catamarán
  Catamarqueño|cs|catamarqueño
@@ -4060,7 +4059,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  cmt||cm
  cmtrs||cm
  cmts||cm
- coach||entrenador, preparador
+ coach||entrenador, preparador, entrenadora, preparadora
  coagulacion||coagulación
  coalcoman||Coalcomán
  coalicción||coalición
@@ -5440,7 +5439,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  curriculas||currículas
  curriculo||currículo (educación)
  curriculos||currículos (educación)
- curriculums||currículum, ''curriculum vitae'' (carrera de la vida)
+ curriculums||currículums
  curtiduria||curtiduría
  curtidurias||curtidurías
  curúles||curules
@@ -11177,6 +11176,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  inabilitados||inhabilitados
  inacesible||inaccesible
  inacesibles||inaccesibles
+ inagura||inaugura
  inaguración||inauguración
  inagurada||inaugurada
  inaguradas||inauguradas

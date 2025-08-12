@@ -32,18 +32,18 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
 
 == A ==
  a alturas||a altitudes («altitud» es sobre el nivel del mar), a alturas («altura» es sobre el terreno o superficie inmediatamente inferior)
- aC.|cs|a.&nbsp;C. (con espacio duro)
- a.C.|cs|a.&nbsp;C. (con espacio duro)
- a.C|cs|a.&nbsp;C. (con espacio duro)
- a. C.|cs|a.&nbsp;C. (con espacio duro)
+ aC.|cs|a.&nbsp;C. («antes de Cristo» —con espacio duro—)
+ a.C.|cs|a.&nbsp;C. («antes de Cristo» —con espacio duro—)
+ a.C|cs|a.&nbsp;C. («antes de Cristo» —con espacio duro—)
+ a. C.|cs|a.&nbsp;C. («antes de Cristo» —con espacio duro—)
  a cambió||a cambio
  a capella||a&nbsp;capela (en español), ''a&nbsp;cappella'' (en italiano, en cursiva, solamente para partituras)
  actualmente en vigor||en vigor, vigente, vigentes
- adc|cs|a.&nbsp;C. (con espacio duro)
- AdC|cs|a.&nbsp;C. (con espacio duro)
- adC|cs|a.&nbsp;C. (con espacio duro)
- a de C.||a.&nbsp;C. (con espacio duro)
- a. de C.||a.&nbsp;C. (con espacio duro)
+ adc|cs|a.&nbsp;C. («antes de Cristo» —con espacio duro—)
+ AdC|cs|a.&nbsp;C. («antes de Cristo» —con espacio duro—)
+ adC|cs|a.&nbsp;C. («antes de Cristo» —con espacio duro—)
+ a de C.||a.&nbsp;C. («antes de Cristo» —con espacio duro—)
+ a. de C.||a.&nbsp;C. («antes de Cristo» —con espacio duro—)
  a demás||además (adverbio)
  ad-hoc||''ad hoc''
  ad honorem||''ad honorem'', ''Ad honorem'' (para inicios de frase o columnas de tablas)
@@ -1210,6 +1210,7 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  comicios electorales||comicios
  Complejo Deportivo|cs|complejo deportivo (genérico), Complejo Deportivo (nombre propio), Complejo deportivo (para inicios de frase o columnas de tablas)
  Complejo deportivo|cs|complejo deportivo (genérico), Complejo Deportivo (nombre propio), Complejo deportivo (para inicios de frase o columnas de tablas)
+ Comunidad Autónoma|cs|comunidad autónoma, Comunidad autónoma (para inicios de frase o columnas de tablas), Comunidad (para la Comunidad de Madrid, la Comunidad Valenciana y la Comunidad Foral de Navarra)
  con Categoría|cs|con categoría
  con está||con esta
  con esté||con este
@@ -1747,8 +1748,8 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  el alguno||en alguno, él alguno, alguno
  el algunos||en algunos, él algunos, algunos
  el alma mater||la ''alma mater''
- el antigua|cs|la antigua
- El antigua|cs|La antigua
+ el antigua|cs|el antiguo, la antigua
+ El antigua|cs|El antiguo, La antigua
  el años||el año, los años, él años
  el autoestima||la autoestima
  el batalla||la batalla, él batalla
@@ -1834,7 +1835,7 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  en de|cs|en, de, el de, es de
  en el caso que||en el caso de que
  en el en el||en el
- en el la|cs|en el, en la
+ en el la|cs|en la, en el
  en el qué||en el que
  en en||en, en el
  en está||en esta, en Esta (cuando es parte de un nombre), en este, en esto
@@ -1905,8 +1906,8 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  Estado del Bienestar|cs|estado del bienestar, Estado del bienestar (para inicios de frase o columnas de tablas)
  Estado del bienestar|cs|estado del bienestar, Estado del bienestar (para inicios de frase o columnas de tablas)
  estado del Bienestar|cs|estado del bienestar, Estado del bienestar (para inicios de frase o columnas de tablas)
- estados miembro|cs|Estados miembro
- Estados Miembro|cs|Estados miembro
+ estados miembro|cs|Estados miembro (construcción aceptada), Estados miembros (construcción recomendada)
+ Estados Miembro|cs|Estados miembro (construcción aceptada), Estados miembros (construcción recomendada)
  estados miembros|cs|Estados miembros
  Estados Miembros|cs|Estados miembros
  Estado Unidos|cs|Estados Unidos
@@ -2148,6 +2149,8 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  ex-funcionarios||exfuncionarios
  ex futbolista||exfutbolista
  ex-futbolista||exfutbolista
+ ex [[Fútbol|| ex[[Fútbol
+ ex-[[Fútbol|| ex[[Fútbol
  ex futbolistas||exfutbolistas
  ex-futbolistas||exfutbolistas
  ex ganador||exganador
@@ -2202,6 +2205,10 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  ex-juezas||exjuezas
  ex jugador||exjugador
  ex-jugador||exjugador
+ ex jugadora||exjugadora
+ ex-jugadora||exjugadora
+ ex jugadoras||exjugadoras
+ ex-jugadoras||exjugadoras
  ex jugadores||exjugadores
  ex-jugadores||exjugadores
  ex lider||exlíder
@@ -5219,7 +5226,6 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  s. a. d.|cs|S.&nbsp;A.&nbsp;D. (abreviatura), SAD (siglas de sociedad anónima deportiva)
  S. D. Éibar|cs|S. D. Eibar
  S.D. Éibar|cs|S. D. Eibar
- s.&nbsp;XIX|cs|{{siglo|XIX||s}}
  Sadam Husein|cs|Sadam Huseín
  Sadam Hussein|cs|Sadam Huseín
  Sadam Husseín|cs|Sadam Huseín
@@ -5274,7 +5280,7 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  se entero que||se enteró de que
  se enteró que||se enteró de que
  se específica||se especifica
- se esta||se está
+ se esta||se está, de esta
  se estreno||se estrenó
  se fundo||se fundó
  seg.||s (símbolo de la unidad temporal segundo), s. (para final de frase)
