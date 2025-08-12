@@ -1,11 +1,11 @@
 package es.bvalero.replacer.page.list;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import es.bvalero.replacer.common.dto.ReplacementTypeDto;
 import es.bvalero.replacer.common.resolver.UserLanguage;
 import es.bvalero.replacer.common.security.ValidateBotUser;
 import es.bvalero.replacer.common.util.ReplacerUtils;
 import es.bvalero.replacer.finder.StandardType;
+import es.bvalero.replacer.replacement.type.ReplacementTypeDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -40,7 +40,7 @@ class PageListController {
     ) {
         // We cannot use the ValidateBotUser annotation because this call is made in an external tab
         WikipediaLanguage language = WikipediaLanguage.valueOfCode(lang);
-        StandardType type = request.toStandardType();
+        StandardType type = toStandardType(request);
         Collection<String> pagesToReview = pageListApi.findPageTitlesNotReviewedByType(language, type);
         String titleList = StringUtils.join(pagesToReview, "\n");
         LOGGER.info(
@@ -57,7 +57,11 @@ class PageListController {
     @PostMapping(value = "")
     void reviewPagesByType(@UserLanguage WikipediaLanguage lang, @Valid ReplacementTypeDto request) {
         LOGGER.info("POST Review pages by type {}", request);
-        StandardType type = request.toStandardType();
+        StandardType type = toStandardType(request);
         pageListApi.updateSystemReviewerByType(lang, type);
+    }
+
+    private StandardType toStandardType(ReplacementTypeDto dto) {
+        return StandardType.of(dto.getKind(), dto.getSubtype());
     }
 }

@@ -1,7 +1,6 @@
 package es.bvalero.replacer.replacement.type;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import es.bvalero.replacer.common.dto.ReplacementTypeDto;
 import es.bvalero.replacer.common.resolver.UserLanguage;
 import es.bvalero.replacer.finder.StandardType;
 import io.swagger.v3.oas.annotations.Operation;
@@ -41,12 +40,16 @@ class ReplacementTypeController {
             replacementTypeFindRequest.isCs()
         );
         if (type.isPresent()) {
-            ReplacementTypeDto typeDto = ReplacementTypeDto.of(type.get());
+            ReplacementTypeDto typeDto = toDto(type.get());
             LOGGER.info("GET Find Replacement Type: {} => {}", replacementTypeFindRequest, typeDto);
             return ResponseEntity.ok(typeDto);
         } else {
             LOGGER.info("GET Find Replacement Type: {} => {}", replacementTypeFindRequest, "No Content");
             return ResponseEntity.noContent().build();
         }
+    }
+
+    private ReplacementTypeDto toDto(StandardType type) {
+        return ReplacementTypeDto.of(type.getKind().getCode(), type.getSubtype());
     }
 }
