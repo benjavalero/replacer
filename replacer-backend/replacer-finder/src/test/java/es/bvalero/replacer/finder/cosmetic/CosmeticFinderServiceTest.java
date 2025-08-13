@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-import es.bvalero.replacer.checkwikipedia.CheckWikipediaService;
+import es.bvalero.replacer.checkwikipedia.CheckWikipediaFixEvent;
 import es.bvalero.replacer.finder.Cosmetic;
 import es.bvalero.replacer.finder.FinderPage;
 import java.util.Collections;
@@ -12,20 +12,21 @@ import java.util.List;
 import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.context.ApplicationEventPublisher;
 
 class CosmeticFinderServiceTest {
 
     // Dependency injection
     private CosmeticFinder cosmeticFinder;
-    private CheckWikipediaService checkWikipediaService;
+    private ApplicationEventPublisher applicationEventPublisher;
 
     private CosmeticFinderService cosmeticFinderService;
 
     @BeforeEach
     void setUp() {
         cosmeticFinder = mock(CosmeticFinder.class);
-        checkWikipediaService = mock(CheckWikipediaService.class);
-        cosmeticFinderService = new CosmeticFinderService(List.of(cosmeticFinder), checkWikipediaService);
+        applicationEventPublisher = mock(ApplicationEventPublisher.class);
+        cosmeticFinderService = new CosmeticFinderService(List.of(cosmeticFinder), applicationEventPublisher);
     }
 
     @Test
@@ -41,10 +42,8 @@ class CosmeticFinderServiceTest {
         assertEquals(page.withContent(expected), cosmeticFinderService.applyCosmeticChanges(page));
 
         verify(cosmeticFinder).find(page);
-        verify(checkWikipediaService).reportFix(
-            page.getPageKey().getLang(),
-            page.getTitle(),
-            cosmetic.getCheckWikipediaAction()
+        verify(applicationEventPublisher).publishEvent(
+            CheckWikipediaFixEvent.of(page.getPageKey().getLang(), page.getTitle(), cosmetic.getCheckWikipediaAction())
         );
     }
 

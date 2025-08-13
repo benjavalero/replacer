@@ -2,13 +2,13 @@ package es.bvalero.replacer.checkwikipedia;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import org.springframework.context.annotation.Profile;
-import org.springframework.scheduling.annotation.Async;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 @Profile("!offline")
 @Service
-class CheckWikipediaRestService implements CheckWikipediaService {
+class CheckWikipediaRestService {
 
     private static final String CHECK_WIKIPEDIA_URL = "https://checkwiki.toolforge.org/cgi-bin/checkwiki.cgi";
 
@@ -19,12 +19,14 @@ class CheckWikipediaRestService implements CheckWikipediaService {
         this.restTemplate = restTemplate;
     }
 
-    @Async
-    public void reportFix(WikipediaLanguage lang, String pageTitle, CheckWikipediaAction action) {
+    @EventListener
+    public void onFix(CheckWikipediaFixEvent event) {
+        CheckWikipediaAction action = event.getAction();
         if (action.isNoAction()) {
             return;
         }
 
+        WikipediaLanguage lang = event.getLang();
         String project = String.format("%swiki", lang.getCode());
 
         String url = String.format(
@@ -32,7 +34,7 @@ class CheckWikipediaRestService implements CheckWikipediaService {
             CHECK_WIKIPEDIA_URL,
             project,
             action.getValue(),
-            pageTitle
+            event.getPageTitle()
         );
         restTemplate.getForObject(url, String.class);
     }

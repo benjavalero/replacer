@@ -1,11 +1,12 @@
 package es.bvalero.replacer.finder.cosmetic;
 
-import es.bvalero.replacer.checkwikipedia.CheckWikipediaService;
+import es.bvalero.replacer.checkwikipedia.CheckWikipediaFixEvent;
 import es.bvalero.replacer.common.util.ReplacerUtils;
 import es.bvalero.replacer.finder.*;
 import jakarta.annotation.PostConstruct;
 import java.util.*;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -14,11 +15,14 @@ class CosmeticFinderService implements FinderService<Cosmetic>, CosmeticApi {
 
     // Dependency injection
     private final List<CosmeticFinder> cosmeticFinders;
-    private final CheckWikipediaService checkWikipediaService;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
-    public CosmeticFinderService(List<CosmeticFinder> cosmeticFinders, CheckWikipediaService checkWikipediaService) {
+    public CosmeticFinderService(
+        List<CosmeticFinder> cosmeticFinders,
+        ApplicationEventPublisher applicationEventPublisher
+    ) {
         this.cosmeticFinders = cosmeticFinders;
-        this.checkWikipediaService = checkWikipediaService;
+        this.applicationEventPublisher = applicationEventPublisher;
     }
 
     @PostConstruct
@@ -82,10 +86,11 @@ class CosmeticFinderService implements FinderService<Cosmetic>, CosmeticApi {
     }
 
     private void applyCheckWikipediaAction(FinderPage page, Cosmetic cosmetic) {
-        checkWikipediaService.reportFix(
+        CheckWikipediaFixEvent event = CheckWikipediaFixEvent.of(
             page.getPageKey().getLang(),
             page.getTitle(),
             cosmetic.getCheckWikipediaAction()
         );
+        applicationEventPublisher.publishEvent(event);
     }
 }
