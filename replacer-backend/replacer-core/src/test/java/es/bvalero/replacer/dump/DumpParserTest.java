@@ -6,9 +6,9 @@ import static org.mockito.Mockito.*;
 import es.bvalero.replacer.DumpProperties;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.exception.ReplacerException;
+import es.bvalero.replacer.page.index.IndexablePage;
 import es.bvalero.replacer.page.index.PageIndexBatchService;
 import es.bvalero.replacer.page.index.PageIndexResult;
-import es.bvalero.replacer.wikipedia.WikipediaPage;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -48,7 +48,7 @@ class DumpParserTest {
 
         assertTrue(dumpParser.getDumpStatus().isEmpty());
 
-        when(pageIndexService.indexPage(any(WikipediaPage.class)))
+        when(pageIndexService.indexPage(any(IndexablePage.class)))
             .thenReturn(PageIndexResult.ofIndexed())
             .thenReturn(PageIndexResult.ofNotIndexed())
             .thenReturn(PageIndexResult.ofIndexed())
@@ -57,7 +57,7 @@ class DumpParserTest {
 
         dumpParser.parseDumpFile(WikipediaLanguage.SPANISH, DumpFile.of(dumpFile));
 
-        verify(pageIndexService, times(4)).indexPage(any(WikipediaPage.class));
+        verify(pageIndexService, times(4)).indexPage(any(IndexablePage.class));
         verify(pageIndexService).finish();
 
         Optional<DumpStatus> dumpStatus = dumpParser.getDumpStatus();

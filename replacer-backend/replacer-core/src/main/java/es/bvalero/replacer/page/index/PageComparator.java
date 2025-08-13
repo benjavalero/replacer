@@ -5,7 +5,6 @@ import es.bvalero.replacer.page.IndexedPage;
 import es.bvalero.replacer.page.save.IndexedPageStatus;
 import es.bvalero.replacer.replacement.IndexedReplacement;
 import es.bvalero.replacer.replacement.save.IndexedReplacementStatus;
-import es.bvalero.replacer.wikipedia.WikipediaPage;
 import java.util.*;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
@@ -22,12 +21,12 @@ import org.springframework.stereotype.Component;
 class PageComparator {
 
     IndexedPage indexPageReplacements(
-        WikipediaPage page,
+        IndexablePage page,
         Collection<Replacement> pageReplacements,
         @Nullable IndexedPage dbPage
     ) {
         // Precondition: the page to index cannot be previous to the indexed one
-        if (dbPage != null && page.getLastUpdate().toLocalDate().isBefore(dbPage.getLastUpdate())) {
+        if (dbPage != null && page.getLastUpdate().isBefore(dbPage.getLastUpdate())) {
             LOGGER.warn(
                 "Page to index previous to the indexed one: {} - {}",
                 page.getLastUpdate(),
@@ -94,11 +93,11 @@ class PageComparator {
     }
 
     @VisibleForTesting
-    static IndexedPage toIndexedPage(WikipediaPage page, IndexedPageStatus pageStatus) {
+    static IndexedPage toIndexedPage(IndexablePage indexablePage, IndexedPageStatus pageStatus) {
         return IndexedPage.builder()
-            .pageKey(page.getPageKey())
-            .title(page.getTitle())
-            .lastUpdate(page.getLastUpdate().toLocalDate())
+            .pageKey(indexablePage.getPageKey())
+            .title(indexablePage.getTitle())
+            .lastUpdate(indexablePage.getLastUpdate())
             .status(pageStatus)
             .build();
     }
@@ -179,12 +178,12 @@ class PageComparator {
     }
 
     /* Check if it is needed to update the page in database */
-    private boolean isUpdatePage(WikipediaPage page, IndexedPage dbPage) {
+    private boolean isUpdatePage(IndexablePage page, IndexedPage dbPage) {
         if (!Objects.equals(page.getTitle(), dbPage.getTitle())) {
             // Just in case check the title as it might change with time
             return true;
         } else {
-            return dbPage.getLastUpdate().isBefore(page.getLastUpdate().toLocalDate());
+            return dbPage.getLastUpdate().isBefore(page.getLastUpdate());
         }
     }
 

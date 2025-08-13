@@ -4,7 +4,6 @@ import es.bvalero.replacer.common.domain.PageKey;
 import lombok.Builder;
 import lombok.ToString;
 import lombok.Value;
-import lombok.With;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.TestOnly;
 import org.springframework.lang.NonNull;
@@ -33,7 +32,6 @@ public class WikipediaPage {
 
     @NonNull
     @ToString.Exclude
-    @With(onMethod_ = @TestOnly)
     String content;
 
     /* Store time (and not only date) in case it is needed in the future */

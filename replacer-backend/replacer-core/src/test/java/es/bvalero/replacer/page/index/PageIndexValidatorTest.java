@@ -6,7 +6,6 @@ import es.bvalero.replacer.common.domain.PageKey;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.page.IndexedPage;
 import es.bvalero.replacer.wikipedia.WikipediaNamespace;
-import es.bvalero.replacer.wikipedia.WikipediaPage;
 import es.bvalero.replacer.wikipedia.WikipediaTimestamp;
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -26,23 +25,22 @@ class PageIndexValidatorTest {
 
     @Test
     void testIsPageIndexableByNamespace() {
-        WikipediaPage notIndexable = buildWikipediaPage(WikipediaNamespace.WIKIPEDIA);
-        WikipediaPage articlePage = buildWikipediaPage(WikipediaNamespace.ARTICLE);
-        WikipediaPage annexPage = buildWikipediaPage(WikipediaNamespace.ANNEX);
+        IndexablePage notIndexable = buildIndexablePage(WikipediaNamespace.WIKIPEDIA);
+        IndexablePage articlePage = buildIndexablePage(WikipediaNamespace.ARTICLE);
+        IndexablePage annexPage = buildIndexablePage(WikipediaNamespace.ANNEX);
 
         assertFalse(pageIndexValidator.isPageIndexableByNamespace(notIndexable));
         assertTrue(pageIndexValidator.isPageIndexableByNamespace(articlePage));
         assertTrue(pageIndexValidator.isPageIndexableByNamespace(annexPage));
     }
 
-    private WikipediaPage buildWikipediaPage(WikipediaNamespace namespace) {
-        return WikipediaPage.builder()
+    private IndexablePage buildIndexablePage(WikipediaNamespace namespace) {
+        return IndexablePage.builder()
             .pageKey(PageKey.of(WikipediaLanguage.getDefault(), 1))
-            .namespace(namespace)
+            .namespace(namespace.getValue())
             .title("T")
             .content("")
-            .lastUpdate(WikipediaTimestamp.now())
-            .queryTimestamp(WikipediaTimestamp.now())
+            .lastUpdate(WikipediaTimestamp.now().toString())
             .build();
     }
 
@@ -51,30 +49,29 @@ class PageIndexValidatorTest {
         LocalDateTime today = LocalDateTime.now();
         LocalDateTime yesterday = today.minusDays(1);
 
-        WikipediaPage page1 = buildWikipediaPage(today);
+        IndexablePage page1 = buildIndexablePage(today);
         assertTrue(pageIndexValidator.isIndexableByTimestamp(page1, null));
 
-        WikipediaPage page2 = buildWikipediaPage(today);
+        IndexablePage page2 = buildIndexablePage(today);
         IndexedPage dbPage2 = buildIndexedPage(today);
         assertTrue(pageIndexValidator.isIndexableByTimestamp(page2, dbPage2));
 
-        WikipediaPage page3 = buildWikipediaPage(yesterday);
+        IndexablePage page3 = buildIndexablePage(yesterday);
         IndexedPage dbPage3 = buildIndexedPage(today);
         assertFalse(pageIndexValidator.isIndexableByTimestamp(page3, dbPage3));
 
-        WikipediaPage page4 = buildWikipediaPage(today);
+        IndexablePage page4 = buildIndexablePage(today);
         IndexedPage dbPage4 = buildIndexedPage(yesterday);
         assertTrue(pageIndexValidator.isIndexableByTimestamp(page4, dbPage4));
     }
 
-    private WikipediaPage buildWikipediaPage(LocalDateTime lastUpdate) {
-        return WikipediaPage.builder()
+    private IndexablePage buildIndexablePage(LocalDateTime lastUpdate) {
+        return IndexablePage.builder()
             .pageKey(PageKey.of(WikipediaLanguage.getDefault(), 1))
-            .namespace(WikipediaNamespace.ARTICLE)
+            .namespace(WikipediaNamespace.getDefault().getValue())
             .title("T")
             .content("")
-            .lastUpdate(WikipediaTimestamp.of(lastUpdate))
-            .queryTimestamp(WikipediaTimestamp.now())
+            .lastUpdate(WikipediaTimestamp.of(lastUpdate).toString())
             .build();
     }
 

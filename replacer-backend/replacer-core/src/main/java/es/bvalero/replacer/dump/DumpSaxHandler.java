@@ -2,11 +2,9 @@ package es.bvalero.replacer.dump;
 
 import es.bvalero.replacer.common.domain.PageKey;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
+import es.bvalero.replacer.page.index.IndexablePage;
 import es.bvalero.replacer.page.index.PageIndexBatchService;
 import es.bvalero.replacer.page.index.PageIndexStatus;
-import es.bvalero.replacer.wikipedia.WikipediaNamespace;
-import es.bvalero.replacer.wikipedia.WikipediaPage;
-import es.bvalero.replacer.wikipedia.WikipediaTimestamp;
 import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -136,14 +134,12 @@ class DumpSaxHandler extends DefaultHandler {
     }
 
     private void indexPage() {
-        final WikipediaTimestamp timeStamp = WikipediaTimestamp.of(this.currentTimestamp);
-        final WikipediaPage page = WikipediaPage.builder()
+        final IndexablePage page = IndexablePage.builder()
             .pageKey(PageKey.of(this.lang, this.currentId))
-            .namespace(WikipediaNamespace.valueOf(this.currentNamespace))
+            .namespace(this.currentNamespace)
             .title(this.currentTitle)
             .content(this.currentContent)
-            .lastUpdate(timeStamp)
-            .queryTimestamp(timeStamp)
+            .lastUpdate(this.currentTimestamp)
             .redirect(this.currentRedirect)
             .build();
 

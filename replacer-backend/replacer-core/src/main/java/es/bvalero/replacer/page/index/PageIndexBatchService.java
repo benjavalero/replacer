@@ -4,7 +4,6 @@ import es.bvalero.replacer.common.domain.PageKey;
 import es.bvalero.replacer.finder.ReplacementFindApi;
 import es.bvalero.replacer.page.IndexedPage;
 import es.bvalero.replacer.page.save.PageSaveRepository;
-import es.bvalero.replacer.wikipedia.WikipediaPage;
 import java.util.Optional;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
@@ -42,17 +41,17 @@ public class PageIndexBatchService extends PageIndexAbstractService {
     }
 
     @Override
-    PageIndexResult indexPage(WikipediaPage page, @Nullable IndexedPage dbPage) {
+    PageIndexResult indexPage(IndexablePage indexablePage, @Nullable IndexedPage dbPage) {
         // Consider as "not indexed" all indexable pages which are not worth to be re-indexed
         // because they have already been indexed recently in the database
-        if (!isPageToBeIndexed(page, dbPage)) {
+        if (!isPageToBeIndexed(indexablePage, dbPage)) {
             return PageIndexResult.ofNotIndexed();
         }
 
-        return super.indexPage(page, dbPage);
+        return super.indexPage(indexablePage, dbPage);
     }
 
-    private boolean isPageToBeIndexed(WikipediaPage page, @Nullable IndexedPage dbPage) {
+    private boolean isPageToBeIndexed(IndexablePage page, @Nullable IndexedPage dbPage) {
         // We assume at this point that the page is indexable by itself
         return pageIndexValidator.isIndexableByTimestamp(page, dbPage);
     }

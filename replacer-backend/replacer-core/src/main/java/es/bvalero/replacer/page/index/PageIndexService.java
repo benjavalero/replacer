@@ -8,6 +8,7 @@ import es.bvalero.replacer.page.IndexedPage;
 import es.bvalero.replacer.page.find.PageRepository;
 import es.bvalero.replacer.page.save.PageSaveRepository;
 import es.bvalero.replacer.wikipedia.WikipediaException;
+import es.bvalero.replacer.wikipedia.WikipediaPage;
 import es.bvalero.replacer.wikipedia.WikipediaPageRepository;
 import es.bvalero.replacer.wikipedia.WikipediaSearchRequest;
 import java.util.Collection;
@@ -45,6 +46,10 @@ public class PageIndexService extends PageIndexAbstractService {
     @Override
     void saveResult(IndexedPage indexedPage) {
         pageComparatorSaver.save(indexedPage);
+    }
+
+    public PageIndexResult indexPage(WikipediaPage wikipediaPage) {
+        return indexPage(IndexablePage.of(wikipediaPage));
     }
 
     public void indexType(WikipediaLanguage lang, StandardType type) {

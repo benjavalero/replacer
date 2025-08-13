@@ -11,7 +11,6 @@ import es.bvalero.replacer.page.IndexedPage;
 import es.bvalero.replacer.page.find.PageRepository;
 import es.bvalero.replacer.page.save.PageSaveRepository;
 import es.bvalero.replacer.wikipedia.WikipediaNamespace;
-import es.bvalero.replacer.wikipedia.WikipediaPage;
 import es.bvalero.replacer.wikipedia.WikipediaPageRepository;
 import es.bvalero.replacer.wikipedia.WikipediaTimestamp;
 import java.time.LocalDate;
@@ -22,13 +21,12 @@ import org.junit.jupiter.api.Test;
 
 class PageIndexServiceTest {
 
-    private final WikipediaPage page = WikipediaPage.builder()
+    private final IndexablePage page = IndexablePage.builder()
         .pageKey(PageKey.of(WikipediaLanguage.getDefault(), 1))
-        .namespace(WikipediaNamespace.ARTICLE)
+        .namespace(WikipediaNamespace.getDefault().getValue())
         .title("T")
         .content("")
-        .lastUpdate(WikipediaTimestamp.now())
-        .queryTimestamp(WikipediaTimestamp.now())
+        .lastUpdate(WikipediaTimestamp.now().toString())
         .build();
 
     // Dependency injection
@@ -77,13 +75,12 @@ class PageIndexServiceTest {
 
     @Test
     void testPageNotIndexableByRedirection() {
-        final WikipediaPage page = WikipediaPage.builder()
+        final IndexablePage page = IndexablePage.builder()
             .pageKey(PageKey.of(WikipediaLanguage.getDefault(), 1))
-            .namespace(WikipediaNamespace.ARTICLE)
+            .namespace(WikipediaNamespace.getDefault().getValue())
             .title("T")
             .content("")
-            .lastUpdate(WikipediaTimestamp.now())
-            .queryTimestamp(WikipediaTimestamp.now())
+            .lastUpdate(WikipediaTimestamp.now().toString())
             .redirect(true)
             .build();
 

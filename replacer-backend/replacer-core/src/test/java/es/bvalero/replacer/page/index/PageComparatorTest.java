@@ -16,7 +16,6 @@ import es.bvalero.replacer.page.save.IndexedPageStatus;
 import es.bvalero.replacer.replacement.IndexedReplacement;
 import es.bvalero.replacer.replacement.save.IndexedReplacementStatus;
 import es.bvalero.replacer.wikipedia.WikipediaNamespace;
-import es.bvalero.replacer.wikipedia.WikipediaPage;
 import es.bvalero.replacer.wikipedia.WikipediaTimestamp;
 import java.time.LocalDate;
 import java.util.Collection;
@@ -31,17 +30,16 @@ class PageComparatorTest {
     private final int pageId = new Random().nextInt();
     private final LocalDate now = LocalDate.now();
     private final LocalDate before = now.minusDays(1);
-    private final WikipediaPage page = WikipediaPage.builder()
+    private final IndexablePage page = IndexablePage.builder()
         .pageKey(PageKey.of(WikipediaLanguage.getDefault(), pageId))
-        .namespace(WikipediaNamespace.ARTICLE)
+        .namespace(WikipediaNamespace.getDefault().getValue())
         .title("T")
         .content("123456789")
-        .lastUpdate(WikipediaTimestamp.now())
-        .queryTimestamp(WikipediaTimestamp.now())
+        .lastUpdate(WikipediaTimestamp.now().toString())
         .build();
 
-    private static Replacement buildFinderReplacement(WikipediaPage wikipediaPage, int index) {
-        FinderPage page = FinderPage.of(wikipediaPage);
+    private static Replacement buildFinderReplacement(IndexablePage indexablePage, int index) {
+        FinderPage page = indexablePage.toFinderPage();
         return Replacement.of(
             index,
             String.valueOf(index),
@@ -415,7 +413,7 @@ class PageComparatorTest {
             "words" +
             "12345678901234567890" +
             "xyz";
-        WikipediaPage page = this.page.withContent(text);
+        IndexablePage page = this.page.withContent(text);
 
         Replacement r1 = Replacement.of(
             25,
@@ -449,7 +447,7 @@ class PageComparatorTest {
             "words" +
             "12345678901234567890" +
             "xyz";
-        WikipediaPage page = this.page.withContent(text);
+        IndexablePage page = this.page.withContent(text);
 
         Replacement r1 = Replacement.of(
             25,

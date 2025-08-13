@@ -12,20 +12,18 @@ import es.bvalero.replacer.page.IndexedPage;
 import es.bvalero.replacer.page.save.IndexedPageStatus;
 import es.bvalero.replacer.page.save.PageSaveRepository;
 import es.bvalero.replacer.wikipedia.WikipediaNamespace;
-import es.bvalero.replacer.wikipedia.WikipediaPage;
 import es.bvalero.replacer.wikipedia.WikipediaTimestamp;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class PageIndexBatchServiceTest {
 
-    private final WikipediaPage page = WikipediaPage.builder()
+    private final IndexablePage page = IndexablePage.builder()
         .pageKey(PageKey.of(WikipediaLanguage.getDefault(), 1))
-        .namespace(WikipediaNamespace.ARTICLE)
+        .namespace(WikipediaNamespace.getDefault().getValue())
         .title("T")
         .content("")
-        .lastUpdate(WikipediaTimestamp.now())
-        .queryTimestamp(WikipediaTimestamp.now())
+        .lastUpdate(WikipediaTimestamp.now().toString())
         .build();
 
     // Dependency injection
@@ -61,13 +59,8 @@ class PageIndexBatchServiceTest {
         when(pageIndexValidator.isPageIndexableByNamespace(page)).thenReturn(true);
         when(pageIndexValidator.isIndexableByTimestamp(page, null)).thenReturn(true);
 
-        IndexedPage indexedPage = IndexedPage.builder()
-            .pageKey(page.getPageKey())
-            .title(page.getTitle())
-            .lastUpdate(page.getLastUpdate().toLocalDate())
-            .build();
         IndexedPage comparatorResult = toIndexedPage(page, IndexedPageStatus.ADD); // Any change
-        when(pageComparator.indexPageReplacements(any(WikipediaPage.class), anyCollection(), isNull())).thenReturn(
+        when(pageComparator.indexPageReplacements(any(IndexablePage.class), anyCollection(), isNull())).thenReturn(
             comparatorResult
         );
 
@@ -77,8 +70,8 @@ class PageIndexBatchServiceTest {
 
         verify(pageIndexValidator).isPageIndexableByNamespace(page);
         verify(pageIndexValidator).isIndexableByTimestamp(page, null);
-        verify(replacementFindApi).findReplacements(FinderPage.of(page));
-        verify(pageComparator).indexPageReplacements(any(WikipediaPage.class), anyCollection(), isNull());
+        verify(replacementFindApi).findReplacements(page.toFinderPage());
+        verify(pageComparator).indexPageReplacements(any(IndexablePage.class), anyCollection(), isNull());
     }
 
     @Test
@@ -94,7 +87,7 @@ class PageIndexBatchServiceTest {
         verify(pageIndexValidator).isIndexableByTimestamp(page, null);
         verify(replacementFindApi, never()).findReplacements(any(FinderPage.class));
         verify(pageComparator, never()).indexPageReplacements(
-            any(WikipediaPage.class),
+            any(IndexablePage.class),
             anyCollection(),
             any(IndexedPage.class)
         );
