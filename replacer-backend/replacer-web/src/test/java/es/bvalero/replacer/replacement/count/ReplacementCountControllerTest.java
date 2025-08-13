@@ -10,12 +10,10 @@ import es.bvalero.replacer.WebMvcConfiguration;
 import es.bvalero.replacer.common.domain.PageKey;
 import es.bvalero.replacer.common.domain.ResultCount;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import es.bvalero.replacer.page.IndexedPage;
 import es.bvalero.replacer.user.User;
 import es.bvalero.replacer.user.security.ValidateUserAspect;
 import es.bvalero.replacer.user.util.WebUtils;
 import jakarta.servlet.http.HttpServletRequest;
-import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 import java.util.Random;
@@ -115,12 +113,8 @@ class ReplacementCountControllerTest {
         WikipediaLanguage lang = WikipediaLanguage.getDefault();
         when(webUtils.getLanguageHeader(any(HttpServletRequest.class))).thenReturn(lang);
 
-        IndexedPage page = IndexedPage.builder()
-            .pageKey(PageKey.of(WikipediaLanguage.getDefault(), 2))
-            .title("T")
-            .lastUpdate(LocalDate.now())
-            .build();
-        Collection<ResultCount<IndexedPage>> counts = List.of(ResultCount.of(page, 100));
+        PageTitle page = PageTitle.of(PageKey.of(WikipediaLanguage.getDefault(), 2), "T");
+        Collection<ResultCount<PageTitle>> counts = List.of(ResultCount.of(page, 100));
 
         when(replacementCountApi.countNotReviewedGroupedByPage(WikipediaLanguage.getDefault())).thenReturn(counts);
 

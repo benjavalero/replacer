@@ -6,7 +6,6 @@ import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.LoadingCache;
 import es.bvalero.replacer.common.domain.ResultCount;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import es.bvalero.replacer.page.IndexedPage;
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.Collection;
@@ -71,7 +70,7 @@ class ReplacementCountCacheRepository implements ReplacementCountRepository {
     }
 
     @Override
-    public Collection<ResultCount<IndexedPage>> countNotReviewedGroupedByPage(WikipediaLanguage lang, int numResults) {
+    public Collection<ResultCount<PageTitle>> countNotReviewedGroupedByPage(WikipediaLanguage lang, int numResults) {
         // For the moment we are not going to cache it as it is used only by admins
         return replacementCountRepository.countNotReviewedGroupedByPage(lang, numResults);
     }

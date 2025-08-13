@@ -6,8 +6,6 @@ import static org.mockito.Mockito.*;
 import es.bvalero.replacer.common.domain.PageKey;
 import es.bvalero.replacer.common.domain.ResultCount;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import es.bvalero.replacer.page.IndexedPage;
-import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 import java.util.Random;
@@ -65,12 +63,8 @@ class ReplacementCountServiceTest {
     @Test
     void testCountReplacementsGroupedByPage() {
         WikipediaLanguage lang = WikipediaLanguage.getDefault();
-        IndexedPage page = IndexedPage.builder()
-            .pageKey(PageKey.of(lang, 1))
-            .title("T")
-            .lastUpdate(LocalDate.now())
-            .build();
-        Collection<ResultCount<IndexedPage>> counts = List.of(ResultCount.of(page, 10));
+        PageTitle page = PageTitle.of(PageKey.of(lang, 1), "T");
+        Collection<ResultCount<PageTitle>> counts = List.of(ResultCount.of(page, 10));
         when(
             replacementCountRepository.countNotReviewedGroupedByPage(lang, ReplacementCountService.NUM_RESULTS)
         ).thenReturn(counts);

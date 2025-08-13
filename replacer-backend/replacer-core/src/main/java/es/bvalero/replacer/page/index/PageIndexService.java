@@ -2,6 +2,7 @@ package es.bvalero.replacer.page.index;
 
 import es.bvalero.replacer.common.domain.PageKey;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
+import es.bvalero.replacer.finder.AddedTypeEvent;
 import es.bvalero.replacer.finder.ReplacementFindApi;
 import es.bvalero.replacer.finder.StandardType;
 import es.bvalero.replacer.page.IndexedPage;
@@ -13,6 +14,7 @@ import es.bvalero.replacer.wikipedia.WikipediaPageRepository;
 import es.bvalero.replacer.wikipedia.WikipediaSearchRequest;
 import java.util.Collection;
 import java.util.Optional;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -50,6 +52,11 @@ public class PageIndexService extends PageIndexAbstractService {
 
     public PageIndexResult indexPage(WikipediaPage wikipediaPage) {
         return indexPage(IndexablePage.of(wikipediaPage));
+    }
+
+    @EventListener
+    public void onAddedType(AddedTypeEvent event) {
+        indexType(event.getReplacementType().getLang(), event.getReplacementType().getType());
     }
 
     public void indexType(WikipediaLanguage lang, StandardType type) {

@@ -5,8 +5,6 @@ import static es.bvalero.replacer.replacement.IndexedReplacement.REVIEWER_SYSTEM
 import es.bvalero.replacer.common.domain.PageKey;
 import es.bvalero.replacer.common.domain.ResultCount;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import es.bvalero.replacer.page.IndexedPage;
-import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Objects;
 import lombok.extern.slf4j.Slf4j;
@@ -85,7 +83,7 @@ class ReplacementCountJdbcRepository implements ReplacementCountRepository {
     }
 
     @Override
-    public Collection<ResultCount<IndexedPage>> countNotReviewedGroupedByPage(WikipediaLanguage lang, int numResults) {
+    public Collection<ResultCount<PageTitle>> countNotReviewedGroupedByPage(WikipediaLanguage lang, int numResults) {
         // TODO: We could limit also by number of replacement, e.g. more than 50 and use a HAVING clause
         String sql =
             "SELECT p.page_id, p.title, COUNT(*) AS num " +
@@ -99,11 +97,7 @@ class ReplacementCountJdbcRepository implements ReplacementCountRepository {
         return Objects.requireNonNull(
             jdbcTemplate.query(sql, namedParameters, (resultSet, rowNum) ->
                 ResultCount.of(
-                    IndexedPage.builder()
-                        .pageKey(PageKey.of(lang, resultSet.getInt("PAGE_ID")))
-                        .title(resultSet.getString("TITLE"))
-                        .lastUpdate(LocalDate.now()) // Not relevant in this method
-                        .build(),
+                    PageTitle.of(PageKey.of(lang, resultSet.getInt("PAGE_ID")), resultSet.getString("TITLE")),
                     resultSet.getInt("NUM")
                 )
             )
