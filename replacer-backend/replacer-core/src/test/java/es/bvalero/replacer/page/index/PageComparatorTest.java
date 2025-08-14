@@ -12,7 +12,7 @@ import es.bvalero.replacer.finder.ReplacementKind;
 import es.bvalero.replacer.finder.StandardType;
 import es.bvalero.replacer.finder.Suggestion;
 import es.bvalero.replacer.page.IndexedPage;
-import es.bvalero.replacer.page.save.IndexedPageStatus;
+import es.bvalero.replacer.page.IndexedPageStatus;
 import es.bvalero.replacer.replacement.IndexedReplacement;
 import es.bvalero.replacer.replacement.IndexedReplacementStatus;
 import es.bvalero.replacer.wikipedia.WikipediaNamespace;

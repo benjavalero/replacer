@@ -1,4 +1,4 @@
-package es.bvalero.replacer.page.save;
+package es.bvalero.replacer.page;
 
 /** Enumerate to handle the indexation status of an indexable page */
 public enum IndexedPageStatus {

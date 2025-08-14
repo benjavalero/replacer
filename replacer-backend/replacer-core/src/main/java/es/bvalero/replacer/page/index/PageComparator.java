@@ -2,7 +2,7 @@ package es.bvalero.replacer.page.index;
 
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.page.IndexedPage;
-import es.bvalero.replacer.page.save.IndexedPageStatus;
+import es.bvalero.replacer.page.IndexedPageStatus;
 import es.bvalero.replacer.replacement.IndexedReplacement;
 import es.bvalero.replacer.replacement.IndexedReplacementStatus;
 import java.util.*;

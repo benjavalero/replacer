@@ -5,6 +5,7 @@ import es.bvalero.replacer.finder.CustomType;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.StandardType;
 import es.bvalero.replacer.page.IndexedPage;
+import es.bvalero.replacer.page.IndexedPageStatus;
 import es.bvalero.replacer.replacement.IndexedCustomReplacement;
 import es.bvalero.replacer.replacement.IndexedReplacement;
 import es.bvalero.replacer.wikipedia.WikipediaPageSaveResult;
