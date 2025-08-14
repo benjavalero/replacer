@@ -24,7 +24,7 @@ import org.jetbrains.annotations.VisibleForTesting;
 
 /** Template class to find a review. There are different implementations according to the different search options. */
 @Slf4j
-abstract class ReviewFinder {
+abstract class ReviewFinder implements ReviewFinderApi {
 
     // Dependency injection
     private final WikipediaPageRepository wikipediaPageRepository;
@@ -62,7 +62,7 @@ abstract class ReviewFinder {
     }
 
     /** Find a page/section review for the given search options (if any) */
-    Optional<Review> findRandomPageReview(ReviewOptions options) {
+    public Optional<Review> findRandomPageReview(ReviewOptions options) {
         // Restart offset
         findCachedResult(options).ifPresent(PageSearchResult::resetOffset);
 
@@ -185,7 +185,7 @@ abstract class ReviewFinder {
     ///// STEP 2 /////
 
     /** This step can be called independently in case we already know the ID of the page to review */
-    Optional<Review> findPageReview(PageKey pageKey, ReviewOptions options) {
+    public Optional<Review> findPageReview(PageKey pageKey, ReviewOptions options) {
         try {
             // STEP 2.1: Load the page from Wikipedia
             Optional<WikipediaPage> wikipediaPage = findPageFromWikipedia(pageKey);

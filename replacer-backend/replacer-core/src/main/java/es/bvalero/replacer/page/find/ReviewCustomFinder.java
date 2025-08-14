@@ -9,7 +9,7 @@ import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.page.PageRepository;
 import es.bvalero.replacer.page.PageSaveRepository;
 import es.bvalero.replacer.page.index.PageIndexService;
-import es.bvalero.replacer.replacement.CustomReplacementService;
+import es.bvalero.replacer.replacement.CustomRepository;
 import es.bvalero.replacer.wikipedia.*;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -17,16 +17,18 @@ import java.util.stream.Stream;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.TestOnly;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Slf4j
+@Qualifier("reviewCustomFinder")
 @Component
 class ReviewCustomFinder extends ReviewFinder {
 
     // Dependency injection
     private final WikipediaPageRepository wikipediaPageRepository;
-    private final CustomReplacementService customReplacementService;
+    private final CustomRepository customRepository;
     private final CustomReplacementFindApi customReplacementFindApi;
 
     @Setter(onMethod_ = @TestOnly)
@@ -39,12 +41,12 @@ class ReviewCustomFinder extends ReviewFinder {
         PageRepository pageRepository,
         PageSaveRepository pageSaveRepository,
         ReviewSectionFinder reviewSectionFinder,
-        CustomReplacementService customReplacementService,
+        CustomRepository customRepository,
         CustomReplacementFindApi customReplacementFindApi
     ) {
         super(wikipediaPageRepository, pageIndexService, pageRepository, pageSaveRepository, reviewSectionFinder);
         this.wikipediaPageRepository = wikipediaPageRepository;
-        this.customReplacementService = customReplacementService;
+        this.customRepository = customRepository;
         this.customReplacementFindApi = customReplacementFindApi;
     }
 
@@ -68,7 +70,11 @@ class ReviewCustomFinder extends ReviewFinder {
         // Make it out of the loop as we are not taking into account the offset for this
         Collection<Integer> reviewedIds = searchResult.isEmpty()
             ? Collections.emptyList()
-            : customReplacementService.findPagesReviewed(lang, options.getCustomType());
+            : customRepository
+                .findPagesReviewed(lang, options.getCustomType())
+                .stream()
+                .map(PageKey::getPageId)
+                .toList();
 
         while (totalToReview >= 0) {
             // Discard the pages already reviewed

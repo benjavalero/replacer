@@ -10,8 +10,10 @@ import es.bvalero.replacer.page.index.PageIndexService;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
 import es.bvalero.replacer.wikipedia.WikipediaPageRepository;
 import java.util.Collection;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
+@Qualifier("reviewNoTypeFinder")
 @Component
 class ReviewNoTypeFinder extends ReviewFinder {
 

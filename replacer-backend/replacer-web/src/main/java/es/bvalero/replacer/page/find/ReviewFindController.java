@@ -11,6 +11,7 @@ import java.util.Objects;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.jmolecules.architecture.hexagonal.PrimaryAdapter;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,14 +25,14 @@ class ReviewFindController {
     static final String TOTAL_PAGES_HEADER = "X-Pagination-Total-Pages";
 
     // Dependency injection
-    private final ReviewNoTypeFinder reviewNoTypeFinder;
-    private final ReviewTypeFinder reviewTypeFinder;
-    private final ReviewCustomFinder reviewCustomFinder;
+    private final ReviewFinderApi reviewNoTypeFinder;
+    private final ReviewFinderApi reviewTypeFinder;
+    private final ReviewFinderApi reviewCustomFinder;
 
     ReviewFindController(
-        ReviewNoTypeFinder reviewNoTypeFinder,
-        ReviewTypeFinder reviewTypeFinder,
-        ReviewCustomFinder reviewCustomFinder
+        @Qualifier("reviewNoTypeFinder") ReviewFinderApi reviewNoTypeFinder,
+        @Qualifier("reviewTypeFinder") ReviewFinderApi reviewTypeFinder,
+        @Qualifier("reviewCustomFinder") ReviewFinderApi reviewCustomFinder
     ) {
         this.reviewNoTypeFinder = reviewNoTypeFinder;
         this.reviewTypeFinder = reviewTypeFinder;

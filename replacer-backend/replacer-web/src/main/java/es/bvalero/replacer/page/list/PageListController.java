@@ -1,11 +1,11 @@
 package es.bvalero.replacer.page.list;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
+import es.bvalero.replacer.common.dto.ReplacementTypeDto;
 import es.bvalero.replacer.common.resolver.UserLanguage;
 import es.bvalero.replacer.common.security.ValidateBotUser;
 import es.bvalero.replacer.common.util.ReplacerUtils;
 import es.bvalero.replacer.finder.StandardType;
-import es.bvalero.replacer.replacement.type.ReplacementTypeDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;

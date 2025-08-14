@@ -6,7 +6,7 @@ import java.util.Optional;
 import org.jmolecules.architecture.hexagonal.PrimaryPort;
 
 @PrimaryPort
-public interface ReplacementTypeFindApi {
+interface ReplacementTypeFindApi {
     /** Find a known standard type matching with the given replacement and case-sensitive option */
     Optional<StandardType> findReplacementType(WikipediaLanguage lang, String replacement, boolean caseSensitive);
 }

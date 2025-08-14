@@ -29,6 +29,7 @@ import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -50,14 +51,17 @@ class ReviewFindControllerTest {
     @MockitoBean
     private WebUtils webUtils;
 
+    @Qualifier("reviewNoTypeFinder")
     @MockitoBean
-    private ReviewNoTypeFinder reviewNoTypeFinder;
+    private ReviewFinderApi reviewNoTypeFinder;
 
+    @Qualifier("reviewTypeFinder")
     @MockitoBean
-    private ReviewTypeFinder reviewTypeFinder;
+    private ReviewFinderApi reviewTypeFinder;
 
+    @Qualifier("reviewCustomFinder")
     @MockitoBean
-    private ReviewCustomFinder reviewCustomFinder;
+    private ReviewFinderApi reviewCustomFinder;
 
     private final int pageId = 3;
     private final String title = "T";

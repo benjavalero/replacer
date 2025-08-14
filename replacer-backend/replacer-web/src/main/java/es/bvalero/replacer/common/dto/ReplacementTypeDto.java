@@ -1,4 +1,4 @@
-package es.bvalero.replacer.replacement.type;
+package es.bvalero.replacer.common.dto;
 
 import es.bvalero.replacer.common.util.ReplacerUtils;
 import io.swagger.v3.oas.annotations.Parameter;
