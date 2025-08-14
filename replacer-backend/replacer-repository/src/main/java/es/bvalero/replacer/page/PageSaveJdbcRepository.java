@@ -1,9 +1,6 @@
-package es.bvalero.replacer.page.save;
+package es.bvalero.replacer.page;
 
 import es.bvalero.replacer.common.domain.PageKey;
-import es.bvalero.replacer.page.IndexedPage;
-import es.bvalero.replacer.page.IndexedPageStatus;
-import es.bvalero.replacer.page.PageRepository;
 import es.bvalero.replacer.replacement.CustomRepository;
 import es.bvalero.replacer.replacement.IndexedCustomReplacement;
 import es.bvalero.replacer.replacement.IndexedReplacementStatus;

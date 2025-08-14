@@ -3,7 +3,7 @@ package es.bvalero.replacer.page.index;
 import es.bvalero.replacer.common.domain.PageKey;
 import es.bvalero.replacer.finder.ReplacementFindApi;
 import es.bvalero.replacer.page.IndexedPage;
-import es.bvalero.replacer.page.save.PageSaveRepository;
+import es.bvalero.replacer.page.PageSaveRepository;
 import java.util.Optional;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;

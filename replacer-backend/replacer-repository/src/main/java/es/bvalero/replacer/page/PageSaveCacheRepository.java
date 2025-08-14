@@ -1,11 +1,10 @@
-package es.bvalero.replacer.page.save;
+package es.bvalero.replacer.page;
 
 import es.bvalero.replacer.common.PageCountDecrementEvent;
 import es.bvalero.replacer.common.PageCountIncrementEvent;
 import es.bvalero.replacer.common.domain.PageKey;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.StandardType;
-import es.bvalero.replacer.page.IndexedPage;
 import es.bvalero.replacer.replacement.IndexedReplacement;
 import es.bvalero.replacer.replacement.IndexedReplacementStatus;
 import java.util.Collection;

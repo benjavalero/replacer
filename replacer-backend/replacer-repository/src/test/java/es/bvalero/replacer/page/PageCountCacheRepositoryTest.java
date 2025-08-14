@@ -1,4 +1,4 @@
-package es.bvalero.replacer.page.count;
+package es.bvalero.replacer.page;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;

@@ -1,7 +1,7 @@
 package es.bvalero.replacer.page.index;
 
 import es.bvalero.replacer.page.IndexedPage;
-import es.bvalero.replacer.page.save.PageSaveRepository;
+import es.bvalero.replacer.page.PageSaveRepository;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

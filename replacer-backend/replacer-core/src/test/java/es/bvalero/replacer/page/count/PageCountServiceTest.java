@@ -8,6 +8,7 @@ import es.bvalero.replacer.common.domain.User;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.ReplacementKind;
 import es.bvalero.replacer.finder.StandardType;
+import es.bvalero.replacer.page.PageCountRepository;
 import java.util.Collection;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;

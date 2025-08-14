@@ -3,6 +3,7 @@ package es.bvalero.replacer.page.count;
 import es.bvalero.replacer.common.domain.ResultCount;
 import es.bvalero.replacer.common.domain.User;
 import es.bvalero.replacer.finder.StandardType;
+import es.bvalero.replacer.page.PageCountRepository;
 import java.util.Collection;
 import org.springframework.stereotype.Service;
 

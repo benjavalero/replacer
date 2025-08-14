@@ -1,4 +1,4 @@
-package es.bvalero.replacer.page.count;
+package es.bvalero.replacer.page;
 
 import static java.time.temporal.ChronoUnit.HOURS;
 

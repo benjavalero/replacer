@@ -1,4 +1,4 @@
-package es.bvalero.replacer.page.count;
+package es.bvalero.replacer.page;
 
 import es.bvalero.replacer.common.domain.ResultCount;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
