@@ -10,10 +10,10 @@ import org.springframework.stereotype.Component;
 class DumpScheduledTask {
 
     // Dependency injection
-    private final DumpIndexService dumpIndexService;
+    private final DumpIndexApi dumpIndexApi;
 
-    DumpScheduledTask(DumpIndexService dumpIndexService) {
-        this.dumpIndexService = dumpIndexService;
+    DumpScheduledTask(DumpIndexApi dumpIndexApi) {
+        this.dumpIndexApi = dumpIndexApi;
     }
 
     @Scheduled(
@@ -22,6 +22,6 @@ class DumpScheduledTask {
     )
     void scheduledStartDumpIndexing() {
         LOGGER.debug("START Scheduled Dump Indexing...");
-        dumpIndexService.indexLatestDumpFiles();
+        dumpIndexApi.indexLatestDumpFiles();
     }
 }

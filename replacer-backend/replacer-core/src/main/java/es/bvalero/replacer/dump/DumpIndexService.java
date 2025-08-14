@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
  */
 @Slf4j
 @Service
-class DumpIndexService {
+class DumpIndexService implements DumpIndexApi {
 
     // Dependency injection
     private final DumpFinder dumpFinder;
@@ -27,7 +27,6 @@ class DumpIndexService {
         this.dumpParser = dumpParser;
     }
 
-    /** Find the latest dump files for each language and index them */
     // In order to be asynchronous it must be public and called externally:
     // https://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/scheduling/annotation/EnableAsync.html
     @Async
@@ -55,8 +54,7 @@ class DumpIndexService {
         LOGGER.debug("END dump indexing...");
     }
 
-    /** Find the status of the current (or the last) dump indexing */
-    Optional<DumpStatus> getDumpStatus() {
+    public Optional<DumpStatus> getDumpStatus() {
         return dumpParser.getDumpStatus();
     }
 

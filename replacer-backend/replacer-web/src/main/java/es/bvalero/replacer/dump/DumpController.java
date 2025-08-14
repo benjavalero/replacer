@@ -20,17 +20,17 @@ import org.springframework.web.bind.annotation.*;
 class DumpController {
 
     // Dependency injection
-    private final DumpIndexService dumpIndexService;
+    private final DumpIndexApi dumpIndexApi;
 
-    DumpController(DumpIndexService dumpIndexService) {
-        this.dumpIndexService = dumpIndexService;
+    DumpController(DumpIndexApi dumpIndexApi) {
+        this.dumpIndexApi = dumpIndexApi;
     }
 
     @Operation(summary = "Find the status of the current (or the last) dump indexing")
     @ValidateAdminUser
     @GetMapping(value = "")
     ResponseEntity<DumpStatusDto> getDumpStatus() {
-        Optional<DumpStatus> dumpStatus = dumpIndexService.getDumpStatus();
+        Optional<DumpStatus> dumpStatus = dumpIndexApi.getDumpStatus();
         if (dumpStatus.isPresent()) {
             DumpStatusDto dto = toDto(dumpStatus.get());
             LOGGER.debug("GET Dump Indexing Status: {}", dto);
@@ -47,7 +47,7 @@ class DumpController {
     @PostMapping(value = "")
     void manualStartDumpIndexing() {
         LOGGER.info("START Manual Dump Indexing...");
-        dumpIndexService.indexLatestDumpFiles();
+        dumpIndexApi.indexLatestDumpFiles();
     }
 
     private DumpStatusDto toDto(DumpStatus status) {

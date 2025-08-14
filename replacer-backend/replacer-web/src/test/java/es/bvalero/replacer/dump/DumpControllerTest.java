@@ -41,7 +41,7 @@ class DumpControllerTest {
     private WebUtils webUtils;
 
     @MockitoBean
-    private DumpIndexService dumpIndexService;
+    private DumpIndexApi dumpIndexApi;
 
     @Test
     void testGetDumpStatus() throws Exception {
@@ -64,7 +64,7 @@ class DumpControllerTest {
             start,
             end
         );
-        when(dumpIndexService.getDumpStatus()).thenReturn(Optional.of(dumpStatus));
+        when(dumpIndexApi.getDumpStatus()).thenReturn(Optional.of(dumpStatus));
 
         mvc
             .perform(
@@ -82,7 +82,7 @@ class DumpControllerTest {
             .andExpect(jsonPath("$.start", is(ReplacerUtils.convertLocalDateTimeToMilliseconds(start))))
             .andExpect(jsonPath("$.end", is(ReplacerUtils.convertLocalDateTimeToMilliseconds(end))));
 
-        verify(dumpIndexService).getDumpStatus();
+        verify(dumpIndexApi).getDumpStatus();
     }
 
     @Test
@@ -90,7 +90,7 @@ class DumpControllerTest {
         User user = User.buildTestAdminUser();
         when(webUtils.getAuthenticatedUser(any(HttpServletRequest.class))).thenReturn(user);
 
-        when(dumpIndexService.getDumpStatus()).thenReturn(Optional.empty());
+        when(dumpIndexApi.getDumpStatus()).thenReturn(Optional.empty());
 
         mvc
             .perform(
@@ -101,7 +101,7 @@ class DumpControllerTest {
             )
             .andExpect(status().isNoContent());
 
-        verify(dumpIndexService).getDumpStatus();
+        verify(dumpIndexApi).getDumpStatus();
     }
 
     @Test
@@ -118,7 +118,7 @@ class DumpControllerTest {
             )
             .andExpect(status().isForbidden());
 
-        verify(dumpIndexService, never()).indexLatestDumpFiles();
+        verify(dumpIndexApi, never()).indexLatestDumpFiles();
     }
 
     @Test
@@ -135,7 +135,7 @@ class DumpControllerTest {
             )
             .andExpect(status().isAccepted());
 
-        verify(dumpIndexService).indexLatestDumpFiles();
+        verify(dumpIndexApi).indexLatestDumpFiles();
     }
 
     @Test
@@ -152,6 +152,6 @@ class DumpControllerTest {
             )
             .andExpect(status().isForbidden());
 
-        verify(dumpIndexService, never()).indexLatestDumpFiles();
+        verify(dumpIndexApi, never()).indexLatestDumpFiles();
     }
 }
