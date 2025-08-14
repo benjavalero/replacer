@@ -21,7 +21,7 @@ public class WikipediaSearchRequest {
     WikipediaLanguage lang;
 
     @Builder.Default
-    Collection<WikipediaNamespace> namespaces = List.of(WikipediaNamespace.getDefault());
+    Collection<WikipediaNamespace> namespaces = List.of(WikipediaNamespace.ARTICLE);
 
     @NonNull
     String text;

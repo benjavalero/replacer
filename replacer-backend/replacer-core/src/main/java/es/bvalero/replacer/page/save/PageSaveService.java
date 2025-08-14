@@ -11,6 +11,7 @@ import es.bvalero.replacer.wikipedia.WikipediaPageSaveRepository;
 import es.bvalero.replacer.wikipedia.WikipediaPageSaveResult;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.Nullable;
@@ -73,7 +74,7 @@ class PageSaveService implements PageSaveApi {
             .sectionId(reviewedPage.getSectionId())
             .content(textToSave)
             .editSummary(summary)
-            .queryTimestamp(reviewedPage.getQueryTimestamp())
+            .queryTimestamp(Objects.requireNonNull(reviewedPage.getQueryTimestamp()))
             .build();
 
         WikipediaPageSaveResult pageSaveResult = saveReviewContent(pageSave, user);
