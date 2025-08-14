@@ -1,4 +1,4 @@
-package es.bvalero.replacer.replacement.count;
+package es.bvalero.replacer.replacement;
 
 import static java.time.temporal.ChronoUnit.MINUTES;
 

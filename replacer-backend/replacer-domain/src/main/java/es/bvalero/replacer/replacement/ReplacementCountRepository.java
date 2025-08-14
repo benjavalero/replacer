@@ -1,4 +1,4 @@
-package es.bvalero.replacer.replacement.count;
+package es.bvalero.replacer.replacement;
 
 import es.bvalero.replacer.common.domain.ResultCount;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
@@ -7,7 +7,7 @@ import org.jmolecules.architecture.hexagonal.SecondaryPort;
 
 /** Repository to retrieve the replacement counts for statistics */
 @SecondaryPort
-interface ReplacementCountRepository {
+public interface ReplacementCountRepository {
     /** Count the number of reviewed replacements including the custom ones */
     int countReviewed(WikipediaLanguage lang);
 

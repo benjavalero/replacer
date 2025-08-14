@@ -11,6 +11,7 @@ import es.bvalero.replacer.common.domain.PageKey;
 import es.bvalero.replacer.common.domain.ResultCount;
 import es.bvalero.replacer.common.domain.User;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
+import es.bvalero.replacer.replacement.PageTitle;
 import es.bvalero.replacer.user.ValidateUserAspect;
 import es.bvalero.replacer.user.WebUtils;
 import jakarta.servlet.http.HttpServletRequest;

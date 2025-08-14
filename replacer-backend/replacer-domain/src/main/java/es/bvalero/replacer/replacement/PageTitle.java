@@ -1,10 +1,10 @@
-package es.bvalero.replacer.replacement.count;
+package es.bvalero.replacer.replacement;
 
 import es.bvalero.replacer.common.domain.PageKey;
 import lombok.Value;
 
 @Value(staticConstructor = "of")
-class PageTitle {
+public class PageTitle {
 
     PageKey pageKey;
     String title;
