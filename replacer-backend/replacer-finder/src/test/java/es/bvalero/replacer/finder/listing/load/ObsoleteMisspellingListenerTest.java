@@ -4,14 +4,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import es.bvalero.replacer.finder.LangReplacementType;
 import es.bvalero.replacer.finder.ReplacementKind;
 import es.bvalero.replacer.finder.StandardType;
 import es.bvalero.replacer.finder.listing.SimpleMisspelling;
 import es.bvalero.replacer.finder.listing.StandardMisspelling;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import org.apache.commons.collections4.SetValuedMap;
 import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
 import org.junit.jupiter.api.BeforeEach;
@@ -50,9 +47,8 @@ class ObsoleteMisspellingListenerTest {
         SetValuedMap<WikipediaLanguage, StandardMisspelling> map2 = new HashSetValuedHashMap<>();
         map2.putAll(WikipediaLanguage.getDefault(), List.of(misspelling2, misspelling3));
 
-        Set<LangReplacementType> expected = Set.of(
-            LangReplacementType.of(WikipediaLanguage.getDefault(), StandardType.of(ReplacementKind.SIMPLE, "A"))
-        );
-        assertEquals(expected, new HashSet<>(obsoleteMisspellingListener.getObsoleteMisspellings(map1, map2)));
+        SetValuedMap<WikipediaLanguage, StandardType> expected = new HashSetValuedHashMap<>();
+        expected.put(WikipediaLanguage.getDefault(), StandardType.of(ReplacementKind.SIMPLE, "A"));
+        assertEquals(expected, obsoleteMisspellingListener.getObsoleteMisspellings(map1, map2));
     }
 }

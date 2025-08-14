@@ -1,7 +1,6 @@
 package es.bvalero.replacer.finder.listing.load;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import es.bvalero.replacer.finder.LangReplacementType;
 import es.bvalero.replacer.finder.RemovedTypeEvent;
 import es.bvalero.replacer.finder.ReplacementKind;
 import es.bvalero.replacer.finder.StandardType;
@@ -9,13 +8,11 @@ import es.bvalero.replacer.finder.listing.StandardMisspelling;
 import jakarta.annotation.PostConstruct;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.SetValuedMap;
+import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
 import org.jetbrains.annotations.VisibleForTesting;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
@@ -57,17 +54,19 @@ class ObsoleteMisspellingListener implements PropertyChangeListener {
                 WikipediaLanguage,
                 StandardMisspelling
             >) evt.getNewValue();
-        getObsoleteMisspellings(oldItems, newItems).forEach(obsolete ->
-            applicationEventPublisher.publishEvent(RemovedTypeEvent.of(obsolete))
-        );
+        getObsoleteMisspellings(oldItems, newItems)
+            .entries()
+            .forEach(obsolete ->
+                applicationEventPublisher.publishEvent(RemovedTypeEvent.of(obsolete.getKey(), obsolete.getValue()))
+            );
     }
 
     @VisibleForTesting
-    Collection<LangReplacementType> getObsoleteMisspellings(
+    SetValuedMap<WikipediaLanguage, StandardType> getObsoleteMisspellings(
         SetValuedMap<WikipediaLanguage, StandardMisspelling> oldItems,
         SetValuedMap<WikipediaLanguage, StandardMisspelling> newItems
     ) {
-        List<LangReplacementType> types = new ArrayList<>();
+        SetValuedMap<WikipediaLanguage, StandardType> types = new HashSetValuedHashMap<>();
         // Find the misspellings removed from the list to remove them from the database
         for (WikipediaLanguage lang : WikipediaLanguage.values()) {
             Set<String> oldWords = oldItems
@@ -97,7 +96,7 @@ class ObsoleteMisspellingListener implements PropertyChangeListener {
                 oldWords
                     .stream()
                     .map(word -> StandardType.of(misspellingType, word))
-                    .forEach(type -> types.add(LangReplacementType.of(lang, type)));
+                    .forEach(type -> types.put(lang, type));
             }
         }
         return types;

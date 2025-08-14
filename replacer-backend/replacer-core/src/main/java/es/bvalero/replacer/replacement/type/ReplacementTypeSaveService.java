@@ -17,9 +17,6 @@ class ReplacementTypeSaveService {
 
     @EventListener
     public void onRemovedType(RemovedTypeEvent event) {
-        replacementSaveRepository.removeByType(
-            event.getReplacementType().getLang(),
-            event.getReplacementType().getType()
-        );
+        replacementSaveRepository.removeByType(event.getLang(), event.getType());
     }
 }

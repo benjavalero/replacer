@@ -4,7 +4,6 @@ import es.bvalero.replacer.common.PageCountDecrementEvent;
 import es.bvalero.replacer.common.PageCountIncrementEvent;
 import es.bvalero.replacer.common.domain.PageKey;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import es.bvalero.replacer.finder.LangReplacementType;
 import es.bvalero.replacer.finder.StandardType;
 import es.bvalero.replacer.page.IndexedPage;
 import es.bvalero.replacer.replacement.IndexedReplacement;
@@ -68,13 +67,9 @@ class PageSaveCacheRepository implements PageSaveRepository {
             if (alreadyIndexed == 0) {
                 // If we are keeping any replacement, the count doesn't change.
                 if (toAdd > toRemove) {
-                    applicationEventPublisher.publishEvent(
-                        PageCountIncrementEvent.of(LangReplacementType.of(lang, type))
-                    );
+                    applicationEventPublisher.publishEvent(PageCountIncrementEvent.of(lang, type));
                 } else if (toAdd < toRemove) {
-                    applicationEventPublisher.publishEvent(
-                        PageCountDecrementEvent.of(LangReplacementType.of(lang, type))
-                    );
+                    applicationEventPublisher.publishEvent(PageCountDecrementEvent.of(lang, type));
                 }
             }
         }

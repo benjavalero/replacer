@@ -56,7 +56,7 @@ public class PageIndexService extends PageIndexAbstractService {
 
     @EventListener
     public void onAddedType(AddedTypeEvent event) {
-        indexType(event.getReplacementType().getLang(), event.getReplacementType().getType());
+        indexType(event.getLang(), event.getType());
     }
 
     public void indexType(WikipediaLanguage lang, StandardType type) {

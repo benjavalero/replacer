@@ -2,7 +2,6 @@ package es.bvalero.replacer.finder.listing.load;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.AddedTypeEvent;
-import es.bvalero.replacer.finder.LangReplacementType;
 import es.bvalero.replacer.finder.ReplacementKind;
 import es.bvalero.replacer.finder.StandardType;
 import es.bvalero.replacer.finder.listing.StandardMisspelling;
@@ -13,6 +12,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.SetValuedMap;
+import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
 import org.jetbrains.annotations.VisibleForTesting;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
@@ -54,21 +54,24 @@ class AddedMisspellingListener implements PropertyChangeListener {
                 WikipediaLanguage,
                 StandardMisspelling
             >) evt.getNewValue();
-        getAddedMisspellings(oldItems, newItems).forEach(added ->
-            applicationEventPublisher.publishEvent(AddedTypeEvent.of(added))
-        );
+        getAddedMisspellings(oldItems, newItems)
+            .entries()
+            .forEach(added ->
+                applicationEventPublisher.publishEvent(AddedTypeEvent.of(added.getKey(), added.getValue()))
+            );
     }
 
     @VisibleForTesting
-    Collection<LangReplacementType> getAddedMisspellings(
+    SetValuedMap<WikipediaLanguage, StandardType> getAddedMisspellings(
         SetValuedMap<WikipediaLanguage, StandardMisspelling> oldItems,
         SetValuedMap<WikipediaLanguage, StandardMisspelling> newItems
     ) {
+        SetValuedMap<WikipediaLanguage, StandardType> types = new HashSetValuedHashMap<>();
+
         if (oldItems.isEmpty()) {
-            return Collections.emptyList();
+            return types;
         }
 
-        List<LangReplacementType> types = new ArrayList<>();
         // Find the misspellings added to the list to index them
         for (WikipediaLanguage lang : WikipediaLanguage.values()) {
             Set<String> oldWords = oldItems
@@ -98,7 +101,7 @@ class AddedMisspellingListener implements PropertyChangeListener {
                 newWords
                     .stream()
                     .map(word -> StandardType.of(misspellingType, word))
-                    .forEach(type -> types.add(LangReplacementType.of(lang, type)));
+                    .forEach(type -> types.put(lang, type));
             }
         }
         return types;

@@ -83,7 +83,7 @@ public class PageCountCacheRepository implements PageCountRepository {
 
     @EventListener
     void onRemovePageCount(PageCountRemoveEvent event) {
-        this.removePageCountByType(event.getReplacementType().getLang(), event.getReplacementType().getType());
+        this.removePageCountByType(event.getLang(), event.getType());
     }
 
     @VisibleForTesting
@@ -93,7 +93,7 @@ public class PageCountCacheRepository implements PageCountRepository {
 
     @EventListener
     void onIncrementPageCount(PageCountIncrementEvent event) {
-        this.incrementPageCountByType(event.getReplacementType().getLang(), event.getReplacementType().getType());
+        this.incrementPageCountByType(event.getLang(), event.getType());
     }
 
     private void incrementPageCountByType(WikipediaLanguage lang, StandardType type) {
@@ -102,7 +102,7 @@ public class PageCountCacheRepository implements PageCountRepository {
 
     @EventListener
     void onDecrementPageCount(PageCountDecrementEvent event) {
-        this.decrementPageCountByType(event.getReplacementType().getLang(), event.getReplacementType().getType());
+        this.decrementPageCountByType(event.getLang(), event.getType());
     }
 
     @VisibleForTesting
