@@ -2,7 +2,7 @@ package es.bvalero.replacer.page.save;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import es.bvalero.replacer.user.User;
+import es.bvalero.replacer.common.domain.User;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

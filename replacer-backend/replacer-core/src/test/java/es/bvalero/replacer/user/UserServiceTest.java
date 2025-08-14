@@ -5,6 +5,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import es.bvalero.replacer.common.domain.AccessToken;
+import es.bvalero.replacer.common.domain.User;
 import es.bvalero.replacer.common.domain.UserId;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.wikipedia.WikipediaUser;

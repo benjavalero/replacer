@@ -1,9 +1,9 @@
 package es.bvalero.replacer.page.find;
 
+import es.bvalero.replacer.common.domain.User;
 import es.bvalero.replacer.finder.CustomType;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.Suggestion;
-import es.bvalero.replacer.user.User;
 import es.bvalero.replacer.wikipedia.WikipediaSection;
 import java.util.Collection;
 import java.util.stream.Collectors;

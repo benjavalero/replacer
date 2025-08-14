@@ -4,6 +4,7 @@ import es.bvalero.replacer.auth.AuthorizationException;
 import es.bvalero.replacer.auth.OAuthService;
 import es.bvalero.replacer.auth.RequestToken;
 import es.bvalero.replacer.common.domain.AccessToken;
+import es.bvalero.replacer.common.domain.User;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import org.springframework.stereotype.Service;
 

@@ -1,12 +1,12 @@
 package es.bvalero.replacer.page.save;
 
 import es.bvalero.replacer.common.domain.PageKey;
+import es.bvalero.replacer.common.domain.User;
 import es.bvalero.replacer.common.resolver.AuthenticatedUser;
 import es.bvalero.replacer.finder.CustomType;
 import es.bvalero.replacer.finder.ReplacementKind;
 import es.bvalero.replacer.finder.ReplacementType;
 import es.bvalero.replacer.finder.StandardType;
-import es.bvalero.replacer.user.User;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.wikipedia.WikipediaTimestamp;
 import io.swagger.v3.oas.annotations.Operation;

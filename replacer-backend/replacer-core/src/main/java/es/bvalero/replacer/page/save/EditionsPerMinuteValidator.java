@@ -2,8 +2,8 @@ package es.bvalero.replacer.page.save;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
+import es.bvalero.replacer.common.domain.User;
 import es.bvalero.replacer.common.domain.UserId;
-import es.bvalero.replacer.user.User;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;

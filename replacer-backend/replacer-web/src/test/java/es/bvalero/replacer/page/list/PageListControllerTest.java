@@ -6,10 +6,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import es.bvalero.replacer.WebMvcConfiguration;
+import es.bvalero.replacer.common.domain.User;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.ReplacementKind;
 import es.bvalero.replacer.finder.StandardType;
-import es.bvalero.replacer.user.User;
 import es.bvalero.replacer.user.ValidateUserAspect;
 import es.bvalero.replacer.user.WebUtils;
 import jakarta.servlet.http.HttpServletRequest;

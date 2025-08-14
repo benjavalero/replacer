@@ -12,6 +12,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import es.bvalero.replacer.WebMvcConfiguration;
 import es.bvalero.replacer.auth.AuthorizationException;
 import es.bvalero.replacer.auth.RequestToken;
+import es.bvalero.replacer.common.domain.User;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.Test;

@@ -1,6 +1,6 @@
 package es.bvalero.replacer.page.save;
 
-import es.bvalero.replacer.user.User;
+import es.bvalero.replacer.common.domain.User;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import org.jmolecules.architecture.hexagonal.PrimaryPort;
 

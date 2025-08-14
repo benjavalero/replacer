@@ -2,6 +2,7 @@ package es.bvalero.replacer.user;
 
 import es.bvalero.replacer.auth.AuthorizationException;
 import es.bvalero.replacer.common.domain.AccessToken;
+import es.bvalero.replacer.common.domain.User;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;

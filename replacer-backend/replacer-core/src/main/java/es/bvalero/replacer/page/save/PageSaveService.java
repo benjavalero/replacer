@@ -1,10 +1,10 @@
 package es.bvalero.replacer.page.save;
 
+import es.bvalero.replacer.common.domain.User;
 import es.bvalero.replacer.finder.CosmeticApi;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.ReplacementType;
 import es.bvalero.replacer.page.IndexedPage;
-import es.bvalero.replacer.user.User;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.wikipedia.WikipediaPageSaveCommand;
 import es.bvalero.replacer.wikipedia.WikipediaPageSaveRepository;
