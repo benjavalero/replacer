@@ -5,5 +5,5 @@ import lombok.Value;
 @Value(staticConstructor = "of")
 public class AddedTypeEvent {
 
-    ChangedReplacementType replacementType;
+    LangReplacementType replacementType;
 }

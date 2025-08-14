@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import es.bvalero.replacer.finder.ChangedReplacementType;
+import es.bvalero.replacer.finder.LangReplacementType;
 import es.bvalero.replacer.finder.ReplacementKind;
 import es.bvalero.replacer.finder.StandardType;
 import es.bvalero.replacer.finder.listing.SimpleMisspelling;
@@ -50,8 +50,8 @@ class ObsoleteMisspellingListenerTest {
         SetValuedMap<WikipediaLanguage, StandardMisspelling> map2 = new HashSetValuedHashMap<>();
         map2.putAll(WikipediaLanguage.getDefault(), List.of(misspelling2, misspelling3));
 
-        Set<ChangedReplacementType> expected = Set.of(
-            ChangedReplacementType.of(WikipediaLanguage.getDefault(), StandardType.of(ReplacementKind.SIMPLE, "A"))
+        Set<LangReplacementType> expected = Set.of(
+            LangReplacementType.of(WikipediaLanguage.getDefault(), StandardType.of(ReplacementKind.SIMPLE, "A"))
         );
         assertEquals(expected, new HashSet<>(obsoleteMisspellingListener.getObsoleteMisspellings(map1, map2)));
     }

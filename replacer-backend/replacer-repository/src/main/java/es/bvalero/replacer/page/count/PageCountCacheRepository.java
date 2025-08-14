@@ -4,6 +4,9 @@ import static java.time.temporal.ChronoUnit.HOURS;
 
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.LoadingCache;
+import es.bvalero.replacer.common.PageCountDecrementEvent;
+import es.bvalero.replacer.common.PageCountIncrementEvent;
+import es.bvalero.replacer.common.PageCountRemoveEvent;
 import es.bvalero.replacer.common.domain.ResultCount;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.StandardType;
@@ -14,8 +17,10 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.VisibleForTesting;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Primary;
+import org.springframework.context.event.EventListener;
 import org.springframework.lang.Nullable;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Repository;
@@ -76,15 +81,32 @@ public class PageCountCacheRepository implements PageCountRepository {
         }
     }
 
-    public void removePageCountByType(WikipediaLanguage lang, StandardType type) {
+    @EventListener
+    void onRemovePageCount(PageCountRemoveEvent event) {
+        this.removePageCountByType(event.getReplacementType().getLang(), event.getReplacementType().getType());
+    }
+
+    @VisibleForTesting
+    void removePageCountByType(WikipediaLanguage lang, StandardType type) {
         this.getCounts(lang).remove(type);
     }
 
-    public void incrementPageCountByType(WikipediaLanguage lang, StandardType type) {
+    @EventListener
+    void onIncrementPageCount(PageCountIncrementEvent event) {
+        this.incrementPageCountByType(event.getReplacementType().getLang(), event.getReplacementType().getType());
+    }
+
+    private void incrementPageCountByType(WikipediaLanguage lang, StandardType type) {
         this.getCounts(lang).compute(type, (t, c) -> c == null ? 1 : c + 1);
     }
 
-    public void decrementPageCountByType(WikipediaLanguage lang, StandardType type) {
+    @EventListener
+    void onDecrementPageCount(PageCountDecrementEvent event) {
+        this.decrementPageCountByType(event.getReplacementType().getLang(), event.getReplacementType().getType());
+    }
+
+    @VisibleForTesting
+    void decrementPageCountByType(WikipediaLanguage lang, StandardType type) {
         this.getCounts(lang).computeIfPresent(type, (t, c) -> c > 1 ? c - 1 : null);
     }
 

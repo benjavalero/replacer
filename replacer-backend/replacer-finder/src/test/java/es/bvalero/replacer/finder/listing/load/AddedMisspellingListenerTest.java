@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import es.bvalero.replacer.finder.ChangedReplacementType;
+import es.bvalero.replacer.finder.LangReplacementType;
 import es.bvalero.replacer.finder.ReplacementKind;
 import es.bvalero.replacer.finder.StandardType;
 import es.bvalero.replacer.finder.listing.SimpleMisspelling;
@@ -51,8 +51,8 @@ class AddedMisspellingListenerTest {
         SetValuedMap<WikipediaLanguage, StandardMisspelling> map2 = new HashSetValuedHashMap<>();
         map2.putAll(WikipediaLanguage.getDefault(), List.of(misspelling2, misspelling3));
 
-        Set<ChangedReplacementType> expected = Set.of(
-            ChangedReplacementType.of(WikipediaLanguage.getDefault(), StandardType.of(ReplacementKind.SIMPLE, "C"))
+        Set<LangReplacementType> expected = Set.of(
+            LangReplacementType.of(WikipediaLanguage.getDefault(), StandardType.of(ReplacementKind.SIMPLE, "C"))
         );
         assertEquals(expected, new HashSet<>(addedMisspellingListener.getAddedMisspellings(map1, map2)));
     }

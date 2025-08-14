@@ -1,13 +1,16 @@
 package es.bvalero.replacer.replacement.save;
 
+import es.bvalero.replacer.common.PageCountDecrementEvent;
+import es.bvalero.replacer.common.PageCountRemoveEvent;
 import es.bvalero.replacer.common.domain.PageKey;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
+import es.bvalero.replacer.finder.LangReplacementType;
 import es.bvalero.replacer.finder.StandardType;
-import es.bvalero.replacer.page.count.PageCountCacheRepository;
 import es.bvalero.replacer.replacement.IndexedReplacement;
 import java.util.Collection;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,14 +22,14 @@ class ReplacementSaveCacheRepository implements ReplacementSaveRepository {
 
     // Dependency injection
     private final ReplacementSaveRepository replacementSaveRepository;
-    private final PageCountCacheRepository pageCountCacheRepository;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
     ReplacementSaveCacheRepository(
         @Qualifier("replacementSaveJdbcRepository") ReplacementSaveRepository replacementSaveRepository,
-        PageCountCacheRepository pageCountCacheRepository
+        ApplicationEventPublisher applicationEventPublisher
     ) {
         this.replacementSaveRepository = replacementSaveRepository;
-        this.pageCountCacheRepository = pageCountCacheRepository;
+        this.applicationEventPublisher = applicationEventPublisher;
     }
 
     @Override
@@ -49,7 +52,7 @@ class ReplacementSaveCacheRepository implements ReplacementSaveRepository {
 
     @Override
     public void updateReviewerByType(WikipediaLanguage lang, StandardType type, String reviewer) {
-        pageCountCacheRepository.removePageCountByType(lang, type);
+        applicationEventPublisher.publishEvent(PageCountRemoveEvent.of(LangReplacementType.of(lang, type)));
         replacementSaveRepository.updateReviewerByType(lang, type, reviewer);
     }
 
@@ -71,13 +74,15 @@ class ReplacementSaveCacheRepository implements ReplacementSaveRepository {
             .stream()
             .map(IndexedReplacement::getType)
             .distinct()
-            .forEach(t -> pageCountCacheRepository.decrementPageCountByType(lang, t));
+            .forEach(type ->
+                applicationEventPublisher.publishEvent(PageCountDecrementEvent.of(LangReplacementType.of(lang, type)))
+            );
         replacementSaveRepository.updateReviewer(replacements);
     }
 
     @Override
     public void removeByType(WikipediaLanguage lang, StandardType type) {
-        pageCountCacheRepository.removePageCountByType(lang, type);
+        applicationEventPublisher.publishEvent(PageCountRemoveEvent.of(LangReplacementType.of(lang, type)));
         replacementSaveRepository.removeByType(lang, type);
     }
 }

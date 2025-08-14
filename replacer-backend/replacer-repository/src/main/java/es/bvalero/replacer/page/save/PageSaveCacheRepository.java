@@ -1,15 +1,18 @@
 package es.bvalero.replacer.page.save;
 
+import es.bvalero.replacer.common.PageCountDecrementEvent;
+import es.bvalero.replacer.common.PageCountIncrementEvent;
 import es.bvalero.replacer.common.domain.PageKey;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
+import es.bvalero.replacer.finder.LangReplacementType;
 import es.bvalero.replacer.finder.StandardType;
 import es.bvalero.replacer.page.IndexedPage;
-import es.bvalero.replacer.page.count.PageCountCacheRepository;
 import es.bvalero.replacer.replacement.IndexedReplacement;
 import es.bvalero.replacer.replacement.save.IndexedReplacementStatus;
 import java.util.Collection;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,14 +24,14 @@ class PageSaveCacheRepository implements PageSaveRepository {
 
     // Dependency injection
     private final PageSaveRepository pageSaveRepository;
-    private final PageCountCacheRepository pageCountCacheRepository;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
     public PageSaveCacheRepository(
         @Qualifier("pageSaveJdbcRepository") PageSaveRepository pageSaveRepository,
-        PageCountCacheRepository pageCountCacheRepository
+        ApplicationEventPublisher applicationEventPublisher
     ) {
         this.pageSaveRepository = pageSaveRepository;
-        this.pageCountCacheRepository = pageCountCacheRepository;
+        this.applicationEventPublisher = applicationEventPublisher;
     }
 
     @Override
@@ -65,9 +68,13 @@ class PageSaveCacheRepository implements PageSaveRepository {
             if (alreadyIndexed == 0) {
                 // If we are keeping any replacement, the count doesn't change.
                 if (toAdd > toRemove) {
-                    pageCountCacheRepository.incrementPageCountByType(lang, type);
+                    applicationEventPublisher.publishEvent(
+                        PageCountIncrementEvent.of(LangReplacementType.of(lang, type))
+                    );
                 } else if (toAdd < toRemove) {
-                    pageCountCacheRepository.decrementPageCountByType(lang, type);
+                    applicationEventPublisher.publishEvent(
+                        PageCountDecrementEvent.of(LangReplacementType.of(lang, type))
+                    );
                 }
             }
         }

@@ -1,7 +1,7 @@
 package es.bvalero.replacer.finder.listing.load;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import es.bvalero.replacer.finder.ChangedReplacementType;
+import es.bvalero.replacer.finder.LangReplacementType;
 import es.bvalero.replacer.finder.RemovedTypeEvent;
 import es.bvalero.replacer.finder.ReplacementKind;
 import es.bvalero.replacer.finder.StandardType;
@@ -63,11 +63,11 @@ class ObsoleteMisspellingListener implements PropertyChangeListener {
     }
 
     @VisibleForTesting
-    Collection<ChangedReplacementType> getObsoleteMisspellings(
+    Collection<LangReplacementType> getObsoleteMisspellings(
         SetValuedMap<WikipediaLanguage, StandardMisspelling> oldItems,
         SetValuedMap<WikipediaLanguage, StandardMisspelling> newItems
     ) {
-        List<ChangedReplacementType> types = new ArrayList<>();
+        List<LangReplacementType> types = new ArrayList<>();
         // Find the misspellings removed from the list to remove them from the database
         for (WikipediaLanguage lang : WikipediaLanguage.values()) {
             Set<String> oldWords = oldItems
@@ -97,7 +97,7 @@ class ObsoleteMisspellingListener implements PropertyChangeListener {
                 oldWords
                     .stream()
                     .map(word -> StandardType.of(misspellingType, word))
-                    .forEach(type -> types.add(ChangedReplacementType.of(lang, type)));
+                    .forEach(type -> types.add(LangReplacementType.of(lang, type)));
             }
         }
         return types;
