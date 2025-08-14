@@ -11,7 +11,7 @@ import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.ReplacementKind;
 import es.bvalero.replacer.finder.StandardType;
 import es.bvalero.replacer.user.User;
-import es.bvalero.replacer.user.util.WebUtils;
+import es.bvalero.replacer.user.WebUtils;
 import es.bvalero.replacer.wikipedia.WikipediaConflictException;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.wikipedia.WikipediaTimestamp;

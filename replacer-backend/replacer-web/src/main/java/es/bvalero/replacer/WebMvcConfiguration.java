@@ -1,8 +1,8 @@
 package es.bvalero.replacer;
 
-import es.bvalero.replacer.user.interceptor.MdcInterceptor;
-import es.bvalero.replacer.user.resolver.AuthenticatedUserArgumentResolver;
-import es.bvalero.replacer.user.resolver.UserLanguageArgumentResolver;
+import es.bvalero.replacer.user.AuthenticatedUserArgumentResolver;
+import es.bvalero.replacer.user.MdcInterceptor;
+import es.bvalero.replacer.user.UserLanguageArgumentResolver;
 import java.io.IOException;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Value;

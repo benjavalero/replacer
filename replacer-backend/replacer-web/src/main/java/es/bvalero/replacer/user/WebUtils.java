@@ -1,10 +1,8 @@
-package es.bvalero.replacer.user.util;
+package es.bvalero.replacer.user;
 
 import es.bvalero.replacer.auth.AuthorizationException;
 import es.bvalero.replacer.common.domain.AccessToken;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import es.bvalero.replacer.user.User;
-import es.bvalero.replacer.user.UserApi;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.Arrays;

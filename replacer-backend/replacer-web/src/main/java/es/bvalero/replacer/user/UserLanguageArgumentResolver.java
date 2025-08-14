@@ -1,7 +1,6 @@
-package es.bvalero.replacer.user.resolver;
+package es.bvalero.replacer.user;
 
 import es.bvalero.replacer.common.resolver.UserLanguage;
-import es.bvalero.replacer.user.util.WebUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.core.MethodParameter;
 import org.springframework.lang.Nullable;

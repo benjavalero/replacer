@@ -1,8 +1,8 @@
 package es.bvalero.replacer;
 
 import es.bvalero.replacer.auth.AuthorizationException;
-import es.bvalero.replacer.user.security.ForbiddenException;
-import es.bvalero.replacer.user.util.WebUtils;
+import es.bvalero.replacer.common.security.ForbiddenException;
+import es.bvalero.replacer.user.WebUtils;
 import es.bvalero.replacer.wikipedia.WikipediaConflictException;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import lombok.extern.slf4j.Slf4j;
