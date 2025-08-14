@@ -5,8 +5,8 @@ import static es.bvalero.replacer.replacement.IndexedReplacement.REVIEWER_SYSTEM
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.StandardType;
-import es.bvalero.replacer.page.find.PageRepository;
-import es.bvalero.replacer.replacement.save.ReplacementSaveRepository;
+import es.bvalero.replacer.page.PageRepository;
+import es.bvalero.replacer.replacement.ReplacementSaveRepository;
 import java.text.Collator;
 import java.util.Collection;
 import java.util.Objects;

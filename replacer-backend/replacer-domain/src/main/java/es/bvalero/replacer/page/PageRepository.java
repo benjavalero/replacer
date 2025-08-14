@@ -1,9 +1,8 @@
-package es.bvalero.replacer.page.find;
+package es.bvalero.replacer.page;
 
 import es.bvalero.replacer.common.domain.PageKey;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.StandardType;
-import es.bvalero.replacer.page.IndexedPage;
 import java.util.Collection;
 import java.util.Optional;
 import org.jmolecules.architecture.hexagonal.SecondaryPort;

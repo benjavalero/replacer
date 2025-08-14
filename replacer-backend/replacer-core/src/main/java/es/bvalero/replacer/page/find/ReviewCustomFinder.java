@@ -6,6 +6,7 @@ import es.bvalero.replacer.finder.CustomReplacementFindApi;
 import es.bvalero.replacer.finder.CustomType;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.Replacement;
+import es.bvalero.replacer.page.PageRepository;
 import es.bvalero.replacer.page.index.PageIndexService;
 import es.bvalero.replacer.page.save.PageSaveRepository;
 import es.bvalero.replacer.replacement.CustomReplacementService;

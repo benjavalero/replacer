@@ -1,7 +1,7 @@
 package es.bvalero.replacer.replacement.type;
 
 import es.bvalero.replacer.finder.RemovedTypeEvent;
-import es.bvalero.replacer.replacement.save.ReplacementSaveRepository;
+import es.bvalero.replacer.replacement.ReplacementSaveRepository;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 

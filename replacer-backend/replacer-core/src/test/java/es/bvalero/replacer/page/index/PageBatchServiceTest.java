@@ -7,7 +7,7 @@ import static org.mockito.Mockito.*;
 import es.bvalero.replacer.common.domain.PageKey;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.page.IndexedPage;
-import es.bvalero.replacer.page.find.PageRepository;
+import es.bvalero.replacer.page.PageRepository;
 import es.bvalero.replacer.page.save.PageSaveRepository;
 import java.time.LocalDate;
 import java.util.List;

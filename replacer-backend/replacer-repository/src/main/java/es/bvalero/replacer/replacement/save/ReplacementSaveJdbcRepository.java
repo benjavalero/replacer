@@ -4,6 +4,7 @@ import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.StandardType;
 import es.bvalero.replacer.replacement.IndexedReplacement;
 import es.bvalero.replacer.replacement.IndexedReplacementStatus;
+import es.bvalero.replacer.replacement.ReplacementSaveRepository;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.Set;

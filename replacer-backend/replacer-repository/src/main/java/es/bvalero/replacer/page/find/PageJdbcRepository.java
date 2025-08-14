@@ -4,6 +4,7 @@ import es.bvalero.replacer.common.domain.PageKey;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.StandardType;
 import es.bvalero.replacer.page.IndexedPage;
+import es.bvalero.replacer.page.PageRepository;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.Optional;

@@ -7,6 +7,7 @@ import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.ReplacementType;
 import es.bvalero.replacer.finder.StandardType;
 import es.bvalero.replacer.page.IndexedPage;
+import es.bvalero.replacer.page.PageRepository;
 import es.bvalero.replacer.page.index.PageIndexService;
 import es.bvalero.replacer.page.save.PageSaveRepository;
 import es.bvalero.replacer.user.User;
