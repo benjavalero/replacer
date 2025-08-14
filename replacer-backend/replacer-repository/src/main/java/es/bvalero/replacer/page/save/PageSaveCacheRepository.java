@@ -8,7 +8,7 @@ import es.bvalero.replacer.finder.LangReplacementType;
 import es.bvalero.replacer.finder.StandardType;
 import es.bvalero.replacer.page.IndexedPage;
 import es.bvalero.replacer.replacement.IndexedReplacement;
-import es.bvalero.replacer.replacement.save.IndexedReplacementStatus;
+import es.bvalero.replacer.replacement.IndexedReplacementStatus;
 import java.util.Collection;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Qualifier;

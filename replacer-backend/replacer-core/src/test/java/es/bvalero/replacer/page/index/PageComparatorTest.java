@@ -14,7 +14,7 @@ import es.bvalero.replacer.finder.Suggestion;
 import es.bvalero.replacer.page.IndexedPage;
 import es.bvalero.replacer.page.save.IndexedPageStatus;
 import es.bvalero.replacer.replacement.IndexedReplacement;
-import es.bvalero.replacer.replacement.save.IndexedReplacementStatus;
+import es.bvalero.replacer.replacement.IndexedReplacementStatus;
 import es.bvalero.replacer.wikipedia.WikipediaNamespace;
 import es.bvalero.replacer.wikipedia.WikipediaTimestamp;
 import java.time.LocalDate;

@@ -1,4 +1,4 @@
-package es.bvalero.replacer.replacement.save;
+package es.bvalero.replacer.replacement;
 
 /** Enumerate to handle the indexation status of an indexable replacement */
 public enum IndexedReplacementStatus {

@@ -4,7 +4,7 @@ import es.bvalero.replacer.common.domain.PageKey;
 import es.bvalero.replacer.page.save.IndexedPageStatus;
 import es.bvalero.replacer.replacement.IndexedCustomReplacement;
 import es.bvalero.replacer.replacement.IndexedReplacement;
-import es.bvalero.replacer.replacement.save.IndexedReplacementStatus;
+import es.bvalero.replacer.replacement.IndexedReplacementStatus;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;

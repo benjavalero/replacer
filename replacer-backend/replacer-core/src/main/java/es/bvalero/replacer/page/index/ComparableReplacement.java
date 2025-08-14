@@ -6,7 +6,7 @@ import es.bvalero.replacer.common.domain.PageKey;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.StandardType;
 import es.bvalero.replacer.replacement.IndexedReplacement;
-import es.bvalero.replacer.replacement.save.IndexedReplacementStatus;
+import es.bvalero.replacer.replacement.IndexedReplacementStatus;
 import java.util.Objects;
 import lombok.*;
 import org.apache.commons.lang3.StringUtils;

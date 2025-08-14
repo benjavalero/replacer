@@ -5,7 +5,7 @@ import es.bvalero.replacer.page.IndexedPage;
 import es.bvalero.replacer.page.find.PageRepository;
 import es.bvalero.replacer.replacement.CustomRepository;
 import es.bvalero.replacer.replacement.IndexedCustomReplacement;
-import es.bvalero.replacer.replacement.save.IndexedReplacementStatus;
+import es.bvalero.replacer.replacement.IndexedReplacementStatus;
 import es.bvalero.replacer.replacement.save.ReplacementSaveRepository;
 import java.time.LocalDate;
 import java.util.Collection;
