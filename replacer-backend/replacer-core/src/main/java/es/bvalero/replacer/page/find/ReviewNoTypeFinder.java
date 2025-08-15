@@ -6,7 +6,7 @@ import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.page.PageCountRepository;
 import es.bvalero.replacer.page.PageRepository;
 import es.bvalero.replacer.page.PageSaveRepository;
-import es.bvalero.replacer.page.index.PageIndexService;
+import es.bvalero.replacer.page.index.PageIndexApi;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
 import es.bvalero.replacer.wikipedia.WikipediaPageRepository;
 import java.util.Collection;
@@ -23,13 +23,13 @@ class ReviewNoTypeFinder extends ReviewFinder {
 
     ReviewNoTypeFinder(
         WikipediaPageRepository wikipediaPageRepository,
-        PageIndexService pageIndexService,
+        @Qualifier("pageIndexService") PageIndexApi pageIndexApi,
         PageRepository pageRepository,
         PageSaveRepository pageSaveRepository,
         ReviewSectionFinder reviewSectionFinder,
         PageCountRepository pageCountRepository
     ) {
-        super(wikipediaPageRepository, pageIndexService, pageRepository, pageSaveRepository, reviewSectionFinder);
+        super(wikipediaPageRepository, pageIndexApi, pageRepository, pageSaveRepository, reviewSectionFinder);
         this.pageRepository = pageRepository;
         this.pageCountRepository = pageCountRepository;
     }

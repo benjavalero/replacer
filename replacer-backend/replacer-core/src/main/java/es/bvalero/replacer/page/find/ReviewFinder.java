@@ -10,7 +10,7 @@ import es.bvalero.replacer.finder.StandardType;
 import es.bvalero.replacer.page.IndexedPage;
 import es.bvalero.replacer.page.PageRepository;
 import es.bvalero.replacer.page.PageSaveRepository;
-import es.bvalero.replacer.page.index.PageIndexService;
+import es.bvalero.replacer.page.index.PageIndexApi;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
 import es.bvalero.replacer.wikipedia.WikipediaPageRepository;
 import java.util.*;
@@ -28,7 +28,7 @@ abstract class ReviewFinder implements ReviewFinderApi {
 
     // Dependency injection
     private final WikipediaPageRepository wikipediaPageRepository;
-    private final PageIndexService pageIndexService;
+    private final PageIndexApi pageIndexApi;
     private final PageRepository pageRepository;
     private final PageSaveRepository pageSaveRepository;
     private final ReviewSectionFinder reviewSectionFinder;
@@ -49,13 +49,13 @@ abstract class ReviewFinder implements ReviewFinderApi {
 
     ReviewFinder(
         WikipediaPageRepository wikipediaPageRepository,
-        PageIndexService pageIndexService,
+        PageIndexApi pageIndexApi,
         PageRepository pageRepository,
         PageSaveRepository pageSaveRepository,
         ReviewSectionFinder reviewSectionFinder
     ) {
         this.wikipediaPageRepository = wikipediaPageRepository;
-        this.pageIndexService = pageIndexService;
+        this.pageIndexApi = pageIndexApi;
         this.pageRepository = pageRepository;
         this.pageSaveRepository = pageSaveRepository;
         this.reviewSectionFinder = reviewSectionFinder;
@@ -233,7 +233,7 @@ abstract class ReviewFinder implements ReviewFinderApi {
         // We take profit, and we update the database with the just calculated replacements (also when empty).
         // If the page has not been indexed (or is not indexable) the collection of replacements is empty
         // Note this collection has already discarded the replacements reviewed in the past
-        Collection<Replacement> standardReplacements = pageIndexService.indexPage(page).getReplacements();
+        Collection<Replacement> standardReplacements = pageIndexApi.indexPage(page).getReplacements();
 
         // Decorate the standard replacements with different actions depending on the type of review
         Collection<Replacement> decoratedReplacements = decorateReplacements(page, options, standardReplacements);

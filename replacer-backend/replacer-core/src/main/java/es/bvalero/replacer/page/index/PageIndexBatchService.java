@@ -5,11 +5,13 @@ import es.bvalero.replacer.finder.ReplacementFindApi;
 import es.bvalero.replacer.page.IndexedPage;
 import es.bvalero.replacer.page.PageSaveRepository;
 import java.util.Optional;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 
+@Qualifier("pageIndexBatchService")
 @Service
-public class PageIndexBatchService extends PageIndexAbstractService {
+class PageIndexBatchService extends PageIndexAbstractService implements PageIndexApi {
 
     // Dependency injection
     private final PageIndexValidator pageIndexValidator;
@@ -56,7 +58,7 @@ public class PageIndexBatchService extends PageIndexAbstractService {
         return pageIndexValidator.isIndexableByTimestamp(page, dbPage);
     }
 
-    /* Force saving what is left on the batch (if applicable) */
+    @Override
     public void finish() {
         pageComparatorSaver.forceSave();
     }

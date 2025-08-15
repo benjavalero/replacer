@@ -9,16 +9,17 @@ import es.bvalero.replacer.page.IndexedPage;
 import es.bvalero.replacer.page.PageRepository;
 import es.bvalero.replacer.page.PageSaveRepository;
 import es.bvalero.replacer.wikipedia.WikipediaException;
-import es.bvalero.replacer.wikipedia.WikipediaPage;
 import es.bvalero.replacer.wikipedia.WikipediaPageRepository;
 import es.bvalero.replacer.wikipedia.WikipediaSearchRequest;
 import java.util.Collection;
 import java.util.Optional;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
+@Qualifier("pageIndexService")
 @Service
-public class PageIndexService extends PageIndexAbstractService {
+class PageIndexService extends PageIndexAbstractService implements PageIndexApi {
 
     // Dependency injection
     private final WikipediaPageRepository wikipediaPageRepository;
@@ -50,15 +51,12 @@ public class PageIndexService extends PageIndexAbstractService {
         pageComparatorSaver.save(indexedPage);
     }
 
-    public PageIndexResult indexPage(WikipediaPage wikipediaPage) {
-        return indexPage(IndexablePage.of(wikipediaPage));
-    }
-
     @EventListener
     public void onAddedType(AddedTypeEvent event) {
         indexType(event.getLang(), event.getType());
     }
 
+    @Override
     public void indexType(WikipediaLanguage lang, StandardType type) {
         // For each type, find the Wikipedia pages containing the text, using the default search options.
         // At least some of them not to overload the Wikipedia search.

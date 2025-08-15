@@ -6,7 +6,7 @@ import es.bvalero.replacer.finder.StandardType;
 import es.bvalero.replacer.page.PageCountRepository;
 import es.bvalero.replacer.page.PageRepository;
 import es.bvalero.replacer.page.PageSaveRepository;
-import es.bvalero.replacer.page.index.PageIndexService;
+import es.bvalero.replacer.page.index.PageIndexApi;
 import es.bvalero.replacer.replacement.ReplacementSaveRepository;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
 import es.bvalero.replacer.wikipedia.WikipediaPageRepository;
@@ -23,22 +23,22 @@ class ReviewTypeFinder extends ReviewFinder {
 
     // Dependency injection
     private final PageRepository pageRepository;
-    private final PageIndexService pageIndexService;
+    private final PageIndexApi pageIndexApi;
     private final PageSaveRepository pageSaveRepository;
     private final PageCountRepository pageCountRepository;
     private final ReplacementSaveRepository replacementSaveRepository;
 
     ReviewTypeFinder(
         WikipediaPageRepository wikipediaPageRepository,
-        PageIndexService pageIndexService,
+        @Qualifier("pageIndexService") PageIndexApi pageIndexApi,
         PageRepository pageRepository,
         PageSaveRepository pageSaveRepository,
         ReviewSectionFinder reviewSectionFinder,
         PageCountRepository pageCountRepository,
         ReplacementSaveRepository replacementSaveRepository
     ) {
-        super(wikipediaPageRepository, pageIndexService, pageRepository, pageSaveRepository, reviewSectionFinder);
-        this.pageIndexService = pageIndexService;
+        super(wikipediaPageRepository, pageIndexApi, pageRepository, pageSaveRepository, reviewSectionFinder);
+        this.pageIndexApi = pageIndexApi;
         this.pageRepository = pageRepository;
         this.pageSaveRepository = pageSaveRepository;
         this.pageCountRepository = pageCountRepository;
@@ -76,7 +76,7 @@ class ReviewTypeFinder extends ReviewFinder {
     }
 
     private void forceIndex(ReviewOptions options) {
-        pageIndexService.indexType(options.getUser().getId().getLang(), options.getStandardType());
+        pageIndexApi.indexType(options.getUser().getId().getLang(), options.getStandardType());
     }
 
     @Override

@@ -3,7 +3,7 @@ package es.bvalero.replacer.dump;
 import es.bvalero.replacer.DumpProperties;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.exception.ReplacerException;
-import es.bvalero.replacer.page.index.PageIndexBatchService;
+import es.bvalero.replacer.page.index.PageIndexApi;
 import jakarta.annotation.PostConstruct;
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -16,6 +16,7 @@ import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.xml.sax.SAXException;
 
@@ -25,7 +26,7 @@ import org.xml.sax.SAXException;
 class DumpParser {
 
     // Dependency injection
-    private final PageIndexBatchService pageIndexService;
+    private final PageIndexApi pageIndexApi;
     private final DumpProperties dumpProperties;
 
     // Singleton properties to be set in each dump parsing
@@ -33,8 +34,8 @@ class DumpParser {
     private DumpSaxHandler dumpHandler;
     private DumpFile dumpFile;
 
-    DumpParser(PageIndexBatchService pageIndexService, DumpProperties dumpProperties) {
-        this.pageIndexService = pageIndexService;
+    DumpParser(@Qualifier("pageIndexBatchService") PageIndexApi pageIndexApi, DumpProperties dumpProperties) {
+        this.pageIndexApi = pageIndexApi;
         this.dumpProperties = dumpProperties;
     }
 
@@ -61,7 +62,7 @@ class DumpParser {
             saxParser.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
 
             this.dumpFile = dumpFile;
-            this.dumpHandler = new DumpSaxHandler(lang, pageIndexService);
+            this.dumpHandler = new DumpSaxHandler(lang, pageIndexApi);
             saxParser.parse(xmlInput, this.dumpHandler);
         } catch (IOException e) {
             throw new ReplacerException("Dump file not valid: " + dumpFile, e);

@@ -7,7 +7,7 @@ import es.bvalero.replacer.DumpProperties;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.page.index.IndexablePage;
-import es.bvalero.replacer.page.index.PageIndexBatchService;
+import es.bvalero.replacer.page.index.PageIndexApi;
 import es.bvalero.replacer.page.index.PageIndexResult;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
@@ -22,16 +22,16 @@ import org.junit.jupiter.api.Test;
 class DumpParserTest {
 
     // Dependency injection
-    private PageIndexBatchService pageIndexService;
+    private PageIndexApi pageIndexApi;
     private DumpProperties dumpProperties;
 
     private DumpParser dumpParser;
 
     @BeforeEach
     public void setUp() {
-        pageIndexService = mock(PageIndexBatchService.class);
+        pageIndexApi = mock(PageIndexApi.class);
         dumpProperties = mock(DumpProperties.class);
-        dumpParser = new DumpParser(pageIndexService, dumpProperties);
+        dumpParser = new DumpParser(pageIndexApi, dumpProperties);
     }
 
     @Test
@@ -48,7 +48,7 @@ class DumpParserTest {
 
         assertTrue(dumpParser.getDumpStatus().isEmpty());
 
-        when(pageIndexService.indexPage(any(IndexablePage.class)))
+        when(pageIndexApi.indexPage(any(IndexablePage.class)))
             .thenReturn(PageIndexResult.ofIndexed())
             .thenReturn(PageIndexResult.ofNotIndexed())
             .thenReturn(PageIndexResult.ofIndexed())
@@ -57,8 +57,8 @@ class DumpParserTest {
 
         dumpParser.parseDumpFile(WikipediaLanguage.SPANISH, DumpFile.of(dumpFile));
 
-        verify(pageIndexService, times(4)).indexPage(any(IndexablePage.class));
-        verify(pageIndexService).finish();
+        verify(pageIndexApi, times(4)).indexPage(any(IndexablePage.class));
+        verify(pageIndexApi).finish();
 
         Optional<DumpStatus> dumpStatus = dumpParser.getDumpStatus();
         assertTrue(dumpStatus.isPresent());

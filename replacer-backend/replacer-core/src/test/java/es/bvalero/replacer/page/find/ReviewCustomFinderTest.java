@@ -9,8 +9,8 @@ import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.*;
 import es.bvalero.replacer.page.PageRepository;
 import es.bvalero.replacer.page.PageSaveRepository;
+import es.bvalero.replacer.page.index.PageIndexApi;
 import es.bvalero.replacer.page.index.PageIndexResult;
-import es.bvalero.replacer.page.index.PageIndexService;
 import es.bvalero.replacer.replacement.CustomRepository;
 import es.bvalero.replacer.wikipedia.*;
 import java.util.*;
@@ -33,7 +33,7 @@ class ReviewCustomFinderTest {
 
     // Dependency injection
     private WikipediaPageRepository wikipediaPageRepository;
-    private PageIndexService pageIndexService;
+    private PageIndexApi pageIndexApi;
     private PageRepository pageRepository;
     private PageSaveRepository pageSaveRepository;
     private ReviewSectionFinder reviewSectionFinder;
@@ -45,7 +45,7 @@ class ReviewCustomFinderTest {
     @BeforeEach
     public void setUp() {
         wikipediaPageRepository = mock(WikipediaPageRepository.class);
-        pageIndexService = mock(PageIndexService.class);
+        pageIndexApi = mock(PageIndexApi.class);
         pageRepository = mock(PageRepository.class);
         pageSaveRepository = mock(PageSaveRepository.class);
         reviewSectionFinder = mock(ReviewSectionFinder.class);
@@ -53,7 +53,7 @@ class ReviewCustomFinderTest {
         customReplacementFindApi = mock(CustomReplacementFindApi.class);
         pageReviewCustomService = new ReviewCustomFinder(
             wikipediaPageRepository,
-            pageIndexService,
+            pageIndexApi,
             pageRepository,
             pageSaveRepository,
             reviewSectionFinder,
@@ -157,7 +157,7 @@ class ReviewCustomFinderTest {
             List.of()
         );
         when(wikipediaPageRepository.findByKey(any(PageKey.class))).thenReturn(Optional.of(page));
-        when(pageIndexService.indexPage(page)).thenReturn(PageIndexResult.ofIndexed());
+        when(pageIndexApi.indexPage(page)).thenReturn(PageIndexResult.ofIndexed());
         when(
             customReplacementFindApi.findCustomReplacements(
                 any(FinderPage.class),
@@ -204,7 +204,7 @@ class ReviewCustomFinderTest {
             List.of()
         );
         when(wikipediaPageRepository.findByKey(any(PageKey.class))).thenReturn(Optional.of(page));
-        when(pageIndexService.indexPage(page)).thenReturn(PageIndexResult.ofIndexed());
+        when(pageIndexApi.indexPage(page)).thenReturn(PageIndexResult.ofIndexed());
         when(
             customReplacementFindApi.findCustomReplacements(
                 any(FinderPage.class),
@@ -251,7 +251,7 @@ class ReviewCustomFinderTest {
             List.of(PageKey.of(WikipediaLanguage.getDefault(), pageId1))
         );
         when(wikipediaPageRepository.findByKey(any(PageKey.class))).thenReturn(Optional.of(page));
-        when(pageIndexService.indexPage(page)).thenReturn(PageIndexResult.ofIndexed());
+        when(pageIndexApi.indexPage(page)).thenReturn(PageIndexResult.ofIndexed());
         when(
             customReplacementFindApi.findCustomReplacements(
                 any(FinderPage.class),
@@ -336,7 +336,7 @@ class ReviewCustomFinderTest {
             .thenReturn(Optional.of(pages.get(3))) // Call 3
             .thenReturn(Optional.of(pages.get(4))); // Call 4
 
-        when(pageIndexService.indexPage(any(WikipediaPage.class))).thenReturn(PageIndexResult.ofIndexed());
+        when(pageIndexApi.indexPage(any(WikipediaPage.class))).thenReturn(PageIndexResult.ofIndexed());
 
         when(
             customReplacementFindApi.findCustomReplacements(
@@ -418,7 +418,7 @@ class ReviewCustomFinderTest {
             .thenReturn(Optional.of(pages.get(3))) // Call 3
             .thenReturn(Optional.of(pages.get(4))); // Call 4
 
-        when(pageIndexService.indexPage(any(WikipediaPage.class))).thenReturn(PageIndexResult.ofIndexed());
+        when(pageIndexApi.indexPage(any(WikipediaPage.class))).thenReturn(PageIndexResult.ofIndexed());
 
         when(
             customReplacementFindApi.findCustomReplacements(

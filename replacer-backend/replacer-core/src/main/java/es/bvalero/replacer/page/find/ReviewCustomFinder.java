@@ -8,7 +8,7 @@ import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.page.PageRepository;
 import es.bvalero.replacer.page.PageSaveRepository;
-import es.bvalero.replacer.page.index.PageIndexService;
+import es.bvalero.replacer.page.index.PageIndexApi;
 import es.bvalero.replacer.replacement.CustomRepository;
 import es.bvalero.replacer.wikipedia.*;
 import java.util.*;
@@ -37,14 +37,14 @@ class ReviewCustomFinder extends ReviewFinder {
 
     public ReviewCustomFinder(
         WikipediaPageRepository wikipediaPageRepository,
-        PageIndexService pageIndexService,
+        @Qualifier("pageIndexService") PageIndexApi pageIndexApi,
         PageRepository pageRepository,
         PageSaveRepository pageSaveRepository,
         ReviewSectionFinder reviewSectionFinder,
         CustomRepository customRepository,
         CustomReplacementFindApi customReplacementFindApi
     ) {
-        super(wikipediaPageRepository, pageIndexService, pageRepository, pageSaveRepository, reviewSectionFinder);
+        super(wikipediaPageRepository, pageIndexApi, pageRepository, pageSaveRepository, reviewSectionFinder);
         this.wikipediaPageRepository = wikipediaPageRepository;
         this.customRepository = customRepository;
         this.customReplacementFindApi = customReplacementFindApi;
