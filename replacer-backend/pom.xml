@@ -43,6 +43,7 @@
                 <module>replacer-wikipedia</module>
                 <module>replacer-finder</module>
                 <module>replacer-web</module>
+                <module>replacer-dump</module>
                 <module>replacer-app</module>
             </modules>
         </profile>

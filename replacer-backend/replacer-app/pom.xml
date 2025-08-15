@@ -44,6 +44,11 @@
         </dependency>
         <dependency>
             <groupId>es.bvalero.replacer</groupId>
+            <artifactId>replacer-dump</artifactId>
+            <version>${revision}</version>
+        </dependency>
+        <dependency>
+            <groupId>es.bvalero.replacer</groupId>
             <artifactId>replacer-web</artifactId>
             <version>${revision}</version>
         </dependency>
