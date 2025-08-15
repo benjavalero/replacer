@@ -136,8 +136,6 @@
                 <configuration>
                     <excludes>
                         <exclude>**/*BenchmarkTest.java</exclude>
-                        <!-- TODO: Enable when the Modulith refactor is done -->
-                        <exclude>**/ArchitectureTest.java</exclude>
                     </excludes>
                 </configuration>
             </plugin>

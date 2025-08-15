@@ -5,6 +5,7 @@ import com.tngtech.archunit.junit.AnalyzeClasses;
 import com.tngtech.archunit.junit.ArchTest;
 import com.tngtech.archunit.lang.ArchRule;
 import org.jmolecules.archunit.JMoleculesArchitectureRules;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.modulith.core.ApplicationModules;
 import org.springframework.modulith.docs.Documenter;
@@ -15,6 +16,7 @@ class ArchitectureTest {
     @ArchTest
     ArchRule hexagonal = JMoleculesArchitectureRules.ensureHexagonal();
 
+    @Disabled
     @Test
     void createApplicationModuleModel() {
         ApplicationModules modules = buildApplicationModules();
@@ -27,6 +29,7 @@ class ArchitectureTest {
         modules.verify();
     }
 
+    @Disabled
     @Test
     void createModuleDocumentation() {
         ApplicationModules modules = buildApplicationModules();
