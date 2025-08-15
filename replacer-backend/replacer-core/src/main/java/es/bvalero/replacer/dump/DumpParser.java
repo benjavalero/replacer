@@ -3,7 +3,7 @@ package es.bvalero.replacer.dump;
 import es.bvalero.replacer.DumpProperties;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.exception.ReplacerException;
-import es.bvalero.replacer.page.index.PageIndexApi;
+import es.bvalero.replacer.index.PageIndexApi;
 import jakarta.annotation.PostConstruct;
 import java.io.BufferedInputStream;
 import java.io.IOException;

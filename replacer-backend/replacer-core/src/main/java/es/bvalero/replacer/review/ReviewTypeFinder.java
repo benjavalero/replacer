@@ -1,0 +1,104 @@
+package es.bvalero.replacer.review;
+
+import es.bvalero.replacer.common.domain.PageKey;
+import es.bvalero.replacer.finder.Replacement;
+import es.bvalero.replacer.finder.StandardType;
+import es.bvalero.replacer.index.PageIndexApi;
+import es.bvalero.replacer.page.PageCountRepository;
+import es.bvalero.replacer.page.PageRepository;
+import es.bvalero.replacer.page.PageSaveRepository;
+import es.bvalero.replacer.replacement.ReplacementSaveRepository;
+import es.bvalero.replacer.wikipedia.WikipediaPage;
+import es.bvalero.replacer.wikipedia.WikipediaPageRepository;
+import java.util.Collection;
+import java.util.List;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
+
+@Slf4j
+@Qualifier("reviewTypeFinder")
+@Component
+class ReviewTypeFinder extends ReviewFinder {
+
+    // Dependency injection
+    private final PageRepository pageRepository;
+    private final PageIndexApi pageIndexApi;
+    private final PageSaveRepository pageSaveRepository;
+    private final PageCountRepository pageCountRepository;
+    private final ReplacementSaveRepository replacementSaveRepository;
+
+    ReviewTypeFinder(
+        WikipediaPageRepository wikipediaPageRepository,
+        @Qualifier("pageIndexService") PageIndexApi pageIndexApi,
+        PageRepository pageRepository,
+        PageSaveRepository pageSaveRepository,
+        ReviewSectionFinder reviewSectionFinder,
+        PageCountRepository pageCountRepository,
+        ReplacementSaveRepository replacementSaveRepository
+    ) {
+        super(wikipediaPageRepository, pageIndexApi, pageRepository, pageSaveRepository, reviewSectionFinder);
+        this.pageIndexApi = pageIndexApi;
+        this.pageRepository = pageRepository;
+        this.pageSaveRepository = pageSaveRepository;
+        this.pageCountRepository = pageCountRepository;
+        this.replacementSaveRepository = replacementSaveRepository;
+    }
+
+    @Override
+    PageSearchResult findPageIdsToReview(ReviewOptions options) {
+        int totalResults = findTotalResults(options);
+        if (totalResults == 0) {
+            LOGGER.debug("No results on DB. Re-index with some Wikipedia live results and retry.");
+            forceIndex(options);
+            totalResults = findTotalResults(options);
+            if (totalResults == 0) {
+                return PageSearchResult.ofEmpty();
+            }
+        }
+
+        return PageSearchResult.of(totalResults, findResults(options));
+    }
+
+    private int findTotalResults(ReviewOptions options) {
+        return pageCountRepository.countNotReviewedByType(
+            options.getUser().getId().getLang(),
+            options.getStandardType()
+        );
+    }
+
+    private Collection<PageKey> findResults(ReviewOptions options) {
+        return pageRepository.findNotReviewedByType(
+            options.getUser().getId().getLang(),
+            options.getStandardType(),
+            getCacheSize()
+        );
+    }
+
+    private void forceIndex(ReviewOptions options) {
+        pageIndexApi.indexType(options.getUser().getId().getLang(), options.getStandardType());
+    }
+
+    @Override
+    void removePageCounts(ReviewOptions options) {
+        replacementSaveRepository.removeByType(options.getUser().getId().getLang(), options.getStandardType());
+    }
+
+    @Override
+    Collection<Replacement> decorateReplacements(
+        WikipediaPage page,
+        ReviewOptions options,
+        Collection<Replacement> replacements
+    ) {
+        // Though the whole list of replacements will be returned no matter the type
+        // we run a filter to check there is at least one replacement of the requested type
+        StandardType type = options.getStandardType();
+        Collection<Replacement> filtered = filterReplacementsByType(replacements, type);
+        if (filtered.isEmpty()) {
+            // No replacement to be reviewed for this page and type
+            return List.of();
+        }
+
+        return replacements;
+    }
+}

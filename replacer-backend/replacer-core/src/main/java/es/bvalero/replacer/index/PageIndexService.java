@@ -1,0 +1,76 @@
+package es.bvalero.replacer.index;
+
+import es.bvalero.replacer.common.domain.PageKey;
+import es.bvalero.replacer.common.domain.WikipediaLanguage;
+import es.bvalero.replacer.finder.AddedTypeEvent;
+import es.bvalero.replacer.finder.ReplacementFindApi;
+import es.bvalero.replacer.finder.StandardType;
+import es.bvalero.replacer.page.IndexedPage;
+import es.bvalero.replacer.page.PageRepository;
+import es.bvalero.replacer.page.PageSaveRepository;
+import es.bvalero.replacer.wikipedia.WikipediaException;
+import es.bvalero.replacer.wikipedia.WikipediaPageRepository;
+import es.bvalero.replacer.wikipedia.WikipediaSearchRequest;
+import java.util.Collection;
+import java.util.Optional;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.event.EventListener;
+import org.springframework.stereotype.Service;
+
+@Qualifier("pageIndexService")
+@Service
+class PageIndexService extends PageIndexAbstractService implements PageIndexApi {
+
+    // Dependency injection
+    private final WikipediaPageRepository wikipediaPageRepository;
+    private final PageRepository pageRepository;
+    private final PageComparatorSaver pageComparatorSaver;
+
+    public PageIndexService(
+        WikipediaPageRepository wikipediaPageRepository,
+        PageSaveRepository pageSaveRepository,
+        PageIndexValidator pageIndexValidator,
+        ReplacementFindApi replacementFindApi,
+        PageComparator pageComparator,
+        PageRepository pageRepository,
+        PageComparatorSaver pageComparatorSaver
+    ) {
+        super(pageSaveRepository, pageIndexValidator, replacementFindApi, pageComparator);
+        this.wikipediaPageRepository = wikipediaPageRepository;
+        this.pageRepository = pageRepository;
+        this.pageComparatorSaver = pageComparatorSaver;
+    }
+
+    @Override
+    Optional<IndexedPage> findIndexedPageByKey(PageKey pageKey) {
+        return pageRepository.findByKey(pageKey);
+    }
+
+    @Override
+    void saveResult(IndexedPage indexedPage) {
+        pageComparatorSaver.save(indexedPage);
+    }
+
+    @EventListener
+    public void onAddedType(AddedTypeEvent event) {
+        indexType(event.getLang(), event.getType());
+    }
+
+    @Override
+    public void indexType(WikipediaLanguage lang, StandardType type) {
+        // For each type, find the Wikipedia pages containing the text, using the default search options.
+        // At least some of them not to overload the Wikipedia search.
+        WikipediaSearchRequest request = WikipediaSearchRequest.builder().lang(lang).text(type.getSubtype()).build();
+        Collection<PageKey> pageKeys = wikipediaPageRepository
+            .findByContent(request)
+            .getPageIds()
+            .stream()
+            .map(pageId -> PageKey.of(lang, pageId))
+            .toList();
+        try {
+            wikipediaPageRepository.findByKeys(pageKeys).forEach(this::indexPage);
+        } catch (WikipediaException e) {
+            // Do nothing, simply we don't index in case we cannot retrieve the pages.
+        }
+    }
+}
