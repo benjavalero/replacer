@@ -1,5 +1,6 @@
 package es.bvalero.replacer.replacement;
 
+import es.bvalero.replacer.common.domain.PageTitle;
 import es.bvalero.replacer.common.domain.ResultCount;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import java.util.Collection;

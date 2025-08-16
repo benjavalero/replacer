@@ -3,10 +3,9 @@ package es.bvalero.replacer.replacement.count;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
-import es.bvalero.replacer.common.domain.PageKey;
+import es.bvalero.replacer.common.domain.PageTitle;
 import es.bvalero.replacer.common.domain.ResultCount;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import es.bvalero.replacer.replacement.PageTitle;
 import es.bvalero.replacer.replacement.ReplacementCountRepository;
 import java.util.Collection;
 import java.util.List;
@@ -65,7 +64,7 @@ class ReplacementCountServiceTest {
     @Test
     void testCountReplacementsGroupedByPage() {
         WikipediaLanguage lang = WikipediaLanguage.getDefault();
-        PageTitle page = PageTitle.of(PageKey.of(lang, 1), "T");
+        PageTitle page = PageTitle.of(1, "T");
         Collection<ResultCount<PageTitle>> counts = List.of(ResultCount.of(page, 10));
         when(
             replacementCountRepository.countNotReviewedGroupedByPage(lang, ReplacementCountService.NUM_RESULTS)

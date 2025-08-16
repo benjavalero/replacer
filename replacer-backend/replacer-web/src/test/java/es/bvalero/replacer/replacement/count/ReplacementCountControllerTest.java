@@ -7,11 +7,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import es.bvalero.replacer.WebMvcConfiguration;
-import es.bvalero.replacer.common.domain.PageKey;
+import es.bvalero.replacer.common.domain.PageTitle;
 import es.bvalero.replacer.common.domain.ResultCount;
 import es.bvalero.replacer.common.domain.User;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import es.bvalero.replacer.replacement.PageTitle;
 import es.bvalero.replacer.user.ValidateUserAspect;
 import es.bvalero.replacer.user.WebUtils;
 import jakarta.servlet.http.HttpServletRequest;
@@ -114,7 +113,7 @@ class ReplacementCountControllerTest {
         WikipediaLanguage lang = WikipediaLanguage.getDefault();
         when(webUtils.getLanguageHeader(any(HttpServletRequest.class))).thenReturn(lang);
 
-        PageTitle page = PageTitle.of(PageKey.of(WikipediaLanguage.getDefault(), 2), "T");
+        PageTitle page = PageTitle.of(2, "T");
         Collection<ResultCount<PageTitle>> counts = List.of(ResultCount.of(page, 100));
 
         when(replacementCountApi.countNotReviewedGroupedByPage(WikipediaLanguage.getDefault())).thenReturn(counts);
@@ -127,7 +126,7 @@ class ReplacementCountControllerTest {
                     .contentType(MediaType.APPLICATION_JSON)
             )
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$[0].pageId", is(page.getPageKey().getPageId())))
+            .andExpect(jsonPath("$[0].pageId", is(page.getPageId())))
             .andExpect(jsonPath("$[0].title", is(page.getTitle())))
             .andExpect(jsonPath("$[0].count", is(100)));
 

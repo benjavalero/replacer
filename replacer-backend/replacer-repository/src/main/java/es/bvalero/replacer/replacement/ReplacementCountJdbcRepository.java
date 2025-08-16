@@ -2,7 +2,7 @@ package es.bvalero.replacer.replacement;
 
 import static es.bvalero.replacer.replacement.IndexedReplacement.REVIEWER_SYSTEM;
 
-import es.bvalero.replacer.common.domain.PageKey;
+import es.bvalero.replacer.common.domain.PageTitle;
 import es.bvalero.replacer.common.domain.ResultCount;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import java.util.Collection;
@@ -97,7 +97,7 @@ class ReplacementCountJdbcRepository implements ReplacementCountRepository {
         return Objects.requireNonNull(
             jdbcTemplate.query(sql, namedParameters, (resultSet, rowNum) ->
                 ResultCount.of(
-                    PageTitle.of(PageKey.of(lang, resultSet.getInt("PAGE_ID")), resultSet.getString("TITLE")),
+                    PageTitle.of(resultSet.getInt("PAGE_ID"), resultSet.getString("TITLE")),
                     resultSet.getInt("NUM")
                 )
             )

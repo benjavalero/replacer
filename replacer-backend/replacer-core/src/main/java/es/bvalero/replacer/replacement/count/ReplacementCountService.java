@@ -1,8 +1,8 @@
 package es.bvalero.replacer.replacement.count;
 
+import es.bvalero.replacer.common.domain.PageTitle;
 import es.bvalero.replacer.common.domain.ResultCount;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import es.bvalero.replacer.replacement.PageTitle;
 import es.bvalero.replacer.replacement.ReplacementCountRepository;
 import java.util.Collection;
 import org.jetbrains.annotations.VisibleForTesting;
