@@ -3,13 +3,16 @@ package es.bvalero.replacer.page.list;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
+import es.bvalero.replacer.common.domain.PageTitle;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.StandardType;
 import es.bvalero.replacer.page.PageRepository;
 import es.bvalero.replacer.replacement.ReplacementSaveRepository;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -31,7 +34,9 @@ class PageListServiceTest {
     @Test
     void testFindPageTitlesToReviewByType() {
         // An array list to be able to sort
-        List<String> list = Arrays.asList("Bo", "C", "Aá", "Bñ", null, "Ae");
+        List<PageTitle> list = Stream.of("Bo", "C", "Aá", "Bñ", null, "Ae")
+            .map(t -> t == null ? null : PageTitle.of(1, t))
+            .collect(Collectors.toCollection(ArrayList::new));
         List<String> sorted = List.of("Aá", "Ae", "Bñ", "Bo", "C");
 
         WikipediaLanguage lang = WikipediaLanguage.getDefault();

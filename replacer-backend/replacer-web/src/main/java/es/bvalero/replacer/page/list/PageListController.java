@@ -32,9 +32,9 @@ class PageListController {
         this.pageListApi = pageListApi;
     }
 
-    @Operation(summary = "List the pages to review containing the given replacement type")
+    @Operation(summary = "List the titles of pages to review containing the given replacement type")
     @GetMapping(value = "", produces = MediaType.TEXT_PLAIN_VALUE)
-    ResponseEntity<String> findPageTitlesNotReviewedByType(
+    ResponseEntity<String> listPageTitlesNotReviewedByType(
         @RequestParam String lang,
         @Valid ReplacementTypeDto request
     ) {

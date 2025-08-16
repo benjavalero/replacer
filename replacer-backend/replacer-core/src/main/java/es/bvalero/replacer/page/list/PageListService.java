@@ -3,6 +3,7 @@ package es.bvalero.replacer.page.list;
 import static es.bvalero.replacer.common.util.ReplacerUtils.LOCALE_ES;
 import static es.bvalero.replacer.replacement.IndexedReplacement.REVIEWER_SYSTEM;
 
+import es.bvalero.replacer.common.domain.PageTitle;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.StandardType;
 import es.bvalero.replacer.page.PageRepository;
@@ -30,6 +31,7 @@ class PageListService implements PageListApi {
             .findTitlesNotReviewedByType(lang, type)
             .stream()
             .filter(Objects::nonNull)
+            .map(PageTitle::getTitle)
             .sorted(Collator.getInstance(LOCALE_ES))
             .toList();
     }

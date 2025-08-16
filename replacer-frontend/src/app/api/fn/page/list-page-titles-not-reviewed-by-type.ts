@@ -7,7 +7,7 @@ import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
 
-export interface FindPageTitlesNotReviewedByType$Params {
+export interface ListPageTitlesNotReviewedByType$Params {
   lang: string;
 
 /**
@@ -21,8 +21,8 @@ export interface FindPageTitlesNotReviewedByType$Params {
   subtype: string;
 }
 
-export function findPageTitlesNotReviewedByType(http: HttpClient, rootUrl: string, params: FindPageTitlesNotReviewedByType$Params, context?: HttpContext): Observable<StrictHttpResponse<string>> {
-  const rb = new RequestBuilder(rootUrl, findPageTitlesNotReviewedByType.PATH, 'get');
+export function listPageTitlesNotReviewedByType(http: HttpClient, rootUrl: string, params: ListPageTitlesNotReviewedByType$Params, context?: HttpContext): Observable<StrictHttpResponse<string>> {
+  const rb = new RequestBuilder(rootUrl, listPageTitlesNotReviewedByType.PATH, 'get');
   if (params) {
     rb.query('lang', params.lang, {});
     rb.query('kind', params.kind, {});
@@ -39,4 +39,4 @@ export function findPageTitlesNotReviewedByType(http: HttpClient, rootUrl: strin
   );
 }
 
-findPageTitlesNotReviewedByType.PATH = '/api/page/type';
+listPageTitlesNotReviewedByType.PATH = '/api/page/type';

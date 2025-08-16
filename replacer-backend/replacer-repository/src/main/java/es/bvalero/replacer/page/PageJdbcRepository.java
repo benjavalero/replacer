@@ -1,6 +1,7 @@
 package es.bvalero.replacer.page;
 
 import es.bvalero.replacer.common.domain.PageKey;
+import es.bvalero.replacer.common.domain.PageTitle;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.StandardType;
 import java.util.Collection;
@@ -135,9 +136,9 @@ class PageJdbcRepository implements PageRepository {
     }
 
     @Override
-    public Collection<String> findTitlesNotReviewedByType(WikipediaLanguage lang, StandardType type) {
+    public Collection<PageTitle> findTitlesNotReviewedByType(WikipediaLanguage lang, StandardType type) {
         String sql =
-            "SELECT p.title FROM page p " +
+            "SELECT p.page_id, p.title FROM page p " +
             "WHERE p.lang = :lang AND EXISTS " +
             "(SELECT NULL FROM replacement r WHERE p.lang = r.lang AND p.page_id = r.page_id " +
             "AND r.kind = :kind AND r.subtype = :subtype AND r.reviewer IS NULL)";
@@ -145,6 +146,8 @@ class PageJdbcRepository implements PageRepository {
             .addValue("lang", lang.getCode())
             .addValue("kind", type.getKind().getCode())
             .addValue("subtype", type.getSubtype());
-        return jdbcTemplate.queryForList(sql, namedParameters, String.class);
+        return jdbcTemplate.query(sql, namedParameters, (resultSet, rowNum) ->
+            PageTitle.of(resultSet.getInt("PAGE_ID"), resultSet.getString("TITLE"))
+        );
     }
 }

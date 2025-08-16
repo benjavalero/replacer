@@ -1,6 +1,7 @@
 package es.bvalero.replacer.page;
 
 import es.bvalero.replacer.common.domain.PageKey;
+import es.bvalero.replacer.common.domain.PageTitle;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.StandardType;
 import java.util.Collection;
@@ -20,5 +21,5 @@ public interface PageRepository {
     Collection<PageKey> findNotReviewedByType(WikipediaLanguage lang, @Nullable StandardType type, int numResults);
 
     /** Find the pages to review by the given type and return the titles */
-    Collection<String> findTitlesNotReviewedByType(WikipediaLanguage lang, StandardType type);
+    Collection<PageTitle> findTitlesNotReviewedByType(WikipediaLanguage lang, StandardType type);
 }

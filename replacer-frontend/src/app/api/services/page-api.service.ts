@@ -13,11 +13,11 @@ import { countNotReviewedGroupedByType } from '../fn/page/count-not-reviewed-gro
 import { CountNotReviewedGroupedByType$Params } from '../fn/page/count-not-reviewed-grouped-by-type';
 import { findPageReviewById } from '../fn/page/find-page-review-by-id';
 import { FindPageReviewById$Params } from '../fn/page/find-page-review-by-id';
-import { findPageTitlesNotReviewedByType } from '../fn/page/find-page-titles-not-reviewed-by-type';
-import { FindPageTitlesNotReviewedByType$Params } from '../fn/page/find-page-titles-not-reviewed-by-type';
 import { findRandomPageWithReplacements } from '../fn/page/find-random-page-with-replacements';
 import { FindRandomPageWithReplacements$Params } from '../fn/page/find-random-page-with-replacements';
 import { KindCount } from '../models/kind-count';
+import { listPageTitlesNotReviewedByType } from '../fn/page/list-page-titles-not-reviewed-by-type';
+import { ListPageTitlesNotReviewedByType$Params } from '../fn/page/list-page-titles-not-reviewed-by-type';
 import { Page } from '../models/page';
 import { reviewPagesByType } from '../fn/page/review-pages-by-type';
 import { ReviewPagesByType$Params } from '../fn/page/review-pages-by-type';
@@ -96,35 +96,35 @@ export class PageApiService extends BaseService {
     );
   }
 
-  /** Path part for operation `findPageTitlesNotReviewedByType()` */
-  static readonly FindPageTitlesNotReviewedByTypePath = '/api/page/type';
+  /** Path part for operation `listPageTitlesNotReviewedByType()` */
+  static readonly ListPageTitlesNotReviewedByTypePath = '/api/page/type';
 
   /**
-   * List the pages to review containing the given replacement type.
+   * List the titles of pages to review containing the given replacement type.
    *
    *
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `findPageTitlesNotReviewedByType()` instead.
+   * To access only the response body, use `listPageTitlesNotReviewedByType()` instead.
    *
    * This method doesn't expect any request body.
    */
-  findPageTitlesNotReviewedByType$Response(params: FindPageTitlesNotReviewedByType$Params, context?: HttpContext): Observable<StrictHttpResponse<string>> {
-    return findPageTitlesNotReviewedByType(this.http, this.rootUrl, params, context);
+  listPageTitlesNotReviewedByType$Response(params: ListPageTitlesNotReviewedByType$Params, context?: HttpContext): Observable<StrictHttpResponse<string>> {
+    return listPageTitlesNotReviewedByType(this.http, this.rootUrl, params, context);
   }
 
   /**
-   * List the pages to review containing the given replacement type.
+   * List the titles of pages to review containing the given replacement type.
    *
    *
    *
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `findPageTitlesNotReviewedByType$Response()` instead.
+   * To access the full response (for headers, for example), `listPageTitlesNotReviewedByType$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  findPageTitlesNotReviewedByType(params: FindPageTitlesNotReviewedByType$Params, context?: HttpContext): Observable<string> {
-    return this.findPageTitlesNotReviewedByType$Response(params, context).pipe(
+  listPageTitlesNotReviewedByType(params: ListPageTitlesNotReviewedByType$Params, context?: HttpContext): Observable<string> {
+    return this.listPageTitlesNotReviewedByType$Response(params, context).pipe(
       map((r: StrictHttpResponse<string>): string => r.body)
     );
   }
