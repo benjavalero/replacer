@@ -13,12 +13,15 @@ import { countNotReviewedGroupedByType } from '../fn/page/count-not-reviewed-gro
 import { CountNotReviewedGroupedByType$Params } from '../fn/page/count-not-reviewed-grouped-by-type';
 import { findPageReviewById } from '../fn/page/find-page-review-by-id';
 import { FindPageReviewById$Params } from '../fn/page/find-page-review-by-id';
+import { findPageTitlesToReviewByCustomType } from '../fn/page/find-page-titles-to-review-by-custom-type';
+import { FindPageTitlesToReviewByCustomType$Params } from '../fn/page/find-page-titles-to-review-by-custom-type';
 import { findRandomPageWithReplacements } from '../fn/page/find-random-page-with-replacements';
 import { FindRandomPageWithReplacements$Params } from '../fn/page/find-random-page-with-replacements';
 import { KindCount } from '../models/kind-count';
 import { listPageTitlesNotReviewedByType } from '../fn/page/list-page-titles-not-reviewed-by-type';
 import { ListPageTitlesNotReviewedByType$Params } from '../fn/page/list-page-titles-not-reviewed-by-type';
 import { Page } from '../models/page';
+import { PageTitle } from '../models/page-title';
 import { reviewPagesByType } from '../fn/page/review-pages-by-type';
 import { ReviewPagesByType$Params } from '../fn/page/review-pages-by-type';
 import { saveReview } from '../fn/page/save-review';
@@ -225,6 +228,39 @@ export class PageApiService extends BaseService {
   findRandomPageWithReplacements(params?: FindRandomPageWithReplacements$Params, context?: HttpContext): Observable<Page> {
     return this.findRandomPageWithReplacements$Response(params, context).pipe(
       map((r: StrictHttpResponse<Page>): Page => r.body)
+    );
+  }
+
+  /** Path part for operation `findPageTitlesToReviewByCustomType()` */
+  static readonly FindPageTitlesToReviewByCustomTypePath = '/api/page/custom';
+
+  /**
+   * Find a random page and the replacements to review.
+   *
+   *
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `findPageTitlesToReviewByCustomType()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  findPageTitlesToReviewByCustomType$Response(params?: FindPageTitlesToReviewByCustomType$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<PageTitle>>> {
+    return findPageTitlesToReviewByCustomType(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * Find a random page and the replacements to review.
+   *
+   *
+   *
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `findPageTitlesToReviewByCustomType$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  findPageTitlesToReviewByCustomType(params?: FindPageTitlesToReviewByCustomType$Params, context?: HttpContext): Observable<Array<PageTitle>> {
+    return this.findPageTitlesToReviewByCustomType$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Array<PageTitle>>): Array<PageTitle> => r.body)
     );
   }
 

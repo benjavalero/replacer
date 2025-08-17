@@ -1,6 +1,7 @@
 package es.bvalero.replacer.review;
 
 import es.bvalero.replacer.common.domain.PageKey;
+import es.bvalero.replacer.common.domain.PageTitle;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.CustomReplacementFindApi;
 import es.bvalero.replacer.finder.CustomType;
@@ -15,6 +16,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.Setter;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.TestOnly;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -70,11 +72,7 @@ class ReviewCustomFinder extends ReviewFinder {
         // Make it out of the loop as we are not taking into account the offset for this
         Collection<Integer> reviewedIds = searchResult.isEmpty()
             ? Collections.emptyList()
-            : customRepository
-                .findPagesReviewed(lang, options.getCustomType())
-                .stream()
-                .map(PageKey::getPageId)
-                .toList();
+            : findReviewedPageIds(options);
 
         while (totalToReview >= 0) {
             // Discard the pages already reviewed
@@ -90,9 +88,7 @@ class ReviewCustomFinder extends ReviewFinder {
             // Also discard the pages not containing the custom replacement according to the rules of the tool.
             // For that, we retrieve the potential custom replacements in the pages found by the Wikipedia search.
             try {
-                final List<PageKey> keys = pageIds.stream().map(id -> PageKey.of(lang, id)).toList();
-                final Collection<WikipediaPage> pages = wikipediaPageRepository.findByKeys(keys);
-                for (WikipediaPage page : pages) {
+                for (WikipediaPage page : findWikipediaPagesById(lang, pageIds)) {
                     final Collection<Replacement> customReplacements = findCustomReplacements(page, options);
                     if (customReplacements.isEmpty()) {
                         pageIds.remove(page.getPageKey().getPageId());
@@ -148,6 +144,21 @@ class ReviewCustomFinder extends ReviewFinder {
         return wikipediaPageRepository.findByContent(searchRequest);
     }
 
+    private Collection<Integer> findReviewedPageIds(ReviewOptions options) {
+        WikipediaLanguage lang = options.getUser().getId().getLang();
+        return customRepository
+            .findPagesReviewed(lang, options.getCustomType())
+            .stream()
+            .map(PageKey::getPageId)
+            .toList();
+    }
+
+    private Collection<WikipediaPage> findWikipediaPagesById(WikipediaLanguage lang, Collection<Integer> pageIds)
+        throws WikipediaException {
+        final List<PageKey> keys = pageIds.stream().map(id -> PageKey.of(lang, id)).toList();
+        return wikipediaPageRepository.findByKeys(keys);
+    }
+
     private Collection<Replacement> findCustomReplacements(WikipediaPage page, ReviewOptions options) {
         return customReplacementFindApi.findCustomReplacements(
             FinderPage.of(page),
@@ -178,5 +189,21 @@ class ReviewCustomFinder extends ReviewFinder {
         }
 
         return merged;
+    }
+
+    @SneakyThrows
+    @Override
+    public Collection<PageTitle> findPageTitlesToReviewByType(ReviewOptions options) {
+        // We use the same approach that for finding a review,
+        // i.e. search all the results and then discard the ones not to review.
+        final WikipediaLanguage lang = options.getUser().getId().getLang();
+        final WikipediaSearchResult searchResult = findWikipediaResults(options, 0);
+        final Set<Integer> pageIds = new HashSet<>(searchResult.getPageIds());
+        findReviewedPageIds(options).forEach(pageIds::remove);
+        return findWikipediaPagesById(lang, pageIds)
+            .stream()
+            .filter(page -> !findCustomReplacements(page, options).isEmpty())
+            .map(page -> PageTitle.of(page.getPageKey().getPageId(), page.getTitle()))
+            .toList();
     }
 }

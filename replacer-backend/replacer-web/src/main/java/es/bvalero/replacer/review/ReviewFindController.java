@@ -1,12 +1,15 @@
 package es.bvalero.replacer.review;
 
 import es.bvalero.replacer.common.domain.PageKey;
+import es.bvalero.replacer.common.domain.PageTitle;
 import es.bvalero.replacer.common.domain.User;
 import es.bvalero.replacer.common.resolver.AuthenticatedUser;
+import es.bvalero.replacer.finder.ReplacementKind;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import java.util.Collection;
 import java.util.Objects;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
@@ -86,5 +89,18 @@ class ReviewFindController {
             LOGGER.info("END Find Random Page with Replacements: No Review");
             return ResponseEntity.noContent().build();
         }
+    }
+
+    @Operation(summary = "Find a random page and the replacements to review")
+    @GetMapping(value = "/custom")
+    Collection<PageTitle> findPageTitlesToReviewByCustomType(
+        @AuthenticatedUser User user,
+        @Valid ReviewOptionsDto optionsDto
+    ) {
+        ReviewOptions options = ReviewMapper.fromDto(optionsDto, user);
+        assert options.getKind() == ReplacementKind.CUSTOM;
+        Collection<PageTitle> pageTitles = reviewCustomFinder.findPageTitlesToReviewByType(options);
+        LOGGER.info("GET Find Page Titles to Review by Custom Type: {} - {} items", optionsDto, pageTitles.size());
+        return pageTitles;
     }
 }

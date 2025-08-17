@@ -4,6 +4,7 @@ export { DumpStatus } from './models/dump-status';
 export { KindCount } from './models/kind-count';
 export { Page } from './models/page';
 export { PageCount } from './models/page-count';
+export { PageTitle } from './models/page-title';
 export { Replacement } from './models/replacement';
 export { ReplacementCount } from './models/replacement-count';
 export { ReplacementType } from './models/replacement-type';

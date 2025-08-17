@@ -1,6 +1,8 @@
 package es.bvalero.replacer.review;
 
 import es.bvalero.replacer.common.domain.PageKey;
+import es.bvalero.replacer.common.domain.PageTitle;
+import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.StandardType;
 import es.bvalero.replacer.index.PageIndexApi;
@@ -100,5 +102,11 @@ class ReviewTypeFinder extends ReviewFinder {
         }
 
         return replacements;
+    }
+
+    @Override
+    public Collection<PageTitle> findPageTitlesToReviewByType(ReviewOptions options) {
+        WikipediaLanguage lang = options.getUser().getId().getLang();
+        return pageRepository.findTitlesNotReviewedByType(lang, options.getStandardType());
     }
 }

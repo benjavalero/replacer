@@ -1,6 +1,7 @@
 package es.bvalero.replacer.review;
 
 import es.bvalero.replacer.common.domain.PageKey;
+import es.bvalero.replacer.common.domain.PageTitle;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.index.PageIndexApi;
@@ -10,6 +11,7 @@ import es.bvalero.replacer.page.PageSaveRepository;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
 import es.bvalero.replacer.wikipedia.WikipediaPageRepository;
 import java.util.Collection;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
@@ -56,5 +58,10 @@ class ReviewNoTypeFinder extends ReviewFinder {
     ) {
         // No decoration by default
         return replacements;
+    }
+
+    @Override
+    public Collection<PageTitle> findPageTitlesToReviewByType(ReviewOptions options) {
+        throw new UnsupportedOperationException();
     }
 }
