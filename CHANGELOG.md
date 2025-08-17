@@ -1,5 +1,8 @@
 # Versions
 
+## 2.31.0 (17 Aug 2025)
+- Feat: list pages to review in case the user has not rights for custom replacements
+
 ## 2.30.2 (11 Aug 2025)
 - Fix: improve handling issues when applying recursive cosmetics
 - Fix: don't fail when forcing index of a type with no results
