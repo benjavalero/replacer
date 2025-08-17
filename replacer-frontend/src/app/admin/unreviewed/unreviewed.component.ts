@@ -2,9 +2,9 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { Observable } from 'rxjs';
-import { UserConfigService } from '../../core/services/user-config.service';
 import { PageCount } from '../../api/models/page-count';
 import { ReplacementApiService } from '../../api/services/replacement-api.service';
+import { UserConfigService } from '../../core/services/user-config.service';
 
 @Component({
   standalone: true,

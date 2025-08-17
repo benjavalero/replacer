@@ -4,6 +4,7 @@ import { UnreviewedComponent } from './admin/unreviewed/unreviewed.component';
 import { DashboardComponent } from './core/dashboard/dashboard.component';
 import { OAuthResponseComponent } from './core/dashboard/oauth-response/oauth-response.component';
 import { authenticationGuard } from './core/guards/authentication.guard';
+import { CustomPageListComponent } from './review/page/custom-page-list/custom-page-list.component';
 import { FindCustomComponent } from './review/page/find-custom.component';
 import { FindRandomComponent } from './review/page/find-random.component';
 import { ReplacementListComponent } from './review/replacement-list/replacement-list.component';
@@ -41,6 +42,7 @@ export const routes: Routes = [
       { path: 'custom/:subtype/:suggestion/:cs', component: FindRandomComponent },
       { path: 'custom/:subtype/:suggestion/:cs/:id', component: FindRandomComponent },
       { path: 'list', component: ReplacementListComponent },
+      { path: 'list/:subtype/:suggestion/:cs', component: CustomPageListComponent },
       { path: ':kind/:subtype', component: FindRandomComponent },
       { path: ':kind/:subtype/:id', component: FindRandomComponent }
     ]

@@ -25,7 +25,7 @@ export const kindLabel: { [key: number]: string } = {
 @Component({
   standalone: true,
   selector: 'app-find-random',
-  imports: [CommonModule, EditPageComponent, ExistingCustomComponent, AlertComponent],
+  imports: [CommonModule, EditPageComponent, AlertComponent],
   templateUrl: './find-random.component.html',
   styleUrls: []
 })
@@ -35,8 +35,6 @@ export class FindRandomComponent implements OnInit {
   numPending: number = 0;
 
   displayCustomWarning: boolean = false;
-  /* Maximum number of occurrences allowed for a custom replacement */
-  maxCustomOccurrences = 50;
 
   constructor(
     private alertService: AlertService,
@@ -55,7 +53,6 @@ export class FindRandomComponent implements OnInit {
 
   ngOnInit() {
     // Optional search options
-    const idParam = this.route.snapshot.paramMap.get('id');
     const kindParam = this.route.snapshot.paramMap.get('kind');
     const subtypeParam = this.route.snapshot.paramMap.get('subtype');
     const suggestionParam = this.route.snapshot.paramMap.get('suggestion');
@@ -78,16 +75,27 @@ export class FindRandomComponent implements OnInit {
     }
     this.options = options;
 
+    // If they type is custom, first of all we check if it is an existing standard one.
+    if (this.isCustomType(options)) {
+      this.validateExistingReplacement(options);
+    }
+
+    this.handleOptions(options);
+  }
+
+  private handleOptions(options: ReviewOptions): void {
+    const idParam = this.route.snapshot.paramMap.get('id');
     if (idParam !== null) {
       this.findPageReview(+idParam, options);
-    } else if (this.isCustomType(options)) {
-      this.validateExistingReplacement(options);
     } else {
       this.findRandomPage(options);
     }
   }
 
   private findRandomPage(options: ReviewOptions): void {
+    this.alertService.clearAlertMessages();
+    this.checkCustomReplacementRights(options);
+
     const msg =
       options.kind && options.subtype
         ? `Buscando artículo aleatorio de tipo «${this.getKindLabel(options.kind)} - ${options.subtype}»…`
@@ -100,10 +108,10 @@ export class FindRandomComponent implements OnInit {
       next: (response: StrictHttpResponse<Page>) => {
         const page: Page | null = response.body;
         this.numPending = Number(response.headers.get('X-Pagination-Total-Pages') ?? '0');
-        if (this.hasCustomReplacementManyOccurrences(options, this.numPending)) {
-          this.alertService.clearAlertMessages();
+        if (this.isCustomType(options)) {
           this.displayCustomWarning = true;
-        } else if (page !== null) {
+        }
+        if (page !== null) {
           this.manageReview(page, options);
         } else {
           this.alertService.addWarningMessage(
@@ -120,15 +128,25 @@ export class FindRandomComponent implements OnInit {
     return kindLabel[kind];
   }
 
+  private checkCustomReplacementRights(options: ReviewOptions): void {
+    if (!this.canUseCustomReplacement(options)) {
+      const path: string = `/review/list/${options.subtype}/${options.suggestion}/${options.cs}`;
+      this.router.navigate([path]);
+    }
+  }
+
   private findPageReview(pageId: number, options: ReviewOptions): void {
+    this.checkCustomReplacementRights(options);
+
     this.pageApiService.findPageReviewById$Response({ ...options, id: pageId }).subscribe({
       next: (response: StrictHttpResponse<Page>) => {
         const page: Page | null = response.body;
         this.numPending = Number(response.headers.get('X-Pagination-Total-Pages') ?? '0');
-        if (this.hasCustomReplacementManyOccurrences(options, this.numPending)) {
+        if (this.isCustomType(options)) {
           this.alertService.clearAlertMessages();
           this.displayCustomWarning = true;
-        } else if (page) {
+        }
+        if (page) {
           this.manageReview(page, options);
         } else {
           // This alert will be short as it will be cleared on redirecting to next page
@@ -201,7 +219,7 @@ export class FindRandomComponent implements OnInit {
             this.router.navigate([this.getReviewUrl(replacementType as ReviewOptions, null)]);
           });
         } else {
-          this.findRandomPage(options);
+          this.handleOptions(options);
         }
       });
   }
@@ -213,8 +231,9 @@ export class FindRandomComponent implements OnInit {
     return modalRef.result;
   }
 
-  private hasCustomReplacementManyOccurrences(options: ReviewOptions, numPending: number): boolean {
+  private canUseCustomReplacement(options: ReviewOptions): boolean {
     const isSpecialUser: boolean = this.userService.isSpecialUser();
-    return this.isCustomType(options) && numPending > this.maxCustomOccurrences && !isSpecialUser;
+    const isBotUser: boolean = this.userService.isBotUser();
+    return this.isCustomType(options) && (isSpecialUser || isBotUser);
   }
 }
