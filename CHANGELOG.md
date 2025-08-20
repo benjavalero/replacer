@@ -1,5 +1,8 @@
 # Versions
 
+## 2.31.1 (??)
+- Fix: unexpected redirection to custom from standard review
+
 ## 2.31.0 (17 Aug 2025)
 - Feat: list pages to review in case the user has not rights for custom replacements
 

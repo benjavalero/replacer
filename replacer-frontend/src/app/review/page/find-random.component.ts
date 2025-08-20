@@ -129,7 +129,7 @@ export class FindRandomComponent implements OnInit {
   }
 
   private checkCustomReplacementRights(options: ReviewOptions): void {
-    if (!this.canUseCustomReplacement(options)) {
+    if (this.isCustomType(options) && !this.canUseCustomReplacement()) {
       const path: string = `/review/list/${options.subtype}/${options.suggestion}/${options.cs}`;
       this.router.navigate([path]);
     }
@@ -231,9 +231,9 @@ export class FindRandomComponent implements OnInit {
     return modalRef.result;
   }
 
-  private canUseCustomReplacement(options: ReviewOptions): boolean {
+  private canUseCustomReplacement(): boolean {
     const isSpecialUser: boolean = this.userService.isSpecialUser();
     const isBotUser: boolean = this.userService.isBotUser();
-    return this.isCustomType(options) && (isSpecialUser || isBotUser);
+    return isSpecialUser || isBotUser;
   }
 }
