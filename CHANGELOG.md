@@ -1,5 +1,8 @@
 # Versions
 
+## 2.31.2 (??)
+- Feat: parse a collection of pages from Wikipedia response as a stream to avoid memory issues
+
 ## 2.31.1 (20 Aug 2025)
 - Fix: unexpected redirection to custom from standard review
 

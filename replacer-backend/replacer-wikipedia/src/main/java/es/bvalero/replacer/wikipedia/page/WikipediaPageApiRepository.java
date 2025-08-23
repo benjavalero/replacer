@@ -49,25 +49,30 @@ public class WikipediaPageApiRepository implements WikipediaPageRepository {
             .lang(lang)
             .params(buildPageIdsRequestParams("titles", pageTitle))
             .build();
-        WikipediaApiResponse apiResponse = wikipediaApiHelper.executeApiRequest(apiRequest);
         // Return the only value that should be in the map
-        return extractPagesFromJson(apiResponse, lang).stream().findAny();
+        return convertWikipediaPageResponse(lang, wikipediaApiHelper.executeApiRequestAsText(apiRequest)).findAny();
+    }
+
+    private Stream<WikipediaPage> convertWikipediaPageResponse(WikipediaLanguage lang, String apiResponse) {
+        return WikipediaJsonParser.parse(lang, apiResponse)
+            .filter(wp -> !wp.isMissing())
+            .filter(wp -> !wp.isProtected());
     }
 
     @Override
     public Optional<WikipediaPage> findByKey(PageKey pageKey) {
         // Return the only value that should be in the map
         try {
-            return findByKeys(List.of(pageKey)).stream().findAny();
+            return findByKeys(List.of(pageKey)).findAny();
         } catch (WikipediaException e) {
             return Optional.empty();
         }
     }
 
     @Override
-    public Collection<WikipediaPage> findByKeys(Collection<PageKey> pageKeys) throws WikipediaException {
+    public Stream<WikipediaPage> findByKeys(Collection<PageKey> pageKeys) throws WikipediaException {
         if (pageKeys.isEmpty()) {
-            return Collections.emptyList();
+            return Stream.empty();
         }
 
         // We assume all requested pages share the same language
@@ -79,23 +84,23 @@ public class WikipediaPageApiRepository implements WikipediaPageRepository {
         }
         WikipediaLanguage lang = keyLangs.get(0);
 
-        List<WikipediaPage> pages = new ArrayList<>(pageKeys.size());
+        Stream<WikipediaPage> pages = Stream.of();
         // There is a maximum number of pages to request
         // We split the request in several sub-lists
         List<Integer> idList = pageKeys.stream().map(PageKey::getPageId).toList();
         int start = 0;
         while (start < idList.size()) {
             List<Integer> subList = idList.subList(start, start + Math.min(idList.size() - start, MAX_PAGES_REQUESTED));
-            pages.addAll(getPagesByIds(lang, subList));
+            pages = Stream.concat(pages, getPagesByIds(lang, subList));
             start += subList.size();
         }
         return pages;
     }
 
-    private Collection<WikipediaPage> getPagesByIds(WikipediaLanguage lang, List<Integer> pageIds)
+    private Stream<WikipediaPage> getPagesByIds(WikipediaLanguage lang, List<Integer> pageIds)
         throws WikipediaException {
         if (pageIds.isEmpty()) {
-            return Collections.emptyList();
+            return Stream.empty();
         }
 
         try {
@@ -105,16 +110,15 @@ public class WikipediaPageApiRepository implements WikipediaPageRepository {
                 .lang(lang)
                 .params(buildPageIdsRequestParams("pageids", pagesValue))
                 .build();
-            WikipediaApiResponse apiResponse = wikipediaApiHelper.executeApiRequest(apiRequest);
-            return extractPagesFromJson(apiResponse, lang);
+            return convertWikipediaPageResponse(lang, wikipediaApiHelper.executeApiRequestAsText(apiRequest));
         } catch (OutOfMemoryError e) {
             // Sometimes (though rarely) the retrieved pages are huge (e.g. annexes) and throw an out-of-memory error
             // Retry recursively with smaller chunks
             LOGGER.warn("Out-of-memory when retrieving pages by ID: {}", StringUtils.join(pageIds, SPACE));
             int half = pageIds.size() / 2;
-            Collection<WikipediaPage> result1 = getPagesByIds(lang, pageIds.subList(0, half));
-            Collection<WikipediaPage> result2 = getPagesByIds(lang, pageIds.subList(half, pageIds.size()));
-            return Stream.concat(result1.stream(), result2.stream()).toList();
+            Stream<WikipediaPage> result1 = getPagesByIds(lang, pageIds.subList(0, half));
+            Stream<WikipediaPage> result2 = getPagesByIds(lang, pageIds.subList(half, pageIds.size()));
+            return Stream.concat(result1, result2);
         } catch (Exception e) {
             LOGGER.error("Error finding pages by ID: {}", StringUtils.join(pageIds, SPACE), e);
             throw new WikipediaException(e);
@@ -131,31 +135,6 @@ public class WikipediaPageApiRepository implements WikipediaPageRepository {
         params.put(pagesParam, pagesValue);
         params.put("curtimestamp", "true");
         return params;
-    }
-
-    private Collection<WikipediaPage> extractPagesFromJson(WikipediaApiResponse response, WikipediaLanguage lang) {
-        // Query timestamp
-        String curtimestamp = response.getCurtimestamp();
-        return response
-            .getQuery()
-            .getPages()
-            .stream()
-            .filter(page -> !page.isMissing())
-            .filter(page -> !page.isProtected())
-            .map(page -> convert(page, lang, curtimestamp))
-            .toList();
-    }
-
-    private WikipediaPage convert(WikipediaApiResponse.Page page, WikipediaLanguage lang, String curtimestamp) {
-        return WikipediaPage.builder()
-            .pageKey(PageKey.of(lang, page.getPageid()))
-            .namespace(WikipediaNamespace.valueOf(page.getNs()))
-            .title(page.getTitle())
-            .content(page.getRevisions().stream().findFirst().orElseThrow().getSlots().getMain().getContent())
-            .lastUpdate(WikipediaTimestamp.of(page.getRevisions().stream().findFirst().orElseThrow().getTimestamp()))
-            .queryTimestamp(WikipediaTimestamp.of(curtimestamp))
-            .redirect(page.isRedirect())
-            .build();
     }
 
     @Override
@@ -215,14 +194,13 @@ public class WikipediaPageApiRepository implements WikipediaPageRepository {
     public Optional<WikipediaPage> findPageSection(WikipediaSection section) {
         try {
             PageKey pageKey = section.getPageKey();
+            WikipediaLanguage lang = pageKey.getLang();
             WikipediaApiRequest apiRequest = WikipediaApiRequest.builder()
                 .verb(WikipediaApiVerb.GET)
-                .lang(pageKey.getLang())
+                .lang(lang)
                 .params(buildPageIdsAndSectionRequestParams(pageKey.getPageId(), section.getIndex()))
                 .build();
-            WikipediaApiResponse apiResponse = wikipediaApiHelper.executeApiRequest(apiRequest);
-            Collection<WikipediaPage> pages = extractPagesFromJson(apiResponse, pageKey.getLang());
-            return pages.stream().findAny();
+            return convertWikipediaPageResponse(lang, wikipediaApiHelper.executeApiRequestAsText(apiRequest)).findAny();
         } catch (WikipediaException e) {
             LOGGER.error("Error getting page section: {}", section, e);
             return Optional.empty();

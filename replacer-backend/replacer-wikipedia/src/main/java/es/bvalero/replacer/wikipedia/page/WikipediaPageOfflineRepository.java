@@ -8,6 +8,7 @@ import es.bvalero.replacer.wikipedia.*;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
@@ -46,8 +47,8 @@ class WikipediaPageOfflineRepository implements WikipediaPageRepository {
     }
 
     @Override
-    public Collection<WikipediaPage> findByKeys(Collection<PageKey> pageKeys) {
-        return pageKeys.stream().map(this::findByKey).filter(Optional::isPresent).map(Optional::get).toList();
+    public Stream<WikipediaPage> findByKeys(Collection<PageKey> pageKeys) {
+        return pageKeys.stream().map(this::findByKey).filter(Optional::isPresent).map(Optional::get);
     }
 
     @Override

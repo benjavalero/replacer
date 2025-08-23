@@ -6,9 +6,9 @@ import es.bvalero.replacer.JsonMapperConfiguration;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.LinkedHashMap;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 import lombok.experimental.UtilityClass;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.Nullable;
@@ -120,6 +120,17 @@ public class ReplacerUtils {
             map.put(objs[i].toString(), objs[i + 1]);
         }
         return toJson(map);
+    }
+
+    //endregion
+
+    //region Logging Utils
+
+    public <T> Stream<T> streamOfIterable(Iterable<T> iterable) {
+        return StreamSupport.stream(
+            Spliterators.spliteratorUnknownSize(iterable.iterator(), Spliterator.ORDERED),
+            false
+        );
     }
     //endregion
 }

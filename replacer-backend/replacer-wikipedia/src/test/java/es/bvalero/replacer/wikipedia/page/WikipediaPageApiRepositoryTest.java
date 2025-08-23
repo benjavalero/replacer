@@ -73,8 +73,7 @@ class WikipediaPageApiRepositoryTest {
                 }
             }
             """;
-        WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
-        when(wikipediaApiHelper.executeApiRequest(any(WikipediaApiRequest.class))).thenReturn(response);
+        when(wikipediaApiHelper.executeApiRequestAsText(any(WikipediaApiRequest.class))).thenReturn(textResponse);
 
         int pageId = 6219990;
         String title = "Usuario:Benjavalero";
@@ -127,8 +126,7 @@ class WikipediaPageApiRepositoryTest {
                 }
             }
             """;
-        WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
-        when(wikipediaApiHelper.executeApiRequest(any(WikipediaApiRequest.class))).thenReturn(response);
+        when(wikipediaApiHelper.executeApiRequestAsText(any(WikipediaApiRequest.class))).thenReturn(textResponse);
 
         PageKey pageKey = PageKey.of(WikipediaLanguage.SPANISH, 6219990);
         String title = "Usuario:Benjavalero";
@@ -203,13 +201,12 @@ class WikipediaPageApiRepositoryTest {
                 }
             }
             """;
-        WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
-        when(wikipediaApiHelper.executeApiRequest(any(WikipediaApiRequest.class))).thenReturn(response);
+        when(wikipediaApiHelper.executeApiRequestAsText(any(WikipediaApiRequest.class))).thenReturn(textResponse);
 
         WikipediaLanguage lang = WikipediaLanguage.SPANISH;
-        Collection<WikipediaPage> pages = wikipediaPageRepository.findByKeys(
-            List.of(PageKey.of(lang, 6219990), PageKey.of(lang, 6903884))
-        );
+        Collection<WikipediaPage> pages = wikipediaPageRepository
+            .findByKeys(List.of(PageKey.of(lang, 6219990), PageKey.of(lang, 6903884)))
+            .toList();
         assertNotNull(pages);
         assertEquals(2, pages.size());
         assertTrue(pages.stream().anyMatch(page -> page.getPageId() == 6219990));
@@ -257,8 +254,7 @@ class WikipediaPageApiRepositoryTest {
                 }
             }
             """;
-        WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
-        when(wikipediaApiHelper.executeApiRequest(any(WikipediaApiRequest.class))).thenReturn(response);
+        when(wikipediaApiHelper.executeApiRequestAsText(any(WikipediaApiRequest.class))).thenReturn(textResponse);
 
         assertFalse(
             wikipediaPageRepository.findByTitle(WikipediaLanguage.SPANISH, "Usuario:Benjavaleroxx").isPresent()
@@ -320,8 +316,7 @@ class WikipediaPageApiRepositoryTest {
                 }
             }
             """;
-        WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
-        when(wikipediaApiHelper.executeApiRequest(any(WikipediaApiRequest.class))).thenReturn(response);
+        when(wikipediaApiHelper.executeApiRequestAsText(any(WikipediaApiRequest.class))).thenReturn(textResponse);
 
         assertFalse(wikipediaPageRepository.findByTitle(WikipediaLanguage.SPANISH, "Getxo").isPresent());
     }
@@ -652,8 +647,7 @@ class WikipediaPageApiRepositoryTest {
                 }
             }
             """;
-        WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
-        when(wikipediaApiHelper.executeApiRequest(any(WikipediaApiRequest.class))).thenReturn(response);
+        when(wikipediaApiHelper.executeApiRequestAsText(any(WikipediaApiRequest.class))).thenReturn(textResponse);
 
         PageKey pageKey = PageKey.of(WikipediaLanguage.getDefault(), 6903884);
         int sectionId = 1;

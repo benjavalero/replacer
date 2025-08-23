@@ -13,6 +13,7 @@ import es.bvalero.replacer.page.PageSaveRepository;
 import es.bvalero.replacer.replacement.CustomRepository;
 import es.bvalero.replacer.wikipedia.*;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.Setter;
@@ -65,7 +66,7 @@ class ReviewCustomFinder extends ReviewFinder {
 
         final WikipediaSearchResult searchResult = findWikipediaResults(options, offset);
         final int totalWikipediaResults = searchResult.getTotal();
-        int totalToReview = searchResult.getTotal();
+        final AtomicInteger totalToReview = new AtomicInteger(searchResult.getTotal());
         final Set<Integer> pageIds = new HashSet<>(searchResult.getPageIds());
 
         // Find all the pages already reviewed for this custom replacement
@@ -74,13 +75,13 @@ class ReviewCustomFinder extends ReviewFinder {
             ? Collections.emptyList()
             : findReviewedPageIds(options);
 
-        while (totalToReview >= 0) {
+        while (totalToReview.get() >= 0) {
             // Discard the pages already reviewed
             // For the moment we don't check the positions of the replacements,
             // which means that once a custom replacement is reviewed for a page it is done forever.
             for (Integer reviewId : reviewedIds) {
                 if (pageIds.remove(reviewId)) {
-                    totalToReview--;
+                    totalToReview.decrementAndGet();
                 }
             }
             LOGGER.debug("After discarding reviewed: {}", totalToReview);
@@ -88,13 +89,13 @@ class ReviewCustomFinder extends ReviewFinder {
             // Also discard the pages not containing the custom replacement according to the rules of the tool.
             // For that, we retrieve the potential custom replacements in the pages found by the Wikipedia search.
             try {
-                for (WikipediaPage page : findWikipediaPagesById(lang, pageIds)) {
+                findWikipediaPagesById(lang, pageIds).forEach(page -> {
                     final Collection<Replacement> customReplacements = findCustomReplacements(page, options);
                     if (customReplacements.isEmpty()) {
                         pageIds.remove(page.getPageKey().getPageId());
-                        totalToReview--;
+                        totalToReview.decrementAndGet();
                     }
-                }
+                });
             } catch (WikipediaException e) {
                 // Do nothing, simply we don't discard in case we cannot retrieve the pages.
             }
@@ -119,7 +120,7 @@ class ReviewCustomFinder extends ReviewFinder {
                 // Note that the total returned is an estimation, but it is not worth to check all the results.
                 // E.g. The initial search returns 1000 results. We check the first 500 and discard 498.
                 // This method will return 2 pages and a total of 502. Maybe the rest of pages can be discarded or not.
-                return PageSearchResult.of(totalToReview, pageKeys, nextOffset);
+                return PageSearchResult.of(totalToReview.get(), pageKeys, nextOffset);
             }
         }
 
@@ -153,7 +154,7 @@ class ReviewCustomFinder extends ReviewFinder {
             .toList();
     }
 
-    private Collection<WikipediaPage> findWikipediaPagesById(WikipediaLanguage lang, Collection<Integer> pageIds)
+    private Stream<WikipediaPage> findWikipediaPagesById(WikipediaLanguage lang, Collection<Integer> pageIds)
         throws WikipediaException {
         final List<PageKey> keys = pageIds.stream().map(id -> PageKey.of(lang, id)).toList();
         return wikipediaPageRepository.findByKeys(keys);
@@ -201,7 +202,6 @@ class ReviewCustomFinder extends ReviewFinder {
         final Set<Integer> pageIds = new HashSet<>(searchResult.getPageIds());
         findReviewedPageIds(options).forEach(pageIds::remove);
         return findWikipediaPagesById(lang, pageIds)
-            .stream()
             .filter(page -> !findCustomReplacements(page, options).isEmpty())
             .map(page -> PageTitle.of(page.getPageKey().getPageId(), page.getTitle()))
             .toList();

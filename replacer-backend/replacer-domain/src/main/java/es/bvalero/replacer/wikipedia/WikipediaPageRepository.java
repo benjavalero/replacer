@@ -4,6 +4,7 @@ import es.bvalero.replacer.common.domain.PageKey;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import java.util.Collection;
 import java.util.Optional;
+import java.util.stream.Stream;
 import org.jmolecules.architecture.hexagonal.SecondaryPort;
 
 /** Repository to perform operations on Wikipedia pages */
@@ -17,7 +18,7 @@ public interface WikipediaPageRepository {
 
     Optional<WikipediaPage> findByKey(PageKey pageKey);
 
-    Collection<WikipediaPage> findByKeys(Collection<PageKey> pageKeys) throws WikipediaException;
+    Stream<WikipediaPage> findByKeys(Collection<PageKey> pageKeys) throws WikipediaException;
 
     Collection<WikipediaSection> findSectionsInPage(PageKey pageKey);
 

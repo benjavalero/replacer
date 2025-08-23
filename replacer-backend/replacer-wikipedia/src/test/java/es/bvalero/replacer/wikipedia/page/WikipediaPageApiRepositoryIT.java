@@ -47,9 +47,9 @@ class WikipediaPageApiRepositoryIT {
     void testGetPagesContent() throws WikipediaException {
         // We pass a null access token to retrieve an anonymous edit token
         WikipediaLanguage lang = WikipediaLanguage.SPANISH;
-        Collection<WikipediaPage> pages = wikipediaService.findByKeys(
-            List.of(PageKey.of(lang, 6219990), PageKey.of(lang, 6903884))
-        );
+        Collection<WikipediaPage> pages = wikipediaService
+            .findByKeys(List.of(PageKey.of(lang, 6219990), PageKey.of(lang, 6903884)))
+            .toList();
         assertNotNull(pages);
         assertEquals(2, pages.size());
         assertTrue(pages.stream().anyMatch(page -> page.getPageId() == 6219990));

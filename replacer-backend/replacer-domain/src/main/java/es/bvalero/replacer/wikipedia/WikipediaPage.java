@@ -4,6 +4,7 @@ import es.bvalero.replacer.common.domain.PageKey;
 import lombok.Builder;
 import lombok.ToString;
 import lombok.Value;
+import lombok.experimental.Accessors;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.TestOnly;
 import org.springframework.lang.NonNull;
@@ -38,9 +39,20 @@ public class WikipediaPage {
     @NonNull
     WikipediaTimestamp lastUpdate;
 
+    /* If the page is now missing */
+    @ToString.Exclude
+    @Builder.Default
+    boolean missing = false;
+
     /* If the page is considered a redirection page */
     @ToString.Exclude
     boolean redirect;
+
+    /* If the page is protected for librarians */
+    @ToString.Exclude
+    @Accessors(fluent = true)
+    @Builder.Default
+    boolean isProtected = false;
 
     /* Store the timestamp when the page was queried */
     @NonNull

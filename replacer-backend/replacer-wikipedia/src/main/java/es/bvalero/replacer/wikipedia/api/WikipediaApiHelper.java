@@ -33,6 +33,10 @@ public class WikipediaApiHelper {
     }
 
     public WikipediaApiResponse executeApiRequest(WikipediaApiRequest apiRequest) throws WikipediaException {
+        return convert(executeApiRequestAsText(apiRequest));
+    }
+
+    public String executeApiRequestAsText(WikipediaApiRequest apiRequest) throws WikipediaException {
         // Add common parameters to receive a JSON response from Wikipedia API
         WikipediaApiRequest request = apiRequest
             .toBuilder()
@@ -40,8 +44,7 @@ public class WikipediaApiHelper {
             .param("formatversion", "2")
             .build();
 
-        String responseBody = executeMediaWikiRequest(request);
-        return convert(responseBody);
+        return executeMediaWikiRequest(request);
     }
 
     private String executeMediaWikiRequest(WikipediaApiRequest apiRequest) throws WikipediaException {
