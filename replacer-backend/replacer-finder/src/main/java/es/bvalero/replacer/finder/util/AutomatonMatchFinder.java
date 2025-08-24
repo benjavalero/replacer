@@ -2,9 +2,11 @@ package es.bvalero.replacer.finder.util;
 
 import dk.brics.automaton.AutomatonMatcher;
 import dk.brics.automaton.RunAutomaton;
+import es.bvalero.replacer.common.util.ReplacerUtils;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.regex.MatchResult;
+import java.util.stream.Stream;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 
@@ -13,8 +15,8 @@ public class AutomatonMatchFinder {
 
     // As it returns directly the regex matches, we cannot use it in a loop.
 
-    public static Iterable<MatchResult> find(String text, RunAutomaton automaton) {
-        return () -> new AutomatonIterator(text, automaton);
+    public static Stream<MatchResult> find(String text, RunAutomaton automaton) {
+        return ReplacerUtils.streamOfIterable(() -> new AutomatonIterator(text, automaton));
     }
 
     private static class AutomatonIterator implements Iterator<MatchResult> {

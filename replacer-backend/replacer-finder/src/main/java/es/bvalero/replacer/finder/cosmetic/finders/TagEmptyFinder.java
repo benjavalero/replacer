@@ -8,6 +8,7 @@ import es.bvalero.replacer.finder.util.RegexMatchFinder;
 import java.util.Set;
 import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 import org.intellij.lang.annotations.RegExp;
 import org.springframework.stereotype.Component;
 
@@ -35,7 +36,7 @@ class TagEmptyFinder implements CosmeticFinder {
     );
 
     @Override
-    public Iterable<MatchResult> findMatchResults(FinderPage page) {
+    public Stream<MatchResult> findMatchResults(FinderPage page) {
         return RegexMatchFinder.find(page.getContent(), PATTERN_TAG_EMPTY);
     }
 

@@ -12,6 +12,7 @@ import es.bvalero.replacer.finder.util.FinderUtils;
 import jakarta.annotation.PostConstruct;
 import java.util.*;
 import java.util.regex.MatchResult;
+import java.util.stream.Stream;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
@@ -61,12 +62,12 @@ class LinkFinder extends ImmutableCheckedFinder {
     }
 
     @Override
-    public Iterable<MatchResult> findMatchResults(FinderPage page) {
+    public Stream<MatchResult> findMatchResults(FinderPage page) {
         final List<MatchResult> immutables = new ArrayList<>(100);
         for (MatchResult template : FinderUtils.findAllStructures(page, START_LINK, END_LINK)) {
             immutables.addAll(findImmutable(template, page));
         }
-        return immutables;
+        return immutables.stream();
     }
 
     private List<MatchResult> findImmutable(MatchResult link, FinderPage page) {

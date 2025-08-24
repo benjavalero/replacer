@@ -13,6 +13,7 @@ import es.bvalero.replacer.finder.util.LinearMatchFinder;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.MatchResult;
+import java.util.stream.Stream;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
@@ -32,7 +33,7 @@ class DegreeFinder implements ReplacementFinder {
     private static final char SPACE = ' ';
 
     @Override
-    public Iterable<MatchResult> findMatchResults(FinderPage page) {
+    public Stream<MatchResult> findMatchResults(FinderPage page) {
         // The performance is about 5x better than an automaton approach
         // Using an automaton or Aho-Corasick to capture the degree symbols is 3x slower
         return LinearMatchFinder.find(page, this::findDegree);

@@ -178,7 +178,7 @@ class ReviewCustomFinder extends ReviewFinder {
         // Add the custom replacements to the standard ones preferring the custom ones
         // Return the merged collection as a TreeSet to keep the order and discard duplicates
         // We also check there are no replacements containing others
-        Collection<Replacement> merged = Stream.of(customReplacements, replacements)
+        SortedSet<Replacement> merged = Stream.of(customReplacements, replacements)
             .flatMap(Collection::stream)
             .collect(Collectors.toCollection(TreeSet::new));
         Replacement.removeNested(merged);

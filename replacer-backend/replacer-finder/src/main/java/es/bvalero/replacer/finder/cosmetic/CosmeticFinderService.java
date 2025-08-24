@@ -31,7 +31,7 @@ class CosmeticFinderService implements FinderService<Cosmetic>, CosmeticApi {
     }
 
     @Override
-    public Iterable<Finder<Cosmetic>> getFinders() {
+    public Collection<Finder<Cosmetic>> getFinders() {
         return new ArrayList<>(cosmeticFinders);
     }
 

@@ -6,9 +6,9 @@ import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.ReplacementFindApi;
 import es.bvalero.replacer.page.IndexedPage;
 import es.bvalero.replacer.page.PageSaveRepository;
-import java.util.Collection;
 import java.util.Optional;
 import java.util.Set;
+import java.util.SortedSet;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
@@ -65,7 +65,7 @@ abstract class PageIndexAbstractService {
 
     // This method can be overridden in case we want to avoid calculating the replacements under some circumstances
     PageIndexResult indexPage(IndexablePage indexablePage, @Nullable IndexedPage dbPage) {
-        final Collection<Replacement> replacements = replacementFindApi.findReplacements(indexablePage.toFinderPage());
+        final SortedSet<Replacement> replacements = replacementFindApi.findReplacements(indexablePage.toFinderPage());
 
         final IndexedPage result = pageComparator.indexPageReplacements(indexablePage, replacements, dbPage);
         if (result.isPageToSave()) {

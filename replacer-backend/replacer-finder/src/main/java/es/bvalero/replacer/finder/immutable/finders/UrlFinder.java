@@ -8,6 +8,7 @@ import es.bvalero.replacer.finder.FinderPriority;
 import es.bvalero.replacer.finder.immutable.ImmutableFinder;
 import es.bvalero.replacer.finder.util.AutomatonMatchFinder;
 import java.util.regex.MatchResult;
+import java.util.stream.Stream;
 import org.springframework.stereotype.Component;
 
 /**
@@ -25,7 +26,7 @@ class UrlFinder implements ImmutableFinder {
     );
 
     @Override
-    public Iterable<MatchResult> findMatchResults(FinderPage page) {
+    public Stream<MatchResult> findMatchResults(FinderPage page) {
         return AutomatonMatchFinder.find(page.getContent(), AUTOMATON_URL);
     }
 

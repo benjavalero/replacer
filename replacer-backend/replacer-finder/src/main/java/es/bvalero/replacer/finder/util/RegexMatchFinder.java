@@ -1,10 +1,12 @@
 package es.bvalero.replacer.finder.util;
 
+import es.bvalero.replacer.common.util.ReplacerUtils;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 
@@ -13,8 +15,8 @@ public class RegexMatchFinder {
 
     // As it returns directly the regex matches, we cannot use it in a loop.
 
-    public static Iterable<MatchResult> find(String text, Pattern pattern) {
-        return () -> new RegexIterator(text, pattern);
+    public static Stream<MatchResult> find(String text, Pattern pattern) {
+        return ReplacerUtils.streamOfIterable(() -> new RegexIterator(text, pattern));
     }
 
     private static class RegexIterator implements Iterator<MatchResult> {

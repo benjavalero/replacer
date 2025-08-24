@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.regex.MatchResult;
-import lombok.Getter;
+import java.util.stream.Stream;
 
 class RedirectionAhoCorasickLongestFinder implements BenchmarkFinder {
 
@@ -21,16 +21,19 @@ class RedirectionAhoCorasickLongestFinder implements BenchmarkFinder {
     }
 
     @Override
-    public Iterable<MatchResult> findMatchResults(FinderPage page) {
+    public Stream<MatchResult> findMatchResults(FinderPage page) {
         final ResultMatchListener listener = new ResultMatchListener();
         this.stringMap.match(page.getContent(), listener);
         return listener.getMatches();
     }
 
-    @Getter
     private static class ResultMatchListener implements MapMatchListener<String> {
 
         private final List<MatchResult> matches = new ArrayList<>(1);
+
+        public Stream<MatchResult> getMatches() {
+            return matches.stream();
+        }
 
         @Override
         public boolean match(String text, int start, int end, String word) {

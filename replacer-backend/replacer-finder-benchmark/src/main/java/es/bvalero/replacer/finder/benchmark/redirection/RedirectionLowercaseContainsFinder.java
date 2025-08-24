@@ -6,7 +6,7 @@ import es.bvalero.replacer.finder.benchmark.BenchmarkResult;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
+import java.util.stream.Stream;
 
 class RedirectionLowercaseContainsFinder implements BenchmarkFinder {
 
@@ -17,14 +17,14 @@ class RedirectionLowercaseContainsFinder implements BenchmarkFinder {
     }
 
     @Override
-    public Iterable<BenchmarkResult> find(FinderPage page) {
+    public Stream<BenchmarkResult> find(FinderPage page) {
         final String text = page.getContent();
         final String lowerCaseText = FinderUtils.toLowerCase(text);
         for (String redirectionWord : redirectionWords) {
             if (lowerCaseText.contains(redirectionWord)) {
-                return Set.of(BenchmarkResult.of(0, text));
+                return Stream.of(BenchmarkResult.of(0, text));
             }
         }
-        return Set.of();
+        return Stream.of();
     }
 }

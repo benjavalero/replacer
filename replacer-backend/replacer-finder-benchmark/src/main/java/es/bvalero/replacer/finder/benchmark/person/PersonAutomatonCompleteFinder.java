@@ -8,6 +8,7 @@ import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
 import es.bvalero.replacer.finder.benchmark.BenchmarkResult;
 import java.util.*;
+import java.util.stream.Stream;
 
 class PersonAutomatonCompleteFinder implements BenchmarkFinder {
 
@@ -23,7 +24,7 @@ class PersonAutomatonCompleteFinder implements BenchmarkFinder {
     }
 
     @Override
-    public Iterable<BenchmarkResult> find(FinderPage page) {
+    public Stream<BenchmarkResult> find(FinderPage page) {
         final String text = page.getContent();
         // We loop over all the words and find them completely in the text with an automaton
         final List<BenchmarkResult> matches = new ArrayList<>(100);
@@ -33,6 +34,6 @@ class PersonAutomatonCompleteFinder implements BenchmarkFinder {
                 matches.add(BenchmarkResult.of(m.start(), m.group().substring(0, m.group().length() - 2)));
             }
         }
-        return matches;
+        return matches.stream();
     }
 }

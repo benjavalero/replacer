@@ -24,6 +24,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.regex.MatchResult;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.SetValuedMap;
@@ -175,7 +176,7 @@ public class UppercaseFinder implements ImmutableFinder, PropertyChangeListener 
     }
 
     @Override
-    public Iterable<MatchResult> findMatchResults(FinderPage page) {
+    public Stream<MatchResult> findMatchResults(FinderPage page) {
         final StringMap<String> stringMap = this.uppercaseStringMap.get(page.getPageKey().getLang());
         final ResultMatchListener listener = new ResultMatchListener();
         stringMap.match(page.getContent(), listener);

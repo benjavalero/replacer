@@ -163,7 +163,7 @@ class ReviewCustomFinderTest {
                 any(FinderPage.class),
                 any(CustomReplacementFindRequest.class)
             )
-        ).thenReturn(List.of(customRep));
+        ).thenReturn(Stream.of(customRep).collect(Collectors.toCollection(TreeSet::new)));
 
         // First call
         Optional<Review> review1 = pageReviewCustomService.findRandomPageReview(options);
@@ -210,7 +210,7 @@ class ReviewCustomFinderTest {
                 any(FinderPage.class),
                 any(CustomReplacementFindRequest.class)
             )
-        ).thenReturn(List.of());
+        ).thenReturn(new TreeSet<>());
 
         // Only call
         Optional<Review> review = pageReviewCustomService.findRandomPageReview(options);
@@ -257,7 +257,7 @@ class ReviewCustomFinderTest {
                 any(FinderPage.class),
                 any(CustomReplacementFindRequest.class)
             )
-        ).thenReturn(List.of(customRep));
+        ).thenReturn(Stream.of(customRep).collect(Collectors.toCollection(TreeSet::new)));
 
         // Only call
         Optional<Review> review = pageReviewCustomService.findRandomPageReview(options);
@@ -343,7 +343,7 @@ class ReviewCustomFinderTest {
                 any(FinderPage.class),
                 any(CustomReplacementFindRequest.class)
             )
-        ).thenReturn(List.of(customRep));
+        ).thenReturn(Stream.of(customRep).collect(Collectors.toCollection(TreeSet::new)));
 
         // We cannot use the same options object for all calls as it is mutable (and mutated)
         // Call 1
@@ -425,7 +425,7 @@ class ReviewCustomFinderTest {
                 any(FinderPage.class),
                 any(CustomReplacementFindRequest.class)
             )
-        ).thenReturn(List.of());
+        ).thenReturn(new TreeSet<>());
 
         // Only Call
         Optional<Review> review = pageReviewCustomService.findRandomPageReview(options);
@@ -470,7 +470,7 @@ class ReviewCustomFinderTest {
                 FinderPage.of(page),
                 options.getCustomReplacementFindRequest()
             )
-        ).thenReturn(List.of(custom));
+        ).thenReturn(Stream.of(custom).collect(Collectors.toCollection(TreeSet::new)));
 
         Collection<Replacement> result = pageReviewCustomService.decorateReplacements(page, options, replacements);
 
@@ -512,7 +512,7 @@ class ReviewCustomFinderTest {
                 FinderPage.of(page),
                 options.getCustomReplacementFindRequest()
             )
-        ).thenReturn(List.of(custom));
+        ).thenReturn(Stream.of(custom).collect(Collectors.toCollection(TreeSet::new)));
 
         Collection<Replacement> result = pageReviewCustomService.decorateReplacements(page, options, replacements);
 
@@ -554,7 +554,7 @@ class ReviewCustomFinderTest {
                 FinderPage.of(page),
                 options.getCustomReplacementFindRequest()
             )
-        ).thenReturn(List.of(custom));
+        ).thenReturn(Stream.of(custom).collect(Collectors.toCollection(TreeSet::new)));
 
         Collection<Replacement> result = pageReviewCustomService.decorateReplacements(page, options, replacements);
 

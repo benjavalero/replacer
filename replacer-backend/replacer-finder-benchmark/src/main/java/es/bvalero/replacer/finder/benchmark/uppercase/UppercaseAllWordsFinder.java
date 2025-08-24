@@ -6,6 +6,7 @@ import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
 import java.util.*;
 import java.util.regex.MatchResult;
+import java.util.stream.Stream;
 import org.springframework.lang.Nullable;
 
 class UppercaseAllWordsFinder extends UppercaseBenchmarkFinder {
@@ -17,7 +18,7 @@ class UppercaseAllWordsFinder extends UppercaseBenchmarkFinder {
     }
 
     @Override
-    public Iterable<MatchResult> findMatchResults(FinderPage page) {
+    public Stream<MatchResult> findMatchResults(FinderPage page) {
         return LinearMatchFinder.find(page, this::findUppercase);
     }
 

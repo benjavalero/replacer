@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.MatchResult;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.springframework.stereotype.Component;
 
 /** Find words in the page title */
@@ -24,7 +25,7 @@ class TitleFinder extends ImmutableCheckedFinder {
     }
 
     @Override
-    public Iterable<MatchResult> findMatchResults(FinderPage page) {
+    public Stream<MatchResult> findMatchResults(FinderPage page) {
         // With few title words, the performance of the simple index-of and the Aho-Corasick is similar.
         final List<MatchResult> matches = new ArrayList<>(100);
         final String text = page.getContent();
@@ -43,7 +44,7 @@ class TitleFinder extends ImmutableCheckedFinder {
                 }
             }
         }
-        return matches;
+        return matches.stream();
     }
 
     private Set<String> findTitleWords(String title) {

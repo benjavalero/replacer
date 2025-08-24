@@ -9,7 +9,6 @@ import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.StandardType;
 import java.util.List;
-import org.apache.commons.collections4.IterableUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -164,7 +163,7 @@ class DateFinderTest {
         String expected = "30 de decembro do 1591";
 
         FinderPage page = FinderPage.of(WikipediaLanguage.GALICIAN, date);
-        List<Replacement> replacements = IterableUtils.toList(dateFinder.find(page));
+        List<Replacement> replacements = dateFinder.find(page).toList();
 
         assertEquals(1, replacements.size());
         assertEquals(date, replacements.get(0).getText());

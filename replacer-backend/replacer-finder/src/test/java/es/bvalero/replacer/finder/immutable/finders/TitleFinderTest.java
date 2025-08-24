@@ -6,7 +6,6 @@ import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.Immutable;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.apache.commons.collections4.IterableUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -25,7 +24,7 @@ class TitleFinderTest {
         String content = "En el hotel Hilton de Paris vivía París Hilton.";
 
         FinderPage page = FinderPage.of(title, content);
-        List<Immutable> matches = IterableUtils.toList(titleFinder.find(page));
+        List<Immutable> matches = titleFinder.find(page).toList();
 
         // Use a list to find repeated results
         List<String> expected = List.of("Hilton", "Hilton", "Paris");

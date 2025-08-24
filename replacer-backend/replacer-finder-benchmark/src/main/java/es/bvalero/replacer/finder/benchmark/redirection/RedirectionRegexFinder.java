@@ -7,6 +7,7 @@ import es.bvalero.replacer.finder.util.FinderUtils;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 class RedirectionRegexFinder implements BenchmarkFinder {
 
@@ -18,13 +19,13 @@ class RedirectionRegexFinder implements BenchmarkFinder {
     }
 
     @Override
-    public Iterable<BenchmarkResult> find(FinderPage page) {
+    public Stream<BenchmarkResult> find(FinderPage page) {
         final String text = page.getContent();
         final String lowerCaseText = FinderUtils.toLowerCase(text);
         final Matcher m = this.pattern.matcher(lowerCaseText);
         if (m.find()) {
-            return List.of(BenchmarkResult.of(0, text));
+            return Stream.of(BenchmarkResult.of(0, text));
         }
-        return List.of();
+        return Stream.of();
     }
 }

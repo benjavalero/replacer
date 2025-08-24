@@ -7,6 +7,7 @@ import es.bvalero.replacer.finder.util.AutomatonMatchFinder;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import java.util.Collection;
 import java.util.regex.MatchResult;
+import java.util.stream.Stream;
 
 class UppercaseAutomatonAlternateAllFinder extends UppercaseBenchmarkFinder {
 
@@ -18,7 +19,7 @@ class UppercaseAutomatonAlternateAllFinder extends UppercaseBenchmarkFinder {
     }
 
     @Override
-    public Iterable<MatchResult> findMatchResults(FinderPage page) {
+    public Stream<MatchResult> findMatchResults(FinderPage page) {
         return AutomatonMatchFinder.find(page.getContent(), words);
     }
 

@@ -8,7 +8,6 @@ import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.Cosmetic;
 import es.bvalero.replacer.finder.FinderPage;
 import java.util.List;
-import org.apache.commons.collections4.IterableUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -58,7 +57,7 @@ class SpaceIncorrectFinderTest {
     @CsvSource(value = { "[[File:x.jpeg|test]], [[Ficheiro:x.jpeg|test]]", "[[image:x.png]], [[Imaxe:x.png]]" })
     void testNotTranslatedSpaceInGalician(String text, String fix) {
         FinderPage page = FinderPage.of(WikipediaLanguage.GALICIAN, text);
-        List<Cosmetic> cosmetics = IterableUtils.toList(spaceIncorrectFinder.find(page));
+        List<Cosmetic> cosmetics = spaceIncorrectFinder.find(page).toList();
 
         assertEquals(1, cosmetics.size());
         assertEquals(text, cosmetics.get(0).getText());
@@ -69,7 +68,7 @@ class SpaceIncorrectFinderTest {
     @ValueSource(strings = { "[[Arquivo:z.jpg]]" })
     void testValidSpaceInGalician(String text) {
         FinderPage page = FinderPage.of(WikipediaLanguage.GALICIAN, text);
-        List<Cosmetic> cosmetics = IterableUtils.toList(spaceIncorrectFinder.find(page));
+        List<Cosmetic> cosmetics = spaceIncorrectFinder.find(page).toList();
 
         assertTrue(cosmetics.isEmpty());
     }
@@ -96,9 +95,7 @@ class SpaceIncorrectFinderTest {
         String text = "[[arquivo:xxx.jpg]]";
         String fix = "[[Ficheiro:xxx.jpg]]";
 
-        List<Cosmetic> cosmetics = IterableUtils.toList(
-            spaceIncorrectFinder.find(FinderPage.of(WikipediaLanguage.GALICIAN, text))
-        );
+        List<Cosmetic> cosmetics = spaceIncorrectFinder.find(FinderPage.of(WikipediaLanguage.GALICIAN, text)).toList();
 
         assertEquals(1, cosmetics.size());
         assertEquals(text, cosmetics.get(0).getText());

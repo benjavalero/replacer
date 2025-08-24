@@ -6,6 +6,7 @@ import es.bvalero.replacer.finder.util.FinderMatchResult;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import java.util.Collection;
 import java.util.regex.MatchResult;
+import java.util.stream.Stream;
 import org.ahocorasick.trie.Trie;
 
 /**
@@ -22,11 +23,10 @@ class WordTrieNoOverlappingFinder implements BenchmarkFinder {
     }
 
     @Override
-    public Iterable<MatchResult> findMatchResults(FinderPage page) {
+    public Stream<MatchResult> findMatchResults(FinderPage page) {
         return this.trie.parseText(page.getContent())
             .stream()
-            .map(emit -> (MatchResult) FinderMatchResult.of(emit.getStart(), emit.getKeyword()))
-            .toList();
+            .map(emit -> (MatchResult) FinderMatchResult.of(emit.getStart(), emit.getKeyword()));
     }
 
     @Override

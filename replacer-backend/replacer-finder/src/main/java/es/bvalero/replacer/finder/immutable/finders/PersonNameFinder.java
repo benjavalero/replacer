@@ -10,6 +10,7 @@ import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.ResultMatchListener;
 import jakarta.annotation.PostConstruct;
 import java.util.regex.MatchResult;
+import java.util.stream.Stream;
 import org.springframework.stereotype.Component;
 
 /**
@@ -52,7 +53,7 @@ class PersonNameFinder implements ImmutableFinder {
     }
 
     @Override
-    public Iterable<MatchResult> findMatchResults(FinderPage page) {
+    public Stream<MatchResult> findMatchResults(FinderPage page) {
         final ResultMatchListener listener = new ResultMatchListener();
         this.stringMap.match(page.getContent(), listener);
         return listener.getMatches();

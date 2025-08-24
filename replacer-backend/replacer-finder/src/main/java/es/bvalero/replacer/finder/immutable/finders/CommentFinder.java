@@ -6,6 +6,7 @@ import es.bvalero.replacer.finder.immutable.ImmutableCheckedFinder;
 import es.bvalero.replacer.finder.util.FinderMatchResult;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
 import java.util.regex.MatchResult;
+import java.util.stream.Stream;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
@@ -29,7 +30,7 @@ class CommentFinder extends ImmutableCheckedFinder {
     }
 
     @Override
-    public Iterable<MatchResult> findMatchResults(FinderPage page) {
+    public Stream<MatchResult> findMatchResults(FinderPage page) {
         // To match the content of the comment with a regex we cannot use a negated class,
         // as we want to capture dashes or tags inside.
         // The alternative is using the classic .+? approach (the lazy modifier is needed),

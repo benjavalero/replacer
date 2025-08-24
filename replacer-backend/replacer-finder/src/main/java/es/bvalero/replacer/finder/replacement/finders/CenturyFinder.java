@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.MatchResult;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
@@ -64,12 +65,12 @@ class CenturyFinder implements ReplacementFinder {
     private static final RunAutomaton AUTOMATON_ERA_WORDS = new RunAutomaton(new RegExp(REGEX_ERA_WORDS).toAutomaton());
 
     @Override
-    public Iterable<MatchResult> findMatchResults(FinderPage page) {
+    public Stream<MatchResult> findMatchResults(FinderPage page) {
         // The linear approach is 20x better than using a regex
         if (WikipediaLanguage.SPANISH == page.getPageKey().getLang()) {
             return LinearMatchFinder.find(page, this::findCentury);
         } else {
-            return List.of();
+            return Stream.of();
         }
     }
 

@@ -13,9 +13,12 @@ import es.bvalero.replacer.finder.util.ResultMatchListener;
 import jakarta.annotation.PostConstruct;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.*;
+import java.util.EnumMap;
+import java.util.Map;
+import java.util.Set;
 import java.util.regex.MatchResult;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.SetValuedMap;
 import org.springframework.stereotype.Component;
@@ -68,13 +71,13 @@ public class MisspellingComposedFinder extends MisspellingFinder implements Prop
     }
 
     @Override
-    public Iterable<MatchResult> findMatchResults(FinderPage page) {
+    public Stream<MatchResult> findMatchResults(FinderPage page) {
         // There are hundreds of composed misspellings.
         // The best approach is to loop over all the misspellings and find them in the text.
         // Nevertheless, the Aho-Corasick algorithm can be even better.
         final StringMap<String> stringMap = this.stringMaps.get(page.getPageKey().getLang());
         if (stringMap == null) {
-            return List.of();
+            return Stream.of();
         }
         final ResultMatchListener listener = new ResultMatchListener();
         stringMap.match(page.getContent(), listener);

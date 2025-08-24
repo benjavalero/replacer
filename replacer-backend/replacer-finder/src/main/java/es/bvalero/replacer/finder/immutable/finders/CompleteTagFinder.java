@@ -11,6 +11,7 @@ import jakarta.annotation.PostConstruct;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.MatchResult;
+import java.util.stream.Stream;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
@@ -50,7 +51,7 @@ class CompleteTagFinder extends ImmutableCheckedFinder {
     }
 
     @Override
-    public Iterable<MatchResult> findMatchResults(FinderPage page) {
+    public Stream<MatchResult> findMatchResults(FinderPage page) {
         // To match the content of the tag with a regex we cannot use a negated class,
         // as we want to capture other tags inside.
         // The alternative is using the classic .+? approach (the lazy modifier is needed),

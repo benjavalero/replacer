@@ -11,6 +11,7 @@ import es.bvalero.replacer.finder.util.FinderUtils;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Stream;
 
 class SurnameAutomatonCompleteFinder implements BenchmarkFinder {
 
@@ -25,7 +26,7 @@ class SurnameAutomatonCompleteFinder implements BenchmarkFinder {
     }
 
     @Override
-    public Iterable<BenchmarkResult> find(FinderPage page) {
+    public Stream<BenchmarkResult> find(FinderPage page) {
         final String text = page.getContent();
         // We loop over all the words and find them completely in the text with an automaton
         final List<BenchmarkResult> matches = new ArrayList<>(100);
@@ -40,6 +41,6 @@ class SurnameAutomatonCompleteFinder implements BenchmarkFinder {
                 }
             }
         }
-        return matches;
+        return matches.stream();
     }
 }

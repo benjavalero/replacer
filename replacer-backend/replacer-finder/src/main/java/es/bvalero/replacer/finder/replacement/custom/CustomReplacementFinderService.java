@@ -3,8 +3,10 @@ package es.bvalero.replacer.finder.replacement.custom;
 import es.bvalero.replacer.finder.*;
 import es.bvalero.replacer.finder.replacement.ReplacementFinderAbstractService;
 import java.util.Collection;
-import java.util.Set;
+import java.util.Collections;
+import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.stream.Stream;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -17,22 +19,22 @@ class CustomReplacementFinderService
     }
 
     @Override
-    public Set<Replacement> find(FinderPage page) {
+    public SortedSet<Replacement> find(FinderPage page) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public Iterable<Replacement> findIterable(FinderPage page) {
+    public Stream<Replacement> findStream(FinderPage page) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public Iterable<Finder<Replacement>> getFinders() {
+    public Collection<Finder<Replacement>> getFinders() {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public Collection<Replacement> findCustomReplacements(
+    public SortedSet<Replacement> findCustomReplacements(
         FinderPage page,
         CustomReplacementFindRequest customReplacementFindRequest
     ) {
@@ -44,8 +46,8 @@ class CustomReplacementFinderService
             customReplacementFindRequest.isCaseSensitive(),
             customReplacementFindRequest.getComment()
         );
-        Iterable<Replacement> customResults = findIterable(page, Set.of(finder));
-        Set<Replacement> sortedResults = new TreeSet<>();
+        Stream<Replacement> customResults = findStream(page, Collections.singleton(finder));
+        SortedSet<Replacement> sortedResults = new TreeSet<>();
         customResults.forEach(sortedResults::add);
         return super.filterResults(page, sortedResults);
     }

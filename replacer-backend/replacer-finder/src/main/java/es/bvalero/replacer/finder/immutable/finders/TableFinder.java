@@ -7,6 +7,7 @@ import es.bvalero.replacer.finder.immutable.ImmutableFinder;
 import es.bvalero.replacer.finder.util.FinderMatchResult;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
 import java.util.regex.MatchResult;
+import java.util.stream.Stream;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
@@ -24,7 +25,7 @@ class TableFinder implements ImmutableFinder {
     private static final String ROW_START = "|-";
 
     @Override
-    public Iterable<MatchResult> findMatchResults(FinderPage page) {
+    public Stream<MatchResult> findMatchResults(FinderPage page) {
         return LinearMatchFinder.find(page, this::findLine);
     }
 

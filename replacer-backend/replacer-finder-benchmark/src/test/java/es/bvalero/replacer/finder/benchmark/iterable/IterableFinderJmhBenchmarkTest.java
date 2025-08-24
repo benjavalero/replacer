@@ -3,10 +3,10 @@ package es.bvalero.replacer.finder.benchmark.iterable;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import es.bvalero.replacer.common.exception.ReplacerException;
+import es.bvalero.replacer.common.util.ReplacerUtils;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.benchmark.BaseFinderJmhBenchmark;
 import es.bvalero.replacer.finder.util.FinderMatchResult;
-import es.bvalero.replacer.finder.util.LinearMatchFinder;
 import java.util.regex.MatchResult;
 import org.junit.jupiter.api.Test;
 import org.openjdk.jmh.annotations.Benchmark;
@@ -24,14 +24,29 @@ public class IterableFinderJmhBenchmarkTest extends BaseFinderJmhBenchmark {
     private static final String fileName = "iterable/iterable-summary-jmh";
     private static final String word = "_";
 
+    @Override
+    @Setup
+    public void setUp() throws ReplacerException {
+        // Base set-up
+        super.setUp();
+    }
+
     @Benchmark
-    public void linearFinder(Blackhole bh) {
-        sampleContents.forEach(page -> LinearMatchFinder.find(page, this::findMatch).forEach(bh::consume));
+    public void iterableFinder(Blackhole bh) {
+        sampleContents.forEach(page -> IterableMatchFinder.find(page, this::findMatch).forEach(bh::consume));
     }
 
     @Benchmark
     public void streamFinder(Blackhole bh) {
-        sampleContents.forEach(page -> StreamMatchFinder.find(page, this::findMatch).forEach(bh::consume));
+        sampleContents.stream().flatMap(page -> StreamMatchFinder.find(page, this::findMatch)).forEach(bh::consume);
+    }
+
+    @Benchmark
+    public void iterableToStreamFinder(Blackhole bh) {
+        sampleContents
+            .stream()
+            .flatMap(page -> ReplacerUtils.streamOfIterable(IterableMatchFinder.find(page, this::findMatch)))
+            .forEach(bh::consume);
     }
 
     @Benchmark

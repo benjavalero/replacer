@@ -11,6 +11,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.MatchResult;
+import java.util.stream.Stream;
 
 /**
  * Find all the words in the text using an automaton.
@@ -30,7 +31,7 @@ class WordAutomatonAllFinder implements BenchmarkFinder {
     }
 
     @Override
-    public Iterable<MatchResult> findMatchResults(FinderPage page) {
+    public Stream<MatchResult> findMatchResults(FinderPage page) {
         return AutomatonMatchFinder.find(page.getContent(), wordAutomaton);
     }
 

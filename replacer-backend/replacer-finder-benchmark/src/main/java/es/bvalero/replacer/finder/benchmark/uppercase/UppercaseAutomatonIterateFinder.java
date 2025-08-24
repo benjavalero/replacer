@@ -8,6 +8,7 @@ import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.benchmark.BenchmarkResult;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import java.util.*;
+import java.util.stream.Stream;
 
 class UppercaseAutomatonIterateFinder extends UppercaseBenchmarkFinder {
 
@@ -22,7 +23,7 @@ class UppercaseAutomatonIterateFinder extends UppercaseBenchmarkFinder {
     }
 
     @Override
-    public Iterable<BenchmarkResult> find(FinderPage page) {
+    public Stream<BenchmarkResult> find(FinderPage page) {
         final String text = page.getContent();
         // We loop over all the words and find them in the text with an automaton
         final List<BenchmarkResult> matches = new ArrayList<>(100);
@@ -34,6 +35,6 @@ class UppercaseAutomatonIterateFinder extends UppercaseBenchmarkFinder {
                 matches.add(BenchmarkResult.of(m.start() + pos, w));
             }
         }
-        return matches;
+        return matches.stream();
     }
 }

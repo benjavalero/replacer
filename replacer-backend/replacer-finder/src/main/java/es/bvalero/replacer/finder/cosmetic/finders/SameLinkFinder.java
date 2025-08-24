@@ -7,6 +7,7 @@ import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.RegexMatchFinder;
 import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 import org.intellij.lang.annotations.RegExp;
 import org.springframework.stereotype.Component;
 
@@ -20,7 +21,7 @@ class SameLinkFinder implements CosmeticFinder {
     private static final Pattern PATTERN_SAME_LINK = Pattern.compile(REGEX_SAME_LINK, Pattern.CASE_INSENSITIVE);
 
     @Override
-    public Iterable<MatchResult> findMatchResults(FinderPage page) {
+    public Stream<MatchResult> findMatchResults(FinderPage page) {
         return RegexMatchFinder.find(page.getContent(), PATTERN_SAME_LINK);
     }
 

@@ -73,12 +73,12 @@ class OrdinalFinder implements ReplacementFinder {
     }
 
     @Override
-    public Iterable<MatchResult> findMatchResults(FinderPage page) {
+    public Stream<MatchResult> findMatchResults(FinderPage page) {
         if (WikipediaLanguage.SPANISH == page.getPageKey().getLang()) {
             // The linear approach is about better than the automaton
             return LinearMatchFinder.find(page, this::findOrdinal);
         } else {
-            return List.of();
+            return Stream.of();
         }
     }
 

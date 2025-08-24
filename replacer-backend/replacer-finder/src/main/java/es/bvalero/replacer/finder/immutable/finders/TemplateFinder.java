@@ -12,6 +12,7 @@ import es.bvalero.replacer.finder.util.FinderUtils;
 import jakarta.annotation.PostConstruct;
 import java.util.*;
 import java.util.regex.MatchResult;
+import java.util.stream.Stream;
 import org.apache.commons.collections4.SetValuedMap;
 import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
 import org.apache.commons.lang3.StringUtils;
@@ -94,7 +95,7 @@ class TemplateFinder implements ImmutableFinder {
     }
 
     @Override
-    public Iterable<MatchResult> findMatchResults(FinderPage page) {
+    public Stream<MatchResult> findMatchResults(FinderPage page) {
         final List<MatchResult> immutables = new ArrayList<>(100);
         for (FinderMatchResult template : FinderUtils.findAllStructures(
             page,
@@ -104,7 +105,7 @@ class TemplateFinder implements ImmutableFinder {
         )) {
             immutables.addAll(findImmutables(template, page));
         }
-        return immutables;
+        return immutables.stream();
     }
 
     private boolean isNotFakeTemplate(String text, int templateStart) {

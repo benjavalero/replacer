@@ -8,6 +8,7 @@ import es.bvalero.replacer.finder.util.LinearMatchFinder;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.MatchResult;
+import java.util.stream.Stream;
 import org.springframework.lang.Nullable;
 
 class CompleteTagLinearFinder implements BenchmarkFinder {
@@ -19,7 +20,7 @@ class CompleteTagLinearFinder implements BenchmarkFinder {
     }
 
     @Override
-    public Iterable<MatchResult> findMatchResults(FinderPage page) {
+    public Stream<MatchResult> findMatchResults(FinderPage page) {
         return LinearMatchFinder.find(page, this::findCompleteTag);
     }
 

@@ -8,6 +8,7 @@ import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
 import es.bvalero.replacer.finder.benchmark.BenchmarkResult;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import java.util.List;
+import java.util.stream.Stream;
 
 class RedirectionAutomatonFinder implements BenchmarkFinder {
 
@@ -20,13 +21,13 @@ class RedirectionAutomatonFinder implements BenchmarkFinder {
     }
 
     @Override
-    public Iterable<BenchmarkResult> find(FinderPage page) {
+    public Stream<BenchmarkResult> find(FinderPage page) {
         final String text = page.getContent();
         final String lowerCaseText = FinderUtils.toLowerCase(text);
         final AutomatonMatcher m = this.automaton.newMatcher(lowerCaseText);
         if (m.find()) {
-            return List.of(BenchmarkResult.of(0, text));
+            return Stream.of(BenchmarkResult.of(0, text));
         }
-        return List.of();
+        return Stream.of();
     }
 }

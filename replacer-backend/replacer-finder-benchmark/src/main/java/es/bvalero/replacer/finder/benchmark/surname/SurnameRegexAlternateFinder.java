@@ -9,6 +9,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 class SurnameRegexAlternateFinder implements BenchmarkFinder {
 
@@ -20,7 +21,7 @@ class SurnameRegexAlternateFinder implements BenchmarkFinder {
     }
 
     @Override
-    public Iterable<BenchmarkResult> find(FinderPage page) {
+    public Stream<BenchmarkResult> find(FinderPage page) {
         final String text = page.getContent();
         // Build an alternate regex with all the words and match it against the text
         final List<BenchmarkResult> matches = new ArrayList<>(100);
@@ -34,6 +35,6 @@ class SurnameRegexAlternateFinder implements BenchmarkFinder {
                 matches.add(match);
             }
         }
-        return matches;
+        return matches.stream();
     }
 }

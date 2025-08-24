@@ -3,7 +3,7 @@ package es.bvalero.replacer.finder.immutable;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.Immutable;
 import es.bvalero.replacer.finder.util.FinderUtils;
-import org.apache.commons.collections4.IterableUtils;
+import java.util.stream.Stream;
 import org.springframework.beans.factory.annotation.Value;
 
 /** Decorator to perform some checks in found immutables */
@@ -20,20 +20,17 @@ public abstract class ImmutableCheckedFinder implements ImmutableFinder {
 
     // NOTE this will not be applied if overridden by an Immutable Finder
     @Override
-    public Iterable<Immutable> find(FinderPage page) {
+    public Stream<Immutable> find(FinderPage page) {
         if (this.showImmutableWarning) {
-            // Trick: use iterable converter with no conversion at all but decoration
-            return IterableUtils.transformedIterable(ImmutableFinder.super.find(page), immutable ->
-                check(immutable, page)
-            );
+            // Trick: use peek with no conversion at all but decoration
+            return ImmutableFinder.super.find(page).peek(immutable -> check(immutable, page));
         } else {
             return ImmutableFinder.super.find(page);
         }
     }
 
-    private Immutable check(Immutable immutable, FinderPage page) {
+    private void check(Immutable immutable, FinderPage page) {
         this.checkMaxLength(immutable, page);
-        return immutable;
     }
 
     protected int getMaxLength() {

@@ -8,6 +8,7 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 /**
  * Find all the words/expressions in the text with a regex.
@@ -32,7 +33,7 @@ class WordRegexAlternateCompleteSeparatorsFinder implements BenchmarkFinder {
     }
 
     @Override
-    public Iterable<MatchResult> findMatchResults(FinderPage page) {
+    public Stream<MatchResult> findMatchResults(FinderPage page) {
         return RegexMatchFinder.find(page.getContent(), this.pattern);
     }
 }

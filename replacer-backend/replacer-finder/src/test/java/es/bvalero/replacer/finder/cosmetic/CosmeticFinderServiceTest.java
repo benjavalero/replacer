@@ -7,9 +7,8 @@ import static org.mockito.Mockito.*;
 import es.bvalero.replacer.checkwikipedia.CheckWikipediaFixEvent;
 import es.bvalero.replacer.finder.Cosmetic;
 import es.bvalero.replacer.finder.FinderPage;
-import java.util.Collections;
 import java.util.List;
-import java.util.Set;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.ApplicationEventPublisher;
@@ -32,9 +31,7 @@ class CosmeticFinderServiceTest {
     @Test
     void testApplyCosmeticChanges() {
         Cosmetic cosmetic = Cosmetic.builder().start(2).text("[[Link|link]]").fix("[[link]]").build();
-        when(cosmeticFinder.find(any(FinderPage.class)))
-            .thenReturn(Set.of(cosmetic))
-            .thenReturn(Collections.emptySet());
+        when(cosmeticFinder.find(any(FinderPage.class))).thenReturn(Stream.of(cosmetic)).thenReturn(Stream.empty());
 
         String text = "A [[Link|link]] to simplify.";
         String expected = "A [[link]] to simplify.";
@@ -57,8 +54,8 @@ class CosmeticFinderServiceTest {
         Cosmetic cosmetic2 = Cosmetic.builder().start(29).text("archivo").fix("Archivo").build();
         Cosmetic cosmetic3 = Cosmetic.builder().start(19).text("</br>").fix("<br>").build();
         when(cosmeticFinder.find(any(FinderPage.class)))
-            .thenReturn(Set.of(cosmetic, cosmetic2, cosmetic3))
-            .thenReturn(Collections.emptySet());
+            .thenReturn(Stream.of(cosmetic, cosmetic2, cosmetic3))
+            .thenReturn(Stream.empty());
 
         String text = "A [[Link|link]] to </br> a [[archivo:x.jpeg]].";
         String expected = "A [[link]] to <br> a [[Archivo:x.jpeg]].";
@@ -73,9 +70,9 @@ class CosmeticFinderServiceTest {
         Cosmetic cosmetic = Cosmetic.builder().start(2).text("[[Link|''link'']]").fix("''[[Link|link]]''").build();
         Cosmetic cosmetic2 = Cosmetic.builder().start(4).text("[[Link|link]]").fix("[[link]]").build();
         when(cosmeticFinder.find(any(FinderPage.class)))
-            .thenReturn(Set.of(cosmetic))
-            .thenReturn(Set.of(cosmetic2))
-            .thenReturn(Collections.emptySet());
+            .thenReturn(Stream.of(cosmetic))
+            .thenReturn(Stream.of(cosmetic2))
+            .thenReturn(Stream.empty());
 
         String text = "A [[Link|''link'']].";
         String expected = "A ''[[link]]''.";

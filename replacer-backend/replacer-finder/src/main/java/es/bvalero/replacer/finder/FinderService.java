@@ -1,9 +1,10 @@
 package es.bvalero.replacer.finder;
 
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.Collection;
+import java.util.SortedSet;
+import java.util.concurrent.ConcurrentSkipListSet;
+import java.util.stream.Stream;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections4.IterableUtils;
 
 public interface FinderService<T extends FinderResult> {
     @Slf4j
@@ -12,10 +13,12 @@ public interface FinderService<T extends FinderResult> {
     }
 
     /* Default service method returning a sorted set of results */
-    default Set<T> find(FinderPage page) {
-        // Build the sorted set from the results of the more generic iterable finder
-        final Set<T> results = new TreeSet<>();
-        findIterable(page).forEach(r -> {
+    default SortedSet<T> find(FinderPage page) {
+        // Build the sorted set from the results of the more generic stream finder.
+        // We return a mutable and thread-safe collection
+        // as we will remove items if they are contained in immutables.
+        final SortedSet<T> results = new ConcurrentSkipListSet<>();
+        findStream(page).forEach(r -> {
             if (!results.add(r)) {
                 FinderService.LogHolder.LOGGER.warn("Duplicated finder result: {}", r);
             }
@@ -24,24 +27,23 @@ public interface FinderService<T extends FinderResult> {
     }
 
     /*
-     * Returns an iterable results in case we want to retrieve the results one-by-one,
+     * Returns the results as a stream in case we want to retrieve the results one-by-one,
      * for instance to improve performance.
      */
-    default Iterable<T> findIterable(FinderPage page) {
-        // We include a default implementation that just creates an iterable
+    default Stream<T> findStream(FinderPage page) {
+        // We include a default implementation that just creates a stream
         // from all the results for each associated finder.
-        return findIterable(page, getFinders());
+        return findStream(page, getFinders());
     }
 
-    @SuppressWarnings("unchecked")
-    default Iterable<T> findIterable(FinderPage page, Iterable<Finder<T>> finders) {
+    default Stream<T> findStream(FinderPage page, Collection<Finder<T>> finders) {
         // The finders are sorted in the implementations
-        // in order not to sort them here every time
-        return IterableUtils.chainedIterable(
-            IterableUtils.toList(finders).stream().map(finder -> finder.find(page)).toArray(Iterable[]::new)
-        );
+        // in order not to sort them here every time.
+        // According to the benchmark, iterating the finders in parallel
+        // with the default number of threads is almost twice faster.
+        return finders.parallelStream().flatMap(finder -> finder.find(page));
     }
 
     /* Finders whose results will be included in the results  */
-    Iterable<Finder<T>> getFinders();
+    Collection<Finder<T>> getFinders();
 }

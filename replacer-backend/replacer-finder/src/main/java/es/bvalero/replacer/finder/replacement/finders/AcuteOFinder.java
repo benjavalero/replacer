@@ -11,6 +11,7 @@ import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
 import java.util.List;
 import java.util.regex.MatchResult;
+import java.util.stream.Stream;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
@@ -25,11 +26,11 @@ class AcuteOFinder implements ReplacementFinder {
     static final String FIX_ACUTE_O = "o";
 
     @Override
-    public Iterable<MatchResult> findMatchResults(FinderPage page) {
+    public Stream<MatchResult> findMatchResults(FinderPage page) {
         if (WikipediaLanguage.SPANISH == page.getPageKey().getLang()) {
             return LinearMatchFinder.find(page, this::findAcuteO);
         } else {
-            return List.of();
+            return Stream.of();
         }
     }
 

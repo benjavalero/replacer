@@ -6,6 +6,7 @@ import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
 import es.bvalero.replacer.finder.util.AutomatonMatchFinder;
 import java.util.regex.MatchResult;
+import java.util.stream.Stream;
 
 class SimpleAutomatonFinder implements BenchmarkFinder {
 
@@ -16,7 +17,7 @@ class SimpleAutomatonFinder implements BenchmarkFinder {
     }
 
     @Override
-    public Iterable<MatchResult> findMatchResults(FinderPage page) {
+    public Stream<MatchResult> findMatchResults(FinderPage page) {
         return AutomatonMatchFinder.find(page.getContent(), automaton);
     }
 }

@@ -32,16 +32,16 @@ class ReplacementFinderService
     }
 
     @Override
-    public Iterable<Finder<Replacement>> getFinders() {
+    public Collection<Finder<Replacement>> getFinders() {
         return new ArrayList<>(this.replacementFinders);
     }
 
     @Override
-    public Collection<Replacement> findReplacements(FinderPage page) {
+    public SortedSet<Replacement> findReplacements(FinderPage page) {
         // There will usually be much more immutables found than results.
         // Thus, it is better to obtain first all the results, and then obtain the immutables one by one,
         // aborting in case the replacement list gets empty. This way we can avoid lots of immutable calculations.
-        Collection<Replacement> allResults = this.find(page);
+        SortedSet<Replacement> allResults = this.find(page);
         return super.filterResults(page, allResults);
     }
 

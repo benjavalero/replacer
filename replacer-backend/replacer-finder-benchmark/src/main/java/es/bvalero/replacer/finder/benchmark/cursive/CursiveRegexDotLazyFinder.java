@@ -6,6 +6,7 @@ import es.bvalero.replacer.finder.benchmark.BenchmarkResult;
 import es.bvalero.replacer.finder.util.RegexMatchFinder;
 import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 class CursiveRegexDotLazyFinder implements BenchmarkFinder {
 
@@ -16,7 +17,7 @@ class CursiveRegexDotLazyFinder implements BenchmarkFinder {
     );
 
     @Override
-    public Iterable<MatchResult> findMatchResults(FinderPage page) {
+    public Stream<MatchResult> findMatchResults(FinderPage page) {
         return RegexMatchFinder.find(page.getContent(), CURSIVE_PATTERN);
     }
 

@@ -16,6 +16,7 @@ import jakarta.annotation.PostConstruct;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.MatchResult;
+import java.util.stream.Stream;
 import org.springframework.stereotype.Component;
 
 /**
@@ -57,7 +58,7 @@ class PersonSurnameFinder implements ImmutableFinder {
     }
 
     @Override
-    public Iterable<MatchResult> findMatchResults(FinderPage page) {
+    public Stream<MatchResult> findMatchResults(FinderPage page) {
         // The list will keep on growing
         // The best approach is to find the whole list of words with the Aho-Corasick algorithm (2x faster),
         // but we choose the automaton because it allows regular expressions and the performance is quite good too.

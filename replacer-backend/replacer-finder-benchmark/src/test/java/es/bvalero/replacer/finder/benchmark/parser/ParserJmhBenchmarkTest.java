@@ -20,6 +20,13 @@ public class ParserJmhBenchmarkTest extends BaseFinderJmhBenchmark {
 
     private static final String fileName = "parser/parser-summary-jmh";
 
+    @Override
+    @Setup
+    public void setUp() throws ReplacerException {
+        // Base set-up
+        super.setUp();
+    }
+
     @Benchmark
     public void scan(Blackhole bh) {
         sampleContents.forEach(page -> new Scanner().scan(page.getContent()).forEach(bh::consume));

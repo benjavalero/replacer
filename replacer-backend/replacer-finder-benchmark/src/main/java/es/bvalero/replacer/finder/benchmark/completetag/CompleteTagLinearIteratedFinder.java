@@ -6,6 +6,7 @@ import es.bvalero.replacer.finder.benchmark.BenchmarkResult;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Stream;
 
 class CompleteTagLinearIteratedFinder implements BenchmarkFinder {
 
@@ -16,13 +17,13 @@ class CompleteTagLinearIteratedFinder implements BenchmarkFinder {
     }
 
     @Override
-    public Iterable<BenchmarkResult> find(FinderPage page) {
+    public Stream<BenchmarkResult> find(FinderPage page) {
         final String text = page.getContent();
         final List<BenchmarkResult> matches = new ArrayList<>(100);
         for (String tag : tags) {
             matches.addAll(findResults(text, tag));
         }
-        return matches;
+        return matches.stream();
     }
 
     private List<BenchmarkResult> findResults(String text, String tag) {

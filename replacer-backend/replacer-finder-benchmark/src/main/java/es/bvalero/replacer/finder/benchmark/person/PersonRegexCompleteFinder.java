@@ -6,6 +6,7 @@ import es.bvalero.replacer.finder.benchmark.BenchmarkResult;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 class PersonRegexCompleteFinder implements BenchmarkFinder {
 
@@ -19,7 +20,7 @@ class PersonRegexCompleteFinder implements BenchmarkFinder {
     }
 
     @Override
-    public Iterable<BenchmarkResult> find(FinderPage page) {
+    public Stream<BenchmarkResult> find(FinderPage page) {
         final String text = page.getContent();
         // We loop over all the words and find them completely in the text with a regex
         final List<BenchmarkResult> matches = new ArrayList<>(100);
@@ -29,6 +30,6 @@ class PersonRegexCompleteFinder implements BenchmarkFinder {
                 matches.add(BenchmarkResult.of(m.start(), m.group().substring(0, m.group().length() - 2)));
             }
         }
-        return matches;
+        return matches.stream();
     }
 }

@@ -8,6 +8,7 @@ import es.bvalero.replacer.finder.util.LinearMatchFinder;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.MatchResult;
+import java.util.stream.Stream;
 import org.springframework.lang.Nullable;
 
 /**
@@ -27,7 +28,7 @@ class CompleteTagFinalFinder implements BenchmarkFinder {
     private static final String START_CLOSING_TAG = "</";
 
     @Override
-    public Iterable<MatchResult> findMatchResults(FinderPage page) {
+    public Stream<MatchResult> findMatchResults(FinderPage page) {
         // To match the content of the tag with a regex we cannot use a negated class,
         // as we want to capture other tags inside.
         // The alternative is using the classic .+? approach (the lazy modifier is needed),

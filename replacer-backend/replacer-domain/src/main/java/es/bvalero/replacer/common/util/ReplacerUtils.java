@@ -127,6 +127,8 @@ public class ReplacerUtils {
     //region Logging Utils
 
     public <T> Stream<T> streamOfIterable(Iterable<T> iterable) {
+        // According to benchmarks, it is better to convert a custom iterable into a stream
+        // than using the Stream.iterate generator.
         return StreamSupport.stream(
             Spliterators.spliteratorUnknownSize(iterable.iterator(), Spliterator.ORDERED),
             false

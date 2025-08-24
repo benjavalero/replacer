@@ -6,6 +6,7 @@ import es.bvalero.replacer.finder.util.FinderUtils;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 class UppercaseRegexIterateFinder extends UppercaseBenchmarkFinder {
 
@@ -20,7 +21,7 @@ class UppercaseRegexIterateFinder extends UppercaseBenchmarkFinder {
     }
 
     @Override
-    public Iterable<BenchmarkResult> find(FinderPage page) {
+    public Stream<BenchmarkResult> find(FinderPage page) {
         final String text = page.getContent();
         // We loop over all the words and find them in the text with a regex
         final List<BenchmarkResult> matches = new ArrayList<>(100);
@@ -32,6 +33,6 @@ class UppercaseRegexIterateFinder extends UppercaseBenchmarkFinder {
                 matches.add(BenchmarkResult.of(m.start() + pos, w));
             }
         }
-        return matches;
+        return matches.stream();
     }
 }

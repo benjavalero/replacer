@@ -15,7 +15,6 @@ import es.bvalero.replacer.finder.listing.parse.SimpleMisspellingParser;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-import org.apache.commons.collections4.IterableUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -197,9 +196,7 @@ class LinkFinderTest {
     @ParameterizedTest
     @ValueSource(strings = { "[[Arquivo:xxx.jpg]]", "[[Ficheiro:y.pdf]]", "[[File:z.png]]", "[[imaxe:a.jpeg]]" })
     void testGalicianFile(String text) {
-        List<Immutable> matches = IterableUtils.toList(
-            linkFinder.find(FinderPage.of(WikipediaLanguage.GALICIAN, text))
-        );
+        List<Immutable> matches = linkFinder.find(FinderPage.of(WikipediaLanguage.GALICIAN, text)).toList();
 
         assertEquals(1, matches.size());
         assertEquals(text, matches.get(0).getText());

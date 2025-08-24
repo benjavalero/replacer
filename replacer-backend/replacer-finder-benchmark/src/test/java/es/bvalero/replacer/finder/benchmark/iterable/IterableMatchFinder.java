@@ -1,19 +1,18 @@
-package es.bvalero.replacer.finder.util;
+package es.bvalero.replacer.finder.benchmark.iterable;
 
-import es.bvalero.replacer.common.util.ReplacerUtils;
 import es.bvalero.replacer.finder.FinderPage;
+import es.bvalero.replacer.finder.util.LinearFinder;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.regex.MatchResult;
-import java.util.stream.Stream;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class LinearMatchFinder {
+public class IterableMatchFinder {
 
-    public static Stream<MatchResult> find(FinderPage page, LinearFinder finder) {
-        return ReplacerUtils.streamOfIterable(() -> new LinearIterator(page, finder));
+    public static Iterable<MatchResult> find(FinderPage page, LinearFinder finder) {
+        return () -> new LinearIterator(page, finder);
     }
 
     private static class LinearIterator implements Iterator<MatchResult> {

@@ -5,6 +5,7 @@ import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
 import es.bvalero.replacer.finder.util.RegexMatchFinder;
 import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 class SimpleRegexFinder implements BenchmarkFinder {
 
@@ -15,7 +16,7 @@ class SimpleRegexFinder implements BenchmarkFinder {
     }
 
     @Override
-    public Iterable<MatchResult> findMatchResults(FinderPage page) {
+    public Stream<MatchResult> findMatchResults(FinderPage page) {
         return RegexMatchFinder.find(page.getContent(), pattern);
     }
 }

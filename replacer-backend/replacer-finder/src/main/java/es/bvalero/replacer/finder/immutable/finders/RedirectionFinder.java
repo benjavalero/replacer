@@ -9,8 +9,8 @@ import es.bvalero.replacer.finder.util.FinderUtils;
 import jakarta.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.regex.MatchResult;
+import java.util.stream.Stream;
 import org.springframework.stereotype.Component;
 
 /** Find redirection templates. In case they are found the complete text must be ignored. */
@@ -41,15 +41,15 @@ class RedirectionFinder implements ImmutableFinder {
     }
 
     @Override
-    public Iterable<MatchResult> findMatchResults(FinderPage page) {
+    public Stream<MatchResult> findMatchResults(FinderPage page) {
         // With only 3 redirection words, the performance of the simple index-of and the Aho-Corasick is similar.
         final String text = page.getContent();
         final String lowerCaseText = FinderUtils.toLowerCase(text);
         for (String redirectionWord : this.redirectionWords) {
             if (lowerCaseText.contains(redirectionWord)) {
-                return Set.of(FinderMatchResult.of(0, text));
+                return Stream.of(FinderMatchResult.of(0, text));
             }
         }
-        return Set.of();
+        return Stream.of();
     }
 }

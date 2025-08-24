@@ -9,6 +9,7 @@ import es.bvalero.replacer.finder.util.FinderMatchResult;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
 import java.util.Set;
 import java.util.regex.MatchResult;
+import java.util.stream.Stream;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.Nullable;
 
@@ -40,7 +41,7 @@ abstract class QuotesFinder extends ImmutableCheckedFinder {
     abstract char getEndChar();
 
     @Override
-    public Iterable<MatchResult> findMatchResults(FinderPage page) {
+    public Stream<MatchResult> findMatchResults(FinderPage page) {
         // The linear approach is 3x faster than the most optimized automaton
         return LinearMatchFinder.find(page, this::findQuote);
     }

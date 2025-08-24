@@ -3,28 +3,28 @@ package es.bvalero.replacer.finder;
 import es.bvalero.replacer.finder.parser.FinderParserPage;
 import java.util.List;
 import java.util.regex.MatchResult;
-import org.apache.commons.collections4.IterableUtils;
+import java.util.stream.Stream;
 import org.jetbrains.annotations.TestOnly;
 
 public interface Finder<T extends FinderResult> extends Comparable<Finder<T>> {
-    // This method returns an Iterable in case we want to retrieve the result one-by-one,
+    // This method returns a stream in case we want to retrieve the result one-by-one,
     // for instance, to improve performance.
-    default Iterable<T> find(FinderPage page) {
+    default Stream<T> find(FinderPage page) {
         // The finding process consists basically in three steps:
         // 1. Find a list of all potential match results
         // 2. Validate each match result (by itself and/or against the complete text)
         //    and filter the list to keep only the valid match results
         // 3. Convert the list of match results into a list of T items
 
-        final Iterable<MatchResult> allMatchResults = findMatchResults(page);
-        final Iterable<MatchResult> validMatchResults = filterValidMatchResults(allMatchResults, page);
+        final Stream<MatchResult> allMatchResults = findMatchResults(page);
+        final Stream<MatchResult> validMatchResults = filterValidMatchResults(allMatchResults, page);
         return convertMatchResults(validMatchResults, page);
     }
 
-    Iterable<MatchResult> findMatchResults(FinderPage page);
+    Stream<MatchResult> findMatchResults(FinderPage page);
 
-    private Iterable<MatchResult> filterValidMatchResults(Iterable<MatchResult> matchResults, FinderPage page) {
-        return IterableUtils.filteredIterable(matchResults, matchResult -> validate(matchResult, page));
+    private Stream<MatchResult> filterValidMatchResults(Stream<MatchResult> matchResults, FinderPage page) {
+        return matchResults.filter(matchResult -> validate(matchResult, page));
     }
 
     default boolean validate(MatchResult matchResult, FinderPage page) {
@@ -32,8 +32,8 @@ public interface Finder<T extends FinderResult> extends Comparable<Finder<T>> {
         return true;
     }
 
-    private Iterable<T> convertMatchResults(Iterable<MatchResult> matchResults, FinderPage page) {
-        return IterableUtils.transformedIterable(matchResults, m -> convert(m, page));
+    private Stream<T> convertMatchResults(Stream<MatchResult> matchResults, FinderPage page) {
+        return matchResults.map(m -> convert(m, page));
     }
 
     T convert(MatchResult matchResult, FinderPage page);
@@ -42,9 +42,7 @@ public interface Finder<T extends FinderResult> extends Comparable<Finder<T>> {
     default List<T> findList(String text) {
         // When testing, validate the position of the match results.
         // For the sake of the tests, we always use a FinderParserPage even if we don't use the parser at all
-        return IterableUtils.toList(
-            IterableUtils.filteredIterable(find(FinderParserPage.of(FinderPage.of(text))), m -> m.validate(text))
-        );
+        return find(FinderParserPage.of(FinderPage.of(text))).filter(m -> m.validate(text)).toList();
     }
 
     default FinderPriority getPriority() {

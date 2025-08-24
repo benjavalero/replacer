@@ -8,6 +8,7 @@ import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.ResultMatchListener;
 import java.util.Collection;
 import java.util.regex.MatchResult;
+import java.util.stream.Stream;
 
 class PersonAhoCorasickLongestFinder implements BenchmarkFinder {
 
@@ -18,7 +19,7 @@ class PersonAhoCorasickLongestFinder implements BenchmarkFinder {
     }
 
     @Override
-    public Iterable<MatchResult> findMatchResults(FinderPage page) {
+    public Stream<MatchResult> findMatchResults(FinderPage page) {
         final ResultMatchListener listener = new ResultMatchListener();
         this.stringMap.match(page.getContent(), listener);
         return listener.getMatches();

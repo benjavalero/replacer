@@ -6,6 +6,7 @@ import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.util.ResultMatchListener;
 import java.util.Collection;
 import java.util.regex.MatchResult;
+import java.util.stream.Stream;
 
 class UppercaseAhoCorasickWholeFinder extends UppercaseBenchmarkFinder {
 
@@ -18,7 +19,7 @@ class UppercaseAhoCorasickWholeFinder extends UppercaseBenchmarkFinder {
     }
 
     @Override
-    public Iterable<MatchResult> findMatchResults(FinderPage page) {
+    public Stream<MatchResult> findMatchResults(FinderPage page) {
         final ResultMatchListener listener = new ResultMatchListener();
         this.stringMap.match(page.getContent(), listener);
         return listener.getMatches();

@@ -7,7 +7,7 @@ import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
 import java.util.Collection;
 import java.util.regex.MatchResult;
-import org.apache.commons.collections4.IterableUtils;
+import java.util.stream.Stream;
 import org.springframework.lang.Nullable;
 
 /**
@@ -22,13 +22,9 @@ class WordLinearFinder implements BenchmarkFinder {
         this.words = words;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
-    public Iterable<MatchResult> findMatchResults(FinderPage page) {
-        // Only works converting to list the iterables in the loop
-        return IterableUtils.chainedIterable(
-            words.stream().map(MisspellingLinearFinder::new).map(finder -> finder.find(page)).toArray(Iterable[]::new)
-        );
+    public Stream<MatchResult> findMatchResults(FinderPage page) {
+        return words.stream().map(MisspellingLinearFinder::new).flatMap(finder -> finder.find(page));
     }
 
     private static class MisspellingLinearFinder {
@@ -39,8 +35,8 @@ class WordLinearFinder implements BenchmarkFinder {
             this.misspelling = word;
         }
 
-        public Iterable<MatchResult> find(FinderPage page) {
-            return IterableUtils.toList(LinearMatchFinder.find(page, this::findMisspelling));
+        public Stream<MatchResult> find(FinderPage page) {
+            return LinearMatchFinder.find(page, this::findMisspelling);
         }
 
         @Nullable

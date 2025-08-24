@@ -12,6 +12,7 @@ import jakarta.annotation.PostConstruct;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.regex.MatchResult;
+import java.util.stream.Stream;
 import org.apache.commons.collections4.SetValuedMap;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
@@ -41,7 +42,7 @@ public class MisspellingSimpleFinder extends MisspellingFinder implements Proper
     }
 
     @Override
-    public Iterable<MatchResult> findMatchResults(FinderPage page) {
+    public Stream<MatchResult> findMatchResults(FinderPage page) {
         // There are thousands of simple misspellings
         // The best approach is to find all words in the text and check if they are in the list
         // Within this approach the linear finder gives the best performance

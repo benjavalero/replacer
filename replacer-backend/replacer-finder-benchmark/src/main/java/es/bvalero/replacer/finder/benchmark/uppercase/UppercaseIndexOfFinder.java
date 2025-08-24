@@ -6,7 +6,7 @@ import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
 import java.util.Collection;
 import java.util.regex.MatchResult;
-import org.apache.commons.collections4.IterableUtils;
+import java.util.stream.Stream;
 import org.springframework.lang.Nullable;
 
 class UppercaseIndexOfFinder extends UppercaseBenchmarkFinder {
@@ -17,13 +17,9 @@ class UppercaseIndexOfFinder extends UppercaseBenchmarkFinder {
         this.words = words;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
-    public Iterable<MatchResult> findMatchResults(FinderPage page) {
-        // Only works converting to list the iterables in the loop
-        return IterableUtils.chainedIterable(
-            words.stream().map(UppercaseLinearFinder::new).map(finder -> finder.find(page)).toArray(Iterable[]::new)
-        );
+    public Stream<MatchResult> findMatchResults(FinderPage page) {
+        return words.stream().map(UppercaseLinearFinder::new).flatMap(finder -> finder.find(page));
     }
 
     private static class UppercaseLinearFinder {
@@ -34,8 +30,8 @@ class UppercaseIndexOfFinder extends UppercaseBenchmarkFinder {
             this.uppercase = word;
         }
 
-        public Iterable<MatchResult> find(FinderPage page) {
-            return IterableUtils.toList(LinearMatchFinder.find(page, this::findUppercase));
+        public Stream<MatchResult> find(FinderPage page) {
+            return LinearMatchFinder.find(page, this::findUppercase);
         }
 
         @Nullable

@@ -11,6 +11,7 @@ import es.bvalero.replacer.finder.util.FinderUtils;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Stream;
 
 class PersonAutomatonAlternateCompleteFinder implements BenchmarkFinder {
 
@@ -22,7 +23,7 @@ class PersonAutomatonAlternateCompleteFinder implements BenchmarkFinder {
     }
 
     @Override
-    public Iterable<BenchmarkResult> find(FinderPage page) {
+    public Stream<BenchmarkResult> find(FinderPage page) {
         final String text = page.getContent();
         // Build an alternate automaton with all the complete words and match it against the text
         final List<BenchmarkResult> matches = new ArrayList<>(100);
@@ -30,6 +31,6 @@ class PersonAutomatonAlternateCompleteFinder implements BenchmarkFinder {
         while (m.find()) {
             matches.add(BenchmarkResult.of(m.start(), m.group().substring(0, m.group().length() - 2)));
         }
-        return matches;
+        return matches.stream();
     }
 }

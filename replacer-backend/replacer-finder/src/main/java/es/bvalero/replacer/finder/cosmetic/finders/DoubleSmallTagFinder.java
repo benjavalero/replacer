@@ -6,6 +6,7 @@ import es.bvalero.replacer.finder.cosmetic.CosmeticFinder;
 import es.bvalero.replacer.finder.util.RegexMatchFinder;
 import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 import org.intellij.lang.annotations.RegExp;
 import org.springframework.stereotype.Component;
 
@@ -19,7 +20,7 @@ class DoubleSmallTagFinder implements CosmeticFinder {
     private static final Pattern PATTERN_DOUBLE_SMALL_TAG = Pattern.compile(REGEX_DOUBLE_SMALL_TAG);
 
     @Override
-    public Iterable<MatchResult> findMatchResults(FinderPage page) {
+    public Stream<MatchResult> findMatchResults(FinderPage page) {
         return RegexMatchFinder.find(page.getContent(), PATTERN_DOUBLE_SMALL_TAG);
     }
 

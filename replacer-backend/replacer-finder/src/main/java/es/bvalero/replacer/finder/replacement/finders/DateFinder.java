@@ -21,7 +21,7 @@ import jakarta.annotation.PostConstruct;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.regex.MatchResult;
-import org.apache.commons.collections4.CollectionUtils;
+import java.util.stream.Stream;
 import org.apache.commons.collections4.ListValuedMap;
 import org.apache.commons.collections4.SetValuedMap;
 import org.apache.commons.collections4.multimap.ArrayListValuedHashMap;
@@ -177,22 +177,18 @@ class DateFinder implements ReplacementFinder {
     }
 
     @Override
-    public Iterable<Replacement> find(FinderPage page) {
+    public Stream<Replacement> find(FinderPage page) {
         // The performance was better with a linear approach just checking the 12 lang months,
         // but once we also check the English months we use the automaton approach which gives
         // a slightly better performance and is easier to maintain.
 
         // For the sake of performance and not to duplicate steps and code,
         // it is better to override the main method, and validate and convert at a time.
-        final List<Replacement> results = new ArrayList<>(100);
-        for (MatchResult match : findMatchResults(page)) {
-            CollectionUtils.addIgnoreNull(results, convertDate(match, page));
-        }
-        return results;
+        return findMatchResults(page).map(match -> convertDate(match, page)).filter(Objects::nonNull);
     }
 
     @Override
-    public Iterable<MatchResult> findMatchResults(FinderPage page) {
+    public Stream<MatchResult> findMatchResults(FinderPage page) {
         return AutomatonMatchFinder.find(page.getContent(), automata.get(page.getPageKey().getLang()));
     }
 

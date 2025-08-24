@@ -4,6 +4,7 @@ import es.bvalero.replacer.common.util.ReplacerUtils;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.SortedSet;
 import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -92,7 +93,7 @@ public final class Replacement implements FinderResult {
         return Suggestion.sortSuggestions(merged, this.text);
     }
 
-    public static void removeNested(Collection<Replacement> results) {
+    public static void removeNested(SortedSet<Replacement> results) {
         // Filter to return the results which are NOT strictly contained in any other
         results.removeIf(r -> results.stream().anyMatch(r2 -> r2.containsStrictly(r)));
     }
