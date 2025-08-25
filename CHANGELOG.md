@@ -1,6 +1,7 @@
 # Versions
 
-## 2.31.2 (??)
+## 2.31.2 (25 Aug 2025)
+- Fix: include the user agent to implement the robot policy
 - Feat: parse a collection of pages from Wikipedia response as a stream to avoid memory issues
 - Feat: find the replacements and the immutables as a stream and iterate them in parallel to improve the performance
 
