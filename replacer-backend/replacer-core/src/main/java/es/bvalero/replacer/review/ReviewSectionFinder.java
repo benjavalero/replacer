@@ -1,5 +1,6 @@
 package es.bvalero.replacer.review;
 
+import es.bvalero.replacer.common.domain.User;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
 import es.bvalero.replacer.wikipedia.WikipediaPageRepository;
@@ -25,12 +26,13 @@ class ReviewSectionFinder {
      * In case such a section is found, then return a review containing the page fragment corresponding to the section
      * with the replacements translated accordingly.
      */
-    Optional<Review> findPageReviewSection(Review review) {
+    Optional<Review> findPageReviewSection(Review review, User user) {
         assert review.getSection() == null;
 
         // Find the sections from the Wikipedia API (better than calculating them by ourselves)
         Collection<WikipediaSection> sections = wikipediaPageRepository.findSectionsInPage(
-            review.getPage().getPageKey()
+            review.getPage().getPageKey(),
+            user.getAccessToken()
         );
 
         // Find the smallest section containing all the replacements
@@ -40,7 +42,10 @@ class ReviewSectionFinder {
         );
         if (smallestSection.isPresent()) {
             // Find the section from Wikipedia API (better than calculating it by ourselves)
-            Optional<WikipediaPage> pageSection = wikipediaPageRepository.findPageSection(smallestSection.get());
+            Optional<WikipediaPage> pageSection = wikipediaPageRepository.findPageSection(
+                smallestSection.get(),
+                user.getAccessToken()
+            );
             if (pageSection.isPresent()) {
                 // We need to modify the start position of the replacements according to the section start
                 Collection<Replacement> sectionReplacements = translateReplacementsByOffset(

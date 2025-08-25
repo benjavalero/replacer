@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import es.bvalero.replacer.common.domain.AccessToken;
 import es.bvalero.replacer.common.domain.PageKey;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.wikipedia.*;
@@ -26,6 +27,8 @@ class WikipediaPageApiRepositoryTest {
 
     private WikipediaPageApiRepository wikipediaPageRepository;
     private WikipediaPageOfflineRepository wikipediaPageOfflineRepository;
+
+    private final AccessToken accessToken = AccessToken.of("a", "b");
 
     @BeforeEach
     void setUp() {
@@ -130,7 +133,9 @@ class WikipediaPageApiRepositoryTest {
 
         PageKey pageKey = PageKey.of(WikipediaLanguage.SPANISH, 6219990);
         String title = "Usuario:Benjavalero";
-        WikipediaPage page = wikipediaPageRepository.findByKey(pageKey).orElseThrow(WikipediaException::new);
+        WikipediaPage page = wikipediaPageRepository
+            .findByKey(pageKey, accessToken)
+            .orElseThrow(WikipediaException::new);
         assertNotNull(page);
         assertEquals(pageKey, page.getPageKey());
         assertEquals(title, page.getTitle());
@@ -205,7 +210,7 @@ class WikipediaPageApiRepositoryTest {
 
         WikipediaLanguage lang = WikipediaLanguage.SPANISH;
         Collection<WikipediaPage> pages = wikipediaPageRepository
-            .findByKeys(List.of(PageKey.of(lang, 6219990), PageKey.of(lang, 6903884)))
+            .findByKeys(List.of(PageKey.of(lang, 6219990), PageKey.of(lang, 6903884)), accessToken)
             .toList();
         assertNotNull(pages);
         assertEquals(2, pages.size());
@@ -410,7 +415,8 @@ class WikipediaPageApiRepositoryTest {
                 .lang(WikipediaLanguage.SPANISH)
                 .namespaces(List.of(WikipediaNamespace.ANNEX))
                 .text("Campaneta")
-                .build()
+                .build(),
+            accessToken
         );
         assertEquals(13, pageIds.getTotal());
     }
@@ -434,7 +440,8 @@ class WikipediaPageApiRepositoryTest {
         when(wikipediaApiHelper.executeApiRequest(any(WikipediaApiRequest.class))).thenReturn(response);
 
         WikipediaSearchResult pageIds = wikipediaPageRepository.findByContent(
-            WikipediaSearchRequest.builder().lang(WikipediaLanguage.SPANISH).text("jsdfslkdfjhow").build()
+            WikipediaSearchRequest.builder().lang(WikipediaLanguage.SPANISH).text("jsdfslkdfjhow").build(),
+            accessToken
         );
         assertTrue(pageIds.isEmpty());
     }
@@ -505,7 +512,8 @@ class WikipediaPageApiRepositoryTest {
         when(wikipediaApiHelper.executeApiRequest(any(WikipediaApiRequest.class))).thenReturn(response);
 
         Collection<WikipediaSection> sections = wikipediaPageRepository.findSectionsInPage(
-            PageKey.of(WikipediaLanguage.SPANISH, 6903884)
+            PageKey.of(WikipediaLanguage.SPANISH, 6903884),
+            accessToken
         );
         assertNotNull(sections);
         assertEquals(3, sections.size());
@@ -598,7 +606,8 @@ class WikipediaPageApiRepositoryTest {
         when(wikipediaApiHelper.executeApiRequest(any(WikipediaApiRequest.class))).thenReturn(response);
 
         Collection<WikipediaSection> sections = wikipediaPageRepository.findSectionsInPage(
-            PageKey.of(WikipediaLanguage.SPANISH, 6633556)
+            PageKey.of(WikipediaLanguage.SPANISH, 6633556),
+            accessToken
         );
         assertNotNull(sections);
         assertTrue(sections.isEmpty());
@@ -659,7 +668,9 @@ class WikipediaPageApiRepositoryTest {
             .anchor("X")
             .build();
         String title = "Usuario:Benjavalero/Taller";
-        WikipediaPage page = wikipediaPageRepository.findPageSection(section).orElseThrow(WikipediaException::new);
+        WikipediaPage page = wikipediaPageRepository
+            .findPageSection(section, accessToken)
+            .orElseThrow(WikipediaException::new);
         assertNotNull(page);
         assertEquals(WikipediaLanguage.getDefault(), page.getPageKey().getLang());
         assertEquals(pageKey, page.getPageKey());
@@ -682,7 +693,8 @@ class WikipediaPageApiRepositoryTest {
             assertFalse(p.isRedirect());
 
             Optional<WikipediaPage> page2 = wikipediaPageOfflineRepository.findByKey(
-                PageKey.of(WikipediaLanguage.getDefault(), pageId)
+                PageKey.of(WikipediaLanguage.getDefault(), pageId),
+                accessToken
             );
             // This test may fail sometimes if both fake offline pages have been built in different seconds
             // Just in case with annotate this test with @RetryingTest
@@ -690,18 +702,24 @@ class WikipediaPageApiRepositoryTest {
 
             PageKey pageKey = PageKey.of(WikipediaLanguage.getDefault(), pageId);
             Optional<WikipediaPage> pageSection = wikipediaPageOfflineRepository.findPageSection(
-                WikipediaSection.builder().pageKey(pageKey).anchor("").build()
+                WikipediaSection.builder().pageKey(pageKey).anchor("").build(),
+                accessToken
             );
             assertEquals(p, pageSection.orElse(null));
         });
 
         assertFalse(
             wikipediaPageOfflineRepository
-                .findByContent(WikipediaSearchRequest.builder().lang(WikipediaLanguage.getDefault()).text("").build())
+                .findByContent(
+                    WikipediaSearchRequest.builder().lang(WikipediaLanguage.getDefault()).text("").build(),
+                    accessToken
+                )
                 .isEmpty()
         );
         assertTrue(
-            wikipediaPageOfflineRepository.findSectionsInPage(PageKey.of(WikipediaLanguage.getDefault(), 1)).isEmpty()
+            wikipediaPageOfflineRepository
+                .findSectionsInPage(PageKey.of(WikipediaLanguage.getDefault(), 1), accessToken)
+                .isEmpty()
         );
     }
 }

@@ -3,7 +3,9 @@ package es.bvalero.replacer.review;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+import es.bvalero.replacer.common.domain.AccessToken;
 import es.bvalero.replacer.common.domain.PageKey;
+import es.bvalero.replacer.common.domain.User;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.ReplacementKind;
@@ -22,6 +24,8 @@ class ReviewSectionFinderTest {
     private WikipediaPageRepository wikipediaPageRepository;
 
     private ReviewSectionFinder reviewSectionFinder;
+
+    private final User user = User.buildTestUser();
 
     @BeforeEach
     public void setUp() {
@@ -45,10 +49,12 @@ class ReviewSectionFinderTest {
         WikipediaPage page = buildWikipediaPage(1, "Any content");
         List<Replacement> replacements = List.of();
 
-        when(wikipediaPageRepository.findSectionsInPage(any(PageKey.class))).thenReturn(List.of());
+        when(wikipediaPageRepository.findSectionsInPage(any(PageKey.class), any(AccessToken.class))).thenReturn(
+            List.of()
+        );
 
         Review review = Review.of(page, null, replacements, 1);
-        Optional<Review> sectionReview = reviewSectionFinder.findPageReviewSection(review);
+        Optional<Review> sectionReview = reviewSectionFinder.findPageReviewSection(review, user);
 
         assertFalse(sectionReview.isPresent());
     }
@@ -79,7 +85,9 @@ class ReviewSectionFinderTest {
             .byteOffset(offset)
             .anchor("X")
             .build();
-        when(wikipediaPageRepository.findSectionsInPage(page.getPageKey())).thenReturn(List.of(section));
+        when(wikipediaPageRepository.findSectionsInPage(page.getPageKey(), user.getAccessToken())).thenReturn(
+            List.of(section)
+        );
 
         String sectionContent = content.substring(offset, 10);
         WikipediaPage pageSection = WikipediaPage.builder()
@@ -90,9 +98,11 @@ class ReviewSectionFinderTest {
             .lastUpdate(page.getLastUpdate())
             .queryTimestamp(page.getQueryTimestamp())
             .build();
-        when(wikipediaPageRepository.findPageSection(section)).thenReturn(Optional.of(pageSection));
+        when(wikipediaPageRepository.findPageSection(section, user.getAccessToken())).thenReturn(
+            Optional.of(pageSection)
+        );
 
-        Optional<Review> sectionReview = reviewSectionFinder.findPageReviewSection(pageReview);
+        Optional<Review> sectionReview = reviewSectionFinder.findPageReviewSection(pageReview, user);
 
         assertTrue(sectionReview.isPresent());
         sectionReview.ifPresent(review -> {

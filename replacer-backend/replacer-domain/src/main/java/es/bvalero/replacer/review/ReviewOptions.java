@@ -30,7 +30,7 @@ class ReviewOptions {
 
     @Getter
     @NonNull
-    User user; // TODO: Check if this is actually used
+    User user;
 
     @Getter
     @NonNull

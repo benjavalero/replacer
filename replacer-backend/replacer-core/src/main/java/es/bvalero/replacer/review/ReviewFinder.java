@@ -188,7 +188,7 @@ abstract class ReviewFinder implements ReviewFinderApi {
     public Optional<Review> findPageReview(PageKey pageKey, ReviewOptions options) {
         try {
             // STEP 2.1: Load the page from Wikipedia
-            Optional<WikipediaPage> wikipediaPage = findPageFromWikipedia(pageKey);
+            Optional<WikipediaPage> wikipediaPage = findPageFromWikipedia(pageKey, options.getUser());
 
             // STEP 2.2: Build the review for the page, or return an empty review in case the page doesn't exist.
             return wikipediaPage.flatMap(page -> buildPageReview(page, options));
@@ -199,8 +199,8 @@ abstract class ReviewFinder implements ReviewFinderApi {
         }
     }
 
-    private Optional<WikipediaPage> findPageFromWikipedia(PageKey pageKey) {
-        Optional<WikipediaPage> page = wikipediaPageRepository.findByKey(pageKey);
+    private Optional<WikipediaPage> findPageFromWikipedia(PageKey pageKey, User user) {
+        Optional<WikipediaPage> page = wikipediaPageRepository.findByKey(pageKey, user.getAccessToken());
         if (page.isEmpty()) {
             // Find the page title in the database to improve the warning
             String pageDbTitle = pageRepository.findByKey(pageKey).map(IndexedPage::getTitle).orElse(null);
@@ -225,7 +225,7 @@ abstract class ReviewFinder implements ReviewFinderApi {
         Review review = Review.of(page, null, replacements, numPending);
 
         // STEP 2.2.3: Try to reduce the review size by returning just a section of the page
-        return Optional.of(reviewSectionFinder.findPageReviewSection(review).orElse(review));
+        return Optional.of(reviewSectionFinder.findPageReviewSection(review, options.getUser()).orElse(review));
     }
 
     private Collection<Replacement> findReplacements(WikipediaPage page, ReviewOptions options) {

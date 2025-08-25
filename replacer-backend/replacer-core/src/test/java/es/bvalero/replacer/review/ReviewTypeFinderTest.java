@@ -102,7 +102,7 @@ class ReviewTypeFinderTest {
             .thenReturn(List.of());
 
         // The page exists in Wikipedia
-        when(wikipediaPageRepository.findByKey(randomPageKey)).thenReturn(Optional.of(page));
+        when(wikipediaPageRepository.findByKey(randomPageKey, user.getAccessToken())).thenReturn(Optional.of(page));
 
         when(pageIndexApi.indexPage(page)).thenReturn(PageIndexResult.ofIndexed(replacements));
 
@@ -124,7 +124,7 @@ class ReviewTypeFinderTest {
         ).thenReturn(List.of(randomPageKey));
 
         // The page exists in Wikipedia
-        when(wikipediaPageRepository.findByKey(randomPageKey)).thenReturn(Optional.of(page));
+        when(wikipediaPageRepository.findByKey(randomPageKey, user.getAccessToken())).thenReturn(Optional.of(page));
 
         when(pageIndexApi.indexPage(page)).thenReturn(PageIndexResult.ofIndexed(replacements));
 
@@ -156,8 +156,8 @@ class ReviewTypeFinderTest {
         );
 
         // The pages exist in Wikipedia
-        when(wikipediaPageRepository.findByKey(randomPageKey)).thenReturn(Optional.of(page));
-        when(wikipediaPageRepository.findByKey(randomPageKey2)).thenReturn(Optional.of(page2));
+        when(wikipediaPageRepository.findByKey(randomPageKey, user.getAccessToken())).thenReturn(Optional.of(page));
+        when(wikipediaPageRepository.findByKey(randomPageKey2, user.getAccessToken())).thenReturn(Optional.of(page2));
 
         when(pageIndexApi.indexPage(any(WikipediaPage.class))).thenReturn(PageIndexResult.ofIndexed(replacements));
 
@@ -178,7 +178,7 @@ class ReviewTypeFinderTest {
         final int sectionId = 1;
 
         // The page exists in Wikipedia
-        when(wikipediaPageRepository.findByKey(randomPageKey)).thenReturn(Optional.of(page));
+        when(wikipediaPageRepository.findByKey(randomPageKey, user.getAccessToken())).thenReturn(Optional.of(page));
 
         when(pageIndexApi.indexPage(page)).thenReturn(PageIndexResult.ofIndexed(replacements));
 
@@ -195,7 +195,9 @@ class ReviewTypeFinderTest {
             .build();
         int numPending = 5;
         Review sectionReview = Review.of(page, section, replacements, numPending);
-        when(reviewSectionFinder.findPageReviewSection(any(Review.class))).thenReturn(Optional.of(sectionReview));
+        when(reviewSectionFinder.findPageReviewSection(any(Review.class), any(User.class))).thenReturn(
+            Optional.of(sectionReview)
+        );
 
         Optional<Review> review = pageReviewTypeSubtypeService.findPageReview(randomPageKey, options);
 
@@ -212,12 +214,14 @@ class ReviewTypeFinderTest {
     @Test
     void testPageReviewWithNoSection() {
         // The page exists in Wikipedia
-        when(wikipediaPageRepository.findByKey(randomPageKey)).thenReturn(Optional.of(page));
+        when(wikipediaPageRepository.findByKey(randomPageKey, user.getAccessToken())).thenReturn(Optional.of(page));
 
         when(pageIndexApi.indexPage(page)).thenReturn(PageIndexResult.ofIndexed(replacements));
 
         // The page has no sections
-        when(reviewSectionFinder.findPageReviewSection(any(Review.class))).thenReturn(Optional.empty());
+        when(reviewSectionFinder.findPageReviewSection(any(Review.class), any(User.class))).thenReturn(
+            Optional.empty()
+        );
 
         // Load the cache in order to find the total results
         pageReviewTypeSubtypeService.loadCache(options);
@@ -243,7 +247,7 @@ class ReviewTypeFinderTest {
             .thenReturn(List.of());
 
         // The page exists in Wikipedia
-        when(wikipediaPageRepository.findByKey(randomPageKey)).thenReturn(Optional.of(page));
+        when(wikipediaPageRepository.findByKey(randomPageKey, user.getAccessToken())).thenReturn(Optional.of(page));
 
         final Replacement replacement2 = Replacement.of(
             2,

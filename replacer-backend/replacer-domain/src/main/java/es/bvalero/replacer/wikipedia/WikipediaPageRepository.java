@@ -1,7 +1,9 @@
 package es.bvalero.replacer.wikipedia;
 
+import es.bvalero.replacer.common.domain.AccessToken;
 import es.bvalero.replacer.common.domain.PageKey;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
+import jakarta.annotation.Nullable;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -16,14 +18,23 @@ public interface WikipediaPageRepository {
 
     Optional<WikipediaPage> findByTitle(WikipediaLanguage lang, String pageTitle);
 
-    Optional<WikipediaPage> findByKey(PageKey pageKey);
+    Optional<WikipediaPage> findByKey(PageKey pageKey, AccessToken accessToken);
 
-    Stream<WikipediaPage> findByKeys(Collection<PageKey> pageKeys) throws WikipediaException;
+    default Stream<WikipediaPage> findByKeys(Collection<PageKey> pageKeys) throws WikipediaException {
+        return findByKeys(pageKeys, null);
+    }
 
-    Collection<WikipediaSection> findSectionsInPage(PageKey pageKey);
+    Stream<WikipediaPage> findByKeys(Collection<PageKey> pageKeys, @Nullable AccessToken accessToken)
+        throws WikipediaException;
 
-    Optional<WikipediaPage> findPageSection(WikipediaSection section);
+    Collection<WikipediaSection> findSectionsInPage(PageKey pageKey, AccessToken accessToken);
+
+    Optional<WikipediaPage> findPageSection(WikipediaSection section, AccessToken accessToken);
 
     /** Find the IDs of the pages containing the given content */
-    WikipediaSearchResult findByContent(WikipediaSearchRequest searchRequest);
+    default WikipediaSearchResult findByContent(WikipediaSearchRequest searchRequest) {
+        return findByContent(searchRequest, null);
+    }
+
+    WikipediaSearchResult findByContent(WikipediaSearchRequest searchRequest, @Nullable AccessToken accessToken);
 }

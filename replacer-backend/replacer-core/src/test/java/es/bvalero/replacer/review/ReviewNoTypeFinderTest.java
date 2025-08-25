@@ -108,7 +108,7 @@ class ReviewNoTypeFinderTest {
             .thenReturn(List.of());
 
         // The page doesn't exist in Wikipedia
-        when(wikipediaPageRepository.findByKey(randomPageKey)).thenReturn(Optional.empty());
+        when(wikipediaPageRepository.findByKey(randomPageKey, user.getAccessToken())).thenReturn(Optional.empty());
 
         Optional<Review> review = pageReviewNoTypeService.findRandomPageReview(options);
 
@@ -124,7 +124,7 @@ class ReviewNoTypeFinderTest {
         );
 
         // The page exists in Wikipedia
-        when(wikipediaPageRepository.findByKey(randomPageKey)).thenReturn(Optional.of(page));
+        when(wikipediaPageRepository.findByKey(randomPageKey, user.getAccessToken())).thenReturn(Optional.of(page));
 
         when(pageIndexApi.indexPage(page)).thenReturn(PageIndexResult.ofIndexed(replacements));
 
@@ -145,7 +145,7 @@ class ReviewNoTypeFinderTest {
             .thenReturn(List.of());
 
         // The page exists in Wikipedia
-        when(wikipediaPageRepository.findByKey(randomPageKey)).thenReturn(Optional.of(page));
+        when(wikipediaPageRepository.findByKey(randomPageKey, user.getAccessToken())).thenReturn(Optional.of(page));
 
         // The page doesn't contain replacements
         when(pageIndexApi.indexPage(page)).thenReturn(PageIndexResult.ofNotIndexed());
@@ -166,8 +166,8 @@ class ReviewNoTypeFinderTest {
         );
 
         // Only page 1 exists in Wikipedia
-        when(wikipediaPageRepository.findByKey(randomPageKey2)).thenReturn(Optional.empty());
-        when(wikipediaPageRepository.findByKey(randomPageKey)).thenReturn(Optional.of(page));
+        when(wikipediaPageRepository.findByKey(randomPageKey2, user.getAccessToken())).thenReturn(Optional.empty());
+        when(wikipediaPageRepository.findByKey(randomPageKey, user.getAccessToken())).thenReturn(Optional.of(page));
 
         when(pageIndexApi.indexPage(page)).thenReturn(PageIndexResult.ofIndexed(replacements));
 
@@ -192,7 +192,7 @@ class ReviewNoTypeFinderTest {
             List.of(randomPageKey)
         );
 
-        when(wikipediaPageRepository.findByKey(randomPageKey)).thenReturn(Optional.of(page));
+        when(wikipediaPageRepository.findByKey(randomPageKey, user.getAccessToken())).thenReturn(Optional.of(page));
 
         when(pageIndexApi.indexPage(page)).thenReturn(PageIndexResult.ofIndexed(replacements));
 

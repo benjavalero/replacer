@@ -18,7 +18,9 @@ public class MediaWikiConfiguration {
 
     @Bean("mediaWikiService")
     public OAuth10aService mediaWikiService() {
-        return new ServiceBuilder(this.apiKey).apiSecret(this.apiSecret).callback("oob")
+        return new ServiceBuilder(this.apiKey)
+            .apiSecret(this.apiSecret)
+            .callback("oob")
             .userAgent("BenjaBot/0.0 (https://replacer.toolforge.org) scribejava/8.3.3")
             .build(MediaWikiApi.instance());
     }

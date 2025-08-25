@@ -3,6 +3,7 @@ package es.bvalero.replacer.review;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+import es.bvalero.replacer.common.domain.AccessToken;
 import es.bvalero.replacer.common.domain.PageKey;
 import es.bvalero.replacer.common.domain.User;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
@@ -96,15 +97,15 @@ class ReviewCustomFinderTest {
     void testNoResults() {
         // No results in Wikipedia Search ==> Return an empty review
 
-        when(wikipediaPageRepository.findByContent(any(WikipediaSearchRequest.class))).thenReturn(
-            WikipediaSearchResult.ofEmpty()
-        );
+        when(
+            wikipediaPageRepository.findByContent(any(WikipediaSearchRequest.class), any(AccessToken.class))
+        ).thenReturn(WikipediaSearchResult.ofEmpty());
 
         Optional<Review> review = pageReviewCustomService.findRandomPageReview(options);
 
         assertTrue(review.isEmpty());
 
-        verify(wikipediaPageRepository).findByContent(buildWikipediaSearchRequest(replacement));
+        verify(wikipediaPageRepository).findByContent(buildWikipediaSearchRequest(replacement), user.getAccessToken());
         verify(customRepository, never()).findPagesReviewed(any(WikipediaLanguage.class), any(CustomType.class));
     }
 
@@ -117,7 +118,9 @@ class ReviewCustomFinderTest {
         final WikipediaSearchResult searchResult = WikipediaSearchResult.builder().total(1).pageId(pageId).build();
 
         // Mocks
-        when(wikipediaPageRepository.findByContent(any(WikipediaSearchRequest.class))).thenReturn(searchResult);
+        when(
+            wikipediaPageRepository.findByContent(any(WikipediaSearchRequest.class), any(AccessToken.class))
+        ).thenReturn(searchResult);
         when(customRepository.findPagesReviewed(any(WikipediaLanguage.class), any(CustomType.class))).thenReturn(
             List.of(PageKey.of(WikipediaLanguage.getDefault(), pageId))
         );
@@ -127,7 +130,7 @@ class ReviewCustomFinderTest {
         assertTrue(review.isEmpty());
 
         // Verifications
-        verify(wikipediaPageRepository).findByContent(buildWikipediaSearchRequest(replacement));
+        verify(wikipediaPageRepository).findByContent(buildWikipediaSearchRequest(replacement), user.getAccessToken());
         verify(customRepository).findPagesReviewed(lang, customType);
     }
 
@@ -152,11 +155,15 @@ class ReviewCustomFinderTest {
         final WikipediaPage page = buildWikipediaPage(pageId, content);
 
         // Mocks
-        when(wikipediaPageRepository.findByContent(any(WikipediaSearchRequest.class))).thenReturn(searchResult);
+        when(
+            wikipediaPageRepository.findByContent(any(WikipediaSearchRequest.class), any(AccessToken.class))
+        ).thenReturn(searchResult);
         when(customRepository.findPagesReviewed(any(WikipediaLanguage.class), any(CustomType.class))).thenReturn(
             List.of()
         );
-        when(wikipediaPageRepository.findByKey(any(PageKey.class))).thenReturn(Optional.of(page));
+        when(wikipediaPageRepository.findByKey(any(PageKey.class), any(AccessToken.class))).thenReturn(
+            Optional.of(page)
+        );
         when(pageIndexApi.indexPage(page)).thenReturn(PageIndexResult.ofIndexed());
         when(
             customReplacementFindApi.findCustomReplacements(
@@ -180,9 +187,9 @@ class ReviewCustomFinderTest {
         assertTrue(review2.isEmpty());
 
         // Verifications
-        verify(wikipediaPageRepository).findByContent(buildWikipediaSearchRequest(replacement));
+        verify(wikipediaPageRepository).findByContent(buildWikipediaSearchRequest(replacement), user.getAccessToken());
         verify(customRepository).findPagesReviewed(lang, customType);
-        verify(wikipediaPageRepository).findByKey(pageKey);
+        verify(wikipediaPageRepository).findByKey(pageKey, user.getAccessToken());
     }
 
     @Test
@@ -199,11 +206,15 @@ class ReviewCustomFinderTest {
         final WikipediaPage page = buildWikipediaPage(pageId, content);
 
         // Mocks
-        when(wikipediaPageRepository.findByContent(any(WikipediaSearchRequest.class))).thenReturn(searchResult);
+        when(
+            wikipediaPageRepository.findByContent(any(WikipediaSearchRequest.class), any(AccessToken.class))
+        ).thenReturn(searchResult);
         when(customRepository.findPagesReviewed(any(WikipediaLanguage.class), any(CustomType.class))).thenReturn(
             List.of()
         );
-        when(wikipediaPageRepository.findByKey(any(PageKey.class))).thenReturn(Optional.of(page));
+        when(wikipediaPageRepository.findByKey(any(PageKey.class), any(AccessToken.class))).thenReturn(
+            Optional.of(page)
+        );
         when(pageIndexApi.indexPage(page)).thenReturn(PageIndexResult.ofIndexed());
         when(
             customReplacementFindApi.findCustomReplacements(
@@ -217,9 +228,9 @@ class ReviewCustomFinderTest {
         assertTrue(review.isEmpty());
 
         // Verifications
-        verify(wikipediaPageRepository).findByContent(buildWikipediaSearchRequest(replacement));
+        verify(wikipediaPageRepository).findByContent(buildWikipediaSearchRequest(replacement), user.getAccessToken());
         verify(customRepository).findPagesReviewed(lang, customType);
-        verify(wikipediaPageRepository).findByKey(pageKey);
+        verify(wikipediaPageRepository).findByKey(pageKey, user.getAccessToken());
     }
 
     @Test
@@ -246,11 +257,15 @@ class ReviewCustomFinderTest {
         final WikipediaPage page = buildWikipediaPage(pageId2, content);
 
         // Mocks
-        when(wikipediaPageRepository.findByContent(any(WikipediaSearchRequest.class))).thenReturn(searchResult);
+        when(
+            wikipediaPageRepository.findByContent(any(WikipediaSearchRequest.class), any(AccessToken.class))
+        ).thenReturn(searchResult);
         when(customRepository.findPagesReviewed(any(WikipediaLanguage.class), any(CustomType.class))).thenReturn(
             List.of(PageKey.of(WikipediaLanguage.getDefault(), pageId1))
         );
-        when(wikipediaPageRepository.findByKey(any(PageKey.class))).thenReturn(Optional.of(page));
+        when(wikipediaPageRepository.findByKey(any(PageKey.class), any(AccessToken.class))).thenReturn(
+            Optional.of(page)
+        );
         when(pageIndexApi.indexPage(page)).thenReturn(PageIndexResult.ofIndexed());
         when(
             customReplacementFindApi.findCustomReplacements(
@@ -270,9 +285,9 @@ class ReviewCustomFinderTest {
         });
 
         // Verifications
-        verify(wikipediaPageRepository).findByContent(buildWikipediaSearchRequest(replacement));
+        verify(wikipediaPageRepository).findByContent(buildWikipediaSearchRequest(replacement), user.getAccessToken());
         verify(customRepository).findPagesReviewed(lang, customType);
-        verify(wikipediaPageRepository).findByKey(pageKey2);
+        verify(wikipediaPageRepository).findByKey(pageKey2, user.getAccessToken());
     }
 
     @Test
@@ -282,7 +297,7 @@ class ReviewCustomFinderTest {
         // ==> Return an empty review
 
         // Mocks
-        when(wikipediaPageRepository.findByContent(any(WikipediaSearchRequest.class)))
+        when(wikipediaPageRepository.findByContent(any(WikipediaSearchRequest.class), any(AccessToken.class)))
             .thenReturn(WikipediaSearchResult.builder().total(4).pageId(12).pageId(23).pageId(34).build())
             .thenReturn(WikipediaSearchResult.builder().total(4).pageId(45).build());
         when(customRepository.findPagesReviewed(any(WikipediaLanguage.class), any(CustomType.class))).thenReturn(
@@ -294,10 +309,13 @@ class ReviewCustomFinderTest {
         assertTrue(review.isEmpty());
 
         // Verifications
-        verify(wikipediaPageRepository).findByContent(buildWikipediaSearchRequest(replacement));
-        verify(wikipediaPageRepository).findByContent(buildWikipediaSearchRequest(replacement, 3));
+        verify(wikipediaPageRepository).findByContent(buildWikipediaSearchRequest(replacement), user.getAccessToken());
+        verify(wikipediaPageRepository).findByContent(
+            buildWikipediaSearchRequest(replacement, 3),
+            user.getAccessToken()
+        );
         verify(customRepository).findPagesReviewed(lang, customType);
-        verify(wikipediaPageRepository, never()).findByKey(any(PageKey.class));
+        verify(wikipediaPageRepository, never()).findByKey(any(PageKey.class), any(AccessToken.class));
     }
 
     @Test
@@ -320,7 +338,7 @@ class ReviewCustomFinderTest {
         }
 
         // Mocks
-        when(wikipediaPageRepository.findByContent(any(WikipediaSearchRequest.class)))
+        when(wikipediaPageRepository.findByContent(any(WikipediaSearchRequest.class), any(AccessToken.class)))
             .thenReturn(WikipediaSearchResult.builder().total(4).pageId(1).pageId(2).pageId(3).build()) // Call 1
             .thenReturn(WikipediaSearchResult.builder().total(2).pageId(2).pageId(4).build()) // Call 4
             .thenReturn(WikipediaSearchResult.builder().total(2).pageId(2).pageId(4).build()); // Call 5
@@ -330,7 +348,7 @@ class ReviewCustomFinderTest {
             .thenReturn(Stream.of(1, 2, 3).map(pageId -> PageKey.of(lang, pageId)).toList()) // Call 4
             .thenReturn(Stream.of(1, 2, 3, 4).map(pageId -> PageKey.of(lang, pageId)).toList()); // Call 5
 
-        when(wikipediaPageRepository.findByKey(any(PageKey.class)))
+        when(wikipediaPageRepository.findByKey(any(PageKey.class), any(AccessToken.class)))
             .thenReturn(Optional.of(pages.get(1))) // Call 1
             .thenReturn(Optional.of(pages.get(2))) // Call 2
             .thenReturn(Optional.of(pages.get(3))) // Call 3
@@ -387,9 +405,12 @@ class ReviewCustomFinderTest {
         assertTrue(review.isEmpty());
 
         // Verifications
-        verify(wikipediaPageRepository, times(2)).findByContent(buildWikipediaSearchRequest(replacement));
+        verify(wikipediaPageRepository, times(2)).findByContent(
+            buildWikipediaSearchRequest(replacement),
+            user.getAccessToken()
+        );
         verify(customRepository, times(2)).findPagesReviewed(lang, customType);
-        verify(wikipediaPageRepository, times(4)).findByKey(any(PageKey.class));
+        verify(wikipediaPageRepository, times(4)).findByKey(any(PageKey.class), any(AccessToken.class));
     }
 
     @Test
@@ -403,7 +424,7 @@ class ReviewCustomFinderTest {
         }
 
         // Mocks
-        when(wikipediaPageRepository.findByContent(any(WikipediaSearchRequest.class)))
+        when(wikipediaPageRepository.findByContent(any(WikipediaSearchRequest.class), any(AccessToken.class)))
             .thenReturn(WikipediaSearchResult.builder().total(4).pageId(1).pageId(2).pageId(3).build())
             .thenReturn(WikipediaSearchResult.builder().total(4).pageId(4).build())
             .thenReturn(WikipediaSearchResult.builder().total(4).build());
@@ -412,7 +433,7 @@ class ReviewCustomFinderTest {
             List.of()
         );
 
-        when(wikipediaPageRepository.findByKey(any(PageKey.class)))
+        when(wikipediaPageRepository.findByKey(any(PageKey.class), any(AccessToken.class)))
             .thenReturn(Optional.of(pages.get(1))) // Call 1
             .thenReturn(Optional.of(pages.get(2))) // Call 2
             .thenReturn(Optional.of(pages.get(3))) // Call 3
@@ -432,11 +453,17 @@ class ReviewCustomFinderTest {
         assertTrue(review.isEmpty());
 
         // Verifications
-        verify(wikipediaPageRepository).findByContent(buildWikipediaSearchRequest(replacement));
-        verify(wikipediaPageRepository).findByContent(buildWikipediaSearchRequest(replacement, CACHE_SIZE));
-        verify(wikipediaPageRepository).findByContent(buildWikipediaSearchRequest(replacement, 2 * CACHE_SIZE));
+        verify(wikipediaPageRepository).findByContent(buildWikipediaSearchRequest(replacement), user.getAccessToken());
+        verify(wikipediaPageRepository).findByContent(
+            buildWikipediaSearchRequest(replacement, CACHE_SIZE),
+            user.getAccessToken()
+        );
+        verify(wikipediaPageRepository).findByContent(
+            buildWikipediaSearchRequest(replacement, 2 * CACHE_SIZE),
+            user.getAccessToken()
+        );
         verify(customRepository, times(2)).findPagesReviewed(lang, customType);
-        verify(wikipediaPageRepository, times(4)).findByKey(any(PageKey.class));
+        verify(wikipediaPageRepository, times(4)).findByKey(any(PageKey.class), any(AccessToken.class));
     }
 
     @Test

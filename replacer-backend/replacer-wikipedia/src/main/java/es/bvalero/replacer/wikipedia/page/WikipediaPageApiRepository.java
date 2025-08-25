@@ -2,6 +2,7 @@ package es.bvalero.replacer.wikipedia.page;
 
 import static org.apache.commons.lang3.StringUtils.SPACE;
 
+import es.bvalero.replacer.common.domain.AccessToken;
 import es.bvalero.replacer.common.domain.PageKey;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.util.ReplacerUtils;
@@ -10,6 +11,7 @@ import es.bvalero.replacer.wikipedia.api.WikipediaApiHelper;
 import es.bvalero.replacer.wikipedia.api.WikipediaApiRequest;
 import es.bvalero.replacer.wikipedia.api.WikipediaApiResponse;
 import es.bvalero.replacer.wikipedia.api.WikipediaApiVerb;
+import jakarta.annotation.Nullable;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -60,17 +62,18 @@ public class WikipediaPageApiRepository implements WikipediaPageRepository {
     }
 
     @Override
-    public Optional<WikipediaPage> findByKey(PageKey pageKey) {
+    public Optional<WikipediaPage> findByKey(PageKey pageKey, AccessToken accessToken) {
         // Return the only value that should be in the map
         try {
-            return findByKeys(List.of(pageKey)).findAny();
+            return findByKeys(List.of(pageKey), accessToken).findAny();
         } catch (WikipediaException e) {
             return Optional.empty();
         }
     }
 
     @Override
-    public Stream<WikipediaPage> findByKeys(Collection<PageKey> pageKeys) throws WikipediaException {
+    public Stream<WikipediaPage> findByKeys(Collection<PageKey> pageKeys, @Nullable AccessToken accessToken)
+        throws WikipediaException {
         if (pageKeys.isEmpty()) {
             return Stream.empty();
         }
@@ -91,14 +94,17 @@ public class WikipediaPageApiRepository implements WikipediaPageRepository {
         int start = 0;
         while (start < idList.size()) {
             List<Integer> subList = idList.subList(start, start + Math.min(idList.size() - start, MAX_PAGES_REQUESTED));
-            pages = Stream.concat(pages, getPagesByIds(lang, subList));
+            pages = Stream.concat(pages, getPagesByIds(lang, subList, accessToken));
             start += subList.size();
         }
         return pages;
     }
 
-    private Stream<WikipediaPage> getPagesByIds(WikipediaLanguage lang, List<Integer> pageIds)
-        throws WikipediaException {
+    private Stream<WikipediaPage> getPagesByIds(
+        WikipediaLanguage lang,
+        List<Integer> pageIds,
+        @Nullable AccessToken accessToken
+    ) throws WikipediaException {
         if (pageIds.isEmpty()) {
             return Stream.empty();
         }
@@ -109,6 +115,7 @@ public class WikipediaPageApiRepository implements WikipediaPageRepository {
                 .verb(WikipediaApiVerb.GET)
                 .lang(lang)
                 .params(buildPageIdsRequestParams("pageids", pagesValue))
+                .accessToken(accessToken)
                 .build();
             return convertWikipediaPageResponse(lang, wikipediaApiHelper.executeApiRequestAsText(apiRequest));
         } catch (OutOfMemoryError e) {
@@ -116,8 +123,8 @@ public class WikipediaPageApiRepository implements WikipediaPageRepository {
             // Retry recursively with smaller chunks
             LOGGER.warn("Out-of-memory when retrieving pages by ID: {}", StringUtils.join(pageIds, SPACE));
             int half = pageIds.size() / 2;
-            Stream<WikipediaPage> result1 = getPagesByIds(lang, pageIds.subList(0, half));
-            Stream<WikipediaPage> result2 = getPagesByIds(lang, pageIds.subList(half, pageIds.size()));
+            Stream<WikipediaPage> result1 = getPagesByIds(lang, pageIds.subList(0, half), accessToken);
+            Stream<WikipediaPage> result2 = getPagesByIds(lang, pageIds.subList(half, pageIds.size()), accessToken);
             return Stream.concat(result1, result2);
         } catch (Exception e) {
             LOGGER.error("Error finding pages by ID: {}", StringUtils.join(pageIds, SPACE), e);
@@ -138,11 +145,12 @@ public class WikipediaPageApiRepository implements WikipediaPageRepository {
     }
 
     @Override
-    public Collection<WikipediaSection> findSectionsInPage(PageKey pageKey) {
+    public Collection<WikipediaSection> findSectionsInPage(PageKey pageKey, AccessToken accessToken) {
         WikipediaApiRequest apiRequest = WikipediaApiRequest.builder()
             .verb(WikipediaApiVerb.GET)
             .lang(pageKey.getLang())
             .params(buildPageSectionsRequestParams(pageKey.getPageId()))
+            .accessToken(accessToken)
             .build();
         try {
             WikipediaApiResponse apiResponse = wikipediaApiHelper.executeApiRequest(apiRequest);
@@ -191,7 +199,7 @@ public class WikipediaPageApiRepository implements WikipediaPageRepository {
     }
 
     @Override
-    public Optional<WikipediaPage> findPageSection(WikipediaSection section) {
+    public Optional<WikipediaPage> findPageSection(WikipediaSection section, AccessToken accessToken) {
         try {
             PageKey pageKey = section.getPageKey();
             WikipediaLanguage lang = pageKey.getLang();
@@ -199,6 +207,7 @@ public class WikipediaPageApiRepository implements WikipediaPageRepository {
                 .verb(WikipediaApiVerb.GET)
                 .lang(lang)
                 .params(buildPageIdsAndSectionRequestParams(pageKey.getPageId(), section.getIndex()))
+                .accessToken(accessToken)
                 .build();
             return convertWikipediaPageResponse(lang, wikipediaApiHelper.executeApiRequestAsText(apiRequest)).findAny();
         } catch (WikipediaException e) {
@@ -214,7 +223,10 @@ public class WikipediaPageApiRepository implements WikipediaPageRepository {
     }
 
     @Override
-    public WikipediaSearchResult findByContent(WikipediaSearchRequest searchRequest) {
+    public WikipediaSearchResult findByContent(
+        WikipediaSearchRequest searchRequest,
+        @Nullable AccessToken accessToken
+    ) {
         LOGGER.debug("START Find Page by Content: {}", searchRequest);
 
         if (searchRequest.getLimit() > MAX_SEARCH_RESULTS) {
@@ -237,6 +249,7 @@ public class WikipediaPageApiRepository implements WikipediaPageRepository {
             .verb(WikipediaApiVerb.GET)
             .lang(searchRequest.getLang())
             .params(buildPageIdsByStringMatchRequestParams(searchRequest))
+            .accessToken(accessToken)
             .build();
         WikipediaSearchResult result = WikipediaSearchResult.ofEmpty();
         try {

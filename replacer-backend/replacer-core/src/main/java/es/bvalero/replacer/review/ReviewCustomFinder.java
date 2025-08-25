@@ -142,7 +142,7 @@ class ReviewCustomFinder extends ReviewFinder {
             .offset(offset)
             .limit(getCacheSize())
             .build();
-        return wikipediaPageRepository.findByContent(searchRequest);
+        return wikipediaPageRepository.findByContent(searchRequest, options.getUser().getAccessToken());
     }
 
     private Collection<Integer> findReviewedPageIds(ReviewOptions options) {

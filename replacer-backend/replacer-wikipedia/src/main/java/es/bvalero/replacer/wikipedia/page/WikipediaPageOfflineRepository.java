@@ -1,10 +1,12 @@
 package es.bvalero.replacer.wikipedia.page;
 
+import es.bvalero.replacer.common.domain.AccessToken;
 import es.bvalero.replacer.common.domain.PageKey;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.common.util.FileOfflineUtils;
 import es.bvalero.replacer.wikipedia.*;
+import jakarta.annotation.Nullable;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -42,27 +44,34 @@ class WikipediaPageOfflineRepository implements WikipediaPageRepository {
     }
 
     @Override
-    public Optional<WikipediaPage> findByKey(PageKey pageKey) {
+    public Optional<WikipediaPage> findByKey(PageKey pageKey, AccessToken accessToken) {
         return buildFakePage(pageKey.getPageId());
     }
 
     @Override
-    public Stream<WikipediaPage> findByKeys(Collection<PageKey> pageKeys) {
-        return pageKeys.stream().map(this::findByKey).filter(Optional::isPresent).map(Optional::get);
+    public Stream<WikipediaPage> findByKeys(Collection<PageKey> pageKeys, @Nullable AccessToken accessToken) {
+        return pageKeys
+            .stream()
+            .map(pageKey -> buildFakePage(pageKey.getPageId()))
+            .filter(Optional::isPresent)
+            .map(Optional::get);
     }
 
     @Override
-    public Collection<WikipediaSection> findSectionsInPage(PageKey pageKey) {
+    public Collection<WikipediaSection> findSectionsInPage(PageKey pageKey, AccessToken accessToken) {
         return List.of();
     }
 
     @Override
-    public Optional<WikipediaPage> findPageSection(WikipediaSection section) {
+    public Optional<WikipediaPage> findPageSection(WikipediaSection section, AccessToken accessToken) {
         return buildFakePage(section.getPageKey().getPageId());
     }
 
     @Override
-    public WikipediaSearchResult findByContent(WikipediaSearchRequest searchRequest) {
+    public WikipediaSearchResult findByContent(
+        WikipediaSearchRequest searchRequest,
+        @Nullable AccessToken accessToken
+    ) {
         return WikipediaSearchResult.builder().total(1).pageId(1).build();
     }
 }
