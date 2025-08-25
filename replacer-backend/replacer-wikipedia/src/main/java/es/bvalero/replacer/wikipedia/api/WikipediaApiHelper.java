@@ -1,5 +1,7 @@
 package es.bvalero.replacer.wikipedia.api;
 
+import static org.springframework.http.HttpHeaders.ACCEPT_ENCODING;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.scribejava.core.model.OAuth1AccessToken;
@@ -51,6 +53,7 @@ public class WikipediaApiHelper {
         Verb verb = convertVerb(apiRequest.getVerb());
         String url = apiRequest.getUrl();
         OAuthRequest mediaWikiRequest = new OAuthRequest(verb, url);
+        mediaWikiRequest.addHeader(ACCEPT_ENCODING, "gzip");
         apiRequest.getParams().forEach(mediaWikiRequest::addParameter);
         if (apiRequest.isSigned()) {
             assert apiRequest.getAccessToken() != null;
