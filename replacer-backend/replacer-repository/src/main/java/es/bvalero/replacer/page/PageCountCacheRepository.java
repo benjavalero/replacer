@@ -4,9 +4,6 @@ import static java.time.temporal.ChronoUnit.HOURS;
 
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.LoadingCache;
-import es.bvalero.replacer.common.PageCountDecrementEvent;
-import es.bvalero.replacer.common.PageCountIncrementEvent;
-import es.bvalero.replacer.common.PageCountRemoveEvent;
 import es.bvalero.replacer.common.domain.ResultCount;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.StandardType;

@@ -29,6 +29,7 @@ class ReplacementCountCacheRepository implements ReplacementCountRepository {
 
     // Statistics caches
     // The queries in database can be heavy, so we preload the counts on start and refresh them periodically.
+    // As we refresh the stats every 5 minutes, it's not worth to try to update the counts at real-time.
     private final LoadingCache<WikipediaLanguage, Integer> countReviewed = Caffeine.newBuilder()
         .refreshAfterWrite(refreshTime)
         .build(l -> replacementCountRepository.countReviewed(l));
