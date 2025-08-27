@@ -1,7 +1,7 @@
 package es.bvalero.replacer.replacement.type;
 
 import es.bvalero.replacer.finder.RemovedTypeEvent;
-import es.bvalero.replacer.replacement.ReplacementSaveRepository;
+import es.bvalero.replacer.page.PageSaveRepository;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
@@ -9,14 +9,14 @@ import org.springframework.stereotype.Service;
 class ReplacementTypeSaveService {
 
     // Dependency injection
-    private final ReplacementSaveRepository replacementSaveRepository;
+    private final PageSaveRepository pageSaveRepository;
 
-    ReplacementTypeSaveService(ReplacementSaveRepository replacementSaveRepository) {
-        this.replacementSaveRepository = replacementSaveRepository;
+    ReplacementTypeSaveService(PageSaveRepository pageSaveRepository) {
+        this.pageSaveRepository = pageSaveRepository;
     }
 
     @EventListener
     public void onRemovedType(RemovedTypeEvent event) {
-        replacementSaveRepository.removeByType(event.getLang(), event.getType());
+        pageSaveRepository.removeByType(event.getLang(), event.getType());
     }
 }

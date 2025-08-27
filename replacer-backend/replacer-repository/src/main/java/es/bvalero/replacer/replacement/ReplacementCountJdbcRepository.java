@@ -1,6 +1,6 @@
 package es.bvalero.replacer.replacement;
 
-import static es.bvalero.replacer.replacement.IndexedReplacement.REVIEWER_SYSTEM;
+import static es.bvalero.replacer.page.IndexedReplacement.REVIEWER_SYSTEM;
 
 import es.bvalero.replacer.common.domain.PageTitle;
 import es.bvalero.replacer.common.domain.ResultCount;

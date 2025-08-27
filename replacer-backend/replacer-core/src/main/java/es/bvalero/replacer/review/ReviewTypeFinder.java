@@ -9,7 +9,6 @@ import es.bvalero.replacer.index.PageIndexApi;
 import es.bvalero.replacer.page.PageCountRepository;
 import es.bvalero.replacer.page.PageRepository;
 import es.bvalero.replacer.page.PageSaveRepository;
-import es.bvalero.replacer.replacement.ReplacementSaveRepository;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
 import es.bvalero.replacer.wikipedia.WikipediaPageRepository;
 import java.util.Collection;
@@ -28,7 +27,6 @@ class ReviewTypeFinder extends ReviewFinder {
     private final PageIndexApi pageIndexApi;
     private final PageSaveRepository pageSaveRepository;
     private final PageCountRepository pageCountRepository;
-    private final ReplacementSaveRepository replacementSaveRepository;
 
     ReviewTypeFinder(
         WikipediaPageRepository wikipediaPageRepository,
@@ -36,15 +34,13 @@ class ReviewTypeFinder extends ReviewFinder {
         PageRepository pageRepository,
         PageSaveRepository pageSaveRepository,
         ReviewSectionFinder reviewSectionFinder,
-        PageCountRepository pageCountRepository,
-        ReplacementSaveRepository replacementSaveRepository
+        PageCountRepository pageCountRepository
     ) {
         super(wikipediaPageRepository, pageIndexApi, pageRepository, pageSaveRepository, reviewSectionFinder);
         this.pageIndexApi = pageIndexApi;
         this.pageRepository = pageRepository;
         this.pageSaveRepository = pageSaveRepository;
         this.pageCountRepository = pageCountRepository;
-        this.replacementSaveRepository = replacementSaveRepository;
     }
 
     @Override
@@ -83,7 +79,7 @@ class ReviewTypeFinder extends ReviewFinder {
 
     @Override
     void removePageCounts(ReviewOptions options) {
-        replacementSaveRepository.removeByType(options.getUser().getId().getLang(), options.getStandardType());
+        pageSaveRepository.removeByType(options.getUser().getId().getLang(), options.getStandardType());
     }
 
     @Override

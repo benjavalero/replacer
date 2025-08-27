@@ -7,7 +7,7 @@ import es.bvalero.replacer.common.domain.PageTitle;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.StandardType;
 import es.bvalero.replacer.page.PageRepository;
-import es.bvalero.replacer.replacement.ReplacementSaveRepository;
+import es.bvalero.replacer.page.PageSaveRepository;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -20,15 +20,15 @@ class PageListServiceTest {
 
     // Dependency injection
     private PageRepository pageRepository;
-    private ReplacementSaveRepository replacementSaveRepository;
+    private PageSaveRepository pageSaveRepository;
 
     private PageListService pageListService;
 
     @BeforeEach
     public void setUp() {
         pageRepository = mock(PageRepository.class);
-        replacementSaveRepository = mock(ReplacementSaveRepository.class);
-        pageListService = new PageListService(pageRepository, replacementSaveRepository);
+        pageSaveRepository = mock(PageSaveRepository.class);
+        pageListService = new PageListService(pageRepository, pageSaveRepository);
     }
 
     @Test

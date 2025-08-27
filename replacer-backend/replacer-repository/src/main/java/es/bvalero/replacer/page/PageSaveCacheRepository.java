@@ -2,11 +2,10 @@ package es.bvalero.replacer.page;
 
 import es.bvalero.replacer.common.PageCountDecrementEvent;
 import es.bvalero.replacer.common.PageCountIncrementEvent;
+import es.bvalero.replacer.common.PageCountRemoveEvent;
 import es.bvalero.replacer.common.domain.PageKey;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.StandardType;
-import es.bvalero.replacer.replacement.IndexedReplacement;
-import es.bvalero.replacer.replacement.IndexedReplacementStatus;
 import java.util.Collection;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -38,12 +37,6 @@ class PageSaveCacheRepository implements PageSaveRepository {
         this.pageSaveRepository.save(pages);
     }
 
-    @Override
-    public void removeByKey(Collection<PageKey> pageKeys) {
-        // Not worth to find the replacements in order to update the count cache
-        this.pageSaveRepository.removeByKey(pageKeys);
-    }
-
     private void handlePageCache(IndexedPage page) {
         WikipediaLanguage lang = page.getPageKey().getLang();
         Collection<StandardType> types = page
@@ -72,5 +65,23 @@ class PageSaveCacheRepository implements PageSaveRepository {
                 }
             }
         }
+    }
+
+    @Override
+    public void removeByKey(Collection<PageKey> pageKeys) {
+        // Not worth to find the replacements in order to update the count cache
+        this.pageSaveRepository.removeByKey(pageKeys);
+    }
+
+    @Override
+    public void updateReviewerByType(WikipediaLanguage lang, StandardType type, String reviewer) {
+        applicationEventPublisher.publishEvent(PageCountRemoveEvent.of(lang, type));
+        this.pageSaveRepository.updateReviewerByType(lang, type, reviewer);
+    }
+
+    @Override
+    public void removeByType(WikipediaLanguage lang, StandardType type) {
+        applicationEventPublisher.publishEvent(PageCountRemoveEvent.of(lang, type));
+        this.pageSaveRepository.removeByType(lang, type);
     }
 }

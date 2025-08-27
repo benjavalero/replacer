@@ -1,4 +1,4 @@
-package es.bvalero.replacer.replacement;
+package es.bvalero.replacer.page;
 
 import es.bvalero.replacer.common.domain.PageKey;
 import es.bvalero.replacer.finder.CustomType;
@@ -49,7 +49,7 @@ public class IndexedCustomReplacement {
         return getCs(this.type.isCaseSensitive());
     }
 
-    static byte getCs(boolean caseSensitive) {
+    public static byte getCs(boolean caseSensitive) {
         return (byte) (caseSensitive ? 1 : 0);
     }
 }

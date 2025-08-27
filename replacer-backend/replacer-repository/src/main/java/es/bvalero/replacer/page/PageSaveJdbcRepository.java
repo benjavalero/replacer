@@ -1,20 +1,23 @@
 package es.bvalero.replacer.page;
 
+import es.bvalero.replacer.common.PageCountDecrementEvent;
 import es.bvalero.replacer.common.domain.PageKey;
-import es.bvalero.replacer.replacement.CustomRepository;
-import es.bvalero.replacer.replacement.IndexedCustomReplacement;
-import es.bvalero.replacer.replacement.IndexedReplacementStatus;
-import es.bvalero.replacer.replacement.ReplacementSaveRepository;
+import es.bvalero.replacer.common.domain.WikipediaLanguage;
+import es.bvalero.replacer.finder.StandardType;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.core.namedparam.SqlParameterSource;
-import org.springframework.jdbc.core.namedparam.SqlParameterSourceUtils;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.jdbc.core.namedparam.*;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Qualifier("pageSaveJdbcRepository")
 @Transactional
 @Repository
@@ -22,20 +25,17 @@ class PageSaveJdbcRepository implements PageSaveRepository {
 
     // Dependency injection
     private final NamedParameterJdbcTemplate jdbcTemplate;
-    private final ReplacementSaveRepository replacementSaveRepository;
+    private final ApplicationEventPublisher applicationEventPublisher;
     private final PageRepository pageRepository;
-    private final CustomRepository customRepository;
 
     PageSaveJdbcRepository(
         NamedParameterJdbcTemplate jdbcTemplate,
-        ReplacementSaveRepository replacementSaveRepository,
-        PageRepository pageRepository,
-        CustomRepository customRepository
+        ApplicationEventPublisher applicationEventPublisher,
+        PageRepository pageRepository
     ) {
         this.jdbcTemplate = jdbcTemplate;
-        this.replacementSaveRepository = replacementSaveRepository;
+        this.applicationEventPublisher = applicationEventPublisher;
         this.pageRepository = pageRepository;
-        this.customRepository = customRepository;
     }
 
     @Override
@@ -57,7 +57,7 @@ class PageSaveJdbcRepository implements PageSaveRepository {
         update(pages.stream().filter(p -> p.getStatus() == IndexedPageStatus.UPDATE).toList());
 
         // Add the replacements
-        replacementSaveRepository.add(
+        addReplacements(
             pages
                 .stream()
                 .flatMap(p -> p.getReplacements().stream())
@@ -66,7 +66,7 @@ class PageSaveJdbcRepository implements PageSaveRepository {
         );
 
         // Update the replacements
-        replacementSaveRepository.update(
+        updateReplacements(
             pages
                 .stream()
                 .flatMap(p -> p.getReplacements().stream())
@@ -75,7 +75,7 @@ class PageSaveJdbcRepository implements PageSaveRepository {
         );
 
         // Update the reviewed replacements
-        replacementSaveRepository.updateReviewer(
+        updateReviewer(
             pages
                 .stream()
                 .flatMap(p -> p.getReplacements().stream())
@@ -87,7 +87,7 @@ class PageSaveJdbcRepository implements PageSaveRepository {
         addCustomReplacements(pages.stream().flatMap(p -> p.getCustomReplacements().stream()).toList());
 
         // Remove the replacements
-        replacementSaveRepository.remove(
+        removeReplacements(
             pages
                 .stream()
                 .flatMap(p -> p.getReplacements().stream())
@@ -135,7 +135,16 @@ class PageSaveJdbcRepository implements PageSaveRepository {
                 }
             });
 
-        customRepository.add(customReplacements);
+        // TODO: Insert in batch or add comment to explain why not
+        customReplacements.forEach(this::addCustomReplacement);
+    }
+
+    private void addCustomReplacement(IndexedCustomReplacement customReplacement) {
+        final String sql =
+            "INSERT INTO custom (lang, page_id, replacement, cs, start, reviewer, review_type, review_timestamp, old_rev_id, new_rev_id) " +
+            "VALUES (:pageKey.lang.code, :pageKey.pageId, :type.subtype, :cs, :start, :reviewer, :reviewType.code, :reviewTimestamp, :oldRevId, :newRevId)";
+        SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(customReplacement);
+        jdbcTemplate.update(sql, namedParameters);
     }
 
     @Override
@@ -146,4 +155,120 @@ class PageSaveJdbcRepository implements PageSaveRepository {
         String sqlPages = "DELETE FROM page WHERE lang = :lang.code AND page_id = :pageId";
         jdbcTemplate.batchUpdate(sqlPages, namedParameters);
     }
+
+    //region Indexed Replacements
+
+    /** Add a collection of page replacements assuming the related pages already exist */
+    private void addReplacements(Collection<IndexedReplacement> replacements) {
+        assert replacements.stream().allMatch(r -> r.getStatus() == IndexedReplacementStatus.ADD);
+        String sql =
+            "INSERT INTO replacement (page_id, lang, kind, subtype, start, context, reviewer) " +
+            "VALUES (:pageKey.pageId, :pageKey.lang.code, :type.kind.code, :type.subtype, :start, :context, :reviewer)";
+        SqlParameterSource[] namedParameters = SqlParameterSourceUtils.createBatch(replacements.toArray());
+        jdbcTemplate.batchUpdate(sql, namedParameters);
+    }
+
+    /** Update a collection of page replacements */
+    private void updateReplacements(Collection<IndexedReplacement> replacements) {
+        assert replacements.stream().allMatch(r -> r.getStatus() == IndexedReplacementStatus.UPDATE);
+        String sql = "UPDATE replacement SET start = :start, context = :context WHERE id = :id";
+        SqlParameterSource[] namedParameters = SqlParameterSourceUtils.createBatch(replacements.toArray());
+        jdbcTemplate.batchUpdate(sql, namedParameters);
+    }
+
+    /** Delete a collection of page replacements */
+    private void removeReplacements(Collection<IndexedReplacement> replacements) {
+        assert replacements.stream().allMatch(r -> r.getStatus() == IndexedReplacementStatus.REMOVE);
+        if (replacements.isEmpty()) {
+            // We need to check this so the "IN" clause in the query doesn't fail
+            return;
+        }
+
+        String sql = "DELETE FROM replacement WHERE id IN (:ids)";
+        Set<Integer> ids = replacements
+            .stream()
+            .map(r -> Objects.requireNonNull(r.getId()))
+            .collect(Collectors.toUnmodifiableSet());
+        SqlParameterSource namedParameters = new MapSqlParameterSource().addValue("ids", ids);
+        jdbcTemplate.update(sql, namedParameters);
+    }
+
+    /**
+     * Update the reviewer of a collection of replacements.
+     * Only the replacements to review are updated.
+     * Note that the replacements to update are not identified by ID, but by page-key, type and start.
+     */
+    private void updateReviewer(Collection<IndexedReplacement> replacements) {
+        if (replacements.isEmpty()) {
+            return; // Do nothing
+        }
+
+        // We can assume all replacements belong to the same page
+        final Collection<PageKey> pageKeys = replacements
+            .stream()
+            .map(IndexedReplacement::getPageKey)
+            .collect(Collectors.toUnmodifiableSet());
+        assert pageKeys.size() == 1;
+
+        final WikipediaLanguage lang = pageKeys.stream().findAny().orElseThrow(IllegalArgumentException::new).getLang();
+        replacements
+            .stream()
+            .map(IndexedReplacement::getType)
+            .distinct()
+            .forEach(type -> applicationEventPublisher.publishEvent(PageCountDecrementEvent.of(lang, type)));
+
+        // TODO: Update in batch or add comment to explain why not
+        replacements.forEach(this::updateReviewer);
+    }
+
+    private void updateReviewer(IndexedReplacement replacement) {
+        String sql =
+            """
+            UPDATE replacement
+            SET reviewer = :reviewer, review_type = :reviewType, review_timestamp = :reviewTimestamp, old_rev_id = :oldRevId, new_rev_id = :newRevId
+            WHERE lang = :lang AND page_id = :pageId AND kind = :kind AND subtype = :subtype
+            AND start = :start AND reviewer IS NULL
+            """;
+        SqlParameterSource namedParameters = new MapSqlParameterSource()
+            .addValue("reviewer", replacement.getReviewer())
+            .addValue("reviewType", replacement.getReviewType().getCode())
+            .addValue("reviewTimestamp", replacement.getReviewTimestamp())
+            .addValue("oldRevId", replacement.getOldRevId())
+            .addValue("newRevId", replacement.getNewRevId())
+            .addValue("lang", replacement.getPageKey().getLang().getCode())
+            .addValue("pageId", replacement.getPageKey().getPageId())
+            .addValue("kind", replacement.getType().getKind().getCode())
+            .addValue("subtype", replacement.getType().getSubtype())
+            .addValue("start", replacement.getStart());
+        int numRows = jdbcTemplate.update(sql, namedParameters);
+        if (numRows != 1) {
+            LOGGER.warn("Indexed Replacement reviewer not updated: {}", replacement);
+        }
+    }
+
+    @Override
+    public void updateReviewerByType(WikipediaLanguage lang, StandardType type, String reviewer) {
+        String sql =
+            "UPDATE replacement SET reviewer=:reviewer " +
+            "WHERE lang = :lang AND kind = :kind AND subtype = :subtype AND reviewer IS NULL";
+        SqlParameterSource namedParameters = new MapSqlParameterSource()
+            .addValue("reviewer", reviewer)
+            .addValue("lang", lang.getCode())
+            .addValue("kind", type.getKind().getCode())
+            .addValue("subtype", type.getSubtype());
+        jdbcTemplate.update(sql, namedParameters);
+    }
+
+    @Override
+    public void removeByType(WikipediaLanguage lang, StandardType type) {
+        String sql =
+            "DELETE FROM replacement " +
+            "WHERE lang = :lang AND kind = :kind AND subtype = :subtype AND reviewer IS NULL";
+        SqlParameterSource namedParameters = new MapSqlParameterSource()
+            .addValue("lang", lang.getCode())
+            .addValue("kind", type.getKind().getCode())
+            .addValue("subtype", type.getSubtype());
+        jdbcTemplate.update(sql, namedParameters);
+    }
+    // endregion
 }

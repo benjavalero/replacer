@@ -3,9 +3,9 @@ package es.bvalero.replacer.replacement;
 import es.bvalero.replacer.common.domain.PageKey;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.CustomType;
+import es.bvalero.replacer.page.IndexedCustomReplacement;
 import java.util.Collection;
 import java.util.stream.Collectors;
-import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -21,20 +21,6 @@ class CustomJdbcRepository implements CustomRepository {
 
     CustomJdbcRepository(NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-    }
-
-    @Override
-    public void add(Collection<IndexedCustomReplacement> customReplacements) {
-        // TODO: Insert in batch or add comment to explain why not
-        customReplacements.forEach(this::add);
-    }
-
-    private void add(IndexedCustomReplacement customReplacement) {
-        final String sql =
-            "INSERT INTO custom (lang, page_id, replacement, cs, start, reviewer, review_type, review_timestamp, old_rev_id, new_rev_id) " +
-            "VALUES (:pageKey.lang.code, :pageKey.pageId, :type.subtype, :cs, :start, :reviewer, :reviewType.code, :reviewTimestamp, :oldRevId, :newRevId)";
-        SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(customReplacement);
-        jdbcTemplate.update(sql, namedParameters);
     }
 
     // Using DISTINCT makes the query not to use to wanted index "idx_count"

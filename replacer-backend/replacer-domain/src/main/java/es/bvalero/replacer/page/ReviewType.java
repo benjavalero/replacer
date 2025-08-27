@@ -1,4 +1,4 @@
-package es.bvalero.replacer.replacement;
+package es.bvalero.replacer.page;
 
 import java.util.Arrays;
 import java.util.Map;

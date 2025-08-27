@@ -1,7 +1,7 @@
 package es.bvalero.replacer.index;
 
 import static es.bvalero.replacer.index.PageComparator.toIndexedPage;
-import static es.bvalero.replacer.replacement.IndexedReplacement.REVIEWER_SYSTEM;
+import static es.bvalero.replacer.page.IndexedReplacement.REVIEWER_SYSTEM;
 import static org.junit.jupiter.api.Assertions.*;
 
 import es.bvalero.replacer.common.domain.PageKey;
@@ -13,8 +13,8 @@ import es.bvalero.replacer.finder.StandardType;
 import es.bvalero.replacer.finder.Suggestion;
 import es.bvalero.replacer.page.IndexedPage;
 import es.bvalero.replacer.page.IndexedPageStatus;
-import es.bvalero.replacer.replacement.IndexedReplacement;
-import es.bvalero.replacer.replacement.IndexedReplacementStatus;
+import es.bvalero.replacer.page.IndexedReplacement;
+import es.bvalero.replacer.page.IndexedReplacementStatus;
 import es.bvalero.replacer.wikipedia.WikipediaNamespace;
 import es.bvalero.replacer.wikipedia.WikipediaTimestamp;
 import java.time.LocalDate;
