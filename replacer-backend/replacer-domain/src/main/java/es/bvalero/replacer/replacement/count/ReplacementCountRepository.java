@@ -1,4 +1,4 @@
-package es.bvalero.replacer.replacement;
+package es.bvalero.replacer.replacement.count;
 
 import es.bvalero.replacer.common.domain.PageTitle;
 import es.bvalero.replacer.common.domain.ResultCount;

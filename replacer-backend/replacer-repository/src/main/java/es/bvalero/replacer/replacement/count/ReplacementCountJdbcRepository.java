@@ -1,4 +1,4 @@
-package es.bvalero.replacer.replacement;
+package es.bvalero.replacer.replacement.count;
 
 import static es.bvalero.replacer.page.IndexedReplacement.REVIEWER_SYSTEM;
 
