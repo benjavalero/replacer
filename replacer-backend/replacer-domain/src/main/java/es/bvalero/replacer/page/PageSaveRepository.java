@@ -11,6 +11,9 @@ public interface PageSaveRepository {
     /** Save (if needed) a collection of indexed pages and their related replacements */
     void save(Collection<IndexedPage> pages);
 
+    /** Save a just reviewed page */
+    void review(IndexedPage page);
+
     /** Remove a collection of pages and their related replacements */
     void removeByKey(Collection<PageKey> pageKeys);
 

@@ -7,14 +7,15 @@ import es.bvalero.replacer.common.domain.PageKey;
 import es.bvalero.replacer.common.domain.User;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.*;
+import es.bvalero.replacer.page.IndexedPage;
 import es.bvalero.replacer.page.PageSaveRepository;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.wikipedia.WikipediaPageSaveCommand;
 import es.bvalero.replacer.wikipedia.WikipediaPageSaveRepository;
 import es.bvalero.replacer.wikipedia.WikipediaTimestamp;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -22,7 +23,6 @@ class PageSaveServiceTest {
 
     // Dependency injection
     private CosmeticApi cosmeticApi;
-    private EditionsPerMinuteValidator editionsPerMinuteValidator;
     private WikipediaPageSaveRepository wikipediaPageSaveRepository;
     private PageSaveRepository pageSaveRepository;
 
@@ -31,12 +31,11 @@ class PageSaveServiceTest {
     @BeforeEach
     public void setUp() {
         cosmeticApi = mock(CosmeticApi.class);
-        editionsPerMinuteValidator = mock(EditionsPerMinuteValidator.class);
         wikipediaPageSaveRepository = mock(WikipediaPageSaveRepository.class);
         pageSaveRepository = mock(PageSaveRepository.class);
         pageSaveService = new PageSaveService(
             cosmeticApi,
-            editionsPerMinuteValidator,
+            mock(EditionsPerMinuteValidator.class),
             wikipediaPageSaveRepository,
             pageSaveRepository
         );
@@ -71,13 +70,13 @@ class PageSaveServiceTest {
 
         WikipediaPageSaveCommand pageSave = WikipediaPageSaveCommand.builder()
             .pageKey(reviewedPage.getPageKey())
-            .content(reviewedPage.getContent())
+            .content(Objects.requireNonNull(reviewedPage.getContent()))
             .editSummary(EditSummaryBuilder.build(List.of(reviewedReplacement.getType()), false))
-            .queryTimestamp(reviewedPage.getQueryTimestamp())
+            .queryTimestamp(Objects.requireNonNull(reviewedPage.getQueryTimestamp()))
             .build();
 
         verify(wikipediaPageSaveRepository).save(pageSave, user.getAccessToken());
-        verify(pageSaveRepository).save(anyCollection());
+        verify(pageSaveRepository).review(any(IndexedPage.class));
     }
 
     @Test
@@ -115,6 +114,6 @@ class PageSaveServiceTest {
         pageSaveService.save(reviewedPage, user);
 
         verify(wikipediaPageSaveRepository, never()).save(any(WikipediaPageSaveCommand.class), any(AccessToken.class));
-        verify(pageSaveRepository).save(Collections.singletonList(reviewedPage.toIndexedPage(null)));
+        verify(pageSaveRepository).review(reviewedPage.toIndexedPage(null));
     }
 }

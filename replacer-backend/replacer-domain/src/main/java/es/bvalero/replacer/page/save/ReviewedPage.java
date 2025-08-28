@@ -94,11 +94,11 @@ public class ReviewedPage {
     private IndexedPage toModifiedPage(WikipediaPageSaveResult saveResult) {
         return IndexedPage.builder()
             .pageKey(pageKey)
-            .title(title)
+            .title(Objects.requireNonNull(title)) // Not important, it will not be updated
             .lastUpdate(saveResult.getNewTimestamp().toLocalDate())
             .replacements(toIndexedReplacements(saveResult))
             .customReplacements(toIndexedCustomReplacements(saveResult))
-            .status(IndexedPageStatus.UPDATE)
+            .status(IndexedPageStatus.MODIFIED)
             .build();
     }
 
