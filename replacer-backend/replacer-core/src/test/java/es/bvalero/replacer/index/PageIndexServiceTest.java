@@ -30,33 +30,26 @@ class PageIndexServiceTest {
         .build();
 
     // Dependency injection
-    private WikipediaPageRepository wikipediaPageRepository;
     private PageSaveRepository pageSaveRepository;
     private PageIndexValidator pageIndexValidator;
     private ReplacementFindApi replacementFindApi;
-    private PageComparator pageComparator;
     private PageRepository pageRepository;
-    private PageComparatorSaver pageComparatorSaver;
 
     private PageIndexService pageIndexService;
 
     @BeforeEach
     void setUp() {
-        wikipediaPageRepository = mock(WikipediaPageRepository.class);
         pageSaveRepository = mock(PageSaveRepository.class);
         pageIndexValidator = mock(PageIndexValidator.class);
         replacementFindApi = mock(ReplacementFindApi.class);
-        pageComparator = mock(PageComparator.class);
         pageRepository = mock(PageRepository.class);
-        pageComparatorSaver = mock(PageComparatorSaver.class);
         pageIndexService = new PageIndexService(
-            wikipediaPageRepository,
+            mock(WikipediaPageRepository.class),
             pageSaveRepository,
             pageIndexValidator,
             replacementFindApi,
-            pageComparator,
-            pageRepository,
-            pageComparatorSaver
+            mock(PageComparator.class),
+            pageRepository
         );
     }
 
@@ -114,7 +107,7 @@ class PageIndexServiceTest {
         verify(pageIndexValidator).isPageIndexableByNamespace(page);
         verify(pageIndexValidator, never()).isIndexableByTimestamp(page, null);
         verify(replacementFindApi, never()).findReplacements(any(FinderPage.class));
-        verify(pageComparatorSaver, never()).save(any(IndexedPage.class));
+        verify(pageSaveRepository, never()).save(anyCollection());
         verify(pageSaveRepository).removeByKey(anyCollection());
     }
 }
