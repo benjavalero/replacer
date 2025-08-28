@@ -27,30 +27,23 @@ class PageIndexBatchServiceTest {
         .build();
 
     // Dependency injection
-    private PageSaveRepository pageSaveRepository;
     private PageIndexValidator pageIndexValidator;
     private ReplacementFindApi replacementFindApi;
     private PageComparator pageComparator;
-    private PageBatchService pageBatchService;
-    private PageComparatorSaver pageComparatorSaver;
 
     private PageIndexBatchService pageIndexBatchService;
 
     @BeforeEach
     void setUp() {
-        pageSaveRepository = mock(PageSaveRepository.class);
         pageIndexValidator = mock(PageIndexValidator.class);
         replacementFindApi = mock(ReplacementFindApi.class);
         pageComparator = mock(PageComparator.class);
-        pageBatchService = mock(PageBatchService.class);
-        pageComparatorSaver = mock(PageComparatorSaver.class);
         pageIndexBatchService = new PageIndexBatchService(
-            pageSaveRepository,
+            mock(PageSaveRepository.class),
             pageIndexValidator,
             replacementFindApi,
             pageComparator,
-            pageBatchService,
-            pageComparatorSaver
+            mock(PageBatchService.class)
         );
     }
 

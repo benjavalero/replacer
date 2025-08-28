@@ -12,6 +12,7 @@ import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.wikipedia.WikipediaPageRepository;
 import es.bvalero.replacer.wikipedia.WikipediaSearchRequest;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.event.EventListener;
@@ -23,8 +24,8 @@ class PageIndexService extends PageIndexAbstractService implements PageIndexApi 
 
     // Dependency injection
     private final WikipediaPageRepository wikipediaPageRepository;
+    private final PageSaveRepository pageSaveRepository;
     private final PageRepository pageRepository;
-    private final PageComparatorSaver pageComparatorSaver;
 
     public PageIndexService(
         WikipediaPageRepository wikipediaPageRepository,
@@ -32,13 +33,12 @@ class PageIndexService extends PageIndexAbstractService implements PageIndexApi 
         PageIndexValidator pageIndexValidator,
         ReplacementFindApi replacementFindApi,
         PageComparator pageComparator,
-        PageRepository pageRepository,
-        PageComparatorSaver pageComparatorSaver
+        PageRepository pageRepository
     ) {
         super(pageSaveRepository, pageIndexValidator, replacementFindApi, pageComparator);
         this.wikipediaPageRepository = wikipediaPageRepository;
+        this.pageSaveRepository = pageSaveRepository;
         this.pageRepository = pageRepository;
-        this.pageComparatorSaver = pageComparatorSaver;
     }
 
     @Override
@@ -48,7 +48,7 @@ class PageIndexService extends PageIndexAbstractService implements PageIndexApi 
 
     @Override
     void saveResult(IndexedPage indexedPage) {
-        pageComparatorSaver.save(indexedPage);
+        pageSaveRepository.save(Collections.singleton(indexedPage));
     }
 
     @EventListener

@@ -4,8 +4,12 @@ import es.bvalero.replacer.common.domain.PageKey;
 import es.bvalero.replacer.finder.ReplacementFindApi;
 import es.bvalero.replacer.page.IndexedPage;
 import es.bvalero.replacer.page.PageSaveRepository;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 
@@ -14,22 +18,27 @@ import org.springframework.stereotype.Service;
 class PageIndexBatchService extends PageIndexAbstractService implements PageIndexApi {
 
     // Dependency injection
+    private final PageSaveRepository pageSaveRepository;
     private final PageIndexValidator pageIndexValidator;
     private final PageBatchService pageBatchService;
-    private final PageComparatorSaver pageComparatorSaver;
+
+    @Value("${replacer.dump.batch.chunk.size}")
+    private int chunkSize;
+
+    // Singleton field to add the items until the batch limit is reached
+    private final List<IndexedPage> batchResult = Collections.synchronizedList(new ArrayList<>());
 
     public PageIndexBatchService(
         PageSaveRepository pageSaveRepository,
         PageIndexValidator pageIndexValidator,
         ReplacementFindApi replacementFindApi,
         PageComparator pageComparator,
-        PageBatchService pageBatchService,
-        PageComparatorSaver pageComparatorSaver
+        PageBatchService pageBatchService
     ) {
         super(pageSaveRepository, pageIndexValidator, replacementFindApi, pageComparator);
+        this.pageSaveRepository = pageSaveRepository;
         this.pageIndexValidator = pageIndexValidator;
         this.pageBatchService = pageBatchService;
-        this.pageComparatorSaver = pageComparatorSaver;
     }
 
     @Override
@@ -39,7 +48,31 @@ class PageIndexBatchService extends PageIndexAbstractService implements PageInde
 
     @Override
     void saveResult(IndexedPage indexedPage) {
-        pageComparatorSaver.saveBatch(indexedPage);
+        saveBatch(indexedPage);
+    }
+
+    /* Save in DB the results of page indexing when the result size is large enough */
+    private void saveBatch(IndexedPage indexedPage) {
+        addResultToBatch(indexedPage);
+        if (this.batchResult.size() >= this.chunkSize) {
+            saveBatchResult();
+        }
+    }
+
+    private void addResultToBatch(IndexedPage indexedPage) {
+        // Add the indexed page to the batch result
+        // Just in case we check it the page will actually be saved,
+        // not to increase unnecessarily the heap use.
+        if (indexedPage.isPageToSave()) {
+            this.batchResult.add(indexedPage);
+        }
+    }
+
+    private void saveBatchResult() {
+        synchronized (this.batchResult) {
+            pageSaveRepository.save(this.batchResult);
+            this.batchResult.clear();
+        }
     }
 
     @Override
@@ -60,6 +93,7 @@ class PageIndexBatchService extends PageIndexAbstractService implements PageInde
 
     @Override
     public void finish() {
-        pageComparatorSaver.forceSave();
+        // Force saving what is left on the batch
+        saveBatchResult();
     }
 }
