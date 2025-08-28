@@ -39,11 +39,15 @@ class PageSaveJdbcRepository implements PageSaveRepository {
 
     @Override
     public void save(Collection<IndexedPage> pages) {
-        assert pages.stream().noneMatch(p -> p.getStatus() == IndexedPageStatus.UNDEFINED);
+        assert pages
+            .stream()
+            .map(IndexedPage::getStatus)
+            .noneMatch(s -> s == IndexedPageStatus.UNDEFINED || s == IndexedPageStatus.MODIFIED);
         assert pages
             .stream()
             .flatMap(p -> p.getReplacements().stream())
-            .noneMatch(p -> p.getStatus() == IndexedReplacementStatus.UNDEFINED);
+            .map(IndexedReplacement::getStatus)
+            .noneMatch(s -> s == IndexedReplacementStatus.UNDEFINED || s == IndexedReplacementStatus.REVIEWED);
 
         // Pages must be added before adding the related replacements
         // We assume the replacements removed correspond to not removed pages
@@ -73,19 +77,7 @@ class PageSaveJdbcRepository implements PageSaveRepository {
                 .toList()
         );
 
-        // Update the reviewed replacements
-        updateReviewer(
-            pages
-                .stream()
-                .flatMap(p -> p.getReplacements().stream())
-                .filter(p -> p.getStatus() == IndexedReplacementStatus.REVIEWED)
-                .toList()
-        );
-
-        // Update the custom replacements
-        addCustomReplacements(pages.stream().flatMap(p -> p.getCustomReplacements().stream()).toList());
-
-        // Remove the replacements
+        // Remove the obsolete replacements
         removeReplacements(
             pages
                 .stream()
@@ -113,6 +105,23 @@ class PageSaveJdbcRepository implements PageSaveRepository {
             "WHERE lang = :pageKey.lang.code AND page_id = :pageKey.pageId";
         SqlParameterSource[] namedParameters = SqlParameterSourceUtils.createBatch(pages.toArray());
         jdbcTemplate.batchUpdate(sql, namedParameters);
+    }
+
+    @Override
+    public void review(IndexedPage page) {
+        updateLastUpdate(page);
+        updateReviewer(page.getReplacements());
+        addCustomReplacements(page.getCustomReplacements());
+    }
+
+    private void updateLastUpdate(IndexedPage page) {
+        assert page.getStatus() == IndexedPageStatus.MODIFIED;
+        String sql = "UPDATE page SET last_update = :lastUpdate WHERE lang = :lang AND page_id = :pageId";
+        SqlParameterSource namedParameters = new MapSqlParameterSource()
+            .addValue("lastUpdate", page.getLastUpdate())
+            .addValue("lang", page.getPageKey().getLang().getCode())
+            .addValue("pageId", page.getPageKey().getPageId());
+        jdbcTemplate.update(sql, namedParameters);
     }
 
     /** Add a collection of custom replacements */

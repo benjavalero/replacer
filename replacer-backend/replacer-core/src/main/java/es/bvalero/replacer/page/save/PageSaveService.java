@@ -4,14 +4,12 @@ import es.bvalero.replacer.common.domain.User;
 import es.bvalero.replacer.finder.CosmeticApi;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.ReplacementType;
-import es.bvalero.replacer.page.IndexedPage;
 import es.bvalero.replacer.page.PageSaveRepository;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.wikipedia.WikipediaPageSaveCommand;
 import es.bvalero.replacer.wikipedia.WikipediaPageSaveRepository;
 import es.bvalero.replacer.wikipedia.WikipediaPageSaveResult;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
@@ -89,7 +87,6 @@ class PageSaveService implements PageSaveApi {
     }
 
     private void markAsReviewed(ReviewedPage reviewedPage, @Nullable WikipediaPageSaveResult saveResult) {
-        IndexedPage indexedPage = reviewedPage.toIndexedPage(saveResult);
-        pageSaveRepository.save(Collections.singletonList(indexedPage));
+        pageSaveRepository.review(reviewedPage.toIndexedPage(saveResult));
     }
 }

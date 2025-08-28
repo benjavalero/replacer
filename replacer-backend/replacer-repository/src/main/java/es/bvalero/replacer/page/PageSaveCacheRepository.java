@@ -34,6 +34,12 @@ class PageSaveCacheRepository implements PageSaveRepository {
         this.pageSaveRepository.save(pages);
     }
 
+    @Override
+    public void review(IndexedPage page) {
+        handlePageCache(page);
+        this.pageSaveRepository.review(page);
+    }
+
     private void handlePageCache(IndexedPage page) {
         WikipediaLanguage lang = page.getPageKey().getLang();
         Collection<StandardType> types = page
