@@ -24,7 +24,7 @@ and it is quite convenient to generate bar charts to compare the algorithms visu
 
 To run a benchmark, we simply give the class name as an argument to the JAR:
 ```shell
-java -jar target/replacer-finder-benchmark.jar CompleteTagFinderJmhBenchmarkTest
+java -jar target/replacer-finder-benchmark.jar CompleteTagFinderJmhBenchmark
 ```
 
 To run it in Toolforge, first we upload the benchmark JAR:
@@ -34,5 +34,5 @@ To run it in Toolforge, first we upload the benchmark JAR:
 
 and then in the Production machine:
 ```shell
-webservice jdk17 shell -- java -jar /data/project/replacer/replacer-finder-benchmark.jar SimpleFinderJmhBenchmarkTest
+webservice jdk17 shell -- java -jar /data/project/replacer/replacer-finder-benchmark.jar SimpleFinderJmhBenchmark
 ```

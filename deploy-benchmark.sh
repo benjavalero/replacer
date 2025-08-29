@@ -2,7 +2,7 @@
 
 echo "1. Build JAR"
 echo
-mvn clean install
+mvn clean install -P benchmark
 echo
 
 echo "2. Copy JAR"

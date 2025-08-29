@@ -22,10 +22,24 @@
         <sonar.organization>benjavalero-github</sonar.organization>
     </properties>
 
-    <modules>
-        <module>replacer-frontend</module>
-        <module>replacer-backend</module>
-    </modules>
+    <profiles>
+        <profile>
+            <id>default</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <modules>
+                <module>replacer-frontend</module>
+                <module>replacer-backend</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>benchmark</id>
+            <modules>
+                <module>replacer-backend</module>
+            </modules>
+        </profile>
+    </profiles>
 
     <build>
         <plugins>
