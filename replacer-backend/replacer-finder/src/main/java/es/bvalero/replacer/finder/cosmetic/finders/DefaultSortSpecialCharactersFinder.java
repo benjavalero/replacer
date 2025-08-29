@@ -21,6 +21,7 @@ class DefaultSortSpecialCharactersFinder implements CosmeticFinder {
 
     private static final List<String> SORT_TEMPLATES = List.of("DEFAULTSORT", "ORDENAR");
 
+    @SuppressWarnings("InlineFormatString")
     @RegExp
     private static final String REGEX_DEFAULTSORT_TEMPLATE = "\\{\\{(\\s*%s\\s*):(.+?)}}";
 

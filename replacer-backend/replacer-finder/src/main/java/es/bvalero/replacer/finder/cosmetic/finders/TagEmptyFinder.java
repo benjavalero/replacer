@@ -28,6 +28,7 @@ class TagEmptyFinder implements CosmeticFinder {
 
     private static final Set<String> TAGS_SIMPLE = Set.of("ref");
 
+    @SuppressWarnings("InlineFormatString")
     @RegExp
     private static final String REGEX_TAG_EMPTY = "<(%s)[^>]*></\\1>";
 

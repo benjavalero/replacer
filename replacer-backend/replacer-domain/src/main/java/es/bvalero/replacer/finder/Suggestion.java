@@ -1,7 +1,10 @@
 package es.bvalero.replacer.finder;
 
 import es.bvalero.replacer.common.util.ReplacerUtils;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -67,8 +70,8 @@ public class Suggestion {
      * but moving to the head the suggestion matching the original text if it exists
      */
     static List<Suggestion> sortSuggestions(List<Suggestion> suggestions, String originalText) {
-        // Use a linked list to remove and rearrange easily
-        List<Suggestion> sorted = new LinkedList<>();
+        // According to Error-Prone a linked list is rarely better than an array list
+        List<Suggestion> sorted = new ArrayList<>();
 
         // If any of the suggestions matches the original text, then move it as the first suggestion.
         // If not, we add it.

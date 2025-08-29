@@ -50,10 +50,9 @@ class ReplacementCountCacheRepository implements ReplacementCountRepository {
     @Scheduled(initialDelay = 0, fixedDelay = Long.MAX_VALUE)
     public void init() {
         // Initial population of the caches
-        Iterable<WikipediaLanguage> keys = Arrays.asList(WikipediaLanguage.values());
-        this.countReviewed.getAll(keys);
-        this.countNotReviewed.getAll(keys);
-        this.countGroupedByReviewer.getAll(keys);
+        Arrays.stream(WikipediaLanguage.values()).forEach(this::countReviewed);
+        Arrays.stream(WikipediaLanguage.values()).forEach(this::countNotReviewed);
+        Arrays.stream(WikipediaLanguage.values()).forEach(this::countReviewedGroupedByReviewer);
     }
 
     @Override

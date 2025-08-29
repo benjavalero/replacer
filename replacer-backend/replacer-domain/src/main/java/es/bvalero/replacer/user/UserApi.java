@@ -8,7 +8,7 @@ import org.jmolecules.architecture.hexagonal.PrimaryPort;
 
 /** Service to retrieve details about the users of the application */
 @PrimaryPort
-interface UserApi {
+public interface UserApi {
     /** Find a user authenticated in the application */
     Optional<User> findAuthenticatedUser(WikipediaLanguage lang, AccessToken accessToken);
 }

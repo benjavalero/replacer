@@ -30,7 +30,7 @@ class UppercaseIndexOfFinder extends UppercaseBenchmarkFinder {
             this.uppercase = word;
         }
 
-        public Stream<MatchResult> find(FinderPage page) {
+        private Stream<MatchResult> find(FinderPage page) {
             return LinearMatchFinder.find(page, this::findUppercase);
         }
 

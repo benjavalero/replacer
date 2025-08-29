@@ -4,6 +4,7 @@ import es.bvalero.replacer.common.domain.PageKey;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.StandardType;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -136,7 +137,7 @@ class PageSaveJdbcRepository implements PageSaveRepository {
                     IndexedPage indexedPage = IndexedPage.builder()
                         .pageKey(pageKey)
                         .title("") // It will be set in a next indexation
-                        .lastUpdate(LocalDate.now())
+                        .lastUpdate(LocalDate.now(ZoneId.systemDefault()))
                         .status(IndexedPageStatus.ADD)
                         .build();
                     save(List.of(indexedPage));

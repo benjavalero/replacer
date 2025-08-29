@@ -7,6 +7,7 @@ import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.exception.ReplacerException;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -68,7 +69,7 @@ class DumpIndexServiceTest {
                 .numPagesRead(1)
                 .numPagesIndexed(2)
                 .numPagesEstimated(3)
-                .start(LocalDateTime.now())
+                .start(LocalDateTime.now(ZoneId.systemDefault()))
                 .build()
         );
         when(dumpParser.getDumpStatus()).thenReturn(dumpStatus);
@@ -82,7 +83,7 @@ class DumpIndexServiceTest {
 
     @Test
     void testGetDumpIndexingStatus() {
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = LocalDateTime.now(ZoneId.systemDefault());
         Optional<DumpStatus> expected = Optional.of(
             DumpStatus.builder()
                 .running(true)

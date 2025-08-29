@@ -14,6 +14,7 @@ import es.bvalero.replacer.wikipedia.WikipediaNamespace;
 import es.bvalero.replacer.wikipedia.WikipediaPageRepository;
 import es.bvalero.replacer.wikipedia.WikipediaTimestamp;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -94,7 +95,7 @@ class PageIndexServiceTest {
             .pageKey(page.getPageKey())
             .title("T")
             .replacements(List.of())
-            .lastUpdate(LocalDate.now())
+            .lastUpdate(LocalDate.now(ZoneId.systemDefault()))
             .build();
         when(pageRepository.findByKey(page.getPageKey())).thenReturn(Optional.of(dbPage));
 

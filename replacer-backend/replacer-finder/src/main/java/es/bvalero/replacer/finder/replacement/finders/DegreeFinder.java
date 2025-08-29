@@ -39,6 +39,7 @@ class DegreeFinder implements ReplacementFinder {
         return LinearMatchFinder.find(page, this::findDegree);
     }
 
+    @SuppressWarnings("ArgumentSelectionDefectChecker")
     @Nullable
     private MatchResult findDegree(FinderPage page, int start) {
         final String text = page.getContent();

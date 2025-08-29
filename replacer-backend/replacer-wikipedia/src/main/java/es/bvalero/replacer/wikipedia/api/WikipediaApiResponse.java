@@ -40,6 +40,7 @@ public class WikipediaApiResponse {
     }
 
     @Data
+    @SuppressWarnings("JavaLangClash")
     @JsonIgnoreProperties(ignoreUnknown = true)
     private static class Error {
 
@@ -104,10 +105,6 @@ public class WikipediaApiResponse {
         private Collection<Protection> protection;
 
         private Collection<Revision> revisions;
-
-        public boolean isProtected() {
-            return this.protection != null && this.protection.stream().anyMatch(Protection::isLibrarianEditProtection);
-        }
     }
 
     @Data
@@ -116,10 +113,6 @@ public class WikipediaApiResponse {
 
         private String type;
         private String level;
-
-        private boolean isLibrarianEditProtection() {
-            return "edit".equals(this.type) && "sysop".equals(this.level);
-        }
     }
 
     @Data

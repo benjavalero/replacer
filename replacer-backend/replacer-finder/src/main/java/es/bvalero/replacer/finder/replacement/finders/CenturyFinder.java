@@ -140,7 +140,7 @@ class CenturyFinder implements ReplacementFinder {
             // We only consider the word complete and followed by a whitespace
             if (
                 (firstLetter == 'S' || firstLetter == 's') &&
-                (FinderUtils.isWordCompleteInText(startCentury, centuryWord, text)) &&
+                FinderUtils.isWordCompleteInText(startCentury, centuryWord, text) &&
                 text.charAt(endCentury) == SPACE
             ) {
                 return FinderMatchResult.of(startCentury, centuryWord);

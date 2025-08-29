@@ -94,7 +94,7 @@ public class Parser {
 
     private static class ParserIterator implements Iterator<Expression> {
 
-        private final Stack<Expression> stack = new Stack<>();
+        private final Deque<Expression> stack = new ArrayDeque<>();
 
         ParserIterator(List<Expression> expressionList) {
             pushAll(expressionList);

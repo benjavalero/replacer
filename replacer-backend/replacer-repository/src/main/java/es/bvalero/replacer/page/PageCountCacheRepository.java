@@ -51,8 +51,7 @@ public class PageCountCacheRepository implements PageCountRepository {
     @Scheduled(initialDelay = 0, fixedDelay = Long.MAX_VALUE)
     public void init() {
         // Initial population of the caches
-        Iterable<WikipediaLanguage> keys = Arrays.asList(WikipediaLanguage.values());
-        this.counts.getAll(keys);
+        Arrays.stream(WikipediaLanguage.values()).forEach(this::countNotReviewedGroupedByType);
     }
 
     @Override

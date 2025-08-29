@@ -4,7 +4,10 @@ import es.bvalero.replacer.checkwikipedia.CheckWikipediaFixEvent;
 import es.bvalero.replacer.common.util.ReplacerUtils;
 import es.bvalero.replacer.finder.*;
 import jakarta.annotation.PostConstruct;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
@@ -50,7 +53,8 @@ class CosmeticFinderService implements FinderService<Cosmetic>, CosmeticApi {
             // We can assume the collection is sorted
             // We apply the cosmetic replacements sorted in descending order by the start.
             // Therefore, we reverse the collection and just in case we sort it again.
-            List<Cosmetic> cosmetics = new LinkedList<>(cosmeticFound);
+            // According to Error-Prone a linked list is rarely better than an array list.
+            List<Cosmetic> cosmetics = new ArrayList<>(cosmeticFound);
             Collections.reverse(cosmetics);
             cosmetics.sort(Collections.reverseOrder());
 

@@ -10,6 +10,7 @@ import es.bvalero.replacer.page.IndexedReplacementStatus;
 import es.bvalero.replacer.page.ReviewType;
 import es.bvalero.replacer.wikipedia.WikipediaPageSaveResult;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import lombok.Builder;
 import lombok.Value;
 import lombok.With;
@@ -65,7 +66,7 @@ class ReviewedReplacement {
             .context("") // It is not important when saving a review as we only want to update the reviewer
             .reviewer(reviewer)
             .reviewType(ReviewType.NOT_MODIFIED)
-            .reviewTimestamp(LocalDateTime.now())
+            .reviewTimestamp(LocalDateTime.now(ZoneId.systemDefault()))
             .status(IndexedReplacementStatus.REVIEWED)
             .pageKey(pageKey)
             .build();
@@ -95,7 +96,7 @@ class ReviewedReplacement {
             .start(start)
             .reviewer(reviewer)
             .reviewType(ReviewType.NOT_MODIFIED)
-            .reviewTimestamp(LocalDateTime.now())
+            .reviewTimestamp(LocalDateTime.now(ZoneId.systemDefault()))
             .pageKey(pageKey)
             .build();
     }

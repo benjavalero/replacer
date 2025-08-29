@@ -18,7 +18,8 @@ import es.bvalero.replacer.finder.replacement.ReplacementFinder;
 import es.bvalero.replacer.finder.util.AutomatonMatchFinder;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import jakarta.annotation.PostConstruct;
-import java.time.LocalDate;
+import java.time.Year;
+import java.time.ZoneId;
 import java.util.*;
 import java.util.regex.MatchResult;
 import java.util.stream.Stream;
@@ -36,7 +37,7 @@ import org.springframework.stereotype.Component;
 class DateFinder implements ReplacementFinder {
 
     private static final List<Character> YEAR_ALLOWED_CHARS = List.of(DOT);
-    private static final int CURRENT_YEAR = LocalDate.now().getYear();
+    private final int CURRENT_YEAR = Year.now(ZoneId.systemDefault()).getValue();
 
     // Dependency injection
     private final FinderProperties finderProperties;
@@ -558,7 +559,7 @@ class DateFinder implements ReplacementFinder {
         // Default before fixing article (if applicable)
         int start = originalStart;
         String text = originalDate;
-        final List<Suggestion> suggestions = new LinkedList<>();
+        final List<Suggestion> suggestions = new ArrayList<>();
         // Default suggestion
         suggestions.add(Suggestion.ofNoComment(fixedDate));
 

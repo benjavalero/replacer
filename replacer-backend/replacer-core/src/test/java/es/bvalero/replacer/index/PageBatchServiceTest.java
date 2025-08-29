@@ -10,6 +10,7 @@ import es.bvalero.replacer.page.IndexedPage;
 import es.bvalero.replacer.page.PageRepository;
 import es.bvalero.replacer.page.PageSaveRepository;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,7 +36,7 @@ class PageBatchServiceTest {
         return IndexedPage.builder()
             .pageKey(PageKey.of(WikipediaLanguage.getDefault(), pageId))
             .title("T" + pageId)
-            .lastUpdate(LocalDate.now())
+            .lastUpdate(LocalDate.now(ZoneId.systemDefault()))
             .build();
     }
 

@@ -34,8 +34,6 @@ class DumpFinder {
 
     private static final String DUMP_FOLDER_REGEX = "\\d{8}";
     private static final Pattern DUMP_FOLDER_PATTERN = Pattern.compile(DUMP_FOLDER_REGEX);
-    private static final String DUMP_PATH_PROJECT_FORMAT = "%swiki";
-    private static final String DUMP_FILE_NAME_FORMAT = "%s-%s-pages-articles.xml.bz2";
 
     @Setter(onMethod_ = @TestOnly)
     @Value("${replacer.dump.path.base}")
@@ -77,12 +75,16 @@ class DumpFinder {
 
     private Optional<Path> findDumpFile(Path dumpFolder, WikipediaLanguage lang) {
         // Check if the dump folder contains a valid dump
-        String dumpFileName = String.format(DUMP_FILE_NAME_FORMAT, getDumpPathProject(lang), dumpFolder.getFileName());
+        String dumpFileName = String.format(
+            "%s-%s-pages-articles.xml.bz2",
+            getDumpPathProject(lang),
+            dumpFolder.getFileName()
+        );
         Path dumpFile = dumpFolder.resolve(dumpFileName);
         return dumpFile.toFile().exists() ? Optional.of(dumpFile) : Optional.empty();
     }
 
     private String getDumpPathProject(WikipediaLanguage lang) {
-        return String.format(DUMP_PATH_PROJECT_FORMAT, lang.getCode());
+        return String.format("%swiki", lang.getCode());
     }
 }

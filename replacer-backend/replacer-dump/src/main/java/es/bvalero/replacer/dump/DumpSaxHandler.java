@@ -6,6 +6,7 @@ import es.bvalero.replacer.index.IndexablePage;
 import es.bvalero.replacer.index.PageIndexApi;
 import es.bvalero.replacer.index.PageIndexStatus;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.xml.sax.Attributes;
@@ -66,14 +67,14 @@ class DumpSaxHandler extends DefaultHandler {
     public void startDocument() {
         // Reset indexing status
         this.running = true;
-        this.start = LocalDateTime.now();
+        this.start = LocalDateTime.now(ZoneId.systemDefault());
     }
 
     @Override
     public void endDocument() {
         // Finish indexing status
         this.running = false;
-        this.end = LocalDateTime.now();
+        this.end = LocalDateTime.now(ZoneId.systemDefault());
 
         this.pageIndexApi.finish();
     }
@@ -86,32 +87,23 @@ class DumpSaxHandler extends DefaultHandler {
     @Override
     public void endElement(String uri, String localName, String qName) {
         switch (qName) {
-            case TITLE_TAG:
-                this.currentTitle = this.currentChars.toString();
-                break;
-            case NAMESPACE_TAG:
-                this.currentNamespace = Integer.parseInt(this.currentChars.toString());
-                break;
-            case ID_TAG:
+            case TITLE_TAG -> this.currentTitle = this.currentChars.toString();
+            case NAMESPACE_TAG -> this.currentNamespace = Integer.parseInt(this.currentChars.toString());
+            case ID_TAG -> {
                 // ID appears several times: contributor, revision, etc. We care about the first one.
                 if (this.currentId == 0) {
                     this.currentId = Integer.parseInt(this.currentChars.toString());
                 }
-                break;
-            case TIMESTAMP_TAG:
-                this.currentTimestamp = this.currentChars.toString();
-                break;
-            case TEXT_TAG:
+            }
+            case TIMESTAMP_TAG -> this.currentTimestamp = this.currentChars.toString();
+            case TEXT_TAG -> {
                 // Text appears several times (contributor, revision, etc). We care about the first one.
                 if (this.currentContent == null) {
                     this.currentContent = this.currentChars.toString();
                 }
-                break;
-            case REDIRECT_TAG:
-                // If the tag appears it means it is a redirection page
-                this.currentRedirect = true;
-                break;
-            case PAGE_TAG:
+            }
+            case REDIRECT_TAG -> this.currentRedirect = true; // If the tag appears it means it is a redirection page
+            case PAGE_TAG -> {
                 try {
                     indexPage();
                 } catch (Exception e) {
@@ -122,9 +114,8 @@ class DumpSaxHandler extends DefaultHandler {
                 this.currentId = 0;
                 this.currentContent = null;
                 this.currentRedirect = false;
-                break;
-            default:
-                break;
+            }
+            default -> {}
         }
     }
 
@@ -145,15 +136,12 @@ class DumpSaxHandler extends DefaultHandler {
 
         final PageIndexStatus result = pageIndexApi.indexPage(page).getStatus();
         switch (result) {
-            case PAGE_NOT_INDEXABLE:
-                break;
-            case PAGE_NOT_INDEXED:
-                this.incrementNumPagesRead();
-                break;
-            case PAGE_INDEXED:
+            case PAGE_NOT_INDEXABLE -> {}
+            case PAGE_NOT_INDEXED -> this.incrementNumPagesRead();
+            case PAGE_INDEXED -> {
                 this.incrementNumPagesRead();
                 this.incrementNumPagesIndexed();
-                break;
+            }
         }
     }
 

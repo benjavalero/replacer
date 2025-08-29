@@ -50,12 +50,12 @@ class PageComparator {
 
         // Wrap the indexed replacements to compare them
         final List<ComparableReplacement> comparableDbReplacements = dbPage == null
-            ? new LinkedList<>() // The collection must be mutable
+            ? new ArrayList<>() // The collection must be mutable
             : dbPage
                 .getReplacements()
                 .stream()
                 .map(ComparableReplacement::of)
-                .collect(Collectors.toCollection(LinkedList::new));
+                .collect(Collectors.toCollection(ArrayList::new));
         // Remove possible duplicates in database
         cleanDuplicatedReplacements(comparableDbReplacements).forEach(cr ->
             indexedPage.addReplacement(cr.toDomain(IndexedReplacementStatus.REMOVE))
@@ -69,7 +69,7 @@ class PageComparator {
         final List<ComparableReplacement> comparablePageReplacements = pageReplacements
             .stream()
             .map(r -> ComparableReplacement.of(r, page.getPageKey()))
-            .collect(Collectors.toCollection(LinkedList::new));
+            .collect(Collectors.toCollection(ArrayList::new));
         // Replacements with the same type and position are considered equal
         // If they have different position but same context, and they are close enough,
         // they are also considered equal and only one will be indexed and returned to the user to be reviewed.
@@ -172,7 +172,7 @@ class PageComparator {
         // At this point we assume both replacements are the "same"
         return (
             dbReplacement.isToBeReviewed() &&
-            (!Objects.equals(replacement.getStart(), dbReplacement.getStart()) ||
+            (replacement.getStart() != dbReplacement.getStart() ||
                 !Objects.equals(replacement.getContext(), dbReplacement.getContext()))
         );
     }

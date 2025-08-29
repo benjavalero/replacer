@@ -31,7 +31,7 @@ class RedirectionAhoCorasickFinder implements BenchmarkFinder {
 
         private final List<MatchResult> matches = new ArrayList<>(1);
 
-        public Stream<MatchResult> getMatches() {
+        private Stream<MatchResult> getMatches() {
             return matches.stream();
         }
 

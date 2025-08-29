@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 @Component
 class TemplateWordFinder implements CosmeticFinder {
 
+    @SuppressWarnings("InlineFormatString")
     @RegExp
     private static final String REGEX_TEMPLATE_WORD = "\\{\\{(%s):(\\w.+?)}}";
 

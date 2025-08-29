@@ -19,10 +19,8 @@ public class CustomType extends ReplacementType {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof CustomType that)) return false;
         if (!super.equals(o)) return false;
-        CustomType that = (CustomType) o;
         return caseSensitive == that.caseSensitive;
     }
 
