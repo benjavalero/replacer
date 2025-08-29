@@ -6,6 +6,7 @@ import es.bvalero.replacer.common.domain.User;
 import es.bvalero.replacer.common.domain.UserId;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.concurrent.TimeUnit;
 import lombok.Setter;
@@ -39,7 +40,7 @@ class EditionsPerMinuteValidator {
         );
         assert userEditions != null;
 
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = LocalDateTime.now(ZoneId.systemDefault());
         if (userEditions.isAtFullCapacity()) {
             LocalDateTime older = userEditions.peek();
             assert older != null;

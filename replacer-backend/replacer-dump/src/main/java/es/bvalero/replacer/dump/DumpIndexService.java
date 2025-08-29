@@ -30,6 +30,7 @@ class DumpIndexService implements DumpIndexApi {
     // In order to be asynchronous it must be public and called externally:
     // https://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/scheduling/annotation/EnableAsync.html
     @Async
+    @Override
     public void indexLatestDumpFiles() {
         LOGGER.debug("START dump indexing...");
 
@@ -54,6 +55,7 @@ class DumpIndexService implements DumpIndexApi {
         LOGGER.debug("END dump indexing...");
     }
 
+    @Override
     public Optional<DumpStatus> getDumpStatus() {
         return dumpParser.getDumpStatus();
     }

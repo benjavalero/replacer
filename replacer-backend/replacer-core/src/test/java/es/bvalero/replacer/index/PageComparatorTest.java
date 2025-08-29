@@ -18,6 +18,7 @@ import es.bvalero.replacer.page.IndexedReplacementStatus;
 import es.bvalero.replacer.wikipedia.WikipediaNamespace;
 import es.bvalero.replacer.wikipedia.WikipediaTimestamp;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -28,7 +29,7 @@ class PageComparatorTest {
 
     private final PageComparator pageComparator = new PageComparator();
     private final int pageId = new Random().nextInt();
-    private final LocalDate now = LocalDate.now();
+    private final LocalDate now = LocalDate.now(ZoneId.systemDefault());
     private final LocalDate before = now.minusDays(1);
     private final IndexablePage page = IndexablePage.builder()
         .pageKey(PageKey.of(WikipediaLanguage.getDefault(), pageId))

@@ -1,6 +1,5 @@
 package es.bvalero.replacer.finder;
 
-import java.util.Objects;
 import org.apache.commons.lang3.Range;
 
 /**
@@ -18,7 +17,7 @@ public interface FinderResult extends Comparable<FinderResult> {
     @Override
     default int compareTo(FinderResult o) {
         // Compare by start and then by end
-        return Objects.equals(getStart(), o.getStart())
+        return getStart() == o.getStart()
             ? Integer.compare(getEnd(), o.getEnd())
             : Integer.compare(getStart(), o.getStart());
     }
@@ -27,13 +26,13 @@ public interface FinderResult extends Comparable<FinderResult> {
         return Range.of(getStart(), getEnd() - 1);
     }
 
-    /** @return if a result contains strictly, i.e. not been equal, another result. */
+    /** Return if a result contains strictly, i.e. not been equal, another result. */
     default boolean containsStrictly(FinderResult r) {
         // We don't want an item to contain itself
         return getRange().containsRange(r.getRange()) && !getRange().equals(r.getRange());
     }
 
-    /** @return if a result contains (not strictly, i.e. both can be equal) another result. */
+    /** Return if a result contains (not strictly, i.e. both can be equal) another result. */
     default boolean contains(FinderResult r) {
         return getRange().containsRange(r.getRange());
     }

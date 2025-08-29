@@ -16,6 +16,7 @@ import es.bvalero.replacer.user.ValidateUserAspect;
 import es.bvalero.replacer.user.WebUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -53,7 +54,7 @@ class DumpControllerTest {
         int numPagesIndexed = 500;
         int numPagesEstimated = 200000;
         String dumpFileName = "xxx.xml.bz2";
-        LocalDateTime start = LocalDateTime.now();
+        LocalDateTime start = LocalDateTime.now(ZoneId.systemDefault());
         LocalDateTime end = start.plusHours(1);
         DumpStatus dumpStatus = new DumpStatus(
             running,

@@ -9,7 +9,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import es.bvalero.replacer.WebMvcConfiguration;
 import es.bvalero.replacer.common.domain.PageKey;
 import es.bvalero.replacer.common.domain.User;
@@ -44,9 +43,6 @@ class ReviewFindControllerTest {
 
     @Autowired
     private MockMvc mvc;
-
-    @Autowired
-    private ObjectMapper objectMapper;
 
     @MockitoBean
     private WebUtils webUtils;

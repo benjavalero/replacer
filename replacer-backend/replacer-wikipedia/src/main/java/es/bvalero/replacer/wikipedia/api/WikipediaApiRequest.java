@@ -16,8 +16,6 @@ import org.springframework.lang.Nullable;
 @Builder(toBuilder = true)
 public class WikipediaApiRequest {
 
-    private static final String WIKIPEDIA_API_URL = "https://%s.wikipedia.org/w/api.php";
-
     @NonNull
     WikipediaApiVerb verb;
 
@@ -32,7 +30,7 @@ public class WikipediaApiRequest {
     AccessToken accessToken;
 
     String getUrl() {
-        return String.format(WIKIPEDIA_API_URL, this.lang.getCode());
+        return String.format("https://%s.wikipedia.org/w/api.php", this.lang.getCode());
     }
 
     boolean isSigned() {

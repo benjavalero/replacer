@@ -49,6 +49,7 @@ public interface Finder<T extends FinderResult> extends Comparable<Finder<T>> {
         return FinderPriority.NONE;
     }
 
+    @Override
     default int compareTo(Finder finder) {
         return Integer.compare(finder.getPriority().getValue(), getPriority().getValue());
     }

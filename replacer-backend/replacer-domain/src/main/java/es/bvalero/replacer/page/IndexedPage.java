@@ -3,7 +3,6 @@ package es.bvalero.replacer.page;
 import es.bvalero.replacer.common.domain.PageKey;
 import java.time.LocalDate;
 import java.util.*;
-import java.util.stream.Collectors;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
@@ -66,7 +65,7 @@ public class IndexedPage {
             !Objects.equals(expected.getTitle(), actual.getTitle()) ||
             !Objects.equals(expected.getLastUpdate(), actual.getLastUpdate()) ||
             !Objects.equals(expected.getStatus(), actual.getStatus()) ||
-            !Objects.equals(expected.getReplacements().size(), actual.getReplacements().size())
+            expected.getReplacements().size() != actual.getReplacements().size()
         ) {
             return false;
         }
@@ -75,12 +74,12 @@ public class IndexedPage {
             .getReplacements()
             .stream()
             .sorted(Comparator.comparingInt(IndexedReplacement::getStart))
-            .collect(Collectors.toCollection(LinkedList::new));
+            .toList();
         List<IndexedReplacement> actualList = actual
             .getReplacements()
             .stream()
             .sorted(Comparator.comparingInt(IndexedReplacement::getStart))
-            .collect(Collectors.toCollection(LinkedList::new));
+            .toList();
         for (int i = 0; i < expectedList.size(); i++) {
             if (!Objects.equals(expectedList.get(i), actualList.get(i))) {
                 return false;

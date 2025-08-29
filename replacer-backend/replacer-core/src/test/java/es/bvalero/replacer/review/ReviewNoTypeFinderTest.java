@@ -30,7 +30,6 @@ class ReviewNoTypeFinderTest {
     private final int randomId = 1;
     private final int randomId2 = 2;
     private final String content = "XYZ";
-    private final String content2 = "AYB";
     private final PageKey randomPageKey = PageKey.of(WikipediaLanguage.getDefault(), randomId);
     private final PageKey randomPageKey2 = PageKey.of(WikipediaLanguage.getDefault(), randomId2);
     private final WikipediaPage page = WikipediaPage.builder()
@@ -38,14 +37,6 @@ class ReviewNoTypeFinderTest {
         .namespace(WikipediaNamespace.ARTICLE)
         .title("Title1")
         .content(content)
-        .lastUpdate(WikipediaTimestamp.now())
-        .queryTimestamp(WikipediaTimestamp.now())
-        .build();
-    private final WikipediaPage page2 = WikipediaPage.builder()
-        .pageKey(randomPageKey2)
-        .namespace(WikipediaNamespace.ANNEX)
-        .title("Title2")
-        .content(content2)
         .lastUpdate(WikipediaTimestamp.now())
         .queryTimestamp(WikipediaTimestamp.now())
         .build();

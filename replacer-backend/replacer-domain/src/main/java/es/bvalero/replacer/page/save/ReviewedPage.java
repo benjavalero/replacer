@@ -11,6 +11,7 @@ import es.bvalero.replacer.page.IndexedReplacement;
 import es.bvalero.replacer.wikipedia.WikipediaPageSaveResult;
 import es.bvalero.replacer.wikipedia.WikipediaTimestamp;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Collection;
 import java.util.Objects;
 import lombok.Builder;
@@ -106,7 +107,7 @@ public class ReviewedPage {
         return IndexedPage.builder()
             .pageKey(pageKey)
             .title("") // Not important, it will not be updated
-            .lastUpdate(LocalDate.now()) // Not important, it will not be updated.
+            .lastUpdate(LocalDate.now(ZoneId.systemDefault())) // Not important, it will not be updated.
             .replacements(toIndexedReplacements(null))
             .customReplacements(toIndexedCustomReplacements(null))
             .status(IndexedPageStatus.INDEXED)

@@ -53,7 +53,7 @@ final class PageSearchResult {
         return this.total == 0;
     }
 
-    /** @return if the cached result list is empty. It doesn't mean the total is 0! */
+    /** Return if the cached result list is empty. It doesn't mean the total is 0! */
     boolean isEmpty() {
         return getSize() == 0;
     }

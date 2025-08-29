@@ -6,9 +6,7 @@ import org.springframework.lang.Nullable;
 
 @FunctionalInterface
 public interface LinearFinder {
-    /**
-     * @return the next result from the start position.
-     */
+    /** Return the next result from the start position */
     @Nullable
     MatchResult findResult(FinderPage page, int start);
     // We keep this interface as functional.

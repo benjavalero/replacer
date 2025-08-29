@@ -2,10 +2,8 @@ package es.bvalero.replacer.finder;
 
 import es.bvalero.replacer.common.util.ReplacerUtils;
 import java.util.Collection;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.SortedSet;
-import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -116,14 +114,8 @@ public final class Replacement implements FinderResult {
         if (expected.size() != actual.size()) {
             return false;
         }
-        List<Replacement> expectedList = expected
-            .stream()
-            .sorted(FinderResult::compareTo)
-            .collect(Collectors.toCollection(LinkedList::new));
-        List<Replacement> actualList = actual
-            .stream()
-            .sorted(FinderResult::compareTo)
-            .collect(Collectors.toCollection(LinkedList::new));
+        List<Replacement> expectedList = expected.stream().sorted(FinderResult::compareTo).toList();
+        List<Replacement> actualList = actual.stream().sorted(FinderResult::compareTo).toList();
         for (int i = 0; i < expected.size(); i++) {
             if (!compareReplacement(expectedList.get(i), actualList.get(i))) {
                 return false;

@@ -21,6 +21,7 @@ import org.springframework.stereotype.Component;
 @Component
 class CategoryWhiteSpaceFinder implements CosmeticFinder {
 
+    @SuppressWarnings("InlineFormatString")
     @RegExp
     private static final String REGEX_CATEGORY_SPACE = "\\[\\[(\\s*%s\\s*):(.+?)(\\|.+?)?]]";
 

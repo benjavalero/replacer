@@ -402,7 +402,7 @@ public class FinderUtils {
     /** Expand a simple regex containing only character classes and conditionals */
     public Collection<String> expandRegex(String regex) {
         final Set<String> results = new HashSet<>();
-        final Stack<String> pending = new Stack<>();
+        final Deque<String> pending = new ArrayDeque<>();
         pending.push(regex);
         while (!pending.isEmpty()) {
             final String current = pending.pop();
@@ -414,8 +414,8 @@ public class FinderUtils {
                 final String chars = current.substring(posOpenClass + 1, posCloseClass);
                 final String prefix = current.substring(0, posOpenClass);
                 final String suffix = current.substring(posCloseClass + 1);
-                for (char ch : chars.toCharArray()) {
-                    pending.push(prefix + ch + suffix);
+                for (int i = 0; i < chars.length(); i++) {
+                    pending.push(prefix + chars.charAt(i) + suffix);
                 }
             } else if (posConditional >= 0) {
                 assert posConditional > 0;

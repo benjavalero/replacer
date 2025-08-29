@@ -62,6 +62,7 @@ abstract class ReviewFinder implements ReviewFinderApi {
     }
 
     /** Find a page/section review for the given search options (if any) */
+    @Override
     public Optional<Review> findRandomPageReview(ReviewOptions options) {
         // Restart offset
         findCachedResult(options).ifPresent(PageSearchResult::resetOffset);
@@ -185,6 +186,7 @@ abstract class ReviewFinder implements ReviewFinderApi {
     ///// STEP 2 /////
 
     /** This step can be called independently in case we already know the ID of the page to review */
+    @Override
     public Optional<Review> findPageReview(PageKey pageKey, ReviewOptions options) {
         try {
             // STEP 2.1: Load the page from Wikipedia

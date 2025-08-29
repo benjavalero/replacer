@@ -8,6 +8,7 @@ import es.bvalero.replacer.page.IndexedPage;
 import es.bvalero.replacer.wikipedia.WikipediaNamespace;
 import es.bvalero.replacer.wikipedia.WikipediaTimestamp;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -46,7 +47,7 @@ class PageIndexValidatorTest {
 
     @Test
     void testIsPageNotIndexableByTimestamp() {
-        LocalDateTime today = LocalDateTime.now();
+        LocalDateTime today = LocalDateTime.now(ZoneId.systemDefault());
         LocalDateTime yesterday = today.minusDays(1);
 
         IndexablePage page1 = buildIndexablePage(today);

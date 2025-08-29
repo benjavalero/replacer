@@ -2,6 +2,7 @@ package es.bvalero.replacer.wikipedia;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import lombok.AccessLevel;
@@ -28,8 +29,9 @@ public class WikipediaTimestamp {
         return wikipediaTimestamp;
     }
 
+    /* To be used only for fake pages */
     public static WikipediaTimestamp now() {
-        return of(LocalDateTime.now());
+        return of(LocalDateTime.now(ZoneId.systemDefault()));
     }
 
     @VisibleForTesting
