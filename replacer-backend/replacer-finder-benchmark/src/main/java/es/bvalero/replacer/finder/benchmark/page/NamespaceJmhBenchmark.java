@@ -1,7 +1,5 @@
 package es.bvalero.replacer.finder.benchmark.page;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import es.bvalero.replacer.common.domain.PageKey;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.exception.ReplacerException;
@@ -12,7 +10,6 @@ import es.bvalero.replacer.wikipedia.WikipediaNamespace;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import lombok.Value;
-import org.junit.jupiter.api.Test;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.infra.Blackhole;
 import org.openjdk.jmh.runner.RunnerException;
@@ -20,7 +17,7 @@ import org.openjdk.jmh.runner.RunnerException;
 @Warmup(time = 5)
 @Measurement(time = 5)
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
-public class NamespaceJmhBenchmarkTest extends BaseFinderJmhBenchmark {
+public class NamespaceJmhBenchmark extends BaseFinderJmhBenchmark {
 
     private static final String fileName = "page/namespace-summary-jmh";
 
@@ -60,14 +57,10 @@ public class NamespaceJmhBenchmarkTest extends BaseFinderJmhBenchmark {
         );
     }
 
-    @Test
-    void testGenerateChartBoxplot() throws ReplacerException {
-        generateChart(fileName);
-        assertTrue(true);
-    }
+    public static void main(String[] args) throws RunnerException, ReplacerException {
+        run(NamespaceJmhBenchmark.class, fileName);
 
-    public static void main(String[] args) throws RunnerException {
-        run(NamespaceJmhBenchmarkTest.class, fileName);
+        generateChart(fileName);
     }
 
     @Value(staticConstructor = "of")

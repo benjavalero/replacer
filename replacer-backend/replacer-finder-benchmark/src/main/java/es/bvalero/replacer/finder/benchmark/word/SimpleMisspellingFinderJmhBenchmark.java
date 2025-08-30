@@ -1,7 +1,5 @@
 package es.bvalero.replacer.finder.benchmark.word;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.finder.benchmark.BaseFinderJmhBenchmark;
@@ -12,13 +10,12 @@ import es.bvalero.replacer.finder.listing.load.SimpleMisspellingLoader;
 import es.bvalero.replacer.finder.listing.parse.SimpleMisspellingParser;
 import java.util.Set;
 import java.util.stream.Collectors;
-import org.junit.jupiter.api.Test;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.infra.Blackhole;
 import org.openjdk.jmh.runner.RunnerException;
 
-public class SimpleMisspellingFinderJmhBenchmarkTest extends BaseFinderJmhBenchmark {
+public class SimpleMisspellingFinderJmhBenchmark extends BaseFinderJmhBenchmark {
 
     private static final String fileName = "word/simple-misspelling-summary-jmh";
 
@@ -189,13 +186,9 @@ public class SimpleMisspellingFinderJmhBenchmarkTest extends BaseFinderJmhBenchm
     }
     */
 
-    @Test
-    void testGenerateChartBoxplot() throws ReplacerException {
-        generateChart(fileName);
-        assertTrue(true);
-    }
+    public static void main(String[] args) throws RunnerException, ReplacerException {
+        run(SimpleMisspellingFinderJmhBenchmark.class, fileName);
 
-    public static void main(String[] args) throws RunnerException {
-        run(SimpleMisspellingFinderJmhBenchmarkTest.class, fileName);
+        generateChart(fileName);
     }
 }

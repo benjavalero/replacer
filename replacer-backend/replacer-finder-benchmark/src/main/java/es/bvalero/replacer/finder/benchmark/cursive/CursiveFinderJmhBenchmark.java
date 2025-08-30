@@ -1,16 +1,13 @@
 package es.bvalero.replacer.finder.benchmark.cursive;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.finder.benchmark.BaseFinderJmhBenchmark;
-import org.junit.jupiter.api.Test;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.infra.Blackhole;
 import org.openjdk.jmh.runner.RunnerException;
 
-public class CursiveFinderJmhBenchmarkTest extends BaseFinderJmhBenchmark {
+public class CursiveFinderJmhBenchmark extends BaseFinderJmhBenchmark {
 
     private static final String fileName = "cursive/cursive-summary-jmh";
 
@@ -73,13 +70,9 @@ public class CursiveFinderJmhBenchmarkTest extends BaseFinderJmhBenchmark {
         runFinder(cursiveFinalFinder, bh);
     }
 
-    @Test
-    void testGenerateChartBoxplot() throws ReplacerException {
-        generateChart(fileName);
-        assertTrue(true);
-    }
+    public static void main(String[] args) throws RunnerException, ReplacerException {
+        run(CursiveFinderJmhBenchmark.class, fileName);
 
-    public static void main(String[] args) throws RunnerException {
-        run(CursiveFinderJmhBenchmarkTest.class, fileName);
+        generateChart(fileName);
     }
 }

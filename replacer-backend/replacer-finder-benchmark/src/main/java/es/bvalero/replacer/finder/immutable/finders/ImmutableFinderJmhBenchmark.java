@@ -1,7 +1,5 @@
 package es.bvalero.replacer.finder.immutable.finders;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import es.bvalero.replacer.FinderProperties;
 import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.finder.benchmark.BaseFinderJmhBenchmark;
@@ -13,7 +11,6 @@ import es.bvalero.replacer.finder.listing.load.SimpleMisspellingLoader;
 import es.bvalero.replacer.finder.listing.parse.ComposedMisspellingParser;
 import es.bvalero.replacer.finder.listing.parse.FalsePositiveParser;
 import es.bvalero.replacer.finder.listing.parse.SimpleMisspellingParser;
-import org.junit.jupiter.api.Test;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.infra.Blackhole;
 import org.openjdk.jmh.runner.RunnerException;
@@ -23,7 +20,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 
 @EnableConfigurationProperties(FinderProperties.class)
 @State(Scope.Benchmark)
-public class ImmutableFinderJmhBenchmarkTest extends BaseFinderJmhBenchmark {
+public class ImmutableFinderJmhBenchmark extends BaseFinderJmhBenchmark {
 
     private static final String fileName = "../immutable/finders/immutable-summary-jmh";
 
@@ -54,7 +51,7 @@ public class ImmutableFinderJmhBenchmarkTest extends BaseFinderJmhBenchmark {
         // Base set-up
         super.setUp();
 
-        context = SpringApplication.run(ImmutableFinderJmhBenchmarkTest.class);
+        context = SpringApplication.run(ImmutableFinderJmhBenchmark.class);
         context.registerShutdownHook();
 
         FinderProperties finderProperties = context.getBean(FinderProperties.class);
@@ -202,13 +199,9 @@ public class ImmutableFinderJmhBenchmarkTest extends BaseFinderJmhBenchmark {
         runFinder(xmlTagFinder, bh);
     }
 
-    @Test
-    void testGenerateChartBoxplot() throws ReplacerException {
-        generateChart(fileName);
-        assertTrue(true);
-    }
+    public static void main(String[] args) throws RunnerException, ReplacerException {
+        run(ImmutableFinderJmhBenchmark.class, fileName);
 
-    public static void main(String[] args) throws RunnerException {
-        run(ImmutableFinderJmhBenchmarkTest.class, fileName);
+        generateChart(fileName);
     }
 }

@@ -1,12 +1,9 @@
 package es.bvalero.replacer.finder.benchmark.completetag;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import es.bvalero.replacer.FinderProperties;
 import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.finder.benchmark.BaseFinderJmhBenchmark;
 import java.util.Set;
-import org.junit.jupiter.api.Test;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.infra.Blackhole;
@@ -16,7 +13,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.ConfigurableApplicationContext;
 
 @EnableConfigurationProperties(FinderProperties.class)
-public class CompleteTagFinderJmhBenchmarkTest extends BaseFinderJmhBenchmark {
+public class CompleteTagFinderJmhBenchmark extends BaseFinderJmhBenchmark {
 
     private static final String fileName = "completetag/complete-tag-summary-jmh";
 
@@ -34,7 +31,7 @@ public class CompleteTagFinderJmhBenchmarkTest extends BaseFinderJmhBenchmark {
         // Base set-up
         super.setUp();
 
-        context = SpringApplication.run(CompleteTagFinderJmhBenchmarkTest.class);
+        context = SpringApplication.run(CompleteTagFinderJmhBenchmark.class);
         context.registerShutdownHook();
 
         FinderProperties finderProperties = context.getBean(FinderProperties.class);
@@ -73,13 +70,9 @@ public class CompleteTagFinderJmhBenchmarkTest extends BaseFinderJmhBenchmark {
         runFinder(completeTagFinalFinder, bh);
     }
 
-    @Test
-    void testGenerateChartBoxplot() throws ReplacerException {
-        generateChart(fileName);
-        assertTrue(true);
-    }
+    public static void main(String[] args) throws RunnerException, ReplacerException {
+        run(CompleteTagFinderJmhBenchmark.class, fileName);
 
-    public static void main(String[] args) throws RunnerException {
-        run(CompleteTagFinderJmhBenchmarkTest.class, fileName);
+        generateChart(fileName);
     }
 }

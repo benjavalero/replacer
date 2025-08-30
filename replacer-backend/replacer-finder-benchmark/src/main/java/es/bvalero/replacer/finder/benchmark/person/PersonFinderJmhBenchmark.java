@@ -1,13 +1,10 @@
 package es.bvalero.replacer.finder.benchmark.person;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import es.bvalero.replacer.FinderProperties;
 import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.finder.benchmark.BaseFinderJmhBenchmark;
 import java.util.HashSet;
 import java.util.Set;
-import org.junit.jupiter.api.Test;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.infra.Blackhole;
@@ -17,7 +14,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.ConfigurableApplicationContext;
 
 @EnableConfigurationProperties(FinderProperties.class)
-public class PersonFinderJmhBenchmarkTest extends BaseFinderJmhBenchmark {
+public class PersonFinderJmhBenchmark extends BaseFinderJmhBenchmark {
 
     private static final String fileName = "person/person-summary-jmh";
 
@@ -42,7 +39,7 @@ public class PersonFinderJmhBenchmarkTest extends BaseFinderJmhBenchmark {
         // Base set-up
         super.setUp();
 
-        context = SpringApplication.run(PersonFinderJmhBenchmarkTest.class);
+        context = SpringApplication.run(PersonFinderJmhBenchmark.class);
         context.registerShutdownHook();
 
         FinderProperties finderProperties = context.getBean(FinderProperties.class);
@@ -123,13 +120,9 @@ public class PersonFinderJmhBenchmarkTest extends BaseFinderJmhBenchmark {
         runFinder(personAhoCorasickWholeLongestFinder, bh);
     }
 
-    @Test
-    void testGenerateChartBoxplot() throws ReplacerException {
-        generateChart(fileName);
-        assertTrue(true);
-    }
+    public static void main(String[] args) throws RunnerException, ReplacerException {
+        run(PersonFinderJmhBenchmark.class, fileName);
 
-    public static void main(String[] args) throws RunnerException {
-        run(PersonFinderJmhBenchmarkTest.class, fileName);
+        generateChart(fileName);
     }
 }

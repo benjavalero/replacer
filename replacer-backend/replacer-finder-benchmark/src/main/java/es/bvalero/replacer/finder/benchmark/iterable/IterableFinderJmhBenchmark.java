@@ -1,14 +1,11 @@
 package es.bvalero.replacer.finder.benchmark.iterable;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.common.util.ReplacerUtils;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.benchmark.BaseFinderJmhBenchmark;
 import es.bvalero.replacer.finder.util.FinderMatchResult;
 import java.util.regex.MatchResult;
-import org.junit.jupiter.api.Test;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.Measurement;
 import org.openjdk.jmh.annotations.Setup;
@@ -19,7 +16,7 @@ import org.springframework.lang.Nullable;
 
 @Warmup(time = 5) // Default: 5 iterations, 10 s each
 @Measurement(time = 5) // Default: 5 iterations, 10 s each
-public class IterableFinderJmhBenchmarkTest extends BaseFinderJmhBenchmark {
+public class IterableFinderJmhBenchmark extends BaseFinderJmhBenchmark {
 
     private static final String fileName = "iterable/iterable-summary-jmh";
     private static final String word = "_";
@@ -72,13 +69,9 @@ public class IterableFinderJmhBenchmarkTest extends BaseFinderJmhBenchmark {
         return text.indexOf(word, start);
     }
 
-    @Test
-    void testGenerateChartBoxplot() throws ReplacerException {
-        generateChart(fileName);
-        assertTrue(true);
-    }
+    public static void main(String[] args) throws RunnerException, ReplacerException {
+        run(IterableFinderJmhBenchmark.class, fileName);
 
-    public static void main(String[] args) throws RunnerException {
-        run(IterableFinderJmhBenchmarkTest.class, fileName);
+        generateChart(fileName);
     }
 }

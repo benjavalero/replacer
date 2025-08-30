@@ -2,20 +2,15 @@ package es.bvalero.replacer.finder.benchmark;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import es.bvalero.replacer.common.exception.ReplacerException;
+import es.bvalero.replacer.common.util.FileOfflineUtils;
 import es.bvalero.replacer.finder.Finder;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.benchmark.util.BenchmarkUtils;
 import java.awt.Color;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URISyntaxException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartUtils;
@@ -40,10 +35,10 @@ import org.openjdk.jmh.runner.options.OptionsBuilder;
 @OutputTimeUnit(TimeUnit.MICROSECONDS)
 public class BaseFinderJmhBenchmark {
 
-    public static final String BENCHMARK_PACKAGE_PATH = "/es/bvalero/replacer/finder/benchmark/";
-    public static final String TEST_RESOURCES_PATH = "src/test/resources" + BENCHMARK_PACKAGE_PATH;
-    private static final String TEST_RESOURCES_COMPLETE_PATH =
-        "replacer-backend/replacer-finder-benchmark/" + TEST_RESOURCES_PATH;
+    private static final String BENCHMARK_PACKAGE_PATH = "/es/bvalero/replacer/finder/benchmark/";
+    private static final String RESOURCES_PATH = "src/main/resources" + BENCHMARK_PACKAGE_PATH;
+    private static final String RESOURCES_COMPLETE_PATH =
+        "replacer-backend/replacer-finder-benchmark/" + RESOURCES_PATH;
 
     protected List<FinderPage> sampleContents;
     private Map<Integer, Integer> samplePages;
@@ -88,14 +83,14 @@ public class BaseFinderJmhBenchmark {
             // .addProfiler(GCProfiler.class)
             // .addProfiler(MemPoolProfiler.class)
             .resultFormat(ResultFormatType.JSON)
-            .result(TEST_RESOURCES_COMPLETE_PATH + fileName + ".json")
+            .result(RESOURCES_COMPLETE_PATH + fileName + ".json")
             .build();
 
         new Runner(opt).run();
     }
 
     protected static void generateChart(String fileName) throws ReplacerException {
-        DefaultStatisticalCategoryDataset dataset = buildDataset(getJsonSummaries(getJsonFile(fileName)));
+        DefaultStatisticalCategoryDataset dataset = buildDataset(getJsonSummaries(fileName));
         JFreeChart chart = ChartFactory.createBarChart(null, null, "Execution Time (µs)", dataset);
 
         // Customize the plot to use StatisticalBarRenderer for error bars
@@ -110,32 +105,14 @@ public class BaseFinderJmhBenchmark {
         saveChart(chart, fileName);
     }
 
-    private static File getJsonFile(String fileName) throws ReplacerException {
+    private static JmhBenchmarkSummary[] getJsonSummaries(String fileName) throws ReplacerException {
         try {
-            return Paths.get(
-                Objects.requireNonNull(
-                    BaseFinderJmhBenchmark.class.getResource(BENCHMARK_PACKAGE_PATH + fileName + ".json")
-                ).toURI()
-            ).toFile();
-        } catch (URISyntaxException e) {
-            throw new ReplacerException(e);
-        }
-    }
-
-    private static JmhBenchmarkSummary[] getJsonSummaries(File jsonFile) throws ReplacerException {
-        try {
-            String jsonContent = getFileContent(jsonFile);
+            String jsonContent = FileOfflineUtils.getFileContent(
+                "es/bvalero/replacer/finder/benchmark/" + fileName + ".json"
+            );
             ObjectMapper jsonMapper = new ObjectMapper();
             return jsonMapper.readValue(jsonContent, JmhBenchmarkSummary[].class);
         } catch (Exception e) {
-            throw new ReplacerException(e);
-        }
-    }
-
-    private static String getFileContent(File file) throws ReplacerException {
-        try (InputStream is = new FileInputStream(file)) {
-            return new String(Objects.requireNonNull(is).readAllBytes(), StandardCharsets.UTF_8);
-        } catch (IOException e) {
             throw new ReplacerException(e);
         }
     }
@@ -163,7 +140,7 @@ public class BaseFinderJmhBenchmark {
                 folder = "";
                 name = fileName;
             }
-            File chartFile = new File(TEST_RESOURCES_PATH + folder, name + ".png");
+            File chartFile = new File(RESOURCES_COMPLETE_PATH + folder, name + ".png");
             ChartUtils.saveChartAsPNG(chartFile, chart, 800, 600);
         } catch (IOException e) {
             throw new ReplacerException(e);

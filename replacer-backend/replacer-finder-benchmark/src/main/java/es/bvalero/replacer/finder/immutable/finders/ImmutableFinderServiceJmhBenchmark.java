@@ -1,7 +1,5 @@
 package es.bvalero.replacer.finder.immutable.finders;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import es.bvalero.replacer.FinderProperties;
 import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.finder.benchmark.BaseFinderJmhBenchmark;
@@ -18,7 +16,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.ForkJoinPool;
 import lombok.SneakyThrows;
-import org.junit.jupiter.api.Test;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.infra.Blackhole;
 import org.openjdk.jmh.runner.RunnerException;
@@ -30,7 +27,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 @Warmup(time = 5) // Default: 5 iterations, 10 s each
 @Measurement(time = 5) // Default: 5 iterations, 10 s each
 @State(Scope.Benchmark)
-public class ImmutableFinderServiceJmhBenchmarkTest extends BaseFinderJmhBenchmark {
+public class ImmutableFinderServiceJmhBenchmark extends BaseFinderJmhBenchmark {
 
     private static final String fileName = "../immutable/finders/immutable-service-summary-jmh";
 
@@ -44,7 +41,7 @@ public class ImmutableFinderServiceJmhBenchmarkTest extends BaseFinderJmhBenchma
         // Base set-up
         super.setUp();
 
-        context = SpringApplication.run(ImmutableFinderServiceJmhBenchmarkTest.class);
+        context = SpringApplication.run(ImmutableFinderServiceJmhBenchmark.class);
         context.registerShutdownHook();
 
         FinderProperties finderProperties = context.getBean(FinderProperties.class);
@@ -155,14 +152,10 @@ public class ImmutableFinderServiceJmhBenchmarkTest extends BaseFinderJmhBenchma
         runParallelFinder(8, bh);
     }
 
-    @Test
-    void testGenerateChartBoxplot() throws ReplacerException {
-        generateChart(fileName);
-        assertTrue(true);
-    }
+    public static void main(String[] args) throws RunnerException, ReplacerException {
+        run(ImmutableFinderServiceJmhBenchmark.class, fileName);
 
-    public static void main(String[] args) throws RunnerException {
-        run(ImmutableFinderServiceJmhBenchmarkTest.class, fileName);
+        generateChart(fileName);
     }
 
     @SneakyThrows
@@ -170,11 +163,10 @@ public class ImmutableFinderServiceJmhBenchmarkTest extends BaseFinderJmhBenchma
         ForkJoinPool customThreadPool = new ForkJoinPool(threads);
         try {
             customThreadPool
-                .submit(
-                    () ->
-                        sampleContents.forEach(page ->
-                            finders.parallelStream().flatMap(finder -> finder.find(page)).forEach(bh::consume)
-                        )
+                .submit(() ->
+                    sampleContents.forEach(page ->
+                        finders.parallelStream().flatMap(finder -> finder.find(page)).forEach(bh::consume)
+                    )
                 )
                 .get();
         } finally {

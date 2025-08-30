@@ -1,7 +1,5 @@
 package es.bvalero.replacer.finder.replacement.finders;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import es.bvalero.replacer.FinderProperties;
 import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.finder.benchmark.BaseFinderJmhBenchmark;
@@ -11,7 +9,6 @@ import es.bvalero.replacer.finder.listing.load.ComposedMisspellingLoader;
 import es.bvalero.replacer.finder.listing.load.SimpleMisspellingLoader;
 import es.bvalero.replacer.finder.listing.parse.ComposedMisspellingParser;
 import es.bvalero.replacer.finder.listing.parse.SimpleMisspellingParser;
-import org.junit.jupiter.api.Test;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.infra.Blackhole;
 import org.openjdk.jmh.runner.RunnerException;
@@ -21,7 +18,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 
 @EnableConfigurationProperties(FinderProperties.class)
 @State(Scope.Benchmark)
-public class ReplacementFinderJmhBenchmarkTest extends BaseFinderJmhBenchmark {
+public class ReplacementFinderJmhBenchmark extends BaseFinderJmhBenchmark {
 
     private static final String fileName = "../replacement/finders/replacement-summary-jmh";
 
@@ -42,7 +39,7 @@ public class ReplacementFinderJmhBenchmarkTest extends BaseFinderJmhBenchmark {
         // Base set-up
         super.setUp();
 
-        context = SpringApplication.run(ReplacementFinderJmhBenchmarkTest.class);
+        context = SpringApplication.run(ReplacementFinderJmhBenchmark.class);
         context.registerShutdownHook();
 
         FinderProperties finderProperties = context.getBean(FinderProperties.class);
@@ -119,13 +116,9 @@ public class ReplacementFinderJmhBenchmarkTest extends BaseFinderJmhBenchmark {
         runFinder(misspellingSimpleFinder, bh);
     }
 
-    @Test
-    void testGenerateChartBoxplot() throws ReplacerException {
-        generateChart(fileName);
-        assertTrue(true);
-    }
+    public static void main(String[] args) throws RunnerException, ReplacerException {
+        run(ReplacementFinderJmhBenchmark.class, fileName);
 
-    public static void main(String[] args) throws RunnerException {
-        run(ReplacementFinderJmhBenchmarkTest.class, fileName);
+        generateChart(fileName);
     }
 }

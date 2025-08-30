@@ -1,7 +1,5 @@
 package es.bvalero.replacer.finder.benchmark.uppercase;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.finder.benchmark.BaseFinderJmhBenchmark;
@@ -17,13 +15,12 @@ import java.util.HashSet;
 import java.util.Set;
 import org.apache.commons.collections4.SetValuedMap;
 import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
-import org.junit.jupiter.api.Test;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.infra.Blackhole;
 import org.openjdk.jmh.runner.RunnerException;
 
-public class UppercaseFinderJmhBenchmarkTest extends BaseFinderJmhBenchmark {
+public class UppercaseFinderJmhBenchmark extends BaseFinderJmhBenchmark {
 
     private static final String fileName = "uppercase/uppercase-summary-jmh";
 
@@ -125,13 +122,9 @@ public class UppercaseFinderJmhBenchmarkTest extends BaseFinderJmhBenchmark {
         runFinder(uppercaseAhoCorasickWholeLongestFinder, bh);
     }
 
-    @Test
-    void testGenerateChartBoxplot() throws ReplacerException {
-        generateChart(fileName);
-        assertTrue(true);
-    }
+    public static void main(String[] args) throws RunnerException, ReplacerException {
+        run(UppercaseFinderJmhBenchmark.class, fileName);
 
-    public static void main(String[] args) throws RunnerException {
-        run(UppercaseFinderJmhBenchmarkTest.class, fileName);
+        generateChart(fileName);
     }
 }

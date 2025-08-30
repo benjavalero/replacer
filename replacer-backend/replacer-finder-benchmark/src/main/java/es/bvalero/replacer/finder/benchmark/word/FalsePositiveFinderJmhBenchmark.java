@@ -1,7 +1,5 @@
 package es.bvalero.replacer.finder.benchmark.word;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.finder.benchmark.BaseFinderJmhBenchmark;
@@ -13,13 +11,12 @@ import es.bvalero.replacer.finder.listing.parse.FalsePositiveParser;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import java.util.Set;
 import java.util.stream.Collectors;
-import org.junit.jupiter.api.Test;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.infra.Blackhole;
 import org.openjdk.jmh.runner.RunnerException;
 
-public class FalsePositiveFinderJmhBenchmarkTest extends BaseFinderJmhBenchmark {
+public class FalsePositiveFinderJmhBenchmark extends BaseFinderJmhBenchmark {
 
     private static final String fileName = "word/false-positive-summary-jmh";
 
@@ -165,13 +162,9 @@ public class FalsePositiveFinderJmhBenchmarkTest extends BaseFinderJmhBenchmark 
         runFinder(wordTrieWholeFinder, bh);
     }
 
-    @Test
-    void testGenerateChartBoxplot() throws ReplacerException {
-        generateChart(fileName);
-        assertTrue(true);
-    }
+    public static void main(String[] args) throws RunnerException, ReplacerException {
+        run(FalsePositiveFinderJmhBenchmark.class, fileName);
 
-    public static void main(String[] args) throws RunnerException {
-        run(FalsePositiveFinderJmhBenchmarkTest.class, fileName);
+        generateChart(fileName);
     }
 }

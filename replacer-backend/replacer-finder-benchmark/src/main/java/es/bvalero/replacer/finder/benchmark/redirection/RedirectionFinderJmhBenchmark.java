@@ -1,12 +1,9 @@
 package es.bvalero.replacer.finder.benchmark.redirection;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import es.bvalero.replacer.FinderProperties;
 import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.finder.benchmark.BaseFinderJmhBenchmark;
 import java.util.List;
-import org.junit.jupiter.api.Test;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.infra.Blackhole;
@@ -16,7 +13,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.ConfigurableApplicationContext;
 
 @EnableConfigurationProperties(FinderProperties.class)
-public class RedirectionFinderJmhBenchmarkTest extends BaseFinderJmhBenchmark {
+public class RedirectionFinderJmhBenchmark extends BaseFinderJmhBenchmark {
 
     private static final String fileName = "redirection/redirection-summary-jmh";
 
@@ -37,7 +34,7 @@ public class RedirectionFinderJmhBenchmarkTest extends BaseFinderJmhBenchmark {
         // Base set-up
         super.setUp();
 
-        context = SpringApplication.run(RedirectionFinderJmhBenchmarkTest.class);
+        context = SpringApplication.run(RedirectionFinderJmhBenchmark.class);
         context.registerShutdownHook();
 
         FinderProperties finderProperties = context.getBean(FinderProperties.class);
@@ -94,13 +91,9 @@ public class RedirectionFinderJmhBenchmarkTest extends BaseFinderJmhBenchmark {
         runFinder(redirectionAhoCorasickWholeLongestFinder, bh);
     }
 
-    @Test
-    void testGenerateChartBoxplot() throws ReplacerException {
-        generateChart(fileName);
-        assertTrue(true);
-    }
+    public static void main(String[] args) throws RunnerException, ReplacerException {
+        run(RedirectionFinderJmhBenchmark.class, fileName);
 
-    public static void main(String[] args) throws RunnerException {
-        run(RedirectionFinderJmhBenchmarkTest.class, fileName);
+        generateChart(fileName);
     }
 }

@@ -1,13 +1,10 @@
 package es.bvalero.replacer.finder.benchmark.surname;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import es.bvalero.replacer.FinderProperties;
 import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.finder.benchmark.BaseFinderJmhBenchmark;
 import java.util.Set;
 import java.util.stream.Collectors;
-import org.junit.jupiter.api.Test;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.infra.Blackhole;
@@ -17,7 +14,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.ConfigurableApplicationContext;
 
 @EnableConfigurationProperties(FinderProperties.class)
-public class SurnameFinderJmhBenchmarkTest extends BaseFinderJmhBenchmark {
+public class SurnameFinderJmhBenchmark extends BaseFinderJmhBenchmark {
 
     private static final String fileName = "surname/surname-summary-jmh";
 
@@ -42,7 +39,7 @@ public class SurnameFinderJmhBenchmarkTest extends BaseFinderJmhBenchmark {
         // Base set-up
         super.setUp();
 
-        context = SpringApplication.run(SurnameFinderJmhBenchmarkTest.class);
+        context = SpringApplication.run(SurnameFinderJmhBenchmark.class);
         context.registerShutdownHook();
 
         FinderProperties finderProperties = context.getBean(FinderProperties.class);
@@ -127,13 +124,9 @@ public class SurnameFinderJmhBenchmarkTest extends BaseFinderJmhBenchmark {
         runFinder(surnameAhoCorasickWholeLongestFinder, bh);
     }
 
-    @Test
-    void testGenerateChartBoxplot() throws ReplacerException {
-        generateChart(fileName);
-        assertTrue(true);
-    }
+    public static void main(String[] args) throws RunnerException, ReplacerException {
+        run(SurnameFinderJmhBenchmark.class, fileName);
 
-    public static void main(String[] args) throws RunnerException {
-        run(SurnameFinderJmhBenchmarkTest.class, fileName);
+        generateChart(fileName);
     }
 }
