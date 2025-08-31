@@ -144,16 +144,11 @@ class PageSaveJdbcRepository implements PageSaveRepository {
                 }
             });
 
-        // TODO: Insert in batch or add comment to explain why not
-        customReplacements.forEach(this::addCustomReplacement);
-    }
-
-    private void addCustomReplacement(IndexedCustomReplacement customReplacement) {
         final String sql =
             "INSERT INTO custom (lang, page_id, replacement, cs, start, reviewer, review_type, review_timestamp, old_rev_id, new_rev_id) " +
             "VALUES (:pageKey.lang.code, :pageKey.pageId, :type.subtype, :cs, :start, :reviewer, :reviewType.code, :reviewTimestamp, :oldRevId, :newRevId)";
-        SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(customReplacement);
-        jdbcTemplate.update(sql, namedParameters);
+        SqlParameterSource[] namedParameters = SqlParameterSourceUtils.createBatch(customReplacements.toArray());
+        jdbcTemplate.batchUpdate(sql, namedParameters);
     }
 
     @Override
@@ -226,33 +221,15 @@ class PageSaveJdbcRepository implements PageSaveRepository {
             .distinct()
             .forEach(type -> applicationEventPublisher.publishEvent(PageCountDecrementEvent.of(lang, type)));
 
-        // TODO: Update in batch or add comment to explain why not
-        replacements.forEach(this::updateReviewer);
-    }
-
-    private void updateReviewer(IndexedReplacement replacement) {
         String sql =
             """
             UPDATE replacement
-            SET reviewer = :reviewer, review_type = :reviewType, review_timestamp = :reviewTimestamp, old_rev_id = :oldRevId, new_rev_id = :newRevId
-            WHERE lang = :lang AND page_id = :pageId AND kind = :kind AND subtype = :subtype
+            SET reviewer = :reviewer, review_type = :reviewType.code, review_timestamp = :reviewTimestamp, old_rev_id = :oldRevId, new_rev_id = :newRevId
+            WHERE lang = :pageKey.lang.code AND page_id = :pageKey.pageId AND kind = :type.kind.code AND subtype = :type.subtype
             AND start = :start AND reviewer IS NULL
             """;
-        SqlParameterSource namedParameters = new MapSqlParameterSource()
-            .addValue("reviewer", replacement.getReviewer())
-            .addValue("reviewType", replacement.getReviewType().getCode())
-            .addValue("reviewTimestamp", replacement.getReviewTimestamp())
-            .addValue("oldRevId", replacement.getOldRevId())
-            .addValue("newRevId", replacement.getNewRevId())
-            .addValue("lang", replacement.getPageKey().getLang().getCode())
-            .addValue("pageId", replacement.getPageKey().getPageId())
-            .addValue("kind", replacement.getType().getKind().getCode())
-            .addValue("subtype", replacement.getType().getSubtype())
-            .addValue("start", replacement.getStart());
-        int numRows = jdbcTemplate.update(sql, namedParameters);
-        if (numRows != 1) {
-            LOGGER.warn("Indexed Replacement reviewer not updated: {}", replacement);
-        }
+        SqlParameterSource[] namedParameters = SqlParameterSourceUtils.createBatch(replacements.toArray());
+        jdbcTemplate.batchUpdate(sql, namedParameters);
     }
 
     @Override
