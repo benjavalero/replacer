@@ -29,7 +29,8 @@ public enum WikipediaNamespace {
     WIKI_PROJECT(102),
     ANNEX(104),
     TIMED_TEXT(710),
-    MODULE(828);
+    MODULE(828),
+    EVENT(1728);
 
     private static final Map<Integer, WikipediaNamespace> map = Arrays.stream(WikipediaNamespace.values()).collect(
         Collectors.toUnmodifiableMap(WikipediaNamespace::getValue, Function.identity())
