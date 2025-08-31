@@ -11,6 +11,8 @@ import es.bvalero.replacer.wikipedia.*;
 import es.bvalero.replacer.wikipedia.api.WikipediaApiHelper;
 import es.bvalero.replacer.wikipedia.api.WikipediaApiRequest;
 import es.bvalero.replacer.wikipedia.api.WikipediaApiResponse;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -76,7 +78,8 @@ class WikipediaPageApiRepositoryTest {
                 }
             }
             """;
-        when(wikipediaApiHelper.executeApiRequestAsText(any(WikipediaApiRequest.class))).thenReturn(textResponse);
+        InputStream textStream = new ByteArrayInputStream(textResponse.getBytes());
+        when(wikipediaApiHelper.executeApiRequestAsStream(any(WikipediaApiRequest.class))).thenReturn(textStream);
 
         int pageId = 6219990;
         String title = "Usuario:Benjavalero";
@@ -129,7 +132,8 @@ class WikipediaPageApiRepositoryTest {
                 }
             }
             """;
-        when(wikipediaApiHelper.executeApiRequestAsText(any(WikipediaApiRequest.class))).thenReturn(textResponse);
+        InputStream textStream = new ByteArrayInputStream(textResponse.getBytes());
+        when(wikipediaApiHelper.executeApiRequestAsStream(any(WikipediaApiRequest.class))).thenReturn(textStream);
 
         PageKey pageKey = PageKey.of(WikipediaLanguage.SPANISH, 6219990);
         String title = "Usuario:Benjavalero";
@@ -206,7 +210,8 @@ class WikipediaPageApiRepositoryTest {
                 }
             }
             """;
-        when(wikipediaApiHelper.executeApiRequestAsText(any(WikipediaApiRequest.class))).thenReturn(textResponse);
+        InputStream textStream = new ByteArrayInputStream(textResponse.getBytes());
+        when(wikipediaApiHelper.executeApiRequestAsStream(any(WikipediaApiRequest.class))).thenReturn(textStream);
 
         WikipediaLanguage lang = WikipediaLanguage.SPANISH;
         Collection<WikipediaPage> pages = wikipediaPageRepository
@@ -259,7 +264,8 @@ class WikipediaPageApiRepositoryTest {
                 }
             }
             """;
-        when(wikipediaApiHelper.executeApiRequestAsText(any(WikipediaApiRequest.class))).thenReturn(textResponse);
+        InputStream textStream = new ByteArrayInputStream(textResponse.getBytes());
+        when(wikipediaApiHelper.executeApiRequestAsStream(any(WikipediaApiRequest.class))).thenReturn(textStream);
 
         assertFalse(
             wikipediaPageRepository.findByTitle(WikipediaLanguage.SPANISH, "Usuario:Benjavaleroxx").isPresent()
@@ -321,7 +327,8 @@ class WikipediaPageApiRepositoryTest {
                 }
             }
             """;
-        when(wikipediaApiHelper.executeApiRequestAsText(any(WikipediaApiRequest.class))).thenReturn(textResponse);
+        InputStream textStream = new ByteArrayInputStream(textResponse.getBytes());
+        when(wikipediaApiHelper.executeApiRequestAsStream(any(WikipediaApiRequest.class))).thenReturn(textStream);
 
         assertFalse(wikipediaPageRepository.findByTitle(WikipediaLanguage.SPANISH, "Getxo").isPresent());
     }
@@ -656,7 +663,8 @@ class WikipediaPageApiRepositoryTest {
                 }
             }
             """;
-        when(wikipediaApiHelper.executeApiRequestAsText(any(WikipediaApiRequest.class))).thenReturn(textResponse);
+        InputStream textStream = new ByteArrayInputStream(textResponse.getBytes());
+        when(wikipediaApiHelper.executeApiRequestAsStream(any(WikipediaApiRequest.class))).thenReturn(textStream);
 
         PageKey pageKey = PageKey.of(WikipediaLanguage.getDefault(), 6903884);
         int sectionId = 1;

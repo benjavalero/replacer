@@ -12,6 +12,9 @@ import es.bvalero.replacer.wikipedia.api.WikipediaApiRequest;
 import es.bvalero.replacer.wikipedia.api.WikipediaApiResponse;
 import es.bvalero.replacer.wikipedia.api.WikipediaApiVerb;
 import jakarta.annotation.Nullable;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UncheckedIOException;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -52,13 +55,20 @@ public class WikipediaPageApiRepository implements WikipediaPageRepository {
             .params(buildPageIdsRequestParams("titles", pageTitle))
             .build();
         // Return the only value that should be in the map
-        return convertWikipediaPageResponse(lang, wikipediaApiHelper.executeApiRequestAsText(apiRequest)).findAny();
+        return convertWikipediaPageResponse(lang, wikipediaApiHelper.executeApiRequestAsStream(apiRequest)).findAny();
     }
 
-    private Stream<WikipediaPage> convertWikipediaPageResponse(WikipediaLanguage lang, String apiResponse) {
-        return WikipediaJsonParser.parse(lang, apiResponse)
+    private Stream<WikipediaPage> convertWikipediaPageResponse(WikipediaLanguage lang, InputStream apiResponse) {
+        Stream<WikipediaPage> pageStream = WikipediaJsonParser.parse(lang, apiResponse)
             .filter(wp -> !wp.isMissing())
             .filter(wp -> !wp.isProtected());
+        return pageStream.onClose(() -> {
+            try {
+                apiResponse.close();
+            } catch (IOException e) {
+                throw new UncheckedIOException(e);
+            }
+        });
     }
 
     @Override
@@ -117,7 +127,7 @@ public class WikipediaPageApiRepository implements WikipediaPageRepository {
                 .params(buildPageIdsRequestParams("pageids", pagesValue))
                 .accessToken(accessToken)
                 .build();
-            return convertWikipediaPageResponse(lang, wikipediaApiHelper.executeApiRequestAsText(apiRequest));
+            return convertWikipediaPageResponse(lang, wikipediaApiHelper.executeApiRequestAsStream(apiRequest));
         } catch (OutOfMemoryError e) {
             // Sometimes (though rarely) the retrieved pages are huge (e.g. annexes) and throw an out-of-memory error
             // We try to free the memory and retry recursively with smaller chunks
@@ -210,7 +220,10 @@ public class WikipediaPageApiRepository implements WikipediaPageRepository {
                 .params(buildPageIdsAndSectionRequestParams(pageKey.getPageId(), section.getIndex()))
                 .accessToken(accessToken)
                 .build();
-            return convertWikipediaPageResponse(lang, wikipediaApiHelper.executeApiRequestAsText(apiRequest)).findAny();
+            return convertWikipediaPageResponse(
+                lang,
+                wikipediaApiHelper.executeApiRequestAsStream(apiRequest)
+            ).findAny();
         } catch (WikipediaException e) {
             LOGGER.error("Error getting page section: {}", section, e);
             return Optional.empty();

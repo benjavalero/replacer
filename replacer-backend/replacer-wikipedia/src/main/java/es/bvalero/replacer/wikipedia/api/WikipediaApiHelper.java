@@ -12,7 +12,9 @@ import com.github.scribejava.core.oauth.OAuth10aService;
 import es.bvalero.replacer.common.domain.AccessToken;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.concurrent.ExecutionException;
+import java.util.zip.GZIPInputStream;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -35,26 +37,34 @@ public class WikipediaApiHelper {
     }
 
     public WikipediaApiResponse executeApiRequest(WikipediaApiRequest apiRequest) throws WikipediaException {
-        return convert(executeApiRequestAsText(apiRequest));
+        try (Response response = executeMediaWikiRequest(apiRequest)) {
+            return convert(response.getBody());
+        } catch (IOException e) {
+            throw new WikipediaException(e);
+        }
     }
 
-    public String executeApiRequestAsText(WikipediaApiRequest apiRequest) throws WikipediaException {
-        // Add common parameters to receive a JSON response from Wikipedia API
-        WikipediaApiRequest request = apiRequest
-            .toBuilder()
-            .param("format", "json")
-            .param("formatversion", "2")
-            .build();
-
-        return executeMediaWikiRequest(request);
+    public InputStream executeApiRequestAsStream(WikipediaApiRequest apiRequest) throws WikipediaException {
+        try (Response response = executeMediaWikiRequest(apiRequest)) {
+            if ("gzip".equals(response.getHeader("Content-Encoding"))) {
+                return new GZIPInputStream(response.getStream());
+            } else {
+                return response.getStream();
+            }
+        } catch (IOException e) {
+            throw new WikipediaException(e);
+        }
     }
 
-    private String executeMediaWikiRequest(WikipediaApiRequest apiRequest) throws WikipediaException {
+    private Response executeMediaWikiRequest(WikipediaApiRequest apiRequest) throws WikipediaException {
         Verb verb = convertVerb(apiRequest.getVerb());
         String url = apiRequest.getUrl();
         OAuthRequest mediaWikiRequest = new OAuthRequest(verb, url);
         mediaWikiRequest.addHeader(ACCEPT_ENCODING, "gzip");
         apiRequest.getParams().forEach(mediaWikiRequest::addParameter);
+        // Add common parameters to receive a JSON response from Wikipedia API
+        mediaWikiRequest.addParameter("format", "json");
+        mediaWikiRequest.addParameter("formatversion", "2");
         if (apiRequest.isSigned()) {
             assert apiRequest.getAccessToken() != null;
             OAuth1AccessToken oAuth1AccessToken = convertAccessToken(apiRequest.getAccessToken());
@@ -68,8 +78,7 @@ public class WikipediaApiHelper {
                     String.format("Call not successful: %d - %s", response.getCode(), response.getMessage())
                 );
             }
-
-            return response.getBody();
+            return response;
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             LOGGER.error("Thread Error executing OAuth request", e);

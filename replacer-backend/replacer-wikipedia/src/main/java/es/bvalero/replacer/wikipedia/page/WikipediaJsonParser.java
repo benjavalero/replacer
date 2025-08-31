@@ -9,6 +9,7 @@ import es.bvalero.replacer.common.util.ReplacerUtils;
 import es.bvalero.replacer.wikipedia.WikipediaNamespace;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
 import es.bvalero.replacer.wikipedia.WikipediaTimestamp;
+import java.io.InputStream;
 import java.util.Iterator;
 import java.util.stream.Stream;
 import lombok.SneakyThrows;
@@ -18,7 +19,7 @@ import lombok.SneakyThrows;
  */
 public class WikipediaJsonParser {
 
-    public static Stream<WikipediaPage> parse(WikipediaLanguage lang, String jsonResponse) {
+    public static Stream<WikipediaPage> parse(WikipediaLanguage lang, InputStream jsonResponse) {
         Iterable<WikipediaPage> pageIterable = () -> new WikipediaJsonIterator(lang, jsonResponse);
         return ReplacerUtils.streamOfIterable(pageIterable);
     }
@@ -57,7 +58,7 @@ public class WikipediaJsonParser {
         private boolean currentProtected;
 
         @SneakyThrows
-        WikipediaJsonIterator(WikipediaLanguage lang, String jsonResponse) {
+        WikipediaJsonIterator(WikipediaLanguage lang, InputStream jsonResponse) {
             this.lang = lang;
             this.parser = new JsonFactory().createParser(jsonResponse);
             advanceToPagesArray();
