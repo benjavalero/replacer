@@ -24,8 +24,8 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.ConfigurableApplicationContext;
 
 @EnableConfigurationProperties(FinderProperties.class)
-@Warmup(time = 5) // Default: 5 iterations, 10 s each
-@Measurement(time = 5) // Default: 5 iterations, 10 s each
+@Warmup(time = 10) // Default: 5 iterations, 10 s each
+@Measurement(time = 10) // Default: 5 iterations, 10 s each
 @State(Scope.Benchmark)
 public class ImmutableFinderServiceJmhBenchmark extends BaseFinderJmhBenchmark {
 

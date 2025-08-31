@@ -41,7 +41,9 @@ public interface FinderService<T extends FinderResult> {
         // in order not to sort them here every time.
         // According to the benchmark, iterating the finders in parallel
         // with the default number of threads is almost twice faster.
-        return finders.parallelStream().flatMap(finder -> finder.find(page));
+        // However, running the same benchmark in Production,
+        // we find the best option is to keep using the sequential stream.
+        return finders.stream().flatMap(finder -> finder.find(page));
     }
 
     /* Finders whose results will be included in the results  */

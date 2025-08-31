@@ -1,5 +1,8 @@
 # Versions
 
+## 2.31.3 (??)
+- Revert: iterate the replacements and immutables sequentially in Production
+
 ## 2.31.2 (25 Aug 2025)
 - Fix: include the user agent to implement the robot policy
 - Feat: parse a collection of pages from Wikipedia response as a stream to avoid memory issues
