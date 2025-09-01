@@ -160,8 +160,7 @@ public class ImmutableFinderServiceJmhBenchmark extends BaseFinderJmhBenchmark {
 
     @SneakyThrows
     private void runParallelFinder(int threads, Blackhole bh) {
-        ForkJoinPool customThreadPool = new ForkJoinPool(threads);
-        try {
+        try (ForkJoinPool customThreadPool = new ForkJoinPool(threads)) {
             customThreadPool
                 .submit(() ->
                     sampleContents.forEach(page ->
@@ -169,8 +168,6 @@ public class ImmutableFinderServiceJmhBenchmark extends BaseFinderJmhBenchmark {
                     )
                 )
                 .get();
-        } finally {
-            customThreadPool.shutdown(); // Always shut down the pool
         }
     }
 }

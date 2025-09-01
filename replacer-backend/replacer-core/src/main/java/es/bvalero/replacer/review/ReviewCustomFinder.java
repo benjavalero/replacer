@@ -17,7 +17,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.Setter;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.TestOnly;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -192,18 +191,22 @@ class ReviewCustomFinder extends ReviewFinder {
         return merged;
     }
 
-    @SneakyThrows
     @Override
     public Collection<PageTitle> findPageTitlesToReviewByType(ReviewOptions options) {
         // We use the same approach that for finding a review,
         // i.e. search all the results and then discard the ones not to review.
-        final WikipediaLanguage lang = options.getUser().getId().getLang();
-        final WikipediaSearchResult searchResult = findWikipediaResults(options, 0);
-        final Set<Integer> pageIds = new HashSet<>(searchResult.getPageIds());
-        findReviewedPageIds(options).forEach(pageIds::remove);
-        return findWikipediaPagesById(lang, pageIds)
-            .filter(page -> !findCustomReplacements(page, options).isEmpty())
-            .map(page -> PageTitle.of(page.getPageKey().getPageId(), page.getTitle()))
-            .toList();
+        try {
+            final WikipediaLanguage lang = options.getUser().getId().getLang();
+            final WikipediaSearchResult searchResult = findWikipediaResults(options, 0);
+            final Set<Integer> pageIds = new HashSet<>(searchResult.getPageIds());
+            findReviewedPageIds(options).forEach(pageIds::remove);
+            return findWikipediaPagesById(lang, pageIds)
+                .filter(page -> !findCustomReplacements(page, options).isEmpty())
+                .map(page -> PageTitle.of(page.getPageKey().getPageId(), page.getTitle()))
+                .toList();
+        } catch (WikipediaException e) {
+            LOGGER.error("ERROR Find Page Titles to review by type", e);
+            return List.of();
+        }
     }
 }

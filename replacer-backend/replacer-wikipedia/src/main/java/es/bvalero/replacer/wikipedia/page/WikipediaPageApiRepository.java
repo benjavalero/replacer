@@ -58,7 +58,8 @@ public class WikipediaPageApiRepository implements WikipediaPageRepository {
         return convertWikipediaPageResponse(lang, wikipediaApiHelper.executeApiRequestAsStream(apiRequest)).findAny();
     }
 
-    private Stream<WikipediaPage> convertWikipediaPageResponse(WikipediaLanguage lang, InputStream apiResponse) {
+    private Stream<WikipediaPage> convertWikipediaPageResponse(WikipediaLanguage lang, InputStream apiResponse)
+        throws WikipediaException {
         Stream<WikipediaPage> pageStream = WikipediaJsonParser.parse(lang, apiResponse)
             .filter(wp -> !wp.isMissing())
             .filter(wp -> !wp.isProtected());

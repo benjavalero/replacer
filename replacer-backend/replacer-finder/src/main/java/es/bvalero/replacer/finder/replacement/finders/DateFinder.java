@@ -23,6 +23,7 @@ import java.time.ZoneId;
 import java.util.*;
 import java.util.regex.MatchResult;
 import java.util.stream.Stream;
+import lombok.SneakyThrows;
 import org.apache.commons.collections4.ListValuedMap;
 import org.apache.commons.collections4.SetValuedMap;
 import org.apache.commons.collections4.multimap.ArrayListValuedHashMap;
@@ -532,12 +533,10 @@ class DateFinder implements ReplacementFinder {
         return year.charAt(0) + year.substring(2);
     }
 
+    @SneakyThrows
     private boolean isFalseYear(String year) {
-        try {
-            return Integer.parseInt(year) > CURRENT_YEAR;
-        } catch (NumberFormatException nfe) {
-            throw new IllegalStateException();
-        }
+        // At this point the year string should match an integer
+        return Integer.parseInt(year) > CURRENT_YEAR;
     }
 
     private String getPrepositionDefault(WikipediaLanguage lang) {

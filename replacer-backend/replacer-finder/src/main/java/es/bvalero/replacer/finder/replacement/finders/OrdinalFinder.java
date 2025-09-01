@@ -129,19 +129,16 @@ class OrdinalFinder implements ReplacementFinder {
 
     /* Validate if the number is candidate to be the number of an ordinal */
     private boolean isOrdinalNumber(MatchResult numberMatch, String text) {
-        try {
-            // Max. 3 digits allowed
-            // Not preceded by letter, e.g. a3o
-            final String number = numberMatch.group();
-            return (
-                number.length() <= 3 &&
-                Integer.parseInt(number) > 0 &&
-                (numberMatch.start() == 0 || FinderUtils.isValidSeparator(text.charAt(numberMatch.start() - 1))) &&
-                numberMatch.end() < text.length()
-            );
-        } catch (NumberFormatException nfe) {
-            throw new IllegalStateException(nfe);
-        }
+        // Max. 3 digits allowed
+        // Not preceded by letter, e.g. a3o
+        // At this point the number string should match an integer
+        final String number = numberMatch.group();
+        return (
+            number.length() <= 3 &&
+            Integer.parseInt(number) > 0 &&
+            (numberMatch.start() == 0 || FinderUtils.isValidSeparator(text.charAt(numberMatch.start() - 1))) &&
+            numberMatch.end() < text.length()
+        );
     }
 
     /* Find an ordinal suffix right after the number match */

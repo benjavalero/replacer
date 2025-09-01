@@ -6,9 +6,11 @@ import com.fasterxml.jackson.core.JsonToken;
 import es.bvalero.replacer.common.domain.PageKey;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.util.ReplacerUtils;
+import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.wikipedia.WikipediaNamespace;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
 import es.bvalero.replacer.wikipedia.WikipediaTimestamp;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Iterator;
 import java.util.stream.Stream;
@@ -19,9 +21,15 @@ import lombok.SneakyThrows;
  */
 public class WikipediaJsonParser {
 
-    public static Stream<WikipediaPage> parse(WikipediaLanguage lang, InputStream jsonResponse) {
-        Iterable<WikipediaPage> pageIterable = () -> new WikipediaJsonIterator(lang, jsonResponse);
-        return ReplacerUtils.streamOfIterable(pageIterable);
+    public static Stream<WikipediaPage> parse(WikipediaLanguage lang, InputStream jsonResponse)
+        throws WikipediaException {
+        try {
+            final WikipediaJsonIterator pageIterator = new WikipediaJsonIterator(lang, jsonResponse);
+            final Iterable<WikipediaPage> pageIterable = () -> pageIterator;
+            return ReplacerUtils.streamOfIterable(pageIterable);
+        } catch (Exception e) {
+            throw new WikipediaException(e);
+        }
     }
 
     private static class WikipediaJsonIterator implements Iterator<WikipediaPage> {
@@ -57,16 +65,15 @@ public class WikipediaJsonParser {
         private boolean currentRedirect;
         private boolean currentProtected;
 
-        @SneakyThrows
-        WikipediaJsonIterator(WikipediaLanguage lang, InputStream jsonResponse) {
+        private WikipediaJsonIterator(WikipediaLanguage lang, InputStream jsonResponse) throws IOException {
             this.lang = lang;
             this.parser = new JsonFactory().createParser(jsonResponse);
             advanceToPagesArray();
         }
 
-        private void advanceToPagesArray() throws Exception {
+        private void advanceToPagesArray() throws IOException {
             if (parser.nextToken() != JsonToken.START_OBJECT) {
-                throw new Exception("Expected a JSON object at the start");
+                throw new IOException("Expected a JSON object at the start");
             }
 
             // Advance until the end of the main object
@@ -109,7 +116,7 @@ public class WikipediaJsonParser {
             return parsePage();
         }
 
-        private WikipediaPage parsePage() throws Exception {
+        private WikipediaPage parsePage() throws IOException {
             while (parser.nextToken() != JsonToken.END_OBJECT) {
                 String fieldName = parser.currentName();
                 switch (fieldName) {
@@ -172,7 +179,7 @@ public class WikipediaJsonParser {
             this.currentProtected = false;
         }
 
-        private void parseProtections() throws Exception {
+        private void parseProtections() throws IOException {
             // Move into the array
             if (parser.nextToken() == JsonToken.START_ARRAY) {
                 // Iterate over each item in the array
@@ -184,7 +191,7 @@ public class WikipediaJsonParser {
             }
         }
 
-        private void parseProtection() throws Exception {
+        private void parseProtection() throws IOException {
             String type = null;
             String level = null;
             while (parser.nextToken() != JsonToken.END_OBJECT) {
@@ -207,7 +214,7 @@ public class WikipediaJsonParser {
             }
         }
 
-        private void parseRevisions() throws Exception {
+        private void parseRevisions() throws IOException {
             // Move into the array
             if (parser.nextToken() == JsonToken.START_ARRAY) {
                 // Iterate over each item in the array
@@ -219,7 +226,7 @@ public class WikipediaJsonParser {
             }
         }
 
-        private void parseRevision() throws Exception {
+        private void parseRevision() throws IOException {
             while (parser.nextToken() != JsonToken.END_OBJECT) {
                 String fieldName = parser.currentName();
                 switch (fieldName) {
@@ -233,7 +240,7 @@ public class WikipediaJsonParser {
             }
         }
 
-        private void parseSlots() throws Exception {
+        private void parseSlots() throws IOException {
             parser.nextToken(); // Move to the start of the object
             while (parser.nextToken() != JsonToken.END_OBJECT) {
                 String fieldName = parser.currentName();
@@ -245,7 +252,7 @@ public class WikipediaJsonParser {
             }
         }
 
-        private void parseMain() throws Exception {
+        private void parseMain() throws IOException {
             parser.nextToken(); // Move to the start of the object
             while (parser.nextToken() != JsonToken.END_OBJECT) {
                 String fieldName = parser.currentName();

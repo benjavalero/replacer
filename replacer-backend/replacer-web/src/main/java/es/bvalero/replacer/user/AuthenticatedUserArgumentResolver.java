@@ -2,7 +2,6 @@ package es.bvalero.replacer.user;
 
 import es.bvalero.replacer.common.resolver.AuthenticatedUser;
 import jakarta.servlet.http.HttpServletRequest;
-import lombok.SneakyThrows;
 import org.springframework.core.MethodParameter;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
@@ -26,7 +25,6 @@ public class AuthenticatedUserArgumentResolver implements HandlerMethodArgumentR
         return methodParameter.getParameterAnnotation(AuthenticatedUser.class) != null;
     }
 
-    @SneakyThrows
     @Override
     public Object resolveArgument(
         MethodParameter methodParameter,
