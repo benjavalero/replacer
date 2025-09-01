@@ -78,7 +78,7 @@ class WikipediaPageApiRepositoryTest {
                 }
             }
             """;
-        InputStream textStream = new ByteArrayInputStream(textResponse.getBytes());
+        InputStream textStream = new ByteArrayInputStream(textResponse.getBytes("UTF-8"));
         when(wikipediaApiHelper.executeApiRequestAsStream(any(WikipediaApiRequest.class))).thenReturn(textStream);
 
         int pageId = 6219990;
@@ -132,7 +132,7 @@ class WikipediaPageApiRepositoryTest {
                 }
             }
             """;
-        InputStream textStream = new ByteArrayInputStream(textResponse.getBytes());
+        InputStream textStream = new ByteArrayInputStream(textResponse.getBytes("UTF-8"));
         when(wikipediaApiHelper.executeApiRequestAsStream(any(WikipediaApiRequest.class))).thenReturn(textStream);
 
         PageKey pageKey = PageKey.of(WikipediaLanguage.SPANISH, 6219990);
@@ -210,7 +210,7 @@ class WikipediaPageApiRepositoryTest {
                 }
             }
             """;
-        InputStream textStream = new ByteArrayInputStream(textResponse.getBytes());
+        InputStream textStream = new ByteArrayInputStream(textResponse.getBytes("UTF-8"));
         when(wikipediaApiHelper.executeApiRequestAsStream(any(WikipediaApiRequest.class))).thenReturn(textStream);
 
         WikipediaLanguage lang = WikipediaLanguage.SPANISH;
@@ -264,7 +264,7 @@ class WikipediaPageApiRepositoryTest {
                 }
             }
             """;
-        InputStream textStream = new ByteArrayInputStream(textResponse.getBytes());
+        InputStream textStream = new ByteArrayInputStream(textResponse.getBytes("UTF-8"));
         when(wikipediaApiHelper.executeApiRequestAsStream(any(WikipediaApiRequest.class))).thenReturn(textStream);
 
         assertFalse(
@@ -327,7 +327,7 @@ class WikipediaPageApiRepositoryTest {
                 }
             }
             """;
-        InputStream textStream = new ByteArrayInputStream(textResponse.getBytes());
+        InputStream textStream = new ByteArrayInputStream(textResponse.getBytes("UTF-8"));
         when(wikipediaApiHelper.executeApiRequestAsStream(any(WikipediaApiRequest.class))).thenReturn(textStream);
 
         assertFalse(wikipediaPageRepository.findByTitle(WikipediaLanguage.SPANISH, "Getxo").isPresent());
@@ -663,7 +663,7 @@ class WikipediaPageApiRepositoryTest {
                 }
             }
             """;
-        InputStream textStream = new ByteArrayInputStream(textResponse.getBytes());
+        InputStream textStream = new ByteArrayInputStream(textResponse.getBytes("UTF-8"));
         when(wikipediaApiHelper.executeApiRequestAsStream(any(WikipediaApiRequest.class))).thenReturn(textStream);
 
         PageKey pageKey = PageKey.of(WikipediaLanguage.getDefault(), 6903884);
