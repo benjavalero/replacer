@@ -280,6 +280,7 @@ replacer.finder:
     - param: índice
     - param: mapa
     - param: página web
+    - param: refname
     - param: reporte        # Links to reports for football matches
     - param: reporte2
     - param: romaji         # Japanese transcriptions
