@@ -34,5 +34,5 @@ To run it in Toolforge, first we upload the benchmark JAR:
 
 and then in the Production machine:
 ```shell
-webservice jdk17 shell -- java -jar /data/project/replacer/replacer-finder-benchmark.jar SimpleFinderJmhBenchmark
+webservice jdk21 shell -- java -jar /data/project/replacer/replacer-finder-benchmark.jar SimpleFinderJmhBenchmark
 ```
