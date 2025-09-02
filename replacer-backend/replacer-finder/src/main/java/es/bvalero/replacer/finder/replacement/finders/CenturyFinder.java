@@ -91,7 +91,7 @@ class CenturyFinder implements ReplacementFinder {
                 endCentury = centuryNumber.end();
             }
 
-            // Check the era (optional)
+            // Find the era (optional)
             final MatchResult era = findEra(text, endCentury);
             if (era != null) {
                 endCentury = era.end();
@@ -189,20 +189,21 @@ class CenturyFinder implements ReplacementFinder {
 
     @Nullable
     private MatchResult findEra(String text, int start) {
-        final MatchResult era1 = FinderUtils.findWordAfter(text, start, Set.of('.'), false);
-        if (era1 == null) {
+        final MatchResult eraWord1 = FinderUtils.findWordAfter(text, start, Set.of('.'), false);
+        if (eraWord1 == null) {
             return null;
-        } else if (ERA_WORDS.contains(era1.group())) {
-            return era1;
+        } else if (ERA_WORDS.contains(eraWord1.group())) {
+            return eraWord1;
         }
 
         // The era can be two words, e.g. "a. C."
-        final MatchResult era2 = FinderUtils.findWordAfter(text, era1.end(), Set.of('.'), false);
-        if (era2 != null) {
-            final String era = text.substring(era1.start(), era2.end());
-            if (ERA_WORDS.contains(era)) {
-                return FinderMatchResult.of(era1.start(), era);
-            }
+        final MatchResult eraWord2 = FinderUtils.findWordAfter(text, eraWord1.end(), Set.of('.'), false);
+        if (eraWord2 == null) {
+            return null;
+        }
+        final String eraText = text.substring(eraWord1.start(), eraWord2.end());
+        if (ERA_WORDS.contains(eraText)) {
+            return FinderMatchResult.of(eraWord1.start(), eraText);
         }
 
         return null;
