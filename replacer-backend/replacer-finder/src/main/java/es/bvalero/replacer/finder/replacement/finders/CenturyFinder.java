@@ -6,11 +6,7 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 import com.roman.code.ConvertToArabic;
 import com.roman.code.exception.ConversionException;
-import dk.brics.automaton.AutomatonMatcher;
-import dk.brics.automaton.RegExp;
-import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import es.bvalero.replacer.common.util.ReplacerUtils;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.StandardType;
@@ -23,8 +19,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.MatchResult;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
@@ -92,12 +89,14 @@ class CenturyFinder implements ReplacementFinder {
             }
 
             // Find the era (optional)
-            final MatchResult era = findEra(text, endCentury);
-            if (era != null) {
-                endCentury = era.end();
+            MatchResult era = findEra(text, endCentury);
+            if (era == null) {
+                // Fake empty match result
+                era = FinderMatchResult.ofEmpty(endCentury);
             }
+            endCentury = era.end();
 
-            // Check the link
+            // Check if the century is surrounded by a link
             final Boolean isLinked = isLinked(text, startCentury, endCentury);
             if (isLinked == null) {
                 start = endCentury + 1;
@@ -110,9 +109,7 @@ class CenturyFinder implements ReplacementFinder {
             final FinderMatchResult match = FinderMatchResult.of(text, startCentury, endCentury);
             match.addGroup(centuryWord);
             match.addGroup(centuryNumber);
-            if (era != null) {
-                match.addGroup(era);
-            }
+            match.addGroup(era);
             return match;
         }
         return null;
@@ -233,7 +230,8 @@ class CenturyFinder implements ReplacementFinder {
         final String centuryWord = match.group(1);
         final boolean isUppercase = FinderUtils.startsWithUpperCase(centuryWord);
         final String centuryNumber = FinderUtils.toUpperCase(match.group(2));
-        final String era = match.groupCount() == 3 ? match.group(3).substring(0, 1) : EMPTY;
+        final String eraText = match.group(3);
+        final String eraLetter = StringUtils.isEmpty(eraText) ? EMPTY : String.valueOf(eraText.charAt(0));
         final boolean isLinked = centuryText.startsWith(START_LINK);
 
         // Try to fix simple centuries close to this one
@@ -247,22 +245,21 @@ class CenturyFinder implements ReplacementFinder {
         */
 
         // Templates
-        final String templateUpperLink = "{{" + centuryWord + "|" + centuryNumber + "|" + era + "|S|1}}" + extension;
-        final String templateUpperNoLink = "{{" + centuryWord + "|" + centuryNumber + "|" + era + "|S}}" + extension;
-        final String templateLowerLink = "{{" + centuryWord + "|" + centuryNumber + "|" + era + "|s|1}}" + extension;
-        final String templateLowerNoLink = "{{" + centuryWord + "|" + centuryNumber + "|" + era + "|s}}" + extension;
+        final String templateUpperLink = "{{" + centuryWord + "|" + centuryNumber + "|" + eraLetter + "|S|1}}" + extension;
+        final String templateUpperNoLink = "{{" + centuryWord + "|" + centuryNumber + "|" + eraLetter + "|S}}" + extension;
+        final String templateLowerLink = "{{" + centuryWord + "|" + centuryNumber + "|" + eraLetter + "|s|1}}" + extension;
+        final String templateLowerNoLink = "{{" + centuryWord + "|" + centuryNumber + "|" + eraLetter + "|s}}" + extension;
+        final String linkedComment = "enlazado —solo para temas relacionados con el calendario—";
+
 
         final List<Suggestion> suggestions = new ArrayList<>(4);
 
         // Not linked centuries are recommended
         // Offer always the lowercase alternative
-        final String linkedComment = "enlazado —solo para temas relacionados con el calendario—";
         if (isUppercase) {
             suggestions.add(Suggestion.of(templateUpperNoLink, "siglo en versalitas; con mayúscula; sin enlazar"));
             if (isLinked) {
-                suggestions.add(
-                    Suggestion.of(templateUpperLink, "siglo en versalitas; con mayúscula; " + linkedComment)
-                );
+                suggestions.add(Suggestion.of(templateUpperLink, "siglo en versalitas; con mayúscula; " + linkedComment));
             }
         }
         suggestions.add(Suggestion.of(templateLowerNoLink, "siglo en versalitas; con minúscula; sin enlazar"));

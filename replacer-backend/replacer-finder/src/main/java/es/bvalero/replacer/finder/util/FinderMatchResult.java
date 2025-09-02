@@ -34,6 +34,10 @@ public class FinderMatchResult implements MatchResult {
         return new FinderMatchResult(start, text);
     }
 
+    public static FinderMatchResult ofEmpty(int start) {
+        return new FinderMatchResult(start, "");
+    }
+
     public static FinderMatchResult of(String text, int start, int end) {
         return FinderMatchResult.of(start, text.substring(start, end));
     }
