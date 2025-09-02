@@ -34,8 +34,6 @@ import org.springframework.stereotype.Component;
 @Component
 class CenturyFinder implements ReplacementFinder {
 
-    private static final String CENTURY_WORD = "siglo";
-    private static final String CENTURY_SEARCH = CENTURY_WORD.substring(1);
     private static final char SPACE = ' ';
     private static final Set<Character> CENTURY_LETTERS = Set.of('I', 'V', 'X');
     private static final Set<String> ERA_WORDS = Set.of(
@@ -73,17 +71,17 @@ class CenturyFinder implements ReplacementFinder {
     @Nullable
     private MatchResult findCentury(FinderPage page, int start) {
         final String text = page.getContent();
-        // TODO: Reduce cyclomatic complexity
         while (start >= 0 && start < text.length()) {
             // Find century word. It may start with uppercase or be plural.
             final MatchResult centuryWord = findCenturyWord(text, start);
             if (centuryWord == null) {
                 return null;
             }
+
             int startCentury = centuryWord.start();
             int endCentury = centuryWord.end();
 
-            // Check the century number
+            // Find the century number
             assert text.charAt(endCentury) == SPACE;
             final MatchResult centuryNumber = findCenturyNumber(text, endCentury + 1);
             if (centuryNumber == null) {
@@ -122,19 +120,20 @@ class CenturyFinder implements ReplacementFinder {
 
     @Nullable
     private MatchResult findCenturyWord(String text, int start) {
+        // Instead of making a case-insensitive search, we find the end of the word,
+        // and then we check the word is complete. It is a little faster than finding the word with both cases.
+        final String centurySuffix = "iglo";
         while (start >= 0 && start < text.length()) {
-            // Instead of making a case-insensitive search, we find the end of the word,
-            // and then we check the word is complete. It is a little faster than finding the word with both cases.
-            final int startSuffix = text.indexOf(CENTURY_SEARCH, start);
-            if (startSuffix <= 0) { // <= 0 to be able to get the character before
+            final int startSuffix = text.indexOf(centurySuffix, start);
+            int endCentury = startSuffix + centurySuffix.length();
+            if (startSuffix <= 0 || endCentury >= text.length()) { // <= 0 to be able to get the character before
                 return null;
             }
 
-            int endCentury = startSuffix + CENTURY_SEARCH.length();
+            // Check first letter
             final int startCentury = startSuffix - 1;
             final char firstLetter = text.charAt(startCentury);
             if (firstLetter != 'S' && firstLetter != 's') {
-                // Keep on searching
                 start = endCentury;
                 continue;
             }
@@ -146,10 +145,12 @@ class CenturyFinder implements ReplacementFinder {
             }
 
             // We only consider the word complete and followed by a whitespace
+            if (endCentury >= text.length()) {
+                return null;
+            }
             final String centuryWord = text.substring(startCentury, endCentury);
             final char spaceLetter = text.charAt(endCentury);
             if (spaceLetter != SPACE || !FinderUtils.isWordCompleteInText(startCentury, centuryWord, text)) {
-                // Keep on searching
                 start = endCentury;
                 continue;
             }
