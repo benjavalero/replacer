@@ -60,7 +60,7 @@ class PersonSurnameFinder implements ImmutableFinder {
     @Override
     public Stream<MatchResult> findMatchResults(FinderPage page) {
         // The list will keep on growing
-        // The best approach is to find the whole list of words with the Aho-Corasick algorithm (2x faster),
+        // The best approach is to find the whole list of words with the Aho-Corasick algorithm,
         // but we choose the automaton because it allows regular expressions and the performance is quite good too.
         return AutomatonMatchFinder.find(page.getContent(), this.automaton);
     }

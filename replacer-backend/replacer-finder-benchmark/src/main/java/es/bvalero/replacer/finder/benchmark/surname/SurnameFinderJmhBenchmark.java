@@ -21,13 +21,13 @@ public class SurnameFinderJmhBenchmark extends BaseFinderJmhBenchmark {
     private ConfigurableApplicationContext context;
 
     private SurnameIndexOfFinder surnameIndexOfFinder;
-    private SurnameRegexFinder surnameRegexFinder;
-    private SurnameAutomatonFinder surnameAutomatonFinder;
-    private SurnameRegexCompleteFinder surnameRegexCompleteFinder;
-    private SurnameAutomatonCompleteFinder surnameAutomatonCompleteFinder;
-    private SurnameRegexAlternateFinder surnameRegexAlternateFinder;
+    // private SurnameRegexFinder surnameRegexFinder; // Medium
+    // private SurnameAutomatonFinder surnameAutomatonFinder; // Medium
+    // private SurnameRegexCompleteFinder surnameRegexCompleteFinder; // Very Long
+    // private SurnameAutomatonCompleteFinder surnameAutomatonCompleteFinder; // Long
+    // private SurnameRegexAlternateFinder surnameRegexAlternateFinder; // Very Long
     private SurnameAutomatonAlternateFinder surnameAutomatonAlternateFinder;
-    private SurnameRegexAlternateCompleteFinder surnameRegexAlternateCompleteFinder;
+    // private SurnameRegexAlternateCompleteFinder surnameRegexAlternateCompleteFinder; // Short
     private SurnameAutomatonAlternateCompleteFinder surnameAutomatonAlternateCompleteFinder;
     private SurnameAhoCorasickFinder surnameAhoCorasickFinder;
     private SurnameAhoCorasickLongestFinder surnameAhoCorasickLongestFinder;
@@ -51,13 +51,13 @@ public class SurnameFinderJmhBenchmark extends BaseFinderJmhBenchmark {
             .map(FinderProperties.PersonSurname::getSurname)
             .collect(Collectors.toUnmodifiableSet());
         surnameIndexOfFinder = new SurnameIndexOfFinder(personSurnames);
-        surnameRegexFinder = new SurnameRegexFinder(personSurnames);
-        surnameAutomatonFinder = new SurnameAutomatonFinder(personSurnames);
-        surnameRegexCompleteFinder = new SurnameRegexCompleteFinder(personSurnames);
-        surnameAutomatonCompleteFinder = new SurnameAutomatonCompleteFinder(personSurnames);
-        surnameRegexAlternateFinder = new SurnameRegexAlternateFinder(personSurnames);
+        // surnameRegexFinder = new SurnameRegexFinder(personSurnames);
+        // surnameAutomatonFinder = new SurnameAutomatonFinder(personSurnames);
+        // surnameRegexCompleteFinder = new SurnameRegexCompleteFinder(personSurnames);
+        // surnameAutomatonCompleteFinder = new SurnameAutomatonCompleteFinder(personSurnames);
+        // surnameRegexAlternateFinder = new SurnameRegexAlternateFinder(personSurnames);
         surnameAutomatonAlternateFinder = new SurnameAutomatonAlternateFinder(personSurnames);
-        surnameRegexAlternateCompleteFinder = new SurnameRegexAlternateCompleteFinder(personSurnames);
+        // surnameRegexAlternateCompleteFinder = new SurnameRegexAlternateCompleteFinder(personSurnames);
         surnameAutomatonAlternateCompleteFinder = new SurnameAutomatonAlternateCompleteFinder(personSurnames);
         surnameAhoCorasickFinder = new SurnameAhoCorasickFinder(personSurnames);
         surnameAhoCorasickLongestFinder = new SurnameAhoCorasickLongestFinder(personSurnames);
@@ -69,6 +69,7 @@ public class SurnameFinderJmhBenchmark extends BaseFinderJmhBenchmark {
         runFinder(surnameIndexOfFinder, bh);
     }
 
+    /*
     @Benchmark
     public void surnameRegexFinder(Blackhole bh) {
         runFinder(surnameRegexFinder, bh);
@@ -93,16 +94,19 @@ public class SurnameFinderJmhBenchmark extends BaseFinderJmhBenchmark {
     public void surnameRegexAlternateFinder(Blackhole bh) {
         runFinder(surnameRegexAlternateFinder, bh);
     }
+    */
 
     @Benchmark
     public void surnameAutomatonAlternateFinder(Blackhole bh) {
         runFinder(surnameAutomatonAlternateFinder, bh);
     }
 
+    /*
     @Benchmark
     public void surnameRegexAlternateCompleteFinder(Blackhole bh) {
         runFinder(surnameRegexAlternateCompleteFinder, bh);
     }
+    */
 
     @Benchmark
     public void surnameAutomatonAlternateCompleteFinder(Blackhole bh) {
