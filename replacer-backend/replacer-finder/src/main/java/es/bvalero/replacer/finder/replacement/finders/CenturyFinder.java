@@ -38,7 +38,7 @@ class CenturyFinder implements ReplacementFinder {
     private static final String CENTURY_SEARCH = CENTURY_WORD.substring(1);
     private static final char SPACE = ' ';
     private static final Set<Character> CENTURY_LETTERS = Set.of('I', 'V', 'X');
-    private static final List<String> ERA_WORDS = List.of(
+    private static final Set<String> ERA_WORDS = Set.of(
         "aC",
         "a.C.",
         "a. C.",
@@ -51,6 +51,7 @@ class CenturyFinder implements ReplacementFinder {
         "d.{{esd}}C."
     );
 
+    /*
     private static final String REGEX_CENTURY_LETTERS = String.format(
         "[%s]+",
         CENTURY_LETTERS.stream().map(String::valueOf).collect(Collectors.joining())
@@ -58,15 +59,10 @@ class CenturyFinder implements ReplacementFinder {
     private static final RunAutomaton AUTOMATON_CENTURY_LETTERS = new RunAutomaton(
         new RegExp(REGEX_CENTURY_LETTERS).toAutomaton()
     );
-    private static final String REGEX_ERA_WORDS = String.format(
-        "(%s)",
-        FinderUtils.joinAlternate(ERA_WORDS.stream().map(ReplacerUtils::escapeRegexChars).toList())
-    );
-    private static final RunAutomaton AUTOMATON_ERA_WORDS = new RunAutomaton(new RegExp(REGEX_ERA_WORDS).toAutomaton());
+     */
 
     @Override
     public Stream<MatchResult> findMatchResults(FinderPage page) {
-        // The linear approach is 20x better than using a regex
         if (WikipediaLanguage.SPANISH == page.getPageKey().getLang()) {
             return LinearMatchFinder.find(page, this::findCentury);
         } else {
@@ -79,7 +75,8 @@ class CenturyFinder implements ReplacementFinder {
         final String text = page.getContent();
         // TODO: Reduce cyclomatic complexity
         while (start >= 0 && start < text.length()) {
-            MatchResult centuryWord = findCenturyWord(text, start);
+            // Find century word. It may start with uppercase or be plural.
+            final MatchResult centuryWord = findCenturyWord(text, start);
             if (centuryWord == null) {
                 return null;
             }
@@ -133,21 +130,31 @@ class CenturyFinder implements ReplacementFinder {
                 return null;
             }
 
+            int endCentury = startSuffix + CENTURY_SEARCH.length();
             final int startCentury = startSuffix - 1;
             final char firstLetter = text.charAt(startCentury);
-            final String centuryWord = firstLetter + CENTURY_SEARCH;
-            final int endCentury = startCentury + centuryWord.length();
-            // We only consider the word complete and followed by a whitespace
-            if (
-                (firstLetter == 'S' || firstLetter == 's') &&
-                FinderUtils.isWordCompleteInText(startCentury, centuryWord, text) &&
-                text.charAt(endCentury) == SPACE
-            ) {
-                return FinderMatchResult.of(startCentury, centuryWord);
-            } else {
+            if (firstLetter != 'S' && firstLetter != 's') {
                 // Keep on searching
                 start = endCentury;
+                continue;
             }
+
+            // Century word can be plural
+            final char pluralLetter = text.charAt(endCentury);
+            if (pluralLetter == 's') {
+                endCentury++;
+            }
+
+            // We only consider the word complete and followed by a whitespace
+            final String centuryWord = text.substring(startCentury, endCentury);
+            final char spaceLetter = text.charAt(endCentury);
+            if (spaceLetter != SPACE || !FinderUtils.isWordCompleteInText(startCentury, centuryWord, text)) {
+                // Keep on searching
+                start = endCentury;
+                continue;
+            }
+
+            return FinderMatchResult.of(startCentury, centuryWord);
         }
         return null;
     }
@@ -162,8 +169,18 @@ class CenturyFinder implements ReplacementFinder {
     }
 
     private boolean isCenturyNumber(String text) {
+        final String upperText = FinderUtils.toUpperCase(text);
+
+        // Check the century number only contains valid century letters
+        for (int i = 0; i < upperText.length(); i++) {
+            if (!CENTURY_LETTERS.contains(upperText.charAt(i))) {
+                return false;
+            }
+        }
+
+        //  Check the century number is valid and lower than the current century
         try {
-            return ConvertToArabic.fromRoman(FinderUtils.toUpperCase(text)) <= 21;
+            return ConvertToArabic.fromRoman(upperText) <= 21;
         } catch (ConversionException ce) {
             return false;
         }
@@ -171,15 +188,22 @@ class CenturyFinder implements ReplacementFinder {
 
     @Nullable
     private MatchResult findEra(String text, int start) {
-        // We could limit the end of the search, but it is not worth to complicate the code.
-        final AutomatonMatcher matcherEra = AUTOMATON_ERA_WORDS.newMatcher(text, start, text.length());
-        if (matcherEra.find()) {
-            final int startEra = start + matcherEra.start();
-            final String eraSpace = text.substring(start, startEra);
-            if (FinderUtils.isActualSpace(eraSpace)) {
-                return FinderMatchResult.of(startEra, matcherEra.group());
+        final MatchResult era1 = FinderUtils.findWordAfter(text, start, Set.of('.'), false);
+        if (era1 == null) {
+            return null;
+        } else if (ERA_WORDS.contains(era1.group())) {
+            return era1;
+        }
+
+        // The era can be two words, e.g. "a. C."
+        final MatchResult era2 = FinderUtils.findWordAfter(text, era1.end(), Set.of('.'), false);
+        if (era2 != null) {
+            final String era = text.substring(era1.start(), era2.end());
+            if (ERA_WORDS.contains(era)) {
+                return FinderMatchResult.of(era1.start(), era);
             }
         }
+
         return null;
     }
 
@@ -205,44 +229,49 @@ class CenturyFinder implements ReplacementFinder {
 
         String centuryText = match.group();
         final String centuryWord = match.group(1);
+        final boolean isUppercase = FinderUtils.startsWithUpperCase(centuryWord);
         final String centuryNumber = FinderUtils.toUpperCase(match.group(2));
         final String era = match.groupCount() == 3 ? match.group(3).substring(0, 1) : EMPTY;
-        final boolean linked = centuryText.startsWith(START_LINK);
+        final boolean isLinked = centuryText.startsWith(START_LINK);
 
         // Try to fix simple centuries close to this one
         String extension = EMPTY;
+        /*
         final MatchResult matchNext = findNextCentury(text, match.end(), centuryNumber);
         if (matchNext != null) {
             centuryText = text.substring(match.start(), matchNext.end());
             extension = text.substring(match.end(), matchNext.start()) + fixSimpleCentury(matchNext.group());
         }
+        */
 
+        // Templates
         final String templateUpperLink = "{{" + centuryWord + "|" + centuryNumber + "|" + era + "|S|1}}" + extension;
         final String templateUpperNoLink = "{{" + centuryWord + "|" + centuryNumber + "|" + era + "|S}}" + extension;
         final String templateLowerLink = "{{" + centuryWord + "|" + centuryNumber + "|" + era + "|s|1}}" + extension;
         final String templateLowerNoLink = "{{" + centuryWord + "|" + centuryNumber + "|" + era + "|s}}" + extension;
 
         final List<Suggestion> suggestions = new ArrayList<>(4);
+
         // Not linked centuries are recommended
         // Offer always the lowercase alternative
         final String linkedComment = "enlazado —solo para temas relacionados con el calendario—";
-        final boolean uppercase = FinderUtils.startsWithUpperCase(centuryWord);
-        if (uppercase) {
+        if (isUppercase) {
             suggestions.add(Suggestion.of(templateUpperNoLink, "siglo en versalitas; con mayúscula; sin enlazar"));
-            if (linked) {
+            if (isLinked) {
                 suggestions.add(
                     Suggestion.of(templateUpperLink, "siglo en versalitas; con mayúscula; " + linkedComment)
                 );
             }
         }
         suggestions.add(Suggestion.of(templateLowerNoLink, "siglo en versalitas; con minúscula; sin enlazar"));
-        if (linked) {
+        if (isLinked) {
             suggestions.add(Suggestion.of(templateLowerLink, "siglo en versalitas; con minúscula; " + linkedComment));
         }
 
-        return Replacement.of(match.start(), centuryText, StandardType.CENTURY, suggestions, page.getContent());
+        return Replacement.of(match.start(), centuryText, StandardType.CENTURY, suggestions, text);
     }
 
+    /*
     @Nullable
     private MatchResult findNextCentury(String text, int endCentury, String centuryNumber) {
         final AutomatonMatcher matcherNext = AUTOMATON_CENTURY_LETTERS.newMatcher(text, endCentury, text.length());
@@ -277,4 +306,5 @@ class CenturyFinder implements ReplacementFinder {
     private String fixSimpleCentury(String century) {
         return "{{Siglo|" + century + "}}";
     }
+    */
 }
