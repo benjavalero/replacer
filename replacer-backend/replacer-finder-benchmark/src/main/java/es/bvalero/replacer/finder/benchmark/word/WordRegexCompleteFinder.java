@@ -22,7 +22,7 @@ class WordRegexCompleteFinder implements BenchmarkFinder {
     WordRegexCompleteFinder(Collection<String> words) {
         this.patterns = new ArrayList<>();
         for (String word : words) {
-            this.patterns.add(Pattern.compile("\\b" + cleanWord(word) + "\\b"));
+            this.patterns.add(Pattern.compile("\\b" + cleanWord(word) + "\\b", Pattern.UNICODE_CHARACTER_CLASS));
         }
     }
 

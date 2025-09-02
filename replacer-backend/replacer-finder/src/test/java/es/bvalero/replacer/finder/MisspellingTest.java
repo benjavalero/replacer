@@ -140,8 +140,16 @@ class MisspellingTest {
 
     @Test
     void testComposedCaseInsensitiveTermsUppercase() {
-        String word = "Ad Hoc";
+        String word = "Administración pública";
         ComposedMisspelling m = ComposedMisspelling.of(word, false, "X");
-        assertEquals(Set.of("ad hoc", "Ad Hoc", "Ad hoc", "ad Hoc"), m.getTerms());
+        assertEquals(
+            Set.of(
+                "Administración Pública",
+                "Administración pública",
+                "administración Pública",
+                "administración pública"
+            ),
+            m.getTerms()
+        );
     }
 }

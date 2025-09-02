@@ -22,7 +22,7 @@ class WordRegexAllCompleteFinder implements BenchmarkFinder {
     private final Set<String> words = new HashSet<>();
 
     WordRegexAllCompleteFinder(Collection<String> words) {
-        this.wordPattern = Pattern.compile("\\b\\p{L}++\\b");
+        this.wordPattern = Pattern.compile("\\b\\w++\\b", Pattern.UNICODE_CHARACTER_CLASS);
         this.words.addAll(words);
     }
 

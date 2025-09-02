@@ -88,7 +88,7 @@ public abstract class Misspelling {
                 terms.add(word);
             } else {
                 // If case-insensitive, we add "word" and "Word".
-                String[] tokens = word.split("\\b");
+                String[] tokens = word.split("(?U)\\b");
                 addTerms(tokens, 0);
             }
         }

@@ -22,7 +22,7 @@ class WordRegexAlternateCompleteFinder implements BenchmarkFinder {
     WordRegexAlternateCompleteFinder(Collection<String> words) {
         Iterable<String> cleanWords = words.stream().sorted(Comparator.reverseOrder()).map(this::cleanWord).toList();
         String alternations = "\\b(" + FinderUtils.joinAlternate(cleanWords) + ")\\b";
-        this.pattern = Pattern.compile(alternations);
+        this.pattern = Pattern.compile(alternations, Pattern.UNICODE_CHARACTER_CLASS);
     }
 
     @Override
