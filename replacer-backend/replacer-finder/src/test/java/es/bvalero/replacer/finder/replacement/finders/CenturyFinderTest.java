@@ -35,7 +35,7 @@ class CenturyFinderTest {
         List<Replacement> replacements = centuryFinder.findList(text);
         assertEquals(1, replacements.size());
 
-        Replacement rep = replacements.get(0);
+        Replacement rep = replacements.getFirst();
         assertEquals(StandardType.CENTURY, rep.getType());
         assertEquals(century, rep.getText());
         assertEquals(century, rep.getSuggestions().get(0).getText());
@@ -48,7 +48,7 @@ class CenturyFinderTest {
         List<Replacement> replacements = centuryFinder.findList(text);
         assertEquals(1, replacements.size());
 
-        Replacement rep = replacements.get(0);
+        Replacement rep = replacements.getFirst();
         assertEquals(StandardType.CENTURY, rep.getType());
         assertEquals(century, rep.getText());
         assertEquals(century, rep.getSuggestions().get(0).getText());
@@ -62,7 +62,7 @@ class CenturyFinderTest {
         List<Replacement> replacements = centuryFinder.findList(text);
         assertEquals(1, replacements.size());
 
-        Replacement rep = replacements.get(0);
+        Replacement rep = replacements.getFirst();
         assertEquals(StandardType.CENTURY, rep.getType());
         assertEquals(century, rep.getText());
         assertEquals(century, rep.getSuggestions().get(0).getText());
@@ -87,7 +87,7 @@ class CenturyFinderTest {
         List<Replacement> replacements = centuryFinder.findList(text);
         assertEquals(1, replacements.size());
 
-        Replacement rep = replacements.get(0);
+        Replacement rep = replacements.getFirst();
         assertEquals(StandardType.CENTURY, rep.getType());
         assertEquals(century, rep.getText());
         assertEquals(century, rep.getSuggestions().get(0).getText());
@@ -121,7 +121,7 @@ class CenturyFinderTest {
         List<Replacement> replacements = centuryFinder.findList(text);
         assertEquals(1, replacements.size());
 
-        Replacement rep = replacements.get(0);
+        Replacement rep = replacements.getFirst();
         assertEquals(StandardType.CENTURY, rep.getType());
         assertEquals(century, rep.getText());
         assertEquals(century, rep.getSuggestions().get(0).getText());
@@ -134,7 +134,7 @@ class CenturyFinderTest {
         List<Replacement> replacements = centuryFinder.findList(text);
         assertEquals(1, replacements.size());
 
-        Replacement rep = replacements.get(0);
+        Replacement rep = replacements.getFirst();
         assertEquals(StandardType.CENTURY, rep.getType());
         assertEquals(century, rep.getText());
         assertEquals(century, rep.getSuggestions().get(0).getText());
@@ -149,7 +149,7 @@ class CenturyFinderTest {
         List<Replacement> replacements = centuryFinder.findList(text);
         assertEquals(1, replacements.size());
 
-        Replacement rep = replacements.get(0);
+        Replacement rep = replacements.getFirst();
         assertEquals(StandardType.CENTURY, rep.getType());
         assertEquals("siglo XIX y principios del XX", rep.getText());
         assertEquals("{{siglo|XIX||s}} y principios del {{Siglo|XX}}", rep.getSuggestions().get(1).getText());
@@ -162,7 +162,7 @@ class CenturyFinderTest {
         List<Replacement> replacements = centuryFinder.findList(text);
         assertEquals(1, replacements.size());
 
-        Replacement rep = replacements.get(0);
+        Replacement rep = replacements.getFirst();
         assertEquals(StandardType.CENTURY, rep.getType());
         assertEquals("siglo XI", rep.getText());
         assertEquals("{{siglo|XI||s}}", rep.getSuggestions().get(1).getText());
@@ -186,7 +186,7 @@ class CenturyFinderTest {
         List<Replacement> replacements = centuryFinder.findList(text);
 
         assertEquals(1, replacements.size());
-        assertEquals("siglo XIX", replacements.get(0).getText());
+        assertEquals("siglo XIX", replacements.getFirst().getText());
     }
 
     @Test
@@ -196,7 +196,7 @@ class CenturyFinderTest {
         List<Replacement> replacements = centuryFinder.findList(text);
 
         assertEquals(1, replacements.size());
-        assertEquals("siglo XIX", replacements.get(0).getText());
+        assertEquals("siglo XIX", replacements.getFirst().getText());
     }
 
     @Test
@@ -206,6 +206,6 @@ class CenturyFinderTest {
         List<Replacement> replacements = centuryFinder.findList(text);
 
         assertEquals(1, replacements.size());
-        assertEquals("siglo XIX", replacements.get(0).getText());
+        assertEquals("siglo XIX", replacements.getFirst().getText());
     }
 }

@@ -32,7 +32,7 @@ class AcuteOFinderTest {
         List<Replacement> replacements = acuteOFinder.findList(text);
         assertEquals(1, replacements.size());
 
-        Replacement rep = replacements.get(0);
+        Replacement rep = replacements.getFirst();
         assertEquals(StandardType.ACUTE_O, rep.getType());
         assertEquals(AcuteOFinder.ACUTE_O, rep.getText());
         assertEquals(AcuteOFinder.ACUTE_O, rep.getSuggestions().get(0).getText());
@@ -46,7 +46,7 @@ class AcuteOFinderTest {
         List<Replacement> replacements = acuteOFinder.findList(text);
         assertEquals(1, replacements.size());
 
-        Replacement rep = replacements.get(0);
+        Replacement rep = replacements.getFirst();
         assertEquals(StandardType.ACUTE_O, rep.getType());
         assertEquals(AcuteOFinder.ACUTE_O, rep.getText());
         assertEquals(7, rep.getStart());

@@ -76,13 +76,13 @@ class SpaceIncorrectFinder implements CosmeticFinder {
         String spaceWordTranslated;
         String lang = page.getPageKey().getLang().getCode();
         if (this.finderProperties.getAllFileWords().contains(spaceWord)) {
-            spaceWordTranslated = this.finderProperties.getFileWords().get(lang).get(0);
+            spaceWordTranslated = this.finderProperties.getFileWords().get(lang).getFirst();
         } else if (this.finderProperties.getAllImageWords().contains(spaceWord)) {
-            spaceWordTranslated = this.finderProperties.getImageWords().get(lang).get(0);
+            spaceWordTranslated = this.finderProperties.getImageWords().get(lang).getFirst();
         } else if (this.finderProperties.getAllAnnexWords().contains(spaceWord)) {
-            spaceWordTranslated = this.finderProperties.getAnnexWords().get(lang).get(0);
+            spaceWordTranslated = this.finderProperties.getAnnexWords().get(lang).getFirst();
         } else if (this.finderProperties.getAllCategoryWords().contains(spaceWord)) {
-            spaceWordTranslated = this.finderProperties.getCategoryWords().get(lang).get(0);
+            spaceWordTranslated = this.finderProperties.getCategoryWords().get(lang).getFirst();
         } else {
             throw new IllegalStateException("Unexpected value: " + spaceWord);
         }

@@ -540,7 +540,7 @@ class DateFinder implements ReplacementFinder {
     }
 
     private String getPrepositionDefault(WikipediaLanguage lang) {
-        return langPrepositions.get(lang).get(0);
+        return langPrepositions.get(lang).getFirst();
     }
 
     private String fixPrepositionAfter(String prepAfter, WikipediaLanguage lang) {
@@ -566,7 +566,7 @@ class DateFinder implements ReplacementFinder {
         if (FinderUtils.startsWithNumber(fixedDate)) {
             final List<String> articlePair = getFixArticle(page, start);
             if (!articlePair.isEmpty()) {
-                final String article = articlePair.get(0);
+                final String article = articlePair.getFirst();
                 final String alternative = articlePair.get(1);
                 start -= (article.length() + 1); // + 1 because of the space between
                 text = page.getContent().substring(start, start + article.length() + 1 + originalDate.length());

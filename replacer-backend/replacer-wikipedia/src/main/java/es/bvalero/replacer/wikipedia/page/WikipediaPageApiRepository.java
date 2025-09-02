@@ -96,7 +96,7 @@ public class WikipediaPageApiRepository implements WikipediaPageRepository {
                 "All pages have to share the same language: " + StringUtils.join(pageKeys, ", ")
             );
         }
-        WikipediaLanguage lang = keyLangs.get(0);
+        WikipediaLanguage lang = keyLangs.getFirst();
 
         Stream<WikipediaPage> pages = Stream.of();
         // There is a maximum number of pages to request

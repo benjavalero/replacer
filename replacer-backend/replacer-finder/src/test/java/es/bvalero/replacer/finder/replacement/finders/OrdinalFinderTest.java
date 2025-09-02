@@ -91,7 +91,7 @@ class OrdinalFinderTest {
         List<Replacement> replacements = ordinalFinder.findList(text);
 
         assertEquals(1, replacements.size());
-        Replacement rep = replacements.get(0);
+        Replacement rep = replacements.getFirst();
         assertEquals("2ª", rep.getText());
         assertEquals("2.ª", rep.getSuggestions().get(1).getText());
     }
@@ -103,7 +103,7 @@ class OrdinalFinderTest {
         List<Replacement> replacements = ordinalFinder.findList(text);
 
         assertEquals(1, replacements.size());
-        Replacement rep = replacements.get(0);
+        Replacement rep = replacements.getFirst();
         assertEquals(StandardType.ORDINAL, rep.getType());
 
         assertEquals(7, rep.getSuggestions().size());
@@ -145,7 +145,7 @@ class OrdinalFinderTest {
         List<Replacement> replacements = ordinalFinder.findList(text);
 
         assertEquals(1, replacements.size());
-        Replacement rep = replacements.get(0);
+        Replacement rep = replacements.getFirst();
         assertEquals(StandardType.ORDINAL, rep.getType());
 
         assertEquals(5, rep.getSuggestions().size());
@@ -179,7 +179,7 @@ class OrdinalFinderTest {
         List<Replacement> replacements = ordinalFinder.findList(text);
 
         assertEquals(1, replacements.size());
-        Replacement rep = replacements.get(0);
+        Replacement rep = replacements.getFirst();
         assertEquals(StandardType.ORDINAL, rep.getType());
 
         assertEquals(7, rep.getSuggestions().size());
@@ -219,7 +219,7 @@ class OrdinalFinderTest {
         List<Replacement> replacements = ordinalFinder.findList(text);
 
         assertEquals(1, replacements.size());
-        Replacement rep = replacements.get(0);
+        Replacement rep = replacements.getFirst();
         assertEquals(StandardType.ORDINAL, rep.getType());
 
         assertEquals(7, rep.getSuggestions().size());

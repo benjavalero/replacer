@@ -52,7 +52,7 @@ class DegreeFinderTest {
         List<Replacement> replacements = degreeFinder.findList(text);
         assertEquals(1, replacements.size());
 
-        Replacement rep = replacements.get(0);
+        Replacement rep = replacements.getFirst();
         assertEquals(StandardType.DEGREES, rep.getType());
         assertEquals(text, rep.getText());
         assertEquals(text, rep.getSuggestions().get(0).getText());
@@ -75,7 +75,7 @@ class DegreeFinderTest {
         List<Replacement> replacements = degreeFinder.findList(text);
         assertEquals(1, replacements.size());
 
-        Replacement rep = replacements.get(0);
+        Replacement rep = replacements.getFirst();
         assertEquals(StandardType.DEGREES, rep.getType());
         assertEquals(expected, rep.getText());
         assertEquals(position, rep.getStart());
@@ -134,7 +134,7 @@ class DegreeFinderTest {
         List<Replacement> replacements = degreeFinder.findList(text);
 
         assertEquals(1, replacements.size());
-        Replacement rep = replacements.get(0);
+        Replacement rep = replacements.getFirst();
         assertEquals(3, rep.getSuggestions().size());
         assertEquals("1ºC", rep.getSuggestions().get(0).getText());
         assertEquals("1&nbsp;°C", rep.getSuggestions().get(1).getText());

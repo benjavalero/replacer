@@ -43,7 +43,7 @@ class CoordinatesFinderTest {
         List<Replacement> replacements = coordinatesFinder.findList(text);
         assertEquals(1, replacements.size());
 
-        Replacement rep = replacements.get(0);
+        Replacement rep = replacements.getFirst();
         assertEquals(StandardType.COORDINATES, rep.getType());
         assertEquals(text, rep.getText());
         assertEquals(text, rep.getSuggestions().get(0).getText());
@@ -97,7 +97,7 @@ class CoordinatesFinderTest {
 
         assertEquals(1, replacements.size());
 
-        Replacement rep = replacements.get(0);
+        Replacement rep = replacements.getFirst();
         assertEquals("23º 14'", rep.getText());
         assertEquals("23º 14'", rep.getSuggestions().get(0).getText());
         assertEquals("23°14′", rep.getSuggestions().get(1).getText());
