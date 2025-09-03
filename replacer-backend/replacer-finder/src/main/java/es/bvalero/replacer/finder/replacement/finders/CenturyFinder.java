@@ -275,7 +275,6 @@ class CenturyFinder implements ReplacementFinder {
 
         String centuryText = match.group();
         final String centuryWord = match.group(1);
-        assert !isPlural(centuryWord);
         final boolean isUppercase = FinderUtils.startsWithUpperCase(centuryWord);
         final String centuryNumber = FinderUtils.toUpperCase(match.group(2));
         final String eraText = match.group(3);
@@ -327,34 +326,16 @@ class CenturyFinder implements ReplacementFinder {
     }
 
     private Replacement convertCenturyPlural(MatchResult match, FinderPage page) {
-        // FIXME "siglos XX y XXI",
         final String text = page.getContent();
 
-        String centuryText = match.group();
-        final String centuryWord = match.group(1); // siglos
-        assert isPlural(centuryWord);
-        final String centuryNumber = FinderUtils.toUpperCase(match.group(2));
-        final String eraText = match.group(3);
-        final String eraLetter = StringUtils.isEmpty(eraText) ? EMPTY : String.valueOf(eraText.charAt(0));
-
-        // Add extension and its suggestion
-        final String extensionText = match.group(4);
-        assert StringUtils.isNotEmpty(extensionText);
-        final String extension;
-        final int extensionStart = match.start(4);
-        final int extensionEnd = match.end(4);
-        final String extensionPrefix = text.substring(match.end(), extensionStart);
-        centuryText = text.substring(match.start(), extensionEnd);
-        extension = extensionPrefix + fixSimpleCentury(extensionText);
-
-        // final String template = "{{" + CENTURY_WORD + "|" + centuryNumber + "|" + eraLetter + "|s}}" + extension;
+        final String centuryText = text.substring(match.start(), match.end(4));
 
         final List<Suggestion> suggestions = new ArrayList<>(1);
-        final String suggestionText = text.substring(match.start(0), match.start(2))
-            +  fixSimpleCentury(match.group(2))
-        // TODO: Test with era
-        + text.substring(match.end(2), match.start(4))
-        + fixSimpleCentury(match.group(4));
+        final String suggestionText =
+            text.substring(match.start(0), match.start(2)) +
+            fixSimpleCentury(match.group(2)) +
+            text.substring(match.end(2), match.start(4)) +
+            fixSimpleCentury(match.group(4));
 
         suggestions.add(Suggestion.of(suggestionText, "siglos en versalitas"));
 
