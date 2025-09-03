@@ -32,6 +32,7 @@ class CenturyFinder implements ReplacementFinder {
 
     private static final String CENTURY_WORD = "siglo";
     private static final String CENTURY_SEARCH = CENTURY_WORD.substring(1);
+    private static final char PLURAL_LETTER = 's';
     private static final char SPACE = ' ';
     private static final Set<Character> CENTURY_LETTERS = Set.of('I', 'V', 'X');
     private static final Set<String> ERA_WORDS = Set.of(
@@ -104,6 +105,12 @@ class CenturyFinder implements ReplacementFinder {
                 extension = FinderMatchResult.ofEmpty(endCentury);
             }
 
+            // If the century word is plural then the extension is mandatory
+            if (isPlural(centuryWord.group()) && StringUtils.isEmpty(extension.group())) {
+                start = endCentury + 1;
+                continue;
+            }
+
             final FinderMatchResult match = FinderMatchResult.of(text, startCentury, endCentury);
             match.addGroup(centuryWord);
             match.addGroup(centuryNumber);
@@ -135,7 +142,7 @@ class CenturyFinder implements ReplacementFinder {
 
             // Century word can be plural
             final char pluralLetter = text.charAt(endCentury);
-            if (pluralLetter == 's') {
+            if (pluralLetter == PLURAL_LETTER) {
                 endCentury++;
             }
 
@@ -249,12 +256,26 @@ class CenturyFinder implements ReplacementFinder {
         return null;
     }
 
+    private boolean isPlural(String word) {
+        return word.charAt(word.length() - 1) == PLURAL_LETTER;
+    }
+
     @Override
     public Replacement convert(MatchResult match, FinderPage page) {
+        final String centuryWord = match.group(1);
+        if (isPlural(centuryWord)) {
+            return convertCenturyPlural(match, page);
+        } else {
+            return convertCenturySingular(match, page);
+        }
+    }
+
+    private Replacement convertCenturySingular(MatchResult match, FinderPage page) {
         final String text = page.getContent();
 
         String centuryText = match.group();
         final String centuryWord = match.group(1);
+        assert !isPlural(centuryWord);
         final boolean isUppercase = FinderUtils.startsWithUpperCase(centuryWord);
         final String centuryNumber = FinderUtils.toUpperCase(match.group(2));
         final String eraText = match.group(3);
@@ -301,6 +322,41 @@ class CenturyFinder implements ReplacementFinder {
         if (isLinked) {
             suggestions.add(Suggestion.of(templateLowerLink, "siglo en versalitas; con minúscula; " + linkedComment));
         }
+
+        return Replacement.of(match.start(), centuryText, StandardType.CENTURY, suggestions, text);
+    }
+
+    private Replacement convertCenturyPlural(MatchResult match, FinderPage page) {
+        // FIXME "siglos XX y XXI",
+        final String text = page.getContent();
+
+        String centuryText = match.group();
+        final String centuryWord = match.group(1); // siglos
+        assert isPlural(centuryWord);
+        final String centuryNumber = FinderUtils.toUpperCase(match.group(2));
+        final String eraText = match.group(3);
+        final String eraLetter = StringUtils.isEmpty(eraText) ? EMPTY : String.valueOf(eraText.charAt(0));
+
+        // Add extension and its suggestion
+        final String extensionText = match.group(4);
+        assert StringUtils.isNotEmpty(extensionText);
+        final String extension;
+        final int extensionStart = match.start(4);
+        final int extensionEnd = match.end(4);
+        final String extensionPrefix = text.substring(match.end(), extensionStart);
+        centuryText = text.substring(match.start(), extensionEnd);
+        extension = extensionPrefix + fixSimpleCentury(extensionText);
+
+        // final String template = "{{" + CENTURY_WORD + "|" + centuryNumber + "|" + eraLetter + "|s}}" + extension;
+
+        final List<Suggestion> suggestions = new ArrayList<>(1);
+        final String suggestionText = text.substring(match.start(0), match.start(2))
+            +  fixSimpleCentury(match.group(2))
+        // TODO: Test with era
+        + text.substring(match.end(2), match.start(4))
+        + fixSimpleCentury(match.group(4));
+
+        suggestions.add(Suggestion.of(suggestionText, "siglos en versalitas"));
 
         return Replacement.of(match.start(), centuryText, StandardType.CENTURY, suggestions, text);
     }

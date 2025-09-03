@@ -53,6 +53,8 @@ class CenturyFinderTest {
             "siglo XIX y principios del siglo XXL * siglo XIX * {{siglo|XIX||s}}",
             // After false positive
             "Los siglos y el siglo XIX * siglo XIX * {{siglo|XIX||s}}",
+            // Plural century
+            "siglos XX y XXI * siglos XX y XXI * siglos {{Siglo|XX}} y {{Siglo|XXI}}",
         }
     )
     void testCenturySimple(String text, String century, String expected) {
@@ -75,7 +77,8 @@ class CenturyFinderTest {
             // Century arabic number
             "siglo 20",
             "Siglo 21",
-            // FIXME "siglos XX y XXI",
+            // Plural century with nothing after
+            "siglos XX y nada más después",
             // Not whitespace after century word
             "siglo  XX",
             "siglo-XX",
