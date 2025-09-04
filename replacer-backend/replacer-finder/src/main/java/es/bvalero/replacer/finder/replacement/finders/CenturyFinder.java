@@ -35,7 +35,7 @@ class CenturyFinder implements ReplacementFinder {
     private static final char PLURAL_LETTER = 's';
     private static final char SPACE = ' ';
     private static final Set<Character> CENTURY_LETTERS = Set.of('I', 'V', 'X');
-    private static final Set<String> ERA_WORDS = Set.of(
+    private static final List<String> ERA_WORDS = List.of(
         "aC",
         "a.C.",
         "a. C.",
@@ -191,24 +191,21 @@ class CenturyFinder implements ReplacementFinder {
 
     @Nullable
     private MatchResult findEra(String text, int start) {
-        final MatchResult eraWord1 = FinderUtils.findWordAfter(text, start, Set.of('.'), false);
-        if (eraWord1 == null) {
-            return null;
-        } else if (ERA_WORDS.contains(eraWord1.group())) {
-            return eraWord1;
-        }
+        // 11 is the max length of an era including a space before
+        final String nextText = text.substring(start, Math.min(start + 11, text.length()));
+        return ERA_WORDS.stream()
+            .filter(w -> containsEra(nextText, w))
+            .findFirst()
+            .map(w -> FinderMatchResult.of(start, w))
+            .orElse(null);
+    }
 
-        // The era can be two words, e.g. "a. C."
-        final MatchResult eraWord2 = FinderUtils.findWordAfter(text, eraWord1.end(), Set.of('.'), false);
-        if (eraWord2 == null) {
-            return null;
+    private boolean containsEra(String text, String eraWord) {
+        final int pos = text.indexOf(eraWord);
+        if (pos >= 0) {
+            return FinderUtils.isActualSpace(text.substring(0, pos));
         }
-        final String eraText = text.substring(eraWord1.start(), eraWord2.end());
-        if (ERA_WORDS.contains(eraText)) {
-            return FinderMatchResult.of(eraWord1.start(), eraText);
-        }
-
-        return null;
+        return false;
     }
 
     /** True if linked; False if not linked; Null if linked not closed or open. */
