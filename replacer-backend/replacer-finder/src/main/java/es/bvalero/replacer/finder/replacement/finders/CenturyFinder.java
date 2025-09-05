@@ -123,8 +123,8 @@ class CenturyFinder implements ReplacementFinder {
 
     @Nullable
     private MatchResult findCenturyWord(String text, int start) {
-        MatchResult completeWord = findCenturyCompleteWord(text, start);
-        MatchResult abbreviatedWord = findCenturyAbbreviatedWord(text, start);
+        final MatchResult completeWord = findCenturyCompleteWord(text, start);
+        final MatchResult abbreviatedWord = findCenturyAbbreviatedWord(text, start);
         if (completeWord != null && abbreviatedWord != null) {
             return completeWord.start() < abbreviatedWord.start() ? completeWord : abbreviatedWord;
         } else {
@@ -361,16 +361,23 @@ class CenturyFinder implements ReplacementFinder {
     private Replacement convertCenturyPlural(MatchResult match, FinderPage page) {
         final String text = page.getContent();
 
-        final String centuryText = text.substring(match.start(), match.end(4));
+        final int startCentury = match.start();
+        final int endExtension = match.end(4);
+        final String centuryText = text.substring(startCentury, endExtension);
 
-        final List<Suggestion> suggestions = new ArrayList<>(1);
-        final String suggestionText =
-            text.substring(match.start(0), match.start(2)) +
-            fixSimpleCentury(match.group(2)) +
-            text.substring(match.end(2), match.start(4)) +
-            fixSimpleCentury(match.group(4));
+        final int startWord = match.start(0);
+        final int startNumber = match.start(2);
+        final String centuryWord = text.substring(startWord, startNumber); // Including space after
+        final String centuryNumber = match.group(2);
+        final String fixedNumber = fixSimpleCentury(centuryNumber);
+        final int endNumber = match.end(2);
+        final int startExtension = match.start(4);
+        final String era = text.substring(endNumber, startExtension); // Including spaces
+        final String extension = match.group(4);
+        final String fixedExtension = fixSimpleCentury(extension);
+        final String suggestionText = centuryWord + fixedNumber + era + fixedExtension;
 
-        suggestions.add(Suggestion.of(suggestionText, "siglos en versalitas"));
+        final List<Suggestion> suggestions = List.of(Suggestion.of(suggestionText, "siglos en versalitas"));
 
         return Replacement.of(match.start(), centuryText, StandardType.CENTURY, suggestions, text);
     }
