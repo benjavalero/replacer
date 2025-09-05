@@ -149,7 +149,7 @@ public class FinderUtils {
     }
 
     public boolean isActualSpace(String str) {
-        return SPACES.contains(str);
+        return StringUtils.isNotEmpty(str) && (SPACES.contains(str) || StringUtils.isBlank(str));
     }
 
     public boolean isNonBreakingSpace(String str) {

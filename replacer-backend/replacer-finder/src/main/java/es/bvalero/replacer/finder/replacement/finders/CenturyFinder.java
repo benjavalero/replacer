@@ -33,7 +33,6 @@ class CenturyFinder implements ReplacementFinder {
     private static final String CENTURY_WORD = "Siglo";
     private static final String CENTURY_SEARCH = CENTURY_WORD.substring(1);
     private static final char PLURAL_LETTER = 's';
-    private static final char SPACE = ' ';
     private static final Set<Character> CENTURY_LETTERS = Set.of('I', 'V', 'X');
     private static final List<String> ERA_WORDS = List.of(
         "aC",
@@ -71,8 +70,7 @@ class CenturyFinder implements ReplacementFinder {
             int endCentury = centuryWord.end();
 
             // Find the century number
-            assert text.charAt(endCentury) == SPACE;
-            final MatchResult centuryNumber = findCenturyNumber(text, endCentury + 1);
+            final MatchResult centuryNumber = findCenturyNumber(text, endCentury);
             if (centuryNumber == null) {
                 start = endCentury + 1;
                 continue;
@@ -123,6 +121,9 @@ class CenturyFinder implements ReplacementFinder {
 
     @Nullable
     private MatchResult findCenturyWord(String text, int start) {
+        // Support abbreviated century words is x4 slower than only supporting the complete century word.
+        // The best performance is obtained by finding the complete and abbreviated century words
+        // each one with a different approach. Note that supporting hard-spaces is x2 slower.
         final MatchResult completeWord = findCenturyCompleteWord(text, start);
         final MatchResult abbreviatedWord = findCenturyAbbreviatedWord(text, start);
         if (completeWord != null && abbreviatedWord != null) {
@@ -157,13 +158,9 @@ class CenturyFinder implements ReplacementFinder {
                 endCentury++;
             }
 
-            // We only consider the word complete and followed by a whitespace
-            if (endCentury >= text.length()) {
-                return null;
-            }
+            // We only consider the word complete
             final String centuryWord = text.substring(startCentury, endCentury);
-            final char spaceLetter = text.charAt(endCentury);
-            if (spaceLetter != SPACE || !FinderUtils.isWordCompleteInText(startCentury, centuryWord, text)) {
+            if (!FinderUtils.isWordCompleteInText(startCentury, centuryWord, text)) {
                 start = endCentury;
                 continue;
             }
@@ -177,13 +174,12 @@ class CenturyFinder implements ReplacementFinder {
     private MatchResult findCenturyAbbreviatedWord(String text, int start) {
         while (start >= 0 && start < text.length()) {
             final String nextText = text.substring(start);
-            // Finding with the whitespace produces more accurate matches and improves performance
-            final int startAbbr = StringUtils.indexOfAny(nextText, "S. ", "s. ");
+            final int startAbbr = StringUtils.indexOfAny(nextText, "S.", "s.");
             if (startAbbr < 0) {
                 return null;
             }
 
-            // We only consider the word complete and followed by a whitespace
+            // We only consider the word complete
             final int startCentury = start + startAbbr;
             final int endCentury = startCentury + 2;
             final String centuryWord = text.substring(startCentury, endCentury);
@@ -200,7 +196,11 @@ class CenturyFinder implements ReplacementFinder {
     @Nullable
     private MatchResult findCenturyNumber(String text, int start) {
         final MatchResult centuryNumber = FinderUtils.findWordAfter(text, start);
-        if (centuryNumber == null || centuryNumber.start() != start || !isCenturyNumber(centuryNumber.group())) {
+        if (
+            centuryNumber == null ||
+            !FinderUtils.isActualSpace(text.substring(start, centuryNumber.start())) ||
+            !isCenturyNumber(centuryNumber.group())
+        ) {
             return null;
         }
         return centuryNumber;

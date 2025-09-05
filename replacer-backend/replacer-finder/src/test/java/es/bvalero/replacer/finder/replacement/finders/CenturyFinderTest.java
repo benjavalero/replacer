@@ -31,6 +31,9 @@ class CenturyFinderTest {
             // Lowercase
             "siglo XX * siglo XX * {{siglo|XX||s}}",
             "siglo xx * siglo xx * {{siglo|XX||s}}",
+            // With hard space or several spaces
+            "siglo&nbsp;XX * siglo&nbsp;XX * {{siglo|XX||s}}",
+            "siglo  XX * siglo  XX * {{siglo|XX||s}}",
             // Uppercase
             "Siglo XX * Siglo XX * {{Siglo|XX||S}}, {{Siglo|XX||s}}",
             // Lowercase with link
@@ -59,6 +62,8 @@ class CenturyFinderTest {
             "siglos I a. C. y II d. C. * siglos I a. C. y II * siglos {{Siglo|I}} a. C. y {{Siglo|II}}",
             // Century abbreviated
             "s. XX * s. XX * {{Siglo|XX||a}}",
+            // Century abbreviated with hard space
+            "S.&nbsp;XIX * S.&nbsp;XIX * {{Siglo|XIX||A}}, {{Siglo|XIX||a}}",
         }
     )
     void testCenturySimple(String text, String century, String expected) {
@@ -84,7 +89,6 @@ class CenturyFinderTest {
             // Plural century with nothing after
             "siglos XX y nada más después",
             // Not whitespace after century word
-            "siglo  XX",
             "siglo-XX",
             // Broken link
             "[[siglo XX",
