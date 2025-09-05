@@ -30,7 +30,7 @@ import org.springframework.stereotype.Component;
 @Component
 class CenturyFinder implements ReplacementFinder {
 
-    private static final String CENTURY_WORD = "siglo";
+    private static final String CENTURY_WORD = "Siglo";
     private static final String CENTURY_SEARCH = CENTURY_WORD.substring(1);
     private static final char PLURAL_LETTER = 's';
     private static final char SPACE = ' ';
@@ -123,6 +123,17 @@ class CenturyFinder implements ReplacementFinder {
 
     @Nullable
     private MatchResult findCenturyWord(String text, int start) {
+        MatchResult completeWord = findCenturyCompleteWord(text, start);
+        MatchResult abbreviatedWord = findCenturyAbbreviatedWord(text, start);
+        if (completeWord != null && abbreviatedWord != null) {
+            return completeWord.start() < abbreviatedWord.start() ? completeWord : abbreviatedWord;
+        } else {
+            return completeWord == null ? abbreviatedWord : completeWord;
+        }
+    }
+
+    @Nullable
+    private MatchResult findCenturyCompleteWord(String text, int start) {
         // Instead of making a case-insensitive search, we find the end of the word,
         // and then we check the word is complete. It is a little faster than finding the word with both cases.
         while (start >= 0 && start < text.length()) {
@@ -153,6 +164,30 @@ class CenturyFinder implements ReplacementFinder {
             final String centuryWord = text.substring(startCentury, endCentury);
             final char spaceLetter = text.charAt(endCentury);
             if (spaceLetter != SPACE || !FinderUtils.isWordCompleteInText(startCentury, centuryWord, text)) {
+                start = endCentury;
+                continue;
+            }
+
+            return FinderMatchResult.of(startCentury, centuryWord);
+        }
+        return null;
+    }
+
+    @Nullable
+    private MatchResult findCenturyAbbreviatedWord(String text, int start) {
+        while (start >= 0 && start < text.length()) {
+            final String nextText = text.substring(start);
+            // Finding with the whitespace produces more accurate matches and improves performance
+            final int startAbbr = StringUtils.indexOfAny(nextText, "S. ", "s. ");
+            if (startAbbr < 0) {
+                return null;
+            }
+
+            // We only consider the word complete and followed by a whitespace
+            final int startCentury = start + startAbbr;
+            final int endCentury = startCentury + 2;
+            final String centuryWord = text.substring(startCentury, endCentury);
+            if (!FinderUtils.isWordCompleteInText(startCentury, centuryWord, text)) {
                 start = endCentury;
                 continue;
             }
@@ -264,7 +299,7 @@ class CenturyFinder implements ReplacementFinder {
         final String text = page.getContent();
 
         String centuryText = match.group();
-        final String centuryWord = match.group(1);
+        String centuryWord = match.group(1);
         final boolean isUppercase = FinderUtils.startsWithUpperCase(centuryWord);
         final String centuryNumber = FinderUtils.toUpperCase(match.group(2));
         final String eraText = match.group(3);
@@ -284,15 +319,23 @@ class CenturyFinder implements ReplacementFinder {
             extension = extensionPrefix + fixSimpleCentury(extensionText);
         }
 
+        // Manage abbreviated century word
+        final boolean isAbbreviated = centuryWord.charAt(centuryWord.length() - 1) == '.';
+        if (isAbbreviated) {
+            centuryWord = CENTURY_WORD;
+        }
+
         // Templates
+        final String lowerPrefix = isAbbreviated ? "a" : "s";
+        final String upperPrefix = FinderUtils.toUpperCase(lowerPrefix);
         final String templateUpperLink =
-            "{{" + centuryWord + "|" + centuryNumber + "|" + eraLetter + "|S|1}}" + extension;
+            "{{" + centuryWord + "|" + centuryNumber + "|" + eraLetter + "|" + upperPrefix + "|1}}" + extension;
         final String templateUpperNoLink =
-            "{{" + centuryWord + "|" + centuryNumber + "|" + eraLetter + "|S}}" + extension;
+            "{{" + centuryWord + "|" + centuryNumber + "|" + eraLetter + "|" + upperPrefix + "}}" + extension;
         final String templateLowerLink =
-            "{{" + centuryWord + "|" + centuryNumber + "|" + eraLetter + "|s|1}}" + extension;
+            "{{" + centuryWord + "|" + centuryNumber + "|" + eraLetter + "|" + lowerPrefix + "|1}}" + extension;
         final String templateLowerNoLink =
-            "{{" + centuryWord + "|" + centuryNumber + "|" + eraLetter + "|s}}" + extension;
+            "{{" + centuryWord + "|" + centuryNumber + "|" + eraLetter + "|" + lowerPrefix + "}}" + extension;
         final String linkedComment = "enlazado —solo para temas relacionados con el calendario—";
 
         final List<Suggestion> suggestions = new ArrayList<>(4);

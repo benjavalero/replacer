@@ -57,6 +57,8 @@ class CenturyFinderTest {
             "siglos XX y XXI * siglos XX y XXI * siglos {{Siglo|XX}} y {{Siglo|XXI}}",
             // Plural century with era
             "siglos I a. C. y II d. C. * siglos I a. C. y II * siglos {{Siglo|I}} a. C. y {{Siglo|II}}",
+            // Century abbreviated
+            "s. XX * s. XX * {{Siglo|XX||a}}",
         }
     )
     void testCenturySimple(String text, String century, String expected) {
