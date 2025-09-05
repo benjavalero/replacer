@@ -191,21 +191,14 @@ class CenturyFinder implements ReplacementFinder {
 
     @Nullable
     private MatchResult findEra(String text, int start) {
-        // 11 is the max length of an era including a space before
-        final String nextText = text.substring(start, Math.min(start + 11, text.length()));
-        return ERA_WORDS.stream()
-            .filter(w -> containsEra(nextText, w))
-            .findFirst()
-            .map(w -> FinderMatchResult.of(start, w))
-            .orElse(null);
-    }
-
-    private boolean containsEra(String text, String eraWord) {
-        final int pos = text.indexOf(eraWord);
-        if (pos >= 0) {
-            return FinderUtils.isActualSpace(text.substring(0, pos));
+        final String nextText = text.substring(start);
+        for (String eraWord : ERA_WORDS) {
+            final int pos = nextText.indexOf(eraWord);
+            if (pos >= 0 && FinderUtils.isActualSpace(nextText.substring(0, pos))) {
+                return FinderMatchResult.of(start + pos, eraWord);
+            }
         }
-        return false;
+        return null;
     }
 
     /** True if linked; False if not linked; Null if linked not closed or open. */
