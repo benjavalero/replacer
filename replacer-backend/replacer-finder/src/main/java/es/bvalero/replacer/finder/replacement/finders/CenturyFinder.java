@@ -33,7 +33,7 @@ class CenturyFinder implements ReplacementFinder {
     private static final String CENTURY_WORD = "Siglo";
     private static final String CENTURY_SEARCH = CENTURY_WORD.substring(1);
     private static final char PLURAL_LETTER = 's';
-    private static final Set<Character> CENTURY_LETTERS = Set.of('I', 'V', 'X', 'i', 'v', 'x');
+    private static final Set<Character> CENTURY_LETTERS = Set.of('I', 'V', 'X');
     private static final List<String> ERA_WORDS = List.of(
         "aC",
         "a.C.",
@@ -207,16 +207,19 @@ class CenturyFinder implements ReplacementFinder {
     }
 
     private boolean isCenturyNumber(String text) {
+        // The century library only accepts uppercase characters
+        final String upperText = FinderUtils.toUpperCase(text);
+
         // Check the century number only contains valid century letters
-        for (int i = 0; i < text.length(); i++) {
-            if (!CENTURY_LETTERS.contains(text.charAt(i))) {
+        for (int i = 0; i < upperText.length(); i++) {
+            if (!CENTURY_LETTERS.contains(upperText.charAt(i))) {
                 return false;
             }
         }
 
         //  Check the century number is valid and lower than the current century
         try {
-            return ConvertToArabic.fromRoman(text) <= 21;
+            return ConvertToArabic.fromRoman(upperText) <= 21;
         } catch (ConversionException ce) {
             return false;
         }
