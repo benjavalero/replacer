@@ -159,13 +159,11 @@ class CenturyFinder implements ReplacementFinder {
             }
 
             // We only consider the word complete
-            final String centuryWord = text.substring(startCentury, endCentury);
-            if (!FinderUtils.isWordCompleteInText(startCentury, centuryWord, text)) {
-                start = endCentury;
-                continue;
+            if (FinderUtils.isWordCompleteInText(startCentury, endCentury, text)) {
+                return FinderMatchResult.of(text, startCentury, endCentury);
             }
 
-            return FinderMatchResult.of(startCentury, centuryWord);
+            start = endCentury;
         }
         return null;
     }

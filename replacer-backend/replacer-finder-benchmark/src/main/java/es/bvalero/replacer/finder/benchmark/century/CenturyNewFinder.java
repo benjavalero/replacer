@@ -6,10 +6,6 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 import com.roman.code.ConvertToArabic;
 import com.roman.code.exception.ConversionException;
-import dk.brics.automaton.AutomatonMatcher;
-import dk.brics.automaton.DatatypesAutomatonProvider;
-import dk.brics.automaton.RegExp;
-import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.Replacement;
@@ -159,13 +155,11 @@ class CenturyNewFinder implements BenchmarkFinder {
             }
 
             // We only consider the word complete
-            final String centuryWord = text.substring(startCentury, endCentury);
-            if (!FinderUtils.isWordCompleteInText(startCentury, centuryWord, text)) {
-                start = endCentury;
-                continue;
+            if (FinderUtils.isWordCompleteInText(startCentury, endCentury, text)) {
+                return FinderMatchResult.of(text, startCentury, endCentury);
             }
 
-            return FinderMatchResult.of(startCentury, centuryWord);
+            start = endCentury;
         }
         return null;
     }
