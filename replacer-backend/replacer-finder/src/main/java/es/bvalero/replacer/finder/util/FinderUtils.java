@@ -165,11 +165,14 @@ public class FinderUtils {
      * In this context, we consider a word separator a character which is not alphanumeric nor an underscore.
      */
     public boolean isWordCompleteInText(int startWord, String word, String text) {
+        return isWordCompleteInText(startWord, startWord + word.length(), text);
+    }
+
+    public boolean isWordCompleteInText(int startWord, int endWord, String text) {
         // We check the separators are not letters. The detected word might not be complete.
         // We check the separators are not digits. There are rare cases where the misspelling
         // is preceded or followed by a digit e.g. the misspelling "Km" in "Km2".
         // We discard words preceded or followed by certain separators like '_'.
-        final int endWord = startWord + word.length();
         if (startWord < 0 || endWord > text.length()) {
             throw new IllegalArgumentException();
         }
@@ -293,6 +296,20 @@ public class FinderUtils {
         }
         final MatchResult wordBefore = findWordBefore(text, start);
         return wordBefore != null && startsWithUpperCase(wordBefore.group());
+    }
+
+    @Nullable
+    public MatchResult indexOfAny(String text, int start, String... searchStrings) {
+        String minString = null;
+        int minStart = Integer.MAX_VALUE;
+        for (String searchString : searchStrings) {
+            final int pos = text.indexOf(searchString, start);
+            if (pos >= 0 && pos < minStart) {
+                minString = searchString;
+                minStart = pos;
+            }
+        }
+        return minString == null ? null : FinderMatchResult.of(minStart, minString);
     }
 
     /* Find the most close sequence of letters and digits ending at the given position */
