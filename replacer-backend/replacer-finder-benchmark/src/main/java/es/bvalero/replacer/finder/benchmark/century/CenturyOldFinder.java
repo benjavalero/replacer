@@ -46,10 +46,6 @@ class CenturyOldFinder implements BenchmarkFinder {
         "d.&nbsp;C.",
         "d.{{esd}}C."
     );
-    private static final String CENTURY_WORD_REGEX = "[Ss](iglos?|\\.)";
-    private static final RunAutomaton CENTURY_WORD_AUTOMATON = new RunAutomaton(
-        new RegExp(CENTURY_WORD_REGEX).toAutomaton(new DatatypesAutomatonProvider())
-    );
 
     @Override
     public Stream<MatchResult> findMatchResults(FinderPage page) {
@@ -125,18 +121,69 @@ class CenturyOldFinder implements BenchmarkFinder {
 
     @Nullable
     private MatchResult findCenturyWord(String text, int start) {
-        // Support abbreviated century words is slower than only supporting the complete century word.
-        // The best approach is to use an automaton with both.
-        // Note that supporting hard-spaces also decreases the performance.
-        final AutomatonMatcher matcher = CENTURY_WORD_AUTOMATON.newMatcher(text, start, text.length());
-        while (matcher.find()) {
-            // We only consider the word complete
-            final int startCentury = start + matcher.start();
-            final int endCentury = start + matcher.end();
-            final String centuryWord = text.substring(startCentury, endCentury);
-            if (FinderUtils.isWordCompleteInText(startCentury, centuryWord, text)) {
-                return FinderMatchResult.of(startCentury, centuryWord);
+        // Support abbreviated century words is x4 slower than only supporting the complete century word.
+        // The best performance is obtained by finding the complete and abbreviated century words
+        // each one with a different approach. Note that supporting hard-spaces is x2 slower.
+        final MatchResult completeWord = findCenturyCompleteWord(text, start);
+        final MatchResult abbreviatedWord = findCenturyAbbreviatedWord(text, start);
+        if (completeWord != null && abbreviatedWord != null) {
+            return completeWord.start() < abbreviatedWord.start() ? completeWord : abbreviatedWord;
+        } else {
+            return completeWord == null ? abbreviatedWord : completeWord;
+        }
+    }
+
+    @Nullable
+    private MatchResult findCenturyCompleteWord(String text, int start) {
+        // Instead of making a case-insensitive search, we find the end of the word,
+        // and then we check the word is complete. It is a little faster than finding the word with both cases.
+        while (start >= 0 && start < text.length()) {
+            final int startSuffix = text.indexOf(CENTURY_SEARCH, start);
+            int endCentury = startSuffix + CENTURY_SEARCH.length();
+            if (startSuffix <= 0 || endCentury >= text.length()) { // <= 0 to be able to get the character before
+                return null;
             }
+
+            // Check first letter
+            final int startCentury = startSuffix - 1;
+            final char firstLetter = text.charAt(startCentury);
+            if (firstLetter != 'S' && firstLetter != 's') {
+                start = endCentury;
+                continue;
+            }
+
+            // Century word can be plural
+            final char pluralLetter = text.charAt(endCentury);
+            if (pluralLetter == PLURAL_LETTER) {
+                endCentury++;
+            }
+
+            // We only consider the word complete
+            final String centuryWord = text.substring(startCentury, endCentury);
+            if (!FinderUtils.isWordCompleteInText(startCentury, centuryWord, text)) {
+                start = endCentury;
+                continue;
+            }
+
+            return FinderMatchResult.of(startCentury, centuryWord);
+        }
+        return null;
+    }
+
+    @Nullable
+    private MatchResult findCenturyAbbreviatedWord(String text, int start) {
+        while (start >= 0 && start < text.length()) {
+            final MatchResult abbr = FinderUtils.indexOfAny(text, start, "S.", "s.");
+            if (abbr == null) {
+                return null;
+            }
+
+            // We only consider the word complete
+            if (FinderUtils.isWordCompleteInText(abbr, text)) {
+                return abbr;
+            }
+
+            start = abbr.end();
         }
         return null;
     }

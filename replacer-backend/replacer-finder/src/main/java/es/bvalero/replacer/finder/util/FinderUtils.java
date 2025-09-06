@@ -168,6 +168,10 @@ public class FinderUtils {
         return isWordCompleteInText(startWord, startWord + word.length(), text);
     }
 
+    public boolean isWordCompleteInText(MatchResult match, String text) {
+        return isWordCompleteInText(match.start(), match.end(), text);
+    }
+
     public boolean isWordCompleteInText(int startWord, int endWord, String text) {
         // We check the separators are not letters. The detected word might not be complete.
         // We check the separators are not digits. There are rare cases where the misspelling
