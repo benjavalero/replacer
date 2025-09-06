@@ -216,11 +216,12 @@ class CenturyOldFinder implements BenchmarkFinder {
 
     @Nullable
     private MatchResult findEra(String text, int start) {
-        final String nextText = text.substring(start);
         for (String eraWord : ERA_WORDS) {
-            final int pos = nextText.indexOf(eraWord);
-            if (pos >= 0 && FinderUtils.isActualSpace(nextText.substring(0, pos))) {
-                return FinderMatchResult.of(start + pos, eraWord);
+            final int pos = text.indexOf(eraWord, start);
+            if (pos >= 0) {
+                if (FinderUtils.isActualSpace(text.substring(start, pos))) {
+                    return FinderMatchResult.of(pos, eraWord);
+                }
             }
         }
         return null;
