@@ -266,25 +266,24 @@ class CenturyNewFinder implements BenchmarkFinder {
     private Replacement convertCenturySingular(MatchResult match, FinderPage page) {
         final String text = page.getContent();
 
-        String centuryText = match.group();
+        String centuryText;
         String centuryWord = match.group(1);
         final boolean isUppercase = FinderUtils.startsWithUpperCase(centuryWord);
         final String centuryNumber = FinderUtils.toUpperCase(match.group(2));
         final String eraText = match.group(3);
         final String eraLetter = StringUtils.isEmpty(eraText) ? EMPTY : String.valueOf(eraText.charAt(0));
-        final boolean isLinked = centuryText.startsWith(START_LINK);
 
         // Add extension and its suggestion
         final String extensionText = match.group(4);
         final String extension;
         if (StringUtils.isEmpty(extensionText)) {
+            centuryText = match.group();
             extension = EMPTY;
         } else {
             final int extensionStart = match.start(4);
             final int extensionEnd = match.end(4);
-            final String extensionPrefix = text.substring(match.end(), extensionStart);
             centuryText = text.substring(match.start(), extensionEnd);
-            extension = extensionPrefix + fixSimpleCentury(extensionText);
+            extension = text.substring(match.end(), extensionStart) + fixSimpleCentury(extensionText);
         }
 
         // Manage abbreviated century word
@@ -310,6 +309,7 @@ class CenturyNewFinder implements BenchmarkFinder {
 
         // Not linked centuries are recommended
         // Offer always the lowercase alternative
+        final boolean isLinked = centuryText.startsWith(START_LINK);
         if (isUppercase) {
             suggestions.add(Suggestion.of(templateUpperNoLink, "siglo en versalitas; con mayúscula; sin enlazar"));
             if (isLinked) {
