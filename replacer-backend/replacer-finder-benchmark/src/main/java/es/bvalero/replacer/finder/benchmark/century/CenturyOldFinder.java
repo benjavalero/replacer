@@ -167,7 +167,7 @@ class CenturyOldFinder implements BenchmarkFinder {
     @Nullable
     private MatchResult findCenturyAbbreviatedWord(String text, int start) {
         while (start >= 0 && start < text.length()) {
-            final MatchResult abbr = FinderUtils.indexOfAny(text, start, "S.", "s.");
+            final MatchResult abbr = FinderUtils.indexOfAny(text, start, "s.", "S.");
             if (abbr == null) {
                 return null;
             }
