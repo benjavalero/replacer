@@ -302,13 +302,17 @@ public class FinderUtils {
         return wordBefore != null && startsWithUpperCase(wordBefore.group());
     }
 
+    /**
+     * Find the first occurrence of several search strings.
+     * Put the most common occurrence first improves performance.
+     */
     @Nullable
     public MatchResult indexOfAny(String text, int start, String... searchStrings) {
         String minString = null;
-        int minStart = Integer.MAX_VALUE;
+        int minStart = text.length();
         for (String searchString : searchStrings) {
-            final int pos = text.indexOf(searchString, start);
-            if (pos >= 0 && pos < minStart) {
+            final int pos = text.indexOf(searchString, start, minStart);
+            if (pos >= 0) {
                 minString = searchString;
                 minStart = pos;
             }
