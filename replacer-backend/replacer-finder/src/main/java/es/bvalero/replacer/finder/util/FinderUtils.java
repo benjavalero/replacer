@@ -160,6 +160,20 @@ public class FinderUtils {
 
     //region Text Utils
 
+    public boolean containsAtPosition(String text, String substring, int start) {
+        assert start >= 0;
+        if (start + substring.length() > text.length()) {
+            return false;
+        }
+
+        for (int i = 0; i < substring.length(); i++) {
+            if (text.charAt(start + i) != substring.charAt(i)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     /**
      * Check if a word is complete in a text. In particular, check if the characters around the word are separators.
      * In this context, we consider a word separator a character which is not alphanumeric nor an underscore.
