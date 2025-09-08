@@ -203,11 +203,11 @@ class DateFinder implements ReplacementFinder {
     @Nullable
     public Replacement convertDate(MatchResult match, FinderPage page) {
         final WikipediaLanguage lang = page.getPageKey().getLang();
-        final String date = match.group();
-        if (!FinderUtils.isWordCompleteInText(match.start(), date, page.getContent())) {
+        if (!FinderUtils.isWordCompleteInText(match, page.getContent())) {
             return null;
         }
 
+        final String date = match.group();
         final MatchResult matchWord = FinderUtils.findWordAfter(date, 0, YEAR_ALLOWED_CHARS, false);
         assert matchWord != null;
         final String firstWord = matchWord.group();

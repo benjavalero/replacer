@@ -33,10 +33,8 @@ class WordRegexFinder implements BenchmarkFinder {
         for (Pattern pattern : this.patterns) {
             final Matcher m = pattern.matcher(text);
             while (m.find()) {
-                final int start = m.start();
-                final String word = m.group();
-                if (FinderUtils.isWordCompleteInText(start, word, text)) {
-                    matches.add(BenchmarkResult.of(start, word));
+                if (FinderUtils.isWordCompleteInText(m, text)) {
+                    matches.add(BenchmarkResult.of(m.start(), m.group()));
                 }
             }
         }

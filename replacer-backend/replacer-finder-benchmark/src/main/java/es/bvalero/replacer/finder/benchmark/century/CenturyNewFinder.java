@@ -187,7 +187,7 @@ class CenturyNewFinder implements BenchmarkFinder {
     private boolean isLinked(String text, int start, int end) {
         return (
             FinderUtils.containsAtPosition(text, START_LINK, Math.max(0, start - START_LINK.length())) &&
-                FinderUtils.containsAtPosition(text, END_LINK, end)
+            FinderUtils.containsAtPosition(text, END_LINK, end)
         );
     }
 

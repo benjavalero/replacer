@@ -37,7 +37,6 @@ class WordAutomatonAllFinder implements BenchmarkFinder {
 
     @Override
     public boolean validate(MatchResult match, FinderPage page) {
-        final String word = match.group();
-        return this.words.contains(word) && FinderUtils.isWordCompleteInText(match.start(), word, page.getContent());
+        return this.words.contains(match.group()) && FinderUtils.isWordCompleteInText(match, page.getContent());
     }
 }

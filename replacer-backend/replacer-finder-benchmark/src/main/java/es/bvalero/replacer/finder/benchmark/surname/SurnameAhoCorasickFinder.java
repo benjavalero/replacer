@@ -28,7 +28,7 @@ class SurnameAhoCorasickFinder implements BenchmarkFinder {
     @Override
     public boolean validate(MatchResult matchResult, FinderPage page) {
         return (
-            FinderUtils.isWordCompleteInText(matchResult.start(), matchResult.group(), page.getContent()) &&
+            FinderUtils.isWordCompleteInText(matchResult, page.getContent()) &&
             FinderUtils.isWordPrecededByUpperCase(matchResult.start(), page.getContent())
         );
     }

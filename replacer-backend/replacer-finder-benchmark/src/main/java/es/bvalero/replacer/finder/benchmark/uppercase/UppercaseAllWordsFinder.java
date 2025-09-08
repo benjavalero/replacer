@@ -34,7 +34,7 @@ class UppercaseAllWordsFinder extends UppercaseBenchmarkFinder {
                 if (
                     FinderUtils.startsWithUpperCase(word) &&
                     words.contains(word) &&
-                    FinderUtils.isWordCompleteInText(startWord, word, text) &&
+                    FinderUtils.isWordCompleteInText(startWord, endWord, text) &&
                     isWordPrecededByPunctuation(startWord, text)
                 ) {
                     return FinderMatchResult.of(startWord, word);

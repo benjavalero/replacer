@@ -35,10 +35,8 @@ class WordAutomatonFinder implements BenchmarkFinder {
         for (RunAutomaton automaton : this.automata) {
             final AutomatonMatcher m = automaton.newMatcher(text);
             while (m.find()) {
-                final int start = m.start();
-                final String word = m.group();
-                if (FinderUtils.isWordCompleteInText(start, word, text)) {
-                    matches.add(BenchmarkResult.of(start, word));
+                if (FinderUtils.isWordCompleteInText(m, text)) {
+                    matches.add(BenchmarkResult.of(m.start(), m.group()));
                 }
             }
         }

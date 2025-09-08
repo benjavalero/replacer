@@ -102,7 +102,7 @@ class DegreeFinder implements ReplacementFinder {
             if (
                 startLetter >= text.length() ||
                 !DEGREE_LETTERS.contains(text.charAt(startLetter)) ||
-                !FinderUtils.isWordCompleteInText(startLetter, text.substring(startLetter, startLetter + 1), text)
+                !FinderUtils.isWordCompleteInText(startLetter, startLetter + 1, text)
             ) {
                 // Keep on searching
                 start = startSymbol + 1;
