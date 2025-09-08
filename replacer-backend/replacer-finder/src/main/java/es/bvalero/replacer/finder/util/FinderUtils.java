@@ -149,7 +149,7 @@ public class FinderUtils {
     }
 
     public boolean isActualSpace(String str) {
-        return SPACES.contains(str);
+        return StringUtils.isNotEmpty(str) && (SPACES.contains(str) || StringUtils.isBlank(str));
     }
 
     public boolean isNonBreakingSpace(String str) {
@@ -160,16 +160,46 @@ public class FinderUtils {
 
     //region Text Utils
 
+    /** Check if a substring is contained in a text at a certain position */
+    public boolean containsAtPosition(String text, String substring, int start) {
+        assert start >= 0;
+        if (start + substring.length() > text.length()) {
+            return false;
+        }
+
+        for (int i = 0; i < substring.length(); i++) {
+            if (text.charAt(start + i) != substring.charAt(i)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     /**
      * Check if a word is complete in a text. In particular, check if the characters around the word are separators.
      * In this context, we consider a word separator a character which is not alphanumeric nor an underscore.
      */
     public boolean isWordCompleteInText(int startWord, String word, String text) {
+        return isWordCompleteInText(startWord, startWord + word.length(), text);
+    }
+
+    /**
+     * Check if a word is complete in a text. In particular, check if the characters around the word are separators.
+     * In this context, we consider a word separator a character which is not alphanumeric nor an underscore.
+     */
+    public boolean isWordCompleteInText(MatchResult match, String text) {
+        return isWordCompleteInText(match.start(), match.end(), text);
+    }
+
+    /**
+     * Check if a word is complete in a text. In particular, check if the characters around the word are separators.
+     * In this context, we consider a word separator a character which is not alphanumeric nor an underscore.
+     */
+    public boolean isWordCompleteInText(int startWord, int endWord, String text) {
         // We check the separators are not letters. The detected word might not be complete.
         // We check the separators are not digits. There are rare cases where the misspelling
         // is preceded or followed by a digit e.g. the misspelling "Km" in "Km2".
         // We discard words preceded or followed by certain separators like '_'.
-        final int endWord = startWord + word.length();
         if (startWord < 0 || endWord > text.length()) {
             throw new IllegalArgumentException();
         }
@@ -223,6 +253,16 @@ public class FinderUtils {
         return (
             end + 1 < text.length() && isValidSeparator(text.charAt(end)) && Character.isUpperCase(text.charAt(end + 1))
         );
+    }
+
+    /**
+     * Find the most close sequence of letters and digits starting at the given position
+     * and preceded by a soft/hard space.
+     */
+    @Nullable
+    public MatchResult findWordAfterSpace(String text, int start) {
+        final MatchResult match = findWordAfter(text, start);
+        return match != null && isActualSpace(text.substring(start, match.start())) ? match : null;
     }
 
     /** Find the most close sequence of letters and digits starting at the given position */
@@ -293,6 +333,24 @@ public class FinderUtils {
         }
         final MatchResult wordBefore = findWordBefore(text, start);
         return wordBefore != null && startsWithUpperCase(wordBefore.group());
+    }
+
+    /**
+     * Find the first occurrence of several search strings.
+     * Put the most common occurrence first improves performance.
+     */
+    @Nullable
+    public MatchResult indexOfAny(String text, int start, String... searchStrings) {
+        String minString = null;
+        int minStart = text.length();
+        for (String searchString : searchStrings) {
+            final int pos = text.indexOf(searchString, start, minStart);
+            if (pos >= 0) {
+                minString = searchString;
+                minStart = pos;
+            }
+        }
+        return minString == null ? null : FinderMatchResult.of(minStart, minString);
     }
 
     /* Find the most close sequence of letters and digits ending at the given position */

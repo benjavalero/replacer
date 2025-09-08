@@ -5,6 +5,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.StandardType;
+import es.bvalero.replacer.finder.Suggestion;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,149 +26,83 @@ class CenturyFinderTest {
 
     @ParameterizedTest
     @CsvSource(
+        delimiter = '*',
         value = {
-            "El siglo XX., siglo XX, {{siglo|XX||s}}",
-            "El siglo V., siglo V, {{siglo|V||s}}",
-            "El siglo XXI., siglo XXI, {{siglo|XXI||s}}",
-            "El siglo XIII., siglo XIII, {{siglo|XIII||s}}",
-            "El siglo xx., siglo xx, {{siglo|XX||s}}",
+            // Lowercase
+            "siglo XX * siglo XX * {{siglo|XX||s}}",
+            "siglo xx * siglo xx * {{siglo|XX||s}}",
+            // With hard space or several spaces
+            "siglo&nbsp;XX * siglo&nbsp;XX * {{siglo|XX||s}}",
+            "siglo  XX * siglo  XX * {{siglo|XX||s}}",
+            // Uppercase
+            "Siglo XX * Siglo XX * {{Siglo|XX||S}}, {{Siglo|XX||s}}",
+            // Lowercase with link
+            "[[siglo XX]] * [[siglo XX]] * {{siglo|XX||s}}, {{siglo|XX||s|1}}",
+            // Uppercase with link
+            "[[Siglo XX]] * [[Siglo XX]] * {{Siglo|XX||S}}, {{Siglo|XX||S|1}}, {{Siglo|XX||s}}, {{Siglo|XX||s|1}}",
+            // With era
+            "siglo II a. C. * siglo II a. C. * {{siglo|II|a|s}}",
+            "siglo V d.C. * siglo V d.C. * {{siglo|V|d|s}}",
+            "siglo I&nbsp;a.&nbsp;C. * siglo I&nbsp;a.&nbsp;C. * {{siglo|I|a|s}}",
+            "siglo X d.{{esd}}C. * siglo X d.{{esd}}C. * {{siglo|X|d|s}}",
+            // With era and with link
+            "[[siglo VI d.&nbsp;C.]] * [[siglo VI d.&nbsp;C.]] * {{siglo|VI|d|s}}, {{siglo|VI|d|s|1}}",
+            // Broken link
+            "[[siglo XX * siglo XX * {{siglo|XX||s}}",
+            // With simple century after
+            "siglo XX-XXI * siglo XX-XXI * {{siglo|XX||s}}-{{Siglo|XXI}}",
+            "siglos XX-XXI * siglos XX-XXI * siglos {{Siglo|XX}}-{{Siglo|XXI}}",
+            "siglo XX o XXI * siglo XX o XXI * {{siglo|XX||s}} o {{Siglo|XXI}}",
+            "siglos XX o XXI * siglos XX o XXI * siglos {{Siglo|XX}} o {{Siglo|XXI}}",
+            "siglo XIX y principios del XX * siglo XIX y principios del XX * {{siglo|XIX||s}} y principios del {{Siglo|XX}}",
+            // With fake century after
+            "siglo XI Alfonso VI * siglo XI * {{siglo|XI||s}}",
+            // With century after too far
+            "siglo XIX y los comienzos del XX * siglo XIX * {{siglo|XIX||s}}",
+            // With invalid century after
+            "siglo XIX y principios del siglo XXL * siglo XIX * {{siglo|XIX||s}}",
+            // After false positive
+            "Los siglos y el siglo XIX * siglo XIX * {{siglo|XIX||s}}",
+            // Plural century
+            "siglos XX y XXI * siglos XX y XXI * siglos {{Siglo|XX}} y {{Siglo|XXI}}",
+            // Plural century with era
+            "siglos I a. C. y II d. C. * siglos I a. C. y II * siglos {{Siglo|I}} a. C. y {{Siglo|II}}",
+            // Century abbreviated
+            "s. XX * s. XX * {{Siglo|XX||a}}",
+            // Century abbreviated with hard space
+            "S.&nbsp;XIX * S.&nbsp;XIX * {{Siglo|XIX||A}}, {{Siglo|XIX||a}}",
         }
     )
-    void testCenturyLowerCase(String text, String century, String expected) {
+    void testCenturySimple(String text, String century, String expected) {
         List<Replacement> replacements = centuryFinder.findList(text);
         assertEquals(1, replacements.size());
 
         Replacement rep = replacements.getFirst();
         assertEquals(StandardType.CENTURY, rep.getType());
         assertEquals(century, rep.getText());
-        assertEquals(century, rep.getSuggestions().get(0).getText());
-        assertEquals(expected, rep.getSuggestions().get(1).getText());
-    }
 
-    @ParameterizedTest
-    @CsvSource(value = { "El Siglo XX., Siglo XX, {{Siglo|XX||S}}, {{Siglo|XX||s}}" })
-    void testCenturyUpperCase(String text, String century, String upper, String lower) {
-        List<Replacement> replacements = centuryFinder.findList(text);
-        assertEquals(1, replacements.size());
-
-        Replacement rep = replacements.getFirst();
-        assertEquals(StandardType.CENTURY, rep.getType());
-        assertEquals(century, rep.getText());
-        assertEquals(century, rep.getSuggestions().get(0).getText());
-        assertEquals(upper, rep.getSuggestions().get(1).getText());
-        assertEquals(lower, rep.getSuggestions().get(2).getText());
-    }
-
-    @ParameterizedTest
-    @CsvSource(value = { "El [[siglo XX]]., [[siglo XX]], {{siglo|XX||s}}, {{siglo|XX||s|1}}" })
-    void testCenturyLowerCaseWithLink(String text, String century, String notLinked, String linked) {
-        List<Replacement> replacements = centuryFinder.findList(text);
-        assertEquals(1, replacements.size());
-
-        Replacement rep = replacements.getFirst();
-        assertEquals(StandardType.CENTURY, rep.getType());
-        assertEquals(century, rep.getText());
-        assertEquals(century, rep.getSuggestions().get(0).getText());
-        assertEquals(notLinked, rep.getSuggestions().get(1).getText());
-        assertEquals(linked, rep.getSuggestions().get(2).getText());
-    }
-
-    @ParameterizedTest
-    @CsvSource(
-        value = {
-            "El [[Siglo XX]]., [[Siglo XX]], {{Siglo|XX||S}}, {{Siglo|XX||S|1}}, {{Siglo|XX||s}}, {{Siglo|XX||s|1}}",
-        }
-    )
-    void testCenturyUpperCaseWithLink(
-        String text,
-        String century,
-        String upperNotLinked,
-        String upperLinked,
-        String lowerNotLinked,
-        String lowerLinked
-    ) {
-        List<Replacement> replacements = centuryFinder.findList(text);
-        assertEquals(1, replacements.size());
-
-        Replacement rep = replacements.getFirst();
-        assertEquals(StandardType.CENTURY, rep.getType());
-        assertEquals(century, rep.getText());
-        assertEquals(century, rep.getSuggestions().get(0).getText());
-        assertEquals(upperNotLinked, rep.getSuggestions().get(1).getText());
-        assertEquals(upperLinked, rep.getSuggestions().get(2).getText());
-        assertEquals(lowerNotLinked, rep.getSuggestions().get(3).getText());
-        assertEquals(lowerLinked, rep.getSuggestions().get(4).getText());
+        List<String> expectedSuggestions = new ArrayList<>();
+        expectedSuggestions.add(century);
+        expectedSuggestions.addAll(Arrays.stream(expected.split(",")).map(String::trim).toList());
+        assertEquals(expectedSuggestions, rep.getSuggestions().stream().map(Suggestion::getText).toList());
     }
 
     @ParameterizedTest
     @ValueSource(
         strings = {
-            "El siglo 20.", "Siglo 21.", "Los siglos XX y XXI.", "El siglo  XX.", "El siglo-XX.", "El [[siglo XX.",
+            // Century arabic number
+            "siglo 20",
+            "Siglo 21",
+            // Plural century with nothing after
+            "siglos XX y nada más después",
+            // Not whitespace after century word
+            "siglo-XX",
         }
     )
     void testCenturyNotValid(String text) {
         List<Replacement> replacements = centuryFinder.findList(text);
 
         assertTrue(replacements.isEmpty());
-    }
-
-    @ParameterizedTest
-    @CsvSource(
-        value = {
-            "El siglo II a. C., siglo II a. C., {{siglo|II|a|s}}",
-            "El siglo V d.C., siglo V d.C., {{siglo|V|d|s}}",
-            "El siglo I&nbsp;a.&nbsp;C., siglo I&nbsp;a.&nbsp;C., {{siglo|I|a|s}}",
-        }
-    )
-    void testCenturyWithEra(String text, String century, String expected) {
-        List<Replacement> replacements = centuryFinder.findList(text);
-        assertEquals(1, replacements.size());
-
-        Replacement rep = replacements.getFirst();
-        assertEquals(StandardType.CENTURY, rep.getType());
-        assertEquals(century, rep.getText());
-        assertEquals(century, rep.getSuggestions().get(0).getText());
-        assertEquals(expected, rep.getSuggestions().get(1).getText());
-    }
-
-    @ParameterizedTest
-    @CsvSource(value = { "El [[siglo VI d.&nbsp;C.]], [[siglo VI d.&nbsp;C.]], {{siglo|VI|d|s}}, {{siglo|VI|d|s|1}}" })
-    void testCenturyWithEraLinked(String text, String century, String notLinked, String linked) {
-        List<Replacement> replacements = centuryFinder.findList(text);
-        assertEquals(1, replacements.size());
-
-        Replacement rep = replacements.getFirst();
-        assertEquals(StandardType.CENTURY, rep.getType());
-        assertEquals(century, rep.getText());
-        assertEquals(century, rep.getSuggestions().get(0).getText());
-        assertEquals(notLinked, rep.getSuggestions().get(1).getText());
-        assertEquals(linked, rep.getSuggestions().get(2).getText());
-    }
-
-    @Test
-    void testCenturyWithSimpleCenturyAfter() {
-        String text = "Entre el siglo XIX y principios del XX.";
-
-        List<Replacement> replacements = centuryFinder.findList(text);
-        assertEquals(1, replacements.size());
-
-        Replacement rep = replacements.getFirst();
-        assertEquals(StandardType.CENTURY, rep.getType());
-        assertEquals("siglo XIX y principios del XX", rep.getText());
-        assertEquals("{{siglo|XIX||s}} y principios del {{Siglo|XX}}", rep.getSuggestions().get(1).getText());
-    }
-
-    @Test
-    void testCenturyWithFakeCenturyAfter() {
-        String text = "En el siglo XI Alfonso VI...";
-
-        List<Replacement> replacements = centuryFinder.findList(text);
-        assertEquals(1, replacements.size());
-
-        Replacement rep = replacements.getFirst();
-        assertEquals(StandardType.CENTURY, rep.getType());
-        assertEquals("siglo XI", rep.getText());
-        assertEquals("{{siglo|XI||s}}", rep.getSuggestions().get(1).getText());
     }
 
     @Test
@@ -177,35 +114,5 @@ class CenturyFinderTest {
         assertEquals(2, replacements.size());
         assertEquals("siglo XIX", replacements.get(0).getText());
         assertEquals("siglo XX", replacements.get(1).getText());
-    }
-
-    @Test
-    void testCenturyWithCenturyAfterTooFar() {
-        String text = "Entre el siglo XIX y los comienzos del XX.";
-
-        List<Replacement> replacements = centuryFinder.findList(text);
-
-        assertEquals(1, replacements.size());
-        assertEquals("siglo XIX", replacements.getFirst().getText());
-    }
-
-    @Test
-    void testCenturyWithCompleteCenturyAfterInvalid() {
-        String text = "Entre el siglo XIX y principios del siglo XXL";
-
-        List<Replacement> replacements = centuryFinder.findList(text);
-
-        assertEquals(1, replacements.size());
-        assertEquals("siglo XIX", replacements.getFirst().getText());
-    }
-
-    @Test
-    void testCenturyAfterFalsePositive() {
-        String text = "Los siglos y el siglo XIX.";
-
-        List<Replacement> replacements = centuryFinder.findList(text);
-
-        assertEquals(1, replacements.size());
-        assertEquals("siglo XIX", replacements.getFirst().getText());
     }
 }

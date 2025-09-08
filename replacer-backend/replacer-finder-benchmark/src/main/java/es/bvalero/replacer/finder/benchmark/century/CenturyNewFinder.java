@@ -1,4 +1,4 @@
-package es.bvalero.replacer.finder.replacement.finders;
+package es.bvalero.replacer.finder.benchmark.century;
 
 import static es.bvalero.replacer.finder.util.FinderUtils.END_LINK;
 import static es.bvalero.replacer.finder.util.FinderUtils.START_LINK;
@@ -11,7 +11,8 @@ import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.StandardType;
 import es.bvalero.replacer.finder.Suggestion;
-import es.bvalero.replacer.finder.replacement.ReplacementFinder;
+import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
+import es.bvalero.replacer.finder.benchmark.BenchmarkResult;
 import es.bvalero.replacer.finder.util.FinderMatchResult;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
@@ -22,13 +23,8 @@ import java.util.regex.MatchResult;
 import java.util.stream.Stream;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.Nullable;
-import org.springframework.stereotype.Component;
 
-/**
- * Find a century and replace it with the template
- */
-@Component
-class CenturyFinder implements ReplacementFinder {
+class CenturyNewFinder implements BenchmarkFinder {
 
     private static final String CENTURY_WORD = "Siglo";
     private static final String CENTURY_SEARCH = CENTURY_WORD.substring(1);
@@ -191,7 +187,7 @@ class CenturyFinder implements ReplacementFinder {
     private boolean isLinked(String text, int start, int end) {
         return (
             FinderUtils.containsAtPosition(text, START_LINK, Math.max(0, start - START_LINK.length())) &&
-            FinderUtils.containsAtPosition(text, END_LINK, end)
+                FinderUtils.containsAtPosition(text, END_LINK, end)
         );
     }
 
@@ -229,13 +225,17 @@ class CenturyFinder implements ReplacementFinder {
     }
 
     @Override
-    public Replacement convert(MatchResult match, FinderPage page) {
+    public BenchmarkResult convert(MatchResult match, FinderPage page) {
         final String centuryWord = match.group(1);
         if (isPlural(centuryWord)) {
-            return convertCenturyPlural(match, page);
+            return convertReplacement(convertCenturyPlural(match, page));
         } else {
-            return convertCenturySingular(match, page);
+            return convertReplacement(convertCenturySingular(match, page));
         }
+    }
+
+    private BenchmarkResult convertReplacement(Replacement replacement) {
+        return BenchmarkResult.of(replacement.getStart(), replacement.getText());
     }
 
     private Replacement convertCenturySingular(MatchResult match, FinderPage page) {
