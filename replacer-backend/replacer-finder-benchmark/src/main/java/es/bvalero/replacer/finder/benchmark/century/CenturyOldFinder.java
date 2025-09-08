@@ -182,15 +182,14 @@ class CenturyOldFinder implements BenchmarkFinder {
 
     @Nullable
     private MatchResult findEra(String text, int start) {
-        for (String eraWord : ERA_WORDS) {
-            final int pos = text.indexOf(eraWord, start);
-            if (pos >= 0) {
-                if (FinderUtils.isActualSpace(text.substring(start, pos))) {
-                    return FinderMatchResult.of(pos, eraWord);
-                }
-            }
+        final MatchResult nextWord = FinderUtils.findWordAfterSpace(text, start);
+        if (nextWord == null) {
+            return null;
         }
-        return null;
+        final int startNextWord = nextWord.start();
+        return ERA_WORDS.stream()
+            .filter(w -> FinderUtils.containsAtPosition(text, w, startNextWord))
+            .findAny().map(w -> FinderMatchResult.of(startNextWord, w)).orElse(null);
     }
 
     /** True if linked; False if not linked; Null if linked not closed or open. */
