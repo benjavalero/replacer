@@ -44,9 +44,14 @@ class CenturyFinderTest {
             "siglo II a. C. * siglo II a. C. * {{siglo|II|a|s}}",
             "siglo V d.C. * siglo V d.C. * {{siglo|V|d|s}}",
             "siglo I&nbsp;a.&nbsp;C. * siglo I&nbsp;a.&nbsp;C. * {{siglo|I|a|s}}",
+            "siglo X d.{{esd}}C. * siglo X d.{{esd}}C. * {{siglo|X|d|s}}",
             // With era and with link
             "[[siglo VI d.&nbsp;C.]] * [[siglo VI d.&nbsp;C.]] * {{siglo|VI|d|s}}, {{siglo|VI|d|s|1}}",
             // With simple century after
+            "siglo XX-XXI * siglo XX-XXI * {{siglo|XX||s}}-{{Siglo|XXI}}",
+            "siglos XX-XXI * siglos XX-XXI * siglos {{Siglo|XX}}-{{Siglo|XXI}}",
+            "siglo XX o XXI * siglo XX o XXI * {{siglo|XX||s}} o {{Siglo|XXI}}",
+            "siglos XX o XXI * siglos XX o XXI * siglos {{Siglo|XX}} o {{Siglo|XXI}}",
             "siglo XIX y principios del XX * siglo XIX y principios del XX * {{siglo|XIX||s}} y principios del {{Siglo|XX}}",
             // With fake century after
             "siglo XI Alfonso VI * siglo XI * {{siglo|XI||s}}",
@@ -64,6 +69,16 @@ class CenturyFinderTest {
             "s. XX * s. XX * {{Siglo|XX||a}}",
             // Century abbreviated with hard space
             "S.&nbsp;XIX * S.&nbsp;XIX * {{Siglo|XIX||A}}, {{Siglo|XIX||a}}",
+            /*
+        A.C (solo cambia la parte del siglo y deja eso fuera de la plantilla)
+        a. C (cuando no hay un punto después de la C)
+        a. de C.
+        d. de C.
+        a.c. (lo deja fuera de la plantilla)
+        [[siglo X|X]] (enlace X) (es el que más me encuentro)
+        {{AC|siglo X}} (no lo convierte en {{siglo X|a}})
+        {{esd|siglo X}} (no lo convierte en {{siglo X|s}})
+             */
         }
     )
     void testCenturySimple(String text, String century, String expected) {
