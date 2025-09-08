@@ -160,6 +160,7 @@ public class FinderUtils {
 
     //region Text Utils
 
+    /** Check if a substring is contained in a text at a certain position */
     public boolean containsAtPosition(String text, String substring, int start) {
         assert start >= 0;
         if (start + substring.length() > text.length()) {
@@ -182,10 +183,18 @@ public class FinderUtils {
         return isWordCompleteInText(startWord, startWord + word.length(), text);
     }
 
+    /**
+     * Check if a word is complete in a text. In particular, check if the characters around the word are separators.
+     * In this context, we consider a word separator a character which is not alphanumeric nor an underscore.
+     */
     public boolean isWordCompleteInText(MatchResult match, String text) {
         return isWordCompleteInText(match.start(), match.end(), text);
     }
 
+    /**
+     * Check if a word is complete in a text. In particular, check if the characters around the word are separators.
+     * In this context, we consider a word separator a character which is not alphanumeric nor an underscore.
+     */
     public boolean isWordCompleteInText(int startWord, int endWord, String text) {
         // We check the separators are not letters. The detected word might not be complete.
         // We check the separators are not digits. There are rare cases where the misspelling
@@ -246,6 +255,10 @@ public class FinderUtils {
         );
     }
 
+    /**
+     * Find the most close sequence of letters and digits starting at the given position
+     * and preceded by a soft/hard space.
+     */
     @Nullable
     public MatchResult findWordAfterSpace(String text, int start) {
         final MatchResult match = findWordAfter(text, start);

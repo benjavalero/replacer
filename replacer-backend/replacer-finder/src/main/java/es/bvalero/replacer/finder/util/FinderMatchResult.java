@@ -1,5 +1,7 @@
 package es.bvalero.replacer.finder.util;
 
+import static org.apache.commons.lang3.StringUtils.EMPTY;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.MatchResult;
@@ -35,7 +37,7 @@ public class FinderMatchResult implements MatchResult {
     }
 
     public static FinderMatchResult ofEmpty(int start) {
-        return new FinderMatchResult(start, "");
+        return new FinderMatchResult(start, EMPTY);
     }
 
     public static FinderMatchResult of(String text, int start, int end) {
