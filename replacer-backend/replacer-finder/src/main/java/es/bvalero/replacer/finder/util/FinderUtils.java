@@ -306,11 +306,11 @@ public class FinderUtils {
         }
 
         // Check possible non-breaking space
-        final String word = text.substring(firstLetter, lastLetter + 1);
-        if (isSpaceWord(word)) {
-            return findWordAfter(text, lastLetter + 1, allowedChars, charsAllowedAtStart);
+        final int endWord = lastLetter + 1;
+        if (isSpaceWord(text, firstLetter)) {
+            return findWordAfter(text, endWord, allowedChars, charsAllowedAtStart);
         } else {
-            return FinderMatchResult.of(firstLetter, word);
+            return FinderMatchResult.of(text, firstLetter, endWord);
         }
     }
 
@@ -324,8 +324,8 @@ public class FinderUtils {
         return count;
     }
 
-    private boolean isSpaceWord(String word) {
-        return "nbsp".equals(word) || "esd".equals(word);
+    private boolean isSpaceWord(String text, int start) {
+        return containsAtPosition(text, "nbsp", start) || containsAtPosition(text, "esd", start);
     }
 
     public boolean isWordPrecededByUpperCase(int start, String text) {
@@ -404,11 +404,10 @@ public class FinderUtils {
         }
 
         // Check possible non-breaking space
-        final String word = text.substring(firstLetter, lastLetter + 1);
-        if (isSpaceWord(word)) {
+        if (isSpaceWord(text, firstLetter)) {
             return findWordBefore(text, firstLetter, allowedChars, charsAllowedAtStart);
         } else {
-            return FinderMatchResult.of(firstLetter, word);
+            return FinderMatchResult.of(text, firstLetter, lastLetter + 1);
         }
     }
 
