@@ -69,16 +69,6 @@ class CenturyFinderTest {
             "s. XX * s. XX * {{Siglo|XX||a}}",
             // Century abbreviated with hard space
             "S.&nbsp;XIX * S.&nbsp;XIX * {{Siglo|XIX||A}}, {{Siglo|XIX||a}}",
-            /*
-        A.C (solo cambia la parte del siglo y deja eso fuera de la plantilla)
-        a. C (cuando no hay un punto después de la C)
-        a. de C.
-        d. de C.
-        a.c. (lo deja fuera de la plantilla)
-        [[siglo X|X]] (enlace X) (es el que más me encuentro)
-        {{AC|siglo X}} (no lo convierte en {{siglo X|a}})
-        {{esd|siglo X}} (no lo convierte en {{siglo X|s}})
-             */
         }
     )
     void testCenturySimple(String text, String century, String expected) {
