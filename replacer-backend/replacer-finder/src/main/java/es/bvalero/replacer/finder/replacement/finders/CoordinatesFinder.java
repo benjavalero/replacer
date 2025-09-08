@@ -177,8 +177,7 @@ class CoordinatesFinder implements ReplacementFinder {
             return null;
         }
 
-        final String space = text.substring(start, matchNumber.start());
-        if (!FinderUtils.isBlankOrNonBreakingSpace(space)) {
+        if (!FinderUtils.isBlankOrNonBreakingSpace(text, start, matchNumber.start())) {
             // Not a valid space between the previous match and the number match
             return null;
         }
@@ -229,8 +228,7 @@ class CoordinatesFinder implements ReplacementFinder {
             return null;
         }
 
-        final String space = text.substring(start, matchNumber.start());
-        if (!FinderUtils.isBlankOrNonBreakingSpace(space)) {
+        if (!FinderUtils.isBlankOrNonBreakingSpace(text, start, matchNumber.start())) {
             // Not a valid space between the previous match and the number match
             return null;
         }
@@ -265,8 +263,7 @@ class CoordinatesFinder implements ReplacementFinder {
             return null;
         }
 
-        final String space = text.substring(start, matchDirection.start());
-        if (!FinderUtils.isBlankOrNonBreakingSpace(space)) {
+        if (!FinderUtils.isBlankOrNonBreakingSpace(text, start, matchDirection.start())) {
             // Not a valid space between the previous match and the number match
             return null;
         }

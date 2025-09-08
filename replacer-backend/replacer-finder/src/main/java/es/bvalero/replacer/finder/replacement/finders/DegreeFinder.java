@@ -125,9 +125,10 @@ class DegreeFinder implements ReplacementFinder {
             return null;
         }
         // If preceded by number, there must be a space (or nothing) between.
-        final String word = matchBefore.group();
-        final String space1 = text.substring(matchBefore.end(), startSymbol);
-        if (FinderUtils.isDecimalNumber(word) && !FinderUtils.isBlankOrNonBreakingSpace(space1)) {
+        if (
+            FinderUtils.isDecimalNumber(matchBefore.group()) &&
+            !FinderUtils.isBlankOrNonBreakingSpace(text, matchBefore.end(), startSymbol)
+        ) {
             return null;
         }
         return matchBefore;
@@ -185,7 +186,8 @@ class DegreeFinder implements ReplacementFinder {
         final int start;
         final String text;
         if (FinderUtils.isDecimalNumber(word)) {
-            final String fixedSpace = FinderUtils.isNonBreakingSpace(space1) ? space1 : NON_BREAKING_SPACE;
+            final boolean isNonBreakingSpace = FinderUtils.isNonBreakingSpace(page.getContent(), match.start(2));
+            final String fixedSpace = isNonBreakingSpace ? space1 : NON_BREAKING_SPACE;
             fixedDegree = word + fixedSpace + fixedSymbol + fixedLetter;
             start = match.start();
             text = match.group();

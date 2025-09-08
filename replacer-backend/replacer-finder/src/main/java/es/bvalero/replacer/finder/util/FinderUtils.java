@@ -145,16 +145,31 @@ public class FinderUtils {
         return (ch >= '0' && ch <= '9');
     }
 
-    public boolean isBlankOrNonBreakingSpace(String str) {
-        return StringUtils.isBlank(str) || isNonBreakingSpace(str);
+    public boolean isBlankOrNonBreakingSpace(String text, int start, int end) {
+        return isBlank(text, start, end) || isNonBreakingSpace(text, start);
+    }
+
+    private boolean isBlank(String text, int start, int end) {
+        if (start == end) {
+            return true;
+        }
+        for (int i = start; i < end; i++) {
+            if (!Character.isWhitespace(text.charAt(i))) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public boolean isActualSpace(String str) {
-        return StringUtils.isNotEmpty(str) && (SPACES.contains(str) || StringUtils.isBlank(str));
+        return SPACES.contains(str);
     }
 
-    public boolean isNonBreakingSpace(String str) {
-        return NON_BREAKING_SPACE.equals(str) || NON_BREAKING_SPACE_TEMPLATE.equals(str);
+    public boolean isNonBreakingSpace(String text, int start) {
+        return (
+            containsAtPosition(text, NON_BREAKING_SPACE, start) ||
+            containsAtPosition(text, NON_BREAKING_SPACE_TEMPLATE, start)
+        );
     }
 
     //endregion
@@ -263,7 +278,7 @@ public class FinderUtils {
     @Nullable
     public MatchResult findWordAfterSpace(String text, int start) {
         final MatchResult match = findWordAfter(text, start);
-        return match != null && isActualSpace(text.substring(start, match.start())) ? match : null;
+        return match != null && isBlankOrNonBreakingSpace(text, start, match.start()) ? match : null;
     }
 
     /** Find the most close sequence of letters and digits starting at the given position */
