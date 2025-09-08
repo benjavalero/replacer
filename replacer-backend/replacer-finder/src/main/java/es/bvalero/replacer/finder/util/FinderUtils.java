@@ -246,6 +246,12 @@ public class FinderUtils {
         );
     }
 
+    @Nullable
+    public MatchResult findWordAfterSpace(String text, int start) {
+        final MatchResult match = findWordAfter(text, start);
+        return match != null && isActualSpace(text.substring(start, match.start())) ? match : null;
+    }
+
     /** Find the most close sequence of letters and digits starting at the given position */
     @Nullable
     public MatchResult findWordAfter(String text, int start) {

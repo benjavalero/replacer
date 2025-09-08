@@ -157,15 +157,8 @@ class CenturyOldFinder implements BenchmarkFinder {
 
     @Nullable
     private MatchResult findCenturyNumber(String text, int start) {
-        final MatchResult centuryNumber = FinderUtils.findWordAfter(text, start);
-        if (
-            centuryNumber == null ||
-                !FinderUtils.isActualSpace(text.substring(start, centuryNumber.start())) ||
-                !isCenturyNumber(centuryNumber.group())
-        ) {
-            return null;
-        }
-        return centuryNumber;
+        final MatchResult centuryNumber = FinderUtils.findWordAfterSpace(text, start);
+        return centuryNumber != null && isCenturyNumber(centuryNumber.group()) ? centuryNumber : null;
     }
 
     private boolean isCenturyNumber(String text) {
