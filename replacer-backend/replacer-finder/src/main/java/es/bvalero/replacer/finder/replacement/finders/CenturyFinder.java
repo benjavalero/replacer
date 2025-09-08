@@ -66,7 +66,7 @@ class CenturyFinder implements ReplacementFinder {
                 return null;
             }
 
-            int startCentury = centuryWord.start();
+            final int startCentury = centuryWord.start();
             int endCentury = centuryWord.end();
 
             // Find the century number
@@ -85,16 +85,6 @@ class CenturyFinder implements ReplacementFinder {
                 era = FinderMatchResult.ofEmpty(endCentury);
             }
             endCentury = era.end();
-
-            // Check if the century is surrounded by a link
-            final Boolean isLinked = isLinked(text, startCentury, endCentury);
-            if (isLinked == null) {
-                start = endCentury;
-                continue;
-            } else if (isLinked) {
-                startCentury -= START_LINK.length();
-                endCentury += END_LINK.length();
-            }
 
             // Find the extension (optional)
             MatchResult extension = findExtension(text, endCentury, centuryNumber.group());
@@ -198,20 +188,11 @@ class CenturyFinder implements ReplacementFinder {
             .orElse(null);
     }
 
-    /** True if linked; False if not linked; Null if linked not closed or open. */
-    @Nullable
-    private Boolean isLinked(String text, int start, int end) {
-        final int startLink = Math.max(0, start - START_LINK.length());
-        final int endLink = Math.min(text.length(), end + END_LINK.length());
-        final String leftLink = text.substring(startLink, start);
-        final String rightLink = text.substring(end, endLink);
-        if (START_LINK.equals(leftLink) && END_LINK.equals(rightLink)) {
-            return true;
-        } else if (START_LINK.equals(leftLink) || END_LINK.equals(rightLink)) {
-            return null;
-        } else {
-            return false;
-        }
+    private boolean isLinked(String text, int start, int end) {
+        return (
+            FinderUtils.containsAtPosition(text, START_LINK, Math.max(0, start - START_LINK.length())) &&
+            FinderUtils.containsAtPosition(text, END_LINK, end)
+        );
     }
 
     @Nullable
@@ -260,23 +241,30 @@ class CenturyFinder implements ReplacementFinder {
     private Replacement convertCenturySingular(MatchResult match, FinderPage page) {
         final String text = page.getContent();
 
-        String centuryText;
+        // String centuryText;
+        int startCentury = match.start();
+        int endCentury = match.end(3);
         String centuryWord = match.group(1);
         final boolean isUppercase = FinderUtils.startsWithUpperCase(centuryWord);
         final String centuryNumber = FinderUtils.toUpperCase(match.group(2));
         final String eraText = match.group(3);
         final String eraLetter = StringUtils.isEmpty(eraText) ? EMPTY : String.valueOf(eraText.charAt(0));
 
+        // Check if the century is surrounded by a link
+        final boolean isLinked = isLinked(text, startCentury, endCentury);
+        if (isLinked) {
+            startCentury -= START_LINK.length();
+            endCentury += END_LINK.length();
+        }
+
         // Add extension and its suggestion
         final String extensionText = match.group(4);
         final String extension;
         if (StringUtils.isEmpty(extensionText)) {
-            centuryText = match.group();
             extension = EMPTY;
         } else {
             final int extensionStart = match.start(4);
-            final int extensionEnd = match.end(4);
-            centuryText = text.substring(match.start(), extensionEnd);
+            endCentury = match.end(4);
             extension = text.substring(match.end(), extensionStart) + fixSimpleCentury(extensionText);
         }
 
@@ -303,7 +291,6 @@ class CenturyFinder implements ReplacementFinder {
 
         // Not linked centuries are recommended
         // Offer always the lowercase alternative
-        final boolean isLinked = centuryText.startsWith(START_LINK);
         if (isUppercase) {
             suggestions.add(Suggestion.of(templateUpperNoLink, "siglo en versalitas; con mayúscula; sin enlazar"));
             if (isLinked) {
@@ -317,7 +304,8 @@ class CenturyFinder implements ReplacementFinder {
             suggestions.add(Suggestion.of(templateLowerLink, "siglo en versalitas; con minúscula; " + linkedComment));
         }
 
-        return Replacement.of(match.start(), centuryText, StandardType.CENTURY, suggestions, text);
+        final String centuryText = text.substring(startCentury, endCentury);
+        return Replacement.of(startCentury, centuryText, StandardType.CENTURY, suggestions, text);
     }
 
     private Replacement convertCenturyPlural(MatchResult match, FinderPage page) {

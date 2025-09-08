@@ -47,6 +47,8 @@ class CenturyFinderTest {
             "siglo X d.{{esd}}C. * siglo X d.{{esd}}C. * {{siglo|X|d|s}}",
             // With era and with link
             "[[siglo VI d.&nbsp;C.]] * [[siglo VI d.&nbsp;C.]] * {{siglo|VI|d|s}}, {{siglo|VI|d|s|1}}",
+            // Broken link
+            "[[siglo XX * siglo XX * {{siglo|XX||s}}",
             // With simple century after
             "siglo XX-XXI * siglo XX-XXI * {{siglo|XX||s}}-{{Siglo|XXI}}",
             "siglos XX-XXI * siglos XX-XXI * siglos {{Siglo|XX}}-{{Siglo|XXI}}",
@@ -95,8 +97,6 @@ class CenturyFinderTest {
             "siglos XX y nada más después",
             // Not whitespace after century word
             "siglo-XX",
-            // Broken link
-            "[[siglo XX",
         }
     )
     void testCenturyNotValid(String text) {
