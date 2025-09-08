@@ -72,7 +72,7 @@ class CenturyFinder implements ReplacementFinder {
             // Find the century number
             final MatchResult centuryNumber = findCenturyNumber(text, endCentury);
             if (centuryNumber == null) {
-                start = endCentury + 1;
+                start = endCentury;
                 continue;
             } else {
                 endCentury = centuryNumber.end();
@@ -89,7 +89,7 @@ class CenturyFinder implements ReplacementFinder {
             // Check if the century is surrounded by a link
             final Boolean isLinked = isLinked(text, startCentury, endCentury);
             if (isLinked == null) {
-                start = endCentury + 1;
+                start = endCentury;
                 continue;
             } else if (isLinked) {
                 startCentury -= START_LINK.length();
@@ -105,7 +105,7 @@ class CenturyFinder implements ReplacementFinder {
 
             // If the century word is plural then the extension is mandatory
             if (isPlural(centuryWord.group()) && StringUtils.isEmpty(extension.group())) {
-                start = endCentury + 1;
+                start = endCentury;
                 continue;
             }
 
