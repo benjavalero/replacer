@@ -1,5 +1,7 @@
 package es.bvalero.replacer.finder.cosmetic.finders;
 
+import static org.apache.commons.lang3.StringUtils.EMPTY;
+
 import es.bvalero.replacer.checkwikipedia.CheckWikipediaAction;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.cosmetic.CosmeticFinder;
@@ -58,6 +60,6 @@ class TagEmptyFinder implements CosmeticFinder {
 
     @Override
     public String getFix(MatchResult match, FinderPage page) {
-        return "";
+        return EMPTY;
     }
 }

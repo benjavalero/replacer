@@ -315,7 +315,8 @@ class DateFinder implements ReplacementFinder {
         prepAfter = fixPrepositionAfter(prepAfter, lang);
 
         final String prepBefore = getPrepositionDefault(lang);
-        final String fixedDate = fixedDay + " " + prepBefore + " " + fixedMonth + " " + prepAfter + " " + fixedYear;
+        final String fixedDate =
+            fixedDay + SPACE + prepBefore + SPACE + fixedMonth + SPACE + prepAfter + SPACE + fixedYear;
 
         return buildDateReplacement(page, match.start(), date, fixedDate);
     }
@@ -367,7 +368,7 @@ class DateFinder implements ReplacementFinder {
         fixedMonth = fixSeptember(fixedMonth, lang);
         prepAfter = fixPrepositionAfter(prepAfter, lang);
 
-        final String fixedDate = connector + " " + fixedMonth + " " + prepAfter + " " + fixedYear;
+        final String fixedDate = connector + SPACE + fixedMonth + SPACE + prepAfter + SPACE + fixedYear;
 
         return buildDateReplacement(page, match.start(), date, fixedDate);
     }
@@ -417,7 +418,8 @@ class DateFinder implements ReplacementFinder {
         prepAfter = fixPrepositionAfter(prepAfter, lang);
 
         final String prepBefore = getPrepositionDefault(lang);
-        final String fixedDate = fixedDay + " " + prepBefore + " " + fixedMonth + " " + prepAfter + " " + fixedYear;
+        final String fixedDate =
+            fixedDay + SPACE + prepBefore + SPACE + fixedMonth + SPACE + prepAfter + SPACE + fixedYear;
 
         return buildDateReplacement(page, match.start(), date, fixedDate);
     }
@@ -458,7 +460,8 @@ class DateFinder implements ReplacementFinder {
         fixedMonth = fixSeptember(fixedMonth, lang);
 
         final String preposition = getPrepositionDefault(lang);
-        final String fixedDate = fixedDay + " " + preposition + " " + fixedMonth + " " + preposition + " " + fixedYear;
+        final String fixedDate =
+            fixedDay + SPACE + preposition + SPACE + fixedMonth + SPACE + preposition + SPACE + fixedYear;
 
         return buildDateReplacement(page, match.start(), date, fixedDate);
     }
@@ -550,8 +553,8 @@ class DateFinder implements ReplacementFinder {
                 start -= (article.length() + 1); // + 1 because of the space between
                 text = page.getContent().substring(start, start + article.length() + 1 + originalDate.length());
 
-                final String fixedDateWithoutArticle = article + " " + fixedDate;
-                final String fixedDateWithArticle = alternative + " " + fixedDate;
+                final String fixedDateWithoutArticle = article + SPACE + fixedDate;
+                final String fixedDateWithArticle = alternative + SPACE + fixedDate;
                 suggestions.clear();
                 suggestions.add(Suggestion.of(fixedDateWithArticle, "con artículo"));
                 suggestions.add(Suggestion.of(fixedDateWithoutArticle, "sin artículo"));

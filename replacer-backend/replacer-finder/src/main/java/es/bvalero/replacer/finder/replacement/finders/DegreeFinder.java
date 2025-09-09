@@ -1,6 +1,7 @@
 package es.bvalero.replacer.finder.replacement.finders;
 
 import static es.bvalero.replacer.finder.util.FinderUtils.*;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.Replacement;
@@ -176,7 +177,7 @@ class DegreeFinder implements ReplacementFinder {
         } else {
             fixedLetter = symbol.charAt(symbol.length() - 1);
             if (fixedLetter == KELVIN) {
-                fixedSymbol = "";
+                fixedSymbol = EMPTY;
             } else {
                 fixedSymbol = String.valueOf(DEGREE);
                 if (symbol.charAt(0) == MASCULINE_ORDINAL) {

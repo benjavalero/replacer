@@ -308,7 +308,7 @@ class CoordinatesFinder implements ReplacementFinder {
             "{{esd|" +
             matchDegrees +
             DEGREE +
-            " " +
+            SPACE +
             matchMinutes +
             PRIME +
             (matchSeconds == null ? "" : SPACE + matchSeconds + DOUBLE_PRIME) +

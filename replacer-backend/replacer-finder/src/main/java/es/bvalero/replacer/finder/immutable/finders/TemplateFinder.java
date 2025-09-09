@@ -1,6 +1,7 @@
 package es.bvalero.replacer.finder.immutable.finders;
 
 import static es.bvalero.replacer.finder.util.FinderUtils.PIPE;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 import es.bvalero.replacer.FinderProperties;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
@@ -306,7 +307,7 @@ class TemplateFinder implements ImmutableFinder {
         // or the pair template name-param is to be ignored
         // or the value is a file or a domain
         // then we also return the value
-        final String trimmedKey = key == null ? "" : FinderUtils.toLowerCase(key.trim());
+        final String trimmedKey = key == null ? EMPTY : FinderUtils.toLowerCase(key.trim());
         return (
             this.paramNames.contains(trimmedKey) ||
             this.templateParamPairs.containsMapping(FinderUtils.toLowerCase(templateName.trim()), trimmedKey) ||
