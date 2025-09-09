@@ -32,7 +32,6 @@ class OrdinalFinder implements ReplacementFinder {
     private static final String MASCULINE_LETTER = "o";
     private static final String FEMININE_LETTER = "a";
     private static final String PLURAL_LETTER = "s";
-    private static final Set<Character> SUFFIX_ALLOWED_CHARS = Set.of(DEGREE);
 
     // Dependency injection
     private final FinderProperties finderProperties;
@@ -149,7 +148,7 @@ class OrdinalFinder implements ReplacementFinder {
         if (isOrdinalLetter(text.charAt(start))) {
             matchSuffix = FinderMatchResult.of(start, text.substring(start, start + 1));
         } else {
-            matchSuffix = FinderUtils.findWordAfter(text, start, SUFFIX_ALLOWED_CHARS, true);
+            matchSuffix = FinderUtils.findWordAfter(text, start, true, DEGREE);
             // It must be a known suffix
             if (matchSuffix == null || !SUFFIXES.contains(matchSuffix.group())) {
                 return null;

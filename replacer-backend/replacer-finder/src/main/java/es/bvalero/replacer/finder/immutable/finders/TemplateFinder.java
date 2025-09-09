@@ -37,9 +37,6 @@ class TemplateFinder implements ImmutableFinder {
     private static final char COLON = ':';
     private static final char EQUALS = '=';
 
-    // We want to avoid the '=' in references to be mistaken by the one of the parameter
-    private static final Set<Character> FORBIDDEN_CHARS = Set.of('<');
-
     // Dependency injection
     private final FinderProperties finderProperties;
     private final UppercaseFinder uppercaseFinder;
@@ -283,7 +280,8 @@ class TemplateFinder implements ImmutableFinder {
     }
 
     private boolean isForbiddenChar(char ch) {
-        return FORBIDDEN_CHARS.contains(ch);
+        // We want to avoid the '=' in references to be mistaken by the one of the parameter
+        return ch == '<';
     }
 
     private String trimValue(String value) {

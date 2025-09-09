@@ -28,15 +28,8 @@ class CoordinatesFinder implements ReplacementFinder {
     private static final char APOSTROPHE = '\'';
     private static final char SINGLE_QUOTE = '\u2019'; // ’
     private static final char ACUTE_ACCENT = '\u00b4'; // ´
-    private static final Set<Character> PRIME_CHARS = Set.of(PRIME, APOSTROPHE, SINGLE_QUOTE, ACUTE_ACCENT);
     private static final char DOUBLE_PRIME = '\u2033'; // ″
     private static final char DOUBLE_QUOTE = '\"';
-    private static final Set<Character> DOUBLE_PRIME_CHARS = Set.of(
-        DOUBLE_PRIME,
-        DOUBLE_QUOTE,
-        START_QUOTE_TYPOGRAPHIC,
-        END_QUOTE_TYPOGRAPHIC
-    );
     private static final Set<String> CARDINAL_DIRECTIONS = Set.of(
         "N",
         "S",
@@ -194,7 +187,7 @@ class CoordinatesFinder implements ReplacementFinder {
     }
 
     private boolean isPrimeChar(char ch) {
-        return PRIME_CHARS.contains(ch);
+        return ch == PRIME || ch == APOSTROPHE || ch == SINGLE_QUOTE || ch == ACUTE_ACCENT;
     }
 
     private boolean isValidPrimeChar(char ch) {
@@ -220,7 +213,7 @@ class CoordinatesFinder implements ReplacementFinder {
         // Let's find the seconds symbol, which might have 2 characters.
         String doublePrime;
         final String nextChars = text.substring(matchNumber.end(), Math.min(matchNumber.end() + 2, text.length()));
-        if (!nextChars.isEmpty() && DOUBLE_PRIME_CHARS.contains(nextChars.charAt(0))) {
+        if (!nextChars.isEmpty() && isDoublePrimeChar(nextChars.charAt(0))) {
             doublePrime = nextChars.substring(0, 1);
         } else if (nextChars.length() > 1 && isPrimeChar(nextChars.charAt(0)) && isPrimeChar(nextChars.charAt(1))) {
             doublePrime = nextChars;
@@ -236,6 +229,10 @@ class CoordinatesFinder implements ReplacementFinder {
         final MatchResult doublePrimeMatch = FinderMatchResult.of(matchNumber.end(), doublePrime);
         matchNumber.addGroup(doublePrimeMatch);
         return matchNumber;
+    }
+
+    private boolean isDoublePrimeChar(char ch) {
+        return ch == DOUBLE_PRIME || ch == DOUBLE_QUOTE || ch == START_QUOTE_TYPOGRAPHIC || ch == END_QUOTE_TYPOGRAPHIC;
     }
 
     private boolean isSecondNumber(String number) {

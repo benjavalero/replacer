@@ -2,7 +2,6 @@ package es.bvalero.replacer.finder.immutable.finders;
 
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.immutable.ImmutableFinder;
-import java.util.Set;
 import org.springframework.stereotype.Component;
 
 /**
@@ -10,8 +9,6 @@ import org.springframework.stereotype.Component;
  */
 @Component
 class QuotesDoubleFinder extends QuotesFinder implements ImmutableFinder {
-
-    private static final Set<Character> FORBIDDEN_CHARS = Set.of('#', '{', '}', '<', '>');
 
     @Override
     char getStartChar() {
@@ -46,7 +43,7 @@ class QuotesDoubleFinder extends QuotesFinder implements ImmutableFinder {
     }
 
     private boolean isForbiddenChar(char ch) {
-        return FORBIDDEN_CHARS.contains(ch);
+        return ch == '#' || ch == '{' || ch == '}' || ch == '<' || ch == '>';
     }
 
     @Override
