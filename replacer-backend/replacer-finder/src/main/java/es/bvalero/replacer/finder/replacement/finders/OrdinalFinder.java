@@ -281,9 +281,7 @@ class OrdinalFinder implements ReplacementFinder {
         final char ordinalSymbol = isOrdinalMasculine ? MASCULINE_ORDINAL : FEMININE_ORDINAL;
         final String ordinalLetter = getOrdinalLetter(ordinalSymbol);
         if (isOrdinalPlural) {
-            return Suggestion.ofNoComment(
-                String.format("{{ord|%d.|%s%s}}", ordinalNumber, ordinalLetter, PLURAL_LETTER)
-            );
+            return Suggestion.ofNoComment("{{ord|" + ordinalNumber + ".|" + ordinalLetter + PLURAL_LETTER + "}}");
         } else {
             return Suggestion.of(
                 ordinalNumber + "." + ordinalSymbol,

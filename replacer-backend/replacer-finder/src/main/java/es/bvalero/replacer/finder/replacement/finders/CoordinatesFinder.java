@@ -291,30 +291,29 @@ class CoordinatesFinder implements ReplacementFinder {
         }
 
         // Suggestion 1: no spaces
-        String noSpaces = String.format(
-            "%s%s%s%s%s%s",
-            matchDegrees,
-            DEGREE,
-            matchMinutes,
-            PRIME,
-            (matchSeconds == null ? "" : fixSeconds(matchSeconds) + DOUBLE_PRIME),
-            (matchDirection == null ? "" : NON_BREAKING_SPACE + fixDirection(matchDirection))
-        );
+        String noSpaces =
+            String.valueOf(matchDegrees) +
+            DEGREE +
+            matchMinutes +
+            PRIME +
+            (matchSeconds == null ? "" : fixSeconds(matchSeconds) + DOUBLE_PRIME) +
+            (matchDirection == null ? "" : NON_BREAKING_SPACE + fixDirection(matchDirection));
         final Suggestion suggestionNoSpaces = Suggestion.of(
             noSpaces,
             "sin espacios y con los símbolos apropiados, recomendado para coordenadas"
         );
 
         // Suggestion 2: with spaces
-        String withSpaces = String.format(
-            "{{esd|%s%s %s%s%s%s}}",
-            matchDegrees,
-            DEGREE,
-            matchMinutes,
-            PRIME,
-            (matchSeconds == null ? "" : SPACE + matchSeconds + DOUBLE_PRIME),
-            (matchDirection == null ? "" : SPACE + fixDirection(matchDirection))
-        );
+        String withSpaces =
+            "{{esd|" +
+            matchDegrees +
+            DEGREE +
+            " " +
+            matchMinutes +
+            PRIME +
+            (matchSeconds == null ? "" : SPACE + matchSeconds + DOUBLE_PRIME) +
+            (matchDirection == null ? "" : SPACE + fixDirection(matchDirection)) +
+            "}}";
         final Suggestion suggestionWithSpaces = Suggestion.of(withSpaces, "con espacios y con los símbolos apropiados");
 
         return Replacement.of(

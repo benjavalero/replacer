@@ -315,14 +315,7 @@ class DateFinder implements ReplacementFinder {
         prepAfter = fixPrepositionAfter(prepAfter, lang);
 
         final String prepBefore = getPrepositionDefault(lang);
-        final String fixedDate = String.format(
-            "%s %s %s %s %s",
-            fixedDay,
-            prepBefore,
-            fixedMonth,
-            prepAfter,
-            fixedYear
-        );
+        final String fixedDate = fixedDay + " " + prepBefore + " " + fixedMonth + " " + prepAfter + " " + fixedYear;
 
         return buildDateReplacement(page, match.start(), date, fixedDate);
     }
@@ -374,7 +367,7 @@ class DateFinder implements ReplacementFinder {
         fixedMonth = fixSeptember(fixedMonth, lang);
         prepAfter = fixPrepositionAfter(prepAfter, lang);
 
-        final String fixedDate = String.format("%s %s %s %s", connector, fixedMonth, prepAfter, fixedYear);
+        final String fixedDate = connector + " " + fixedMonth + " " + prepAfter + " " + fixedYear;
 
         return buildDateReplacement(page, match.start(), date, fixedDate);
     }
@@ -424,14 +417,7 @@ class DateFinder implements ReplacementFinder {
         prepAfter = fixPrepositionAfter(prepAfter, lang);
 
         final String prepBefore = getPrepositionDefault(lang);
-        final String fixedDate = String.format(
-            "%s %s %s %s %s",
-            fixedDay,
-            prepBefore,
-            fixedMonth,
-            prepAfter,
-            fixedYear
-        );
+        final String fixedDate = fixedDay + " " + prepBefore + " " + fixedMonth + " " + prepAfter + " " + fixedYear;
 
         return buildDateReplacement(page, match.start(), date, fixedDate);
     }
@@ -472,14 +458,7 @@ class DateFinder implements ReplacementFinder {
         fixedMonth = fixSeptember(fixedMonth, lang);
 
         final String preposition = getPrepositionDefault(lang);
-        final String fixedDate = String.format(
-            "%s %s %s %s %s",
-            fixedDay,
-            preposition,
-            fixedMonth,
-            preposition,
-            fixedYear
-        );
+        final String fixedDate = fixedDay + " " + preposition + " " + fixedMonth + " " + preposition + " " + fixedYear;
 
         return buildDateReplacement(page, match.start(), date, fixedDate);
     }
