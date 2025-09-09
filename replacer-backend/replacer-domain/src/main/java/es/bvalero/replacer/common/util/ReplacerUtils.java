@@ -78,6 +78,11 @@ public class ReplacerUtils {
         return text.toUpperCase(LOCALE_ES);
     }
 
+    /** Converts all the characters in this text to lower case */
+    public String toLowerCase(String text) {
+        return text.toLowerCase(LOCALE_ES);
+    }
+
     public String escapeRegexChars(String text) {
         return text
             .replace(".", "\\.")

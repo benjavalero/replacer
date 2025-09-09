@@ -7,6 +7,7 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
 import com.roman.code.ConvertToArabic;
 import com.roman.code.exception.ConversionException;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
+import es.bvalero.replacer.common.util.ReplacerUtils;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.StandardType;
@@ -164,7 +165,7 @@ class CenturyFinder implements ReplacementFinder {
         //  Check the century number is valid and lower than the current century
         // The century library only accepts uppercase characters
         try {
-            return ConvertToArabic.fromRoman(FinderUtils.toUpperCase(text)) <= 21;
+            return ConvertToArabic.fromRoman(ReplacerUtils.toUpperCase(text)) <= 21;
         } catch (ConversionException ce) {
             return false;
         }
@@ -246,7 +247,7 @@ class CenturyFinder implements ReplacementFinder {
         int endCentury = match.end(3);
         String centuryWord = match.group(1);
         final boolean isUppercase = FinderUtils.startsWithUpperCase(centuryWord);
-        final String centuryNumber = FinderUtils.toUpperCase(match.group(2));
+        final String centuryNumber = ReplacerUtils.toUpperCase(match.group(2));
         final String eraText = match.group(3);
         final String eraLetter = StringUtils.isEmpty(eraText) ? EMPTY : String.valueOf(eraText.charAt(0));
 
@@ -276,7 +277,7 @@ class CenturyFinder implements ReplacementFinder {
 
         // Templates
         final String lowerPrefix = isAbbreviated ? "a" : "s";
-        final String upperPrefix = FinderUtils.toUpperCase(lowerPrefix);
+        final String upperPrefix = ReplacerUtils.toUpperCase(lowerPrefix);
         final String templateUpperLink =
             "{{" + centuryWord + "|" + centuryNumber + "|" + eraLetter + "|" + upperPrefix + "|1}}" + extension;
         final String templateUpperNoLink =

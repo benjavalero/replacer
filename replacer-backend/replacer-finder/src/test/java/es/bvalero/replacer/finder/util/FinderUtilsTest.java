@@ -2,6 +2,7 @@ package es.bvalero.replacer.finder.util;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import es.bvalero.replacer.common.util.ReplacerUtils;
 import es.bvalero.replacer.finder.FinderPage;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -15,9 +16,9 @@ class FinderUtilsTest {
 
     @Test
     void testToLowerCase() {
-        assertEquals("hola", FinderUtils.toLowerCase("hola"));
-        assertEquals("¡hola, gañán!", FinderUtils.toLowerCase("¡Hola, GAÑÁN!"));
-        assertEquals("1234", FinderUtils.toLowerCase("1234"));
+        assertEquals("hola", ReplacerUtils.toLowerCase("hola"));
+        assertEquals("¡hola, gañán!", ReplacerUtils.toLowerCase("¡Hola, GAÑÁN!"));
+        assertEquals("1234", ReplacerUtils.toLowerCase("1234"));
     }
 
     @Test

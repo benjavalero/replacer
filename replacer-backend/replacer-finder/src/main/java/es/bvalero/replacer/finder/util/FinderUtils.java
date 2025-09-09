@@ -1,6 +1,5 @@
 package es.bvalero.replacer.finder.util;
 
-import static es.bvalero.replacer.common.util.ReplacerUtils.LOCALE_ES;
 import static org.apache.commons.lang3.StringUtils.SPACE;
 
 import es.bvalero.replacer.common.util.ReplacerUtils;
@@ -34,8 +33,7 @@ public class FinderUtils {
     // Character combinations
     private static final String ALTERNATE_SEPARATOR = Character.toString(PIPE);
     public static final String NON_BREAKING_SPACE = "&nbsp;";
-    private static final String NON_BREAKING_SPACE_TEMPLATE = "{{esd}}";
-    public static final Set<String> SPACES = Set.of(SPACE, NON_BREAKING_SPACE, NON_BREAKING_SPACE_TEMPLATE);
+    public static final String NON_BREAKING_SPACE_TEMPLATE = "{{esd}}";
     public static final String START_LINK = "[[";
     public static final String END_LINK = "]]";
 
@@ -43,15 +41,6 @@ public class FinderUtils {
     public static final String ENGLISH_LANGUAGE = "en";
 
     //region String Utils
-
-    public String toLowerCase(String text) {
-        return text.toLowerCase(LOCALE_ES);
-    }
-
-    /** Converts all the characters in this text to upper case */
-    public String toUpperCase(String text) {
-        return ReplacerUtils.toUpperCase(text);
-    }
 
     public boolean startsWithLowerCase(String word) {
         return Character.isLowerCase(word.charAt(0));
@@ -72,7 +61,7 @@ public class FinderUtils {
 
     /** Capitalizes a string changing the first character of the text to uppercase and the rest to lowercase */
     public String setFirstUpperCaseFully(String word) {
-        return toUpperCase(word.substring(0, 1)) + toLowerCase(word.substring(1));
+        return ReplacerUtils.toUpperCase(word.substring(0, 1)) + ReplacerUtils.toLowerCase(word.substring(1));
     }
 
     public String setFirstLowerCase(String word) {
@@ -158,7 +147,7 @@ public class FinderUtils {
     }
 
     public boolean isActualSpace(String str) {
-        return SPACES.contains(str);
+        return SPACE.equals(str) || NON_BREAKING_SPACE.equals(str) || NON_BREAKING_SPACE_TEMPLATE.equals(str);
     }
 
     public boolean isNonBreakingSpace(String text, int start) {

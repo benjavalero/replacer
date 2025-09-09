@@ -1,5 +1,6 @@
 package es.bvalero.replacer.finder.benchmark.redirection;
 
+import es.bvalero.replacer.common.util.ReplacerUtils;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
 import es.bvalero.replacer.finder.benchmark.BenchmarkResult;
@@ -21,7 +22,7 @@ class RedirectionRegexFinder implements BenchmarkFinder {
     @Override
     public Stream<BenchmarkResult> find(FinderPage page) {
         final String text = page.getContent();
-        final String lowerCaseText = FinderUtils.toLowerCase(text);
+        final String lowerCaseText = ReplacerUtils.toLowerCase(text);
         final Matcher m = this.pattern.matcher(lowerCaseText);
         if (m.find()) {
             return Stream.of(BenchmarkResult.of(0, text));

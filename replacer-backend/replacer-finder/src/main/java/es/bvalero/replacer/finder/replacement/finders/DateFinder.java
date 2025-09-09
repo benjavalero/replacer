@@ -1,7 +1,6 @@
 package es.bvalero.replacer.finder.replacement.finders;
 
-import static es.bvalero.replacer.finder.util.FinderUtils.DOT;
-import static es.bvalero.replacer.finder.util.FinderUtils.ENGLISH_LANGUAGE;
+import static es.bvalero.replacer.finder.util.FinderUtils.*;
 import static org.apache.commons.lang3.StringUtils.SPACE;
 
 import dk.brics.automaton.DatatypesAutomatonProvider;
@@ -107,10 +106,10 @@ class DateFinder implements ReplacementFinder {
             String regexPrepositions = String.format("(%s)", FinderUtils.joinAlternate(prepositionsLowerUpperCase));
             String regexConnectors = String.format("(%s)", FinderUtils.joinAlternate(connectorsLowerUpperCase));
             String regexMonthsLowerUpperCase = String.format("(%s)", FinderUtils.joinAlternate(monthsLowerUpperCase));
-            String regexSpaces = String.format(
-                "(%s)+",
-                FinderUtils.joinAlternate(FinderUtils.SPACES.stream().map(ReplacerUtils::escapeRegexChars).toList())
-            );
+            List<String> spaces = Stream.of(SPACE, NON_BREAKING_SPACE, NON_BREAKING_SPACE_TEMPLATE)
+                .map(ReplacerUtils::escapeRegexChars)
+                .toList();
+            String regexSpaces = String.format("(%s)+", FinderUtils.joinAlternate(spaces));
 
             // There is no performance gain by using more generic regex for these numbers
             String regexDay = "([012]?[0-9]|3[01])";
