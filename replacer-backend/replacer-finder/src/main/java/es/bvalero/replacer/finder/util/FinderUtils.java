@@ -54,11 +54,6 @@ public class FinderUtils {
         return isDigit(word.charAt(0));
     }
 
-    /** Capitalizes a string changing the first character of the text to uppercase */
-    public String setFirstUpperCase(String word) {
-        return ReplacerUtils.setFirstUpperCase(word);
-    }
-
     /** Capitalizes a string changing the first character of the text to uppercase and the rest to lowercase */
     public String setFirstUpperCaseFully(String word) {
         return ReplacerUtils.toUpperCase(word.substring(0, 1)) + ReplacerUtils.toLowerCase(word.substring(1));
@@ -152,29 +147,14 @@ public class FinderUtils {
 
     public boolean isNonBreakingSpace(String text, int start) {
         return (
-            containsAtPosition(text, NON_BREAKING_SPACE, start) ||
-            containsAtPosition(text, NON_BREAKING_SPACE_TEMPLATE, start)
+            ReplacerUtils.containsAtPosition(text, NON_BREAKING_SPACE, start) ||
+            ReplacerUtils.containsAtPosition(text, NON_BREAKING_SPACE_TEMPLATE, start)
         );
     }
 
     //endregion
 
     //region Text Utils
-
-    /** Check if a substring is contained in a text at a certain position */
-    public boolean containsAtPosition(String text, String substring, int start) {
-        assert start >= 0;
-        if (start + substring.length() > text.length()) {
-            return false;
-        }
-
-        for (int i = 0; i < substring.length(); i++) {
-            if (text.charAt(start + i) != substring.charAt(i)) {
-                return false;
-            }
-        }
-        return true;
-    }
 
     /**
      * Check if a word is complete in a text. In particular, check if the characters around the word are separators.
@@ -333,7 +313,10 @@ public class FinderUtils {
     }
 
     private boolean isSpaceWord(String text, int start) {
-        return containsAtPosition(text, "nbsp", start) || containsAtPosition(text, "esd", start);
+        return (
+            ReplacerUtils.containsAtPosition(text, NON_BREAKING_SPACE, start - 1) ||
+            ReplacerUtils.containsAtPosition(text, NON_BREAKING_SPACE_TEMPLATE, start - 2)
+        );
     }
 
     public boolean isWordPrecededByUpperCase(int start, String text) {

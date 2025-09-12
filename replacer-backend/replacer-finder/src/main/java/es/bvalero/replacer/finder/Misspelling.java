@@ -1,5 +1,6 @@
 package es.bvalero.replacer.finder;
 
+import es.bvalero.replacer.common.util.ReplacerUtils;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -106,7 +107,7 @@ public abstract class Misspelling {
         addTerms(lowercase, pos + 1);
 
         String[] uppercase = tokens.clone();
-        uppercase[pos] = FinderUtils.setFirstUpperCase(uppercase[pos]);
+        uppercase[pos] = ReplacerUtils.setFirstUpperCase(uppercase[pos]);
         terms.add(StringUtils.join(uppercase));
         addTerms(uppercase, pos + 1);
     }

@@ -183,7 +183,7 @@ class CenturyFinder implements ReplacementFinder {
         }
         final int startNextWord = nextWord.start();
         return ERA_WORDS.stream()
-            .filter(w -> FinderUtils.containsAtPosition(text, w, startNextWord))
+            .filter(w -> ReplacerUtils.containsAtPosition(text, w, startNextWord))
             .findAny()
             .map(w -> FinderMatchResult.of(startNextWord, w))
             .orElse(null);
@@ -191,8 +191,8 @@ class CenturyFinder implements ReplacementFinder {
 
     private boolean isLinked(String text, int start, int end) {
         return (
-            FinderUtils.containsAtPosition(text, START_LINK, Math.max(0, start - START_LINK.length())) &&
-            FinderUtils.containsAtPosition(text, END_LINK, end)
+            ReplacerUtils.containsAtPosition(text, START_LINK, Math.max(0, start - START_LINK.length())) &&
+            ReplacerUtils.containsAtPosition(text, END_LINK, end)
         );
     }
 

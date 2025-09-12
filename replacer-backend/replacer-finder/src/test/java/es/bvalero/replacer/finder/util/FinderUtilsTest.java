@@ -15,13 +15,6 @@ import org.junit.jupiter.api.Test;
 class FinderUtilsTest {
 
     @Test
-    void testToLowerCase() {
-        assertEquals("hola", ReplacerUtils.toLowerCase("hola"));
-        assertEquals("¡hola, gañán!", ReplacerUtils.toLowerCase("¡Hola, GAÑÁN!"));
-        assertEquals("1234", ReplacerUtils.toLowerCase("1234"));
-    }
-
-    @Test
     void testStartsWithLowerCase() {
         assertFalse(FinderUtils.startsWithLowerCase("Álvaro"));
         assertTrue(FinderUtils.startsWithLowerCase("úlcera"));

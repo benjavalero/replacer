@@ -3,6 +3,7 @@ package es.bvalero.replacer.finder.replacement.finders;
 import static es.bvalero.replacer.finder.util.FinderUtils.*;
 import static org.apache.commons.lang3.StringUtils.SPACE;
 
+import es.bvalero.replacer.common.util.ReplacerUtils;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.StandardType;
@@ -269,7 +270,7 @@ class CoordinatesFinder implements ReplacementFinder {
     }
 
     private boolean isDirectionString(String str) {
-        return CARDINAL_DIRECTIONS.contains(FinderUtils.setFirstUpperCase(str));
+        return CARDINAL_DIRECTIONS.contains(ReplacerUtils.setFirstUpperCase(str));
     }
 
     @Override

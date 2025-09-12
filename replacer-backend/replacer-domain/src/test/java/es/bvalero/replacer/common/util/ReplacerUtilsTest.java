@@ -34,4 +34,11 @@ class ReplacerUtilsTest {
         assertEquals("¡HOLA, GAÑÁN!", ReplacerUtils.toUpperCase("¡Hola, gañán!"));
         assertEquals("1234", ReplacerUtils.toUpperCase("1234"));
     }
+
+    @Test
+    void testToLowerCase() {
+        assertEquals("hola", ReplacerUtils.toLowerCase("hola"));
+        assertEquals("¡hola, gañán!", ReplacerUtils.toLowerCase("¡Hola, GAÑÁN!"));
+        assertEquals("1234", ReplacerUtils.toLowerCase("1234"));
+    }
 }

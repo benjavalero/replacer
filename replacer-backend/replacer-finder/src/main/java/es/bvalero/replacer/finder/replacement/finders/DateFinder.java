@@ -66,7 +66,7 @@ class DateFinder implements ReplacementFinder {
                 .get(lang)
                 .forEach(month -> {
                     monthsLowerUpperCase.add(month);
-                    monthsLowerUpperCase.add(FinderUtils.setFirstUpperCase(month));
+                    monthsLowerUpperCase.add(ReplacerUtils.setFirstUpperCase(month));
                 });
             englishMonths.addAll(this.finderProperties.getMonthNames().get(ENGLISH_LANGUAGE));
             monthsLowerUpperCase.addAll(englishMonths);
@@ -83,7 +83,7 @@ class DateFinder implements ReplacementFinder {
                 .get(lang)
                 .forEach(preposition -> {
                     prepositionsLowerUpperCase.add(preposition);
-                    prepositionsLowerUpperCase.add(FinderUtils.setFirstUpperCase(preposition));
+                    prepositionsLowerUpperCase.add(ReplacerUtils.setFirstUpperCase(preposition));
                 });
 
             // Connectors
@@ -93,7 +93,7 @@ class DateFinder implements ReplacementFinder {
                 .get(lang)
                 .forEach(connector -> {
                     connectorsLowerUpperCase.add(connector);
-                    connectorsLowerUpperCase.add(FinderUtils.setFirstUpperCase(connector));
+                    connectorsLowerUpperCase.add(ReplacerUtils.setFirstUpperCase(connector));
                 });
 
             // Articles
@@ -171,8 +171,8 @@ class DateFinder implements ReplacementFinder {
         final Map<String, String> articleMap = new HashMap<>();
         articleMap.put(dateArticle.getPrep(), dateArticle.getArticle());
         articleMap.put(
-            FinderUtils.setFirstUpperCase(dateArticle.getPrep()),
-            FinderUtils.setFirstUpperCase(dateArticle.getArticle())
+            ReplacerUtils.setFirstUpperCase(dateArticle.getPrep()),
+            ReplacerUtils.setFirstUpperCase(dateArticle.getArticle())
         );
         return articleMap;
     }
