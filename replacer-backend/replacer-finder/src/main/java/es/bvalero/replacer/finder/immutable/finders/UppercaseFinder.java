@@ -55,8 +55,6 @@ public class UppercaseFinder implements ImmutableFinder, PropertyChangeListener 
 
     private static final String CAPTION_SEPARATOR = "|+";
     private static final String PARAGRAPH_START = "\n\n";
-    // The pipe is not only used for tables cells, we must check is not a wiki-link!!!
-    private static final Set<Character> PUNCTUATIONS = Set.of('=', '#', '*', '>', '.', '!');
     private static final char[] falseWordChars = { '-' };
     private static final boolean[] wordCharFlags = { false };
 
@@ -203,7 +201,15 @@ public class UppercaseFinder implements ImmutableFinder, PropertyChangeListener 
             return false;
         } else {
             final char lastChar = leftText.charAt(leftText.length() - 1);
-            return PUNCTUATIONS.contains(lastChar);
+            // The pipe is not only used for tables cells, we must check is not a wiki-link!!!
+            return (
+                lastChar == '=' ||
+                lastChar == '#' ||
+                lastChar == '*' ||
+                lastChar == '>' ||
+                lastChar == '.' ||
+                lastChar == '!'
+            );
         }
     }
 

@@ -2,8 +2,8 @@ package es.bvalero.replacer.finder.replacement.custom;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import es.bvalero.replacer.common.util.ReplacerUtils;
 import es.bvalero.replacer.finder.Replacement;
-import es.bvalero.replacer.finder.util.FinderUtils;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 
@@ -86,9 +86,15 @@ class CustomReplacementFinderTest {
         assertEquals(replacement, replacements.get(0).getText());
         assertEquals(replacement, replacements.get(0).getSuggestions().get(0).getText());
         assertEquals(suggestion, replacements.get(0).getSuggestions().get(1).getText());
-        assertEquals(FinderUtils.setFirstUpperCase(replacement), replacements.get(1).getText());
-        assertEquals(FinderUtils.setFirstUpperCase(replacement), replacements.get(1).getSuggestions().get(0).getText());
-        assertEquals(FinderUtils.setFirstUpperCase(suggestion), replacements.get(1).getSuggestions().get(1).getText());
+        assertEquals(ReplacerUtils.setFirstUpperCase(replacement), replacements.get(1).getText());
+        assertEquals(
+            ReplacerUtils.setFirstUpperCase(replacement),
+            replacements.get(1).getSuggestions().get(0).getText()
+        );
+        assertEquals(
+            ReplacerUtils.setFirstUpperCase(suggestion),
+            replacements.get(1).getSuggestions().get(1).getText()
+        );
     }
 
     @Test

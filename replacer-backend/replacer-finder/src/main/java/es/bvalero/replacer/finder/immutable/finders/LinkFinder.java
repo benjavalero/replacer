@@ -4,6 +4,7 @@ import static es.bvalero.replacer.finder.util.FinderUtils.*;
 
 import es.bvalero.replacer.FinderProperties;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
+import es.bvalero.replacer.common.util.ReplacerUtils;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.FinderPriority;
 import es.bvalero.replacer.finder.immutable.ImmutableCheckedFinder;
@@ -150,7 +151,7 @@ class LinkFinder extends ImmutableCheckedFinder {
     }
 
     private boolean isCategorySpace(@Nullable String space) {
-        return (space != null && this.categoryWords.contains(FinderUtils.setFirstUpperCase(space.trim())));
+        return (space != null && this.categoryWords.contains(ReplacerUtils.setFirstUpperCase(space.trim())));
     }
 
     @Nullable
@@ -160,7 +161,7 @@ class LinkFinder extends ImmutableCheckedFinder {
     }
 
     private boolean isFileSpace(@Nullable String space) {
-        return space != null && this.fileSpaces.contains(FinderUtils.setFirstUpperCase(space.trim()));
+        return space != null && this.fileSpaces.contains(ReplacerUtils.setFirstUpperCase(space.trim()));
     }
 
     private boolean isLangSpace(@Nullable String space) {

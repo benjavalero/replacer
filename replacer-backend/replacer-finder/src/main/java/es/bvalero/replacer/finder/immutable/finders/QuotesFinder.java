@@ -7,7 +7,6 @@ import es.bvalero.replacer.finder.FinderPriority;
 import es.bvalero.replacer.finder.immutable.ImmutableCheckedFinder;
 import es.bvalero.replacer.finder.util.FinderMatchResult;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
-import java.util.Set;
 import java.util.regex.MatchResult;
 import java.util.stream.Stream;
 import org.apache.commons.lang3.StringUtils;
@@ -18,13 +17,6 @@ abstract class QuotesFinder extends ImmutableCheckedFinder {
     protected static final char DOUBLE_QUOTES = '\"';
     protected static final char START_QUOTE_ANGULAR = '«';
     protected static final char END_QUOTE_ANGULAR = '»';
-    private static final Set<Character> QUOTE_CHARS = Set.of(
-        DOUBLE_QUOTES,
-        START_QUOTE_ANGULAR,
-        END_QUOTE_ANGULAR,
-        START_QUOTE_TYPOGRAPHIC,
-        END_QUOTE_TYPOGRAPHIC
-    );
 
     @Override
     public FinderPriority getPriority() {
@@ -127,6 +119,12 @@ abstract class QuotesFinder extends ImmutableCheckedFinder {
     }
 
     private boolean isQuoteChar(char ch) {
-        return QUOTE_CHARS.contains(ch);
+        return (
+            ch == DOUBLE_QUOTES ||
+            ch == START_QUOTE_ANGULAR ||
+            ch == END_QUOTE_ANGULAR ||
+            ch == START_QUOTE_TYPOGRAPHIC ||
+            ch == END_QUOTE_TYPOGRAPHIC
+        );
     }
 }

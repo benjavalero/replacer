@@ -37,7 +37,7 @@ class WordLinearAllFinder implements BenchmarkFinder {
             if (startWord >= 0) {
                 final int endWord = findEndWord(text, startWord);
                 final String word = text.substring(startWord, endWord);
-                if (words.contains(word) && FinderUtils.isWordCompleteInText(startWord, word, text)) {
+                if (words.contains(word) && FinderUtils.isWordCompleteInText(startWord, endWord, text)) {
                     return FinderMatchResult.of(startWord, word);
                 } else {
                     // The char after the word is a non-letter, so we can start searching for the next word one position after.

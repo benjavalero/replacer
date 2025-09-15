@@ -39,7 +39,7 @@ public abstract class ImmutableCheckedFinder implements ImmutableFinder {
 
     private void checkMaxLength(Immutable immutable, FinderPage page) {
         if (immutable.getText().length() > getMaxLength()) {
-            final String message = String.format("%s too long", getImmutableType());
+            final String message = getImmutableType() + " too long";
             logImmutableCheck(page, immutable, message);
         }
     }

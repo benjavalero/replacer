@@ -7,6 +7,7 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
 import com.roman.code.ConvertToArabic;
 import com.roman.code.exception.ConversionException;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
+import es.bvalero.replacer.common.util.ReplacerUtils;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.StandardType;
@@ -17,7 +18,6 @@ import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.regex.MatchResult;
 import java.util.stream.Stream;
 import org.apache.commons.lang3.StringUtils;
@@ -33,7 +33,6 @@ class CenturyFinder implements ReplacementFinder {
     private static final String CENTURY_WORD = "Siglo";
     private static final String CENTURY_SEARCH = CENTURY_WORD.substring(1);
     private static final char PLURAL_LETTER = 's';
-    private static final Set<Character> CENTURY_LETTERS = Set.of('I', 'V', 'X');
     private static final List<String> ERA_WORDS = List.of(
         "aC",
         "a.C.",
@@ -156,22 +155,24 @@ class CenturyFinder implements ReplacementFinder {
     }
 
     private boolean isCenturyNumber(String text) {
-        // The century library only accepts uppercase characters
-        final String upperText = FinderUtils.toUpperCase(text);
-
         // Check the century number only contains valid century letters
-        for (int i = 0; i < upperText.length(); i++) {
-            if (!CENTURY_LETTERS.contains(upperText.charAt(i))) {
+        for (int i = 0; i < text.length(); i++) {
+            if (!isCenturyLetter(text.charAt(i))) {
                 return false;
             }
         }
 
         //  Check the century number is valid and lower than the current century
+        // The century library only accepts uppercase characters
         try {
-            return ConvertToArabic.fromRoman(upperText) <= 21;
+            return ConvertToArabic.fromRoman(ReplacerUtils.toUpperCase(text)) <= 21;
         } catch (ConversionException ce) {
             return false;
         }
+    }
+
+    private boolean isCenturyLetter(char ch) {
+        return ch == 'I' || ch == 'V' || ch == 'X' || ch == 'i' || ch == 'v' || ch == 'x';
     }
 
     @Nullable
@@ -182,7 +183,7 @@ class CenturyFinder implements ReplacementFinder {
         }
         final int startNextWord = nextWord.start();
         return ERA_WORDS.stream()
-            .filter(w -> FinderUtils.containsAtPosition(text, w, startNextWord))
+            .filter(w -> ReplacerUtils.containsAtPosition(text, w, startNextWord))
             .findAny()
             .map(w -> FinderMatchResult.of(startNextWord, w))
             .orElse(null);
@@ -190,8 +191,8 @@ class CenturyFinder implements ReplacementFinder {
 
     private boolean isLinked(String text, int start, int end) {
         return (
-            FinderUtils.containsAtPosition(text, START_LINK, Math.max(0, start - START_LINK.length())) &&
-            FinderUtils.containsAtPosition(text, END_LINK, end)
+            ReplacerUtils.containsAtPosition(text, START_LINK, Math.max(0, start - START_LINK.length())) &&
+            ReplacerUtils.containsAtPosition(text, END_LINK, end)
         );
     }
 
@@ -246,7 +247,7 @@ class CenturyFinder implements ReplacementFinder {
         int endCentury = match.end(3);
         String centuryWord = match.group(1);
         final boolean isUppercase = FinderUtils.startsWithUpperCase(centuryWord);
-        final String centuryNumber = FinderUtils.toUpperCase(match.group(2));
+        final String centuryNumber = ReplacerUtils.toUpperCase(match.group(2));
         final String eraText = match.group(3);
         final String eraLetter = StringUtils.isEmpty(eraText) ? EMPTY : String.valueOf(eraText.charAt(0));
 
@@ -276,7 +277,7 @@ class CenturyFinder implements ReplacementFinder {
 
         // Templates
         final String lowerPrefix = isAbbreviated ? "a" : "s";
-        final String upperPrefix = FinderUtils.toUpperCase(lowerPrefix);
+        final String upperPrefix = ReplacerUtils.toUpperCase(lowerPrefix);
         final String templateUpperLink =
             "{{" + centuryWord + "|" + centuryNumber + "|" + eraLetter + "|" + upperPrefix + "|1}}" + extension;
         final String templateUpperNoLink =

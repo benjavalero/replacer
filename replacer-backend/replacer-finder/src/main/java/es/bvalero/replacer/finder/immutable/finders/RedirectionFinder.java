@@ -1,11 +1,11 @@
 package es.bvalero.replacer.finder.immutable.finders;
 
 import es.bvalero.replacer.FinderProperties;
+import es.bvalero.replacer.common.util.ReplacerUtils;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.FinderPriority;
 import es.bvalero.replacer.finder.immutable.ImmutableFinder;
 import es.bvalero.replacer.finder.util.FinderMatchResult;
-import es.bvalero.replacer.finder.util.FinderUtils;
 import jakarta.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +29,7 @@ class RedirectionFinder implements ImmutableFinder {
     @PostConstruct
     public void init() {
         this.redirectionWords.addAll(
-                this.finderProperties.getRedirectionWords().stream().map(FinderUtils::toLowerCase).toList()
+                this.finderProperties.getRedirectionWords().stream().map(ReplacerUtils::toLowerCase).toList()
             );
     }
 
@@ -44,7 +44,7 @@ class RedirectionFinder implements ImmutableFinder {
     public Stream<MatchResult> findMatchResults(FinderPage page) {
         // With only 3 redirection words, the performance of the simple index-of and the Aho-Corasick is similar.
         final String text = page.getContent();
-        final String lowerCaseText = FinderUtils.toLowerCase(text);
+        final String lowerCaseText = ReplacerUtils.toLowerCase(text);
         for (String redirectionWord : this.redirectionWords) {
             if (lowerCaseText.contains(redirectionWord)) {
                 return Stream.of(FinderMatchResult.of(0, text));

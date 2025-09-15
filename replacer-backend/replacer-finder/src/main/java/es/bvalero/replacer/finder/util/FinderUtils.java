@@ -1,6 +1,5 @@
 package es.bvalero.replacer.finder.util;
 
-import static es.bvalero.replacer.common.util.ReplacerUtils.LOCALE_ES;
 import static org.apache.commons.lang3.StringUtils.SPACE;
 
 import es.bvalero.replacer.common.util.ReplacerUtils;
@@ -32,29 +31,16 @@ public class FinderUtils {
     private static final char NEGATIVE_SYMBOL = '-';
 
     // Character combinations
-    public static final Set<Character> ORDINALS = Set.of(MASCULINE_ORDINAL, FEMININE_ORDINAL);
-    private static final Set<Character> URL_SEPARATORS = Set.of('/', '.');
     private static final String ALTERNATE_SEPARATOR = Character.toString(PIPE);
     public static final String NON_BREAKING_SPACE = "&nbsp;";
-    private static final String NON_BREAKING_SPACE_TEMPLATE = "{{esd}}";
-    public static final Set<String> SPACES = Set.of(SPACE, NON_BREAKING_SPACE, NON_BREAKING_SPACE_TEMPLATE);
+    public static final String NON_BREAKING_SPACE_TEMPLATE = "{{esd}}";
     public static final String START_LINK = "[[";
     public static final String END_LINK = "]]";
-    public static final Set<Character> DECIMAL_SEPARATORS = Set.of(DOT, DECIMAL_COMMA);
 
     private static final Marker MARKER_IMMUTABLE = MarkerFactory.getMarker("IMMUTABLE");
     public static final String ENGLISH_LANGUAGE = "en";
 
     //region String Utils
-
-    public String toLowerCase(String text) {
-        return text.toLowerCase(LOCALE_ES);
-    }
-
-    /** Converts all the characters in this text to upper case */
-    public String toUpperCase(String text) {
-        return ReplacerUtils.toUpperCase(text);
-    }
 
     public boolean startsWithLowerCase(String word) {
         return Character.isLowerCase(word.charAt(0));
@@ -68,14 +54,9 @@ public class FinderUtils {
         return isDigit(word.charAt(0));
     }
 
-    /** Capitalizes a string changing the first character of the text to uppercase */
-    public String setFirstUpperCase(String word) {
-        return ReplacerUtils.setFirstUpperCase(word);
-    }
-
     /** Capitalizes a string changing the first character of the text to uppercase and the rest to lowercase */
     public String setFirstUpperCaseFully(String word) {
-        return toUpperCase(word.substring(0, 1)) + toLowerCase(word.substring(1));
+        return ReplacerUtils.toUpperCase(word.substring(0, 1)) + ReplacerUtils.toLowerCase(word.substring(1));
     }
 
     public String setFirstLowerCase(String word) {
@@ -124,7 +105,7 @@ public class FinderUtils {
     }
 
     private boolean isDecimalNumber(char ch) {
-        return isDigit(ch) || DECIMAL_SEPARATORS.contains(ch);
+        return isDigit(ch) || isDecimalSeparator(ch);
     }
 
     public boolean isNumeric(String word) {
@@ -144,36 +125,36 @@ public class FinderUtils {
         return (ch >= '0' && ch <= '9');
     }
 
-    public boolean isBlankOrNonBreakingSpace(String str) {
-        return StringUtils.isBlank(str) || isNonBreakingSpace(str);
+    public boolean isBlankOrNonBreakingSpace(String text, int start, int end) {
+        return isBlank(text, start, end) || isNonBreakingSpace(text, start);
     }
 
-    public boolean isActualSpace(String str) {
-        return StringUtils.isNotEmpty(str) && (SPACES.contains(str) || StringUtils.isBlank(str));
-    }
-
-    public boolean isNonBreakingSpace(String str) {
-        return NON_BREAKING_SPACE.equals(str) || NON_BREAKING_SPACE_TEMPLATE.equals(str);
-    }
-
-    //endregion
-
-    //region Text Utils
-
-    /** Check if a substring is contained in a text at a certain position */
-    public boolean containsAtPosition(String text, String substring, int start) {
-        assert start >= 0;
-        if (start + substring.length() > text.length()) {
-            return false;
+    private boolean isBlank(String text, int start, int end) {
+        if (start == end) {
+            return true;
         }
-
-        for (int i = 0; i < substring.length(); i++) {
-            if (text.charAt(start + i) != substring.charAt(i)) {
+        for (int i = start; i < end; i++) {
+            if (!Character.isWhitespace(text.charAt(i))) {
                 return false;
             }
         }
         return true;
     }
+
+    public boolean isActualSpace(String str) {
+        return SPACE.equals(str) || NON_BREAKING_SPACE.equals(str) || NON_BREAKING_SPACE_TEMPLATE.equals(str);
+    }
+
+    public boolean isNonBreakingSpace(String text, int start) {
+        return (
+            ReplacerUtils.containsAtPosition(text, NON_BREAKING_SPACE, start) ||
+            ReplacerUtils.containsAtPosition(text, NON_BREAKING_SPACE_TEMPLATE, start)
+        );
+    }
+
+    //endregion
+
+    //region Text Utils
 
     /**
      * Check if a word is complete in a text. In particular, check if the characters around the word are separators.
@@ -230,7 +211,7 @@ public class FinderUtils {
     }
 
     private boolean isOrdinal(char ch) {
-        return ORDINALS.contains(ch);
+        return ch == MASCULINE_ORDINAL || ch == FEMININE_ORDINAL;
     }
 
     public boolean isValidSeparator(char separator) {
@@ -245,7 +226,11 @@ public class FinderUtils {
         }
         final char left = text.charAt(startWord - 1);
         final char right = text.charAt(endWord);
-        return left == right && URL_SEPARATORS.contains(left);
+        return left == right && isUrlSeparator(left);
+    }
+
+    private boolean isUrlSeparator(char ch) {
+        return ch == '/' || ch == '.';
     }
 
     public boolean isWordFollowedByUpperCase(int start, String word, String text) {
@@ -262,13 +247,13 @@ public class FinderUtils {
     @Nullable
     public MatchResult findWordAfterSpace(String text, int start) {
         final MatchResult match = findWordAfter(text, start);
-        return match != null && isActualSpace(text.substring(start, match.start())) ? match : null;
+        return match != null && isBlankOrNonBreakingSpace(text, start, match.start()) ? match : null;
     }
 
     /** Find the most close sequence of letters and digits starting at the given position */
     @Nullable
     public MatchResult findWordAfter(String text, int start) {
-        return findWordAfter(text, start, List.of(), false);
+        return findWordAfter(text, start, false);
     }
 
     /**
@@ -276,12 +261,7 @@ public class FinderUtils {
      * Some additional chars are allowed, at the start or in the middle according to the configuration.
      */
     @Nullable
-    public MatchResult findWordAfter(
-        String text,
-        int start,
-        Collection<Character> allowedChars,
-        boolean charsAllowedAtStart
-    ) {
+    public MatchResult findWordAfter(String text, int start, boolean charsAllowedAtStart, char... allowedChars) {
         if (start >= text.length()) {
             return null;
         }
@@ -290,7 +270,7 @@ public class FinderUtils {
         int lastLetter = -1;
         for (int i = start; i < text.length(); i++) {
             final char ch = text.charAt(i);
-            if (isWordChar(ch) || (allowedChars.contains(ch) && (firstLetter >= 0 || charsAllowedAtStart))) {
+            if (isWordChar(ch) || (containsChar(ch, allowedChars) && (firstLetter >= 0 || charsAllowedAtStart))) {
                 if (firstLetter < 0) {
                     firstLetter = i;
                 }
@@ -305,12 +285,21 @@ public class FinderUtils {
         }
 
         // Check possible non-breaking space
-        final String word = text.substring(firstLetter, lastLetter + 1);
-        if (isSpaceWord(word)) {
-            return findWordAfter(text, lastLetter + 1, allowedChars, charsAllowedAtStart);
+        final int endWord = lastLetter + 1;
+        if (isSpaceWord(text, firstLetter)) {
+            return findWordAfter(text, endWord, charsAllowedAtStart, allowedChars);
         } else {
-            return FinderMatchResult.of(firstLetter, word);
+            return FinderMatchResult.of(text, firstLetter, endWord);
         }
+    }
+
+    private boolean containsChar(char ch, char... chars) {
+        for (char c : chars) {
+            if (c == ch) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public int countWords(String text, int start, int end) {
@@ -323,8 +312,11 @@ public class FinderUtils {
         return count;
     }
 
-    private boolean isSpaceWord(String word) {
-        return "nbsp".equals(word) || "esd".equals(word);
+    private boolean isSpaceWord(String text, int start) {
+        return (
+            ReplacerUtils.containsAtPosition(text, NON_BREAKING_SPACE, start - 1) ||
+            ReplacerUtils.containsAtPosition(text, NON_BREAKING_SPACE_TEMPLATE, start - 2)
+        );
     }
 
     public boolean isWordPrecededByUpperCase(int start, String text) {
@@ -356,7 +348,7 @@ public class FinderUtils {
     /* Find the most close sequence of letters and digits ending at the given position */
     @Nullable
     public MatchResult findWordBefore(String text, int start) {
-        return findWordBefore(text, start, List.of(), false);
+        return findWordBefore(text, start, false);
     }
 
     /**
@@ -365,12 +357,7 @@ public class FinderUtils {
      */
     // TODO: Reduce cyclomatic complexity
     @Nullable
-    public MatchResult findWordBefore(
-        String text,
-        int start,
-        Collection<Character> allowedChars,
-        boolean charsAllowedAtStart
-    ) {
+    public MatchResult findWordBefore(String text, int start, boolean charsAllowedAtStart, char... allowedChars) {
         if (start < 1) {
             return null;
         }
@@ -379,7 +366,7 @@ public class FinderUtils {
         int lastLetter = -1;
         for (int i = start - 1; i >= 0; i--) {
             final char ch = text.charAt(i);
-            if (isWordChar(ch) || allowedChars.contains(ch)) {
+            if (isWordChar(ch) || containsChar(ch, allowedChars)) {
                 if (lastLetter < 0) {
                     lastLetter = i;
                 }
@@ -394,7 +381,7 @@ public class FinderUtils {
         }
 
         if (!charsAllowedAtStart) {
-            while (firstLetter < text.length() && allowedChars.contains(text.charAt(firstLetter))) {
+            while (firstLetter < text.length() && containsChar(text.charAt(firstLetter), allowedChars)) {
                 firstLetter++;
             }
             if (firstLetter > lastLetter) {
@@ -403,11 +390,10 @@ public class FinderUtils {
         }
 
         // Check possible non-breaking space
-        final String word = text.substring(firstLetter, lastLetter + 1);
-        if (isSpaceWord(word)) {
-            return findWordBefore(text, firstLetter, allowedChars, charsAllowedAtStart);
+        if (isSpaceWord(text, firstLetter)) {
+            return findWordBefore(text, firstLetter, charsAllowedAtStart, allowedChars);
         } else {
-            return FinderMatchResult.of(firstLetter, word);
+            return FinderMatchResult.of(text, firstLetter, lastLetter + 1);
         }
     }
 

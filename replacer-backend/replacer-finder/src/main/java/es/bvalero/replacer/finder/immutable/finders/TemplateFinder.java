@@ -1,9 +1,11 @@
 package es.bvalero.replacer.finder.immutable.finders;
 
 import static es.bvalero.replacer.finder.util.FinderUtils.PIPE;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 import es.bvalero.replacer.FinderProperties;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
+import es.bvalero.replacer.common.util.ReplacerUtils;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.FinderPriority;
 import es.bvalero.replacer.finder.immutable.ImmutableFinder;
@@ -37,9 +39,6 @@ class TemplateFinder implements ImmutableFinder {
     private static final char COLON = ':';
     private static final char EQUALS = '=';
 
-    // We want to avoid the '=' in references to be mistaken by the one of the parameter
-    private static final Set<Character> FORBIDDEN_CHARS = Set.of('<');
-
     // Dependency injection
     private final FinderProperties finderProperties;
     private final UppercaseFinder uppercaseFinder;
@@ -72,18 +71,18 @@ class TemplateFinder implements ImmutableFinder {
         for (FinderProperties.TemplateParam templateParam : this.finderProperties.getTemplateParams()) {
             assert templateParam.getTemplate() != null || templateParam.getParam() != null;
             if (templateParam.getParam() == null) {
-                String name = FinderUtils.toLowerCase(templateParam.getTemplate());
+                String name = ReplacerUtils.toLowerCase(templateParam.getTemplate());
                 if (templateParam.isPartial()) {
                     this.templateNamesPartial.add(name);
                 } else {
                     this.templateNames.add(name);
                 }
             } else if (templateParam.getTemplate() == null) {
-                this.paramNames.add(FinderUtils.toLowerCase(templateParam.getParam()));
+                this.paramNames.add(ReplacerUtils.toLowerCase(templateParam.getParam()));
             } else {
                 this.templateParamPairs.put(
-                        FinderUtils.toLowerCase(templateParam.getTemplate()),
-                        FinderUtils.toLowerCase(templateParam.getParam())
+                        ReplacerUtils.toLowerCase(templateParam.getTemplate()),
+                        ReplacerUtils.toLowerCase(templateParam.getParam())
                     );
             }
         }
@@ -170,7 +169,7 @@ class TemplateFinder implements ImmutableFinder {
     }
 
     private String normalizeTemplateName(String templateName) {
-        return FinderUtils.toLowerCase(templateName.trim()).replace('_', ' ');
+        return ReplacerUtils.toLowerCase(templateName.trim()).replace('_', ' ');
     }
 
     private boolean ignoreCompletePage(String templateName) {
@@ -283,7 +282,8 @@ class TemplateFinder implements ImmutableFinder {
     }
 
     private boolean isForbiddenChar(char ch) {
-        return FORBIDDEN_CHARS.contains(ch);
+        // We want to avoid the '=' in references to be mistaken by the one of the parameter
+        return ch == '<';
     }
 
     private String trimValue(String value) {
@@ -308,10 +308,10 @@ class TemplateFinder implements ImmutableFinder {
         // or the pair template name-param is to be ignored
         // or the value is a file or a domain
         // then we also return the value
-        final String trimmedKey = key == null ? "" : FinderUtils.toLowerCase(key.trim());
+        final String trimmedKey = key == null ? EMPTY : ReplacerUtils.toLowerCase(key.trim());
         return (
             this.paramNames.contains(trimmedKey) ||
-            this.templateParamPairs.containsMapping(FinderUtils.toLowerCase(templateName.trim()), trimmedKey) ||
+            this.templateParamPairs.containsMapping(ReplacerUtils.toLowerCase(templateName.trim()), trimmedKey) ||
             matchesFile(value)
         );
     }

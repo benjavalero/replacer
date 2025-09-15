@@ -87,7 +87,7 @@ class CompleteTagFinder extends ImmutableCheckedFinder {
             int endOpenTag = findEndTag(text, endTagName);
             if (endOpenTag < 0) {
                 // Open tag not closed
-                final String message = String.format("Open tag %s not closed", tagName);
+                final String message = "Open tag " + tagName + " not closed";
                 logImmutableCheck(page, startCompleteTag, endTagName, message);
                 start = endTagName;
                 continue;
@@ -102,7 +102,7 @@ class CompleteTagFinder extends ImmutableCheckedFinder {
             final int endCompleteTag = findEndCompleteTag(text, endTagName, tagName);
             if (endCompleteTag < 0) {
                 // Tag not closed
-                final String message = String.format("Tag %s not closed", tagName);
+                final String message = "Tag " + tagName + " not closed";
                 logImmutableCheck(page, startCompleteTag, endTagName, message);
                 start = endTagName;
                 continue;

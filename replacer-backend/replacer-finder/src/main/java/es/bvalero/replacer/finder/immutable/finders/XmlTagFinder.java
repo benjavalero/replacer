@@ -6,7 +6,6 @@ import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.immutable.ImmutableCheckedFinder;
 import es.bvalero.replacer.finder.util.FinderMatchResult;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
-import java.util.Set;
 import java.util.regex.MatchResult;
 import java.util.stream.Stream;
 import org.springframework.lang.Nullable;
@@ -21,9 +20,6 @@ class XmlTagFinder extends ImmutableCheckedFinder {
     private static final char START_TAG = '<';
     private static final char END_TAG = '>';
     private static final char END_TAG_SLASH = '/';
-
-    // We want to avoid some mathematical expressions with the "less than" sign
-    private static final Set<Character> FORBIDDEN_CHARS = Set.of(NEW_LINE, START_TAG, END_TAG);
 
     @Override
     public int getMaxLength() {
@@ -93,6 +89,7 @@ class XmlTagFinder extends ImmutableCheckedFinder {
     }
 
     private boolean isForbiddenChar(char ch) {
-        return FORBIDDEN_CHARS.contains(ch);
+        // We want to avoid some mathematical expressions with the "less than" sign
+        return ch == NEW_LINE || ch == START_TAG || ch == END_TAG;
     }
 }

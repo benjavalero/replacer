@@ -31,8 +31,7 @@ class SurnameAutomatonFinder implements BenchmarkFinder {
             final AutomatonMatcher m = word.newMatcher(text);
             while (m.find()) {
                 if (
-                    FinderUtils.isWordCompleteInText(m.start(), m.group(), text) &&
-                    FinderUtils.isWordPrecededByUpperCase(m.start(), text)
+                    FinderUtils.isWordCompleteInText(m, text) && FinderUtils.isWordPrecededByUpperCase(m.start(), text)
                 ) {
                     matches.add(BenchmarkResult.of(m.start(), m.group()));
                 }

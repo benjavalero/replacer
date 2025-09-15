@@ -1,7 +1,6 @@
 package es.bvalero.replacer.finder.replacement.finders;
 
-import static es.bvalero.replacer.finder.util.FinderUtils.DOT;
-import static es.bvalero.replacer.finder.util.FinderUtils.ENGLISH_LANGUAGE;
+import static es.bvalero.replacer.finder.util.FinderUtils.*;
 import static org.apache.commons.lang3.StringUtils.SPACE;
 
 import dk.brics.automaton.DatatypesAutomatonProvider;
@@ -37,7 +36,7 @@ import org.springframework.stereotype.Component;
 @Component
 class DateFinder implements ReplacementFinder {
 
-    private static final List<Character> YEAR_ALLOWED_CHARS = List.of(DOT);
+    private static final char[] YEAR_ALLOWED_CHARS = new char[] { DOT };
     private final int CURRENT_YEAR = Year.now(ZoneId.systemDefault()).getValue();
 
     // Dependency injection
@@ -67,7 +66,7 @@ class DateFinder implements ReplacementFinder {
                 .get(lang)
                 .forEach(month -> {
                     monthsLowerUpperCase.add(month);
-                    monthsLowerUpperCase.add(FinderUtils.setFirstUpperCase(month));
+                    monthsLowerUpperCase.add(ReplacerUtils.setFirstUpperCase(month));
                 });
             englishMonths.addAll(this.finderProperties.getMonthNames().get(ENGLISH_LANGUAGE));
             monthsLowerUpperCase.addAll(englishMonths);
@@ -84,7 +83,7 @@ class DateFinder implements ReplacementFinder {
                 .get(lang)
                 .forEach(preposition -> {
                     prepositionsLowerUpperCase.add(preposition);
-                    prepositionsLowerUpperCase.add(FinderUtils.setFirstUpperCase(preposition));
+                    prepositionsLowerUpperCase.add(ReplacerUtils.setFirstUpperCase(preposition));
                 });
 
             // Connectors
@@ -94,7 +93,7 @@ class DateFinder implements ReplacementFinder {
                 .get(lang)
                 .forEach(connector -> {
                     connectorsLowerUpperCase.add(connector);
-                    connectorsLowerUpperCase.add(FinderUtils.setFirstUpperCase(connector));
+                    connectorsLowerUpperCase.add(ReplacerUtils.setFirstUpperCase(connector));
                 });
 
             // Articles
@@ -107,10 +106,10 @@ class DateFinder implements ReplacementFinder {
             String regexPrepositions = String.format("(%s)", FinderUtils.joinAlternate(prepositionsLowerUpperCase));
             String regexConnectors = String.format("(%s)", FinderUtils.joinAlternate(connectorsLowerUpperCase));
             String regexMonthsLowerUpperCase = String.format("(%s)", FinderUtils.joinAlternate(monthsLowerUpperCase));
-            String regexSpaces = String.format(
-                "(%s)+",
-                FinderUtils.joinAlternate(FinderUtils.SPACES.stream().map(ReplacerUtils::escapeRegexChars).toList())
-            );
+            List<String> spaces = Stream.of(SPACE, NON_BREAKING_SPACE, NON_BREAKING_SPACE_TEMPLATE)
+                .map(ReplacerUtils::escapeRegexChars)
+                .toList();
+            String regexSpaces = String.format("(%s)+", FinderUtils.joinAlternate(spaces));
 
             // There is no performance gain by using more generic regex for these numbers
             String regexDay = "([012]?[0-9]|3[01])";
@@ -172,8 +171,8 @@ class DateFinder implements ReplacementFinder {
         final Map<String, String> articleMap = new HashMap<>();
         articleMap.put(dateArticle.getPrep(), dateArticle.getArticle());
         articleMap.put(
-            FinderUtils.setFirstUpperCase(dateArticle.getPrep()),
-            FinderUtils.setFirstUpperCase(dateArticle.getArticle())
+            ReplacerUtils.setFirstUpperCase(dateArticle.getPrep()),
+            ReplacerUtils.setFirstUpperCase(dateArticle.getArticle())
         );
         return articleMap;
     }
@@ -203,12 +202,12 @@ class DateFinder implements ReplacementFinder {
     @Nullable
     public Replacement convertDate(MatchResult match, FinderPage page) {
         final WikipediaLanguage lang = page.getPageKey().getLang();
-        final String date = match.group();
-        if (!FinderUtils.isWordCompleteInText(match.start(), date, page.getContent())) {
+        if (!FinderUtils.isWordCompleteInText(match, page.getContent())) {
             return null;
         }
 
-        final MatchResult matchWord = FinderUtils.findWordAfter(date, 0, YEAR_ALLOWED_CHARS, false);
+        final String date = match.group();
+        final MatchResult matchWord = FinderUtils.findWordAfter(date, 0, false, YEAR_ALLOWED_CHARS);
         assert matchWord != null;
         final String firstWord = matchWord.group();
         if (isRegexDay(firstWord)) {
@@ -286,11 +285,11 @@ class DateFinder implements ReplacementFinder {
         }
 
         // Prep After or Year
-        matchWord = FinderUtils.findWordAfter(date, matchWord.end(), YEAR_ALLOWED_CHARS, false);
+        matchWord = FinderUtils.findWordAfter(date, matchWord.end(), false, YEAR_ALLOWED_CHARS);
         assert matchWord != null;
         String prepAfter = matchWord.group();
         if (isPreposition(matchWord.group(), lang)) {
-            matchWord = FinderUtils.findWordAfter(date, matchWord.end(), YEAR_ALLOWED_CHARS, false);
+            matchWord = FinderUtils.findWordAfter(date, matchWord.end(), false, YEAR_ALLOWED_CHARS);
             assert matchWord != null;
         } else {
             prepAfter = getPrepositionDefault(lang);
@@ -315,14 +314,8 @@ class DateFinder implements ReplacementFinder {
         prepAfter = fixPrepositionAfter(prepAfter, lang);
 
         final String prepBefore = getPrepositionDefault(lang);
-        final String fixedDate = String.format(
-            "%s %s %s %s %s",
-            fixedDay,
-            prepBefore,
-            fixedMonth,
-            prepAfter,
-            fixedYear
-        );
+        final String fixedDate =
+            fixedDay + SPACE + prepBefore + SPACE + fixedMonth + SPACE + prepAfter + SPACE + fixedYear;
 
         return buildDateReplacement(page, match.start(), date, fixedDate);
     }
@@ -346,11 +339,11 @@ class DateFinder implements ReplacementFinder {
         }
 
         // Prep After or Year
-        matchWord = FinderUtils.findWordAfter(date, matchWord.end(), YEAR_ALLOWED_CHARS, false);
+        matchWord = FinderUtils.findWordAfter(date, matchWord.end(), false, YEAR_ALLOWED_CHARS);
         assert matchWord != null;
         String prepAfter = matchWord.group();
         if (isPreposition(matchWord.group(), lang)) {
-            matchWord = FinderUtils.findWordAfter(date, matchWord.end(), YEAR_ALLOWED_CHARS, false);
+            matchWord = FinderUtils.findWordAfter(date, matchWord.end(), false, YEAR_ALLOWED_CHARS);
             assert matchWord != null;
         } else {
             prepAfter = getPrepositionDefault(lang);
@@ -374,7 +367,7 @@ class DateFinder implements ReplacementFinder {
         fixedMonth = fixSeptember(fixedMonth, lang);
         prepAfter = fixPrepositionAfter(prepAfter, lang);
 
-        final String fixedDate = String.format("%s %s %s %s", connector, fixedMonth, prepAfter, fixedYear);
+        final String fixedDate = connector + SPACE + fixedMonth + SPACE + prepAfter + SPACE + fixedYear;
 
         return buildDateReplacement(page, match.start(), date, fixedDate);
     }
@@ -402,11 +395,11 @@ class DateFinder implements ReplacementFinder {
         }
 
         // Prep After or Year
-        matchWord = FinderUtils.findWordAfter(date, matchWord.end(), YEAR_ALLOWED_CHARS, false);
+        matchWord = FinderUtils.findWordAfter(date, matchWord.end(), false, YEAR_ALLOWED_CHARS);
         assert matchWord != null;
         String prepAfter = matchWord.group();
         if (isPreposition(matchWord.group(), lang)) {
-            matchWord = FinderUtils.findWordAfter(date, matchWord.end(), YEAR_ALLOWED_CHARS, false);
+            matchWord = FinderUtils.findWordAfter(date, matchWord.end(), false, YEAR_ALLOWED_CHARS);
             assert matchWord != null;
         } else {
             prepAfter = getPrepositionDefault(lang);
@@ -424,14 +417,8 @@ class DateFinder implements ReplacementFinder {
         prepAfter = fixPrepositionAfter(prepAfter, lang);
 
         final String prepBefore = getPrepositionDefault(lang);
-        final String fixedDate = String.format(
-            "%s %s %s %s %s",
-            fixedDay,
-            prepBefore,
-            fixedMonth,
-            prepAfter,
-            fixedYear
-        );
+        final String fixedDate =
+            fixedDay + SPACE + prepBefore + SPACE + fixedMonth + SPACE + prepAfter + SPACE + fixedYear;
 
         return buildDateReplacement(page, match.start(), date, fixedDate);
     }
@@ -441,7 +428,7 @@ class DateFinder implements ReplacementFinder {
         final WikipediaLanguage lang = page.getPageKey().getLang();
         final String date = match.group();
 
-        MatchResult matchWord = FinderUtils.findWordAfter(date, 0, YEAR_ALLOWED_CHARS, false);
+        MatchResult matchWord = FinderUtils.findWordAfter(date, 0, false, YEAR_ALLOWED_CHARS);
         assert matchWord != null;
         String fixedYear = matchWord.group();
         if (isFixableYear(fixedYear)) {
@@ -472,14 +459,8 @@ class DateFinder implements ReplacementFinder {
         fixedMonth = fixSeptember(fixedMonth, lang);
 
         final String preposition = getPrepositionDefault(lang);
-        final String fixedDate = String.format(
-            "%s %s %s %s %s",
-            fixedDay,
-            preposition,
-            fixedMonth,
-            preposition,
-            fixedYear
-        );
+        final String fixedDate =
+            fixedDay + SPACE + preposition + SPACE + fixedMonth + SPACE + preposition + SPACE + fixedYear;
 
         return buildDateReplacement(page, match.start(), date, fixedDate);
     }
@@ -571,8 +552,8 @@ class DateFinder implements ReplacementFinder {
                 start -= (article.length() + 1); // + 1 because of the space between
                 text = page.getContent().substring(start, start + article.length() + 1 + originalDate.length());
 
-                final String fixedDateWithoutArticle = article + " " + fixedDate;
-                final String fixedDateWithArticle = alternative + " " + fixedDate;
+                final String fixedDateWithoutArticle = article + SPACE + fixedDate;
+                final String fixedDateWithArticle = alternative + SPACE + fixedDate;
                 suggestions.clear();
                 suggestions.add(Suggestion.of(fixedDateWithArticle, "con artículo"));
                 suggestions.add(Suggestion.of(fixedDateWithoutArticle, "sin artículo"));

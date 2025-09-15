@@ -28,8 +28,8 @@ class CompleteTagLinearIteratedFinder implements BenchmarkFinder {
 
     private List<BenchmarkResult> findResults(String text, String tag) {
         final List<BenchmarkResult> matches = new ArrayList<>(100);
-        final String openTag = String.format("<%s", tag);
-        final String closeTag = String.format("</%s>", tag);
+        final String openTag = "<" + tag;
+        final String closeTag = "</" + tag + ">";
         int start = 0;
         while (start >= 0) {
             start = text.indexOf(openTag, start);

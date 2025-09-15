@@ -1,6 +1,7 @@
 package es.bvalero.replacer.finder.replacement.finders;
 
 import static es.bvalero.replacer.finder.util.FinderUtils.*;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.Replacement;
@@ -11,7 +12,6 @@ import es.bvalero.replacer.finder.util.FinderMatchResult;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
 import java.util.List;
-import java.util.Set;
 import java.util.regex.MatchResult;
 import java.util.stream.Stream;
 import org.apache.commons.lang3.StringUtils;
@@ -27,10 +27,10 @@ class DegreeFinder implements ReplacementFinder {
     private static final char CELSIUS = 'C';
     private static final char FAHRENHEIT = 'F';
     private static final char KELVIN = 'K';
-    private static final Set<Character> DEGREE_LETTERS = Set.of(CELSIUS, FAHRENHEIT, KELVIN);
     private static final char CELSIUS_UNICODE = '\u2103'; // ℃
     private static final char FAHRENHEIT_UNICODE = '\u2109'; // ℉
     private static final char SPACE = ' ';
+    private static final char[] DECIMAL_SEPARATORS = new char[] { DOT, DECIMAL_COMMA };
 
     @Override
     public Stream<MatchResult> findMatchResults(FinderPage page) {
@@ -101,8 +101,8 @@ class DegreeFinder implements ReplacementFinder {
             final int startLetter = text.charAt(startSymbol + 1) == SPACE ? startSymbol + 2 : startSymbol + 1;
             if (
                 startLetter >= text.length() ||
-                !DEGREE_LETTERS.contains(text.charAt(startLetter)) ||
-                !FinderUtils.isWordCompleteInText(startLetter, text.substring(startLetter, startLetter + 1), text)
+                !isDegreeLetter(text.charAt(startLetter)) ||
+                !FinderUtils.isWordCompleteInText(startLetter, startLetter + 1, text)
             ) {
                 // Keep on searching
                 start = startSymbol + 1;
@@ -118,16 +118,21 @@ class DegreeFinder implements ReplacementFinder {
         return symbolChar == CELSIUS_UNICODE || symbolChar == FAHRENHEIT_UNICODE;
     }
 
+    private boolean isDegreeLetter(char ch) {
+        return ch == CELSIUS || ch == FAHRENHEIT || ch == KELVIN;
+    }
+
     @Nullable
     private MatchResult findDegreeWord(String text, int startSymbol) {
-        final MatchResult matchBefore = FinderUtils.findWordBefore(text, startSymbol, DECIMAL_SEPARATORS, false);
+        final MatchResult matchBefore = FinderUtils.findWordBefore(text, startSymbol, false, DECIMAL_SEPARATORS);
         if (matchBefore == null) {
             return null;
         }
         // If preceded by number, there must be a space (or nothing) between.
-        final String word = matchBefore.group();
-        final String space1 = text.substring(matchBefore.end(), startSymbol);
-        if (FinderUtils.isDecimalNumber(word) && !FinderUtils.isBlankOrNonBreakingSpace(space1)) {
+        if (
+            FinderUtils.isDecimalNumber(matchBefore.group()) &&
+            !FinderUtils.isBlankOrNonBreakingSpace(text, matchBefore.end(), startSymbol)
+        ) {
             return null;
         }
         return matchBefore;
@@ -172,7 +177,7 @@ class DegreeFinder implements ReplacementFinder {
         } else {
             fixedLetter = symbol.charAt(symbol.length() - 1);
             if (fixedLetter == KELVIN) {
-                fixedSymbol = "";
+                fixedSymbol = EMPTY;
             } else {
                 fixedSymbol = String.valueOf(DEGREE);
                 if (symbol.charAt(0) == MASCULINE_ORDINAL) {
@@ -185,7 +190,8 @@ class DegreeFinder implements ReplacementFinder {
         final int start;
         final String text;
         if (FinderUtils.isDecimalNumber(word)) {
-            final String fixedSpace = FinderUtils.isNonBreakingSpace(space1) ? space1 : NON_BREAKING_SPACE;
+            final boolean isNonBreakingSpace = FinderUtils.isNonBreakingSpace(page.getContent(), match.start(2));
+            final String fixedSpace = isNonBreakingSpace ? space1 : NON_BREAKING_SPACE;
             fixedDegree = word + fixedSpace + fixedSymbol + fixedLetter;
             start = match.start();
             text = match.group();
@@ -205,7 +211,7 @@ class DegreeFinder implements ReplacementFinder {
             isNumeric(word) &&
             StringUtils.isEmpty(space1) &&
             symbol.charAt(0) == MASCULINE_ORDINAL &&
-            DEGREE_LETTERS.contains(symbol.charAt(1))
+            isDegreeLetter(symbol.charAt(1))
         ) {
             suggestions.add(Suggestion.of(word + DOT + symbol, "ordinal"));
         }

@@ -61,6 +61,6 @@ class TitleFinder extends ImmutableCheckedFinder {
 
     @Override
     public boolean validate(MatchResult match, FinderPage page) {
-        return FinderUtils.isWordCompleteInText(match.start(), match.group(), page.getContent());
+        return FinderUtils.isWordCompleteInText(match, page.getContent());
     }
 }

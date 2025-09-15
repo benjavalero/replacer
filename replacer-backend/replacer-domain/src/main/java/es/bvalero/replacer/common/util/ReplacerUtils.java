@@ -26,13 +26,25 @@ public class ReplacerUtils {
         return text.substring(limitLeft, limitRight);
     }
 
-    public String replaceInText(String text, int start, String current, String replacement) {
-        final int end = start + current.length();
-        final String actual = text.substring(start, end);
-        if (!actual.equals(current)) {
-            throw new IllegalArgumentException("Replacement mismatch: %s <> %s".formatted(actual, current));
+    /** Check if a substring is contained in a text at a certain position */
+    public boolean containsAtPosition(String text, String substring, int start) {
+        if (start < 0 || start + substring.length() > text.length()) {
+            return false;
         }
-        return text.substring(0, start) + replacement + text.substring(end);
+
+        for (int i = 0; i < substring.length(); i++) {
+            if (text.charAt(start + i) != substring.charAt(i)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public String replaceInText(String text, int start, String current, String replacement) {
+        if (!containsAtPosition(text, current, start)) {
+            throw new IllegalArgumentException("Replacement mismatch: %s at %d".formatted(current, start));
+        }
+        return text.substring(0, start) + replacement + text.substring(start + current.length());
     }
 
     /**
@@ -76,6 +88,11 @@ public class ReplacerUtils {
     /** Converts all the characters in this text to upper case */
     public String toUpperCase(String text) {
         return text.toUpperCase(LOCALE_ES);
+    }
+
+    /** Converts all the characters in this text to lower case */
+    public String toLowerCase(String text) {
+        return text.toLowerCase(LOCALE_ES);
     }
 
     public String escapeRegexChars(String text) {

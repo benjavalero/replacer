@@ -3,6 +3,7 @@ package es.bvalero.replacer.finder.replacement.finders;
 import static es.bvalero.replacer.finder.util.FinderUtils.*;
 import static org.apache.commons.lang3.StringUtils.SPACE;
 
+import es.bvalero.replacer.common.util.ReplacerUtils;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.StandardType;
@@ -28,15 +29,8 @@ class CoordinatesFinder implements ReplacementFinder {
     private static final char APOSTROPHE = '\'';
     private static final char SINGLE_QUOTE = '\u2019'; // ’
     private static final char ACUTE_ACCENT = '\u00b4'; // ´
-    private static final Set<Character> PRIME_CHARS = Set.of(PRIME, APOSTROPHE, SINGLE_QUOTE, ACUTE_ACCENT);
     private static final char DOUBLE_PRIME = '\u2033'; // ″
     private static final char DOUBLE_QUOTE = '\"';
-    private static final Set<Character> DOUBLE_PRIME_CHARS = Set.of(
-        DOUBLE_PRIME,
-        DOUBLE_QUOTE,
-        START_QUOTE_TYPOGRAPHIC,
-        END_QUOTE_TYPOGRAPHIC
-    );
     private static final Set<String> CARDINAL_DIRECTIONS = Set.of(
         "N",
         "S",
@@ -177,8 +171,7 @@ class CoordinatesFinder implements ReplacementFinder {
             return null;
         }
 
-        final String space = text.substring(start, matchNumber.start());
-        if (!FinderUtils.isBlankOrNonBreakingSpace(space)) {
+        if (!FinderUtils.isBlankOrNonBreakingSpace(text, start, matchNumber.start())) {
             // Not a valid space between the previous match and the number match
             return null;
         }
@@ -195,7 +188,7 @@ class CoordinatesFinder implements ReplacementFinder {
     }
 
     private boolean isPrimeChar(char ch) {
-        return PRIME_CHARS.contains(ch);
+        return ch == PRIME || ch == APOSTROPHE || ch == SINGLE_QUOTE || ch == ACUTE_ACCENT;
     }
 
     private boolean isValidPrimeChar(char ch) {
@@ -221,7 +214,7 @@ class CoordinatesFinder implements ReplacementFinder {
         // Let's find the seconds symbol, which might have 2 characters.
         String doublePrime;
         final String nextChars = text.substring(matchNumber.end(), Math.min(matchNumber.end() + 2, text.length()));
-        if (!nextChars.isEmpty() && DOUBLE_PRIME_CHARS.contains(nextChars.charAt(0))) {
+        if (!nextChars.isEmpty() && isDoublePrimeChar(nextChars.charAt(0))) {
             doublePrime = nextChars.substring(0, 1);
         } else if (nextChars.length() > 1 && isPrimeChar(nextChars.charAt(0)) && isPrimeChar(nextChars.charAt(1))) {
             doublePrime = nextChars;
@@ -229,8 +222,7 @@ class CoordinatesFinder implements ReplacementFinder {
             return null;
         }
 
-        final String space = text.substring(start, matchNumber.start());
-        if (!FinderUtils.isBlankOrNonBreakingSpace(space)) {
+        if (!FinderUtils.isBlankOrNonBreakingSpace(text, start, matchNumber.start())) {
             // Not a valid space between the previous match and the number match
             return null;
         }
@@ -238,6 +230,10 @@ class CoordinatesFinder implements ReplacementFinder {
         final MatchResult doublePrimeMatch = FinderMatchResult.of(matchNumber.end(), doublePrime);
         matchNumber.addGroup(doublePrimeMatch);
         return matchNumber;
+    }
+
+    private boolean isDoublePrimeChar(char ch) {
+        return ch == DOUBLE_PRIME || ch == DOUBLE_QUOTE || ch == START_QUOTE_TYPOGRAPHIC || ch == END_QUOTE_TYPOGRAPHIC;
     }
 
     private boolean isSecondNumber(String number) {
@@ -265,8 +261,7 @@ class CoordinatesFinder implements ReplacementFinder {
             return null;
         }
 
-        final String space = text.substring(start, matchDirection.start());
-        if (!FinderUtils.isBlankOrNonBreakingSpace(space)) {
+        if (!FinderUtils.isBlankOrNonBreakingSpace(text, start, matchDirection.start())) {
             // Not a valid space between the previous match and the number match
             return null;
         }
@@ -275,7 +270,7 @@ class CoordinatesFinder implements ReplacementFinder {
     }
 
     private boolean isDirectionString(String str) {
-        return CARDINAL_DIRECTIONS.contains(FinderUtils.setFirstUpperCase(str));
+        return CARDINAL_DIRECTIONS.contains(ReplacerUtils.setFirstUpperCase(str));
     }
 
     @Override
@@ -297,30 +292,29 @@ class CoordinatesFinder implements ReplacementFinder {
         }
 
         // Suggestion 1: no spaces
-        String noSpaces = String.format(
-            "%s%s%s%s%s%s",
-            matchDegrees,
-            DEGREE,
-            matchMinutes,
-            PRIME,
-            (matchSeconds == null ? "" : fixSeconds(matchSeconds) + DOUBLE_PRIME),
-            (matchDirection == null ? "" : NON_BREAKING_SPACE + fixDirection(matchDirection))
-        );
+        String noSpaces =
+            String.valueOf(matchDegrees) +
+            DEGREE +
+            matchMinutes +
+            PRIME +
+            (matchSeconds == null ? "" : fixSeconds(matchSeconds) + DOUBLE_PRIME) +
+            (matchDirection == null ? "" : NON_BREAKING_SPACE + fixDirection(matchDirection));
         final Suggestion suggestionNoSpaces = Suggestion.of(
             noSpaces,
             "sin espacios y con los símbolos apropiados, recomendado para coordenadas"
         );
 
         // Suggestion 2: with spaces
-        String withSpaces = String.format(
-            "{{esd|%s%s %s%s%s%s}}",
-            matchDegrees,
-            DEGREE,
-            matchMinutes,
-            PRIME,
-            (matchSeconds == null ? "" : SPACE + matchSeconds + DOUBLE_PRIME),
-            (matchDirection == null ? "" : SPACE + fixDirection(matchDirection))
-        );
+        String withSpaces =
+            "{{esd|" +
+            matchDegrees +
+            DEGREE +
+            SPACE +
+            matchMinutes +
+            PRIME +
+            (matchSeconds == null ? "" : SPACE + matchSeconds + DOUBLE_PRIME) +
+            (matchDirection == null ? "" : SPACE + fixDirection(matchDirection)) +
+            "}}";
         final Suggestion suggestionWithSpaces = Suggestion.of(withSpaces, "con espacios y con los símbolos apropiados");
 
         return Replacement.of(
