@@ -9,8 +9,8 @@ import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.Warmup;
 import org.openjdk.jmh.infra.Blackhole;
 
-@Warmup(time = 3) // Default: 5 iterations, 10 s each
-@Measurement(time = 3) // Default: 5 iterations, 10 s each
+@Warmup(time = 5) // Default: 5 iterations, 10 s each
+@Measurement(time = 5) // Default: 5 iterations, 10 s each
 public class CenturyFinderJmhBenchmark extends BaseFinderJmhBenchmark {
 
     private static final String fileName = "century/century-summary-jmh";
