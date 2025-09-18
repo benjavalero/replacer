@@ -5,6 +5,9 @@ import es.bvalero.replacer.finder.*;
 import es.bvalero.replacer.finder.StandardType;
 import jakarta.annotation.PostConstruct;
 import java.util.*;
+import java.util.concurrent.ConcurrentSkipListSet;
+import java.util.stream.Stream;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 /**
@@ -13,6 +16,7 @@ import org.springframework.stereotype.Service;
  * which implement the same interface.
  * The service applies all these specific finders and returns the collected results.
  */
+@Slf4j
 @Service
 class ReplacementFinderService
     extends ReplacementFinderAbstractService
@@ -57,4 +61,35 @@ class ReplacementFinderService
             .findAny()
             .orElse(Optional.empty());
     }
+
+    //region Implementation without suggestions
+
+    /* Particular case to avoid calculating suggestions when indexing to improve a little the performance */
+    @Override
+    public SortedSet<Replacement> findReplacementsWithoutSuggestions(FinderPage page) {
+        SortedSet<Replacement> allResults = this.findWithoutSuggestions(page);
+        return super.filterResults(page, allResults);
+    }
+
+    private SortedSet<Replacement> findWithoutSuggestions(FinderPage page) {
+        final SortedSet<Replacement> results = new ConcurrentSkipListSet<>();
+        findStreamWithoutSuggestions(page).forEach(r -> {
+            if (!results.add(r)) {
+                LOGGER.warn("Duplicated finder result: {}", r);
+            }
+        });
+        return results;
+    }
+
+    private Stream<Replacement> findStreamWithoutSuggestions(FinderPage page) {
+        return findStreamWithoutSuggestions(page, getFinders());
+    }
+
+    private Stream<Replacement> findStreamWithoutSuggestions(FinderPage page, Collection<Finder<Replacement>> finders) {
+        return finders
+            .stream()
+            .map(finder -> (ReplacementFinder) finder)
+            .flatMap(finder -> finder.findWithNoSuggestions(page));
+    }
+    //endregion
 }

@@ -1,10 +1,13 @@
 package es.bvalero.replacer.finder;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.SortedSet;
+import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.With;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.TestOnly;
 import org.springframework.lang.NonNull;
@@ -30,6 +33,7 @@ public final class Replacement implements FinderResult {
     @NonNull
     private final ReplacementType type;
 
+    @With(AccessLevel.PRIVATE)
     @NonNull
     private final List<Suggestion> suggestions;
 
@@ -45,7 +49,7 @@ public final class Replacement implements FinderResult {
         }
 
         // There must exist at least a suggestion different from the found text
-        if (suggestions.isEmpty() || suggestions.stream().allMatch(s -> s.getText().equals(text))) {
+        if (!suggestions.isEmpty() && suggestions.stream().allMatch(s -> s.getText().equals(text))) {
             String msg = String.format("%s - %s", type, StringUtils.join(suggestions));
             throw new IllegalArgumentException("Invalid replacement suggestions: " + msg);
         }
@@ -54,12 +58,26 @@ public final class Replacement implements FinderResult {
         this.text = text;
         this.type = type;
 
-        // Pre-calculate the suggestions as they will always be used later
-        this.suggestions = mergeSuggestions(suggestions);
+        // Pre-calculate the final merged suggestions as they will always be used later
+        this.suggestions = suggestions.isEmpty() ? suggestions : mergeSuggestions(suggestions);
     }
 
     public static Replacement of(int start, String text, ReplacementType type, List<Suggestion> suggestions) {
+        if (suggestions.isEmpty()) {
+            throw new IllegalArgumentException("Invalid replacement. Empty suggestions.");
+        }
+
         return new Replacement(start, text, type, suggestions);
+    }
+
+    /* Particular case to avoid calculating suggestions when indexing to improve a little the performance */
+    public static Replacement ofNoSuggestions(int start, String text, ReplacementType type) {
+        return new Replacement(start, text, type, Collections.emptyList());
+    }
+
+    /* Remove the suggestions to improve performance */
+    public Replacement withNoSuggestions() {
+        return withSuggestions(Collections.emptyList());
     }
 
     // Include the original text as the first option

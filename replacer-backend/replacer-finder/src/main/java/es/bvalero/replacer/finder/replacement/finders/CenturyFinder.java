@@ -229,6 +229,8 @@ class CenturyFinder implements ReplacementFinder {
         return word.charAt(word.length() - 1) == PLURAL_LETTER;
     }
 
+    // TODO: Implement conversion without suggestions
+
     @Override
     public Replacement convert(MatchResult match, FinderPage page) {
         final String centuryWord = match.group(1);

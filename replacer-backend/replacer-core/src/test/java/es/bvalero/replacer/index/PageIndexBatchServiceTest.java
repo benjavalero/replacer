@@ -63,7 +63,7 @@ class PageIndexBatchServiceTest {
 
         verify(pageIndexValidator).isPageIndexableByNamespace(page);
         verify(pageIndexValidator).isIndexableByTimestamp(page, null);
-        verify(replacementFindApi).findReplacements(page.toFinderPage());
+        verify(replacementFindApi).findReplacementsWithoutSuggestions(page.toFinderPage());
         verify(pageComparator).indexPageReplacements(any(IndexablePage.class), anyCollection(), isNull());
     }
 

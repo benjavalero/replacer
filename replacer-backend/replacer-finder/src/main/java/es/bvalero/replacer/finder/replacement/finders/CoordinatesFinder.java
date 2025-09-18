@@ -274,6 +274,11 @@ class CoordinatesFinder implements ReplacementFinder {
     }
 
     @Override
+    public Replacement convertWithNoSuggestions(MatchResult match, FinderPage page) {
+        return Replacement.ofNoSuggestions(match.start(), match.group(), StandardType.COORDINATES);
+    }
+
+    @Override
     public Replacement convert(MatchResult match, FinderPage page) {
         final int matchDegrees = Integer.parseInt(match.group(1));
         final int matchMinutes = Integer.parseInt(match.group(2));

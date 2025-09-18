@@ -2,6 +2,7 @@ package es.bvalero.replacer.finder.benchmark.word;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.exception.ReplacerException;
+import es.bvalero.replacer.finder.Finder;
 import es.bvalero.replacer.finder.benchmark.BaseFinderJmhBenchmark;
 import es.bvalero.replacer.finder.listing.ComposedMisspelling;
 import es.bvalero.replacer.finder.listing.find.ListingFinder;
@@ -93,6 +94,14 @@ public class ComposedMisspellingFinderJmhBenchmark extends BaseFinderJmhBenchmar
     @Benchmark
     public void wordTrieNoOverlappingFinder(Blackhole bh) {
         runFinder(wordTrieNoOverlappingFinder, bh);
+    }
+
+    @Override
+    protected void runFinder(Finder<?> finder, Blackhole bh) {
+        // As the sample represents the whole dump,
+        // finding all over the sample represents the time finding all over the dump.
+        // NOTE: therefore, the average time corresponds to run the finder in the 50 sample pages.
+        sampleContents.forEach(page -> finder.findAndFilter(page).forEach(bh::consume));
     }
 
     public static void main(String[] args) throws RunnerException, ReplacerException {

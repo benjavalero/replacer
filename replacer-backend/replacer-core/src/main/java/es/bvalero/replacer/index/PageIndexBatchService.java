@@ -1,13 +1,11 @@
 package es.bvalero.replacer.index;
 
 import es.bvalero.replacer.common.domain.PageKey;
+import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.ReplacementFindApi;
 import es.bvalero.replacer.page.IndexedPage;
 import es.bvalero.replacer.page.PageSaveRepository;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.lang.Nullable;
@@ -20,6 +18,7 @@ class PageIndexBatchService extends PageIndexAbstractService implements PageInde
     // Dependency injection
     private final PageSaveRepository pageSaveRepository;
     private final PageIndexValidator pageIndexValidator;
+    private final ReplacementFindApi replacementFindApi;
     private final PageBatchService pageBatchService;
 
     @Value("${replacer.dump.batch.chunk.size}")
@@ -38,6 +37,7 @@ class PageIndexBatchService extends PageIndexAbstractService implements PageInde
         super(pageSaveRepository, pageIndexValidator, replacementFindApi, pageComparator);
         this.pageSaveRepository = pageSaveRepository;
         this.pageIndexValidator = pageIndexValidator;
+        this.replacementFindApi = replacementFindApi;
         this.pageBatchService = pageBatchService;
     }
 
@@ -89,6 +89,10 @@ class PageIndexBatchService extends PageIndexAbstractService implements PageInde
     private boolean isPageToBeIndexed(IndexablePage page, @Nullable IndexedPage dbPage) {
         // We assume at this point that the page is indexable by itself
         return pageIndexValidator.isIndexableByTimestamp(page, dbPage);
+    }
+
+    SortedSet<Replacement> findReplacements(IndexablePage indexablePage) {
+        return replacementFindApi.findReplacementsWithoutSuggestions(indexablePage.toFinderPage());
     }
 
     @Override

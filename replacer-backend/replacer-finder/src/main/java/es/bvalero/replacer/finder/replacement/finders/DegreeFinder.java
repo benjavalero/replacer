@@ -160,6 +160,8 @@ class DegreeFinder implements ReplacementFinder {
         return FinderUtils.isDecimalNumber(word) && !FinderUtils.isActualSpace(space1);
     }
 
+    // TODO: Implement conversion without suggestions
+
     @Override
     public Replacement convert(MatchResult match, FinderPage page) {
         // 1 - word; 2 - space before; 3 - symbol
