@@ -72,7 +72,7 @@ class AcuteOFinder implements ReplacementFinder {
 
     @Override
     public Replacement convert(MatchResult match, FinderPage page) {
-        return Replacement.of(match.start(), ACUTE_O, StandardType.ACUTE_O, findSuggestions(), page.getContent());
+        return Replacement.of(match.start(), ACUTE_O, StandardType.ACUTE_O, findSuggestions());
     }
 
     private List<Suggestion> findSuggestions() {

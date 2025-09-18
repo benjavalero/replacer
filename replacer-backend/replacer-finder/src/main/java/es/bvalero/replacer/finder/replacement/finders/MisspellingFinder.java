@@ -68,8 +68,7 @@ public abstract class MisspellingFinder implements ReplacementFinder {
             start,
             text,
             StandardType.of(getType(), getSubtype(text, page.getPageKey().getLang())),
-            findSuggestions(text, page.getPageKey().getLang()),
-            page.getContent()
+            findSuggestions(text, page.getPageKey().getLang())
         );
     }
 

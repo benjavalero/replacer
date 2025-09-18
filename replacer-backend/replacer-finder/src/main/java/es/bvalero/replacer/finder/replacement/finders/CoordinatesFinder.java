@@ -321,8 +321,7 @@ class CoordinatesFinder implements ReplacementFinder {
             match.start(),
             match.group(),
             StandardType.COORDINATES,
-            List.of(suggestionNoSpaces, suggestionWithSpaces),
-            page.getContent()
+            List.of(suggestionNoSpaces, suggestionWithSpaces)
         );
     }
 

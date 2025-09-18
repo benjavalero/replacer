@@ -1,5 +1,6 @@
 package es.bvalero.replacer.index;
 
+import es.bvalero.replacer.common.util.ReplacerUtils;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.page.IndexedPage;
 import es.bvalero.replacer.page.IndexedPageStatus;
@@ -8,6 +9,7 @@ import es.bvalero.replacer.page.IndexedReplacementStatus;
 import java.util.*;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.VisibleForTesting;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
@@ -19,6 +21,9 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 class PageComparator {
+
+    private static final int CONTEXT_THRESHOLD = 20;
+    private static final int MAX_CONTEXT_LENGTH = 255; // Constrained by the database
 
     IndexedPage indexPageReplacements(
         IndexablePage page,
@@ -68,7 +73,7 @@ class PageComparator {
         // In case a replacement is kept as is, we also mark it as "touched".
         final List<ComparableReplacement> comparablePageReplacements = pageReplacements
             .stream()
-            .map(r -> ComparableReplacement.of(r, page.getPageKey()))
+            .map(r -> ComparableReplacement.of(r, page))
             .collect(Collectors.toCollection(ArrayList::new));
         // Replacements with the same type and position are considered equal
         // If they have different position but same context, and they are close enough,
@@ -90,6 +95,18 @@ class PageComparator {
             .noneMatch(p -> p.getStatus() == IndexedReplacementStatus.UNDEFINED);
 
         return indexedPage;
+    }
+
+    static String extractContext(Replacement replacement, String pageContent) {
+        return StringUtils.truncate(
+            ReplacerUtils.getContextAroundWord(
+                pageContent,
+                replacement.getStart(),
+                replacement.getEnd(),
+                CONTEXT_THRESHOLD
+            ),
+            MAX_CONTEXT_LENGTH
+        );
     }
 
     @VisibleForTesting
@@ -210,13 +227,11 @@ class PageComparator {
             .toList();
         return replacements
             .stream()
-            .filter(r -> indexedReplacements.stream().anyMatch(ir -> PageComparator.isSameReplacement(r, ir)))
+            .filter(r -> indexedReplacements.stream().anyMatch(ir -> isSameReplacement(r, ir)))
             .toList();
     }
 
     private static boolean isSameReplacement(Replacement r, IndexedReplacement ir) {
-        return (
-            r.getType().equals(ir.getType()) && r.getStart() == ir.getStart() && r.getContext().equals(ir.getContext())
-        );
+        return r.getType().equals(ir.getType()) && r.getStart() == ir.getStart();
     }
 }

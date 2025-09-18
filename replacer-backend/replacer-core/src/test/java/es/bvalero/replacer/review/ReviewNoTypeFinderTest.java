@@ -44,8 +44,7 @@ class ReviewNoTypeFinderTest {
         1,
         "Y",
         StandardType.DEGREES,
-        List.of(Suggestion.ofNoComment("Z")),
-        content
+        List.of(Suggestion.ofNoComment("Z"))
     );
     private final List<Replacement> replacements = List.of(replacement);
     private final User user = User.buildTestUser();

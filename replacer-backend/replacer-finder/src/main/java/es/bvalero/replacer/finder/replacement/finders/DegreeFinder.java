@@ -216,6 +216,6 @@ class DegreeFinder implements ReplacementFinder {
             suggestions.add(Suggestion.of(word + DOT + symbol, "ordinal"));
         }
 
-        return Replacement.of(start, text, StandardType.DEGREES, suggestions, page.getContent());
+        return Replacement.of(start, text, StandardType.DEGREES, suggestions);
     }
 }

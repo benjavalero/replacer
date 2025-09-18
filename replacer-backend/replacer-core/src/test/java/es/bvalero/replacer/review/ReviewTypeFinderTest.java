@@ -51,8 +51,7 @@ class ReviewTypeFinderTest {
         1,
         "Y",
         StandardType.of(ReplacementKind.SIMPLE, "Y"),
-        List.of(Suggestion.ofNoComment("Z")),
-        content
+        List.of(Suggestion.ofNoComment("Z"))
     );
     private final List<Replacement> replacements = List.of(replacement);
     private final User user = User.buildTestUser();
@@ -249,8 +248,7 @@ class ReviewTypeFinderTest {
             2,
             "Z",
             StandardType.of(ReplacementKind.SIMPLE, "Z"),
-            List.of(Suggestion.ofNoComment("z")),
-            page.getContent()
+            List.of(Suggestion.ofNoComment("z"))
         );
         when(pageIndexApi.indexPage(page)).thenReturn(PageIndexResult.ofIndexed(List.of(replacement2)));
 

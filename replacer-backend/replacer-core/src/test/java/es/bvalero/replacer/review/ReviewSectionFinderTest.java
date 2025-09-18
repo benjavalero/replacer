@@ -68,8 +68,7 @@ class ReviewSectionFinderTest {
             8,
             "an",
             StandardType.of(ReplacementKind.SIMPLE, "an"),
-            List.of(suggestion),
-            content
+            List.of(suggestion)
         );
         List<Replacement> replacements = List.of(replacement);
         WikipediaPage page = buildWikipediaPage(pageId, content);
