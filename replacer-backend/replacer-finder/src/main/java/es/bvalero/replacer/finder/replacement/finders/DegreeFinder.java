@@ -60,7 +60,7 @@ class DegreeFinder implements ReplacementFinder {
             }
 
             final int startDegree = matchWord.start();
-            final FinderMatchResult match = FinderMatchResult.of(text, startDegree, endDegree);
+            final FinderMatchResult match = FinderMatchResult.ofNested(text, startDegree, endDegree);
             // 1 - word; 2 - space before; 3 - symbol
             match.addGroup(matchWord);
             match.addGroup(FinderMatchResult.of(text, matchWord.end(), startSymbol));

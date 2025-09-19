@@ -99,7 +99,7 @@ class CoordinatesFinder implements ReplacementFinder {
                 endCoordinates = matchDirection.end();
             }
 
-            final FinderMatchResult result = FinderMatchResult.of(text, matchDegrees.start(), endCoordinates);
+            final FinderMatchResult result = FinderMatchResult.ofNested(text, matchDegrees.start(), endCoordinates);
             // Groups: 1 - Degrees; 2 - Minutes; 3 - Seconds (optional); 4 - Direction (optional)
             result.addGroup(matchDegrees);
             result.addGroup(matchMinutes);
@@ -201,12 +201,13 @@ class CoordinatesFinder implements ReplacementFinder {
      */
     @Nullable
     private MatchResult findSeconds(String text, int start) {
-        final FinderMatchResult matchNumber = (FinderMatchResult) FinderUtils.findNumber(text, start, true, false);
-        if (matchNumber == null || matchNumber.end() >= text.length()) {
+        final MatchResult match = FinderUtils.findNumber(text, start, true, false);
+        if (match == null || match.end() >= text.length()) {
             // No number to continue searching
             return null;
         }
 
+        final FinderMatchResult matchNumber = FinderMatchResult.ofNested(match.start(), match.group());
         if (!isSecondNumber(matchNumber.group())) {
             return null;
         }

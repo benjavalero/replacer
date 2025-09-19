@@ -100,7 +100,7 @@ class OrdinalFinder implements ReplacementFinder {
 
             final int startOrdinal = matchNumber.start();
             final int endOrdinal = matchSuffix.end();
-            final FinderMatchResult matchResult = FinderMatchResult.of(text, startOrdinal, endOrdinal);
+            final FinderMatchResult matchResult = FinderMatchResult.ofNested(text, startOrdinal, endOrdinal);
             matchResult.addGroup(matchNumber);
             matchResult.addGroup(matchSuffix);
             return matchResult;

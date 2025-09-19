@@ -13,13 +13,16 @@ import java.util.regex.MatchResult;
  */
 public record FinderMatchResult(int start, String group, List<MatchResult> groups) implements MatchResult {
     private FinderMatchResult(int start, String text) {
-        this(start, text, new ArrayList<>(4));
-        // Group 0 is the whole match, but we don't actually need to add it.
-        groups.add(null);
+        // By default, we assume the match does not contain groups to improve performance.
+        this(start, text, List.of());
     }
 
     public static FinderMatchResult of(int start, String text) {
         return new FinderMatchResult(start, text);
+    }
+
+    public static FinderMatchResult ofNested(int start, String text) {
+        return new FinderMatchResult(start, text, new ArrayList<>(4));
     }
 
     public static FinderMatchResult ofEmpty(int start) {
@@ -28,6 +31,10 @@ public record FinderMatchResult(int start, String group, List<MatchResult> group
 
     public static FinderMatchResult of(String text, int start, int end) {
         return new FinderMatchResult(start, text.substring(start, end));
+    }
+
+    public static FinderMatchResult ofNested(String text, int start, int end) {
+        return FinderMatchResult.ofNested(start, text.substring(start, end));
     }
 
     @Override
@@ -47,7 +54,7 @@ public record FinderMatchResult(int start, String group, List<MatchResult> group
 
     @Override
     public int start(int group) {
-        return group == 0 ? this.start() : this.groups.get(group).start();
+        return group == 0 ? this.start() : this.groups.get(group - 1).start();
     }
 
     @Override
@@ -57,17 +64,17 @@ public record FinderMatchResult(int start, String group, List<MatchResult> group
 
     @Override
     public int end(int group) {
-        return group == 0 ? this.end() : this.groups.get(group).end();
+        return group == 0 ? this.end() : this.groups.get(group - 1).end();
     }
 
     @Override
     public String group(int group) {
-        return group == 0 ? this.group() : this.groups.get(group).group();
+        return group == 0 ? this.group() : this.groups.get(group - 1).group();
     }
 
     @Override
     public int groupCount() {
-        return this.groups.size() - 1;
+        return this.groups.size();
     }
 
     public boolean containsNested(int position) {

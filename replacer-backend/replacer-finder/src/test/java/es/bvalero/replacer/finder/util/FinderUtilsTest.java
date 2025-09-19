@@ -236,8 +236,8 @@ class FinderUtilsTest {
         MatchResult matchLink2 = matches.stream().filter(m -> m.group().equals(link2)).findAny().get();
         MatchResult matchLink3 = matches.stream().filter(m -> m.group().equals(link3)).findAny().get();
         assertEquals(2, matchLink.groupCount());
-        assertEquals(matchLink2, matchLink.groups().get(1));
-        assertEquals(matchLink3, matchLink.groups().get(2));
+        assertEquals(matchLink2, matchLink.groups().get(0));
+        assertEquals(matchLink3, matchLink.groups().get(1));
         assertEquals(0, matchLink2.groupCount());
         assertEquals(0, matchLink3.groupCount());
     }
@@ -258,9 +258,9 @@ class FinderUtilsTest {
         FinderMatchResult matchLink2 = matches.stream().filter(m -> m.group().equals(link2)).findAny().get();
         MatchResult matchLink3 = matches.stream().filter(m -> m.group().equals(link3)).findAny().get();
         assertEquals(1, matchLink.groupCount());
-        assertEquals(matchLink2, matchLink.groups().get(1));
+        assertEquals(matchLink2, matchLink.groups().getFirst());
         assertEquals(1, matchLink2.groupCount());
-        assertEquals(matchLink3, matchLink2.groups().get(1));
+        assertEquals(matchLink3, matchLink2.groups().getFirst());
         assertEquals(0, matchLink3.groupCount());
     }
 

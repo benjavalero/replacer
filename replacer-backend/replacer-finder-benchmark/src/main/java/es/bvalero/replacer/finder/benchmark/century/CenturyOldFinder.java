@@ -96,7 +96,7 @@ class CenturyOldFinder implements BenchmarkFinder {
                 continue;
             }
 
-            final FinderMatchResult match = FinderMatchResult.of(text, startCentury, endCentury);
+            final FinderMatchResult match = FinderMatchResult.ofNested(text, startCentury, endCentury);
             match.addGroup(centuryWord);
             match.addGroup(centuryNumber);
             match.addGroup(era);

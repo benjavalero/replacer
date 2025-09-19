@@ -564,7 +564,7 @@ public class FinderUtils {
                 if (newStart < 0) {
                     break;
                 }
-                matchStack.addLast(FinderMatchResult.ofEmpty(newStart));
+                matchStack.addLast(FinderMatchResult.ofNested(newStart, startStr));
                 index = newStart + startStr.length();
             }
 
@@ -583,7 +583,7 @@ public class FinderUtils {
             final int nextStart = text.indexOf(startStr, index);
             if (nextStart >= 0 && nextStart < end) {
                 // Nested structure
-                final FinderMatchResult nextMatch = FinderMatchResult.ofEmpty(nextStart);
+                final FinderMatchResult nextMatch = FinderMatchResult.ofNested(nextStart, startStr);
                 matchStack.addLast(nextMatch);
                 index = nextStart + startStr.length();
             } else {
