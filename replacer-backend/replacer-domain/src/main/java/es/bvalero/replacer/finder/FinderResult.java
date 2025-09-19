@@ -1,7 +1,5 @@
 package es.bvalero.replacer.finder;
 
-import org.apache.commons.lang3.Range;
-
 /**
  * Base interface for the finder results: cosmetics, immutables and replacements.
  * It has to be public so the extensions can use the common methods.
@@ -22,19 +20,15 @@ public interface FinderResult extends Comparable<FinderResult> {
             : Integer.compare(getStart(), o.getStart());
     }
 
-    private Range<Integer> getRange() {
-        return Range.of(getStart(), getEnd() - 1);
-    }
-
     /** Return if a result contains strictly, i.e. not been equal, another result. */
     default boolean containsStrictly(FinderResult r) {
         // We don't want an item to contain itself
-        return getRange().containsRange(r.getRange()) && !getRange().equals(r.getRange());
+        return this.contains(r) && this.compareTo(r) != 0;
     }
 
     /** Return if a result contains (not strictly, i.e. both can be equal) another result. */
     default boolean contains(FinderResult r) {
-        return getRange().containsRange(r.getRange());
+        return r.getStart() >= getStart() && r.getEnd() <= getEnd();
     }
 
     default boolean validate(String pageContent) {
