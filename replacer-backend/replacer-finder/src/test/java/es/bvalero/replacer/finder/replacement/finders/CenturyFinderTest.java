@@ -78,13 +78,13 @@ class CenturyFinderTest {
         assertEquals(1, replacements.size());
 
         Replacement rep = replacements.getFirst();
-        assertEquals(StandardType.CENTURY, rep.getType());
-        assertEquals(century, rep.getText());
+        assertEquals(StandardType.CENTURY, rep.type());
+        assertEquals(century, rep.text());
 
         List<String> expectedSuggestions = new ArrayList<>();
         expectedSuggestions.add(century);
         expectedSuggestions.addAll(Arrays.stream(expected.split(",")).map(String::trim).toList());
-        assertEquals(expectedSuggestions, rep.getSuggestions().stream().map(Suggestion::getText).toList());
+        assertEquals(expectedSuggestions, rep.suggestions().stream().map(Suggestion::getText).toList());
     }
 
     @ParameterizedTest
@@ -112,7 +112,7 @@ class CenturyFinderTest {
         List<Replacement> replacements = centuryFinder.findList(text);
 
         assertEquals(2, replacements.size());
-        assertEquals("siglo XIX", replacements.get(0).getText());
-        assertEquals("siglo XX", replacements.get(1).getText());
+        assertEquals("siglo XIX", replacements.get(0).text());
+        assertEquals("siglo XX", replacements.get(1).text());
     }
 }

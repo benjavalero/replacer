@@ -29,7 +29,7 @@ class CommentFinderTest {
         List<Immutable> matches = commentFinder.findList(text);
 
         assertEquals(1, matches.size());
-        assertEquals(text, matches.get(0).getText());
+        assertEquals(text, matches.get(0).text());
     }
 
     @Test
@@ -52,7 +52,7 @@ class CommentFinderTest {
         List<Immutable> matches = commentFinder.findList(text);
 
         Set<String> expected = Set.of(comment1, comment2);
-        Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
+        Set<String> actual = matches.stream().map(Immutable::text).collect(Collectors.toSet());
         assertEquals(expected, actual);
     }
 }

@@ -4,32 +4,18 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.regex.MatchResult;
-import lombok.*;
-import org.jetbrains.annotations.TestOnly;
 
 /**
  * Simple implementation to create match results from a match start and text.
  * We also support groups, to implement the capture of nested or convenient matches.
  */
-@ToString
-@EqualsAndHashCode
-public class FinderMatchResult implements MatchResult {
-
-    private final int start;
-
-    @Setter(AccessLevel.PROTECTED) // Just for the temporary matches when capturing nested groups
-    private String text;
-
-    @Getter(onMethod_ = @TestOnly)
-    @EqualsAndHashCode.Exclude
-    private final List<MatchResult> groups = new ArrayList<>();
-
-    protected FinderMatchResult(int start, String text) {
-        this.start = start;
-        this.text = text;
+public record FinderMatchResult(int start, String group, List<MatchResult> groups) implements MatchResult {
+    private FinderMatchResult(int start, String text) {
+        this(start, text, new ArrayList<>(4));
         // Group 0 is the whole match, but we don't actually need to add it.
-        this.groups.add(null);
+        groups.add(null);
     }
 
     public static FinderMatchResult of(int start, String text) {
@@ -41,16 +27,22 @@ public class FinderMatchResult implements MatchResult {
     }
 
     public static FinderMatchResult of(String text, int start, int end) {
-        return FinderMatchResult.of(start, text.substring(start, end));
+        return new FinderMatchResult(start, text.substring(start, end));
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof FinderMatchResult that)) return false;
+        return start == that.start && Objects.equals(group, that.group);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(start, group);
     }
 
     public void addGroup(MatchResult group) {
         this.groups.add(group);
-    }
-
-    @Override
-    public int start() {
-        return this.start;
     }
 
     @Override
@@ -60,17 +52,12 @@ public class FinderMatchResult implements MatchResult {
 
     @Override
     public int end() {
-        return this.start + this.text.length();
+        return this.start + this.group.length();
     }
 
     @Override
     public int end(int group) {
         return group == 0 ? this.end() : this.groups.get(group).end();
-    }
-
-    @Override
-    public String group() {
-        return this.text;
     }
 
     @Override

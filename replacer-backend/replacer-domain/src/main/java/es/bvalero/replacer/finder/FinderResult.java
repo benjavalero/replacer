@@ -5,19 +5,17 @@ package es.bvalero.replacer.finder;
  * It has to be public so the extensions can use the common methods.
  */
 public interface FinderResult extends Comparable<FinderResult> {
-    int getStart();
-    String getText();
+    int start();
+    String text();
 
-    default int getEnd() {
-        return getStart() + getText().length();
+    default int end() {
+        return start() + text().length();
     }
 
     @Override
     default int compareTo(FinderResult o) {
         // Compare by start and then by end
-        return getStart() == o.getStart()
-            ? Integer.compare(getEnd(), o.getEnd())
-            : Integer.compare(getStart(), o.getStart());
+        return start() == o.start() ? Integer.compare(end(), o.end()) : Integer.compare(start(), o.start());
     }
 
     /** Return if a result contains strictly, i.e. not been equal, another result. */
@@ -28,18 +26,18 @@ public interface FinderResult extends Comparable<FinderResult> {
 
     /** Return if a result contains (not strictly, i.e. both can be equal) another result. */
     default boolean contains(FinderResult r) {
-        return r.getStart() >= getStart() && r.getEnd() <= getEnd();
+        return r.start() >= start() && r.end() <= end();
     }
 
     default boolean validate(String pageContent) {
         // Validate positions only on tests not to penalize the performance
-        if (getEnd() <= pageContent.length() && getText().equals(pageContent.substring(getStart(), getEnd()))) {
+        if (end() <= pageContent.length() && text().equals(pageContent.substring(start(), end()))) {
             return true;
         } else {
             String msg = String.format(
                 "Finder result (%d - %s) doesn't match with page content",
-                this.getStart(),
-                this.getText()
+                this.start(),
+                this.text()
             );
             throw new IllegalStateException(msg);
         }

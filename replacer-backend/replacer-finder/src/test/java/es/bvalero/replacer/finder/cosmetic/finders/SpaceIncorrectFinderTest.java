@@ -39,8 +39,8 @@ class SpaceIncorrectFinderTest {
         List<Cosmetic> cosmetics = spaceIncorrectFinder.findList(text);
 
         assertEquals(1, cosmetics.size());
-        assertEquals(text, cosmetics.get(0).getText());
-        assertEquals(fix, cosmetics.get(0).getFix());
+        assertEquals(text, cosmetics.get(0).text());
+        assertEquals(fix, cosmetics.get(0).fix());
     }
 
     @ParameterizedTest
@@ -60,8 +60,8 @@ class SpaceIncorrectFinderTest {
         List<Cosmetic> cosmetics = spaceIncorrectFinder.find(page).toList();
 
         assertEquals(1, cosmetics.size());
-        assertEquals(text, cosmetics.get(0).getText());
-        assertEquals(fix, cosmetics.get(0).getFix());
+        assertEquals(text, cosmetics.get(0).text());
+        assertEquals(fix, cosmetics.get(0).fix());
     }
 
     @ParameterizedTest
@@ -86,8 +86,8 @@ class SpaceIncorrectFinderTest {
         List<Cosmetic> cosmetics = spaceIncorrectFinder.findList(text);
 
         assertEquals(1, cosmetics.size());
-        assertEquals(text, cosmetics.get(0).getText());
-        assertEquals(fix, cosmetics.get(0).getFix());
+        assertEquals(text, cosmetics.get(0).text());
+        assertEquals(fix, cosmetics.get(0).fix());
     }
 
     @Test
@@ -98,7 +98,7 @@ class SpaceIncorrectFinderTest {
         List<Cosmetic> cosmetics = spaceIncorrectFinder.find(FinderPage.of(WikipediaLanguage.GALICIAN, text)).toList();
 
         assertEquals(1, cosmetics.size());
-        assertEquals(text, cosmetics.get(0).getText());
-        assertEquals(fix, cosmetics.get(0).getFix());
+        assertEquals(text, cosmetics.get(0).text());
+        assertEquals(fix, cosmetics.get(0).fix());
     }
 }

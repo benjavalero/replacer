@@ -1,16 +1,8 @@
 package es.bvalero.replacer.finder;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.SortedSet;
-import lombok.AccessLevel;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.With;
+import java.util.*;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.TestOnly;
-import org.springframework.lang.NonNull;
 
 /**
  * A <strong>replacement</strong> is a potential issue to be checked and fixed (replaced). For instance,
@@ -19,25 +11,9 @@ import org.springframework.lang.NonNull;
  * For instance, in Spanish the word "Paris" could be misspelled if it corresponds to the French city
  * (written correctly as "París"), but it would be correct if it refers to the mythological Trojan prince.
  */
-@Getter
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public final class Replacement implements FinderResult {
-
-    @EqualsAndHashCode.Include
-    private final int start;
-
-    @EqualsAndHashCode.Include
-    @NonNull
-    private final String text;
-
-    @NonNull
-    private final ReplacementType type;
-
-    @With(AccessLevel.PRIVATE)
-    @NonNull
-    private final List<Suggestion> suggestions;
-
-    private Replacement(int start, String text, ReplacementType type, List<Suggestion> suggestions) {
+public record Replacement(int start, String text, ReplacementType type, List<Suggestion> suggestions)
+    implements FinderResult {
+    public Replacement(int start, String text, ReplacementType type, List<Suggestion> suggestions) {
         // Validate start
         if (start < 0) {
             throw new IllegalArgumentException("Negative replacement start: " + start);
@@ -75,9 +51,24 @@ public final class Replacement implements FinderResult {
         return new Replacement(start, text, type, Collections.emptyList());
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof Replacement that)) return false;
+        return start == that.start && Objects.equals(text, that.text);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(start, text);
+    }
+
     /* Remove the suggestions to improve performance */
     public Replacement withNoSuggestions() {
         return withSuggestions(Collections.emptyList());
+    }
+
+    private Replacement withSuggestions(List<Suggestion> suggestions) {
+        return new Replacement(start, text, type, suggestions);
     }
 
     // Include the original text as the first option
@@ -115,8 +106,8 @@ public final class Replacement implements FinderResult {
     private static boolean compareReplacement(Replacement expected, Replacement actual) {
         return (
             expected.equals(actual) &&
-            expected.getType().equals(actual.getType()) &&
-            expected.getSuggestions().equals(actual.getSuggestions())
+            expected.type.equals(actual.type) &&
+            expected.suggestions().equals(actual.suggestions())
         );
     }
 }

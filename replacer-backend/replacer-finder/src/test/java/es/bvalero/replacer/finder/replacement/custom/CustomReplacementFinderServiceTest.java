@@ -30,7 +30,7 @@ class CustomReplacementFinderServiceTest {
 
         assertFalse(replacements.isEmpty());
         assertEquals(1, replacements.size());
-        assertEquals("X", replacements.stream().findFirst().orElseThrow().getText());
+        assertEquals("X", replacements.stream().findFirst().orElseThrow().text());
     }
 
     @Test

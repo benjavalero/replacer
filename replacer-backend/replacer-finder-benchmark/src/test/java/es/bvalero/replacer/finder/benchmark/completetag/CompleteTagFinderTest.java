@@ -45,7 +45,7 @@ class CompleteTagFinderTest {
         BenchmarkFinder finder = new CompleteTagRegexIteratedFinder(completeTags);
         assertEquals(
             expected,
-            finder.findMatches(text).stream().map(BenchmarkResult::getText).collect(Collectors.toSet())
+            finder.findMatches(text).stream().map(BenchmarkResult::text).collect(Collectors.toSet())
         );
     }
 
@@ -54,7 +54,7 @@ class CompleteTagFinderTest {
         BenchmarkFinder finder = new CompleteTagRegexBackReferenceFinder(completeTags);
         assertEquals(
             expected,
-            finder.findMatches(text).stream().map(BenchmarkResult::getText).collect(Collectors.toSet())
+            finder.findMatches(text).stream().map(BenchmarkResult::text).collect(Collectors.toSet())
         );
     }
 
@@ -63,7 +63,7 @@ class CompleteTagFinderTest {
         BenchmarkFinder finder = new CompleteTagLinearIteratedFinder(completeTags);
         assertEquals(
             expected,
-            finder.findMatches(text).stream().map(BenchmarkResult::getText).collect(Collectors.toSet())
+            finder.findMatches(text).stream().map(BenchmarkResult::text).collect(Collectors.toSet())
         );
     }
 
@@ -72,7 +72,7 @@ class CompleteTagFinderTest {
         BenchmarkFinder finder = new CompleteTagLinearFinder(completeTags);
         assertEquals(
             expected,
-            finder.findMatches(text).stream().map(BenchmarkResult::getText).collect(Collectors.toSet())
+            finder.findMatches(text).stream().map(BenchmarkResult::text).collect(Collectors.toSet())
         );
     }
 
@@ -81,7 +81,7 @@ class CompleteTagFinderTest {
         BenchmarkFinder finder = new CompleteTagFinalFinder(completeTags);
         assertEquals(
             expected,
-            finder.findMatches(text).stream().map(BenchmarkResult::getText).collect(Collectors.toSet())
+            finder.findMatches(text).stream().map(BenchmarkResult::text).collect(Collectors.toSet())
         );
     }
 }

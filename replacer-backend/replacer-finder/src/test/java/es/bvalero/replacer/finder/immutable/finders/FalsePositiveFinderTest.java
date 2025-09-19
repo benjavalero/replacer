@@ -50,7 +50,7 @@ class FalsePositiveFinderTest {
         List<Immutable> matches = falsePositiveFinder.findList(text);
 
         Set<String> expected = Set.of("sólo", "éstos", "Index", "Online");
-        Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
+        Set<String> actual = matches.stream().map(Immutable::text).collect(Collectors.toSet());
         assertEquals(expected, actual);
     }
 
@@ -62,10 +62,10 @@ class FalsePositiveFinderTest {
         List<Immutable> matches = falsePositiveFinder.findList(text);
 
         Set<String> expected = Set.of("tí", "había allí");
-        Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
+        Set<String> actual = matches.stream().map(Immutable::text).collect(Collectors.toSet());
         assertEquals(expected, actual);
 
-        assertEquals(2, matches.stream().filter(m -> m.getText().equals("tí")).count());
+        assertEquals(2, matches.stream().filter(m -> m.text().equals("tí")).count());
     }
 
     @Test
@@ -77,7 +77,7 @@ class FalsePositiveFinderTest {
 
         // Both matches are found
         Set<String> expected = Set.of("Top Album", "Album Chart");
-        Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
+        Set<String> actual = matches.stream().map(Immutable::text).collect(Collectors.toSet());
         assertEquals(expected, actual);
     }
 
@@ -93,7 +93,7 @@ class FalsePositiveFinderTest {
         // So, once the first one is discarded as it is not complete, we lose the second one too.
         // Using the Aho-Corasick algorithm, we can fix it.
         Set<String> expected = Set.of("aún son");
-        Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
+        Set<String> actual = matches.stream().map(Immutable::text).collect(Collectors.toSet());
         assertEquals(expected, actual);
     }
 

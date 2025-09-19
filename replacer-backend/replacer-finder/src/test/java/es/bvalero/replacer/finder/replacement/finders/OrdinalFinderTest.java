@@ -46,10 +46,10 @@ class OrdinalFinderTest {
         List<Replacement> replacements = ordinalFinder.findList(ordinal);
 
         assertEquals(1, replacements.size());
-        assertEquals(ordinal, replacements.get(0).getText());
-        assertEquals(ordinal, replacements.get(0).getSuggestions().get(0).getText());
-        assertEquals(expected, replacements.get(0).getSuggestions().get(1).getText());
-        assertEquals(StandardType.ORDINAL, replacements.get(0).getType());
+        assertEquals(ordinal, replacements.get(0).text());
+        assertEquals(ordinal, replacements.get(0).suggestions().get(0).getText());
+        assertEquals(expected, replacements.get(0).suggestions().get(1).getText());
+        assertEquals(StandardType.ORDINAL, replacements.get(0).type());
     }
 
     @ParameterizedTest
@@ -92,8 +92,8 @@ class OrdinalFinderTest {
 
         assertEquals(1, replacements.size());
         Replacement rep = replacements.getFirst();
-        assertEquals("2ª", rep.getText());
-        assertEquals("2.ª", rep.getSuggestions().get(1).getText());
+        assertEquals("2ª", rep.text());
+        assertEquals("2.ª", rep.suggestions().get(1).getText());
     }
 
     @Test
@@ -104,10 +104,10 @@ class OrdinalFinderTest {
 
         assertEquals(1, replacements.size());
         Replacement rep = replacements.getFirst();
-        assertEquals(StandardType.ORDINAL, rep.getType());
+        assertEquals(StandardType.ORDINAL, rep.type());
 
-        assertEquals(7, rep.getSuggestions().size());
-        List<Suggestion> sug = rep.getSuggestions();
+        assertEquals(7, rep.suggestions().size());
+        List<Suggestion> sug = rep.suggestions();
 
         // Original
         assertEquals("2º", sug.get(0).getText());
@@ -146,10 +146,10 @@ class OrdinalFinderTest {
 
         assertEquals(1, replacements.size());
         Replacement rep = replacements.getFirst();
-        assertEquals(StandardType.ORDINAL, rep.getType());
+        assertEquals(StandardType.ORDINAL, rep.type());
 
-        assertEquals(5, rep.getSuggestions().size());
-        List<Suggestion> sug = rep.getSuggestions();
+        assertEquals(5, rep.suggestions().size());
+        List<Suggestion> sug = rep.suggestions();
 
         // Original
         assertEquals("4ª", sug.get(0).getText());
@@ -180,10 +180,10 @@ class OrdinalFinderTest {
 
         assertEquals(1, replacements.size());
         Replacement rep = replacements.getFirst();
-        assertEquals(StandardType.ORDINAL, rep.getType());
+        assertEquals(StandardType.ORDINAL, rep.type());
 
-        assertEquals(7, rep.getSuggestions().size());
-        List<Suggestion> sug = rep.getSuggestions();
+        assertEquals(7, rep.suggestions().size());
+        List<Suggestion> sug = rep.suggestions();
 
         // Original
         assertEquals("11ª", sug.get(0).getText());
@@ -220,10 +220,10 @@ class OrdinalFinderTest {
 
         assertEquals(1, replacements.size());
         Replacement rep = replacements.getFirst();
-        assertEquals(StandardType.ORDINAL, rep.getType());
+        assertEquals(StandardType.ORDINAL, rep.type());
 
-        assertEquals(7, rep.getSuggestions().size());
-        List<Suggestion> sug = rep.getSuggestions();
+        assertEquals(7, rep.suggestions().size());
+        List<Suggestion> sug = rep.suggestions();
 
         // Original
         assertEquals("1ros.", sug.get(0).getText());

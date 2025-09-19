@@ -540,18 +540,6 @@ public class FinderUtils {
         boolean validate(String text, int start);
     }
 
-    /* Temporary match result when we only know the match start */
-    private class TempMatchResult extends FinderMatchResult {
-
-        TempMatchResult(int start) {
-            super(start, "");
-        }
-
-        static TempMatchResult of(int start) {
-            return new TempMatchResult(start);
-        }
-    }
-
     public Collection<FinderMatchResult> findAllStructures(FinderPage page, String startStr, String endStr) {
         return findAllStructures(page, startStr, endStr, (text, start) -> true);
     }
@@ -567,7 +555,7 @@ public class FinderUtils {
 
         final String text = page.getContent();
         // Deque implementation is a little better than old stack and recommended by Java
-        final Deque<TempMatchResult> matchStack = new ArrayDeque<>();
+        final Deque<FinderMatchResult> matchStack = new ArrayDeque<>();
         int index = 0;
         // TODO: Reduce cyclomatic complexity
         while (index >= 0 && index < text.length()) {
@@ -576,12 +564,12 @@ public class FinderUtils {
                 if (newStart < 0) {
                     break;
                 }
-                matchStack.addLast(TempMatchResult.of(newStart));
+                matchStack.addLast(FinderMatchResult.ofEmpty(newStart));
                 index = newStart + startStr.length();
             }
 
             assert !matchStack.isEmpty();
-            final TempMatchResult currentMatch = matchStack.getLast();
+            final FinderMatchResult currentMatch = matchStack.getLast();
             final int start = currentMatch.start();
             final int end = text.indexOf(endStr, index);
             if (end < 0) {
@@ -595,15 +583,22 @@ public class FinderUtils {
             final int nextStart = text.indexOf(startStr, index);
             if (nextStart >= 0 && nextStart < end) {
                 // Nested structure
-                final TempMatchResult nextMatch = TempMatchResult.of(nextStart);
-                currentMatch.addGroup(nextMatch);
+                final FinderMatchResult nextMatch = FinderMatchResult.ofEmpty(nextStart);
                 matchStack.addLast(nextMatch);
                 index = nextStart + startStr.length();
             } else {
                 final int actualEnd = end + endStr.length();
-                currentMatch.setText(text.substring(start, actualEnd));
-                matches.add(currentMatch);
+                final FinderMatchResult endedMatch = new FinderMatchResult(
+                    currentMatch.start(),
+                    text.substring(start, actualEnd),
+                    currentMatch.groups()
+                );
+                matches.add(endedMatch);
                 matchStack.removeLast();
+                if (!matchStack.isEmpty()) {
+                    // Add the ended Match to the parent that now it's at the top of the stack
+                    matchStack.getLast().addGroup(endedMatch);
+                }
                 index = actualEnd;
             }
         }

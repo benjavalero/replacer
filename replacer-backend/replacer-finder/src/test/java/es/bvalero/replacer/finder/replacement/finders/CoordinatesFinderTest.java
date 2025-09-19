@@ -44,10 +44,10 @@ class CoordinatesFinderTest {
         assertEquals(1, replacements.size());
 
         Replacement rep = replacements.getFirst();
-        assertEquals(StandardType.COORDINATES, rep.getType());
-        assertEquals(text, rep.getText());
-        assertEquals(text, rep.getSuggestions().get(0).getText());
-        assertEquals(expected, rep.getSuggestions().get(1).getText());
+        assertEquals(StandardType.COORDINATES, rep.type());
+        assertEquals(text, rep.text());
+        assertEquals(text, rep.suggestions().get(0).getText());
+        assertEquals(expected, rep.suggestions().get(1).getText());
     }
 
     @ParameterizedTest
@@ -98,10 +98,10 @@ class CoordinatesFinderTest {
         assertEquals(1, replacements.size());
 
         Replacement rep = replacements.getFirst();
-        assertEquals("23º 14'", rep.getText());
-        assertEquals("23º 14'", rep.getSuggestions().get(0).getText());
-        assertEquals("23°14′", rep.getSuggestions().get(1).getText());
-        assertEquals("{{esd|23° 14′}}", rep.getSuggestions().get(2).getText());
+        assertEquals("23º 14'", rep.text());
+        assertEquals("23º 14'", rep.suggestions().get(0).getText());
+        assertEquals("23°14′", rep.suggestions().get(1).getText());
+        assertEquals("{{esd|23° 14′}}", rep.suggestions().get(2).getText());
     }
 
     @ParameterizedTest

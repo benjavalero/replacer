@@ -19,10 +19,10 @@ class CustomReplacementFinderTest {
         List<Replacement> replacements = customReplacementFinder.findList(text);
 
         assertEquals(1, replacements.size());
-        assertEquals(3, replacements.get(0).getStart());
-        assertEquals(replacement, replacements.get(0).getText());
-        assertEquals(replacement, replacements.get(0).getSuggestions().get(0).getText());
-        assertEquals(suggestion, replacements.get(0).getSuggestions().get(1).getText());
+        assertEquals(3, replacements.get(0).start());
+        assertEquals(replacement, replacements.get(0).text());
+        assertEquals(replacement, replacements.get(0).suggestions().get(0).getText());
+        assertEquals(suggestion, replacements.get(0).suggestions().get(1).getText());
     }
 
     @Test
@@ -35,9 +35,9 @@ class CustomReplacementFinderTest {
         List<Replacement> replacements = customReplacementFinder.findList(text);
 
         assertEquals(1, replacements.size());
-        assertEquals(replacement, replacements.get(0).getText());
-        assertEquals(replacement, replacements.get(0).getSuggestions().get(0).getText());
-        assertEquals(suggestion, replacements.get(0).getSuggestions().get(1).getText());
+        assertEquals(replacement, replacements.get(0).text());
+        assertEquals(replacement, replacements.get(0).suggestions().get(0).getText());
+        assertEquals(suggestion, replacements.get(0).suggestions().get(1).getText());
     }
 
     @Test
@@ -50,11 +50,11 @@ class CustomReplacementFinderTest {
         List<Replacement> replacements = customReplacementFinder.findList(text);
 
         assertEquals(1, replacements.size());
-        assertEquals(replacement, replacements.get(0).getText());
+        assertEquals(replacement, replacements.get(0).text());
         // We return the lowercase and also the uppercase just in case of correct punctuation rules
-        assertEquals(2, replacements.get(0).getSuggestions().size());
-        assertEquals("Enero", replacements.get(0).getSuggestions().get(0).getText());
-        assertEquals("enero", replacements.get(0).getSuggestions().get(1).getText());
+        assertEquals(2, replacements.get(0).suggestions().size());
+        assertEquals("Enero", replacements.get(0).suggestions().get(0).getText());
+        assertEquals("enero", replacements.get(0).suggestions().get(1).getText());
     }
 
     @Test
@@ -67,9 +67,9 @@ class CustomReplacementFinderTest {
         List<Replacement> replacements = customReplacementFinder.findList(text);
 
         assertEquals(1, replacements.size());
-        assertEquals(replacement, replacements.get(0).getText());
-        assertEquals(replacement, replacements.get(0).getSuggestions().get(0).getText());
-        assertEquals(suggestion, replacements.get(0).getSuggestions().get(1).getText());
+        assertEquals(replacement, replacements.get(0).text());
+        assertEquals(replacement, replacements.get(0).suggestions().get(0).getText());
+        assertEquals(suggestion, replacements.get(0).suggestions().get(1).getText());
     }
 
     @Test
@@ -83,18 +83,12 @@ class CustomReplacementFinderTest {
 
         assertEquals(2, replacements.size());
 
-        assertEquals(replacement, replacements.get(0).getText());
-        assertEquals(replacement, replacements.get(0).getSuggestions().get(0).getText());
-        assertEquals(suggestion, replacements.get(0).getSuggestions().get(1).getText());
-        assertEquals(ReplacerUtils.setFirstUpperCase(replacement), replacements.get(1).getText());
-        assertEquals(
-            ReplacerUtils.setFirstUpperCase(replacement),
-            replacements.get(1).getSuggestions().get(0).getText()
-        );
-        assertEquals(
-            ReplacerUtils.setFirstUpperCase(suggestion),
-            replacements.get(1).getSuggestions().get(1).getText()
-        );
+        assertEquals(replacement, replacements.get(0).text());
+        assertEquals(replacement, replacements.get(0).suggestions().get(0).getText());
+        assertEquals(suggestion, replacements.get(0).suggestions().get(1).getText());
+        assertEquals(ReplacerUtils.setFirstUpperCase(replacement), replacements.get(1).text());
+        assertEquals(ReplacerUtils.setFirstUpperCase(replacement), replacements.get(1).suggestions().get(0).getText());
+        assertEquals(ReplacerUtils.setFirstUpperCase(suggestion), replacements.get(1).suggestions().get(1).getText());
     }
 
     @Test
@@ -107,7 +101,7 @@ class CustomReplacementFinderTest {
         List<Replacement> replacements = customReplacementFinder.findList(text);
 
         assertEquals(1, replacements.size());
-        assertEquals(replacement, replacements.get(0).getText());
+        assertEquals(replacement, replacements.get(0).text());
     }
 
     @Test
@@ -120,9 +114,9 @@ class CustomReplacementFinderTest {
         List<Replacement> replacements = customReplacementFinder.findList(text);
 
         assertEquals(1, replacements.size());
-        assertEquals(replacement, replacements.get(0).getText());
-        assertEquals("on line", replacements.get(0).getSuggestions().get(0).getText());
-        assertEquals("online", replacements.get(0).getSuggestions().get(1).getText());
-        assertEquals("en línea", replacements.get(0).getSuggestions().get(2).getText());
+        assertEquals(replacement, replacements.get(0).text());
+        assertEquals("on line", replacements.get(0).suggestions().get(0).getText());
+        assertEquals("online", replacements.get(0).suggestions().get(1).getText());
+        assertEquals("en línea", replacements.get(0).suggestions().get(2).getText());
     }
 }

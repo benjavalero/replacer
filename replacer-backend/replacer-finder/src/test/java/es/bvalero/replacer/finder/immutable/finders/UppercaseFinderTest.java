@@ -124,7 +124,7 @@ class UppercaseFinderTest {
         List<Immutable> matches = uppercaseFinder.findList(text);
 
         Set<String> expected = Set.of("Febrero");
-        Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
+        Set<String> actual = matches.stream().map(Immutable::text).collect(Collectors.toSet());
         assertEquals(expected, actual);
     }
 
@@ -145,7 +145,7 @@ class UppercaseFinderTest {
         List<Immutable> matches = uppercaseFinder.findList(text);
 
         Set<String> expected = Set.of("Jefe de Estado");
-        Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
+        Set<String> actual = matches.stream().map(Immutable::text).collect(Collectors.toSet());
         assertEquals(expected, actual);
     }
 

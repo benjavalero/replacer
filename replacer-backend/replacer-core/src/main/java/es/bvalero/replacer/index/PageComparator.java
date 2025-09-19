@@ -99,12 +99,7 @@ class PageComparator {
 
     static String extractContext(Replacement replacement, String pageContent) {
         return StringUtils.truncate(
-            ReplacerUtils.getContextAroundWord(
-                pageContent,
-                replacement.getStart(),
-                replacement.getEnd(),
-                CONTEXT_THRESHOLD
-            ),
+            ReplacerUtils.getContextAroundWord(pageContent, replacement.start(), replacement.end(), CONTEXT_THRESHOLD),
             MAX_CONTEXT_LENGTH
         );
     }
@@ -232,6 +227,6 @@ class PageComparator {
     }
 
     private static boolean isSameReplacement(Replacement r, IndexedReplacement ir) {
-        return r.getType().equals(ir.getType()) && r.getStart() == ir.getStart();
+        return r.type().equals(ir.getType()) && r.start() == ir.getStart();
     }
 }

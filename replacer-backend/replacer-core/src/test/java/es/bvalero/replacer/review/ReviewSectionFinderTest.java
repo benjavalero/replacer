@@ -110,7 +110,7 @@ class ReviewSectionFinderTest {
             assertEquals(section, review.getSection());
             assertEquals(sectionContent, review.getPage().getContent());
             assertEquals(1, review.getReplacements().size());
-            assertEquals(8 - offset, new ArrayList<>(review.getReplacements()).get(0).getStart());
+            assertEquals(8 - offset, new ArrayList<>(review.getReplacements()).get(0).start());
             assertEquals(numPending, review.getNumPending());
         });
     }

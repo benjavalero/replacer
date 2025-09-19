@@ -26,8 +26,8 @@ class UnicodeWhiteSpacesFinderTest {
         List<Cosmetic> cosmetics = unicodeWhiteSpaceFinder.findList(text);
 
         assertEquals(1, cosmetics.size());
-        assertEquals(text, cosmetics.get(0).getText());
-        assertEquals(fix, cosmetics.get(0).getFix());
+        assertEquals(text, cosmetics.get(0).text());
+        assertEquals(fix, cosmetics.get(0).fix());
     }
 
     @ParameterizedTest

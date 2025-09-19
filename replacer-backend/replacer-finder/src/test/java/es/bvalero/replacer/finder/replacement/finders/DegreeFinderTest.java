@@ -53,10 +53,10 @@ class DegreeFinderTest {
         assertEquals(1, replacements.size());
 
         Replacement rep = replacements.getFirst();
-        assertEquals(StandardType.DEGREES, rep.getType());
-        assertEquals(text, rep.getText());
-        assertEquals(text, rep.getSuggestions().get(0).getText());
-        assertEquals(expected, rep.getSuggestions().get(1).getText());
+        assertEquals(StandardType.DEGREES, rep.type());
+        assertEquals(text, rep.text());
+        assertEquals(text, rep.suggestions().get(0).getText());
+        assertEquals(expected, rep.suggestions().get(1).getText());
     }
 
     @ParameterizedTest
@@ -76,11 +76,11 @@ class DegreeFinderTest {
         assertEquals(1, replacements.size());
 
         Replacement rep = replacements.getFirst();
-        assertEquals(StandardType.DEGREES, rep.getType());
-        assertEquals(expected, rep.getText());
-        assertEquals(position, rep.getStart());
-        assertEquals(expected, rep.getSuggestions().get(0).getText());
-        assertEquals(fix, rep.getSuggestions().get(1).getText());
+        assertEquals(StandardType.DEGREES, rep.type());
+        assertEquals(expected, rep.text());
+        assertEquals(position, rep.start());
+        assertEquals(expected, rep.suggestions().get(0).getText());
+        assertEquals(fix, rep.suggestions().get(1).getText());
     }
 
     @ParameterizedTest
@@ -128,7 +128,7 @@ class DegreeFinderTest {
         List<Replacement> replacements = degreeFinder.findList(text);
 
         assertEquals(1, replacements.size());
-        assertEquals("34ºC", replacements.get(0).getText());
+        assertEquals("34ºC", replacements.get(0).text());
     }
 
     @Test
@@ -139,12 +139,12 @@ class DegreeFinderTest {
 
         assertEquals(1, replacements.size());
         Replacement rep = replacements.getFirst();
-        assertEquals(3, rep.getSuggestions().size());
-        assertEquals("1ºC", rep.getSuggestions().get(0).getText());
-        assertEquals("1&nbsp;°C", rep.getSuggestions().get(1).getText());
-        assertEquals("grados", rep.getSuggestions().get(1).getComment());
-        assertEquals("1.ºC", rep.getSuggestions().get(2).getText());
-        assertEquals("ordinal", rep.getSuggestions().get(2).getComment());
+        assertEquals(3, rep.suggestions().size());
+        assertEquals("1ºC", rep.suggestions().get(0).getText());
+        assertEquals("1&nbsp;°C", rep.suggestions().get(1).getText());
+        assertEquals("grados", rep.suggestions().get(1).getComment());
+        assertEquals("1.ºC", rep.suggestions().get(2).getText());
+        assertEquals("ordinal", rep.suggestions().get(2).getComment());
     }
 
     @Test

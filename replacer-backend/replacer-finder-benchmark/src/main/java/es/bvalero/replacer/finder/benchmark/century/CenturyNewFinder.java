@@ -236,7 +236,7 @@ class CenturyNewFinder implements BenchmarkFinder {
     }
 
     private BenchmarkResult convertReplacement(Replacement replacement) {
-        return BenchmarkResult.of(replacement.getStart(), replacement.getText());
+        return BenchmarkResult.of(replacement.start(), replacement.text());
     }
 
     private Replacement convertCenturySingular(MatchResult match, FinderPage page) {

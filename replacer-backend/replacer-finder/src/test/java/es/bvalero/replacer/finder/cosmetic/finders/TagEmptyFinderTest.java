@@ -31,8 +31,8 @@ class TagEmptyFinderTest {
         List<Cosmetic> cosmetics = tagEmptyFinder.findList(text);
 
         assertEquals(1, cosmetics.size());
-        assertEquals(text, cosmetics.get(0).getText());
-        assertEquals("", cosmetics.get(0).getFix());
+        assertEquals(text, cosmetics.get(0).text());
+        assertEquals("", cosmetics.get(0).fix());
     }
 
     @ParameterizedTest

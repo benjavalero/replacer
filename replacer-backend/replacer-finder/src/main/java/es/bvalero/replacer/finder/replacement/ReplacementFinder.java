@@ -23,7 +23,7 @@ public interface ReplacementFinder extends Finder<Replacement> {
         final Replacement withSuggestions = convert(matchResult, page);
         final Replacement withoutSuggestions = withSuggestions.withNoSuggestions();
         assert withoutSuggestions.equals(withSuggestions);
-        assert withoutSuggestions.getSuggestions().isEmpty();
+        assert withoutSuggestions.suggestions().isEmpty();
         return withoutSuggestions;
     }
 

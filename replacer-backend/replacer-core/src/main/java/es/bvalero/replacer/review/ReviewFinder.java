@@ -265,14 +265,14 @@ abstract class ReviewFinder implements ReviewFinderApi {
     );
 
     Collection<Replacement> filterReplacementsByType(Collection<Replacement> replacements, ReplacementType type) {
-        return replacements.stream().filter(replacement -> Objects.equals(replacement.getType(), type)).toList();
+        return replacements.stream().filter(replacement -> Objects.equals(replacement.type(), type)).toList();
     }
 
     private Collection<Replacement> discardForbiddenReplacements(
         Collection<Replacement> replacements,
         ReviewOptions options
     ) {
-        return replacements.stream().filter(r -> !isTypeForbidden(r.getType(), options.getUser())).toList();
+        return replacements.stream().filter(r -> !isTypeForbidden(r.type(), options.getUser())).toList();
     }
 
     private boolean isTypeForbidden(ReplacementType type, User user) {

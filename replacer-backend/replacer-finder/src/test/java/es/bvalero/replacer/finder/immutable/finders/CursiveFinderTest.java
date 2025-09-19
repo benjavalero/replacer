@@ -41,7 +41,7 @@ class CursiveFinderTest {
         List<Immutable> matches = cursiveFinder.findList(text);
 
         assertEquals(1, matches.size());
-        assertEquals(cursive, matches.get(0).getText());
+        assertEquals(cursive, matches.get(0).text());
     }
 
     @ParameterizedTest
@@ -69,7 +69,7 @@ class CursiveFinderTest {
         List<Immutable> matches = cursiveFinder.findList(text);
 
         assertEquals(1, matches.size());
-        assertEquals(cursive, matches.get(0).getText());
+        assertEquals(cursive, matches.get(0).text());
     }
 
     @Test
@@ -80,7 +80,7 @@ class CursiveFinderTest {
         List<Immutable> matches = cursiveFinder.findList(text);
 
         assertEquals(1, matches.size());
-        assertEquals(cursive, matches.get(0).getText());
+        assertEquals(cursive, matches.get(0).text());
     }
 
     @Test
@@ -92,7 +92,7 @@ class CursiveFinderTest {
         List<Immutable> matches = cursiveFinder.findList(text);
 
         Set<String> expected = Set.of(cursive, bold);
-        Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
+        Set<String> actual = matches.stream().map(Immutable::text).collect(Collectors.toSet());
         assertEquals(expected, actual);
     }
 
@@ -107,7 +107,7 @@ class CursiveFinderTest {
         List<Immutable> matches = cursiveFinder.findList(text);
 
         Set<String> expected = Set.of(cursive1, cursive2, cursive3);
-        Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
+        Set<String> actual = matches.stream().map(Immutable::text).collect(Collectors.toSet());
         assertEquals(expected, actual);
     }
 
@@ -122,7 +122,7 @@ class CursiveFinderTest {
             "''Y \"será más terrorífica que 'La Mujer de Judas'\"''",
             "''[[Almas en Pena]]''"
         );
-        Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
+        Set<String> actual = matches.stream().map(Immutable::text).collect(Collectors.toSet());
         assertEquals(expected, actual);
     }
 }
