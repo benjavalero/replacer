@@ -126,7 +126,7 @@ public class FinderUtils {
     }
 
     public boolean isBlankOrNonBreakingSpace(String text, int start, int end) {
-        return isBlank(text, start, end) || isNonBreakingSpace(text, start);
+        return isBlank(text, start, end) || isNonBreakingSpace(text, start, end);
     }
 
     private boolean isBlank(String text, int start, int end) {
@@ -141,14 +141,17 @@ public class FinderUtils {
         return true;
     }
 
+    /** Check if the string is a whitespace or represents a non-breaking space */
     public boolean isActualSpace(String str) {
         return SPACE.equals(str) || NON_BREAKING_SPACE.equals(str) || NON_BREAKING_SPACE_TEMPLATE.equals(str);
     }
 
-    public boolean isNonBreakingSpace(String text, int start) {
+    public boolean isNonBreakingSpace(String text, int start, int end) {
         return (
-            ReplacerUtils.containsAtPosition(text, NON_BREAKING_SPACE, start) ||
-            ReplacerUtils.containsAtPosition(text, NON_BREAKING_SPACE_TEMPLATE, start)
+            (end - start == NON_BREAKING_SPACE.length() &&
+                ReplacerUtils.containsAtPosition(text, NON_BREAKING_SPACE, start)) ||
+            (end - start == NON_BREAKING_SPACE_TEMPLATE.length() &&
+                ReplacerUtils.containsAtPosition(text, NON_BREAKING_SPACE_TEMPLATE, start))
         );
     }
 
@@ -343,6 +346,30 @@ public class FinderUtils {
             }
         }
         return minString == null ? null : FinderMatchResult.of(minStart, minString);
+    }
+
+    /**
+     * Find the first occurrence of several search characters.
+     * Put the most common occurrence first improves performance.
+     */
+    public int indexOfAny(String text, int start, char... searchChars) {
+        int minStart = text.length();
+        for (char searchChar : searchChars) {
+            final int pos = indexOfChar(text, searchChar, start, minStart);
+            if (pos >= 0) {
+                minStart = pos;
+            }
+        }
+        return minStart == text.length() ? -1 : minStart;
+    }
+
+    private int indexOfChar(String text, char ch, int start, int end) {
+        for (int i = start; i < end; i++) {
+            if (text.charAt(i) == ch) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     /* Find the most close sequence of letters and digits ending at the given position */
