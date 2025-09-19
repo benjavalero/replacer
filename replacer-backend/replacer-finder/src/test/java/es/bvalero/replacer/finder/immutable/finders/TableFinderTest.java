@@ -33,7 +33,7 @@ class TableFinderTest {
         List<Immutable> matches = tableFinder.findList(text);
 
         Set<String> expected = Set.of("{| class=\"wikitable\"", "|- style=\"bgcolor: salmon\"");
-        Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
+        Set<String> actual = matches.stream().map(Immutable::text).collect(Collectors.toSet());
         assertEquals(expected, actual);
     }
 
@@ -44,6 +44,6 @@ class TableFinderTest {
         List<Immutable> matches = tableFinder.findList(text);
 
         assertEquals(1, matches.size());
-        assertEquals(text, matches.get(0).getText());
+        assertEquals(text, matches.get(0).text());
     }
 }

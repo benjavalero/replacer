@@ -74,9 +74,9 @@ class CosmeticFinderService implements FinderService<Cosmetic>, CosmeticApi {
             LOGGER.debug("START Apply cosmetic: {}", cosmetic);
             String fixedText = ReplacerUtils.replaceInText(
                 page.getContent(),
-                cosmetic.getStart(),
-                cosmetic.getText(),
-                cosmetic.getFix()
+                cosmetic.start(),
+                cosmetic.text(),
+                cosmetic.fix()
             );
             FinderPage fixedPage = page.withContent(fixedText);
             applyCheckWikipediaAction(page, cosmetic);
@@ -93,7 +93,7 @@ class CosmeticFinderService implements FinderService<Cosmetic>, CosmeticApi {
         CheckWikipediaFixEvent event = CheckWikipediaFixEvent.of(
             page.getPageKey().getLang(),
             page.getTitle(),
-            cosmetic.getCheckWikipediaAction()
+            cosmetic.checkWikipediaAction()
         );
         applicationEventPublisher.publishEvent(event);
     }

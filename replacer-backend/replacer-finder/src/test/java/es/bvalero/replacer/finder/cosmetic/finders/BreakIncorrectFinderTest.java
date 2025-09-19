@@ -25,8 +25,8 @@ class BreakIncorrectFinderTest {
         List<Cosmetic> cosmetics = breakIncorrectFinder.findList(text);
 
         assertEquals(1, cosmetics.size());
-        assertEquals(text, cosmetics.get(0).getText());
-        assertEquals(BREAK_XHTML, cosmetics.get(0).getFix());
+        assertEquals(text, cosmetics.get(0).text());
+        assertEquals(BREAK_XHTML, cosmetics.get(0).fix());
     }
 
     @ParameterizedTest

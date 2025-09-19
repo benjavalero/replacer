@@ -189,8 +189,20 @@ class DateFinder implements ReplacementFinder {
     }
 
     @Override
+    public Stream<Replacement> findWithNoSuggestions(FinderPage page) {
+        return find(page).map(Replacement::withNoSuggestions);
+    }
+
+    @Override
     public Stream<MatchResult> findMatchResults(FinderPage page) {
+        // Note we are overriding the parent "find" method too
         return AutomatonMatchFinder.find(page.getContent(), automata.get(page.getPageKey().getLang()));
+    }
+
+    @Override
+    public Replacement convertWithNoSuggestions(MatchResult matchResult, FinderPage page) {
+        // We cannot use this same method because we need it to be able to return a null
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -565,7 +577,7 @@ class DateFinder implements ReplacementFinder {
             suggestions.add(0, Suggestion.of(text, "no reemplazar si el contexto está en inglés"));
         }
 
-        return Replacement.of(start, text, StandardType.DATE, suggestions, page.getContent());
+        return Replacement.of(start, text, StandardType.DATE, suggestions);
     }
 
     // Return the appropriate article for the date

@@ -57,14 +57,14 @@ class ComparableReplacement {
             .build();
     }
 
-    static ComparableReplacement of(Replacement replacement, PageKey pageKey) {
-        assert replacement.getType() instanceof StandardType;
+    static ComparableReplacement of(Replacement replacement, IndexablePage page) {
+        assert replacement.type() instanceof StandardType;
         return of(
             IndexedReplacement.builder()
-                .pageKey(pageKey)
-                .type((StandardType) replacement.getType())
-                .start(replacement.getStart())
-                .context(replacement.getContext())
+                .pageKey(page.getPageKey())
+                .type((StandardType) replacement.type())
+                .start(replacement.start())
+                .context(PageComparator.extractContext(replacement, page.getContent()))
                 .build()
         );
     }

@@ -26,7 +26,7 @@ public interface BenchmarkFinder extends Finder<BenchmarkResult> {
 
     @Override
     default BenchmarkResult convert(MatchResult match, FinderPage page) {
-        return BenchmarkResult.of(match.start(), match.group());
+        return new BenchmarkResult(match.start(), match.group());
     }
 
     default String cleanWord(String word) {

@@ -16,9 +16,13 @@ public interface Finder<T extends FinderResult> extends Comparable<Finder<T>> {
         //    and filter the list to keep only the valid match results
         // 3. Convert the list of match results into a list of T items
 
-        final Stream<MatchResult> allMatchResults = findMatchResults(page);
-        final Stream<MatchResult> validMatchResults = filterValidMatchResults(allMatchResults, page);
+        final Stream<MatchResult> validMatchResults = findAndFilter(page);
         return convertMatchResults(validMatchResults, page);
+    }
+
+    default Stream<MatchResult> findAndFilter(FinderPage page) {
+        final Stream<MatchResult> allMatchResults = findMatchResults(page);
+        return filterValidMatchResults(allMatchResults, page);
     }
 
     Stream<MatchResult> findMatchResults(FinderPage page);

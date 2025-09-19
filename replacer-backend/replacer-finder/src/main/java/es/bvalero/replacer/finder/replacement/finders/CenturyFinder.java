@@ -98,7 +98,7 @@ class CenturyFinder implements ReplacementFinder {
                 continue;
             }
 
-            final FinderMatchResult match = FinderMatchResult.of(text, startCentury, endCentury);
+            final FinderMatchResult match = FinderMatchResult.ofNested(text, startCentury, endCentury);
             match.addGroup(centuryWord);
             match.addGroup(centuryNumber);
             match.addGroup(era);
@@ -229,6 +229,8 @@ class CenturyFinder implements ReplacementFinder {
         return word.charAt(word.length() - 1) == PLURAL_LETTER;
     }
 
+    // TODO: Implement conversion without suggestions
+
     @Override
     public Replacement convert(MatchResult match, FinderPage page) {
         final String centuryWord = match.group(1);
@@ -306,7 +308,7 @@ class CenturyFinder implements ReplacementFinder {
         }
 
         final String centuryText = text.substring(startCentury, endCentury);
-        return Replacement.of(startCentury, centuryText, StandardType.CENTURY, suggestions, text);
+        return Replacement.of(startCentury, centuryText, StandardType.CENTURY, suggestions);
     }
 
     private Replacement convertCenturyPlural(MatchResult match, FinderPage page) {
@@ -330,7 +332,7 @@ class CenturyFinder implements ReplacementFinder {
 
         final List<Suggestion> suggestions = List.of(Suggestion.of(suggestionText, "siglos en versalitas"));
 
-        return Replacement.of(match.start(), centuryText, StandardType.CENTURY, suggestions, text);
+        return Replacement.of(match.start(), centuryText, StandardType.CENTURY, suggestions);
     }
 
     private String fixSimpleCentury(String century) {

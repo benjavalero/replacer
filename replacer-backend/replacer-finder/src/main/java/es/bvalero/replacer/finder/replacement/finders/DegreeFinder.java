@@ -60,7 +60,7 @@ class DegreeFinder implements ReplacementFinder {
             }
 
             final int startDegree = matchWord.start();
-            final FinderMatchResult match = FinderMatchResult.of(text, startDegree, endDegree);
+            final FinderMatchResult match = FinderMatchResult.ofNested(text, startDegree, endDegree);
             // 1 - word; 2 - space before; 3 - symbol
             match.addGroup(matchWord);
             match.addGroup(FinderMatchResult.of(text, matchWord.end(), startSymbol));
@@ -74,9 +74,9 @@ class DegreeFinder implements ReplacementFinder {
     private MatchResult findDegreeSymbol(String text, int start) {
         while (start >= 0 && start < text.length()) {
             // First we find the initial symbol
-            final String textSearchable = text.substring(start);
-            int startSymbol = StringUtils.indexOfAny(
-                textSearchable,
+            final int startSymbol = FinderUtils.indexOfAny(
+                text,
+                start,
                 DEGREE,
                 MASCULINE_ORDINAL,
                 CELSIUS_UNICODE,
@@ -84,8 +84,6 @@ class DegreeFinder implements ReplacementFinder {
             );
             if (startSymbol < 0) {
                 return null;
-            } else {
-                startSymbol = start + startSymbol;
             }
 
             // If it is a Unicode symbol we are done
@@ -153,12 +151,17 @@ class DegreeFinder implements ReplacementFinder {
             return true;
         }
 
-        // If the symbol doesn't need to be fixed, we check the space before if preceded by number.
+        // If the symbol doesn't need to be fixed, we check the space before.
+        if (!FinderUtils.isBlankOrNonBreakingSpace(page.getContent(), match.start(2), match.end(2))) {
+            return false;
+        }
+
         // Between number and degree, we don't fix actual spaces.
-        final String word = match.group(1);
-        final String space1 = match.group(2);
-        return FinderUtils.isDecimalNumber(word) && !FinderUtils.isActualSpace(space1);
+        // We know that the space is not a non-breaking space.
+        return FinderUtils.isDecimalNumber(match.group(1)) && !FinderUtils.isActualSpace(match.group(2));
     }
+
+    // TODO: Implement conversion without suggestions
 
     @Override
     public Replacement convert(MatchResult match, FinderPage page) {
@@ -190,7 +193,11 @@ class DegreeFinder implements ReplacementFinder {
         final int start;
         final String text;
         if (FinderUtils.isDecimalNumber(word)) {
-            final boolean isNonBreakingSpace = FinderUtils.isNonBreakingSpace(page.getContent(), match.start(2));
+            final boolean isNonBreakingSpace = FinderUtils.isNonBreakingSpace(
+                page.getContent(),
+                match.start(2),
+                match.end(2)
+            );
             final String fixedSpace = isNonBreakingSpace ? space1 : NON_BREAKING_SPACE;
             fixedDegree = word + fixedSpace + fixedSymbol + fixedLetter;
             start = match.start();
@@ -216,6 +223,6 @@ class DegreeFinder implements ReplacementFinder {
             suggestions.add(Suggestion.of(word + DOT + symbol, "ordinal"));
         }
 
-        return Replacement.of(start, text, StandardType.DEGREES, suggestions, page.getContent());
+        return Replacement.of(start, text, StandardType.DEGREES, suggestions);
     }
 }

@@ -29,7 +29,7 @@ class RedirectionFinderTest {
         String text = "xxx #REDIRECCIÓN [[A]] yyy";
         List<Immutable> results = redirectionFinder.findList(text);
         assertFalse(results.isEmpty());
-        assertEquals(0, results.get(0).getStart());
-        assertEquals(text, results.get(0).getText());
+        assertEquals(0, results.get(0).start());
+        assertEquals(text, results.get(0).text());
     }
 }

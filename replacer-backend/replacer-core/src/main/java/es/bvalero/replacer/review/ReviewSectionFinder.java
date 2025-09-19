@@ -123,11 +123,11 @@ class ReviewSectionFinder {
     }
 
     private boolean isReplacementContainedInInterval(Replacement replacement, int start, @Nullable Integer end) {
-        if (replacement.getStart() >= start) {
+        if (replacement.start() >= start) {
             if (end == null) {
                 return true;
             } else {
-                return replacement.getEnd() <= end;
+                return replacement.end() <= end;
             }
         } else {
             return false;
@@ -138,7 +138,7 @@ class ReviewSectionFinder {
         Collection<Replacement> replacements,
         int sectionOffset
     ) {
-        return replacements.stream().map(rep -> rep.withStart(rep.getStart() - sectionOffset)).toList();
+        return replacements.stream().map(rep -> rep.withStart(rep.start() - sectionOffset)).toList();
     }
 
     private boolean validateTranslatedReplacements(Collection<Replacement> replacements, WikipediaPage pageSection) {
@@ -146,9 +146,9 @@ class ReviewSectionFinder {
     }
 
     private boolean validateReplacement(Replacement replacement, String text) {
-        if (replacement.getEnd() > text.length()) {
+        if (replacement.end() > text.length()) {
             return false;
         }
-        return replacement.getText().equals(text.substring(replacement.getStart(), replacement.getEnd()));
+        return replacement.text().equals(text.substring(replacement.start(), replacement.end()));
     }
 }

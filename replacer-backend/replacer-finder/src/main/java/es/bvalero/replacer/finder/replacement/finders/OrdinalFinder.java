@@ -100,7 +100,7 @@ class OrdinalFinder implements ReplacementFinder {
 
             final int startOrdinal = matchNumber.start();
             final int endOrdinal = matchSuffix.end();
-            final FinderMatchResult matchResult = FinderMatchResult.of(text, startOrdinal, endOrdinal);
+            final FinderMatchResult matchResult = FinderMatchResult.ofNested(text, startOrdinal, endOrdinal);
             matchResult.addGroup(matchNumber);
             matchResult.addGroup(matchSuffix);
             return matchResult;
@@ -191,14 +191,13 @@ class OrdinalFinder implements ReplacementFinder {
     }
 
     @Override
+    public Replacement convertWithNoSuggestions(MatchResult match, FinderPage page) {
+        return Replacement.ofNoSuggestions(match.start(), match.group(), StandardType.ORDINAL);
+    }
+
+    @Override
     public Replacement convert(MatchResult match, FinderPage page) {
-        return Replacement.of(
-            match.start(),
-            match.group(),
-            StandardType.ORDINAL,
-            buildSuggestions(match, page),
-            page.getContent()
-        );
+        return Replacement.of(match.start(), match.group(), StandardType.ORDINAL, buildSuggestions(match, page));
     }
 
     private List<Suggestion> buildSuggestions(MatchResult match, FinderPage page) {

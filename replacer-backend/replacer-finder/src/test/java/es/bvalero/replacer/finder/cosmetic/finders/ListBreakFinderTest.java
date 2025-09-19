@@ -24,8 +24,8 @@ class ListBreakFinderTest {
         List<Cosmetic> cosmetics = listBreakFinder.findList(text);
 
         assertEquals(1, cosmetics.size());
-        assertEquals(text, cosmetics.get(0).getText());
-        assertEquals(fix, cosmetics.get(0).getFix());
+        assertEquals(text, cosmetics.get(0).text());
+        assertEquals(fix, cosmetics.get(0).fix());
     }
 
     @Test
@@ -35,9 +35,9 @@ class ListBreakFinderTest {
         List<Cosmetic> cosmetics = listBreakFinder.findList(text);
 
         assertEquals(2, cosmetics.size());
-        assertEquals("* y<br>", cosmetics.get(0).getText());
-        assertEquals("* y", cosmetics.get(0).getFix());
-        assertEquals("* z <br />", cosmetics.get(1).getText());
-        assertEquals("* z", cosmetics.get(1).getFix());
+        assertEquals("* y<br>", cosmetics.get(0).text());
+        assertEquals("* y", cosmetics.get(0).fix());
+        assertEquals("* z <br />", cosmetics.get(1).text());
+        assertEquals("* z", cosmetics.get(1).fix());
     }
 }

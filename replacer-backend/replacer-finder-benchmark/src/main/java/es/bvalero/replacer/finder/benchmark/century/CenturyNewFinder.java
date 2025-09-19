@@ -94,7 +94,7 @@ class CenturyNewFinder implements BenchmarkFinder {
                 continue;
             }
 
-            final FinderMatchResult match = FinderMatchResult.of(text, startCentury, endCentury);
+            final FinderMatchResult match = FinderMatchResult.ofNested(text, startCentury, endCentury);
             match.addGroup(centuryWord);
             match.addGroup(centuryNumber);
             match.addGroup(era);
@@ -236,7 +236,7 @@ class CenturyNewFinder implements BenchmarkFinder {
     }
 
     private BenchmarkResult convertReplacement(Replacement replacement) {
-        return BenchmarkResult.of(replacement.getStart(), replacement.getText());
+        return BenchmarkResult.of(replacement.start(), replacement.text());
     }
 
     private Replacement convertCenturySingular(MatchResult match, FinderPage page) {
@@ -306,7 +306,7 @@ class CenturyNewFinder implements BenchmarkFinder {
         }
 
         final String centuryText = text.substring(startCentury, endCentury);
-        return Replacement.of(startCentury, centuryText, StandardType.CENTURY, suggestions, text);
+        return Replacement.of(startCentury, centuryText, StandardType.CENTURY, suggestions);
     }
 
     private Replacement convertCenturyPlural(MatchResult match, FinderPage page) {
@@ -330,7 +330,7 @@ class CenturyNewFinder implements BenchmarkFinder {
 
         final List<Suggestion> suggestions = List.of(Suggestion.of(suggestionText, "siglos en versalitas"));
 
-        return Replacement.of(match.start(), centuryText, StandardType.CENTURY, suggestions, text);
+        return Replacement.of(match.start(), centuryText, StandardType.CENTURY, suggestions);
     }
 
     private String fixSimpleCentury(String century) {

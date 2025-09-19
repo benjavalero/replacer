@@ -28,7 +28,7 @@ class TitleFinderTest {
 
         // Use a list to find repeated results
         List<String> expected = List.of("Hilton", "Hilton", "Paris");
-        List<String> actual = matches.stream().map(Immutable::getText).sorted().collect(Collectors.toList());
+        List<String> actual = matches.stream().map(Immutable::text).sorted().collect(Collectors.toList());
         assertEquals(expected, actual);
     }
 }

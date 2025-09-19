@@ -63,9 +63,8 @@ abstract class PageIndexAbstractService {
         return findIndexedPageByKey(pageKey).orElse(null);
     }
 
-    // This method can be overridden in case we want to avoid calculating the replacements under some circumstances
     PageIndexResult indexPage(IndexablePage indexablePage, @Nullable IndexedPage dbPage) {
-        final SortedSet<Replacement> replacements = replacementFindApi.findReplacements(indexablePage.toFinderPage());
+        final SortedSet<Replacement> replacements = findReplacements(indexablePage);
 
         final IndexedPage result = pageComparator.indexPageReplacements(indexablePage, replacements, dbPage);
         if (result.isPageToSave()) {
@@ -76,6 +75,11 @@ abstract class PageIndexAbstractService {
             result.isPageToSave() ? PageIndexStatus.PAGE_INDEXED : PageIndexStatus.PAGE_NOT_INDEXED,
             PageComparator.filterReplacementsToReview(replacements, result)
         );
+    }
+
+    // This method can be overridden in case we want to avoid calculating the replacements under some circumstances
+    SortedSet<Replacement> findReplacements(IndexablePage indexablePage) {
+        return replacementFindApi.findReplacements(indexablePage.toFinderPage());
     }
 
     abstract Optional<IndexedPage> findIndexedPageByKey(PageKey pageKey);

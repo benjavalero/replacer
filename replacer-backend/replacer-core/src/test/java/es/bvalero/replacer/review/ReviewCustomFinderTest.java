@@ -147,8 +147,7 @@ class ReviewCustomFinderTest {
             2,
             replacement,
             customType,
-            List.of(Suggestion.ofNoComment(suggestion)),
-            content
+            List.of(Suggestion.ofNoComment(suggestion))
         );
         final WikipediaSearchResult searchResult = WikipediaSearchResult.builder().total(1).pageId(pageId).build();
         final PageKey pageKey = PageKey.of(lang, pageId);
@@ -245,8 +244,7 @@ class ReviewCustomFinderTest {
             2,
             replacement,
             customType,
-            List.of(Suggestion.ofNoComment(suggestion)),
-            content
+            List.of(Suggestion.ofNoComment(suggestion))
         );
         final WikipediaSearchResult searchResult = WikipediaSearchResult.builder()
             .total(2)
@@ -329,8 +327,7 @@ class ReviewCustomFinderTest {
             2,
             replacement,
             customType,
-            List.of(Suggestion.ofNoComment(suggestion)),
-            content
+            List.of(Suggestion.ofNoComment(suggestion))
         );
         final Map<Integer, WikipediaPage> pages = new HashMap<>();
         for (int i = 1; i <= 4; i++) {
@@ -480,18 +477,11 @@ class ReviewCustomFinderTest {
             2,
             subtype,
             StandardType.of(ReplacementKind.SIMPLE, subtype),
-            List.of(suggestion),
-            page.getContent()
+            List.of(suggestion)
         );
         Collection<Replacement> replacements = List.of(replacement);
 
-        final Replacement custom = Replacement.of(
-            2,
-            subtype,
-            options.getCustomType(),
-            List.of(suggestion),
-            page.getContent()
-        );
+        final Replacement custom = Replacement.of(2, subtype, options.getCustomType(), List.of(suggestion));
         when(
             customReplacementFindApi.findCustomReplacements(
                 FinderPage.of(page),
@@ -522,8 +512,7 @@ class ReviewCustomFinderTest {
             8,
             "Leon",
             StandardType.of(ReplacementKind.SIMPLE, "leon"),
-            List.of(Suggestion.ofNoComment("León")),
-            page.getContent()
+            List.of(Suggestion.ofNoComment("León"))
         );
         Collection<Replacement> replacements = List.of(replacement);
 
@@ -531,8 +520,7 @@ class ReviewCustomFinderTest {
             3,
             subtype,
             options.getCustomType(),
-            List.of(Suggestion.ofNoComment(comment)),
-            page.getContent()
+            List.of(Suggestion.ofNoComment(comment))
         );
         when(
             customReplacementFindApi.findCustomReplacements(
@@ -564,8 +552,7 @@ class ReviewCustomFinderTest {
             0,
             "En Septiembre de 2020",
             StandardType.DATE,
-            List.of(Suggestion.ofNoComment("En septiembre de 2020")),
-            page.getContent()
+            List.of(Suggestion.ofNoComment("En septiembre de 2020"))
         );
         Collection<Replacement> replacements = List.of(replacement);
 
@@ -573,8 +560,7 @@ class ReviewCustomFinderTest {
             0,
             subtype,
             options.getCustomType(),
-            List.of(Suggestion.ofNoComment("En septiembre")),
-            page.getContent()
+            List.of(Suggestion.ofNoComment("En septiembre"))
         );
         when(
             customReplacementFindApi.findCustomReplacements(

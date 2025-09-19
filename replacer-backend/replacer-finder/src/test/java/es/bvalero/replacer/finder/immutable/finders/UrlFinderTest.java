@@ -27,7 +27,7 @@ class UrlFinderTest {
         List<Immutable> matches = urlFinder.findList(text);
 
         Set<String> expected = Set.of(url1, url2);
-        Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
+        Set<String> actual = matches.stream().map(Immutable::text).collect(Collectors.toSet());
         assertEquals(expected, actual);
     }
 }

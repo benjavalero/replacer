@@ -34,7 +34,7 @@ class PersonNameFinderTest {
         List<Immutable> matches = personNameFinder.findList(text);
 
         assertEquals(1, matches.size());
-        assertEquals(noun, matches.get(0).getText());
+        assertEquals(noun, matches.get(0).text());
     }
 
     @ParameterizedTest

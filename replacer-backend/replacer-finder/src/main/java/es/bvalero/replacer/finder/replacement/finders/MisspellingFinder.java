@@ -61,6 +61,17 @@ public abstract class MisspellingFinder implements ReplacementFinder {
     }
 
     @Override
+    public Replacement convertWithNoSuggestions(MatchResult matcher, FinderPage page) {
+        final int start = matcher.start();
+        final String text = matcher.group();
+        return Replacement.ofNoSuggestions(
+            start,
+            text,
+            StandardType.of(getType(), getSubtype(text, page.getPageKey().getLang()))
+        );
+    }
+
+    @Override
     public Replacement convert(MatchResult matcher, FinderPage page) {
         final int start = matcher.start();
         final String text = matcher.group();
@@ -68,8 +79,7 @@ public abstract class MisspellingFinder implements ReplacementFinder {
             start,
             text,
             StandardType.of(getType(), getSubtype(text, page.getPageKey().getLang())),
-            findSuggestions(text, page.getPageKey().getLang()),
-            page.getContent()
+            findSuggestions(text, page.getPageKey().getLang())
         );
     }
 

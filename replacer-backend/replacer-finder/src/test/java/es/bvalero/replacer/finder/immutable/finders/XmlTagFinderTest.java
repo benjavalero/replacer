@@ -31,8 +31,8 @@ class XmlTagFinderTest {
         List<Immutable> matches = xmlTagFinder.findList(text);
         assertEquals(1, matches.size());
 
-        assertEquals(0, matches.get(0).getStart());
-        assertEquals(text, matches.get(0).getText());
+        assertEquals(0, matches.get(0).start());
+        assertEquals(text, matches.get(0).text());
     }
 
     @ParameterizedTest

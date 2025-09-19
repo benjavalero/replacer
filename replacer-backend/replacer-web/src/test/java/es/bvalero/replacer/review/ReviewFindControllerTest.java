@@ -88,8 +88,7 @@ class ReviewFindControllerTest {
         start,
         rep,
         StandardType.of(ReplacementKind.SIMPLE, rep),
-        List.of(suggestion),
-        page.getContent()
+        List.of(suggestion)
     );
     private final int numPending = 100;
     private final Review review = Review.of(page, section, List.of(replacement), numPending);

@@ -1,16 +1,8 @@
 package es.bvalero.replacer.finder;
 
-import es.bvalero.replacer.common.util.ReplacerUtils;
-import java.util.Collection;
-import java.util.List;
-import java.util.SortedSet;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
+import java.util.*;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.TestOnly;
-import org.springframework.lang.NonNull;
 
 /**
  * A <strong>replacement</strong> is a potential issue to be checked and fixed (replaced). For instance,
@@ -19,37 +11,9 @@ import org.springframework.lang.NonNull;
  * For instance, in Spanish the word "Paris" could be misspelled if it corresponds to the French city
  * (written correctly as "París"), but it would be correct if it refers to the mythological Trojan prince.
  */
-@Getter
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public final class Replacement implements FinderResult {
-
-    private static final int CONTEXT_THRESHOLD = 20;
-    private static final int MAX_CONTEXT_LENGTH = 255; // Constrained by the database
-
-    @EqualsAndHashCode.Include
-    private final int start;
-
-    @EqualsAndHashCode.Include
-    @NonNull
-    private final String text;
-
-    @NonNull
-    private final ReplacementType type;
-
-    @NonNull
-    private final String context;
-
-    @NonNull
-    private final List<Suggestion> suggestions;
-
-    private Replacement(
-        int start,
-        String text,
-        ReplacementType type,
-        List<Suggestion> suggestions,
-        String pageContent
-    ) {
+public record Replacement(int start, String text, ReplacementType type, List<Suggestion> suggestions)
+    implements FinderResult {
+    public Replacement(int start, String text, ReplacementType type, List<Suggestion> suggestions) {
         // Validate start
         if (start < 0) {
             throw new IllegalArgumentException("Negative replacement start: " + start);
@@ -61,7 +25,7 @@ public final class Replacement implements FinderResult {
         }
 
         // There must exist at least a suggestion different from the found text
-        if (suggestions.isEmpty() || suggestions.stream().allMatch(s -> s.getText().equals(text))) {
+        if (!suggestions.isEmpty() && suggestions.stream().allMatch(s -> s.getText().equals(text))) {
             String msg = String.format("%s - %s", type, StringUtils.join(suggestions));
             throw new IllegalArgumentException("Invalid replacement suggestions: " + msg);
         }
@@ -70,19 +34,41 @@ public final class Replacement implements FinderResult {
         this.text = text;
         this.type = type;
 
-        // Pre-calculate the context and the suggestions as they will always be used later
-        this.context = extractContext(pageContent);
-        this.suggestions = mergeSuggestions(suggestions);
+        // Pre-calculate the final merged suggestions as they will always be used later
+        this.suggestions = suggestions.isEmpty() ? suggestions : mergeSuggestions(suggestions);
     }
 
-    public static Replacement of(
-        int start,
-        String text,
-        ReplacementType type,
-        List<Suggestion> suggestions,
-        String pageContent
-    ) {
-        return new Replacement(start, text, type, suggestions, pageContent);
+    public static Replacement of(int start, String text, ReplacementType type, List<Suggestion> suggestions) {
+        if (suggestions.isEmpty()) {
+            throw new IllegalArgumentException("Invalid replacement. Empty suggestions.");
+        }
+
+        return new Replacement(start, text, type, suggestions);
+    }
+
+    /* Particular case to avoid calculating suggestions when indexing to improve a little the performance */
+    public static Replacement ofNoSuggestions(int start, String text, ReplacementType type) {
+        return new Replacement(start, text, type, Collections.emptyList());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof Replacement that)) return false;
+        return start == that.start && Objects.equals(text, that.text);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(start, text);
+    }
+
+    /* Remove the suggestions to improve performance */
+    public Replacement withNoSuggestions() {
+        return withSuggestions(Collections.emptyList());
+    }
+
+    private Replacement withSuggestions(List<Suggestion> suggestions) {
+        return new Replacement(start, text, type, suggestions);
     }
 
     // Include the original text as the first option
@@ -96,15 +82,8 @@ public final class Replacement implements FinderResult {
         results.removeIf(r -> results.stream().anyMatch(r2 -> r2.containsStrictly(r)));
     }
 
-    private String extractContext(String pageContent) {
-        return StringUtils.truncate(
-            ReplacerUtils.getContextAroundWord(pageContent, start, getEnd(), CONTEXT_THRESHOLD),
-            MAX_CONTEXT_LENGTH
-        );
-    }
-
     public Replacement withStart(int newStart) {
-        return new Replacement(newStart, this.text, this.type, this.context, this.suggestions);
+        return new Replacement(newStart, this.text, this.type, this.suggestions);
     }
 
     // We consider two replacements equal if they have the same start and end (or text).
@@ -127,8 +106,8 @@ public final class Replacement implements FinderResult {
     private static boolean compareReplacement(Replacement expected, Replacement actual) {
         return (
             expected.equals(actual) &&
-            expected.getType().equals(actual.getType()) &&
-            expected.getSuggestions().equals(actual.getSuggestions())
+            expected.type.equals(actual.type) &&
+            expected.suggestions().equals(actual.suggestions())
         );
     }
 }

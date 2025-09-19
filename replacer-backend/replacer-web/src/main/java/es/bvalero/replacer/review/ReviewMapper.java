@@ -39,16 +39,16 @@ class ReviewMapper {
     }
 
     private ReplacementDto toDto(Replacement replacement) {
-        Boolean caseSensitive = replacement.getType() instanceof CustomType customType
+        Boolean caseSensitive = replacement.type() instanceof CustomType customType
             ? customType.isCaseSensitive()
             : null;
         return ReplacementDto.of(
-            replacement.getStart(),
-            replacement.getText(),
-            replacement.getType().getKind().getCode(),
-            replacement.getType().getSubtype(),
+            replacement.start(),
+            replacement.text(),
+            replacement.type().getKind().getCode(),
+            replacement.type().getSubtype(),
             caseSensitive,
-            replacement.getSuggestions().stream().map(ReviewMapper::toDto).collect(Collectors.toList())
+            replacement.suggestions().stream().map(ReviewMapper::toDto).collect(Collectors.toList())
         );
     }
 

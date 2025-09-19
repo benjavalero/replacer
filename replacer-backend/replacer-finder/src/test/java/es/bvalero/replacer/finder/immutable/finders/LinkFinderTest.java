@@ -61,7 +61,7 @@ class LinkFinderTest {
         List<Immutable> matches = linkFinder.findList(text);
 
         assertEquals(1, matches.size());
-        assertEquals(text, matches.get(0).getText());
+        assertEquals(text, matches.get(0).text());
     }
 
     @Test
@@ -76,7 +76,7 @@ class LinkFinderTest {
         List<Immutable> matches = linkFinder.findList(text);
 
         Set<String> expected = Set.of(suffixed1, suffixed2, inLink);
-        Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
+        Set<String> actual = matches.stream().map(Immutable::text).collect(Collectors.toSet());
         assertEquals(expected, actual);
     }
 
@@ -105,7 +105,7 @@ class LinkFinderTest {
         List<Immutable> matches = linkFinder.findList(text);
 
         Set<String> expected = Set.of(aliased1, aliased2, withNewLine, file, aliasedAnnex, category, interWiki);
-        Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
+        Set<String> actual = matches.stream().map(Immutable::text).collect(Collectors.toSet());
         assertEquals(expected, actual);
     }
 
@@ -115,7 +115,7 @@ class LinkFinderTest {
         List<Immutable> matches = linkFinder.findList(text);
 
         assertEquals(1, matches.size());
-        assertEquals(text, matches.get(0).getText());
+        assertEquals(text, matches.get(0).text());
     }
 
     @Test
@@ -126,7 +126,7 @@ class LinkFinderTest {
         List<Immutable> matches = linkFinder.findList(text);
 
         Set<String> expected = Set.of(fileWithParameters);
-        Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
+        Set<String> actual = matches.stream().map(Immutable::text).collect(Collectors.toSet());
         assertEquals(expected, actual);
     }
 
@@ -137,7 +137,7 @@ class LinkFinderTest {
         List<Immutable> matches = linkFinder.findList(text);
 
         Set<String> expected = Set.of(text);
-        Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
+        Set<String> actual = matches.stream().map(Immutable::text).collect(Collectors.toSet());
         assertEquals(expected, actual);
     }
 
@@ -164,7 +164,7 @@ class LinkFinderTest {
         List<Immutable> matches = linkFinder.findList(text);
 
         Set<String> expected = Set.of(fileUppercaseValid, fileUppercaseMisspelling, aliasUppercaseMisspelling);
-        Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
+        Set<String> actual = matches.stream().map(Immutable::text).collect(Collectors.toSet());
         assertEquals(expected, actual);
     }
 
@@ -181,7 +181,7 @@ class LinkFinderTest {
         List<Immutable> matches = linkFinder.findList(text);
 
         assertEquals(1, matches.size());
-        assertEquals(text, matches.get(0).getText());
+        assertEquals(text, matches.get(0).text());
     }
 
     @ParameterizedTest
@@ -189,7 +189,7 @@ class LinkFinderTest {
     void testInterWikiAliased(String text) {
         List<Immutable> matches = linkFinder.findList(text);
 
-        Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
+        Set<String> actual = matches.stream().map(Immutable::text).collect(Collectors.toSet());
         assertFalse(actual.contains(text));
     }
 
@@ -199,6 +199,6 @@ class LinkFinderTest {
         List<Immutable> matches = linkFinder.find(FinderPage.of(WikipediaLanguage.GALICIAN, text)).toList();
 
         assertEquals(1, matches.size());
-        assertEquals(text, matches.get(0).getText());
+        assertEquals(text, matches.get(0).text());
     }
 }

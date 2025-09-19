@@ -33,10 +33,10 @@ class AcuteOFinderTest {
         assertEquals(1, replacements.size());
 
         Replacement rep = replacements.getFirst();
-        assertEquals(StandardType.ACUTE_O, rep.getType());
-        assertEquals(AcuteOFinder.ACUTE_O, rep.getText());
-        assertEquals(AcuteOFinder.ACUTE_O, rep.getSuggestions().get(0).getText());
-        assertEquals(AcuteOFinder.FIX_ACUTE_O, rep.getSuggestions().get(1).getText());
+        assertEquals(StandardType.ACUTE_O, rep.type());
+        assertEquals(AcuteOFinder.ACUTE_O, rep.text());
+        assertEquals(AcuteOFinder.ACUTE_O, rep.suggestions().get(0).getText());
+        assertEquals(AcuteOFinder.FIX_ACUTE_O, rep.suggestions().get(1).getText());
     }
 
     @Test
@@ -47,11 +47,11 @@ class AcuteOFinderTest {
         assertEquals(1, replacements.size());
 
         Replacement rep = replacements.getFirst();
-        assertEquals(StandardType.ACUTE_O, rep.getType());
-        assertEquals(AcuteOFinder.ACUTE_O, rep.getText());
-        assertEquals(7, rep.getStart());
-        assertEquals(AcuteOFinder.ACUTE_O, rep.getSuggestions().get(0).getText());
-        assertEquals(AcuteOFinder.FIX_ACUTE_O, rep.getSuggestions().get(1).getText());
+        assertEquals(StandardType.ACUTE_O, rep.type());
+        assertEquals(AcuteOFinder.ACUTE_O, rep.text());
+        assertEquals(7, rep.start());
+        assertEquals(AcuteOFinder.ACUTE_O, rep.suggestions().get(0).getText());
+        assertEquals(AcuteOFinder.FIX_ACUTE_O, rep.suggestions().get(1).getText());
     }
 
     @ParameterizedTest

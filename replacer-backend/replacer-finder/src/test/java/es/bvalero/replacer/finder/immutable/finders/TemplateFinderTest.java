@@ -54,7 +54,7 @@ class TemplateFinderTest {
     void testTemplateNames(String text, String templateName) {
         List<Immutable> matches = templateFinder.findList(text);
 
-        assertTrue(matches.stream().map(Immutable::getText).collect(Collectors.toSet()).contains(templateName));
+        assertTrue(matches.stream().map(Immutable::text).collect(Collectors.toSet()).contains(templateName));
     }
 
     @ParameterizedTest
@@ -71,7 +71,7 @@ class TemplateFinderTest {
         List<Immutable> matches = templateFinder.findList(text);
 
         assertEquals(1, matches.size());
-        assertEquals(text, matches.get(0).getText());
+        assertEquals(text, matches.get(0).text());
     }
 
     @ParameterizedTest
@@ -80,7 +80,7 @@ class TemplateFinderTest {
         List<Immutable> matches = templateFinder.findList(text);
 
         assertFalse(matches.isEmpty());
-        assertFalse(matches.stream().map(Immutable::getText).collect(Collectors.toSet()).contains(text));
+        assertFalse(matches.stream().map(Immutable::text).collect(Collectors.toSet()).contains(text));
     }
 
     @ParameterizedTest
@@ -96,15 +96,13 @@ class TemplateFinderTest {
         List<Immutable> matches = templateFinder.findList(text);
 
         assertFalse(matches.isEmpty());
-        assertTrue(
-            matches.stream().map(Immutable::getText).map(String::trim).collect(Collectors.toSet()).contains(param)
-        );
+        assertTrue(matches.stream().map(Immutable::text).map(String::trim).collect(Collectors.toSet()).contains(param));
         if (StringUtils.isBlank(value)) {
             assertEquals(2, matches.size()); // Template name + param
         } else {
             assertEquals(3, matches.size()); // Template name + param + value
             assertTrue(
-                matches.stream().map(Immutable::getText).map(String::trim).collect(Collectors.toSet()).contains(value)
+                matches.stream().map(Immutable::text).map(String::trim).collect(Collectors.toSet()).contains(value)
             );
         }
     }
@@ -116,7 +114,7 @@ class TemplateFinderTest {
         List<Immutable> matches = templateFinder.findList(text);
 
         Set<String> expected = Set.of("P", "ps");
-        Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
+        Set<String> actual = matches.stream().map(Immutable::text).collect(Collectors.toSet());
         assertEquals(expected, actual);
     }
 
@@ -127,7 +125,7 @@ class TemplateFinderTest {
         List<Immutable> matches = templateFinder.findList(text);
 
         Set<String> expected = Set.of("Template", "image ", " x.jpg ");
-        Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
+        Set<String> actual = matches.stream().map(Immutable::text).collect(Collectors.toSet());
         assertEquals(expected, actual);
     }
 
@@ -138,7 +136,7 @@ class TemplateFinderTest {
         List<Immutable> matches = templateFinder.findList(text);
 
         Set<String> expected = Set.of("Template", "image ", " x.jpg");
-        Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
+        Set<String> actual = matches.stream().map(Immutable::text).collect(Collectors.toSet());
         assertEquals(expected, actual);
     }
 
@@ -150,29 +148,29 @@ class TemplateFinderTest {
         List<Immutable> matches = templateFinder.findList(template);
 
         Set<String> expected = Set.of("Template1", "Template2", "param1", "url", "value2");
-        Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
+        Set<String> actual = matches.stream().map(Immutable::text).collect(Collectors.toSet());
         assertEquals(expected, actual);
 
         // Check positions
         assertEquals(
             2,
-            matches.stream().filter(m -> m.getText().equals("Template1")).findAny().map(Immutable::getStart).orElse(0)
+            matches.stream().filter(m -> m.text().equals("Template1")).findAny().map(Immutable::start).orElse(0)
         );
         assertEquals(
             12,
-            matches.stream().filter(m -> m.getText().equals("param1")).findAny().map(Immutable::getStart).orElse(0)
+            matches.stream().filter(m -> m.text().equals("param1")).findAny().map(Immutable::start).orElse(0)
         );
         assertEquals(
             21,
-            matches.stream().filter(m -> m.getText().equals("Template2")).findAny().map(Immutable::getStart).orElse(0)
+            matches.stream().filter(m -> m.text().equals("Template2")).findAny().map(Immutable::start).orElse(0)
         );
         assertEquals(
             31,
-            matches.stream().filter(m -> m.getText().equals("url")).findAny().map(Immutable::getStart).orElse(0)
+            matches.stream().filter(m -> m.text().equals("url")).findAny().map(Immutable::start).orElse(0)
         );
         assertEquals(
             35,
-            matches.stream().filter(m -> m.getText().equals("value2")).findAny().map(Immutable::getStart).orElse(0)
+            matches.stream().filter(m -> m.text().equals("value2")).findAny().map(Immutable::start).orElse(0)
         );
     }
 
@@ -192,9 +190,9 @@ class TemplateFinderTest {
         List<Immutable> matches = templateFinder.findList(text);
 
         Set<String> expected = Set.of("T", "x", "A", "B", "y");
-        Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
+        Set<String> actual = matches.stream().map(Immutable::text).collect(Collectors.toSet());
         assertEquals(expected, actual);
-        assertTrue(matches.stream().allMatch(m -> m.getStart() >= 0));
+        assertTrue(matches.stream().allMatch(m -> m.start() >= 0));
     }
 
     @Test
@@ -295,7 +293,7 @@ class TemplateFinderTest {
         // The '=' should be detected as belonging to the reference,
         // and therefore the argument must be treated as a value
         Set<String> expected = Set.of("T");
-        Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
+        Set<String> actual = matches.stream().map(Immutable::text).collect(Collectors.toSet());
         assertEquals(expected, actual);
     }
 
@@ -315,7 +313,7 @@ class TemplateFinderTest {
         List<Immutable> matches = templateFinder.findList(text);
 
         Set<String> expected = Set.of("Template1", "Template2");
-        Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
+        Set<String> actual = matches.stream().map(Immutable::text).collect(Collectors.toSet());
         assertEquals(expected, actual);
     }
 
@@ -328,7 +326,7 @@ class TemplateFinderTest {
         List<Immutable> matches = templateFinder.findList(template);
 
         Set<String> expected = Set.of("Template1", "Template2", "url", "value2");
-        Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
+        Set<String> actual = matches.stream().map(Immutable::text).collect(Collectors.toSet());
         assertEquals(expected, actual);
     }
 
@@ -339,7 +337,7 @@ class TemplateFinderTest {
         List<Immutable> matches = templateFinder.findList(template);
 
         Set<String> expected = Set.of("#ifeq", "NAMESPACE");
-        Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
+        Set<String> actual = matches.stream().map(Immutable::text).collect(Collectors.toSet());
         assertEquals(expected, actual);
     }
 }

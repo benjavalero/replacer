@@ -1,9 +1,11 @@
 package es.bvalero.replacer.finder.cosmetic;
 
+import static es.bvalero.replacer.checkwikipedia.CheckWikipediaAction.NO_ACTION;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+import es.bvalero.replacer.checkwikipedia.CheckWikipediaAction;
 import es.bvalero.replacer.checkwikipedia.CheckWikipediaFixEvent;
 import es.bvalero.replacer.finder.Cosmetic;
 import es.bvalero.replacer.finder.FinderPage;
@@ -30,7 +32,7 @@ class CosmeticFinderServiceTest {
 
     @Test
     void testApplyCosmeticChanges() {
-        Cosmetic cosmetic = Cosmetic.builder().start(2).text("[[Link|link]]").fix("[[link]]").build();
+        Cosmetic cosmetic = new Cosmetic(2, "[[Link|link]]", "[[link]]", NO_ACTION);
         when(cosmeticFinder.find(any(FinderPage.class))).thenReturn(Stream.of(cosmetic)).thenReturn(Stream.empty());
 
         String text = "A [[Link|link]] to simplify.";
@@ -40,7 +42,7 @@ class CosmeticFinderServiceTest {
 
         verify(cosmeticFinder).find(page);
         verify(applicationEventPublisher).publishEvent(
-            CheckWikipediaFixEvent.of(page.getPageKey().getLang(), page.getTitle(), cosmetic.getCheckWikipediaAction())
+            CheckWikipediaFixEvent.of(page.getPageKey().getLang(), page.getTitle(), cosmetic.checkWikipediaAction())
         );
     }
 
@@ -50,9 +52,9 @@ class CosmeticFinderServiceTest {
 
     @Test
     void testApplySeveralCosmeticChanges() {
-        Cosmetic cosmetic = Cosmetic.builder().start(2).text("[[Link|link]]").fix("[[link]]").build();
-        Cosmetic cosmetic2 = Cosmetic.builder().start(29).text("archivo").fix("Archivo").build();
-        Cosmetic cosmetic3 = Cosmetic.builder().start(19).text("</br>").fix("<br>").build();
+        Cosmetic cosmetic = new Cosmetic(2, "[[Link|link]]", "[[link]]", NO_ACTION);
+        Cosmetic cosmetic2 = new Cosmetic(29, "archivo", "Archivo", NO_ACTION);
+        Cosmetic cosmetic3 = new Cosmetic(19, "</br>", "<br>", NO_ACTION);
         when(cosmeticFinder.find(any(FinderPage.class)))
             .thenReturn(Stream.of(cosmetic, cosmetic2, cosmetic3))
             .thenReturn(Stream.empty());
@@ -67,8 +69,8 @@ class CosmeticFinderServiceTest {
 
     @Test
     void testApplyNestedCosmeticChanges() {
-        Cosmetic cosmetic = Cosmetic.builder().start(2).text("[[Link|''link'']]").fix("''[[Link|link]]''").build();
-        Cosmetic cosmetic2 = Cosmetic.builder().start(4).text("[[Link|link]]").fix("[[link]]").build();
+        Cosmetic cosmetic = new Cosmetic(2, "[[Link|''link'']]", "''[[Link|link]]''", NO_ACTION);
+        Cosmetic cosmetic2 = new Cosmetic(4, "[[Link|link]]", "[[link]]", NO_ACTION);
         when(cosmeticFinder.find(any(FinderPage.class)))
             .thenReturn(Stream.of(cosmetic))
             .thenReturn(Stream.of(cosmetic2))

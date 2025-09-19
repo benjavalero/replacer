@@ -115,9 +115,9 @@
                 <configuration>
                     <filesets>
                         <fileset>
-                            <directory>testoutput</directory>
+                            <directory>replacer-finder-benchmark/src/main/resources</directory>
                             <includes>
-                                <include>**</include>
+                                <include>**/*jmh.json</include>
                             </includes>
                         </fileset>
                     </filesets>
@@ -186,6 +186,14 @@
                 <configuration>
                     <prettierJavaVersion>2.6.7</prettierJavaVersion>
                 </configuration>
+                <executions>
+                    <execution>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>write</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

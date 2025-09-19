@@ -8,6 +8,6 @@ import java.util.regex.MatchResult;
 public interface ImmutableFinder extends Finder<Immutable> {
     @Override
     default Immutable convert(MatchResult match, FinderPage page) {
-        return Immutable.of(match.start(), match.group());
+        return new Immutable(match.start(), match.group());
     }
 }

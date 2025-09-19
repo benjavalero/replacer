@@ -51,13 +51,7 @@ class CustomReplacementFinder extends MisspellingFinder implements ReplacementFi
     public Replacement convert(MatchResult matcher, FinderPage page) {
         final int start = matcher.start();
         final String text = matcher.group();
-        return Replacement.of(
-            start,
-            text,
-            this.customMisspelling.toCustomType(),
-            findSuggestions(text),
-            page.getContent()
-        );
+        return Replacement.of(start, text, this.customMisspelling.toCustomType(), findSuggestions(text));
     }
 
     private List<Suggestion> findSuggestions(String text) {

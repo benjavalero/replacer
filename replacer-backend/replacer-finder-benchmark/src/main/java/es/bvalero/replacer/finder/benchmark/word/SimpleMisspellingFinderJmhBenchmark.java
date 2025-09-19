@@ -2,12 +2,14 @@ package es.bvalero.replacer.finder.benchmark.word;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.exception.ReplacerException;
+import es.bvalero.replacer.finder.Finder;
 import es.bvalero.replacer.finder.benchmark.BaseFinderJmhBenchmark;
 import es.bvalero.replacer.finder.listing.SimpleMisspelling;
 import es.bvalero.replacer.finder.listing.find.ListingFinder;
 import es.bvalero.replacer.finder.listing.find.ListingOfflineFinder;
 import es.bvalero.replacer.finder.listing.load.SimpleMisspellingLoader;
 import es.bvalero.replacer.finder.listing.parse.SimpleMisspellingParser;
+import es.bvalero.replacer.finder.replacement.ReplacementFinder;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.openjdk.jmh.annotations.Benchmark;
@@ -185,6 +187,14 @@ public class SimpleMisspellingFinderJmhBenchmark extends BaseFinderJmhBenchmark 
         runFinder(wordTrieWholeFinder, bh);
     }
     */
+
+    @Override
+    protected void runFinder(Finder<?> finder, Blackhole bh) {
+        // As the sample represents the whole dump,
+        // finding all over the sample represents the time finding all over the dump.
+        // NOTE: therefore, the average time corresponds to run the finder in the 50 sample pages.
+        sampleContents.forEach(page -> finder.findAndFilter(page).forEach(bh::consume));
+    }
 
     public static void main(String[] args) throws RunnerException, ReplacerException {
         run(SimpleMisspellingFinderJmhBenchmark.class, fileName);

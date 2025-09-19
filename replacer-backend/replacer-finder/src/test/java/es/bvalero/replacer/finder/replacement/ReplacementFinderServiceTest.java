@@ -50,8 +50,7 @@ class ReplacementFinderServiceTest {
             0,
             "An",
             StandardType.of(ReplacementKind.SIMPLE, "an"),
-            List.of(Suggestion.ofNoComment("Un")),
-            text
+            List.of(Suggestion.ofNoComment("Un"))
         );
         when(replacementFinder.find(any(FinderPage.class))).thenReturn(Stream.of(replacement));
 
@@ -69,15 +68,13 @@ class ReplacementFinderServiceTest {
             0,
             "An",
             StandardType.of(ReplacementKind.SIMPLE, "an"),
-            List.of(Suggestion.ofNoComment("Un")),
-            text
+            List.of(Suggestion.ofNoComment("Un"))
         );
         Replacement replacement2 = Replacement.of(
             3,
             "example",
             StandardType.of(ReplacementKind.SIMPLE, "example"),
-            List.of(Suggestion.ofNoComment("ejemplo")),
-            text
+            List.of(Suggestion.ofNoComment("ejemplo"))
         );
         when(replacementFinder.find(any(FinderPage.class))).thenReturn(Stream.of(replacement1, replacement2));
 
@@ -95,15 +92,13 @@ class ReplacementFinderServiceTest {
             0,
             "An",
             StandardType.of(ReplacementKind.SIMPLE, "an"),
-            List.of(Suggestion.ofNoComment("Un")),
-            text
+            List.of(Suggestion.ofNoComment("Un"))
         );
         Replacement replacement2 = Replacement.of(
             0,
             "An",
             StandardType.of(ReplacementKind.SIMPLE, "an"),
-            List.of(Suggestion.ofNoComment("Un")),
-            text
+            List.of(Suggestion.ofNoComment("Un"))
         );
         assertEquals(replacement1, replacement2);
 
@@ -129,15 +124,13 @@ class ReplacementFinderServiceTest {
             0,
             "An",
             StandardType.of(ReplacementKind.SIMPLE, "an"),
-            List.of(Suggestion.ofNoComment("Un")),
-            text
+            List.of(Suggestion.ofNoComment("Un"))
         );
         Replacement replacement2 = Replacement.of(
             0,
             "An example",
             StandardType.of(ReplacementKind.COMPOSED, "an example"),
-            List.of(Suggestion.ofNoComment("Un ejemplo")),
-            text
+            List.of(Suggestion.ofNoComment("Un ejemplo"))
         );
         assertTrue(replacement2.containsStrictly(replacement1));
 
@@ -157,15 +150,13 @@ class ReplacementFinderServiceTest {
             0,
             "An",
             StandardType.of(ReplacementKind.SIMPLE, "an"),
-            List.of(Suggestion.ofNoComment("Un")),
-            text
+            List.of(Suggestion.ofNoComment("Un"))
         );
         Replacement replacement2 = Replacement.of(
             3,
             "example",
             StandardType.of(ReplacementKind.SIMPLE, "example"),
-            List.of(Suggestion.ofNoComment("ejemplo")),
-            text
+            List.of(Suggestion.ofNoComment("ejemplo"))
         );
         Immutable immutable = Immutable.of(14, "two");
 
@@ -186,15 +177,13 @@ class ReplacementFinderServiceTest {
             0,
             "An",
             StandardType.of(ReplacementKind.SIMPLE, "an"),
-            List.of(Suggestion.ofNoComment("Un")),
-            text
+            List.of(Suggestion.ofNoComment("Un"))
         );
         Replacement replacement2 = Replacement.of(
             3,
             "example",
             StandardType.of(ReplacementKind.SIMPLE, "example"),
-            List.of(Suggestion.ofNoComment("ejemplo")),
-            text
+            List.of(Suggestion.ofNoComment("ejemplo"))
         );
         Immutable immutable = Immutable.of(0, "An");
 
@@ -215,15 +204,13 @@ class ReplacementFinderServiceTest {
             0,
             "An",
             StandardType.of(ReplacementKind.SIMPLE, "an"),
-            List.of(Suggestion.ofNoComment("Un")),
-            text
+            List.of(Suggestion.ofNoComment("Un"))
         );
         Replacement replacement2 = Replacement.of(
             3,
             "example",
             StandardType.of(ReplacementKind.SIMPLE, "ejemplo"),
-            List.of(Suggestion.ofNoComment("ejemplo")),
-            text
+            List.of(Suggestion.ofNoComment("ejemplo"))
         );
         Immutable immutable = Immutable.of(0, "An example");
 
@@ -237,48 +224,42 @@ class ReplacementFinderServiceTest {
 
     @Test
     void testContains() {
-        String text = "ABCDE";
+        // String text = "ABCDE";
         Replacement result1 = Replacement.of(
             0,
             "A",
             StandardType.of(ReplacementKind.SIMPLE, "a"),
-            List.of(Suggestion.ofNoComment("x")),
-            text
+            List.of(Suggestion.ofNoComment("x"))
         );
         Replacement result2 = Replacement.of(
             1,
             "BC",
             StandardType.of(ReplacementKind.SIMPLE, "bc"),
-            List.of(Suggestion.ofNoComment("x")),
-            text
+            List.of(Suggestion.ofNoComment("x"))
         );
         Replacement result3 = Replacement.of(
             1,
             "B",
             StandardType.of(ReplacementKind.SIMPLE, "b"),
-            List.of(Suggestion.ofNoComment("x")),
-            text
+            List.of(Suggestion.ofNoComment("x"))
         );
         Replacement result4 = Replacement.of(
             0,
             "AB",
             StandardType.of(ReplacementKind.SIMPLE, "ab"),
-            List.of(Suggestion.ofNoComment("x")),
-            text
+            List.of(Suggestion.ofNoComment("x"))
         );
         Replacement result5 = Replacement.of(
             0,
             "ABC",
             StandardType.of(ReplacementKind.SIMPLE, "abc"),
-            List.of(Suggestion.ofNoComment("x")),
-            text
+            List.of(Suggestion.ofNoComment("x"))
         );
         Replacement result6 = Replacement.of(
             2,
             "C",
             StandardType.of(ReplacementKind.SIMPLE, "c"),
-            List.of(Suggestion.ofNoComment("x")),
-            text
+            List.of(Suggestion.ofNoComment("x"))
         );
 
         assertTrue(result1.contains(result1));

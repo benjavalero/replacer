@@ -1,12 +1,12 @@
 package es.bvalero.replacer.index;
 
+import static es.bvalero.replacer.index.PageComparator.extractContext;
 import static es.bvalero.replacer.index.PageComparator.toIndexedPage;
 import static es.bvalero.replacer.page.IndexedReplacement.REVIEWER_SYSTEM;
 import static org.junit.jupiter.api.Assertions.*;
 
 import es.bvalero.replacer.common.domain.PageKey;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.ReplacementKind;
 import es.bvalero.replacer.finder.StandardType;
@@ -39,14 +39,12 @@ class PageComparatorTest {
         .lastUpdate(WikipediaTimestamp.now().toString())
         .build();
 
-    private static Replacement buildFinderReplacement(IndexablePage indexablePage, int index) {
-        FinderPage page = indexablePage.toFinderPage();
+    private static Replacement buildFinderReplacement(int index) {
         return Replacement.of(
             index,
             String.valueOf(index),
             StandardType.of(ReplacementKind.SIMPLE, String.valueOf(index)),
-            List.of(Suggestion.ofNoComment(String.valueOf(index + 1))),
-            page.getContent()
+            List.of(Suggestion.ofNoComment(String.valueOf(index + 1)))
         );
     }
 
@@ -63,13 +61,13 @@ class PageComparatorTest {
 
     @Test
     void testNewPageWithReplacements() {
-        Replacement r1 = buildFinderReplacement(page, 1); // New => ADD
+        Replacement r1 = buildFinderReplacement(1); // New => ADD
         Collection<Replacement> replacements = List.of(r1);
 
         IndexedPage result = pageComparator.indexPageReplacements(page, replacements, null);
 
         IndexedPage expected = toIndexedPage(page, IndexedPageStatus.ADD);
-        expected.addReplacement(ComparableReplacement.of(r1, page.getPageKey()).toDomain(IndexedReplacementStatus.ADD));
+        expected.addReplacement(ComparableReplacement.of(r1, page).toDomain(IndexedReplacementStatus.ADD));
 
         assertTrue(IndexedPage.compare(expected, result));
     }
@@ -145,50 +143,50 @@ class PageComparatorTest {
         // New
         // R9 : Not in DB => Add
 
-        Replacement r1 = buildFinderReplacement(page, 1);
-        Replacement r2 = buildFinderReplacement(page, 2);
-        Replacement r3 = buildFinderReplacement(page, 3);
-        Replacement r4 = buildFinderReplacement(page, 4);
-        Replacement r5 = buildFinderReplacement(page, 5);
-        Replacement r9 = buildFinderReplacement(page, 9);
+        Replacement r1 = buildFinderReplacement(1);
+        Replacement r2 = buildFinderReplacement(2);
+        Replacement r3 = buildFinderReplacement(3);
+        Replacement r4 = buildFinderReplacement(4);
+        Replacement r5 = buildFinderReplacement(5);
+        Replacement r9 = buildFinderReplacement(9);
         Collection<Replacement> replacements = List.of(r1, r2, r3, r4, r5, r9);
 
         // Existing replacements in DB
         IndexedReplacement r1db = IndexedReplacement.builder()
             .id(1)
             .pageKey(page.getPageKey())
-            .type((StandardType) r1.getType())
-            .start(r1.getStart())
-            .context(r1.getContext())
+            .type((StandardType) r1.type())
+            .start(r1.start())
+            .context(extractContext(r1, page.getContent()))
             .build();
         IndexedReplacement r2db = IndexedReplacement.builder()
             .id(2)
             .pageKey(page.getPageKey())
-            .type((StandardType) r2.getType())
-            .start(r2.getStart())
-            .context(r2.getContext())
+            .type((StandardType) r2.type())
+            .start(r2.start())
+            .context(extractContext(r2, page.getContent()))
             .reviewer("User")
             .build();
         IndexedReplacement r3db = IndexedReplacement.builder()
             .id(3)
             .pageKey(page.getPageKey())
-            .type((StandardType) r3.getType())
-            .start(r3.getStart())
-            .context(r3.getContext())
+            .type((StandardType) r3.type())
+            .start(r3.start())
+            .context(extractContext(r3, page.getContent()))
             .reviewer(REVIEWER_SYSTEM)
             .build();
         IndexedReplacement r4db = IndexedReplacement.builder()
             .id(4)
             .pageKey(page.getPageKey())
-            .type((StandardType) r4.getType())
+            .type((StandardType) r4.type())
             .start(5)
-            .context(r4.getContext())
+            .context(extractContext(r4, page.getContent()))
             .build();
         IndexedReplacement r5db = IndexedReplacement.builder()
             .id(5)
             .pageKey(page.getPageKey())
-            .type((StandardType) r5.getType())
-            .start(r5.getStart())
+            .type((StandardType) r5.type())
+            .start(r5.start())
             .context("50")
             .build();
         IndexedReplacement r6db = IndexedReplacement.builder()
@@ -224,18 +222,12 @@ class PageComparatorTest {
         IndexedPage result = pageComparator.indexPageReplacements(page, replacements, dbPage);
 
         IndexedPage expected = toIndexedPage(page, IndexedPageStatus.INDEXED);
-        expected.addReplacement(ComparableReplacement.of(r9, page.getPageKey()).toDomain(IndexedReplacementStatus.ADD));
-        expected.addReplacement(
-            ComparableReplacement.of(r4, page.getPageKey()).toDomain(4, IndexedReplacementStatus.UPDATE)
-        );
-        expected.addReplacement(
-            ComparableReplacement.of(r5, page.getPageKey()).toDomain(5, IndexedReplacementStatus.UPDATE)
-        );
+        expected.addReplacement(ComparableReplacement.of(r9, page).toDomain(IndexedReplacementStatus.ADD));
+        expected.addReplacement(ComparableReplacement.of(r4, page).toDomain(4, IndexedReplacementStatus.UPDATE));
+        expected.addReplacement(ComparableReplacement.of(r5, page).toDomain(5, IndexedReplacementStatus.UPDATE));
         expected.addReplacement(ComparableReplacement.of(r6db).toDomain(IndexedReplacementStatus.REMOVE));
         expected.addReplacement(ComparableReplacement.of(r8db).toDomain(IndexedReplacementStatus.REMOVE));
-        expected.addReplacement(
-            ComparableReplacement.of(r1, page.getPageKey()).toDomain(1, IndexedReplacementStatus.INDEXED)
-        );
+        expected.addReplacement(ComparableReplacement.of(r1, page).toDomain(1, IndexedReplacementStatus.INDEXED));
 
         assertTrue(
             result
@@ -259,16 +251,16 @@ class PageComparatorTest {
         // R1 : In DB not reviewed => Do nothing
 
         // Replacements found to index
-        Replacement r1 = buildFinderReplacement(page, 1);
+        Replacement r1 = buildFinderReplacement(1);
         Collection<Replacement> replacements = List.of(r1);
 
         // Existing replacements in DB
         IndexedReplacement r1db = IndexedReplacement.builder()
             .id(1)
             .pageKey(page.getPageKey())
-            .type((StandardType) r1.getType())
-            .start(r1.getStart())
-            .context(r1.getContext())
+            .type((StandardType) r1.type())
+            .start(r1.start())
+            .context(extractContext(r1, page.getContent()))
             .build();
         IndexedPage dbPage = IndexedPage.builder()
             .pageKey(page.getPageKey())
@@ -280,9 +272,7 @@ class PageComparatorTest {
         IndexedPage result = pageComparator.indexPageReplacements(page, replacements, dbPage);
 
         IndexedPage expected = toIndexedPage(page, IndexedPageStatus.INDEXED);
-        expected.addReplacement(
-            ComparableReplacement.of(r1, page.getPageKey()).toDomain(1, IndexedReplacementStatus.INDEXED)
-        );
+        expected.addReplacement(ComparableReplacement.of(r1, page).toDomain(1, IndexedReplacementStatus.INDEXED));
 
         assertTrue(IndexedPage.compare(expected, result));
     }
@@ -365,7 +355,7 @@ class PageComparatorTest {
 
     @Test
     void testDuplicatedDbReplacementsWithDifferentContext() {
-        Replacement r1 = buildFinderReplacement(page, 1);
+        Replacement r1 = buildFinderReplacement(1);
         Collection<Replacement> replacements = List.of(r1);
 
         // Existing replacements in DB: the same replacement found in the same position with different context
@@ -373,15 +363,15 @@ class PageComparatorTest {
         IndexedReplacement r1db = IndexedReplacement.builder()
             .id(1)
             .pageKey(page.getPageKey())
-            .type((StandardType) r1.getType())
-            .start(r1.getStart())
+            .type((StandardType) r1.type())
+            .start(r1.start())
             .context("1")
             .build();
         IndexedReplacement r2db = IndexedReplacement.builder()
             .id(2)
             .pageKey(page.getPageKey())
-            .type((StandardType) r1.getType())
-            .start(r1.getStart())
+            .type((StandardType) r1.type())
+            .start(r1.start())
             .context("")
             .reviewer("X")
             .build();
@@ -420,18 +410,16 @@ class PageComparatorTest {
             25,
             "words",
             StandardType.of(ReplacementKind.SIMPLE, "words"),
-            List.of(Suggestion.ofNoComment("Words")),
-            page.getContent()
+            List.of(Suggestion.ofNoComment("Words"))
         );
-        ComparableReplacement cr1 = ComparableReplacement.of(r1, page.getPageKey());
+        ComparableReplacement cr1 = ComparableReplacement.of(r1, page);
         Replacement r2 = Replacement.of(
             75,
             "words",
             StandardType.of(ReplacementKind.SIMPLE, "words"),
-            List.of(Suggestion.ofNoComment("Words")),
-            page.getContent()
+            List.of(Suggestion.ofNoComment("Words"))
         );
-        ComparableReplacement cr2 = ComparableReplacement.of(r2, page.getPageKey());
+        ComparableReplacement cr2 = ComparableReplacement.of(r2, page);
 
         assertFalse(cr1.isContextCloseEnough(cr2));
         assertFalse(cr2.isContextCloseEnough(cr1));
@@ -454,18 +442,16 @@ class PageComparatorTest {
             25,
             "words",
             StandardType.of(ReplacementKind.SIMPLE, "words"),
-            List.of(Suggestion.ofNoComment("Words")),
-            page.getContent()
+            List.of(Suggestion.ofNoComment("Words"))
         );
-        ComparableReplacement cr1 = ComparableReplacement.of(r1, page.getPageKey());
+        ComparableReplacement cr1 = ComparableReplacement.of(r1, page);
         Replacement r2 = Replacement.of(
             70,
             "words",
             StandardType.of(ReplacementKind.SIMPLE, "words"),
-            List.of(Suggestion.ofNoComment("Words")),
-            page.getContent()
+            List.of(Suggestion.ofNoComment("Words"))
         );
-        ComparableReplacement cr2 = ComparableReplacement.of(r2, page.getPageKey());
+        ComparableReplacement cr2 = ComparableReplacement.of(r2, page);
 
         assertTrue(cr1.isContextCloseEnough(cr2));
         assertTrue(cr2.isContextCloseEnough(cr1));

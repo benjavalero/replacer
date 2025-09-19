@@ -44,7 +44,7 @@ class IgnorableSectionFinderTest {
         List<Immutable> matches = ignorableSectionFinder.findList(text);
 
         Set<String> expected = Set.of(ignorableSection);
-        Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
+        Set<String> actual = matches.stream().map(Immutable::text).collect(Collectors.toSet());
         assertEquals(expected, actual);
     }
 
@@ -75,7 +75,7 @@ class IgnorableSectionFinderTest {
         List<Immutable> matches = ignorableSectionFinder.findList(text);
 
         Set<String> expected = Set.of(ignorableSection);
-        Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
+        Set<String> actual = matches.stream().map(Immutable::text).collect(Collectors.toSet());
         assertEquals(expected, actual);
     }
 }

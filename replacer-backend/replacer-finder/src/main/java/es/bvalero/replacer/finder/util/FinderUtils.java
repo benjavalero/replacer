@@ -126,7 +126,7 @@ public class FinderUtils {
     }
 
     public boolean isBlankOrNonBreakingSpace(String text, int start, int end) {
-        return isBlank(text, start, end) || isNonBreakingSpace(text, start);
+        return isBlank(text, start, end) || isNonBreakingSpace(text, start, end);
     }
 
     private boolean isBlank(String text, int start, int end) {
@@ -141,14 +141,17 @@ public class FinderUtils {
         return true;
     }
 
+    /** Check if the string is a whitespace or represents a non-breaking space */
     public boolean isActualSpace(String str) {
         return SPACE.equals(str) || NON_BREAKING_SPACE.equals(str) || NON_BREAKING_SPACE_TEMPLATE.equals(str);
     }
 
-    public boolean isNonBreakingSpace(String text, int start) {
+    public boolean isNonBreakingSpace(String text, int start, int end) {
         return (
-            ReplacerUtils.containsAtPosition(text, NON_BREAKING_SPACE, start) ||
-            ReplacerUtils.containsAtPosition(text, NON_BREAKING_SPACE_TEMPLATE, start)
+            (end - start == NON_BREAKING_SPACE.length() &&
+                ReplacerUtils.containsAtPosition(text, NON_BREAKING_SPACE, start)) ||
+            (end - start == NON_BREAKING_SPACE_TEMPLATE.length() &&
+                ReplacerUtils.containsAtPosition(text, NON_BREAKING_SPACE_TEMPLATE, start))
         );
     }
 
@@ -345,6 +348,30 @@ public class FinderUtils {
         return minString == null ? null : FinderMatchResult.of(minStart, minString);
     }
 
+    /**
+     * Find the first occurrence of several search characters.
+     * Put the most common occurrence first improves performance.
+     */
+    public int indexOfAny(String text, int start, char... searchChars) {
+        int minStart = text.length();
+        for (char searchChar : searchChars) {
+            final int pos = indexOfChar(text, searchChar, start, minStart);
+            if (pos >= 0) {
+                minStart = pos;
+            }
+        }
+        return minStart == text.length() ? -1 : minStart;
+    }
+
+    private int indexOfChar(String text, char ch, int start, int end) {
+        for (int i = start; i < end; i++) {
+            if (text.charAt(i) == ch) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
     /* Find the most close sequence of letters and digits ending at the given position */
     @Nullable
     public MatchResult findWordBefore(String text, int start) {
@@ -513,18 +540,6 @@ public class FinderUtils {
         boolean validate(String text, int start);
     }
 
-    /* Temporary match result when we only know the match start */
-    private class TempMatchResult extends FinderMatchResult {
-
-        TempMatchResult(int start) {
-            super(start, "");
-        }
-
-        static TempMatchResult of(int start) {
-            return new TempMatchResult(start);
-        }
-    }
-
     public Collection<FinderMatchResult> findAllStructures(FinderPage page, String startStr, String endStr) {
         return findAllStructures(page, startStr, endStr, (text, start) -> true);
     }
@@ -540,7 +555,7 @@ public class FinderUtils {
 
         final String text = page.getContent();
         // Deque implementation is a little better than old stack and recommended by Java
-        final Deque<TempMatchResult> matchStack = new ArrayDeque<>();
+        final Deque<FinderMatchResult> matchStack = new ArrayDeque<>();
         int index = 0;
         // TODO: Reduce cyclomatic complexity
         while (index >= 0 && index < text.length()) {
@@ -549,12 +564,12 @@ public class FinderUtils {
                 if (newStart < 0) {
                     break;
                 }
-                matchStack.addLast(TempMatchResult.of(newStart));
+                matchStack.addLast(FinderMatchResult.ofNested(newStart, startStr));
                 index = newStart + startStr.length();
             }
 
             assert !matchStack.isEmpty();
-            final TempMatchResult currentMatch = matchStack.getLast();
+            final FinderMatchResult currentMatch = matchStack.getLast();
             final int start = currentMatch.start();
             final int end = text.indexOf(endStr, index);
             if (end < 0) {
@@ -568,15 +583,22 @@ public class FinderUtils {
             final int nextStart = text.indexOf(startStr, index);
             if (nextStart >= 0 && nextStart < end) {
                 // Nested structure
-                final TempMatchResult nextMatch = TempMatchResult.of(nextStart);
-                currentMatch.addGroup(nextMatch);
+                final FinderMatchResult nextMatch = FinderMatchResult.ofNested(nextStart, startStr);
                 matchStack.addLast(nextMatch);
                 index = nextStart + startStr.length();
             } else {
                 final int actualEnd = end + endStr.length();
-                currentMatch.setText(text.substring(start, actualEnd));
-                matches.add(currentMatch);
+                final FinderMatchResult endedMatch = new FinderMatchResult(
+                    currentMatch.start(),
+                    text.substring(start, actualEnd),
+                    currentMatch.groups()
+                );
+                matches.add(endedMatch);
                 matchStack.removeLast();
+                if (!matchStack.isEmpty()) {
+                    // Add the ended Match to the parent that now it's at the top of the stack
+                    matchStack.getLast().addGroup(endedMatch);
+                }
                 index = actualEnd;
             }
         }

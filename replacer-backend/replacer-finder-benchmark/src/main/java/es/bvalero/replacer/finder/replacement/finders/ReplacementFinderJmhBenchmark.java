@@ -2,6 +2,7 @@ package es.bvalero.replacer.finder.replacement.finders;
 
 import es.bvalero.replacer.FinderProperties;
 import es.bvalero.replacer.common.exception.ReplacerException;
+import es.bvalero.replacer.finder.Finder;
 import es.bvalero.replacer.finder.benchmark.BaseFinderJmhBenchmark;
 import es.bvalero.replacer.finder.listing.find.ListingFinder;
 import es.bvalero.replacer.finder.listing.find.ListingOfflineFinder;
@@ -9,6 +10,7 @@ import es.bvalero.replacer.finder.listing.load.ComposedMisspellingLoader;
 import es.bvalero.replacer.finder.listing.load.SimpleMisspellingLoader;
 import es.bvalero.replacer.finder.listing.parse.ComposedMisspellingParser;
 import es.bvalero.replacer.finder.listing.parse.SimpleMisspellingParser;
+import es.bvalero.replacer.finder.replacement.ReplacementFinder;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.infra.Blackhole;
 import org.openjdk.jmh.runner.RunnerException;
@@ -114,6 +116,16 @@ public class ReplacementFinderJmhBenchmark extends BaseFinderJmhBenchmark {
     @Benchmark
     public void misspellingSimpleFinder(Blackhole bh) {
         runFinder(misspellingSimpleFinder, bh);
+    }
+
+    @Override
+    protected void runFinder(Finder<?> finder, Blackhole bh) {
+        assert finder instanceof ReplacementFinder;
+        ReplacementFinder replacementFinder = (ReplacementFinder) finder;
+        // As the sample represents the whole dump,
+        // finding all over the sample represents the time finding all over the dump.
+        // NOTE: therefore, the average time corresponds to run the finder in the 50 sample pages.
+        sampleContents.forEach(page -> replacementFinder.findWithNoSuggestions(page).forEach(bh::consume));
     }
 
     public static void main(String[] args) throws RunnerException, ReplacerException {

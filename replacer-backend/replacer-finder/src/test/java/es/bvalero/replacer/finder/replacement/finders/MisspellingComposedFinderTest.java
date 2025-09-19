@@ -74,8 +74,7 @@ class MisspellingComposedFinderTest {
             2,
             "aún así",
             StandardType.of(ReplacementKind.COMPOSED, "aún así"),
-            List.of(Suggestion.ofNoComment("aún así"), Suggestion.ofNoComment("aun así")),
-            text
+            List.of(Suggestion.ofNoComment("aún así"), Suggestion.ofNoComment("aun así"))
         );
         assertTrue(Replacement.compareReplacements(Set.of(expected), results));
     }
@@ -95,15 +94,13 @@ class MisspellingComposedFinderTest {
             2,
             "aún",
             StandardType.of(ReplacementKind.COMPOSED, "aún"),
-            List.of(Suggestion.ofNoComment("aún"), Suggestion.ofNoComment("aun")),
-            text
+            List.of(Suggestion.ofNoComment("aún"), Suggestion.ofNoComment("aun"))
         );
         Replacement expectedComposed = Replacement.of(
             2,
             "aún así",
             StandardType.of(ReplacementKind.COMPOSED, "aún así"),
-            List.of(Suggestion.ofNoComment("aún así"), Suggestion.ofNoComment("aun así")),
-            text
+            List.of(Suggestion.ofNoComment("aún así"), Suggestion.ofNoComment("aun así"))
         );
         Set<Replacement> expected = Set.of(expectedSimple, expectedComposed);
         assertTrue(Replacement.compareReplacements(expected, results));
@@ -122,8 +119,7 @@ class MisspellingComposedFinderTest {
             4,
             "mas.",
             StandardType.of(ReplacementKind.COMPOSED, "mas."),
-            List.of(Suggestion.ofNoComment("mas."), Suggestion.ofNoComment("más.")),
-            text
+            List.of(Suggestion.ofNoComment("mas."), Suggestion.ofNoComment("más."))
         );
         assertTrue(Replacement.compareReplacements(Set.of(expected), results));
     }
@@ -141,8 +137,7 @@ class MisspellingComposedFinderTest {
             4,
             "aun,",
             StandardType.of(ReplacementKind.COMPOSED, "aun,"),
-            List.of(Suggestion.ofNoComment("aun,"), Suggestion.ofNoComment("aún,")),
-            text
+            List.of(Suggestion.ofNoComment("aun,"), Suggestion.ofNoComment("aún,"))
         );
         assertTrue(Replacement.compareReplacements(Set.of(expected), results));
     }
@@ -160,8 +155,7 @@ class MisspellingComposedFinderTest {
             3,
             "Rio 2016",
             StandardType.of(ReplacementKind.COMPOSED, "Rio 2016"),
-            List.of(Suggestion.ofNoComment("Rio 2016"), Suggestion.ofNoComment("Río 2016")),
-            text
+            List.of(Suggestion.ofNoComment("Rio 2016"), Suggestion.ofNoComment("Río 2016"))
         );
         assertTrue(Replacement.compareReplacements(Set.of(expected), results));
     }
@@ -195,8 +189,7 @@ class MisspellingComposedFinderTest {
                 Suggestion.ofNoComment("Parque Nacional"),
                 Suggestion.ofNoComment("parque nacional"),
                 Suggestion.ofNoComment("Parque nacional")
-            ),
-            text
+            )
         );
         assertTrue(Replacement.compareReplacements(Set.of(expected), results));
     }
@@ -214,8 +207,7 @@ class MisspellingComposedFinderTest {
             3,
             "1º",
             StandardType.of(ReplacementKind.COMPOSED, "1º"),
-            List.of(Suggestion.ofNoComment("1º"), Suggestion.ofNoComment("1.º")),
-            text
+            List.of(Suggestion.ofNoComment("1º"), Suggestion.ofNoComment("1.º"))
         );
         assertTrue(Replacement.compareReplacements(Set.of(expected), results));
     }
@@ -233,8 +225,7 @@ class MisspellingComposedFinderTest {
             3,
             "1°",
             StandardType.of(ReplacementKind.COMPOSED, "1°"),
-            List.of(Suggestion.ofNoComment("1°"), Suggestion.ofNoComment("1.º")),
-            text
+            List.of(Suggestion.ofNoComment("1°"), Suggestion.ofNoComment("1.º"))
         );
         assertTrue(Replacement.compareReplacements(Set.of(expected), results));
     }
@@ -252,8 +243,7 @@ class MisspellingComposedFinderTest {
             3,
             "anti-ruso",
             StandardType.of(ReplacementKind.COMPOSED, "anti-ruso"),
-            List.of(Suggestion.ofNoComment("anti-ruso"), Suggestion.ofNoComment("antirruso")),
-            text
+            List.of(Suggestion.ofNoComment("anti-ruso"), Suggestion.ofNoComment("antirruso"))
         );
         assertTrue(Replacement.compareReplacements(Set.of(expected), results));
     }
@@ -271,8 +261,7 @@ class MisspellingComposedFinderTest {
             3,
             "C's",
             StandardType.of(ReplacementKind.COMPOSED, "C's"),
-            List.of(Suggestion.ofNoComment("C's"), Suggestion.ofNoComment("Cs")),
-            text
+            List.of(Suggestion.ofNoComment("C's"), Suggestion.ofNoComment("Cs"))
         );
         assertTrue(Replacement.compareReplacements(Set.of(expected), results));
     }
@@ -290,8 +279,7 @@ class MisspellingComposedFinderTest {
             3,
             "[[siglo X]]",
             StandardType.of(ReplacementKind.COMPOSED, "[[siglo X]]"),
-            List.of(Suggestion.ofNoComment("[[siglo X]]"), Suggestion.ofNoComment("{{siglo|X||s|1}}")),
-            text
+            List.of(Suggestion.ofNoComment("[[siglo X]]"), Suggestion.ofNoComment("{{siglo|X||s|1}}"))
         );
         assertTrue(Replacement.compareReplacements(Set.of(expected), results));
     }
@@ -313,8 +301,7 @@ class MisspellingComposedFinderTest {
             List.of(
                 Suggestion.ofNoComment(cm1.getWord()),
                 Suggestion.ofNoComment(cm1.getSuggestions().get(0).getText())
-            ),
-            text
+            )
         );
         Replacement expected2 = Replacement.of(
             3,
@@ -323,8 +310,7 @@ class MisspellingComposedFinderTest {
             List.of(
                 Suggestion.ofNoComment(cm2.getWord()),
                 Suggestion.ofNoComment(cm2.getSuggestions().get(0).getText())
-            ),
-            text
+            )
         );
         Set<Replacement> expected = Set.of(expected1, expected2);
         assertTrue(Replacement.compareReplacements(expected, results));
@@ -344,8 +330,7 @@ class MisspellingComposedFinderTest {
             15,
             "''', es",
             StandardType.of(ReplacementKind.COMPOSED, "''', es"),
-            List.of(Suggestion.ofNoComment("''', es"), Suggestion.ofNoComment("''' es")),
-            text
+            List.of(Suggestion.ofNoComment("''', es"), Suggestion.ofNoComment("''' es"))
         );
         assertTrue(Replacement.compareReplacements(Set.of(expected), results));
     }
@@ -363,8 +348,7 @@ class MisspellingComposedFinderTest {
             3,
             "Anti-Ruso",
             StandardType.of(ReplacementKind.COMPOSED, "anti-ruso"),
-            List.of(Suggestion.ofNoComment("Anti-Ruso"), Suggestion.ofNoComment("Antirruso")),
-            text
+            List.of(Suggestion.ofNoComment("Anti-Ruso"), Suggestion.ofNoComment("Antirruso"))
         );
         assertTrue(Replacement.compareReplacements(Set.of(expected), results));
     }
@@ -381,8 +365,7 @@ class MisspellingComposedFinderTest {
             0,
             text,
             StandardType.of(ReplacementKind.COMPOSED, "rio de la plata"),
-            List.of(Suggestion.ofNoComment(text), Suggestion.ofNoComment("Río de la Plata")),
-            text
+            List.of(Suggestion.ofNoComment(text), Suggestion.ofNoComment("Río de la Plata"))
         );
         assertTrue(Replacement.compareReplacements(Set.of(expected), results));
     }
@@ -407,8 +390,7 @@ class MisspellingComposedFinderTest {
             List.of(
                 Suggestion.ofNoComment("Sistema Solar"),
                 Suggestion.of("Sistema solar", "para inicios de frase o columnas de tablas")
-            ),
-            text
+            )
         );
         assertTrue(Replacement.compareReplacements(Set.of(expected), results));
     }
@@ -430,8 +412,7 @@ class MisspellingComposedFinderTest {
             3,
             "Sistema Solar",
             StandardType.of(ReplacementKind.COMPOSED, "Sistema Solar"),
-            List.of(Suggestion.ofNoComment("Sistema Solar"), Suggestion.ofNoComment("Sistema solar")),
-            text
+            List.of(Suggestion.ofNoComment("Sistema Solar"), Suggestion.ofNoComment("Sistema solar"))
         );
         assertTrue(Replacement.compareReplacements(Set.of(expected), results));
     }
