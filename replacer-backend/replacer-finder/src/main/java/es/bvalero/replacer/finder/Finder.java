@@ -36,16 +36,20 @@ public interface Finder<T extends FinderResult> extends Comparable<Finder<T>> {
     }
 
     private Stream<T> convertMatchResults(Stream<MatchResult> matchResults, FinderPage page) {
-        return matchResults.map(m -> convert(m, page));
+        // When testing or running locally, validate the position of the match results.
+        return matchResults.map(m -> convert(m, page)).peek(m -> validateFinderResult(m, page));
     }
 
     T convert(MatchResult matchResult, FinderPage page);
 
+    private void validateFinderResult(T result, FinderPage page) {
+        assert result.validate(page.getContent());
+    }
+
     @TestOnly
     default List<T> findList(String text) {
-        // When testing, validate the position of the match results.
         // If in the future we want to use the parser approach, we can just wrap the FinderPage in a FinderParserPage.
-        return find(FinderPage.of(text)).filter(m -> m.validate(text)).toList();
+        return find(FinderPage.of(text)).toList();
     }
 
     default FinderPriority getPriority() {

@@ -15,7 +15,14 @@ public interface ReplacementFinder extends Finder<Replacement> {
     /* Particular case to avoid calculating suggestions when indexing to improve a little the performance */
     default Stream<Replacement> findWithNoSuggestions(FinderPage page) {
         final Stream<MatchResult> validMatchResults = findAndFilter(page);
-        return validMatchResults.map(m -> convertWithNoSuggestions(m, page));
+        return validMatchResults.map(m -> mapWithNoSuggestions(m, page));
+    }
+
+    private Replacement mapWithNoSuggestions(MatchResult matchResult, FinderPage page) {
+        final Replacement withNoSuggestions = convertWithNoSuggestions(matchResult, page);
+        // After calling convertWithNoSuggestions we want to validate that the result is the same as with suggestions
+        assert withNoSuggestions.equals(convert(matchResult, page));
+        return withNoSuggestions;
     }
 
     /** If not overridden, take the replacement with suggestions from default conversion and remove the suggestions. */

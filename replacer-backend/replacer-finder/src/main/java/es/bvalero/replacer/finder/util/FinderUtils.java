@@ -2,6 +2,7 @@ package es.bvalero.replacer.finder.util;
 
 import static org.apache.commons.lang3.StringUtils.SPACE;
 
+import es.bvalero.replacer.FinderPropertiesConfiguration;
 import es.bvalero.replacer.common.util.ReplacerUtils;
 import es.bvalero.replacer.finder.FinderPage;
 import java.util.*;
@@ -12,6 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Marker;
 import org.slf4j.MarkerFactory;
 import org.springframework.lang.Nullable;
+import org.springframework.stereotype.Component;
 
 @Slf4j
 @UtilityClass
@@ -516,6 +518,10 @@ public class FinderUtils {
     //region Logging Utils
 
     public void logFinderResult(FinderPage page, int start, int end, String message) {
+        if (!FinderPropertiesBridge.isShowImmutableWarning()) {
+            return;
+        }
+
         LOGGER.debug(
             MARKER_IMMUTABLE,
             "{}: {}",
@@ -529,6 +535,21 @@ public class FinderUtils {
                 getTextSnippet(page.getContent(), start, end)
             )
         );
+    }
+
+    @Component
+    private class FinderPropertiesBridge {
+
+        private static FinderPropertiesConfiguration config;
+
+        public FinderPropertiesBridge(FinderPropertiesConfiguration config) {
+            FinderPropertiesBridge.config = config;
+        }
+
+        public static boolean isShowImmutableWarning() {
+            // The configuration will be null when testing
+            return config != null && Boolean.parseBoolean(config.getShowImmutableWarning());
+        }
     }
 
     //endregion
