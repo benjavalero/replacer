@@ -127,6 +127,15 @@ public class FinderUtils {
         return (ch >= '0' && ch <= '9');
     }
 
+    public boolean isUppercase(String word) {
+        for (int i = 0; i < word.length(); i++) {
+            if (!Character.isUpperCase(word.charAt(i))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     public boolean isBlankOrNonBreakingSpace(String text, int start, int end) {
         return isBlank(text, start, end) || isNonBreakingSpace(text, start, end);
     }
