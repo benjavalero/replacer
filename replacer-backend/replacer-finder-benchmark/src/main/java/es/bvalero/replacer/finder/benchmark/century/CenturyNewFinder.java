@@ -19,7 +19,6 @@ import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.regex.MatchResult;
 import java.util.stream.Stream;
 import org.apache.commons.lang3.StringUtils;
@@ -30,7 +29,6 @@ class CenturyNewFinder implements BenchmarkFinder {
     private static final String CENTURY_WORD = "Siglo";
     private static final String CENTURY_SEARCH = CENTURY_WORD.substring(1);
     private static final char PLURAL_LETTER = 's';
-    private static final Set<Character> CENTURY_LETTERS = Set.of('I', 'V', 'X');
     private static final List<String> ERA_WORDS = List.of(
         "aC",
         "a.C.",
@@ -149,26 +147,33 @@ class CenturyNewFinder implements BenchmarkFinder {
     @Nullable
     private MatchResult findCenturyNumber(String text, int start) {
         final MatchResult centuryNumber = FinderUtils.findWordAfterSpace(text, start);
-        return centuryNumber != null && isCenturyNumber(centuryNumber.group()) ? centuryNumber : null;
+        if (centuryNumber == null) {
+            return null;
+        }
+        // The century library only accepts uppercase characters
+        final String romanNumber = ReplacerUtils.toUpperCase(centuryNumber.group());
+        // Note that we are returning the match with uppercase, although maybe it is not in the whole text.
+        return isCenturyNumber(romanNumber) ? FinderMatchResult.of(centuryNumber.start(), romanNumber) : null;
     }
 
     private boolean isCenturyNumber(String text) {
-        // The century library only accepts uppercase characters
-        final String upperText = ReplacerUtils.toUpperCase(text);
-
         // Check the century number only contains valid century letters
-        for (int i = 0; i < upperText.length(); i++) {
-            if (!CENTURY_LETTERS.contains(upperText.charAt(i))) {
+        for (int i = 0; i < text.length(); i++) {
+            if (!isCenturyLetter(text.charAt(i))) {
                 return false;
             }
         }
 
         //  Check the century number is valid and lower than the current century
         try {
-            return ConvertToArabic.fromRoman(upperText) <= 21;
+            return ConvertToArabic.fromRoman(text) <= 21;
         } catch (ConversionException ce) {
             return false;
         }
+    }
+
+    private boolean isCenturyLetter(char ch) {
+        return ch == 'I' || ch == 'V' || ch == 'X';
     }
 
     @Nullable
@@ -188,7 +193,7 @@ class CenturyNewFinder implements BenchmarkFinder {
     private boolean isLinked(String text, int start, int end) {
         return (
             ReplacerUtils.containsAtPosition(text, START_LINK, Math.max(0, start - START_LINK.length())) &&
-            ReplacerUtils.containsAtPosition(text, END_LINK, end)
+                ReplacerUtils.containsAtPosition(text, END_LINK, end)
         );
     }
 
@@ -211,7 +216,12 @@ class CenturyNewFinder implements BenchmarkFinder {
 
             // Check the found century number is actually a century
             // Check the next century number is greater than the previous one
-            if (isCenturyNumber(word) && ConvertToArabic.fromRoman(word) > ConvertToArabic.fromRoman(centuryNumber)) {
+            // The century library only accepts uppercase characters
+            final String romanWord = ReplacerUtils.toUpperCase(word);
+            if (
+                isCenturyNumber(romanWord) &&
+                    ConvertToArabic.fromRoman(romanWord) > ConvertToArabic.fromRoman(centuryNumber)
+            ) {
                 return wordFound;
             } else {
                 numWordsFound++;
@@ -224,6 +234,8 @@ class CenturyNewFinder implements BenchmarkFinder {
     private boolean isPlural(String word) {
         return word.charAt(word.length() - 1) == PLURAL_LETTER;
     }
+
+    // TODO: Implement conversion without suggestions
 
     @Override
     public BenchmarkResult convert(MatchResult match, FinderPage page) {
@@ -247,7 +259,7 @@ class CenturyNewFinder implements BenchmarkFinder {
         int endCentury = match.end(3);
         String centuryWord = match.group(1);
         final boolean isUppercase = FinderUtils.startsWithUpperCase(centuryWord);
-        final String centuryNumber = ReplacerUtils.toUpperCase(match.group(2));
+        final String centuryNumber = match.group(2); // We can assume it is already uppercas
         final String eraText = match.group(3);
         final String eraLetter = StringUtils.isEmpty(eraText) ? EMPTY : String.valueOf(eraText.charAt(0));
 
@@ -334,6 +346,6 @@ class CenturyNewFinder implements BenchmarkFinder {
     }
 
     private String fixSimpleCentury(String century) {
-        return "{{Siglo|" + century + "}}";
+        return "{{Siglo|" + ReplacerUtils.toUpperCase(century) + "}}";
     }
 }

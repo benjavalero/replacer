@@ -55,6 +55,8 @@ class CenturyFinderTest {
             "siglo XX o XXI * siglo XX o XXI * {{siglo|XX||s}} o {{Siglo|XXI}}",
             "siglos XX o XXI * siglos XX o XXI * siglos {{Siglo|XX}} o {{Siglo|XXI}}",
             "siglo XIX y principios del XX * siglo XIX y principios del XX * {{siglo|XIX||s}} y principios del {{Siglo|XX}}",
+            // With lowercase century after
+            "siglos xv y xvi * siglos xv y xvi * siglos {{Siglo|XV}} y {{Siglo|XVI}}",
             // With fake century after
             "siglo XI Alfonso VI * siglo XI * {{siglo|XI||s}}",
             // With century after too far
