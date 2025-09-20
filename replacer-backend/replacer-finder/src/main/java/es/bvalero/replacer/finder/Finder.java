@@ -1,6 +1,5 @@
 package es.bvalero.replacer.finder;
 
-import es.bvalero.replacer.finder.parser.FinderParserPage;
 import java.util.List;
 import java.util.regex.MatchResult;
 import java.util.stream.Stream;
@@ -45,8 +44,8 @@ public interface Finder<T extends FinderResult> extends Comparable<Finder<T>> {
     @TestOnly
     default List<T> findList(String text) {
         // When testing, validate the position of the match results.
-        // For the sake of the tests, we always use a FinderParserPage even if we don't use the parser at all
-        return find(FinderParserPage.of(FinderPage.of(text))).filter(m -> m.validate(text)).toList();
+        // If in the future we want to use the parser approach, we can just wrap the FinderPage in a FinderParserPage.
+        return find(FinderPage.of(text)).filter(m -> m.validate(text)).toList();
     }
 
     default FinderPriority getPriority() {

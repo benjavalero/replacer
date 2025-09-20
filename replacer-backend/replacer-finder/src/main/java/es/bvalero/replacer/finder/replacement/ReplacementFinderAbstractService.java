@@ -4,7 +4,6 @@ import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.Immutable;
 import es.bvalero.replacer.finder.ImmutableFindApi;
 import es.bvalero.replacer.finder.Replacement;
-import es.bvalero.replacer.finder.parser.FinderParserPage;
 import java.util.SortedSet;
 import java.util.stream.Stream;
 
@@ -49,7 +48,7 @@ public abstract class ReplacementFinderAbstractService {
     }
 
     private Stream<Immutable> findImmutables(FinderPage page) {
-        final FinderParserPage parserPage = FinderParserPage.of(page);
-        return immutableFindApi.findImmutables(parserPage);
+        // If in the future we want to use the parser approach, we can just wrap the FinderPage in a FinderParserPage.
+        return immutableFindApi.findImmutables(page);
     }
 }
