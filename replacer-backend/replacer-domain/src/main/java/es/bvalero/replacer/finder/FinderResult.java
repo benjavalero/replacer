@@ -1,5 +1,7 @@
 package es.bvalero.replacer.finder;
 
+import es.bvalero.replacer.common.util.ReplacerUtils;
+
 /**
  * Base interface for the finder results: cosmetics, immutables and replacements.
  * It has to be public so the extensions can use the common methods.
@@ -30,8 +32,7 @@ public interface FinderResult extends Comparable<FinderResult> {
     }
 
     default boolean validate(String pageContent) {
-        // Validate positions only on tests not to penalize the performance
-        if (end() <= pageContent.length() && text().equals(pageContent.substring(start(), end()))) {
+        if (end() <= pageContent.length() && ReplacerUtils.containsAtPosition(pageContent, text(), start())) {
             return true;
         } else {
             String msg = String.format(
