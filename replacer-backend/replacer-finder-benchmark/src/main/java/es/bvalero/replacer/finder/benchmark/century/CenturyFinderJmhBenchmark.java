@@ -1,7 +1,9 @@
 package es.bvalero.replacer.finder.benchmark.century;
 
 import es.bvalero.replacer.common.exception.ReplacerException;
+import es.bvalero.replacer.finder.Finder;
 import es.bvalero.replacer.finder.benchmark.BaseFinderJmhBenchmark;
+import es.bvalero.replacer.finder.replacement.ReplacementFinder;
 import lombok.SneakyThrows;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.Measurement;
@@ -37,6 +39,16 @@ public class CenturyFinderJmhBenchmark extends BaseFinderJmhBenchmark {
     @Benchmark
     public void centuryNewFinder(Blackhole bh) {
         runFinder(centuryNewFinder, bh);
+    }
+
+    @Override
+    protected void runFinder(Finder<?> finder, Blackhole bh) {
+        assert finder instanceof ReplacementFinder;
+        ReplacementFinder replacementFinder = (ReplacementFinder) finder;
+        // As the sample represents the whole dump,
+        // finding all over the sample represents the time finding all over the dump.
+        // NOTE: therefore, the average time corresponds to run the finder in the 50 sample pages.
+        sampleContents.forEach(page -> replacementFinder.findWithNoSuggestions(page).forEach(bh::consume));
     }
 
     @SneakyThrows

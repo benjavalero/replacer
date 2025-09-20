@@ -12,8 +12,7 @@ import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.StandardType;
 import es.bvalero.replacer.finder.Suggestion;
-import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
-import es.bvalero.replacer.finder.benchmark.BenchmarkResult;
+import es.bvalero.replacer.finder.replacement.ReplacementFinder;
 import es.bvalero.replacer.finder.util.FinderMatchResult;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
@@ -24,7 +23,7 @@ import java.util.stream.Stream;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.Nullable;
 
-class CenturyOldFinder implements BenchmarkFinder {
+class CenturyOldFinder implements ReplacementFinder {
 
     private static final String CENTURY_WORD = "Siglo";
     private static final String CENTURY_SEARCH = CENTURY_WORD.substring(1);
@@ -238,17 +237,13 @@ class CenturyOldFinder implements BenchmarkFinder {
     // TODO: Implement conversion without suggestions
 
     @Override
-    public BenchmarkResult convert(MatchResult match, FinderPage page) {
+    public Replacement convert(MatchResult match, FinderPage page) {
         final String centuryWord = match.group(1);
         if (isPlural(centuryWord)) {
-            return convertReplacement(convertCenturyPlural(match, page));
+            return convertCenturyPlural(match, page);
         } else {
-            return convertReplacement(convertCenturySingular(match, page));
+            return convertCenturySingular(match, page);
         }
-    }
-
-    private BenchmarkResult convertReplacement(Replacement replacement) {
-        return BenchmarkResult.of(replacement.start(), replacement.text());
     }
 
     private Replacement convertCenturySingular(MatchResult match, FinderPage page) {
