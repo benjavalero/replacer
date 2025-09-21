@@ -40,6 +40,8 @@ class CenturyFinderTest {
             "[[siglo XX]] * [[siglo XX]] * {{siglo|XX||s}}, {{siglo|XX||s|1}}",
             // Uppercase with link
             "[[Siglo XX]] * [[Siglo XX]] * {{Siglo|XX||S}}, {{Siglo|XX||S|1}}, {{Siglo|XX||s}}, {{Siglo|XX||s|1}}",
+            // With aliased link
+            "[[siglo XX|XX]] * [[siglo XX|XX]] * {{siglo|XX}}, {{siglo|XX|||1}}",
             // With era
             "siglo II a. C. * siglo II a. C. * {{siglo|II|a|s}}",
             "siglo V d.C. * siglo V d.C. * {{siglo|V|d|s}}",
