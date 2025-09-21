@@ -200,7 +200,7 @@ class CenturyOldFinder implements ReplacementFinder {
     private boolean isLinked(String text, int start, int end) {
         return (
             ReplacerUtils.containsAtPosition(text, START_LINK, Math.max(0, start - START_LINK.length())) &&
-                ReplacerUtils.containsAtPosition(text, END_LINK, end)
+            ReplacerUtils.containsAtPosition(text, END_LINK, end)
         );
     }
 
@@ -227,7 +227,7 @@ class CenturyOldFinder implements ReplacementFinder {
             final String romanWord = ReplacerUtils.toUpperCase(word);
             if (
                 isCenturyNumber(romanWord) &&
-                    ConvertToArabic.fromRoman(romanWord) > ConvertToArabic.fromRoman(centuryNumber)
+                ConvertToArabic.fromRoman(romanWord) > ConvertToArabic.fromRoman(centuryNumber)
             ) {
                 return wordFound;
             } else {

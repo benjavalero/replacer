@@ -33,9 +33,13 @@ public class FinderUtils {
     private static final char NEGATIVE_SYMBOL = '-';
 
     // Character combinations
+    public static final String START_TEMPLATE = "{{";
+    public static final String END_TEMPLATE = "}}";
     private static final String ALTERNATE_SEPARATOR = Character.toString(PIPE);
     public static final String NON_BREAKING_SPACE = "&nbsp;";
-    public static final String NON_BREAKING_SPACE_TEMPLATE = "{{esd}}";
+    public static final String NON_BREAKING_SPACE_TEMPLATE_NAME = "esd";
+    public static final String NON_BREAKING_SPACE_TEMPLATE =
+        START_TEMPLATE + NON_BREAKING_SPACE_TEMPLATE_NAME + END_TEMPLATE;
     public static final String START_LINK = "[[";
     public static final String END_LINK = "]]";
 

@@ -230,6 +230,27 @@ class CenturyFinder implements ReplacementFinder {
             }
         }
 
+        // Check if wrapped by a non-breaking space template
+        final String nbsTemplatePrefix = START_TEMPLATE + NON_BREAKING_SPACE_TEMPLATE_NAME + PIPE;
+        final int startNbsTemplate = start - nbsTemplatePrefix.length();
+        final boolean startsWithNbsTemplate = ReplacerUtils.containsAtPosition(
+            text,
+            nbsTemplatePrefix,
+            startNbsTemplate
+        );
+        if (startsWithNbsTemplate && ReplacerUtils.containsAtPosition(text, END_TEMPLATE, end)) {
+            return FinderMatchResult.of(text, startNbsTemplate, end + END_TEMPLATE.length());
+        }
+
+        // Check if wrapped by an era template
+        final String eraTemplatePrefix = START_TEMPLATE + "AC" + PIPE;
+        final int startEraTemplate = start - eraTemplatePrefix.length();
+        final boolean startsWithEraTemplate =
+            startEraTemplate >= 0 && eraTemplatePrefix.equalsIgnoreCase(text.substring(startEraTemplate, start));
+        if (startsWithEraTemplate && ReplacerUtils.containsAtPosition(text, END_TEMPLATE, end)) {
+            return FinderMatchResult.of(text, startEraTemplate, end + END_TEMPLATE.length());
+        }
+
         return null;
     }
 
@@ -294,7 +315,24 @@ class CenturyFinder implements ReplacementFinder {
         final String centuryNumber = match.group(2);
         assert FinderUtils.isUppercase(centuryNumber);
         final String eraText = match.group(3);
-        final String eraLetter = StringUtils.isEmpty(eraText) ? EMPTY : String.valueOf(eraText.charAt(0));
+        String eraLetter;
+        if (StringUtils.isNotEmpty(eraText)) {
+            eraLetter = String.valueOf(eraText.charAt(0));
+        } else {
+            // Special case when the century is wrapped by an era template
+            final int startCenturyWord = match.start(1);
+            final String eraTemplatePrefix = START_TEMPLATE + "AC" + PIPE;
+            if (
+                startCenturyWord >= eraTemplatePrefix.length() &&
+                eraTemplatePrefix.equalsIgnoreCase(
+                    text.substring(startCenturyWord - eraTemplatePrefix.length(), startCenturyWord)
+                )
+            ) {
+                eraLetter = "a";
+            } else {
+                eraLetter = EMPTY;
+            }
+        }
 
         // Check if the century is surrounded by a link
         final boolean isLinked = ReplacerUtils.containsAtPosition(match.group(), START_LINK, 0);

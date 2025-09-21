@@ -1,6 +1,6 @@
 package es.bvalero.replacer.finder.immutable.finders;
 
-import static es.bvalero.replacer.finder.util.FinderUtils.PIPE;
+import static es.bvalero.replacer.finder.util.FinderUtils.*;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 import es.bvalero.replacer.FinderProperties;
@@ -34,8 +34,6 @@ import org.springframework.stereotype.Component;
 @Component
 class TemplateFinder implements ImmutableFinder {
 
-    private static final String START_TEMPLATE = "{{";
-    private static final String END_TEMPLATE = "}}";
     private static final char COLON = ':';
     private static final char EQUALS = '=';
 
