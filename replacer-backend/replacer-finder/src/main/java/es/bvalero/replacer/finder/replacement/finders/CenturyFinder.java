@@ -1,7 +1,6 @@
 package es.bvalero.replacer.finder.replacement.finders;
 
-import static es.bvalero.replacer.finder.util.FinderUtils.END_LINK;
-import static es.bvalero.replacer.finder.util.FinderUtils.START_LINK;
+import static es.bvalero.replacer.finder.util.FinderUtils.*;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 import com.roman.code.ConvertToArabic;
@@ -85,11 +84,11 @@ class CenturyFinder implements ReplacementFinder {
             }
             endCentury = era.end();
 
-            // Check if the century is surrounded by a link
-            final boolean isLinked = isLinked(text, startCentury, endCentury);
-            if (isLinked) {
-                startCentury -= START_LINK.length();
-                endCentury += END_LINK.length();
+            // Find if the century is wrapped so the positions must be modified
+            final MatchResult wrap = findCenturyWrapper(text, startCentury, endCentury, centuryNumber.group());
+            if (wrap != null) {
+                startCentury = wrap.start();
+                endCentury = wrap.end();
             }
 
             // Find the extension (optional)
@@ -155,6 +154,10 @@ class CenturyFinder implements ReplacementFinder {
         return null;
     }
 
+    private boolean isAbbreviated(String word) {
+        return word.charAt(word.length() - 1) == '.';
+    }
+
     @Nullable
     private MatchResult findCenturyNumber(String text, int start) {
         final MatchResult centuryNumber = FinderUtils.findWordAfterSpace(text, start);
@@ -202,11 +205,32 @@ class CenturyFinder implements ReplacementFinder {
             .orElse(null);
     }
 
-    private boolean isLinked(String text, int start, int end) {
-        return (
-            ReplacerUtils.containsAtPosition(text, START_LINK, Math.max(0, start - START_LINK.length())) &&
-            ReplacerUtils.containsAtPosition(text, END_LINK, end)
-        );
+    @Nullable
+    private MatchResult findCenturyWrapper(String text, int start, int end, String centuryNumber) {
+        // Check if wrapped by a link
+        final boolean startsWithLink = ReplacerUtils.containsAtPosition(text, START_LINK, start - START_LINK.length());
+        if (startsWithLink) {
+            final int posStartLink = start - START_LINK.length();
+            final int posEndLink = text.indexOf(END_LINK, end);
+            if (posEndLink < 0) {
+                // Broken link
+                return null;
+            }
+            if (posEndLink == end) {
+                // Linked without alias
+                return FinderMatchResult.of(text, posStartLink, end + END_LINK.length());
+            }
+            // Check link with alias
+            if (
+                text.charAt(end) == PIPE &&
+                end + 1 + centuryNumber.length() == posEndLink &&
+                ReplacerUtils.containsAtPosition(text, centuryNumber, end + 1)
+            ) {
+                return FinderMatchResult.of(text, posStartLink, posEndLink + END_LINK.length());
+            }
+        }
+
+        return null;
     }
 
     @Nullable
@@ -247,10 +271,6 @@ class CenturyFinder implements ReplacementFinder {
         return word.charAt(word.length() - 1) == PLURAL_LETTER;
     }
 
-    private boolean isAbbreviated(String word) {
-        return word.charAt(word.length() - 1) == '.';
-    }
-
     @Override
     public Replacement convertWithNoSuggestions(MatchResult match, FinderPage page) {
         return Replacement.ofNoSuggestions(match.start(), match.group(), StandardType.CENTURY);
@@ -278,6 +298,7 @@ class CenturyFinder implements ReplacementFinder {
 
         // Check if the century is surrounded by a link
         final boolean isLinked = ReplacerUtils.containsAtPosition(match.group(), START_LINK, 0);
+        final boolean isLinkAliased = isLinked && text.charAt(match.end(2)) == PIPE;
 
         // Add extension and its suggestion
         final String extensionText = match.group(4);
@@ -290,19 +311,44 @@ class CenturyFinder implements ReplacementFinder {
             extension = text.substring(eraEnd, extensionStart) + fixSimpleCentury(extensionText);
         }
 
-        // Templates
+        // Templates (as simple as possible)
         final boolean isAbbreviated = isAbbreviated(centuryWord);
         final String templateName = isAbbreviated ? CENTURY_WORD : centuryWord;
-        final String lowerPrefix = isAbbreviated ? "a" : "s";
+        final String lowerPrefix;
+        if (isLinkAliased) {
+            lowerPrefix = EMPTY;
+        } else if (isAbbreviated) {
+            lowerPrefix = "a";
+        } else {
+            lowerPrefix = "s";
+        }
         final String upperPrefix = ReplacerUtils.toUpperCase(lowerPrefix);
         final String templateUpperLink =
             "{{" + templateName + "|" + centuryNumber + "|" + eraLetter + "|" + upperPrefix + "|1}}" + extension;
         final String templateUpperNoLink =
-            "{{" + templateName + "|" + centuryNumber + "|" + eraLetter + "|" + upperPrefix + "}}" + extension;
+            ("{{" +
+                templateName +
+                "|" +
+                centuryNumber +
+                "|" +
+                eraLetter +
+                "|" +
+                upperPrefix +
+                "}}" +
+                extension).replace("||}}", "}}");
         final String templateLowerLink =
             "{{" + templateName + "|" + centuryNumber + "|" + eraLetter + "|" + lowerPrefix + "|1}}" + extension;
         final String templateLowerNoLink =
-            "{{" + templateName + "|" + centuryNumber + "|" + eraLetter + "|" + lowerPrefix + "}}" + extension;
+            ("{{" +
+                templateName +
+                "|" +
+                centuryNumber +
+                "|" +
+                eraLetter +
+                "|" +
+                lowerPrefix +
+                "}}" +
+                extension).replace("||}}", "}}");
         final String linkedComment = "enlazado —solo para temas relacionados con el calendario—";
 
         final List<Suggestion> suggestions = new ArrayList<>(4);
