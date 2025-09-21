@@ -42,6 +42,9 @@ class CenturyFinderTest {
             "[[Siglo XX]] * [[Siglo XX]] * {{Siglo|XX||S}}, {{Siglo|XX||S|1}}, {{Siglo|XX||s}}, {{Siglo|XX||s|1}}",
             // With aliased link
             "[[siglo XX|XX]] * [[siglo XX|XX]] * {{siglo|XX}}, {{siglo|XX|||1}}",
+            // Wrapped with template
+            "{{esd|Siglo XX}} * {{esd|Siglo XX}} * {{Siglo|XX||S}}, {{Siglo|XX||s}}",
+            "{{ac|Siglo XX}} * {{ac|Siglo XX}} * {{Siglo|XX|a|S}}, {{Siglo|XX|a|s}}",
             // With era
             "siglo II a. C. * siglo II a. C. * {{siglo|II|a|s}}",
             "siglo V d.C. * siglo V d.C. * {{siglo|V|d|s}}",

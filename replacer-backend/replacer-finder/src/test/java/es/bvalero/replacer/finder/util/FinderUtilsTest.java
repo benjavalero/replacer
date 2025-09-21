@@ -1,5 +1,7 @@
 package es.bvalero.replacer.finder.util;
 
+import static es.bvalero.replacer.finder.util.FinderUtils.END_TEMPLATE;
+import static es.bvalero.replacer.finder.util.FinderUtils.START_TEMPLATE;
 import static org.junit.jupiter.api.Assertions.*;
 
 import es.bvalero.replacer.finder.FinderPage;
@@ -302,7 +304,7 @@ class FinderUtilsTest {
     }
 
     private List<FinderMatchResult> findAllTemplates(FinderPage page) {
-        return new ArrayList<>(FinderUtils.findAllStructures(page, "{{", "}}"));
+        return new ArrayList<>(FinderUtils.findAllStructures(page, START_TEMPLATE, END_TEMPLATE));
     }
 
     @Test
