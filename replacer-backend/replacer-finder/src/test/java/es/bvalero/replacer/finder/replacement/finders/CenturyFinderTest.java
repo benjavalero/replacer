@@ -62,6 +62,9 @@ class CenturyFinderTest {
             "siglo XIX y principios del XX * siglo XIX y principios del XX * {{siglo|XIX||s}} y principios del {{Siglo|XX}}",
             // With lowercase century after
             "siglos xv y xvi * siglos xv y xvi * siglos {{Siglo|XV}} y {{Siglo|XVI}}",
+            // With Arabic numbers
+            "siglo 20 * siglo 20 * {{siglo|XX||s}}",
+            "siglos 15 y 16 * siglos 15 y 16 * siglos {{Siglo|XV}} y {{Siglo|XVI}}",
             // With fake century after
             "siglo XI Alfonso VI * siglo XI * {{siglo|XI||s}}",
             // With century after too far
@@ -97,9 +100,6 @@ class CenturyFinderTest {
     @ParameterizedTest
     @ValueSource(
         strings = {
-            // Century arabic number
-            "siglo 20",
-            "Siglo 21",
             // Plural century with nothing after
             "siglos XX y nada más después",
             // Not whitespace after century word

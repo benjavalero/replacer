@@ -4,6 +4,7 @@ import static es.bvalero.replacer.finder.util.FinderUtils.*;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 import com.roman.code.ConvertToArabic;
+import com.roman.code.ConvertToRoman;
 import com.roman.code.exception.ConversionException;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.util.ReplacerUtils;
@@ -19,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.MatchResult;
 import java.util.stream.Stream;
+import javax.naming.OperationNotSupportedException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.Nullable;
 
@@ -87,7 +89,7 @@ class CenturyNewFinder implements ReplacementFinder {
             }
 
             // Find the extension (optional)
-            MatchResult extension = findExtension(text, endCentury, centuryNumber.group());
+            MatchResult extension = findExtension(text, endCentury, centuryNumber.start(1));
             if (extension == null) {
                 // Fake empty match result
                 extension = FinderMatchResult.ofEmpty(endCentury);
@@ -159,31 +161,67 @@ class CenturyNewFinder implements ReplacementFinder {
         if (centuryNumber == null) {
             return null;
         }
-        // The century library only accepts uppercase characters
-        final String romanNumber = ReplacerUtils.toUpperCase(centuryNumber.group());
-        // Note that we are returning the match with uppercase, although maybe it is not in the whole text.
-        return isCenturyNumber(romanNumber) ? FinderMatchResult.of(centuryNumber.start(), romanNumber) : null;
+        final int arabicNumber = getCenturyArabicNumber(centuryNumber.group());
+        if (arabicNumber > 0) {
+            // Trick: store the Arabic value in the start a nested match group
+            final FinderMatchResult match = FinderMatchResult.ofNested(centuryNumber.start(), centuryNumber.group());
+            match.addGroup(FinderMatchResult.ofEmpty(arabicNumber));
+            return match;
+        }
+        return null;
     }
 
-    private boolean isCenturyNumber(String text) {
-        // Check the century number only contains valid century letters
-        for (int i = 0; i < text.length(); i++) {
-            if (!isCenturyLetter(text.charAt(i))) {
+    private int getCenturyArabicNumber(String word) {
+        // Note the word can be a Roman number in lowercase or an Arabic number
+        try {
+            int arabic = -1;
+            if (isRomanLetters(word)) {
+                final String upperRoman = ReplacerUtils.toUpperCase(word);
+                arabic = ConvertToArabic.fromRoman(upperRoman);
+            } else if (FinderUtils.isNumeric(word)) {
+                arabic = Integer.parseInt(word);
+            }
+            if (isValidArabicCentury(arabic)) {
+                return arabic;
+            }
+        } catch (ConversionException ignored) {}
+        return -1;
+    }
+
+    @Nullable
+    private String getCenturyRomanNumber(String word) {
+        // Note the word can be a Roman number in lowercase or an Arabic number
+        try {
+            if (isRomanLetters(word)) {
+                final String upperRoman = ReplacerUtils.toUpperCase(word);
+                if (isValidArabicCentury(ConvertToArabic.fromRoman(upperRoman))) {
+                    return upperRoman;
+                }
+            } else if (FinderUtils.isNumeric(word)) {
+                final int arabic = Integer.parseInt(word);
+                if (isValidArabicCentury(arabic)) {
+                    return ConvertToRoman.fromArabic(arabic);
+                }
+            }
+        } catch (ConversionException | OperationNotSupportedException ignored) {}
+        return null;
+    }
+
+    private boolean isRomanLetters(String word) {
+        for (int i = 0; i < word.length(); i++) {
+            if (!isCenturyLetter(word.charAt(i))) {
                 return false;
             }
         }
-
-        //  Check the century number is valid and lower than the current century
-        try {
-            assert FinderUtils.isUppercase(text);
-            return ConvertToArabic.fromRoman(text) <= 21;
-        } catch (ConversionException ce) {
-            return false;
-        }
+        return true;
     }
 
     private boolean isCenturyLetter(char ch) {
-        return ch == 'I' || ch == 'V' || ch == 'X';
+        return ch == 'I' || ch == 'V' || ch == 'X' || ch == 'i' || ch == 'v' || ch == 'x';
+    }
+
+    private boolean isValidArabicCentury(int number) {
+        return number > 0 && number <= 21;
     }
 
     @Nullable
@@ -250,7 +288,7 @@ class CenturyNewFinder implements ReplacementFinder {
     }
 
     @Nullable
-    private MatchResult findExtension(String text, int start, String centuryNumber) {
+    private MatchResult findExtension(String text, int start, int centuryNumber) {
         // Find the next century number with at most 3 words between both century numbers
         int numWordsFound = 0;
         int wordStart = start;
@@ -268,12 +306,7 @@ class CenturyNewFinder implements ReplacementFinder {
 
             // Check the found century number is actually a century
             // Check the next century number is greater than the previous one
-            // The century library only accepts uppercase characters
-            final String romanWord = ReplacerUtils.toUpperCase(word);
-            if (
-                isCenturyNumber(romanWord) &&
-                ConvertToArabic.fromRoman(romanWord) > ConvertToArabic.fromRoman(centuryNumber)
-            ) {
+            if (getCenturyArabicNumber(word) > centuryNumber) {
                 return wordFound;
             } else {
                 numWordsFound++;
@@ -307,8 +340,7 @@ class CenturyNewFinder implements ReplacementFinder {
 
         final String centuryWord = match.group(1);
         final boolean isUppercase = FinderUtils.startsWithUpperCase(centuryWord);
-        final String centuryNumber = match.group(2);
-        assert FinderUtils.isUppercase(centuryNumber);
+        final String centuryNumber = getCenturyRomanNumber(match.group(2));
         final String eraText = match.group(3);
         String eraLetter;
         if (StringUtils.isNotEmpty(eraText)) {
@@ -425,6 +457,6 @@ class CenturyNewFinder implements ReplacementFinder {
     }
 
     private String fixSimpleCentury(String century) {
-        return "{{Siglo|" + ReplacerUtils.toUpperCase(century) + "}}";
+        return START_TEMPLATE + CENTURY_WORD + PIPE + getCenturyRomanNumber(century) + END_TEMPLATE;
     }
 }
