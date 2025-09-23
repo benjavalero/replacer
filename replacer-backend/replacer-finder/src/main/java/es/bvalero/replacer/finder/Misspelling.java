@@ -61,7 +61,7 @@ public abstract class Misspelling {
                 throw new IllegalArgumentException("No suggestions");
             }
 
-            if (suggestionList.size() == 1 && suggestionList.get(0).getText().equals(this.word)) {
+            if (suggestionList.size() == 1 && suggestionList.getFirst().getText().equals(this.word)) {
                 throw new IllegalArgumentException("Only suggestion is equal to the word");
             }
 

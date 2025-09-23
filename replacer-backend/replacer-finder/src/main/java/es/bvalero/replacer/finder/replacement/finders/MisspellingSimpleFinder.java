@@ -96,8 +96,10 @@ public class MisspellingSimpleFinder extends MisspellingFinder implements Proper
     private boolean isValid(String word, int startWord, String text, WikipediaLanguage lang) {
         // The word is wrapped by non-letters, so we still need to validate the separators.
         // We discard some words in URLs by checking if they are wrapped by a dot or a slash.
+        // It is more performant to check first if the word exists and then make the other discards.
         return (
-            (isExistingWord(word, lang) && FinderUtils.isWordCompleteInText(startWord, word, text)) &&
+            isExistingWord(word, lang) &&
+            FinderUtils.isWordCompleteInText(startWord, word, text) &&
             !FinderUtils.isUrlWord(startWord, word, text)
         );
     }
