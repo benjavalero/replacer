@@ -39,7 +39,6 @@ class DegreeFinder implements ReplacementFinder {
         return LinearMatchFinder.find(page, this::findDegree);
     }
 
-    @SuppressWarnings("ArgumentSelectionDefectChecker")
     @Nullable
     private MatchResult findDegree(FinderPage page, int start) {
         final String text = page.getContent();
@@ -50,17 +49,17 @@ class DegreeFinder implements ReplacementFinder {
                 return null;
             }
             final int startSymbol = matchSymbol.start();
-            final int endDegree = matchSymbol.end();
+            final int endSymbol = matchSymbol.end();
 
             // Find the word before (not necessarily a number)
             final MatchResult matchWord = findDegreeWord(text, startSymbol);
             if (matchWord == null) {
-                start = endDegree;
+                start = endSymbol;
                 continue;
             }
 
-            final int startDegree = matchWord.start();
-            final FinderMatchResult match = FinderMatchResult.ofNested(text, startDegree, endDegree);
+            final int startDegree = FinderUtils.isDecimalNumber(matchWord.group()) ? matchWord.start() : startSymbol;
+            final FinderMatchResult match = FinderMatchResult.ofNested(text, startDegree, endSymbol);
             // 1 - word; 2 - space before; 3 - symbol
             match.addGroup(matchWord);
             match.addGroup(FinderMatchResult.of(text, matchWord.end(), startSymbol));
@@ -77,8 +76,8 @@ class DegreeFinder implements ReplacementFinder {
             final int startSymbol = FinderUtils.indexOfAny(
                 text,
                 start,
-                DEGREE,
                 MASCULINE_ORDINAL,
+                DEGREE,
                 CELSIUS_UNICODE,
                 FAHRENHEIT_UNICODE
             );
@@ -92,22 +91,25 @@ class DegreeFinder implements ReplacementFinder {
                 return FinderMatchResult.of(startSymbol, Character.toString(degreeSymbol));
             }
 
-            // Find the degree letter. We admit a whitespace between.
-            if (startSymbol + 1 >= text.length()) {
+            // Find the degree letter
+            int endSymbol = startSymbol + 1;
+            if (endSymbol >= text.length()) {
                 return null;
             }
-            final int startLetter = text.charAt(startSymbol + 1) == SPACE ? startSymbol + 2 : startSymbol + 1;
-            if (
-                startLetter >= text.length() ||
-                !isDegreeLetter(text.charAt(startLetter)) ||
-                !FinderUtils.isWordCompleteInText(startLetter, startLetter + 1, text)
-            ) {
-                // Keep on searching
-                start = startSymbol + 1;
-                continue;
+            char symbolLetter = text.charAt(endSymbol++);
+            // We admit a whitespace between
+            if (symbolLetter == SPACE) {
+                if (endSymbol >= text.length()) {
+                    return null;
+                }
+                symbolLetter = text.charAt(endSymbol++);
+            }
+            if (isDegreeLetter(symbolLetter) && FinderUtils.isWordCompleteInText(startSymbol, endSymbol, text)) {
+                return FinderMatchResult.of(text, startSymbol, endSymbol);
             }
 
-            return FinderMatchResult.of(text, startSymbol, startLetter + 1);
+            // Keep on searching
+            start = endSymbol + 1;
         }
         return null;
     }
@@ -161,68 +163,67 @@ class DegreeFinder implements ReplacementFinder {
         return FinderUtils.isDecimalNumber(match.group(1)) && !FinderUtils.isActualSpace(match.group(2));
     }
 
-    // TODO: Implement conversion without suggestions
+    @Override
+    public Replacement convertWithNoSuggestions(MatchResult match, FinderPage page) {
+        return Replacement.ofNoSuggestions(match.start(), match.group(), StandardType.DEGREES);
+    }
 
     @Override
     public Replacement convert(MatchResult match, FinderPage page) {
         // 1 - word; 2 - space before; 3 - symbol
         final String word = match.group(1);
+        final boolean isNumericWord = FinderUtils.isDecimalNumber(word);
         final String space1 = match.group(2);
         final String symbol = match.group(3);
 
-        final char fixedLetter;
-        final String fixedSymbol;
         String suggestion = null;
-        if (isUnicodeSymbol(symbol.charAt(0))) {
-            fixedLetter = symbol.charAt(0) == FAHRENHEIT_UNICODE ? FAHRENHEIT : CELSIUS;
-            fixedSymbol = String.valueOf(DEGREE);
-            suggestion = "carácter Unicode";
-        } else {
-            fixedLetter = symbol.charAt(symbol.length() - 1);
-            if (fixedLetter == KELVIN) {
-                fixedSymbol = EMPTY;
-            } else {
-                fixedSymbol = String.valueOf(DEGREE);
-                if (symbol.charAt(0) == MASCULINE_ORDINAL) {
-                    suggestion = "símbolo de ordinal";
-                }
-            }
-        }
 
-        final String fixedDegree;
-        final int start;
-        final String text;
-        if (FinderUtils.isDecimalNumber(word)) {
+        // Fix space between word and symbol (if needed)
+        String fixedSpace1 = space1;
+        if (isNumericWord) {
             final boolean isNonBreakingSpace = FinderUtils.isNonBreakingSpace(
                 page.getContent(),
                 match.start(2),
                 match.end(2)
             );
-            final String fixedSpace = isNonBreakingSpace ? space1 : NON_BREAKING_SPACE;
-            fixedDegree = word + fixedSpace + fixedSymbol + fixedLetter;
-            start = match.start();
-            text = match.group();
-        } else {
-            fixedDegree = fixedSymbol + fixedLetter;
-            final int offset = word.length() + space1.length();
-            start = match.start() + offset;
-            text = match.group().substring(offset);
+            if (!isNonBreakingSpace) {
+                fixedSpace1 = NON_BREAKING_SPACE;
+            }
         }
 
+        // Fix symbol
+        final char startSymbol = symbol.charAt(0);
+        String fixedSymbol = String.valueOf(startSymbol);
+        char fixedLetter = symbol.charAt(symbol.length() - 1);
+        if (isUnicodeSymbol(symbol.charAt(0))) {
+            fixedSymbol = String.valueOf(DEGREE);
+            fixedLetter = symbol.charAt(0) == FAHRENHEIT_UNICODE ? FAHRENHEIT : CELSIUS;
+            suggestion = "carácter Unicode";
+        } else if (fixedLetter == KELVIN) {
+            fixedSymbol = EMPTY;
+        } else if (startSymbol == MASCULINE_ORDINAL) {
+            fixedSymbol = String.valueOf(DEGREE);
+            suggestion = "símbolo de ordinal";
+        }
+
+        final String fixedDegree = isNumericWord
+            ? word + fixedSpace1 + fixedSymbol + fixedLetter
+            : fixedSymbol + fixedLetter;
+
         final List<Suggestion> suggestions = new java.util.ArrayList<>();
-        suggestions.add(Suggestion.of(text, suggestion));
+        suggestions.add(Suggestion.of(match.group(), suggestion));
         suggestions.add(Suggestion.of(fixedDegree, "grados"));
 
         // Exception: sometimes 1ºC might be an ordinal, e.g. the group of a sports competition.
         if (
             isNumeric(word) &&
             StringUtils.isEmpty(space1) &&
-            symbol.charAt(0) == MASCULINE_ORDINAL &&
+            startSymbol == MASCULINE_ORDINAL &&
             isDegreeLetter(symbol.charAt(1))
         ) {
             suggestions.add(Suggestion.of(word + DOT + symbol, "ordinal"));
         }
 
-        return Replacement.of(start, text, StandardType.DEGREES, suggestions);
+        return Replacement.of(match.start(), match.group(), StandardType.DEGREES, suggestions);
     }
 }
