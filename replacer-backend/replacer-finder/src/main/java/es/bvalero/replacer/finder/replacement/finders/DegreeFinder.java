@@ -97,7 +97,7 @@ class DegreeFinder implements ReplacementFinder {
             }
             char symbolLetter = text.charAt(endSymbol++);
             // We admit a whitespace between
-            if (symbolLetter == WHITESPACE) {
+            if (FinderUtils.isWhiteSpace(symbolLetter)) {
                 if (endSymbol >= text.length()) {
                     return null;
                 }
@@ -130,7 +130,7 @@ class DegreeFinder implements ReplacementFinder {
         // If preceded by number, there must be a space (or nothing) between.
         if (
             FinderUtils.isDecimalNumber(matchBefore.group()) &&
-            !FinderUtils.isBlankOrNonBreakingSpace(text, matchBefore.end(), startSymbol)
+            !FinderUtils.isEmptyBlankOrSpaceAlias(text, matchBefore.end(), startSymbol)
         ) {
             return null;
         }
@@ -139,6 +139,7 @@ class DegreeFinder implements ReplacementFinder {
 
     @Override
     public boolean validate(MatchResult match, FinderPage page) {
+        final String text = page.getContent();
         final String symbol = match.group(3);
         assert symbol.length() <= 3;
         // Check the symbol
@@ -152,14 +153,12 @@ class DegreeFinder implements ReplacementFinder {
             return true;
         }
 
-        // If the symbol doesn't need to be fixed, we check the space before.
-        if (!FinderUtils.isBlankOrNonBreakingSpace(page.getContent(), match.start(2), match.end(2))) {
-            return false;
-        }
-
         // Between number and degree, we don't fix actual spaces.
         // We know that the space is not a non-breaking space.
-        return FinderUtils.isDecimalNumber(match.group(1)) && !FinderUtils.isActualSpace(match.group(2));
+        return (
+            FinderUtils.isDecimalNumber(match.group(1)) &&
+            !FinderUtils.isWhiteSpaceOrAlias(text, match.start(2), match.end(2))
+        );
     }
 
     @Override
@@ -180,12 +179,12 @@ class DegreeFinder implements ReplacementFinder {
         // Fix space between word and symbol (if needed)
         String fixedSpace1 = space1;
         if (isNumericWord) {
-            final boolean isNonBreakingSpace = FinderUtils.isNonBreakingSpace(
+            final boolean isHardSpaceAlias = FinderUtils.isHardSpaceAlias(
                 page.getContent(),
                 match.start(2),
                 match.end(2)
             );
-            if (!isNonBreakingSpace) {
+            if (!isHardSpaceAlias) {
                 fixedSpace1 = NON_BREAKING_SPACE;
             }
         }
