@@ -29,7 +29,6 @@ class DegreeFinder implements ReplacementFinder {
     private static final char KELVIN = 'K';
     private static final char CELSIUS_UNICODE = '\u2103'; // ℃
     private static final char FAHRENHEIT_UNICODE = '\u2109'; // ℉
-    private static final char SPACE = ' ';
     private static final char[] DECIMAL_SEPARATORS = new char[] { DOT, DECIMAL_COMMA };
 
     @Override
@@ -98,7 +97,7 @@ class DegreeFinder implements ReplacementFinder {
             }
             char symbolLetter = text.charAt(endSymbol++);
             // We admit a whitespace between
-            if (symbolLetter == SPACE) {
+            if (symbolLetter == WHITESPACE) {
                 if (endSymbol >= text.length()) {
                     return null;
                 }
@@ -216,7 +215,7 @@ class DegreeFinder implements ReplacementFinder {
 
         // Exception: sometimes 1ºC might be an ordinal, e.g. the group of a sports competition.
         if (
-            isNumeric(word) &&
+            isNumber(word) &&
             StringUtils.isEmpty(space1) &&
             startSymbol == MASCULINE_ORDINAL &&
             isDegreeLetter(symbol.charAt(1))

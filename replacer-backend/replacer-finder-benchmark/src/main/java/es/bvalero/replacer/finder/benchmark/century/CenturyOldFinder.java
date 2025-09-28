@@ -24,10 +24,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.MatchResult;
 import java.util.stream.Stream;
+import javax.naming.OperationNotSupportedException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.Nullable;
-
-import javax.naming.OperationNotSupportedException;
 
 class CenturyOldFinder implements ReplacementFinder {
 
@@ -183,7 +182,7 @@ class CenturyOldFinder implements ReplacementFinder {
             if (isRomanLetters(word)) {
                 final String upperRoman = ReplacerUtils.toUpperCase(word);
                 arabic = ConvertToArabic.fromRoman(upperRoman);
-            } else if (FinderUtils.isNumeric(word)) {
+            } else if (FinderUtils.isNumber(word)) {
                 arabic = Integer.parseInt(word);
             }
             if (isValidArabicCentury(arabic)) {
@@ -202,7 +201,7 @@ class CenturyOldFinder implements ReplacementFinder {
                 if (isValidArabicCentury(ConvertToArabic.fromRoman(upperRoman))) {
                     return upperRoman;
                 }
-            } else if (FinderUtils.isNumeric(word)) {
+            } else if (FinderUtils.isNumber(word)) {
                 final int arabic = Integer.parseInt(word);
                 if (isValidArabicCentury(arabic)) {
                     return ConvertToRoman.fromArabic(arabic);

@@ -1,7 +1,7 @@
 package es.bvalero.replacer.finder.listing;
 
 import static es.bvalero.replacer.common.util.ReplacerUtils.LOCALE_ES;
-import static org.apache.commons.lang3.StringUtils.SPACE;
+import static es.bvalero.replacer.finder.util.FinderUtils.SPACE;
 
 import es.bvalero.replacer.common.util.FileOfflineUtils;
 import java.nio.file.Files;

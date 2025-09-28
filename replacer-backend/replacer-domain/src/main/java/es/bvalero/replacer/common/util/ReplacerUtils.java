@@ -52,14 +52,6 @@ public class ReplacerUtils {
      * e.g. to capitalize a text enclosed by quotes.
      */
     public String setFirstUpperCaseIgnoringNonLetters(String text) {
-        if (StringUtils.isEmpty(text) || Character.isUpperCase(text.charAt(0))) {
-            return text;
-        }
-
-        if (Character.isLetterOrDigit(text.charAt(0))) {
-            return setFirstUpperCase(text);
-        }
-
         // Find the first letter
         int startFirstLetter = -1;
         for (int i = 0; i < text.length(); i++) {

@@ -1,6 +1,6 @@
 package es.bvalero.replacer.finder.cosmetic.finders;
 
-import static org.apache.commons.lang3.StringUtils.SPACE;
+import static es.bvalero.replacer.finder.util.FinderUtils.SPACE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 

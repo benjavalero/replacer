@@ -1,7 +1,6 @@
 package es.bvalero.replacer.finder.replacement.finders;
 
 import static es.bvalero.replacer.finder.util.FinderUtils.*;
-import static org.apache.commons.lang3.StringUtils.SPACE;
 
 import es.bvalero.replacer.common.util.ReplacerUtils;
 import es.bvalero.replacer.finder.FinderPage;

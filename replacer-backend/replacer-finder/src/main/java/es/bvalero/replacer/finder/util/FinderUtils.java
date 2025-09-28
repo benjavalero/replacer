@@ -1,9 +1,8 @@
 package es.bvalero.replacer.finder.util;
 
-import static org.apache.commons.lang3.StringUtils.SPACE;
+import static es.bvalero.replacer.common.util.ReplacerUtils.*;
 
 import es.bvalero.replacer.FinderPropertiesConfiguration;
-import es.bvalero.replacer.common.util.ReplacerUtils;
 import es.bvalero.replacer.finder.FinderPage;
 import java.util.*;
 import java.util.regex.MatchResult;
@@ -31,11 +30,13 @@ public class FinderUtils {
     public static final char DOT = '.';
     public static final char DECIMAL_COMMA = ',';
     private static final char NEGATIVE_SYMBOL = '-';
+    public static final char WHITESPACE = ' ';
 
     // Character combinations
     public static final String START_TEMPLATE = "{{";
     public static final String END_TEMPLATE = "}}";
     private static final String ALTERNATE_SEPARATOR = Character.toString(PIPE);
+    public static final String SPACE = " ";
     public static final String NON_BREAKING_SPACE = "&nbsp;";
     public static final String NON_BREAKING_SPACE_TEMPLATE_NAME = "esd";
     public static final String NON_BREAKING_SPACE_TEMPLATE =
@@ -57,12 +58,12 @@ public class FinderUtils {
     }
 
     public boolean startsWithNumber(String word) {
-        return isDigit(word.charAt(0));
+        return isAsciiDigit(word.charAt(0));
     }
 
     /** Capitalizes a string changing the first character of the text to uppercase and the rest to lowercase */
     public String setFirstUpperCaseFully(String word) {
-        return ReplacerUtils.toUpperCase(word.substring(0, 1)) + ReplacerUtils.toLowerCase(word.substring(1));
+        return toUpperCase(word.substring(0, 1)) + toLowerCase(word.substring(1));
     }
 
     public String setFirstLowerCase(String word) {
@@ -98,7 +99,11 @@ public class FinderUtils {
     }
 
     public boolean isAsciiLowerCase(int ch) {
-        return (ch >= 'a' && ch <= 'z');
+        return ch >= 'a' && ch <= 'z';
+    }
+
+    public boolean isAsciiDigit(int ch) {
+        return ch >= '0' && ch <= '9';
     }
 
     public boolean isDecimalNumber(String word) {
@@ -114,9 +119,9 @@ public class FinderUtils {
         return isDigit(ch) || isDecimalSeparator(ch);
     }
 
-    public boolean isNumeric(String word) {
+    public boolean isNumber(String word) {
         for (int i = 0; i < word.length(); i++) {
-            if (!isDigit(word.charAt(i))) {
+            if (!isAsciiDigit(word.charAt(i))) {
                 return false;
             }
         }
@@ -125,19 +130,6 @@ public class FinderUtils {
 
     public String normalizeDecimalNumber(String number) {
         return number.replace(DECIMAL_COMMA, DOT);
-    }
-
-    public boolean isDigit(int ch) {
-        return (ch >= '0' && ch <= '9');
-    }
-
-    public boolean isUppercase(String word) {
-        for (int i = 0; i < word.length(); i++) {
-            if (!Character.isUpperCase(word.charAt(i))) {
-                return false;
-            }
-        }
-        return true;
     }
 
     public boolean isBlankOrNonBreakingSpace(String text, int start, int end) {
@@ -163,10 +155,9 @@ public class FinderUtils {
 
     public boolean isNonBreakingSpace(String text, int start, int end) {
         return (
-            (end - start == NON_BREAKING_SPACE.length() &&
-                ReplacerUtils.containsAtPosition(text, NON_BREAKING_SPACE, start)) ||
+            (end - start == NON_BREAKING_SPACE.length() && containsAtPosition(text, NON_BREAKING_SPACE, start)) ||
             (end - start == NON_BREAKING_SPACE_TEMPLATE.length() &&
-                ReplacerUtils.containsAtPosition(text, NON_BREAKING_SPACE_TEMPLATE, start))
+                containsAtPosition(text, NON_BREAKING_SPACE_TEMPLATE, start))
         );
     }
 
@@ -332,8 +323,8 @@ public class FinderUtils {
 
     private boolean isSpaceWord(String text, int start) {
         return (
-            ReplacerUtils.containsAtPosition(text, NON_BREAKING_SPACE, start - 1) ||
-            ReplacerUtils.containsAtPosition(text, NON_BREAKING_SPACE_TEMPLATE, start - 2)
+            containsAtPosition(text, NON_BREAKING_SPACE, start - 1) ||
+            containsAtPosition(text, NON_BREAKING_SPACE_TEMPLATE, start - 2)
         );
     }
 
@@ -444,7 +435,7 @@ public class FinderUtils {
         int startNumber = -1;
         int endNumber = text.length();
         for (int i = start; i < text.length(); i++) {
-            if (isDigit(text.charAt(i))) {
+            if (isAsciiDigit(text.charAt(i))) {
                 if (startNumber < 0) {
                     startNumber = i;
                 }
@@ -482,7 +473,7 @@ public class FinderUtils {
     }
 
     private String getTextSnippet(String text, int start, int end) {
-        return ReplacerUtils.getContextAroundWord(text, start, end, 50);
+        return getContextAroundWord(text, start, end, 50);
     }
 
     /** Expand a simple regex containing only character classes and conditionals */
@@ -539,7 +530,7 @@ public class FinderUtils {
             MARKER_IMMUTABLE,
             "{}: {}",
             message,
-            ReplacerUtils.toJson(
+            toJson(
                 "lang",
                 page.getPageKey().getLang(),
                 "title",
