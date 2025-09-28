@@ -107,16 +107,26 @@ public class FinderUtils {
     }
 
     public boolean isDecimalNumber(String word) {
+        boolean decimalFound = false;
         for (int i = 0; i < word.length(); i++) {
-            if (!isDecimalNumber(word.charAt(i))) {
-                return false;
+            final char ch = word.charAt(i);
+            if (!isAsciiDigit(ch)) {
+                if (isDecimalSeparator(ch)) {
+                    if (decimalFound) {
+                        return false;
+                    } else {
+                        decimalFound = true;
+                    }
+                } else {
+                    return false;
+                }
             }
         }
         return true;
     }
 
-    private boolean isDecimalNumber(char ch) {
-        return isDigit(ch) || isDecimalSeparator(ch);
+    private boolean isDecimalSeparator(char ch) {
+        return ch == DOT || ch == DECIMAL_COMMA;
     }
 
     public boolean isNumber(String word) {
@@ -462,10 +472,6 @@ public class FinderUtils {
         }
 
         return FinderMatchResult.of(text, startNumber, endNumber);
-    }
-
-    private boolean isDecimalSeparator(char ch) {
-        return ch == DOT || ch == DECIMAL_COMMA;
     }
 
     private boolean isNegativeSymbol(char ch) {
