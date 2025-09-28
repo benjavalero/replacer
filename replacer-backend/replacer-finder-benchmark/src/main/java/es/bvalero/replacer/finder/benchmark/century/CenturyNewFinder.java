@@ -178,7 +178,7 @@ class CenturyNewFinder implements ReplacementFinder {
             if (isRomanLetters(word)) {
                 final String upperRoman = ReplacerUtils.toUpperCase(word);
                 arabic = ConvertToArabic.fromRoman(upperRoman);
-            } else if (FinderUtils.isNumeric(word)) {
+            } else if (word.length() <= 2 && FinderUtils.isNumeric(word)) {
                 arabic = Integer.parseInt(word);
             }
             if (isValidArabicCentury(arabic)) {
@@ -197,7 +197,7 @@ class CenturyNewFinder implements ReplacementFinder {
                 if (isValidArabicCentury(ConvertToArabic.fromRoman(upperRoman))) {
                     return upperRoman;
                 }
-            } else if (FinderUtils.isNumeric(word)) {
+            } else if (word.length() <= 2 && FinderUtils.isNumeric(word)) {
                 final int arabic = Integer.parseInt(word);
                 if (isValidArabicCentury(arabic)) {
                     return ConvertToRoman.fromArabic(arabic);
@@ -208,6 +208,10 @@ class CenturyNewFinder implements ReplacementFinder {
     }
 
     private boolean isRomanLetters(String word) {
+        if (word.length() > 5) {
+            // 5 is the maximum length of a Roman century: XVIII
+            return false;
+        }
         for (int i = 0; i < word.length(); i++) {
             if (!isCenturyLetter(word.charAt(i))) {
                 return false;
