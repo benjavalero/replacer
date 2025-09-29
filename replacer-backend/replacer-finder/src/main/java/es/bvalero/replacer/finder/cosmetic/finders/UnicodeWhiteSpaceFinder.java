@@ -1,6 +1,6 @@
 package es.bvalero.replacer.finder.cosmetic.finders;
 
-import static org.apache.commons.lang3.StringUtils.SPACE;
+import static es.bvalero.replacer.finder.util.FinderUtils.SPACE;
 
 import es.bvalero.replacer.checkwikipedia.CheckWikipediaAction;
 import es.bvalero.replacer.finder.FinderPage;

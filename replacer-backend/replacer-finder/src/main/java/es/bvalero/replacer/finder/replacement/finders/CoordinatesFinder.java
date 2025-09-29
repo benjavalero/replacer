@@ -1,7 +1,6 @@
 package es.bvalero.replacer.finder.replacement.finders;
 
 import static es.bvalero.replacer.finder.util.FinderUtils.*;
-import static org.apache.commons.lang3.StringUtils.SPACE;
 
 import es.bvalero.replacer.common.util.ReplacerUtils;
 import es.bvalero.replacer.finder.FinderPage;
@@ -171,7 +170,7 @@ class CoordinatesFinder implements ReplacementFinder {
             return null;
         }
 
-        if (!FinderUtils.isBlankOrNonBreakingSpace(text, start, matchNumber.start())) {
+        if (!FinderUtils.isEmptyBlankOrSpaceAlias(text, start, matchNumber.start())) {
             // Not a valid space between the previous match and the number match
             return null;
         }
@@ -223,7 +222,7 @@ class CoordinatesFinder implements ReplacementFinder {
             return null;
         }
 
-        if (!FinderUtils.isBlankOrNonBreakingSpace(text, start, matchNumber.start())) {
+        if (!FinderUtils.isEmptyBlankOrSpaceAlias(text, start, matchNumber.start())) {
             // Not a valid space between the previous match and the number match
             return null;
         }
@@ -253,17 +252,12 @@ class CoordinatesFinder implements ReplacementFinder {
     @Nullable
     private MatchResult findDirection(String text, int start) {
         // Find if there is a cardinal direction and enlarge the match
-        final MatchResult matchDirection = FinderUtils.findWordAfter(text, start);
+        final MatchResult matchDirection = FinderUtils.findWordAfterSpace(text, start);
         if (matchDirection == null) {
             return null;
         }
 
         if (!isDirectionString(matchDirection.group())) {
-            return null;
-        }
-
-        if (!FinderUtils.isBlankOrNonBreakingSpace(text, start, matchDirection.start())) {
-            // Not a valid space between the previous match and the number match
             return null;
         }
 

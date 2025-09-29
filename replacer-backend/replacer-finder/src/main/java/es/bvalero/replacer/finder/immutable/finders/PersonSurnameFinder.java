@@ -1,6 +1,6 @@
 package es.bvalero.replacer.finder.immutable.finders;
 
-import static org.apache.commons.lang3.StringUtils.SPACE;
+import static es.bvalero.replacer.finder.util.FinderUtils.SPACE;
 
 import dk.brics.automaton.DatatypesAutomatonProvider;
 import dk.brics.automaton.RegExp;

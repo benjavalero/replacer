@@ -1,9 +1,8 @@
 package es.bvalero.replacer.finder.util;
 
-import static org.apache.commons.lang3.StringUtils.SPACE;
+import static es.bvalero.replacer.common.util.ReplacerUtils.*;
 
 import es.bvalero.replacer.FinderPropertiesConfiguration;
-import es.bvalero.replacer.common.util.ReplacerUtils;
 import es.bvalero.replacer.finder.FinderPage;
 import java.util.*;
 import java.util.regex.MatchResult;
@@ -36,10 +35,14 @@ public class FinderUtils {
     public static final String START_TEMPLATE = "{{";
     public static final String END_TEMPLATE = "}}";
     private static final String ALTERNATE_SEPARATOR = Character.toString(PIPE);
+    public static final String SPACE = " ";
     public static final String NON_BREAKING_SPACE = "&nbsp;";
     public static final String NON_BREAKING_SPACE_TEMPLATE_NAME = "esd";
     public static final String NON_BREAKING_SPACE_TEMPLATE =
         START_TEMPLATE + NON_BREAKING_SPACE_TEMPLATE_NAME + END_TEMPLATE;
+    private static final List<String> HARD_SPACE_ALIASES = List.of(NON_BREAKING_SPACE, NON_BREAKING_SPACE_TEMPLATE);
+    private static final String NARROW_NON_BREAKING_SPACE = "&#x202f;";
+    private static final List<String> SOFT_SPACE_ALIASES = List.of(NARROW_NON_BREAKING_SPACE);
     public static final String START_LINK = "[[";
     public static final String END_LINK = "]]";
 
@@ -57,12 +60,12 @@ public class FinderUtils {
     }
 
     public boolean startsWithNumber(String word) {
-        return isDigit(word.charAt(0));
+        return isAsciiDigit(word.charAt(0));
     }
 
     /** Capitalizes a string changing the first character of the text to uppercase and the rest to lowercase */
     public String setFirstUpperCaseFully(String word) {
-        return ReplacerUtils.toUpperCase(word.substring(0, 1)) + ReplacerUtils.toLowerCase(word.substring(1));
+        return toUpperCase(word.substring(0, 1)) + toLowerCase(word.substring(1));
     }
 
     public String setFirstLowerCase(String word) {
@@ -98,25 +101,39 @@ public class FinderUtils {
     }
 
     public boolean isAsciiLowerCase(int ch) {
-        return (ch >= 'a' && ch <= 'z');
+        return ch >= 'a' && ch <= 'z';
+    }
+
+    public boolean isAsciiDigit(int ch) {
+        return ch >= '0' && ch <= '9';
     }
 
     public boolean isDecimalNumber(String word) {
+        boolean decimalFound = false;
         for (int i = 0; i < word.length(); i++) {
-            if (!isDecimalNumber(word.charAt(i))) {
-                return false;
+            final char ch = word.charAt(i);
+            if (!isAsciiDigit(ch)) {
+                if (isDecimalSeparator(ch)) {
+                    if (decimalFound) {
+                        return false;
+                    } else {
+                        decimalFound = true;
+                    }
+                } else {
+                    return false;
+                }
             }
         }
         return true;
     }
 
-    private boolean isDecimalNumber(char ch) {
-        return isDigit(ch) || isDecimalSeparator(ch);
+    private boolean isDecimalSeparator(char ch) {
+        return ch == DOT || ch == DECIMAL_COMMA;
     }
 
-    public boolean isNumeric(String word) {
+    public boolean isNumber(String word) {
         for (int i = 0; i < word.length(); i++) {
-            if (!isDigit(word.charAt(i))) {
+            if (!isAsciiDigit(word.charAt(i))) {
                 return false;
             }
         }
@@ -127,47 +144,67 @@ public class FinderUtils {
         return number.replace(DECIMAL_COMMA, DOT);
     }
 
-    public boolean isDigit(int ch) {
-        return (ch >= '0' && ch <= '9');
+    /** Determine if a string is empty, i.e. has length zero contains no character. */
+    private boolean isEmpty(String text, int start, int end) {
+        assert start >= 0;
+        assert end <= text.length();
+        return start == end;
     }
 
-    public boolean isUppercase(String word) {
-        for (int i = 0; i < word.length(); i++) {
-            if (!Character.isUpperCase(word.charAt(i))) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    public boolean isBlankOrNonBreakingSpace(String text, int start, int end) {
-        return isBlank(text, start, end) || isNonBreakingSpace(text, start, end);
-    }
-
+    /** Determine if a string is blank, i.e. composed only by Unicode whitespace characters. */
     private boolean isBlank(String text, int start, int end) {
-        if (start == end) {
-            return true;
-        }
+        assert !isEmpty(text, start, end);
         for (int i = start; i < end; i++) {
-            if (!Character.isWhitespace(text.charAt(i))) {
+            if (!isWhiteSpace(text.charAt(i))) {
                 return false;
             }
         }
         return true;
     }
 
-    /** Check if the string is a whitespace or represents a non-breaking space */
-    public boolean isActualSpace(String str) {
-        return SPACE.equals(str) || NON_BREAKING_SPACE.equals(str) || NON_BREAKING_SPACE_TEMPLATE.equals(str);
+    /** Determine if a character is considered a Unicode whitespace character */
+    public boolean isWhiteSpace(char ch) {
+        return Character.isWhitespace(ch);
     }
 
-    public boolean isNonBreakingSpace(String text, int start, int end) {
-        return (
-            (end - start == NON_BREAKING_SPACE.length() &&
-                ReplacerUtils.containsAtPosition(text, NON_BREAKING_SPACE, start)) ||
-            (end - start == NON_BREAKING_SPACE_TEMPLATE.length() &&
-                ReplacerUtils.containsAtPosition(text, NON_BREAKING_SPACE_TEMPLATE, start))
-        );
+    /** Determine if a string is composed by an only Unicode whitespace character */
+    private boolean isWhiteSpace(String text, int start, int end) {
+        return end - start == 1 && isWhiteSpace(text.charAt(start));
+    }
+
+    /** Determine if the string is empty or blank or a whitespace alias */
+    public boolean isEmptyBlankOrSpaceAlias(String text, int start, int end) {
+        return isEmpty(text, start, end) || isBlank(text, start, end) || isSpaceAlias(text, start, end);
+    }
+
+    /** Determine if the string is an only whitespace or a whitespace alias */
+    public boolean isWhiteSpaceOrAlias(String text, int start, int end) {
+        return isWhiteSpace(text, start, end) || isSpaceAlias(text, start, end);
+    }
+
+    /** Determine if a string represents the alias of a Unicode whitespace character */
+    private boolean isSpaceAlias(String text, int start, int end) {
+        return isHardSpaceAlias(text, start, end) || isSoftSpaceAlias(text, start, end);
+    }
+
+    /** Determine if a string represents the alias of a hard (non-breaking) space character */
+    public boolean isHardSpaceAlias(String text, int start, int end) {
+        for (String alias : HARD_SPACE_ALIASES) {
+            if (end - start == alias.length() && containsAtPosition(text, alias, start)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /** Determine if a string represents the alias of a soft (breaking) space character */
+    private boolean isSoftSpaceAlias(String text, int start, int end) {
+        for (String alias : SOFT_SPACE_ALIASES) {
+            if (end - start == alias.length() && containsAtPosition(text, alias, start)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     //endregion
@@ -265,7 +302,7 @@ public class FinderUtils {
     @Nullable
     public MatchResult findWordAfterSpace(String text, int start) {
         final MatchResult match = findWordAfter(text, start);
-        return match != null && isBlankOrNonBreakingSpace(text, start, match.start()) ? match : null;
+        return match != null && isEmptyBlankOrSpaceAlias(text, start, match.start()) ? match : null;
     }
 
     /** Find the most close sequence of letters and digits starting at the given position */
@@ -332,8 +369,8 @@ public class FinderUtils {
 
     private boolean isSpaceWord(String text, int start) {
         return (
-            ReplacerUtils.containsAtPosition(text, NON_BREAKING_SPACE, start - 1) ||
-            ReplacerUtils.containsAtPosition(text, NON_BREAKING_SPACE_TEMPLATE, start - 2)
+            containsAtPosition(text, NON_BREAKING_SPACE, start - 1) ||
+            containsAtPosition(text, NON_BREAKING_SPACE_TEMPLATE, start - 2)
         );
     }
 
@@ -444,7 +481,7 @@ public class FinderUtils {
         int startNumber = -1;
         int endNumber = text.length();
         for (int i = start; i < text.length(); i++) {
-            if (isDigit(text.charAt(i))) {
+            if (isAsciiDigit(text.charAt(i))) {
                 if (startNumber < 0) {
                     startNumber = i;
                 }
@@ -473,16 +510,12 @@ public class FinderUtils {
         return FinderMatchResult.of(text, startNumber, endNumber);
     }
 
-    private boolean isDecimalSeparator(char ch) {
-        return ch == DOT || ch == DECIMAL_COMMA;
-    }
-
     private boolean isNegativeSymbol(char ch) {
         return ch == NEGATIVE_SYMBOL;
     }
 
     private String getTextSnippet(String text, int start, int end) {
-        return ReplacerUtils.getContextAroundWord(text, start, end, 50);
+        return getContextAroundWord(text, start, end, 50);
     }
 
     /** Expand a simple regex containing only character classes and conditionals */
@@ -539,7 +572,7 @@ public class FinderUtils {
             MARKER_IMMUTABLE,
             "{}: {}",
             message,
-            ReplacerUtils.toJson(
+            toJson(
                 "lang",
                 page.getPageKey().getLang(),
                 "title",

@@ -1,7 +1,6 @@
 package es.bvalero.replacer.finder.replacement.finders;
 
 import static es.bvalero.replacer.finder.util.FinderUtils.*;
-import static org.apache.commons.lang3.StringUtils.SPACE;
 
 import dk.brics.automaton.DatatypesAutomatonProvider;
 import dk.brics.automaton.RegExp;
@@ -239,7 +238,7 @@ class DateFinder implements ReplacementFinder {
     }
 
     private boolean isRegexDay(String token) {
-        return token.length() <= 2 && FinderUtils.isNumeric(token);
+        return token.length() <= 2 && FinderUtils.isNumber(token);
     }
 
     private boolean isRegexConnector(String token, WikipediaLanguage lang) {
@@ -257,9 +256,9 @@ class DateFinder implements ReplacementFinder {
 
     private boolean isRegexYear(String token) {
         if (token.length() == 4) {
-            return FinderUtils.isNumeric(token);
+            return FinderUtils.isNumber(token);
         } else if (token.length() == 5) {
-            return FinderUtils.isDigit(token.charAt(0)) && token.charAt(1) == '.';
+            return FinderUtils.isAsciiDigit(token.charAt(0)) && token.charAt(1) == '.';
         } else {
             throw new IllegalStateException();
         }

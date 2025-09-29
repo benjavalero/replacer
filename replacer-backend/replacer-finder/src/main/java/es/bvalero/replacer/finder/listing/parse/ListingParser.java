@@ -1,6 +1,6 @@
 package es.bvalero.replacer.finder.listing.parse;
 
-import static org.apache.commons.lang3.StringUtils.SPACE;
+import static es.bvalero.replacer.finder.util.FinderUtils.SPACE;
 
 import es.bvalero.replacer.finder.listing.ListingItem;
 import java.io.BufferedReader;

@@ -29,7 +29,6 @@ class DegreeFinder implements ReplacementFinder {
     private static final char KELVIN = 'K';
     private static final char CELSIUS_UNICODE = '\u2103'; // ℃
     private static final char FAHRENHEIT_UNICODE = '\u2109'; // ℉
-    private static final char SPACE = ' ';
     private static final char[] DECIMAL_SEPARATORS = new char[] { DOT, DECIMAL_COMMA };
 
     @Override
@@ -98,7 +97,7 @@ class DegreeFinder implements ReplacementFinder {
             }
             char symbolLetter = text.charAt(endSymbol++);
             // We admit a whitespace between
-            if (symbolLetter == SPACE) {
+            if (FinderUtils.isWhiteSpace(symbolLetter)) {
                 if (endSymbol >= text.length()) {
                     return null;
                 }
@@ -131,7 +130,7 @@ class DegreeFinder implements ReplacementFinder {
         // If preceded by number, there must be a space (or nothing) between.
         if (
             FinderUtils.isDecimalNumber(matchBefore.group()) &&
-            !FinderUtils.isBlankOrNonBreakingSpace(text, matchBefore.end(), startSymbol)
+            !FinderUtils.isEmptyBlankOrSpaceAlias(text, matchBefore.end(), startSymbol)
         ) {
             return null;
         }
@@ -140,6 +139,7 @@ class DegreeFinder implements ReplacementFinder {
 
     @Override
     public boolean validate(MatchResult match, FinderPage page) {
+        final String text = page.getContent();
         final String symbol = match.group(3);
         assert symbol.length() <= 3;
         // Check the symbol
@@ -153,14 +153,12 @@ class DegreeFinder implements ReplacementFinder {
             return true;
         }
 
-        // If the symbol doesn't need to be fixed, we check the space before.
-        if (!FinderUtils.isBlankOrNonBreakingSpace(page.getContent(), match.start(2), match.end(2))) {
-            return false;
-        }
-
         // Between number and degree, we don't fix actual spaces.
         // We know that the space is not a non-breaking space.
-        return FinderUtils.isDecimalNumber(match.group(1)) && !FinderUtils.isActualSpace(match.group(2));
+        return (
+            FinderUtils.isDecimalNumber(match.group(1)) &&
+            !FinderUtils.isWhiteSpaceOrAlias(text, match.start(2), match.end(2))
+        );
     }
 
     @Override
@@ -181,12 +179,12 @@ class DegreeFinder implements ReplacementFinder {
         // Fix space between word and symbol (if needed)
         String fixedSpace1 = space1;
         if (isNumericWord) {
-            final boolean isNonBreakingSpace = FinderUtils.isNonBreakingSpace(
+            final boolean isHardSpaceAlias = FinderUtils.isHardSpaceAlias(
                 page.getContent(),
                 match.start(2),
                 match.end(2)
             );
-            if (!isNonBreakingSpace) {
+            if (!isHardSpaceAlias) {
                 fixedSpace1 = NON_BREAKING_SPACE;
             }
         }
@@ -216,7 +214,7 @@ class DegreeFinder implements ReplacementFinder {
 
         // Exception: sometimes 1ºC might be an ordinal, e.g. the group of a sports competition.
         if (
-            isNumeric(word) &&
+            isNumber(word) &&
             StringUtils.isEmpty(space1) &&
             startSymbol == MASCULINE_ORDINAL &&
             isDegreeLetter(symbol.charAt(1))
