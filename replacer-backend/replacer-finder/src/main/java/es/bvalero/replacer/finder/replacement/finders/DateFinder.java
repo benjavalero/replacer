@@ -105,10 +105,8 @@ class DateFinder implements ReplacementFinder {
             String regexPrepositions = String.format("(%s)", FinderUtils.joinAlternate(prepositionsLowerUpperCase));
             String regexConnectors = String.format("(%s)", FinderUtils.joinAlternate(connectorsLowerUpperCase));
             String regexMonthsLowerUpperCase = String.format("(%s)", FinderUtils.joinAlternate(monthsLowerUpperCase));
-            List<String> spaces = Stream.of(SPACE, NON_BREAKING_SPACE, NON_BREAKING_SPACE_TEMPLATE)
-                .map(ReplacerUtils::escapeRegexChars)
-                .toList();
-            String regexSpaces = String.format("(%s)+", FinderUtils.joinAlternate(spaces));
+            List<String> spaces = SPACE_ALIASES.stream().map(ReplacerUtils::escapeRegexChars).toList();
+            String regexSpaces = String.format("(<Zs>+|%s)+", FinderUtils.joinAlternate(spaces));
 
             // There is no performance gain by using more generic regex for these numbers
             String regexDay = "([012]?[0-9]|3[01])";

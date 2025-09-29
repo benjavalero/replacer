@@ -3,9 +3,11 @@ package es.bvalero.replacer.finder.util;
 import static es.bvalero.replacer.common.util.ReplacerUtils.*;
 
 import es.bvalero.replacer.FinderPropertiesConfiguration;
+import es.bvalero.replacer.common.util.ReplacerUtils;
 import es.bvalero.replacer.finder.FinderPage;
 import java.util.*;
 import java.util.regex.MatchResult;
+import java.util.stream.Stream;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -38,13 +40,51 @@ public class FinderUtils {
     public static final String SPACE = " ";
     public static final String NON_BREAKING_SPACE = "&nbsp;";
     public static final String NON_BREAKING_SPACE_TEMPLATE_NAME = "esd";
-    public static final String NON_BREAKING_SPACE_TEMPLATE =
-        START_TEMPLATE + NON_BREAKING_SPACE_TEMPLATE_NAME + END_TEMPLATE;
-    private static final List<String> HARD_SPACE_ALIASES = List.of(NON_BREAKING_SPACE, NON_BREAKING_SPACE_TEMPLATE);
-    private static final String NARROW_NON_BREAKING_SPACE = "&#x202f;";
-    private static final List<String> SOFT_SPACE_ALIASES = List.of(NARROW_NON_BREAKING_SPACE);
     public static final String START_LINK = "[[";
     public static final String END_LINK = "]]";
+
+    // Spaces
+    private static final List<String> HARD_SPACE_ALIASES = List.of(
+        // No-break space
+        START_TEMPLATE + NON_BREAKING_SPACE_TEMPLATE_NAME + END_TEMPLATE,
+        NON_BREAKING_SPACE,
+        "\u00a0",
+        "&#xa0;",
+        "&#xA0;",
+        "&#160;",
+        // Narrow no-break space character
+        "\u202f",
+        "&#x202f;",
+        "&#x202F;",
+        "&#8239;",
+        // Figure space
+        "&numsp;",
+        "\u2007",
+        "&#x2007;",
+        "&#8199;"
+    );
+    private static final List<String> SOFT_SPACE_ALIASES = List.of(
+        // Thin space
+        "&thinsp;",
+        "&#x2009;",
+        "&#8201;",
+        // Hair space
+        "&hairsp;",
+        "&#x200a;",
+        "&#x200A;",
+        "&#8202;",
+        // en space
+        "&ensp;",
+        "&#x2002;",
+        "&#8194;",
+        // em space
+        "&emsp;",
+        "&#x2003;",
+        "&#8195;"
+    );
+    public static final List<String> SPACE_ALIASES = Stream.of(HARD_SPACE_ALIASES, SOFT_SPACE_ALIASES)
+        .flatMap(Collection::stream)
+        .toList();
 
     private static final Marker MARKER_IMMUTABLE = MarkerFactory.getMarker("IMMUTABLE");
     public static final String ENGLISH_LANGUAGE = "en";
@@ -189,8 +229,9 @@ public class FinderUtils {
 
     /** Determine if a string represents the alias of a hard (non-breaking) space character */
     public boolean isHardSpaceAlias(String text, int start, int end) {
+        final int l = end - start;
         for (String alias : HARD_SPACE_ALIASES) {
-            if (end - start == alias.length() && containsAtPosition(text, alias, start)) {
+            if (l == alias.length() && containsAtPosition(text, alias, start)) {
                 return true;
             }
         }
@@ -199,8 +240,9 @@ public class FinderUtils {
 
     /** Determine if a string represents the alias of a soft (breaking) space character */
     private boolean isSoftSpaceAlias(String text, int start, int end) {
+        final int l = end - start;
         for (String alias : SOFT_SPACE_ALIASES) {
-            if (end - start == alias.length() && containsAtPosition(text, alias, start)) {
+            if (l == alias.length() && containsAtPosition(text, alias, start)) {
                 return true;
             }
         }
@@ -341,7 +383,7 @@ public class FinderUtils {
 
         // Check possible non-breaking space
         final int endWord = lastLetter + 1;
-        if (isSpaceWord(text, firstLetter)) {
+        if (isSpaceWord(text, firstLetter, endWord)) {
             return findWordAfter(text, endWord, charsAllowedAtStart, allowedChars);
         } else {
             return FinderMatchResult.of(text, firstLetter, endWord);
@@ -367,11 +409,16 @@ public class FinderUtils {
         return count;
     }
 
-    private boolean isSpaceWord(String text, int start) {
-        return (
-            containsAtPosition(text, NON_BREAKING_SPACE, start - 1) ||
-            containsAtPosition(text, NON_BREAKING_SPACE_TEMPLATE, start - 2)
-        );
+    /* Check if a word like "nbsp" is a space alias and therefore should not be considered as an actual word */
+    private boolean isSpaceWord(String text, int start, int end) {
+        final String word = text.substring(start, end);
+        for (String alias : SPACE_ALIASES) {
+            final int pos = alias.indexOf(word);
+            if (pos > 0 && containsAtPosition(text, alias, start - pos)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public boolean isWordPrecededByUpperCase(int start, String text) {
@@ -469,10 +516,11 @@ public class FinderUtils {
         }
 
         // Check possible non-breaking space
-        if (isSpaceWord(text, firstLetter)) {
+        final int endWord = lastLetter + 1;
+        if (isSpaceWord(text, firstLetter, endWord)) {
             return findWordBefore(text, firstLetter, charsAllowedAtStart, allowedChars);
         } else {
-            return FinderMatchResult.of(text, firstLetter, lastLetter + 1);
+            return FinderMatchResult.of(text, firstLetter, endWord);
         }
     }
 
