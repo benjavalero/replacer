@@ -81,6 +81,8 @@ class CenturyFinderTest {
             "s. XX * s. XX * {{Siglo|XX||a}}",
             // Century abbreviated with hard space
             "S.&nbsp;XIX * S.&nbsp;XIX * {{Siglo|XIX||A}}, {{Siglo|XIX||a}}",
+            // Several extensions (we cannot use a comma to test so we use a semicolon)
+            "siglos xv; xvi y xvii * siglos xv; xvi y xvii * siglos {{Siglo|XV}}; {{Siglo|XVI}} y {{Siglo|XVII}}",
         }
     )
     void testCenturySimple(String text, String century, String expected) {

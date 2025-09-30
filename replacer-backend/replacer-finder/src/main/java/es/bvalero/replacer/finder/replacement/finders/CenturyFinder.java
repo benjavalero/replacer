@@ -18,6 +18,7 @@ import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.SequencedCollection;
 import java.util.regex.MatchResult;
 import java.util.stream.Stream;
 import javax.naming.OperationNotSupportedException;
@@ -93,16 +94,14 @@ class CenturyFinder implements ReplacementFinder {
                 endCentury = wrap.end();
             }
 
-            // Find the extension (optional)
-            MatchResult extension = findExtension(text, endCentury, centuryNumber.start(1));
-            if (extension == null) {
-                // Fake empty match result
-                extension = FinderMatchResult.ofEmpty(endCentury);
+            // Find the extensions (optional)
+            SequencedCollection<MatchResult> extensions = findExtensions(text, endCentury, centuryNumber.start(1));
+            if (!extensions.isEmpty()) {
+                endCentury = extensions.getLast().end();
             }
-            endCentury = extension.end();
 
             // If the century word is plural then the extension is mandatory
-            if (isPlural(centuryWord.group()) && StringUtils.isEmpty(extension.group())) {
+            if (isPlural(centuryWord.group()) && extensions.isEmpty()) {
                 start = endCentury;
                 continue;
             }
@@ -111,7 +110,9 @@ class CenturyFinder implements ReplacementFinder {
             match.addGroup(centuryWord);
             match.addGroup(centuryNumber);
             match.addGroup(era);
-            match.addGroup(extension);
+            for (MatchResult extension : extensions) {
+                match.addGroup(extension);
+            }
             return match;
         }
         return null;
@@ -296,6 +297,16 @@ class CenturyFinder implements ReplacementFinder {
         return null;
     }
 
+    private SequencedCollection<MatchResult> findExtensions(String text, int start, int centuryNumber) {
+        final SequencedCollection<MatchResult> extensions = new ArrayList<>(2);
+        MatchResult extension = findExtension(text, start, centuryNumber);
+        while (extension != null) {
+            extensions.add(extension);
+            extension = findExtension(text, extension.end(), extension.start(1));
+        }
+        return extensions;
+    }
+
     @Nullable
     private MatchResult findExtension(String text, int start, int centuryNumber) {
         // Find the next century number with at most 3 words between both century numbers
@@ -315,8 +326,12 @@ class CenturyFinder implements ReplacementFinder {
 
             // Check the found century number is actually a century
             // Check the next century number is greater than the previous one
-            if (getCenturyArabicNumber(word) > centuryNumber) {
-                return wordFound;
+            final int extensionNumber = getCenturyArabicNumber(word);
+            if (extensionNumber > centuryNumber) {
+                // Trick: store the Arabic value in the start a nested match group
+                final FinderMatchResult match = FinderMatchResult.ofNested(wordFound.start(), wordFound.group());
+                match.addGroup(FinderMatchResult.ofEmpty(extensionNumber));
+                return match;
             } else {
                 numWordsFound++;
                 wordStart = wordFound.end();
@@ -375,14 +390,14 @@ class CenturyFinder implements ReplacementFinder {
         final boolean isLinkAliased = isLinked && text.charAt(match.end(2)) == PIPE;
 
         // Add extension and its suggestion
-        final String extensionText = match.group(4);
-        final String extension;
-        if (StringUtils.isEmpty(extensionText)) {
-            extension = EMPTY;
-        } else {
-            final int extensionStart = match.start(4);
-            final int eraEnd = match.end(3);
-            extension = text.substring(eraEnd, extensionStart) + fixSimpleCentury(extensionText);
+        StringBuilder extension = new StringBuilder();
+        if (match.groupCount() > 3) {
+            for (int i = 4; i <= match.groupCount(); i++) {
+                final int extensionStart = match.start(i);
+                final int previousEnd = match.end(i - 1);
+                final String extensionText = match.group(i);
+                extension.append(text, previousEnd, extensionStart).append(fixSimpleCentury(extensionText));
+            }
         }
 
         // Templates (as simple as possible)
@@ -454,11 +469,16 @@ class CenturyFinder implements ReplacementFinder {
         final String centuryNumber = match.group(2);
         final String fixedNumber = fixSimpleCentury(centuryNumber);
         final int endNumber = match.end(2);
-        final int startExtension = match.start(4);
-        final String era = text.substring(endNumber, startExtension); // Including spaces
-        final String extensionText = match.group(4);
-        final String fixedExtension = fixSimpleCentury(extensionText);
-        final String suggestionText = centuryWord + fixedNumber + era + fixedExtension;
+        final String era = text.substring(endNumber, match.end(3)); // Including spaces
+        StringBuilder extension = new StringBuilder();
+        assert match.groupCount() > 3;
+        for (int i = 4; i <= match.groupCount(); i++) {
+            final int extensionStart = match.start(i);
+            final int previousEnd = match.end(i - 1);
+            final String extensionText = match.group(i);
+            extension.append(text, previousEnd, extensionStart).append(fixSimpleCentury(extensionText));
+        }
+        final String suggestionText = centuryWord + fixedNumber + era + extension;
 
         final List<Suggestion> suggestions = List.of(Suggestion.of(suggestionText, "siglos en versalitas"));
 
