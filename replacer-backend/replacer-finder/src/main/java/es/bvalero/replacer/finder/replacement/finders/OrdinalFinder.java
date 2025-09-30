@@ -146,9 +146,9 @@ class OrdinalFinder implements ReplacementFinder {
         assert start < text.length();
         final MatchResult matchSuffix;
         if (isOrdinalLetter(text.charAt(start))) {
-            matchSuffix = FinderMatchResult.of(start, text.substring(start, start + 1));
+            matchSuffix = FinderMatchResult.of(text, start, start + 1);
         } else {
-            matchSuffix = FinderUtils.findWordAfter(text, start, true, DEGREE);
+            matchSuffix = FinderUtils.findWordAfter(text, start, DEGREE);
             // It must be a known suffix
             if (matchSuffix == null || !SUFFIXES.contains(matchSuffix.group())) {
                 return null;

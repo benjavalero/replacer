@@ -123,7 +123,7 @@ class DegreeFinder implements ReplacementFinder {
 
     @Nullable
     private MatchResult findDegreeWord(String text, int startSymbol) {
-        final MatchResult matchBefore = FinderUtils.findWordBefore(text, startSymbol, false, DECIMAL_SEPARATORS);
+        final MatchResult matchBefore = FinderUtils.findWordBefore(text, startSymbol, DECIMAL_SEPARATORS);
         if (matchBefore == null) {
             return null;
         }

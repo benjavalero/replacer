@@ -301,10 +301,10 @@ public class FinderUtils {
         );
     }
 
-    private boolean isWordChar(char ch) {
+    private boolean isWordChar(char ch, char... allowedChars) {
         // Unicode considers the masculine/feminine ordinal as a letter, but we discard them.
         // We admit the underscore as part of a complete word
-        return (Character.isLetterOrDigit(ch) && !isOrdinal(ch)) || ch == UNDERSCORE;
+        return (Character.isLetterOrDigit(ch) && !isOrdinal(ch)) || ch == UNDERSCORE || containsChar(ch, allowedChars);
     }
 
     private boolean isOrdinal(char ch) {
@@ -339,26 +339,17 @@ public class FinderUtils {
 
     /**
      * Find the most close sequence of letters and digits starting at the given position
-     * and preceded by a soft/hard space.
+     * and preceded by an empty or soft/hard space.
      */
     @Nullable
-    public MatchResult findWordAfterSpace(String text, int start) {
-        final MatchResult match = findWordAfter(text, start);
+    public MatchResult findWordAfterSpace(String text, int start, char... allowedChars) {
+        final MatchResult match = findWordAfter(text, start, allowedChars);
         return match != null && isEmptyBlankOrSpaceAlias(text, start, match.start()) ? match : null;
     }
 
     /** Find the most close sequence of letters and digits starting at the given position */
     @Nullable
-    public MatchResult findWordAfter(String text, int start) {
-        return findWordAfter(text, start, false);
-    }
-
-    /**
-     * Find the most close sequence of letters and digits starting at the given position.
-     * Some additional chars are allowed, at the start or in the middle according to the configuration.
-     */
-    @Nullable
-    public MatchResult findWordAfter(String text, int start, boolean charsAllowedAtStart, char... allowedChars) {
+    public MatchResult findWordAfter(String text, int start, char... allowedChars) {
         if (start >= text.length()) {
             return null;
         }
@@ -366,8 +357,7 @@ public class FinderUtils {
         int firstLetter = -1;
         int lastLetter = -1;
         for (int i = start; i < text.length(); i++) {
-            final char ch = text.charAt(i);
-            if (isWordChar(ch) || (containsChar(ch, allowedChars) && (firstLetter >= 0 || charsAllowedAtStart))) {
+            if (isWordChar(text.charAt(i), allowedChars)) {
                 if (firstLetter < 0) {
                     firstLetter = i;
                 }
@@ -381,10 +371,10 @@ public class FinderUtils {
             return null;
         }
 
-        // Check possible non-breaking space
+        // Check possible space alias
         final int endWord = lastLetter + 1;
         if (isSpaceWord(text, firstLetter, endWord)) {
-            return findWordAfter(text, endWord, charsAllowedAtStart, allowedChars);
+            return findWordAfter(text, endWord, allowedChars);
         } else {
             return FinderMatchResult.of(text, firstLetter, endWord);
         }
@@ -471,19 +461,9 @@ public class FinderUtils {
         return -1;
     }
 
-    /* Find the most close sequence of letters and digits ending at the given position */
+    /** Find the most close sequence of letters and digits ending at the given position */
     @Nullable
-    public MatchResult findWordBefore(String text, int start) {
-        return findWordBefore(text, start, false);
-    }
-
-    /**
-     * Find the most close sequence of letters and digits ending at the given position.
-     * Some additional chars are allowed, at the start or in the middle according to the configuration.
-     */
-    // TODO: Reduce cyclomatic complexity
-    @Nullable
-    public MatchResult findWordBefore(String text, int start, boolean charsAllowedAtStart, char... allowedChars) {
+    public MatchResult findWordBefore(String text, int start, char... allowedChars) {
         if (start < 1) {
             return null;
         }
@@ -491,8 +471,7 @@ public class FinderUtils {
         int firstLetter = -1;
         int lastLetter = -1;
         for (int i = start - 1; i >= 0; i--) {
-            final char ch = text.charAt(i);
-            if (isWordChar(ch) || containsChar(ch, allowedChars)) {
+            if (isWordChar(text.charAt(i), allowedChars)) {
                 if (lastLetter < 0) {
                     lastLetter = i;
                 }
@@ -502,26 +481,28 @@ public class FinderUtils {
             }
         }
 
-        if (lastLetter < 0) {
+        if (lastLetter < 0 || firstLetter > lastLetter) {
             return null;
         }
 
-        if (!charsAllowedAtStart) {
-            while (firstLetter < text.length() && containsChar(text.charAt(firstLetter), allowedChars)) {
-                firstLetter++;
-            }
-            if (firstLetter > lastLetter) {
-                return null;
-            }
-        }
-
-        // Check possible non-breaking space
+        // Check possible space alias
         final int endWord = lastLetter + 1;
         if (isSpaceWord(text, firstLetter, endWord)) {
-            return findWordBefore(text, firstLetter, charsAllowedAtStart, allowedChars);
+            return findWordBefore(text, firstLetter, allowedChars);
         } else {
             return FinderMatchResult.of(text, firstLetter, endWord);
         }
+    }
+
+    @Nullable
+    public MatchResult findNumberAfterSpace(
+        String text,
+        int start,
+        boolean allowDecimals,
+        boolean allowNegativeNumbers
+    ) {
+        final MatchResult match = findNumber(text, start, allowDecimals, allowNegativeNumbers);
+        return match != null && isEmptyBlankOrSpaceAlias(text, start, match.start()) ? match : null;
     }
 
     @Nullable

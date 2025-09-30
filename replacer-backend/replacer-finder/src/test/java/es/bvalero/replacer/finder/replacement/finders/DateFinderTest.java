@@ -56,6 +56,7 @@ class DateFinderTest {
             "17 de setiembre de 2.019|17 de septiembre de 2019",
             "10 de septiembre, 2022|10 de septiembre de 2022",
             "10 May 1995|10 de mayo de 1995",
+            "7 de Agosto de&nbsp;2019|7 de agosto de 2019",
         }
     )
     void testLongDate(String date, String expected) {

@@ -156,7 +156,7 @@ class CoordinatesFinder implements ReplacementFinder {
     /* Find a minutes match corresponding to a number followed by a minutes symbol */
     @Nullable
     private MatchResult findMinutes(String text, int start) {
-        final MatchResult matchNumber = FinderUtils.findNumber(text, start, false, false);
+        final MatchResult matchNumber = FinderUtils.findNumberAfterSpace(text, start, false, false);
         if (matchNumber == null || matchNumber.end() >= text.length()) {
             // No number to continue searching
             return null;
@@ -167,11 +167,6 @@ class CoordinatesFinder implements ReplacementFinder {
         }
 
         if (!isPrimeChar(text.charAt(matchNumber.end()))) {
-            return null;
-        }
-
-        if (!FinderUtils.isEmptyBlankOrSpaceAlias(text, start, matchNumber.start())) {
-            // Not a valid space between the previous match and the number match
             return null;
         }
 
@@ -200,7 +195,7 @@ class CoordinatesFinder implements ReplacementFinder {
      */
     @Nullable
     private MatchResult findSeconds(String text, int start) {
-        final MatchResult match = FinderUtils.findNumber(text, start, true, false);
+        final MatchResult match = FinderUtils.findNumberAfterSpace(text, start, true, false);
         if (match == null || match.end() >= text.length()) {
             // No number to continue searching
             return null;
@@ -219,11 +214,6 @@ class CoordinatesFinder implements ReplacementFinder {
         } else if (nextChars.length() > 1 && isPrimeChar(nextChars.charAt(0)) && isPrimeChar(nextChars.charAt(1))) {
             doublePrime = nextChars;
         } else {
-            return null;
-        }
-
-        if (!FinderUtils.isEmptyBlankOrSpaceAlias(text, start, matchNumber.start())) {
-            // Not a valid space between the previous match and the number match
             return null;
         }
 
