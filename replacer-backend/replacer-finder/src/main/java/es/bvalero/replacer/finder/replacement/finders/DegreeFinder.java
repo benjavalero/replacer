@@ -129,12 +129,13 @@ class DegreeFinder implements ReplacementFinder {
         }
         // If preceded by number, there must be a space (or nothing) between.
         if (
-            FinderUtils.isDecimalNumber(matchBefore.group()) &&
-            !FinderUtils.isEmptyBlankOrSpaceAlias(text, matchBefore.end(), startSymbol)
+            FinderUtils.isWord(matchBefore.group()) ||
+            (FinderUtils.isDecimalNumber(matchBefore.group()) &&
+                FinderUtils.isEmptyBlankOrSpaceAlias(text, matchBefore.end(), startSymbol))
         ) {
-            return null;
+            return matchBefore;
         }
-        return matchBefore;
+        return null;
     }
 
     @Override

@@ -148,23 +148,35 @@ public class FinderUtils {
         return ch >= '0' && ch <= '9';
     }
 
-    public boolean isDecimalNumber(String word) {
-        boolean decimalFound = false;
+    public boolean isWord(String word) {
         for (int i = 0; i < word.length(); i++) {
-            final char ch = word.charAt(i);
-            if (!isAsciiDigit(ch)) {
-                if (isDecimalSeparator(ch)) {
-                    if (decimalFound) {
-                        return false;
-                    } else {
-                        decimalFound = true;
-                    }
-                } else {
-                    return false;
-                }
+            if (!isWordChar(word.charAt(i))) {
+                return false;
             }
         }
         return true;
+    }
+
+    public boolean isDecimalNumber(String word) {
+        // Find the integer part
+        int i = 0;
+        while (i < word.length() && isAsciiDigit(word.charAt(i))) {
+            i++;
+        }
+        if (i == word.length()) {
+            return true;
+        }
+        if (i == 0 || !isDecimalSeparator(word.charAt(i))) {
+            return false;
+        }
+        i++; // Advance to the decimal part
+        if (i == word.length()) {
+            return false;
+        }
+        while (i < word.length() && isAsciiDigit(word.charAt(i))) {
+            i++;
+        }
+        return i == word.length();
     }
 
     private boolean isDecimalSeparator(char ch) {
