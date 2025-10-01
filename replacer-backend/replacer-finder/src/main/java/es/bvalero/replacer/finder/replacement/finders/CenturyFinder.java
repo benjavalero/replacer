@@ -35,18 +35,6 @@ class CenturyFinder implements ReplacementFinder {
     private static final String CENTURY_WORD = "Siglo";
     private static final String CENTURY_SEARCH = CENTURY_WORD.substring(1);
     private static final char PLURAL_LETTER = 's';
-    private static final List<String> ERA_WORDS = List.of(
-        "aC",
-        "a.C.",
-        "a. C.",
-        "a.&nbsp;C.",
-        "a.{{esd}}C.",
-        "dC",
-        "d.C.",
-        "d. C.",
-        "d.&nbsp;C.",
-        "d.{{esd}}C."
-    );
 
     @Override
     public Stream<MatchResult> findMatchResults(FinderPage page) {
@@ -236,16 +224,43 @@ class CenturyFinder implements ReplacementFinder {
 
     @Nullable
     private MatchResult findEra(String text, int start) {
-        final MatchResult nextWord = FinderUtils.findWordAfterSpace(text, start);
-        if (nextWord == null) {
+        final MatchResult firstWord = FinderUtils.findWordAfterSpace(text, start);
+        if (firstWord == null) {
             return null;
         }
-        final int startNextWord = nextWord.start();
-        return ERA_WORDS.stream()
-            .filter(w -> ReplacerUtils.containsAtPosition(text, w, startNextWord))
-            .findAny()
-            .map(w -> FinderMatchResult.of(startNextWord, w))
-            .orElse(null);
+        final int startEra = firstWord.start();
+        final char firstLetter = text.charAt(startEra);
+        if (firstLetter != 'a' && firstLetter != 'd' && firstLetter != 'A' && firstLetter != 'D') {
+            return null;
+        }
+        int endEra = startEra + 1;
+        if (endEra >= text.length()) {
+            return null;
+        }
+        if (text.charAt(endEra) == DOT) {
+            endEra++;
+        }
+        // Find the second part of the era
+        MatchResult secondWord = FinderUtils.findWordAfterSpace(text, endEra);
+        if (secondWord != null && "de".equals(secondWord.group())) {
+            secondWord = FinderUtils.findWordAfterSpace(text, secondWord.end());
+        }
+        if (secondWord == null) {
+            return null;
+        }
+        if (
+            !"c".equals(secondWord.group()) &&
+            !"C".equals(secondWord.group()) &&
+            !"dC".equals(secondWord.group()) &&
+            !"dc".equals(secondWord.group())
+        ) {
+            return null;
+        }
+        endEra = secondWord.end();
+        if (endEra < text.length() && text.charAt(endEra) == DOT) {
+            endEra++;
+        }
+        return FinderMatchResult.of(text, startEra, endEra);
     }
 
     @Nullable
