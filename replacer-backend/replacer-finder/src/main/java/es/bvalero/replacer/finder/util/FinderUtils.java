@@ -3,7 +3,6 @@ package es.bvalero.replacer.finder.util;
 import static es.bvalero.replacer.common.util.ReplacerUtils.*;
 
 import es.bvalero.replacer.FinderPropertiesConfiguration;
-import es.bvalero.replacer.common.util.ReplacerUtils;
 import es.bvalero.replacer.finder.FinderPage;
 import java.util.*;
 import java.util.regex.MatchResult;
@@ -216,7 +215,7 @@ public class FinderUtils {
 
     /** Determine if a character is considered a Unicode whitespace character */
     public boolean isWhiteSpace(char ch) {
-        return Character.isWhitespace(ch);
+        return ch != NEW_LINE && Character.isWhitespace(ch);
     }
 
     /** Determine if a string is composed by an only Unicode whitespace character */
