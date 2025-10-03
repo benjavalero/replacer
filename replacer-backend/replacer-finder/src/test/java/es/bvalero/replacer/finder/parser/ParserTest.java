@@ -2,7 +2,7 @@ package es.bvalero.replacer.finder.parser;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import es.bvalero.replacer.finder.util.FinderMatchResult;
+import es.bvalero.replacer.finder.util.FinderMatchRange;
 import java.util.List;
 import java.util.regex.MatchResult;
 import org.apache.commons.collections4.IterableUtils;
@@ -34,7 +34,7 @@ class ParserTest {
 
         List<MatchResult> matches = IterableUtils.toList(parser.find(text, ExpressionType.COMMENT));
         assertEquals(2, matches.size());
-        assertEquals(FinderMatchResult.of(text, 6, 43), matches.get(0));
-        assertEquals(FinderMatchResult.of(text, 19, 34), matches.get(1));
+        assertEquals(FinderMatchRange.of(text, 6, 43), matches.get(0));
+        assertEquals(FinderMatchRange.of(text, 19, 34), matches.get(1));
     }
 }

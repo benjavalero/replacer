@@ -8,6 +8,7 @@ import es.bvalero.replacer.common.util.ReplacerUtils;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.FinderPriority;
 import es.bvalero.replacer.finder.immutable.ImmutableCheckedFinder;
+import es.bvalero.replacer.finder.util.FinderMatchRange;
 import es.bvalero.replacer.finder.util.FinderMatchResult;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import jakarta.annotation.PostConstruct;
@@ -81,7 +82,7 @@ class LinkFinder extends ImmutableCheckedFinder {
         // If the link is suffixed then return the complete link
         final int endSuffix = findEndSuffix(text, link.end());
         if (endSuffix > link.end()) {
-            return List.of(FinderMatchResult.of(text, link.start(), endSuffix));
+            return List.of(FinderMatchRange.of(text, link.start(), endSuffix));
         }
 
         final String linkContent = getLinkContent(link.group());
@@ -157,7 +158,7 @@ class LinkFinder extends ImmutableCheckedFinder {
     @Nullable
     private MatchResult findLinkAlias(String linkContent) {
         final int startLastPipe = linkContent.lastIndexOf(PIPE);
-        return startLastPipe >= 0 ? FinderMatchResult.of(linkContent, startLastPipe + 1, linkContent.length()) : null;
+        return startLastPipe >= 0 ? FinderMatchRange.of(linkContent, startLastPipe + 1, linkContent.length()) : null;
     }
 
     private boolean isFileSpace(@Nullable String space) {

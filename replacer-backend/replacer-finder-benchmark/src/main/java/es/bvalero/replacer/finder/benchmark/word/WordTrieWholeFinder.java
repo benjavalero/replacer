@@ -26,7 +26,7 @@ class WordTrieWholeFinder implements BenchmarkFinder {
     public Stream<MatchResult> findMatchResults(FinderPage page) {
         return this.trie.parseText(page.getContent())
             .stream()
-            .map(emit -> (MatchResult) FinderMatchResult.of(emit.getStart(), emit.getKeyword()));
+            .map(emit -> FinderMatchResult.of(emit.getStart(), emit.getKeyword()));
     }
 
     @Override

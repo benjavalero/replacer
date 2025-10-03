@@ -8,6 +8,7 @@ import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.StandardType;
 import es.bvalero.replacer.finder.Suggestion;
 import es.bvalero.replacer.finder.replacement.ReplacementFinder;
+import es.bvalero.replacer.finder.util.FinderMatchRange;
 import es.bvalero.replacer.finder.util.FinderMatchResult;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
@@ -98,7 +99,7 @@ class CoordinatesFinder implements ReplacementFinder {
                 endCoordinates = matchDirection.end();
             }
 
-            final FinderMatchResult result = FinderMatchResult.ofNested(text, matchDegrees.start(), endCoordinates);
+            final FinderMatchRange result = FinderMatchRange.ofNested(text, matchDegrees.start(), endCoordinates);
             // Groups: 1 - Degrees; 2 - Minutes; 3 - Seconds (optional); 4 - Direction (optional)
             result.addGroup(matchDegrees);
             result.addGroup(matchMinutes);

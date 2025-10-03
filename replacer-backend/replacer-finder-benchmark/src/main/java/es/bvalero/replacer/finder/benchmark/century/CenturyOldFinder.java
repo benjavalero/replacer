@@ -17,6 +17,7 @@ import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.StandardType;
 import es.bvalero.replacer.finder.Suggestion;
 import es.bvalero.replacer.finder.replacement.ReplacementFinder;
+import es.bvalero.replacer.finder.util.FinderMatchRange;
 import es.bvalero.replacer.finder.util.FinderMatchResult;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
@@ -81,7 +82,7 @@ class CenturyOldFinder implements ReplacementFinder {
             MatchResult era = findEra(text, endCentury);
             if (era == null) {
                 // Fake empty match result
-                era = FinderMatchResult.ofEmpty(endCentury);
+                era = FinderMatchRange.ofEmpty(text, endCentury);
             }
             endCentury = era.end();
 
@@ -106,7 +107,7 @@ class CenturyOldFinder implements ReplacementFinder {
                 continue;
             }
 
-            final FinderMatchResult match = FinderMatchResult.ofNested(text, startCentury, endCentury);
+            final FinderMatchRange match = FinderMatchRange.ofNested(text, startCentury, endCentury);
             match.addGroup(centuryWord);
             match.addGroup(centuryNumber);
             match.addGroup(era);
@@ -147,7 +148,7 @@ class CenturyOldFinder implements ReplacementFinder {
 
             // We only consider the word complete
             if (FinderUtils.isWordCompleteInText(startCentury, endCentury, text)) {
-                return isAbbreviation ? match : FinderMatchResult.of(text, startCentury, endCentury);
+                return isAbbreviation ? match : FinderMatchRange.of(text, startCentury, endCentury);
             }
 
             start = endCentury;
@@ -169,7 +170,7 @@ class CenturyOldFinder implements ReplacementFinder {
         if (arabicNumber > 0) {
             // Trick: store the Arabic value in the start a nested match group
             final FinderMatchResult match = FinderMatchResult.ofNested(centuryNumber.start(), centuryNumber.group());
-            match.addGroup(FinderMatchResult.ofEmpty(arabicNumber));
+            match.addGroup(FinderMatchRange.ofEmpty(text, arabicNumber));
             return match;
         }
         return null;
@@ -255,7 +256,7 @@ class CenturyOldFinder implements ReplacementFinder {
             }
             if (posEndLink == end) {
                 // Linked without alias
-                return FinderMatchResult.of(text, posStartLink, end + END_LINK.length());
+                return FinderMatchRange.of(text, posStartLink, end + END_LINK.length());
             }
             // Check link with alias
             if (
@@ -263,7 +264,7 @@ class CenturyOldFinder implements ReplacementFinder {
                 end + 1 + centuryNumber.length() == posEndLink &&
                 ReplacerUtils.containsAtPosition(text, centuryNumber, end + 1)
             ) {
-                return FinderMatchResult.of(text, posStartLink, posEndLink + END_LINK.length());
+                return FinderMatchRange.of(text, posStartLink, posEndLink + END_LINK.length());
             }
         }
 
@@ -276,7 +277,7 @@ class CenturyOldFinder implements ReplacementFinder {
             startNbsTemplate
         );
         if (startsWithNbsTemplate && ReplacerUtils.containsAtPosition(text, END_TEMPLATE, end)) {
-            return FinderMatchResult.of(text, startNbsTemplate, end + END_TEMPLATE.length());
+            return FinderMatchRange.of(text, startNbsTemplate, end + END_TEMPLATE.length());
         }
 
         // Check if wrapped by an era template
@@ -285,7 +286,7 @@ class CenturyOldFinder implements ReplacementFinder {
         final boolean startsWithEraTemplate =
             startEraTemplate >= 0 && eraTemplatePrefix.equalsIgnoreCase(text.substring(startEraTemplate, start));
         if (startsWithEraTemplate && ReplacerUtils.containsAtPosition(text, END_TEMPLATE, end)) {
-            return FinderMatchResult.of(text, startEraTemplate, end + END_TEMPLATE.length());
+            return FinderMatchRange.of(text, startEraTemplate, end + END_TEMPLATE.length());
         }
 
         return null;

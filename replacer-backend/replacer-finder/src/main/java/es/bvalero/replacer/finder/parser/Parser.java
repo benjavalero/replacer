@@ -5,7 +5,7 @@ import static es.bvalero.replacer.finder.parser.ExpressionType.NONE;
 import static es.bvalero.replacer.finder.parser.TokenType.END_COMMENT;
 import static es.bvalero.replacer.finder.parser.TokenType.START_COMMENT;
 
-import es.bvalero.replacer.finder.util.FinderMatchResult;
+import es.bvalero.replacer.finder.util.FinderMatchRange;
 import java.util.*;
 import java.util.function.Function;
 import java.util.regex.MatchResult;
@@ -147,7 +147,7 @@ public class Parser {
     }
 
     private MatchResult convert(String text, Expression expression) {
-        return FinderMatchResult.of(text, expression.start(), expression.end());
+        return FinderMatchRange.of(text, expression.start(), expression.end());
     }
     //endregion
 }

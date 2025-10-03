@@ -387,7 +387,7 @@ public class FinderUtils {
         if (isSpaceWord(text, firstLetter, endWord)) {
             return findWordAfter(text, endWord, allowedChars);
         } else {
-            return FinderMatchResult.of(text, firstLetter, endWord);
+            return FinderMatchRange.of(text, firstLetter, endWord);
         }
     }
 
@@ -501,7 +501,7 @@ public class FinderUtils {
         if (isSpaceWord(text, firstLetter, endWord)) {
             return findWordBefore(text, firstLetter, allowedChars);
         } else {
-            return FinderMatchResult.of(text, firstLetter, endWord);
+            return FinderMatchRange.of(text, firstLetter, endWord);
         }
     }
 
@@ -547,7 +547,7 @@ public class FinderUtils {
             startNumber -= 1;
         }
 
-        return FinderMatchResult.of(text, startNumber, endNumber);
+        return FinderMatchRange.of(text, startNumber, endNumber);
     }
 
     private boolean isNegativeSymbol(char ch) {
@@ -737,7 +737,7 @@ public class FinderUtils {
                 }
             }
 
-            words.add(FinderMatchResult.of(text, startWord, endWord));
+            words.add(FinderMatchRange.of(text, startWord, endWord));
             start = endWord + 1;
         }
         return words;

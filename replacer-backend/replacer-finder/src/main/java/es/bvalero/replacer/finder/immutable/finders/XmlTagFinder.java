@@ -4,7 +4,7 @@ import static es.bvalero.replacer.finder.util.FinderUtils.NEW_LINE;
 
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.immutable.ImmutableCheckedFinder;
-import es.bvalero.replacer.finder.util.FinderMatchResult;
+import es.bvalero.replacer.finder.util.FinderMatchRange;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
 import java.util.regex.MatchResult;
 import java.util.stream.Stream;
@@ -62,7 +62,7 @@ class XmlTagFinder extends ImmutableCheckedFinder {
                 continue;
             }
 
-            return FinderMatchResult.of(text, startTag, endTag);
+            return FinderMatchRange.of(text, startTag, endTag);
         }
         return null;
     }

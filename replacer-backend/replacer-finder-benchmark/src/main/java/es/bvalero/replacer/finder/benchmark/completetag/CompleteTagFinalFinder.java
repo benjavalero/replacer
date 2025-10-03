@@ -2,7 +2,7 @@ package es.bvalero.replacer.finder.benchmark.completetag;
 
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
-import es.bvalero.replacer.finder.util.FinderMatchResult;
+import es.bvalero.replacer.finder.util.FinderMatchRange;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
 import java.util.HashSet;
@@ -80,7 +80,7 @@ class CompleteTagFinalFinder implements BenchmarkFinder {
                 continue;
             }
 
-            return FinderMatchResult.of(text, startCompleteTag, endCompleteTag);
+            return FinderMatchRange.of(text, startCompleteTag, endCompleteTag);
         }
         return null;
     }

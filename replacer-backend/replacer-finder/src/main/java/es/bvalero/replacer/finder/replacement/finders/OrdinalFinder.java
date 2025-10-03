@@ -10,7 +10,7 @@ import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.StandardType;
 import es.bvalero.replacer.finder.Suggestion;
 import es.bvalero.replacer.finder.replacement.ReplacementFinder;
-import es.bvalero.replacer.finder.util.FinderMatchResult;
+import es.bvalero.replacer.finder.util.FinderMatchRange;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
 import jakarta.annotation.PostConstruct;
@@ -100,7 +100,7 @@ class OrdinalFinder implements ReplacementFinder {
 
             final int startOrdinal = matchNumber.start();
             final int endOrdinal = matchSuffix.end();
-            final FinderMatchResult matchResult = FinderMatchResult.ofNested(text, startOrdinal, endOrdinal);
+            final FinderMatchRange matchResult = FinderMatchRange.ofNested(text, startOrdinal, endOrdinal);
             matchResult.addGroup(matchNumber);
             matchResult.addGroup(matchSuffix);
             return matchResult;
@@ -146,7 +146,7 @@ class OrdinalFinder implements ReplacementFinder {
         assert start < text.length();
         final MatchResult matchSuffix;
         if (isOrdinalLetter(text.charAt(start))) {
-            matchSuffix = FinderMatchResult.of(text, start, start + 1);
+            matchSuffix = FinderMatchRange.of(text, start, start + 1);
         } else {
             matchSuffix = FinderUtils.findWordAfter(text, start, DEGREE);
             // It must be a known suffix
@@ -169,7 +169,7 @@ class OrdinalFinder implements ReplacementFinder {
         if (endSuffix < text.length() && text.charAt(endSuffix) == DOT) {
             endSuffix += 1;
         }
-        return FinderMatchResult.of(text, start, endSuffix);
+        return FinderMatchRange.of(text, start, endSuffix);
     }
 
     private boolean isOrdinalLetter(char ch) {
@@ -182,7 +182,7 @@ class OrdinalFinder implements ReplacementFinder {
         // Not to be fixed:
         // - dot + ordinal symbol
         // - degree symbol
-        final String suffix = ((FinderMatchResult) match).group(2);
+        final String suffix = match.group(2);
         return switch (suffix.length()) {
             case 2 -> suffix.charAt(0) != DOT || !isOrdinalLetter(suffix.charAt(1));
             case 1 -> suffix.charAt(0) != DEGREE;

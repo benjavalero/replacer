@@ -8,6 +8,7 @@ import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.StandardType;
 import es.bvalero.replacer.finder.Suggestion;
 import es.bvalero.replacer.finder.replacement.ReplacementFinder;
+import es.bvalero.replacer.finder.util.FinderMatchRange;
 import es.bvalero.replacer.finder.util.FinderMatchResult;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
@@ -58,10 +59,10 @@ class DegreeFinder implements ReplacementFinder {
             }
 
             final int startDegree = FinderUtils.isDecimalNumber(matchWord.group()) ? matchWord.start() : startSymbol;
-            final FinderMatchResult match = FinderMatchResult.ofNested(text, startDegree, endSymbol);
+            final FinderMatchRange match = FinderMatchRange.ofNested(text, startDegree, endSymbol);
             // 1 - word; 2 - space before; 3 - symbol
             match.addGroup(matchWord);
-            match.addGroup(FinderMatchResult.of(text, matchWord.end(), startSymbol));
+            match.addGroup(FinderMatchRange.of(text, matchWord.end(), startSymbol));
             match.addGroup(matchSymbol);
             return match;
         }
@@ -104,7 +105,7 @@ class DegreeFinder implements ReplacementFinder {
                 symbolLetter = text.charAt(endSymbol++);
             }
             if (isDegreeLetter(symbolLetter) && FinderUtils.isWordCompleteInText(startSymbol, endSymbol, text)) {
-                return FinderMatchResult.of(text, startSymbol, endSymbol);
+                return FinderMatchRange.of(text, startSymbol, endSymbol);
             }
 
             // Keep on searching

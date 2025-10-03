@@ -1,7 +1,5 @@
 package es.bvalero.replacer.finder.util;
 
-import static org.apache.commons.lang3.StringUtils.EMPTY;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -25,22 +23,11 @@ public record FinderMatchResult(int start, String group, List<MatchResult> group
         return new FinderMatchResult(start, text, new ArrayList<>(4));
     }
 
-    public static FinderMatchResult ofEmpty(int start) {
-        return new FinderMatchResult(start, EMPTY);
-    }
-
-    public static FinderMatchResult of(String text, int start, int end) {
-        return new FinderMatchResult(start, text.substring(start, end));
-    }
-
-    public static FinderMatchResult ofNested(String text, int start, int end) {
-        return FinderMatchResult.ofNested(start, text.substring(start, end));
-    }
-
+    // To compare different implementations of MatchResult
     @Override
     public boolean equals(Object o) {
-        if (!(o instanceof FinderMatchResult that)) return false;
-        return start == that.start && Objects.equals(group, that.group);
+        if (!(o instanceof MatchResult that)) return false;
+        return start == that.start() && Objects.equals(group, that.group());
     }
 
     @Override
@@ -54,7 +41,7 @@ public record FinderMatchResult(int start, String group, List<MatchResult> group
 
     @Override
     public int start(int group) {
-        return group == 0 ? this.start() : this.groups.get(group - 1).start();
+        return group == 0 ? this.start : this.groups.get(group - 1).start();
     }
 
     @Override
