@@ -59,7 +59,7 @@ public class MisspellingSimpleFinder extends MisspellingFinder implements Proper
                 final int endWord = findEndWord(text, startWord);
                 final String word = text.substring(startWord, endWord);
                 if (isValid(word, startWord, text, lang)) {
-                    return FinderMatchResult.of(startWord, word);
+                    return FinderMatchResult.of(startWord, word.intern());
                 } else {
                     // The char after the word is a non-letter, so we can start searching for the next word one position after.
                     start = endWord + 1;
