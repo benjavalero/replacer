@@ -47,18 +47,22 @@ public record FinderMatchRange(String text, int start, int end, List<MatchResult
         this.groups.add(group);
     }
 
+    public MatchResult getGroup(int group) {
+        return group == 0 ? this : this.groups.get(group - 1);
+    }
+
     private int length() {
         return this.end - this.start;
     }
 
     @Override
     public int start(int group) {
-        return group == 0 ? this.start : this.groups.get(group - 1).start();
+        return getGroup(group).start();
     }
 
     @Override
     public int end(int group) {
-        return group == 0 ? this.end : this.groups.get(group - 1).end();
+        return getGroup(group).end();
     }
 
     @Override
@@ -68,7 +72,7 @@ public record FinderMatchRange(String text, int start, int end, List<MatchResult
 
     @Override
     public String group(int group) {
-        return group == 0 ? this.group() : this.groups.get(group - 1).group();
+        return getGroup(group).group();
     }
 
     @Override
