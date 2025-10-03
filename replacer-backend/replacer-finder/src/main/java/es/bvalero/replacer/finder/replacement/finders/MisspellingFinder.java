@@ -45,7 +45,8 @@ public abstract class MisspellingFinder implements ReplacementFinder {
     private Map<String, StandardMisspelling> buildMisspellingMap(Set<StandardMisspelling> misspellings) {
         // Build a map to quick access the misspellings by word
         final Map<String, StandardMisspelling> map = new HashMap<>(misspellings.size());
-        misspellings.forEach(misspelling -> misspelling.getTerms().forEach(term -> map.put(term, misspelling)));
+        misspellings.forEach(misspelling -> misspelling.getTerms().forEach(term -> map.put(term.intern(), misspelling))
+        );
         return map;
     }
 
