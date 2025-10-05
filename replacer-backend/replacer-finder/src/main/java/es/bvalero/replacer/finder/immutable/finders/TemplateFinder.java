@@ -110,7 +110,7 @@ class TemplateFinder implements ImmutableFinder {
         // We want to avoid the warning in these cases
         // This method is only called in case the template is not closed
         final char nextChar = text.charAt(templateStart + START_TEMPLATE.length());
-        return Character.isLetterOrDigit(nextChar);
+        return FinderUtils.isWordChar(nextChar);
     }
 
     private List<MatchResult> findImmutables(FinderMatchResult template, FinderPage page) {
@@ -319,7 +319,7 @@ class TemplateFinder implements ImmutableFinder {
         final int dot = value.lastIndexOf('.');
         if (dot >= 0) {
             final String extension = value.substring(dot + 1);
-            return extension.length() >= 2 && extension.length() <= 4 && StringUtils.isAlpha(extension);
+            return extension.length() >= 2 && extension.length() <= 4 && FinderUtils.isAscii(extension);
         } else {
             return false;
         }

@@ -114,7 +114,7 @@ public class FinderUtils {
     public String setFirstUpperCaseClass(String word) {
         if (!word.isEmpty()) {
             final char first = word.charAt(0);
-            if (Character.isLetter(first)) {
+            if (isLetter(first)) {
                 return String.format(
                     "[%s%s]%s",
                     Character.toUpperCase(first),
@@ -124,6 +124,15 @@ public class FinderUtils {
             }
         }
         return word;
+    }
+
+    public boolean isAscii(String word) {
+        for (int i = 0; i < word.length(); i++) {
+            if (!isAscii(word.charAt(i))) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public boolean isAscii(char ch) {
@@ -154,6 +163,30 @@ public class FinderUtils {
             }
         }
         return true;
+    }
+
+    /**
+     * Determine if the character is a valid Unicode letter.
+     * Therefore, non-letters like dash, dot, underscore, digits, etc. return false.
+     * The only exception is the masculine ordinal, which is considered a letter by the current Wikipedia spellchecker.
+     */
+    public boolean isLetter(char ch) {
+        // Unicode considers both ordinals as valid letters
+        return Character.isLetter(ch) && ch != FEMININE_ORDINAL;
+    }
+
+    /**
+     * Determine if the character is a valid word character, i.e. a Unicode letter or digit.
+     * We also admit the underscore as part of a complete word.
+     * Note that Unicode considers the ordinals as letters, but we discard them.
+     * Optionally, we can include some special allowed characters to check.
+     */
+    public boolean isWordChar(char ch, char... allowedChars) {
+        return (Character.isLetterOrDigit(ch) && !isOrdinal(ch)) || ch == UNDERSCORE || containsChar(ch, allowedChars);
+    }
+
+    private boolean isOrdinal(char ch) {
+        return ch == MASCULINE_ORDINAL || ch == FEMININE_ORDINAL;
     }
 
     public boolean isDecimalNumber(String word) {
@@ -310,16 +343,6 @@ public class FinderUtils {
             isValidSeparator(text.charAt(endWord - 1)) ||
             isValidSeparator(text.charAt(endWord))
         );
-    }
-
-    private boolean isWordChar(char ch, char... allowedChars) {
-        // Unicode considers the masculine/feminine ordinal as a letter, but we discard them.
-        // We admit the underscore as part of a complete word
-        return (Character.isLetterOrDigit(ch) && !isOrdinal(ch)) || ch == UNDERSCORE || containsChar(ch, allowedChars);
-    }
-
-    private boolean isOrdinal(char ch) {
-        return ch == MASCULINE_ORDINAL || ch == FEMININE_ORDINAL;
     }
 
     public boolean isValidSeparator(char separator) {

@@ -1,7 +1,6 @@
 package es.bvalero.replacer.finder.util;
 
-import static es.bvalero.replacer.finder.util.FinderUtils.END_TEMPLATE;
-import static es.bvalero.replacer.finder.util.FinderUtils.START_TEMPLATE;
+import static es.bvalero.replacer.finder.util.FinderUtils.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import es.bvalero.replacer.finder.FinderPage;
@@ -66,6 +65,21 @@ class FinderUtilsTest {
         assertFalse(FinderUtils.isAsciiLowerCase("Amigo"));
         assertFalse(FinderUtils.isAsciiLowerCase("úlcera"));
         assertFalse(FinderUtils.isAsciiLowerCase("1234"));
+    }
+
+    @Test
+    void testIsLetter() {
+        assertTrue(FinderUtils.isLetter('a'));
+        assertTrue(FinderUtils.isLetter('Ü'));
+        assertTrue(FinderUtils.isLetter('Ñ'));
+        assertTrue(FinderUtils.isLetter('ç'));
+        assertTrue(FinderUtils.isLetter(MASCULINE_ORDINAL));
+        assertFalse(FinderUtils.isLetter(FEMININE_ORDINAL));
+        assertFalse(FinderUtils.isLetter('2'));
+        assertFalse(FinderUtils.isLetter(DEGREE));
+        assertFalse(FinderUtils.isLetter(DOT));
+        assertFalse(FinderUtils.isLetter('-'));
+        assertFalse(FinderUtils.isLetter('_'));
     }
 
     @Test

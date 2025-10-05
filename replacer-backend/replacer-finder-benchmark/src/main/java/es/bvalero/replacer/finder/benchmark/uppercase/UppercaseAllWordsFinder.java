@@ -51,7 +51,7 @@ class UppercaseAllWordsFinder extends UppercaseBenchmarkFinder {
 
     private int findStartWord(String text, int start) {
         for (int i = start; i < text.length(); i++) {
-            if (isLetter(text.charAt(i))) {
+            if (FinderUtils.isLetter(text.charAt(i))) {
                 return i;
             }
         }
@@ -60,14 +60,10 @@ class UppercaseAllWordsFinder extends UppercaseBenchmarkFinder {
 
     private int findEndWord(String text, int startWord) {
         for (int i = startWord + 1; i < text.length(); i++) {
-            if (!isLetter(text.charAt(i))) {
+            if (!FinderUtils.isLetter(text.charAt(i))) {
                 return i;
             }
         }
         return text.length();
-    }
-
-    private boolean isLetter(char ch) {
-        return Character.isLetter(ch);
     }
 }

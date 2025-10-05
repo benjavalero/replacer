@@ -46,7 +46,7 @@ public abstract class Misspelling {
 
         try {
             // EXCEPTION: Composed misspellings with one word finished with comma, e.g. "mas."
-            if (comment.endsWith(",") && StringUtils.isAlpha(comment.substring(0, comment.length() - 2))) {
+            if (comment.endsWith(",") && FinderUtils.isWord(comment.substring(0, comment.length() - 2))) {
                 suggestionList.add(MisspellingSuggestion.ofNoComment(comment));
                 return suggestionList;
             }

@@ -5,6 +5,7 @@ import static es.bvalero.replacer.finder.util.FinderUtils.NEW_LINE;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.immutable.ImmutableCheckedFinder;
 import es.bvalero.replacer.finder.util.FinderMatchRange;
+import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
 import java.util.regex.MatchResult;
 import java.util.stream.Stream;
@@ -76,7 +77,7 @@ class XmlTagFinder extends ImmutableCheckedFinder {
     }
 
     private boolean isValidFirstChar(char ch) {
-        return Character.isLetter(ch) || ch == END_TAG_SLASH;
+        return FinderUtils.isAscii(ch) || ch == END_TAG_SLASH;
     }
 
     private boolean isValidTagContent(String tagContent) {
