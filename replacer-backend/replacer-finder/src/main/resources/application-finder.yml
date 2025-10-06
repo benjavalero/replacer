@@ -259,6 +259,7 @@ replacer.finder:
     - template: twitter
     - template: url
     - template: versalita
+    - template: VT
     - template: wayback
     - template: webarchive
     - template: Wikidata list

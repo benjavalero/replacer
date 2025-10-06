@@ -272,11 +272,11 @@ class TemplateFinderTest {
         // Load misspellings
         composedMisspellingLoader.load();
 
-        String text = "{{VT|Guerras napoleónicas}}";
+        String text = "{{T|Guerras napoleónicas}}";
 
         List<Immutable> matches = templateFinder.findList(text);
 
-        Set<Immutable> expected = Set.of(Immutable.of(2, "VT"), Immutable.of(5, "Guerras napoleónicas"));
+        Set<Immutable> expected = Set.of(Immutable.of(2, "T"), Immutable.of(4, "Guerras napoleónicas"));
         Set<Immutable> actual = new HashSet<>(matches);
         assertEquals(expected, actual);
     }
