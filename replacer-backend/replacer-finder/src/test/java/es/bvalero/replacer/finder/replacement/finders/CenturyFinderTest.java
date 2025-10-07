@@ -41,7 +41,7 @@ class CenturyFinderTest {
             // Uppercase with link
             "[[Siglo XX]] * [[Siglo XX]] * {{Siglo|XX||S}}, {{Siglo|XX||S|1}}, {{Siglo|XX||s}}, {{Siglo|XX||s|1}}",
             // With aliased link
-            "[[siglo XX|XX]] * [[siglo XX|XX]] * {{siglo|XX}}, {{siglo|XX|||1}}",
+            "[[Siglo XX|XX]] * [[Siglo XX|XX]] * {{Siglo|XX}}, {{Siglo|XX|||1}}",
             // Wrapped with template
             "{{esd|Siglo XX}} * {{esd|Siglo XX}} * {{Siglo|XX||S}}, {{Siglo|XX||s}}",
             "{{ac|Siglo XX}} * {{ac|Siglo XX}} * {{Siglo|XX|a|S}}, {{Siglo|XX|a|s}}",

@@ -390,13 +390,12 @@ class CenturyFinder implements ReplacementFinder {
         final FinderMatchRange match = (FinderMatchRange) matchResult;
 
         final String centuryWord = match.group(1);
-        final boolean isUppercase = FinderUtils.startsWithUpperCase(centuryWord);
         final MatchResult centuryNumberMatch = match.getGroup(2);
         final String centuryNumber = centuryNumberMatch.group(2);
         String eraLetter;
         if (centuryNumberMatch.groupCount() > 2) {
             final String eraText = centuryNumberMatch.group(3);
-            eraLetter = String.valueOf(eraText.charAt(0));
+            eraLetter = ReplacerUtils.toLowerCase(String.valueOf(eraText.charAt(0)));
         } else {
             // Special case when the century is wrapped by an era template
             final int startCenturyWord = match.start(1);
@@ -428,7 +427,6 @@ class CenturyFinder implements ReplacementFinder {
             }
         }
 
-        // Templates (as simple as possible)
         final boolean isAbbreviated = isAbbreviation(centuryWord);
         final String templateName = isAbbreviated ? CENTURY_WORD : centuryWord;
         final String lowerPrefix;
@@ -440,68 +438,47 @@ class CenturyFinder implements ReplacementFinder {
             lowerPrefix = "s";
         }
         final String upperPrefix = ReplacerUtils.toUpperCase(lowerPrefix);
-        final String templateUpperLink =
-            "{{" + templateName + "|" + centuryNumber + "|" + eraLetter + "|" + upperPrefix + "|1}}" + extension;
-        final String templateUpperNoLink =
-            ("{{" +
-                templateName +
-                "|" +
-                centuryNumber +
-                "|" +
-                eraLetter +
-                "|" +
-                upperPrefix +
-                "}}" +
-                extension).replace("||}}", "}}");
-        final String templateLowerLink =
-            "{{" + templateName + "|" + centuryNumber + "|" + eraLetter + "|" + lowerPrefix + "|1}}" + extension;
-        final String templateLowerNoLink =
-            ("{{" +
-                templateName +
-                "|" +
-                centuryNumber +
-                "|" +
-                eraLetter +
-                "|" +
-                lowerPrefix +
-                "}}" +
-                extension).replace("||}}", "}}");
-        final String abbreviationComment = isAbbreviated ? "; abreviado" : EMPTY;
-        final String linkedComment = "enlazado —solo para temas relacionados con el calendario—";
 
         final List<Suggestion> suggestions = new ArrayList<>(4);
 
+        String fixedCentury;
         // Not linked centuries are recommended
         // Offer always the lowercase alternative
+        final boolean isUppercase = FinderUtils.startsWithUpperCase(centuryWord) && !isLinkAliased;
         if (isUppercase) {
-            suggestions.add(
-                Suggestion.of(
-                    templateUpperNoLink,
-                    "siglo en versalitas; con mayúscula; sin enlazar" + abbreviationComment
-                )
-            );
+            fixedCentury = buildCenturyTemplate(templateName, centuryNumber, eraLetter, upperPrefix, false);
+            suggestions.add(Suggestion.of(fixedCentury + extension, buildSuggestionComment(upperPrefix, false)));
             if (isLinked) {
-                suggestions.add(
-                    Suggestion.of(
-                        templateUpperLink,
-                        "siglo en versalitas; con mayúscula; " + linkedComment + abbreviationComment
-                    )
-                );
+                fixedCentury = buildCenturyTemplate(templateName, centuryNumber, eraLetter, upperPrefix, true);
+                suggestions.add(Suggestion.of(fixedCentury + extension, buildSuggestionComment(upperPrefix, true)));
             }
         }
-        suggestions.add(
-            Suggestion.of(templateLowerNoLink, "siglo en versalitas; con minúscula; sin enlazar" + abbreviationComment)
-        );
+        fixedCentury = buildCenturyTemplate(templateName, centuryNumber, eraLetter, lowerPrefix, false);
+        suggestions.add(Suggestion.of(fixedCentury + extension, buildSuggestionComment(lowerPrefix, false)));
         if (isLinked) {
-            suggestions.add(
-                Suggestion.of(
-                    templateLowerLink,
-                    "siglo en versalitas; con minúscula; " + linkedComment + abbreviationComment
-                )
-            );
+            fixedCentury = buildCenturyTemplate(templateName, centuryNumber, eraLetter, lowerPrefix, true);
+            suggestions.add(Suggestion.of(fixedCentury + extension, buildSuggestionComment(lowerPrefix, true)));
         }
 
         return Replacement.of(match.start(), match.group(), StandardType.CENTURY, suggestions);
+    }
+
+    private String buildSuggestionComment(String centuryLetter, boolean isLinked) {
+        final StringBuilder comment = new StringBuilder("siglo en versalitas");
+        if (centuryLetter.equals("S")) {
+            comment.append("; con mayúscula");
+        } else if (centuryLetter.equals("s")) {
+            comment.append("; con minúscula");
+        } else if (centuryLetter.equalsIgnoreCase("a")) {
+            comment.append("; abreviado");
+        }
+        comment.append("; ");
+        if (isLinked) {
+            comment.append("enlazado —solo para temas relacionados con el calendario—");
+        } else {
+            comment.append("sin enlazar");
+        }
+        return comment.toString();
     }
 
     private Replacement convertCenturyPlural(MatchResult matchResult, FinderPage page) {
@@ -532,16 +509,38 @@ class CenturyFinder implements ReplacementFinder {
     }
 
     private String fixCenturyNumber(MatchResult match) {
-        // We now that it is a century number match
-        final StringBuilder fix = new StringBuilder()
-            .append(START_TEMPLATE)
-            .append(CENTURY_WORD)
-            .append(PIPE)
-            .append(match.group(2));
-        if (match.groupCount() > 2) {
-            fix.append(PIPE).append(match.group(3).charAt(0));
+        return buildCenturyTemplate(
+            CENTURY_WORD,
+            match.group(2),
+            match.groupCount() > 2 ? ReplacerUtils.toLowerCase(String.valueOf(match.group(3).charAt(0))) : EMPTY,
+            EMPTY,
+            false
+        );
+    }
+
+    private String buildCenturyTemplate(
+        String templateName,
+        String centuryNumber,
+        String eraLetter,
+        String centuryLetter,
+        boolean linked
+    ) {
+        final StringBuilder template = new StringBuilder();
+        template.append(START_TEMPLATE);
+        template.append(templateName);
+        template.append(PIPE);
+        template.append(centuryNumber);
+        template.append(PIPE);
+        template.append(eraLetter);
+        template.append(PIPE);
+        template.append(centuryLetter);
+        template.append(PIPE);
+        template.append(linked ? "1" : EMPTY);
+        // Remove the trailing pipes
+        while (template.charAt(template.length() - 1) == PIPE) {
+            template.deleteCharAt(template.length() - 1);
         }
-        fix.append(END_TEMPLATE);
-        return fix.toString();
+        template.append(END_TEMPLATE);
+        return template.toString();
     }
 }
