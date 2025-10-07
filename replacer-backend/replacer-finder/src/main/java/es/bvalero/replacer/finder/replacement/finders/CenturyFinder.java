@@ -466,6 +466,7 @@ class CenturyFinder implements ReplacementFinder {
                 lowerPrefix +
                 "}}" +
                 extension).replace("||}}", "}}");
+        final String abbreviationComment = isAbbreviated ? "; abreviado" : EMPTY;
         final String linkedComment = "enlazado —solo para temas relacionados con el calendario—";
 
         final List<Suggestion> suggestions = new ArrayList<>(4);
@@ -473,16 +474,31 @@ class CenturyFinder implements ReplacementFinder {
         // Not linked centuries are recommended
         // Offer always the lowercase alternative
         if (isUppercase) {
-            suggestions.add(Suggestion.of(templateUpperNoLink, "siglo en versalitas; con mayúscula; sin enlazar"));
+            suggestions.add(
+                Suggestion.of(
+                    templateUpperNoLink,
+                    "siglo en versalitas; con mayúscula; sin enlazar" + abbreviationComment
+                )
+            );
             if (isLinked) {
                 suggestions.add(
-                    Suggestion.of(templateUpperLink, "siglo en versalitas; con mayúscula; " + linkedComment)
+                    Suggestion.of(
+                        templateUpperLink,
+                        "siglo en versalitas; con mayúscula; " + linkedComment + abbreviationComment
+                    )
                 );
             }
         }
-        suggestions.add(Suggestion.of(templateLowerNoLink, "siglo en versalitas; con minúscula; sin enlazar"));
+        suggestions.add(
+            Suggestion.of(templateLowerNoLink, "siglo en versalitas; con minúscula; sin enlazar" + abbreviationComment)
+        );
         if (isLinked) {
-            suggestions.add(Suggestion.of(templateLowerLink, "siglo en versalitas; con minúscula; " + linkedComment));
+            suggestions.add(
+                Suggestion.of(
+                    templateLowerLink,
+                    "siglo en versalitas; con minúscula; " + linkedComment + abbreviationComment
+                )
+            );
         }
 
         return Replacement.of(match.start(), match.group(), StandardType.CENTURY, suggestions);
