@@ -472,6 +472,24 @@ public class FinderUtils {
     }
 
     /**
+     * Find the last occurrence of several search strings.
+     * Put the most common occurrence first improves performance.
+     */
+    @Nullable
+    public MatchResult lastIndexOfAny(String text, int start, String... searchStrings) {
+        String maxString = null;
+        int maxStart = 0;
+        for (String searchString : searchStrings) {
+            final int pos = text.lastIndexOf(searchString, start);
+            if (pos >= maxStart) {
+                maxString = searchString;
+                maxStart = pos;
+            }
+        }
+        return maxString == null ? null : FinderMatchResult.of(maxStart, maxString);
+    }
+
+    /**
      * Find the first occurrence of several search characters.
      * Put the most common occurrence first improves performance.
      */

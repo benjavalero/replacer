@@ -69,7 +69,10 @@ class CenturyFinder implements ReplacementFinder {
 
             // Find if the century is wrapped so the positions must be modified
             final MatchResult wrap = findCenturyWrapper(text, startCentury, endCentury, centuryNumber.group());
-            if (wrap != null) {
+            if (wrap == null) {
+                start = endCentury;
+                continue;
+            } else {
                 startCentury = wrap.start();
                 endCentury = wrap.end();
             }
@@ -272,33 +275,42 @@ class CenturyFinder implements ReplacementFinder {
         return FinderMatchRange.of(text, startEra, endEra);
     }
 
-    /** Find if the century (word and number) is wrapped by a link or a known template */
+    /**
+     * Find if the century (word and number) is wrapped by a link or a known template,
+     * e.g. <code>[[Siglo XX]]</code> or <code>{{esd|siglo XX}}</code>
+     * If there is such a wrap, return the wrap. If not, return the original match.
+     * Return null in case of error or a wider wrap to be ignored, e.g. <code>[[Siglo XX en España]]</code>
+     */
     @Nullable
     private MatchResult findCenturyWrapper(String text, int start, int end, String centuryNumber) {
-        // Check if wrapped by a link
-        final boolean startsWithLink = ReplacerUtils.containsAtPosition(text, START_LINK, start - START_LINK.length());
-        if (startsWithLink) {
-            final int posStartLink = start - START_LINK.length();
-            final int posEndLink = text.indexOf(END_LINK, end);
-            if (posEndLink < 0) {
-                // Broken link
+        // 1. Check if wrapped by a link, e.g. "[[Siglo XX]]"
+        final MatchResult endLink = FinderUtils.indexOfAny(text, end, START_LINK, END_LINK);
+        final boolean endsWithLink = endLink != null && END_LINK.equals(endLink.group());
+        if (endsWithLink) {
+            // Check if the century is followed immediately by the link end
+            // Exception: an aliased link, e.g. "[[Siglo XX|XX]]"
+            boolean isAliased =
+                text.charAt(end) == PIPE &&
+                end + 1 + centuryNumber.length() == endLink.start() &&
+                ReplacerUtils.containsAtPosition(text, centuryNumber, end + 1);
+            if (!isAliased && !FinderUtils.isEmptyBlankOrSpaceAlias(text, end, endLink.start())) {
                 return null;
             }
-            if (posEndLink == end) {
-                // Linked without alias
-                return FinderMatchRange.of(text, posStartLink, end + END_LINK.length());
-            }
-            // Check link with alias
-            if (
-                text.charAt(end) == PIPE &&
-                end + 1 + centuryNumber.length() == posEndLink &&
-                ReplacerUtils.containsAtPosition(text, centuryNumber, end + 1)
-            ) {
-                return FinderMatchRange.of(text, posStartLink, posEndLink + END_LINK.length());
+
+            // Check if the century is preceded immediately by the link start
+            final MatchResult startLink = FinderUtils.lastIndexOfAny(text, start, START_LINK, END_LINK);
+            final boolean startsWithLink = startLink != null && START_LINK.equals(startLink.group());
+            if (startsWithLink) {
+                if (!FinderUtils.isEmptyBlankOrSpaceAlias(text, startLink.end(), start)) {
+                    return null;
+                }
+
+                // At this point the link is valid
+                return FinderMatchRange.of(text, startLink.start(), endLink.end());
             }
         }
 
-        // Check if wrapped by a non-breaking space template
+        // 2. Check if wrapped by a non-breaking space template, e.g. "{{esd|siglo XX}}"
         final String nbsTemplatePrefix = START_TEMPLATE + NON_BREAKING_SPACE_TEMPLATE_NAME + PIPE;
         final int startNbsTemplate = start - nbsTemplatePrefix.length();
         final boolean startsWithNbsTemplate = ReplacerUtils.containsAtPosition(
@@ -310,7 +322,7 @@ class CenturyFinder implements ReplacementFinder {
             return FinderMatchRange.of(text, startNbsTemplate, end + END_TEMPLATE.length());
         }
 
-        // Check if wrapped by an era template
+        // 3. Check if wrapped by an era template, e.g. "{{AC|siglo I}}"
         final String eraTemplatePrefix = START_TEMPLATE + "AC" + PIPE;
         final int startEraTemplate = start - eraTemplatePrefix.length();
         final boolean startsWithEraTemplate =
@@ -319,7 +331,8 @@ class CenturyFinder implements ReplacementFinder {
             return FinderMatchRange.of(text, startEraTemplate, end + END_TEMPLATE.length());
         }
 
-        return null;
+        // If not wrapped, return the original match.
+        return FinderMatchRange.of(text, start, end);
     }
 
     /** Find the existing extensions to the century, i.e. more century numbers close to the found century. */

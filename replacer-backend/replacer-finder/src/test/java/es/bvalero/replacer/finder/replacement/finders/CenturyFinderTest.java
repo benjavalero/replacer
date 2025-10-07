@@ -108,6 +108,11 @@ class CenturyFinderTest {
             "siglos XX y nada más después",
             // Not whitespace after century word
             "siglo-XX",
+            // Wrapped by a greater link
+            "[[Terremotos en el siglo XX]]",
+            "[[Siglo XX en España]]",
+            "[[Terremotos en el siglo XX en España]]",
+            "[[Siglo XX|s. XX]]",
         }
     )
     void testCenturyNotValid(String text) {
