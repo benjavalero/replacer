@@ -16,13 +16,15 @@ import es.bvalero.replacer.finder.replacement.ReplacementFinder;
 import es.bvalero.replacer.finder.util.FinderMatchRange;
 import es.bvalero.replacer.finder.util.FinderMatchResult;
 import es.bvalero.replacer.finder.util.FinderUtils;
-import es.bvalero.replacer.finder.util.LinearMatchFinder;
+import es.bvalero.replacer.finder.util.LinearMatchCollectionFinder;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.SequencedCollection;
 import java.util.regex.MatchResult;
 import java.util.stream.Stream;
 import javax.naming.OperationNotSupportedException;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
@@ -39,20 +41,19 @@ class CenturyFinder implements ReplacementFinder {
     @Override
     public Stream<MatchResult> findMatchResults(FinderPage page) {
         if (WikipediaLanguage.SPANISH == page.getPageKey().getLang()) {
-            return LinearMatchFinder.find(page, this::findCentury);
+            return LinearMatchCollectionFinder.find(page, this::findCentury);
         } else {
             return Stream.of();
         }
     }
 
-    @Nullable
-    private MatchResult findCentury(FinderPage page, int start) {
+    private SequencedCollection<MatchResult> findCentury(FinderPage page, int start) {
         final String text = page.getContent();
         while (start >= 0 && start < text.length()) {
             // 1. Find century word
             final MatchResult centuryWord = findCenturyWord(text, start);
             if (centuryWord == null) {
-                return null;
+                return Collections.emptyList();
             }
 
             int startCentury = centuryWord.start();
@@ -77,27 +78,35 @@ class CenturyFinder implements ReplacementFinder {
                 endCentury = wrap.end();
             }
 
-            // 4. Find the extensions (optional)
-            SequencedCollection<MatchResult> extensions = findExtensions(text, endCentury, centuryNumber.start(2));
-            if (!extensions.isEmpty()) {
-                endCentury = extensions.getLast().end();
-            }
+            // 4. Find the extensions (if any)
+            final SequencedCollection<MatchResult> extensions = findExtensions(
+                text,
+                endCentury,
+                centuryNumber.start(3)
+            );
 
             // If the century word is plural then the extension is mandatory
-            if (isPlural(centuryWord.group()) && extensions.isEmpty()) {
+            final boolean isPlural = isPlural(centuryWord.group());
+            if (isPlural && extensions.isEmpty()) {
                 start = endCentury;
                 continue;
             }
 
-            final FinderMatchRange match = FinderMatchRange.ofNested(text, startCentury, endCentury);
-            match.addGroup(centuryWord);
-            match.addGroup(centuryNumber);
-            for (MatchResult extension : extensions) {
-                match.addGroup(extension);
+            // 5. Return the sequence of matches
+            final SequencedCollection<MatchResult> matches = new ArrayList<>(extensions.size() + 1);
+            if (isPlural) {
+                // If the century word is plural then we don't consider the century word as part of the replacement
+                matches.add(centuryNumber);
+            } else {
+                final FinderMatchRange match = FinderMatchRange.ofNested(text, startCentury, endCentury);
+                match.addGroup(centuryWord);
+                match.addGroup(centuryNumber);
+                matches.add(match);
             }
-            return match;
+            matches.addAll(extensions);
+            return matches;
         }
-        return null;
+        return Collections.emptyList();
     }
 
     /**
@@ -153,9 +162,10 @@ class CenturyFinder implements ReplacementFinder {
 
     /**
      * Find a century number with an optional era, e.g. <code>XX d. C.</code> or <code>16</code>
-     * The century number is stored in the 1st nested match group.
-     * Trick: the Arabic value is stored in the start of the 2nd nested match group.
-     * The era, if existing, is stored in the 3rd nested match group.
+     * The 1st nested group is empty as there is no century word.
+     * The century number is stored in the 2nd nested match group.
+     * Trick: the Arabic and Roman values are stored in the start and text of the 3rd nested match group.
+     * The era, if existing, is stored in the 4th nested match group.
      */
     @Nullable
     private MatchResult findCenturyNumber(String text, int start) {
@@ -177,6 +187,7 @@ class CenturyFinder implements ReplacementFinder {
         }
 
         final FinderMatchRange match = FinderMatchRange.ofNested(text, centuryNumber.start(), endCenturyNumber);
+        match.addGroup(FinderMatchRange.ofEmpty(text, centuryNumber.start()));
         match.addGroup(centuryNumber);
         match.addGroup(centuryNumberTrick);
         if (era != null) {
@@ -341,7 +352,7 @@ class CenturyFinder implements ReplacementFinder {
         MatchResult extension = findExtension(text, start, centuryNumber);
         while (extension != null) {
             extensions.add(extension);
-            extension = findExtension(text, extension.end(), extension.start(1));
+            extension = findExtension(text, extension.end(), extension.start(3));
         }
         return extensions;
     }
@@ -365,7 +376,7 @@ class CenturyFinder implements ReplacementFinder {
 
             // Check if it is a century number and is greater than the previous one
             final MatchResult numberMatch = findCenturyNumber(text, wordFound.start());
-            if (numberMatch != null && numberMatch.start(2) > centuryNumber) {
+            if (numberMatch != null && numberMatch.start(3) > centuryNumber) {
                 return numberMatch;
             } else {
                 numWordsFound++;
@@ -391,23 +402,24 @@ class CenturyFinder implements ReplacementFinder {
     @Override
     public Replacement convert(MatchResult match, FinderPage page) {
         final String centuryWord = match.group(1);
-        if (isPlural(centuryWord)) {
-            return convertCenturyPlural(match, page);
+        if (StringUtils.isEmpty(centuryWord)) {
+            return convertCenturyNumber(match);
         } else {
-            return convertCenturySingular(match, page);
+            return convertCenturyWithWord(match, page);
         }
     }
 
-    private Replacement convertCenturySingular(MatchResult matchResult, FinderPage page) {
+    private Replacement convertCenturyWithWord(MatchResult matchResult, FinderPage page) {
         final String text = page.getContent();
         final FinderMatchRange match = (FinderMatchRange) matchResult;
 
         final String centuryWord = match.group(1);
+        assert StringUtils.isNotEmpty(centuryWord);
         final MatchResult centuryNumberMatch = match.getGroup(2);
-        final String centuryNumber = centuryNumberMatch.group(2);
+        final String centuryNumber = centuryNumberMatch.group(3);
         String eraLetter;
-        if (centuryNumberMatch.groupCount() > 2) {
-            final String eraText = centuryNumberMatch.group(3);
+        if (centuryNumberMatch.groupCount() > 3) {
+            final String eraText = centuryNumberMatch.group(4);
             eraLetter = ReplacerUtils.toLowerCase(String.valueOf(eraText.charAt(0)));
         } else {
             // Special case when the century is wrapped by an era template
@@ -428,18 +440,6 @@ class CenturyFinder implements ReplacementFinder {
         // Check if the century is surrounded by a link
         final boolean isLinked = ReplacerUtils.containsAtPosition(match.group(), START_LINK, 0);
         final boolean isLinkAliased = isLinked && text.charAt(match.end(2)) == PIPE;
-
-        // Add extension and its suggestion
-        StringBuilder extension = new StringBuilder();
-        if (match.groupCount() > 2) {
-            for (int i = 3; i <= match.groupCount(); i++) {
-                final int extensionStart = match.start(i);
-                final int previousEnd = match.end(i - 1);
-                final MatchResult extensionMatch = match.getGroup(i);
-                extension.append(text, previousEnd, extensionStart).append(fixCenturyNumber(extensionMatch));
-            }
-        }
-
         final boolean isAbbreviated = isAbbreviation(centuryWord);
         final String templateName = isAbbreviated ? CENTURY_WORD : centuryWord;
         final String lowerPrefix;
@@ -460,17 +460,17 @@ class CenturyFinder implements ReplacementFinder {
         final boolean isUppercase = FinderUtils.startsWithUpperCase(centuryWord) && !isLinkAliased;
         if (isUppercase) {
             fixedCentury = buildCenturyTemplate(templateName, centuryNumber, eraLetter, upperPrefix, false);
-            suggestions.add(Suggestion.of(fixedCentury + extension, buildSuggestionComment(upperPrefix, false)));
+            suggestions.add(Suggestion.of(fixedCentury, buildSuggestionComment(upperPrefix, false)));
             if (isLinked) {
                 fixedCentury = buildCenturyTemplate(templateName, centuryNumber, eraLetter, upperPrefix, true);
-                suggestions.add(Suggestion.of(fixedCentury + extension, buildSuggestionComment(upperPrefix, true)));
+                suggestions.add(Suggestion.of(fixedCentury, buildSuggestionComment(upperPrefix, true)));
             }
         }
         fixedCentury = buildCenturyTemplate(templateName, centuryNumber, eraLetter, lowerPrefix, false);
-        suggestions.add(Suggestion.of(fixedCentury + extension, buildSuggestionComment(lowerPrefix, false)));
+        suggestions.add(Suggestion.of(fixedCentury, buildSuggestionComment(lowerPrefix, false)));
         if (isLinked) {
             fixedCentury = buildCenturyTemplate(templateName, centuryNumber, eraLetter, lowerPrefix, true);
-            suggestions.add(Suggestion.of(fixedCentury + extension, buildSuggestionComment(lowerPrefix, true)));
+            suggestions.add(Suggestion.of(fixedCentury, buildSuggestionComment(lowerPrefix, true)));
         }
 
         return Replacement.of(match.start(), match.group(), StandardType.CENTURY, suggestions);
@@ -494,41 +494,14 @@ class CenturyFinder implements ReplacementFinder {
         return comment.toString();
     }
 
-    private Replacement convertCenturyPlural(MatchResult matchResult, FinderPage page) {
-        final String text = page.getContent();
-        final FinderMatchRange match = (FinderMatchRange) matchResult;
-
-        assert match.start(1) == match.start();
-        final int startWord = match.start();
-        final int startNumber = match.start(2);
-        final String centuryWord = text.substring(startWord, startNumber); // Including space between word and number
-
-        final MatchResult centuryNumberMatch = match.getGroup(2);
-        final String fixedNumber = fixCenturyNumber(centuryNumberMatch);
-
-        StringBuilder extension = new StringBuilder();
-        assert match.groupCount() > 2;
-        for (int i = 3; i <= match.groupCount(); i++) {
-            final int extensionStart = match.start(i);
-            final int previousEnd = match.end(i - 1);
-            final MatchResult extensionMatch = match.getGroup(i);
-            extension.append(text, previousEnd, extensionStart).append(fixCenturyNumber(extensionMatch));
-        }
-        final String suggestionText = centuryWord + fixedNumber + extension;
-
-        final List<Suggestion> suggestions = List.of(Suggestion.of(suggestionText, "siglos en versalitas"));
-
+    private Replacement convertCenturyNumber(MatchResult match) {
+        final String romanNumber = match.group(3);
+        final String eraLetter = match.groupCount() > 3
+            ? ReplacerUtils.toLowerCase(String.valueOf(match.group(4).charAt(0)))
+            : EMPTY;
+        final String suggestionText = buildCenturyTemplate(CENTURY_WORD, romanNumber, eraLetter, EMPTY, false);
+        final List<Suggestion> suggestions = List.of(Suggestion.of(suggestionText, "siglo en versalitas"));
         return Replacement.of(match.start(), match.group(), StandardType.CENTURY, suggestions);
-    }
-
-    private String fixCenturyNumber(MatchResult match) {
-        return buildCenturyTemplate(
-            CENTURY_WORD,
-            match.group(2),
-            match.groupCount() > 2 ? ReplacerUtils.toLowerCase(String.valueOf(match.group(3).charAt(0))) : EMPTY,
-            EMPTY,
-            false
-        );
     }
 
     private String buildCenturyTemplate(
