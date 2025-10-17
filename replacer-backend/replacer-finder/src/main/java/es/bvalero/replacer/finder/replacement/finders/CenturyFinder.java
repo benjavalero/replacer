@@ -37,6 +37,7 @@ class CenturyFinder implements ReplacementFinder {
 
     private static final String CENTURY_WORD = "Siglo";
     private static final String CENTURY_SEARCH = CENTURY_WORD.substring(1);
+    private static final int MAX_WORDS_BETWEEN_CENTURIES = 4;
 
     @Override
     public Stream<MatchResult> findMatchResults(FinderPage page) {
@@ -363,7 +364,7 @@ class CenturyFinder implements ReplacementFinder {
         // Find the next century number with at most 3 words between both century numbers
         int numWordsFound = 0;
         int wordStart = start;
-        while (numWordsFound < 4) {
+        while (numWordsFound <= MAX_WORDS_BETWEEN_CENTURIES) {
             final MatchResult wordFound = FinderUtils.findWordAfter(text, wordStart);
             if (wordFound == null) {
                 return null;

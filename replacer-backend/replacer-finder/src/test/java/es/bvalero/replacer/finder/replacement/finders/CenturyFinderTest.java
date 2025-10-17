@@ -61,7 +61,7 @@ class CenturyFinderTest {
             // With fake century after
             "siglo XI Alfonso VI * siglo XI * {{siglo|XI||s}}",
             // With century after too far
-            "siglo XIX y los comienzos del XX * siglo XIX * {{siglo|XIX||s}}",
+            "siglo XIX y en los comienzos del XX * siglo XIX * {{siglo|XIX||s}}",
             // With invalid century after
             "siglo XIX y principios del siglo XXL * siglo XIX * {{siglo|XIX||s}}",
             // After false positive
@@ -95,7 +95,7 @@ class CenturyFinderTest {
             "siglos XX-XXI * XX, XXI * {{Siglo|XX}}, {{Siglo|XXI}}",
             "siglo XX o XXI * siglo XX, XXI * {{siglo|XX||s}}, {{Siglo|XXI}}",
             "siglos XX o XXI * XX, XXI * {{Siglo|XX}}, {{Siglo|XXI}}",
-            "siglo XIX y principios del XX * siglo XIX, XX * {{siglo|XIX||s}}, {{Siglo|XX}}",
+            "siglo XIX y los comienzos del XX * siglo XIX, XX * {{siglo|XIX||s}}, {{Siglo|XX}}",
             // With lowercase century after
             "siglos xv y xvi * xv, xvi * {{Siglo|XV}}, {{Siglo|XVI}}",
             // With Arabic numbers
