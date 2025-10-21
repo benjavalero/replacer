@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -107,6 +106,9 @@ class CenturyFinderTest {
             // Several extensions (we cannot use a comma to test so we use a semicolon)
             "siglos xv; xvi y xvii * xv, xvi, xvii * {{Siglo|XV}}, {{Siglo|XVI}}, {{Siglo|XVII}}",
             "de los siglos XVII; XVIII y XIX. * XVII, XVIII, XIX * {{Siglo|XVII}}, {{Siglo|XVIII}}, {{Siglo|XIX}}",
+            // With century word between
+            "Entre el siglo XIX y el siglo XX. * siglo XIX, siglo XX * {{siglo|XIX||s}}, {{siglo|XX||s}}",
+            "Entre el s. XIX y el s. XX. * s. XIX, s. XX * {{Siglo|XIX||a}}, {{Siglo|XX||a}}",
         }
     )
     void testCenturyExtended(String text, String century, String expected) {
@@ -146,16 +148,5 @@ class CenturyFinderTest {
         List<Replacement> replacements = centuryFinder.findList(text);
 
         assertTrue(replacements.isEmpty());
-    }
-
-    @Test
-    void testCenturyWithCompleteCenturyAfter() {
-        String text = "Entre el siglo XIX y el siglo XX.";
-
-        List<Replacement> replacements = centuryFinder.findList(text);
-
-        assertEquals(2, replacements.size());
-        assertEquals("siglo XIX", replacements.get(0).text());
-        assertEquals("siglo XX", replacements.get(1).text());
     }
 }

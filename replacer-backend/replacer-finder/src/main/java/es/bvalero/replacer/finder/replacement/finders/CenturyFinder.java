@@ -37,6 +37,7 @@ class CenturyFinder implements ReplacementFinder {
 
     private static final String CENTURY_WORD = "Siglo";
     private static final String CENTURY_SEARCH = CENTURY_WORD.substring(1);
+    private static final String[] CENTURY_WORDS = new String[] { "s.", "S.", CENTURY_SEARCH };
     private static final int MAX_WORDS_BETWEEN_CENTURIES = 4;
 
     @Override
@@ -120,7 +121,7 @@ class CenturyFinder implements ReplacementFinder {
         while (start >= 0 && start < text.length()) {
             // Find any of the supported century words, finding first the most common.
             // Instead of finding all the variants of "siglo", we find the root "iglo" and then check the variants.
-            final MatchResult match = FinderUtils.indexOfAny(text, start, "s.", "S.", CENTURY_SEARCH);
+            final MatchResult match = FinderUtils.indexOfAny(text, start, CENTURY_WORDS);
             if (match == null) {
                 return null;
             }
@@ -370,14 +371,16 @@ class CenturyFinder implements ReplacementFinder {
                 return null;
             }
 
-            // Check we are not capturing a complete century again
-            if (wordFound.group().contains(CENTURY_SEARCH)) {
-                return null;
-            }
-
             // Check if it is a century number and is greater than the previous one
             final MatchResult numberMatch = findCenturyNumber(text, wordFound.start());
             if (numberMatch != null && numberMatch.start(3) > centuryNumber) {
+                // Check we are not capturing a complete century again
+                for (String centuryWord : CENTURY_WORDS) {
+                    if (text.indexOf(centuryWord, start, numberMatch.start()) >= 0) {
+                        return null;
+                    }
+                }
+
                 return numberMatch;
             } else {
                 numWordsFound++;
