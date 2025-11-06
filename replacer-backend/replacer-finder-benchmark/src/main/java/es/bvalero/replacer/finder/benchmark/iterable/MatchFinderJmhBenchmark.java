@@ -21,6 +21,8 @@ public class MatchFinderJmhBenchmark extends BaseFinderJmhBenchmark {
     private static final String fileName = "iterable/match-summary-jmh";
     private static final String word = "_";
 
+    final MutableMatch match = new MutableMatch();
+
     @Override
     @Setup
     public void setUp() throws ReplacerException {
@@ -117,7 +119,27 @@ public class MatchFinderJmhBenchmark extends BaseFinderJmhBenchmark {
         return null;
     }
 
-    private int findStartMatch(String text, int start) {
+    @Benchmark
+    public void mutableMatchFinder(Blackhole bh) {
+        sampleContents
+            .stream()
+            .flatMap(page ->
+                ReplacerUtils.streamOfIterable(IterableMutableMatchFinder.find(page, this::findMutableMatch, match))
+            )
+            .forEach(bh::consume);
+    }
+
+    private void findMutableMatch(FinderPage page, int start, MutableMatch match) {
+        final String text = page.getContent();
+        if (start >= 0 && start < text.length()) {
+            match.setStart(findStartMatch(text, start));
+        } else {
+            match.setStart(-1);
+        }
+        match.setWord(word);
+    }
+
+    private static int findStartMatch(String text, int start) {
         return text.indexOf(word, start);
     }
 
