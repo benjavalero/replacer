@@ -133,6 +133,8 @@ class CenturyFinderTest {
             "siglos XX y nada más después",
             // Not whitespace after century word
             "siglo-XX",
+            // Century number immediately after the abbreviation
+            "S.I",
             // Wrapped by a greater link
             "[[Terremotos en el siglo XX]]",
             "[[Siglo XX en España]]",

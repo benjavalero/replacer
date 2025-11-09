@@ -61,8 +61,9 @@ class CenturyFinder implements ReplacementFinder {
             int endCentury = centuryWord.end();
 
             // 2. Find century number
+            // Ignore numbers immediately after the century word
             final CenturyNumber centuryNumber = findCenturyNumber(text, endCentury);
-            if (centuryNumber == null) {
+            if (centuryNumber == null || centuryNumber.start() == endCentury) {
                 start = endCentury;
                 continue;
             }
@@ -385,6 +386,7 @@ class CenturyFinder implements ReplacementFinder {
             }
 
             // Check if it is a century number and is greater than the previous one
+            // We "find" instead of "get" to capture a possible era in the extension
             final CenturyNumber nextNumber = findCenturyNumber(text, nextWord.start());
             if (nextNumber != null && nextNumber.arabic() > currentNumber.arabic()) {
                 // Check we are not capturing a complete century again
