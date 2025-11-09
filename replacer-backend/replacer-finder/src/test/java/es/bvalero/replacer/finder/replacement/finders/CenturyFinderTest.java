@@ -102,7 +102,8 @@ class CenturyFinderTest {
             // Plural century
             "siglos XX y XXI * XX, XXI * {{Siglo|XX}}, {{Siglo|XXI}}",
             // Plural century with era
-            "siglos I a. C. y II d. C. * I a. C., II d. C. * {{Siglo|I|a}}, {{Siglo|II|d}}",
+            "siglos III a. C. y II d. C. * III a. C., II d. C. * {{Siglo|III|a}}, {{Siglo|II|d}}",
+            "siglos III a. C. y II a. C. * III a. C., II a. C. * {{Siglo|III|a}}, {{Siglo|II|a}}",
             // Several extensions (we cannot use a comma to test so we use a semicolon)
             "siglos xv; xvi y xvii * xv, xvi, xvii * {{Siglo|XV}}, {{Siglo|XVI}}, {{Siglo|XVII}}",
             "de los siglos XVII; XVIII y XIX. * XVII, XVIII, XIX * {{Siglo|XVII}}, {{Siglo|XVIII}}, {{Siglo|XIX}}",

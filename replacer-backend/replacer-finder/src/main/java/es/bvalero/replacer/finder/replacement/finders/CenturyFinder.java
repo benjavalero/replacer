@@ -171,7 +171,25 @@ class CenturyFinder implements ReplacementFinder {
     //region Century Number
 
     private record CenturyNumber(int start, String group, String roman, int arabic, @Nullable String era)
-        implements SimpleMatchResult {}
+        implements SimpleMatchResult {
+        private boolean isEraBefore() {
+            return "a".equals(getEraLetter());
+        }
+
+        String getEraLetter() {
+            return era == null ? EMPTY : ReplacerUtils.toLowerCase(String.valueOf(era.charAt(0)));
+        }
+
+        boolean isGreaterThan(CenturyNumber m) {
+            if (this.isEraBefore()) {
+                return m.arabic() > this.arabic();
+            } else if (m.isEraBefore()) {
+                return true;
+            } else {
+                return this.arabic() > m.arabic();
+            }
+        }
+    }
 
     /**
      * Find a century number with an optional era, e.g. <code>XX d. C.</code> or <code>16</code>
@@ -388,7 +406,7 @@ class CenturyFinder implements ReplacementFinder {
             // Check if it is a century number and is greater than the previous one
             // We "find" instead of "get" to capture a possible era in the extension
             final CenturyNumber nextNumber = findCenturyNumber(text, nextWord.start());
-            if (nextNumber != null && nextNumber.arabic() > currentNumber.arabic()) {
+            if (nextNumber != null && nextNumber.isGreaterThan(currentNumber)) {
                 // Check we are not capturing a complete century again
                 for (String centuryWord : CENTURY_WORDS) {
                     if (text.indexOf(centuryWord, start, nextNumber.start()) >= 0) {
