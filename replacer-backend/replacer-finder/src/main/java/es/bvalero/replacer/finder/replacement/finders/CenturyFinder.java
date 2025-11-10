@@ -399,7 +399,7 @@ class CenturyFinder implements ReplacementFinder {
         int wordStart = start;
         while (numWordsFound <= MAX_WORDS_BETWEEN_CENTURIES) {
             final MatchResult nextWord = FinderUtils.findWordAfter(text, wordStart);
-            if (nextWord == null) {
+            if (nextWord == null || text.indexOf('\n', wordStart, nextWord.start()) >= 0) {
                 return null;
             }
 
