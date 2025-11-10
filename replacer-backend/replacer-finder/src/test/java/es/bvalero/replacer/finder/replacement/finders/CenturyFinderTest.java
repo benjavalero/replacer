@@ -37,11 +37,11 @@ class CenturyFinderTest {
             // Uppercase
             "Siglo XX * Siglo XX * {{Siglo|XX||S}}, {{Siglo|XX||s}}",
             // Lowercase with link
-            "[[siglo XX]] * [[siglo XX]] * {{siglo|XX||s}}, {{siglo|XX||s|1}}",
+            "[[siglo XX]] * [[siglo XX]] * {{siglo|XX||s|1}}, {{siglo|XX||s}}",
             // Uppercase with link
-            "[[Siglo XX]] * [[Siglo XX]] * {{Siglo|XX||S}}, {{Siglo|XX||S|1}}, {{Siglo|XX||s}}, {{Siglo|XX||s|1}}",
+            "[[Siglo XX]] * [[Siglo XX]] * {{Siglo|XX||S|1}}, {{Siglo|XX||S}}, {{Siglo|XX||s|1}}, {{Siglo|XX||s}}",
             // With aliased link
-            "[[Siglo XX|XX]] * [[Siglo XX|XX]] * {{Siglo|XX}}, {{Siglo|XX|||1}}",
+            "[[Siglo XX|XX]] * [[Siglo XX|XX]] * {{Siglo|XX|||1}}, {{Siglo|XX}}",
             // Wrapped with template
             "{{esd|Siglo XX}} * {{esd|Siglo XX}} * {{Siglo|XX||S}}, {{Siglo|XX||s}}",
             "{{ac|Siglo XX}} * {{ac|Siglo XX}} * {{Siglo|XX|a|S}}, {{Siglo|XX|a|s}}",
@@ -53,7 +53,7 @@ class CenturyFinderTest {
             "siglo I adC * siglo I adC * {{siglo|I|a|s}}",
             "siglo I a.&nbsp;de&nbsp;C. * siglo I a.&nbsp;de&nbsp;C. * {{siglo|I|a|s}}",
             // With era and with link
-            "[[siglo VI d.&nbsp;C.]] * [[siglo VI d.&nbsp;C.]] * {{siglo|VI|d|s}}, {{siglo|VI|d|s|1}}",
+            "[[siglo VI d.&nbsp;C.]] * [[siglo VI d.&nbsp;C.]] * {{siglo|VI|d|s|1}}, {{siglo|VI|d|s}}",
             // Broken link
             "[[siglo XX * siglo XX * {{siglo|XX||s}}",
             // With Arabic numbers

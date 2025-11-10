@@ -496,19 +496,19 @@ class CenturyFinder implements ReplacementFinder {
         // Offer always the lowercase alternative
         final boolean isUppercase = FinderUtils.startsWithUpperCase(centuryWord) && !isLinkAliased;
         if (isUppercase) {
-            fixedCentury = buildCenturyTemplate(templateName, romanNumber, eraLetter, upperPrefix, false);
-            suggestions.add(Suggestion.of(fixedCentury, buildSuggestionComment(upperPrefix, false)));
             if (isLinked) {
                 fixedCentury = buildCenturyTemplate(templateName, romanNumber, eraLetter, upperPrefix, true);
                 suggestions.add(Suggestion.of(fixedCentury, buildSuggestionComment(upperPrefix, true)));
             }
+            fixedCentury = buildCenturyTemplate(templateName, romanNumber, eraLetter, upperPrefix, false);
+            suggestions.add(Suggestion.of(fixedCentury, buildSuggestionComment(upperPrefix, false)));
         }
-        fixedCentury = buildCenturyTemplate(templateName, romanNumber, eraLetter, lowerPrefix, false);
-        suggestions.add(Suggestion.of(fixedCentury, buildSuggestionComment(lowerPrefix, false)));
         if (isLinked) {
             fixedCentury = buildCenturyTemplate(templateName, romanNumber, eraLetter, lowerPrefix, true);
             suggestions.add(Suggestion.of(fixedCentury, buildSuggestionComment(lowerPrefix, true)));
         }
+        fixedCentury = buildCenturyTemplate(templateName, romanNumber, eraLetter, lowerPrefix, false);
+        suggestions.add(Suggestion.of(fixedCentury, buildSuggestionComment(lowerPrefix, false)));
 
         return Replacement.of(match.start(), match.group(), StandardType.CENTURY, suggestions);
     }
