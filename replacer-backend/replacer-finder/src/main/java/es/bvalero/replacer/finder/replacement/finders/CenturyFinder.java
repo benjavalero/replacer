@@ -37,6 +37,7 @@ class CenturyFinder implements ReplacementFinder {
     private static final String CENTURY_WORD = "Siglo";
     private static final String CENTURY_SEARCH = CENTURY_WORD.substring(1);
     private static final String[] CENTURY_WORDS = new String[] { "s.", "S.", CENTURY_SEARCH };
+    private static final String[] WRAP_TEMPLATES = new String[] { NON_BREAKING_SPACE_TEMPLATE_NAME, "nowrap" };
     private static final int MAX_WORDS_BETWEEN_CENTURIES = 5;
 
     @Override
@@ -352,15 +353,17 @@ class CenturyFinder implements ReplacementFinder {
         }
 
         // 2. Check if wrapped by a non-breaking space template, e.g. "{{esd|siglo XX}}"
-        final String nbsTemplatePrefix = START_TEMPLATE + NON_BREAKING_SPACE_TEMPLATE_NAME + PIPE;
-        final int startNbsTemplate = start - nbsTemplatePrefix.length();
-        final boolean startsWithNbsTemplate = ReplacerUtils.containsAtPosition(
-            text,
-            nbsTemplatePrefix,
-            startNbsTemplate
-        );
-        if (startsWithNbsTemplate && ReplacerUtils.containsAtPosition(text, END_TEMPLATE, end)) {
-            return FinderMatchRange.of(text, startNbsTemplate, end + END_TEMPLATE.length());
+        for (String wrapTemplate : WRAP_TEMPLATES) {
+            final String nbsTemplatePrefix = START_TEMPLATE + wrapTemplate + PIPE;
+            final int startNbsTemplate = start - nbsTemplatePrefix.length();
+            final boolean startsWithNbsTemplate = ReplacerUtils.containsAtPosition(
+                text,
+                nbsTemplatePrefix,
+                startNbsTemplate
+            );
+            if (startsWithNbsTemplate && ReplacerUtils.containsAtPosition(text, END_TEMPLATE, end)) {
+                return FinderMatchRange.of(text, startNbsTemplate, end + END_TEMPLATE.length());
+            }
         }
 
         // 3. Check if wrapped by an era template, e.g. "{{AC|siglo I}}"

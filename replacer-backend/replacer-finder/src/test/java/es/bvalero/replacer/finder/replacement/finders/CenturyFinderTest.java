@@ -45,6 +45,7 @@ class CenturyFinderTest {
             // Wrapped with template
             "{{esd|Siglo XX}} * {{esd|Siglo XX}} * {{Siglo|XX||S}}, {{Siglo|XX||s}}",
             "{{ac|Siglo XX}} * {{ac|Siglo XX}} * {{Siglo|XX|a|S}}, {{Siglo|XX|a|s}}",
+            "{{nowrap|siglo XX}} * {{nowrap|siglo XX}} * {{siglo|XX||s}}",
             // With era
             "siglo II a. C. * siglo II a. C. * {{siglo|II|a|s}}",
             "siglo V d.C. * siglo V d.C. * {{siglo|V|d|s}}",
