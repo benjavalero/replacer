@@ -34,6 +34,11 @@ public interface ReplacementFinder extends Finder<Replacement> {
         return withoutSuggestions;
     }
 
+    /* Particular case to return the replacements that can be applied automatically with no user revision */
+    default Stream<Replacement> findAutomaticReplacements(FinderPage page) {
+        return Stream.empty();
+    }
+
     default Optional<StandardType> findMatchingReplacementType(
         WikipediaLanguage lang,
         String replacement,

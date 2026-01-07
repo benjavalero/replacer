@@ -5,11 +5,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-import es.bvalero.replacer.checkwikipedia.CheckWikipediaAction;
 import es.bvalero.replacer.checkwikipedia.CheckWikipediaFixEvent;
-import es.bvalero.replacer.finder.Cosmetic;
-import es.bvalero.replacer.finder.FinderPage;
+import es.bvalero.replacer.finder.*;
 import java.util.List;
+import java.util.TreeSet;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,6 +18,7 @@ class CosmeticFinderServiceTest {
 
     // Dependency injection
     private CosmeticFinder cosmeticFinder;
+    private ReplacementFindApi replacementFindApi;
     private ApplicationEventPublisher applicationEventPublisher;
 
     private CosmeticFinderService cosmeticFinderService;
@@ -26,8 +26,13 @@ class CosmeticFinderServiceTest {
     @BeforeEach
     void setUp() {
         cosmeticFinder = mock(CosmeticFinder.class);
+        replacementFindApi = mock(ReplacementFindApi.class);
         applicationEventPublisher = mock(ApplicationEventPublisher.class);
-        cosmeticFinderService = new CosmeticFinderService(List.of(cosmeticFinder), applicationEventPublisher);
+        cosmeticFinderService = new CosmeticFinderService(
+            List.of(cosmeticFinder),
+            replacementFindApi,
+            applicationEventPublisher
+        );
     }
 
     @Test
@@ -82,5 +87,37 @@ class CosmeticFinderServiceTest {
         assertEquals(page.withContent(expected), cosmeticFinderService.applyCosmeticChanges(page));
 
         verify(cosmeticFinder).find(page);
+    }
+
+    @Test
+    void testFindCosmetics() {
+        // Given
+        FinderPage page = buildFinderPage("Some text with [[Link|link]] and mistak.");
+        Cosmetic cosmetic = new Cosmetic(15, "[[Link|link]]", "[[link]]", NO_ACTION);
+        when(cosmeticFinder.find(page)).thenReturn(Stream.of(cosmetic));
+
+        Replacement replacement = Replacement.of(
+            31,
+            "mistak",
+            StandardType.of(ReplacementKind.SIMPLE, "mistak"),
+            List.of(Suggestion.ofNoComment("mistake"))
+        );
+        when(replacementFindApi.findAutomaticReplacements(page)).thenReturn(new TreeSet<>(List.of(replacement)));
+
+        // When
+        List<Cosmetic> results = cosmeticFinderService.findCosmetics(page).stream().toList();
+
+        // Then
+        assertEquals(2, results.size());
+        assertEquals(cosmetic, results.get(0));
+
+        Cosmetic converted = results.get(1);
+        assertEquals(31, converted.start());
+        assertEquals("mistak", converted.text());
+        assertEquals("mistake", converted.fix());
+        assertEquals(NO_ACTION, converted.checkWikipediaAction());
+
+        verify(cosmeticFinder).find(page);
+        verify(replacementFindApi).findAutomaticReplacements(page);
     }
 }

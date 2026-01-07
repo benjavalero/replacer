@@ -3,6 +3,7 @@ package es.bvalero.replacer.finder.replacement.finders;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.StandardType;
 import es.bvalero.replacer.finder.Suggestion;
@@ -91,6 +92,54 @@ class CenturyFinderTest {
     @CsvSource(
         delimiter = '*',
         value = {
+            "Siglos IX-XV * IX, XV",
+            "Siglos XI al XIII * XI, XIII",
+            "siglos XIII-XIV * XIII, XIV",
+            "siglos X, XI y XII * X, XI, XII",
+            "siglos IX y VIII a. C. * IX, VIII a. C.",
+            "siglos II a. C. y I a. C * II a. C., I a. C",
+            "siglo XVI * siglo XVI",
+            "siglo V a. C. * siglo V a. C.",
+            "siglo XII y comienzos del XIII * siglo XII, XIII",
+        }
+    )
+    void testFindAutomaticReplacements(String text, String expectedCenturies) {
+        List<String> expectedList = Arrays.stream(expectedCenturies.split(",")).map(String::trim).toList();
+        List<String> actualList = centuryFinder
+            .findAutomaticReplacements(FinderPage.of(text))
+            .map(Replacement::text)
+            .toList();
+
+        assertEquals(expectedList, actualList);
+    }
+
+    @ParameterizedTest
+    @ValueSource(
+        strings = {
+            "Siglo XVI",
+            "siglo 19",
+            "S. VIII",
+            "S. III d. C.",
+            "s. III-IV",
+            "s. IV",
+            "s. III a. C.",
+            "s. 11",
+            "{{AC|siglo V}}",
+            "C. S. I. C.",
+            "Siglo XIX. Solo hay 15 runas.",
+        }
+    )
+    void testFindAutomaticReplacementsNegative(String text) {
+        assertTrue(
+            centuryFinder.findAutomaticReplacements(FinderPage.of(text)).findAny().isEmpty(),
+            "Should not find automatic replacements for: " + text
+        );
+    }
+
+    @ParameterizedTest
+    @CsvSource(
+        delimiter = '*',
+        value = {
             // With simple century after
             "siglo XX-XXI * siglo XX, XXI * {{siglo|XX||s}}, {{Siglo|XXI}}",
             "siglos XX-XXI * XX, XXI * {{Siglo|XX}}, {{Siglo|XXI}}",
@@ -120,13 +169,13 @@ class CenturyFinderTest {
         final List<String> expectedCentury = Arrays.stream(century.split(",")).map(String::trim).toList();
         final List<String> expectedSuggestions = Arrays.stream(expected.split(",")).map(String::trim).toList();
         assertEquals(expectedCentury.size(), replacements.size());
-        for (int i = 0; i < replacements.size(); i++) {
-            Replacement rep = replacements.get(i);
-            assertEquals(StandardType.CENTURY, rep.type());
-            assertEquals(expectedCentury.get(i), rep.text());
-            assertTrue(rep.suggestions().size() > 1);
-            assertEquals(expectedSuggestions.get(i), rep.suggestions().get(1).getText());
-        }
+        assertEquals(expectedCentury, replacements.stream().map(Replacement::text).toList());
+        assertEquals(
+            expectedSuggestions,
+            replacements.stream().map(rep -> rep.suggestions().get(1).getText()).toList()
+        );
+        assertTrue(replacements.stream().allMatch(rep -> rep.type() == StandardType.CENTURY));
+        assertTrue(replacements.stream().allMatch(rep -> rep.suggestions().size() > 1));
     }
 
     @Test

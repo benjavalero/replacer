@@ -1,5 +1,8 @@
 # Versions
 
+## 2.33.0 (??)
+- Feat: use some replacements that can be applied automatically as cosmetics
+
 ## 2.32.0 (1 Sep 2025)
 - Revert: iterate the replacements and immutables sequentially in Production
 - Feat: upgrade to Java 21

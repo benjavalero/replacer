@@ -17,13 +17,11 @@ import es.bvalero.replacer.finder.util.FinderMatchRange;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.LinearMatchCollectionFinder;
 import es.bvalero.replacer.finder.util.SimpleMatchResult;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.SequencedCollection;
+import java.util.*;
 import java.util.regex.MatchResult;
 import java.util.stream.Stream;
 import javax.naming.OperationNotSupportedException;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
@@ -188,6 +186,14 @@ class CenturyFinder implements ReplacementFinder {
                 return true;
             } else {
                 return this.arabic() > m.arabic();
+            }
+        }
+
+        String getOriginalNumber() {
+            if (era == null) {
+                return group;
+            } else {
+                return Objects.requireNonNull(findWordAfter(group, 0)).group();
             }
         }
     }
@@ -569,6 +575,76 @@ class CenturyFinder implements ReplacementFinder {
         }
         template.append(END_TEMPLATE);
         return template.toString();
+    }
+
+    //endregion
+
+    //region Automatic replacements
+
+    @Override
+    public Stream<Replacement> findAutomaticReplacements(FinderPage page) {
+        final SequencedCollection<MatchResult> automaticMatches = new ArrayList<>();
+        int start = 0;
+        while (start >= 0 && start < page.getContent().length()) {
+            final SequencedCollection<MatchResult> matches = this.findCentury(page, start);
+            if (matches.isEmpty()) {
+                // End the loop
+                start = -1;
+            } else {
+                if (isAutomaticReplacement(matches, page)) {
+                    automaticMatches.addAll(matches);
+                }
+                start = matches.getLast().end();
+            }
+        }
+        // Filter just in case the ones with more than one possible fix
+        return automaticMatches.stream().map(m -> this.convert(m, page)).filter(r -> r.suggestions().size() == 2);
+    }
+
+    // We need to capture all the century subgroups
+    private boolean isAutomaticReplacement(SequencedCollection<MatchResult> matches, FinderPage page) {
+        assert !matches.isEmpty();
+
+        final MatchResult firstMatchResult = matches.getFirst();
+        assert firstMatchResult instanceof CenturyMatch;
+        final CenturyMatch firstMatch = (CenturyMatch) firstMatchResult;
+        final MatchResult firstWord = firstMatch.word();
+
+        if (matches.size() == 1) {
+            // Case 1: only one century
+            // Only automatic if the first word is complete and lowercase, e.g. "siglo XX",
+            // and the number is Roman uppercase
+            final String number = firstMatch.number().getOriginalNumber();
+            return (
+                firstWord != null &&
+                firstWord.start() == 0 &&
+                "siglo".equals(firstWord.group()) &&
+                isUpperCaseRoman(number)
+            );
+        }
+
+        assert matches.size() > 1;
+
+        // The numbers must all be uppercase Roman
+        boolean allUpperCaseRoman = matches
+            .stream()
+            .map(m -> ((CenturyMatch) m).number().roman())
+            .allMatch(this::isUpperCaseRoman);
+        if (!allUpperCaseRoman) {
+            return false;
+        }
+
+        // If the first match has a word it must be lowercase and not an abbreviation
+        if (firstWord != null) {
+            final String word = firstWord.group();
+            return !isAbbreviation(word) && FinderUtils.startsWithLowerCase(word);
+        }
+
+        return true;
+    }
+
+    private boolean isUpperCaseRoman(String roman) {
+        return StringUtils.isAllUpperCase(roman) && isRomanLetters(roman);
     }
     //endregion
 }

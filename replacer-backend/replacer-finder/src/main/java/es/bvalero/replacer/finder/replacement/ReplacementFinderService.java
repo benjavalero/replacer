@@ -2,10 +2,10 @@ package es.bvalero.replacer.finder.replacement;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.*;
-import es.bvalero.replacer.finder.StandardType;
 import jakarta.annotation.PostConstruct;
 import java.util.*;
 import java.util.concurrent.ConcurrentSkipListSet;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -88,8 +88,24 @@ class ReplacementFinderService
     private Stream<Replacement> findStreamWithoutSuggestions(FinderPage page, Collection<Finder<Replacement>> finders) {
         return finders
             .stream()
-            .map(finder -> (ReplacementFinder) finder)
+            .map(ReplacementFinder.class::cast)
             .flatMap(finder -> finder.findWithNoSuggestions(page));
+    }
+
+    //endregion
+
+    //region Automatic replacements
+
+    @Override
+    public SortedSet<Replacement> findAutomaticReplacements(FinderPage page) {
+        // Build the sorted set from the results of the more generic stream finder.
+        // We return a mutable and thread-safe collection
+        // as we will remove items if they are contained in immutables.
+        return getFinders()
+            .stream()
+            .map(ReplacementFinder.class::cast)
+            .flatMap(finder -> finder.findAutomaticReplacements(page))
+            .collect(Collectors.toCollection(ConcurrentSkipListSet::new));
     }
     //endregion
 }

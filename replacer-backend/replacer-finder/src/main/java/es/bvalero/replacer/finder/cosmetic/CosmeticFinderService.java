@@ -1,5 +1,6 @@
 package es.bvalero.replacer.finder.cosmetic;
 
+import es.bvalero.replacer.checkwikipedia.CheckWikipediaAction;
 import es.bvalero.replacer.checkwikipedia.CheckWikipediaFixEvent;
 import es.bvalero.replacer.common.util.ReplacerUtils;
 import es.bvalero.replacer.finder.*;
@@ -8,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Stream;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
@@ -18,13 +20,16 @@ class CosmeticFinderService implements FinderService<Cosmetic>, CosmeticApi {
 
     // Dependency injection
     private final List<CosmeticFinder> cosmeticFinders;
+    private final ReplacementFindApi replacementFindApi;
     private final ApplicationEventPublisher applicationEventPublisher;
 
     public CosmeticFinderService(
         List<CosmeticFinder> cosmeticFinders,
+        ReplacementFindApi replacementFindApi,
         ApplicationEventPublisher applicationEventPublisher
     ) {
         this.cosmeticFinders = cosmeticFinders;
+        this.replacementFindApi = replacementFindApi;
         this.applicationEventPublisher = applicationEventPublisher;
     }
 
@@ -40,7 +45,17 @@ class CosmeticFinderService implements FinderService<Cosmetic>, CosmeticApi {
 
     @Override
     public Collection<Cosmetic> findCosmetics(FinderPage page) {
-        return this.find(page);
+        return Stream.concat(findStream(page), findAutomaticReplacements(page)).toList();
+    }
+
+    private Stream<Cosmetic> findAutomaticReplacements(FinderPage page) {
+        return replacementFindApi.findAutomaticReplacements(page).stream().map(this::convertReplacement);
+    }
+
+    private Cosmetic convertReplacement(Replacement replacement) {
+        assert replacement.suggestions().size() == 2;
+        String fix = replacement.suggestions().get(1).getText();
+        return new Cosmetic(replacement.start(), replacement.text(), fix, CheckWikipediaAction.NO_ACTION);
     }
 
     /** Return the page with new content after applying all the cosmetic changes */

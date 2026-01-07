@@ -18,4 +18,10 @@ public interface ReplacementFindApi {
 
     /** Find a known standard type matching with the given replacement and case-sensitive option */
     Optional<StandardType> findReplacementType(WikipediaLanguage lang, String replacement, boolean caseSensitive);
+
+    /**
+     * Find all replacements in the page content that can be applied automatically
+     * ignoring the ones contained in immutables
+     */
+    SortedSet<Replacement> findAutomaticReplacements(FinderPage page);
 }
