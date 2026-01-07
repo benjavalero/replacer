@@ -235,17 +235,6 @@ public class FinderUtils {
         return start == end;
     }
 
-    /** Determine if a string is blank, i.e. composed only by Unicode whitespace characters. */
-    private boolean isBlank(String text, int start, int end) {
-        assert !isEmpty(text, start, end);
-        for (int i = start; i < end; i++) {
-            if (!isWhiteSpace(text.charAt(i))) {
-                return false;
-            }
-        }
-        return true;
-    }
-
     /** Determine if a character is considered a Unicode whitespace character */
     public boolean isWhiteSpace(char ch) {
         return ch != NEW_LINE && Character.isWhitespace(ch);
@@ -258,7 +247,31 @@ public class FinderUtils {
 
     /** Determine if the string is empty or blank or a whitespace alias */
     public boolean isEmptyBlankOrSpaceAlias(String text, int start, int end) {
-        return isEmpty(text, start, end) || isBlank(text, start, end) || isSpaceAlias(text, start, end);
+        int i = start;
+        while (i < end) {
+            char ch = text.charAt(i);
+            if (isWhiteSpace(ch)) {
+                i++;
+            } else {
+                // Check if it's one of the known aliases starting at the current position
+                int aliasLength = getSpaceAliasLength(text, i, end);
+                if (aliasLength > 0) {
+                    i += aliasLength;
+                } else {
+                    return false; // Found a non-whitespace character that isn't an alias
+                }
+            }
+        }
+        return true;
+    }
+
+    private int getSpaceAliasLength(String text, int start, int end) {
+        for (String alias : SPACE_ALIASES) {
+            if (containsAtPosition(text, alias, start) && start + alias.length() <= end) {
+                return alias.length();
+            }
+        }
+        return 0;
     }
 
     /** Determine if the string is an only whitespace or a whitespace alias */

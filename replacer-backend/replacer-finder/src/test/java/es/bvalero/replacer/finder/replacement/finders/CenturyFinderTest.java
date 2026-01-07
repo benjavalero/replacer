@@ -50,7 +50,7 @@ class CenturyFinderTest {
             // With era
             "siglo II a. C. * siglo II a. C. * {{siglo|II|a|s}}",
             "siglo V d.C. * siglo V d.C. * {{siglo|V|d|s}}",
-            "siglo I&nbsp;a.&nbsp;C. * siglo I&nbsp;a.&nbsp;C. * {{siglo|I|a|s}}",
+            "siglo I &nbsp;a.&nbsp;C. * siglo I &nbsp;a.&nbsp;C. * {{siglo|I|a|s}}",
             "siglo X d.{{esd}}C. * siglo X d.{{esd}}C. * {{siglo|X|d|s}}",
             "siglo I adC * siglo I adC * {{siglo|I|a|s}}",
             "siglo I a.&nbsp;de&nbsp;C. * siglo I a.&nbsp;de&nbsp;C. * {{siglo|I|a|s}}",
