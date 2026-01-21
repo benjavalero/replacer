@@ -1,7 +1,13 @@
 # Versions
 
 ## 2.33.0 (??)
-- Feat: use some replacements that can be applied automatically as cosmetics
+- Feature: major improvements to the century finder including support for Arabic numbers, linked centuries with aliases, abbreviations, eras and several templates (e.g. `nowrap` or non-breaking spaces).
+- Feature: improvements in string treatment with better support for space aliases and performance optimizations.
+- Feature: use some replacements that can be applied automatically as cosmetics
+- Feature: ignore values of `refname` template parameter
+- Improvement: performance optimizations in finders by using Java records and avoiding unnecessary object creation.
+- Improvement: better capture of degree symbols.
+- Config: add tasks for IntelliJ and VS Code.
 
 ## 2.32.0 (1 Sep 2025)
 - Revert: iterate the replacements and immutables sequentially in Production
