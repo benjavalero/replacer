@@ -1,6 +1,6 @@
 # Versions
 
-## 2.33.0 (??)
+## 2.33.0 (26 Jan 2026)
 - Feature: major improvements to the century finder including support for Arabic numbers, linked centuries with aliases, abbreviations, eras and several templates (e.g. `nowrap` or non-breaking spaces).
 - Feature: improvements in string treatment with better support for space aliases and performance optimizations.
 - Feature: use some replacements that can be applied automatically as cosmetics
