@@ -22,7 +22,8 @@ También hay que filtrar por los espacios ''Principal'' y ''Anexo'', que son los
 === Listado ===
 
  # a. de C.
- S. A. de C. V.          # 150
+ S. A. de C. V.          # 153
+ S.A. de C.V.            # 1628
 
  # Adrian
  Adrian Mannarino
@@ -48,6 +49,9 @@ También hay que filtrar por los espacios ''Principal'' y ''Anexo'', que son los
 
  # alla
  Alla Kudryavtseva
+
+ # a.m.
+ U.N.A.M.                # 120
 
  # america
  # Se ignora también precedido de nombre propio
@@ -83,6 +87,9 @@ También hay que filtrar por los espacios ''Principal'' y ''Anexo'', que son los
  # Bahía
  Bahía Blanca
 
+ # ban
+ Ban Ki-moon             # 397
+
  # barbara
  Barbara Schett
  Barbara Potter
@@ -94,6 +101,9 @@ También hay que filtrar por los espacios ''Principal'' y ''Anexo'', que son los
 
  # Biblioteca
  Biblioteca Nacional
+
+ # bunkers
+ Los Bunkers             # 263
 
  # cave
  Nick Cave               # 329
@@ -151,6 +161,7 @@ También hay que filtrar por los espacios ''Principal'' y ''Anexo'', que son los
  Ciudad Acuña
  Ciudad Obregón
  Ciudad Victoria         # 659
+ Premio Ciudad
 
  # Colegio
  Real Colegio
@@ -225,6 +236,10 @@ También hay que filtrar por los espacios ''Principal'' y ''Anexo'', que son los
 
  # Garcia
  Caroline Garcia
+
+ # ghetto
+ De La Ghetto            # 172
+ De la Ghetto            # 173
 
  # Gómez
  Selena Gomez
@@ -310,6 +325,9 @@ También hay que filtrar por los espacios ''Principal'' y ''Anexo'', que son los
 
  # Lunes
  Lunes Santo
+
+ # luthiers
+ Les Luthiers            # 264
 
  # lt
  &lt;
@@ -518,6 +536,10 @@ También hay que filtrar por los espacios ''Principal'' y ''Anexo'', que son los
  # Primavera
  Primavera Árabe           # 441
 
+ # Primer Ministro
+ Oficina del Primer Ministro
+ Premio del Primer Ministro
+
  # Provincial
  Diputación Provincial
  Audiencia Provincial
@@ -711,6 +733,9 @@ También hay que filtrar por los espacios ''Principal'' y ''Anexo'', que son los
  # Viernes
  Viernes Santo
  Viernes de Dolores
+
+ # volleyball
+ Beach Volleyball        # 165
 
  # wild card
  (wild card)

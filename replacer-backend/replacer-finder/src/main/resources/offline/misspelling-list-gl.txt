@@ -283,8 +283,8 @@
  aceder||acceder
  acedera||aceda
  acederas||acedas
- aceira||beirarúa
- aceiras||beirarúas
+ aceira||beirarrúa
+ aceiras||beirarrúas
  aceirico||alfineteiro
  aceiricos||alfineteiros
  aceitona||oliva
@@ -524,6 +524,8 @@
  aereo||aéreo
  aereas||aéreas
  aereos||aéreos
+ aerolínea||aeroliña
+ aerolíneas||aeroliñas
  aerolito||aerólito
  aerolitos||aerólitos
  aerostato||aeróstato
@@ -579,6 +581,8 @@
  agotar||esgotar
  agobiar||angustiar
  agobio||angustia
+ agria||agre
+ agrias||agres
  agrio||agre
  agrios||agres
  agujetas||maniotas
@@ -818,6 +822,7 @@
  amortiguar||amortecer
  analise||análise
  analises||análises
+ ancara||Ankara
  ancestro||antecesor, antepasado, devanceiro
  ancestros||antecesores, antepasados, devanceiros
  ancla||áncora
@@ -846,7 +851,6 @@
  anilla||anel
  anillas||aneis
  animales||animais
- ankara||Ancara
  anodino||anódino
  anodinos||anódinos
  anodina||anódina
@@ -990,6 +994,7 @@
  arcillas||arxilas
  ardilla||esquío
  ardillas||esquíos
+ aredor||arredor
  arista||aresta
  aristas||arestas
  Argelia|cs|Alxeria
@@ -1107,6 +1112,7 @@
  asinalar||sinalar
  asinatura||sinatura
  asinaturas||sinaturas
+ asistíu||asistiu
  asoprar||soprar
  asosegar||sosegar
  aspavento||espavento
@@ -1151,6 +1157,17 @@
  atestiguou||testemuñou
  aterrizar||aterrar
  aterrizaxe||aterraxe
+ atingue||atinxe
+ atinguen||atinxen
+ atinguía||atinxía
+ atinguían||atinxían
+ atinguida||atinxida
+ atinguidas||atinxidas
+ atinguido||atinxido
+ atinguidos||atinxidos
+ atinguir||atinxir
+ atinguiu||atinxiu
+ atinguiron||atinxiron
  atirar||tirar
  atividade||actividade
  atividades||actividades
@@ -1201,6 +1218,7 @@
  autoinduccións||autoinducións
  autoinducion||autoindución
  autoinducions||autoinducións
+ autofinanciación||autofinanciamento
  automáticamente||automaticamente
  automobil||automóbil
  automobiles||automóbiles
@@ -1319,6 +1337,8 @@
  bandolina||mandolina
  bandolinas||mandolinas
  banquillo||banco
+ bañador||traxe de baño
+ bañadores||traxes de baño
  baranda||varanda
  barandas||varandas
  barandilla||varanda
@@ -2130,6 +2150,8 @@
  carnecería||carnicería
  carnecerias||carnicerías
  carnecerías||carnicerías
+ carnet||carné
+ carnets||carnés
  carnica||cárnica
  carnicas||cárnicas
  carnico||cárnico
@@ -2391,6 +2413,7 @@
  chamabase||chamábase
  chamabanse||chamábanse
  chamán||xamán
+ chamáns||xamáns
  chamanismo||xamanismo
  chambrico||chambaril
  chambricos||chambaris
@@ -3054,6 +3077,8 @@
  confesions||confesións
  configuracion||configuración
  configuracions||configuracións
+ confiere||confire
+ confieren||confiren
  confima||confirma
  confimada||confirmada
  confimadas||confirmadas
@@ -4255,6 +4280,8 @@
  deican||dedican
  deicandose||dedicándose
  deicándose||dedicándose
+ deiferente||diferente
+ deiferentes||diferentes
  del||do (contracción "de + o"), del (é correcta se é contracción "de + el")
  delagacion||delegación
  delagación||delegación
@@ -4672,6 +4699,7 @@
  destruidos||destruídos
  destruimos||destruímos
  destruir||destruír
+ destruiron||destruíron
  desvaer||esvaecer
  desvan||faiado
  desván||faiado
@@ -4913,6 +4941,7 @@
  direitas||directas, dereitas
  direito||directo
  direitos||directos
+ dirixíu||dirixiu
  dirreccion||dirección
  dirrección||dirección
  discapacidad||discapacidade
@@ -6743,6 +6772,8 @@
  estribación||contraforte
  estribaciones||contrafortes
  estribacións||contrafortes
+ estribillo||retrousos
+ estribillos||retrousos
  estropear||estragar
  estropeado||estragado
  estropeados||estragados
@@ -6750,6 +6781,8 @@
  estropeadas||estragadas
  estructura||estrutura
  estructuras||estruturas
+ estrutrura||estrutura
+ estrutruras||estruturas
  estubo||estivo
  estuche||estoxo
  estuches||estoxos
@@ -6820,6 +6853,12 @@
  eúscaros||éuscaros, vascos
  euskera||éuscaro, vasco (lingua vasca)
  euskeras||éuscaros, vascos (lingua vasca)
+ euxenesia||euxénese
+ euxenésica||euxenética
+ euxenésicas||euxenéticas
+ euxenésico||euxenético
+ euxenésicos||euxenéticos
+ euxenicista||euxenista
  evaluacion||avaliación
  evaluación||avaliación
  evaluacions||avaliacións
@@ -8042,6 +8081,8 @@
  gracias||grazas
  grada||bancada, chanzo
  gradas||bancadas, chanzos
+ grado||grao
+ grados||graos
  graderío||bancada
  graderíos||bancadas
  graduacion||graduación
@@ -8510,6 +8551,7 @@
  hipotesis||hipótese
  hipótesis||hipótese, hipóteses
  hipotéticamente||hipoteticamente
+ hippie||hippy
  hirta||irta
  hirtas||irtas
  hirto||irto
@@ -8666,6 +8708,7 @@
  idolos||ídolos
  illano||insular,illán
  illanos||insulares, illáns
+ imponencia||impoñencia
  inamobible||inamovible
  inamobibles||inamovibles
  incorruta||incorrupta
@@ -9066,6 +9109,7 @@
  influido||influído
  influidos||influídos
  influir||influír
+ influiria||influiría
  influiron||influíron
  influiu||influíu
  informacion||información
@@ -9320,6 +9364,7 @@
  introduccións||introducións
  introducion||introdución
  introducions||introducións
+ introducíu||introduciu
  intromision||intromisión
  intromisions||intromisións
  intrucción||instrución
@@ -9591,6 +9636,8 @@
 
 == K ==
  kabul||Cabul
+ kaiak||caiac
+ kaiaks||caiacs
  kathmandu||Katmandú
  katmandu||Katmandú
  kazagistan||Kazakhstán
@@ -11078,6 +11125,7 @@
  numas||nunhas
  numero||número
  numeros||números
+ núpcias||nupcias
  nutria||lontra
  nutrias||lontras
  nutrinte||nutriente
@@ -11405,6 +11453,7 @@
  patosas||zouponas
  patronato||padroado
  patronatos||padroados
+ patronos||patróns
  pavonearse||fachendear
  páxaro||paxaro
  páxara||paxara
@@ -11667,6 +11716,7 @@
  plusvalores||plusvalías
  pó||po (ex: unha nube de po)
  pós||pos (ex: unha nube de pos)
+ poblacion||poboación
  población||poboación
  poblaciones||poboacións
  poboacion||poboación
@@ -11706,6 +11756,13 @@
  polichinela||pulchinelo
  polichinelas||pulchinelos
  policiaca||policial
+ policiacas||policiais
+ policíaca||policial
+ policíacas||policiais
+ policiaco||policial
+ policiacos||policiais
+ policíaco||policial
+ policíacos||policiais
  polilla||traza, couza
  polillas||trazas, couzas
  polison||polisón
@@ -11926,6 +11983,7 @@
  prescolar||preescolar
  presencia||presenza (substantivo), presencia (é correcto se é do verbo presenciar)
  presencias||presenzas
+ presentandose||presentándose
  presiona||aperta, preme, pulsa, mete presión
  presionan||apertan, premen, pulsan, meten presión
  presionar||apertar, premer, pulsar, meter presión
@@ -11950,6 +12008,10 @@
  perxuicios||prexuízos
  perxuícios||prexuízos
  perxuizos||prexuízos
+ priemeira||primeira
+ priemeiras||primeiras
+ priemeiro||primeiro
+ priemeiros||primeiros
  primaveira||primavera
  primaveiras||primaveras
  primer||primeiro
@@ -11981,6 +12043,7 @@
  produccións||producións
  producion||produción
  producions||producións
+ produciria||produciría
  producíuse||produciuse
  producto||produto
  productor||produtor
@@ -11996,6 +12059,27 @@
  promediar||calcular a media
  promedio||media, termo medio
  promedios||media, termo medio
+ promociona||promove
+ promocionada||promovida
+ promocionadas||promovidas
+ promocionado||promovido
+ promocionados||promovidos
+ promocionan||promoven
+ promocionaba||promovía
+ promocionaban||promovían
+ promocionar||promover
+ promocionaría||promovería
+ promocionarían||promoverían
+ promocionaron||promoveron
+ promocionarse||promoverse
+ promocionase||promovese
+ promociónase||promóvese
+ promociónanse||promóvense
+ promocionasen||promovesen
+ promocione||promova
+ promocionen||promovan
+ promocionou||promoveu
+ promocionouse||promoveuse
  pronosticar||prognosticar
  pronóstico||prognóstico
  pronósticos||prognósticos
@@ -12130,6 +12214,7 @@
  queixidos||laios
  queixoto||coxote
  queixotos||coxotes
+ quén||quen
  quenia|cs|Quenia
  quenes||quen
  querellarse||querelarse
@@ -12181,6 +12266,7 @@
  raperas||rapeiras
  rapero||rapeiro
  raperos||rapeiros
+ rápidamente||rapidamente
  rapiña||rapina
  rapiñas||rapinas
  rapiñar||rapinar
@@ -12272,6 +12358,7 @@
  rechear||reencher
  rechistar||chiar
  recibeu||recibiu
+ recibíu||recibiu
  recife||arrecife
  recifes||arrecifes
  recluta||recruta
@@ -12326,7 +12413,9 @@
  records||récords
  recorrer||percorrer (pero só no caso de ''andar un traxecto'')
  recorrido||percorrido (itinerario, traxecto)
+ recruamento||recrudescencia
  recrudece||recrúa
+ recrudecemento||recrudescencia
  recrudecen||recrúan
  recrudecendo||recruando
  recrudecendose||recruándose
@@ -12350,11 +12439,13 @@
  recurrir||recorrer (a alguén, presentar recurso)
  reducción||redución
  reduccións||reducións
- reemprazaba||substituía
- reemprazaban||substituían
+ reducíu||reduciu
+ reducíuse||reduciuse
  reemprace||substitúa
  reempracen||substitúan
  reempraza||substitúe
+ reemprazaba||substituía
+ reemprazaban||substituían
  reemprazada||substituída
  reemprazadas||substituídas
  reemprazado||substituído
@@ -12441,11 +12532,38 @@
  reír||rir
  remite||remitente, remite (é correcto se é do verbo remitir)
  remites||remitentes
- remprazaba||substituía
- remprazaban||substituían
+ remplace||substitúa
+ remplacen||substitúan
+ remplaza||substitúe
+ remplazaba||substituía
+ remplazaban||substituían
+ remplazada||substituída
+ remplazadas||substituídas
+ remplazado||substituído
+ remplazados||substituídos
+ remplazan||substitúen
+ remplazando||substituíndo
+ remplazandose||substituíndose
+ remplazándose||substituíndose
+ remplazar||substituír
+ remplazara||substituíra
+ remplazará||substituirá
+ remplazaran||substituíran
+ remplazarán||substituirán
+ remplazaren||substituíren
+ remplazaria||substituiría
+ remplazaría||substituiría
+ remplazarian||substituirían
+ remplazarían||substituirían
+ remplazaron||substituíron
+ remplazase||substituíse
+ remplazasen||substituísen
+ remplazou||substituíu
  remprace||substitúa
  rempracen||substitúan
  rempraza||substitúe
+ remprazaba||substituía
+ remprazaban||substituían
  remprazada||substituída
  remprazadas||substituídas
  remprazado||substituído
@@ -13430,6 +13548,8 @@
  sustituir||substituír
  sustituír||substituír
  sustituíu||substituíu
+ sustracción||subtracción
+ sustraccións||subtraccións
  susurrar||murmurar, musitar
  susurro||murmurio
  suxa||sucia
@@ -14086,6 +14206,9 @@
  veriña||albeira
  verlo||vérrago (porco), vélaro (conxunto de lá)
  verlos||vérragos (porcos), vélaros (conxunto de lás)
+ verquer||verter
+ verquido||vertido
+ verquidos||vertidos
  version||versión
  versions||versións
  vertedeira||vertedoiro

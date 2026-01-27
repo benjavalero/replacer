@@ -45,11 +45,11 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  a de C.||a.&nbsp;C. («antes de Cristo» —con espacio duro—)
  a. de C.||a.&nbsp;C. («antes de Cristo» —con espacio duro—)
  a demás||además (adverbio)
- ad-hoc||''ad hoc''
- ad honorem||''ad honorem'', ''Ad honorem'' (para inicios de frase o columnas de tablas)
- ad honórem||''ad honorem'', ''Ad honorem'' (para inicios de frase o columnas de tablas)
- ad honoren||''ad honorem'', ''Ad honorem'' (para inicios de frase o columnas de tablas)
- Ad honorem|cs|''ad honorem'', ''Ad honorem'' (para inicios de frase o columnas de tablas)
+ ad-hoc||''ad&nbsp;hoc''
+ ad honorem||''ad&nbsp;honorem'', ''Ad&nbsp;honorem'' (para inicios de frase o columnas de tablas)
+ ad honórem||''ad&nbsp;honorem'', ''Ad&nbsp;honorem'' (para inicios de frase o columnas de tablas)
+ ad honoren||''ad&nbsp;honorem'', ''Ad&nbsp;honorem'' (para inicios de frase o columnas de tablas)
+ Ad honorem|cs|''ad&nbsp;honorem'', ''Ad&nbsp;honorem'' (para inicios de frase o columnas de tablas)
  Administración Publica|cs|Administración Pública
  a.e.c.||a.&nbsp;C. (con espacio duro; abreviatura de «antes de Cristo»; recomendada), a.&nbsp;e.&nbsp;c. (con espacios duros; abreviatura de «antes de la era común»)
  a. e. c.||a.&nbsp;C. (con espacio duro; abreviatura de «antes de Cristo»; recomendada), a.&nbsp;e.&nbsp;c. (con espacios duros; abreviatura de «antes de la era común»)
@@ -422,7 +422,6 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  Área Sanitaria|cs|área sanitaria, Área sanitaria (para inicios de frase o columnas de tablas)
  Área sanitaria|cs|área sanitaria, Área sanitaria (para inicios de frase o columnas de tablas)
  arriba a abajo||arriba abajo
- asía||Asia (continente), asía (conjugación del verbo «asir»: él, ella, usted), hacía (conjugación del verbo «hacer»: él, ella, usted), hacia (preposición), así (adverbio o conjugación del verbo «asir»: yo), Asía (navío español)
  a si como||así como, a sí mismo como
  a sí como||así como, a sí mismo como
  a traves||a través
@@ -686,6 +685,7 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  beauty addict||adicto a la belleza, adicta a la belleza
  B.I.C|cs|BIC (siglas de bien de interés cultural)
  B.I.C.|cs|BIC (siglas de bien de interés cultural)
+ Bien de Interés Cultural|cs|bien de interés cultural, Bien de interés cultural (para inicios de frase o columnas de tablas)
  big five||los 5 grandes, los cinco grandes
 
 == C ==
@@ -715,6 +715,7 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  canta-autores||cantautores
  Carlos Ménem|cs|Carlos Menem
  Casa Consistorial|cs|casa consistorial, Casa consistorial (para inicios de frase o columnas de tablas)
+ Casa de Borbón|cs|casa de Borbón
  Casa Rural|cs|casa rural, Casa rural (para inicios de frase o columnas de tablas)
  Casa rural|cs|casa rural, Casa rural (para inicios de frase o columnas de tablas)
  Casco histórico|cs|casco histórico, Casco histórico (para inicios de frase o columnas de tablas)
@@ -751,7 +752,7 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  centro-america||Centroamérica (subcontinente), Centro América (cuando es parte de un nombre)
  centro américa||Centroamérica (subcontinente), Centro América (cuando es parte de un nombre)
  centro-américa||Centroamérica (subcontinente), Centro América (cuando es parte de un nombre)
- Centro Cívico|cs|centro cívico (genérico), Centro Cívico (nombre propio), Centro cívico (para inicios de frase o columnas de tablas)
+ Centro Cívico|cs|centro cívico (genérico, ejemplo: «un centro cívico», «el centro cívico de la ciudad»), Centro Cívico (nombre propio, ejemplo: «Centro Cívico San Agustín»), Centro cívico (para inicios de frase o columnas de tablas)
  Centro cívico|cs|centro cívico, Centro cívico (para inicios de frase o columnas de tablas)
  Centro Deportivo|cs|centro deportivo (genérico), Centro Deportivo (nombre propio), Centro deportivo (para inicios de frase o columnas de tablas)
  Centro deportivo|cs|centro deportivo (genérico), Centro Deportivo (nombre propio), Centro deportivo (para inicios de frase o columnas de tablas)
@@ -769,10 +770,11 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  Centro de día|cs|centro de día (genérico), Centro de Día (nombre propio), Centro de día (para inicios de frase o columnas de tablas)
  Centro de Especialidades|cs|centro de especialidades (genérico), Centro de Especialidades (nombre propio), Centro de especialidades (para inicios de frase o columnas de tablas)
  Centro de especialidades|cs|centro de especialidades, Centro de especialidades (para inicios de frase o columnas de tablas)
- Centro de Interpretación|cs|centro de interpretación (genérico), Centro de Interpretación (nombre propio), Centro de interpretación (para inicios de frase o columnas de tablas)
- Centro de interpretación|cs|centro de interpretación (genérico), Centro de Interpretación (nombre propio), Centro de interpretación (para inicios de frase o columnas de tablas)
+ Centro de Interpretación|cs|centro de interpretación (genérico, ejemplo: «un centro de interpretación»), Centro de Interpretación (nombre propio, ejemplo: «Centro de Interpretación Patrimonial de Almería»), Centro de interpretación (para inicios de frase o columnas de tablas)
+ Centro de interpretación|cs|centro de interpretación (genérico, ejemplo: «un centro de interpretación»), Centro de Interpretación (nombre propio, ejemplo: «Centro de Interpretación Patrimonial de Almería»), Centro de interpretación (para inicios de frase o columnas de tablas)
  Centro de Mayores|cs|centro de mayores (genérico), Centro de Mayores (nombre propio), Centro de mayores (para inicios de frase o columnas de tablas)
  Centro de mayores|cs|centro de mayores (genérico), Centro de Mayores (nombre propio), Centro de mayores (para inicios de frase o columnas de tablas)
+ cerca a||cerca de
  Ché Guevara|cs|Che Guevara
  ciencia-ficcion||ciencia ficción
  ciencia-ficción||ciencia ficción
@@ -953,10 +955,10 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  co-desarrollaran||codesarrollaran (pretérito), codesarrollarán (futuro)
  co desarrollaron||codesarrollaron
  co-desarrollaron||codesarrollaron
- co desarrollo||codesarrollo (sustantivo o verbo 1.ª persona), codesarrolló (3.ª persona)
- co-desarrollo||codesarrollo (sustantivo o verbo 1.ª persona), codesarrolló (3.ª persona)
- co desarrolló||codesarrolló (3.ª persona), codesarrollo (sustantivo o verbo 1.ª persona)
- co-desarrolló||codesarrollo (3.ª persona), codesarrollo (sustantivo o verbo 1.ª persona)
+ co desarrollo||codesarrollo (sustantivo o verbo, 1.ª persona), codesarrolló (verbo, 3.ª persona)
+ co-desarrollo||codesarrollo (sustantivo o verbo, 1.ª persona), codesarrolló (verbo, 3.ª persona)
+ co desarrolló||codesarrolló (verbo, 3.ª persona), codesarrollo (sustantivo o verbo 1.ª persona)
+ co-desarrolló||codesarrollo (verbo, 3.ª persona), codesarrollo (sustantivo o verbo 1.ª persona)
  co descubridor||codescubridor
  co-descubridor||codescubridor
  co descubridora||codescubridora
@@ -1210,7 +1212,8 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  comicios electorales||comicios
  Complejo Deportivo|cs|complejo deportivo (genérico), Complejo Deportivo (nombre propio), Complejo deportivo (para inicios de frase o columnas de tablas)
  Complejo deportivo|cs|complejo deportivo (genérico), Complejo Deportivo (nombre propio), Complejo deportivo (para inicios de frase o columnas de tablas)
- Comunidad Autónoma|cs|comunidad autónoma, Comunidad autónoma (para inicios de frase o columnas de tablas), Comunidad (para la Comunidad de Madrid, la Comunidad Valenciana y la Comunidad Foral de Navarra)
+ Comunidad Autónoma|cs|comunidad autónoma, Comunidad autónoma (para inicios de frase o columnas de tablas), Comunidad (para la Comunidad de Madrid, la Comunidad Valenciana y la Comunidad Foral de Navarra), Región (para la Región de Murcia)
+ Comunidades Autónomas|cs|comunidades autónomas, Comunidades autónomas (para inicios de frase o columnas de tablas)
  con Categoría|cs|con categoría
  con está||con esta
  con esté||con este
@@ -1752,6 +1755,7 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  El antigua|cs|El antiguo, La antigua
  el años||el año, los años, él años
  el autoestima||la autoestima
+ el ayuntamiento|cs|el ayuntamiento (edificio), la casa consistorial (edificio: más propiamente dicho), el municipio, el Ayuntamiento (institución, y para inicios de frase o columnas de tablas)
  el batalla||la batalla, él batalla
  el cambió||el cambio, él cambió
  el comision||la comisión, la Comisión (cuando es parte de un nombre)
@@ -1828,7 +1832,6 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  e-mail||mensaje de correo electrónico, correo electrónico
  e-mails||mensajes de correo electrónico, correos electrónicos
  en al año||en el año
- en base a||con base en (construcción recomendada), basándose en (construcción recomendada), sobre la base de (construcción recomendada)
  en caso que||en caso de que
  en cuento a||en cuanto a
  en cuento al||en cuanto al
@@ -1849,6 +1852,7 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  enllaços externs||Enlaces externos
  external links||Enlaces externos
  en la qué||en la que
+ en miles de Euros|cs|en miles de euros
  en perdida||en pérdida
  en relación a||con relación a, en relación con
  en relación al||con relación al, en relación con el
@@ -1859,6 +1863,7 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  enterandose que||enterándose de que
  enterándose que||enterándose de que
  enterarse que||enterarse de que
+ Entidad de Población|cs|entidad de población, Entidad de población (para inicios de frase o columnas de tablas)
  entorno a||en torno a (locución adverbial)
  entorno al||en torno al (locución adverbial)
  entre medias||entremedias (entre dos lugares, cosas o tiempos)
@@ -2205,6 +2210,7 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  ex-juezas||exjuezas
  ex jugador||exjugador
  ex-jugador||exjugador
+ ex–jugador||exjugador
  ex jugadora||exjugadora
  ex-jugadora||exjugadora
  ex jugadoras||exjugadoras
@@ -2307,6 +2313,7 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  ex-políticos||expolíticos
  ex presidente||expresidente
  ex-presidente||expresidente
+ ex–presidente||expresidente
  ex presidentes||expresidentes
  ex-presidentes||expresidentes
  ex preso||ex-preso (para referirse a alguien que ya no es preso)
@@ -2399,6 +2406,9 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  ex-vicepresidente||exvicepresidente
 
 == F ==
+ Familia Real Británica|cs|familia real británica
+ Familia Real Española |cs|familia real española
+ Familia Real|cs|familia real
  Fase de Grupos|cs|fase de grupos (en medio de oración), Fase de grupos (para inicios de frase o columnas de tablas)
  ffaa||FF.&nbsp;AA. (Fuerzas Armadas)
  ff.aa.||FF.&nbsp;AA. (Fuerzas Armadas)
@@ -3191,7 +3201,7 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  laminas de||láminas de
  la mismas||la misma, las mismas
  la mismo||la misma, lo mismo, el mismo
- la movimiento||el movimiento
+ la movimiento||el movimiento, al movimiento
  la mujeres||las mujeres, la mujer
  la naciones||las naciones, las Naciones (cuando es parte de un nombre), la nación es
  la necesidades||las necesidades, la necesidad, la necesidad es
@@ -3648,6 +3658,7 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  mas y|cs|más y
  match ball||pelota de partido
  match point||punto de partido
+ Max Augustín|cs|Max Augustin
  maxi sencillo||maxisencillo
  maxi-sencillo||maxisencillo
  maxi sencillos||maxisencillos
@@ -3659,8 +3670,10 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  medio-ambiente||medio ambiente, medioambiente (recomendada)
  medio-ambientes||medios ambientes, medioambientes (recomendada)
  medios-ambientes||medios ambientes, medioambientes (recomendada)
- mejor conocida como||más conocida como (expresión correcta en español)
- mejor conocido como||más conocido como (expresión correcta en español)
+ mejor conocida como||más conocida como (expresión correcta en español), conocida como (expresión correcta en español)
+ mejor conocido como||más conocido como (expresión correcta en español), conocido como (expresión correcta en español)
+ mejor conocida por||más conocida por (expresión correcta en español), conocida por (expresión correcta en español)
+ mejor conocido por||más conocido por (expresión correcta en español), conocido por (expresión correcta en español)
  Mercado de Abastos|cs|mercado de abastos, Mercado de abastos (para inicios de frase o columnas de tablas)
  Mercado de abastos|cs|mercado de abastos, Mercado de abastos (para inicios de frase o columnas de tablas)
  Mercado Municipal|cs|mercado municipal, Mercado municipal (para inicios de frase o columnas de tablas)
@@ -3673,7 +3686,9 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  meta-análisis||metaanálisis
  Metro de Paris|cs|Metro de París (en español), Métro de Paris (en francés)
  méxico-estadounidense||mexicano-estadounidense, mexicanoestadounidense
+ mexico-estadounidense||mexicano-estadounidense, mexicanoestadounidense
  méxico-estadounidenses||mexicano-estadounidenses, mexicanoestadounidenses
+ mexico-estadounidenses||mexicano-estadounidenses, mexicanoestadounidenses
  mezzo soprano||''mezzosoprano''
  mezzo-soprano||''mezzosoprano''
  mezzo sopranos||''mezzosopranos''
@@ -5071,6 +5086,7 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  relacionadas al||relacionadas con el
  relacionado al||relacionado con el
  relacionados al||relacionados con el
+ release date||fecha de lanzamiento
  re lanza||relanza
  re-lanza||relanza
  re lanzaba||relanzaba
@@ -5259,6 +5275,7 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  se centro||se centró
  se continuo||se continuó
  se creo||se creó
+ Secretario General|cs|secretario general, Secretario general (para inicios de frase o columnas de tablas)
  se da cuenta que||se da cuenta de que
  se dan cuenta que||se dan cuenta de que
  se dedicada||se dedicaba, dedicada, se dedica

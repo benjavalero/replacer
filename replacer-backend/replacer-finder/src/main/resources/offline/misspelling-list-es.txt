@@ -1593,6 +1593,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  ashgabat||Asjabad
  asi||así
  asia|cs|Asia
+ asía||Asia (continente), asía (conjugación del verbo «asir»: él, ella, usted), hacía (conjugación del verbo «hacer»: él, ella, usted), hacia (preposición), así (adverbio o conjugación del verbo «asir»: yo), Asía (navío español)
  asiatica||asiática
  asíatica||asiática
  asiaticas||asiáticas
@@ -1784,7 +1785,6 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  atun||atún
  audicencia||audiencia
  audicencias||audiencias
- Auditorio|cs|auditorio
  audifono||audífono
  audifonos||audífonos
  aujero||agujero
@@ -2327,7 +2327,6 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  biberos||viveros
  bibilioteca||biblioteca
  bibiliotecas||bibliotecas
- Biblioteca|cs|biblioteca, Biblioteca (cuando forma parte del nombre propio)
  bíblia||biblia
  bíblias||biblias
  biblica||bíblica
@@ -2781,7 +2780,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  butirometro||butirómetro
  butirometros||butirómetros
  buyumbura|cs|Buyumbura
- bypass||''bypass'' (en cursiva por ser voz inglesa), baipás (forma recomendada)
+ bypass||baipás (forma recomendada), ''bypass'' (en cursiva por ser voz inglesa)
 
 == C ==
  cabacera||cabecera
@@ -4149,7 +4148,6 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  coleción||colección
  coleciones||colecciones
  colectivizacion||colectivización
- Colegio|cs|colegio (categorizador de lugar), Colegio (nombre propio)
  coleoptero||coleóptero
  coleopteros||coleópteros
  colerica||colérica
@@ -4259,7 +4257,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  comic||cómic
  comica||cómica
  comicas||cómicas
- comicio||comicios
+ comicio||comicios (se usa siempre en plural), votación
  comico||cómico
  comicos||cómicos
  comics||cómics
@@ -5198,7 +5196,6 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  crellendolos||creyéndolos
  crelléndolos||creyéndolos
  cremones||cremonés
- cremor||crémor
  creo||creó (3.ª persona), creo (1.ª persona)
  creperia||crepería
  creperias||creperías
@@ -6320,7 +6317,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  devonicas||devónicas
  devonico||devónico
  devonicos||devónicos
- dí||di
+ dí||día, di
  dia||día
  diabatica||diabática
  diabaticas||diabáticas
@@ -8104,8 +8101,6 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  estaticos||estáticos
  estatística||estadística
  estatísticas||estadísticas
- estator||estátor
- estatores||estátores
  estátua||estatua
  estátuas||estatuas (sustantivo, plural; verbo «estatuar», ‘adornar con estatuas’, 2.ª persona singular: tú), estatuás (verbo «estatuar», ‘adornar con estatuas’, 2.ª persona singular: vos)
  estátus||estatus
@@ -9025,7 +9020,6 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  fidji||Fiyi
  fidyi||Fiyi
  fié||fie
- Fiestas|cs|fiestas (forma genérica), Fiestas (nombre propio)
  fiéis||fieis
  fienes||fines
  fifi||fifí
@@ -9551,7 +9545,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  galapagos||Galápagos
  galápagos|cs|Galápagos
  galardon||galardón
- galeria||galería
+ galeria||galeria (una de las 35 tribus romanas), galería (sinónimo de: pasillo, corredor; soportal, claustro; museo, pinacoteca; colección; pasadizo, túnel; etc.)
  galéria||galería
  galerias||galerías
  galérias||galerías
@@ -12911,9 +12905,8 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  mancebias||mancebías
  manchester||Mánchester
  manchu||manchú
- manchues||manchúes
- manchús||manchúes
- manchus||manchúes
+ manchues||manchúes, manchús
+ manchus||manchús, manchúes
  mancion||mansión
  manción||mansión
  mandacion||mandación
@@ -13210,7 +13203,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  membresia||membresía
  memorandum||memorándum
  memoría||memoria
- memorial||monumento (''memorial'' en inglés), monumento conmemorativo (''memorial'' en inglés), memorial (escrito que plantea una petición), memorándum
+ memorial||monumento (''memorial'' en inglés), monumento conmemorativo (''memorial'' en inglés), monumento homenaje (''memorial'' en inglés), monumento en memoria (''memorial'' en inglés), memorial (escrito que plantea una petición), memorándum
  memorías||memorias
  memotecnia||mnemotecnia, nemotecnia
  memotecnias||mnemotecnias, nemotecnias
@@ -16396,6 +16389,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  Primavera|cs|primavera
  primavrea||primavera
  primavreas||primaveras
+ prime||prime (conjugación del verbo «primar»), horario de máxima audiencia (en inglés, ''prime''), horario estelar (en inglés, ''prime'')
  primogenita||primogénita
  primogenitas||primogénitas
  primogenito||primogénito
@@ -17131,6 +17125,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  ratafias||ratafías
  ratificacion||ratificación
  ratifico||ratificó (verbo, 3.ª persona), ratifico (verbo, 1.ª persona)
+ rating||índice de audiencia, tasa de audiencia
  raton||ratón
  raul||Raúl (nombre de pila masculino en español), Raul (nombre de pila masculino en italiano y en otros idiomas)
  raúl|cs|Raúl
@@ -17841,6 +17836,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  rotulas||rótulas (sustantivo, plural), rotulas (conjugación del verbo «rotular»)
  round||asalto (en boxeo), ronda (en otros deportes)
  rounds||asaltos (en boxeo), rondas (en otros deportes)
+ router||rúter, enrutador, encaminador, direccionador
  rozandola||rozándola
  rozandolas||rozándolas
  rozandole||rozándole
@@ -18362,6 +18358,8 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  shanghái|cs|Shanghái
  share||cuota, cuota de audiencia, porcentaje de audiencia, cuota de pantalla
  shares||cuotas, cuotas de audiencia, porcentajes de audiencia, cuotas de pantalla
+ Sharja|cs|Sarja (nombre en español de un emirato, y su capital, de Emiratos Árabes Unidos)
+ Sharjah|cs|Sarja (nombre en español de un emirato, y su capital, de Emiratos Árabes Unidos)
  shii||chií
  shií||chií
  shiies||chiíes
@@ -18733,6 +18731,8 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  soñaria||soñaría
  sopie||sopié
  sopies||sopiés
+ soporta||soporta (1. sostiene o lleva sobre sí una carga o peso; 2. tolera o lleva con paciencia), admite (en software; en inglés, ''supports''), es compatible con (en software; en inglés, ''supports'')
+ soporte||ayuda, apoyo, asistencia, soporte
  soprendente||sorprendente
  soprendentemente||sorprendentemente
  soprendentes||sorprendentes
@@ -18770,8 +18770,8 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  sozobra||zozobra
  sozobrar||zozobrar
  sozobras||zozobras
- spoiler||destripe, espóiler, destripamiento
- spoilers||destripes, espóileres, destripamientos
+ spoiler||espóiler, destripe, destripamiento
+ spoilers||espóileres, destripes, destripamientos
  sponsor||patrocinador
  sponsors||patrocinadores
  sprinter||esprínter
@@ -19758,7 +19758,8 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  traidas||traídas
  traido||traído
  traidos||traídos
- trailer||tráiler
+ trailer||tráiler (tipo de remolque), avance (en cinematografía)
+ tráiler||tráiler (tipo de remolque), avance (en cinematografía)
  trailers||tráileres
  tráilers||tráileres
  training||adiestramiento, entrenamiento, preparación, instrucción, curso de formación (en el ámbito de la enseñanza), curso de capacitación (en el ámbito de la enseñanza), curso de perfeccionamiento (en el ámbito de la enseñanza)

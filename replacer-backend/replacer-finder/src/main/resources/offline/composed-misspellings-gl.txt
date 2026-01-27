@@ -17,6 +17,7 @@ O formato é o mesmo que o do [[Wikipedia:Revisor ortográfico/Listaxe|lista de 
 
  balanza de pagos||balanza de pagamentos
  con mais||con máis
+ conta con||ten
 
  de mais||de máis
  de este||deste
