@@ -2,6 +2,7 @@ package es.bvalero.replacer.finder.benchmark.century;
 
 import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.finder.benchmark.BaseFinderJmhBenchmark;
+import es.bvalero.replacer.finder.replacement.finders.CenturyFinder;
 import lombok.SneakyThrows;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.Measurement;
@@ -15,7 +16,7 @@ public class CenturyFinderJmhBenchmark extends BaseFinderJmhBenchmark {
 
     private static final String fileName = "century/century-summary-jmh";
 
-    private CenturyOldFinder centuryOldFinder;
+    private CenturyFinder centuryFinder;
     private CenturyNewFinder centuryNewFinder;
 
     @Override
@@ -25,13 +26,13 @@ public class CenturyFinderJmhBenchmark extends BaseFinderJmhBenchmark {
         super.setUp();
 
         // Initialize the finders
-        centuryOldFinder = new CenturyOldFinder();
+        centuryFinder = new CenturyFinder();
         centuryNewFinder = new CenturyNewFinder();
     }
 
     @Benchmark
-    public void centuryOldFinder(Blackhole bh) {
-        runFinder(centuryOldFinder, bh);
+    public void centuryFinder(Blackhole bh) {
+        runFinder(centuryFinder, bh);
     }
 
     @Benchmark
