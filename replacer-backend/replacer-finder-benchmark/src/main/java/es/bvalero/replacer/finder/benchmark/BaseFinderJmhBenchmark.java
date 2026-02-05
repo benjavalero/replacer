@@ -21,6 +21,7 @@ import org.jfree.chart.renderer.category.StatisticalBarRenderer;
 import org.jfree.data.statistics.DefaultStatisticalCategoryDataset;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.infra.Blackhole;
+import org.openjdk.jmh.profile.*;
 import org.openjdk.jmh.results.format.ResultFormatType;
 import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.RunnerException;
@@ -102,7 +103,9 @@ public class BaseFinderJmhBenchmark {
         Options opt = new OptionsBuilder()
             .include(jmhBenchmarkClass.getSimpleName())
             // .addProfiler(GCProfiler.class)
+            // .addProfiler(StackProfiler.class)
             // .addProfiler(MemPoolProfiler.class)
+            // .addProfiler(JavaFlightRecorderProfiler.class)
             .resultFormat(ResultFormatType.JSON)
             .result(RESOURCES_COMPLETE_PATH + fileName + ".json")
             .build();
