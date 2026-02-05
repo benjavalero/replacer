@@ -6,6 +6,7 @@ import es.bvalero.replacer.common.util.FileOfflineUtils;
 import es.bvalero.replacer.finder.Finder;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.benchmark.util.BenchmarkUtils;
+import es.bvalero.replacer.finder.replacement.ReplacementFinder;
 import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
@@ -73,6 +74,20 @@ public class BaseFinderJmhBenchmark {
                 .stream()
                 .filter(p -> p.getPageKey().getPageId() == samplePages.get(pageId))
                 .forEach(page -> finder.find(page).forEach(bh::consume));
+        }
+    }
+
+    protected void runReplacementFinder(ReplacementFinder finder, Blackhole bh) {
+        if (pageId == 0) {
+            // As the sample represents the whole dump,
+            // finding all over the sample represents the time finding all over the dump.
+            // NOTE: therefore, the average time corresponds to run the finder in the 50 sample pages.
+            sampleContents.forEach(page -> finder.findWithNoSuggestions(page).forEach(bh::consume));
+        } else {
+            sampleContents
+                .stream()
+                .filter(p -> p.getPageKey().getPageId() == samplePages.get(pageId))
+                .forEach(page -> finder.findWithNoSuggestions(page).forEach(bh::consume));
         }
     }
 
