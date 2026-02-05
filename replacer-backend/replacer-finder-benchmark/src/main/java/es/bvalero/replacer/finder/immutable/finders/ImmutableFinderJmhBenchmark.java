@@ -3,6 +3,7 @@ package es.bvalero.replacer.finder.immutable.finders;
 import es.bvalero.replacer.FinderProperties;
 import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.finder.benchmark.BaseFinderJmhBenchmark;
+import es.bvalero.replacer.finder.benchmark.BaselineFinder;
 import es.bvalero.replacer.finder.listing.find.ListingFinder;
 import es.bvalero.replacer.finder.listing.find.ListingOfflineFinder;
 import es.bvalero.replacer.finder.listing.load.ComposedMisspellingLoader;
@@ -26,6 +27,7 @@ public class ImmutableFinderJmhBenchmark extends BaseFinderJmhBenchmark {
 
     private ConfigurableApplicationContext context;
 
+    private BaselineFinder baselineFinder;
     private CommentFinder commentFinder;
     private CompleteTagFinder completeTagFinder;
     private CursiveFinder cursiveFinder;
@@ -56,6 +58,7 @@ public class ImmutableFinderJmhBenchmark extends BaseFinderJmhBenchmark {
 
         FinderProperties finderProperties = context.getBean(FinderProperties.class);
 
+        baselineFinder = new BaselineFinder();
         commentFinder = new CommentFinder();
         completeTagFinder = new CompleteTagFinder(finderProperties);
         completeTagFinder.init();
@@ -107,6 +110,11 @@ public class ImmutableFinderJmhBenchmark extends BaseFinderJmhBenchmark {
     @TearDown
     public void tearDown() {
         context.close();
+    }
+
+    @Benchmark
+    public void baselineFinder(Blackhole bh) {
+        runFinder(baselineFinder, bh);
     }
 
     @Benchmark

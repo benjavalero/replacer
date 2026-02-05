@@ -71,30 +71,44 @@ public class BaseFinderJmhBenchmark {
     }
 
     protected void runFinder(Finder<?> finder, Blackhole bh) {
+        // We optimize the loops to focus the benchmark on the finder
+        final int sampleSize = sampleContents.size();
         if (pageId == 0) {
             // As the sample represents the whole dump,
             // finding all over the sample represents the time finding all over the dump.
             // NOTE: therefore, the average time corresponds to run the finder in the 50 sample pages.
-            sampleContents.forEach(page -> finder.find(page).forEach(bh::consume));
+            for (int i = 0; i < sampleSize; i++) {
+                finder.find(sampleContents.get(i)).forEach(bh::consume);
+            }
         } else {
-            sampleContents
-                .stream()
-                .filter(p -> p.getPageKey().getPageId() == samplePages.get(pageId))
-                .forEach(page -> finder.find(page).forEach(bh::consume));
+            final int targetPageId = samplePages.get(pageId);
+            for (int i = 0; i < sampleSize; i++) {
+                final FinderPage page = sampleContents.get(i);
+                if (page.getPageKey().getPageId() == targetPageId) {
+                    finder.find(page).forEach(bh::consume);
+                }
+            }
         }
     }
 
     protected void runReplacementFinder(ReplacementFinder finder, Blackhole bh) {
+        // We optimize the loops to focus the benchmark on the finder
+        final int sampleSize = sampleContents.size();
         if (pageId == 0) {
             // As the sample represents the whole dump,
             // finding all over the sample represents the time finding all over the dump.
             // NOTE: therefore, the average time corresponds to run the finder in the 50 sample pages.
-            sampleContents.forEach(page -> finder.findWithNoSuggestions(page).forEach(bh::consume));
+            for (int i = 0; i < sampleSize; i++) {
+                finder.findWithNoSuggestions(sampleContents.get(i)).forEach(bh::consume);
+            }
         } else {
-            sampleContents
-                .stream()
-                .filter(p -> p.getPageKey().getPageId() == samplePages.get(pageId))
-                .forEach(page -> finder.findWithNoSuggestions(page).forEach(bh::consume));
+            final int targetPageId = samplePages.get(pageId);
+            for (int i = 0; i < sampleSize; i++) {
+                final FinderPage page = sampleContents.get(i);
+                if (page.getPageKey().getPageId() == targetPageId) {
+                    finder.findWithNoSuggestions(page).forEach(bh::consume);
+                }
+            }
         }
     }
 

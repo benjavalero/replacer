@@ -3,14 +3,14 @@ package es.bvalero.replacer.finder.benchmark;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.util.FinderMatchResult;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
-import java.util.UUID;
 import java.util.regex.MatchResult;
 import java.util.stream.Stream;
 import org.springframework.lang.Nullable;
 
 public class BaselineFinder implements BenchmarkFinder {
 
-    private final String word = UUID.randomUUID().toString();
+    private static final char CHAR = '~'; // Character rare enough in Spanish articles
+    private static final String WORD = String.valueOf(CHAR);
 
     @Override
     public Stream<MatchResult> findMatchResults(FinderPage page) {
@@ -23,7 +23,7 @@ public class BaselineFinder implements BenchmarkFinder {
         if (start >= 0 && start < text.length()) {
             final int startMatch = findStartMatch(text, start);
             if (startMatch >= 0) {
-                return FinderMatchResult.of(startMatch, word);
+                return FinderMatchResult.of(startMatch, WORD);
             } else {
                 return null;
             }
@@ -32,7 +32,7 @@ public class BaselineFinder implements BenchmarkFinder {
     }
 
     private int findStartMatch(String text, int start) {
-        // return text.charAt(1) == 'ñ' ? 1 : -1;
-        return text.indexOf(word, start);
+        // return text.isEmpty() ? 1 : -1;
+        return text.indexOf(CHAR, start);
     }
 }

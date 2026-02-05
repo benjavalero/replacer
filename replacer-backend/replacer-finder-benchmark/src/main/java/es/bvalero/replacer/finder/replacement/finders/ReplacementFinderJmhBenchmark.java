@@ -3,6 +3,7 @@ package es.bvalero.replacer.finder.replacement.finders;
 import es.bvalero.replacer.FinderProperties;
 import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.finder.benchmark.BaseFinderJmhBenchmark;
+import es.bvalero.replacer.finder.benchmark.BaselineFinder;
 import es.bvalero.replacer.finder.listing.find.ListingFinder;
 import es.bvalero.replacer.finder.listing.find.ListingOfflineFinder;
 import es.bvalero.replacer.finder.listing.load.ComposedMisspellingLoader;
@@ -24,6 +25,7 @@ public class ReplacementFinderJmhBenchmark extends BaseFinderJmhBenchmark {
 
     private ConfigurableApplicationContext context;
 
+    private BaselineFinder baselineFinder;
     private AcuteOFinder acuteOFinder;
     private CenturyFinder centuryFinder;
     private CoordinatesFinder coordinatesFinder;
@@ -44,6 +46,7 @@ public class ReplacementFinderJmhBenchmark extends BaseFinderJmhBenchmark {
 
         FinderProperties finderProperties = context.getBean(FinderProperties.class);
 
+        baselineFinder = new BaselineFinder();
         acuteOFinder = new AcuteOFinder();
         centuryFinder = new CenturyFinder();
         coordinatesFinder = new CoordinatesFinder();
@@ -77,43 +80,48 @@ public class ReplacementFinderJmhBenchmark extends BaseFinderJmhBenchmark {
     }
 
     @Benchmark
+    public void baselineFinder(Blackhole bh) {
+        runFinder(baselineFinder, bh);
+    }
+
+    @Benchmark
     public void acuteOFinder(Blackhole bh) {
-        runFinder(acuteOFinder, bh);
+        runReplacementFinder(acuteOFinder, bh);
     }
 
     @Benchmark
     public void centuryFinder(Blackhole bh) {
-        runFinder(centuryFinder, bh);
+        runReplacementFinder(centuryFinder, bh);
     }
 
     @Benchmark
     public void coordinatesFinder(Blackhole bh) {
-        runFinder(coordinatesFinder, bh);
+        runReplacementFinder(coordinatesFinder, bh);
     }
 
     @Benchmark
     public void dateFinder(Blackhole bh) {
-        runFinder(dateFinder, bh);
+        runReplacementFinder(dateFinder, bh);
     }
 
     @Benchmark
     public void degreeFinder(Blackhole bh) {
-        runFinder(degreeFinder, bh);
+        runReplacementFinder(degreeFinder, bh);
     }
 
     @Benchmark
     public void ordinalFinder(Blackhole bh) {
-        runFinder(ordinalFinder, bh);
+        runReplacementFinder(ordinalFinder, bh);
     }
 
     @Benchmark
     public void misspellingComposedFinder(Blackhole bh) {
-        runFinder(misspellingComposedFinder, bh);
+        runReplacementFinder(misspellingComposedFinder, bh);
     }
 
     @Benchmark
     public void misspellingSimpleFinder(Blackhole bh) {
-        runFinder(misspellingSimpleFinder, bh);
+        runReplacementFinder(misspellingSimpleFinder, bh);
     }
 
     public static void main(String[] args) throws RunnerException, ReplacerException {
