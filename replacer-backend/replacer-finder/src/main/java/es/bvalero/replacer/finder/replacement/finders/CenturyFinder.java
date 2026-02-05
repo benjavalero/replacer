@@ -16,8 +16,10 @@ import es.bvalero.replacer.finder.replacement.ReplacementFinder;
 import es.bvalero.replacer.finder.util.FinderMatchRange;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.LinearMatchCollectionFinder;
-import es.bvalero.replacer.finder.util.SimpleMatchResult;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.SequencedCollection;
 import java.util.regex.MatchResult;
 import java.util.stream.Stream;
 import javax.naming.OperationNotSupportedException;
@@ -30,7 +32,7 @@ import org.springframework.stereotype.Component;
  * e.g. <code>siglo XX</code> ==> <code>{{siglo|XX||s}}</code>
  */
 @Component
-class CenturyFinder implements ReplacementFinder {
+public class CenturyFinder implements ReplacementFinder {
 
     private static final String CENTURY_WORD = "Siglo";
     private static final String CENTURY_SEARCH = CENTURY_WORD.substring(1);
@@ -102,13 +104,6 @@ class CenturyFinder implements ReplacementFinder {
         return Collections.emptyList();
     }
 
-    private record CenturyMatch(int start, String group, @Nullable MatchResult word, CenturyNumber number)
-        implements SimpleMatchResult {
-        static CenturyMatch ofNumber(CenturyNumber number) {
-            return new CenturyMatch(number.start(), number.group(), null, number);
-        }
-    }
-
     //region Century Word
 
     /**
@@ -168,35 +163,6 @@ class CenturyFinder implements ReplacementFinder {
     //endregion
 
     //region Century Number
-
-    private record CenturyNumber(int start, String group, String roman, int arabic, @Nullable String era)
-        implements SimpleMatchResult {
-        private boolean isEraBefore() {
-            return "a".equals(getEraLetter());
-        }
-
-        String getEraLetter() {
-            return era == null ? EMPTY : ReplacerUtils.toLowerCase(String.valueOf(era.charAt(0)));
-        }
-
-        boolean isGreaterThan(CenturyNumber m) {
-            if (this.isEraBefore()) {
-                return m.arabic() > this.arabic();
-            } else if (m.isEraBefore()) {
-                return true;
-            } else {
-                return this.arabic() > m.arabic();
-            }
-        }
-
-        String getOriginalNumber() {
-            if (era == null) {
-                return group;
-            } else {
-                return Objects.requireNonNull(findWordAfter(group, 0)).group();
-            }
-        }
-    }
 
     /**
      * Find a century number with an optional era, e.g. <code>XX d. C.</code> or <code>16</code>
