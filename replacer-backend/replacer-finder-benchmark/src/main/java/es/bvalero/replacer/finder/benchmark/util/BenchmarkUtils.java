@@ -9,16 +9,14 @@ import es.bvalero.replacer.common.util.FileOfflineUtils;
 import es.bvalero.replacer.finder.FinderPage;
 import java.util.ArrayList;
 import java.util.List;
-import lombok.experimental.UtilityClass;
 
-@UtilityClass
 public class BenchmarkUtils {
 
-    public List<FinderPage> findSampleContents() throws ReplacerException {
+    public static List<FinderPage> findSampleContents() throws ReplacerException {
         return findSamplePages().stream().map(BenchmarkUtils::convert).toList();
     }
 
-    public List<WikipediaApiResponse.Page> findSamplePages() throws ReplacerException {
+    public static List<WikipediaApiResponse.Page> findSamplePages() throws ReplacerException {
         try {
             String jsonResponse = FileOfflineUtils.getFileContent(
                 "es/bvalero/replacer/finder/benchmark/page-samples.json"
@@ -32,7 +30,7 @@ public class BenchmarkUtils {
         }
     }
 
-    private FinderPage convert(WikipediaApiResponse.Page page) {
+    private static FinderPage convert(WikipediaApiResponse.Page page) {
         return FinderPage.of(
             PageKey.of(WikipediaLanguage.getDefault(), page.getPageid()),
             page.getTitle(),

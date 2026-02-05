@@ -7,7 +7,6 @@ import es.bvalero.replacer.finder.FinderPage;
 import java.util.*;
 import java.util.regex.MatchResult;
 import java.util.stream.Stream;
-import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Marker;
@@ -16,7 +15,6 @@ import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
 @Slf4j
-@UtilityClass
 public class FinderUtils {
 
     // Common characters
@@ -90,28 +88,28 @@ public class FinderUtils {
 
     //region String Utils
 
-    public boolean startsWithLowerCase(String word) {
+    public static boolean startsWithLowerCase(String word) {
         return Character.isLowerCase(word.charAt(0));
     }
 
-    public boolean startsWithUpperCase(String word) {
+    public static boolean startsWithUpperCase(String word) {
         return Character.isUpperCase(word.charAt(0));
     }
 
-    public boolean startsWithNumber(String word) {
+    public static boolean startsWithNumber(String word) {
         return isAsciiDigit(word.charAt(0));
     }
 
     /** Capitalizes a string changing the first character of the text to uppercase and the rest to lowercase */
-    public String setFirstUpperCaseFully(String word) {
+    public static String setFirstUpperCaseFully(String word) {
         return toUpperCase(word.substring(0, 1)) + toLowerCase(word.substring(1));
     }
 
-    public String setFirstLowerCase(String word) {
+    public static String setFirstLowerCase(String word) {
         return StringUtils.uncapitalize(word);
     }
 
-    public String setFirstUpperCaseClass(String word) {
+    static String setFirstUpperCaseClass(String word) {
         if (!word.isEmpty()) {
             final char first = word.charAt(0);
             if (isLetter(first)) {
@@ -126,7 +124,7 @@ public class FinderUtils {
         return word;
     }
 
-    public boolean isAscii(String word) {
+    public static boolean isAscii(String word) {
         for (int i = 0; i < word.length(); i++) {
             if (!isAscii(word.charAt(i))) {
                 return false;
@@ -135,11 +133,11 @@ public class FinderUtils {
         return true;
     }
 
-    public boolean isAscii(char ch) {
+    public static boolean isAscii(char ch) {
         return (ch >= 'A' && ch <= 'Z') || (ch >= 'a' && ch <= 'z');
     }
 
-    public boolean isAsciiLowerCase(String word) {
+    public static boolean isAsciiLowerCase(String word) {
         for (int i = 0; i < word.length(); i++) {
             if (!isAsciiLowerCase(word.charAt(i))) {
                 return false;
@@ -148,15 +146,15 @@ public class FinderUtils {
         return true;
     }
 
-    public boolean isAsciiLowerCase(int ch) {
+    public static boolean isAsciiLowerCase(int ch) {
         return ch >= 'a' && ch <= 'z';
     }
 
-    public boolean isAsciiDigit(int ch) {
+    public static boolean isAsciiDigit(int ch) {
         return ch >= '0' && ch <= '9';
     }
 
-    public boolean isWord(String word) {
+    public static boolean isWord(String word) {
         for (int i = 0; i < word.length(); i++) {
             if (!isWordChar(word.charAt(i))) {
                 return false;
@@ -170,7 +168,7 @@ public class FinderUtils {
      * Therefore, non-letters like dash, dot, underscore, digits, etc. return false.
      * The only exception is the masculine ordinal, which is considered a letter by the current Wikipedia spellchecker.
      */
-    public boolean isLetter(char ch) {
+    public static boolean isLetter(char ch) {
         // Unicode considers both ordinals as valid letters
         return Character.isLetter(ch) && ch != FEMININE_ORDINAL;
     }
@@ -181,15 +179,15 @@ public class FinderUtils {
      * Note that Unicode considers the ordinals as letters, but we discard them.
      * Optionally, we can include some special allowed characters to check.
      */
-    public boolean isWordChar(char ch, char... allowedChars) {
+    public static boolean isWordChar(char ch, char... allowedChars) {
         return (Character.isLetterOrDigit(ch) && !isOrdinal(ch)) || ch == UNDERSCORE || containsChar(ch, allowedChars);
     }
 
-    private boolean isOrdinal(char ch) {
+    private static boolean isOrdinal(char ch) {
         return ch == MASCULINE_ORDINAL || ch == FEMININE_ORDINAL;
     }
 
-    public boolean isDecimalNumber(String word) {
+    public static boolean isDecimalNumber(String word) {
         // Find the integer part
         int i = 0;
         while (i < word.length() && isAsciiDigit(word.charAt(i))) {
@@ -211,11 +209,11 @@ public class FinderUtils {
         return i == word.length();
     }
 
-    private boolean isDecimalSeparator(char ch) {
+    private static boolean isDecimalSeparator(char ch) {
         return ch == DOT || ch == DECIMAL_COMMA;
     }
 
-    public boolean isNumber(String word) {
+    public static boolean isNumber(String word) {
         for (int i = 0; i < word.length(); i++) {
             if (!isAsciiDigit(word.charAt(i))) {
                 return false;
@@ -224,7 +222,7 @@ public class FinderUtils {
         return true;
     }
 
-    public String normalizeDecimalNumber(String number) {
+    public static String normalizeDecimalNumber(String number) {
         return number.replace(DECIMAL_COMMA, DOT);
     }
 
@@ -236,17 +234,17 @@ public class FinderUtils {
     }
 
     /** Determine if a character is considered a Unicode whitespace character */
-    public boolean isWhiteSpace(char ch) {
+    public static boolean isWhiteSpace(char ch) {
         return ch != NEW_LINE && Character.isWhitespace(ch);
     }
 
     /** Determine if a string is composed by an only Unicode whitespace character */
-    private boolean isWhiteSpace(String text, int start, int end) {
+    private static boolean isWhiteSpace(String text, int start, int end) {
         return end - start == 1 && isWhiteSpace(text.charAt(start));
     }
 
     /** Determine if the string is empty or blank or a whitespace alias */
-    public boolean isEmptyBlankOrSpaceAlias(String text, int start, int end) {
+    public static boolean isEmptyBlankOrSpaceAlias(String text, int start, int end) {
         int i = start;
         while (i < end) {
             char ch = text.charAt(i);
@@ -265,7 +263,7 @@ public class FinderUtils {
         return true;
     }
 
-    private int getSpaceAliasLength(String text, int start, int end) {
+    private static int getSpaceAliasLength(String text, int start, int end) {
         for (String alias : SPACE_ALIASES) {
             if (containsAtPosition(text, alias, start) && start + alias.length() <= end) {
                 return alias.length();
@@ -275,17 +273,17 @@ public class FinderUtils {
     }
 
     /** Determine if the string is an only whitespace or a whitespace alias */
-    public boolean isWhiteSpaceOrAlias(String text, int start, int end) {
+    public static boolean isWhiteSpaceOrAlias(String text, int start, int end) {
         return isWhiteSpace(text, start, end) || isSpaceAlias(text, start, end);
     }
 
     /** Determine if a string represents the alias of a Unicode whitespace character */
-    private boolean isSpaceAlias(String text, int start, int end) {
+    private static boolean isSpaceAlias(String text, int start, int end) {
         return isHardSpaceAlias(text, start, end) || isSoftSpaceAlias(text, start, end);
     }
 
     /** Determine if a string represents the alias of a hard (non-breaking) space character */
-    public boolean isHardSpaceAlias(String text, int start, int end) {
+    public static boolean isHardSpaceAlias(String text, int start, int end) {
         final int l = end - start;
         for (String alias : HARD_SPACE_ALIASES) {
             if (l == alias.length() && containsAtPosition(text, alias, start)) {
@@ -296,7 +294,7 @@ public class FinderUtils {
     }
 
     /** Determine if a string represents the alias of a soft (breaking) space character */
-    private boolean isSoftSpaceAlias(String text, int start, int end) {
+    private static boolean isSoftSpaceAlias(String text, int start, int end) {
         final int l = end - start;
         for (String alias : SOFT_SPACE_ALIASES) {
             if (l == alias.length() && containsAtPosition(text, alias, start)) {
@@ -314,7 +312,7 @@ public class FinderUtils {
      * Check if a word is complete in a text. In particular, check if the characters around the word are separators.
      * In this context, we consider a word separator a character which is not alphanumeric nor an underscore.
      */
-    public boolean isWordCompleteInText(int startWord, String word, String text) {
+    public static boolean isWordCompleteInText(int startWord, String word, String text) {
         return isWordCompleteInText(startWord, startWord + word.length(), text);
     }
 
@@ -322,7 +320,7 @@ public class FinderUtils {
      * Check if a word is complete in a text. In particular, check if the characters around the word are separators.
      * In this context, we consider a word separator a character which is not alphanumeric nor an underscore.
      */
-    public boolean isWordCompleteInText(MatchResult match, String text) {
+    public static boolean isWordCompleteInText(MatchResult match, String text) {
         return isWordCompleteInText(match.start(), match.end(), text);
     }
 
@@ -330,7 +328,7 @@ public class FinderUtils {
      * Check if a word is complete in a text. In particular, check if the characters around the word are separators.
      * In this context, we consider a word separator a character which is not alphanumeric nor an underscore.
      */
-    public boolean isWordCompleteInText(int startWord, int endWord, String text) {
+    public static boolean isWordCompleteInText(int startWord, int endWord, String text) {
         // We check the separators are not letters. The detected word might not be complete.
         // We check the separators are not digits. There are rare cases where the misspelling
         // is preceded or followed by a digit e.g. the misspelling "Km" in "Km2".
@@ -342,14 +340,14 @@ public class FinderUtils {
         return isValidLeftSeparator(startWord, text) && isValidRightSeparator(endWord, text);
     }
 
-    private boolean isValidLeftSeparator(int startWord, String text) {
+    private static boolean isValidLeftSeparator(int startWord, String text) {
         // Special case: if the start of the word is a separator, then we consider it as the left separator itself.
         return (
             startWord == 0 || isValidSeparator(text.charAt(startWord)) || isValidSeparator(text.charAt(startWord - 1))
         );
     }
 
-    private boolean isValidRightSeparator(int endWord, String text) {
+    private static boolean isValidRightSeparator(int endWord, String text) {
         // Special case: if the end of the word is a separator, then we consider it as the right separator itself.
         return (
             endWord == text.length() ||
@@ -358,12 +356,12 @@ public class FinderUtils {
         );
     }
 
-    public boolean isValidSeparator(char separator) {
+    public static boolean isValidSeparator(char separator) {
         // A word character is not a valid separator and vice versa
         return !isWordChar(separator);
     }
 
-    public boolean isUrlWord(int startWord, String word, String text) {
+    public static boolean isUrlWord(int startWord, String word, String text) {
         final int endWord = startWord + word.length();
         if (startWord <= 0 || endWord >= text.length()) {
             return false;
@@ -373,11 +371,11 @@ public class FinderUtils {
         return left == right && isUrlSeparator(left);
     }
 
-    private boolean isUrlSeparator(char ch) {
+    private static boolean isUrlSeparator(char ch) {
         return ch == '/' || ch == '.';
     }
 
-    public boolean isWordFollowedByUpperCase(int start, String word, String text) {
+    public static boolean isWordFollowedByUpperCase(int start, String word, String text) {
         final int end = start + word.length();
         return (
             end + 1 < text.length() && isValidSeparator(text.charAt(end)) && Character.isUpperCase(text.charAt(end + 1))
@@ -389,14 +387,14 @@ public class FinderUtils {
      * and preceded by an empty or soft/hard space.
      */
     @Nullable
-    public MatchResult findWordAfterSpace(String text, int start, char... allowedChars) {
+    public static MatchResult findWordAfterSpace(String text, int start, char... allowedChars) {
         final MatchResult match = findWordAfter(text, start, allowedChars);
         return match != null && isEmptyBlankOrSpaceAlias(text, start, match.start()) ? match : null;
     }
 
     /** Find the most close sequence of letters and digits starting at the given position */
     @Nullable
-    public MatchResult findWordAfter(String text, int start, char... allowedChars) {
+    public static MatchResult findWordAfter(String text, int start, char... allowedChars) {
         if (start >= text.length()) {
             return null;
         }
@@ -427,7 +425,7 @@ public class FinderUtils {
         }
     }
 
-    private boolean containsChar(char ch, char... chars) {
+    private static boolean containsChar(char ch, char... chars) {
         for (char c : chars) {
             if (c == ch) {
                 return true;
@@ -436,7 +434,7 @@ public class FinderUtils {
         return false;
     }
 
-    public int countWords(String text, int start, int end) {
+    static int countWords(String text, int start, int end) {
         int count = 0;
         MatchResult matchWord = findWordAfter(text, start);
         while (matchWord != null && matchWord.end() <= end) {
@@ -447,7 +445,7 @@ public class FinderUtils {
     }
 
     /* Check if a word like "nbsp" is a space alias and therefore should not be considered as an actual word */
-    private boolean isSpaceWord(String text, int start, int end) {
+    private static boolean isSpaceWord(String text, int start, int end) {
         final String word = text.substring(start, end);
         for (String alias : SPACE_ALIASES) {
             final int pos = alias.indexOf(word);
@@ -458,7 +456,7 @@ public class FinderUtils {
         return false;
     }
 
-    public boolean isWordPrecededByUpperCase(int start, String text) {
+    public static boolean isWordPrecededByUpperCase(int start, String text) {
         if (start < 2 || !isValidSeparator(text.charAt(start - 1))) {
             return false;
         }
@@ -471,7 +469,7 @@ public class FinderUtils {
      * Put the most common occurrence first improves performance.
      */
     @Nullable
-    public MatchResult indexOfAny(String text, int start, String... searchStrings) {
+    public static MatchResult indexOfAny(String text, int start, String... searchStrings) {
         String minString = null;
         int minStart = text.length();
         for (String searchString : searchStrings) {
@@ -489,7 +487,7 @@ public class FinderUtils {
      * Put the most common occurrence first improves performance.
      */
     @Nullable
-    public MatchResult lastIndexOfAny(String text, int start, String... searchStrings) {
+    public static MatchResult lastIndexOfAny(String text, int start, String... searchStrings) {
         String maxString = null;
         int maxStart = 0;
         for (String searchString : searchStrings) {
@@ -506,7 +504,7 @@ public class FinderUtils {
      * Find the first occurrence of several search characters.
      * Put the most common occurrence first improves performance.
      */
-    public int indexOfAny(String text, int start, char... searchChars) {
+    public static int indexOfAny(String text, int start, char... searchChars) {
         int minStart = text.length();
         for (char searchChar : searchChars) {
             final int pos = indexOfChar(text, searchChar, start, minStart);
@@ -517,7 +515,7 @@ public class FinderUtils {
         return minStart == text.length() ? -1 : minStart;
     }
 
-    private int indexOfChar(String text, char ch, int start, int end) {
+    private static int indexOfChar(String text, char ch, int start, int end) {
         for (int i = start; i < end; i++) {
             if (text.charAt(i) == ch) {
                 return i;
@@ -528,7 +526,7 @@ public class FinderUtils {
 
     /** Find the most close sequence of letters and digits ending at the given position */
     @Nullable
-    public MatchResult findWordBefore(String text, int start, char... allowedChars) {
+    public static MatchResult findWordBefore(String text, int start, char... allowedChars) {
         if (start < 1) {
             return null;
         }
@@ -560,7 +558,7 @@ public class FinderUtils {
     }
 
     @Nullable
-    public MatchResult findNumberAfterSpace(
+    public static MatchResult findNumberAfterSpace(
         String text,
         int start,
         boolean allowDecimals,
@@ -571,7 +569,7 @@ public class FinderUtils {
     }
 
     @Nullable
-    public MatchResult findNumber(String text, int start, boolean allowDecimals, boolean allowNegativeNumbers) {
+    public static MatchResult findNumber(String text, int start, boolean allowDecimals, boolean allowNegativeNumbers) {
         int startNumber = -1;
         int endNumber = text.length();
         for (int i = start; i < text.length(); i++) {
@@ -604,16 +602,16 @@ public class FinderUtils {
         return FinderMatchRange.of(text, startNumber, endNumber);
     }
 
-    private boolean isNegativeSymbol(char ch) {
+    private static boolean isNegativeSymbol(char ch) {
         return ch == NEGATIVE_SYMBOL;
     }
 
-    private String getTextSnippet(String text, int start, int end) {
+    private static String getTextSnippet(String text, int start, int end) {
         return getContextAroundWord(text, start, end, 50);
     }
 
     /** Expand a simple regex containing only character classes and conditionals */
-    public Collection<String> expandRegex(String regex) {
+    public static Collection<String> expandRegex(String regex) {
         final Set<String> results = new HashSet<>();
         final Deque<String> pending = new ArrayDeque<>();
         pending.push(regex);
@@ -649,7 +647,7 @@ public class FinderUtils {
 
     //region Collection Utils
 
-    public String joinAlternate(Iterable<String> items) {
+    public static String joinAlternate(Iterable<String> items) {
         return String.join(ALTERNATE_SEPARATOR, items);
     }
 
@@ -657,7 +655,7 @@ public class FinderUtils {
 
     //region Logging Utils
 
-    public void logFinderResult(FinderPage page, int start, int end, String message) {
+    public static void logFinderResult(FinderPage page, int start, int end, String message) {
         if (!FinderPropertiesBridge.isShowImmutableWarning()) {
             return;
         }
@@ -701,11 +699,11 @@ public class FinderUtils {
         boolean validate(String text, int start);
     }
 
-    public Collection<FinderMatchResult> findAllStructures(FinderPage page, String startStr, String endStr) {
+    public static Collection<FinderMatchResult> findAllStructures(FinderPage page, String startStr, String endStr) {
         return findAllStructures(page, startStr, endStr, (text, start) -> true);
     }
 
-    public Collection<FinderMatchResult> findAllStructures(
+    public static Collection<FinderMatchResult> findAllStructures(
         FinderPage page,
         String startStr,
         String endStr,
@@ -766,7 +764,7 @@ public class FinderUtils {
         return matches;
     }
 
-    public List<MatchResult> findAllWords(String text) {
+    public static List<MatchResult> findAllWords(String text) {
         final List<MatchResult> words = new ArrayList<>(100);
         int start = 0;
         while (start >= 0 && start < text.length()) {

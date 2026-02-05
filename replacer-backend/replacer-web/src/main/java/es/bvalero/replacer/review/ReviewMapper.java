@@ -7,13 +7,11 @@ import es.bvalero.replacer.finder.Suggestion;
 import es.bvalero.replacer.wikipedia.WikipediaSection;
 import java.util.Collection;
 import java.util.stream.Collectors;
-import lombok.experimental.UtilityClass;
 import org.springframework.lang.Nullable;
 
-@UtilityClass
 class ReviewMapper {
 
-    Page toDto(Review review) {
+    static Page toDto(Review review) {
         return Page.builder()
             .lang(review.getPage().getPageKey().getLang().getCode())
             .pageId(review.getPage().getPageKey().getPageId())
@@ -26,7 +24,7 @@ class ReviewMapper {
     }
 
     @Nullable
-    private Section toDto(@Nullable WikipediaSection section) {
+    private static Section toDto(@Nullable WikipediaSection section) {
         if (section == null) {
             return null;
         } else {
@@ -34,11 +32,11 @@ class ReviewMapper {
         }
     }
 
-    private Collection<ReplacementDto> toDto(Collection<Replacement> replacements) {
+    private static Collection<ReplacementDto> toDto(Collection<Replacement> replacements) {
         return replacements.stream().map(ReviewMapper::toDto).toList();
     }
 
-    private ReplacementDto toDto(Replacement replacement) {
+    private static ReplacementDto toDto(Replacement replacement) {
         Boolean caseSensitive = replacement.type() instanceof CustomType customType
             ? customType.isCaseSensitive()
             : null;
@@ -52,11 +50,11 @@ class ReviewMapper {
         );
     }
 
-    private SuggestionDto toDto(Suggestion suggestion) {
+    private static SuggestionDto toDto(Suggestion suggestion) {
         return SuggestionDto.of(suggestion.getText(), suggestion.getComment());
     }
 
-    ReviewOptions fromDto(ReviewOptionsDto options, User user) {
+    static ReviewOptions fromDto(ReviewOptionsDto options, User user) {
         return ReviewOptions.of(
             user,
             options.getKind(),

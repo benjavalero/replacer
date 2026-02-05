@@ -3,17 +3,15 @@ package es.bvalero.replacer.page.save;
 import es.bvalero.replacer.finder.ReplacementType;
 import java.util.Collection;
 import java.util.stream.Collectors;
-import lombok.experimental.UtilityClass;
 import org.apache.commons.lang3.StringUtils;
 
 /** Utility class to build the summary for a Wikipedia edit based on the fixed replacement types */
-@UtilityClass
 class EditSummaryBuilder {
 
     private static final String EDIT_SUMMARY = "Reemplazos con [[Usuario:Benjavalero/Replacer|Replacer]]";
     private static final String COSMETIC_CHANGES = "mejoras cosméticas";
 
-    String build(Collection<ReplacementType> fixedReplacementTypes, boolean applyCosmetics) {
+    static String build(Collection<ReplacementType> fixedReplacementTypes, boolean applyCosmetics) {
         if (fixedReplacementTypes.isEmpty()) {
             throw new IllegalArgumentException("No fixed replacements when building edit summary");
         }
@@ -32,7 +30,7 @@ class EditSummaryBuilder {
         return summary.toString();
     }
 
-    private String buildSubtypeSummary(ReplacementType type) {
+    private static String buildSubtypeSummary(ReplacementType type) {
         return switch (type.getKind()) {
             case SIMPLE, COMPOSED -> "«%s»".formatted(type.getSubtype());
             case CUSTOM -> "«%s» (personalizado)".formatted(type.getSubtype());
