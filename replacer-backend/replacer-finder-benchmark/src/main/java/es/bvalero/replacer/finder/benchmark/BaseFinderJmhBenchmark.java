@@ -28,18 +28,24 @@ import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
 
 @Threads(1) // Default
-@Fork(value = 1, jvmArgsAppend = { "-Xmx256m", "-da" }) // 0 makes debugging possible, disable assertions just in case
+// 0 forks makes debugging possible, disable assertions just in case.
+// 1 fork is enough for normal development and for profiling
+// 3-5 forks are recommended to improve accuracy and to reduce variance when increasing time doesn't work
+@Fork(value = 1, jvmArgsAppend = { "-Xmx256m", "-da" })
 @State(Scope.Benchmark)
+// 5 iterations are the default and enough to stabilize times
+// Time recommended depending on the duration per operation: 5-10 s for ns, 2-5 s for µs, 1-2 s for ms.
+// It can be increased to reduce the variance
 @Warmup(time = 2) // Default: 5 iterations, 10 s each
 @Measurement(time = 2) // Default: 5 iterations, 10 s each
-@BenchmarkMode(Mode.AverageTime)
-@OutputTimeUnit(TimeUnit.MICROSECONDS)
+@BenchmarkMode(Mode.AverageTime) // Default: Throughput
+@OutputTimeUnit(TimeUnit.MICROSECONDS) // Default: seconds
 public class BaseFinderJmhBenchmark {
 
     private static final String BENCHMARK_PACKAGE_PATH = "/es/bvalero/replacer/finder/benchmark/";
     private static final String RESOURCES_PATH = "src/main/resources" + BENCHMARK_PACKAGE_PATH;
-    private static final String RESOURCES_COMPLETE_PATH =
-        "replacer-backend/replacer-finder-benchmark/" + RESOURCES_PATH;
+    // When running from the parent project, "replacer-backend/" needs to be prepended to the path.
+    private static final String RESOURCES_COMPLETE_PATH = "replacer-finder-benchmark/" + RESOURCES_PATH;
 
     protected List<FinderPage> sampleContents;
     private Map<Integer, Integer> samplePages;
