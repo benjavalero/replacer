@@ -226,13 +226,6 @@ public class FinderUtils {
         return number.replace(DECIMAL_COMMA, DOT);
     }
 
-    /** Determine if a string is empty, i.e. has length zero contains no character. */
-    private boolean isEmpty(String text, int start, int end) {
-        assert start >= 0;
-        assert end <= text.length();
-        return start == end;
-    }
-
     /** Determine if a character is considered a Unicode whitespace character */
     public static boolean isWhiteSpace(char ch) {
         return ch != NEW_LINE && Character.isWhitespace(ch);
@@ -507,21 +500,12 @@ public class FinderUtils {
     public static int indexOfAny(String text, int start, char... searchChars) {
         int minStart = text.length();
         for (char searchChar : searchChars) {
-            final int pos = indexOfChar(text, searchChar, start, minStart);
+            final int pos = text.indexOf(searchChar, start, minStart);
             if (pos >= 0) {
                 minStart = pos;
             }
         }
         return minStart == text.length() ? -1 : minStart;
-    }
-
-    private static int indexOfChar(String text, char ch, int start, int end) {
-        for (int i = start; i < end; i++) {
-            if (text.charAt(i) == ch) {
-                return i;
-            }
-        }
-        return -1;
     }
 
     /** Find the most close sequence of letters and digits ending at the given position */
