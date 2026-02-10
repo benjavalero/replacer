@@ -3,7 +3,6 @@ package es.bvalero.replacer.finder.benchmark.century;
 import static es.bvalero.replacer.finder.util.FinderUtils.*;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
-import com.roman.code.ConvertToArabic;
 import com.roman.code.ConvertToRoman;
 import com.roman.code.exception.ConversionException;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
@@ -21,6 +20,7 @@ import es.bvalero.replacer.finder.util.LinearMatchCollectionFinder;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.SequencedCollection;
 import java.util.regex.MatchResult;
 import java.util.stream.Stream;
@@ -41,6 +41,33 @@ class CenturyNewFinder implements ReplacementFinder {
     private static final String[] CENTURY_WORDS = new String[] { "s.", "S.", CENTURY_SEARCH };
     private static final String[] WRAP_TEMPLATES = new String[] { NON_BREAKING_SPACE_TEMPLATE_NAME, "nowrap" };
     private static final int MAX_WORDS_BETWEEN_CENTURIES = 5;
+
+    private static final Map<String, String> ARABIC_TO_ROMAN;
+    private static final Map<String, Integer> ROMAN_TO_ARABIC;
+
+    static {
+        Map<String, String> arabicToRoman = new java.util.HashMap<>();
+        for (int i = 1; i <= 21; i++) {
+            try {
+                arabicToRoman.put(String.valueOf(i), ConvertToRoman.fromArabic(i));
+            } catch (OperationNotSupportedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        ARABIC_TO_ROMAN = Collections.unmodifiableMap(arabicToRoman);
+
+        Map<String, Integer> romanToArabic = new java.util.HashMap<>();
+        for (int i = 1; i <= 21; i++) {
+            try {
+                String roman = ConvertToRoman.fromArabic(i);
+                romanToArabic.put(roman, i);
+                romanToArabic.put(ReplacerUtils.toLowerCase(roman), i);
+            } catch (OperationNotSupportedException | ConversionException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        ROMAN_TO_ARABIC = Collections.unmodifiableMap(romanToArabic);
+    }
 
     @Override
     public Stream<MatchResult> findMatchResults(FinderPage page) {
@@ -225,45 +252,19 @@ class CenturyNewFinder implements ReplacementFinder {
     private CenturyNumber getCenturyNumber(MatchResult match) {
         final String word = match.group();
         try {
-            final int arabic;
-            final String roman;
-            if (isRomanLetters(word)) {
-                roman = ReplacerUtils.toUpperCase(word);
-                arabic = ConvertToArabic.fromRoman(roman);
-                if (isValidArabicCentury(arabic)) {
-                    return new CenturyNumber(match.start(), word, roman, arabic, null);
-                }
-            } else if (word.length() <= 2 && FinderUtils.isNumber(word)) {
-                arabic = Integer.parseInt(word);
-                if (isValidArabicCentury(arabic)) {
-                    roman = ConvertToRoman.fromArabic(arabic);
-                    return new CenturyNumber(match.start(), word, roman, arabic, null);
-                }
+            // Try as Roman numeral first (use pre-computed map)
+            Integer arabicValue = ROMAN_TO_ARABIC.get(word);
+            if (arabicValue != null) {
+                return new CenturyNumber(match.start(), word, ReplacerUtils.toUpperCase(word), arabicValue, null);
             }
-        } catch (ConversionException | NumberFormatException | OperationNotSupportedException ignored) {}
+            // Try as Arabic numeral (use pre-computed map)
+            String roman = ARABIC_TO_ROMAN.get(word);
+            if (roman != null) {
+                int arabic = Integer.parseInt(word);
+                return new CenturyNumber(match.start(), word, roman, arabic, null);
+            }
+        } catch (NumberFormatException ignored) {}
         return null;
-    }
-
-    private boolean isRomanLetters(String word) {
-        // 5 is the maximum length of a Roman century: XVIII
-        if (word.length() > 5) {
-            return false;
-        }
-        for (int i = 0; i < word.length(); i++) {
-            if (!isCenturyLetter(word.charAt(i))) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    private boolean isCenturyLetter(char ch) {
-        final char lower = FinderUtils.toLowerCaseAscii(ch);
-        return lower == 'i' || lower == 'v' || lower == 'x';
-    }
-
-    private boolean isValidArabicCentury(int number) {
-        return number > 0 && number <= 21;
     }
 
     /** Find a century era, e.g. <code>a. C.</code> */
@@ -635,7 +636,7 @@ class CenturyNewFinder implements ReplacementFinder {
     }
 
     private boolean isUpperCaseRoman(String roman) {
-        return StringUtils.isAllUpperCase(roman) && isRomanLetters(roman);
+        return StringUtils.isAllUpperCase(roman) && ROMAN_TO_ARABIC.containsKey(roman);
     }
     //endregion
 }
