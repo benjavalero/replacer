@@ -17,7 +17,6 @@ public class CenturyFinderJmhBenchmark extends BaseFinderJmhBenchmark {
 
     private static final String fileName = "century/century-summary-jmh";
 
-    private BaselineFinder baselineFinder;
     private CenturyFinder centuryFinder;
     private CenturyNewFinder centuryNewFinder;
 
@@ -28,14 +27,8 @@ public class CenturyFinderJmhBenchmark extends BaseFinderJmhBenchmark {
         super.setUp();
 
         // Initialize the finders
-        baselineFinder = new BaselineFinder();
         centuryFinder = new CenturyFinder();
         centuryNewFinder = new CenturyNewFinder();
-    }
-
-    @Benchmark
-    public void baselineFinder(Blackhole bh) {
-        runFinder(baselineFinder, bh);
     }
 
     @Benchmark

@@ -116,33 +116,51 @@ class CenturyNewFinder implements ReplacementFinder {
     @Nullable
     private MatchResult findCenturyWord(String text, int start) {
         while (start >= 0 && start < text.length()) {
-            // Find any of the supported century words, finding first the most common.
-            // Instead of finding all the variants of "siglo", we find the root "iglo" and then check the variants.
-            final MatchResult match = FinderUtils.indexOfAny(text, start, CENTURY_WORDS);
-            if (match == null) {
+            // Find any of the supported century words.
+            // Abbreviations (e.g., "s.") are most common, so we optimize by searching for their components.
+            // Instead of searching for all variants, we search for suffixes and validate the prefix later.
+            // Character search is faster than string search, so we handle '.' separately.
+
+            // Search for '.' first (most common)
+            final int posDot = text.indexOf('.', start);
+
+            // Search for "iglo" only up to the dot position (if found)
+            final int rightLimit = posDot >= 0 ? posDot : text.length();
+            final int posIglo = text.indexOf("iglo", start, rightLimit);
+
+            // Determine which occurrence comes first
+            final int startCentury;
+            int endCentury;
+            final boolean foundIglo;
+            if (posIglo >= 0 && (posDot < 0 || posIglo < posDot)) {
+                // "iglo" found (and either no '.' or "iglo" comes before '.')
+                startCentury = posIglo - 1;
+                endCentury = posIglo + 4;
+                foundIglo = true;
+            } else if (posDot >= 0) {
+                // '.' found (and no "iglo" before it)
+                startCentury = posDot - 1;
+                endCentury = posDot + 1;
+                foundIglo = false;
+            } else {
+                // No occurrences found
                 return null;
             }
 
-            int startCentury = match.start();
-            int endCentury = match.end();
-            final boolean isAbbreviation = isAbbreviation(match.group());
-            if (!isAbbreviation) {
-                // Check first letter of the word
-                if (startCentury <= 0 || !isCenturyFirstLetter(text.charAt(startCentury - 1))) {
-                    start = endCentury;
-                    continue;
-                }
-                startCentury--;
+            // Check first letter of the word
+            if (!isCenturyFirstLetter(text.charAt(startCentury))) {
+                start = endCentury;
+                continue;
+            }
 
-                // Century word can be plural, e.g. "siglos"
-                if (isPluralWord(text.charAt(endCentury))) {
-                    endCentury++;
-                }
+            // If we found "iglo", check for plural suffix "s"
+            if (foundIglo && endCentury < text.length() && isPluralChar(text.charAt(endCentury))) {
+                endCentury++;
             }
 
             // We only consider the word complete
             if (FinderUtils.isWordCompleteInText(startCentury, endCentury, text)) {
-                return isAbbreviation ? match : FinderMatchRange.of(text, startCentury, endCentury);
+                return FinderMatchRange.of(text, startCentury, endCentury);
             }
 
             start = endCentury;
@@ -158,7 +176,7 @@ class CenturyNewFinder implements ReplacementFinder {
         return ch == 'S' || ch == 's';
     }
 
-    private boolean isPluralWord(char ch) {
+    private boolean isPluralChar(char ch) {
         return ch == 's';
     }
 
@@ -401,7 +419,7 @@ class CenturyNewFinder implements ReplacementFinder {
     }
 
     private boolean isPluralWord(String word) {
-        return isPluralWord(word.charAt(word.length() - 1));
+        return isPluralChar(word.charAt(word.length() - 1));
     }
 
     //endregion
