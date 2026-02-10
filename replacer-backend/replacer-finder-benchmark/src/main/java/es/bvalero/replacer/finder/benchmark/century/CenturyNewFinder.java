@@ -172,8 +172,11 @@ class CenturyNewFinder implements ReplacementFinder {
         return word.length() == 2;
     }
 
+    /**
+     * Check if a character is 'S' or 's'.
+     */
     private boolean isCenturyFirstLetter(char ch) {
-        return ch == 'S' || ch == 's';
+        return FinderUtils.toLowerCaseAscii(ch) == 's';
     }
 
     private boolean isPluralChar(char ch) {
@@ -255,7 +258,8 @@ class CenturyNewFinder implements ReplacementFinder {
     }
 
     private boolean isCenturyLetter(char ch) {
-        return ch == 'I' || ch == 'V' || ch == 'X' || ch == 'i' || ch == 'v' || ch == 'x';
+        final char lower = FinderUtils.toLowerCaseAscii(ch);
+        return lower == 'i' || lower == 'v' || lower == 'x';
     }
 
     private boolean isValidArabicCentury(int number) {
@@ -294,7 +298,8 @@ class CenturyNewFinder implements ReplacementFinder {
     }
 
     private boolean isEraFirstLetter(char ch) {
-        return ch == 'a' || ch == 'd' || ch == 'A' || ch == 'D';
+        final char lower = FinderUtils.toLowerCaseAscii(ch);
+        return lower == 'a' || lower == 'd';
     }
 
     private boolean isEraPreposition(String word) {

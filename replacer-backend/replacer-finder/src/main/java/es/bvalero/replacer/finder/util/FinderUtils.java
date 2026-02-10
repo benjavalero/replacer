@@ -154,6 +154,17 @@ public class FinderUtils {
         return ch >= '0' && ch <= '9';
     }
 
+    /**
+     * Convert an ASCII letter to lowercase using bitwise OR.
+     * This is faster than Character.toLowerCase() for ASCII letters.
+     * Works by setting bit 5 (0x20), which is the difference between uppercase and lowercase ASCII.
+     * For example: 'A' (0x41) | 0x20 = 'a' (0x61), 'a' (0x61) | 0x20 = 'a' (0x61).
+     * WARNING: Only works for ASCII letters (A-Z, a-z). Do not use with Unicode characters.
+     */
+    public static char toLowerCaseAscii(char ch) {
+        return (char) (ch | 0x20);
+    }
+
     public static boolean isWord(String word) {
         for (int i = 0; i < word.length(); i++) {
             if (!isWordChar(word.charAt(i))) {
