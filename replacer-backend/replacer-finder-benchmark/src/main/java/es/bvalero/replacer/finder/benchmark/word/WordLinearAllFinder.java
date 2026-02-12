@@ -52,7 +52,7 @@ class WordLinearAllFinder implements BenchmarkFinder {
 
     private int findStartWord(String text, int start) {
         for (int i = start; i < text.length(); i++) {
-            if (FinderUtils.isLetter(text.charAt(i))) {
+            if (FinderUtils.isSpanishLetter(text.charAt(i))) {
                 return i;
             }
         }
@@ -61,7 +61,7 @@ class WordLinearAllFinder implements BenchmarkFinder {
 
     private int findEndWord(String text, int startWord) {
         for (int i = startWord + 1; i < text.length(); i++) {
-            if (!FinderUtils.isLetter(text.charAt(i))) {
+            if (!FinderUtils.isSpanishLetter(text.charAt(i))) {
                 return i;
             }
         }

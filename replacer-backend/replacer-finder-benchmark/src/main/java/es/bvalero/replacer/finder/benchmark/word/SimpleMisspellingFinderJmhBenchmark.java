@@ -9,7 +9,6 @@ import es.bvalero.replacer.finder.listing.find.ListingFinder;
 import es.bvalero.replacer.finder.listing.find.ListingOfflineFinder;
 import es.bvalero.replacer.finder.listing.load.SimpleMisspellingLoader;
 import es.bvalero.replacer.finder.listing.parse.SimpleMisspellingParser;
-import es.bvalero.replacer.finder.replacement.ReplacementFinder;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.openjdk.jmh.annotations.Benchmark;

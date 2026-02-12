@@ -185,6 +185,36 @@ public class FinderUtils {
     }
 
     /**
+     * Determine if the character is a Spanish letter (ASCII letters + Spanish accented letters).
+     * This is faster than isLetter() for Spanish text as it uses early exit for ASCII letters.
+     */
+    public static boolean isSpanishLetter(char c) {
+        if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')) {
+            return true;
+        }
+        switch (c) {
+            case 'á':
+            case 'é':
+            case 'í':
+            case 'ó':
+            case 'ú':
+            case 'Á':
+            case 'É':
+            case 'Í':
+            case 'Ó':
+            case 'Ú':
+            case 'ü':
+            case 'Ü':
+            case 'ñ':
+            case 'Ñ':
+            case 'º':
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    /**
      * Determine if the character is a valid word character, i.e. a Unicode letter or digit.
      * We also admit the underscore as part of a complete word.
      * Note that Unicode considers the ordinals as letters, but we discard them.
