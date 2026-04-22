@@ -1,41 +1,39 @@
 import { Component, OnInit } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
-import { AlertComponent } from '../../shared/alerts/alert-container/alert/alert.component';
 import { AlertService } from '../../shared/alerts/alert.service';
 import StringUtils from '../../shared/util/string-utils';
 
 @Component({
   standalone: true,
   selector: 'app-find-custom',
-  imports: [FormsModule, AlertComponent],
+  imports: [ReactiveFormsModule],
   templateUrl: './find-custom.component.html',
   styleUrls: []
 })
 export class FindCustomComponent implements OnInit {
-  replacement: string;
-  suggestion: string;
-  caseSensitive: boolean;
+  readonly customForm = this.formBuilder.nonNullable.group({
+    replacement: [''],
+    suggestion: [''],
+    caseSensitive: [false]
+  });
 
   constructor(
-    private router: Router,
-    private alertService: AlertService,
-    private titleService: Title
-  ) {
-    this.replacement = '';
-    this.suggestion = '';
-    this.caseSensitive = false;
-  }
+    private readonly formBuilder: FormBuilder,
+    private readonly router: Router,
+    private readonly alertService: AlertService,
+    private readonly titleService: Title
+  ) {}
 
   ngOnInit() {
     this.titleService.setTitle('Replacer - Reemplazo personalizado');
   }
 
   onSubmit() {
-    const r = this.replacement.trim();
-    const s = this.suggestion.trim();
-    const cs = this.caseSensitive || false;
+    const r = this.customForm.controls.replacement.value.trim();
+    const s = this.customForm.controls.suggestion.value.trim();
+    const cs = this.customForm.controls.caseSensitive.value;
 
     if (this.validate(r, s, cs)) {
       this.router.navigate([`review/custom/${r}/${s}/${cs}`]);
@@ -48,10 +46,7 @@ export class FindCustomComponent implements OnInit {
     if (!replacement || !suggestion) {
       this.alertService.addErrorMessage('El reemplazo y la sugerencia son obligatorios');
       return false;
-    } else if (replacement === suggestion) {
-      this.alertService.addErrorMessage('El texto a reemplazar y el sugerido son iguales');
-      return false;
-    } else if (!cs && StringUtils.compareStringAccent(replacement, suggestion) === 0) {
+    } else if (replacement === suggestion || (!cs && StringUtils.compareStringAccent(replacement, suggestion) === 0)) {
       this.alertService.addErrorMessage('El texto a reemplazar y el sugerido son iguales');
       return false;
     }

@@ -13,8 +13,8 @@ import { AlertComponent } from '../../shared/alerts/alert-container/alert/alert.
 import { AlertService } from '../../shared/alerts/alert.service';
 import { sleep } from '../../shared/util/sleep';
 import { EditSnippetComponent } from './edit-snippet.component';
-import { kindLabel } from './find-random.component';
 import { FixedReplacement, getReplacementEnd } from './page-replacement.model';
+import { replacementKindLabels } from './replacement-kind-labels.const';
 import { ReviewOptions } from './review-options.model';
 
 @Component({
@@ -40,9 +40,9 @@ export class EditPageComponent implements OnChanges {
   private readonly editionsPerMinute = 5;
 
   constructor(
-    private alertService: AlertService,
-    private userService: UserService,
-    private pageApiService: PageApiService
+    private readonly alertService: AlertService,
+    private readonly userService: UserService,
+    private readonly pageApiService: PageApiService
   ) {}
 
   ngOnChanges() {
@@ -101,7 +101,7 @@ export class EditPageComponent implements OnChanges {
       const options: ReviewOptions = this.options;
       if (options.kind && options.subtype) {
         let count: number = 0;
-        for (let replacement of this.page.replacements) {
+        for (const replacement of this.page.replacements) {
           if (replacement.kind !== options.kind || replacement.subtype !== options.subtype) {
             count++;
           }
@@ -275,6 +275,6 @@ export class EditPageComponent implements OnChanges {
   }
 
   get kindLabel(): string {
-    return kindLabel[this.options.kind!];
+    return replacementKindLabels[this.options.kind!];
   }
 }

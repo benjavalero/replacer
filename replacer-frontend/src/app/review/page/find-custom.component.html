@@ -6,7 +6,7 @@
   el texto.
 </p>
 
-<form (ngSubmit)="onSubmit()" class="mt-4">
+<form [formGroup]="customForm" (ngSubmit)="onSubmit()" class="mt-4">
   <div class="form-group row">
     <label for="text-replacement" class="col-sm-2 col-form-label">Texto a reemplazar:</label>
     <div class="col-sm-10">
@@ -17,7 +17,7 @@
         type="text"
         maxlength="100"
         placeholder="Texto a reemplazar"
-        [(ngModel)]="replacement"
+        formControlName="replacement"
         autocomplete="off" />
     </div>
   </div>
@@ -25,7 +25,7 @@
     <input
       class="form-check-input"
       type="checkbox"
-      [(ngModel)]="caseSensitive"
+      formControlName="caseSensitive"
       id="case-sensitive"
       name="case-sensitive" />
     <label class="form-check-label" for="case-sensitive">Distinguir mayúsculas en el texto a reemplazar</label>
@@ -39,7 +39,7 @@
         class="form-control"
         type="text"
         placeholder="Texto sugerido"
-        [(ngModel)]="suggestion"
+        formControlName="suggestion"
         autocomplete="off" />
       <small class="form-text text-muted">Puede introducir varias sugerencias separadas por comas</small>
     </div>

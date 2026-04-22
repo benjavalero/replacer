@@ -13,14 +13,9 @@ import { AlertComponent } from '../../shared/alerts/alert-container/alert/alert.
 import { AlertService } from '../../shared/alerts/alert.service';
 import { EditPageComponent } from './edit-page.component';
 import { ExistingCustomComponent } from './existing-custom/existing-custom.component';
+import { replacementKindLabels } from './replacement-kind-labels.const';
 import { ReviewOptions } from './review-options.model';
-
-export const kindLabel: { [key: number]: string } = {
-  1: 'Personalizado',
-  2: 'Ortografía',
-  3: 'Compuestos',
-  5: 'Estilo'
-};
+import { buildReviewOptionsFromParamMap, getPageIdFromParamMap } from './review-route-options.util';
 
 @Component({
   standalone: true,
@@ -30,71 +25,53 @@ export const kindLabel: { [key: number]: string } = {
   styleUrls: []
 })
 export class FindRandomComponent implements OnInit {
-  page: Page | null;
-  options: ReviewOptions | null;
+  page: Page | null = null;
+  options: ReviewOptions | null = null;
   numPending: number = 0;
 
   displayCustomWarning: boolean = false;
 
   constructor(
-    private alertService: AlertService,
-    private replacementTypeApiService: ReplacementTypeApiService,
-    private pageApiService: PageApiService,
-    private router: Router,
-    private route: ActivatedRoute,
-    private titleService: Title,
-    private location: Location,
-    private modalService: NgbModal,
-    private userService: UserService
-  ) {
-    this.page = null;
-    this.options = null;
-  }
+    private readonly alertService: AlertService,
+    private readonly replacementTypeApiService: ReplacementTypeApiService,
+    private readonly pageApiService: PageApiService,
+    private readonly router: Router,
+    private readonly route: ActivatedRoute,
+    private readonly titleService: Title,
+    private readonly location: Location,
+    private readonly modalService: NgbModal,
+    private readonly userService: UserService
+  ) {}
 
   ngOnInit() {
-    // Optional search options
-    const kindParam = this.route.snapshot.paramMap.get('kind');
-    const subtypeParam = this.route.snapshot.paramMap.get('subtype');
-    const suggestionParam = this.route.snapshot.paramMap.get('suggestion');
-    const csParam = this.route.snapshot.paramMap.get('cs');
-
-    // Build review-options object
-    const options = {} as ReviewOptions;
-    if (subtypeParam !== null) {
-      options.subtype = subtypeParam;
-      if (suggestionParam !== null) {
-        // Custom type
-        options.kind = 1;
-        options.suggestion = suggestionParam;
-        // If the suggestion is defined we can assume the cs is also defined
-        options.cs = csParam! === 'true';
-      } else {
-        // If the subtype is defined we can assume the kind is also defined
-        options.kind = +kindParam!;
-      }
-    }
+    const options = buildReviewOptionsFromParamMap(this.route.snapshot.paramMap);
     this.options = options;
 
-    // If they type is custom, first of all we check if it is an existing standard one.
+    // For custom replacements, gate the search flow behind existing-type validation.
+    // This avoids launching the review lookup twice during initialization.
     if (this.isCustomType(options)) {
       this.validateExistingReplacement(options);
+      return;
     }
 
     this.handleOptions(options);
   }
 
   private handleOptions(options: ReviewOptions): void {
-    const idParam = this.route.snapshot.paramMap.get('id');
-    if (idParam !== null) {
-      this.findPageReview(+idParam, options);
-    } else {
+    const pageId = getPageIdFromParamMap(this.route.snapshot.paramMap);
+    if (pageId === null) {
       this.findRandomPage(options);
+      return;
     }
+
+    this.findPageReview(pageId, options);
   }
 
   private findRandomPage(options: ReviewOptions): void {
     this.alertService.clearAlertMessages();
-    this.checkCustomReplacementRights(options);
+    if (!this.checkCustomReplacementRights(options)) {
+      return;
+    }
 
     const msg =
       options.kind && options.subtype
@@ -111,32 +88,39 @@ export class FindRandomComponent implements OnInit {
         if (this.isCustomType(options)) {
           this.displayCustomWarning = true;
         }
-        if (page !== null) {
-          this.manageReview(page, options);
-        } else {
+        if (page === null) {
           this.alertService.addWarningMessage(
             options.kind && options.subtype
               ? `No se ha encontrado ningún artículo de tipo «${this.getKindLabel(options.kind)} - ${options.subtype}»`
               : 'No se ha encontrado ningún artículo'
           );
+          return;
         }
+
+        this.manageReview(page, options);
       }
     });
   }
 
   private getKindLabel(kind: number): string {
-    return kindLabel[kind];
+    return replacementKindLabels[kind];
   }
 
-  private checkCustomReplacementRights(options: ReviewOptions): void {
+  private checkCustomReplacementRights(options: ReviewOptions): boolean {
     if (this.isCustomType(options) && !this.canUseCustomReplacement()) {
       const path: string = `/review/list/${options.subtype}/${options.suggestion}/${options.cs}`;
       this.router.navigate([path]);
+      return false;
     }
+
+    return true;
   }
 
   private findPageReview(pageId: number, options: ReviewOptions): void {
-    this.checkCustomReplacementRights(options);
+    // Stop immediately after redirecting unauthorized users to the listing view.
+    if (!this.checkCustomReplacementRights(options)) {
+      return;
+    }
 
     this.pageApiService.findPageReviewById$Response({ ...options, id: pageId }).subscribe({
       next: (response: StrictHttpResponse<Page>) => {
@@ -215,7 +199,8 @@ export class FindRandomComponent implements OnInit {
       })
       .subscribe((replacementType: ReplacementType) => {
         if (replacementType) {
-          this.openExistingCustomModal$(replacementType.kind, replacementType.subtype).then(() => {
+          const existingKindLabel = replacementKindLabels[replacementType.kind];
+          this.openExistingCustomModal$(existingKindLabel, replacementType.subtype).then(() => {
             this.router.navigate([this.getReviewUrl(replacementType as ReviewOptions, null)]);
           });
         } else {
@@ -224,11 +209,11 @@ export class FindRandomComponent implements OnInit {
       });
   }
 
-  private openExistingCustomModal$(kind: number, subtype: string): Promise<any> {
+  private openExistingCustomModal$(kindLabel: string, subtype: string): Promise<void> {
     const modalRef = this.modalService.open(ExistingCustomComponent);
-    modalRef.componentInstance.kind = kindLabel[kind];
+    modalRef.componentInstance.kindLabel = kindLabel;
     modalRef.componentInstance.subtype = subtype;
-    return modalRef.result;
+    return modalRef.result as Promise<void>;
   }
 
   private canUseCustomReplacement(): boolean {

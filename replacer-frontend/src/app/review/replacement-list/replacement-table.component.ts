@@ -10,7 +10,7 @@ import { SubtypeCount } from '../../api/models/subtype-count';
 import { UserConfigService } from '../../core/services/user-config.service';
 import { UserService } from '../../core/services/user.service';
 import StringUtils from '../../shared/util/string-utils';
-import { kindLabel } from '../page/find-random.component';
+import { replacementKindLabels as kindLabel } from '../page/replacement-kind-labels.const';
 import { ReplacementListService } from './replacement-list.service';
 import { ReviewSubtypeComponent } from './review-subtype.component';
 import { SortDirection, rotate } from './sort-direction.model';

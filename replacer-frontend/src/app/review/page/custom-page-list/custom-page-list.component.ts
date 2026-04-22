@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
@@ -7,7 +8,7 @@ import { UserConfigService } from '../../../core/services/user-config.service';
 import { AlertComponent } from '../../../shared/alerts/alert-container/alert/alert.component';
 import { AlertService } from '../../../shared/alerts/alert.service';
 import { ReviewOptions } from '../review-options.model';
-import { CommonModule } from '@angular/common';
+import { buildCustomReviewOptionsFromParamMap } from '../review-route-options.util';
 
 @Component({
   standalone: true,
@@ -17,31 +18,20 @@ import { CommonModule } from '@angular/common';
   styleUrls: []
 })
 export class CustomPageListComponent implements OnInit {
-  options: ReviewOptions | null;
+  options: ReviewOptions | null = null;
   pageTitles$!: Observable<PageTitle[]>;
 
   constructor(
-    private route: ActivatedRoute,
-    private alertService: AlertService,
-    private pageApiService: PageApiService,
-    private userConfigService: UserConfigService
-  ) {
-    this.options = null;
-  }
+    private readonly route: ActivatedRoute,
+    private readonly alertService: AlertService,
+    private readonly pageApiService: PageApiService,
+    private readonly userConfigService: UserConfigService
+  ) {}
 
   ngOnInit() {
     this.alertService.clearAlertMessages();
 
-    const subtypeParam = this.route.snapshot.paramMap.get('subtype');
-    const suggestionParam = this.route.snapshot.paramMap.get('suggestion');
-    const csParam = this.route.snapshot.paramMap.get('cs');
-
-    this.options = {
-      kind: 1,
-      subtype: subtypeParam!,
-      suggestion: suggestionParam!,
-      cs: csParam! === 'true'
-    } as ReviewOptions;
+    this.options = buildCustomReviewOptionsFromParamMap(this.route.snapshot.paramMap);
     this.pageTitles$ = this.pageApiService.findPageTitlesToReviewByCustomType({ ...this.options });
   }
 
