@@ -5,7 +5,6 @@ import { Observable } from 'rxjs';
 import { PageTitle } from '../../../api/models/page-title';
 import { PageApiService } from '../../../api/services/page-api.service';
 import { UserConfigService } from '../../../core/services/user-config.service';
-import { AlertComponent } from '../../../shared/alerts/alert-container/alert/alert.component';
 import { AlertService } from '../../../shared/alerts/alert.service';
 import { ReviewOptions } from '../review-options.model';
 import { buildCustomReviewOptionsFromParamMap } from '../review-route-options.util';
@@ -13,7 +12,7 @@ import { buildCustomReviewOptionsFromParamMap } from '../review-route-options.ut
 @Component({
   standalone: true,
   selector: 'app-custom-page-list',
-  imports: [CommonModule, AlertComponent],
+  imports: [CommonModule],
   templateUrl: './custom-page-list.component.html',
   styleUrls: []
 })

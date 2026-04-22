@@ -13,6 +13,7 @@ export class UserService {
   readonly isSpecialUser = computed(() => this.user().specialUser);
   readonly isAdminUser = computed(() => this.user().admin);
   readonly userName = computed(() => this.user().name);
+  readonly canUseCustomReplacement = computed(() => this.isBotUser() || this.isSpecialUser());
 
   private loadCurrentUser(): User {
     const localWikipediaUser = localStorage.getItem(this.wikipediaUserKey);

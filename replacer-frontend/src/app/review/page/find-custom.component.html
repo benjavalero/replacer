@@ -6,6 +6,24 @@
   el texto.
 </p>
 
+<app-alert type="warning" [icon]="true" class="alert-small mt-4" *ngIf="userLacksPermissions()">
+  <p>
+    La herramienta tan solo permite la revisión de reemplazos personalizados a usuarios con permisos especiales como
+    verificadores, reversores o bots.
+  </p>
+  <p>
+    El propósito de los reemplazos personalizados es facilitar aquellas correcciones con pocas ocurrencias y que por
+    tanto no figuran en los listados generales. Si un reemplazo tiene muchas ocurrencias, se recomienda añadirlo a los
+    <a href="https://es.wikipedia.org/wiki/Usuario:Benjavalero/Replacer#Tipos_de_reemplazos"
+      target="_blank" rel="noopener noreferrer">listados generales</a>
+    para que pueda ser revisado por la comunidad. En unas horas se indexará y estará disponible en la aplicación.
+  </p>
+  <p>
+    Los usuarios sin permisos especiales verán una lista con las páginas que contienen alguna ocurrencia para poder
+    revisarlas una a una.
+  </p>
+</app-alert>
+
 <form [formGroup]="customForm" (ngSubmit)="onSubmit()" class="mt-4">
   <div class="form-group row">
     <label for="text-replacement" class="col-sm-2 col-form-label">Texto a reemplazar:</label>
