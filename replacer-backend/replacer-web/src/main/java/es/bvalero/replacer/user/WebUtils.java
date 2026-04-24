@@ -7,11 +7,13 @@ import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.Arrays;
+import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.TestOnly;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Component;
 
+@Slf4j
 @Component
 public class WebUtils {
 
@@ -36,13 +38,17 @@ public class WebUtils {
         // Access Token Cookie
         Cookie[] requestCookies = request.getCookies();
         if (requestCookies == null) {
-            throw new IllegalArgumentException();
+            LOGGER.warn("Unauthenticated request: no cookies found");
+            throw new AuthorizationException();
         }
-        String accessTokenCookie = Arrays.stream(request.getCookies())
+        String accessTokenCookie = Arrays.stream(requestCookies)
             .filter(cookie -> ACCESS_TOKEN_COOKIE.equals(cookie.getName()))
             .map(Cookie::getValue)
             .findAny()
-            .orElseThrow(IllegalArgumentException::new);
+            .orElseThrow(() -> {
+                LOGGER.warn("Unauthenticated request: access-token cookie not found");
+                return new AuthorizationException();
+            });
         AccessToken accessToken = AccessToken.fromCookieValue(accessTokenCookie);
 
         return userApi.findAuthenticatedUser(lang, accessToken).orElseThrow(AuthorizationException::new);
