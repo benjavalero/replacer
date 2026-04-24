@@ -190,6 +190,14 @@ class CenturyFinderTest {
         assertEquals(1, replacements.size());
     }
 
+    // Check that the finder doesn't fail when the text starts with a century word suffix ('.' or "iglo")
+    @ParameterizedTest
+    @ValueSource(strings = { ".\n\nEsta área la conforman los siguientes países.", "igloos are common in the Arctic." })
+    void testTextStartingWithCenturyWordSuffixShouldNotThrow(String text) {
+        List<Replacement> replacements = centuryFinder.findList(text);
+        assertTrue(replacements.isEmpty());
+    }
+
     @ParameterizedTest
     @ValueSource(
         strings = {

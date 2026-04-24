@@ -186,7 +186,7 @@ public class CenturyFinder implements ReplacementFinder {
             }
 
             // Check first letter of the word
-            if (FinderUtils.toLowerCaseAscii(text.charAt(startCentury)) != 's') {
+            if (startCentury < 0 || FinderUtils.toLowerCaseAscii(text.charAt(startCentury)) != 's') {
                 start = endCentury;
                 continue;
             }
