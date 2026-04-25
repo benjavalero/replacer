@@ -1,5 +1,12 @@
 # Versions
 
+## 2.33.1 (22 Apr 2026)
+- Refactor: warn about the permissions necessary to perform custom replacements
+- Doc: align English documentation with the main one in Spanish from Wikipedia
+- Refactor: optimization of simple-misspelling finder by checking specific Spanish letters
+- Refactor: big optimization of century finder
+- Chorus: upgrade frontend dependencies
+
 ## 2.33.0 (26 Jan 2026)
 - Feature: major improvements to the century finder including support for Arabic numbers, linked centuries with aliases, abbreviations, eras and several templates (e.g. `nowrap` or non-breaking spaces).
 - Feature: improvements in string treatment with better support for space aliases and performance optimizations.
