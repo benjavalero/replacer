@@ -34,4 +34,3 @@ jobs:
           -Dsonar.projectKey=benjavalero_replacer
           -Dsonar.organization=benjavalero-github
           -Dsonar.host.url=https://sonarcloud.io
-          -Dsonar.maven.scanAll=true
