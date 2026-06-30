@@ -16,6 +16,7 @@
         <!-- Don't analyze API generated code -->
         <sonar.sources>src</sonar.sources>
         <sonar.exclusions>**/api/**/*.ts</sonar.exclusions>
+        <sonar.coverage.exclusions>**/*</sonar.coverage.exclusions>
     </properties>
 
     <build>
