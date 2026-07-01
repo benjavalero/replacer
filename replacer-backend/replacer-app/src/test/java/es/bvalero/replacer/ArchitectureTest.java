@@ -10,6 +10,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.modulith.core.ApplicationModules;
 import org.springframework.modulith.docs.Documenter;
 
+// Suppress "Tests should include assertions": disabled tests are just developer utilities
+@SuppressWarnings("java:S2699")
 @AnalyzeClasses(packages = "es.bvalero.replacer")
 class ArchitectureTest {
 

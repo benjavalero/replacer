@@ -17,19 +17,19 @@ import org.springframework.lang.NonNull;
 @NoArgsConstructor
 class RequestTokenDto {
 
-    @Schema(requiredMode = REQUIRED, example = "b3cecd4b16ecde45d9fd1a0ce68a4091")
+    @Schema(requiredMode = REQUIRED)
     @NonNull
     @NotNull
     String token;
 
-    @Schema(requiredMode = REQUIRED, example = "23391110732a791d94321559c784c85c")
+    @Schema(requiredMode = REQUIRED)
     @NonNull
     @NotNull
     String tokenSecret;
 
     @Schema(
         requiredMode = REQUIRED,
-        example = "https://meta.wikimedia.org/wiki/Special:OAuth/authorize?oauth_token=b3cecd4b16ecde45d9fd1a0ce68a4091"
+        example = "https://meta.wikimedia.org/wiki/Special:OAuth/authorize?oauth_token=<request-token>"
     )
     @NonNull
     @NotNull

@@ -33,8 +33,8 @@ import org.springframework.test.web.servlet.MockMvc;
 @WebMvcTest(controllers = { PageSaveController.class, WebMvcConfiguration.class })
 class PageSaveControllerTest {
 
-    private static final int pageId = 123;
-    private static final PageKey pageKey = PageKey.of(WikipediaLanguage.getDefault(), pageId);
+    private static final int PAGE_ID = 123;
+    private static final PageKey pageKey = PageKey.of(WikipediaLanguage.getDefault(), PAGE_ID);
     private static final ReviewedReplacement reviewedReplacement = ReviewedReplacement.builder()
         .pageKey(pageKey)
         .type(StandardType.of(ReplacementKind.SIMPLE, "1"))
