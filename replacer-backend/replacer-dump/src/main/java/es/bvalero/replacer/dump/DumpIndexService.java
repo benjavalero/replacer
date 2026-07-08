@@ -1,7 +1,6 @@
 package es.bvalero.replacer.dump;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import es.bvalero.replacer.common.exception.ReplacerException;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
@@ -41,15 +40,7 @@ class DumpIndexService implements DumpIndexApi {
         }
 
         for (WikipediaLanguage lang : WikipediaLanguage.values()) {
-            dumpFinder
-                .findLatestDumpFile(lang)
-                .ifPresent(dumpFile -> {
-                    try {
-                        dumpParser.parseDumpFile(lang, dumpFile);
-                    } catch (ReplacerException e) {
-                        LOGGER.error("Error indexing latest dump file for lang {}", lang, e);
-                    }
-                });
+            dumpParser.parseDumpFiles(lang, dumpFinder.findLatestDumpFiles(lang));
         }
 
         LOGGER.debug("END dump indexing...");

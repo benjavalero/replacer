@@ -4,10 +4,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import es.bvalero.replacer.common.exception.ReplacerException;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,40 +28,22 @@ class DumpIndexServiceTest {
     }
 
     @Test
-    void testProcessLatestDumpFiles() throws ReplacerException {
+    void testProcessLatestDumpFiles() {
         when(dumpParser.getDumpStatus()).thenReturn(Optional.empty());
 
         Path dumpPath = mock(Path.class);
         DumpFile dumpFile = DumpFile.of(dumpPath);
-        when(dumpFinder.findLatestDumpFile(any(WikipediaLanguage.class))).thenReturn(Optional.of(dumpFile));
+        when(dumpFinder.findLatestDumpFiles(any(WikipediaLanguage.class))).thenReturn(List.of(dumpFile));
 
         dumpIndexService.indexLatestDumpFiles();
 
         // 2 executions, one per language.
-        verify(dumpFinder, times(2)).findLatestDumpFile(any(WikipediaLanguage.class));
-        verify(dumpParser, times(2)).parseDumpFile(any(WikipediaLanguage.class), any(DumpFile.class));
+        verify(dumpFinder, times(2)).findLatestDumpFiles(any(WikipediaLanguage.class));
+        verify(dumpParser, times(2)).parseDumpFiles(any(WikipediaLanguage.class), anyCollection());
     }
 
     @Test
-    void testProcessLatestDumpFilesWithException() throws ReplacerException {
-        when(dumpParser.getDumpStatus()).thenReturn(Optional.empty());
-
-        Path dumpPath = mock(Path.class);
-        DumpFile dumpFile = DumpFile.of(dumpPath);
-        when(dumpFinder.findLatestDumpFile(any(WikipediaLanguage.class))).thenReturn(Optional.of(dumpFile));
-        doThrow(ReplacerException.class)
-            .when(dumpParser)
-            .parseDumpFile(any(WikipediaLanguage.class), any(DumpFile.class));
-
-        dumpIndexService.indexLatestDumpFiles();
-
-        // 2 executions, one per language.
-        verify(dumpFinder, times(2)).findLatestDumpFile(any(WikipediaLanguage.class));
-        verify(dumpParser, times(2)).parseDumpFile(any(WikipediaLanguage.class), any(DumpFile.class));
-    }
-
-    @Test
-    void testProcessLatestDumpFilesAlreadyRunning() throws ReplacerException {
+    void testProcessLatestDumpFilesAlreadyRunning() {
         Optional<DumpStatus> dumpStatus = Optional.of(
             DumpStatus.builder()
                 .running(true)
@@ -77,8 +59,8 @@ class DumpIndexServiceTest {
         dumpIndexService.indexLatestDumpFiles();
 
         // 2 executions, one per language.
-        verify(dumpFinder, never()).findLatestDumpFile(any(WikipediaLanguage.class));
-        verify(dumpParser, never()).parseDumpFile(any(WikipediaLanguage.class), any(DumpFile.class));
+        verify(dumpFinder, never()).findLatestDumpFiles(any(WikipediaLanguage.class));
+        verify(dumpParser, never()).parseDumpFiles(any(WikipediaLanguage.class), anyCollection());
     }
 
     @Test

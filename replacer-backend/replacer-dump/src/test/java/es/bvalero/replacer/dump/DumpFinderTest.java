@@ -6,8 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Optional;
+import java.util.Collection;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -24,107 +23,108 @@ class DumpFinderTest {
         dumpFinder = new DumpFinder();
     }
 
-    @Test
-    void testFindLatestDumpFile() throws Exception {
-        // Two folders: 1 (old) and 2 (new). Each with one valid dump file.
-        // The newer also contains a non-valid dump file.
-        String dumpPathBase = dumpBaseFolder.toString();
-        String dumpPathProject = "eswiki";
-
-        Path dumpBase = Paths.get(dumpPathBase);
-        Path dumpProject = dumpBase.resolve(dumpPathProject);
-        Files.createDirectory(dumpProject);
-        Path subFolder1 = dumpProject.resolve("20170101");
-        Path subFolder2 = dumpProject.resolve("20170201");
-        Files.createDirectory(subFolder1);
-        Files.createDirectory(subFolder2);
-        Path dumpFile1 = subFolder1.resolve("eswiki-20170101-pages-articles.xml.bz2");
-        Path dumpFile2 = subFolder2.resolve("eswiki-20170201-pages-articles.xml.bz2");
-        Path dumpFile3 = subFolder2.resolve("eswiki-20190201-pages-meta-current.xml.bz2"); // Non-valid
-        Files.createFile(dumpFile1);
-        Files.createFile(dumpFile2);
-        Files.createFile(dumpFile3);
-
-        dumpFinder.setDumpPathBase(dumpPathBase);
-
-        Optional<DumpFile> latestDumpFile = dumpFinder.findLatestDumpFile(WikipediaLanguage.SPANISH);
-
-        assertTrue(latestDumpFile.isPresent());
-        assertEquals(dumpFile2, latestDumpFile.get().getPath());
+    private Path createDumpStructure(String date) throws Exception {
+        Path project = dumpBaseFolder.resolve("eswiki");
+        Files.createDirectories(project);
+        Path dateFolder = project.resolve(date);
+        Files.createDirectories(dateFolder);
+        Path bzip2Folder = dateFolder.resolve("xml/bzip2");
+        Files.createDirectories(bzip2Folder);
+        return bzip2Folder;
     }
 
     @Test
-    void testFindLatestDumpFileInOldSubFolder() throws Exception {
-        // In case the latest dump folder has not a valid dump yet
-        // (the generation is not done yet)
-        String dumpPathBase = dumpBaseFolder.toString();
-        String dumpPathProject = "eswiki";
+    void testFindLatestDumpFiles() throws Exception {
+        // Two date folders, each with one valid dump file
+        Path bzip2Older = createDumpStructure("2026-06-01");
+        Path bzip2Newer = createDumpStructure("2026-07-01");
+        Files.createFile(bzip2Older.resolve("eswiki-2026-06-01-p1p100.xml.bz2"));
+        Files.createFile(bzip2Newer.resolve("eswiki-2026-07-01-p1p100.xml.bz2"));
 
-        Path dumpBase = Paths.get(dumpPathBase);
-        Path dumpProject = dumpBase.resolve(dumpPathProject);
-        Files.createDirectory(dumpProject);
-        Path subFolder1 = dumpProject.resolve("20170101");
-        Path subFolder2 = dumpProject.resolve("20170201");
-        Files.createDirectory(subFolder1);
-        Files.createDirectory(subFolder2);
-        Path dumpFile1 = subFolder1.resolve("eswiki-20170101-pages-articles.xml.bz2");
-        Files.createFile(dumpFile1);
-
-        dumpFinder.setDumpPathBase(dumpPathBase);
-
-        Optional<DumpFile> latestDumpFile = dumpFinder.findLatestDumpFile(WikipediaLanguage.SPANISH);
-
-        assertTrue(latestDumpFile.isPresent());
-        assertEquals(dumpFile1, latestDumpFile.get().getPath());
-    }
-
-    @Test
-    void testEmptyDumpFolders() throws Exception {
-        // In case there is no dump folder with a dump yet
-        String dumpPathBase = dumpBaseFolder.toString();
-        String dumpPathProject = "eswiki";
-
-        Path dumpBase = Paths.get(dumpPathBase);
-        Path dumpProject = dumpBase.resolve(dumpPathProject);
-        Files.createDirectory(dumpProject);
-        Path subFolder1 = dumpProject.resolve("20170101");
-        Files.createDirectory(subFolder1);
-
-        dumpFinder.setDumpPathBase(dumpPathBase);
-
-        assertTrue(dumpFinder.findLatestDumpFile(WikipediaLanguage.SPANISH).isEmpty());
-    }
-
-    @Test
-    void testDumpFolderWithoutValidSubFolders() throws Exception {
-        String dumpPathBase = dumpBaseFolder.toString();
-        String dumpPathProject = "eswiki";
-
-        Path dumpBase = Paths.get(dumpPathBase);
-        Path dumpProject = dumpBase.resolve(dumpPathProject);
-        Files.createDirectory(dumpProject);
-        Path subFolder1 = dumpProject.resolve("20170101-temp");
-        Files.createDirectory(subFolder1);
-        Path dumpFile1 = subFolder1.resolve("eswiki-20170101-pages-articles.xml.bz2");
-        Files.createFile(dumpFile1);
-
-        dumpFinder.setDumpPathBase(dumpPathBase);
-
-        assertTrue(dumpFinder.findLatestDumpFile(WikipediaLanguage.SPANISH).isEmpty());
-    }
-
-    @Test
-    void testNotExistingDumpProjectFolder() {
         dumpFinder.setDumpPathBase(dumpBaseFolder.toString());
 
-        // Don't create the project sub-folder for the test
-        assertTrue(dumpFinder.findLatestDumpFile(WikipediaLanguage.SPANISH).isEmpty());
+        Collection<DumpFile> result = dumpFinder.findLatestDumpFiles(WikipediaLanguage.SPANISH);
+
+        assertEquals(1, result.size());
+        assertTrue(result.iterator().next().getPath().toString().contains("2026-07-01"));
     }
 
     @Test
-    void testNotExistingDumpBaseFolder() {
+    void testFindLatestDumpFilesInOldFolder() throws Exception {
+        // Latest folder has no dump files yet
+        Path bzip2Older = createDumpStructure("2026-06-01");
+        createDumpStructure("2026-07-01"); // empty
+        Files.createFile(bzip2Older.resolve("eswiki-2026-06-01-p1p100.xml.bz2"));
+
+        dumpFinder.setDumpPathBase(dumpBaseFolder.toString());
+
+        Collection<DumpFile> result = dumpFinder.findLatestDumpFiles(WikipediaLanguage.SPANISH);
+
+        assertEquals(1, result.size());
+        assertTrue(result.iterator().next().getPath().toString().contains("2026-06-01"));
+    }
+
+    @Test
+    void testFindMultipleDumpFiles() throws Exception {
+        Path bzip2 = createDumpStructure("2026-07-01");
+        Files.createFile(bzip2.resolve("eswiki-2026-07-01-p5p5140731.xml.bz2"));
+        Files.createFile(bzip2.resolve("eswiki-2026-07-01-p5140732p9913156.xml.bz2"));
+        Files.createFile(bzip2.resolve("eswiki-2026-07-01-p9913157p11541945.xml.bz2"));
+
+        dumpFinder.setDumpPathBase(dumpBaseFolder.toString());
+
+        Collection<DumpFile> result = dumpFinder.findLatestDumpFiles(WikipediaLanguage.SPANISH);
+
+        assertEquals(3, result.size());
+    }
+
+    @Test
+    void testIgnoreNonMatchingFiles() throws Exception {
+        Path bzip2 = createDumpStructure("2026-07-01");
+        Files.createFile(bzip2.resolve("eswiki-2026-07-01-p5p5140731.xml.bz2"));
+        Files.createFile(bzip2.resolve("some-other-file.txt")); // Non-valid
+
+        dumpFinder.setDumpPathBase(dumpBaseFolder.toString());
+
+        Collection<DumpFile> result = dumpFinder.findLatestDumpFiles(WikipediaLanguage.SPANISH);
+
+        assertEquals(1, result.size());
+    }
+
+    @Test
+    void testEmptyDumpFolder() throws Exception {
+        createDumpStructure("2026-07-01"); // empty bzip2 folder
+
+        dumpFinder.setDumpPathBase(dumpBaseFolder.toString());
+
+        assertTrue(dumpFinder.findLatestDumpFiles(WikipediaLanguage.SPANISH).isEmpty());
+    }
+
+    @Test
+    void testInvalidDateFolderIgnored() throws Exception {
+        // Folder with invalid date format
+        Path project = dumpBaseFolder.resolve("eswiki");
+        Files.createDirectories(project);
+        Path invalidFolder = project.resolve("20260701"); // old format, should be ignored
+        Files.createDirectories(invalidFolder.resolve("xml/bzip2"));
+        Files.createFile(invalidFolder.resolve("xml/bzip2/eswiki-20260701-p1p100.xml.bz2"));
+
+        dumpFinder.setDumpPathBase(dumpBaseFolder.toString());
+
+        assertTrue(dumpFinder.findLatestDumpFiles(WikipediaLanguage.SPANISH).isEmpty());
+    }
+
+    @Test
+    void testNotExistingProjectFolder() {
+        dumpFinder.setDumpPathBase(dumpBaseFolder.toString());
+
+        assertTrue(dumpFinder.findLatestDumpFiles(WikipediaLanguage.SPANISH).isEmpty());
+    }
+
+    @Test
+    void testNotExistingBaseFolder() {
         dumpFinder.setDumpPathBase("xxx");
 
-        assertTrue(dumpFinder.findLatestDumpFile(WikipediaLanguage.SPANISH).isEmpty());
+        assertTrue(dumpFinder.findLatestDumpFiles(WikipediaLanguage.SPANISH).isEmpty());
     }
 }

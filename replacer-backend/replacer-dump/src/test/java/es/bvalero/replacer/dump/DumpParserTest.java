@@ -13,6 +13,7 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -55,7 +56,7 @@ class DumpParserTest {
             .thenReturn(PageIndexResult.ofNotIndexable());
         when(dumpProperties.getNumPagesEstimated()).thenReturn(Map.of(WikipediaLanguage.SPANISH.getCode(), 150000));
 
-        dumpParser.parseDumpFile(WikipediaLanguage.SPANISH, DumpFile.of(dumpFile));
+        dumpParser.parseDumpFiles(WikipediaLanguage.SPANISH, List.of(DumpFile.of(dumpFile)));
 
         verify(pageIndexApi, times(4)).indexPage(any(IndexablePage.class));
         verify(pageIndexApi).finish();

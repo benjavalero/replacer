@@ -8,7 +8,6 @@ import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 import lombok.Setter;
@@ -19,49 +18,40 @@ import org.springframework.stereotype.Component;
 
 /**
  * Find the latest Wikipedia dump in the filesystem where the application runs.
- * The dumps are generated monthly and placed in a shared folder in Wikipedia servers.
- * This dump base folder is structured in sub-folders corresponding to the different wiki-projects,
- * e.g. `eswiki`, which are also structured in sub-folders for each generation date, e.g. `20120120`,
- * containing finally the dump files.
- * This component looks, for one project, into the date folders to find the last
- * one containing a generated dump with the pages to be indexed. It is possible
- * that the last date folder exists but not all dumps are generated within it yet.
- * The path of the shared folder and the wiki-project are configured externally.
+ * The dumps are placed in a shared folder in Wikipedia servers with the structure:
+ * {base}/{project}/{date}/xml/bzip2/{dump files}
+ * e.g. /public/dumps/public/other/mediawiki_content_current/eswiki/2026-07-01/xml/bzip2/
+ * There may be one or more dump files per date folder.
  */
 @Slf4j
 @Component
 class DumpFinder {
 
-    private static final String DUMP_FOLDER_REGEX = "\\d{8}";
+    private static final String DUMP_FOLDER_REGEX = "\\d{4}-\\d{2}-\\d{2}";
     private static final Pattern DUMP_FOLDER_PATTERN = Pattern.compile(DUMP_FOLDER_REGEX);
 
     @Setter(onMethod_ = @TestOnly)
     @Value("${replacer.dump.path.base}")
     private String dumpPathBase;
 
-    Optional<DumpFile> findLatestDumpFile(WikipediaLanguage lang) {
+    Collection<DumpFile> findLatestDumpFiles(WikipediaLanguage lang) {
         Path dumpPath = Paths.get(this.dumpPathBase, getDumpPathProject(lang));
-        LOGGER.debug("Finding latest dump file in: {} ...", dumpPath);
+        LOGGER.debug("Finding latest dump files in: {} ...", dumpPath);
 
-        Path latestDumpFile = null;
         for (Path dumpFolder : findDumpFolders(dumpPath)) {
-            Optional<Path> dumpFile = findDumpFile(dumpFolder, lang);
-            if (dumpFile.isPresent()) {
-                latestDumpFile = dumpFile.get();
-                break;
+            Collection<DumpFile> dumpFiles = findDumpFiles(dumpFolder, lang);
+            if (!dumpFiles.isEmpty()) {
+                LOGGER.debug("Found latest dump files for {} Wikipedia: {}", lang, dumpFiles);
+                return dumpFiles;
             }
         }
-        if (latestDumpFile == null) {
-            LOGGER.error("No dump file found for {} Wikipedia", lang);
-            return Optional.empty();
-        }
 
-        LOGGER.debug("Found latest dump for {} Wikipedia: {}", lang, latestDumpFile);
-        return Optional.of(DumpFile.of(latestDumpFile));
+        LOGGER.error("No dump files found for {} Wikipedia", lang);
+        return List.of();
     }
 
     private Collection<Path> findDumpFolders(Path dumpPath) {
-        try (Stream<Path> listedFiles = Files.list(Paths.get(dumpPath.toString()))) {
+        try (Stream<Path> listedFiles = Files.list(dumpPath)) {
             // Return the dump folders reverse-ordered by name (date)
             return listedFiles
                 .filter(folder -> DUMP_FOLDER_PATTERN.matcher(folder.getFileName().toString()).matches())
@@ -73,15 +63,23 @@ class DumpFinder {
         }
     }
 
-    private Optional<Path> findDumpFile(Path dumpFolder, WikipediaLanguage lang) {
-        // Check if the dump folder contains a valid dump
-        String dumpFileName = String.format(
-            "%s-%s-pages-articles.xml.bz2",
-            getDumpPathProject(lang),
-            dumpFolder.getFileName()
-        );
-        Path dumpFile = dumpFolder.resolve(dumpFileName);
-        return dumpFile.toFile().exists() ? Optional.of(dumpFile) : Optional.empty();
+    private Collection<DumpFile> findDumpFiles(Path dumpFolder, WikipediaLanguage lang) {
+        Path bzip2Folder = dumpFolder.resolve("xml/bzip2");
+        if (!bzip2Folder.toFile().exists()) {
+            return List.of();
+        }
+
+        String prefix = String.format("%s-%s-", getDumpPathProject(lang), dumpFolder.getFileName());
+        try (Stream<Path> files = Files.list(bzip2Folder)) {
+            return files
+                .filter(f -> f.getFileName().toString().startsWith(prefix))
+                .filter(f -> f.getFileName().toString().endsWith(".xml.bz2"))
+                .map(DumpFile::of)
+                .toList();
+        } catch (IOException e) {
+            LOGGER.error("Error listing files in: {}", bzip2Folder, e);
+            return List.of();
+        }
     }
 
     private String getDumpPathProject(WikipediaLanguage lang) {
