@@ -4,9 +4,6 @@
 *.iws
 *.ipr
 
-# VS Code
-.vscode
-
 target
 .flattened-pom.xml
 .DS_Store
