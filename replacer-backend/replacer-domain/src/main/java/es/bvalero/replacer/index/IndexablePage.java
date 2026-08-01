@@ -7,6 +7,7 @@ import es.bvalero.replacer.wikipedia.WikipediaPage;
 import es.bvalero.replacer.wikipedia.WikipediaTimestamp;
 import java.time.LocalDate;
 import java.util.Objects;
+import java.util.Optional;
 import lombok.*;
 import org.jetbrains.annotations.TestOnly;
 import org.springframework.lang.NonNull;
@@ -22,7 +23,7 @@ public class IndexablePage {
     @ToString.Exclude
     int namespace;
 
-    WikipediaNamespace getNamespace() {
+    Optional<WikipediaNamespace> getNamespace() {
         return WikipediaNamespace.valueOf(this.namespace);
     }
 

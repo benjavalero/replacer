@@ -133,7 +133,7 @@ class ReviewCustomFinder extends ReviewFinder {
             .lang(lang)
             .namespaces(
                 this.indexableNamespaces.stream()
-                    .map(WikipediaNamespace::valueOf)
+                    .flatMap(n -> WikipediaNamespace.valueOf(n).stream())
                     .collect(Collectors.toUnmodifiableSet())
             )
             .text(customType.getSubtype())

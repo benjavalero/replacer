@@ -37,7 +37,7 @@ public class NamespaceJmhBenchmark extends BaseFinderJmhBenchmark {
     private FinderEnumPage convertEnumPage(WikipediaApiResponse.Page page) {
         return FinderEnumPage.of(
             PageKey.of(WikipediaLanguage.getDefault(), page.getPageid()),
-            WikipediaNamespace.valueOf(page.getNs()),
+            WikipediaNamespace.valueOf(page.getNs()).orElseThrow(),
             page.getTitle(),
             page.getRevisions().stream().findFirst().orElseThrow().getSlots().getMain().getContent()
         );

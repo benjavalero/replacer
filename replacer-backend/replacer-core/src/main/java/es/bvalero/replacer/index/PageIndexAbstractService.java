@@ -6,6 +6,7 @@ import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.ReplacementFindApi;
 import es.bvalero.replacer.page.IndexedPage;
 import es.bvalero.replacer.page.PageSaveRepository;
+import es.bvalero.replacer.wikipedia.WikipediaNamespace;
 import java.util.Optional;
 import java.util.Set;
 import java.util.SortedSet;
@@ -101,7 +102,7 @@ abstract class PageIndexAbstractService {
                 "pageId",
                 page.getPageKey().getPageId(),
                 "namespace",
-                page.getNamespace(),
+                page.getNamespace().map(WikipediaNamespace::getValue).orElse(null),
                 "title",
                 page.getTitle(),
                 "dbTitle",

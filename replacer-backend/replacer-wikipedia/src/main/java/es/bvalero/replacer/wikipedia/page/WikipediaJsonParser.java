@@ -160,7 +160,7 @@ public class WikipediaJsonParser {
 
             return WikipediaPage.builder()
                 .pageKey(PageKey.of(lang, currentId))
-                .namespace(WikipediaNamespace.valueOf(currentNamespace))
+                .namespace(WikipediaNamespace.valueOf(currentNamespace).orElseThrow())
                 .title(currentTitle)
                 .content(currentContent)
                 .lastUpdate(WikipediaTimestamp.of(currentTimestamp))

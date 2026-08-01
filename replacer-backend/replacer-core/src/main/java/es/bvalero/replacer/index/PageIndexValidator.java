@@ -28,12 +28,12 @@ class PageIndexValidator {
     @PostConstruct
     public void init() {
         this.indexableWikipediaNamespaces = this.indexableNamespaces.stream()
-            .map(WikipediaNamespace::valueOf)
+            .flatMap(n -> WikipediaNamespace.valueOf(n).stream())
             .collect(Collectors.toUnmodifiableSet());
     }
 
     boolean isPageIndexableByNamespace(IndexablePage page) {
-        return this.indexableWikipediaNamespaces.contains(page.getNamespace());
+        return page.getNamespace().filter(this.indexableWikipediaNamespaces::contains).isPresent();
     }
 
     boolean isIndexableByTimestamp(IndexablePage page, @Nullable IndexedPage dbPage) {

@@ -2,10 +2,12 @@ package es.bvalero.replacer.wikipedia;
 
 import java.util.Arrays;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.TestOnly;
 
 /**
@@ -13,6 +15,7 @@ import org.jetbrains.annotations.TestOnly;
  * Even when just a few namespaces are indexed, we need to enumerate all of them
  * as they can be found on pages retrieved from Wikipedia or dumps.
  */
+@Slf4j
 @Getter
 @AllArgsConstructor
 public enum WikipediaNamespace {
@@ -46,11 +49,11 @@ public enum WikipediaNamespace {
 
     // We cannot override the static method "valueOf(String)"
     // but in this case as the value is an integer we can overload the method
-    public static WikipediaNamespace valueOf(int namespace) {
-        if (map.containsKey(namespace)) {
-            return map.get(namespace);
-        } else {
-            throw new IllegalArgumentException("Wrong namespace value: " + namespace);
+    public static Optional<WikipediaNamespace> valueOf(int namespace) {
+        Optional<WikipediaNamespace> result = Optional.ofNullable(map.get(namespace));
+        if (result.isEmpty() && namespace % 2 == 0) {
+            LOGGER.warn("Unknown even namespace: {}", namespace);
         }
+        return result;
     }
 }
