@@ -9,7 +9,6 @@ import { DumpAdapterService } from './dump-adapter.service';
 import { DumpAdapterStatus } from './dump.model';
 
 @Component({
-  standalone: true,
   selector: 'app-dump',
   imports: [CommonModule, FormsModule, AlertComponent],
   providers: [DumpAdapterService],

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbDropdown, NgbDropdownItem, NgbDropdownMenu, NgbDropdownToggle, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Language } from '../../model/language.model';
@@ -8,22 +8,19 @@ import { ChangeLanguageComponent } from './change-language/change-language.compo
 
 @Component({
   selector: 'app-header-user-menu',
-  standalone: true,
-  imports: [ChangeLanguageComponent, NgbDropdown, NgbDropdownToggle, NgbDropdownMenu, NgbDropdownItem],
+  imports: [NgbDropdown, NgbDropdownToggle, NgbDropdownMenu, NgbDropdownItem],
   templateUrl: './header-user-menu.component.html',
   styleUrls: [],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HeaderUserMenuComponent {
+  private userService = inject(UserService);
+  private userConfigService = inject(UserConfigService);
+  private router = inject(Router);
+  private modalService = inject(NgbModal);
+
   userName = this.userService.userName;
   lang = this.userConfigService.lang;
-
-  constructor(
-    private userService: UserService,
-    private userConfigService: UserConfigService,
-    private router: Router,
-    private modalService: NgbModal
-  ) {}
 
   onSelectLang(lang: string) {
     // Enable language

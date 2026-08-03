@@ -1,5 +1,4 @@
-import { CommonModule } from '@angular/common';
-import { Component, OnInit, computed } from '@angular/core';
+import { Component, OnInit, computed, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
@@ -9,13 +8,18 @@ import { AlertService } from '../../shared/alerts/alert.service';
 import StringUtils from '../../shared/util/string-utils';
 
 @Component({
-  standalone: true,
   selector: 'app-find-custom',
-  imports: [CommonModule, ReactiveFormsModule, AlertComponent],
+  imports: [ReactiveFormsModule, AlertComponent],
   templateUrl: './find-custom.component.html',
   styleUrls: []
 })
 export class FindCustomComponent implements OnInit {
+  private formBuilder = inject(FormBuilder);
+  private router = inject(Router);
+  private alertService = inject(AlertService);
+  private titleService = inject(Title);
+  private userService = inject(UserService);
+
   readonly customForm = this.formBuilder.nonNullable.group({
     replacement: [''],
     suggestion: [''],
@@ -23,14 +27,6 @@ export class FindCustomComponent implements OnInit {
   });
 
   readonly userLacksPermissions = computed(() => !this.userService.canUseCustomReplacement());
-
-  constructor(
-    private readonly formBuilder: FormBuilder,
-    private readonly router: Router,
-    private readonly alertService: AlertService,
-    private readonly titleService: Title,
-    private readonly userService: UserService
-  ) {}
 
   ngOnInit() {
     this.titleService.setTitle('Replacer - Reemplazo personalizado');

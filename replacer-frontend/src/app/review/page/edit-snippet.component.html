@@ -1,22 +1,27 @@
 <div class="border border-secondary p-2 mt-3 mb-3">
-  <div class="pre" *ngIf="suggestionSelected">
-    <span>{{ textLeft }}</span>
-    <!-- IMPORTANT: Don't break lines before or after the snippet not to introduce unwanted whitespaces -->
-    <!-- prettier-ignore -->
-    <span class="btn"
-      [ngClass]="{ 'btn-danger': replacement.text === suggestionSelected.text, 'btn-success': replacement.text !== suggestionSelected.text }">{{
+  @if (suggestionSelected) {
+    <div class="pre">
+      <span>{{ textLeft }}</span>
+      <!-- IMPORTANT: Don't break lines before or after the snippet not to introduce unwanted whitespaces -->
+      <!-- prettier-ignore -->
+      <span class="btn"
+        [ngClass]="{ 'btn-danger': replacement.text === suggestionSelected.text, 'btn-success': replacement.text !== suggestionSelected.text }">{{
       suggestionSelected.text }}</span>
-    <span>{{ textRight }}</span>
-  </div>
-  <div class="pre" *ngIf="customFix">
-    <span>{{ customFix.text }}</span>
-  </div>
+      <span>{{ textRight }}</span>
+    </div>
+  }
+  @if (customFix) {
+    <div class="pre">
+      <span>{{ customFix.text }}</span>
+    </div>
+  }
 
   <div class="container mt-3">
-    <div class="row" *ngIf="suggestionSelected">
-      <div
-        *ngFor="let suggestion of replacement.suggestions; let i = index; let first = first; let last = last"
-        class="btn text-start col-sm"
+    @if (suggestionSelected) {
+      <div class="row">
+        @for (suggestion of replacement.suggestions; track suggestion; let i = $index; let first = $first; let last = $last) {
+          <div
+            class="btn text-start col-sm"
         [ngClass]="{
           'btn-primary': suggestion === suggestionSelected,
           'btn-outline-primary': suggestion !== suggestionSelected,
@@ -24,11 +29,15 @@
           'middle-suggestion': !first && !last,
           'last-suggestion': last
         }"
-        (click)="onSelectSuggestion(i)">
-        {{ suggestion.text }}
-        <span *ngIf="suggestion.comment" class="small">({{ suggestion.comment }})</span>
+            (click)="onSelectSuggestion(i)">
+            {{ suggestion.text }}
+            @if (suggestion.comment) {
+              <span class="small">({{ suggestion.comment }})</span>
+            }
+          </div>
+        }
       </div>
-    </div>
+    }
     <div class="row">
       <button type="button" class="btn w-100 btn-primary mt-1" (click)="onEdit()">Editar fragmento</button>
     </div>

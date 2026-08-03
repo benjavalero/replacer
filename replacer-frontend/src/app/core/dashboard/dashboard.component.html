@@ -9,68 +9,65 @@
   </div>
 </div>
 
-<div *ngIf="isValidUser(); else login">
-  <div class="row" *ngIf="hasRightsUser(); else noRightsAlert">
-    <div class="col-md-6 col-lg-4 py-1">
-      <div class="card h-100 bg-light">
-        <div class="card-body">
-          <h4 class="card-title">Artículo aleatorio</h4>
-          <p class="card-text">Revisa todos los posibles reemplazos de un artículo aleatorio.</p>
-          <a routerLink="/review/notype" class="stretched-link"></a>
+@if (isValidUser()) {
+  <div>
+    @if (hasRightsUser()) {
+      <div class="row">
+        <div class="col-md-6 col-lg-4 py-1">
+          <div class="card h-100 bg-light">
+            <div class="card-body">
+              <h4 class="card-title">Artículo aleatorio</h4>
+              <p class="card-text">Revisa todos los posibles reemplazos de un artículo aleatorio.</p>
+              <a routerLink="/review/notype" class="stretched-link"></a>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-4 py-1">
+          <div class="card h-100 bg-light">
+            <div class="card-body">
+              <h4 class="card-title">Lista de reemplazos</h4>
+              <p class="card-text">Revisa todos los artículos que contienen un reemplazo en concreto.</p>
+              <a routerLink="/review/list" class="stretched-link"></a>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-4 py-1">
+          <div class="card h-100 bg-light">
+            <div class="card-body">
+              <h4 class="card-title">Reemplazo personalizado</h4>
+              <p class="card-text">Revisa todos los artículos que contienen un reemplazo personalizado.</p>
+              <a routerLink="/review/custom" class="stretched-link"></a>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-4 py-1">
+          <div class="card h-100 bg-light">
+            <div class="card-body">
+              <h4 class="card-title">Estadísticas</h4>
+              <p class="card-text">Muestra, entre otras estadísticas, el número de reemplazos indexados y revisados.</p>
+              <a routerLink="/stats" class="stretched-link"></a>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-
-    <div class="col-md-6 col-lg-4 py-1">
-      <div class="card h-100 bg-light">
-        <div class="card-body">
-          <h4 class="card-title">Lista de reemplazos</h4>
-          <p class="card-text">Revisa todos los artículos que contienen un reemplazo en concreto.</p>
-          <a routerLink="/review/list" class="stretched-link"></a>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-md-6 col-lg-4 py-1">
-      <div class="card h-100 bg-light">
-        <div class="card-body">
-          <h4 class="card-title">Reemplazo personalizado</h4>
-          <p class="card-text">Revisa todos los artículos que contienen un reemplazo personalizado.</p>
-          <a routerLink="/review/custom" class="stretched-link"></a>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-md-6 col-lg-4 py-1">
-      <div class="card h-100 bg-light">
-        <div class="card-body">
-          <h4 class="card-title">Estadísticas</h4>
-          <p class="card-text">Muestra, entre otras estadísticas, el número de reemplazos indexados y revisados.</p>
-          <a routerLink="/stats" class="stretched-link"></a>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <ng-template #noRightsAlert>
-    <app-alert type="danger">
-      <p>
-        Es necesario ser un usuario
-        <a href="https://es.wikipedia.org/wiki/Wikipedia:Autoconfirmados" target="_blank" rel="noopener noreferrer">
-          autoconfirmado
-        </a>
-        para utilizar Replacer.
-      </p>
+    } @else {
+      <app-alert type="danger">
+        <p>
+          Es necesario ser un usuario
+          <a href="https://es.wikipedia.org/wiki/Wikipedia:Autoconfirmados" target="_blank" rel="noopener noreferrer">
+            autoconfirmado
+          </a>
+          para utilizar Replacer.
+        </p>
+      </app-alert>
+    }
+    <app-alert type="warning" [icon]="true" class="alert-small">
+      <p><strong>Usa Replacer de forma responsable</strong></p>
+      <p>Tómate tu tiempo y revisa cuidadosamente cada reemplazo en su contexto.</p>
+      <p>Hay muchísimos falsos positivos; en caso de duda, elige la opción de guardar sin cambios.</p>
     </app-alert>
-  </ng-template>
-
-  <app-alert type="warning" [icon]="true" class="alert-small">
-    <p><strong>Usa Replacer de forma responsable</strong></p>
-    <p>Tómate tu tiempo y revisa cuidadosamente cada reemplazo en su contexto.</p>
-    <p>Hay muchísimos falsos positivos; en caso de duda, elige la opción de guardar sin cambios.</p>
-  </app-alert>
-</div>
-
-<ng-template #login>
+  </div>
+} @else {
   <app-login></app-login>
-</ng-template>
+}
+

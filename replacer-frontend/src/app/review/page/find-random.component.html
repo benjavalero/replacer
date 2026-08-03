@@ -1,16 +1,19 @@
-<app-edit-page
-  *ngIf="page && options"
-  [page]="page"
-  [options]="options"
-  [numPending]="numPending"
+@if (page && options) {
+  <app-edit-page
+    [page]="page"
+    [options]="options"
+    [numPending]="numPending"
   (saved)="onSaved($event)"></app-edit-page>
+}
 
-<app-alert type="warning" [icon]="true" class="alert-small" *ngIf="displayCustomWarning">
-  <p>
-    Se han encontrado <strong>{{ numPending }}</strong> ocurrencias del reemplazo personalizado «<strong>{{ options!.subtype }}</strong>».
-    Si un reemplazo tiene muchas ocurrencias, por favor añádelo a los
-    <a href="https://es.wikipedia.org/wiki/Usuario:Benjavalero/Replacer#Tipos_de_reemplazos"
+@if (displayCustomWarning) {
+  <app-alert type="warning" [icon]="true" class="alert-small">
+    <p>
+      Se han encontrado <strong>{{ numPending }}</strong> ocurrencias del reemplazo personalizado «<strong>{{ options!.subtype }}</strong>».
+      Si un reemplazo tiene muchas ocurrencias, por favor añádelo a los
+      <a href="https://es.wikipedia.org/wiki/Usuario:Benjavalero/Replacer#Tipos_de_reemplazos"
       target="_blank" rel="noopener noreferrer">listados generales</a>
-    para que pueda ser revisado por la comunidad. En unas horas se indexará y estará disponible en la aplicación.
-  </p>
-</app-alert>
+      para que pueda ser revisado por la comunidad. En unas horas se indexará y estará disponible en la aplicación.
+    </p>
+  </app-alert>
+}

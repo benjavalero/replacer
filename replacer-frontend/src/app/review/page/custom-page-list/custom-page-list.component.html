@@ -5,26 +5,35 @@
   para facilitar su revisión y potencial corrección de forma manual.
 </p>
 
-<ng-template #loading>Calculando…</ng-template>
-<div *ngIf="pageTitles$ | async as pageTitles; else loading">
-  <p *ngIf="pageTitles.length == 0">No hay páginas para revisar</p>
-  <table *ngIf="pageTitles.length"
-    class="table" aria-describedby="Lista de páginas sin revisar para el reemplazo personalizado dado">
-    <thead>
-      <tr>
-        <th scope="col">Título</th>
-        <th scope="col"></th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let item of pageTitles">
-        <td>{{ item.title }}</td>
-        <td>
-          <a href="{{ wikipediaUrl }}{{ item.title }}" class="no-underline" target="_blank" rel="noopener noreferrer">
-            Abrir en Wikipedia
-          </a>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+@if (pageTitles$ | async; as pageTitles) {
+  <div>
+    @if (pageTitles.length === 0) {
+      <p>No hay páginas para revisar</p>
+    }
+    @if (pageTitles.length) {
+      <table
+        class="table" aria-describedby="Lista de páginas sin revisar para el reemplazo personalizado dado">
+        <thead>
+          <tr>
+            <th scope="col">Título</th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (item of pageTitles; track item) {
+            <tr>
+              <td>{{ item.title }}</td>
+              <td>
+                <a href="{{ wikipediaUrl }}{{ item.title }}" class="no-underline" target="_blank" rel="noopener noreferrer">
+                  Abrir en Wikipedia
+                </a>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+  </div>
+} @else {
+  Calculando…
+}

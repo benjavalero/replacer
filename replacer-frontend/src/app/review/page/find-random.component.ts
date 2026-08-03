@@ -1,4 +1,4 @@
-import { CommonModule, Location } from '@angular/common';
+import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -18,9 +18,8 @@ import { ReviewOptions } from './review-options.model';
 import { buildReviewOptionsFromParamMap, getPageIdFromParamMap } from './review-route-options.util';
 
 @Component({
-  standalone: true,
   selector: 'app-find-random',
-  imports: [CommonModule, EditPageComponent, AlertComponent],
+  imports: [EditPageComponent, AlertComponent],
   templateUrl: './find-random.component.html',
   styleUrls: []
 })

@@ -1,18 +1,16 @@
-import { AsyncPipe, NgForOf } from '@angular/common';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { AlertService } from '../alert.service';
 import { AlertComponent } from './alert/alert.component';
 
 @Component({
   selector: 'app-alert-container',
-  standalone: true,
-  imports: [AsyncPipe, NgForOf, AlertComponent],
+  imports: [AlertComponent],
   templateUrl: './alert-container.component.html',
   styleUrls: ['./alert-container.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AlertContainerComponent {
-  alerts = this.alertService.alerts;
+  private alertService = inject(AlertService);
 
-  constructor(private alertService: AlertService) {}
+  alerts = this.alertService.alerts;
 }

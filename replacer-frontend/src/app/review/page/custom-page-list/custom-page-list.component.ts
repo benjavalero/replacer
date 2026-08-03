@@ -10,7 +10,6 @@ import { ReviewOptions } from '../review-options.model';
 import { buildCustomReviewOptionsFromParamMap } from '../review-route-options.util';
 
 @Component({
-  standalone: true,
   selector: 'app-custom-page-list',
   imports: [CommonModule],
   templateUrl: './custom-page-list.component.html',

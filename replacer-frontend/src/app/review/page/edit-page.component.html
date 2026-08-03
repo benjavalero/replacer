@@ -1,64 +1,76 @@
-<div *ngIf="page.replacements.length" class="container">
-  <nav *ngIf="options.kind && options.subtype" aria-label="breadcrumb">
-    <ol class="breadcrumb">
-      <li class="breadcrumb-item">{{ kindLabel }}</li>
-      <ng-template [ngIf]="!options.suggestion">
-        <li class="breadcrumb-item">
-          {{ options.subtype }} &nbsp;
-          <span *ngIf="numPending !== 0" class="badge text-bg-light">
-            <span class="align-middle">{{ numPending }}</span>
-          </span>
-        </li>
-      </ng-template>
-      <ng-template [ngIf]="options.suggestion">
-        <li class="breadcrumb-item">{{ options.subtype }}</li>
-        <li class="breadcrumb-item">
-          {{ options.suggestion }} &nbsp;
-          <span *ngIf="numPending !== 0" class="badge text-bg-light">
-            <span class="align-middle">{{ numPending }}</span>
-          </span>
-        </li>
-      </ng-template>
-    </ol>
-  </nav>
-
-  <h3 id="pageTitle">
-    {{ page.title }}
-    <a href="{{ url }}" target="_blank" rel="noopener noreferrer" class="small no-underline">[Abrir en Wikipedia]</a>
-    <a href="{{ historyUrl }}" target="_blank" rel="noopener noreferrer" class="small no-underline">[Historial]</a>
-  </h3>
-
-  <app-edit-snippet
-    *ngFor="let replacement of page.replacements; let i = index; let first = first; let last = last"
-    [index]="i"
-    [pageText]="page.content"
-    [replacement]="replacement"
-    (fixed)="onFixed($event)"
-    [limitLeft]="limitLeft(i)"
-    [limitRight]="limitRight(i)"
-    [hidden]="!displayReplacement(i)"></app-edit-snippet>
-
-  <button type="button" class="btn btn-success w-100 mt-3 mb-3 py-3" (click)="onSaveChanges()">
-    <span *ngIf="fixedCount !== 0">
-      Guardar cambios
-      <span class="badge text-bg-light">{{ fixedCount }}</span>
-    </span>
-    <span *ngIf="fixedCount === 0">
-      Marcar como revisado
-      <span class="small">(sin cambios)</span>
-    </span>
-  </button>
-
-  <button type="button" class="btn btn-outline-success w-100 mb-3" (click)="onSkip()">
-    <fa-icon [icon]="ffIcon"></fa-icon>
-    Revisar después
-  </button>
-
-  <app-alert type="info" [icon]="false" class="alert-small" [hidden]="countOtherTypes === 0">
-    <p *ngIf="countOtherTypes === 1" class="small">La página contiene {{ countOtherTypes }} reemplazo de otro tipo</p>
-    <p *ngIf="countOtherTypes !== 1" class="small">
-      La página contiene {{ countOtherTypes }} reemplazos de otros tipos
-    </p>
-    <button type="button" class="btn btn-info w-100" (click)="onReviewAllTypes()">Mostrar todos los reemplazos</button>
-  </app-alert>
-</div>
+@if (page.replacements.length) {
+  <div class="container">
+    @if (options.kind && options.subtype) {
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item">{{ kindLabel }}</li>
+          @if (!options.suggestion) {
+            <li class="breadcrumb-item">
+              {{ options.subtype }} &nbsp;
+              @if (numPending !== 0) {
+                <span class="badge text-bg-light">
+                  <span class="align-middle">{{ numPending }}</span>
+                </span>
+              }
+            </li>
+          }
+          @if (options.suggestion) {
+            <li class="breadcrumb-item">{{ options.subtype }}</li>
+            <li class="breadcrumb-item">
+              {{ options.suggestion }} &nbsp;
+              @if (numPending !== 0) {
+                <span class="badge text-bg-light">
+                  <span class="align-middle">{{ numPending }}</span>
+                </span>
+              }
+            </li>
+          }
+        </ol>
+      </nav>
+    }
+    <h3 id="pageTitle">
+      {{ page.title }}
+      <a href="{{ url }}" target="_blank" rel="noopener noreferrer" class="small no-underline">[Abrir en Wikipedia]</a>
+      <a href="{{ historyUrl }}" target="_blank" rel="noopener noreferrer" class="small no-underline">[Historial]</a>
+    </h3>
+    @for (replacement of page.replacements; track replacement; let i = $index; let first = $first; let last = $last) {
+      <app-edit-snippet
+        [index]="i"
+        [pageText]="page.content"
+        [replacement]="replacement"
+        (fixed)="onFixed($event)"
+        [limitLeft]="limitLeft(i)"
+        [limitRight]="limitRight(i)"
+      [hidden]="!displayReplacement(i)"></app-edit-snippet>
+    }
+    <button type="button" class="btn btn-success w-100 mt-3 mb-3 py-3" (click)="onSaveChanges()">
+      @if (fixedCount !== 0) {
+        <span>
+          Guardar cambios
+          <span class="badge text-bg-light">{{ fixedCount }}</span>
+        </span>
+      }
+      @if (fixedCount === 0) {
+        <span>
+          Marcar como revisado
+          <span class="small">(sin cambios)</span>
+        </span>
+      }
+    </button>
+    <button type="button" class="btn btn-outline-success w-100 mb-3" (click)="onSkip()">
+      <fa-icon [icon]="ffIcon"></fa-icon>
+      Revisar después
+    </button>
+    <app-alert type="info" [icon]="false" class="alert-small" [hidden]="countOtherTypes === 0">
+      @if (countOtherTypes === 1) {
+        <p class="small">La página contiene {{ countOtherTypes }} reemplazo de otro tipo</p>
+      }
+      @if (countOtherTypes !== 1) {
+        <p class="small">
+          La página contiene {{ countOtherTypes }} reemplazos de otros tipos
+        </p>
+      }
+      <button type="button" class="btn btn-info w-100" (click)="onReviewAllTypes()">Mostrar todos los reemplazos</button>
+    </app-alert>
+  </div>
+}

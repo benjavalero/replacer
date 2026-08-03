@@ -1,54 +1,61 @@
 <h3>Indexación</h3>
 
-<div *ngIf="status$ | async as status; else loading">
-  <app-alert type="warning" *ngIf="!status.start">No se ha encontrado el estado de la última indexación</app-alert>
-  <ul *ngIf="status.start">
-    <li>
-      En ejecución:
-      <strong>{{ status.running }}</strong>
-    </li>
-    <li>
-      Fichero en proceso:
-      <strong>{{ status.dumpFileName }}</strong>
-    </li>
-    <li>
-      Inicio:
-      <strong>{{ status.startDate }}</strong>
-    </li>
-    <li>
-      Final:
-      <strong>{{ status.endDate }}</strong>
-    </li>
-    <li>
-      Páginas leídas:
-      <strong>{{ status.numPagesRead }}</strong>
-    </li>
-    <li>
-      Páginas indexadas:
-      <strong>{{ status.numPagesIndexed }}</strong>
-    </li>
-    <li>
-      Tiempo transcurrido:
-      <strong>{{ status.elapsed }} (hh:mm:ss)</strong>
-    </li>
-    <li>
-      Progreso:
-      <strong>{{ status.progress | number }} %</strong>
-    </li>
-    <li>
-      Tiempo medio por página:
-      <strong>{{ status.average | number }} ms</strong>
-    </li>
-    <li *ngIf="status.running">
-      Tiempo estimado de finalización:
-      <strong>{{ status.eta }} (hh:mm:ss)</strong>
-    </li>
-  </ul>
-
-  <form *ngIf="!status.running" (ngSubmit)="onSubmit()" class="mb-3">
-    <button type="submit" class="btn btn-primary" id="button-index">Lanzar indexación</button>
-  </form>
-</div>
-<ng-template #loading>
+@if (status$ | async; as status) {
+  <div>
+    @if (status.start) {
+      <ul>
+        <li>
+          En ejecución:
+          <strong>{{ status.running }}</strong>
+        </li>
+        <li>
+          Fichero en proceso:
+          <strong>{{ status.dumpFileName }}</strong>
+        </li>
+        <li>
+          Inicio:
+          <strong>{{ status.startDate }}</strong>
+        </li>
+        <li>
+          Final:
+          <strong>{{ status.endDate }}</strong>
+        </li>
+        <li>
+          Páginas leídas:
+          <strong>{{ status.numPagesRead }}</strong>
+        </li>
+        <li>
+          Páginas indexadas:
+          <strong>{{ status.numPagesIndexed }}</strong>
+        </li>
+        <li>
+          Tiempo transcurrido:
+          <strong>{{ status.elapsed }} (hh:mm:ss)</strong>
+        </li>
+        <li>
+          Progreso:
+          <strong>{{ status.progress | number }} %</strong>
+        </li>
+        <li>
+          Tiempo medio por página:
+          <strong>{{ status.average | number }} ms</strong>
+        </li>
+        @if (status.running) {
+          <li>
+            Tiempo estimado de finalización:
+            <strong>{{ status.eta }} (hh:mm:ss)</strong>
+          </li>
+        }
+      </ul>
+    } @else {
+      <app-alert type="warning">No se ha encontrado el estado de la última indexación</app-alert>
+    }
+    @if (!status.running) {
+      <form (ngSubmit)="onSubmit()" class="mb-3">
+        <button type="submit" class="btn btn-primary" id="button-index">Lanzar indexación</button>
+      </form>
+    }
+  </div>
+} @else {
   <app-alert>Cargando estado de la indexación…</app-alert>
-</ng-template>
+}

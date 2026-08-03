@@ -1,11 +1,12 @@
 <div class="card bg-light">
   <div class="card-body">
     <p class="card-text">Necesita autenticarse en la Wikipedia para guardar los cambios con su usuario.</p>
-    <div *ngIf="authorizationUrl$ | async as url; else loading">
-      <a class="btn btn-primary w-100" href="{{ url }}">Iniciar sesión</a>
-    </div>
-    <ng-template #loading>
+    @if (authorizationUrl$ | async; as url) {
+      <div>
+        <a class="btn btn-primary w-100" href="{{ url }}">Iniciar sesión</a>
+      </div>
+    } @else {
       <app-alert>Comprobando autenticación…</app-alert>
-    </ng-template>
+    }
   </div>
 </div>

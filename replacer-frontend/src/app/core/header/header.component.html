@@ -12,97 +12,101 @@
       <span class="navbar-toggler-icon"></span>
     </button>
 
-    <div id="navbarSupportedContent" class="navbar-collapse" [ngbCollapse]="isNavCollapsed" *ngIf="isValidUser()">
-      <!-- Navigation links are only available for valid users -->
-      <ul class="navbar-nav me-auto" *ngIf="hasRightsUser()">
-        <li class="nav-item">
-          <a
-            class="nav-link"
-            routerLinkActive="active"
-            routerLink="/review/notype"
-            (click)="isNavCollapsed = true"
-            title="Revisa todos los posibles reemplazos de un artículo aleatorio">
-            Artículo aleatorio
-          </a>
-        </li>
-        <li class="nav-item">
-          <a
-            class="nav-link"
-            routerLinkActive="active"
-            routerLink="/review/list"
-            (click)="isNavCollapsed = true"
-            title="Revisa todos los artículos que contienen un reemplazo en concreto">
-            Lista de reemplazos
-          </a>
-        </li>
-        <li class="nav-item">
-          <a
-            class="nav-link"
-            routerLinkActive="active"
-            routerLink="/review/custom"
-            (click)="isNavCollapsed = true"
-            title="Revisa todos los artículos que contienen un reemplazo personalizado">
-            Reemplazo personalizado
-          </a>
-        </li>
-        <li class="nav-item">
-          <a
-            class="nav-link"
-            routerLinkActive="active"
-            routerLink="/stats"
-            (click)="isNavCollapsed = true"
-            title="Muestra el número de reemplazos indexados y revisados">
-            Estadísticas
-          </a>
-        </li>
-        <li class="nav-item">
-          <a
-            class="nav-link"
-            href="https://es.wikipedia.org/wiki/Usuario:Benjavalero/Replacer"
-            target="_blank"
-            rel="noopener noreferrer"
-            title="Abrir página de la herramienta en Wikipedia">
-            Ayuda
-          </a>
-        </li>
-        <li class="nav-item" ngbDropdown *ngIf="isAdminUser()">
-          <a
-            class="nav-link"
-            [ngClass]="{ active: indexing.isActive || unreviewed.isActive }"
-            style="cursor: pointer"
-            ngbDropdownToggle
-            id="navbarDropdownAdmin"
-            role="button"
-            title="Tareas de administración">
-            Administración
-          </a>
-          <div ngbDropdownMenu aria-labelledby="navbarDropdownAdmin">
-            <button
-              ngbDropdownItem
-              routerLinkActive="active"
-              routerLink="/admin/dump-indexing"
-              #indexing="routerLinkActive"
-              (click)="isNavCollapsed = true"
-              title="Indexación">
-              Indexación
-            </button>
-            <button
-              ngbDropdownItem
-              routerLinkActive="active"
-              routerLink="/admin/unreviewed"
-              #unreviewed="routerLinkActive"
-              (click)="isNavCollapsed = true"
-              title="Páginas con más reemplazos">
-              Páginas con más reemplazos
-            </button>
-          </div>
-        </li>
-      </ul>
-
-      <hr />
-
-      <!-- User menu. Currently only with language options. -->
-      <app-header-user-menu></app-header-user-menu>
-    </div>
+    @if (isValidUser()) {
+      <div id="navbarSupportedContent" class="navbar-collapse" [ngbCollapse]="isNavCollapsed">
+        <!-- Navigation links are only available for valid users -->
+        @if (hasRightsUser()) {
+          <ul class="navbar-nav me-auto">
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                routerLinkActive="active"
+                routerLink="/review/notype"
+                (click)="isNavCollapsed = true"
+                title="Revisa todos los posibles reemplazos de un artículo aleatorio">
+                Artículo aleatorio
+              </a>
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                routerLinkActive="active"
+                routerLink="/review/list"
+                (click)="isNavCollapsed = true"
+                title="Revisa todos los artículos que contienen un reemplazo en concreto">
+                Lista de reemplazos
+              </a>
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                routerLinkActive="active"
+                routerLink="/review/custom"
+                (click)="isNavCollapsed = true"
+                title="Revisa todos los artículos que contienen un reemplazo personalizado">
+                Reemplazo personalizado
+              </a>
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                routerLinkActive="active"
+                routerLink="/stats"
+                (click)="isNavCollapsed = true"
+                title="Muestra el número de reemplazos indexados y revisados">
+                Estadísticas
+              </a>
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                href="https://es.wikipedia.org/wiki/Usuario:Benjavalero/Replacer"
+                target="_blank"
+                rel="noopener noreferrer"
+                title="Abrir página de la herramienta en Wikipedia">
+                Ayuda
+              </a>
+            </li>
+            @if (isAdminUser()) {
+              <li class="nav-item" ngbDropdown>
+                <a
+                  class="nav-link"
+                  [ngClass]="{ active: indexing.isActive || unreviewed.isActive }"
+                  style="cursor: pointer"
+                  ngbDropdownToggle
+                  id="navbarDropdownAdmin"
+                  role="button"
+                  title="Tareas de administración">
+                  Administración
+                </a>
+                <div ngbDropdownMenu aria-labelledby="navbarDropdownAdmin">
+                  <button
+                    ngbDropdownItem
+                    routerLinkActive="active"
+                    routerLink="/admin/dump-indexing"
+                    #indexing="routerLinkActive"
+                    (click)="isNavCollapsed = true"
+                    title="Indexación">
+                    Indexación
+                  </button>
+                  <button
+                    ngbDropdownItem
+                    routerLinkActive="active"
+                    routerLink="/admin/unreviewed"
+                    #unreviewed="routerLinkActive"
+                    (click)="isNavCollapsed = true"
+                    title="Páginas con más reemplazos">
+                    Páginas con más reemplazos
+                  </button>
+                </div>
+              </li>
+            }
+          </ul>
+        }
+        <hr />
+        <!-- User menu. Currently only with language options. -->
+        <app-header-user-menu></app-header-user-menu>
+      </div>
+    }
   </div>
 </nav>

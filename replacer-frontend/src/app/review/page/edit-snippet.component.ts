@@ -7,7 +7,6 @@ import { EditCustomSnippetComponent } from './edit-custom-snippet.component';
 import { FixedReplacement, Snippet, getReplacementEnd } from './page-replacement.model';
 
 @Component({
-  standalone: true,
   selector: 'app-edit-snippet',
   imports: [CommonModule],
   templateUrl: './edit-snippet.component.html',

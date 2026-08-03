@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faFastForward } from '@fortawesome/free-solid-svg-icons';
@@ -18,9 +17,8 @@ import { replacementKindLabels } from './replacement-kind-labels.const';
 import { ReviewOptions } from './review-options.model';
 
 @Component({
-  standalone: true,
   selector: 'app-edit-page',
-  imports: [CommonModule, AlertComponent, FontAwesomeModule, EditSnippetComponent],
+  imports: [AlertComponent, FontAwesomeModule, EditSnippetComponent],
   templateUrl: './edit-page.component.html',
   styleUrls: ['./edit-page.component.css']
 })

@@ -1,29 +1,34 @@
 <h3>Páginas con más reemplazos sin revisar</h3>
 
-<ng-template #loading>Calculando…</ng-template>
-<div *ngIf="unreviewed$ | async as unreviewed; else loading">
-  <table class="table" aria-describedby="Lista de páginas con más reemplazos sin revisar">
-    <thead>
-      <tr>
-        <th scope="col">Título</th>
-        <th scope="col">#</th>
-        <th scope="col"></th>
-        <th scope="col"></th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let item of unreviewed">
-        <td>{{ item.title }}</td>
-        <td>{{ item.count }}</td>
-        <td>
-          <a href="{{ wikipediaUrl }}{{ item.title }}" class="no-underline" target="_blank" rel="noopener noreferrer">
-            Abrir en Wikipedia
-          </a>
-        </td>
-        <td>
-          <a routerLink="/review/notype/{{ item.pageId }}" class="no-underline">Abrir en Replacer</a>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+@if (unreviewed$ | async; as unreviewed) {
+  <div>
+    <table class="table" aria-describedby="Lista de páginas con más reemplazos sin revisar">
+      <thead>
+        <tr>
+          <th scope="col">Título</th>
+          <th scope="col">#</th>
+          <th scope="col"></th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (item of unreviewed; track item) {
+          <tr>
+            <td>{{ item.title }}</td>
+            <td>{{ item.count }}</td>
+            <td>
+              <a href="{{ wikipediaUrl }}{{ item.title }}" class="no-underline" target="_blank" rel="noopener noreferrer">
+                Abrir en Wikipedia
+              </a>
+            </td>
+            <td>
+              <a routerLink="/review/notype/{{ item.pageId }}" class="no-underline">Abrir en Replacer</a>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+} @else {
+  Calculando…
+}

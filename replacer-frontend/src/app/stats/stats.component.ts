@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Observable } from 'rxjs';
 import { ReplacementCount } from '../api/models/replacement-count';
@@ -9,23 +9,20 @@ import { UserConfigService } from '../core/services/user-config.service';
 import { AlertComponent } from '../shared/alerts/alert-container/alert/alert.component';
 
 @Component({
-  standalone: true,
   selector: 'app-stats',
   imports: [CommonModule, AlertComponent],
   templateUrl: './stats.component.html',
   styleUrls: []
 })
 export class StatsComponent implements OnInit {
+  private replacementApiService = inject(ReplacementApiService);
+  private titleService = inject(Title);
+  private userConfigService = inject(UserConfigService);
+
   lang = this.userConfigService.lang;
   numReviewed$!: Observable<ReplacementCount>;
   numNotReviewed$!: Observable<ReplacementCount>;
   numReviewedGrouped$!: Observable<ReviewerCount[]>;
-
-  constructor(
-    private replacementApiService: ReplacementApiService,
-    private titleService: Title,
-    private userConfigService: UserConfigService
-  ) {}
 
   ngOnInit() {
     this.titleService.setTitle('Replacer - Estadísticas');

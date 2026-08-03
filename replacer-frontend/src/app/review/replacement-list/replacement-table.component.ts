@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnChanges, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -16,17 +16,8 @@ import { ReviewSubtypeComponent } from './review-subtype.component';
 import { SortDirection, rotate } from './sort-direction.model';
 
 @Component({
-  standalone: true,
   selector: 'app-replacement-table',
-  imports: [
-    CommonModule,
-    FormsModule,
-    RouterModule,
-    FontAwesomeModule,
-    NgbPaginationModule,
-    NgbTooltip,
-    ReviewSubtypeComponent
-  ],
+  imports: [CommonModule, FormsModule, RouterModule, FontAwesomeModule, NgbPaginationModule, NgbTooltip],
   templateUrl: './replacement-table.component.html',
   styleUrls: ['./replacement-table.component.css']
 })
@@ -38,6 +29,11 @@ export class ReplacementTableComponent implements OnInit, OnChanges {
   @Input() subtypeCounts: SubtypeCount[];
 
   filteredItems: SubtypeCount[];
+
+  private userConfigService = inject(UserConfigService);
+  private userService = inject(UserService);
+  private replacementListService = inject(ReplacementListService);
+  private modalService = inject(NgbModal);
 
   isBotUser = this.userService.isBotUser;
   label!: string;
@@ -56,12 +52,7 @@ export class ReplacementTableComponent implements OnInit, OnChanges {
   listIcon = faList;
   checkIcon = faCheckDouble;
 
-  constructor(
-    private userConfigService: UserConfigService,
-    private userService: UserService,
-    private replacementListService: ReplacementListService,
-    private modalService: NgbModal
-  ) {
+  constructor() {
     this.subtypeCounts = [];
     this.filteredItems = this.subtypeCounts;
 

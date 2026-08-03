@@ -7,7 +7,6 @@ import { ReplacementApiService } from '../../api/services/replacement-api.servic
 import { UserConfigService } from '../../core/services/user-config.service';
 
 @Component({
-  standalone: true,
   selector: 'app-unreviewed',
   imports: [CommonModule, RouterModule],
   templateUrl: './unreviewed.component.html',

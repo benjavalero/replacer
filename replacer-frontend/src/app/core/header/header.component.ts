@@ -1,5 +1,5 @@
-import { NgClass, NgIf } from '@angular/common';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { NgClass } from '@angular/common';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import {
   NgbCollapse,
@@ -13,9 +13,7 @@ import { HeaderUserMenuComponent } from './header-user-menu/header-user-menu.com
 
 @Component({
   selector: 'app-header',
-  standalone: true,
   imports: [
-    NgIf,
     NgClass,
     RouterLink,
     RouterLinkActive,
@@ -31,10 +29,10 @@ import { HeaderUserMenuComponent } from './header-user-menu/header-user-menu.com
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HeaderComponent {
+  private userService = inject(UserService);
+
   isNavCollapsed = true;
   isValidUser = this.userService.isValidUser;
   hasRightsUser = this.userService.hasRightsUser;
   isAdminUser = this.userService.isAdminUser;
-
-  constructor(private userService: UserService) {}
 }

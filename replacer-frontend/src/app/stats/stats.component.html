@@ -8,32 +8,45 @@
   <p>Se consideran contribuciones tanto las revisiones realizadas con cambios como aquellas sin ellos.</p>
 </app-alert>
 
-<ng-template #loading>Calculando…</ng-template>
 <ul>
   <li>
     Reemplazos revisados:
-    <strong *ngIf="numReviewed$ | async as numReviewed; else loading">{{ numReviewed.count }}</strong>
+    @if (numReviewed$ | async; as numReviewed) {
+      <strong>{{ numReviewed.count }}</strong>
+    } @else {
+      Calculando…
+    }
   </li>
   <li>
     Reemplazos sin revisar:
-    <strong *ngIf="numNotReviewed$ | async as numNotReviewed; else loading">{{ numNotReviewed.count }}</strong>
+    @if (numNotReviewed$ | async; as numNotReviewed) {
+      <strong>{{ numNotReviewed.count }}</strong>
+    } @else {
+      Calculando…
+    }
   </li>
 </ul>
 
 <h4>Contribuciones</h4>
-<div *ngIf="numReviewedGrouped$ | async as numReviewedGrouped; else loading">
-  <table class="table" aria-describedby="Lista de usuarios que han contribuido y su número de contribuciones">
-    <thead>
-      <tr>
-        <th scope="col">Usuario</th>
-        <th scope="col">#</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let item of numReviewedGrouped">
-        <td class="w-50">{{ item.reviewer }}</td>
-        <td class="w-50">{{ item.count }}</td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+@if (numReviewedGrouped$ | async; as numReviewedGrouped) {
+  <div>
+    <table class="table" aria-describedby="Lista de usuarios que han contribuido y su número de contribuciones">
+      <thead>
+        <tr>
+          <th scope="col">Usuario</th>
+          <th scope="col">#</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (item of numReviewedGrouped; track item) {
+          <tr>
+            <td class="w-50">{{ item.reviewer }}</td>
+            <td class="w-50">{{ item.count }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+} @else {
+  Calculando…
+}

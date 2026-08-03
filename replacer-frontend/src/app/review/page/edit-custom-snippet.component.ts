@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, inject } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { UserConfigService } from '../../core/services/user-config.service';
 import { Snippet } from './page-replacement.model';
@@ -12,12 +12,11 @@ import { Snippet } from './page-replacement.model';
 export class EditCustomSnippetComponent implements OnInit {
   @Input() snippet!: Snippet;
   private newText!: string;
-  userLang = this.userConfigService.lang;
 
-  constructor(
-    public activeModal: NgbActiveModal,
-    private userConfigService: UserConfigService
-  ) {}
+  activeModal = inject(NgbActiveModal);
+  private userConfigService = inject(UserConfigService);
+
+  userLang = this.userConfigService.lang;
 
   ngOnInit(): void {
     this.newText = this.snippet.text;

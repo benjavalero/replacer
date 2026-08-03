@@ -1,17 +1,19 @@
-<div *ngIf="kindCounts$ | async as kindCounts; else loading">
-  <h3>Lista de reemplazos</h3>
-
-  <p>
-    Las siguientes listas muestran potenciales errores ortográficos y de estilo sin revisar, así como el número estimado
-    de páginas que los contienen.
-  </p>
-
-  <app-replacement-table
-    *ngFor="let kindCount of kindCounts"
-    [kind]="kindCount.k"
-    [subtypeCounts]="kindCount.l"></app-replacement-table>
-  <app-alert type="warning" *ngIf="kindCounts.length === 0">No se ha encontrado ningún artículo</app-alert>
-</div>
-<ng-template #loading>
+@if (kindCounts(); as kindCounts) {
+  <div>
+    <h3>Lista de reemplazos</h3>
+    <p>
+      Las siguientes listas muestran potenciales errores ortográficos y de estilo sin revisar, así como el número estimado
+      de páginas que los contienen.
+    </p>
+    @for (kindCount of kindCounts; track kindCount) {
+      <app-replacement-table
+        [kind]="kindCount.k"
+      [subtypeCounts]="kindCount.l"></app-replacement-table>
+    }
+    @if (kindCounts.length === 0) {
+      <app-alert type="warning">No se ha encontrado ningún artículo</app-alert>
+    }
+  </div>
+} @else {
   <app-alert>Cargando lista de reemplazos…</app-alert>
-</ng-template>
+}
