@@ -71,7 +71,10 @@ class PageSaveController {
         @Nullable Integer sectionOffset,
         User user
     ) {
-        return reviewed.stream().map(r -> mapReviewedReplacement(pageKey, r, sectionOffset, user)).toList();
+        return reviewed
+            .stream()
+            .map(r -> mapReviewedReplacement(pageKey, r, sectionOffset, user))
+            .toList();
     }
 
     private ReviewedReplacement mapReviewedReplacement(
@@ -81,9 +84,10 @@ class PageSaveController {
         User user
     ) {
         ReplacementKind replacementKind = ReplacementKind.valueOf(reviewed.getKind());
-        ReplacementType replacementType = replacementKind == ReplacementKind.CUSTOM
-            ? CustomType.of(reviewed.getSubtype(), Objects.requireNonNull(reviewed.getCs()))
-            : StandardType.of(replacementKind, reviewed.getSubtype());
+        ReplacementType replacementType =
+            replacementKind == ReplacementKind.CUSTOM
+                ? CustomType.of(reviewed.getSubtype(), Objects.requireNonNull(reviewed.getCs()))
+                : StandardType.of(replacementKind, reviewed.getSubtype());
         int offset = Objects.requireNonNullElse(sectionOffset, 0);
         return ReviewedReplacement.builder()
             .pageKey(pageKey)

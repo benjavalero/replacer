@@ -9,5 +9,4 @@ import java.lang.annotation.Target;
 @Parameter(hidden = true)
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.PARAMETER)
-public @interface UserLanguage {
-}
+public @interface UserLanguage {}

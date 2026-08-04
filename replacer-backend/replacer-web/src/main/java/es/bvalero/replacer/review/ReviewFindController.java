@@ -50,12 +50,11 @@ class ReviewFindController {
     ) {
         LOGGER.info("START Find Random Page with Replacements. Options: {}", optionsDto);
         ReviewOptions options = ReviewMapper.fromDto(optionsDto, user);
-        Optional<Review> review =
-            switch (options.getKind()) {
-                case EMPTY -> reviewNoTypeFinder.findRandomPageReview(options);
-                case CUSTOM -> reviewCustomFinder.findRandomPageReview(options);
-                default -> reviewTypeFinder.findRandomPageReview(options);
-            };
+        Optional<Review> review = switch (options.getKind()) {
+            case EMPTY -> reviewNoTypeFinder.findRandomPageReview(options);
+            case CUSTOM -> reviewCustomFinder.findRandomPageReview(options);
+            default -> reviewTypeFinder.findRandomPageReview(options);
+        };
         return buildResponse(review);
     }
 
@@ -69,12 +68,11 @@ class ReviewFindController {
         LOGGER.info("START Find Page Review by ID {}. Options: {}", pageId, optionsDto);
         ReviewOptions options = ReviewMapper.fromDto(optionsDto, user);
         PageKey pageKey = PageKey.of(user.getId().getLang(), pageId);
-        Optional<Review> review =
-            switch (options.getKind()) {
-                case EMPTY -> reviewNoTypeFinder.findPageReview(pageKey, options);
-                case CUSTOM -> reviewCustomFinder.findPageReview(pageKey, options);
-                default -> reviewTypeFinder.findPageReview(pageKey, options);
-            };
+        Optional<Review> review = switch (options.getKind()) {
+            case EMPTY -> reviewNoTypeFinder.findPageReview(pageKey, options);
+            case CUSTOM -> reviewCustomFinder.findPageReview(pageKey, options);
+            default -> reviewTypeFinder.findPageReview(pageKey, options);
+        };
         return buildResponse(review);
     }
 

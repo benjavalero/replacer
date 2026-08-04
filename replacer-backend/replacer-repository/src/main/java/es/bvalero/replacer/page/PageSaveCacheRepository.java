@@ -56,8 +56,14 @@ class PageSaveCacheRepository implements PageSaveRepository {
                 .filter(r -> r.getType().equals(type))
                 .filter(IndexedReplacement::isToBeReviewed)
                 .collect(Collectors.toUnmodifiableSet());
-            long toAdd = unreviewed.stream().filter(r -> r.getStatus() == IndexedReplacementStatus.ADD).count();
-            long toRemove = unreviewed.stream().filter(r -> r.getStatus() == IndexedReplacementStatus.REMOVE).count();
+            long toAdd = unreviewed
+                .stream()
+                .filter(r -> r.getStatus() == IndexedReplacementStatus.ADD)
+                .count();
+            long toRemove = unreviewed
+                .stream()
+                .filter(r -> r.getStatus() == IndexedReplacementStatus.REMOVE)
+                .count();
             long alreadyIndexed = unreviewed.size() - (toAdd + toRemove);
             if (alreadyIndexed == 0) {
                 // If we are keeping any replacement, the count doesn't change.

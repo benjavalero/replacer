@@ -25,8 +25,9 @@ public class ValidateUserAspect {
 
     @Around("@annotation(es.bvalero.replacer.common.security.ValidateAdminUser)")
     public Object validateAdminUser(ProceedingJoinPoint joinPoint) throws Throwable {
-        HttpServletRequest request =
-            ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
+        HttpServletRequest request = (
+            (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()
+        ).getRequest();
         User user = webUtils.getAuthenticatedUser(request);
         if (!user.isAdmin()) {
             LOGGER.error(
@@ -41,8 +42,9 @@ public class ValidateUserAspect {
 
     @Around("@annotation(es.bvalero.replacer.common.security.ValidateBotUser)")
     public Object validateBotUser(ProceedingJoinPoint joinPoint) throws Throwable {
-        HttpServletRequest request =
-            ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
+        HttpServletRequest request = (
+            (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()
+        ).getRequest();
         User user = webUtils.getAuthenticatedUser(request);
         if (!user.isBot()) {
             LOGGER.error("User {} is not a bot and is accessing method {}", user, joinPoint.getSignature().getName());

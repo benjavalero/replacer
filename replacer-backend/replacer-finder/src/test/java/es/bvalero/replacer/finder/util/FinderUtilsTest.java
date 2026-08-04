@@ -256,9 +256,21 @@ class FinderUtilsTest {
         Set<String> links = Set.of(link, link2, link3);
         assertEquals(links, matches.stream().map(MatchResult::group).collect(Collectors.toSet()));
 
-        FinderMatchResult matchLink = matches.stream().filter(m -> m.group().equals(link)).findAny().get();
-        MatchResult matchLink2 = matches.stream().filter(m -> m.group().equals(link2)).findAny().get();
-        MatchResult matchLink3 = matches.stream().filter(m -> m.group().equals(link3)).findAny().get();
+        FinderMatchResult matchLink = matches
+            .stream()
+            .filter(m -> m.group().equals(link))
+            .findAny()
+            .get();
+        MatchResult matchLink2 = matches
+            .stream()
+            .filter(m -> m.group().equals(link2))
+            .findAny()
+            .get();
+        MatchResult matchLink3 = matches
+            .stream()
+            .filter(m -> m.group().equals(link3))
+            .findAny()
+            .get();
         assertEquals(2, matchLink.groupCount());
         assertEquals(matchLink2, matchLink.groups().get(0));
         assertEquals(matchLink3, matchLink.groups().get(1));
@@ -278,9 +290,21 @@ class FinderUtilsTest {
         Set<String> links = Set.of(link, link2, link3);
         assertEquals(links, matches.stream().map(MatchResult::group).collect(Collectors.toSet()));
 
-        FinderMatchResult matchLink = matches.stream().filter(m -> m.group().equals(link)).findAny().get();
-        FinderMatchResult matchLink2 = matches.stream().filter(m -> m.group().equals(link2)).findAny().get();
-        MatchResult matchLink3 = matches.stream().filter(m -> m.group().equals(link3)).findAny().get();
+        FinderMatchResult matchLink = matches
+            .stream()
+            .filter(m -> m.group().equals(link))
+            .findAny()
+            .get();
+        FinderMatchResult matchLink2 = matches
+            .stream()
+            .filter(m -> m.group().equals(link2))
+            .findAny()
+            .get();
+        MatchResult matchLink3 = matches
+            .stream()
+            .filter(m -> m.group().equals(link3))
+            .findAny()
+            .get();
         assertEquals(1, matchLink.groupCount());
         assertEquals(matchLink2, matchLink.groups().getFirst());
         assertEquals(1, matchLink2.groupCount());

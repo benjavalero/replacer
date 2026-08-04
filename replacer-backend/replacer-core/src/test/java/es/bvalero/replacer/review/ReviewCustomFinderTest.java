@@ -299,7 +299,9 @@ class ReviewCustomFinderTest {
             .thenReturn(WikipediaSearchResult.builder().total(4).pageId(12).pageId(23).pageId(34).build())
             .thenReturn(WikipediaSearchResult.builder().total(4).pageId(45).build());
         when(customRepository.findPagesReviewed(any(WikipediaLanguage.class), any(CustomType.class))).thenReturn(
-            Stream.of(12, 23, 34, 45).map(pageId -> PageKey.of(lang, pageId)).toList()
+            Stream.of(12, 23, 34, 45)
+                .map(pageId -> PageKey.of(lang, pageId))
+                .toList()
         );
 
         // Only call
@@ -342,8 +344,16 @@ class ReviewCustomFinderTest {
 
         when(customRepository.findPagesReviewed(any(WikipediaLanguage.class), any(CustomType.class)))
             .thenReturn(List.of()) // Call 1
-            .thenReturn(Stream.of(1, 2, 3).map(pageId -> PageKey.of(lang, pageId)).toList()) // Call 4
-            .thenReturn(Stream.of(1, 2, 3, 4).map(pageId -> PageKey.of(lang, pageId)).toList()); // Call 5
+            .thenReturn(
+                Stream.of(1, 2, 3)
+                    .map(pageId -> PageKey.of(lang, pageId))
+                    .toList()
+            ) // Call 4
+            .thenReturn(
+                Stream.of(1, 2, 3, 4)
+                    .map(pageId -> PageKey.of(lang, pageId))
+                    .toList()
+            ); // Call 5
 
         when(wikipediaPageRepository.findByKey(any(PageKey.class), any(AccessToken.class)))
             .thenReturn(Optional.of(pages.get(1))) // Call 1

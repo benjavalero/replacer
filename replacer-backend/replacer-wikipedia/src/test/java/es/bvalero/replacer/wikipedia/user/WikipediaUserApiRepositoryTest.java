@@ -35,8 +35,7 @@ class WikipediaUserApiRepositoryTest {
     @Test
     void testLoggedUserName() throws Exception {
         // API response
-        String textResponse =
-            """
+        String textResponse = """
             {
                 "batchcomplete": true,
                 "query": {

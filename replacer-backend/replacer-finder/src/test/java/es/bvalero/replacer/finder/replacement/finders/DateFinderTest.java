@@ -287,8 +287,7 @@ class DateFinderTest {
 
     @Test
     void testPrecededByArticleWithNoSpaceBetween() {
-        String text =
-            """
+        String text = """
             |'''A'''
             |-
             |28 octubre 2022,\s""";

@@ -13,7 +13,7 @@ import org.springframework.lang.Nullable;
 @Data
 public class ReviewOptionsDto {
 
-    @Parameter(schema = @Schema(type = "integer"), description = "Replacement kind code", example = "2")
+    @Parameter(schema = @Schema(types = "integer"), description = "Replacement kind code", example = "2")
     @Nullable
     private Byte kind;
 

@@ -58,8 +58,7 @@ class ReplacementCountJdbcRepository implements ReplacementCountRepository {
     @Override
     public Collection<ResultCount<String>> countReviewedGroupedByReviewer(WikipediaLanguage lang) {
         LOGGER.debug("START Counting reviewed pages grouped by reviewer - {}…", lang);
-        String sqlReplacement =
-            """
+        String sqlReplacement = """
             SELECT reviewer, COUNT(*) AS num FROM replacement
             WHERE lang = :lang AND reviewer IS NOT NULL AND reviewer <> :system
             GROUP BY reviewer

@@ -14,7 +14,7 @@ import org.springframework.lang.Nullable;
 @Data
 class ReviewedReplacementDto {
 
-    @Schema(type = "integer", description = "Replacement kind", requiredMode = REQUIRED)
+    @Schema(types = "integer", description = "Replacement kind", requiredMode = REQUIRED)
     byte kind;
 
     @Schema(description = "Replacement subtype", requiredMode = REQUIRED)

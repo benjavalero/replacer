@@ -109,24 +109,24 @@ class DumpParser {
         int totalPagesRead = this.dumpHandlers.stream().mapToInt(DumpSaxHandler::getNumPagesRead).sum();
         int totalPagesIndexed = this.dumpHandlers.stream().mapToInt(DumpSaxHandler::getNumPagesIndexed).sum();
 
-        String dumpFileName =
-            this.dumpFiles.stream().map(f -> f.getPath().getFileName().toString()).collect(Collectors.joining(", "));
+        String dumpFileName = this.dumpFiles.stream()
+            .map(f -> f.getPath().getFileName().toString())
+            .collect(Collectors.joining(", "));
 
-        LocalDateTime start =
-            this.dumpHandlers.stream()
-                .map(DumpSaxHandler::getStart)
-                .filter(Objects::nonNull)
-                .min(LocalDateTime::compareTo)
-                .orElse(null);
+        LocalDateTime start = this.dumpHandlers.stream()
+            .map(DumpSaxHandler::getStart)
+            .filter(Objects::nonNull)
+            .min(LocalDateTime::compareTo)
+            .orElse(null);
 
         // End is null if any handler has not finished yet
         LocalDateTime end = anyRunning
             ? null
             : this.dumpHandlers.stream()
-                .map(DumpSaxHandler::getEnd)
-                .filter(Objects::nonNull)
-                .max(LocalDateTime::compareTo)
-                .orElse(null);
+                  .map(DumpSaxHandler::getEnd)
+                  .filter(Objects::nonNull)
+                  .max(LocalDateTime::compareTo)
+                  .orElse(null);
 
         return Optional.of(
             DumpStatus.builder()

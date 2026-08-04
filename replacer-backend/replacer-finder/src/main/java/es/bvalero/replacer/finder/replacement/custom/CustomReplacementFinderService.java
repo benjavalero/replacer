@@ -12,7 +12,8 @@ import org.springframework.stereotype.Service;
 @Service
 class CustomReplacementFinderService
     extends ReplacementFinderAbstractService
-    implements FinderService<Replacement>, CustomReplacementFindApi {
+    implements FinderService<Replacement>, CustomReplacementFindApi
+{
 
     public CustomReplacementFinderService(ImmutableFindApi immutableFindApi) {
         super(immutableFindApi);

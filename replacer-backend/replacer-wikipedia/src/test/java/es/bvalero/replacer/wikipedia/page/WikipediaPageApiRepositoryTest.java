@@ -43,8 +43,7 @@ class WikipediaPageApiRepositoryTest {
     @Test
     void testGetPageContentByTitle() throws Exception {
         // API response
-        String textResponse =
-            """
+        String textResponse = """
             {
                 "batchcomplete": true,
                 "curtimestamp": "2023-01-19T08:30:11Z",
@@ -97,8 +96,7 @@ class WikipediaPageApiRepositoryTest {
     @Test
     void testGetPageContentById() throws Exception {
         // API response
-        String textResponse =
-            """
+        String textResponse = """
             {
                 "batchcomplete": true,
                 "curtimestamp": "2023-01-19T08:35:51Z",
@@ -151,8 +149,7 @@ class WikipediaPageApiRepositoryTest {
     @Test
     void testGetPagesContent() throws Exception {
         // API response
-        String textResponse =
-            """
+        String textResponse = """
             {
                 "batchcomplete": true,
                 "curtimestamp": "2023-01-19T08:37:13Z",
@@ -244,8 +241,7 @@ class WikipediaPageApiRepositoryTest {
     @Test
     void testGetPageContentUnavailable() throws Exception {
         // API response
-        String textResponse =
-            """
+        String textResponse = """
             {
                 "batchcomplete": true,
                 "curtimestamp": "2023-01-19T08:38:51Z",
@@ -275,8 +271,7 @@ class WikipediaPageApiRepositoryTest {
     @Test
     void testGetProtectedPage() throws Exception {
         // API response
-        String textResponse =
-            """
+        String textResponse = """
             {
                 "batchcomplete": true,
                 "curtimestamp": "2023-01-19T09:07:39Z",
@@ -336,8 +331,7 @@ class WikipediaPageApiRepositoryTest {
     @Test
     void testGetPageIdsByStringMatch() throws Exception {
         // API response
-        String textResponse =
-            """
+        String textResponse = """
             {
                 "batchcomplete": true,
                 "query": {
@@ -431,8 +425,7 @@ class WikipediaPageApiRepositoryTest {
     @Test
     void testGetPageIdsByStringMatchWithNoResults() throws Exception {
         // API response
-        String textResponse =
-            """
+        String textResponse = """
             {
                 "batchcomplete": true,
                 "query": {
@@ -470,8 +463,7 @@ class WikipediaPageApiRepositoryTest {
     @Test
     void testGetPageSections() throws Exception {
         // API response
-        String textResponse =
-            """
+        String textResponse = """
             {
                 "parse": {
                     "title": "Usuario:Benjavalero/Taller",
@@ -564,8 +556,7 @@ class WikipediaPageApiRepositoryTest {
     @Test
     void testGetPageInvalidSections() throws Exception {
         // API response
-        String textResponse =
-            """
+        String textResponse = """
             {
                 "parse": {
                     "title": "Anexo:Asteroides (161001)–(162000)",
@@ -623,8 +614,7 @@ class WikipediaPageApiRepositoryTest {
     @Test
     void testGetPageSection() throws Exception {
         // API response
-        String textResponse =
-            """
+        String textResponse = """
             {
                 "batchcomplete": true,
                 "curtimestamp": "2023-01-19T09:04:19Z",

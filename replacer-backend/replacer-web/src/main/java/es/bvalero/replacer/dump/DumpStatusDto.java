@@ -39,13 +39,13 @@ class DumpStatusDto {
 
     @Schema(
         description = "Indexing start time (in ms)",
-        type = "number",
+        types = "number",
         requiredMode = REQUIRED,
         example = "1616315965367"
     )
     long start;
 
-    @Schema(description = "Indexing end time (in ms)", type = "number", example = "1616317331756")
+    @Schema(description = "Indexing end time (in ms)", types = "number", example = "1616317331756")
     @Nullable
     Long end;
 

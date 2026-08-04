@@ -181,7 +181,9 @@ class DateFinder implements ReplacementFinder {
 
         // For the sake of performance and not to duplicate steps and code,
         // it is better to override the main method, and validate and convert at a time.
-        return findMatchResults(page).map(match -> convertDate(match, page)).filter(Objects::nonNull);
+        return findMatchResults(page)
+            .map(match -> convertDate(match, page))
+            .filter(Objects::nonNull);
     }
 
     @Override

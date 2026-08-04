@@ -100,8 +100,9 @@ class CategoryWhiteSpaceFinder implements CosmeticFinder {
     @Override
     public String getFix(MatchResult match, FinderPage page) {
         // We take profit and fix also the category space if not translated
-        String defaultCategoryWord =
-            this.finderProperties.getCategoryWords().get(page.getPageKey().getLang().getCode()).getFirst();
+        String defaultCategoryWord = this.finderProperties.getCategoryWords()
+            .get(page.getPageKey().getLang().getCode())
+            .getFirst();
         String fixedCategoryName = match.group(2).trim();
         String fixedCategoryAlias = match.group(3) == null ? "" : PIPE + match.group(3).substring(1).trim();
         return String.format("[[%s:%s%s]]", defaultCategoryWord, fixedCategoryName, fixedCategoryAlias);

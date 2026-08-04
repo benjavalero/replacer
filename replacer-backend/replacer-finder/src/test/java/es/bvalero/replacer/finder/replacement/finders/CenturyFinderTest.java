@@ -172,7 +172,10 @@ class CenturyFinderTest {
         assertEquals(expectedCentury, replacements.stream().map(Replacement::text).toList());
         assertEquals(
             expectedSuggestions,
-            replacements.stream().map(rep -> rep.suggestions().get(1).getText()).toList()
+            replacements
+                .stream()
+                .map(rep -> rep.suggestions().get(1).getText())
+                .toList()
         );
         assertTrue(replacements.stream().allMatch(rep -> rep.type() == StandardType.CENTURY));
         assertTrue(replacements.stream().allMatch(rep -> rep.suggestions().size() > 1));
@@ -180,8 +183,7 @@ class CenturyFinderTest {
 
     @Test
     void testCenturyExtendedWithNewLine() {
-        String text =
-            """
+        String text = """
             Siglo XIX |
             21
             """;

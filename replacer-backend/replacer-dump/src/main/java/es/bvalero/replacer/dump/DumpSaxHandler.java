@@ -115,7 +115,8 @@ class DumpSaxHandler extends DefaultHandler {
                 this.currentContent = null;
                 this.currentRedirect = false;
             }
-            default -> {}
+            default -> {
+            }
         }
     }
 
@@ -136,7 +137,8 @@ class DumpSaxHandler extends DefaultHandler {
 
         final PageIndexStatus result = pageIndexApi.indexPage(page).getStatus();
         switch (result) {
-            case PAGE_NOT_INDEXABLE -> {}
+            case PAGE_NOT_INDEXABLE -> {
+            }
             case PAGE_NOT_INDEXED -> this.incrementNumPagesRead();
             case PAGE_INDEXED -> {
                 this.incrementNumPagesRead();

@@ -14,6 +14,7 @@
 
     <properties>
         <org.jmolecules.integrations.version>0.26.0</org.jmolecules.integrations.version>
+        <org.jmolecules.starter-ddd.version>0.33.0</org.jmolecules.starter-ddd.version>
     </properties>
 
     <dependencies>
@@ -80,7 +81,7 @@
         <dependency>
             <groupId>org.jmolecules.integrations</groupId>
             <artifactId>jmolecules-starter-ddd</artifactId>
-            <version>${org.jmolecules.integrations.version}</version>
+            <version>${org.jmolecules.starter-ddd.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -106,7 +107,7 @@
                 <dependency>
                     <groupId>io.logz.logback</groupId>
                     <artifactId>logzio-logback-appender</artifactId>
-                    <version>2.3.0</version>
+                    <version>2.5.0</version>
                 </dependency>
             </dependencies>
             <build>
@@ -220,7 +221,7 @@
                             <resources>
                                 <resource>
                                     <directory>${basedir}/../../replacer-frontend/dist/replacer-frontend/browser</directory>
-                                    <filtering>true</filtering>
+                                    <filtering>false</filtering>
                                 </resource>
                             </resources>
                         </configuration>

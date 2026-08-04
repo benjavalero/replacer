@@ -154,23 +154,48 @@ class TemplateFinderTest {
         // Check positions
         assertEquals(
             2,
-            matches.stream().filter(m -> m.text().equals("Template1")).findAny().map(Immutable::start).orElse(0)
+            matches
+                .stream()
+                .filter(m -> m.text().equals("Template1"))
+                .findAny()
+                .map(Immutable::start)
+                .orElse(0)
         );
         assertEquals(
             12,
-            matches.stream().filter(m -> m.text().equals("param1")).findAny().map(Immutable::start).orElse(0)
+            matches
+                .stream()
+                .filter(m -> m.text().equals("param1"))
+                .findAny()
+                .map(Immutable::start)
+                .orElse(0)
         );
         assertEquals(
             21,
-            matches.stream().filter(m -> m.text().equals("Template2")).findAny().map(Immutable::start).orElse(0)
+            matches
+                .stream()
+                .filter(m -> m.text().equals("Template2"))
+                .findAny()
+                .map(Immutable::start)
+                .orElse(0)
         );
         assertEquals(
             31,
-            matches.stream().filter(m -> m.text().equals("url")).findAny().map(Immutable::start).orElse(0)
+            matches
+                .stream()
+                .filter(m -> m.text().equals("url"))
+                .findAny()
+                .map(Immutable::start)
+                .orElse(0)
         );
         assertEquals(
             35,
-            matches.stream().filter(m -> m.text().equals("value2")).findAny().map(Immutable::start).orElse(0)
+            matches
+                .stream()
+                .filter(m -> m.text().equals("value2"))
+                .findAny()
+                .map(Immutable::start)
+                .orElse(0)
         );
     }
 

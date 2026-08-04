@@ -55,10 +55,20 @@ class PageSaveJdbcRepository implements PageSaveRepository {
 
         // Add pages
         // Without the replacements as they will be added later
-        add(pages.stream().filter(p -> p.getStatus() == IndexedPageStatus.ADD).toList());
+        add(
+            pages
+                .stream()
+                .filter(p -> p.getStatus() == IndexedPageStatus.ADD)
+                .toList()
+        );
 
         // Update pages
-        update(pages.stream().filter(p -> p.getStatus() == IndexedPageStatus.UPDATE).toList());
+        update(
+            pages
+                .stream()
+                .filter(p -> p.getStatus() == IndexedPageStatus.UPDATE)
+                .toList()
+        );
 
         // Add the replacements
         addReplacements(
@@ -221,8 +231,7 @@ class PageSaveJdbcRepository implements PageSaveRepository {
             .distinct()
             .forEach(type -> applicationEventPublisher.publishEvent(PageCountDecrementEvent.of(lang, type)));
 
-        String sql =
-            """
+        String sql = """
             UPDATE replacement
             SET reviewer = :reviewer, review_type = :reviewType.code, review_timestamp = :reviewTimestamp, old_rev_id = :oldRevId, new_rev_id = :newRevId
             WHERE lang = :pageKey.lang.code AND page_id = :pageKey.pageId AND kind = :type.kind.code AND subtype = :type.subtype

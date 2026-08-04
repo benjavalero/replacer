@@ -40,8 +40,9 @@ class DumpParserTest {
         // We need a real dump file to create the input stream
         Path dumpFile = Paths.get(
             Objects.requireNonNull(
-                getClass()
-                    .getResource("/es/bvalero/replacer/dump/eswiki/20170101/eswiki-20170101-pages-articles.xml.bz2")
+                getClass().getResource(
+                    "/es/bvalero/replacer/dump/eswiki/20170101/eswiki-20170101-pages-articles.xml.bz2"
+                )
             ).toURI()
         );
         assertNotNull(dumpFile);

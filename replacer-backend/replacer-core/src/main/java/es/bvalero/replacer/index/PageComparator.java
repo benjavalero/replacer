@@ -54,13 +54,14 @@ class PageComparator {
         IndexedPage indexedPage = toIndexedPage(page, pageStatus);
 
         // Wrap the indexed replacements to compare them
-        final List<ComparableReplacement> comparableDbReplacements = dbPage == null
-            ? new ArrayList<>() // The collection must be mutable
-            : dbPage
-                .getReplacements()
-                .stream()
-                .map(ComparableReplacement::of)
-                .collect(Collectors.toCollection(ArrayList::new));
+        final List<ComparableReplacement> comparableDbReplacements =
+            dbPage == null
+                ? new ArrayList<>() // The collection must be mutable
+                : dbPage
+                      .getReplacements()
+                      .stream()
+                      .map(ComparableReplacement::of)
+                      .collect(Collectors.toCollection(ArrayList::new));
         // Remove possible duplicates in database
         cleanDuplicatedReplacements(comparableDbReplacements).forEach(cr ->
             indexedPage.addReplacement(cr.toDomain(IndexedReplacementStatus.REMOVE))
@@ -176,7 +177,10 @@ class PageComparator {
         ComparableReplacement replacement,
         Collection<ComparableReplacement> entities
     ) {
-        return entities.stream().filter(entity -> entity.isSame(replacement)).findAny();
+        return entities
+            .stream()
+            .filter(entity -> entity.isSame(replacement))
+            .findAny();
     }
 
     /* Compare the given replacement with the counterpart in DB and return if it must be updated */

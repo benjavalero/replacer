@@ -312,7 +312,11 @@ class PageComparatorTest {
         assertFalse(toIndex.getReplacements().isEmpty());
         assertEquals(
             1,
-            toIndex.getReplacements().stream().filter(ir -> ir.getStatus() == IndexedReplacementStatus.REMOVE).count()
+            toIndex
+                .getReplacements()
+                .stream()
+                .filter(ir -> ir.getStatus() == IndexedReplacementStatus.REMOVE)
+                .count()
         );
     }
 
@@ -349,7 +353,10 @@ class PageComparatorTest {
 
         // In this case r1db and r2db are not considered the same so none of them is removed
         assertTrue(
-            toIndex.getReplacements().stream().noneMatch(ir -> ir.getStatus() == IndexedReplacementStatus.REMOVE)
+            toIndex
+                .getReplacements()
+                .stream()
+                .noneMatch(ir -> ir.getStatus() == IndexedReplacementStatus.REMOVE)
         );
     }
 

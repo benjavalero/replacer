@@ -33,8 +33,7 @@ class WikipediaPageSaveApiRepositoryTest {
     @Test
     void testGetEditToken() throws Exception {
         // API response
-        String textResponse =
-            """
+        String textResponse = """
             {
                 "batchcomplete": true,
                 "query": {
@@ -96,8 +95,7 @@ class WikipediaPageSaveApiRepositoryTest {
         String editTokenJson =
             "{\"batchcomplete\":true,\"query\":{\"pages\":[{\"pageid\":2209245,\"ns\":4,\"title\":\"Wikipedia:Zona de pruebas/5\",\"revisions\":[{\"timestamp\":\"2019-06-24T21:24:09Z\"}]}],\"tokens\":{\"csrftoken\":\"+\\\\\"}}}";
         WikipediaApiResponse editTokenResponse = jsonMapper.readValue(editTokenJson, WikipediaApiResponse.class);
-        String editResultJson =
-            """
+        String editResultJson = """
             {
                 "edit": {
                     "result": "Success",

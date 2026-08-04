@@ -47,13 +47,13 @@ class AddedMisspellingListener implements PropertyChangeListener {
     public void propertyChange(PropertyChangeEvent evt) {
         // This should work for both types of misspellings
         SetValuedMap<WikipediaLanguage, StandardMisspelling> oldItems = (SetValuedMap<
-                WikipediaLanguage,
-                StandardMisspelling
-            >) evt.getOldValue();
+            WikipediaLanguage,
+            StandardMisspelling
+        >) evt.getOldValue();
         SetValuedMap<WikipediaLanguage, StandardMisspelling> newItems = (SetValuedMap<
-                WikipediaLanguage,
-                StandardMisspelling
-            >) evt.getNewValue();
+            WikipediaLanguage,
+            StandardMisspelling
+        >) evt.getNewValue();
         getAddedMisspellings(oldItems, newItems)
             .entries()
             .forEach(added ->

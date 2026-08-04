@@ -15,7 +15,7 @@ public class KindCount implements Comparable<KindCount> {
 
     // We use short aliases for the JSON properties in order to try to reduce the size of the response
 
-    @Schema(type = "integer", description = "Replacement kind code", requiredMode = REQUIRED, example = "2")
+    @Schema(types = "integer", description = "Replacement kind code", requiredMode = REQUIRED, example = "2")
     @JsonProperty("k")
     byte kind;
 

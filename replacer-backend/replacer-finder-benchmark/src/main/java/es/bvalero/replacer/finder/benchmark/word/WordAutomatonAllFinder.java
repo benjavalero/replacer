@@ -1,6 +1,5 @@
 package es.bvalero.replacer.finder.benchmark.word;
 
-import dk.brics.automaton.DatatypesAutomatonProvider;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.finder.FinderPage;

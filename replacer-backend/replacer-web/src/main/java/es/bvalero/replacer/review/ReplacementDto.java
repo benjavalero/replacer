@@ -22,7 +22,7 @@ class ReplacementDto {
     @NonNull
     String text;
 
-    @Schema(type = "integer", description = "Kind of the replacement", example = "2", requiredMode = REQUIRED)
+    @Schema(types = "integer", description = "Kind of the replacement", example = "2", requiredMode = REQUIRED)
     byte kind;
 
     @Schema(description = "Subtype of the replacement", example = "habia", requiredMode = REQUIRED)

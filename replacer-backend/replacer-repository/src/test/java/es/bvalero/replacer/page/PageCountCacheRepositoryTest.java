@@ -41,8 +41,23 @@ class PageCountCacheRepositoryTest {
 
         Collection<ResultCount<StandardType>> typeCounts = pageCountCacheRepository.countNotReviewedGroupedByType(lang);
         assertEquals(2, typeCounts.size());
-        assertEquals(1, typeCounts.stream().map(rc -> rc.getKey().getKind()).distinct().count());
-        assertEquals(kind, typeCounts.stream().map(rc -> rc.getKey().getKind()).distinct().findAny().orElse(null));
+        assertEquals(
+            1,
+            typeCounts
+                .stream()
+                .map(rc -> rc.getKey().getKind())
+                .distinct()
+                .count()
+        );
+        assertEquals(
+            kind,
+            typeCounts
+                .stream()
+                .map(rc -> rc.getKey().getKind())
+                .distinct()
+                .findAny()
+                .orElse(null)
+        );
         assertEquals(
             2,
             typeCounts
@@ -67,8 +82,23 @@ class PageCountCacheRepositoryTest {
 
         typeCounts = pageCountCacheRepository.countNotReviewedGroupedByType(lang);
         assertEquals(2, typeCounts.size());
-        assertEquals(1, typeCounts.stream().map(rc -> rc.getKey().getKind()).distinct().count());
-        assertEquals(kind, typeCounts.stream().map(rc -> rc.getKey().getKind()).distinct().findAny().orElse(null));
+        assertEquals(
+            1,
+            typeCounts
+                .stream()
+                .map(rc -> rc.getKey().getKind())
+                .distinct()
+                .count()
+        );
+        assertEquals(
+            kind,
+            typeCounts
+                .stream()
+                .map(rc -> rc.getKey().getKind())
+                .distinct()
+                .findAny()
+                .orElse(null)
+        );
         assertEquals(
             1,
             typeCounts
@@ -93,7 +123,15 @@ class PageCountCacheRepositoryTest {
 
         typeCounts = pageCountCacheRepository.countNotReviewedGroupedByType(lang);
         assertEquals(1, typeCounts.size());
-        assertEquals(kind, typeCounts.stream().map(rc -> rc.getKey().getKind()).distinct().findAny().orElse(null));
+        assertEquals(
+            kind,
+            typeCounts
+                .stream()
+                .map(rc -> rc.getKey().getKind())
+                .distinct()
+                .findAny()
+                .orElse(null)
+        );
         assertEquals(
             1,
             typeCounts
@@ -112,7 +150,15 @@ class PageCountCacheRepositoryTest {
 
         typeCounts = pageCountCacheRepository.countNotReviewedGroupedByType(lang);
         assertEquals(1, typeCounts.size());
-        assertEquals(kind, typeCounts.stream().map(rc -> rc.getKey().getKind()).distinct().findAny().orElse(null));
+        assertEquals(
+            kind,
+            typeCounts
+                .stream()
+                .map(rc -> rc.getKey().getKind())
+                .distinct()
+                .findAny()
+                .orElse(null)
+        );
         assertEquals(
             1,
             typeCounts

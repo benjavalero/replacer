@@ -65,7 +65,13 @@ class FalsePositiveFinderTest {
         Set<String> actual = matches.stream().map(Immutable::text).collect(Collectors.toSet());
         assertEquals(expected, actual);
 
-        assertEquals(2, matches.stream().filter(m -> m.text().equals("tí")).count());
+        assertEquals(
+            2,
+            matches
+                .stream()
+                .filter(m -> m.text().equals("tí"))
+                .count()
+        );
     }
 
     @Test

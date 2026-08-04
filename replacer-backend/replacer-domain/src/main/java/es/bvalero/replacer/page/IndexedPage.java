@@ -53,7 +53,9 @@ public class IndexedPage {
     public boolean isPageToSave() {
         return (
             this.getStatus() != IndexedPageStatus.INDEXED ||
-            this.getReplacements().stream().anyMatch(r -> r.getStatus() != IndexedReplacementStatus.INDEXED)
+            this.getReplacements()
+                .stream()
+                .anyMatch(r -> r.getStatus() != IndexedReplacementStatus.INDEXED)
         );
     }
 

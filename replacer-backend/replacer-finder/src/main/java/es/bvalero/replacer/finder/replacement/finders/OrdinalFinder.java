@@ -315,8 +315,9 @@ class OrdinalFinder implements ReplacementFinder {
     ) {
         final List<Suggestion> suggestions = new ArrayList<>();
 
-        final FinderProperties.OrdinalSuggestion ordinalSuggestion =
-            this.finderProperties.getOrdinalSuggestions().get(lang.getCode()).get(ordinalNumber);
+        final FinderProperties.OrdinalSuggestion ordinalSuggestion = this.finderProperties.getOrdinalSuggestions()
+            .get(lang.getCode())
+            .get(ordinalNumber);
         if (ordinalSuggestion == null) {
             return suggestions;
         }
@@ -356,7 +357,10 @@ class OrdinalFinder implements ReplacementFinder {
                     .map(s -> Suggestion.of(s, "fraccionario"))
                     .forEach(suggestions::add);
             } else {
-                fractionalOptions.stream().map(s -> Suggestion.of(s, "fraccionario")).forEach(suggestions::add);
+                fractionalOptions
+                    .stream()
+                    .map(s -> Suggestion.of(s, "fraccionario"))
+                    .forEach(suggestions::add);
             }
         }
 

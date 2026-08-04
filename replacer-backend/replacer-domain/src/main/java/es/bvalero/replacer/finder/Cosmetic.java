@@ -8,8 +8,12 @@ import java.util.Objects;
  * concerning cosmetic modifications, visible or not,
  * e.g. replacing <code>[[Asia|Asia]]</code> by <code>[[Asia]]</code>.
  */
-public record Cosmetic(int start, String text, String fix, CheckWikipediaAction checkWikipediaAction)
-    implements FinderResult {
+public record Cosmetic(
+    int start,
+    String text,
+    String fix,
+    CheckWikipediaAction checkWikipediaAction
+) implements FinderResult {
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof Cosmetic cosmetic)) return false;

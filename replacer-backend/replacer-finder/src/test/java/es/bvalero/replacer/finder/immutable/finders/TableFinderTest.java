@@ -20,8 +20,7 @@ class TableFinderTest {
 
     @Test
     void testTable() {
-        String text =
-            """
+        String text = """
 
             {| class="wikitable"
             |+ Caption

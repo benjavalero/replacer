@@ -79,9 +79,9 @@ class TemplateFinder implements ImmutableFinder {
                 this.paramNames.add(ReplacerUtils.toLowerCase(templateParam.getParam()));
             } else {
                 this.templateParamPairs.put(
-                        ReplacerUtils.toLowerCase(templateParam.getTemplate()),
-                        ReplacerUtils.toLowerCase(templateParam.getParam())
-                    );
+                    ReplacerUtils.toLowerCase(templateParam.getTemplate()),
+                    ReplacerUtils.toLowerCase(templateParam.getParam())
+                );
             }
         }
     }

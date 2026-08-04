@@ -22,8 +22,7 @@ class IgnorableSectionFinderTest {
 
     @Test
     void testIgnorableSection() {
-        String ignorableSection =
-            """
+        String ignorableSection = """
             == Bibliografía de Julio Verne ==
             Ignorable Content
             === Ignorable Subsection
@@ -31,15 +30,15 @@ class IgnorableSectionFinderTest {
             """;
         String text =
             """
-            Text
-            == Section 1 ==
-            Content 1
-            """ +
+                Text
+                == Section 1 ==
+                Content 1
+                """ +
             ignorableSection +
             """
-            == Section 3 ==
-            Content 3
-            """;
+                == Section 3 ==
+                Content 3
+                """;
 
         List<Immutable> matches = ignorableSectionFinder.findList(text);
 
@@ -57,8 +56,7 @@ class IgnorableSectionFinderTest {
 
     @Test
     void testIgnorableSectionAtTheEnd() {
-        String ignorableSection =
-            """
+        String ignorableSection = """
             == Bibliografía de Julio Verne ==
             Ignorable Content
             === Ignorable Subsection
@@ -66,10 +64,10 @@ class IgnorableSectionFinderTest {
             """;
         String text =
             """
-            Text
-            == Section 1 ==
-            Content 1
-            """ +
+                Text
+                == Section 1 ==
+                Content 1
+                """ +
             ignorableSection;
 
         List<Immutable> matches = ignorableSectionFinder.findList(text);

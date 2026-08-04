@@ -155,7 +155,10 @@ class ReviewCustomFinder extends ReviewFinder {
 
     private Stream<WikipediaPage> findWikipediaPagesById(WikipediaLanguage lang, Collection<Integer> pageIds)
         throws WikipediaException {
-        final List<PageKey> keys = pageIds.stream().map(id -> PageKey.of(lang, id)).toList();
+        final List<PageKey> keys = pageIds
+            .stream()
+            .map(id -> PageKey.of(lang, id))
+            .toList();
         return wikipediaPageRepository.findByKeys(keys);
     }
 

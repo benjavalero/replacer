@@ -29,8 +29,8 @@ class RedirectionFinder implements ImmutableFinder {
     @PostConstruct
     public void init() {
         this.redirectionWords.addAll(
-                this.finderProperties.getRedirectionWords().stream().map(ReplacerUtils::toLowerCase).toList()
-            );
+            this.finderProperties.getRedirectionWords().stream().map(ReplacerUtils::toLowerCase).toList()
+        );
     }
 
     @Override

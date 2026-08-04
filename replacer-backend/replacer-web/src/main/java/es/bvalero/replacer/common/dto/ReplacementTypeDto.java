@@ -17,10 +17,11 @@ import org.springframework.lang.NonNull;
 @NoArgsConstructor(force = true)
 public class ReplacementTypeDto {
 
-    @Schema(type = "integer", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(types = "integer", requiredMode = Schema.RequiredMode.REQUIRED)
     @Parameter(description = "Replacement kind code", required = true, example = "2")
     private byte kind;
 
+    @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
     @Parameter(description = "Replacement subtype", required = true, example = "aún")
     @NonNull
     private String subtype;

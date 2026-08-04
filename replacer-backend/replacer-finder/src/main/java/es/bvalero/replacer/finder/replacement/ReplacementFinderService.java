@@ -20,7 +20,8 @@ import org.springframework.stereotype.Service;
 @Service
 class ReplacementFinderService
     extends ReplacementFinderAbstractService
-    implements FinderService<Replacement>, ReplacementFindApi {
+    implements FinderService<Replacement>, ReplacementFindApi
+{
 
     // Dependency injection
     private final List<ReplacementFinder> replacementFinders;

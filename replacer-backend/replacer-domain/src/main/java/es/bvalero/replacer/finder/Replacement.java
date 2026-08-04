@@ -11,8 +11,12 @@ import org.jetbrains.annotations.TestOnly;
  * For instance, in Spanish the word "Paris" could be misspelled if it corresponds to the French city
  * (written correctly as "París"), but it would be correct if it refers to the mythological Trojan prince.
  */
-public record Replacement(int start, String text, ReplacementType type, List<Suggestion> suggestions)
-    implements FinderResult {
+public record Replacement(
+    int start,
+    String text,
+    ReplacementType type,
+    List<Suggestion> suggestions
+) implements FinderResult {
     public Replacement(int start, String text, ReplacementType type, List<Suggestion> suggestions) {
         // Validate start
         if (start < 0) {
