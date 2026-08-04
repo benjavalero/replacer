@@ -17,6 +17,7 @@ export class DashboardComponent implements OnInit {
 
   isValidUser = this.userService.isValidUser;
   hasRightsUser = this.userService.hasRightsUser;
+  canUseCustomReplacement = this.userService.canUseCustomReplacement;
 
   ngOnInit() {
     this.titleService.setTitle('Replacer - Reemplazador de la Wikipedia');
