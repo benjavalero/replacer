@@ -13,7 +13,7 @@ public class ResultCount<T> implements Comparable<ResultCount<T>> {
     int count;
 
     @Override
-    public int compareTo(ResultCount count) {
+    public int compareTo(ResultCount<T> count) {
         // By default, we sort the items by count in descendent order.
         return Integer.compare(count.getCount(), this.count);
     }

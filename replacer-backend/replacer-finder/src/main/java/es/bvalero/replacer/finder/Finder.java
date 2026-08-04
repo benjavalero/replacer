@@ -5,7 +5,7 @@ import java.util.regex.MatchResult;
 import java.util.stream.Stream;
 import org.jetbrains.annotations.TestOnly;
 
-public interface Finder<T extends FinderResult> extends Comparable<Finder<T>> {
+public interface Finder<T extends FinderResult> extends Comparable<Finder<?>> {
     // This method returns a stream in case we want to retrieve the result one-by-one,
     // for instance, to improve performance.
     default Stream<T> find(FinderPage page) {
@@ -57,7 +57,7 @@ public interface Finder<T extends FinderResult> extends Comparable<Finder<T>> {
     }
 
     @Override
-    default int compareTo(Finder finder) {
+    default int compareTo(Finder<?> finder) {
         return Integer.compare(finder.getPriority().getValue(), getPriority().getValue());
     }
 }

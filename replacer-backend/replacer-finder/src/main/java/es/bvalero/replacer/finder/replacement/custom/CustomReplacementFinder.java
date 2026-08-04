@@ -4,7 +4,6 @@ import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.ReplacementKind;
 import es.bvalero.replacer.finder.Suggestion;
-import es.bvalero.replacer.finder.replacement.ReplacementFinder;
 import es.bvalero.replacer.finder.replacement.finders.MisspellingFinder;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.RegexMatchFinder;
@@ -17,7 +16,7 @@ import lombok.AllArgsConstructor;
 
 /** Special case of Replacement Finder where the options are set at runtime */
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-class CustomReplacementFinder extends MisspellingFinder implements ReplacementFinder {
+class CustomReplacementFinder extends MisspellingFinder {
 
     private final CustomMisspelling customMisspelling;
     private final Pattern pattern;
