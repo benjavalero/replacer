@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { AlertComponent } from '../../../shared/alerts/alert-container/alert/alert.component';
 import { UserLoginService } from '../../services/user-login.service';
@@ -11,9 +11,9 @@ import { UserLoginService } from '../../services/user-login.service';
   styles: []
 })
 export class LoginComponent implements OnInit {
-  authorizationUrl$!: Observable<string>;
+  private loginService = inject(UserLoginService);
 
-  constructor(private loginService: UserLoginService) {}
+  authorizationUrl$!: Observable<string>;
 
   ngOnInit() {
     this.authorizationUrl$ = this.loginService.getAuthorizationUrl$();

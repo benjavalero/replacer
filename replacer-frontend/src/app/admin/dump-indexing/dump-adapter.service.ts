@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { DumpStatus } from '../../api/models/dump-status';
 import { DumpApiService } from '../../api/services/dump-api.service';
@@ -6,10 +6,12 @@ import { DumpAdapterStatus } from './dump.model';
 
 @Injectable()
 export class DumpAdapterService {
+  private dumpApiService = inject(DumpApiService);
+
   // Initial state is null when there is no data yet
   readonly status$ = new Subject<DumpAdapterStatus | null>();
 
-  constructor(private dumpApiService: DumpApiService) {
+  constructor() {
     this.refreshDumpIndexing();
   }
 

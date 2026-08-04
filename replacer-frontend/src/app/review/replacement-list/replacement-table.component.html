@@ -65,7 +65,7 @@
                       rel="noopener noreferrer"
                       title="Abrir lista de páginas"
                       [ngClass]="{ disabled: item.c === 0 }">
-                      <fa-icon [icon]="listIcon"></fa-icon>
+                      <i class="bi bi-list"></i>
                     </a>
                     &nbsp;
                     <a
@@ -74,7 +74,7 @@
                       (click)="reviewPages(item.s)"
                       title="Marcar todas como revisadas"
                       [ngClass]="{ disabled: item.c === 0 }">
-                      <fa-icon [icon]="checkIcon"></fa-icon>
+                      <i class="bi bi-check2-all"></i>
                     </a>
                   </td>
                 }

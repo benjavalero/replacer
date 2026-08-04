@@ -1,6 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faFastForward } from '@fortawesome/free-solid-svg-icons';
+import { Component, EventEmitter, Input, OnChanges, Output, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Page } from '../../api/models/page';
 import { Replacement } from '../../api/models/replacement';
@@ -18,16 +16,19 @@ import { ReviewOptions } from './review-options.model';
 
 @Component({
   selector: 'app-edit-page',
-  imports: [AlertComponent, FontAwesomeModule, EditSnippetComponent],
+  imports: [AlertComponent, EditSnippetComponent],
   templateUrl: './edit-page.component.html',
   styleUrls: ['./edit-page.component.css']
 })
 export class EditPageComponent implements OnChanges {
+  private readonly alertService = inject(AlertService);
+  private readonly userService = inject(UserService);
+  private readonly pageApiService = inject(PageApiService);
+
   @Input() page!: Page;
   @Input() options!: ReviewOptions;
   @Input() numPending!: number;
 
-  ffIcon = faFastForward;
   private readonly THRESHOLD = 200; // Maximum number of characters to display around the replacements
   private fixedReplacements!: FixedReplacement[];
   private reviewAllTypes: boolean = false;
@@ -36,12 +37,6 @@ export class EditPageComponent implements OnChanges {
 
   private readonly lastSaveKey = 'lastSave';
   private readonly editionsPerMinute = 5;
-
-  constructor(
-    private readonly alertService: AlertService,
-    private readonly userService: UserService,
-    private readonly pageApiService: PageApiService
-  ) {}
 
   ngOnChanges() {
     // We assume the replacements are returned sorted by the back-end

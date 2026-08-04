@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { Observable } from 'rxjs';
 import { PageCount } from '../../api/models/page-count';
@@ -13,12 +13,10 @@ import { UserConfigService } from '../../core/services/user-config.service';
   styleUrls: []
 })
 export class UnreviewedComponent implements OnInit {
-  unreviewed$!: Observable<PageCount[]>;
+  private replacementApiService = inject(ReplacementApiService);
+  private userConfigService = inject(UserConfigService);
 
-  constructor(
-    private replacementApiService: ReplacementApiService,
-    private userConfigService: UserConfigService
-  ) {}
+  unreviewed$!: Observable<PageCount[]>;
 
   ngOnInit() {
     this.unreviewed$ = this.replacementApiService.countNotReviewedReplacementsGroupedByPage();

@@ -3,5 +3,7 @@
   "input": "http://localhost:8080/v3/api-docs",
   "excludeParameters": ["Accept-Language"],
   "serviceSuffix": "ApiService",
-  "enumStyle": "alias"
+  "enumStyle": "alias",
+  "services": true,
+  "promises": false
 }

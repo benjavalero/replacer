@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AlertService } from '../../../shared/alerts/alert.service';
 import { UserLoginService } from '../../services/user-login.service';
@@ -10,12 +10,10 @@ import { UserLoginService } from '../../services/user-login.service';
   styles: []
 })
 export class OAuthResponseComponent implements OnInit {
-  constructor(
-    private route: ActivatedRoute,
-    private loginService: UserLoginService,
-    private router: Router,
-    private alertService: AlertService
-  ) {}
+  private route = inject(ActivatedRoute);
+  private loginService = inject(UserLoginService);
+  private router = inject(Router);
+  private alertService = inject(AlertService);
 
   ngOnInit(): void {
     this.alertService.addInfoMessage('Comprobando autenticación…');

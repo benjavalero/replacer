@@ -1,13 +1,13 @@
-import { Injectable, signal } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { Observable } from 'rxjs';
 import { KindCount } from '../../api/models/kind-count';
 import { PageApiService } from '../../api/services/page-api.service';
 
 @Injectable()
 export class ReplacementListService {
-  readonly counts = signal<KindCount[] | null>(null);
+  private pageApiService = inject(PageApiService);
 
-  constructor(private pageApiService: PageApiService) {}
+  readonly counts = signal<KindCount[] | null>(null);
 
   loadCountsFromServer(): void {
     this.pageApiService.countNotReviewedGroupedByType().subscribe((kindCounts) => this.counts.set(kindCounts));

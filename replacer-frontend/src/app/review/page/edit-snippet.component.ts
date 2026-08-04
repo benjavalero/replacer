@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation, inject } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Replacement } from '../../api/models/replacement';
 import { Suggestion } from '../../api/models/suggestion';
@@ -14,6 +14,8 @@ import { FixedReplacement, Snippet, getReplacementEnd } from './page-replacement
   styleUrls: ['./edit-snippet.component.css']
 })
 export class EditSnippetComponent implements OnInit {
+  private modalService = inject(NgbModal);
+
   @Input() index!: number;
   @Input() pageText!: string;
   @Input() replacement!: Replacement;
@@ -27,7 +29,7 @@ export class EditSnippetComponent implements OnInit {
 
   @Output() fixed: EventEmitter<FixedReplacement> = new EventEmitter();
 
-  constructor(private modalService: NgbModal) {
+  constructor() {
     this.customFix = null;
   }
 

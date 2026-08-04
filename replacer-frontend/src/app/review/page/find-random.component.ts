@@ -1,5 +1,5 @@
 import { Location } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -24,23 +24,21 @@ import { buildReviewOptionsFromParamMap, getPageIdFromParamMap } from './review-
   styleUrls: []
 })
 export class FindRandomComponent implements OnInit {
+  private readonly alertService = inject(AlertService);
+  private readonly replacementTypeApiService = inject(ReplacementTypeApiService);
+  private readonly pageApiService = inject(PageApiService);
+  private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
+  private readonly titleService = inject(Title);
+  private readonly location = inject(Location);
+  private readonly modalService = inject(NgbModal);
+  private readonly userService = inject(UserService);
+
   page: Page | null = null;
   options: ReviewOptions | null = null;
   numPending: number = 0;
 
   displayCustomWarning: boolean = false;
-
-  constructor(
-    private readonly alertService: AlertService,
-    private readonly replacementTypeApiService: ReplacementTypeApiService,
-    private readonly pageApiService: PageApiService,
-    private readonly router: Router,
-    private readonly route: ActivatedRoute,
-    private readonly titleService: Title,
-    private readonly location: Location,
-    private readonly modalService: NgbModal,
-    private readonly userService: UserService
-  ) {}
 
   ngOnInit() {
     const options = buildReviewOptionsFromParamMap(this.route.snapshot.paramMap);

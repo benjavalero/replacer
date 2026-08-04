@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
@@ -9,5 +9,5 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ChangeLanguageComponent {
-  constructor(public activeModal: NgbActiveModal) {}
+  activeModal = inject(NgbActiveModal);
 }

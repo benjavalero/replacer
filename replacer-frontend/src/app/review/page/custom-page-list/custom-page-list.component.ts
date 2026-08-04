@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { PageTitle } from '../../../api/models/page-title';
@@ -16,15 +16,13 @@ import { buildCustomReviewOptionsFromParamMap } from '../review-route-options.ut
   styleUrls: []
 })
 export class CustomPageListComponent implements OnInit {
+  private readonly route = inject(ActivatedRoute);
+  private readonly alertService = inject(AlertService);
+  private readonly pageApiService = inject(PageApiService);
+  private readonly userConfigService = inject(UserConfigService);
+
   options: ReviewOptions | null = null;
   pageTitles$!: Observable<PageTitle[]>;
-
-  constructor(
-    private readonly route: ActivatedRoute,
-    private readonly alertService: AlertService,
-    private readonly pageApiService: PageApiService,
-    private readonly userConfigService: UserConfigService
-  ) {}
 
   ngOnInit() {
     this.alertService.clearAlertMessages();

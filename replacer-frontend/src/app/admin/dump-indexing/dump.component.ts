@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
 import { Observable, Subscription, interval } from 'rxjs';
@@ -16,16 +16,14 @@ import { DumpAdapterStatus } from './dump.model';
   styleUrls: []
 })
 export class DumpComponent implements OnInit, OnDestroy {
+  private dumpService = inject(DumpAdapterService);
+  private titleService = inject(Title);
+
   // Status Details
   status$!: Observable<DumpAdapterStatus | null>;
 
   // Check the status
   subscription!: Subscription;
-
-  constructor(
-    private dumpService: DumpAdapterService,
-    private titleService: Title
-  ) {}
 
   ngOnInit() {
     this.titleService.setTitle('Replacer - Indexación');

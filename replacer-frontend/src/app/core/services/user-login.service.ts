@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { RequestToken } from '../../api/models/request-token';
@@ -11,13 +11,11 @@ import { UserService } from './user.service';
   providedIn: 'root'
 })
 export class UserLoginService {
+  private userApiService = inject(UserApiService);
+  private userService = inject(UserService);
+
   private readonly requestTokenKey = 'requestToken';
   private readonly redirectPathKey = 'redirectPath';
-
-  constructor(
-    private userApiService: UserApiService,
-    private userService: UserService
-  ) {}
 
   getAuthorizationUrl$(): Observable<string> {
     return this.userApiService.initiateAuthorization().pipe(

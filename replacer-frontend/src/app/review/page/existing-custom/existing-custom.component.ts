@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, inject } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
@@ -8,8 +8,8 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
   styles: []
 })
 export class ExistingCustomComponent {
+  activeModal = inject(NgbActiveModal);
+
   @Input() kindLabel!: string;
   @Input() subtype!: string;
-
-  constructor(public activeModal: NgbActiveModal) {}
 }

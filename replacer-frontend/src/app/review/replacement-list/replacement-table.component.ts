@@ -2,8 +2,6 @@ import { CommonModule } from '@angular/common';
 import { Component, Input, OnChanges, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faCheckDouble, faList } from '@fortawesome/free-solid-svg-icons';
 import { NgbModal, NgbPaginationModule, NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
 import { environment } from '../../../environments/environment';
 import { SubtypeCount } from '../../api/models/subtype-count';
@@ -17,7 +15,7 @@ import { SortDirection, rotate } from './sort-direction.model';
 
 @Component({
   selector: 'app-replacement-table',
-  imports: [CommonModule, FormsModule, RouterModule, FontAwesomeModule, NgbPaginationModule, NgbTooltip],
+  imports: [CommonModule, FormsModule, RouterModule, NgbPaginationModule, NgbTooltip],
   templateUrl: './replacement-table.component.html',
   styleUrls: ['./replacement-table.component.css']
 })
@@ -49,9 +47,6 @@ export class ReplacementTableComponent implements OnInit, OnChanges {
 
   // Subtype Review
   pageListUrl: string;
-  listIcon = faList;
-  checkIcon = faCheckDouble;
-
   constructor() {
     this.subtypeCounts = [];
     this.filteredItems = this.subtypeCounts;
