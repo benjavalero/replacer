@@ -1,12 +1,12 @@
-<ngb-alert [dismissible]="false" [type]="type">
+<ngb-alert [dismissible]="false" [type]="type()">
   <div class="row vertical-align text-center">
-    @if (icon) {
+    @if (icon()) {
       <div class="col-sm-1">
         <i class="bi bi-exclamation-circle" style="font-size: 3em"></i>
       </div>
     }
     <!-- Center if there is no icon -->
-    <div [ngClass]="{ 'col-sm-11 text-start': icon, col: !icon }">
+    <div [ngClass]="{ 'col-sm-11 text-start': icon(), col: !icon() }">
       <ng-content></ng-content>
     </div>
   </div>

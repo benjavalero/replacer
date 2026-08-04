@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import {
   NgbCollapse,
@@ -31,8 +31,12 @@ import { HeaderUserMenuComponent } from './header-user-menu/header-user-menu.com
 export class HeaderComponent {
   private userService = inject(UserService);
 
-  isNavCollapsed = true;
+  readonly isNavCollapsed = signal(true);
   isValidUser = this.userService.isValidUser;
   hasRightsUser = this.userService.hasRightsUser;
   isAdminUser = this.userService.isAdminUser;
+
+  toggleNav() {
+    this.isNavCollapsed.update((v) => !v);
+  }
 }

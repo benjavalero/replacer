@@ -5,15 +5,15 @@
     <button
       type="button"
       class="navbar-toggler"
-      (click)="isNavCollapsed = !isNavCollapsed"
+      (click)="toggleNav()"
       aria-controls="navbarSupportedContent"
-      [attr.aria-expanded]="!isNavCollapsed"
+      [attr.aria-expanded]="!isNavCollapsed()"
       aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
 
     @if (isValidUser()) {
-      <div id="navbarSupportedContent" class="navbar-collapse" [ngbCollapse]="isNavCollapsed">
+      <div id="navbarSupportedContent" class="navbar-collapse" [ngbCollapse]="isNavCollapsed()">
         <!-- Navigation links are only available for valid users -->
         @if (hasRightsUser()) {
           <ul class="navbar-nav me-auto">
@@ -22,7 +22,7 @@
                 class="nav-link"
                 routerLinkActive="active"
                 routerLink="/review/notype"
-                (click)="isNavCollapsed = true"
+                (click)="isNavCollapsed.set(true)"
                 title="Revisa todos los posibles reemplazos de un artículo aleatorio">
                 Artículo aleatorio
               </a>
@@ -32,7 +32,7 @@
                 class="nav-link"
                 routerLinkActive="active"
                 routerLink="/review/list"
-                (click)="isNavCollapsed = true"
+                (click)="isNavCollapsed.set(true)"
                 title="Revisa todos los artículos que contienen un reemplazo en concreto">
                 Lista de reemplazos
               </a>
@@ -42,7 +42,7 @@
                 class="nav-link"
                 routerLinkActive="active"
                 routerLink="/review/custom"
-                (click)="isNavCollapsed = true"
+                (click)="isNavCollapsed.set(true)"
                 title="Revisa todos los artículos que contienen un reemplazo personalizado">
                 Reemplazo personalizado
               </a>
@@ -52,7 +52,7 @@
                 class="nav-link"
                 routerLinkActive="active"
                 routerLink="/stats"
-                (click)="isNavCollapsed = true"
+                (click)="isNavCollapsed.set(true)"
                 title="Muestra el número de reemplazos indexados y revisados">
                 Estadísticas
               </a>
@@ -85,7 +85,7 @@
                     routerLinkActive="active"
                     routerLink="/admin/dump-indexing"
                     #indexing="routerLinkActive"
-                    (click)="isNavCollapsed = true"
+                    (click)="isNavCollapsed.set(true)"
                     title="Indexación">
                     Indexación
                   </button>
@@ -94,7 +94,7 @@
                     routerLinkActive="active"
                     routerLink="/admin/unreviewed"
                     #unreviewed="routerLinkActive"
-                    (click)="isNavCollapsed = true"
+                    (click)="isNavCollapsed.set(true)"
                     title="Páginas con más reemplazos">
                     Páginas con más reemplazos
                   </button>

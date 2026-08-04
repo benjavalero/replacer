@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, Output, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, inject, input, output, signal } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Page } from '../../api/models/page';
 import { Replacement } from '../../api/models/replacement';
@@ -18,41 +18,46 @@ import { ReviewOptions } from './review-options.model';
   selector: 'app-edit-page',
   imports: [AlertComponent, EditSnippetComponent],
   templateUrl: './edit-page.component.html',
-  styleUrls: ['./edit-page.component.css']
+  styleUrls: ['./edit-page.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class EditPageComponent implements OnChanges {
+export class EditPageComponent {
   private readonly alertService = inject(AlertService);
   private readonly userService = inject(UserService);
   private readonly pageApiService = inject(PageApiService);
 
-  @Input() page!: Page;
-  @Input() options!: ReviewOptions;
-  @Input() numPending!: number;
+  page = input.required<Page>();
+  options = input.required<ReviewOptions>();
+  numPending = input.required<number>();
 
   private readonly THRESHOLD = 200; // Maximum number of characters to display around the replacements
   private fixedReplacements!: FixedReplacement[];
   private reviewAllTypes: boolean = false;
+  protected readonly hidden = signal(false);
 
-  @Output() saved: EventEmitter<ReviewOptions> = new EventEmitter();
+  saved = output<ReviewOptions>();
 
   private readonly lastSaveKey = 'lastSave';
   private readonly editionsPerMinute = 5;
 
-  ngOnChanges() {
-    // We assume the replacements are returned sorted by the back-end
-    this.fixedReplacements = new Array<FixedReplacement>(this.page.replacements.length);
+  constructor() {
+    effect(() => {
+      // We assume the replacements are returned sorted by the back-end
+      this.fixedReplacements = new Array<FixedReplacement>(this.page().replacements.length);
 
-    // Reset filter by type
-    this.reviewAllTypes = false;
+      // Reset filter by type
+      this.reviewAllTypes = false;
+      this.hidden.set(false);
+    });
   }
 
   displayReplacement(index: number): boolean {
     if (this.reviewAllTypes) {
       return true;
     } else {
-      const options: ReviewOptions = this.options;
+      const options: ReviewOptions = this.options();
       if (options.kind && options.subtype) {
-        const replacement = this.page.replacements[index];
+        const replacement = this.page().replacements[index];
         return replacement.kind === options.kind && replacement.subtype === options.subtype;
       } else {
         return true;
@@ -62,12 +67,12 @@ export class EditPageComponent implements OnChanges {
 
   // Calculate limits in order not to clash with other replacements
   limitLeft(index: number): number {
-    const currentStart = this.page.replacements[index].start;
+    const currentStart = this.page().replacements[index].start;
     let limit: number;
     if (index == 0) {
       limit = 0;
     } else {
-      const previousEnd = getReplacementEnd(this.page.replacements[index - 1]);
+      const previousEnd = getReplacementEnd(this.page().replacements[index - 1]);
       const diff = Math.floor((currentStart - previousEnd) / 2);
       limit = currentStart - diff;
     }
@@ -75,12 +80,12 @@ export class EditPageComponent implements OnChanges {
   }
 
   limitRight(index: number): number {
-    const currentEnd = getReplacementEnd(this.page.replacements[index]);
+    const currentEnd = getReplacementEnd(this.page().replacements[index]);
     let limit: number;
-    if (index == this.page.replacements.length - 1) {
-      limit = this.page.content.length;
+    if (index == this.page().replacements.length - 1) {
+      limit = this.page().content.length;
     } else {
-      const nextStart = this.page.replacements[index + 1].start;
+      const nextStart = this.page().replacements[index + 1].start;
       const diff = Math.ceil((nextStart - currentEnd) / 2);
       limit = currentEnd + diff;
     }
@@ -91,10 +96,10 @@ export class EditPageComponent implements OnChanges {
     if (this.reviewAllTypes) {
       return 0;
     } else {
-      const options: ReviewOptions = this.options;
+      const options: ReviewOptions = this.options();
       if (options.kind && options.subtype) {
         let count: number = 0;
-        for (const replacement of this.page.replacements) {
+        for (const replacement of this.page().replacements) {
           if (replacement.kind !== options.kind || replacement.subtype !== options.subtype) {
             count++;
           }
@@ -123,12 +128,12 @@ export class EditPageComponent implements OnChanges {
     const fixedReplacements = this.filterFixedReplacements().sort((a, b): number => b.start - a.start);
     if (fixedReplacements.length > 0) {
       // Apply the fixes in the original text
-      let contentToSave = this.page.content;
+      let contentToSave = this.page().content;
       fixedReplacements.forEach((fix) => {
         contentToSave = this.replaceText(contentToSave, fix.start, fix.oldText, fix.newText!);
       });
 
-      this.alertService.addInfoMessage(`Guardando cambios en «${this.page.title}»…`);
+      this.alertService.addInfoMessage(`Guardando cambios en «${this.page().title}»…`);
       this.saveContent(contentToSave);
     } else {
       // Save with no changes => Mark page as reviewed
@@ -137,8 +142,8 @@ export class EditPageComponent implements OnChanges {
   }
 
   onSkip() {
-    // Remove replacements as a trick to hide the page
-    this.page.replacements = [];
+    // Hide the page as a trick while waiting for the next one
+    this.hidden.set(true);
 
     // Just move to the next page making the current one to move to the end of the queue
     this.nextPage();
@@ -152,30 +157,30 @@ export class EditPageComponent implements OnChanges {
   }
 
   private saveWithNoChanges() {
-    this.alertService.addInfoMessage(`Marcando como revisado sin guardar cambios en «${this.page.title}»…`);
+    this.alertService.addInfoMessage(`Marcando como revisado sin guardar cambios en «${this.page().title}»…`);
     this.saveContent(null);
   }
 
   private saveContent(content: string | null) {
     const reviewedReplacements: ReviewedReplacement[] = this.getReviewedReplacements();
 
-    // Remove replacements as a trick to hide the page
-    this.page.replacements = [];
+    // Hide the page as a trick while waiting for the next one
+    this.hidden.set(true);
 
     // Build the reviewed page depending on changes or not
     let reviewedPage: ReviewedPage;
     if (content === null) {
       reviewedPage = {
-        sectionOffset: this.page.section?.offset,
+        sectionOffset: this.page().section?.offset,
         reviewedReplacements: reviewedReplacements
       } as ReviewedPage;
     } else {
       reviewedPage = {
-        title: this.page.title,
+        title: this.page().title,
         content: content,
-        sectionId: this.page.section?.id,
-        sectionOffset: this.page.section?.offset,
-        queryTimestamp: this.page.queryTimestamp,
+        sectionId: this.page().section?.id,
+        sectionOffset: this.page().section?.offset,
+        queryTimestamp: this.page().queryTimestamp,
         reviewedReplacements: reviewedReplacements
       } as ReviewedPage;
     }
@@ -204,7 +209,7 @@ export class EditPageComponent implements OnChanges {
   private postSaveReview(reviewedPage: ReviewedPage): Observable<void> {
     // Call backend and delay the observable response
     return this.pageApiService.saveReview({
-      id: this.page.pageId,
+      id: this.page().pageId,
       body: reviewedPage
     });
   }
@@ -233,10 +238,10 @@ export class EditPageComponent implements OnChanges {
 
   private getReviewedReplacements(): ReviewedReplacement[] {
     const reviewedReplacements: ReviewedReplacement[] = [];
-    for (let i = 0; i < this.page.replacements.length; i++) {
+    for (let i = 0; i < this.page().replacements.length; i++) {
       const displayed: boolean = this.displayReplacement(i);
       if (displayed) {
-        const replacement: Replacement = this.page.replacements[i];
+        const replacement: Replacement = this.page().replacements[i];
         const fixed: boolean = this.fixedReplacements[i]?.isFixed() || false;
         // Destructure to delete unneeded properties
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -249,7 +254,7 @@ export class EditPageComponent implements OnChanges {
 
   private nextPage(): void {
     // This event will be called when the page is saved with or without changes, and also when skipped.
-    this.saved.emit(this.options);
+    this.saved.emit(this.options());
   }
 
   private replaceText(fullText: string, position: number, currentText: string, newText: string): string {
@@ -257,18 +262,18 @@ export class EditPageComponent implements OnChanges {
   }
 
   get url(): string {
-    let url = `https://${this.page.lang}.wikipedia.org/wiki/${this.page.title}`;
-    if (this.page.section) {
-      url += `#${this.page.section.title}`;
+    let url = `https://${this.page().lang}.wikipedia.org/wiki/${this.page().title}`;
+    if (this.page().section) {
+      url += `#${this.page().section!.title}`;
     }
     return url;
   }
 
   get historyUrl(): string {
-    return `https://${this.page.lang}.wikipedia.org/w/index.php?title=${this.page.title}&action=history`;
+    return `https://${this.page().lang}.wikipedia.org/w/index.php?title=${this.page().title}&action=history`;
   }
 
   get kindLabel(): string {
-    return replacementKindLabels[this.options.kind!];
+    return replacementKindLabels[this.options().kind!];
   }
 }

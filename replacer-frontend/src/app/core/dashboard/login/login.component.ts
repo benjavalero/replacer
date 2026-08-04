@@ -1,21 +1,15 @@
-import { AsyncPipe } from '@angular/common';
-import { Component, OnInit, inject } from '@angular/core';
-import { Observable } from 'rxjs';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { AlertComponent } from '../../../shared/alerts/alert-container/alert/alert.component';
 import { UserLoginService } from '../../services/user-login.service';
 
 @Component({
   selector: 'app-login',
-  imports: [AsyncPipe, AlertComponent],
+  imports: [AlertComponent],
   templateUrl: './login.component.html',
-  styles: []
+  styles: [],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class LoginComponent implements OnInit {
-  private loginService = inject(UserLoginService);
-
-  authorizationUrl$!: Observable<string>;
-
-  ngOnInit() {
-    this.authorizationUrl$ = this.loginService.getAuthorizationUrl$();
-  }
+export class LoginComponent {
+  authorizationUrl = toSignal(inject(UserLoginService).getAuthorizationUrl$());
 }

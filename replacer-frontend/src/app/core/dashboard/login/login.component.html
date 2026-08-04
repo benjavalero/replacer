@@ -1,7 +1,7 @@
 <div class="card bg-light">
   <div class="card-body">
     <p class="card-text">Necesita autenticarse en la Wikipedia para guardar los cambios con su usuario.</p>
-    @if (authorizationUrl$ | async; as url) {
+    @if (authorizationUrl(); as url) {
       <div>
         <a class="btn btn-primary w-100" href="{{ url }}">Iniciar sesión</a>
       </div>

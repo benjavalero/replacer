@@ -1,5 +1,5 @@
 import { Location } from '@angular/common';
-import { Component, OnInit, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -21,9 +21,10 @@ import { buildReviewOptionsFromParamMap, getPageIdFromParamMap } from './review-
   selector: 'app-find-random',
   imports: [EditPageComponent, AlertComponent],
   templateUrl: './find-random.component.html',
-  styleUrls: []
+  styleUrls: [],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FindRandomComponent implements OnInit {
+export class FindRandomComponent {
   private readonly alertService = inject(AlertService);
   private readonly replacementTypeApiService = inject(ReplacementTypeApiService);
   private readonly pageApiService = inject(PageApiService);
@@ -34,15 +35,14 @@ export class FindRandomComponent implements OnInit {
   private readonly modalService = inject(NgbModal);
   private readonly userService = inject(UserService);
 
-  page: Page | null = null;
-  options: ReviewOptions | null = null;
-  numPending: number = 0;
+  readonly page = signal<Page | null>(null);
+  readonly options = signal<ReviewOptions | null>(null);
+  readonly numPending = signal<number>(0);
+  readonly displayCustomWarning = signal<boolean>(false);
 
-  displayCustomWarning: boolean = false;
-
-  ngOnInit() {
+  constructor() {
     const options = buildReviewOptionsFromParamMap(this.route.snapshot.paramMap);
-    this.options = options;
+    this.options.set(options);
 
     // For custom replacements, gate the search flow behind existing-type validation.
     // This avoids launching the review lookup twice during initialization.
@@ -81,9 +81,9 @@ export class FindRandomComponent implements OnInit {
     this.pageApiService.findRandomPageWithReplacements$Response({ ...options }).subscribe({
       next: (response: StrictHttpResponse<Page>) => {
         const page: Page | null = response.body;
-        this.numPending = Number(response.headers.get('X-Pagination-Total-Pages') ?? '0');
+        this.numPending.set(Number(response.headers.get('X-Pagination-Total-Pages') ?? '0'));
         if (this.isCustomType(options)) {
-          this.displayCustomWarning = true;
+          this.displayCustomWarning.set(true);
         }
         if (page === null) {
           this.alertService.addWarningMessage(
@@ -122,10 +122,10 @@ export class FindRandomComponent implements OnInit {
     this.pageApiService.findPageReviewById$Response({ ...options, id: pageId }).subscribe({
       next: (response: StrictHttpResponse<Page>) => {
         const page: Page | null = response.body;
-        this.numPending = Number(response.headers.get('X-Pagination-Total-Pages') ?? '0');
+        this.numPending.set(Number(response.headers.get('X-Pagination-Total-Pages') ?? '0'));
         if (this.isCustomType(options)) {
           this.alertService.clearAlertMessages();
-          this.displayCustomWarning = true;
+          this.displayCustomWarning.set(true);
         }
         if (page) {
           this.manageReview(page, options);
@@ -143,7 +143,7 @@ export class FindRandomComponent implements OnInit {
   private manageReview(page: Page, options: ReviewOptions): void {
     this.alertService.clearAlertMessages();
 
-    this.page = page;
+    this.page.set(page);
 
     // Modify title
     let htmlTitle = 'Replacer - ';

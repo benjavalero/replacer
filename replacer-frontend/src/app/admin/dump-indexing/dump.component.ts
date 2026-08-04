@@ -1,42 +1,32 @@
-import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, OnInit, inject } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { DecimalPipe } from '@angular/common';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Title } from '@angular/platform-browser';
-import { Observable, Subscription, interval } from 'rxjs';
+import { interval } from 'rxjs';
 import { AlertComponent } from '../../shared/alerts/alert-container/alert/alert.component';
 import { sleep } from '../../shared/util/sleep';
 import { DumpAdapterService } from './dump-adapter.service';
-import { DumpAdapterStatus } from './dump.model';
 
 @Component({
   selector: 'app-dump',
-  imports: [CommonModule, FormsModule, AlertComponent],
+  imports: [DecimalPipe, AlertComponent],
   providers: [DumpAdapterService],
   templateUrl: './dump.component.html',
-  styleUrls: []
+  styleUrls: [],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DumpComponent implements OnInit, OnDestroy {
+export class DumpComponent {
   private dumpService = inject(DumpAdapterService);
-  private titleService = inject(Title);
 
-  // Status Details
-  status$!: Observable<DumpAdapterStatus | null>;
+  status = this.dumpService.status;
 
-  // Check the status
-  subscription!: Subscription;
-
-  ngOnInit() {
-    this.titleService.setTitle('Replacer - Indexación');
-    this.status$ = this.dumpService.status$;
+  constructor() {
+    inject(Title).setTitle('Replacer - Indexación');
 
     // Refresh every 10 seconds
-    this.subscription = interval(10000).subscribe(() => {
-      this.dumpService.refreshDumpIndexing();
-    });
-  }
-
-  ngOnDestroy() {
-    this.subscription.unsubscribe();
+    interval(10000)
+      .pipe(takeUntilDestroyed())
+      .subscribe(() => this.dumpService.refreshDumpIndexing());
   }
 
   onSubmit() {

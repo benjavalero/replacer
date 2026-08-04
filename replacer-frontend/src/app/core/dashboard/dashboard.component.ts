@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { RouterLink } from '@angular/router';
 import { AlertComponent } from '../../shared/alerts/alert-container/alert/alert.component';
@@ -9,17 +9,17 @@ import { LoginComponent } from './login/login.component';
   selector: 'app-dashboard',
   imports: [RouterLink, AlertComponent, LoginComponent],
   templateUrl: './dashboard.component.html',
-  styleUrls: []
+  styleUrls: [],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent {
   private userService = inject(UserService);
-  private titleService = inject(Title);
 
   isValidUser = this.userService.isValidUser;
   hasRightsUser = this.userService.hasRightsUser;
   canUseCustomReplacement = this.userService.canUseCustomReplacement;
 
-  ngOnInit() {
-    this.titleService.setTitle('Replacer - Reemplazador de la Wikipedia');
+  constructor() {
+    inject(Title).setTitle('Replacer - Reemplazador de la Wikipedia');
   }
 }

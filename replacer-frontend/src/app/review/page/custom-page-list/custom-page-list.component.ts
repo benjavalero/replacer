@@ -1,8 +1,6 @@
-import { CommonModule } from '@angular/common';
-import { Component, OnInit, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs';
-import { PageTitle } from '../../../api/models/page-title';
 import { PageApiService } from '../../../api/services/page-api.service';
 import { UserConfigService } from '../../../core/services/user-config.service';
 import { AlertService } from '../../../shared/alerts/alert.service';
@@ -11,24 +9,25 @@ import { buildCustomReviewOptionsFromParamMap } from '../review-route-options.ut
 
 @Component({
   selector: 'app-custom-page-list',
-  imports: [CommonModule],
+  imports: [],
   templateUrl: './custom-page-list.component.html',
-  styleUrls: []
+  styleUrls: [],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CustomPageListComponent implements OnInit {
-  private readonly route = inject(ActivatedRoute);
+export class CustomPageListComponent {
   private readonly alertService = inject(AlertService);
-  private readonly pageApiService = inject(PageApiService);
   private readonly userConfigService = inject(UserConfigService);
 
-  options: ReviewOptions | null = null;
-  pageTitles$!: Observable<PageTitle[]>;
+  readonly options: ReviewOptions;
+  readonly pageTitles;
 
-  ngOnInit() {
+  constructor() {
+    const route = inject(ActivatedRoute);
+    const pageApiService = inject(PageApiService);
+
     this.alertService.clearAlertMessages();
-
-    this.options = buildCustomReviewOptionsFromParamMap(this.route.snapshot.paramMap);
-    this.pageTitles$ = this.pageApiService.findPageTitlesToReviewByCustomType({ ...this.options });
+    this.options = buildCustomReviewOptionsFromParamMap(route.snapshot.paramMap);
+    this.pageTitles = toSignal(pageApiService.findPageTitlesToReviewByCustomType({ ...this.options }));
   }
 
   get wikipediaUrl(): string {

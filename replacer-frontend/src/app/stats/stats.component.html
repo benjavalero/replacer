@@ -11,7 +11,7 @@
 <ul>
   <li>
     Reemplazos revisados:
-    @if (numReviewed$ | async; as numReviewed) {
+    @if (numReviewed(); as numReviewed) {
       <strong>{{ numReviewed.count }}</strong>
     } @else {
       Calculando…
@@ -19,7 +19,7 @@
   </li>
   <li>
     Reemplazos sin revisar:
-    @if (numNotReviewed$ | async; as numNotReviewed) {
+    @if (numNotReviewed(); as numNotReviewed) {
       <strong>{{ numNotReviewed.count }}</strong>
     } @else {
       Calculando…
@@ -28,7 +28,7 @@
 </ul>
 
 <h4>Contribuciones</h4>
-@if (numReviewedGrouped$ | async; as numReviewedGrouped) {
+@if (numReviewedGrouped(); as numReviewedGrouped) {
   <div>
     <table class="table" aria-describedby="Lista de usuarios que han contribuido y su número de contribuciones">
       <thead>

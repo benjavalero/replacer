@@ -26,7 +26,6 @@
           "options": {
             "browser": "src/main.ts",
             "polyfills": [
-              "zone.js",
               "@angular/localize/init"
             ],
             "tsConfig": "tsconfig.app.json",
@@ -91,7 +90,6 @@
           "builder": "@angular/build:karma",
           "options": {
             "polyfills": [
-              "zone.js",
               "zone.js/testing",
               "@angular/localize/init"
             ],

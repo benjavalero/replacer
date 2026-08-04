@@ -1,39 +1,36 @@
 <h3>Reemplazo personalizado</h3>
 
 <p>
-  A continuación se listan las páginas con ocurrencias por revisar del reemplazo personalizado «<strong>{{ options!.subtype }}</strong>»
+  A continuación se listan las páginas con ocurrencias por revisar del reemplazo personalizado «<strong>{{ options.subtype }}</strong>»
   para facilitar su revisión y potencial corrección de forma manual.
 </p>
 
-@if (pageTitles$ | async; as pageTitles) {
-  <div>
-    @if (pageTitles.length === 0) {
-      <p>No hay páginas para revisar</p>
-    }
-    @if (pageTitles.length) {
-      <table
-        class="table" aria-describedby="Lista de páginas sin revisar para el reemplazo personalizado dado">
-        <thead>
+@if (pageTitles(); as pageTitles) {
+  @if (pageTitles.length === 0) {
+    <p>No hay páginas para revisar</p>
+  } @else {
+    <table
+      class="table" aria-describedby="Lista de páginas sin revisar para el reemplazo personalizado dado">
+      <thead>
+        <tr>
+          <th scope="col">Título</th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (item of pageTitles; track item) {
           <tr>
-            <th scope="col">Título</th>
-            <th scope="col"></th>
+            <td>{{ item.title }}</td>
+            <td>
+              <a href="{{ wikipediaUrl }}{{ item.title }}" class="no-underline" target="_blank" rel="noopener noreferrer">
+                Abrir en Wikipedia
+              </a>
+            </td>
           </tr>
-        </thead>
-        <tbody>
-          @for (item of pageTitles; track item) {
-            <tr>
-              <td>{{ item.title }}</td>
-              <td>
-                <a href="{{ wikipediaUrl }}{{ item.title }}" class="no-underline" target="_blank" rel="noopener noreferrer">
-                  Abrir en Wikipedia
-                </a>
-              </td>
-            </tr>
-          }
-        </tbody>
-      </table>
-    }
-  </div>
+        }
+      </tbody>
+    </table>
+  }
 } @else {
   Calculando…
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
@@ -11,13 +11,13 @@ import StringUtils from '../../shared/util/string-utils';
   selector: 'app-find-custom',
   imports: [ReactiveFormsModule, AlertComponent],
   templateUrl: './find-custom.component.html',
-  styleUrls: []
+  styleUrls: [],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FindCustomComponent implements OnInit {
+export class FindCustomComponent {
   private formBuilder = inject(FormBuilder);
   private router = inject(Router);
   private alertService = inject(AlertService);
-  private titleService = inject(Title);
   private userService = inject(UserService);
 
   readonly customForm = this.formBuilder.nonNullable.group({
@@ -28,8 +28,8 @@ export class FindCustomComponent implements OnInit {
 
   readonly userLacksPermissions = computed(() => !this.userService.canUseCustomReplacement());
 
-  ngOnInit() {
-    this.titleService.setTitle('Replacer - Reemplazo personalizado');
+  constructor() {
+    inject(Title).setTitle('Replacer - Reemplazo personalizado');
   }
 
   onSubmit() {

@@ -1,15 +1,15 @@
-import { Component, Input, OnInit, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, inject } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { UserConfigService } from '../../core/services/user-config.service';
 import { Snippet } from './page-replacement.model';
 
 @Component({
-  standalone: true,
   selector: 'app-edit-custom-snippet',
   templateUrl: './edit-custom-snippet.component.html',
-  styleUrls: ['./edit-custom-snippet.component.css']
+  styleUrls: ['./edit-custom-snippet.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class EditCustomSnippetComponent implements OnInit {
+export class EditCustomSnippetComponent {
   @Input() snippet!: Snippet;
   private newText!: string;
 
@@ -18,16 +18,12 @@ export class EditCustomSnippetComponent implements OnInit {
 
   userLang = this.userConfigService.lang;
 
-  ngOnInit(): void {
-    this.newText = this.snippet.text;
-  }
-
   onChange(event: Event) {
     this.newText = (event.target as HTMLElement).innerText;
   }
 
   accept(): void {
-    const newSnippet = { ...this.snippet, text: this.newText };
+    const newSnippet = { ...this.snippet, text: this.newText ?? this.snippet.text };
     this.activeModal.close(newSnippet);
   }
 }

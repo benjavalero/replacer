@@ -1,6 +1,6 @@
 <h3>Indexación</h3>
 
-@if (status$ | async; as status) {
+@if (status(); as status) {
   <div>
     @if (status.start) {
       <ul>

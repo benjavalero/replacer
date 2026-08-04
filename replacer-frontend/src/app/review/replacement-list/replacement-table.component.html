@@ -1,6 +1,6 @@
-@if (subtypeCounts.length) {
+@if (subtypeCounts().length) {
   <div>
-    <h4>{{ label }}</h4>
+    <h4>{{ label() }}</h4>
     @if (filtrable) {
       <div class="form-group mt-4">
         <input
@@ -34,14 +34,11 @@
             @for (item of filteredItems; track item) {
               <tr>
                 <td class="w-75">
-                  <!-- No link in case of zero count after reviewing a subtype -->
-                  <!-- No link in case of replacement type for bots -->
                   @if (isEditable(item)) {
-                    <a routerLink="/review/{{ kind }}/{{ item.s }}" class="no-underline">
+                    <a routerLink="/review/{{ kind() }}/{{ item.s }}" class="no-underline">
                       {{ item.s }}
                     </a>
-                  }
-                  @if (!isEditable(item)) {
+                  } @else {
                     <span>{{ item.s }}</span>
                   }
                   &nbsp;
@@ -60,7 +57,7 @@
                     <a
                       class="btn btn-outline-secondary"
                       role="button"
-                      href="{{ pageListUrl }}&kind={{ kind }}&subtype={{ item.s }}"
+                      href="{{ pageListUrl() }}&kind={{ kind() }}&subtype={{ item.s }}"
                       target="_blank"
                       rel="noopener noreferrer"
                       title="Abrir lista de páginas"

@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { NgbAlert } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
@@ -10,6 +10,6 @@ import { NgbAlert } from '@ng-bootstrap/ng-bootstrap';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AlertComponent {
-  @Input() type: string = 'primary';
-  @Input() icon: boolean = false;
+  type = input<string>('primary');
+  icon = input<boolean>(false);
 }

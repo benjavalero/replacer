@@ -1,38 +1,38 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AlertService } from '../../../shared/alerts/alert.service';
 import { UserLoginService } from '../../services/user-login.service';
 
 @Component({
-  standalone: true,
   selector: 'app-oauth',
   template: ``,
-  styles: []
+  styles: [],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class OAuthResponseComponent implements OnInit {
-  private route = inject(ActivatedRoute);
-  private loginService = inject(UserLoginService);
-  private router = inject(Router);
-  private alertService = inject(AlertService);
+export class OAuthResponseComponent {
+  constructor() {
+    const route = inject(ActivatedRoute);
+    const loginService = inject(UserLoginService);
+    const router = inject(Router);
+    const alertService = inject(AlertService);
 
-  ngOnInit(): void {
-    this.alertService.addInfoMessage('Comprobando autenticación…');
+    alertService.addInfoMessage('Comprobando autenticación…');
 
     // Manage return from authorization URL
-    this.route.queryParams.subscribe((params) => {
+    route.queryParams.subscribe((params) => {
       const oauthVerifier: string = params['oauth_verifier'];
       if (oauthVerifier) {
-        this.loginService.loginUser$(oauthVerifier).subscribe({
+        loginService.loginUser$(oauthVerifier).subscribe({
           next: () => {
-            this.router.navigate([this.loginService.redirectPath || 'dashboard']);
+            router.navigate([loginService.redirectPath || 'dashboard']);
           },
           error: () => {
-            this.alertService.addErrorMessage('Error al solicitar un Access Token del API de MediaWiki');
+            alertService.addErrorMessage('Error al solicitar un Access Token del API de MediaWiki');
           }
         });
       } else {
         console.log('Empty route but not back from authorization. Redirect to Dashboard.');
-        this.router.navigate(['dashboard']);
+        router.navigate(['dashboard']);
       }
     });
   }

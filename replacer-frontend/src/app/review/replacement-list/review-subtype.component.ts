@@ -1,11 +1,11 @@
-import { Component, Input, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, inject } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
-  standalone: true,
   selector: 'app-review-subtype',
   templateUrl: './review-subtype.component.html',
-  styles: []
+  styles: [],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ReviewSubtypeComponent {
   activeModal = inject(NgbActiveModal);

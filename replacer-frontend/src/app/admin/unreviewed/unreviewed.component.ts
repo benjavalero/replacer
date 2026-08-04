@@ -1,26 +1,20 @@
-import { CommonModule } from '@angular/common';
-import { Component, OnInit, inject } from '@angular/core';
-import { RouterModule } from '@angular/router';
-import { Observable } from 'rxjs';
-import { PageCount } from '../../api/models/page-count';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { RouterLink } from '@angular/router';
 import { ReplacementApiService } from '../../api/services/replacement-api.service';
 import { UserConfigService } from '../../core/services/user-config.service';
 
 @Component({
   selector: 'app-unreviewed',
-  imports: [CommonModule, RouterModule],
+  imports: [RouterLink],
   templateUrl: './unreviewed.component.html',
-  styleUrls: []
+  styleUrls: [],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class UnreviewedComponent implements OnInit {
-  private replacementApiService = inject(ReplacementApiService);
+export class UnreviewedComponent {
   private userConfigService = inject(UserConfigService);
 
-  unreviewed$!: Observable<PageCount[]>;
-
-  ngOnInit() {
-    this.unreviewed$ = this.replacementApiService.countNotReviewedReplacementsGroupedByPage();
-  }
+  unreviewed = toSignal(inject(ReplacementApiService).countNotReviewedReplacementsGroupedByPage());
 
   get wikipediaUrl(): string {
     return `https://${this.userConfigService.lang()}.wikipedia.org/wiki/`;

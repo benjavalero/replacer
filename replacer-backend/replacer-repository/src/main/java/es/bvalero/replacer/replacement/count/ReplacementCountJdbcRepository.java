@@ -83,6 +83,8 @@ class ReplacementCountJdbcRepository implements ReplacementCountRepository {
 
     @Override
     public Collection<ResultCount<PageTitle>> countNotReviewedGroupedByPage(WikipediaLanguage lang, int numResults) {
+        LOGGER.debug("START Counting not reviewed pages grouped by page - {}…", lang);
+        // TODO: Consider caching or pre-calculating this query as it is very slow
         // TODO: We could limit also by number of replacement, e.g. more than 50 and use a HAVING clause
         String sql =
             "SELECT p.page_id, p.title, COUNT(*) AS num " +
@@ -93,7 +95,7 @@ class ReplacementCountJdbcRepository implements ReplacementCountRepository {
             "LIMIT " +
             numResults;
         SqlParameterSource namedParameters = new MapSqlParameterSource().addValue("lang", lang.getCode());
-        return Objects.requireNonNull(
+        Collection<ResultCount<PageTitle>> counts = Objects.requireNonNull(
             jdbcTemplate.query(sql, namedParameters, (resultSet, rowNum) ->
                 ResultCount.of(
                     PageTitle.of(resultSet.getInt("PAGE_ID"), resultSet.getString("TITLE")),
@@ -101,5 +103,7 @@ class ReplacementCountJdbcRepository implements ReplacementCountRepository {
                 )
             )
         );
+        LOGGER.debug("END Counting not reviewed pages grouped by page - {}", lang);
+        return counts;
     }
 }

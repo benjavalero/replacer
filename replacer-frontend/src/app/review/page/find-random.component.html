@@ -1,15 +1,15 @@
-@if (page && options) {
+@if (page() && options()) {
   <app-edit-page
-    [page]="page"
-    [options]="options"
-    [numPending]="numPending"
+    [page]="page()!"
+    [options]="options()!"
+    [numPending]="numPending()"
   (saved)="onSaved($event)"></app-edit-page>
 }
 
-@if (displayCustomWarning) {
+@if (displayCustomWarning()) {
   <app-alert type="warning" [icon]="true" class="alert-small">
     <p>
-      Se han encontrado <strong>{{ numPending }}</strong> ocurrencias del reemplazo personalizado «<strong>{{ options!.subtype }}</strong>».
+      Se han encontrado <strong>{{ numPending() }}</strong> ocurrencias del reemplazo personalizado «<strong>{{ options()!.subtype }}</strong>».
       Si un reemplazo tiene muchas ocurrencias, por favor añádelo a los
       <a href="https://es.wikipedia.org/wiki/Usuario:Benjavalero/Replacer#Tipos_de_reemplazos"
       target="_blank" rel="noopener noreferrer">listados generales</a>
