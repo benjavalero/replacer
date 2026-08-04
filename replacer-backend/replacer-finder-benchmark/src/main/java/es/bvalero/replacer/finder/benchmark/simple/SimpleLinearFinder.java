@@ -6,7 +6,7 @@ import es.bvalero.replacer.finder.util.FinderMatchResult;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
 import java.util.regex.MatchResult;
 import java.util.stream.Stream;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.Nullable;
 
 class SimpleLinearFinder implements BenchmarkFinder {
 

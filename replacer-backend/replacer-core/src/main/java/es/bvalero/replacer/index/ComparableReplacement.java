@@ -11,8 +11,8 @@ import java.util.Objects;
 import lombok.*;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.VisibleForTesting;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 /** Wrapper for a replacement indexed in the database during the comparison, as we need to keep track of the status. */
 @Value

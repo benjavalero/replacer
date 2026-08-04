@@ -2,7 +2,7 @@ package es.bvalero.replacer.common.domain;
 
 import lombok.Value;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 /** OAuth access token to log in the application and be able to apply changes in Wikipedia */
 @Value(staticConstructor = "of")

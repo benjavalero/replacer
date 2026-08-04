@@ -1,7 +1,7 @@
 package es.bvalero.replacer.common.domain;
 
 import lombok.Value;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 /** Generic class to store the result of different count queries */
 @Value(staticConstructor = "of")

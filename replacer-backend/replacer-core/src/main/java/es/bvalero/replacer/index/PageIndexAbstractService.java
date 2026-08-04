@@ -11,7 +11,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.SortedSet;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.springframework.stereotype.Service;
 
 /** Index a page: calculate its replacements and update the related replacements in DB accordingly */

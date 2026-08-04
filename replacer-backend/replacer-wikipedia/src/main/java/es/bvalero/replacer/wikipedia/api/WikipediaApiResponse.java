@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import java.util.Collection;
 import lombok.Data;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * DTO to represent any possible response from Wikipedia API,

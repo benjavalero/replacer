@@ -7,8 +7,8 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.jspecify.annotations.NonNull;
 import org.springdoc.core.annotations.ParameterObject;
-import org.springframework.lang.NonNull;
 
 @Schema(name = "ReplacementType")
 @ParameterObject

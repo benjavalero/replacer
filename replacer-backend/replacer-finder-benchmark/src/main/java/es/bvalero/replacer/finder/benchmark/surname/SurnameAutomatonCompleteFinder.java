@@ -20,8 +20,8 @@ class SurnameAutomatonCompleteFinder implements BenchmarkFinder {
     SurnameAutomatonCompleteFinder(Collection<String> words) {
         for (String word : words) {
             this.words.add(
-                    new RunAutomaton(new RegExp("<Lu><L>+ " + word).toAutomaton(new DatatypesAutomatonProvider()))
-                );
+                new RunAutomaton(new RegExp("<Lu><L>+ " + word).toAutomaton(new DatatypesAutomatonProvider()))
+            );
         }
     }
 

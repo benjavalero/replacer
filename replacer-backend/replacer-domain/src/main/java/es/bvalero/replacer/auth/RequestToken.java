@@ -1,7 +1,7 @@
 package es.bvalero.replacer.auth;
 
 import lombok.Value;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 /** Request token with an authorization URL to initiate an authorization process */
 @Value(staticConstructor = "of")

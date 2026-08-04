@@ -122,13 +122,21 @@ public class ImmutableFinderServiceJmhBenchmark extends BaseFinderJmhBenchmark {
 
     @Benchmark
     public void sequentialFinder(Blackhole bh) {
-        sampleContents.forEach(page -> finders.stream().flatMap(finder -> finder.find(page)).forEach(bh::consume));
+        sampleContents.forEach(page ->
+            finders
+                .stream()
+                .flatMap(finder -> finder.find(page))
+                .forEach(bh::consume)
+        );
     }
 
     @Benchmark
     public void parallelFinder(Blackhole bh) {
         sampleContents.forEach(page ->
-            finders.parallelStream().flatMap(finder -> finder.find(page)).forEach(bh::consume)
+            finders
+                .parallelStream()
+                .flatMap(finder -> finder.find(page))
+                .forEach(bh::consume)
         );
     }
 
@@ -164,7 +172,10 @@ public class ImmutableFinderServiceJmhBenchmark extends BaseFinderJmhBenchmark {
             customThreadPool
                 .submit(() ->
                     sampleContents.forEach(page ->
-                        finders.parallelStream().flatMap(finder -> finder.find(page)).forEach(bh::consume)
+                        finders
+                            .parallelStream()
+                            .flatMap(finder -> finder.find(page))
+                            .forEach(bh::consume)
                     )
                 )
                 .get();

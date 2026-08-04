@@ -7,7 +7,7 @@ import es.bvalero.replacer.finder.util.LinearMatchFinder;
 import java.util.Collection;
 import java.util.regex.MatchResult;
 import java.util.stream.Stream;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.Nullable;
 
 class UppercaseIndexOfFinder extends UppercaseBenchmarkFinder {
 
@@ -19,7 +19,10 @@ class UppercaseIndexOfFinder extends UppercaseBenchmarkFinder {
 
     @Override
     public Stream<MatchResult> findMatchResults(FinderPage page) {
-        return words.stream().map(UppercaseLinearFinder::new).flatMap(finder -> finder.find(page));
+        return words
+            .stream()
+            .map(UppercaseLinearFinder::new)
+            .flatMap(finder -> finder.find(page));
     }
 
     private static class UppercaseLinearFinder {

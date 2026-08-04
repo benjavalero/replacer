@@ -7,7 +7,7 @@ import es.bvalero.replacer.finder.StandardType;
 import java.util.Collection;
 import java.util.Optional;
 import org.jmolecules.architecture.hexagonal.SecondaryPort;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @SecondaryPort
 public interface PageRepository {

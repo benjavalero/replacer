@@ -7,7 +7,7 @@ import lombok.Value;
 import lombok.With;
 import lombok.experimental.NonFinal;
 import org.jetbrains.annotations.TestOnly;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 /*
  * This class contains the minimum data to retrieve the replacements from a text.

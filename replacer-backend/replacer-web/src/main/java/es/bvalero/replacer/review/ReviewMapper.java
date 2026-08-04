@@ -7,7 +7,7 @@ import es.bvalero.replacer.finder.Suggestion;
 import es.bvalero.replacer.wikipedia.WikipediaSection;
 import java.util.Collection;
 import java.util.stream.Collectors;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.Nullable;
 
 class ReviewMapper {
 

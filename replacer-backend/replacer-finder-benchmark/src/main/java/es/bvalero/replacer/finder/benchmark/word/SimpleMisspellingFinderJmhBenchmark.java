@@ -60,7 +60,10 @@ public class SimpleMisspellingFinderJmhBenchmark extends BaseFinderJmhBenchmark 
         );
 
         // Extract the misspelling words
-        Set<String> words = misspellings.stream().flatMap(cm -> cm.getTerms().stream()).collect(Collectors.toSet());
+        Set<String> words = misspellings
+            .stream()
+            .flatMap(cm -> cm.getTerms().stream())
+            .collect(Collectors.toSet());
 
         // Initialize the finders
         // wordRegexFinder = new WordRegexFinder(words);

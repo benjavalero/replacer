@@ -16,8 +16,8 @@ import java.util.Collection;
 import java.util.Objects;
 import lombok.Builder;
 import lombok.Value;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 /** A reviewed page. The page fields are only mandatory when saving the page with changes. */
 @Value

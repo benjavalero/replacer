@@ -3,8 +3,8 @@ package es.bvalero.replacer.wikipedia;
 import es.bvalero.replacer.common.domain.PageKey;
 import lombok.Builder;
 import lombok.Value;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 /** A group with all the parameters needed to save a page in Wikipedia. */
 @Value

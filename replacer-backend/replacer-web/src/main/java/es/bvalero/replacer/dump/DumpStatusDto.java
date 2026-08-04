@@ -7,7 +7,7 @@ import es.bvalero.replacer.common.util.ReplacerUtils;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Value;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @Schema(description = "Status of the current (or the last) dump indexing", name = "DumpStatus")
 @JsonInclude(JsonInclude.Include.NON_NULL)

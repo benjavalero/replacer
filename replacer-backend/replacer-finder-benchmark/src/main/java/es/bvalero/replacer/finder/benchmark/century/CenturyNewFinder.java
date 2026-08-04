@@ -26,7 +26,7 @@ import java.util.regex.MatchResult;
 import java.util.stream.Stream;
 import javax.naming.OperationNotSupportedException;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.springframework.stereotype.Component;
 
 /**
@@ -564,9 +564,8 @@ class CenturyNewFinder implements ReplacementFinder {
     private Replacement convertCenturyNumber(CenturyMatch match) {
         final CenturyNumber number = match.number();
         final String romanNumber = number.roman();
-        final String eraLetter = number.era() != null
-            ? ReplacerUtils.toLowerCase(String.valueOf(number.era().charAt(0)))
-            : EMPTY;
+        final String eraLetter =
+            number.era() != null ? ReplacerUtils.toLowerCase(String.valueOf(number.era().charAt(0))) : EMPTY;
         final String suggestionText = buildCenturyTemplate(CENTURY_WORD, romanNumber, eraLetter, EMPTY, false);
         final List<Suggestion> suggestions = List.of(Suggestion.of(suggestionText, "siglo en versalitas"));
         return Replacement.of(match.start(), match.group(), StandardType.CENTURY, suggestions);
@@ -619,7 +618,10 @@ class CenturyNewFinder implements ReplacementFinder {
             }
         }
         // Filter just in case the ones with more than one possible fix
-        return automaticMatches.stream().map(m -> this.convert(m, page)).filter(r -> r.suggestions().size() == 2);
+        return automaticMatches
+            .stream()
+            .map(m -> this.convert(m, page))
+            .filter(r -> r.suggestions().size() == 2);
     }
 
     // We need to capture all the century subgroups

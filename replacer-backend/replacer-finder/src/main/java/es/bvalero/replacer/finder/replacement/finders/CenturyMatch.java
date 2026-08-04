@@ -2,7 +2,7 @@ package es.bvalero.replacer.finder.replacement.finders;
 
 import es.bvalero.replacer.finder.util.SimpleMatchResult;
 import java.util.regex.MatchResult;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public record CenturyMatch(
     int start,

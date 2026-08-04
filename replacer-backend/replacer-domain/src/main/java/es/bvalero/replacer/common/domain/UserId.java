@@ -3,7 +3,7 @@ package es.bvalero.replacer.common.domain;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Value;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 /** A key to identify a user in a specific Wikipedia */
 @AllArgsConstructor(access = AccessLevel.PRIVATE)

@@ -2,7 +2,7 @@ package es.bvalero.replacer.common.domain;
 
 import lombok.Value;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * A key to identify a page.

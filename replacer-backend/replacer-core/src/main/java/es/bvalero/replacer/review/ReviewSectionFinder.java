@@ -7,7 +7,7 @@ import es.bvalero.replacer.wikipedia.WikipediaPageRepository;
 import es.bvalero.replacer.wikipedia.WikipediaSection;
 import java.util.*;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.springframework.stereotype.Component;
 
 @Slf4j

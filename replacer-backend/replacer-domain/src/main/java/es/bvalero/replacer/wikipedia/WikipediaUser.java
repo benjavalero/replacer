@@ -3,7 +3,7 @@ package es.bvalero.replacer.wikipedia;
 import es.bvalero.replacer.common.domain.UserId;
 import lombok.Builder;
 import lombok.Value;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * A user registered in Wikipedia, along with the roles in Wikipedia he/she belongs to.

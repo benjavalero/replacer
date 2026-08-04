@@ -1,7 +1,7 @@
 package es.bvalero.replacer.finder.benchmark.iterable;
 
 import es.bvalero.replacer.finder.FinderPage;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @FunctionalInterface
 interface MatchArrayFinder {

@@ -2,12 +2,12 @@ package es.bvalero.replacer;
 
 import java.util.Objects;
 import java.util.Properties;
+import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.config.YamlPropertiesFactoryBean;
 import org.springframework.core.env.PropertiesPropertySource;
 import org.springframework.core.env.PropertySource;
 import org.springframework.core.io.support.EncodedResource;
 import org.springframework.core.io.support.PropertySourceFactory;
-import org.springframework.lang.Nullable;
 
 public class YamlPropertySourceFactory implements PropertySourceFactory {
 

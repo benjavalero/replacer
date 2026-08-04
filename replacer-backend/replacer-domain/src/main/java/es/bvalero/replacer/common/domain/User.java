@@ -6,7 +6,7 @@ import lombok.Value;
 import lombok.With;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.TestOnly;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * <p>A user of the application, which has also to be a Wikipedia user.

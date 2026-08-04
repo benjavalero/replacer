@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Stream;
 import org.apache.commons.lang3.StringUtils;
 import org.intellij.lang.annotations.RegExp;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.springframework.stereotype.Component;
 
 /** Categories containing unnecessary spaces, e.g. `[[Categoría: Animal]] ==> [[Categoría:Animal]]` */

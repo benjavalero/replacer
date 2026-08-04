@@ -4,7 +4,7 @@ import es.bvalero.replacer.finder.listing.ListingItem;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @Slf4j
 abstract class MisspellingParser<T extends ListingItem> extends ListingParser<T> {

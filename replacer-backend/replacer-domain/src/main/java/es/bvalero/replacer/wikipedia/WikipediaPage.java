@@ -7,7 +7,7 @@ import lombok.Value;
 import lombok.experimental.Accessors;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.TestOnly;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * A Wikipedia page is a page retrieved from Wikipedia, from any language or namespace.

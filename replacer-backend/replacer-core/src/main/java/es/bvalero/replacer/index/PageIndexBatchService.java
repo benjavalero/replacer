@@ -6,9 +6,9 @@ import es.bvalero.replacer.finder.ReplacementFindApi;
 import es.bvalero.replacer.page.IndexedPage;
 import es.bvalero.replacer.page.PageSaveRepository;
 import java.util.*;
+import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 
 @Qualifier("pageIndexBatchService")

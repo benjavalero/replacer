@@ -10,7 +10,7 @@ import java.util.Objects;
 import java.util.Optional;
 import lombok.*;
 import org.jetbrains.annotations.TestOnly;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 @Value
 @Builder

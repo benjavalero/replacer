@@ -9,7 +9,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.MatchResult;
 import java.util.stream.Stream;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Find some XML tags and all the content within, even other tags, e.g. `<code>An <span>example</span>.</code>`

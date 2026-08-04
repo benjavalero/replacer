@@ -7,8 +7,8 @@ import java.util.Collection;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Value;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 /** Review of a page */
 @AllArgsConstructor(access = AccessLevel.PRIVATE)

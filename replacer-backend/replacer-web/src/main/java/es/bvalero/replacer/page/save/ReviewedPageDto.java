@@ -12,7 +12,7 @@ import jakarta.validation.constraints.NotNull;
 import java.util.Collection;
 import lombok.*;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @Schema(
     description = "Reviewed page. The page fields are only mandatory when saving the page with changes.",

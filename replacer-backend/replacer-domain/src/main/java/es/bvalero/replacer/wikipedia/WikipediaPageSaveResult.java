@@ -2,7 +2,7 @@ package es.bvalero.replacer.wikipedia;
 
 import lombok.Builder;
 import lombok.Value;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 @Value
 @Builder

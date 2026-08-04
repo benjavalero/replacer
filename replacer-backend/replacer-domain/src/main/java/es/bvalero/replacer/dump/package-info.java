@@ -1,2 +1,4 @@
-@org.springframework.lang.NonNullApi
+@NullMarked
 package es.bvalero.replacer.dump;
+
+import org.jspecify.annotations.NullMarked;

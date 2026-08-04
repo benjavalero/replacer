@@ -9,9 +9,9 @@ import java.util.regex.MatchResult;
 import java.util.stream.Stream;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Marker;
 import org.slf4j.MarkerFactory;
-import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
 @Slf4j

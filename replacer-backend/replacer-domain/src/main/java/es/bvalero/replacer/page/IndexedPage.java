@@ -7,7 +7,7 @@ import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
 import org.jetbrains.annotations.TestOnly;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * An indexed page can be persisted and retrieved from persistence,

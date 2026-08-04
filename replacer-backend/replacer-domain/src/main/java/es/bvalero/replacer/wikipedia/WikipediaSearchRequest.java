@@ -6,7 +6,7 @@ import java.util.Collection;
 import java.util.List;
 import lombok.Builder;
 import lombok.Value;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * A group of options to search the pages in Wikipedia containing a given text.

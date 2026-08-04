@@ -7,8 +7,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.Setter;
 import org.jetbrains.annotations.TestOnly;
+import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
 /**

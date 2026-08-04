@@ -2,7 +2,7 @@ package es.bvalero.replacer.wikipedia.page;
 
 import es.bvalero.replacer.wikipedia.WikipediaTimestamp;
 import lombok.Value;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 @Value(staticConstructor = "of")
 class EditToken {

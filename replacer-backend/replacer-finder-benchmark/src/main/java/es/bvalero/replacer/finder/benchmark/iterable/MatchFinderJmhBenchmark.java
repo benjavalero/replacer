@@ -6,13 +6,13 @@ import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.benchmark.BaseFinderJmhBenchmark;
 import es.bvalero.replacer.finder.util.FinderMatchResult;
 import java.util.regex.MatchResult;
+import org.jspecify.annotations.Nullable;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.Measurement;
 import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.Warmup;
 import org.openjdk.jmh.infra.Blackhole;
 import org.openjdk.jmh.runner.RunnerException;
-import org.springframework.lang.Nullable;
 
 @Warmup(time = 5) // Default: 5 iterations, 10 s each
 @Measurement(time = 5) // Default: 5 iterations, 10 s each
@@ -78,7 +78,8 @@ public class MatchFinderJmhBenchmark extends BaseFinderJmhBenchmark {
     public void matchRecordFinder(Blackhole bh) {
         sampleContents
             .stream()
-            .flatMap(page -> ReplacerUtils.streamOfIterable(IterableMatchRecordFinder.find(page, this::findMatchRecord))
+            .flatMap(page ->
+                ReplacerUtils.streamOfIterable(IterableMatchRecordFinder.find(page, this::findMatchRecord))
             )
             .forEach(bh::consume);
     }

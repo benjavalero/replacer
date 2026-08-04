@@ -4,7 +4,7 @@ import es.bvalero.replacer.common.domain.PageKey;
 import lombok.Builder;
 import lombok.ToString;
 import lombok.Value;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * A Wikipedia section representing just the properties of a section in a Wikipedia page,

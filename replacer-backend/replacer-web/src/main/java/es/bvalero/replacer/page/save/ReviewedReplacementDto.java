@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @Schema(description = "Reviewed replacement", name = "ReviewedReplacement")
 @JsonInclude(JsonInclude.Include.NON_NULL)

@@ -17,8 +17,8 @@ import java.util.Collection;
 import java.util.Objects;
 import lombok.extern.slf4j.Slf4j;
 import org.jmolecules.architecture.hexagonal.PrimaryAdapter;
+import org.jspecify.annotations.Nullable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "Page")

@@ -7,7 +7,7 @@ import es.bvalero.replacer.common.util.ReplacerUtils;
 import es.bvalero.replacer.finder.util.SimpleMatchResult;
 import java.util.Objects;
 import java.util.regex.MatchResult;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public record CenturyNumber(int start, String group, int arabic, @Nullable String era) implements SimpleMatchResult {
     /**

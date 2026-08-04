@@ -7,7 +7,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Value;
 import org.jetbrains.annotations.TestOnly;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 /** Result of indexing a page or several pages */
 @Value

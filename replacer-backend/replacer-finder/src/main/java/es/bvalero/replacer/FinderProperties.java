@@ -4,10 +4,10 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.Data;
+import org.jspecify.annotations.Nullable;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.lang.Nullable;
 
 @Configuration
 @ConfigurationProperties(prefix = "replacer.finder")

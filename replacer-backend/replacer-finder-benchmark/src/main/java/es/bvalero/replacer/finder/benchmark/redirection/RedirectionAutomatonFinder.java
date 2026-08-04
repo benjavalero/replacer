@@ -16,7 +16,10 @@ class RedirectionAutomatonFinder implements BenchmarkFinder {
     private final RunAutomaton automaton;
 
     RedirectionAutomatonFinder(List<String> redirectionWords) {
-        List<String> fixedRedirectionWords = redirectionWords.stream().map(s -> s.replace("#", "\\#")).toList();
+        List<String> fixedRedirectionWords = redirectionWords
+            .stream()
+            .map(s -> s.replace("#", "\\#"))
+            .toList();
         String alternations = '(' + FinderUtils.joinAlternate(fixedRedirectionWords) + ')';
         this.automaton = new RunAutomaton(new RegExp(alternations).toAutomaton());
     }

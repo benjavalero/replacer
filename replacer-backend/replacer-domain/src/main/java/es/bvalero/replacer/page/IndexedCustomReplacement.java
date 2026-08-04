@@ -5,8 +5,8 @@ import es.bvalero.replacer.finder.CustomType;
 import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Value;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 /**
  * An indexed custom replacement can be persisted and retrieved from persistence,

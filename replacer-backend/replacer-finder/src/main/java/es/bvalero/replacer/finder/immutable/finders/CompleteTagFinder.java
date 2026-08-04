@@ -12,7 +12,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.MatchResult;
 import java.util.stream.Stream;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.springframework.stereotype.Component;
 
 /**

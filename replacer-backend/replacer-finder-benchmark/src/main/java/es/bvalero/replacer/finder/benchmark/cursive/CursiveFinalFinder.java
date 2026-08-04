@@ -9,7 +9,7 @@ import es.bvalero.replacer.finder.util.LinearMatchFinder;
 import java.util.regex.MatchResult;
 import java.util.stream.Stream;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Find text in cursive and bold, e.g. `''cursive''` in `This is a ''cursive'' example`
@@ -95,9 +95,8 @@ class CursiveFinalFinder implements BenchmarkFinder {
 
     private boolean isEmptyCursiveText(String text, int startCursive, int endCursive, int numQuotes) {
         // The cursive may end with the text end or with a new line
-        final int endCursiveText = text.length() == endCursive || text.charAt(endCursive) == NEW_LINE
-            ? endCursive
-            : endCursive - numQuotes;
+        final int endCursiveText =
+            text.length() == endCursive || text.charAt(endCursive) == NEW_LINE ? endCursive : endCursive - numQuotes;
         final String cursiveText = text.substring(startCursive + numQuotes, endCursiveText);
         return StringUtils.isBlank(cursiveText);
     }

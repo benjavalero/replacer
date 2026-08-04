@@ -8,7 +8,7 @@ import es.bvalero.replacer.finder.util.LinearMatchFinder;
 import java.util.Collection;
 import java.util.regex.MatchResult;
 import java.util.stream.Stream;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Loop over all the words/expressions and find them in the text using a simple "indexOf".
@@ -24,7 +24,10 @@ class WordLinearFinder implements BenchmarkFinder {
 
     @Override
     public Stream<MatchResult> findMatchResults(FinderPage page) {
-        return words.stream().map(MisspellingLinearFinder::new).flatMap(finder -> finder.find(page));
+        return words
+            .stream()
+            .map(MisspellingLinearFinder::new)
+            .flatMap(finder -> finder.find(page));
     }
 
     private static class MisspellingLinearFinder {
