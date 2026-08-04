@@ -22,8 +22,8 @@ export class EditCustomSnippetComponent implements OnInit {
     this.newText = this.snippet.text;
   }
 
-  onChange(event: any) {
-    this.newText = event.target.innerText;
+  onChange(event: Event) {
+    this.newText = (event.target as HTMLElement).innerText;
   }
 
   accept(): void {

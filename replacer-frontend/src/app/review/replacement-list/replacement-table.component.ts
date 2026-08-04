@@ -112,9 +112,9 @@ export class ReplacementTableComponent implements OnInit, OnChanges {
 
   private sortCounts(items: SubtypeCount[], column: string, direction: SortDirection): SubtypeCount[] {
     return [...items].sort((a, b) => {
-      const aValue: any = a[column as keyof SubtypeCount];
-      const bValue: any = b[column as keyof SubtypeCount];
-      const res = column === 's' ? StringUtils.compareStringBase(aValue, bValue) : this.compareNumber(aValue, bValue);
+      const aValue = a[column as keyof SubtypeCount];
+      const bValue = b[column as keyof SubtypeCount];
+      const res = column === 's' ? StringUtils.compareStringBase(aValue as string, bValue as string) : this.compareNumber(aValue as number, bValue as number);
       return direction === 'asc' ? res : -res;
     });
   }

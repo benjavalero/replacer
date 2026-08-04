@@ -239,6 +239,7 @@ export class EditPageComponent implements OnChanges {
         const replacement: Replacement = this.page.replacements[i];
         const fixed: boolean = this.fixedReplacements[i]?.isFixed() || false;
         // Destructure to delete unneeded properties
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { suggestions, text, ...reviewed } = replacement;
         reviewedReplacements.push({ ...reviewed, fixed: fixed } as ReviewedReplacement);
       }
