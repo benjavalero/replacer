@@ -38,7 +38,7 @@ import org.springframework.stereotype.Component;
  * </ul>
  */
 @Component
-class DegreeFinder implements ReplacementFinder {
+public class DegreeFinder implements ReplacementFinder {
 
     private static final char CELSIUS = 'C';
     private static final char FAHRENHEIT = 'F';

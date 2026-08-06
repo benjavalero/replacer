@@ -15,14 +15,14 @@ import org.springframework.stereotype.Component;
 
 /** Find redirection templates. In case they are found the complete text must be ignored. */
 @Component
-class RedirectionFinder implements ImmutableFinder {
+public class RedirectionFinder implements ImmutableFinder {
 
     // Dependency injection
     private final FinderProperties finderProperties;
 
     private final List<String> redirectionWords = new ArrayList<>();
 
-    RedirectionFinder(FinderProperties finderProperties) {
+    public RedirectionFinder(FinderProperties finderProperties) {
         this.finderProperties = finderProperties;
     }
 

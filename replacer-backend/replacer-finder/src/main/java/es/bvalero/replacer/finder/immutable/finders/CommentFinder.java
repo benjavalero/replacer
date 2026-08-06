@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
  * Find XML comments, e.g. `<!-- A comment -->`
  */
 @Component
-class CommentFinder extends ImmutableCheckedFinder {
+public class CommentFinder extends ImmutableCheckedFinder {
 
     private static final String START_COMMENT = "<!--";
     private static final String END_COMMENT = "-->";

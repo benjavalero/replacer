@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
 
 /** Find ignorable sections in a page content */
 @Component
-class IgnorableSectionFinder implements ImmutableFinder {
+public class IgnorableSectionFinder implements ImmutableFinder {
 
     private static final char HEADER_CHAR = '=';
     private static final String START_HEADER = "==";
@@ -29,7 +29,7 @@ class IgnorableSectionFinder implements ImmutableFinder {
 
     private final Set<String> ignorableSections = new HashSet<>();
 
-    IgnorableSectionFinder(FinderProperties finderProperties) {
+    public IgnorableSectionFinder(FinderProperties finderProperties) {
         this.finderProperties = finderProperties;
     }
 

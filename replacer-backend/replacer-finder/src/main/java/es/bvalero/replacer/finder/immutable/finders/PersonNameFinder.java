@@ -22,14 +22,14 @@ import org.springframework.stereotype.Component;
  * Or compound words, as `Los Angeles`.
  */
 @Component
-class PersonNameFinder implements ImmutableFinder {
+public class PersonNameFinder implements ImmutableFinder {
 
     // Dependency injection
     private final FinderProperties finderProperties;
 
     private StringMap<String> stringMap;
 
-    PersonNameFinder(FinderProperties finderProperties) {
+    public PersonNameFinder(FinderProperties finderProperties) {
         this.finderProperties = finderProperties;
     }
 

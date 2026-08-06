@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
  * Find text in angular quotes, e.g. `«text»`. The text may include new lines.
  */
 @Component
-class QuotesAngularFinder extends QuotesFinder {
+public class QuotesAngularFinder extends QuotesFinder {
 
     @Override
     char getStartChar() {

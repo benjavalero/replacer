@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
  * </ul>
  */
 @Component
-class TableFinder implements ImmutableFinder {
+public class TableFinder implements ImmutableFinder {
 
     private static final String TABLE_START = "{|";
     private static final String ROW_START = "|-";

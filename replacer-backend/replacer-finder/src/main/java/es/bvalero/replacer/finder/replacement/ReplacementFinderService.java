@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
  */
 @Slf4j
 @Service
-class ReplacementFinderService
+public class ReplacementFinderService
     extends ReplacementFinderAbstractService
     implements FinderService<Replacement>, ReplacementFindApi
 {

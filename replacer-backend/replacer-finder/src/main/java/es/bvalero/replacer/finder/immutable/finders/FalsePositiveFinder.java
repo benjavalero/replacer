@@ -29,14 +29,14 @@ import org.springframework.stereotype.Component;
  */
 @Slf4j
 @Component
-class FalsePositiveFinder implements ImmutableFinder, PropertyChangeListener {
+public class FalsePositiveFinder implements ImmutableFinder, PropertyChangeListener {
 
     // Dependency injection
     private final FalsePositiveLoader falsePositiveLoader;
 
     private Map<WikipediaLanguage, AhoCorasickMap<String>> stringMaps = new EnumMap<>(WikipediaLanguage.class);
 
-    FalsePositiveFinder(FalsePositiveLoader falsePositiveLoader) {
+    public FalsePositiveFinder(FalsePositiveLoader falsePositiveLoader) {
         this.falsePositiveLoader = falsePositiveLoader;
     }
 

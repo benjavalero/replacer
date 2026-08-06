@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
  * It also finds text starting with the simple quotes and ending with a new line.
  */
 @Component
-class CursiveFinder extends ImmutableCheckedFinder {
+public class CursiveFinder extends ImmutableCheckedFinder {
 
     private static final String START_CURSIVE = "''";
     private static final char QUOTE = '\'';

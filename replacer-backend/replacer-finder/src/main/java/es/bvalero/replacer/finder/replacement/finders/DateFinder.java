@@ -33,7 +33,7 @@ import org.springframework.stereotype.Component;
  * Find dates to be corrected, e.g. with the month in uppercase.
  */
 @Component
-class DateFinder implements ReplacementFinder {
+public class DateFinder implements ReplacementFinder {
 
     private final int CURRENT_YEAR = Year.now(ZoneId.systemDefault()).getValue();
 
@@ -49,7 +49,7 @@ class DateFinder implements ReplacementFinder {
     );
     private static final Map<WikipediaLanguage, RunAutomaton> automata = new EnumMap<>(WikipediaLanguage.class);
 
-    DateFinder(FinderProperties finderProperties) {
+    public DateFinder(FinderProperties finderProperties) {
         this.finderProperties = finderProperties;
     }
 

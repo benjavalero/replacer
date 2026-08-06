@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
  * Find URLs, e.g. `https://www.google.es`
  */
 @Component
-class UrlFinder implements ImmutableFinder {
+public class UrlFinder implements ImmutableFinder {
 
     // The automaton works quite well and provides support for complex URLs,
     // so it is worth to use it even if it doesn't give the best performance.

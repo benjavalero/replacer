@@ -32,7 +32,7 @@ import org.springframework.stereotype.Component;
  * </ul>
  */
 @Component
-class TemplateFinder implements ImmutableFinder {
+public class TemplateFinder implements ImmutableFinder {
 
     private static final char COLON = ':';
     private static final char EQUALS = '=';
@@ -57,7 +57,7 @@ class TemplateFinder implements ImmutableFinder {
     // Take into account that there might be several param names for the same template name
     private final SetValuedMap<String, String> templateParamPairs = new HashSetValuedHashMap<>();
 
-    TemplateFinder(FinderProperties finderProperties, UppercaseFinder uppercaseFinder) {
+    public TemplateFinder(FinderProperties finderProperties, UppercaseFinder uppercaseFinder) {
         this.finderProperties = finderProperties;
         this.uppercaseFinder = uppercaseFinder;
     }

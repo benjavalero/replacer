@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
  * Find coordinates with wrong degree, minute or second symbols.
  */
 @Component
-class CoordinatesFinder implements ReplacementFinder {
+public class CoordinatesFinder implements ReplacementFinder {
 
     private static final char PRIME = '\u2032'; // ′
     private static final char APOSTROPHE = '\'';

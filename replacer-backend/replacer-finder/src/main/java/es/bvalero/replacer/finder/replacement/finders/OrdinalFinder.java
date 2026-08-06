@@ -27,7 +27,7 @@ import org.springframework.stereotype.Component;
  * Find ordinals to be corrected in Spanish, e.g. without the dot between the number and the symbol.
  */
 @Component
-class OrdinalFinder implements ReplacementFinder {
+public class OrdinalFinder implements ReplacementFinder {
 
     private static final String MASCULINE_LETTER = "o";
     private static final String FEMININE_LETTER = "a";
@@ -40,7 +40,7 @@ class OrdinalFinder implements ReplacementFinder {
     private static final Set<String> FEMININE_SUFFIXES = new HashSet<>();
     private static final Set<String> SUFFIXES = new HashSet<>();
 
-    OrdinalFinder(FinderProperties finderProperties) {
+    public OrdinalFinder(FinderProperties finderProperties) {
         this.finderProperties = finderProperties;
     }
 

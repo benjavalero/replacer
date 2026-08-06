@@ -24,7 +24,7 @@ import org.springframework.stereotype.Component;
  * e.g. in Spanish `RCA Records`, as "records" is also a noun to be written with an accent.
  */
 @Component
-class PersonSurnameFinder implements ImmutableFinder {
+public class PersonSurnameFinder implements ImmutableFinder {
 
     // Dependency injection
     private final FinderProperties finderProperties;
@@ -32,7 +32,7 @@ class PersonSurnameFinder implements ImmutableFinder {
     private RunAutomaton automaton;
     private final Set<String> completeSurnames = new HashSet<>();
 
-    PersonSurnameFinder(FinderProperties finderProperties) {
+    public PersonSurnameFinder(FinderProperties finderProperties) {
         this.finderProperties = finderProperties;
     }
 

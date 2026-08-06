@@ -30,7 +30,7 @@ import org.springframework.stereotype.Component;
  * </ul>
  */
 @Component
-class LinkFinder extends ImmutableCheckedFinder {
+public class LinkFinder extends ImmutableCheckedFinder {
 
     private static final char COLON = ':';
 
@@ -41,7 +41,7 @@ class LinkFinder extends ImmutableCheckedFinder {
     private final Set<String> categoryWords = new HashSet<>();
     private final Set<String> fileSpaces = new HashSet<>();
 
-    LinkFinder(FinderProperties finderProperties, UppercaseFinder uppercaseFinder) {
+    public LinkFinder(FinderProperties finderProperties, UppercaseFinder uppercaseFinder) {
         this.finderProperties = finderProperties;
         this.uppercaseFinder = uppercaseFinder;
     }

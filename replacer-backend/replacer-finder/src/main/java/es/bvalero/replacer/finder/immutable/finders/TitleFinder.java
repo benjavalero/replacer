@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 
 /** Find words in the page title */
 @Component
-class TitleFinder extends ImmutableCheckedFinder {
+public class TitleFinder extends ImmutableCheckedFinder {
 
     private static final int MIN_WORD_LENGTH = 4;
 

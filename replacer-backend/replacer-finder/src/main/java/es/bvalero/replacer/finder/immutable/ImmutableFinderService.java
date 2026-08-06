@@ -10,7 +10,7 @@ import java.util.stream.Stream;
 import org.springframework.stereotype.Service;
 
 @Service
-class ImmutableFinderService implements FinderService<Immutable>, ImmutableFindApi {
+public class ImmutableFinderService implements FinderService<Immutable>, ImmutableFindApi {
 
     // Dependency injection
     private final List<ImmutableFinder> immutableFinders;

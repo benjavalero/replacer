@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
  * Find text in typographic quotes, e.g. `“text”`. The text may include new lines.
  */
 @Component
-class QuotesTypographicFinder extends QuotesFinder {
+public class QuotesTypographicFinder extends QuotesFinder {
 
     @Override
     char getStartChar() {

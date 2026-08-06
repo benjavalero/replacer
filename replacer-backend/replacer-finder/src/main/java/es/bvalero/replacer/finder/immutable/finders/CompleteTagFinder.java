@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
  * Find some XML tags and all the content within, even other tags, e.g. `<code>An <span>example</span>.</code>`
  */
 @Component
-class CompleteTagFinder extends ImmutableCheckedFinder {
+public class CompleteTagFinder extends ImmutableCheckedFinder {
 
     private static final char START_TAG = '<';
     private static final char END_TAG = '>';
@@ -31,7 +31,7 @@ class CompleteTagFinder extends ImmutableCheckedFinder {
 
     private final Set<String> supportedCompleteTags = new HashSet<>();
 
-    CompleteTagFinder(FinderProperties finderProperties) {
+    public CompleteTagFinder(FinderProperties finderProperties) {
         this.finderProperties = finderProperties;
     }
 

@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
  * Find text in double quotes, e.g. `"text"`. The text may include new lines.
  */
 @Component
-class QuotesDoubleFinder extends QuotesFinder {
+public class QuotesDoubleFinder extends QuotesFinder {
 
     @Override
     char getStartChar() {

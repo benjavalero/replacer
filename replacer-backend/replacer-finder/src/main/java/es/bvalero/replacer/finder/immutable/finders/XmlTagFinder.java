@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
  * Find XML tags, e.g. `<span>` or `<br />`
  */
 @Component
-class XmlTagFinder extends ImmutableCheckedFinder {
+public class XmlTagFinder extends ImmutableCheckedFinder {
 
     private static final char START_TAG = '<';
     private static final char END_TAG = '>';
