@@ -62,14 +62,16 @@ public class UppercaseFinder implements ImmutableFinder, PropertyChangeListener 
     private final SimpleMisspellingLoader simpleMisspellingLoader;
     private final ComposedMisspellingLoader composedMisspellingLoader;
 
-    // Uppercase words for simple and composed misspellings
-    private SetValuedMap<WikipediaLanguage, String> simpleUppercaseMap = new HashSetValuedHashMap<>();
-    private SetValuedMap<WikipediaLanguage, String> composedUppercaseMap = new HashSetValuedHashMap<>();
+    // volatile: references replaced atomically on reload; guarantees visibility across threads
+    private volatile SetValuedMap<WikipediaLanguage, String> simpleUppercaseMap = new HashSetValuedHashMap<>();
+    private volatile SetValuedMap<WikipediaLanguage, String> composedUppercaseMap = new HashSetValuedHashMap<>();
     // StringMap with the misspellings which start with uppercase and are case-sensitive
-    private Map<WikipediaLanguage, StringMap<String>> uppercaseStringMap = new EnumMap<>(WikipediaLanguage.class);
+    private volatile Map<WikipediaLanguage, StringMap<String>> uppercaseStringMap = new EnumMap<>(
+        WikipediaLanguage.class
+    );
 
     @Getter
-    private SetValuedMap<WikipediaLanguage, String> uppercaseMap = new HashSetValuedHashMap<>();
+    private volatile SetValuedMap<WikipediaLanguage, String> uppercaseMap = new HashSetValuedHashMap<>();
 
     public UppercaseFinder(
         SimpleMisspellingLoader simpleMisspellingLoader,
@@ -176,6 +178,10 @@ public class UppercaseFinder implements ImmutableFinder, PropertyChangeListener 
     @Override
     public Stream<MatchResult> findMatchResults(FinderPage page) {
         final StringMap<String> stringMap = this.uppercaseStringMap.get(page.getPageKey().getLang());
+        if (stringMap == null) {
+            LOGGER.warn("No uppercase map for lang {} (still loading)", page.getPageKey().getLang());
+            return Stream.of();
+        }
         final ResultMatchListener listener = new ResultMatchListener();
         stringMap.match(page.getContent(), listener);
         return listener.getMatches();

@@ -34,7 +34,8 @@ public class FalsePositiveFinder implements ImmutableFinder, PropertyChangeListe
     // Dependency injection
     private final FalsePositiveLoader falsePositiveLoader;
 
-    private Map<WikipediaLanguage, AhoCorasickMap<String>> stringMaps = new EnumMap<>(WikipediaLanguage.class);
+    // volatile: reference replaced atomically on reload; guarantees visibility across threads
+    private volatile Map<WikipediaLanguage, AhoCorasickMap<String>> stringMaps = new EnumMap<>(WikipediaLanguage.class);
 
     public FalsePositiveFinder(FalsePositiveLoader falsePositiveLoader) {
         this.falsePositiveLoader = falsePositiveLoader;
@@ -90,6 +91,7 @@ public class FalsePositiveFinder implements ImmutableFinder, PropertyChangeListe
         // To allow simple regular expressions, we "expand" them first.
         final StringMap<String> stringMap = this.stringMaps.get(page.getPageKey().getLang());
         if (stringMap == null) {
+            LOGGER.warn("No false positive map for lang {} (still loading)", page.getPageKey().getLang());
             return Stream.of();
         }
         final ResultMatchListener listener = new ResultMatchListener();

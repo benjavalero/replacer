@@ -19,14 +19,15 @@ import org.apache.commons.lang3.StringUtils;
 public abstract class MisspellingFinder implements ReplacementFinder {
 
     // Derived from the misspelling set to access faster by word
-    private Map<WikipediaLanguage, Map<String, StandardMisspelling>> misspellingMap = new EnumMap<>(
+    // volatile: reference replaced atomically on reload; guarantees visibility across threads
+    private volatile Map<WikipediaLanguage, Map<String, StandardMisspelling>> misspellingMap = new EnumMap<>(
         WikipediaLanguage.class
     );
 
     private Map<String, StandardMisspelling> getMisspellingMap(WikipediaLanguage lang) {
         final Map<String, StandardMisspelling> langMap = this.misspellingMap.get(lang);
         if (langMap == null) {
-            LOGGER.error("No misspelling map for lang {}", lang);
+            LOGGER.warn("No misspelling map for lang {} (still loading)", lang);
             return Map.of();
         } else {
             return langMap;

@@ -33,7 +33,8 @@ public class MisspellingComposedFinder extends MisspellingFinder implements Prop
     // Dependency injection
     private final ComposedMisspellingLoader composedMisspellingLoader;
 
-    private Map<WikipediaLanguage, AhoCorasickMap<String>> stringMaps = new EnumMap<>(WikipediaLanguage.class);
+    // volatile: reference replaced atomically on reload; guarantees visibility across threads
+    private volatile Map<WikipediaLanguage, AhoCorasickMap<String>> stringMaps = new EnumMap<>(WikipediaLanguage.class);
 
     public MisspellingComposedFinder(ComposedMisspellingLoader composedMisspellingLoader) {
         this.composedMisspellingLoader = composedMisspellingLoader;
@@ -77,6 +78,7 @@ public class MisspellingComposedFinder extends MisspellingFinder implements Prop
         // Nevertheless, the Aho-Corasick algorithm can be even better.
         final StringMap<String> stringMap = this.stringMaps.get(page.getPageKey().getLang());
         if (stringMap == null) {
+            LOGGER.warn("No composed misspelling map for lang {} (still loading)", page.getPageKey().getLang());
             return Stream.of();
         }
         final ResultMatchListener listener = new ResultMatchListener();
