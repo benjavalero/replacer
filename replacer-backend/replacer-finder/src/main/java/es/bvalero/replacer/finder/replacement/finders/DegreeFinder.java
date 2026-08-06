@@ -20,7 +20,22 @@ import org.jspecify.annotations.Nullable;
 import org.springframework.stereotype.Component;
 
 /**
- * Find temperature degrees with the wrong symbol
+ * Find temperature degrees with incorrect format, e.g.:
+ * <ul>
+ *   <li>{@code 50ºC} - ordinal symbol instead of degree: {@code 50&nbsp;°C}</li>
+ *   <li>{@code 50°C} - missing space between number and symbol: {@code 50&nbsp;°C}</li>
+ *   <li>{@code 50 ºC} - ordinal symbol: {@code 50&nbsp;°C}</li>
+ *   <li>{@code 50° C} - space inside the symbol: {@code 50&nbsp;°C}</li>
+ *   <li>{@code 50 ℃} - Unicode symbol: {@code 50&nbsp;°C}</li>
+ *   <li>{@code 50 °K} - Kelvin (symbol not needed): {@code 50&nbsp;K}</li>
+ *   <li>{@code ºC} - no number before (only the symbol is fixed): {@code °C}</li>
+ * </ul>
+ * Cases not corrected:
+ * <ul>
+ *   <li>{@code 50 °C} or {@code 50&nbsp;°C} - symbol already correct</li>
+ *   <li>{@code {{unidad|5|°C}}} - non-space separator between number and symbol</li>
+ *   <li>{@code (15 - 14) [°C]} - no number immediately before the symbol</li>
+ * </ul>
  */
 @Component
 class DegreeFinder implements ReplacementFinder {
@@ -51,16 +66,26 @@ class DegreeFinder implements ReplacementFinder {
             final int startSymbol = matchSymbol.start();
             final int endSymbol = matchSymbol.end();
 
-            // Find the word before (not necessarily a number)
-            final MatchResult matchWord = findDegreeWord(text, startSymbol);
+            // Find the word or number immediately before the symbol (decimal separators allowed within numbers)
+            final MatchResult matchWord = FinderUtils.findWordBefore(text, startSymbol, DECIMAL_SEPARATORS);
             if (matchWord == null) {
                 start = endSymbol;
                 continue;
             }
 
+            // Include the number in the match only if it is a decimal number;
+            // for plain words (e.g. "fusion") the match starts at the symbol.
+            // If the separator is not a valid space (e.g. "400{ºC}"), skip.
+            if (
+                FinderUtils.isDecimalNumber(matchWord.group()) &&
+                !FinderUtils.isEmptyBlankOrSpaceAlias(text, matchWord.end(), startSymbol)
+            ) {
+                start = endSymbol;
+                continue;
+            }
             final int startDegree = FinderUtils.isDecimalNumber(matchWord.group()) ? matchWord.start() : startSymbol;
             final FinderMatchRange match = FinderMatchRange.ofNested(text, startDegree, endSymbol);
-            // 1 - word; 2 - space before; 3 - symbol
+            // Groups: 1 - word before; 2 - separator between word and symbol; 3 - symbol
             match.addGroup(matchWord);
             match.addGroup(FinderMatchRange.of(text, matchWord.end(), startSymbol));
             match.addGroup(matchSymbol);
@@ -72,7 +97,7 @@ class DegreeFinder implements ReplacementFinder {
     @Nullable
     private MatchResult findDegreeSymbol(String text, int start) {
         while (start >= 0 && start < text.length()) {
-            // First we find the initial symbol
+            // Find the next candidate: ordinal (º), degree (°), or Unicode (℃ ℉)
             final int startSymbol = FinderUtils.indexOfAny(
                 text,
                 start,
@@ -85,14 +110,19 @@ class DegreeFinder implements ReplacementFinder {
                 return null;
             }
 
-            // If it is a Unicode symbol we are done
+            // Unicode symbols (℃, ℉) are self-contained - no degree letter follows
             final char degreeSymbol = text.charAt(startSymbol);
+            int endSymbol = startSymbol + 1;
             if (isUnicodeSymbol(degreeSymbol)) {
+                // The symbol must not be immediately followed by a word character
+                if (endSymbol < text.length() && FinderUtils.isWordChar(text.charAt(endSymbol))) {
+                    start = endSymbol;
+                    continue;
+                }
                 return FinderMatchResult.of(startSymbol, Character.toString(degreeSymbol));
             }
 
-            // Find the degree letter
-            int endSymbol = startSymbol + 1;
+            // Expect a degree letter (C, F, K) after the symbol, with an optional whitespace between
             if (endSymbol >= text.length()) {
                 return null;
             }
@@ -108,7 +138,7 @@ class DegreeFinder implements ReplacementFinder {
                 return FinderMatchRange.of(text, startSymbol, endSymbol);
             }
 
-            // Keep on searching
+            // Keep searching
             start = endSymbol + 1;
         }
         return null;
@@ -122,30 +152,12 @@ class DegreeFinder implements ReplacementFinder {
         return ch == CELSIUS || ch == FAHRENHEIT || ch == KELVIN;
     }
 
-    @Nullable
-    private MatchResult findDegreeWord(String text, int startSymbol) {
-        final MatchResult matchBefore = FinderUtils.findWordBefore(text, startSymbol, DECIMAL_SEPARATORS);
-        if (matchBefore == null) {
-            return null;
-        }
-        // If preceded by number, there must be a space (or nothing) between.
-        if (
-            FinderUtils.isWord(matchBefore.group()) ||
-            (FinderUtils.isDecimalNumber(matchBefore.group()) &&
-                FinderUtils.isEmptyBlankOrSpaceAlias(text, matchBefore.end(), startSymbol))
-        ) {
-            return matchBefore;
-        }
-        return null;
-    }
-
     @Override
     public boolean validate(MatchResult match, FinderPage page) {
-        final String text = page.getContent();
+        // Groups: 1 - word before; 2 - separator between word and symbol; 3 - symbol
         final String symbol = match.group(3);
         assert symbol.length() <= 3;
-        // Check the symbol
-        // Contains whitespace / Unicode symbol / Kelvin degree / Ordinal symbol
+        // Check the symbol: inner whitespace / Unicode / Kelvin / ordinal
         if (
             symbol.length() == 3 ||
             symbol.length() == 1 ||
@@ -154,13 +166,8 @@ class DegreeFinder implements ReplacementFinder {
         ) {
             return true;
         }
-
-        // Between number and degree, we don't fix actual spaces.
-        // We know that the space is not a non-breaking space.
-        return (
-            FinderUtils.isDecimalNumber(match.group(1)) &&
-            !FinderUtils.isWhiteSpaceOrAlias(text, match.start(2), match.end(2))
-        );
+        // Symbol is already correct (°C/°F): only fix if a decimal number is directly attached (no separator)
+        return FinderUtils.isDecimalNumber(match.group(1)) && match.group(2).isEmpty();
     }
 
     @Override
@@ -170,7 +177,7 @@ class DegreeFinder implements ReplacementFinder {
 
     @Override
     public Replacement convert(MatchResult match, FinderPage page) {
-        // 1 - word; 2 - space before; 3 - symbol
+        // Groups: 1 - word before; 2 - separator between word and symbol; 3 - symbol
         final String word = match.group(1);
         final boolean isNumericWord = FinderUtils.isDecimalNumber(word);
         final String space1 = match.group(2);
@@ -178,7 +185,7 @@ class DegreeFinder implements ReplacementFinder {
 
         String suggestion = null;
 
-        // Fix space between word and symbol (if needed)
+        // Fix the separator: replace with a non-breaking space unless it already is one
         String fixedSpace1 = space1;
         if (isNumericWord) {
             final boolean isHardSpaceAlias = FinderUtils.isHardSpaceAlias(
@@ -191,7 +198,7 @@ class DegreeFinder implements ReplacementFinder {
             }
         }
 
-        // Fix symbol
+        // Fix the degree symbol: Unicode -> °, ordinal º -> °, Kelvin -> no symbol
         final char startSymbol = symbol.charAt(0);
         String fixedSymbol = String.valueOf(startSymbol);
         char fixedLetter = symbol.charAt(symbol.length() - 1);
@@ -214,7 +221,7 @@ class DegreeFinder implements ReplacementFinder {
         suggestions.add(Suggestion.of(match.group(), suggestion));
         suggestions.add(Suggestion.of(fixedDegree, "grados"));
 
-        // Exception: sometimes 1ºC might be an ordinal, e.g. the group of a sports competition.
+        // Special case: "1ºC" might be an ordinal (e.g. the group of a sports competition) — offer both options
         if (
             isNumber(word) &&
             StringUtils.isEmpty(space1) &&

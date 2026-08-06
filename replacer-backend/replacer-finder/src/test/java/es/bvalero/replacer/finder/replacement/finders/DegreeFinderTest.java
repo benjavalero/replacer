@@ -94,6 +94,11 @@ class DegreeFinderTest {
             "{{unidad|−273.144|°C}})",
             "16,4&nbsp;[[°C]]",
             "1000 kcal/m³.°C.",
+            "{{Unidad||Btu||h|-1|ft|-1|°F|-1}}",
+            "{{unidad|5|°C}}",
+            "0&nbsp;[[°C]]",
+            "(15 - 14) [°C]",
+            "[400{ºC}]", // Non-space separator between number and symbol
         }
     )
     void testValidDegree(String degree) {
@@ -109,6 +114,7 @@ class DegreeFinderTest {
             "ºC", // No word before
             "50 º", // No degree letter
             "50 º ", // No degree letter
+            "50℃OMPLETE", // Unicode symbol not a complete word
         }
     )
     void testFalseDegree(String degree) {
