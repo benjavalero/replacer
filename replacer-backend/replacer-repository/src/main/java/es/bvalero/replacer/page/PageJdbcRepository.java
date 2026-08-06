@@ -101,6 +101,9 @@ class PageJdbcRepository implements PageRepository {
     }
 
     private int findRandomReplacementIdNotReviewed(WikipediaLanguage lang, int chunkSize) {
+        // TODO: This query is very costly even with indexes, as it scans the full replacement table
+        //  filtering by reviewer IS NULL. It would improve significantly if reviewed and not-reviewed
+        //  replacements were stored in separate tables.
         String sql =
             "SELECT FLOOR(MIN(id) + (MAX(id) - MIN(id) + 1 - :chunkSize) * RAND()) FROM replacement " +
             "WHERE lang = :lang AND reviewer IS NULL";

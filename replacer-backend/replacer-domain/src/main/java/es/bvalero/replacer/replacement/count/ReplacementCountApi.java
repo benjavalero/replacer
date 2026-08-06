@@ -9,6 +9,8 @@ import org.jmolecules.architecture.hexagonal.PrimaryPort;
 /** Service to retrieve the replacement counts for statistics */
 @PrimaryPort
 interface ReplacementCountApi {
+    int NUM_RESULTS = 20;
+
     /** Count the number of reviewed replacements including the custom ones */
     int countReviewed(WikipediaLanguage lang);
 

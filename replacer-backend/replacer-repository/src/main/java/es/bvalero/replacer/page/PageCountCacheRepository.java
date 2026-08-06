@@ -35,11 +35,14 @@ public class PageCountCacheRepository implements PageCountRepository {
     private final PageCountRepository pageCountRepository;
 
     // Counts cache
-    // It's a heavy query in database (several seconds), so we load the counts the first time and refresh them periodically.
-    // This may lead to a slight misalignment, which is fixed in the next refresh,
+    // It's a heavy query in database (several seconds), so we load the counts the first time and refresh them
+    // periodically via Caffeine (every hour). The cache is also kept up-to-date in real-time via Spring events
+    // fired when the user reviews pages (increment, decrement, remove), so the hourly refresh is just a safety net.
+    // This may lead to a slight misalignment during the initial load, which is fixed in the next refresh,
     // as modifications in the cache may happen while the count query is in progress.
     // We could lock the cache while querying but the query takes too long.
-    // In theory this cache is mirroring the database reality so in the future the duration could be even longer.
+    // If a request arrives before the initial load completes, Caffeine's LoadingCache will block the request
+    // thread until the value is ready.
     private final LoadingCache<WikipediaLanguage, Map<StandardType, Integer>> counts = Caffeine.newBuilder()
         .refreshAfterWrite(refreshTime)
         .build(this::loadReplacementTypeCounts);

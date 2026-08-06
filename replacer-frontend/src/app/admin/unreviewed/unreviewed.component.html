@@ -1,5 +1,9 @@
 <h3>Páginas con más reemplazos sin revisar</h3>
 
+<app-alert type="warning" [icon]="true">
+  <p>Los datos se actualizan cada hora y pueden no reflejar el estado actual.</p>
+</app-alert>
+
 @if (unreviewed(); as unreviewed) {
   <div>
     <table class="table" aria-describedby="Lista de páginas con más reemplazos sin revisar">

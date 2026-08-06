@@ -66,11 +66,11 @@ class ReplacementCountServiceTest {
         PageTitle page = PageTitle.of(1, "T");
         Collection<ResultCount<PageTitle>> counts = List.of(ResultCount.of(page, 10));
         when(
-            replacementCountRepository.countNotReviewedGroupedByPage(lang, ReplacementCountService.NUM_RESULTS)
+            replacementCountRepository.countNotReviewedGroupedByPage(lang, ReplacementCountApi.NUM_RESULTS)
         ).thenReturn(counts);
 
         assertEquals(counts, replacementCountService.countNotReviewedGroupedByPage(lang));
 
-        verify(replacementCountRepository).countNotReviewedGroupedByPage(lang, ReplacementCountService.NUM_RESULTS);
+        verify(replacementCountRepository).countNotReviewedGroupedByPage(lang, ReplacementCountApi.NUM_RESULTS);
     }
 }

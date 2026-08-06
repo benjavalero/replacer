@@ -4,14 +4,10 @@ import es.bvalero.replacer.common.domain.PageTitle;
 import es.bvalero.replacer.common.domain.ResultCount;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import java.util.Collection;
-import org.jetbrains.annotations.VisibleForTesting;
 import org.springframework.stereotype.Service;
 
 @Service
 class ReplacementCountService implements ReplacementCountApi {
-
-    @VisibleForTesting
-    static final int NUM_RESULTS = 20;
 
     // Dependency injection
     private final ReplacementCountRepository replacementCountRepository;
@@ -37,7 +33,7 @@ class ReplacementCountService implements ReplacementCountApi {
 
     @Override
     public Collection<ResultCount<PageTitle>> countNotReviewedGroupedByPage(WikipediaLanguage lang) {
-        // For the moment we are not going to cache it as it is used only by admins
+        // This query is too heavy to update in real-time; it is cached and refreshed periodically
         return replacementCountRepository.countNotReviewedGroupedByPage(lang, NUM_RESULTS).stream().sorted().toList();
     }
 }

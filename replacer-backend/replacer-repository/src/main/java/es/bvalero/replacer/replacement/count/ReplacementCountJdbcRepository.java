@@ -84,8 +84,6 @@ class ReplacementCountJdbcRepository implements ReplacementCountRepository {
     @Override
     public Collection<ResultCount<PageTitle>> countNotReviewedGroupedByPage(WikipediaLanguage lang, int numResults) {
         LOGGER.debug("START Counting not reviewed pages grouped by page - {}…", lang);
-        // TODO: Consider caching or pre-calculating this query as it is very slow
-        // TODO: We could limit also by number of replacement, e.g. more than 50 and use a HAVING clause
         String sql =
             "SELECT p.page_id, p.title, COUNT(*) AS num " +
             "FROM replacement r JOIN page p ON p.lang = r.lang AND p.page_id = r.page_id " +

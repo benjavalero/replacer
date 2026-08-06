@@ -1,5 +1,6 @@
 package es.bvalero.replacer.replacement.count;
 
+import static java.time.temporal.ChronoUnit.HOURS;
 import static java.time.temporal.ChronoUnit.MINUTES;
 
 import com.github.benmanes.caffeine.cache.Caffeine;
@@ -23,13 +24,16 @@ import org.springframework.transaction.annotation.Transactional;
 class ReplacementCountCacheRepository implements ReplacementCountRepository {
 
     private final Duration refreshTime = Duration.of(5, MINUTES);
+    private final Duration refreshTimeByPage = Duration.of(1, HOURS);
 
     // Dependency injection
     private ReplacementCountRepository replacementCountRepository;
 
     // Statistics caches
-    // The queries in database can be heavy, so we preload the counts on start and refresh them periodically.
-    // As we refresh the stats every 5 minutes, it's not worth to try to update the counts at real-time.
+    // The queries in database can be heavy, so we preload the counts on start and refresh them periodically
+    // via Caffeine (every 5 minutes). There is no real-time update with usage, as the periodic refresh
+    // is frequent enough. If a request arrives before the initial load completes, Caffeine's LoadingCache
+    // will block the request thread until the value is ready.
     private final LoadingCache<WikipediaLanguage, Integer> countReviewed = Caffeine.newBuilder()
         .refreshAfterWrite(refreshTime)
         .build(l -> replacementCountRepository.countReviewed(l));
@@ -40,6 +44,13 @@ class ReplacementCountCacheRepository implements ReplacementCountRepository {
         Caffeine.newBuilder()
             .refreshAfterWrite(refreshTime)
             .build(l -> replacementCountRepository.countReviewedGroupedByReviewer(l));
+    // This query is very heavy so it is not worth updating it in real-time with usage.
+    // Instead, it is preloaded with a delay after startup (to avoid competing with other heavy tasks)
+    // and refreshed periodically via Caffeine every hour.
+    private final LoadingCache<WikipediaLanguage, Collection<ResultCount<PageTitle>>> countGroupedByPage =
+        Caffeine.newBuilder()
+            .refreshAfterWrite(refreshTimeByPage)
+            .build(l -> replacementCountRepository.countNotReviewedGroupedByPage(l, ReplacementCountApi.NUM_RESULTS));
 
     ReplacementCountCacheRepository(
         @Qualifier("replacementCountJdbcRepository") ReplacementCountRepository replacementCountRepository
@@ -53,6 +64,14 @@ class ReplacementCountCacheRepository implements ReplacementCountRepository {
         Arrays.stream(WikipediaLanguage.values()).forEach(this::countReviewed);
         Arrays.stream(WikipediaLanguage.values()).forEach(this::countNotReviewed);
         Arrays.stream(WikipediaLanguage.values()).forEach(this::countReviewedGroupedByReviewer);
+    }
+
+    @Scheduled(initialDelayString = "${replacer.count.page.delay.initial}", fixedDelay = Long.MAX_VALUE)
+    public void initCountGroupedByPage() {
+        // Delayed population to avoid competing with other heavy startup tasks (e.g. page count cache)
+        Arrays.stream(WikipediaLanguage.values()).forEach(l ->
+            countNotReviewedGroupedByPage(l, ReplacementCountApi.NUM_RESULTS)
+        );
     }
 
     @Override
@@ -72,7 +91,6 @@ class ReplacementCountCacheRepository implements ReplacementCountRepository {
 
     @Override
     public Collection<ResultCount<PageTitle>> countNotReviewedGroupedByPage(WikipediaLanguage lang, int numResults) {
-        // For the moment we are not going to cache it as it is used only by admins
-        return replacementCountRepository.countNotReviewedGroupedByPage(lang, numResults);
+        return Objects.requireNonNull(this.countGroupedByPage.get(lang));
     }
 }
