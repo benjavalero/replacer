@@ -3,8 +3,10 @@ package es.bvalero.replacer.review;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+import es.bvalero.replacer.common.domain.AccessToken;
 import es.bvalero.replacer.common.domain.PageKey;
 import es.bvalero.replacer.common.domain.User;
+import es.bvalero.replacer.common.domain.UserId;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.StandardType;
@@ -200,5 +202,49 @@ class ReviewNoTypeFinderTest {
 
         assertTrue(review.isPresent());
         assertEquals(randomId, review.get().getPage().getPageId());
+    }
+
+    @Test
+    void testCacheIsNotSharedBetweenLanguages() {
+        // Users of different languages must not share the page cache
+        User userGl = User.builder()
+            .id(UserId.of(WikipediaLanguage.GALICIAN, "y"))
+            .accessToken(AccessToken.of("a", "b"))
+            .hasRights(true)
+            .build();
+        ReviewOptions optionsGl = ReviewOptions.ofNoType(userGl);
+
+        PageKey pageKeyGl = PageKey.of(WikipediaLanguage.GALICIAN, 99);
+        WikipediaPage pageGl = WikipediaPage.builder()
+            .pageKey(pageKeyGl)
+            .namespace(WikipediaNamespace.ARTICLE)
+            .title("TitleGl")
+            .content(content)
+            .lastUpdate(WikipediaTimestamp.now())
+            .queryTimestamp(WikipediaTimestamp.now())
+            .build();
+
+        when(pageCountRepository.countNotReviewedByType(WikipediaLanguage.SPANISH, null)).thenReturn(1);
+        when(pageCountRepository.countNotReviewedByType(WikipediaLanguage.GALICIAN, null)).thenReturn(1);
+        when(pageRepository.findNotReviewedByType(eq(WikipediaLanguage.SPANISH), isNull(), anyInt())).thenReturn(
+            List.of(randomPageKey)
+        );
+        when(pageRepository.findNotReviewedByType(eq(WikipediaLanguage.GALICIAN), isNull(), anyInt())).thenReturn(
+            List.of(pageKeyGl)
+        );
+
+        when(wikipediaPageRepository.findByKey(randomPageKey, user.getAccessToken())).thenReturn(Optional.of(page));
+        when(wikipediaPageRepository.findByKey(pageKeyGl, userGl.getAccessToken())).thenReturn(Optional.of(pageGl));
+
+        when(pageIndexApi.indexPage(page)).thenReturn(PageIndexResult.ofIndexed(replacements));
+        when(pageIndexApi.indexPage(pageGl)).thenReturn(PageIndexResult.ofIndexed(replacements));
+
+        Optional<Review> reviewEs = pageReviewNoTypeService.findRandomPageReview(options);
+        Optional<Review> reviewGl = pageReviewNoTypeService.findRandomPageReview(optionsGl);
+
+        assertTrue(reviewEs.isPresent());
+        assertEquals(WikipediaLanguage.SPANISH, reviewEs.get().getPage().getPageKey().getLang());
+        assertTrue(reviewGl.isPresent());
+        assertEquals(WikipediaLanguage.GALICIAN, reviewGl.get().getPage().getPageKey().getLang());
     }
 }

@@ -130,6 +130,7 @@ class ReviewOptions {
     @Override
     public String toString() {
         List<String> list = new ArrayList<>();
+        list.add(this.user.getId().getLang().getCode());
         list.add(this.kind.toString());
         if (this.subtype != null) {
             list.add(this.subtype);
