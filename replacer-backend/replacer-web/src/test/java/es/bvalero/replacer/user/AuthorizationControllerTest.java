@@ -19,7 +19,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -43,9 +42,6 @@ class AuthorizationControllerTest {
 
     @Test
     void testInitiateAuthentication() throws Exception {
-        WikipediaLanguage lang = WikipediaLanguage.getDefault();
-        when(webUtils.getLanguageHeader(any(HttpServletRequest.class))).thenReturn(lang);
-
         RequestToken requestToken = RequestToken.of("R", "S", "Z");
         when(authorizationApi.getRequestToken()).thenReturn(requestToken);
 
@@ -61,9 +57,6 @@ class AuthorizationControllerTest {
 
     @Test
     void testInitiateAuthorizationWithException() throws Exception {
-        WikipediaLanguage lang = WikipediaLanguage.getDefault();
-        when(webUtils.getLanguageHeader(any(HttpServletRequest.class))).thenReturn(lang);
-
         when(authorizationApi.getRequestToken()).thenThrow(new AuthorizationException());
 
         mvc
@@ -79,18 +72,18 @@ class AuthorizationControllerTest {
         String oAuthVerifier = "V";
 
         WikipediaLanguage lang = WikipediaLanguage.getDefault();
-        when(webUtils.getLanguageHeader(any(HttpServletRequest.class))).thenReturn(lang);
+        when(webUtils.getLanguageFromCookie(any(HttpServletRequest.class))).thenReturn(lang);
         User user = User.buildTestAdminUser();
         when(authorizationApi.getAuthenticatedUser(lang, requestToken, oAuthVerifier)).thenReturn(user);
 
         VerifyAuthorizationRequest verifyAuthorizationRequest = new VerifyAuthorizationRequest();
+        verifyAuthorizationRequest.setLang(lang.getCode());
         verifyAuthorizationRequest.setRequestToken(RequestTokenDto.of(requestToken));
         verifyAuthorizationRequest.setOauthVerifier(oAuthVerifier);
 
         mvc
             .perform(
                 post("/api/user/verify-authorization")
-                    .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(verifyAuthorizationRequest))
             )
@@ -106,18 +99,16 @@ class AuthorizationControllerTest {
     @Test
     void testVerifyAuthorizationWithEmptyVerifier() throws Exception {
         WikipediaLanguage lang = WikipediaLanguage.getDefault();
-        when(webUtils.getLanguageHeader(any(HttpServletRequest.class))).thenReturn(lang);
-
         RequestToken requestToken = RequestToken.of("R", "S", "Z");
         String oAuthVerifier = "";
 
         VerifyAuthorizationRequest verifyAuthorizationRequest = new VerifyAuthorizationRequest();
+        verifyAuthorizationRequest.setLang(lang.getCode());
         verifyAuthorizationRequest.setRequestToken(RequestTokenDto.of(requestToken));
         verifyAuthorizationRequest.setOauthVerifier(oAuthVerifier);
         mvc
             .perform(
                 post("/api/user/verify-authorization")
-                    .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(verifyAuthorizationRequest))
             )

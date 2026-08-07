@@ -33,6 +33,6 @@ public class UserLanguageArgumentResolver implements HandlerMethodArgumentResolv
         @Nullable WebDataBinderFactory webDataBinderFactory
     ) {
         HttpServletRequest request = (HttpServletRequest) nativeWebRequest.getNativeRequest();
-        return webUtils.getLanguageHeader(request);
+        return webUtils.getLanguageFromCookie(request);
     }
 }

@@ -23,7 +23,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.aop.AopAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -46,17 +45,13 @@ class ReplacementCountControllerTest {
     @Test
     void testCountReplacementsToReview() throws Exception {
         WikipediaLanguage lang = WikipediaLanguage.getDefault();
-        when(webUtils.getLanguageHeader(any(HttpServletRequest.class))).thenReturn(lang);
+        when(webUtils.getLanguageFromCookie(any(HttpServletRequest.class))).thenReturn(lang);
 
         int count = new Random().nextInt();
         when(replacementCountApi.countNotReviewed(WikipediaLanguage.getDefault())).thenReturn(count);
 
         mvc
-            .perform(
-                get("/api/replacement/count?reviewed=false")
-                    .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
-                    .contentType(MediaType.APPLICATION_JSON)
-            )
+            .perform(get("/api/replacement/count?reviewed=false").contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.count", is(count)));
 
@@ -66,17 +61,13 @@ class ReplacementCountControllerTest {
     @Test
     void testCountReplacementsReviewed() throws Exception {
         WikipediaLanguage lang = WikipediaLanguage.getDefault();
-        when(webUtils.getLanguageHeader(any(HttpServletRequest.class))).thenReturn(lang);
+        when(webUtils.getLanguageFromCookie(any(HttpServletRequest.class))).thenReturn(lang);
 
         int count = new Random().nextInt();
         when(replacementCountApi.countReviewed(WikipediaLanguage.getDefault())).thenReturn(count);
 
         mvc
-            .perform(
-                get("/api/replacement/count?reviewed=true")
-                    .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
-                    .contentType(MediaType.APPLICATION_JSON)
-            )
+            .perform(get("/api/replacement/count?reviewed=true").contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.count", is(count)));
 
@@ -86,7 +77,7 @@ class ReplacementCountControllerTest {
     @Test
     void testCountReplacementsGroupedByReviewer() throws Exception {
         WikipediaLanguage lang = WikipediaLanguage.getDefault();
-        when(webUtils.getLanguageHeader(any(HttpServletRequest.class))).thenReturn(lang);
+        when(webUtils.getLanguageFromCookie(any(HttpServletRequest.class))).thenReturn(lang);
 
         ResultCount<String> count = ResultCount.of("X", 100);
         when(replacementCountApi.countReviewedGroupedByReviewer(WikipediaLanguage.getDefault())).thenReturn(
@@ -94,11 +85,7 @@ class ReplacementCountControllerTest {
         );
 
         mvc
-            .perform(
-                get("/api/replacement/user/count")
-                    .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
-                    .contentType(MediaType.APPLICATION_JSON)
-            )
+            .perform(get("/api/replacement/user/count").contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$[0].reviewer", is("X")))
             .andExpect(jsonPath("$[0].count", is(100)));
@@ -111,7 +98,7 @@ class ReplacementCountControllerTest {
         User user = User.buildTestAdminUser();
         when(webUtils.getAuthenticatedUser(any(HttpServletRequest.class))).thenReturn(user);
         WikipediaLanguage lang = WikipediaLanguage.getDefault();
-        when(webUtils.getLanguageHeader(any(HttpServletRequest.class))).thenReturn(lang);
+        when(webUtils.getLanguageFromCookie(any(HttpServletRequest.class))).thenReturn(lang);
 
         PageTitle page = PageTitle.of(2, "T");
         Collection<ResultCount<PageTitle>> counts = List.of(ResultCount.of(page, 100));
@@ -121,8 +108,7 @@ class ReplacementCountControllerTest {
         mvc
             .perform(
                 get("/api/replacement/page/count")
-                    .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
-                    .cookie(WebUtils.buildAccessTokenCookie(user.getAccessToken()))
+                    .cookie(WebUtils.buildAccessTokenCookie(user.getId().getLang(), user.getAccessToken()))
                     .contentType(MediaType.APPLICATION_JSON)
             )
             .andExpect(status().isOk())
@@ -141,8 +127,7 @@ class ReplacementCountControllerTest {
         mvc
             .perform(
                 get("/api/replacement/page/count")
-                    .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
-                    .cookie(WebUtils.buildAccessTokenCookie(user.getAccessToken()))
+                    .cookie(WebUtils.buildAccessTokenCookie(user.getId().getLang(), user.getAccessToken()))
                     .contentType(MediaType.APPLICATION_JSON)
             )
             .andExpect(status().isForbidden());

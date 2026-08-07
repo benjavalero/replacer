@@ -23,7 +23,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -88,8 +87,7 @@ class PageSaveControllerTest {
         mvc
             .perform(
                 post("/api/page/123")
-                    .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
-                    .cookie(WebUtils.buildAccessTokenCookie(user.getAccessToken()))
+                    .cookie(WebUtils.buildAccessTokenCookie(user.getId().getLang(), user.getAccessToken()))
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(reviewedPageWithChanges))
             )
@@ -110,8 +108,7 @@ class PageSaveControllerTest {
         mvc
             .perform(
                 post("/api/page/123")
-                    .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
-                    .cookie(WebUtils.buildAccessTokenCookie(user.getAccessToken()))
+                    .cookie(WebUtils.buildAccessTokenCookie(user.getId().getLang(), user.getAccessToken()))
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(reviewedPageWithoutChanges))
             )
@@ -136,8 +133,7 @@ class PageSaveControllerTest {
         mvc
             .perform(
                 post("/api/page/123")
-                    .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
-                    .cookie(WebUtils.buildAccessTokenCookie(user.getAccessToken()))
+                    .cookie(WebUtils.buildAccessTokenCookie(user.getId().getLang(), user.getAccessToken()))
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(reviewedPageWithoutChanges))
             )
@@ -156,8 +152,7 @@ class PageSaveControllerTest {
         mvc
             .perform(
                 post("/api/page/123")
-                    .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
-                    .cookie(WebUtils.buildAccessTokenCookie(user.getAccessToken()))
+                    .cookie(WebUtils.buildAccessTokenCookie(user.getId().getLang(), user.getAccessToken()))
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(reviewedPageWithChanges))
             )
@@ -176,8 +171,7 @@ class PageSaveControllerTest {
         mvc
             .perform(
                 post("/api/page/123")
-                    .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
-                    .cookie(WebUtils.buildAccessTokenCookie(user.getAccessToken()))
+                    .cookie(WebUtils.buildAccessTokenCookie(user.getId().getLang(), user.getAccessToken()))
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(reviewedPageWithChanges))
             )
@@ -196,8 +190,7 @@ class PageSaveControllerTest {
         mvc
             .perform(
                 post("/api/page/123")
-                    .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
-                    .cookie(WebUtils.buildAccessTokenCookie(user.getAccessToken()))
+                    .cookie(WebUtils.buildAccessTokenCookie(user.getId().getLang(), user.getAccessToken()))
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(reviewedPageWithChanges))
             )

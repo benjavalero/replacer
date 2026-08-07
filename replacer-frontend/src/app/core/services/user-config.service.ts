@@ -37,4 +37,9 @@ export class UserConfigService {
     this.config.update((c) => ({ ...c, lang: lang }));
     localStorage.setItem(this.userConfigKey, JSON.stringify(this.config()));
   }
+
+  clearConfig() {
+    localStorage.removeItem(this.userConfigKey);
+    this.config.set(this.emptyConfig());
+  }
 }

@@ -7,6 +7,7 @@ import { RequestToken } from '../models/request-token';
  * Request token and OAuth verifier to complete the authorization process
  */
 export interface VerifyAuthorizationRequest {
+  lang: string;
   oauthVerifier: string;
   requestToken: RequestToken;
 }

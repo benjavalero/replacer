@@ -19,7 +19,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.aop.AopAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -59,13 +58,12 @@ class PageListControllerTest {
         User user = User.buildTestBotUser();
         when(webUtils.getAuthenticatedUser(any(HttpServletRequest.class))).thenReturn(user);
         WikipediaLanguage lang = WikipediaLanguage.getDefault();
-        when(webUtils.getLanguageHeader(any(HttpServletRequest.class))).thenReturn(lang);
+        when(webUtils.getLanguageFromCookie(any(HttpServletRequest.class))).thenReturn(lang);
 
         mvc
             .perform(
                 post("/api/page/type?kind=2&subtype=Africa")
-                    .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
-                    .cookie(WebUtils.buildAccessTokenCookie(user.getAccessToken()))
+                    .cookie(WebUtils.buildAccessTokenCookie(user.getId().getLang(), user.getAccessToken()))
                     .contentType(MediaType.APPLICATION_JSON)
             )
             .andExpect(status().isNoContent());
@@ -84,8 +82,7 @@ class PageListControllerTest {
         mvc
             .perform(
                 post("/api/page/type?kind=2&subtype=Africa")
-                    .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
-                    .cookie(WebUtils.buildAccessTokenCookie(user.getAccessToken()))
+                    .cookie(WebUtils.buildAccessTokenCookie(user.getId().getLang(), user.getAccessToken()))
                     .contentType(MediaType.APPLICATION_JSON)
             )
             .andExpect(status().isForbidden());

@@ -5,6 +5,7 @@ import { RequestToken } from '../../api/models/request-token';
 import { User } from '../../api/models/user';
 import { VerifyAuthorizationRequest } from '../../api/models/verify-authorization-request';
 import { UserApiService } from '../../api/services/user-api.service';
+import { UserConfigService } from './user-config.service';
 import { UserService } from './user.service';
 
 @Injectable({
@@ -12,6 +13,7 @@ import { UserService } from './user.service';
 })
 export class UserLoginService {
   private userApiService = inject(UserApiService);
+  private userConfigService = inject(UserConfigService);
   private userService = inject(UserService);
 
   private readonly requestTokenKey = 'requestToken';
@@ -46,6 +48,7 @@ export class UserLoginService {
     const requestToken: RequestToken = JSON.parse(localStorage.getItem(this.requestTokenKey)!);
     return this.userApiService.verifyAuthorization({
       body: {
+        lang: this.userConfigService.lang(),
         oauthVerifier,
         requestToken
       } as VerifyAuthorizationRequest

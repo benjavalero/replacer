@@ -17,7 +17,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -39,7 +38,7 @@ class ReplacementTypeControllerTest {
     @Test
     void testFindReplacementType() throws Exception {
         WikipediaLanguage lang = WikipediaLanguage.getDefault();
-        when(webUtils.getLanguageHeader(any(HttpServletRequest.class))).thenReturn(lang);
+        when(webUtils.getLanguageFromCookie(any(HttpServletRequest.class))).thenReturn(lang);
 
         final String replacement = "Africa";
         when(replacementTypeFindApi.findReplacementType(WikipediaLanguage.getDefault(), replacement, true)).thenReturn(
@@ -47,11 +46,7 @@ class ReplacementTypeControllerTest {
         );
 
         mvc
-            .perform(
-                get("/api/type?replacement=Africa&cs=true")
-                    .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
-                    .contentType(MediaType.APPLICATION_JSON)
-            )
+            .perform(get("/api/type?replacement=Africa&cs=true").contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.kind", is((int) ReplacementKind.SIMPLE.getCode())))
             .andExpect(jsonPath("$.subtype", is(replacement)));
@@ -62,7 +57,7 @@ class ReplacementTypeControllerTest {
     @Test
     void testFindReplacementTypeEmpty() throws Exception {
         WikipediaLanguage lang = WikipediaLanguage.getDefault();
-        when(webUtils.getLanguageHeader(any(HttpServletRequest.class))).thenReturn(lang);
+        when(webUtils.getLanguageFromCookie(any(HttpServletRequest.class))).thenReturn(lang);
 
         final String replacement = "African";
         when(replacementTypeFindApi.findReplacementType(WikipediaLanguage.getDefault(), replacement, true)).thenReturn(
@@ -70,11 +65,7 @@ class ReplacementTypeControllerTest {
         );
 
         mvc
-            .perform(
-                get("/api/type?replacement=African&cs=true")
-                    .header(HttpHeaders.ACCEPT_LANGUAGE, WikipediaLanguage.getDefault().getCode())
-                    .contentType(MediaType.APPLICATION_JSON)
-            )
+            .perform(get("/api/type?replacement=African&cs=true").contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent())
             .andExpect(jsonPath("$.kind").doesNotExist())
             .andExpect(jsonPath("$.subtype").doesNotExist());

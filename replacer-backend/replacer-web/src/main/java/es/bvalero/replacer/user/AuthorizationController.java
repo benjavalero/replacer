@@ -3,7 +3,6 @@ package es.bvalero.replacer.user;
 import es.bvalero.replacer.auth.RequestToken;
 import es.bvalero.replacer.common.domain.User;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import es.bvalero.replacer.common.resolver.UserLanguage;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -56,10 +55,10 @@ class AuthorizationController {
     @Operation(summary = "Verify the authorization process and get the authenticated user")
     @PostMapping(value = "/verify-authorization")
     ResponseEntity<UserDto> verifyAuthorization(
-        @UserLanguage WikipediaLanguage lang,
         @Valid @RequestBody VerifyAuthorizationRequest verifyAuthorizationRequest
     ) {
         LOGGER.info("START Verify Authorization: {}", verifyAuthorizationRequest);
+        WikipediaLanguage lang = WikipediaLanguage.valueOfCode(verifyAuthorizationRequest.getLang());
         RequestToken requestToken = RequestTokenDto.toDomain(verifyAuthorizationRequest.getRequestToken());
         String oAuthVerifier = verifyAuthorizationRequest.getOauthVerifier();
         User authenticatedUser = authorizationApi.getAuthenticatedUser(lang, requestToken, oAuthVerifier);
@@ -68,7 +67,7 @@ class AuthorizationController {
         return ResponseEntity.ok()
             .header(
                 HttpHeaders.SET_COOKIE,
-                WebUtils.buildAccessTokenResponseCookie(authenticatedUser.getAccessToken()).toString()
+                WebUtils.buildAccessTokenResponseCookie(lang, authenticatedUser.getAccessToken()).toString()
             )
             .body(authenticatedUserDto);
     }

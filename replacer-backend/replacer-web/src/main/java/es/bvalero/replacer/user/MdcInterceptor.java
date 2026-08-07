@@ -33,7 +33,7 @@ public class MdcInterceptor implements HandlerInterceptor {
             MDC.put("user", user.getId().getUsername());
         } catch (Exception e1) {
             try {
-                WikipediaLanguage lang = webUtils.getLanguageHeader(request);
+                WikipediaLanguage lang = webUtils.getLanguageFromCookie(request);
                 MDC.put("lang", lang.toString());
             } catch (Exception e2) {
                 // Do nothing

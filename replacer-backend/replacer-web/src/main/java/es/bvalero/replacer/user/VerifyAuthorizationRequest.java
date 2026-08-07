@@ -13,6 +13,10 @@ import lombok.Data;
 @Data
 class VerifyAuthorizationRequest {
 
+    @Schema(requiredMode = REQUIRED, example = "es")
+    @NotBlank
+    private String lang;
+
     @Schema
     @Valid
     @NotNull
