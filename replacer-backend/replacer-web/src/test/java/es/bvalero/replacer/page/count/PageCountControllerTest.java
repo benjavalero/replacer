@@ -1,8 +1,10 @@
 package es.bvalero.replacer.page.count;
 
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -57,7 +59,10 @@ class PageCountControllerTest {
             .andExpect(status().isOk())
             .andExpect(jsonPath("$[0].k", is((int) ReplacementKind.SIMPLE.getCode())))
             .andExpect(jsonPath("$[0].l[0].s", is("Y")))
-            .andExpect(jsonPath("$[0].l[0].c", is(100)));
+            .andExpect(jsonPath("$[0].l[0].c", is(100)))
+            .andExpect(header().string("Cache-Control", containsString("max-age=60")))
+            .andExpect(header().string("Cache-Control", containsString("private")))
+            .andExpect(header().exists("ETag"));
 
         verify(pageCountApi).countNotReviewedGroupedByType(user);
     }

@@ -9,8 +9,12 @@ import es.bvalero.replacer.finder.StandardType;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.Collection;
+import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 import lombok.extern.slf4j.Slf4j;
 import org.jmolecules.architecture.hexagonal.PrimaryAdapter;
+import org.springframework.http.CacheControl;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -31,7 +35,7 @@ class PageCountController {
 
     @Operation(summary = "Count the number of pages to review grouped by replacement type")
     @GetMapping(value = "/type/count")
-    Collection<KindCount> countNotReviewedGroupedByType(@AuthenticatedUser User user) {
+    ResponseEntity<Collection<KindCount>> countNotReviewedGroupedByType(@AuthenticatedUser User user) {
         Collection<KindCount> counts = pageCountApi
             .countNotReviewedGroupedByType(user)
             .stream()
@@ -42,7 +46,12 @@ class PageCountController {
             .sorted()
             .toList();
         LOGGER.info("GET Count Pages Not Reviewed By Type: {}", counts);
-        return counts;
+        // Cache per user (private) for 1 minute to save bandwidth; counts are approximate anyway
+        // ETag to skip response body when counts haven't changed after cache expiry; collision risk is acceptable
+        return ResponseEntity.ok()
+            .cacheControl(CacheControl.maxAge(1, TimeUnit.MINUTES).cachePrivate())
+            .eTag(String.valueOf(Objects.hash(counts)))
+            .body(counts);
     }
 
     private SubtypeCount mapResultCount(ResultCount<StandardType> rc) {
