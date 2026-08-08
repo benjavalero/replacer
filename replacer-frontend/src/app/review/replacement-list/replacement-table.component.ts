@@ -22,7 +22,6 @@ import { SortDirection, rotate } from './sort-direction.model';
 })
 export class ReplacementTableComponent {
   private readonly PAGE_SIZE = 8;
-  private readonly MAX_SIZE = 3;
 
   kind = input.required<number>();
   subtypeCounts = input<SubtypeCount[]>([]);
@@ -44,8 +43,7 @@ export class ReplacementTableComponent {
   sortDirection: SortDirection = 'asc';
   filterValue: string = '';
   collectionSize: number = 0;
-  pageSize = this.PAGE_SIZE;
-  maxSize = this.MAX_SIZE;
+  readonly pageSize = this.PAGE_SIZE;
   pageValue: number = 1;
 
   constructor() {
@@ -67,7 +65,6 @@ export class ReplacementTableComponent {
   onFilter(value: string) {
     this.filterValue = value;
     this.page = 1; // Reset page
-    this.refreshFilteredItems();
   }
 
   get page(): number {
@@ -77,6 +74,15 @@ export class ReplacementTableComponent {
   set page(value: number) {
     this.pageValue = value;
     this.refreshFilteredItems();
+  }
+
+  selectPage(page: string) {
+    this.page = parseInt(page, 10) || 1;
+  }
+
+  // Prevent non-numeric characters in real time
+  formatInput(input: HTMLInputElement) {
+    input.value = input.value.replace(/[^0-9]/g, '');
   }
 
   sort(column: string): void {

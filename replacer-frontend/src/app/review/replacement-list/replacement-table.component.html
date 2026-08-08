@@ -45,7 +45,7 @@
                   @if (item.forBots) {
                     <span
                       class="badge text-bg-light"
-              ngbTooltip="Este tipo de reemplazo solo es editable directamente por usuarios con permisos de bot,
+                      ngbTooltip="Este tipo de reemplazo solo es editable directamente por usuarios con permisos de bot,
                   aunque es editable por usuarios normales junto con otras ediciones.">
                       bot
                     </span>
@@ -84,9 +84,27 @@
             [collectionSize]="collectionSize"
             [(page)]="page"
             [pageSize]="pageSize"
-            [maxSize]="maxSize"
-            [rotate]="true"
-          class="d-flex justify-content-center"></ngb-pagination>
+            [boundaryLinks]="true"
+            class="d-flex justify-content-center">
+            <ng-template ngbPaginationPages let-page let-pages="pages">
+              <li class="ngb-custom-pages-item">
+                <div class="d-flex flex-nowrap">
+                  <input
+                    #i
+                    type="text"
+                    inputmode="numeric"
+                    class="form-control"
+                    id="paginationInput"
+                    [value]="page"
+                    (keyup.enter)="selectPage(i.value)"
+                    (blur)="selectPage(i.value)"
+                    (input)="formatInput($any($event).target)"
+                    aria-labelledby="paginationDescription" />
+                  <span id="paginationDescription" class="col-form-label px-2">de {{ pages.length }}</span>
+                </div>
+              </li>
+            </ng-template>
+          </ngb-pagination>
         }
       </div>
     }

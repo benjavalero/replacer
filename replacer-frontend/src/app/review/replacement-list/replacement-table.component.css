@@ -14,3 +14,7 @@ a.btn {
   padding: 3px 6px;
   line-height: normal;
 }
+
+#paginationInput {
+  width: 3.5rem;
+}
