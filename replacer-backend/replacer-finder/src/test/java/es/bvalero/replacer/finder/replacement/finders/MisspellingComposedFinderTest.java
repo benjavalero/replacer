@@ -1,7 +1,7 @@
 package es.bvalero.replacer.finder.replacement.finders;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.*;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.Replacement;
@@ -39,12 +39,16 @@ class MisspellingComposedFinderTest {
     }
 
     private void fakeUpdateMisspellingList(List<ComposedMisspelling> misspellings) {
+        fakeUpdateMisspellingList(misspellingComposedFinder, misspellings);
+    }
+
+    private void fakeUpdateMisspellingList(MisspellingComposedFinder finder, List<ComposedMisspelling> misspellings) {
         SetValuedMap<WikipediaLanguage, ComposedMisspelling> map = new HashSetValuedHashMap<>();
         map.putAll(WikipediaLanguage.SPANISH, misspellings);
 
         composedMisspellingLoader.setItems(map);
         SetValuedMap<WikipediaLanguage, ComposedMisspelling> emptyMap = new HashSetValuedHashMap<>();
-        misspellingComposedFinder.propertyChange(
+        finder.propertyChange(
             new PropertyChangeEvent(this, ComposedMisspellingLoader.LABEL_COMPOSED_MISSPELLING, emptyMap, map)
         );
     }
@@ -314,6 +318,29 @@ class MisspellingComposedFinderTest {
         );
         Set<Replacement> expected = Set.of(expected1, expected2);
         assertTrue(Replacement.compareReplacements(expected, results));
+    }
+
+    @Test
+    void testChainedMisspelling() {
+        MisspellingComposedFinder spyFinder = spy(misspellingComposedFinder);
+        ComposedMisspelling misspelling1 = ComposedMisspelling.of("curriculum-vitae", false, "curriculum vitae");
+        ComposedMisspelling misspelling2 = ComposedMisspelling.of("curriculum vitae", false, "currículum vitae");
+        fakeUpdateMisspellingList(spyFinder, List.of(misspelling1, misspelling2));
+
+        spyFinder.findList("Un curriculum-vitae.");
+
+        verify(spyFinder).logChainedMisspelling("curriculum-vitae", "curriculum vitae");
+    }
+
+    @Test
+    void testNoChainedMisspelling() {
+        MisspellingComposedFinder spyFinder = spy(misspellingComposedFinder);
+        ComposedMisspelling misspelling = ComposedMisspelling.of("curriculum-vitae", false, "currículum vitae");
+        fakeUpdateMisspellingList(spyFinder, List.of(misspelling));
+
+        spyFinder.findList("Un curriculum-vitae.");
+
+        verify(spyFinder, never()).logChainedMisspelling(any(), any());
     }
 
     @Test

@@ -106,7 +106,14 @@ public abstract class MisspellingFinder implements ReplacementFinder {
         final StandardMisspelling misspelling = findMisspellingByWord(originalWord, lang).orElseThrow(
             IllegalArgumentException::new
         );
-        return applyMisspellingSuggestions(originalWord, misspelling);
+        return applyMisspellingSuggestions(originalWord, misspelling)
+            .stream()
+            .peek(s -> {
+                if (isExistingWord(s.getText(), lang)) {
+                    logChainedMisspelling(misspelling.getWord(), s.getText());
+                }
+            })
+            .toList();
     }
 
     protected List<Suggestion> applyMisspellingSuggestions(String word, Misspelling misspelling) {
@@ -141,6 +148,10 @@ public abstract class MisspellingFinder implements ReplacementFinder {
 
     private static Suggestion convertSuggestion(MisspellingSuggestion misspellingSuggestion) {
         return Suggestion.of(misspellingSuggestion.getText(), misspellingSuggestion.getComment());
+    }
+
+    void logChainedMisspelling(String word, String suggestion) {
+        LOGGER.warn("Chained misspelling: '{}' -> '{}' is itself a known misspelling", word, suggestion);
     }
 
     @Override

@@ -1,7 +1,7 @@
 package es.bvalero.replacer.finder.replacement.finders;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.*;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.Replacement;
@@ -41,12 +41,16 @@ class MisspellingSimpleFinderTest {
     }
 
     private void fakeUpdateMisspellingList(List<SimpleMisspelling> misspellings) {
+        fakeUpdateMisspellingList(misspellingFinder, misspellings);
+    }
+
+    private void fakeUpdateMisspellingList(MisspellingSimpleFinder finder, List<SimpleMisspelling> misspellings) {
         SetValuedMap<WikipediaLanguage, SimpleMisspelling> map = new HashSetValuedHashMap<>();
         map.putAll(WikipediaLanguage.SPANISH, misspellings);
 
         simpleMisspellingLoader.setItems(map);
         SetValuedMap<WikipediaLanguage, SimpleMisspelling> emptyMap = new HashSetValuedHashMap<>();
-        misspellingFinder.propertyChange(
+        finder.propertyChange(
             new PropertyChangeEvent(this, SimpleMisspellingLoader.LABEL_SIMPLE_MISSPELLING, emptyMap, map)
         );
     }
@@ -451,6 +455,30 @@ class MisspellingSimpleFinderTest {
             )
         );
         assertTrue(Replacement.compareReplacements(Set.of(expected), results));
+    }
+
+    @Test
+    void testChainedMisspelling() {
+        // master||máster + Máster|cs|máster => finding "Master" suggests "Máster" which is itself a misspelling
+        MisspellingSimpleFinder spyFinder = spy(misspellingFinder);
+        SimpleMisspelling misspelling1 = SimpleMisspelling.ofCaseInsensitive("master", "máster");
+        SimpleMisspelling misspelling2 = SimpleMisspelling.ofCaseSensitive("Máster", "máster");
+        fakeUpdateMisspellingList(spyFinder, List.of(misspelling1, misspelling2));
+
+        spyFinder.findList("Un Master.");
+
+        verify(spyFinder).logChainedMisspelling("master", "Máster");
+    }
+
+    @Test
+    void testNoChainedMisspelling() {
+        MisspellingSimpleFinder spyFinder = spy(misspellingFinder);
+        SimpleMisspelling misspelling = SimpleMisspelling.ofCaseInsensitive("abadia", "abadía");
+        fakeUpdateMisspellingList(spyFinder, List.of(misspelling));
+
+        spyFinder.findList("Una abadia.");
+
+        verify(spyFinder, never()).logChainedMisspelling(any(), any());
     }
 
     @Test
