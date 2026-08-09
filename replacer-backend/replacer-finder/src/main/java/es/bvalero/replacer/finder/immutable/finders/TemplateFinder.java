@@ -122,6 +122,7 @@ public class TemplateFinder implements ImmutableFinder {
             return List.of();
         }
 
+        // Inevitable substring: templateName is needed as a string for FinderMatchResult and isValueImmutable
         final String templateName = findTemplateName(templateContent);
         final String normalizedTemplateName = normalizeTemplateName(templateName);
 
@@ -225,6 +226,7 @@ public class TemplateFinder implements ImmutableFinder {
                 startValueEquals = -1;
             }
 
+            // Inevitable substrings: parameter and value are needed as strings for FinderMatchResult and isValueImmutable/findFirstExpressionUpperCase
             String parameter = null;
             int startValue;
             String value;
@@ -286,6 +288,7 @@ public class TemplateFinder implements ImmutableFinder {
 
     private String trimValue(String value) {
         // If the value is followed by a reference, comment or similar we ignore it
+        // Inevitable substring: trimmedValue is needed as a string for FinderMatchResult and isValueImmutable
         int posLessThan = value.indexOf('<');
         int posStartTemplate = value.indexOf(START_TEMPLATE);
         if (posLessThan >= 0 || posStartTemplate >= 0) {
@@ -318,6 +321,7 @@ public class TemplateFinder implements ImmutableFinder {
         final String value = text.trim();
         final int dot = value.lastIndexOf('.');
         if (dot >= 0) {
+            // Inevitable substring: extension is needed as a string for isAscii
             final String extension = value.substring(dot + 1);
             return extension.length() >= 2 && extension.length() <= 4 && FinderUtils.isAscii(extension);
         } else {

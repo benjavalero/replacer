@@ -88,6 +88,11 @@ public class FinderUtils {
 
     //region String Utils
 
+    /** Check if a substring ends at a certain position in a text */
+    public static boolean endsAtPosition(String text, String substring, int end) {
+        return containsAtPosition(text, substring, end - substring.length());
+    }
+
     public static boolean startsWithLowerCase(String word) {
         return Character.isLowerCase(word.charAt(0));
     }
@@ -275,6 +280,32 @@ public class FinderUtils {
     /** Determine if a string is composed by an only Unicode whitespace character */
     private static boolean isWhiteSpace(String text, int start, int end) {
         return end - start == 1 && isWhiteSpace(text.charAt(start));
+    }
+
+    /** Returns the first position in [start, end) that is not a whitespace character */
+    public static int trimLeft(String text, int start, int end) {
+        while (start < end && Character.isWhitespace(text.charAt(start))) {
+            start++;
+        }
+        return start;
+    }
+
+    /** Returns the position after the last non-whitespace character in [start, end) */
+    public static int trimRight(String text, int start, int end) {
+        while (end > start && Character.isWhitespace(text.charAt(end - 1))) {
+            end--;
+        }
+        return end;
+    }
+
+    /** Determine if a string interval is empty or composed only of whitespace characters */
+    public static boolean isBlank(String text, int start, int end) {
+        for (int i = start; i < end; i++) {
+            if (!Character.isWhitespace(text.charAt(i))) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /** Determine if the string is empty or blank or a whitespace alias */

@@ -57,8 +57,7 @@ public class XmlTagFinder extends ImmutableCheckedFinder {
             }
 
             final int endTag = endTagContent + 1;
-            final String tagContent = text.substring(startTagContent, endTagContent);
-            if (!isValidTagContent(tagContent)) {
+            if (!isValidTagContent(text, startTagContent, endTagContent)) {
                 start = endTag;
                 continue;
             }
@@ -80,9 +79,9 @@ public class XmlTagFinder extends ImmutableCheckedFinder {
         return FinderUtils.isAscii(ch) || ch == END_TAG_SLASH;
     }
 
-    private boolean isValidTagContent(String tagContent) {
-        for (int i = 0; i < tagContent.length(); i++) {
-            if (isForbiddenChar(tagContent.charAt(i))) {
+    private boolean isValidTagContent(String text, int start, int end) {
+        for (int i = start; i < end; i++) {
+            if (isForbiddenChar(text.charAt(i))) {
                 return false;
             }
         }

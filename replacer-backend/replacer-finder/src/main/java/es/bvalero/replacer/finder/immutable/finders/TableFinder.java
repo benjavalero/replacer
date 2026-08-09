@@ -2,9 +2,10 @@ package es.bvalero.replacer.finder.immutable.finders;
 
 import static es.bvalero.replacer.finder.util.FinderUtils.NEW_LINE;
 
+import es.bvalero.replacer.common.util.ReplacerUtils;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.immutable.ImmutableFinder;
-import es.bvalero.replacer.finder.util.FinderMatchResult;
+import es.bvalero.replacer.finder.util.FinderMatchRange;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
 import java.util.regex.MatchResult;
 import java.util.stream.Stream;
@@ -39,13 +40,12 @@ public class TableFinder implements ImmutableFinder {
             }
 
             final int endLine = findEndLine(text, startLine);
-            final String line = text.substring(startLine, endLine);
-            if (!isImmutableLine(line)) {
+            if (!isImmutableLine(text, startLine, endLine)) {
                 start = endLine;
                 continue;
             }
 
-            return FinderMatchResult.of(startLine, line);
+            return FinderMatchRange.of(text, startLine, endLine);
         }
         return null;
     }
@@ -64,15 +64,15 @@ public class TableFinder implements ImmutableFinder {
         return endLine >= 0 ? endLine : text.length();
     }
 
-    private boolean isImmutableLine(String line) {
-        return isStartTableLine(line) || isStartRowLine(line);
+    private boolean isImmutableLine(String text, int start, int end) {
+        return isStartTableLine(text, start) || isStartRowLine(text, start);
     }
 
-    private boolean isStartTableLine(String line) {
-        return line.startsWith(TABLE_START);
+    private boolean isStartTableLine(String text, int start) {
+        return ReplacerUtils.containsAtPosition(text, TABLE_START, start);
     }
 
-    private boolean isStartRowLine(String line) {
-        return line.startsWith(ROW_START);
+    private boolean isStartRowLine(String text, int start) {
+        return ReplacerUtils.containsAtPosition(text, ROW_START, start);
     }
 }

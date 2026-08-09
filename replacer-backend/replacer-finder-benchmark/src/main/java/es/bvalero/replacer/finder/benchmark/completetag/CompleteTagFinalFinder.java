@@ -1,5 +1,6 @@
 package es.bvalero.replacer.finder.benchmark.completetag;
 
+import es.bvalero.replacer.common.util.ReplacerUtils;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
 import es.bvalero.replacer.finder.util.FinderMatchRange;
@@ -111,7 +112,7 @@ class CompleteTagFinalFinder implements BenchmarkFinder {
     }
 
     private boolean isSelfClosingTag(String text, int endOpenTag) {
-        return endOpenTag >= 2 && END_SELF_CLOSING_TAG.equals(text.substring(endOpenTag - 2, endOpenTag));
+        return ReplacerUtils.containsAtPosition(text, END_SELF_CLOSING_TAG, endOpenTag - END_SELF_CLOSING_TAG.length());
     }
 
     private int findEndCompleteTag(String text, int start, String tag) {

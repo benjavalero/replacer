@@ -29,7 +29,6 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.SetValuedMap;
 import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
-import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.VisibleForTesting;
 import org.jspecify.annotations.Nullable;
 import org.springframework.stereotype.Component;
@@ -191,51 +190,56 @@ public class UppercaseFinder implements ImmutableFinder, PropertyChangeListener 
     public boolean validate(MatchResult match, FinderPage page) {
         final String text = page.getContent();
         final int startUpperCase = match.start();
-        final String leftTextNotTrimmed = text.substring(0, startUpperCase);
-        final String leftText = StringUtils.strip(StringUtils.removeEnd(leftTextNotTrimmed, START_LINK));
+
+        // Trim the text at the left of the uppercase. Before trimming at the right, we remove the starting link.
+        // Note: we keep leftTextEnd (before trim) for isPrecededByParagraphStart, as the \n\n are the signal itself.
+        int leftTextEnd = startUpperCase;
+        if (endsAtPosition(text, START_LINK, leftTextEnd)) {
+            leftTextEnd -= START_LINK.length();
+        }
+        final int leftTextEndTrimmed = FinderUtils.trimRight(text, 0, leftTextEnd);
 
         return (
-            isPrecededByPunctuation(leftText) ||
-            isPrecededByPipe(leftText) ||
-            isPrecededByCaptionSeparator(leftText) ||
-            isPrecededByParagraphStart(leftTextNotTrimmed)
+            isPrecededByPunctuation(text, leftTextEndTrimmed) ||
+            isPrecededByPipe(text, leftTextEndTrimmed) ||
+            isPrecededByCaptionSeparator(text, leftTextEndTrimmed) ||
+            isPrecededByParagraphStart(text, leftTextEnd)
         );
     }
 
-    private boolean isPrecededByPunctuation(String leftText) {
-        if (leftText.isEmpty()) {
+    private boolean isPrecededByPunctuation(String text, int end) {
+        if (end <= 0) {
             return false;
-        } else {
-            final char lastChar = leftText.charAt(leftText.length() - 1);
-            // The pipe is not only used for tables cells, we must check is not a wiki-link!!!
-            return (
-                lastChar == '=' ||
-                lastChar == '#' ||
-                lastChar == '*' ||
-                lastChar == '>' ||
-                lastChar == '.' ||
-                lastChar == '!'
-            );
         }
+        final char lastChar = text.charAt(end - 1);
+        // The pipe is not only used for tables cells, we must check is not a wiki-link!!!
+        return (
+            lastChar == '=' ||
+            lastChar == '#' ||
+            lastChar == '*' ||
+            lastChar == '>' ||
+            lastChar == '.' ||
+            lastChar == '!'
+        );
     }
 
-    private boolean isPrecededByPipe(String leftText) {
-        final boolean isPrecededByPipe = leftText.endsWith(String.valueOf(PIPE));
-        // Check the first char of the line is also a pipe
-        return isPrecededByPipe && findFirstLineChar(leftText) == PIPE;
+    private boolean isPrecededByPipe(String text, int end) {
+        // Check it is preceded by a pipe AND the first char of the line is also a pipe
+        if (end <= 0 || text.charAt(end - 1) != PIPE) {
+            return false;
+        }
+
+        final int newLinePos = text.lastIndexOf(NEW_LINE, end - 1);
+        final int firstLineCharPos = newLinePos >= 0 ? newLinePos + 1 : 0;
+        return text.charAt(firstLineCharPos) == PIPE;
     }
 
-    private boolean isPrecededByCaptionSeparator(String leftText) {
-        return leftText.endsWith(CAPTION_SEPARATOR);
+    private boolean isPrecededByCaptionSeparator(String text, int end) {
+        return FinderUtils.endsAtPosition(text, CAPTION_SEPARATOR, end);
     }
 
-    private boolean isPrecededByParagraphStart(String leftText) {
-        return leftText.endsWith(PARAGRAPH_START);
-    }
-
-    private char findFirstLineChar(String text) {
-        final int newLinePos = text.lastIndexOf(NEW_LINE);
-        return newLinePos >= 0 ? text.charAt(newLinePos + 1) : 0;
+    private boolean isPrecededByParagraphStart(String text, int end) {
+        return FinderUtils.endsAtPosition(text, PARAGRAPH_START, end);
     }
 
     /**
@@ -256,6 +260,7 @@ public class UppercaseFinder implements ImmutableFinder, PropertyChangeListener 
 
         // Then, we try with the composed misspellings, checking if the parameter value starts with an uppercase misspelling.
         final int valueStart = firstWord.start();
+        // Substring needed as findFirstExpressionUpperCase operates on a local string
         final String valueText = text.substring(valueStart);
         return this.getUppercaseMap()
             .get(lang)

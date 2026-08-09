@@ -129,6 +129,7 @@ public class CompleteTagFinder extends ImmutableCheckedFinder {
         if (endSupportedTag < 0) {
             return null;
         }
+        // Substring needed to compare against the set of supported tags
         final String tag = text.substring(start, endSupportedTag);
         return this.supportedCompleteTags.contains(tag) ? tag : null;
     }
@@ -139,7 +140,7 @@ public class CompleteTagFinder extends ImmutableCheckedFinder {
     }
 
     private boolean isSelfClosingTag(String text, int endOpenTag) {
-        return endOpenTag >= 2 && END_SELF_CLOSING_TAG.equals(text.substring(endOpenTag - 2, endOpenTag));
+        return FinderUtils.endsAtPosition(text, END_SELF_CLOSING_TAG, endOpenTag);
     }
 
     private int findEndCompleteTag(String text, int start, String tag) {

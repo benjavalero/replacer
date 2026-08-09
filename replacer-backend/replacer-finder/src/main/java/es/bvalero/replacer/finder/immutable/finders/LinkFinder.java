@@ -85,37 +85,43 @@ public class LinkFinder extends ImmutableCheckedFinder {
             return List.of(FinderMatchRange.of(text, link.start(), endSuffix));
         }
 
-        final String linkContent = getLinkContent(link.group());
-        final String linkTitle = findLinkTitle(linkContent);
-        final String linkSpace = findLinkSpace(linkTitle);
+        final int linkContentStart = link.start() + START_LINK.length();
+        final int linkContentEnd = link.end() - END_LINK.length();
+
+        final int pipePos = text.lastIndexOf(PIPE, linkContentEnd - 1);
+        final int linkTitleEnd = pipePos >= linkContentStart ? pipePos : linkContentEnd;
+
+        final String linkSpace = findLinkSpace(text, linkContentStart, linkTitleEnd);
+        final String linkSpaceNormalized = linkSpace != null ? ReplacerUtils.setFirstUpperCase(linkSpace.trim()) : null;
 
         // If the link space is a category then return an immutable of the complete link
-        if (isCategorySpace(linkSpace)) {
+        if (isCategorySpace(linkSpaceNormalized)) {
             return List.of(link);
         }
 
-        // NOTE: the positions of this result are relative to the link content not to the whole link
-        final MatchResult linkAlias = findLinkAlias(linkContent);
+        final MatchResult linkAlias = findLinkAlias(text, linkContentStart, linkContentEnd, pipePos);
 
         // Interwiki links are immutable. If alias exists, then return only the link title.
         // The same applies for interlanguage links and files
         // Exception: if the alias exists but is a parameter then return the complete link
-        if (linkAlias != null || isInterWikiSpace(linkSpace) || isLangSpace(linkSpace) || isFileSpace(linkSpace)) {
+        if (
+            linkAlias != null ||
+            isInterWikiSpace(linkSpace) ||
+            isLangSpace(linkSpace) ||
+            isFileSpace(linkSpaceNormalized)
+        ) {
             if (linkAlias == null) {
                 return List.of(link);
             } else if (isAliasParameter(linkAlias.group())) {
                 return List.of(link);
             } else {
-                final int startTitle = link.start() + START_LINK.length();
-                immutables.add(FinderMatchResult.of(startTitle, linkTitle));
-
-                // If the alias starts with an uppercase word/expression then we return this word
+                immutables.add(FinderMatchRange.of(text, linkContentStart, linkTitleEnd));
                 final Optional<MatchResult> firstExpressionUpperCase = uppercaseFinder.findFirstExpressionUpperCase(
                     linkAlias.group(),
                     lang
                 );
                 firstExpressionUpperCase.ifPresent(uppercase -> {
-                    final int startAlias = startTitle + linkAlias.start();
+                    final int startAlias = linkAlias.start();
                     immutables.add(FinderMatchResult.of(startAlias + uppercase.start(), uppercase.group()));
                 });
             }
@@ -136,33 +142,24 @@ public class LinkFinder extends ImmutableCheckedFinder {
         return text.length();
     }
 
-    private String getLinkContent(String link) {
-        return link.substring(START_LINK.length(), link.length() - END_LINK.length());
+    @Nullable
+    private String findLinkSpace(String text, int start, int end) {
+        final int colonPos = text.indexOf(COLON, start);
+        // Substring needed to compare against the sets of category and file words
+        return colonPos >= start && colonPos < end ? text.substring(start, colonPos) : null;
     }
 
-    private String findLinkTitle(String linkContent) {
-        final int startLastPipe = linkContent.lastIndexOf(PIPE);
-        return startLastPipe >= 0 ? linkContent.substring(0, startLastPipe) : linkContent;
+    private boolean isCategorySpace(@Nullable String normalizedSpace) {
+        return normalizedSpace != null && this.categoryWords.contains(normalizedSpace);
     }
 
     @Nullable
-    private String findLinkSpace(String title) {
-        final int startColon = title.indexOf(COLON);
-        return startColon >= 0 ? title.substring(0, startColon) : null;
+    private MatchResult findLinkAlias(String text, int start, int end, int pipePos) {
+        return pipePos >= start && pipePos < end ? FinderMatchRange.of(text, pipePos + 1, end) : null;
     }
 
-    private boolean isCategorySpace(@Nullable String space) {
-        return (space != null && this.categoryWords.contains(ReplacerUtils.setFirstUpperCase(space.trim())));
-    }
-
-    @Nullable
-    private MatchResult findLinkAlias(String linkContent) {
-        final int startLastPipe = linkContent.lastIndexOf(PIPE);
-        return startLastPipe >= 0 ? FinderMatchRange.of(linkContent, startLastPipe + 1, linkContent.length()) : null;
-    }
-
-    private boolean isFileSpace(@Nullable String space) {
-        return space != null && this.fileSpaces.contains(ReplacerUtils.setFirstUpperCase(space.trim()));
+    private boolean isFileSpace(@Nullable String normalizedSpace) {
+        return normalizedSpace != null && this.fileSpaces.contains(normalizedSpace);
     }
 
     private boolean isLangSpace(@Nullable String space) {

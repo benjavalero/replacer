@@ -73,6 +73,7 @@ public class PersonSurnameFinder implements ImmutableFinder {
     @Override
     public Immutable convert(MatchResult match, FinderPage page) {
         final int startSurname = match.group().indexOf(SPACE) + 1;
+        // Substring needed to compare against the set of complete surnames
         final String surname = match.group().substring(startSurname);
         if (this.completeSurnames.contains(surname)) {
             return ImmutableFinder.super.convert(match, page);

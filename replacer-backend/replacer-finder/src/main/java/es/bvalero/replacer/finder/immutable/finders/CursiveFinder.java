@@ -6,10 +6,10 @@ import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.FinderPriority;
 import es.bvalero.replacer.finder.immutable.ImmutableCheckedFinder;
 import es.bvalero.replacer.finder.util.FinderMatchRange;
+import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
 import java.util.regex.MatchResult;
 import java.util.stream.Stream;
-import org.apache.commons.lang3.StringUtils;
 import org.jspecify.annotations.Nullable;
 import org.springframework.stereotype.Component;
 
@@ -116,7 +116,6 @@ public class CursiveFinder extends ImmutableCheckedFinder {
         final int startCursiveText = startCursive + numQuotes;
         final int endCursiveText =
             text.length() == endCursive || text.charAt(endCursive) == NEW_LINE ? endCursive : endCursive - numQuotes;
-        final String cursiveText = text.substring(startCursiveText, endCursiveText);
-        return StringUtils.isBlank(cursiveText);
+        return FinderUtils.isBlank(text, startCursiveText, endCursiveText);
     }
 }

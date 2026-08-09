@@ -131,6 +131,18 @@ class FinderUtilsTest {
     }
 
     @Test
+    void testIsBlank() {
+        assertTrue(FinderUtils.isBlank("", 0, 0));
+        assertTrue(FinderUtils.isBlank("   ", 0, 3));
+        assertTrue(FinderUtils.isBlank("   ", 1, 2));
+        assertFalse(FinderUtils.isBlank("text", 0, 4));
+        assertFalse(FinderUtils.isBlank("  text  ", 0, 8));
+        assertTrue(FinderUtils.isBlank("  text  ", 0, 2));
+        assertTrue(FinderUtils.isBlank("  text  ", 6, 8));
+        assertFalse(FinderUtils.isBlank("  text  ", 2, 6));
+    }
+
+    @Test
     void testFindWordAfter() {
         assertEquals(FinderMatchResult.of(5, "Mundo"), FinderUtils.findWordAfter("Hola Mundo", 4));
         assertEquals(FinderMatchResult.of(5, "Mundo"), FinderUtils.findWordAfter("Hola Mundo", 5));

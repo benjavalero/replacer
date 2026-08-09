@@ -197,27 +197,25 @@ public class CoordinatesFinder implements ReplacementFinder {
     @Nullable
     private MatchResult findSeconds(String text, int start) {
         final MatchResult match = FinderUtils.findNumberAfterSpace(text, start, true, false);
-        if (match == null || match.end() >= text.length()) {
-            // No number to continue searching
-            return null;
-        }
-
-        final FinderMatchResult matchNumber = FinderMatchResult.ofNested(match.start(), match.group());
-        if (!isSecondNumber(matchNumber.group())) {
+        if (match == null || match.end() >= text.length() || !isSecondNumber(match.group())) {
+            // No seconds number to continue searching
             return null;
         }
 
         // Let's find the seconds symbol, which might have 2 characters.
         String doublePrime;
-        final String nextChars = text.substring(matchNumber.end(), Math.min(matchNumber.end() + 2, text.length()));
-        if (!nextChars.isEmpty() && isDoublePrimeChar(nextChars.charAt(0))) {
-            doublePrime = nextChars.substring(0, 1);
-        } else if (nextChars.length() > 1 && isPrimeChar(nextChars.charAt(0)) && isPrimeChar(nextChars.charAt(1))) {
-            doublePrime = nextChars;
+        final char firstChar = text.charAt(match.end());
+        if (isDoublePrimeChar(firstChar)) {
+            doublePrime = String.valueOf(firstChar);
+        } else if (
+            match.end() + 1 < text.length() && isPrimeChar(firstChar) && isPrimeChar(text.charAt(match.end() + 1))
+        ) {
+            doublePrime = text.substring(match.end(), match.end() + 2);
         } else {
             return null;
         }
 
+        final FinderMatchResult matchNumber = FinderMatchResult.ofNested(match.start(), match.group());
         final MatchResult doublePrimeMatch = FinderMatchResult.of(matchNumber.end(), doublePrime);
         matchNumber.addGroup(doublePrimeMatch);
         return matchNumber;

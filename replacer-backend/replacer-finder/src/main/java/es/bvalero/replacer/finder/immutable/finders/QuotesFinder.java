@@ -9,7 +9,6 @@ import es.bvalero.replacer.finder.util.FinderMatchRange;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
 import java.util.regex.MatchResult;
 import java.util.stream.Stream;
-import org.apache.commons.lang3.StringUtils;
 import org.jspecify.annotations.Nullable;
 
 abstract class QuotesFinder extends ImmutableCheckedFinder {
@@ -84,10 +83,12 @@ abstract class QuotesFinder extends ImmutableCheckedFinder {
     }
 
     protected boolean validateQuote(FinderPage page, int startQuote, int endQuote) {
-        final String quoteText = page.getContent().substring(startQuote + 1, endQuote - 1);
+        final String text = page.getContent();
+        final int start = startQuote + 1;
+        final int end = endQuote - 1;
 
         // Check if the quote is empty
-        if (isEmptyQuote(quoteText)) {
+        if (isBlank(text, start, end)) {
             if (isEmptyQuoteWarning(page, startQuote, endQuote)) {
                 logImmutableCheck(page, startQuote, endQuote, "Empty quoted text");
             }
@@ -95,27 +96,19 @@ abstract class QuotesFinder extends ImmutableCheckedFinder {
         }
 
         // Check the quote text is not quoted again by checking the first and last characters are not quote characters
-        if (isRedundantQuote(quoteText)) {
+        if (isRedundantQuote(text, start, end)) {
             logImmutableCheck(page, startQuote, endQuote, "Redundant quotes");
         }
 
         return true;
     }
 
-    private boolean isEmptyQuote(String quoteText) {
-        return StringUtils.isBlank(quoteText);
-    }
-
     protected boolean isEmptyQuoteWarning(FinderPage page, int startQuote, int endQuote) {
         return true;
     }
 
-    private boolean isRedundantQuote(String quoteText) {
-        return (
-            StringUtils.isNotEmpty(quoteText) &&
-            isQuoteChar(quoteText.charAt(0)) &&
-            isQuoteChar(quoteText.charAt(quoteText.length() - 1))
-        );
+    private boolean isRedundantQuote(String text, int start, int end) {
+        return end > start && isQuoteChar(text.charAt(start)) && isQuoteChar(text.charAt(end - 1));
     }
 
     private boolean isQuoteChar(char ch) {

@@ -3,17 +3,18 @@ package es.bvalero.replacer.finder.immutable.finders;
 import static es.bvalero.replacer.finder.util.FinderUtils.NEW_LINE;
 
 import es.bvalero.replacer.FinderProperties;
+import es.bvalero.replacer.common.util.ReplacerUtils;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.FinderPriority;
 import es.bvalero.replacer.finder.immutable.ImmutableFinder;
 import es.bvalero.replacer.finder.util.FinderMatchRange;
+import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
 import jakarta.annotation.PostConstruct;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.MatchResult;
 import java.util.stream.Stream;
-import org.apache.commons.lang3.StringUtils;
 import org.jspecify.annotations.Nullable;
 import org.springframework.stereotype.Component;
 
@@ -84,41 +85,52 @@ public class IgnorableSectionFinder implements ImmutableFinder {
         return text.indexOf(NEW_LINE, start + START_HEADER.length());
     }
 
+    // Strip the header chars at start and end of the header, and trim the result,
+    // and check if the label is in the ignorable sections list.
     private boolean validateHeader(String text, int startHeader, int endHeader) {
         // We can assume the first two characters are the start of a header
-        // There is no significant improvement by using "strip" method instead
-        final String header = text.substring(startHeader + START_HEADER.length(), endHeader);
-        final String label = StringUtils.remove(header, HEADER_CHAR).trim();
-        return this.ignorableSections.stream().anyMatch(label::startsWith);
+        int labelStart = findHeaderLevelEnd(text, startHeader);
+        while (labelStart < endHeader && Character.isWhitespace(text.charAt(labelStart))) {
+            labelStart++;
+        }
+        int labelEnd = endHeader;
+        while (labelEnd > labelStart && text.charAt(labelEnd - 1) == HEADER_CHAR) {
+            labelEnd--;
+        }
+        labelEnd = FinderUtils.trimRight(text, labelStart, labelEnd);
+        final int labelFinalStart = labelStart; // Lambda requires effectively final variable
+        return this.ignorableSections.stream().anyMatch(s ->
+            ReplacerUtils.containsAtPosition(text, s, labelFinalStart)
+        );
     }
 
     private int findStartNextHeader(String text, int startHeader, int endHeader) {
-        final String headerLevel = findHeaderLevel(text, startHeader);
-        return findStartNextHeader(text, endHeader, headerLevel);
-    }
+        final int headerLevelEnd = findHeaderLevelEnd(text, startHeader);
+        final int headerLevelLength = headerLevelEnd - startHeader;
+        assert headerLevelLength >= 2; // At least "=="
 
-    private int findStartNextHeader(String text, int start, String headerLevel) {
-        final int startNextHeader = text.indexOf(headerLevel, start);
-        if (startNextHeader >= 0) {
-            final int endNextHeaderLevel = startNextHeader + headerLevel.length();
-            // In case we find a subsection, find again.
-            if (endNextHeaderLevel < text.length() && text.charAt(endNextHeaderLevel) == HEADER_CHAR) {
-                // As this is a corner-case, there is no performance penalty on using recursion here.
-                return findStartNextHeader(text, endNextHeaderLevel + 1, headerLevel);
+        int startNextHeader = findStartHeader(text, endHeader);
+        while (startNextHeader >= 0 && startNextHeader < text.length()) {
+            final int nextHeaderLevelEnd = findHeaderLevelEnd(text, startNextHeader);
+            final int nextHeaderLevelLength = nextHeaderLevelEnd - startNextHeader;
+            if (nextHeaderLevelLength > headerLevelLength) {
+                // Lower level, so we need to find the next header of the same level or higher
+                final int endNextHeader = findEndHeader(text, startNextHeader);
+                startNextHeader = findStartHeader(text, endNextHeader);
             } else {
                 return startNextHeader;
             }
-        } else {
-            return text.length();
         }
+        return text.length();
     }
 
-    private String findHeaderLevel(String text, int startHeader) {
-        for (int i = startHeader; i < text.length(); i++) {
-            if (text.charAt(i) != '=') {
-                return text.substring(startHeader, i);
+    private int findHeaderLevelEnd(String text, int startHeader) {
+        assert text.charAt(startHeader) == HEADER_CHAR && text.charAt(startHeader + 1) == HEADER_CHAR;
+        for (int i = startHeader + START_HEADER.length(); i < text.length(); i++) {
+            if (text.charAt(i) != HEADER_CHAR) {
+                return i;
             }
         }
-        throw new IllegalStateException();
+        return text.length();
     }
 }
