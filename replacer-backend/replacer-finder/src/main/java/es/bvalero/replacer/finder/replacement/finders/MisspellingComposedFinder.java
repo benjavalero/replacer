@@ -73,9 +73,9 @@ public class MisspellingComposedFinder extends MisspellingFinder implements Prop
 
     @Override
     public Stream<MatchResult> findMatchResults(FinderPage page) {
-        // There are hundreds of composed misspellings.
-        // The best approach is to loop over all the misspellings and find them in the text.
-        // Nevertheless, the Aho-Corasick algorithm can be even better.
+        // There are thousands of composed misspellings, many containing non-word characters (spaces, hyphens, etc.).
+        // This prevents using the faster Aho-Corasick "whole word" variant, which only works with pure word patterns.
+        // The standard Aho-Corasick algorithm gives the best performance here.
         final StringMap<String> stringMap = this.stringMaps.get(page.getPageKey().getLang());
         if (stringMap == null) {
             LOGGER.warn("No composed misspelling map for lang {} (still loading)", page.getPageKey().getLang());

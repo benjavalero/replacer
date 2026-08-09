@@ -43,9 +43,13 @@ public class MisspellingSimpleFinder extends MisspellingFinder implements Proper
 
     @Override
     public Stream<MatchResult> findMatchResults(FinderPage page) {
-        // There are thousands of simple misspellings
+        // There are thousands of simple misspellings.
         // The best approach is to find all words in the text and check if they are in the list
-        // Within this approach the linear finder gives the best performance
+        // via a HashMap lookup (O(1) per word). This inverts the usual search direction and scales
+        // better than Aho-Corasick, whose automaton becomes too large and cache-unfriendly with 20K+ patterns.
+        // Within this approach the linear finder gives the best performance.
+        // Note: a substring is created for each word found in the text in order to perform the HashMap lookup.
+        // This is an accepted cost, as there is no way to avoid it with the current HashMap-based design.
         return LinearMatchFinder.find(page, this::findWord);
     }
 

@@ -46,7 +46,10 @@ public class BaseFinderJmhBenchmark {
     private static final String BENCHMARK_PACKAGE_PATH = "/es/bvalero/replacer/finder/benchmark/";
     private static final String RESOURCES_PATH = "src/main/resources" + BENCHMARK_PACKAGE_PATH;
     // When running from the parent project, "replacer-backend/" needs to be prepended to the path.
-    private static final String RESOURCES_COMPLETE_PATH = "replacer-finder-benchmark/" + RESOURCES_PATH;
+    private static final String PARENT_PROJECT_PATH = "replacer-backend/";
+    private static final String RESOURCES_COMPLETE_PATH =
+        PARENT_PROJECT_PATH + "replacer-finder-benchmark/" + RESOURCES_PATH;
+    // private static final String RESOURCES_COMPLETE_PATH = "replacer-finder-benchmark/" + RESOURCES_PATH;
 
     protected List<FinderPage> sampleContents;
     private Map<Integer, Integer> samplePages;
@@ -127,6 +130,11 @@ public class BaseFinderJmhBenchmark {
         new Runner(opt).run();
     }
 
+    /**
+     * To regenerate the chart from an existing JSON without re-running the benchmark,
+     * comment out the {@code run(...)} call in the benchmark's {@code main}, recompile
+     * the JAR so the JSON is included in the classpath, and run again.
+     */
     protected static void generateChart(String fileName) throws ReplacerException {
         DefaultStatisticalCategoryDataset dataset = buildDataset(getJsonSummaries(fileName));
         JFreeChart chart = ChartFactory.createBarChart(null, null, "Execution Time (µs)", dataset);

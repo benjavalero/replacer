@@ -188,3 +188,11 @@ Benchmarks in Replacer are test classes extending `BaseFinderBenchmark` and havi
 
 JMH library is used for benchmarking the time to find all the results in the sample of 50 pages.
 Then, a barchart with a confidence interval is generated to compare the results visually.
+
+From a performance perspective, the finder pipeline has three distinct phases with different optimization priorities:
+
+1. **Search**: finding candidate matches in the text. This is the most critical phase, as it runs on every page during dump indexing (~2M pages). Any improvement here has the highest impact.
+2. **Validation**: checking whether a candidate match is a true positive. This also runs during indexing and is worth optimizing, as it is called once per candidate match.
+3. **Suggestion building**: computing the replacement suggestions to display to the user. This only runs when a user opens a page for review, so performance here is not critical and should not be sacrificed for the sake of the above two phases.
+
+This is why finders expose `findWithNoSuggestions` and `convertWithNoSuggestions` methods: during indexing, only the search and validation phases are executed, deferring the more expensive suggestion building to the interactive review flow.
