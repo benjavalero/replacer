@@ -10,8 +10,8 @@ import java.util.stream.Stream;
 import org.ahocorasick.trie.Trie;
 
 /**
- * Finds the words/expressions in the text using the Aho-Corasick algorithm.
- * Then it checks the results to be complete in the text.
+ * Finds the words/expressions in the text using the Aho-Corasick algorithm (Trie library).
+ * No need to validate: the whole-word matching already guarantees completeness.
  * This approach matches only whole word matches, i.e., keywords surrounded by non-word characters or string boundaries.
  */
 class WordTrieWholeFinder implements BenchmarkFinder {

@@ -12,10 +12,10 @@ import java.util.regex.MatchResult;
 import java.util.stream.Stream;
 
 /**
- * Find all the words/expressions in the text with a regex.
- * The regex contains the alternation of all the words/expressions.
+ * Find all the words/expressions in the text using an automaton.
+ * The automaton contains the alternation of all the words/expressions.
  * Then the result is checked to be complete in the text.
- * There is no "complete" version as the automaton doesn't allow complex regex.
+ * Note: there is no "complete" version as the automaton doesn't allow complex regex.
  */
 class WordAutomatonAlternateFinder implements BenchmarkFinder {
 

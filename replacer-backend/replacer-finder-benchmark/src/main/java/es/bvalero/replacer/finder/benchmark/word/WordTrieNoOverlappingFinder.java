@@ -10,8 +10,8 @@ import java.util.stream.Stream;
 import org.ahocorasick.trie.Trie;
 
 /**
- * Finds the words/expressions in the text using the Aho-Corasick algorithm.
- * Then it checks the results to be complete in the text.
+ * Finds the words/expressions in the text using the Aho-Corasick algorithm (Trie library).
+ * Then the result is checked to be complete in the text.
  * This approach matches the left-most longest non-overlapping occurrences of keywords.
  */
 class WordTrieNoOverlappingFinder implements BenchmarkFinder {

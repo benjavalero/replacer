@@ -2,18 +2,19 @@ package es.bvalero.replacer.finder.benchmark.word;
 
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
-import es.bvalero.replacer.finder.benchmark.BenchmarkResult;
 import es.bvalero.replacer.finder.util.FinderUtils;
+import es.bvalero.replacer.finder.util.RegexMatchFinder;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.regex.Matcher;
+import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 /**
  * Loop over all the words/expressions and find them in the text with a regex.
  * Then the result is checked to be complete in the text.
+ * Con: it iterates over all the words/expressions, so it may be slow for large collections.
  */
 class WordRegexFinder implements BenchmarkFinder {
 
@@ -27,17 +28,12 @@ class WordRegexFinder implements BenchmarkFinder {
     }
 
     @Override
-    public Stream<BenchmarkResult> find(FinderPage page) {
-        final String text = page.getContent();
-        final List<BenchmarkResult> matches = new ArrayList<>(100);
-        for (Pattern pattern : this.patterns) {
-            final Matcher m = pattern.matcher(text);
-            while (m.find()) {
-                if (FinderUtils.isWordCompleteInText(m, text)) {
-                    matches.add(BenchmarkResult.of(m.start(), m.group()));
-                }
-            }
-        }
-        return matches.stream();
+    public Stream<MatchResult> findMatchResults(FinderPage page) {
+        return patterns.stream().flatMap(p -> RegexMatchFinder.find(page.getContent(), p));
+    }
+
+    @Override
+    public boolean validate(MatchResult match, FinderPage page) {
+        return FinderUtils.isWordCompleteInText(match, page.getContent());
     }
 }

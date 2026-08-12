@@ -16,8 +16,8 @@ import java.util.stream.Stream;
  * Find all the words in the text using an automaton.
  * Therefore, we can only use it for simple misspellings.
  * Then check if it is a wanted word.
- * Then check if it is complete in the text.
- * There is no "complete" version as the automaton doesn't allow complex regex.
+ * Then the result is checked to be complete in the text.
+ * Note: there is no "complete" version as the automaton doesn't allow complex regex.
  */
 class WordAutomatonAllFinder implements BenchmarkFinder {
 

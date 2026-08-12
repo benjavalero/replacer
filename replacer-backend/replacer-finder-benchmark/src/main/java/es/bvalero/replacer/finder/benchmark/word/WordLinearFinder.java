@@ -8,11 +8,11 @@ import es.bvalero.replacer.finder.util.LinearMatchFinder;
 import java.util.Collection;
 import java.util.regex.MatchResult;
 import java.util.stream.Stream;
-import org.jspecify.annotations.Nullable;
 
 /**
  * Loop over all the words/expressions and find them in the text using a simple "indexOf".
  * Then the result is checked to be complete in the text.
+ * Con: it iterates over all the words/expressions, so it may be slow for large collections.
  */
 class WordLinearFinder implements BenchmarkFinder {
 
@@ -24,45 +24,23 @@ class WordLinearFinder implements BenchmarkFinder {
 
     @Override
     public Stream<MatchResult> findMatchResults(FinderPage page) {
-        return words
-            .stream()
-            .map(MisspellingLinearFinder::new)
-            .flatMap(finder -> finder.find(page));
+        return words.stream().flatMap(word -> LinearMatchFinder.find(page, (p, start) -> findWord(p, start, word)));
     }
 
-    private static class MisspellingLinearFinder {
-
-        private final String misspelling;
-
-        MisspellingLinearFinder(String word) {
-            this.misspelling = word;
-        }
-
-        private Stream<MatchResult> find(FinderPage page) {
-            return LinearMatchFinder.find(page, this::findMisspelling);
-        }
-
-        @Nullable
-        private MatchResult findMisspelling(FinderPage page, int start) {
-            final String text = page.getContent();
-            while (start >= 0 && start < text.length()) {
-                final int startMisspelling = findStartMisspelling(text, start);
-                if (startMisspelling >= 0) {
-                    if (FinderUtils.isWordCompleteInText(startMisspelling, misspelling, text)) {
-                        return FinderMatchResult.of(startMisspelling, misspelling);
-                    } else {
-                        // The char after the word is a non-letter, so we can start searching for the next word one position after.
-                        start = startMisspelling + misspelling.length() + 1;
-                    }
+    private MatchResult findWord(FinderPage page, int start, String word) {
+        final String text = page.getContent();
+        while (start >= 0 && start < text.length()) {
+            final int startWord = text.indexOf(word, start);
+            if (startWord >= 0) {
+                if (FinderUtils.isWordCompleteInText(startWord, word, text)) {
+                    return FinderMatchResult.of(startWord, word);
                 } else {
-                    return null;
+                    start = startWord + word.length() + 1;
                 }
+            } else {
+                return null;
             }
-            return null;
         }
-
-        private int findStartMisspelling(String text, int start) {
-            return text.indexOf(misspelling, start);
-        }
+        return null;
     }
 }

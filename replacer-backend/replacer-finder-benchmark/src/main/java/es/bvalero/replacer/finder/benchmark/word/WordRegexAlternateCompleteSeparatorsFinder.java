@@ -13,7 +13,7 @@ import java.util.stream.Stream;
 /**
  * Find all the words/expressions in the text with a regex.
  * The regex contains the alternation of all the words/expressions surrounded by word boundaries or underscores.
- * Then there is no need to check if the result is complete in the text.
+ * No need to validate: the separators already guarantee completeness.
  */
 class WordRegexAlternateCompleteSeparatorsFinder implements BenchmarkFinder {
 

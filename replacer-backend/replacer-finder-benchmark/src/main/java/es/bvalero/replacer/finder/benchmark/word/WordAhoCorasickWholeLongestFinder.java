@@ -11,7 +11,7 @@ import java.util.stream.Stream;
 
 /**
  * Finds the words/expressions in the text using the Aho-Corasick algorithm.
- * There is no need to validate if the results are complete in the text.
+ * No need to validate: the whole-word matching already guarantees completeness.
  * This approach matches only whole word matches, i.e., keywords surrounded by non-word characters or string boundaries.
  * It allows non-word characters in the keywords.
  * This means there can be overlaps, in which case the leftmost longest match will be returned.
