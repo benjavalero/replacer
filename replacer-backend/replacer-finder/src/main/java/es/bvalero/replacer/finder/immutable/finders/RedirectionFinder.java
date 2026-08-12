@@ -1,5 +1,7 @@
 package es.bvalero.replacer.finder.immutable.finders;
 
+import com.roklenarcic.util.strings.StringMap;
+import com.roklenarcic.util.strings.WholeWordMatchMap;
 import es.bvalero.replacer.FinderProperties;
 import es.bvalero.replacer.common.util.ReplacerUtils;
 import es.bvalero.replacer.finder.FinderPage;
@@ -7,7 +9,6 @@ import es.bvalero.replacer.finder.FinderPriority;
 import es.bvalero.replacer.finder.immutable.ImmutableFinder;
 import es.bvalero.replacer.finder.util.FinderMatchResult;
 import jakarta.annotation.PostConstruct;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.MatchResult;
 import java.util.stream.Stream;
@@ -20,7 +21,7 @@ public class RedirectionFinder implements ImmutableFinder {
     // Dependency injection
     private final FinderProperties finderProperties;
 
-    private final List<String> redirectionWords = new ArrayList<>();
+    private StringMap<String> stringMap;
 
     public RedirectionFinder(FinderProperties finderProperties) {
         this.finderProperties = finderProperties;
@@ -28,9 +29,13 @@ public class RedirectionFinder implements ImmutableFinder {
 
     @PostConstruct
     public void init() {
-        this.redirectionWords.addAll(
-            this.finderProperties.getRedirectionWords().stream().map(ReplacerUtils::toLowerCase).toList()
-        );
+        List<String> lowerCaseWords = this.finderProperties.getRedirectionWords()
+            .stream()
+            .map(ReplacerUtils::toLowerCase)
+            .toList();
+        char[] falseWordChars = { '-' };
+        boolean[] wordCharFlags = { false };
+        this.stringMap = new WholeWordMatchMap<>(lowerCaseWords, lowerCaseWords, true, falseWordChars, wordCharFlags);
     }
 
     @Override
@@ -42,14 +47,10 @@ public class RedirectionFinder implements ImmutableFinder {
 
     @Override
     public Stream<MatchResult> findMatchResults(FinderPage page) {
-        // With only 3 redirection words, the performance of the simple index-of and the Aho-Corasick is similar.
         final String text = page.getContent();
         final String lowerCaseText = ReplacerUtils.toLowerCase(text);
-        for (String redirectionWord : this.redirectionWords) {
-            if (lowerCaseText.contains(redirectionWord)) {
-                return Stream.of(FinderMatchResult.of(0, text));
-            }
-        }
-        return Stream.of();
+        final RedirectionMatchListener listener = new RedirectionMatchListener();
+        this.stringMap.match(lowerCaseText, listener);
+        return listener.isFound() ? Stream.of(FinderMatchResult.of(0, text)) : Stream.of();
     }
 }

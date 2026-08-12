@@ -10,13 +10,18 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
+/**
+ * Finds the redirection words in the lowercase text using a regex alternation.
+ * Returns the whole page on first match.
+ * Case-insensitive: normalizes keywords to lowercase in the constructor and converts the text to lowercase at search time.
+ */
 class RedirectionRegexFinder implements BenchmarkFinder {
 
     private final Pattern pattern;
 
     RedirectionRegexFinder(List<String> redirectionWords) {
-        String alternations = '(' + FinderUtils.joinAlternate(redirectionWords) + ")";
-        this.pattern = Pattern.compile(alternations);
+        List<String> lowerCaseWords = redirectionWords.stream().map(ReplacerUtils::toLowerCase).toList();
+        this.pattern = Pattern.compile('(' + FinderUtils.joinAlternate(lowerCaseWords) + ')');
     }
 
     @Override
@@ -24,8 +29,10 @@ class RedirectionRegexFinder implements BenchmarkFinder {
         final String text = page.getContent();
         final String lowerCaseText = ReplacerUtils.toLowerCase(text);
         final Matcher m = this.pattern.matcher(lowerCaseText);
-        if (m.find()) {
-            return Stream.of(BenchmarkResult.of(0, text));
+        while (m.find()) {
+            if (FinderUtils.isWordCompleteInText(m, lowerCaseText)) {
+                return Stream.of(BenchmarkResult.of(0, text));
+            }
         }
         return Stream.of();
     }

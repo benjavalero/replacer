@@ -21,8 +21,8 @@ class WordAhoCorasickWholeLongestFinder implements BenchmarkFinder {
     private final StringMap<String> stringMap;
 
     WordAhoCorasickWholeLongestFinder(Collection<String> words) {
-        char[] falseWordChars = { '-', '№', '\'', '[', ']' };
-        boolean[] wordCharFlags = { false, true, true, true, true };
+        char[] falseWordChars = { '-' };
+        boolean[] wordCharFlags = { false };
         this.stringMap = new WholeWordLongestMatchMap<>(words, words, true, falseWordChars, wordCharFlags);
     }
 

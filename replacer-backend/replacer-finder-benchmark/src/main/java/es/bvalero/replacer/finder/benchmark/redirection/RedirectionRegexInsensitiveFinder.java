@@ -9,6 +9,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
+/**
+ * Finds the redirection words in the text using a case-insensitive regex alternation.
+ * Returns the whole page on first match.
+ * Case-insensitive: uses {@code CASE_INSENSITIVE | UNICODE_CASE} flags on the pattern.
+ */
 class RedirectionRegexInsensitiveFinder implements BenchmarkFinder {
 
     private final Pattern pattern;
@@ -22,8 +27,10 @@ class RedirectionRegexInsensitiveFinder implements BenchmarkFinder {
     public Stream<BenchmarkResult> find(FinderPage page) {
         final String text = page.getContent();
         final Matcher m = this.pattern.matcher(text);
-        if (m.find()) {
-            return Stream.of(BenchmarkResult.of(0, text));
+        while (m.find()) {
+            if (FinderUtils.isWordCompleteInText(m, text)) {
+                return Stream.of(BenchmarkResult.of(0, text));
+            }
         }
         return Stream.of();
     }

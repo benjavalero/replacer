@@ -20,13 +20,20 @@ public class RedirectionFinderJmhBenchmark extends BaseFinderJmhBenchmark {
     private ConfigurableApplicationContext context;
 
     private RedirectionLowercaseContainsFinder redirectionLowercaseContainsFinder;
-    private RedirectionRegexFinder redirectionRegexFinder;
-    private RedirectionRegexInsensitiveFinder redirectionRegexInsensitiveFinder;
-    private RedirectionAutomatonFinder redirectionAutomatonFinder;
-    private RedirectionAhoCorasickFinder redirectionAhoCorasickFinder;
-    private RedirectionAhoCorasickLongestFinder redirectionAhoCorasickLongestFinder;
+    private RedirectionLowercasePrefixFinder redirectionLowercasePrefixFinder;
+    // private RedirectionRegexFinder redirectionRegexFinder; // Very long
+    // private RedirectionRegexInsensitiveFinder redirectionRegexInsensitiveFinder; // Very long
+    // private RedirectionAutomatonFinder redirectionAutomatonFinder; // Medium
+    private RedirectionAhoCorasickFinder redirectionAhoCorasickFinder; // Medium
+    // private RedirectionAhoCorasickLongestFinder redirectionAhoCorasickLongestFinder; // Medium
     private RedirectionAhoCorasickWholeFinder redirectionAhoCorasickWholeFinder;
-    private RedirectionAhoCorasickWholeLongestFinder redirectionAhoCorasickWholeLongestFinder;
+
+    // private RedirectionAhoCorasickWholeLongestFinder redirectionAhoCorasickWholeLongestFinder; // Medium
+
+    // private RedirectionLowercaseAhoCorasickFinder redirectionLowercaseAhoCorasickFinder; // Worse than case-insensitive
+    // private RedirectionLowercaseAhoCorasickLongestFinder redirectionLowercaseAhoCorasickLongestFinder; // Worse than case-insensitive
+    // private RedirectionLowercaseAhoCorasickWholeFinder redirectionLowercaseAhoCorasickWholeFinder; // Worse than case-insensitive
+    // private RedirectionLowercaseAhoCorasickWholeLongestFinder redirectionLowercaseAhoCorasickWholeLongestFinder; // Worse than case-insensitive
 
     @Override
     @Setup
@@ -42,13 +49,18 @@ public class RedirectionFinderJmhBenchmark extends BaseFinderJmhBenchmark {
         // Initialize the finders
         List<String> redirectionWords = finderProperties.getRedirectionWords();
         redirectionLowercaseContainsFinder = new RedirectionLowercaseContainsFinder(redirectionWords);
-        redirectionRegexFinder = new RedirectionRegexFinder(redirectionWords);
-        redirectionRegexInsensitiveFinder = new RedirectionRegexInsensitiveFinder(redirectionWords);
-        redirectionAutomatonFinder = new RedirectionAutomatonFinder(redirectionWords);
+        redirectionLowercasePrefixFinder = new RedirectionLowercasePrefixFinder(redirectionWords);
+        // redirectionRegexFinder = new RedirectionRegexFinder(redirectionWords);
+        // redirectionRegexInsensitiveFinder = new RedirectionRegexInsensitiveFinder(redirectionWords);
+        // redirectionAutomatonFinder = new RedirectionAutomatonFinder(redirectionWords);
         redirectionAhoCorasickFinder = new RedirectionAhoCorasickFinder(redirectionWords);
-        redirectionAhoCorasickLongestFinder = new RedirectionAhoCorasickLongestFinder(redirectionWords);
+        // redirectionAhoCorasickLongestFinder = new RedirectionAhoCorasickLongestFinder(redirectionWords);
         redirectionAhoCorasickWholeFinder = new RedirectionAhoCorasickWholeFinder(redirectionWords);
-        redirectionAhoCorasickWholeLongestFinder = new RedirectionAhoCorasickWholeLongestFinder(redirectionWords);
+        // redirectionAhoCorasickWholeLongestFinder = new RedirectionAhoCorasickWholeLongestFinder(redirectionWords);
+        // redirectionLowercaseAhoCorasickFinder = new RedirectionLowercaseAhoCorasickFinder(redirectionWords);
+        // redirectionLowercaseAhoCorasickLongestFinder = new RedirectionLowercaseAhoCorasickLongestFinder(redirectionWords);
+        // redirectionLowercaseAhoCorasickWholeFinder = new RedirectionLowercaseAhoCorasickWholeFinder(redirectionWords);
+        // redirectionLowercaseAhoCorasickWholeLongestFinder = new RedirectionLowercaseAhoCorasickWholeLongestFinder(redirectionWords);
     }
 
     @Benchmark
@@ -56,6 +68,12 @@ public class RedirectionFinderJmhBenchmark extends BaseFinderJmhBenchmark {
         runFinder(redirectionLowercaseContainsFinder, bh);
     }
 
+    @Benchmark
+    public void redirectionLowercasePrefixFinder(Blackhole bh) {
+        runFinder(redirectionLowercasePrefixFinder, bh);
+    }
+
+    /*
     @Benchmark
     public void setRedirectionRegexFinder(Blackhole bh) {
         runFinder(redirectionRegexFinder, bh);
@@ -70,29 +88,56 @@ public class RedirectionFinderJmhBenchmark extends BaseFinderJmhBenchmark {
     public void setRedirectionAutomatonFinder(Blackhole bh) {
         runFinder(redirectionAutomatonFinder, bh);
     }
+    */
 
     @Benchmark
     public void setRedirectionAhoCorasickFinder(Blackhole bh) {
         runFinder(redirectionAhoCorasickFinder, bh);
     }
 
+    /*
     @Benchmark
     public void setRedirectionAhoCorasickLongestFinder(Blackhole bh) {
         runFinder(redirectionAhoCorasickLongestFinder, bh);
     }
+    */
 
     @Benchmark
     public void setRedirectionAhoCorasickWholeFinder(Blackhole bh) {
         runFinder(redirectionAhoCorasickWholeFinder, bh);
     }
 
+    /*
     @Benchmark
     public void setRedirectionAhoCorasickWholeLongestFinder(Blackhole bh) {
         runFinder(redirectionAhoCorasickWholeLongestFinder, bh);
     }
+    */
+
+    /*
+    @Benchmark
+    public void setRedirectionLowercaseAhoCorasickFinder(Blackhole bh) {
+        runFinder(redirectionLowercaseAhoCorasickFinder, bh);
+    }
+
+    @Benchmark
+    public void setRedirectionLowercaseAhoCorasickLongestFinder(Blackhole bh) {
+        runFinder(redirectionLowercaseAhoCorasickLongestFinder, bh);
+    }
+
+    @Benchmark
+    public void setRedirectionLowercaseAhoCorasickWholeFinder(Blackhole bh) {
+        runFinder(redirectionLowercaseAhoCorasickWholeFinder, bh);
+    }
+
+    @Benchmark
+    public void setRedirectionLowercaseAhoCorasickWholeLongestFinder(Blackhole bh) {
+        runFinder(redirectionLowercaseAhoCorasickWholeLongestFinder, bh);
+    }
+    */
 
     public static void main(String[] args) throws RunnerException, ReplacerException {
-        run(RedirectionFinderJmhBenchmark.class, fileName);
+        // run(RedirectionFinderJmhBenchmark.class, fileName);
 
         generateChart(fileName);
     }

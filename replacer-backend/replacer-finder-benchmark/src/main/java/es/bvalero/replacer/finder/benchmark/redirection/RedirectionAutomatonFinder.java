@@ -11,6 +11,12 @@ import es.bvalero.replacer.finder.util.FinderUtils;
 import java.util.List;
 import java.util.stream.Stream;
 
+/**
+ * Finds the redirection words in the lowercase text using an automaton alternation.
+ * Returns the whole page on first match.
+ * Case-insensitive: normalizes keywords to lowercase in the constructor and converts the text to lowercase at search time.
+ * Note: {@code #} must be escaped as {@code \#} in dk.brics.automaton regex syntax.
+ */
 class RedirectionAutomatonFinder implements BenchmarkFinder {
 
     private final RunAutomaton automaton;
@@ -18,6 +24,7 @@ class RedirectionAutomatonFinder implements BenchmarkFinder {
     RedirectionAutomatonFinder(List<String> redirectionWords) {
         List<String> fixedRedirectionWords = redirectionWords
             .stream()
+            .map(ReplacerUtils::toLowerCase)
             .map(s -> s.replace("#", "\\#"))
             .toList();
         String alternations = '(' + FinderUtils.joinAlternate(fixedRedirectionWords) + ')';
@@ -29,8 +36,10 @@ class RedirectionAutomatonFinder implements BenchmarkFinder {
         final String text = page.getContent();
         final String lowerCaseText = ReplacerUtils.toLowerCase(text);
         final AutomatonMatcher m = this.automaton.newMatcher(lowerCaseText);
-        if (m.find()) {
-            return Stream.of(BenchmarkResult.of(0, text));
+        while (m.find()) {
+            if (FinderUtils.isWordCompleteInText(m, lowerCaseText)) {
+                return Stream.of(BenchmarkResult.of(0, text));
+            }
         }
         return Stream.of();
     }

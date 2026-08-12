@@ -24,6 +24,7 @@ class RedirectionFinderTest {
         assertFalse(redirectionFinder.findList("xxx #REDIRECT [[A]] yyy").isEmpty());
         assertTrue(redirectionFinder.findList("Otro contenido").isEmpty());
         assertTrue(redirectionFinder.findList("xxx {{destruir|motivo}}").isEmpty());
+        assertTrue(redirectionFinder.findList("xxx #redirecciones yyy").isEmpty());
 
         // The finder returns the whole text
         String text = "xxx #REDIRECCIÓN [[A]] yyy";

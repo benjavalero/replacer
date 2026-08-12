@@ -33,6 +33,12 @@ class RedirectionFinderTest {
     }
 
     @Test
+    void testRedirectionLowercasePrefixFinder() {
+        RedirectionLowercasePrefixFinder finder = new RedirectionLowercasePrefixFinder(redirectionWords);
+        doAssertions(finder);
+    }
+
+    @Test
     void testRedirectionRegexFinder() {
         RedirectionRegexFinder finder = new RedirectionRegexFinder(redirectionWords);
         doAssertions(finder);
@@ -76,11 +82,41 @@ class RedirectionFinderTest {
         doAssertions(finder);
     }
 
+    @Test
+    void testRedirectionLowercaseAhoCorasickFinder() {
+        RedirectionLowercaseAhoCorasickFinder finder = new RedirectionLowercaseAhoCorasickFinder(redirectionWords);
+        doAssertions(finder);
+    }
+
+    @Test
+    void testRedirectionLowercaseAhoCorasickLongestFinder() {
+        RedirectionLowercaseAhoCorasickLongestFinder finder = new RedirectionLowercaseAhoCorasickLongestFinder(
+            redirectionWords
+        );
+        doAssertions(finder);
+    }
+
+    @Test
+    void testRedirectionLowercaseAhoCorasickWholeFinder() {
+        RedirectionLowercaseAhoCorasickWholeFinder finder = new RedirectionLowercaseAhoCorasickWholeFinder(
+            redirectionWords
+        );
+        doAssertions(finder);
+    }
+
+    @Test
+    void testRedirectionLowercaseAhoCorasickWholeLongestFinder() {
+        RedirectionLowercaseAhoCorasickWholeLongestFinder finder =
+            new RedirectionLowercaseAhoCorasickWholeLongestFinder(redirectionWords);
+        doAssertions(finder);
+    }
+
     private void doAssertions(BenchmarkFinder finder) {
         assertFalse(finder.findMatches("xxx #REDIRECCIÓN [[A]] yyy").isEmpty());
         assertFalse(finder.findMatches("xxx #redirección [[A]] yyy").isEmpty());
         assertFalse(finder.findMatches("xxx #REDIRECT [[A]] yyy").isEmpty());
         assertTrue(finder.findMatches("Otro contenido").isEmpty());
         assertTrue(finder.findMatches("xxx {{destruir|motivo}}").isEmpty());
+        assertTrue(finder.findMatches("xxx #redirecciones yyy").isEmpty());
     }
 }
