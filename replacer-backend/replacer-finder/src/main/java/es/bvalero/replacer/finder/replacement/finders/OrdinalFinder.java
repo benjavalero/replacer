@@ -25,6 +25,10 @@ import org.springframework.stereotype.Component;
 
 /**
  * Find ordinals to be corrected in Spanish, e.g. without the dot between the number and the symbol.
+ *
+ * <p>The strategy is to find numbers first and then look for a suffix immediately after. The reverse
+ * approach (find suffix first, then validate the number before) is significantly slower because there
+ * are many possible suffixes, making the anchor search expensive.
  */
 @Component
 public class OrdinalFinder implements ReplacementFinder {
@@ -36,9 +40,9 @@ public class OrdinalFinder implements ReplacementFinder {
     // Dependency injection
     private final FinderProperties finderProperties;
 
-    private static final Set<String> MASCULINE_SUFFIXES = new HashSet<>();
-    private static final Set<String> FEMININE_SUFFIXES = new HashSet<>();
-    private static final Set<String> SUFFIXES = new HashSet<>();
+    private final Set<String> MASCULINE_SUFFIXES = new HashSet<>();
+    private final Set<String> FEMININE_SUFFIXES = new HashSet<>();
+    private final Set<String> SUFFIXES = new HashSet<>();
 
     public OrdinalFinder(FinderProperties finderProperties) {
         this.finderProperties = finderProperties;
@@ -74,7 +78,6 @@ public class OrdinalFinder implements ReplacementFinder {
     @Override
     public Stream<MatchResult> findMatchResults(FinderPage page) {
         if (WikipediaLanguage.SPANISH == page.getPageKey().getLang()) {
-            // The linear approach is about better than the automaton
             return LinearMatchFinder.find(page, this::findOrdinal);
         } else {
             return Stream.of();
@@ -130,13 +133,13 @@ public class OrdinalFinder implements ReplacementFinder {
     private boolean isOrdinalNumber(MatchResult numberMatch, String text) {
         // Max. 3 digits allowed
         // Not preceded by letter, e.g. a3o
-        // At this point the number string should match an integer
+        // Must be a positive integer without leading zeros
         final String number = numberMatch.group();
         return (
             number.length() <= 3 &&
-            Integer.parseInt(number) > 0 &&
-            (numberMatch.start() == 0 || FinderUtils.isValidSeparator(text.charAt(numberMatch.start() - 1))) &&
-            numberMatch.end() < text.length()
+            number.charAt(0) != '0' &&
+            numberMatch.end() < text.length() &&
+            (numberMatch.start() == 0 || FinderUtils.isValidSeparator(text.charAt(numberMatch.start() - 1)))
         );
     }
 
@@ -167,7 +170,7 @@ public class OrdinalFinder implements ReplacementFinder {
         // Always return the match starting right after the number
         int endSuffix = matchSuffix.end();
         if (endSuffix < text.length() && text.charAt(endSuffix) == DOT) {
-            endSuffix += 1;
+            endSuffix++;
         }
         return FinderMatchRange.of(text, start, endSuffix);
     }
