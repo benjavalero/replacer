@@ -12,10 +12,15 @@ import jakarta.annotation.PostConstruct;
 import java.util.List;
 import java.util.regex.MatchResult;
 import java.util.stream.Stream;
-import org.springframework.stereotype.Component;
 
-/** Find redirection templates. In case they are found the complete text must be ignored. */
-@Component
+/**
+ * Find redirection templates. In case they are found the complete text must be ignored.
+ *
+ * <p>Disabled: redirection pages are filtered upstream via {@code IndexablePage.isRedirect()}
+ * (both in dump indexing and API review), so this finder would run on every non-redirection page
+ * for no benefit. Kept for reference in case that upstream check ever becomes unreliable.
+ */
+// @Component — disabled, see Javadoc
 public class RedirectionFinder implements ImmutableFinder {
 
     // Dependency injection
