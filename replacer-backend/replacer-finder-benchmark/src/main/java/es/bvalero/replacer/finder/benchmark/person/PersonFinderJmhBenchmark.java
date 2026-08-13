@@ -6,13 +6,17 @@ import es.bvalero.replacer.finder.benchmark.BaseFinderJmhBenchmark;
 import java.util.HashSet;
 import java.util.Set;
 import org.openjdk.jmh.annotations.Benchmark;
+import org.openjdk.jmh.annotations.Measurement;
 import org.openjdk.jmh.annotations.Setup;
+import org.openjdk.jmh.annotations.Warmup;
 import org.openjdk.jmh.infra.Blackhole;
 import org.openjdk.jmh.runner.RunnerException;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.ConfigurableApplicationContext;
 
+@Warmup(time = 5)
+@Measurement(time = 5)
 @EnableConfigurationProperties(FinderProperties.class)
 public class PersonFinderJmhBenchmark extends BaseFinderJmhBenchmark {
 
@@ -21,13 +25,13 @@ public class PersonFinderJmhBenchmark extends BaseFinderJmhBenchmark {
     private ConfigurableApplicationContext context;
 
     private PersonIndexOfFinder personIndexOfFinder;
-    private PersonRegexFinder personRegexFinder;
-    private PersonAutomatonFinder personAutomatonFinder;
-    private PersonRegexCompleteFinder personRegexCompleteFinder;
-    private PersonAutomatonCompleteFinder personAutomatonCompleteFinder;
-    private PersonRegexAlternateFinder personRegexAlternateFinder;
+    // private PersonRegexFinder personRegexFinder; // Medium
+    // private PersonAutomatonFinder personAutomatonFinder; // Very long
+    // private PersonRegexCompleteFinder personRegexCompleteFinder; // Medium
+    // private PersonAutomatonCompleteFinder personAutomatonCompleteFinder; // Very long
+    // private PersonRegexAlternateFinder personRegexAlternateFinder; // Very long
     private PersonAutomatonAlternateFinder personAutomatonAlternateFinder;
-    private PersonRegexAlternateCompleteFinder personRegexAlternateCompleteFinder;
+    // private PersonRegexAlternateCompleteFinder personRegexAlternateCompleteFinder; // Very long
     private PersonAutomatonAlternateCompleteFinder personAutomatonAlternateCompleteFinder;
     private PersonAhoCorasickFinder personAhoCorasickFinder;
     private PersonAhoCorasickLongestFinder personAhoCorasickLongestFinder;
@@ -47,13 +51,13 @@ public class PersonFinderJmhBenchmark extends BaseFinderJmhBenchmark {
         // Initialize the finders
         Set<String> personNames = new HashSet<>(finderProperties.getPersonNames());
         personIndexOfFinder = new PersonIndexOfFinder(personNames);
-        personRegexFinder = new PersonRegexFinder(personNames);
-        personAutomatonFinder = new PersonAutomatonFinder(personNames);
-        personRegexCompleteFinder = new PersonRegexCompleteFinder(personNames);
-        personAutomatonCompleteFinder = new PersonAutomatonCompleteFinder(personNames);
-        personRegexAlternateFinder = new PersonRegexAlternateFinder(personNames);
+        // personRegexFinder = new PersonRegexFinder(personNames);
+        // personAutomatonFinder = new PersonAutomatonFinder(personNames);
+        // personRegexCompleteFinder = new PersonRegexCompleteFinder(personNames);
+        // personAutomatonCompleteFinder = new PersonAutomatonCompleteFinder(personNames);
+        // personRegexAlternateFinder = new PersonRegexAlternateFinder(personNames);
         personAutomatonAlternateFinder = new PersonAutomatonAlternateFinder(personNames);
-        personRegexAlternateCompleteFinder = new PersonRegexAlternateCompleteFinder(personNames);
+        // personRegexAlternateCompleteFinder = new PersonRegexAlternateCompleteFinder(personNames);
         personAutomatonAlternateCompleteFinder = new PersonAutomatonAlternateCompleteFinder(personNames);
         personAhoCorasickFinder = new PersonAhoCorasickFinder(personNames);
         personAhoCorasickLongestFinder = new PersonAhoCorasickLongestFinder(personNames);
@@ -65,6 +69,7 @@ public class PersonFinderJmhBenchmark extends BaseFinderJmhBenchmark {
         runFinder(personIndexOfFinder, bh);
     }
 
+    /*
     @Benchmark
     public void personRegexFinder(Blackhole bh) {
         runFinder(personRegexFinder, bh);
@@ -89,16 +94,19 @@ public class PersonFinderJmhBenchmark extends BaseFinderJmhBenchmark {
     public void personRegexAlternateFinder(Blackhole bh) {
         runFinder(personRegexAlternateFinder, bh);
     }
+    */
 
     @Benchmark
     public void personAutomatonAlternateFinder(Blackhole bh) {
         runFinder(personAutomatonAlternateFinder, bh);
     }
 
+    /*
     @Benchmark
     public void personRegexAlternateCompleteFinder(Blackhole bh) {
         runFinder(personRegexAlternateCompleteFinder, bh);
     }
+    */
 
     @Benchmark
     public void personAutomatonAlternateCompleteFinder(Blackhole bh) {
@@ -121,7 +129,7 @@ public class PersonFinderJmhBenchmark extends BaseFinderJmhBenchmark {
     }
 
     public static void main(String[] args) throws RunnerException, ReplacerException {
-        run(PersonFinderJmhBenchmark.class, fileName);
+        // run(PersonFinderJmhBenchmark.class, fileName);
 
         generateChart(fileName);
     }

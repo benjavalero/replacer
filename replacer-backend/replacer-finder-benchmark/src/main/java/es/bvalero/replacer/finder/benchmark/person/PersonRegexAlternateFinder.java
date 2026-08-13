@@ -2,15 +2,19 @@ package es.bvalero.replacer.finder.benchmark.person;
 
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
-import es.bvalero.replacer.finder.benchmark.BenchmarkResult;
 import es.bvalero.replacer.finder.util.FinderUtils;
+import es.bvalero.replacer.finder.util.RegexMatchFinder;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.regex.Matcher;
+import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
+/**
+ * Find all the person names in the text using a single alternate regex.
+ * Then validate that the match is followed by an uppercase word.
+ */
 class PersonRegexAlternateFinder implements BenchmarkFinder {
 
     private final Pattern words;
@@ -21,17 +25,12 @@ class PersonRegexAlternateFinder implements BenchmarkFinder {
     }
 
     @Override
-    public Stream<BenchmarkResult> find(FinderPage page) {
-        final String text = page.getContent();
-        // Build an alternate regex with all the words and match it against the text
-        final List<BenchmarkResult> matches = new ArrayList<>(100);
-        final Matcher m = this.words.matcher(text);
-        while (m.find()) {
-            BenchmarkResult match = BenchmarkResult.of(m.start(), m.group());
-            if (FinderUtils.isWordFollowedByUpperCase(m.start(), m.group(), text)) {
-                matches.add(match);
-            }
-        }
-        return matches.stream();
+    public Stream<MatchResult> findMatchResults(FinderPage page) {
+        return RegexMatchFinder.find(page.getContent(), this.words);
+    }
+
+    @Override
+    public boolean validate(MatchResult match, FinderPage page) {
+        return FinderUtils.isWordFollowedByUpperCase(match.start(), match.group(), page.getContent());
     }
 }

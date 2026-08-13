@@ -13,6 +13,11 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Stream;
 
+/**
+ * Find all the person names in the text using a single alternate automaton, including the following space and uppercase letter.
+ * Note: not adaptable to the modern pattern as the condition {@code <Z><Lu>} is embedded in the pattern itself,
+ * so the match includes 2 extra characters that must be trimmed from the result.
+ */
 class PersonAutomatonAlternateCompleteFinder implements BenchmarkFinder {
 
     private final RunAutomaton words;

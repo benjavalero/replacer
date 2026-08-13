@@ -10,6 +10,10 @@ import java.util.Collection;
 import java.util.regex.MatchResult;
 import java.util.stream.Stream;
 
+/**
+ * Find all the person names in the text using the Aho-Corasick algorithm with longest match.
+ * Then validate that the match is complete in the text and followed by an uppercase word.
+ */
 class PersonAhoCorasickLongestFinder implements BenchmarkFinder {
 
     private final StringMap<String> stringMap;

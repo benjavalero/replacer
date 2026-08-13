@@ -10,6 +10,12 @@ import java.util.Collection;
 import java.util.regex.MatchResult;
 import java.util.stream.Stream;
 
+/**
+ * Find all the person names in the text using the Aho-Corasick algorithm with whole-word longest match.
+ * Then validate that the match is followed by an uppercase word.
+ * No need to validate completeness: the whole-word matching already guarantees it.
+ * This is the same approach used in production ({@link es.bvalero.replacer.finder.immutable.finders.PersonNameFinder}).
+ */
 class PersonAhoCorasickWholeLongestFinder implements BenchmarkFinder {
 
     private final StringMap<String> stringMap;

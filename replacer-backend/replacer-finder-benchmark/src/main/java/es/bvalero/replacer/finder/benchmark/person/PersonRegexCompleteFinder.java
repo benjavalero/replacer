@@ -8,6 +8,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
+/**
+ * Find all the person names in the text using one regex per word, including the following space and uppercase letter.
+ * Con: iterates over all words independently.
+ * Note: not adaptable to the modern pattern as the condition {@code \s\p{Lu}} is embedded in the pattern itself,
+ * so the match includes 2 extra characters that must be trimmed from the result.
+ */
 class PersonRegexCompleteFinder implements BenchmarkFinder {
 
     private final List<Pattern> words;
