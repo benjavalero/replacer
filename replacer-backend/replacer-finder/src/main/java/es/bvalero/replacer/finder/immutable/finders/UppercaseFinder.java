@@ -2,8 +2,8 @@ package es.bvalero.replacer.finder.immutable.finders;
 
 import static es.bvalero.replacer.finder.util.FinderUtils.*;
 
-import com.roklenarcic.util.strings.StringMap;
-import com.roklenarcic.util.strings.WholeWordLongestMatchMap;
+import dk.brics.automaton.RegExp;
+import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.FinderPriority;
@@ -12,9 +12,9 @@ import es.bvalero.replacer.finder.immutable.ImmutableFinder;
 import es.bvalero.replacer.finder.listing.StandardMisspelling;
 import es.bvalero.replacer.finder.listing.load.ComposedMisspellingLoader;
 import es.bvalero.replacer.finder.listing.load.SimpleMisspellingLoader;
+import es.bvalero.replacer.finder.util.AutomatonMatchFinder;
 import es.bvalero.replacer.finder.util.FinderMatchResult;
 import es.bvalero.replacer.finder.util.FinderUtils;
-import es.bvalero.replacer.finder.util.ResultMatchListener;
 import jakarta.annotation.PostConstruct;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -54,8 +54,6 @@ public class UppercaseFinder implements ImmutableFinder, PropertyChangeListener 
 
     private static final String CAPTION_SEPARATOR = "|+";
     private static final String PARAGRAPH_START = "\n\n";
-    private static final char[] falseWordChars = { '-' };
-    private static final boolean[] wordCharFlags = { false };
 
     // Dependency injection
     private final SimpleMisspellingLoader simpleMisspellingLoader;
@@ -64,10 +62,8 @@ public class UppercaseFinder implements ImmutableFinder, PropertyChangeListener 
     // volatile: references replaced atomically on reload; guarantees visibility across threads
     private volatile SetValuedMap<WikipediaLanguage, String> simpleUppercaseMap = new HashSetValuedHashMap<>();
     private volatile SetValuedMap<WikipediaLanguage, String> composedUppercaseMap = new HashSetValuedHashMap<>();
-    // StringMap with the misspellings which start with uppercase and are case-sensitive
-    private volatile Map<WikipediaLanguage, StringMap<String>> uppercaseStringMap = new EnumMap<>(
-        WikipediaLanguage.class
-    );
+    // RunAutomaton with the misspellings which start with uppercase and are case-sensitive
+    private volatile Map<WikipediaLanguage, RunAutomaton> uppercaseAutomata = new EnumMap<>(WikipediaLanguage.class);
 
     @Getter
     private volatile SetValuedMap<WikipediaLanguage, String> uppercaseMap = new HashSetValuedHashMap<>();
@@ -107,7 +103,7 @@ public class UppercaseFinder implements ImmutableFinder, PropertyChangeListener 
         mergedUppercaseMap.putAll(this.composedUppercaseMap);
         this.uppercaseMap = mergedUppercaseMap;
 
-        this.uppercaseStringMap = buildUppercaseStringMap(this.uppercaseMap);
+        this.uppercaseAutomata = buildUppercaseAutomata(this.uppercaseMap);
     }
 
     @VisibleForTesting
@@ -146,27 +142,26 @@ public class UppercaseFinder implements ImmutableFinder, PropertyChangeListener 
         );
     }
 
-    private Map<WikipediaLanguage, StringMap<String>> buildUppercaseStringMap(
+    private Map<WikipediaLanguage, RunAutomaton> buildUppercaseAutomata(
         SetValuedMap<WikipediaLanguage, String> uppercaseWords
     ) {
-        LOGGER.debug("START Building Uppercase string map…");
-        final Map<WikipediaLanguage, StringMap<String>> map = new EnumMap<>(WikipediaLanguage.class);
+        LOGGER.debug("START Building Uppercase automata…");
+        final Map<WikipediaLanguage, RunAutomaton> map = new EnumMap<>(WikipediaLanguage.class);
         for (WikipediaLanguage lang : uppercaseWords.keySet()) {
-            map.put(lang, buildUppercaseStringMap(uppercaseWords.get(lang)));
+            map.put(lang, buildUppercaseAutomaton(uppercaseWords.get(lang)));
         }
-        LOGGER.debug("END Building Uppercase string map");
+        LOGGER.debug("END Building Uppercase automata");
         return map;
     }
 
     @Nullable
-    private StringMap<String> buildUppercaseStringMap(@Nullable Set<String> words) {
-        // Currently, there are about 60 uppercase case-sensitive misspellings,
-        // so the best approaches are an automaton with all the terms alternated and
-        // the Aho-Corasick algorithm. We use the last one giving a better median performance.
+    private RunAutomaton buildUppercaseAutomaton(@Nullable Set<String> words) {
+        // Currently, there are about 60 uppercase case-sensitive misspellings.
+        // Benchmarks show that an alternate automaton outperforms Aho-Corasick for this collection size.
         if (words == null || words.isEmpty()) {
             return null;
         }
-        return new WholeWordLongestMatchMap<>(words, words, true, falseWordChars, wordCharFlags);
+        return new RunAutomaton(new RegExp(String.format("(%s)", FinderUtils.joinAlternate(words))).toAutomaton());
     }
 
     @Override
@@ -176,14 +171,12 @@ public class UppercaseFinder implements ImmutableFinder, PropertyChangeListener 
 
     @Override
     public Stream<MatchResult> findMatchResults(FinderPage page) {
-        final StringMap<String> stringMap = this.uppercaseStringMap.get(page.getPageKey().getLang());
-        if (stringMap == null) {
-            LOGGER.warn("No uppercase map for lang {} (still loading)", page.getPageKey().getLang());
+        final RunAutomaton automaton = this.uppercaseAutomata.get(page.getPageKey().getLang());
+        if (automaton == null) {
+            LOGGER.warn("No uppercase automaton for lang {} (still loading)", page.getPageKey().getLang());
             return Stream.of();
         }
-        final ResultMatchListener listener = new ResultMatchListener();
-        stringMap.match(page.getContent(), listener);
-        return listener.getMatches();
+        return AutomatonMatchFinder.find(page.getContent(), automaton);
     }
 
     @Override

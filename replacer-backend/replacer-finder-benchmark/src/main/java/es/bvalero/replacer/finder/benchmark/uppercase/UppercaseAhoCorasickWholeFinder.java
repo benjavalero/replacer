@@ -8,6 +8,12 @@ import java.util.Collection;
 import java.util.regex.MatchResult;
 import java.util.stream.Stream;
 
+/**
+ * Find the words in the text using the Aho-Corasick algorithm with whole-word matching.
+ * Then validate that the match is preceded by the expected punctuation.
+ * Con: unlike {@link UppercaseAhoCorasickWholeLongestFinder}, this one does not use longest matching,
+ * so it may return shorter matches when words share a prefix.
+ */
 class UppercaseAhoCorasickWholeFinder extends UppercaseBenchmarkFinder {
 
     private final StringMap<String> stringMap;

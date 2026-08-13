@@ -10,6 +10,12 @@ import es.bvalero.replacer.finder.util.FinderUtils;
 import java.util.*;
 import java.util.stream.Stream;
 
+/**
+ * Loop over all the words and find them in the text with an automaton that includes the preceding punctuation.
+ * Con: it iterates over all the words, so it may be slow for large collections.
+ * Note: cannot be adapted to the standard {@code findMatchResults}/{@code validate} pattern because the punctuation
+ * is embedded in the automaton pattern itself — the match group includes both punctuation and word.
+ */
 class UppercaseAutomatonIterateFinder extends UppercaseBenchmarkFinder {
 
     private final List<RunAutomaton> words;
@@ -25,7 +31,6 @@ class UppercaseAutomatonIterateFinder extends UppercaseBenchmarkFinder {
     @Override
     public Stream<BenchmarkResult> find(FinderPage page) {
         final String text = page.getContent();
-        // We loop over all the words and find them in the text with an automaton
         final List<BenchmarkResult> matches = new ArrayList<>(100);
         for (RunAutomaton word : this.words) {
             final AutomatonMatcher m = word.newMatcher(text);

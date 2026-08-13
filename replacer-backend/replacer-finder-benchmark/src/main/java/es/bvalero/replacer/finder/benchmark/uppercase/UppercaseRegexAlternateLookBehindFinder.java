@@ -10,6 +10,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
+/**
+ * Build a single alternate regex with lookbehind for the punctuation and find the words in the text.
+ * Con: lookbehind with alternation can be slow.
+ * Note: cannot be adapted to the standard {@code findMatchResults}/{@code validate} pattern because the punctuation
+ * is embedded in the regex as a lookbehind — removing it would change the semantics of the strategy being benchmarked.
+ */
 class UppercaseRegexAlternateLookBehindFinder extends UppercaseBenchmarkFinder {
 
     private final Pattern words;
@@ -26,7 +32,6 @@ class UppercaseRegexAlternateLookBehindFinder extends UppercaseBenchmarkFinder {
     @Override
     public Stream<BenchmarkResult> find(FinderPage page) {
         final String text = page.getContent();
-        // Build an alternate regex with all the words and match it against the text
         final List<BenchmarkResult> matches = new ArrayList<>(100);
         final Matcher m = this.words.matcher(text);
         while (m.find()) {

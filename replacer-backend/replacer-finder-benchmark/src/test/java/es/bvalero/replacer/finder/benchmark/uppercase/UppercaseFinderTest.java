@@ -91,4 +91,22 @@ class UppercaseFinderTest {
         UppercaseAhoCorasickWholeLongestFinder finder = new UppercaseAhoCorasickWholeLongestFinder(words);
         assertEquals(expected, finder.findMatches(text));
     }
+
+    @Test
+    void testUppercasePunctuationFinder() {
+        UppercasePunctuationFinder finder = new UppercasePunctuationFinder(words);
+        assertEquals(expected, finder.findMatches(text));
+    }
+
+    @Test
+    void testUppercaseSeparatorFinder() {
+        UppercaseSeparatorFinder finder = new UppercaseSeparatorFinder(words);
+        assertEquals(expected, finder.findMatches(text));
+    }
+
+    @Test
+    void testUppercaseAhoCorasickSeparatorFinder() {
+        UppercaseAhoCorasickSeparatorFinder finder = new UppercaseAhoCorasickSeparatorFinder(words);
+        assertEquals(expected, finder.findMatches(text));
+    }
 }

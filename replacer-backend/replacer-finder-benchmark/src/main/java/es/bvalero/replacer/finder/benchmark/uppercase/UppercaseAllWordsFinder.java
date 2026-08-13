@@ -9,6 +9,12 @@ import java.util.regex.MatchResult;
 import java.util.stream.Stream;
 import org.jspecify.annotations.Nullable;
 
+/**
+ * Iterate over every word boundary in the text, check if the word is in the uppercase set,
+ * and validate that it is preceded by the expected punctuation.
+ * Pro: single pass over the text regardless of the number of words.
+ * Con: visits every word in the text, even those that are not candidates.
+ */
 class UppercaseAllWordsFinder extends UppercaseBenchmarkFinder {
 
     private final Set<String> words = new HashSet<>();

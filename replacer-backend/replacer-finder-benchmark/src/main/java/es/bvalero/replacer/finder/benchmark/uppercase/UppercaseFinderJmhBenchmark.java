@@ -16,24 +16,32 @@ import java.util.Set;
 import org.apache.commons.collections4.SetValuedMap;
 import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
 import org.openjdk.jmh.annotations.Benchmark;
+import org.openjdk.jmh.annotations.Measurement;
 import org.openjdk.jmh.annotations.Setup;
+import org.openjdk.jmh.annotations.Setup;
+import org.openjdk.jmh.annotations.Warmup;
 import org.openjdk.jmh.infra.Blackhole;
 import org.openjdk.jmh.runner.RunnerException;
 
+@Warmup(time = 5)
+@Measurement(time = 5)
 public class UppercaseFinderJmhBenchmark extends BaseFinderJmhBenchmark {
 
     private static final String fileName = "uppercase/uppercase-summary-jmh";
 
-    private UppercaseIndexOfFinder uppercaseIndexOfFinder;
+    // private UppercaseIndexOfFinder uppercaseIndexOfFinder; // Very long
     private UppercaseAllWordsFinder uppercaseAllWordsFinder;
-    // private UppercaseRegexIterateFinder uppercaseRegexIterateFinder; // Long
-    private UppercaseAutomatonIterateFinder uppercaseAutomatonIterateFinder;
+    // private UppercaseRegexIterateFinder uppercaseRegexIterateFinder; // Very long
+    // private UppercaseAutomatonIterateFinder uppercaseAutomatonIterateFinder; // Very long
     // private UppercaseRegexLookBehindFinder uppercaseRegexLookBehindFinder; // Very long
-    private UppercaseRegexAlternateFinder uppercaseRegexAlternateFinder;
+    // private UppercaseRegexAlternateFinder uppercaseRegexAlternateFinder; // Very long
     private UppercaseAutomatonAlternateFinder uppercaseAutomatonAlternateFinder;
-    private UppercaseRegexAlternateLookBehindFinder uppercaseRegexAlternateLookBehindFinder;
+    // private UppercaseRegexAlternateLookBehindFinder uppercaseRegexAlternateLookBehindFinder; // Long
     private UppercaseAutomatonAlternateAllFinder uppercaseAutomatonAlternateAllFinder;
     private UppercaseAhoCorasickWholeLongestFinder uppercaseAhoCorasickWholeLongestFinder;
+    private UppercasePunctuationFinder uppercasePunctuationFinder;
+    private UppercaseSeparatorFinder uppercaseSeparatorFinder;
+    private UppercaseAhoCorasickSeparatorFinder uppercaseAhoCorasickSeparatorFinder;
 
     @Override
     @Setup
@@ -72,26 +80,34 @@ public class UppercaseFinderJmhBenchmark extends BaseFinderJmhBenchmark {
         );
 
         // Initialize the finders
-        uppercaseIndexOfFinder = new UppercaseIndexOfFinder(words);
+        // uppercaseIndexOfFinder = new UppercaseIndexOfFinder(words);
         uppercaseAllWordsFinder = new UppercaseAllWordsFinder(words);
-        uppercaseAutomatonIterateFinder = new UppercaseAutomatonIterateFinder(words);
-        uppercaseRegexAlternateFinder = new UppercaseRegexAlternateFinder(words);
+        // uppercaseRegexIterateFinder = new UppercaseRegexIterateFinder(words);
+        // uppercaseAutomatonIterateFinder = new UppercaseAutomatonIterateFinder(words);
+        // uppercaseRegexLookBehindFinder = new UppercaseRegexLookBehindFinder(words);
+        // uppercaseRegexAlternateFinder = new UppercaseRegexAlternateFinder(words);
         uppercaseAutomatonAlternateFinder = new UppercaseAutomatonAlternateFinder(words);
-        uppercaseRegexAlternateLookBehindFinder = new UppercaseRegexAlternateLookBehindFinder(words);
+        // uppercaseRegexAlternateLookBehindFinder = new UppercaseRegexAlternateLookBehindFinder(words);
         uppercaseAutomatonAlternateAllFinder = new UppercaseAutomatonAlternateAllFinder(words);
         uppercaseAhoCorasickWholeLongestFinder = new UppercaseAhoCorasickWholeLongestFinder(words);
+        uppercasePunctuationFinder = new UppercasePunctuationFinder(words);
+        // uppercaseSeparatorFinder = new UppercaseSeparatorFinder(words);
+        // uppercaseAhoCorasickSeparatorFinder = new UppercaseAhoCorasickSeparatorFinder(words);
     }
 
+    /*
     @Benchmark
     public void uppercaseIndexOfFinder(Blackhole bh) {
         runFinder(uppercaseIndexOfFinder, bh);
     }
+    */
 
     @Benchmark
     public void uppercaseAllWordsFinder(Blackhole bh) {
         runFinder(uppercaseAllWordsFinder, bh);
     }
 
+    /*
     @Benchmark
     public void uppercaseAutomatonIterateFinder(Blackhole bh) {
         runFinder(uppercaseAutomatonIterateFinder, bh);
@@ -101,6 +117,7 @@ public class UppercaseFinderJmhBenchmark extends BaseFinderJmhBenchmark {
     public void uppercaseRegexAlternateFinder(Blackhole bh) {
         runFinder(uppercaseRegexAlternateFinder, bh);
     }
+    */
 
     @Benchmark
     public void uppercaseAutomatonAlternateFinder(Blackhole bh) {
@@ -112,15 +129,34 @@ public class UppercaseFinderJmhBenchmark extends BaseFinderJmhBenchmark {
         runFinder(uppercaseAutomatonAlternateAllFinder, bh);
     }
 
+    /*
     @Benchmark
     public void uppercaseRegexAlternateLookBehindFinder(Blackhole bh) {
         runFinder(uppercaseRegexAlternateLookBehindFinder, bh);
     }
+    */
 
     @Benchmark
     public void uppercaseAhoCorasickWholeLongestFinder(Blackhole bh) {
         runFinder(uppercaseAhoCorasickWholeLongestFinder, bh);
     }
+
+    @Benchmark
+    public void uppercasePunctuationFinder(Blackhole bh) {
+        runFinder(uppercasePunctuationFinder, bh);
+    }
+
+    /*
+    @Benchmark
+    public void uppercaseSeparatorFinder(Blackhole bh) {
+        runFinder(uppercaseSeparatorFinder, bh);
+    }
+
+    @Benchmark
+    public void uppercaseAhoCorasickSeparatorFinder(Blackhole bh) {
+        runFinder(uppercaseAhoCorasickSeparatorFinder, bh);
+    }
+    */
 
     public static void main(String[] args) throws RunnerException, ReplacerException {
         run(UppercaseFinderJmhBenchmark.class, fileName);
