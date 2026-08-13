@@ -13,6 +13,12 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Stream;
 
+/**
+ * Find all the person surnames in the text using one automaton per word, including the preceding uppercase word.
+ * Con: iterates over all words independently.
+ * Note: not adaptable to the modern pattern as the condition {@code <Lu><L>+} is embedded in the pattern itself,
+ * so the match includes the preceding name that must be trimmed from the result.
+ */
 class SurnameAutomatonCompleteFinder implements BenchmarkFinder {
 
     private final Collection<RunAutomaton> words = new ArrayList<>();

@@ -10,6 +10,11 @@ import java.util.Collection;
 import java.util.regex.MatchResult;
 import java.util.stream.Stream;
 
+/**
+ * Find all the person surnames in the text using the Aho-Corasick algorithm with whole-word longest match.
+ * Then validate that the match is preceded by an uppercase word.
+ * No need to validate completeness: the whole-word matching already guarantees it.
+ */
 class SurnameAhoCorasickWholeLongestFinder implements BenchmarkFinder {
 
     private final StringMap<String> stringMap;

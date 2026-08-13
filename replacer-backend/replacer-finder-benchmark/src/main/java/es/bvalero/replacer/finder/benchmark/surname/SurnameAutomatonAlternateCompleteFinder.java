@@ -13,6 +13,12 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Stream;
 
+/**
+ * Find all the person surnames in the text using a single alternate automaton, including the preceding uppercase word.
+ * Note: not adaptable to the modern pattern as the condition {@code <Lu><L>+} is embedded in the pattern itself,
+ * so the match includes the preceding name that must be trimmed from the result.
+ * This is the same approach used in production ({@link es.bvalero.replacer.finder.immutable.finders.PersonSurnameFinder}).
+ */
 class SurnameAutomatonAlternateCompleteFinder implements BenchmarkFinder {
 
     private final RunAutomaton words;

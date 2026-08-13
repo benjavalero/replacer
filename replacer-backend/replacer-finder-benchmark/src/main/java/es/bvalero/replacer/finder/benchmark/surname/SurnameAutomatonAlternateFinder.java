@@ -6,12 +6,16 @@ import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
 import es.bvalero.replacer.finder.benchmark.BenchmarkResult;
+import es.bvalero.replacer.finder.util.AutomatonMatchFinder;
 import es.bvalero.replacer.finder.util.FinderUtils;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
+import java.util.regex.MatchResult;
 import java.util.stream.Stream;
 
+/**
+ * Find all the person surnames in the text using a single alternate automaton.
+ * Then validate that the match is complete in the text and preceded by an uppercase word.
+ */
 class SurnameAutomatonAlternateFinder implements BenchmarkFinder {
 
     private final RunAutomaton words;
@@ -22,16 +26,15 @@ class SurnameAutomatonAlternateFinder implements BenchmarkFinder {
     }
 
     @Override
-    public Stream<BenchmarkResult> find(FinderPage page) {
-        final String text = page.getContent();
-        // Build an alternate automaton with all the words and match it against the text
-        final List<BenchmarkResult> matches = new ArrayList<>(100);
-        final AutomatonMatcher m = this.words.newMatcher(text);
-        while (m.find()) {
-            if (FinderUtils.isWordCompleteInText(m, text) && FinderUtils.isWordPrecededByUpperCase(m.start(), text)) {
-                matches.add(BenchmarkResult.of(m.start(), m.group()));
-            }
-        }
-        return matches.stream();
+    public Stream<MatchResult> findMatchResults(FinderPage page) {
+        return AutomatonMatchFinder.find(page.getContent(), this.words);
+    }
+
+    @Override
+    public boolean validate(MatchResult match, FinderPage page) {
+        return (
+            FinderUtils.isWordCompleteInText(match, page.getContent()) &&
+            FinderUtils.isWordPrecededByUpperCase(match.start(), page.getContent())
+        );
     }
 }

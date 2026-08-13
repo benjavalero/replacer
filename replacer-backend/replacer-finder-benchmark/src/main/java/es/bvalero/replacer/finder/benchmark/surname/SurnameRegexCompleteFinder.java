@@ -11,6 +11,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
+/**
+ * Find all the person surnames in the text using one regex per word, including the preceding uppercase word.
+ * Con: iterates over all words independently.
+ * Note: not adaptable to the modern pattern as the condition {@code \p{Lu}\p{L}+} is embedded in the pattern itself,
+ * so the match includes the preceding name that must be trimmed from the result.
+ */
 class SurnameRegexCompleteFinder implements BenchmarkFinder {
 
     private final Collection<Pattern> words = new ArrayList<>();

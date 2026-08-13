@@ -4,13 +4,17 @@ import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
 import es.bvalero.replacer.finder.benchmark.BenchmarkResult;
 import es.bvalero.replacer.finder.util.FinderUtils;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.regex.Matcher;
+import es.bvalero.replacer.finder.util.RegexMatchFinder;
+import java.util.*;
+import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
+/**
+ * Find all the person surnames in the text using one regex per word.
+ * Then validate that the match is complete in the text and preceded by an uppercase word.
+ * Con: iterates over all words independently, so the same position can be visited multiple times.
+ */
 class SurnameRegexFinder implements BenchmarkFinder {
 
     private final Collection<Pattern> words = new ArrayList<>();
@@ -22,20 +26,15 @@ class SurnameRegexFinder implements BenchmarkFinder {
     }
 
     @Override
-    public Stream<BenchmarkResult> find(FinderPage page) {
-        final String text = page.getContent();
-        // We loop over all the words and find them in the text with a regex
-        final List<BenchmarkResult> matches = new ArrayList<>(100);
-        for (Pattern word : this.words) {
-            final Matcher m = word.matcher(text);
-            while (m.find()) {
-                if (
-                    FinderUtils.isWordCompleteInText(m, text) && FinderUtils.isWordPrecededByUpperCase(m.start(), text)
-                ) {
-                    matches.add(BenchmarkResult.of(m.start(), m.group()));
-                }
-            }
-        }
-        return matches.stream();
+    public Stream<MatchResult> findMatchResults(FinderPage page) {
+        return this.words.stream().flatMap(p -> RegexMatchFinder.find(page.getContent(), p));
+    }
+
+    @Override
+    public boolean validate(MatchResult match, FinderPage page) {
+        return (
+            FinderUtils.isWordCompleteInText(match, page.getContent()) &&
+            FinderUtils.isWordPrecededByUpperCase(match.start(), page.getContent())
+        );
     }
 }
