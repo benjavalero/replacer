@@ -118,22 +118,25 @@ public class CoordinatesFinder implements ReplacementFinder {
     @Nullable
     private MatchResult findDegrees(String text, int start) {
         while (start >= 0 && start < text.length()) {
-            final MatchResult matchNumber = FinderUtils.findNumber(text, start, false, true);
-            if (matchNumber == null || matchNumber.end() >= text.length()) {
-                // No number to continue searching
+            // Search for the degree character directly (faster than scanning for numbers)
+            final int posDegreeChar = FinderUtils.indexOfAny(text, start, DEGREE, MASCULINE_ORDINAL);
+            if (posDegreeChar < 0) {
                 return null;
             }
-            if (!isDegreeNumber(matchNumber.group())) {
-                start = matchNumber.end();
+
+            // Find the number immediately before the degree character (allow '-' for negative coordinates)
+            final MatchResult matchWord = FinderUtils.findWordBefore(text, posDegreeChar, '-');
+            if (matchWord == null || matchWord.end() != posDegreeChar) {
+                start = posDegreeChar + 1;
                 continue;
             }
 
-            if (!isDegreeChar(text.charAt(matchNumber.end()))) {
-                start = matchNumber.end() + 1;
+            if (!isDegreeNumber(matchWord.group())) {
+                start = posDegreeChar + 1;
                 continue;
             }
 
-            return matchNumber;
+            return matchWord;
         }
         return null;
     }
@@ -144,10 +147,6 @@ public class CoordinatesFinder implements ReplacementFinder {
         } catch (NumberFormatException nfe) {
             return false;
         }
-    }
-
-    private boolean isDegreeChar(char ch) {
-        return ch == DEGREE || ch == MASCULINE_ORDINAL;
     }
 
     private boolean isValidDegreeChar(char ch) {
