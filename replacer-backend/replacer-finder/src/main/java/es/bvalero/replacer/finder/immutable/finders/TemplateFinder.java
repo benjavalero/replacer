@@ -35,7 +35,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class TemplateFinder implements ImmutableFinder {
 
-    private static final char COLON = ':';
     private static final char EQUALS = '=';
 
     // Dependency injection

@@ -16,7 +16,6 @@ import jakarta.annotation.PostConstruct;
 import java.util.*;
 import java.util.regex.MatchResult;
 import java.util.stream.Stream;
-import org.apache.commons.lang3.StringUtils;
 import org.jspecify.annotations.Nullable;
 import org.springframework.stereotype.Component;
 
@@ -32,8 +31,6 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class LinkFinder extends ImmutableCheckedFinder {
-
-    private static final char COLON = ':';
 
     // Dependency injection
     private final FinderProperties finderProperties;
@@ -72,12 +69,7 @@ public class LinkFinder extends ImmutableCheckedFinder {
     private SequencedCollection<MatchResult> findImmutables(FinderPage page, int start) {
         // findNextStructure returns nested structures first, root structure last
         while (start >= 0 && start < page.getContent().length()) {
-            final SequencedCollection<FinderMatchResult> links = FinderUtils.findNextStructure(
-                page,
-                start,
-                START_LINK,
-                END_LINK
-            );
+            final SequencedCollection<LinkStructure> links = LinkStructureFinder.findNext(page, start);
             if (links.isEmpty()) {
                 break;
             }
@@ -94,15 +86,16 @@ public class LinkFinder extends ImmutableCheckedFinder {
         return Collections.emptyList();
     }
 
-    private List<MatchResult> findImmutable(MatchResult link, FinderPage page) {
+    private List<MatchResult> findImmutable(LinkStructure link, FinderPage page) {
         final List<MatchResult> immutables = new ArrayList<>();
 
         // Let's check first the easiest cases
         final WikipediaLanguage lang = page.getPageKey().getLang();
         final String text = page.getContent();
 
-        // If the link is suffixed then return the complete link
-        final int endSuffix = findEndSuffix(text, link.end());
+        // If the link is suffixed then return the complete link including the suffix
+        // We need to calculate the suffix end position to build the immutable range
+        final int endSuffix = findSuffixEnd(text, link.end());
         if (endSuffix > link.end()) {
             return List.of(FinderMatchRange.of(text, link.start(), endSuffix));
         }
@@ -110,34 +103,35 @@ public class LinkFinder extends ImmutableCheckedFinder {
         final int linkContentStart = link.start() + START_LINK.length();
         final int linkContentEnd = link.end() - END_LINK.length();
 
-        final int pipePos = text.lastIndexOf(PIPE, linkContentEnd - 1);
-        final int linkTitleEnd = pipePos >= linkContentStart ? pipePos : linkContentEnd;
-
-        final String linkSpace = findLinkSpace(text, linkContentStart, linkTitleEnd);
-        final String linkSpaceNormalized = linkSpace != null ? ReplacerUtils.setFirstUpperCase(linkSpace.trim()) : null;
+        final String linkSpace = findLinkSpace(text, link);
+        final String linkSpaceTrimmed = linkSpace != null ? linkSpace.trim() : null;
+        final String linkSpaceNormalized = normalizeLinkSpace(linkSpaceTrimmed);
 
         // If the link space is a category then return an immutable of the complete link
         if (isCategorySpace(linkSpaceNormalized)) {
-            return List.of(link);
+            return List.of(FinderMatchRange.of(text, link.start(), link.end()));
         }
-
-        final MatchResult linkAlias = findLinkAlias(text, linkContentStart, linkContentEnd, pipePos);
 
         // Interwiki links are immutable. If alias exists, then return only the link title.
         // The same applies for interlanguage links and files
         // Exception: if the alias exists but is a parameter then return the complete link
+        final int pipePos = link.pipePos();
+        final MatchResult linkAlias = findLinkAlias(text, linkContentStart, linkContentEnd, pipePos);
+
         if (
             linkAlias != null ||
-            isInterWikiSpace(linkSpace) ||
-            isLangSpace(linkSpace) ||
+            isInterWikiSpace(linkSpaceTrimmed) ||
+            isLangSpace(linkSpaceTrimmed) ||
             isFileSpace(linkSpaceNormalized)
         ) {
             if (linkAlias == null) {
-                return List.of(link);
+                return List.of(FinderMatchRange.of(text, link.start(), link.end()));
             } else if (isAliasParameter(linkAlias.group())) {
-                return List.of(link);
+                return List.of(FinderMatchRange.of(text, link.start(), link.end()));
             } else {
+                final int linkTitleEnd = pipePos >= linkContentStart ? pipePos : linkContentEnd;
                 immutables.add(FinderMatchRange.of(text, linkContentStart, linkTitleEnd));
+                // The alias substring is unavoidable here as uppercaseFinder requires a String
                 final Optional<MatchResult> firstExpressionUpperCase = uppercaseFinder.findFirstExpressionUpperCase(
                     linkAlias.group(),
                     lang
@@ -152,23 +146,25 @@ public class LinkFinder extends ImmutableCheckedFinder {
         return immutables;
     }
 
-    // Find the end of the link suffix, i.e. lowercase chars appended to the link
-    // In case of a usual link followed by a space the suffix end will be the link end
-    private int findEndSuffix(String text, int start) {
-        for (int i = start; i < text.length(); i++) {
-            if (!Character.isLowerCase(text.charAt(i))) {
-                return i;
-            }
+    private int findSuffixEnd(String text, int start) {
+        // Find the end of the lowercase suffix after ']]', e.g. '[[brasil]]eño'
+        // We need the exact position to build the immutable range, so the check and the calculation are one
+        int end = start;
+        while (end < text.length() && Character.isLowerCase(text.charAt(end))) {
+            end++;
         }
-        // In case we reach the end of the text
-        return text.length();
+        return end;
     }
 
     @Nullable
-    private String findLinkSpace(String text, int start, int end) {
-        final int colonPos = text.indexOf(COLON, start);
-        // Substring needed to compare against the sets of category and file words
-        return colonPos >= start && colonPos < end ? text.substring(start, colonPos) : null;
+    private String findLinkSpace(String text, LinkStructure link) {
+        final int colonPos = link.colonPos();
+        return colonPos >= 0 ? text.substring(link.start() + START_LINK.length(), colonPos) : null;
+    }
+
+    @Nullable
+    private String normalizeLinkSpace(@Nullable String trimmedSpace) {
+        return trimmedSpace != null ? ReplacerUtils.setFirstUpperCase(trimmedSpace) : null;
     }
 
     private boolean isCategorySpace(@Nullable String normalizedSpace) {
@@ -184,17 +180,12 @@ public class LinkFinder extends ImmutableCheckedFinder {
         return normalizedSpace != null && this.fileSpaces.contains(normalizedSpace);
     }
 
-    private boolean isLangSpace(@Nullable String space) {
-        if (space == null) {
-            return false;
-        } else {
-            final String trimmed = space.trim();
-            return trimmed.length() == 2 && FinderUtils.isAsciiLowerCase(trimmed);
-        }
+    private boolean isLangSpace(@Nullable String trimmedSpace) {
+        return trimmedSpace != null && trimmedSpace.length() == 2 && FinderUtils.isAsciiLowerCase(trimmedSpace);
     }
 
-    private boolean isInterWikiSpace(@Nullable String space) {
-        return space != null && StringUtils.isBlank(space);
+    private boolean isInterWikiSpace(@Nullable String trimmedSpace) {
+        return trimmedSpace != null && trimmedSpace.isEmpty();
     }
 
     private boolean isAliasParameter(String alias) {
