@@ -9,6 +9,7 @@ import java.util.regex.MatchResult;
 import java.util.stream.Stream;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.TestOnly;
 import org.jspecify.annotations.Nullable;
 import org.slf4j.Marker;
 import org.slf4j.MarkerFactory;
@@ -755,11 +756,12 @@ public class FinderUtils {
         boolean validate(String text, int start);
     }
 
-    public static Collection<FinderMatchResult> findAllStructures(FinderPage page, String startStr, String endStr) {
+    @TestOnly
+    static Collection<FinderMatchResult> findAllStructures(FinderPage page, String startStr, String endStr) {
         return findAllStructures(page, startStr, endStr, (text, start) -> true);
     }
 
-    public static Collection<FinderMatchResult> findAllStructures(
+    private static Collection<FinderMatchResult> findAllStructures(
         FinderPage page,
         String startStr,
         String endStr,
@@ -769,9 +771,50 @@ public class FinderUtils {
         final List<FinderMatchResult> matches = new ArrayList<>();
 
         final String text = page.getContent();
+
+        int start = 0;
+        while (start >= 0 && start < text.length()) {
+            final SequencedCollection<FinderMatchResult> foundMatches = findNextStructure(
+                page,
+                start,
+                startStr,
+                endStr,
+                logResultValidator
+            );
+            if (foundMatches.isEmpty()) {
+                break;
+            }
+            matches.addAll(foundMatches);
+            // Move the start position to the end of the root match (always the last one in foundMatches)
+            start = foundMatches.getLast().end();
+        }
+
+        return matches;
+    }
+
+    public static SequencedCollection<FinderMatchResult> findNextStructure(
+        FinderPage page,
+        int index,
+        String startStr,
+        String endStr
+    ) {
+        return findNextStructure(page, index, startStr, endStr, (text, start) -> true);
+    }
+
+    public static SequencedCollection<FinderMatchResult> findNextStructure(
+        FinderPage page,
+        int index,
+        String startStr,
+        String endStr,
+        LogResultValidator logResultValidator
+    ) {
+        // A loop is a little better than recursion
+        final List<FinderMatchResult> matches = new ArrayList<>();
+
+        final String text = page.getContent();
         // Deque implementation is a little better than old stack and recommended by Java
+        // We store the start of the structure but we also store the groups found inside
         final Deque<FinderMatchResult> matchStack = new ArrayDeque<>();
-        int index = 0;
         // TODO: Reduce cyclomatic complexity
         while (index >= 0 && index < text.length()) {
             if (matchStack.isEmpty()) {
@@ -813,6 +856,9 @@ public class FinderUtils {
                 if (!matchStack.isEmpty()) {
                     // Add the ended Match to the parent that now it's at the top of the stack
                     matchStack.getLast().addGroup(endedMatch);
+                } else {
+                    // We found a complete structure, so we can return it
+                    break;
                 }
                 index = actualEnd;
             }

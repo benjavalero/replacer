@@ -11,6 +11,7 @@ import es.bvalero.replacer.finder.FinderPriority;
 import es.bvalero.replacer.finder.immutable.ImmutableFinder;
 import es.bvalero.replacer.finder.util.FinderMatchResult;
 import es.bvalero.replacer.finder.util.FinderUtils;
+import es.bvalero.replacer.finder.util.LinearMatchCollectionFinder;
 import jakarta.annotation.PostConstruct;
 import java.util.*;
 import java.util.regex.MatchResult;
@@ -93,16 +94,33 @@ public class TemplateFinder implements ImmutableFinder {
 
     @Override
     public Stream<MatchResult> findMatchResults(FinderPage page) {
-        final List<MatchResult> immutables = new ArrayList<>(100);
-        for (FinderMatchResult template : FinderUtils.findAllStructures(
-            page,
-            START_TEMPLATE,
-            END_TEMPLATE,
-            this::isNotFakeTemplate
-        )) {
-            immutables.addAll(findImmutables(template, page));
+        return LinearMatchCollectionFinder.find(page, this::findImmutables);
+    }
+
+    private SequencedCollection<MatchResult> findImmutables(FinderPage page, int start) {
+        // findNextStructure returns nested structures first, root structure last
+        while (start >= 0 && start < page.getContent().length()) {
+            final SequencedCollection<FinderMatchResult> templates = FinderUtils.findNextStructure(
+                page,
+                start,
+                START_TEMPLATE,
+                END_TEMPLATE,
+                this::isNotFakeTemplate
+            );
+            if (templates.isEmpty()) {
+                break;
+            }
+            final List<MatchResult> immutables = templates
+                .stream()
+                .flatMap(template -> findImmutable(template, page).stream())
+                .toList();
+            if (!immutables.isEmpty()) {
+                return immutables;
+            }
+            // If no immutables found, search from the end of the root structure (last element)
+            start = templates.getLast().end();
         }
-        return immutables.stream();
+        return Collections.emptyList();
     }
 
     private boolean isNotFakeTemplate(String text, int templateStart) {
@@ -113,7 +131,7 @@ public class TemplateFinder implements ImmutableFinder {
         return FinderUtils.isWordChar(nextChar);
     }
 
-    private List<MatchResult> findImmutables(FinderMatchResult template, FinderPage page) {
+    private List<MatchResult> findImmutable(FinderMatchResult template, FinderPage page) {
         // Let's check first the easiest cases
         final String templateContent = getTemplateContent(template.group());
 

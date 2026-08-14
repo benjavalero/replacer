@@ -11,6 +11,7 @@ import es.bvalero.replacer.finder.immutable.ImmutableCheckedFinder;
 import es.bvalero.replacer.finder.util.FinderMatchRange;
 import es.bvalero.replacer.finder.util.FinderMatchResult;
 import es.bvalero.replacer.finder.util.FinderUtils;
+import es.bvalero.replacer.finder.util.LinearMatchCollectionFinder;
 import jakarta.annotation.PostConstruct;
 import java.util.*;
 import java.util.regex.MatchResult;
@@ -65,11 +66,32 @@ public class LinkFinder extends ImmutableCheckedFinder {
 
     @Override
     public Stream<MatchResult> findMatchResults(FinderPage page) {
-        final List<MatchResult> immutables = new ArrayList<>(100);
-        for (MatchResult template : FinderUtils.findAllStructures(page, START_LINK, END_LINK)) {
-            immutables.addAll(findImmutable(template, page));
+        return LinearMatchCollectionFinder.find(page, this::findImmutables);
+    }
+
+    private SequencedCollection<MatchResult> findImmutables(FinderPage page, int start) {
+        // findNextStructure returns nested structures first, root structure last
+        while (start >= 0 && start < page.getContent().length()) {
+            final SequencedCollection<FinderMatchResult> links = FinderUtils.findNextStructure(
+                page,
+                start,
+                START_LINK,
+                END_LINK
+            );
+            if (links.isEmpty()) {
+                break;
+            }
+            final List<MatchResult> immutables = links
+                .stream()
+                .flatMap(link -> findImmutable(link, page).stream())
+                .toList();
+            if (!immutables.isEmpty()) {
+                return immutables;
+            }
+            // If no immutables found, search from the end of the root structure (last element)
+            start = links.getLast().end();
         }
-        return immutables.stream();
+        return Collections.emptyList();
     }
 
     private List<MatchResult> findImmutable(MatchResult link, FinderPage page) {
