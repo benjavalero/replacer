@@ -1,7 +1,7 @@
 package es.bvalero.replacer.finder.benchmark.uppercase;
 
 import es.bvalero.replacer.finder.FinderPage;
-import es.bvalero.replacer.finder.util.FinderMatchResult;
+import es.bvalero.replacer.finder.util.FinderMatchRange;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
 import java.util.Collection;
@@ -37,7 +37,7 @@ class UppercaseIndexOfFinder extends UppercaseBenchmarkFinder {
                     FinderUtils.isWordCompleteInText(startWord, word, text) &&
                     isWordPrecededByPunctuation(startWord, text)
                 ) {
-                    return FinderMatchResult.of(startWord, word);
+                    return FinderMatchRange.of(text, startWord, word);
                 } else {
                     start = startWord + word.length() + 1;
                 }

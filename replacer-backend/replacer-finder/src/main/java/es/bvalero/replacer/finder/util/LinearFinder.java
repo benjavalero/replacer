@@ -22,7 +22,7 @@ public interface LinearFinder {
     //     if (endMatch >= 0) {
     //       final String match = text.substring(startMatch, endMatch);
     //       if (isValid(match)) {
-    //         return FinderMatchResult.of(startMatch, match);
+    //         return FinderMatchRange.of(text, startMatch, endMatch);
     //       } else {
     //         start = endMatch;
     //       }

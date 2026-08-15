@@ -13,7 +13,7 @@ import es.bvalero.replacer.finder.listing.StandardMisspelling;
 import es.bvalero.replacer.finder.listing.load.ComposedMisspellingLoader;
 import es.bvalero.replacer.finder.listing.load.SimpleMisspellingLoader;
 import es.bvalero.replacer.finder.util.AutomatonMatchFinder;
-import es.bvalero.replacer.finder.util.FinderMatchResult;
+import es.bvalero.replacer.finder.util.FinderMatchRange;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import jakarta.annotation.PostConstruct;
 import java.beans.PropertyChangeEvent;
@@ -239,9 +239,11 @@ public class UppercaseFinder implements ImmutableFinder, PropertyChangeListener 
      * Find the first expression in a text in case it is a known uppercase misspelling.
      * To be used e.g. to find uppercase misspellings at the start of template values or file aliases.
      */
-    public Optional<MatchResult> findFirstExpressionUpperCase(String text, WikipediaLanguage lang) {
+    public Optional<MatchResult> findFirstExpressionUpperCase(FinderPage page, int start) {
+        final String text = page.getContent();
+        final WikipediaLanguage lang = page.getPageKey().getLang();
         // Find the start of the potential expression as there could be other characters like a whitespace
-        final MatchResult firstWord = FinderUtils.findWordAfter(text, 0);
+        final MatchResult firstWord = FinderUtils.findWordAfter(text, start);
         if (firstWord == null) {
             return Optional.empty();
         }
@@ -253,13 +255,11 @@ public class UppercaseFinder implements ImmutableFinder, PropertyChangeListener 
 
         // Then, we try with the composed misspellings, checking if the parameter value starts with an uppercase misspelling.
         final int valueStart = firstWord.start();
-        // Substring needed as findFirstExpressionUpperCase operates on a local string
-        final String valueText = text.substring(valueStart);
         return this.getUppercaseMap()
             .get(lang)
             .stream()
-            .filter(valueText::startsWith)
+            .filter(s -> text.startsWith(s, valueStart))
             .findAny()
-            .map(s -> FinderMatchResult.of(valueStart, s));
+            .map(s -> FinderMatchRange.of(text, valueStart, s));
     }
 }

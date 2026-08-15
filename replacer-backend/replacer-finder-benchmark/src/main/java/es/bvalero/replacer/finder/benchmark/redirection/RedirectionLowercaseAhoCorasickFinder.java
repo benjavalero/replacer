@@ -6,7 +6,7 @@ import es.bvalero.replacer.common.util.ReplacerUtils;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
 import es.bvalero.replacer.finder.immutable.finders.RedirectionMatchListener;
-import es.bvalero.replacer.finder.util.FinderMatchResult;
+import es.bvalero.replacer.finder.util.FinderMatchRange;
 import java.util.Collection;
 import java.util.List;
 import java.util.regex.MatchResult;
@@ -32,6 +32,6 @@ class RedirectionLowercaseAhoCorasickFinder implements BenchmarkFinder {
         final String text = page.getContent();
         final RedirectionMatchListener listener = new RedirectionMatchListener();
         this.stringMap.match(ReplacerUtils.toLowerCase(text), listener);
-        return listener.isFound() ? Stream.of(FinderMatchResult.of(0, text)) : Stream.of();
+        return listener.isFound() ? Stream.of(FinderMatchRange.of(text, 0, text)) : Stream.of();
     }
 }

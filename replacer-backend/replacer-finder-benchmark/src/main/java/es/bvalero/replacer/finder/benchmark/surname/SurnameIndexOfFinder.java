@@ -2,7 +2,7 @@ package es.bvalero.replacer.finder.benchmark.surname;
 
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
-import es.bvalero.replacer.finder.util.FinderMatchResult;
+import es.bvalero.replacer.finder.util.FinderMatchRange;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
 import java.util.ArrayList;
@@ -36,7 +36,7 @@ class SurnameIndexOfFinder implements BenchmarkFinder {
             final int startWord = text.indexOf(word, start);
             if (startWord >= 0) {
                 if (FinderUtils.isWordCompleteInText(startWord, word, text)) {
-                    return FinderMatchResult.of(startWord, word);
+                    return FinderMatchRange.of(text, startWord, word);
                 } else {
                     start = startWord + word.length() + 1;
                 }

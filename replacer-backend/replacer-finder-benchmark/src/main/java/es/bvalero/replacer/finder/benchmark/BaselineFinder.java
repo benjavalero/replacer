@@ -1,7 +1,7 @@
 package es.bvalero.replacer.finder.benchmark;
 
 import es.bvalero.replacer.finder.FinderPage;
-import es.bvalero.replacer.finder.util.FinderMatchResult;
+import es.bvalero.replacer.finder.util.FinderMatchRange;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
 import java.util.regex.MatchResult;
 import java.util.stream.Stream;
@@ -23,7 +23,7 @@ public class BaselineFinder implements BenchmarkFinder {
         if (start >= 0 && start < text.length()) {
             final int startMatch = findStartMatch(text, start);
             if (startMatch >= 0) {
-                return FinderMatchResult.of(startMatch, WORD);
+                return FinderMatchRange.of(text, startMatch, WORD);
             } else {
                 return null;
             }

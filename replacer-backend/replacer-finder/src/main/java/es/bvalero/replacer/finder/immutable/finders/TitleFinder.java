@@ -3,7 +3,7 @@ package es.bvalero.replacer.finder.immutable.finders;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.FinderPriority;
 import es.bvalero.replacer.finder.immutable.ImmutableCheckedFinder;
-import es.bvalero.replacer.finder.util.FinderMatchResult;
+import es.bvalero.replacer.finder.util.FinderMatchRange;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +36,7 @@ public class TitleFinder extends ImmutableCheckedFinder {
             while (start >= 0 && start < text.length()) {
                 final int wordStart = text.indexOf(word, start);
                 if (wordStart >= 0) {
-                    final MatchResult match = FinderMatchResult.of(wordStart, word);
+                    final MatchResult match = FinderMatchRange.of(text, wordStart, word);
                     matches.add(match);
                     start = match.end();
                 } else {

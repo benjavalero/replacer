@@ -5,7 +5,7 @@ import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.ReplacementKind;
 import es.bvalero.replacer.finder.listing.StandardMisspelling;
 import es.bvalero.replacer.finder.listing.load.SimpleMisspellingLoader;
-import es.bvalero.replacer.finder.util.FinderMatchResult;
+import es.bvalero.replacer.finder.util.FinderMatchRange;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
 import jakarta.annotation.PostConstruct;
@@ -63,7 +63,7 @@ public class MisspellingSimpleFinder extends MisspellingFinder implements Proper
                 final int endWord = findEndWord(text, startWord);
                 final String word = text.substring(startWord, endWord);
                 if (isValid(word, startWord, text, lang)) {
-                    return FinderMatchResult.of(startWord, word.intern());
+                    return FinderMatchRange.of(text, startWord, word.intern());
                 } else {
                     // The char after the word is a non-letter, so we can start searching for the next word one position after.
                     start = endWord + 1;

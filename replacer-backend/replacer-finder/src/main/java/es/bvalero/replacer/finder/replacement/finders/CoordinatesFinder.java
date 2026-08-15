@@ -9,7 +9,6 @@ import es.bvalero.replacer.finder.StandardType;
 import es.bvalero.replacer.finder.Suggestion;
 import es.bvalero.replacer.finder.replacement.ReplacementFinder;
 import es.bvalero.replacer.finder.util.FinderMatchRange;
-import es.bvalero.replacer.finder.util.FinderMatchResult;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
 import java.util.List;
@@ -214,8 +213,8 @@ public class CoordinatesFinder implements ReplacementFinder {
             return null;
         }
 
-        final FinderMatchResult matchNumber = FinderMatchResult.ofNested(match.start(), match.group());
-        final MatchResult doublePrimeMatch = FinderMatchResult.of(matchNumber.end(), doublePrime);
+        final FinderMatchRange matchNumber = FinderMatchRange.ofNested(text, match.start(), match.group());
+        final MatchResult doublePrimeMatch = FinderMatchRange.of(text, matchNumber.end(), doublePrime);
         matchNumber.addGroup(doublePrimeMatch);
         return matchNumber;
     }

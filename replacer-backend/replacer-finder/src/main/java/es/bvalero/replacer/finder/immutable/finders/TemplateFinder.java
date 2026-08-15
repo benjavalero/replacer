@@ -3,13 +3,11 @@ package es.bvalero.replacer.finder.immutable.finders;
 import static es.bvalero.replacer.finder.util.FinderUtils.*;
 
 import es.bvalero.replacer.FinderProperties;
-import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.util.ReplacerUtils;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.FinderPriority;
 import es.bvalero.replacer.finder.immutable.ImmutableFinder;
 import es.bvalero.replacer.finder.util.FinderMatchRange;
-import es.bvalero.replacer.finder.util.FinderMatchResult;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.LinearMatchCollectionFinder;
 import jakarta.annotation.PostConstruct;
@@ -119,7 +117,7 @@ public class TemplateFinder implements ImmutableFinder {
 
         // If the whole page is to be ignored the return an immutable of the complete page content
         if (ignoreCompletePage(template.normalizedName())) {
-            return List.of(FinderMatchResult.of(0, text));
+            return List.of(FinderMatchRange.of(text, 0, text.length()));
         }
         // If the template is to be ignored as a whole then return an immutable of the complete template
         if (ignoreCompleteTemplate(template.normalizedName())) {
@@ -129,7 +127,8 @@ public class TemplateFinder implements ImmutableFinder {
         final List<MatchResult> immutables = new ArrayList<>();
 
         // Add the template name
-        immutables.add(FinderMatchResult.of(template.start() + START_TEMPLATE.length(), template.name()));
+        final int startName = template.start() + START_TEMPLATE.length();
+        immutables.add(FinderMatchRange.of(text, startName, template.name()));
 
         // Add the immutables from the parameters and/or values
         immutables.addAll(findParameterImmutables(template, page));
@@ -152,7 +151,6 @@ public class TemplateFinder implements ImmutableFinder {
         final List<MatchResult> immutables = new ArrayList<>();
 
         final String text = page.getContent();
-        final WikipediaLanguage lang = page.getPageKey().getLang();
         final int startTemplateContent = template.start() + START_TEMPLATE.length();
         final int endTemplateContent = template.end() - END_TEMPLATE.length();
 
@@ -198,9 +196,9 @@ public class TemplateFinder implements ImmutableFinder {
                         template.normalizedName()
                     )
                 ) {
-                    immutables.add(FinderMatchResult.of(startValue, value));
+                    immutables.add(FinderMatchRange.of(text, startValue, value));
                 } else {
-                    addUppercaseImmutable(value, startValue, lang, immutables);
+                    addUppercaseImmutable(startValue, page, immutables);
                 }
             }
 
@@ -234,20 +232,9 @@ public class TemplateFinder implements ImmutableFinder {
         return startValueEquals;
     }
 
-    private void addUppercaseImmutable(
-        String value,
-        int startValue,
-        WikipediaLanguage lang,
-        List<MatchResult> immutables
-    ) {
+    private void addUppercaseImmutable(int startValue, FinderPage page, List<MatchResult> immutables) {
         // If the value starts with an uppercase word/expression then we return this word
-        final Optional<MatchResult> firstExpressionUpperCase = uppercaseFinder.findFirstExpressionUpperCase(
-            value,
-            lang
-        );
-        firstExpressionUpperCase.ifPresent(uppercase ->
-            immutables.add(FinderMatchResult.of(startValue + uppercase.start(), uppercase.group()))
-        );
+        uppercaseFinder.findFirstExpressionUpperCase(page, startValue).ifPresent(immutables::add);
     }
 
     private boolean isValidParameterEquals(String text, int startParameter, int startEquals) {

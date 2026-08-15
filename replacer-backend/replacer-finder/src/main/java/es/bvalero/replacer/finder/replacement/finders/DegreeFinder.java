@@ -9,7 +9,6 @@ import es.bvalero.replacer.finder.StandardType;
 import es.bvalero.replacer.finder.Suggestion;
 import es.bvalero.replacer.finder.replacement.ReplacementFinder;
 import es.bvalero.replacer.finder.util.FinderMatchRange;
-import es.bvalero.replacer.finder.util.FinderMatchResult;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
 import java.util.List;
@@ -119,7 +118,7 @@ public class DegreeFinder implements ReplacementFinder {
                     start = endSymbol;
                     continue;
                 }
-                return FinderMatchResult.of(startSymbol, Character.toString(degreeSymbol));
+                return FinderMatchRange.of(text, startSymbol, endSymbol);
             }
 
             // Expect a degree letter (C, F, K) after the symbol, with an optional whitespace between

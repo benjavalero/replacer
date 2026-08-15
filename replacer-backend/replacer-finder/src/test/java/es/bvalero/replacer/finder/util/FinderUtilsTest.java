@@ -3,7 +3,7 @@ package es.bvalero.replacer.finder.util;
 import static es.bvalero.replacer.finder.util.FinderUtils.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-import es.bvalero.replacer.finder.FinderPage;
+import es.bvalero.replacer.finder.util.FinderMatchRange;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -144,22 +144,25 @@ class FinderUtilsTest {
 
     @Test
     void testFindWordAfter() {
-        assertEquals(FinderMatchResult.of(5, "Mundo"), FinderUtils.findWordAfter("Hola Mundo", 4));
-        assertEquals(FinderMatchResult.of(5, "Mundo"), FinderUtils.findWordAfter("Hola Mundo", 5));
-        assertEquals(FinderMatchResult.of(8, "Mundo"), FinderUtils.findWordAfter("Un Hola Mundo", 7));
-        assertEquals(FinderMatchResult.of(8, "Mundo"), FinderUtils.findWordAfter("Un Hola Mundo", 8));
-        assertEquals(FinderMatchResult.of(5, "mundo"), FinderUtils.findWordAfter("Hola mundo", 4));
-        assertEquals(FinderMatchResult.of(6, "Mundo"), FinderUtils.findWordAfter("Hola, Mundo", 4));
-        assertEquals(FinderMatchResult.of(6, "Mundo"), FinderUtils.findWordAfter("Hola, Mundo", 5));
-        assertEquals(FinderMatchResult.of(5, "Mundo"), FinderUtils.findWordAfter("Hola-Mundo", 4));
+        assertEquals(FinderMatchRange.of("Hola Mundo", 5, "Mundo"), FinderUtils.findWordAfter("Hola Mundo", 4));
+        assertEquals(FinderMatchRange.of("Hola Mundo", 5, "Mundo"), FinderUtils.findWordAfter("Hola Mundo", 5));
+        assertEquals(FinderMatchRange.of("Un Hola Mundo", 8, "Mundo"), FinderUtils.findWordAfter("Un Hola Mundo", 7));
+        assertEquals(FinderMatchRange.of("Un Hola Mundo", 8, "Mundo"), FinderUtils.findWordAfter("Un Hola Mundo", 8));
+        assertEquals(FinderMatchRange.of("Hola mundo", 5, "mundo"), FinderUtils.findWordAfter("Hola mundo", 4));
+        assertEquals(FinderMatchRange.of("Hola, Mundo", 6, "Mundo"), FinderUtils.findWordAfter("Hola, Mundo", 4));
+        assertEquals(FinderMatchRange.of("Hola, Mundo", 6, "Mundo"), FinderUtils.findWordAfter("Hola, Mundo", 5));
+        assertEquals(FinderMatchRange.of("Hola-Mundo", 5, "Mundo"), FinderUtils.findWordAfter("Hola-Mundo", 4));
         assertNull(FinderUtils.findWordAfter("Hola", 4));
         assertNull(FinderUtils.findWordAfter("Hola ", 4));
-        assertEquals(FinderMatchResult.of(0, "Hola"), FinderUtils.findWordAfter("Hola", 0));
-        assertEquals(FinderMatchResult.of(5, "A"), FinderUtils.findWordAfter("Hola A", 4));
-        assertEquals(FinderMatchResult.of(6, "A"), FinderUtils.findWordAfter("Hola  A", 4));
-        assertEquals(FinderMatchResult.of(7, "A"), FinderUtils.findWordAfter("Hola . A", 4));
-        assertEquals(FinderMatchResult.of(5, "23.5"), FinderUtils.findWordAfter("Hola 23.5", 4, '.'));
-        assertEquals(FinderMatchResult.of(10, "Mundo"), FinderUtils.findWordAfter("Hola&nbsp;Mundo", 4));
+        assertEquals(FinderMatchRange.of("Hola", 0, "Hola"), FinderUtils.findWordAfter("Hola", 0));
+        assertEquals(FinderMatchRange.of("Hola A", 5, "A"), FinderUtils.findWordAfter("Hola A", 4));
+        assertEquals(FinderMatchRange.of("Hola  A", 6, "A"), FinderUtils.findWordAfter("Hola  A", 4));
+        assertEquals(FinderMatchRange.of("Hola . A", 7, "A"), FinderUtils.findWordAfter("Hola . A", 4));
+        assertEquals(FinderMatchRange.of("Hola 23.5", 5, "23.5"), FinderUtils.findWordAfter("Hola 23.5", 4, '.'));
+        assertEquals(
+            FinderMatchRange.of("Hola&nbsp;Mundo", 10, "Mundo"),
+            FinderUtils.findWordAfter("Hola&nbsp;Mundo", 4)
+        );
     }
 
     @Test
@@ -187,17 +190,26 @@ class FinderUtilsTest {
 
     @Test
     void testFindWordBefore() {
-        assertEquals(FinderMatchResult.of(0, "Hola"), FinderUtils.findWordBefore("Hola mundo", 5));
-        assertEquals(FinderMatchResult.of(0, "Hola"), FinderUtils.findWordBefore("Hola mundo", 4));
-        assertEquals(FinderMatchResult.of(0, "Hola"), FinderUtils.findWordBefore("Hola-mundo", 5));
+        assertEquals(FinderMatchRange.of("Hola mundo", 0, "Hola"), FinderUtils.findWordBefore("Hola mundo", 5));
+        assertEquals(FinderMatchRange.of("Hola mundo", 0, "Hola"), FinderUtils.findWordBefore("Hola mundo", 4));
+        assertEquals(FinderMatchRange.of("Hola-mundo", 0, "Hola"), FinderUtils.findWordBefore("Hola-mundo", 5));
         assertNull(FinderUtils.findWordBefore("Hola", 0));
-        assertEquals(FinderMatchResult.of(0, "Hola"), FinderUtils.findWordBefore("HolaMundo", 4));
-        assertEquals(FinderMatchResult.of(0, "Hola"), FinderUtils.findWordBefore("Hola", 4));
-        assertEquals(FinderMatchResult.of(0, "Hola"), FinderUtils.findWordBefore("Hola  mundo", 6));
-        assertEquals(FinderMatchResult.of(3, "Hola"), FinderUtils.findWordBefore("Un Hola, mundo", 9));
-        assertEquals(FinderMatchResult.of(3, "Hola"), FinderUtils.findWordBefore("Un Hola , mundo", 10));
-        assertEquals(FinderMatchResult.of(3, "23.5"), FinderUtils.findWordBefore("Un 23.5 , mundo", 10, '.'));
-        assertEquals(FinderMatchResult.of(0, "Hola"), FinderUtils.findWordBefore("Hola&nbsp;mundo", 10));
+        assertEquals(FinderMatchRange.of("HolaMundo", 0, "Hola"), FinderUtils.findWordBefore("HolaMundo", 4));
+        assertEquals(FinderMatchRange.of("Hola", 0, "Hola"), FinderUtils.findWordBefore("Hola", 4));
+        assertEquals(FinderMatchRange.of("Hola  mundo", 0, "Hola"), FinderUtils.findWordBefore("Hola  mundo", 6));
+        assertEquals(FinderMatchRange.of("Un Hola, mundo", 3, "Hola"), FinderUtils.findWordBefore("Un Hola, mundo", 9));
+        assertEquals(
+            FinderMatchRange.of("Un Hola , mundo", 3, "Hola"),
+            FinderUtils.findWordBefore("Un Hola , mundo", 10)
+        );
+        assertEquals(
+            FinderMatchRange.of("Un 23.5 , mundo", 3, "23.5"),
+            FinderUtils.findWordBefore("Un 23.5 , mundo", 10, '.')
+        );
+        assertEquals(
+            FinderMatchRange.of("Hola&nbsp;mundo", 0, "Hola"),
+            FinderUtils.findWordBefore("Hola&nbsp;mundo", 10)
+        );
     }
 
     @Test
@@ -223,18 +235,18 @@ class FinderUtilsTest {
         String text = "A b/c-d_e,f.g'h[í]j\"1º2ª3°";
 
         Set<MatchResult> expected = new HashSet<>();
-        expected.add(FinderMatchResult.of(0, "A"));
-        expected.add(FinderMatchResult.of(2, "b"));
-        expected.add(FinderMatchResult.of(4, "c"));
-        expected.add(FinderMatchResult.of(6, "d_e"));
-        expected.add(FinderMatchResult.of(10, "f"));
-        expected.add(FinderMatchResult.of(12, "g"));
-        expected.add(FinderMatchResult.of(14, "h"));
-        expected.add(FinderMatchResult.of(16, "í"));
-        expected.add(FinderMatchResult.of(18, "j"));
-        expected.add(FinderMatchResult.of(20, "1"));
-        expected.add(FinderMatchResult.of(22, "2"));
-        expected.add(FinderMatchResult.of(24, "3"));
+        expected.add(FinderMatchRange.of(text, 0, "A"));
+        expected.add(FinderMatchRange.of(text, 2, "b"));
+        expected.add(FinderMatchRange.of(text, 4, "c"));
+        expected.add(FinderMatchRange.of(text, 6, "d_e"));
+        expected.add(FinderMatchRange.of(text, 10, "f"));
+        expected.add(FinderMatchRange.of(text, 12, "g"));
+        expected.add(FinderMatchRange.of(text, 14, "h"));
+        expected.add(FinderMatchRange.of(text, 16, "í"));
+        expected.add(FinderMatchRange.of(text, 18, "j"));
+        expected.add(FinderMatchRange.of(text, 20, "1"));
+        expected.add(FinderMatchRange.of(text, 22, "2"));
+        expected.add(FinderMatchRange.of(text, 24, "3"));
 
         List<MatchResult> matches = FinderUtils.findAllWords(text);
         assertEquals(expected, new HashSet<>(matches));

@@ -555,7 +555,7 @@ public class FinderUtils {
                 minStart = pos;
             }
         }
-        return minString == null ? null : FinderMatchResult.of(minStart, minString);
+        return minString == null ? null : FinderMatchRange.of(text, minStart, minString);
     }
 
     /**
@@ -573,7 +573,7 @@ public class FinderUtils {
                 maxStart = pos;
             }
         }
-        return maxString == null ? null : FinderMatchResult.of(maxStart, maxString);
+        return maxString == null ? null : FinderMatchRange.of(text, maxStart, maxString);
     }
 
     /**

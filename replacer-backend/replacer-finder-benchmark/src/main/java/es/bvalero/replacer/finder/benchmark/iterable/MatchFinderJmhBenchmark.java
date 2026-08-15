@@ -4,7 +4,7 @@ import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.common.util.ReplacerUtils;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.benchmark.BaseFinderJmhBenchmark;
-import es.bvalero.replacer.finder.util.FinderMatchResult;
+import es.bvalero.replacer.finder.util.FinderMatchRange;
 import java.util.regex.MatchResult;
 import org.jspecify.annotations.Nullable;
 import org.openjdk.jmh.annotations.Benchmark;
@@ -40,7 +40,7 @@ public class MatchFinderJmhBenchmark extends BaseFinderJmhBenchmark {
         if (start >= 0 && start < text.length()) {
             final int startMatch = findStartMatch(text, start);
             if (startMatch >= 0) {
-                return FinderMatchResult.of(startMatch, word);
+                return FinderMatchRange.of(text, startMatch, word);
             } else {
                 return null;
             }

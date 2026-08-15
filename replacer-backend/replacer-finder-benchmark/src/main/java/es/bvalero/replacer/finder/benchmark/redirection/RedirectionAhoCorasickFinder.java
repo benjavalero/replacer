@@ -5,7 +5,7 @@ import com.roklenarcic.util.strings.StringMap;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
 import es.bvalero.replacer.finder.immutable.finders.RedirectionMatchListener;
-import es.bvalero.replacer.finder.util.FinderMatchResult;
+import es.bvalero.replacer.finder.util.FinderMatchRange;
 import java.util.Collection;
 import java.util.regex.MatchResult;
 import java.util.stream.Stream;
@@ -29,6 +29,6 @@ class RedirectionAhoCorasickFinder implements BenchmarkFinder {
         final String text = page.getContent();
         final RedirectionMatchListener listener = new RedirectionMatchListener();
         this.stringMap.match(text, listener);
-        return listener.isFound() ? Stream.of(FinderMatchResult.of(0, text)) : Stream.of();
+        return listener.isFound() ? Stream.of(FinderMatchRange.of(text, 0, text)) : Stream.of();
     }
 }

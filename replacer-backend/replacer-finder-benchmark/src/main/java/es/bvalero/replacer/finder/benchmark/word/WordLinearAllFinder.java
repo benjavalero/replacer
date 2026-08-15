@@ -2,7 +2,7 @@ package es.bvalero.replacer.finder.benchmark.word;
 
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
-import es.bvalero.replacer.finder.util.FinderMatchResult;
+import es.bvalero.replacer.finder.util.FinderMatchRange;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
 import java.util.*;
@@ -38,7 +38,7 @@ class WordLinearAllFinder implements BenchmarkFinder {
                 final int endWord = findEndWord(text, startWord);
                 final String word = text.substring(startWord, endWord);
                 if (words.contains(word) && FinderUtils.isWordCompleteInText(startWord, endWord, text)) {
-                    return FinderMatchResult.of(startWord, word);
+                    return FinderMatchRange.of(text, startWord, word);
                 } else {
                     // The char after the word is a non-letter, so we can start searching for the next word one position after.
                     start = endWord + 1;

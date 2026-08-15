@@ -4,7 +4,7 @@ import com.roklenarcic.util.strings.LongestMatchMap;
 import com.roklenarcic.util.strings.MapMatchListener;
 import com.roklenarcic.util.strings.StringMap;
 import es.bvalero.replacer.finder.FinderPage;
-import es.bvalero.replacer.finder.util.FinderMatchResult;
+import es.bvalero.replacer.finder.util.FinderMatchRange;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -68,7 +68,7 @@ class UppercaseAhoCorasickSeparatorFinder extends UppercaseBenchmarkFinder {
                         }
                         final String word = text.substring(wordStart, wordEnd);
                         if (words.contains(word) && FinderUtils.isWordCompleteInText(wordStart, wordEnd, text)) {
-                            matches.add(FinderMatchResult.of(wordStart, word));
+                            matches.add(FinderMatchRange.of(text, wordStart, word));
                         }
                     }
                     return true;

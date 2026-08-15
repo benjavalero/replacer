@@ -6,7 +6,7 @@ import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.StandardType;
 import es.bvalero.replacer.finder.Suggestion;
 import es.bvalero.replacer.finder.replacement.ReplacementFinder;
-import es.bvalero.replacer.finder.util.FinderMatchResult;
+import es.bvalero.replacer.finder.util.FinderMatchRange;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
 import java.util.List;
@@ -44,7 +44,7 @@ public class AcuteOFinder implements ReplacementFinder {
             }
 
             if (isImmutable(text, startAcuteO)) {
-                return FinderMatchResult.of(startAcuteO, ACUTE_O);
+                return FinderMatchRange.of(text, startAcuteO, ACUTE_O);
             } else {
                 start = startAcuteO + 2; // As we have searched with surrounding whitespaces
             }

@@ -3,13 +3,11 @@ package es.bvalero.replacer.finder.immutable.finders;
 import static es.bvalero.replacer.finder.util.FinderUtils.*;
 
 import es.bvalero.replacer.FinderProperties;
-import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.util.ReplacerUtils;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.FinderPriority;
 import es.bvalero.replacer.finder.immutable.ImmutableCheckedFinder;
 import es.bvalero.replacer.finder.util.FinderMatchRange;
-import es.bvalero.replacer.finder.util.FinderMatchResult;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.LinearMatchCollectionFinder;
 import jakarta.annotation.PostConstruct;
@@ -89,8 +87,6 @@ public class LinkFinder extends ImmutableCheckedFinder {
     private List<MatchResult> findImmutable(LinkStructure link, FinderPage page) {
         final List<MatchResult> immutables = new ArrayList<>();
 
-        // Let's check first the easiest cases
-        final WikipediaLanguage lang = page.getPageKey().getLang();
         final String text = page.getContent();
 
         // If the link is suffixed then return the complete link including the suffix
@@ -103,8 +99,7 @@ public class LinkFinder extends ImmutableCheckedFinder {
         final int linkContentStart = link.start() + START_LINK.length();
         final int linkContentEnd = link.end() - END_LINK.length();
 
-        final String linkSpace = findLinkSpace(text, link);
-        final String linkSpaceTrimmed = linkSpace != null ? linkSpace.trim() : null;
+        final String linkSpaceTrimmed = findLinkSpaceTrimmed(text, link);
         final String linkSpaceNormalized = normalizeLinkSpace(linkSpaceTrimmed);
 
         // If the link space is a category then return an immutable of the complete link
@@ -131,14 +126,12 @@ public class LinkFinder extends ImmutableCheckedFinder {
             } else {
                 final int linkTitleEnd = pipePos >= linkContentStart ? pipePos : linkContentEnd;
                 immutables.add(FinderMatchRange.of(text, linkContentStart, linkTitleEnd));
-                // The alias substring is unavoidable here as uppercaseFinder requires a String
                 final Optional<MatchResult> firstExpressionUpperCase = uppercaseFinder.findFirstExpressionUpperCase(
-                    linkAlias.group(),
-                    lang
+                    page,
+                    linkAlias.start()
                 );
                 firstExpressionUpperCase.ifPresent(uppercase -> {
-                    final int startAlias = linkAlias.start();
-                    immutables.add(FinderMatchResult.of(startAlias + uppercase.start(), uppercase.group()));
+                    immutables.add(uppercase);
                 });
             }
         }
@@ -157,9 +150,14 @@ public class LinkFinder extends ImmutableCheckedFinder {
     }
 
     @Nullable
-    private String findLinkSpace(String text, LinkStructure link) {
+    private String findLinkSpaceTrimmed(String text, LinkStructure link) {
         final int colonPos = link.colonPos();
-        return colonPos >= 0 ? text.substring(link.start() + START_LINK.length(), colonPos) : null;
+        if (colonPos < 0) {
+            return null;
+        }
+        final int start = FinderUtils.trimLeft(text, link.start() + START_LINK.length(), colonPos);
+        final int end = FinderUtils.trimRight(text, start, colonPos);
+        return text.substring(start, end);
     }
 
     @Nullable

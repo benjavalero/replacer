@@ -7,7 +7,7 @@ import es.bvalero.replacer.common.util.ReplacerUtils;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.FinderPriority;
 import es.bvalero.replacer.finder.immutable.ImmutableFinder;
-import es.bvalero.replacer.finder.util.FinderMatchResult;
+import es.bvalero.replacer.finder.util.FinderMatchRange;
 import jakarta.annotation.PostConstruct;
 import java.util.List;
 import java.util.regex.MatchResult;
@@ -56,6 +56,6 @@ public class RedirectionFinder implements ImmutableFinder {
         final String lowerCaseText = ReplacerUtils.toLowerCase(text);
         final RedirectionMatchListener listener = new RedirectionMatchListener();
         this.stringMap.match(lowerCaseText, listener);
-        return listener.isFound() ? Stream.of(FinderMatchResult.of(0, text)) : Stream.of();
+        return listener.isFound() ? Stream.of(FinderMatchRange.of(text, 0, text)) : Stream.of();
     }
 }

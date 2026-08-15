@@ -2,7 +2,7 @@ package es.bvalero.replacer.finder.benchmark.word;
 
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
-import es.bvalero.replacer.finder.util.FinderMatchResult;
+import es.bvalero.replacer.finder.util.FinderMatchRange;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import java.util.Collection;
 import java.util.regex.MatchResult;
@@ -24,9 +24,10 @@ class WordTrieWholeFinder implements BenchmarkFinder {
 
     @Override
     public Stream<MatchResult> findMatchResults(FinderPage page) {
-        return this.trie.parseText(page.getContent())
+        final String text = page.getContent();
+        return this.trie.parseText(text)
             .stream()
-            .map(emit -> FinderMatchResult.of(emit.getStart(), emit.getKeyword()));
+            .map(emit -> FinderMatchRange.of(text, emit.getStart(), emit.getKeyword()));
     }
 
     @Override
