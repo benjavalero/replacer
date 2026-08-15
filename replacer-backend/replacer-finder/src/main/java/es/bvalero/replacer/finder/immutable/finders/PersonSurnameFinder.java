@@ -79,7 +79,7 @@ public class PersonSurnameFinder implements ImmutableFinder {
             // Include the preceding name in the immutable
             final MatchResult wordBefore = FinderUtils.findWordBefore(page.getContent(), match.start());
             if (wordBefore != null) {
-                return Immutable.of(wordBefore.start(), wordBefore.group() + " " + match.group());
+                return Immutable.of(page.getContent(), wordBefore.start(), match.end());
             }
         }
         return ImmutableFinder.super.convert(match, page);

@@ -226,7 +226,11 @@ class TemplateFinderTest {
 
         List<Immutable> matches = templateFinder.findList(text);
 
-        Set<Immutable> expected = Set.of(Immutable.of(2, "T"), Immutable.of(4, "x "), Immutable.of(10, "x "));
+        Set<Immutable> expected = Set.of(
+            Immutable.of(text, 2, "T"),
+            Immutable.of(text, 4, "x "),
+            Immutable.of(text, 10, "x ")
+        );
         Set<Immutable> actual = new HashSet<>(matches);
         assertEquals(3, matches.size());
         assertEquals(expected, actual);
@@ -239,9 +243,9 @@ class TemplateFinderTest {
         List<Immutable> matches = templateFinder.findList(text);
 
         Set<Immutable> expected = Set.of(
-            Immutable.of(2, "T"),
-            Immutable.of(4, "image_caption"),
-            Immutable.of(20, "image")
+            Immutable.of(text, 2, "T"),
+            Immutable.of(text, 4, "image_caption"),
+            Immutable.of(text, 20, "image")
         );
         Set<Immutable> actual = new HashSet<>(matches);
         assertEquals(3, matches.size());
@@ -256,7 +260,11 @@ class TemplateFinderTest {
 
         // To calculate the parameter position we assume the parameters are not repeated in the template
         // Therefore in this case though we find both parameters always the first position is returned
-        Set<Immutable> expected = Set.of(Immutable.of(2, "T"), Immutable.of(4, "x"), Immutable.of(14, "y"));
+        Set<Immutable> expected = Set.of(
+            Immutable.of(text, 2, "T"),
+            Immutable.of(text, 4, "x"),
+            Immutable.of(text, 14, "y")
+        );
         Set<Immutable> actual = new HashSet<>(matches);
         assertEquals(expected, actual);
     }
@@ -268,7 +276,7 @@ class TemplateFinderTest {
 
         List<Immutable> matches = templateFinder.findList(text);
 
-        Set<Immutable> expected = Set.of(Immutable.of(2, "T"), Immutable.of(4, "xxx.jpg"));
+        Set<Immutable> expected = Set.of(Immutable.of(text, 2, "T"), Immutable.of(text, 4, "xxx.jpg"));
         Set<Immutable> actual = new HashSet<>(matches);
         assertEquals(expected, actual);
     }
@@ -283,10 +291,10 @@ class TemplateFinderTest {
         List<Immutable> matches = templateFinder.findList(text);
 
         Set<Immutable> expected = Set.of(
-            Immutable.of(2, "T"),
-            Immutable.of(4, "Enero"),
-            Immutable.of(18, "p"),
-            Immutable.of(21, "Febrero")
+            Immutable.of(text, 2, "T"),
+            Immutable.of(text, 4, "Enero"),
+            Immutable.of(text, 18, "p"),
+            Immutable.of(text, 21, "Febrero")
         );
         Set<Immutable> actual = new HashSet<>(matches);
         assertEquals(expected, actual);
@@ -301,7 +309,7 @@ class TemplateFinderTest {
 
         List<Immutable> matches = templateFinder.findList(text);
 
-        Set<Immutable> expected = Set.of(Immutable.of(2, "T"), Immutable.of(4, "Guerras napoleónicas"));
+        Set<Immutable> expected = Set.of(Immutable.of(text, 2, "T"), Immutable.of(text, 4, "Guerras napoleónicas"));
         Set<Immutable> actual = new HashSet<>(matches);
         assertEquals(expected, actual);
     }

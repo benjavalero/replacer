@@ -158,7 +158,7 @@ class ReplacementFinderServiceTest {
             StandardType.of(ReplacementKind.SIMPLE, "example"),
             List.of(Suggestion.ofNoComment("ejemplo"))
         );
-        Immutable immutable = Immutable.of(14, "two");
+        Immutable immutable = Immutable.of(text, 14, "two");
 
         when(replacementFinder.find(any(FinderPage.class))).thenReturn(Stream.of(replacement1, replacement2));
         when(immutableFindApi.findImmutables(any(FinderPage.class))).thenReturn(Stream.of(immutable));
@@ -185,7 +185,7 @@ class ReplacementFinderServiceTest {
             StandardType.of(ReplacementKind.SIMPLE, "example"),
             List.of(Suggestion.ofNoComment("ejemplo"))
         );
-        Immutable immutable = Immutable.of(0, "An");
+        Immutable immutable = Immutable.of(text, 0, "An");
 
         when(replacementFinder.find(any(FinderPage.class))).thenReturn(Stream.of(replacement1, replacement2));
         when(immutableFindApi.findImmutables(any(FinderPage.class))).thenReturn(Stream.of(immutable));
@@ -212,7 +212,7 @@ class ReplacementFinderServiceTest {
             StandardType.of(ReplacementKind.SIMPLE, "ejemplo"),
             List.of(Suggestion.ofNoComment("ejemplo"))
         );
-        Immutable immutable = Immutable.of(0, "An example");
+        Immutable immutable = Immutable.of(text, 0, "An example");
 
         when(replacementFinder.find(any(FinderPage.class))).thenReturn(Stream.of(replacement1, replacement2));
         when(immutableFindApi.findImmutables(any(FinderPage.class))).thenReturn(Stream.of(immutable));
