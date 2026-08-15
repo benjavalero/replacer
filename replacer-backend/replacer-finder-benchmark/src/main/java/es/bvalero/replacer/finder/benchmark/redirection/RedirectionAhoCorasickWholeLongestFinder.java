@@ -4,7 +4,6 @@ import com.roklenarcic.util.strings.StringMap;
 import com.roklenarcic.util.strings.WholeWordLongestMatchMap;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
-import es.bvalero.replacer.finder.immutable.finders.RedirectionMatchListener;
 import es.bvalero.replacer.finder.util.FinderMatchRange;
 import java.util.Collection;
 import java.util.regex.MatchResult;

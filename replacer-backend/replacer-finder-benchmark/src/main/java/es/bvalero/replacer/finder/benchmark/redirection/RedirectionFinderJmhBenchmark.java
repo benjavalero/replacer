@@ -21,6 +21,7 @@ public class RedirectionFinderJmhBenchmark extends BaseFinderJmhBenchmark {
 
     private RedirectionLowercaseContainsFinder redirectionLowercaseContainsFinder;
     private RedirectionLowercasePrefixFinder redirectionLowercasePrefixFinder;
+    private RedirectionHashFinder redirectionHashFinder;
     // private RedirectionRegexFinder redirectionRegexFinder; // Very long
     // private RedirectionRegexInsensitiveFinder redirectionRegexInsensitiveFinder; // Very long
     // private RedirectionAutomatonFinder redirectionAutomatonFinder; // Medium
@@ -50,6 +51,7 @@ public class RedirectionFinderJmhBenchmark extends BaseFinderJmhBenchmark {
         List<String> redirectionWords = finderProperties.getRedirectionWords();
         redirectionLowercaseContainsFinder = new RedirectionLowercaseContainsFinder(redirectionWords);
         redirectionLowercasePrefixFinder = new RedirectionLowercasePrefixFinder(redirectionWords);
+        redirectionHashFinder = new RedirectionHashFinder(redirectionWords);
         // redirectionRegexFinder = new RedirectionRegexFinder(redirectionWords);
         // redirectionRegexInsensitiveFinder = new RedirectionRegexInsensitiveFinder(redirectionWords);
         // redirectionAutomatonFinder = new RedirectionAutomatonFinder(redirectionWords);
@@ -71,6 +73,11 @@ public class RedirectionFinderJmhBenchmark extends BaseFinderJmhBenchmark {
     @Benchmark
     public void redirectionLowercasePrefixFinder(Blackhole bh) {
         runFinder(redirectionLowercasePrefixFinder, bh);
+    }
+
+    @Benchmark
+    public void redirectionHashFinder(Blackhole bh) {
+        runFinder(redirectionHashFinder, bh);
     }
 
     /*
@@ -137,7 +144,7 @@ public class RedirectionFinderJmhBenchmark extends BaseFinderJmhBenchmark {
     */
 
     public static void main(String[] args) throws RunnerException, ReplacerException {
-        // run(RedirectionFinderJmhBenchmark.class, fileName);
+        run(RedirectionFinderJmhBenchmark.class, fileName);
 
         generateChart(fileName);
     }

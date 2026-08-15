@@ -111,6 +111,12 @@ class RedirectionFinderTest {
         doAssertions(finder);
     }
 
+    @Test
+    void testRedirectionHashFinder() {
+        RedirectionHashFinder finder = new RedirectionHashFinder(redirectionWords);
+        doAssertions(finder);
+    }
+
     private void doAssertions(BenchmarkFinder finder) {
         assertFalse(finder.findMatches("xxx #REDIRECCIÓN [[A]] yyy").isEmpty());
         assertFalse(finder.findMatches("xxx #redirección [[A]] yyy").isEmpty());
