@@ -6,9 +6,7 @@ import es.bvalero.replacer.finder.benchmark.BaseFinderJmhBenchmark;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.openjdk.jmh.annotations.Benchmark;
-import org.openjdk.jmh.annotations.Measurement;
 import org.openjdk.jmh.annotations.Setup;
-import org.openjdk.jmh.annotations.Warmup;
 import org.openjdk.jmh.infra.Blackhole;
 import org.openjdk.jmh.runner.RunnerException;
 import org.springframework.boot.SpringApplication;
@@ -18,8 +16,6 @@ import org.springframework.context.ConfigurableApplicationContext;
 // NOTE: benchmarks are run with the Spanish months surname (used for street/square/avenue names)
 // temporarily commented out in application-finder.yml, as it is a regex pattern that is not
 // supported as a plain string by the benchmark finders.
-@Warmup(time = 5)
-@Measurement(time = 5)
 @EnableConfigurationProperties(FinderProperties.class)
 public class SurnameFinderJmhBenchmark extends BaseFinderJmhBenchmark {
 

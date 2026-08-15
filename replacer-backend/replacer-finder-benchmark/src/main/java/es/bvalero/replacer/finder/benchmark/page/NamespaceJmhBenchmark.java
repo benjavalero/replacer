@@ -14,8 +14,6 @@ import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.infra.Blackhole;
 import org.openjdk.jmh.runner.RunnerException;
 
-@Warmup(time = 5)
-@Measurement(time = 5)
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
 public class NamespaceJmhBenchmark extends BaseFinderJmhBenchmark {
 

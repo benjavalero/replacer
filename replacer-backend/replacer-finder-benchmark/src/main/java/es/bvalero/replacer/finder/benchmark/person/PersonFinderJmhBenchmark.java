@@ -6,17 +6,13 @@ import es.bvalero.replacer.finder.benchmark.BaseFinderJmhBenchmark;
 import java.util.HashSet;
 import java.util.Set;
 import org.openjdk.jmh.annotations.Benchmark;
-import org.openjdk.jmh.annotations.Measurement;
 import org.openjdk.jmh.annotations.Setup;
-import org.openjdk.jmh.annotations.Warmup;
 import org.openjdk.jmh.infra.Blackhole;
 import org.openjdk.jmh.runner.RunnerException;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.ConfigurableApplicationContext;
 
-@Warmup(time = 5)
-@Measurement(time = 5)
 @EnableConfigurationProperties(FinderProperties.class)
 public class PersonFinderJmhBenchmark extends BaseFinderJmhBenchmark {
 

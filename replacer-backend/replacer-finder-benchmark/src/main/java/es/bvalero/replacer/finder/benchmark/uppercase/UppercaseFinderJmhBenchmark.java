@@ -16,15 +16,10 @@ import java.util.Set;
 import org.apache.commons.collections4.SetValuedMap;
 import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
 import org.openjdk.jmh.annotations.Benchmark;
-import org.openjdk.jmh.annotations.Measurement;
 import org.openjdk.jmh.annotations.Setup;
-import org.openjdk.jmh.annotations.Setup;
-import org.openjdk.jmh.annotations.Warmup;
 import org.openjdk.jmh.infra.Blackhole;
 import org.openjdk.jmh.runner.RunnerException;
 
-@Warmup(time = 5)
-@Measurement(time = 5)
 public class UppercaseFinderJmhBenchmark extends BaseFinderJmhBenchmark {
 
     private static final String fileName = "uppercase/uppercase-summary-jmh";

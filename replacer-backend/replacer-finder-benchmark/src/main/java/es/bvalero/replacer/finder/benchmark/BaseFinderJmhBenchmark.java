@@ -37,8 +37,8 @@ import org.openjdk.jmh.runner.options.OptionsBuilder;
 // 5 iterations are the default and enough to stabilize times
 // Time recommended depending on the duration per operation: 5-10 s for ns, 2-5 s for µs, 1-2 s for ms.
 // It can be increased to reduce the variance
-@Warmup(time = 2) // Default: 5 iterations, 10 s each
-@Measurement(time = 2) // Default: 5 iterations, 10 s each
+@Warmup(time = 5) // Default: 5 iterations, 10 s each
+@Measurement(time = 5) // Default: 5 iterations, 10 s each
 @BenchmarkMode(Mode.AverageTime) // Default: Throughput
 @OutputTimeUnit(TimeUnit.MICROSECONDS) // Default: seconds
 public class BaseFinderJmhBenchmark {

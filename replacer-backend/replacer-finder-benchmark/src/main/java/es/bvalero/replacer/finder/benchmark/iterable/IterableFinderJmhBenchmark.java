@@ -8,14 +8,10 @@ import es.bvalero.replacer.finder.util.FinderMatchResult;
 import java.util.regex.MatchResult;
 import org.jspecify.annotations.Nullable;
 import org.openjdk.jmh.annotations.Benchmark;
-import org.openjdk.jmh.annotations.Measurement;
 import org.openjdk.jmh.annotations.Setup;
-import org.openjdk.jmh.annotations.Warmup;
 import org.openjdk.jmh.infra.Blackhole;
 import org.openjdk.jmh.runner.RunnerException;
 
-@Warmup(time = 5) // Default: 5 iterations, 10 s each
-@Measurement(time = 5) // Default: 5 iterations, 10 s each
 public class IterableFinderJmhBenchmark extends BaseFinderJmhBenchmark {
 
     private static final String fileName = "iterable/iterable-summary-jmh";
