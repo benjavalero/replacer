@@ -140,6 +140,15 @@ public class FinderUtils {
         return true;
     }
 
+    public static boolean isAscii(String text, int start, int end) {
+        for (int i = start; i < end; i++) {
+            if (!isAscii(text.charAt(i))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     public static boolean isAscii(char ch) {
         return (ch >= 'A' && ch <= 'Z') || (ch >= 'a' && ch <= 'z');
     }
@@ -751,121 +760,6 @@ public class FinderUtils {
     //endregion
 
     //region Parse Utils
-
-    @FunctionalInterface
-    public interface LogResultValidator {
-        boolean validate(String text, int start);
-    }
-
-    @TestOnly
-    static Collection<FinderMatchResult> findAllStructures(FinderPage page, String startStr, String endStr) {
-        return findAllStructures(page, startStr, endStr, (text, start) -> true);
-    }
-
-    private static Collection<FinderMatchResult> findAllStructures(
-        FinderPage page,
-        String startStr,
-        String endStr,
-        LogResultValidator logResultValidator
-    ) {
-        // A loop is a little better than recursion
-        final List<FinderMatchResult> matches = new ArrayList<>();
-
-        final String text = page.getContent();
-
-        int start = 0;
-        while (start >= 0 && start < text.length()) {
-            final SequencedCollection<FinderMatchResult> foundMatches = findNextStructure(
-                page,
-                start,
-                startStr,
-                endStr,
-                logResultValidator
-            );
-            if (foundMatches.isEmpty()) {
-                break;
-            }
-            matches.addAll(foundMatches);
-            // Move the start position to the end of the root match (always the last one in foundMatches)
-            start = foundMatches.getLast().end();
-        }
-
-        return matches;
-    }
-
-    public static SequencedCollection<FinderMatchResult> findNextStructure(
-        FinderPage page,
-        int index,
-        String startStr,
-        String endStr
-    ) {
-        return findNextStructure(page, index, startStr, endStr, (text, start) -> true);
-    }
-
-    public static SequencedCollection<FinderMatchResult> findNextStructure(
-        FinderPage page,
-        int index,
-        String startStr,
-        String endStr,
-        LogResultValidator logResultValidator
-    ) {
-        // A loop is a little better than recursion
-        final List<FinderMatchResult> matches = new ArrayList<>();
-
-        final String text = page.getContent();
-        // Deque implementation is a little better than old stack and recommended by Java
-        // We store the start of the structure but we also store the groups found inside
-        final Deque<FinderMatchResult> matchStack = new ArrayDeque<>();
-        // TODO: Reduce cyclomatic complexity
-        while (index >= 0 && index < text.length()) {
-            if (matchStack.isEmpty()) {
-                final int newStart = text.indexOf(startStr, index);
-                if (newStart < 0) {
-                    break;
-                }
-                matchStack.addLast(FinderMatchResult.ofNested(newStart, startStr));
-                index = newStart + startStr.length();
-            }
-
-            assert !matchStack.isEmpty();
-            final FinderMatchResult currentMatch = matchStack.getLast();
-            final int start = currentMatch.start();
-            final int end = text.indexOf(endStr, index);
-            if (end < 0) {
-                // Structure not closed. Not worth keep on searching as the next structures are considered as nested.
-                if (logResultValidator.validate(text, start)) {
-                    logFinderResult(page, start, start + startStr.length(), "Structure not closed");
-                }
-                break;
-            }
-
-            final int nextStart = text.indexOf(startStr, index);
-            if (nextStart >= 0 && nextStart < end) {
-                // Nested structure
-                final FinderMatchResult nextMatch = FinderMatchResult.ofNested(nextStart, startStr);
-                matchStack.addLast(nextMatch);
-                index = nextStart + startStr.length();
-            } else {
-                final int actualEnd = end + endStr.length();
-                final FinderMatchResult endedMatch = new FinderMatchResult(
-                    currentMatch.start(),
-                    text.substring(start, actualEnd),
-                    currentMatch.groups()
-                );
-                matches.add(endedMatch);
-                matchStack.removeLast();
-                if (!matchStack.isEmpty()) {
-                    // Add the ended Match to the parent that now it's at the top of the stack
-                    matchStack.getLast().addGroup(endedMatch);
-                } else {
-                    // We found a complete structure, so we can return it
-                    break;
-                }
-                index = actualEnd;
-            }
-        }
-        return matches;
-    }
 
     public static List<MatchResult> findAllWords(String text) {
         final List<MatchResult> words = new ArrayList<>(100);

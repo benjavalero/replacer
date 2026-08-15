@@ -1,7 +1,6 @@
 package es.bvalero.replacer.finder.immutable.finders;
 
 import static es.bvalero.replacer.finder.util.FinderUtils.*;
-import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 import es.bvalero.replacer.FinderProperties;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
@@ -9,6 +8,7 @@ import es.bvalero.replacer.common.util.ReplacerUtils;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.FinderPriority;
 import es.bvalero.replacer.finder.immutable.ImmutableFinder;
+import es.bvalero.replacer.finder.util.FinderMatchRange;
 import es.bvalero.replacer.finder.util.FinderMatchResult;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.LinearMatchCollectionFinder;
@@ -18,8 +18,6 @@ import java.util.regex.MatchResult;
 import java.util.stream.Stream;
 import org.apache.commons.collections4.SetValuedMap;
 import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
-import org.apache.commons.lang3.StringUtils;
-import org.jspecify.annotations.Nullable;
 import org.springframework.stereotype.Component;
 
 /**
@@ -99,13 +97,7 @@ public class TemplateFinder implements ImmutableFinder {
     private SequencedCollection<MatchResult> findImmutables(FinderPage page, int start) {
         // findNextStructure returns nested structures first, root structure last
         while (start >= 0 && start < page.getContent().length()) {
-            final SequencedCollection<FinderMatchResult> templates = FinderUtils.findNextStructure(
-                page,
-                start,
-                START_TEMPLATE,
-                END_TEMPLATE,
-                this::isNotFakeTemplate
-            );
+            final SequencedCollection<TemplateStructure> templates = TemplateStructureFinder.findNext(page, start);
             if (templates.isEmpty()) {
                 break;
             }
@@ -122,164 +114,93 @@ public class TemplateFinder implements ImmutableFinder {
         return Collections.emptyList();
     }
 
-    private boolean isNotFakeTemplate(String text, int templateStart) {
-        // There are some cases where curly braces inside a LaTeX formula may be confused with template start
-        // We want to avoid the warning in these cases
-        // This method is only called in case the template is not closed
-        final char nextChar = text.charAt(templateStart + START_TEMPLATE.length());
-        return FinderUtils.isWordChar(nextChar);
-    }
-
-    private List<MatchResult> findImmutable(FinderMatchResult template, FinderPage page) {
-        // Let's check first the easiest cases
-        final String templateContent = getTemplateContent(template.group());
-
-        // Special case "{{!}}" ==> no immutable
-        if (!validateSpecialCharacters(templateContent)) {
-            return List.of();
-        }
-
-        // Inevitable substring: templateName is needed as a string for FinderMatchResult and isValueImmutable
-        final String templateName = findTemplateName(templateContent);
-        final String normalizedTemplateName = normalizeTemplateName(templateName);
+    private List<MatchResult> findImmutable(TemplateStructure template, FinderPage page) {
+        final String text = page.getContent();
 
         // If the whole page is to be ignored the return an immutable of the complete page content
-        if (ignoreCompletePage(normalizedTemplateName)) {
-            return List.of(FinderMatchResult.of(0, page.getContent()));
+        if (ignoreCompletePage(template.normalizedName())) {
+            return List.of(FinderMatchResult.of(0, text));
         }
         // If the template is to be ignored as a whole then return an immutable of the complete template
-        if (ignoreCompleteTemplate(normalizedTemplateName)) {
-            return List.of(template);
+        if (ignoreCompleteTemplate(template.normalizedName())) {
+            return List.of(FinderMatchRange.of(text, template.start(), template.end()));
         }
 
         final List<MatchResult> immutables = new ArrayList<>();
 
         // Add the template name
-        immutables.add(FinderMatchResult.of(template.start() + START_TEMPLATE.length(), templateName));
+        immutables.add(FinderMatchResult.of(template.start() + START_TEMPLATE.length(), template.name()));
 
         // Add the immutables from the parameters and/or values
-        immutables.addAll(findParameterImmutables(template, templateName, templateContent, page));
+        immutables.addAll(findParameterImmutables(template, page));
 
         return immutables;
     }
 
-    private String getTemplateContent(String template) {
-        return template.substring(START_TEMPLATE.length(), template.length() - END_TEMPLATE.length());
+    private boolean ignoreCompletePage(String normalizedTemplateName) {
+        return this.ignorableTemplates.contains(normalizedTemplateName);
     }
 
-    private boolean validateSpecialCharacters(String templateContent) {
-        // Check that not all the characters are an escaped-pipe. See: https://en.wikipedia.org/wiki/Template:!!
-        for (int i = 0; i < templateContent.length(); i++) {
-            if (templateContent.charAt(i) != '!') {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private String findTemplateName(String templateContent) {
-        final int startPipe = templateContent.indexOf(PIPE);
-        final String templateTitle = startPipe >= 0 ? templateContent.substring(0, startPipe) : templateContent;
-        final int startColon = templateTitle.indexOf(COLON);
-        return startColon >= 0 ? templateTitle.substring(0, startColon) : templateTitle;
-    }
-
-    private String normalizeTemplateName(String templateName) {
-        return ReplacerUtils.toLowerCase(templateName.trim()).replace('_', ' ');
-    }
-
-    private boolean ignoreCompletePage(String templateName) {
-        return this.ignorableTemplates.contains(templateName);
-    }
-
-    private boolean ignoreCompleteTemplate(String templateName) {
+    private boolean ignoreCompleteTemplate(String normalizedTemplateName) {
         return (
-            this.templateNames.contains(templateName) ||
-            this.templateNamesPartial.stream().anyMatch(templateName::startsWith)
+            this.templateNames.contains(normalizedTemplateName) ||
+            this.templateNamesPartial.stream().anyMatch(normalizedTemplateName::startsWith)
         );
     }
 
-    // TODO: Reduce cyclomatic complexity
-    private List<MatchResult> findParameterImmutables(
-        FinderMatchResult template,
-        String templateName,
-        String templateContent,
-        FinderPage page
-    ) {
+    private List<MatchResult> findParameterImmutables(TemplateStructure template, FinderPage page) {
         final List<MatchResult> immutables = new ArrayList<>();
 
+        final String text = page.getContent();
         final WikipediaLanguage lang = page.getPageKey().getLang();
         final int startTemplateContent = template.start() + START_TEMPLATE.length();
+        final int endTemplateContent = template.end() - END_TEMPLATE.length();
 
         // Let's iterate over the template parameters (if any)
-        // Note: we iterate over the template content, so we have to take this into account for the match position.
-        int index = templateContent.indexOf(PIPE);
-        while (index >= 0 && index < templateContent.length()) {
-            final int startParameterPipe = templateContent.indexOf(PIPE, index); // Including the pipe
-            if (template.containsNested(startTemplateContent + startParameterPipe)) {
+        int index = text.indexOf(PIPE, startTemplateContent, endTemplateContent);
+        while (index >= 0 && index < endTemplateContent) {
+            final int startParameterPipe = text.indexOf(PIPE, index, endTemplateContent); // Including the pipe
+            if (template.containsNested(startParameterPipe)) {
                 // The template has no pipe and the pipe belongs to a nested template
                 index = startParameterPipe + 1;
                 continue;
             }
             final int startParameter = startParameterPipe + 1;
-            int endParameter = templateContent.indexOf(PIPE, startParameter);
-            while (template.containsNested(startTemplateContent + endParameter)) {
-                endParameter = templateContent.indexOf(PIPE, endParameter + 1);
-            }
-            if (endParameter < 0) {
-                // We have reached the end of the template
-                endParameter = templateContent.length();
-            }
+            final int endParameter = findEndParameter(text, startParameter, endTemplateContent, template);
 
-            int startValueEquals = templateContent.indexOf(EQUALS, startParameter); // Including the equals
-            if (startValueEquals >= endParameter) {
-                // The equals symbol belongs to the next parameter
-                startValueEquals = -1;
-            } else if (template.containsNested(startTemplateContent + startValueEquals)) {
-                // The equals symbol belongs to a nested template, so we ignore it.
-                startValueEquals = -1;
-            } else if (!isValidParameterEquals(templateContent, startParameter, startValueEquals)) {
-                // The equals symbol is not the parameter one, so we ignore it.
-                startValueEquals = -1;
-            }
+            final int startValueEquals = findParameterEquals(text, startParameter, endParameter, template);
 
-            // Inevitable substrings: parameter and value are needed as strings for FinderMatchResult and isValueImmutable/findFirstExpressionUpperCase
-            String parameter = null;
             int startValue;
-            String value;
+            int endValue;
             if (startValueEquals >= 0) {
-                parameter = templateContent.substring(startParameter, startValueEquals);
                 startValue = startValueEquals + 1;
-                value = templateContent.substring(startValue, endParameter);
+                endValue = trimValue(text, startValue, endParameter);
             } else {
                 // Parameters with no equals symbol are considered as values
                 startValue = startParameter;
-                value = templateContent.substring(startParameter, endParameter);
+                endValue = trimValue(text, startValue, endParameter);
             }
 
             // Always return template parameters as immutables
-            if (parameter != null) {
-                immutables.add(FinderMatchResult.of(startTemplateContent + startParameter, parameter));
+            if (startValueEquals >= 0) {
+                immutables.add(FinderMatchRange.of(text, startParameter, startValueEquals));
             }
 
-            if (StringUtils.isNotBlank(value)) {
-                final String trimmedValue = trimValue(value);
-                if (isValueImmutable(trimmedValue, parameter, templateName)) {
-                    immutables.add(FinderMatchResult.of(startTemplateContent + startValue, trimmedValue));
+            if (!FinderUtils.isBlank(text, startValue, endValue)) {
+                final String value = text.substring(startValue, endValue);
+                if (
+                    isValueImmutable(
+                        text,
+                        startValue,
+                        endValue,
+                        startParameter,
+                        startValueEquals,
+                        template.normalizedName()
+                    )
+                ) {
+                    immutables.add(FinderMatchResult.of(startValue, value));
                 } else {
-                    // If the value starts with an uppercase word/expression then we return this word
-                    final Optional<MatchResult> firstExpressionUpperCase = uppercaseFinder.findFirstExpressionUpperCase(
-                        value,
-                        lang
-                    );
-                    firstExpressionUpperCase.ifPresent(uppercase ->
-                        immutables.add(
-                            FinderMatchResult.of(
-                                startTemplateContent + startValue + uppercase.start(),
-                                uppercase.group()
-                            )
-                        )
-                    );
+                    addUppercaseImmutable(value, startValue, lang, immutables);
                 }
             }
 
@@ -287,6 +208,46 @@ public class TemplateFinder implements ImmutableFinder {
         }
 
         return immutables;
+    }
+
+    private int findEndParameter(String text, int startParameter, int endTemplateContent, TemplateStructure template) {
+        int endParameter = text.indexOf(PIPE, startParameter, endTemplateContent);
+        while (endParameter >= 0 && template.containsNested(endParameter)) {
+            endParameter = text.indexOf(PIPE, endParameter + 1, endTemplateContent);
+        }
+        if (endParameter < 0) {
+            // We have reached the end of the template
+            endParameter = endTemplateContent;
+        }
+        return endParameter;
+    }
+
+    private int findParameterEquals(String text, int startParameter, int endParameter, TemplateStructure template) {
+        int startValueEquals = text.indexOf(EQUALS, startParameter, endParameter); // Including the equals
+        if (startValueEquals >= 0 && template.containsNested(startValueEquals)) {
+            // The equals symbol belongs to a nested template, so we ignore it.
+            startValueEquals = -1;
+        } else if (startValueEquals >= 0 && !isValidParameterEquals(text, startParameter, startValueEquals)) {
+            // The equals symbol is not the parameter one, so we ignore it.
+            startValueEquals = -1;
+        }
+        return startValueEquals;
+    }
+
+    private void addUppercaseImmutable(
+        String value,
+        int startValue,
+        WikipediaLanguage lang,
+        List<MatchResult> immutables
+    ) {
+        // If the value starts with an uppercase word/expression then we return this word
+        final Optional<MatchResult> firstExpressionUpperCase = uppercaseFinder.findFirstExpressionUpperCase(
+            value,
+            lang
+        );
+        firstExpressionUpperCase.ifPresent(uppercase ->
+            immutables.add(FinderMatchResult.of(startValue + uppercase.start(), uppercase.group()))
+        );
     }
 
     private boolean isValidParameterEquals(String text, int startParameter, int startEquals) {
@@ -303,11 +264,10 @@ public class TemplateFinder implements ImmutableFinder {
         return ch == '<';
     }
 
-    private String trimValue(String value) {
+    private int trimValue(String text, int start, int end) {
         // If the value is followed by a reference, comment or similar we ignore it
-        // Inevitable substring: trimmedValue is needed as a string for FinderMatchResult and isValueImmutable
-        int posLessThan = value.indexOf('<');
-        int posStartTemplate = value.indexOf(START_TEMPLATE);
+        int posLessThan = text.indexOf('<', start, end);
+        int posStartTemplate = text.indexOf(START_TEMPLATE, start, end);
         if (posLessThan >= 0 || posStartTemplate >= 0) {
             if (posLessThan < 0) {
                 posLessThan = Integer.MAX_VALUE;
@@ -315,32 +275,49 @@ public class TemplateFinder implements ImmutableFinder {
             if (posStartTemplate < 0) {
                 posStartTemplate = Integer.MAX_VALUE;
             }
-            return value.substring(0, Math.min(posLessThan, posStartTemplate));
+            return Math.min(posLessThan, posStartTemplate);
         } else {
-            return value;
+            return end;
         }
     }
 
-    private boolean isValueImmutable(String value, @Nullable String key, String templateName) {
+    private boolean isValueImmutable(
+        String text,
+        int startValue,
+        int endValue,
+        int startKey,
+        int endKey,
+        String normalizedTemplateName
+    ) {
         // If the param is to be always ignored
         // or the pair template name-param is to be ignored
         // or the value is a file or a domain
         // then we also return the value
-        final String trimmedKey = key == null ? EMPTY : ReplacerUtils.toLowerCase(key.trim());
-        return (
-            this.paramNames.contains(trimmedKey) ||
-            this.templateParamPairs.containsMapping(ReplacerUtils.toLowerCase(templateName.trim()), trimmedKey) ||
-            matchesFile(value)
-        );
+        if (endKey >= 0) {
+            final int trimStart = FinderUtils.trimLeft(text, startKey, endKey);
+            final int trimEnd = FinderUtils.trimRight(text, trimStart, endKey);
+            final String trimmedKey = ReplacerUtils.toLowerCase(text.substring(trimStart, trimEnd));
+            if (
+                this.paramNames.contains(trimmedKey) ||
+                this.templateParamPairs.containsMapping(normalizedTemplateName, trimmedKey)
+            ) {
+                return true;
+            }
+        }
+        return matchesFile(text, startValue, endValue);
     }
 
-    private boolean matchesFile(String text) {
-        final String value = text.trim();
-        final int dot = value.lastIndexOf('.');
-        if (dot >= 0) {
-            // Inevitable substring: extension is needed as a string for isAscii
-            final String extension = value.substring(dot + 1);
-            return extension.length() >= 2 && extension.length() <= 4 && FinderUtils.isAscii(extension);
+    private boolean matchesFile(String text, int start, int end) {
+        final int trimStart = FinderUtils.trimLeft(text, start, end);
+        final int trimEnd = FinderUtils.trimRight(text, trimStart, end);
+        final int posDot = text.lastIndexOf('.', trimEnd - 1);
+        if (posDot >= trimStart) {
+            final int extensionStart = posDot + 1;
+            final int extensionEnd = trimEnd;
+            final int extensionLength = extensionEnd - extensionStart;
+            return (
+                extensionLength >= 2 && extensionLength <= 4 && FinderUtils.isAscii(text, extensionStart, extensionEnd)
+            );
         } else {
             return false;
         }
