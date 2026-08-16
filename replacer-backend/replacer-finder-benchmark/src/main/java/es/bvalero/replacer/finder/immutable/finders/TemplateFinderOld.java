@@ -66,7 +66,7 @@ public class TemplateFinderOld implements ImmutableFinder {
 
     private SequencedCollection<MatchResult> findImmutables(FinderPage page, int start) {
         while (start >= 0 && start < page.getContent().length()) {
-            final SequencedCollection<TemplateStructure> templates = TemplateStructureFinderOld.findNext(page, start);
+            final SequencedCollection<TemplateStructureOld> templates = TemplateStructureFinderOld.findNext(page, start);
             if (templates.isEmpty()) {
                 break;
             }
@@ -82,7 +82,7 @@ public class TemplateFinderOld implements ImmutableFinder {
         return Collections.emptyList();
     }
 
-    private List<MatchResult> findImmutable(TemplateStructure template, FinderPage page) {
+    private List<MatchResult> findImmutable(TemplateStructureOld template, FinderPage page) {
         final String text = page.getContent();
 
         if (ignoreCompletePage(template.normalizedName())) {
@@ -113,7 +113,7 @@ public class TemplateFinderOld implements ImmutableFinder {
         );
     }
 
-    private List<MatchResult> findParameterImmutables(TemplateStructure template, FinderPage page) {
+    private List<MatchResult> findParameterImmutables(TemplateStructureOld template, FinderPage page) {
         final List<MatchResult> immutables = new ArrayList<>();
 
         final String text = page.getContent();
@@ -160,7 +160,11 @@ public class TemplateFinderOld implements ImmutableFinder {
                 ) {
                     immutables.add(FinderMatchRange.of(text, startValue, value));
                 } else {
-                    uppercaseFinder.findFirstExpressionUpperCase(page, startValue).ifPresent(immutables::add);
+                    // If the value starts with an uppercase word/expression then we return this word
+                    final MatchResult uppercase = uppercaseFinder.findFirstExpressionUpperCase(page, startValue);
+                    if (uppercase != null) {
+                        immutables.add(uppercase);
+                    }
                 }
             }
 
@@ -170,7 +174,7 @@ public class TemplateFinderOld implements ImmutableFinder {
         return immutables;
     }
 
-    private int findEndParameter(String text, int startParameter, int endTemplateContent, TemplateStructure template) {
+    private int findEndParameter(String text, int startParameter, int endTemplateContent, TemplateStructureOld template) {
         int endParameter = text.indexOf(PIPE, startParameter, endTemplateContent);
         while (endParameter >= 0 && template.containsNested(endParameter)) {
             endParameter = text.indexOf(PIPE, endParameter + 1, endTemplateContent);
@@ -181,7 +185,7 @@ public class TemplateFinderOld implements ImmutableFinder {
         return endParameter;
     }
 
-    private int findParameterEquals(String text, int startParameter, int endParameter, TemplateStructure template) {
+    private int findParameterEquals(String text, int startParameter, int endParameter, TemplateStructureOld template) {
         int startValueEquals = text.indexOf(EQUALS, startParameter, endParameter);
         if (startValueEquals >= 0 && template.containsNested(startValueEquals)) {
             startValueEquals = -1;

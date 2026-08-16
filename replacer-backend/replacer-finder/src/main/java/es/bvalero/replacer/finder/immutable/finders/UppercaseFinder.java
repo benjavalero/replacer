@@ -21,7 +21,6 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.EnumMap;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.regex.MatchResult;
 import java.util.stream.Collectors;
@@ -240,24 +239,24 @@ public class UppercaseFinder implements ImmutableFinder, PropertyChangeListener 
      * Find the first expression in a text in case it is a known uppercase misspelling.
      * To be used e.g. to find uppercase misspellings at the start of template values or file aliases.
      */
-    public Optional<MatchResult> findFirstExpressionUpperCase(FinderPage page, int start) {
+    public @Nullable MatchResult findFirstExpressionUpperCase(FinderPage page, int start) {
         final String text = page.getContent();
         final WikipediaLanguage lang = page.getPageKey().getLang();
         final RunAutomaton automaton = this.uppercaseAutomata.get(lang);
         if (automaton == null) {
-            return Optional.empty();
+            return null;
         }
 
         // Short-circuit if the first non-space char is not uppercase
         final int valueStart = FinderUtils.trimLeft(text, start, text.length());
         if (valueStart >= text.length() || !FinderUtils.startsWithUpperCase(String.valueOf(text.charAt(valueStart)))) {
-            return Optional.empty();
+            return null;
         }
 
         final AutomatonMatcher matcher = automaton.newMatcher(text, valueStart, text.length());
         if (matcher.find() && matcher.start() == 0) {
-            return Optional.of(FinderMatchRange.of(text, valueStart, valueStart + matcher.end()));
+            return FinderMatchRange.of(text, valueStart, valueStart + matcher.end());
         }
-        return Optional.empty();
+        return null;
     }
 }

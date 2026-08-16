@@ -124,7 +124,7 @@ class TemplateFinderTest {
 
         List<Immutable> matches = templateFinder.findList(text);
 
-        Set<String> expected = Set.of("Template", "image ", " x.jpg ");
+        Set<String> expected = Set.of("Template", "image", "x.jpg");
         Set<String> actual = matches.stream().map(Immutable::text).collect(Collectors.toSet());
         assertEquals(expected, actual);
     }
@@ -135,7 +135,7 @@ class TemplateFinderTest {
 
         List<Immutable> matches = templateFinder.findList(text);
 
-        Set<String> expected = Set.of("Template", "image ", " x.jpg");
+        Set<String> expected = Set.of("Template", "image", "x.jpg");
         Set<String> actual = matches.stream().map(Immutable::text).collect(Collectors.toSet());
         assertEquals(expected, actual);
     }
@@ -228,8 +228,8 @@ class TemplateFinderTest {
 
         Set<Immutable> expected = Set.of(
             Immutable.of(text, 2, "T"),
-            Immutable.of(text, 4, "x "),
-            Immutable.of(text, 10, "x ")
+            Immutable.of(text, 4, "x"),
+            Immutable.of(text, 10, "x")
         );
         Set<Immutable> actual = new HashSet<>(matches);
         assertEquals(3, matches.size());

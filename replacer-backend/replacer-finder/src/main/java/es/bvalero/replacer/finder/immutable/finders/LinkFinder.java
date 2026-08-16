@@ -71,10 +71,10 @@ public class LinkFinder extends ImmutableCheckedFinder {
             if (links.isEmpty()) {
                 break;
             }
-            final List<MatchResult> immutables = links
-                .stream()
-                .flatMap(link -> findImmutable(link, page).stream())
-                .toList();
+            final List<MatchResult> immutables = new ArrayList<>();
+            for (LinkStructure link : links) {
+                immutables.addAll(findImmutable(link, page));
+            }
             if (!immutables.isEmpty()) {
                 return immutables;
             }
@@ -122,7 +122,10 @@ public class LinkFinder extends ImmutableCheckedFinder {
             immutables.add(FinderMatchRange.of(text, linkContentStart, pipePos));
 
             // Include uppercase alias if present
-            uppercaseFinder.findFirstExpressionUpperCase(page, startAlias).ifPresent(immutables::add);
+            final MatchResult uppercase = uppercaseFinder.findFirstExpressionUpperCase(page, startAlias);
+            if (uppercase != null) {
+                immutables.add(uppercase);
+            }
 
             return immutables;
         } else {

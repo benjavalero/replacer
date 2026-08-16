@@ -14,14 +14,14 @@ import java.util.SequencedCollection;
 /** Snapshot of {@link TemplateStructureFinder} as it was at the time the benchmark was introduced. */
 class TemplateStructureFinderOld {
 
-    static SequencedCollection<TemplateStructure> findNext(FinderPage page, int index) {
+    static SequencedCollection<TemplateStructureOld> findNext(FinderPage page, int index) {
         // A loop is a little better than recursion
-        final List<TemplateStructure> matches = new ArrayList<>();
+        final List<TemplateStructureOld> matches = new ArrayList<>();
 
         final String text = page.getContent();
         // Deque implementation is a little better than old stack and recommended by Java
         // We store the start of the structure but we also store the groups found inside
-        final Deque<TemplateStructure> matchStack = new ArrayDeque<>();
+        final Deque<TemplateStructureOld> matchStack = new ArrayDeque<>();
         while (index >= 0 && index < text.length()) {
             if (matchStack.isEmpty()) {
                 final int newStart = findStructureStart(text, index);
@@ -33,7 +33,7 @@ class TemplateStructureFinderOld {
             }
 
             assert !matchStack.isEmpty();
-            final TemplateStructure currentMatch = matchStack.getLast();
+            final TemplateStructureOld currentMatch = matchStack.getLast();
             final int start = currentMatch.start();
             final int end = findStructureEnd(text, index);
             if (end < 0) {
@@ -82,18 +82,18 @@ class TemplateStructureFinderOld {
         return text.indexOf(END_TEMPLATE, index);
     }
 
-    private static TemplateStructure openStructure(String text, int start) {
-        return new TemplateStructure(text, start);
+    private static TemplateStructureOld openStructure(String text, int start) {
+        return new TemplateStructureOld(text, start);
     }
 
-    private static void closeStructure(String text, TemplateStructure structure, int end) {
+    private static void closeStructure(String text, TemplateStructureOld structure, int end) {
         structure.setEnd(end + END_TEMPLATE.length());
         final String name = findTemplateName(text, structure);
         structure.setName(name);
         structure.setNormalizedName(ReplacerUtils.toLowerCase(name).replace('_', ' '));
     }
 
-    private static String findTemplateName(String text, TemplateStructure structure) {
+    private static String findTemplateName(String text, TemplateStructureOld structure) {
         final int startTemplateContent = structure.start() + START_TEMPLATE.length();
         final int endTemplateContent = structure.end() - END_TEMPLATE.length();
         final int startName = FinderUtils.trimLeft(text, startTemplateContent, endTemplateContent);
@@ -104,7 +104,7 @@ class TemplateStructureFinderOld {
         return text.substring(startName, endName);
     }
 
-    private static boolean validateSpecialCharacters(String text, TemplateStructure structure) {
+    private static boolean validateSpecialCharacters(String text, TemplateStructureOld structure) {
         // Check that not all the characters are an escaped-pipe. See: https://en.wikipedia.org/wiki/Template:!!
         final int start = structure.start() + START_TEMPLATE.length();
         final int end = structure.end() - END_TEMPLATE.length();
