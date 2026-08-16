@@ -46,7 +46,7 @@ public class LinkFinderOld extends ImmutableCheckedFinder {
 
     private SequencedCollection<MatchResult> findImmutables(FinderPage page, int start) {
         while (start >= 0 && start < page.getContent().length()) {
-            final SequencedCollection<LinkStructure> links = LinkStructureFinderOld.findNext(page, start);
+            final SequencedCollection<LinkStructureOld> links = LinkStructureFinderOld.findNext(page, start);
             if (links.isEmpty()) {
                 break;
             }
@@ -62,9 +62,7 @@ public class LinkFinderOld extends ImmutableCheckedFinder {
         return Collections.emptyList();
     }
 
-    private List<MatchResult> findImmutable(LinkStructure link, FinderPage page) {
-        final List<MatchResult> immutables = new ArrayList<>();
-
+    private List<MatchResult> findImmutable(LinkStructureOld link, FinderPage page) {
         final String text = page.getContent();
 
         final int endSuffix = findSuffixEnd(text, link.end());
@@ -72,37 +70,36 @@ public class LinkFinderOld extends ImmutableCheckedFinder {
             return List.of(FinderMatchRange.of(text, link.start(), endSuffix));
         }
 
-        final int linkContentStart = link.start() + START_LINK.length();
-        final int linkContentEnd = link.end() - END_LINK.length();
-
-        final String linkSpaceTrimmed = findLinkSpaceTrimmed(text, link);
-        final String linkSpaceNormalized = normalizeLinkSpace(linkSpaceTrimmed);
+        final String linkSpace = findLinkSpace(text, link);
+        final String linkSpaceNormalized = normalizeLinkSpace(linkSpace);
 
         if (isCategorySpace(linkSpaceNormalized)) {
             return List.of(FinderMatchRange.of(text, link.start(), link.end()));
         }
 
+        final int linkContentStart = link.start() + START_LINK.length();
+        final int linkContentEnd = link.end() - END_LINK.length();
         final int pipePos = link.pipePos();
-        final MatchResult linkAlias = findLinkAlias(text, linkContentStart, linkContentEnd, pipePos);
+        final int startAlias = pipePos >= linkContentStart && pipePos < linkContentEnd ? pipePos + 1 : -1;
+        final boolean hasAlias = startAlias >= 0;
 
-        if (
-            linkAlias != null ||
-            isInterWikiSpace(linkSpaceTrimmed) ||
-            isLangSpace(linkSpaceTrimmed) ||
-            isFileSpace(linkSpaceNormalized)
-        ) {
-            if (linkAlias == null) {
+        if (hasAlias) {
+            if (isAliasParameter(text, startAlias, linkContentEnd)) {
                 return List.of(FinderMatchRange.of(text, link.start(), link.end()));
-            } else if (isAliasParameter(linkAlias.group())) {
+            }
+
+            final List<MatchResult> immutables = new ArrayList<>();
+            immutables.add(FinderMatchRange.of(text, linkContentStart, pipePos));
+            uppercaseFinder.findFirstExpressionUpperCase(page, startAlias).ifPresent(immutables::add);
+            return immutables;
+        } else {
+            final boolean isSpace = isInterWikiSpace(linkSpace) || isLangSpace(linkSpace) || isFileSpace(linkSpaceNormalized);
+            if (isSpace) {
                 return List.of(FinderMatchRange.of(text, link.start(), link.end()));
-            } else {
-                final int linkTitleEnd = pipePos >= linkContentStart ? pipePos : linkContentEnd;
-                immutables.add(FinderMatchRange.of(text, linkContentStart, linkTitleEnd));
-                uppercaseFinder.findFirstExpressionUpperCase(page, linkAlias.start()).ifPresent(immutables::add);
             }
         }
 
-        return immutables;
+        return Collections.emptyList();
     }
 
     private int findSuffixEnd(String text, int start) {
@@ -114,7 +111,7 @@ public class LinkFinderOld extends ImmutableCheckedFinder {
     }
 
     @Nullable
-    private String findLinkSpaceTrimmed(String text, LinkStructure link) {
+    private String findLinkSpace(String text, LinkStructureOld link) {
         final int colonPos = link.colonPos();
         if (colonPos < 0) {
             return null;
@@ -133,9 +130,8 @@ public class LinkFinderOld extends ImmutableCheckedFinder {
         return normalizedSpace != null && this.categoryWords.contains(normalizedSpace);
     }
 
-    @Nullable
-    private MatchResult findLinkAlias(String text, int start, int end, int pipePos) {
-        return pipePos >= start && pipePos < end ? FinderMatchRange.of(text, pipePos + 1, end) : null;
+    private boolean isAliasParameter(String text, int startAlias, int endAlias) {
+        return text.indexOf("=", startAlias, endAlias) >= 0;
     }
 
     private boolean isFileSpace(@Nullable String normalizedSpace) {
@@ -148,9 +144,5 @@ public class LinkFinderOld extends ImmutableCheckedFinder {
 
     private boolean isInterWikiSpace(@Nullable String trimmedSpace) {
         return trimmedSpace != null && trimmedSpace.isEmpty();
-    }
-
-    private boolean isAliasParameter(String alias) {
-        return alias.contains("=");
     }
 }
