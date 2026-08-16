@@ -2,6 +2,7 @@ package es.bvalero.replacer.finder.immutable.finders;
 
 import static es.bvalero.replacer.finder.util.FinderUtils.*;
 
+import dk.brics.automaton.AutomatonMatcher;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
@@ -242,24 +243,21 @@ public class UppercaseFinder implements ImmutableFinder, PropertyChangeListener 
     public Optional<MatchResult> findFirstExpressionUpperCase(FinderPage page, int start) {
         final String text = page.getContent();
         final WikipediaLanguage lang = page.getPageKey().getLang();
-        // Find the start of the potential expression as there could be other characters like a whitespace
-        final MatchResult firstWord = FinderUtils.findWordAfter(text, start);
-        if (firstWord == null) {
+        final RunAutomaton automaton = this.uppercaseAutomata.get(lang);
+        if (automaton == null) {
             return Optional.empty();
         }
 
-        // To improve the performance, first we try with the simple misspellings with an exact match.
-        if (this.getUppercaseMap().containsMapping(lang, firstWord.group())) {
-            return Optional.of(firstWord);
+        // Short-circuit if the first non-space char is not uppercase
+        final int valueStart = FinderUtils.trimLeft(text, start, text.length());
+        if (valueStart >= text.length() || !FinderUtils.startsWithUpperCase(String.valueOf(text.charAt(valueStart)))) {
+            return Optional.empty();
         }
 
-        // Then, we try with the composed misspellings, checking if the parameter value starts with an uppercase misspelling.
-        final int valueStart = firstWord.start();
-        return this.getUppercaseMap()
-            .get(lang)
-            .stream()
-            .filter(s -> text.startsWith(s, valueStart))
-            .findAny()
-            .map(s -> FinderMatchRange.of(text, valueStart, s));
+        final AutomatonMatcher matcher = automaton.newMatcher(text, valueStart, text.length());
+        if (matcher.find() && matcher.start() == 0) {
+            return Optional.of(FinderMatchRange.of(text, valueStart, valueStart + matcher.end()));
+        }
+        return Optional.empty();
     }
 }

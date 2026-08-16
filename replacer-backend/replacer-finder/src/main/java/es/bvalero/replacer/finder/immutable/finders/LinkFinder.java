@@ -126,13 +126,7 @@ public class LinkFinder extends ImmutableCheckedFinder {
             } else {
                 final int linkTitleEnd = pipePos >= linkContentStart ? pipePos : linkContentEnd;
                 immutables.add(FinderMatchRange.of(text, linkContentStart, linkTitleEnd));
-                final Optional<MatchResult> firstExpressionUpperCase = uppercaseFinder.findFirstExpressionUpperCase(
-                    page,
-                    linkAlias.start()
-                );
-                firstExpressionUpperCase.ifPresent(uppercase -> {
-                    immutables.add(uppercase);
-                });
+                uppercaseFinder.findFirstExpressionUpperCase(page, linkAlias.start()).ifPresent(immutables::add);
             }
         }
 
