@@ -52,18 +52,18 @@ class UppercaseSeparatorFinder extends UppercaseBenchmarkFinder {
             if (separator == null) {
                 return null;
             }
-            int wordStart = separator.end();
-            while (wordStart < text.length() && FinderUtils.isWhiteSpace(text.charAt(wordStart))) {
-                wordStart++;
+            int startWord = separator.end();
+            while (startWord < text.length() && FinderUtils.isWhiteSpace(text.charAt(startWord))) {
+                startWord++;
             }
-            if (wordStart < text.length() && FinderUtils.startsWithUpperCase(String.valueOf(text.charAt(wordStart)))) {
-                int wordEnd = wordStart + 1;
-                while (wordEnd < text.length() && FinderUtils.isLetter(text.charAt(wordEnd))) {
-                    wordEnd++;
+            if (startWord < text.length() && FinderUtils.startsWithUpperCase(String.valueOf(text.charAt(startWord)))) {
+                int endWord = startWord + 1;
+                while (endWord < text.length() && FinderUtils.isLetter(text.charAt(endWord))) {
+                    endWord++;
                 }
-                final String word = text.substring(wordStart, wordEnd);
-                if (words.contains(word) && FinderUtils.isWordCompleteInText(wordStart, wordEnd, text)) {
-                    return FinderMatchRange.of(text, wordStart, word);
+                final String word = text.substring(startWord, endWord);
+                if (words.contains(word) && FinderUtils.isWordCompleteInText(startWord, endWord, text)) {
+                    return FinderMatchRange.of(text, startWord, word);
                 }
             }
             start = separator.end();

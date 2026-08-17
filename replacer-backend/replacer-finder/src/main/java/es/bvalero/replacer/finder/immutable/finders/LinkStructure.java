@@ -10,8 +10,8 @@ class LinkStructure {
     private final String text;
     private final int start;
     private int end;
-    private int colonPos = -1; // Position of ':' separating the namespace, or -1 if none
-    private int pipePos = -1; // Position of the last '|' separating the alias, or -1 if none
+    private int posColon = -1; // Position of ':' separating the namespace, or -1 if none
+    private int posPipe = -1; // Position of the last '|' separating the alias, or -1 if none
 
     LinkStructure(String text, int start) {
         this.text = text;
@@ -22,11 +22,11 @@ class LinkStructure {
         this.end = end;
     }
 
-    void setColonPos(int colonPos) {
-        this.colonPos = colonPos;
+    void setColonPos(int posColon) {
+        this.posColon = posColon;
     }
 
-    void setPipePos(int pipePos) {
-        this.pipePos = pipePos;
+    void setPipePos(int posPipe) {
+        this.posPipe = posPipe;
     }
 }

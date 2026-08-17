@@ -89,30 +89,30 @@ public class IgnorableSectionFinder implements ImmutableFinder {
     // and check if the label is in the ignorable sections list.
     private boolean validateHeader(String text, int startHeader, int endHeader) {
         // We can assume the first two characters are the start of a header
-        int labelStart = findHeaderLevelEnd(text, startHeader);
-        while (labelStart < endHeader && Character.isWhitespace(text.charAt(labelStart))) {
-            labelStart++;
+        int startLabel = findHeaderLevelEnd(text, startHeader);
+        while (startLabel < endHeader && Character.isWhitespace(text.charAt(startLabel))) {
+            startLabel++;
         }
-        int labelEnd = endHeader;
-        while (labelEnd > labelStart && text.charAt(labelEnd - 1) == HEADER_CHAR) {
-            labelEnd--;
+        int endLabel = endHeader;
+        while (endLabel > startLabel && text.charAt(endLabel - 1) == HEADER_CHAR) {
+            endLabel--;
         }
-        labelEnd = FinderUtils.trimRight(text, labelStart, labelEnd);
-        final int labelFinalStart = labelStart; // Lambda requires effectively final variable
+        endLabel = FinderUtils.trimRight(text, startLabel, endLabel);
+        final int startLabelFinal = startLabel; // Lambda requires effectively final variable
         return this.ignorableSections.stream().anyMatch(s ->
-            ReplacerUtils.containsAtPosition(text, s, labelFinalStart)
+            ReplacerUtils.containsAtPosition(text, s, startLabelFinal)
         );
     }
 
     private int findStartNextHeader(String text, int startHeader, int endHeader) {
-        final int headerLevelEnd = findHeaderLevelEnd(text, startHeader);
-        final int headerLevelLength = headerLevelEnd - startHeader;
+        final int endHeaderLevel = findHeaderLevelEnd(text, startHeader);
+        final int headerLevelLength = endHeaderLevel - startHeader;
         assert headerLevelLength >= 2; // At least "=="
 
         int startNextHeader = findStartHeader(text, endHeader);
         while (startNextHeader >= 0 && startNextHeader < text.length()) {
-            final int nextHeaderLevelEnd = findHeaderLevelEnd(text, startNextHeader);
-            final int nextHeaderLevelLength = nextHeaderLevelEnd - startNextHeader;
+            final int endNextHeaderLevel = findHeaderLevelEnd(text, startNextHeader);
+            final int nextHeaderLevelLength = endNextHeaderLevel - startNextHeader;
             if (nextHeaderLevelLength > headerLevelLength) {
                 // Lower level, so we need to find the next header of the same level or higher
                 final int endNextHeader = findEndHeader(text, startNextHeader);

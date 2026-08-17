@@ -54,21 +54,21 @@ class UppercaseAhoCorasickSeparatorFinder extends UppercaseBenchmarkFinder {
             new MapMatchListener<>() {
                 @Override
                 public boolean match(String t, int start, int end, String value) {
-                    int wordStart = end;
-                    while (wordStart < text.length() && FinderUtils.isWhiteSpace(text.charAt(wordStart))) {
-                        wordStart++;
+                    int startWord = end;
+                    while (startWord < text.length() && FinderUtils.isWhiteSpace(text.charAt(startWord))) {
+                        startWord++;
                     }
                     if (
-                        wordStart < text.length() &&
-                        FinderUtils.startsWithUpperCase(String.valueOf(text.charAt(wordStart)))
+                        startWord < text.length() &&
+                        FinderUtils.startsWithUpperCase(String.valueOf(text.charAt(startWord)))
                     ) {
-                        int wordEnd = wordStart + 1;
-                        while (wordEnd < text.length() && FinderUtils.isLetter(text.charAt(wordEnd))) {
-                            wordEnd++;
+                        int endWord = startWord + 1;
+                        while (endWord < text.length() && FinderUtils.isLetter(text.charAt(endWord))) {
+                            endWord++;
                         }
-                        final String word = text.substring(wordStart, wordEnd);
-                        if (words.contains(word) && FinderUtils.isWordCompleteInText(wordStart, wordEnd, text)) {
-                            matches.add(FinderMatchRange.of(text, wordStart, word));
+                        final String word = text.substring(startWord, endWord);
+                        if (words.contains(word) && FinderUtils.isWordCompleteInText(startWord, endWord, text)) {
+                            matches.add(FinderMatchRange.of(text, startWord, word));
                         }
                     }
                     return true;

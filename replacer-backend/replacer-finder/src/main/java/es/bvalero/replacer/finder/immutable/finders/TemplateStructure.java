@@ -13,8 +13,8 @@ class TemplateStructure {
     private final String text;
     private final int start;
     private int end;
-    private int nameStart = -1;
-    private int nameEnd = -1;
+    private int startName = -1;
+    private int endName = -1;
     private String name;
     private String normalizedName;
     private final List<TemplateStructure> nested = new ArrayList<>(4);
@@ -26,7 +26,7 @@ class TemplateStructure {
 
     String name() {
         if (name == null) {
-            name = nameStart >= 0 && nameEnd > nameStart ? text.substring(nameStart, nameEnd) : "";
+            name = startName >= 0 && endName > startName ? text.substring(startName, endName) : "";
         }
         return name;
     }
@@ -46,12 +46,12 @@ class TemplateStructure {
         this.end = end;
     }
 
-    void setNameStart(int nameStart) {
-        this.nameStart = nameStart;
+    void setNameStart(int startName) {
+        this.startName = startName;
     }
 
-    void setNameEnd(int nameEnd) {
-        this.nameEnd = nameEnd;
+    void setNameEnd(int endName) {
+        this.endName = endName;
     }
 
     void addNested(TemplateStructure nested) {

@@ -198,8 +198,8 @@ public class DegreeFinder implements ReplacementFinder {
         }
 
         // Fix the degree symbol: Unicode -> °, ordinal º -> °, Kelvin -> no symbol
-        final char startSymbol = symbol.charAt(0);
-        String fixedSymbol = String.valueOf(startSymbol);
+        final char firstSymbolChar = symbol.charAt(0);
+        String fixedSymbol = String.valueOf(firstSymbolChar);
         char fixedLetter = symbol.charAt(symbol.length() - 1);
         if (isUnicodeSymbol(symbol.charAt(0))) {
             fixedSymbol = String.valueOf(DEGREE);
@@ -207,7 +207,7 @@ public class DegreeFinder implements ReplacementFinder {
             suggestion = "carácter Unicode";
         } else if (fixedLetter == KELVIN) {
             fixedSymbol = EMPTY;
-        } else if (startSymbol == MASCULINE_ORDINAL) {
+        } else if (firstSymbolChar == MASCULINE_ORDINAL) {
             fixedSymbol = String.valueOf(DEGREE);
             suggestion = "símbolo de ordinal";
         }
@@ -224,7 +224,7 @@ public class DegreeFinder implements ReplacementFinder {
         if (
             isNumber(word) &&
             StringUtils.isEmpty(space1) &&
-            startSymbol == MASCULINE_ORDINAL &&
+            firstSymbolChar == MASCULINE_ORDINAL &&
             isDegreeLetter(symbol.charAt(1))
         ) {
             suggestions.add(Suggestion.of(word + DOT + symbol, "ordinal"));

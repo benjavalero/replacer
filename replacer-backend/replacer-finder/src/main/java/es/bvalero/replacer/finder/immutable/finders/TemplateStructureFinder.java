@@ -35,10 +35,10 @@ class TemplateStructureFinder {
                     }
                     matchStack.getLast().addNested(current);
                     i++; // skip second '}'
-                } else if (current.nameStart() < 0 && !Character.isWhitespace(ch)) {
+                } else if (current.startName() < 0 && !Character.isWhitespace(ch)) {
                     // First non-whitespace char after '{{': start of name
                     current.setNameStart(i);
-                } else if (current.nameEnd() < 0) {
+                } else if (current.endName() < 0) {
                     // Still scanning the name
                     if (ch == PIPE || ch == COLON) {
                         closeName(text, current, i);
@@ -70,8 +70,8 @@ class TemplateStructureFinder {
     }
 
     private static void closeName(String text, TemplateStructure structure, int end) {
-        if (structure.nameStart() >= 0 && structure.nameEnd() < 0) {
-            structure.setNameEnd(FinderUtils.trimRight(text, structure.nameStart(), end));
+        if (structure.startName() >= 0 && structure.endName() < 0) {
+            structure.setNameEnd(FinderUtils.trimRight(text, structure.startName(), end));
         }
     }
 
@@ -79,11 +79,11 @@ class TemplateStructureFinder {
         structure.setEnd(end + END_TEMPLATE.length());
     }
 
-    private static boolean isNotFakeTemplate(String text, int templateStart) {
+    private static boolean isNotFakeTemplate(String text, int startTemplate) {
         // There are some cases where curly braces inside a LaTeX formula may be confused with template start
         // We want to avoid the warning in these cases
         // This method is only called in case the template is not closed
-        final char nextChar = text.charAt(templateStart + START_TEMPLATE.length());
+        final char nextChar = text.charAt(startTemplate + START_TEMPLATE.length());
         return FinderUtils.isWordChar(nextChar);
     }
 }

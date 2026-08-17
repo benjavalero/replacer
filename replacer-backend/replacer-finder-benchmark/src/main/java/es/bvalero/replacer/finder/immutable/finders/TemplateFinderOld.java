@@ -66,7 +66,10 @@ public class TemplateFinderOld implements ImmutableFinder {
 
     private SequencedCollection<MatchResult> findImmutables(FinderPage page, int start) {
         while (start >= 0 && start < page.getContent().length()) {
-            final SequencedCollection<TemplateStructureOld> templates = TemplateStructureFinderOld.findNext(page, start);
+            final SequencedCollection<TemplateStructureOld> templates = TemplateStructureFinderOld.findNext(
+                page,
+                start
+            );
             if (templates.isEmpty()) {
                 break;
             }
@@ -174,7 +177,12 @@ public class TemplateFinderOld implements ImmutableFinder {
         return immutables;
     }
 
-    private int findEndParameter(String text, int startParameter, int endTemplateContent, TemplateStructureOld template) {
+    private int findEndParameter(
+        String text,
+        int startParameter,
+        int endTemplateContent,
+        TemplateStructureOld template
+    ) {
         int endParameter = text.indexOf(PIPE, startParameter, endTemplateContent);
         while (endParameter >= 0 && template.containsNested(endParameter)) {
             endParameter = text.indexOf(PIPE, endParameter + 1, endTemplateContent);

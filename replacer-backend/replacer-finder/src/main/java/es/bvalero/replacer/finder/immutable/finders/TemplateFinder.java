@@ -132,7 +132,7 @@ public class TemplateFinder implements ImmutableFinder {
         final List<MatchResult> immutables = new ArrayList<>();
 
         // Add the template name
-        immutables.add(FinderMatchRange.of(text, template.nameStart(), template.name()));
+        immutables.add(FinderMatchRange.of(text, template.startName(), template.name()));
 
         // Add the immutables from the parameters and/or values
         immutables.addAll(findParameterImmutables(template, page));
@@ -182,16 +182,16 @@ public class TemplateFinder implements ImmutableFinder {
                 posNextPipe = text.indexOf(PIPE, posNextPipe + 1, endTemplateContent);
             }
             final int endValue = posNextPipe >= 0 ? posNextPipe : endTemplateContent;
-            final int equalsPos = findParameterEquals(text, startParameter, endValue, template);
-            final int endParameter = FinderUtils.trimRight(text, startParameter, equalsPos);
+            final int posEquals = findParameterEquals(text, startParameter, endValue, template);
+            final int endParameter = FinderUtils.trimRight(text, startParameter, posEquals);
 
             int startValue;
             int trimmedEndValue;
-            if (equalsPos >= 0) {
+            if (posEquals >= 0) {
                 // Add the parameter as immutable
                 immutables.add(FinderMatchRange.of(text, startParameter, endParameter));
                 // Determine value bounds
-                startValue = FinderUtils.trimLeft(text, equalsPos + 1, endValue);
+                startValue = FinderUtils.trimLeft(text, posEquals + 1, endValue);
                 trimmedEndValue = trimValue(text, startValue, endValue);
             } else {
                 // No '=': the whole parameter is treated as a value
@@ -236,14 +236,14 @@ public class TemplateFinder implements ImmutableFinder {
     private int trimValue(String text, int start, int end) {
         // If the value is followed by a reference, comment or similar we ignore it
         final int posLessThan = text.indexOf('<', start, end);
-        final int posStartTemplate = text.indexOf(START_TEMPLATE, start, end);
+        final int startTemplate = text.indexOf(START_TEMPLATE, start, end);
         final int rawEnd;
-        if (posLessThan >= 0 && posStartTemplate >= 0) {
-            rawEnd = Math.min(posLessThan, posStartTemplate);
+        if (posLessThan >= 0 && startTemplate >= 0) {
+            rawEnd = Math.min(posLessThan, startTemplate);
         } else if (posLessThan >= 0) {
             rawEnd = posLessThan;
-        } else if (posStartTemplate >= 0) {
-            rawEnd = posStartTemplate;
+        } else if (startTemplate >= 0) {
+            rawEnd = startTemplate;
         } else {
             rawEnd = end;
         }
@@ -262,19 +262,19 @@ public class TemplateFinder implements ImmutableFinder {
         String text,
         int startValue,
         int endValue,
-        int startKey,
-        int endKey,
+        int startParam,
+        int endParam,
         String normalizedTemplateName
     ) {
         // If the param is to be always ignored
         // or the pair template name-param is to be ignored
         // or the value is a file or a domain
         // then we also return the value
-        if (endKey >= 0) {
-            final String trimmedKey = ReplacerUtils.toLowerCase(text.substring(startKey, endKey));
+        if (endParam >= 0) {
+            final String trimmedParam = ReplacerUtils.toLowerCase(text.substring(startParam, endParam));
             if (
-                this.paramNames.contains(trimmedKey) ||
-                this.templateParamPairs.containsMapping(normalizedTemplateName, trimmedKey)
+                this.paramNames.contains(trimmedParam) ||
+                this.templateParamPairs.containsMapping(normalizedTemplateName, trimmedParam)
             ) {
                 return true;
             }

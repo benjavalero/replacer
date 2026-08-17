@@ -70,9 +70,9 @@ class UppercaseBenchmarkFinder implements BenchmarkFinder {
         if (end <= 0 || text.charAt(end - 1) != FinderUtils.PIPE) {
             return false;
         }
-        final int newLinePos = text.lastIndexOf(FinderUtils.NEW_LINE, end - 1);
-        final int firstLineCharPos = newLinePos >= 0 ? newLinePos + 1 : 0;
-        return text.charAt(firstLineCharPos) == FinderUtils.PIPE;
+        final int posNewLine = text.lastIndexOf(FinderUtils.NEW_LINE, end - 1);
+        final int posFirstLineChar = posNewLine >= 0 ? posNewLine + 1 : 0;
+        return text.charAt(posFirstLineChar) == FinderUtils.PIPE;
     }
 
     private boolean isPrecededByCaptionSeparator(String text, int end) {

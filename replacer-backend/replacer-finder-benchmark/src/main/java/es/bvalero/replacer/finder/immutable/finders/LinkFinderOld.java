@@ -90,10 +90,15 @@ public class LinkFinderOld extends ImmutableCheckedFinder {
 
             final List<MatchResult> immutables = new ArrayList<>();
             immutables.add(FinderMatchRange.of(text, linkContentStart, pipePos));
-            uppercaseFinder.findFirstExpressionUpperCase(page, startAlias).ifPresent(immutables::add);
+            // If the value starts with an uppercase word/expression then we return this word
+            final MatchResult uppercase = uppercaseFinder.findFirstExpressionUpperCase(page, startAlias);
+            if (uppercase != null) {
+                immutables.add(uppercase);
+            }
             return immutables;
         } else {
-            final boolean isSpace = isInterWikiSpace(linkSpace) || isLangSpace(linkSpace) || isFileSpace(linkSpaceNormalized);
+            final boolean isSpace =
+                isInterWikiSpace(linkSpace) || isLangSpace(linkSpace) || isFileSpace(linkSpaceNormalized);
             if (isSpace) {
                 return List.of(FinderMatchRange.of(text, link.start(), link.end()));
             }

@@ -222,9 +222,9 @@ public class UppercaseFinder implements ImmutableFinder, PropertyChangeListener 
             return false;
         }
 
-        final int newLinePos = text.lastIndexOf(NEW_LINE, end - 1);
-        final int firstLineCharPos = newLinePos >= 0 ? newLinePos + 1 : 0;
-        return text.charAt(firstLineCharPos) == PIPE;
+        final int posNewLine = text.lastIndexOf(NEW_LINE, end - 1);
+        final int posFirstLineChar = posNewLine >= 0 ? posNewLine + 1 : 0;
+        return text.charAt(posFirstLineChar) == PIPE;
     }
 
     private boolean isPrecededByCaptionSeparator(String text, int end) {
@@ -248,14 +248,14 @@ public class UppercaseFinder implements ImmutableFinder, PropertyChangeListener 
         }
 
         // Short-circuit if the first non-space char is not uppercase
-        final int valueStart = FinderUtils.trimLeft(text, start, text.length());
-        if (valueStart >= text.length() || !FinderUtils.startsWithUpperCase(String.valueOf(text.charAt(valueStart)))) {
+        final int startValue = FinderUtils.trimLeft(text, start, text.length());
+        if (startValue >= text.length() || !FinderUtils.startsWithUpperCase(String.valueOf(text.charAt(startValue)))) {
             return null;
         }
 
-        final AutomatonMatcher matcher = automaton.newMatcher(text, valueStart, text.length());
+        final AutomatonMatcher matcher = automaton.newMatcher(text, startValue, text.length());
         if (matcher.find() && matcher.start() == 0) {
-            return FinderMatchRange.of(text, valueStart, valueStart + matcher.end());
+            return FinderMatchRange.of(text, startValue, startValue + matcher.end());
         }
         return null;
     }

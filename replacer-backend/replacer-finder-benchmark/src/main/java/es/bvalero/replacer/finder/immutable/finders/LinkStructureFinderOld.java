@@ -55,7 +55,12 @@ class LinkStructureFinderOld {
 
         if (!matchStack.isEmpty()) {
             final LinkStructureOld unclosed = matchStack.getFirst();
-            FinderUtils.logFinderResult(page, unclosed.start(), unclosed.start() + START_LINK.length(), "Structure not closed");
+            FinderUtils.logFinderResult(
+                page,
+                unclosed.start(),
+                unclosed.start() + START_LINK.length(),
+                "Structure not closed"
+            );
         }
 
         return matches;

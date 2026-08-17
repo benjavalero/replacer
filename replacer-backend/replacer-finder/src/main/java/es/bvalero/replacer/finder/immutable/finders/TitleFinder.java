@@ -34,9 +34,9 @@ public class TitleFinder extends ImmutableCheckedFinder {
             // Find the word case-sensitive improves the performance
             int start = 0;
             while (start >= 0 && start < text.length()) {
-                final int wordStart = text.indexOf(word, start);
-                if (wordStart >= 0) {
-                    final MatchResult match = FinderMatchRange.of(text, wordStart, word);
+                final int startWord = text.indexOf(word, start);
+                if (startWord >= 0) {
+                    final MatchResult match = FinderMatchRange.of(text, startWord, word);
                     matches.add(match);
                     start = match.end();
                 } else {

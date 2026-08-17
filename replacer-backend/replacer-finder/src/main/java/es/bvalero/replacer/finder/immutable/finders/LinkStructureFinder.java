@@ -39,7 +39,7 @@ class LinkStructureFinder {
                     i++; // skip second ']'
                 } else if (ch == PIPE) {
                     current.setPipePos(i);
-                } else if (ch == COLON && current.colonPos() < 0 && current.pipePos() < 0) {
+                } else if (ch == COLON && current.posColon() < 0 && current.posPipe() < 0) {
                     current.setColonPos(i);
                 }
             } else if (matchStack.isEmpty()) {

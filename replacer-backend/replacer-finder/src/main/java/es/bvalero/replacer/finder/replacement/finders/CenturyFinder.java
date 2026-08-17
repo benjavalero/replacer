@@ -417,11 +417,11 @@ public class CenturyFinder implements ReplacementFinder {
     @Nullable
     private CenturyMatch findExtension(String text, int start, CenturyNumber currentNumber) {
         int numWordsFound = 0;
-        int wordStart = start;
+        int startWord = start;
         while (numWordsFound <= MAX_WORDS_BETWEEN_CENTURIES) {
-            final MatchResult nextWord = FinderUtils.findWordAfter(text, wordStart);
+            final MatchResult nextWord = FinderUtils.findWordAfter(text, startWord);
             // Stop if no more words or if there's a line break (centuries must be on the same line)
-            if (nextWord == null || text.indexOf('\n', wordStart, nextWord.start()) >= 0) {
+            if (nextWord == null || text.indexOf('\n', startWord, nextWord.start()) >= 0) {
                 return null;
             }
 
@@ -436,7 +436,7 @@ public class CenturyFinder implements ReplacementFinder {
             }
 
             numWordsFound++;
-            wordStart = nextWord.end();
+            startWord = nextWord.end();
         }
         return null;
     }

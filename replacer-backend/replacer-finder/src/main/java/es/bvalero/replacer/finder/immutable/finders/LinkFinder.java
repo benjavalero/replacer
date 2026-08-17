@@ -105,21 +105,21 @@ public class LinkFinder extends ImmutableCheckedFinder {
         // Interwiki links are immutable. If alias exists, then return only the link title.
         // The same applies for interlanguage links and files
         // Exception: if the alias exists but is a parameter then return the complete link
-        final int linkContentStart = link.start() + START_LINK.length();
-        final int linkContentEnd = link.end() - END_LINK.length();
-        final int pipePos = link.pipePos();
-        final int startAlias = pipePos >= linkContentStart && pipePos < linkContentEnd ? pipePos + 1 : -1;
+        final int startLinkContent = link.start() + START_LINK.length();
+        final int endLinkContent = link.end() - END_LINK.length();
+        final int posPipe = link.posPipe();
+        final int startAlias = posPipe >= startLinkContent && posPipe < endLinkContent ? posPipe + 1 : -1;
         final boolean hasAlias = startAlias >= 0;
 
         if (hasAlias) {
-            if (isAliasParameter(text, startAlias, linkContentEnd)) {
+            if (isAliasParameter(text, startAlias, endLinkContent)) {
                 return List.of(FinderMatchRange.of(text, link.start(), link.end()));
             }
 
             final List<MatchResult> immutables = new ArrayList<>();
 
             // Include title
-            immutables.add(FinderMatchRange.of(text, linkContentStart, pipePos));
+            immutables.add(FinderMatchRange.of(text, startLinkContent, posPipe));
 
             // Include uppercase alias if present
             final MatchResult uppercase = uppercaseFinder.findFirstExpressionUpperCase(page, startAlias);
@@ -152,12 +152,12 @@ public class LinkFinder extends ImmutableCheckedFinder {
 
     @Nullable
     private String findLinkSpace(String text, LinkStructure link) {
-        final int colonPos = link.colonPos();
-        if (colonPos < 0) {
+        final int posColon = link.posColon();
+        if (posColon < 0) {
             return null;
         }
-        final int start = FinderUtils.trimLeft(text, link.start() + START_LINK.length(), colonPos);
-        final int end = FinderUtils.trimRight(text, start, colonPos);
+        final int start = FinderUtils.trimLeft(text, link.start() + START_LINK.length(), posColon);
+        final int end = FinderUtils.trimRight(text, start, posColon);
         return text.substring(start, end);
     }
 

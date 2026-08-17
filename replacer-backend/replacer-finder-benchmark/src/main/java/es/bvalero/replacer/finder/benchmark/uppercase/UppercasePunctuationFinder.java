@@ -54,26 +54,26 @@ class UppercasePunctuationFinder extends UppercaseBenchmarkFinder {
             if (ch >= 128 || !SEPARATOR_FIRST_CHARS[ch]) {
                 continue;
             }
-            final int separatorEnd = getSeparatorEnd(text, i);
-            if (separatorEnd < 0) {
+            final int endSeparator = getSeparatorEnd(text, i);
+            if (endSeparator < 0) {
                 continue;
             }
             // Skip optional whitespace after separator (but not newlines)
-            int wordStart = separatorEnd;
-            while (wordStart < text.length() && FinderUtils.isWhiteSpace(text.charAt(wordStart))) {
-                wordStart++;
+            int startWord = endSeparator;
+            while (startWord < text.length() && FinderUtils.isWhiteSpace(text.charAt(startWord))) {
+                startWord++;
             }
-            if (wordStart >= text.length() || !FinderUtils.startsWithUpperCase(text.charAt(wordStart) + "")) {
+            if (startWord >= text.length() || !FinderUtils.startsWithUpperCase(text.charAt(startWord) + "")) {
                 continue;
             }
             // Find end of word
-            int wordEnd = wordStart + 1;
-            while (wordEnd < text.length() && FinderUtils.isLetter(text.charAt(wordEnd))) {
-                wordEnd++;
+            int endWord = startWord + 1;
+            while (endWord < text.length() && FinderUtils.isLetter(text.charAt(endWord))) {
+                endWord++;
             }
-            final String word = text.substring(wordStart, wordEnd);
-            if (words.contains(word) && FinderUtils.isWordCompleteInText(wordStart, wordEnd, text)) {
-                return FinderMatchRange.of(text, wordStart, word);
+            final String word = text.substring(startWord, endWord);
+            if (words.contains(word) && FinderUtils.isWordCompleteInText(startWord, endWord, text)) {
+                return FinderMatchRange.of(text, startWord, word);
             }
         }
         return null;
