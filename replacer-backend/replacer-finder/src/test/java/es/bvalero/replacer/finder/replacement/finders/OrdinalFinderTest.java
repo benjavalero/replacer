@@ -40,6 +40,12 @@ class OrdinalFinderTest {
             "2nda., 2.ª", // Feminine suffix with dot after
             "1o., 1.º", // Masculine suffix with dot after
             "123º, 123.º", // Masculine ordinal 3 digits
+            "1.ᵉʳ, 1.º", // Unicode superscript masculine suffix with dot before
+            "1ᵉʳ, 1.º", // Unicode superscript masculine suffix
+            "23.ᵉʳ, 23.º", // Unicode superscript masculine suffix with dot before 2 digits
+            "23ᵉʳ, 23.º", // Unicode superscript masculine suffix 2 digits
+            "3.ᵃ, 3.ª", // Unicode superscript feminine suffix with dot before
+            "3ᵃ, 3.ª", // Unicode superscript feminine suffix
         }
     )
     void testOrdinal(String ordinal, String expected) {
@@ -252,5 +258,36 @@ class OrdinalFinderTest {
         // Text alternatives
         assertEquals("primeros", sug.get(6).getText());
         assertNull(sug.get(6).getComment());
+    }
+
+    @ParameterizedTest
+    @CsvSource(
+        {
+            "1º, {{ord|1.|er}}",
+            "3º, {{ord|3.|er}}",
+            "1er, {{ord|1.|er}}",
+            "3er, {{ord|3.|er}}",
+            "11º, {{ord|11.|er}}",
+            "13º, {{ord|13.|er}}",
+            "21º, {{ord|21.|er}}",
+            "23º, {{ord|23.|er}}",
+            "31º, {{ord|31.|er}}",
+            "101º, {{ord|101.|er}}",
+            "103º, {{ord|103.|er}}",
+            "1ᵉʳ, {{ord|1.|er}}",
+            "1.ᵉʳ, {{ord|1.|er}}",
+            "23ᵉʳ, {{ord|23.|er}}",
+            "23.ᵉʳ, {{ord|23.|er}}",
+        }
+    )
+    void testApocopatedOrdinalSuggestion(String ordinal, String expectedEr) {
+        List<Replacement> replacements = ordinalFinder.findList(ordinal);
+
+        assertEquals(1, replacements.size());
+        List<Suggestion> suggestions = replacements.get(0).suggestions();
+        assertTrue(
+            suggestions.stream().anyMatch(s -> expectedEr.equals(s.getText())),
+            "Expected suggestion '" + expectedEr + "' not found in: " + suggestions
+        );
     }
 }

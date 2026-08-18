@@ -433,7 +433,7 @@ replacer.finder:
     es:
       1:
         ordinal:
-          masculine: "{{ord|1.|er}}, primero, primer"
+          masculine: primero, primer
           feminine: primera
       2:
         ordinal:
@@ -441,7 +441,7 @@ replacer.finder:
           feminine: segunda
       3:
         ordinal:
-          masculine: "{{ord|3.|er}}, tercero, tercer"
+          masculine: tercero, tercer
           feminine: tercera
       4:
         ordinal:
@@ -473,7 +473,7 @@ replacer.finder:
           feminine: décima
       11:
         ordinal:
-          masculine: "{{ord|11.|er}}, undécimo, decimoprimero, decimoprimer"
+          masculine: undécimo, decimoprimero, decimoprimer
           feminine: undécima, decimoprimera
         fractional:
           masculine: onceavo
@@ -487,7 +487,7 @@ replacer.finder:
           feminine: doceava
       13:
         ordinal:
-          masculine: "{{ord|13.|er}}, decimotercero, decimotercer"
+          masculine: decimotercero, decimotercer
           feminine: decimotercera
         fractional:
           masculine: treceavo
@@ -543,5 +543,5 @@ replacer.finder:
           feminine: veinteava
 
   ordinalSuffixes:
-    masculine: er,do,ro,to,vo,no,mo,avo,ero,ndo,o
-    feminine: era,da,ra,ta,va,na,ma,ava,nda,a
+    masculine: er,do,ro,to,vo,no,mo,avo,ero,ndo,o,ᵉʳ
+    feminine: era,da,ra,ta,va,na,ma,ava,nda,a,ᵃ

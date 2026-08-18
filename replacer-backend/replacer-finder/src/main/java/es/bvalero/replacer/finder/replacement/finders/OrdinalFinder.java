@@ -272,6 +272,12 @@ public class OrdinalFinder implements ReplacementFinder {
         }
         suggestions.add(buildFixedOrdinalSuggestion(ordinalNumber, false, isOrdinalPlural));
 
+        // Apocopated form with "er" for masculine singular ordinals ending in 1 or 3
+        int lastDigit = ordinalNumber % 10;
+        if (isOrdinalMasculine && !isOrdinalPlural && (lastDigit == 1 || lastDigit == 3)) {
+            suggestions.add(Suggestion.ofNoComment("{{ord|" + ordinalNumber + ".|er}}"));
+        }
+
         return suggestions;
     }
 
