@@ -110,6 +110,11 @@ class UppercaseFinderTest {
             """
             {|
             |-
+            ! colspan="3" | Febrero
+            |}""", // Table header with style
+            """
+            {|
+            |-
             | [[Febrero]] || Texto
             |}""", // Table cell with link
             "<table><tr><td>Febrero</td></tr></table>", // HTML cell

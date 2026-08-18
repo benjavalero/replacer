@@ -217,14 +217,15 @@ public class UppercaseFinder implements ImmutableFinder, PropertyChangeListener 
     }
 
     private boolean isPrecededByPipe(String text, int end) {
-        // Check it is preceded by a pipe AND the first char of the line is also a pipe
+        // Check it is preceded by a pipe AND the first char of the line is also a pipe or a header marker
         if (end <= 0 || text.charAt(end - 1) != PIPE) {
             return false;
         }
 
         final int posNewLine = text.lastIndexOf(NEW_LINE, end - 1);
         final int posFirstLineChar = posNewLine >= 0 ? posNewLine + 1 : 0;
-        return text.charAt(posFirstLineChar) == PIPE;
+        final char firstChar = text.charAt(posFirstLineChar);
+        return firstChar == PIPE || firstChar == '!';
     }
 
     private boolean isPrecededByCaptionSeparator(String text, int end) {
