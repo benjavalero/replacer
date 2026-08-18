@@ -1,5 +1,18 @@
 # Versions
 
+## 2.34.0 (18 Aug 2026)
+- Feature: parallel dump file parsing and support for new dump locations
+- Feature: handle wiki-table header lines in the uppercase finder to avoid false positives
+- Feature: warn on chained misspellings where a suggestion is itself a known misspelling
+- Feature: add direct page navigation input to the replacement table pagination
+- Fix: generate apocopated ordinal suggestions for all numbers ending in 1 or 3
+- Fix: avoid false positives in DegreeFinder when separator is not a space or there is no number before the symbol
+- Fix: avoid cross-language cache sharing in reviews
+- Fix: handle unknown Wikipedia namespaces gracefully during dump parsing
+- Improvement: cache replacement counts grouped by page for better performance
+- Improvement: significant performance optimizations in several finders
+- Chore: upgrade to Angular 20 and Spring Boot 3.5
+
 ## 2.33.1 (22 Apr 2026)
 - Refactor: warn about the permissions necessary to perform custom replacements
 - Doc: align English documentation with the main one in Spanish from Wikipedia
