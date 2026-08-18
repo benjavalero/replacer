@@ -77,7 +77,7 @@ Tamén ten que filtrar polos espazos ''Principal'' e ''Anexo'', que son os espaz
  Silverio Cañada
  Carter
  [Nn]íxer-[Cc]ongo
-
+ 
  # catalunya
  Catalunya Verds
  Catalunya Ràdio
@@ -141,7 +141,7 @@ Tamén ten que filtrar polos espazos ''Principal'' e ''Anexo'', que son os espaz
  Ivan Ljubi[čc]i[ćc]
  Ivan Rakitić
  Pablo Iglesias
-
+ 
  # ---------J
  # jose
  San Jose Earthquakes
@@ -169,7 +169,7 @@ Tamén ten que filtrar polos espazos ''Principal'' e ''Anexo'', que son os espaz
  World Junior
 
  # ---------H
- Hall of Fame
+ Hall of Fame 
  Prentice-Hall
 
  # ---------L

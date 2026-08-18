@@ -749,6 +749,10 @@
  alunizou||aluou
  alveolo||alvéolo
  alveolos||alvéolos
+ alxebraica||alxébrica
+ alxebraicas||alxébricas
+ alxebraico||alxébrico
+ alxebraicos||alxébricos
  alxeria|cs|Alxeria
  amabeis||amábeis
  amabel||amábel
@@ -3044,6 +3048,10 @@
  conducta||conduta
  conductas||condutas
  conductor||condutor
+ conductuais||condutivos
+ conductual||condutivo
+ condutuais||condutivos
+ condutual||condutivo
  coneccion||conexión
  conección||conexión
  coneccions||conexións
@@ -4675,7 +4683,10 @@
  destellos||lampos
  destiño||destino
  destiños||destinos
+ destituida||destituída
+ destituidas||destituídas
  destituido||destituído
+ destituidos||destituídos
  desto||disto
  destornillador||desaparafusador
  destornilladores||desaparafusadores
@@ -4999,6 +5010,7 @@
  disgustos||desgustos
  disminucion||diminución
  disminución||diminución
+ disminúe||diminúe
  disminuir||diminuír
  disminuír||diminuír
  disnea||dispnea
@@ -5072,6 +5084,7 @@
  dogmatísmos||dogmatismos
  dolar||dólar
  dolares||dólares
+ dólmenes||dolmens
  dolorida||dorida
  doloridas||doridas
  dolorido||dorido
@@ -8953,6 +8966,8 @@
  incolumes||incólumes
  inconciente||inconsciente
  inconcientes||inconscientes
+ inconforme||desconforme
+ inconformes||desconformes
  inconita||incógnita
  incónita||incógnita
  inconitas||incógnitas
@@ -9906,11 +9921,22 @@
  limonadas||limoadas
  limosna||esmola, caridade
  limosnas||esmola, caridade
+ limpia||limpa
+ limpiaba||limpaba
+ limpiaban||limpaban
+ limpiades||limpades
  limpiamente||limpamente
+ limpiamos||limpamos
+ limpian||limpan
+ limpiaron||limparon
+ limpias||limpas
  limpida||límpida
  limpidas||límpidas
  limpido||límpido
  limpidos||límpidos
+ limpio||limpo
+ limpios||limpos
+ limpiou||limpou
  linaxe||liñaxe
  linaxes||liñaxes
  linea||liña
@@ -10758,6 +10784,7 @@
  modicos||módicos
  moflete||fazula
  mofletes||fazulas
+ mogoles||mogois
  moitedume||multitude
  moitedumes||multitudes
  moldava||moldova
@@ -10779,6 +10806,7 @@
  monedero||moedeiro, portamoedas
  monederos||moedeiros, portamoedas
  mongola||mongol
+ mongoles||mongois
  monica||Mónica
  mónica|cs|Mónica
  monitorizacion||monitorización
@@ -11135,6 +11163,8 @@
 == O ==
  obertura||abertura
  oberturas||aberturas
+ obispado||bispado
+ obispados||bispados
  obispo||bispo
  obispos||bispos
  oblícua||oblicua
@@ -11156,8 +11186,6 @@
  obxetivos||obxectivo
  obxeto||obxecto
  obxetos||obxectos
- oca||ganso (animal), oca (se é o xogo), oca (se é baleira)
- ocas||gansos (animal), ocas (se é o xogo), ocas (se son baleiras)
  ocho||oito
  ochos||oitos
  ocidentais||occidentais
@@ -12875,7 +12903,17 @@
  seba||ceba
  sebas||cebas
  secano||secaño
+ secretaba||segregaba
+ secretaban||segregaban
+ secretada||segregada
+ secretadas||segregadas
+ secretado||segregado
+ secretados||segregados
+ secretan||segregan
+ secretar||segregar
+ secretaron||segregaron
  secretismo||segredismo
+ secretou||segregou
  secta||seita
  sectas||seitas
  seculo||século
@@ -12923,9 +12961,14 @@
  sembrar||sementar
  sembras||sementeiras
  semen||seme
+ semiconductor||semicondutor
+ semiconductora||semicondutora
+ semiconductoras||semicondutoras
+ semiconductores||semicondutores
  semilla||semente
  semillas||sementes
  sencillez||sinxeleza
+ senderismo||sendeirismo
  senior||sénior
  seniores||séniores, séniors
  seniors||séniors, séniores
@@ -12944,6 +12987,7 @@
  señuelo||reclamo
  señuelos||reclamos
  september||setembro
+ septentrionais||setentrionais
  septentrional||setentrional
  septiembre||setembro
  septima||sétima

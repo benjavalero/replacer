@@ -62,6 +62,8 @@ public class ListingSorter {
         }
 
         String updatedContent = String.join("\n", result);
+        // Remove trailing newline to keep the file faithful to the Wikipedia content
+        updatedContent = updatedContent.stripTrailing();
         Files.writeString(filePath, updatedContent);
         System.out.println("Processed: " + filePath.getFileName());
     }

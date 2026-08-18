@@ -66,7 +66,7 @@ También hay que filtrar por los espacios ''Principal'' y ''Anexo'', que son los
  # angel
  Evil Angel
 
- # Ángela
+ # Ángela 
  Angela Merkel
 
  # angeles
@@ -86,6 +86,7 @@ También hay que filtrar por los espacios ''Principal'' y ''Anexo'', que son los
 
  # Bahía
  Bahía Blanca
+ Salvador de Bahía
 
  # ban
  Ban Ki-moon             # 397
@@ -170,6 +171,14 @@ También hay que filtrar por los espacios ''Principal'' y ''Anexo'', que son los
  # comic
  Comic-Con               # 1369
 
+ # Concejal
+ [Cc]alle Concejal
+ [Cc]alle del Concejal
+
+ # Conde
+ [Cc]alle Conde
+ [Cc]alle del Conde
+
  # creo
  [Cc]reo que
 
@@ -213,6 +222,10 @@ También hay que filtrar por los espacios ''Principal'' y ''Anexo'', que son los
 
  # dua
  Dua Lipa                # 430
+
+ # Duque
+ [Cc]alle Duque
+ [Cc]alle del Duque
 
  # Eibar: la ciudad es con tilde y el equipo sin ella.
  SD Eibar
@@ -416,6 +429,10 @@ También hay que filtrar por los espacios ''Principal'' y ''Anexo'', que son los
  Anna-Maria              # 100
  Maria Bueno             # 100
 
+ # Marqués
+ [Cc]alle Marqués
+ [Cc]alle del Marqués
+
  # Martes
  Martes de Carnaval
  Martes Negro
@@ -535,6 +552,10 @@ También hay que filtrar por los espacios ''Principal'' y ''Anexo'', que son los
 
  # Primavera
  Primavera Árabe           # 441
+
+ # prime
+ Amazon Prime Video        # 1341
+ Prime Video               # 2579
 
  # Primer Ministro
  Oficina del Primer Ministro
@@ -700,6 +721,9 @@ También hay que filtrar por los espacios ''Principal'' y ''Anexo'', que son los
 
  # Tunes
  Looney Tunes
+
+ # ubico
+ Jorge Ubico             # 309
 
  # Union
  # Se ignora también precedido de nombre propio

@@ -682,6 +682,8 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  bajo la base de||sobre la base de
  bajo la base del||sobre la base del
  Banda Municipal de Música|cs|banda municipal de música, Banda municipal de música (para inicios de frase o columnas de tablas)
+ Barranco de|cs|barranco de (categorizador de accidente geográfico), Barranco de (nombre propio e inicios de frase o columnas de tablas)
+ Barranco del|cs|barranco del (categorizador de accidente geográfico), Barranco del (nombre propio e inicios de frase o columnas de tablas)
  beauty addict||adicto a la belleza, adicta a la belleza
  B.I.C|cs|BIC (siglas de bien de interés cultural)
  B.I.C.|cs|BIC (siglas de bien de interés cultural)
@@ -770,11 +772,12 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  Centro de día|cs|centro de día (genérico), Centro de Día (nombre propio), Centro de día (para inicios de frase o columnas de tablas)
  Centro de Especialidades|cs|centro de especialidades (genérico), Centro de Especialidades (nombre propio), Centro de especialidades (para inicios de frase o columnas de tablas)
  Centro de especialidades|cs|centro de especialidades, Centro de especialidades (para inicios de frase o columnas de tablas)
- Centro de Interpretación|cs|centro de interpretación (genérico, ejemplo: «un centro de interpretación»), Centro de Interpretación (nombre propio, ejemplo: «Centro de Interpretación Patrimonial de Almería»), Centro de interpretación (para inicios de frase o columnas de tablas)
  Centro de interpretación|cs|centro de interpretación (genérico, ejemplo: «un centro de interpretación»), Centro de Interpretación (nombre propio, ejemplo: «Centro de Interpretación Patrimonial de Almería»), Centro de interpretación (para inicios de frase o columnas de tablas)
  Centro de Mayores|cs|centro de mayores (genérico), Centro de Mayores (nombre propio), Centro de mayores (para inicios de frase o columnas de tablas)
  Centro de mayores|cs|centro de mayores (genérico), Centro de Mayores (nombre propio), Centro de mayores (para inicios de frase o columnas de tablas)
  cerca a||cerca de
+ Cerro de|cs|cerro de (categorizador de accidente geográfico), Cerro de (nombre propio e inicios de frase o columnas de tablas)
+ Cerro del|cs|cerro del (categorizador de accidente geográfico), Cerro del (nombre propio e inicios de frase o columnas de tablas)
  Ché Guevara|cs|Che Guevara
  ciencia-ficcion||ciencia ficción
  ciencia-ficción||ciencia ficción
@@ -784,8 +787,8 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  Círculo Polar Ártico|cs|círculo polar ártico, Círculo polar ártico (para inicios de frase o columnas de tablas)
  [[ciudad de México]]|cs|[[Ciudad de México]] (con mayúscula inicial, incluso precedida de artículo)
  Circunscripción Senatorial|cs|circunscripción senatorial, Circunscripción senatorial (para inicios de frase o columnas de tablas)
- Ciudad Deportiva|cs|ciudad deportiva, Ciudad deportiva (para inicios de frase o columnas de tablas)
- Ciudad deportiva|cs|ciudad deportiva, Ciudad deportiva (para inicios de frase o columnas de tablas)
+ Ciudad Deportiva|cs|ciudad deportiva (genérico, ejemplo: «una ciudad deportiva»), Ciudad deportiva (para inicios de frase o columnas de tablas), Ciudad Deportiva (nombre propio, ejemplo: «Ciudad Deportiva Joan Gamper»)
+ Ciudad deportiva|cs|ciudad deportiva (genérico, ejemplo: «una ciudad deportiva»), Ciudad deportiva (para inicios de frase o columnas de tablas), Ciudad Deportiva (nombre propio, ejemplo: «Ciudad Deportiva Joan Gamper»)
  [[ciudad de Mexico]]||[[Ciudad de México]] (con mayúscula inicial, incluso precedida de artículo)
  ciudad de México|cs|Ciudad de México (con mayúscula inicial, incluso precedida de artículo)
  ciudad de Mexico||Ciudad de México (con mayúscula inicial, incluso precedida de artículo)
@@ -957,7 +960,7 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  co-desarrollaron||codesarrollaron
  co desarrollo||codesarrollo (sustantivo o verbo, 1.ª persona), codesarrolló (verbo, 3.ª persona)
  co-desarrollo||codesarrollo (sustantivo o verbo, 1.ª persona), codesarrolló (verbo, 3.ª persona)
- co desarrolló||codesarrolló (verbo, 3.ª persona), codesarrollo (sustantivo o verbo 1.ª persona)
+ co desarrolló||codesarrolló (verbo, 3.ª persona), codesarrollo (sustantivo o verbo 1.ª persona) 
  co-desarrolló||codesarrollo (verbo, 3.ª persona), codesarrollo (sustantivo o verbo 1.ª persona)
  co descubridor||codescubridor
  co-descubridor||codescubridor
@@ -1459,7 +1462,9 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  co-titulares||cotitulares
  cuanta con||cuenta con, cuentan con
  cuantan con||cuentan con, cuenta con
- Cuartos de Final|cs|cuartos de final, Cuartos de final (para inicios de frase o columnas de tablas)
+ Cuartos de Final|cs|cuartos de final, Cuartos de final (para inicios de frase o columnas de tablas) 
+ Cueva de|cs|cueva de (categorizador de accidente geográfico), Cueva de (nombres propios e inicios de frase o columnas de tablas)
+ Cueva del|cs|cueva del (categorizador de accidente geográfico), Cueva del (nombres propios e inicios de frase o columnas de tablas)
  [[cum laude]]||''[[cum laude]]'', ''[[Cum laude]]'' (para inicios de frase o columnas de tablas)
  [[Cum laude]]|cs|''[[cum laude]]'', ''[[Cum laude]]'' (para inicios de frase o columnas de tablas)
  cum laude||''cum laude'', ''Cum laude'' (para inicios de frase o columnas de tablas)
@@ -1660,7 +1665,7 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  Doctorado Honoris Causa|cs|doctorado ''honoris causa'', Doctorado ''honoris causa'' (para inicios de frase o columnas de tablas)
  [[Doctor honoris causa]]|cs|doctor ''[[honoris causa]]'', Doctor ''[[honoris causa]]'' (para inicios de frase o columnas de tablas)
  [[Doctor Honoris Causa]]|cs|doctor ''[[honoris causa]]'', Doctor ''[[honoris causa]]'' (para inicios de frase o columnas de tablas)
- Doctor Honoris Causa|cs|doctor ''honoris causa'', Doctor ''honoris causa'' (para inicios de frase o columnas de tablas)
+ Doctor Honoris Causa|cs|doctor ''honoris causa'', Doctor ''honoris causa'' (para inicios de frase o columnas de tablas) 
  Doctor honoris causa|cs|doctor ''honoris causa'', Doctor ''honoris causa'' (para inicios de frase o columnas de tablas)
  domingo de ramos|cs|Domingo de Ramos
  domingo de Ramos|cs|Domingo de Ramos
@@ -1873,7 +1878,7 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  Escuela Municipal de Danza|cs|escuela municipal de danza (genérico), Escuela Municipal de Danza (nombre propio), Escuela municipal de danza (para inicios de frase o columnas de tablas)
  Escuela Municipal de Música y Danza|cs|escuela municipal de música y danza (genérico), Escuela Municipal de Música y Danza (nombre propio), Escuela municipal de música y danza (para inicios de frase o columnas de tablas)
  ese misma||esa misma, ese mismo
- esta a cargo||está a cargo
+ esta a cargo||está a cargo 
  ésta área||esta área
  esta ausente||está ausente
  esta basada||está basada
@@ -2316,8 +2321,8 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  ex–presidente||expresidente
  ex presidentes||expresidentes
  ex-presidentes||expresidentes
- ex preso||ex-preso (para referirse a alguien que ya no es preso)
- ex-preso||expreso (para referirse a una vía de transporte o la rapidez de algo), ex-preso (para referirse a alguien que ya no es preso)
+ ex-preso político||ex preso político
+ ex-preso||expreso (vía de transporte; rapidez de algo; alguien que ya no es preso)
  exprimera dama||ex primera dama
  exprimera ministra||ex primera ministra
  exprimeras damas||ex primeras damas
@@ -2421,6 +2426,7 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  foto portadas||fotoportadas
  foto-portadas||fotoportadas
  fue sido||fue, ha sido
+ Fuentes Nuevas|cs|Fuentesnuevas (localidad de España del municipio de Ponferrada)
  Fútbol Sala|cs|fútbol sala, Fútbol Sala (nombre propio), Fútbol sala (para inicios de frase o columnas de tablas)
  Fútbol sala|cs|fútbol sala, Fútbol Sala (nombre propio), Fútbol sala (para inicios de frase o columnas de tablas)
 
@@ -2439,6 +2445,7 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  gran numeros||gran número, grandes números
  gran números||gran número, grandes números
  grandes perdidas||grandes pérdidas
+ grupo Schwarz|cs|Grupo Schwarz
  Guerra Angloestadounidense|cs|guerra anglo-estadounidense, Guerra anglo-estadounidense (para inicios de frase o columnas de tablas)
  Guerra Anglo Estadounidense|cs|guerra anglo-estadounidense, Guerra anglo-estadounidense (para inicios de frase o columnas de tablas)
  Guerra Anglo-Estadounidense|cs|guerra anglo-estadounidense, Guerra anglo-estadounidense (para inicios de frase o columnas de tablas)
@@ -2929,7 +2936,7 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  hacía arriba||hacia arriba
  hacía atras||hacia atrás
  hacía atrás||hacia atrás
- hacia de|cs|hacía de, hacia (preposición)
+ hacia de|cs|hacía de, hacia (preposición) 
  hacía delante||hacia delante
  hacía el este||hacia el este
  hacía el norte||hacia el norte
@@ -3402,7 +3409,7 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  las sección||la sección, las secciones
  las sectores||los sectores
  las sede||la sede, las sedes
- las sesion||la sesión, las sesiones
+ las sesion||la sesión, las sesiones 
  las sesión||la sesión, las sesiones
  las siguiente||la siguiente, las siguientes
  las sistema||los sistemas, el sistema
@@ -3437,8 +3444,8 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  latínos||latinos, [[latín|latinos]]
  latino america||Latinoamérica
  latino américa||Latinoamérica
- la tora||la Torá (libro sagrado), la Tora (nombre propio), la torá (tributo), la tora (armazón en forma de toro)
- la torá||la Torá (libro sagrado), la Tora (nombre propio), la torá (tributo), la tora (armazón en forma de toro)
+ la tora||la Torá (libro sagrado), la Tora (nombre propio), la torá (tributo), la tora (armazón en forma de toro) 
+ la torá||la Torá (libro sagrado), la Tora (nombre propio), la torá (tributo), la tora (armazón en forma de toro) 
  la torah||la Torá (libro sagrado), la torá (tributo)
  la toráh||la Torá (libro sagrado), la torá (tributo)
  la torneo||el torneo, los torneos, la torneo (conjugación del verbo «tornear»: yo), la torneó (conjugación del verbo «tornear»: él, ella, usted)
@@ -3805,7 +3812,7 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
 
 == N ==
 
- №||N.º (abreviatura de «número» con mayúscula inicial), n.º (abreviatura de «número» sin mayúscula inicial)
+ №||N.º&nbsp; (abreviatura de «número» con mayúscula inicial y con espacio duro), n.º&nbsp; (abreviatura de «número» sin mayúscula inicial y con espacio duro)
  N°|cs|N.º (abreviatura de «número» con mayúscula inicial y con «o voladita» en lugar del símbolo de grados), n.º (abreviatura de «número» sin mayúscula inicial y con «o voladita» en lugar del símbolo de grados)
  n°|cs|n.º (abreviatura de «número»: con punto y con «o voladita» en lugar del símbolo de grados), número
  nº.||n.º (abreviatura de «número»: el punto va entre la «ene» y la «o voladita»), número
@@ -3881,7 +3888,7 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  obsesivo compulsivas||obsesivo-compulsivas
  obsesivo compulsivo||obsesivo-compulsivo
  obsesivo compulsivos||obsesivo-compulsivos
- Octavos de Final|cs|octavos de final, Octavos de final (para inicios de frase o columnas de tablas)
+ Octavos de Final|cs|octavos de final, Octavos de final (para inicios de frase o columnas de tablas) 
  oeste noroeste||oesnoroeste
  oeste-noroeste||oesnoroeste
  oestenoroeste||oesnoroeste
@@ -3924,6 +3931,7 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  pan-americano||panamericano, pan americano (tipo de pan)
  pan americanos||panamericanos
  pan-americanos||panamericanos
+ Paraje Natural Municipal|cs|paraje natural municipal, Paraje natural municipal (para inicios de frase o columnas de tablas)
  Parque de Bomberos|cs|parque de bomberos, Parque de bomberos (para inicios de frase o columnas de tablas)
  Parque de bomberos|cs|parque de bomberos, Parque de bomberos (para inicios de frase o columnas de tablas)
  Partido Judicial|cs|partido judicial, Partido judicial (para inicios de frase o columnas de tablas)
@@ -5267,6 +5275,7 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  Santos patronos|cs|santos patronos
  santos Patronos|cs|santos patronos
  Saudi Arabia|cs|Arabia Saudí (uso mayoritario en España), Arabia Saudita (uso mayoritario en Hispanoamérica)
+ Schwarz Gruppe|cs|Grupo Schwarz (nombre en español de la empresa alemana), Schwarz Gruppe (nombre original en alemán)
  SD Éibar|cs|SD Eibar
  se a||se ha, sé a
  se anuncio||se anunció
@@ -5459,7 +5468,7 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  se hayan sobre||se hallan sobre
  se hayan unas||se hallan unas
  se hayan unos||se hallan unos
- se ira||se irá
+ se ira||se irá 
  se jugo||se jugó
  se llamo||se llamó
  se llevo||se llevó
@@ -5764,7 +5773,7 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  sold out||agotado, agotada, agotados, agotadas
  son mas||son más
  sound-track||banda sonora
- [[statu quo]]||''[[statu quo]]'' (con enlace), ''statu quo'' (sin enlace)
+ [[statu quo]]||''[[statu quo]]'' (en cursiva y con enlace), ''statu quo'' (en cursiva y sin enlace)
  statu quo||''statu quo''
  status quo||''statu quo'' (locución en latín), Status Quo (grupo musical)
  statu quo ante bellum||''statu quo ante bellum''
@@ -6247,9 +6256,9 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
 
 == T ==
 
- tabula rasa||''tabula rasa'' (locución latina), «Tábula Rasa» (capítulo), ''Tábula Rasa'' (serie, pieza musical)
- tabula-rasa||''tabula rasa'' (locución latina), «Tábula Rasa» (capítulo), ''Tábula Rasa'' (serie, pieza musical)
- tábula rasa||''tabula rasa'' (locución latina), «Tábula Rasa» (capítulo), ''Tábula Rasa'' (serie, pieza musical)
+ tabula rasa||''tabula rasa'' (locución latina), «Tábula Rasa» (capítulo), ''Tábula Rasa'' (serie, pieza musical) 
+ tabula-rasa||''tabula rasa'' (locución latina), «Tábula Rasa» (capítulo), ''Tábula Rasa'' (serie, pieza musical) 
+ tábula rasa||''tabula rasa'' (locución latina), «Tábula Rasa» (capítulo), ''Tábula Rasa'' (serie, pieza musical) 
  tábula-rasa||''tabula rasa'' (locución latina), «Tábula Rasa» (capítulo), ''Tábula Rasa'' (serie, pieza musical)
  tal es asi||tan es así, tanto es así
  tal es así||tan es así, tanto es así
@@ -6583,7 +6592,7 @@ El formato es el mismo que el del [[Wikipedia:Corrector ortográfico/Listado|lis
  vicedirector general||vice director general, Vice director general (para inicios de frase o columnas de tablas)
  vice-director general||vice director general, Vice director general (para inicios de frase o columnas de tablas)
  vicedirectora general||vice directora general, Vice directora general (para inicios de frase o columnas de tablas)
- vice-directora general||vice directora general, Vice directora general (para inicios de frase o columnas de tablas)
+ vice-directora general||vice directora general, Vice directora general (para inicios de frase o columnas de tablas) 
  vice gobernacion||vicegobernación
  vice-gobernacion||vicegobernación
  vice gobernación||vicegobernación

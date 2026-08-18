@@ -1590,7 +1590,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  asfalticas||asfálticas
  asfaltico||asfáltico
  asfalticos||asfálticos
- ashgabat||Asjabad
+ ashgabat||Asjabad (capital de Turkmenistán)
  asi||así
  asia|cs|Asia
  asía||Asia (continente), asía (conjugación del verbo «asir»: él, ella, usted), hacía (conjugación del verbo «hacer»: él, ella, usted), hacia (preposición), así (adverbio o conjugación del verbo «asir»: yo), Asía (navío español)
@@ -2158,7 +2158,6 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  barometro||barómetro
  barometros||barómetros
  baron||barón
- Barranco|cs|barranco
  Barriada|cs|barriada
  Barrio|cs|barrio (categorizador de espacio urbano), Barrio (nombre propio)
  bartender||barman
@@ -2378,7 +2377,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  bidets||bidés
  bidéts||bidés
  bidon||bidón
- bielorrusia|cs|Bielorrusia
+ bielorrusia|cs|Bielorrusia (país), bielorrusa (gentilicio)
  bién||bien
  bienechor||bienhechor
  bienechora||bienhechora
@@ -3617,7 +3616,6 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  cereos||céreos
  cernicalo||cernícalo
  cernicalos||cernícalos
- Cerro|cs|cerro (categorizador de accidente geográfico), Cerro (nombre propio)
  certámen||certamen
  certamenes||certámenes
  certificacion||certificación
@@ -4275,6 +4273,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  comiezos||comienzos
  comilon||comilón
  comisaria||comisaria (profesión), comisaría (edificio)
+ Comisaria|cs|comisaria (profesión), comisaría (edificio), Comisaria (profesión en inicios de frase o columnas de tablas), Comisaría (edificio en inicios de frase o columnas de tablas)
  comisarias||comisarias (profesión), comisarías (edificios)
  comiseria||comisaria (profesión), comisaría (edificio)
  comisería||comisaria (profesión), comisaría (edificio)
@@ -4681,7 +4680,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  constiyuye||constituye
  constiyuyen||constituyen
  constraste||contraste
- constrastes||contrastess
+ constrastes||contrastes
  constratista||contratista
  constratistas||contratistas
  constriccion||constricción
@@ -5402,7 +5401,6 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  cuentame||cuéntame
  Cuesta|cs|cuesta
  cuestion||cuestión
- Cueva|cs|cueva
  cuidad||ciudad (sustantivo), cuidad (verbo)
  cuidadana||ciudadana
  cuidadanas||ciudadanas
@@ -6183,6 +6181,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  desparecidas||desaparecidas
  desparecido||desaparecido
  desparecidos||desaparecidos
+ desparición||desaparición
  desperto||despertó
  despidio||despidió
  despliege||despliegue
@@ -6317,6 +6316,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  devonicas||devónicas
  devonico||devónico
  devonicos||devónicos
+ dhaka||Daca (capital de Bangladés)
  dí||día, di
  dia||día
  diabatica||diabática
@@ -6931,6 +6931,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  durente||durante
  duriante||durante
  dusambe||Dusambé (capital de Tayikistán)
+ dushanbe||Dusambé (capital de Tayikistán)
  dvd|cs|DVD
  dvds||DVD
 
@@ -11330,6 +11331,10 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  indec|cs|Indec (Instituto Nacional de Estadística y Censos)
  indecision||indecisión
  indemnizacion||indemnización
+ indentacion||hendidura
+ indentación||hendidura
+ indentaciones||hendiduras
+ indentaciónes||hendiduras
  indentidad||identidad
  indentidades||identidades
  indentifican||identifican
@@ -12233,6 +12238,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  kungfu||kungfú, kung-fu
  kurdistan||Kurdistán (región de Asia Menor)
  kurdistán|cs|Kurdistán (región de Asia Menor)
+ Kurzeme|cs|Curlandia (región de Letonia)
  kuwait|cs|Kuwait
  kuwaiti||kuwaití
  kuwaities||kuwaitíes
@@ -12324,6 +12330,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  lastimandose||lastimándose
  látamente||latamente
  latex||látex
+ Latgale|cs|Latgalia (región de Letonia)
  latigo||látigo
  latigos||látigos
  latin||latín
@@ -14622,8 +14629,8 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  oncolisis||oncólisis
  ondo||hondo
  ong|cs|ONG (sigla de organización no gubernamental)
- ongs||ONG (sigla de organizaciones no gubernamentales)
- ONGs|cs|ONG (sigla de organizaciones no gubernamentales)
+ ongs||ONG (sigla de organizaciones no gubernamentales), organizaciones no gubernamentales
+ ONGs|cs|ONG (sigla de organizaciones no gubernamentales), organizaciones no gubernamentales
  onice||ónice
  onices||ónices
  onicolisis||onicólisis
@@ -16916,6 +16923,8 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  qúbits||cúbits, ''qubits'' (en inglés)
  québec||Quebec
  quebeques||quebequés, quebequense
+ quedaria||quedaría
+ quedarian||quedarían
  quedarón||quedaron
  quedo||quedó (verbo, 3.ª persona), quedo (adjetivo; adverbio; verbo, 1.ª persona)
  quelenquelen||quelenquelén
@@ -17104,6 +17113,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  rangiferos||rangíferos
  rangun||Rangún (ciudad)
  rangún|cs|Rangún (ciudad)
+ ranking||clasificación, tabla clasificatoria, lista, listado, escalafón, ranquin
  rapida||rápida
  ràpida||rápida
  rapidamente||rápidamente
@@ -18155,6 +18165,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  semideciduas||semicaducas
  semideciduo||semicaduco
  semideciduos||semicaducos
+ Semigallia|cs|Semigalia (región de Letonia)
  semiliquida||semilíquida
  semiliquidas||semilíquidas
  semiliquido||semilíquido
@@ -18732,7 +18743,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  sopie||sopié
  sopies||sopiés
  soporta||soporta (1. sostiene o lleva sobre sí una carga o peso; 2. tolera o lleva con paciencia), admite (en software; en inglés, ''supports''), es compatible con (en software; en inglés, ''supports'')
- soporte||ayuda, apoyo, asistencia, soporte
+ soporte||ayuda, apoyo, asistencia, respaldo, compatibilidad (en software; en inglés, ''support'')
  soprendente||sorprendente
  soprendentemente||sorprendentemente
  soprendentes||sorprendentes
@@ -18965,16 +18976,14 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  sumersion||sumersión
  sumo||sumo (adjetivo; sustantivo; verbo, 1.ª persona), sumó (verbo, 3.ª persona)
  suni||suni (región andina), suní, sunita
- sunies||suníes, sunitas
- sunis||sunís, sunitas
- sunni|cs|suní, sunita
- sunní||suní, sunita
- sunnies||suníes, sunitas
- sunníes||suníes, sunitas
- sunnis|cs|suníes, sunitas
- sunnís||suníes, sunitas
- sunnita||sunita, suní
- sunnitas||sunitas, suníes
+ sunni||sunní (poco usada), suní (más frecuente y aconsejada), sunita (más frecuente y aconsejada)
+ sunní||sunní (poco usada), suní (más frecuente y aconsejada), sunita (más frecuente y aconsejada)
+ sunnies||sunníes (poco usada), suníes (más frecuente y aconsejada), sunitas (más frecuente y aconsejada)
+ sunníes||sunníes (poco usada), suníes (más frecuente y aconsejada), sunitas (más frecuente y aconsejada)
+ sunnis||sunnís (poco usada), sunís (más frecuente y aconsejada), sunitas (más frecuente y aconsejada)
+ sunnís||sunnís (poco usada), sunís (más frecuente y aconsejada), sunitas (más frecuente y aconsejada)
+ sunnita||sunnita (poco usada), sunita (más frecuente y aconsejada)
+ sunnitas||sunnitas (poco usada), sunitas (más frecuente y aconsejada)
  supeior||superior
  supeiora||superiora
  supeioras||superioras
@@ -19285,6 +19294,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  tectonicos||tectónicos
  teflon||teflón
  teheran||Teherán
+ tehran||Teherán
  tehuacan||Tehuacán
  tejao||tejado
  tejon||tejón
@@ -19561,6 +19571,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  thailandés||tailandés
  thailandia||Tailandia
  thamesis||Támesis
+ thimphu||Timbu (capital de Bután), Timbú (capital de Bután)
  thiner||tíner (‘diluyente’, ‘disolvente’)
  thinner||tíner (‘diluyente’, ‘disolvente’)
  tí||ti
@@ -19759,10 +19770,9 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  traidas||traídas
  traido||traído
  traidos||traídos
- trailer||tráiler (tipo de remolque), avance (en cinematografía)
- tráiler||tráiler (tipo de remolque), avance (en cinematografía)
- trailers||tráileres
- tráilers||tráileres
+ trailer||tráiler (tipo de remolque, avance de una película)
+ trailers||tráileres (tipo de remolque, avance de una película)
+ tráilers||tráileres (tipo de remolque, avance de una película)
  training||adiestramiento, entrenamiento, preparación, instrucción, curso de formación (en el ámbito de la enseñanza), curso de capacitación (en el ámbito de la enseñanza), curso de perfeccionamiento (en el ámbito de la enseñanza)
  trajedia||tragedia
  trajedias||tragedias
@@ -21178,6 +21188,7 @@ La sintaxis básica es: <code>término potencialmente erróneo|parámetro|térmi
  zejel||zéjel
  zejeles||zéjeles
  zelandes||zelandés
+ Zemgale|cs|Semigalia (región de Letonia)
  zeppelin||zepelín, dirigible, aeróstato, aerostato, Zeppelin (apellido)
  zeppelines||zepelines, dirigibles, aeróstatos, aerostatos
  zero||cero

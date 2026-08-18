@@ -1,7 +1,7 @@
 Nesta lista detállanse os «termos compostos» que a ferramenta [[Wikipedia:Replacer|Replacer]] detecta como potencialmente erróneos.
 
 O formato é o mesmo que o do [[Wikipedia:Revisor ortográfico/Listaxe|lista de termos simples]], coa salvedade de que esta lista estende á anterior con termos ou expresións que conteñen caracteres non alfabéticos: espazos, números, etc. As recomendacións aplican igualmente.
-
+ 
  Administración Publica|cs|Administración Pública
  Alberto Del Río|cs|Alberto Del Rio (nome comercial do loitador, sen til)
  Angel Nieto|cs|Ángel Nieto (piloto español)
@@ -16,6 +16,8 @@ O formato é o mesmo que o do [[Wikipedia:Revisor ortográfico/Listaxe|lista de 
  a traveso de||a través de
 
  balanza de pagos||balanza de pagamentos
+
+ Cerdedo-Cotobade|cs|Cerdedo Cotobade
  con mais||con máis
  conta con||ten
 
@@ -62,6 +64,7 @@ O formato é o mesmo que o do [[Wikipedia:Revisor ortográfico/Listaxe|lista de 
  mesa camilla||mesa de braseiro
  Metro de Paris|cs|Metro de París (en galego), Métro de Paris (en francés)
  moito mais||moito máis
+ Mondariz-Balneario|cs|Mondariz Balneario
 
  New York|cs|Nova York
  Nueva York|cs|Nova York
@@ -72,6 +75,7 @@ O formato é o mesmo que o do [[Wikipedia:Revisor ortográfico/Listaxe|lista de 
  o mais||o máis
  ou mais||ou máis
  opinión publica||opinión pública
+ Oza-Cesuras|cs|Oza Cesuras
 
  Primera División|cs|Primeira División
  Primera Division|cs|Primeira División
@@ -246,9 +250,9 @@ O formato é o mesmo que o do [[Wikipedia:Revisor ortográfico/Listaxe|lista de 
  un arte||unha arte
  uns artes||unhas artes
 
- o canle||a canle
- os canles||as canles
- un canle||unha canle
+ o canle||a canle 
+ os canles||as canles 
+ un canle||unha canle 
  uns canles||unhas canles
 
  o énfase||a énfase
