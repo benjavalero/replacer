@@ -109,7 +109,7 @@ public abstract class MisspellingFinder implements ReplacementFinder {
         return applyMisspellingSuggestions(originalWord, misspelling)
             .stream()
             .peek(s -> {
-                if (isExistingWord(s.getText(), lang)) {
+                if (!s.getText().equals(originalWord) && isExistingWord(s.getText(), lang)) {
                     logChainedMisspelling(misspelling.getWord(), s.getText());
                 }
             })

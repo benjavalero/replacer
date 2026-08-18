@@ -482,6 +482,19 @@ class MisspellingSimpleFinderTest {
     }
 
     @Test
+    void testNoChainedMisspellingWhenSuggestionEqualsOriginal() {
+        // Bahía|cs|bahía => finding "Bahía" suggests "bahía" and adds "Bahía" (uppercase variant)
+        // "Bahía" is itself in the map but should NOT trigger the chaining warning
+        MisspellingSimpleFinder spyFinder = spy(misspellingFinder);
+        SimpleMisspelling misspelling = SimpleMisspelling.ofCaseSensitive("Bahía", "bahía");
+        fakeUpdateMisspellingList(spyFinder, List.of(misspelling));
+
+        spyFinder.findList("La Bahía de Cádiz.");
+
+        verify(spyFinder, never()).logChainedMisspelling(any(), any());
+    }
+
+    @Test
     void testFindMatchingReplacementType() {
         final WikipediaLanguage lang = WikipediaLanguage.getDefault();
         final ReplacementKind simple = ReplacementKind.SIMPLE;
