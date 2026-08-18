@@ -2,9 +2,8 @@ package es.bvalero.replacer.finder.replacement.finders;
 
 import static es.bvalero.replacer.finder.util.FinderUtils.*;
 
-import dk.brics.automaton.DatatypesAutomatonProvider;
-import dk.brics.automaton.RegExp;
-import dk.brics.automaton.RunAutomaton;
+import com.roklenarcic.util.strings.StringMap;
+import com.roklenarcic.util.strings.WholeWordMatchMap;
 import es.bvalero.replacer.FinderProperties;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.util.ReplacerUtils;
@@ -13,15 +12,15 @@ import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.StandardType;
 import es.bvalero.replacer.finder.Suggestion;
 import es.bvalero.replacer.finder.replacement.ReplacementFinder;
-import es.bvalero.replacer.finder.util.AutomatonMatchFinder;
+import es.bvalero.replacer.finder.util.FinderMatchRange;
 import es.bvalero.replacer.finder.util.FinderUtils;
+import es.bvalero.replacer.finder.util.ResultMatchListener;
 import jakarta.annotation.PostConstruct;
 import java.time.Year;
 import java.time.ZoneId;
 import java.util.*;
 import java.util.regex.MatchResult;
 import java.util.stream.Stream;
-import lombok.SneakyThrows;
 import org.apache.commons.collections4.ListValuedMap;
 import org.apache.commons.collections4.SetValuedMap;
 import org.apache.commons.collections4.multimap.ArrayListValuedHashMap;
@@ -31,6 +30,8 @@ import org.springframework.stereotype.Component;
 
 /**
  * Find dates to be corrected, e.g. with the month in uppercase.
+ * Uses Aho-Corasick to find month names in a single pass,
+ * then inspects the context before/after each match to identify the date pattern.
  */
 @Component
 public class DateFinder implements ReplacementFinder {
@@ -47,7 +48,9 @@ public class DateFinder implements ReplacementFinder {
     private static final Map<WikipediaLanguage, Map<String, String>> langArticles = new EnumMap<>(
         WikipediaLanguage.class
     );
-    private static final Map<WikipediaLanguage, RunAutomaton> automata = new EnumMap<>(WikipediaLanguage.class);
+    private static final Map<WikipediaLanguage, StringMap<String>> monthMatchers = new EnumMap<>(
+        WikipediaLanguage.class
+    );
 
     public DateFinder(FinderProperties finderProperties) {
         this.finderProperties = finderProperties;
@@ -76,23 +79,9 @@ public class DateFinder implements ReplacementFinder {
 
             // Prepositions
             langPrepositions.putAll(lang, this.finderProperties.getYearPrepositions().get(lang.getCode()));
-            List<String> prepositionsLowerUpperCase = new ArrayList<>();
-            langPrepositions
-                .get(lang)
-                .forEach(preposition -> {
-                    prepositionsLowerUpperCase.add(preposition);
-                    prepositionsLowerUpperCase.add(ReplacerUtils.setFirstUpperCase(preposition));
-                });
 
             // Connectors
             langConnectors.putAll(lang, this.finderProperties.getDateConnectors().get(lang.getCode()));
-            List<String> connectorsLowerUpperCase = new ArrayList<>();
-            langConnectors
-                .get(lang)
-                .forEach(connector -> {
-                    connectorsLowerUpperCase.add(connector);
-                    connectorsLowerUpperCase.add(ReplacerUtils.setFirstUpperCase(connector));
-                });
 
             // Articles
             langArticles.put(lang, new HashMap<>());
@@ -100,66 +89,10 @@ public class DateFinder implements ReplacementFinder {
                 .get(lang.getCode())
                 .forEach(dateArticle -> langArticles.get(lang).putAll(buildArticleMap(dateArticle)));
 
-            // Regex
-            String regexPrepositions = String.format("(%s)", FinderUtils.joinAlternate(prepositionsLowerUpperCase));
-            String regexConnectors = String.format("(%s)", FinderUtils.joinAlternate(connectorsLowerUpperCase));
-            String regexMonthsLowerUpperCase = String.format("(%s)", FinderUtils.joinAlternate(monthsLowerUpperCase));
-            List<String> spaces = SPACE_ALIASES.stream().map(ReplacerUtils::escapeRegexChars).toList();
-            String regexSpaces = String.format("(<Zs>+|%s)+", FinderUtils.joinAlternate(spaces));
-
-            // There is no performance gain by using more generic regex for these numbers
-            String regexDay = "([012]?[0-9]|3[01])";
-            String regexYear = "[12]\\.?[0-9]{3}";
-            String regexLongDate = String.format(
-                "%s%s(%s%s)?%s,?%s(%s%s)?%s",
-                regexDay,
-                regexSpaces,
-                regexPrepositions,
-                regexSpaces,
-                regexMonthsLowerUpperCase,
-                regexSpaces,
-                regexPrepositions,
-                regexSpaces,
-                regexYear
-            );
-            String regexMonthYear = String.format(
-                "%s%s%s,?%s(%s%s)?%s",
-                regexConnectors,
-                regexSpaces,
-                regexMonthsLowerUpperCase,
-                regexSpaces,
-                regexPrepositions,
-                regexSpaces,
-                regexYear
-            );
-            String regexMonthDayYear = String.format(
-                "%s%s%s,?%s(%s%s)?%s",
-                regexMonthsLowerUpperCase,
-                regexSpaces,
-                regexDay,
-                regexSpaces,
-                regexPrepositions,
-                regexSpaces,
-                regexYear
-            );
-            String regexYearMonthDay = String.format(
-                "%s,?%s%s%s%s",
-                regexYear,
-                regexSpaces,
-                regexMonthsLowerUpperCase,
-                regexSpaces,
-                regexDay
-            );
-
-            String regex = String.format(
-                "(%s|%s|%s|%s)",
-                regexLongDate,
-                regexMonthYear,
-                regexMonthDayYear,
-                regexYearMonthDay
-            );
-
-            automata.put(lang, new RunAutomaton(new RegExp(regex).toAutomaton(new DatatypesAutomatonProvider())));
+            // Aho-Corasick matcher for month names (whole-word matching)
+            // WholeWordMatchMap guarantees word-boundary: no need to validate completeness afterwards
+            // (e.g. "abril" inside "abriles" won't be matched)
+            monthMatchers.put(lang, new WholeWordMatchMap<>(monthsLowerUpperCase, monthsLowerUpperCase, true));
         }
     }
 
@@ -175,12 +108,7 @@ public class DateFinder implements ReplacementFinder {
 
     @Override
     public Stream<Replacement> find(FinderPage page) {
-        // The performance was better with a linear approach just checking the 12 lang months,
-        // but once we also check the English months we use the automaton approach which gives
-        // a slightly better performance and is easier to maintain.
-
-        // For the sake of performance and not to duplicate steps and code,
-        // it is better to override the main method, and validate and convert at a time.
+        // Override find because convertDate may return null (date is valid and needs no fix)
         return findMatchResults(page)
             .map(match -> convertDate(match, page))
             .filter(Objects::nonNull);
@@ -193,9 +121,248 @@ public class DateFinder implements ReplacementFinder {
 
     @Override
     public Stream<MatchResult> findMatchResults(FinderPage page) {
-        // Note we are overriding the parent "find" method too
-        return AutomatonMatchFinder.find(page.getContent(), automata.get(page.getPageKey().getLang()));
+        final WikipediaLanguage lang = page.getPageKey().getLang();
+        final String text = page.getContent();
+
+        // Phase 1: Find all months in the text using Aho-Corasick
+        final ResultMatchListener listener = new ResultMatchListener();
+        monthMatchers.get(lang).match(text, listener);
+
+        // Phase 2: For each month, inspect context to build a complete date MatchResult
+        return listener
+            .getMatches()
+            .map(monthMatch -> buildDateMatch(monthMatch, page))
+            .filter(Objects::nonNull);
     }
+
+    /**
+     * From a month match, look before and after to determine if it's part of a date pattern.
+     * If so, return a MatchResult covering the full date. Otherwise return null.
+     */
+    @Nullable
+    private MatchResult buildDateMatch(MatchResult monthMatch, FinderPage page) {
+        final String text = page.getContent();
+        final WikipediaLanguage lang = page.getPageKey().getLang();
+        final int startMonth = monthMatch.start();
+        final int endMonth = monthMatch.end();
+
+        // Look before the month (DOT allowed to capture years like "2.013")
+        MatchResult wordBefore = FinderUtils.findWordBefore(text, startMonth, DOT);
+
+        if (wordBefore != null) {
+            if (isValidDay(text, wordBefore)) {
+                // Pattern 1: day + month (no prep before)
+                if (FinderUtils.isEmptyBlankOrSpaceAlias(text, wordBefore.end(), startMonth)) {
+                    // The part after the month ([prep] + year) will be verified in the build method
+                    return buildLongDateMatch(page, wordBefore, null, monthMatch);
+                }
+                return null;
+            } else if (isPreposition(wordBefore.group(), lang)) {
+                // Could be: day + prep + month → long date
+                if (FinderUtils.isEmptyBlankOrSpaceAlias(text, wordBefore.end(), startMonth)) {
+                    MatchResult dayBefore = findDayBefore(text, wordBefore);
+                    if (dayBefore != null) {
+                        // The part after the month ([prep] + year) will be verified in the build method
+                        return buildLongDateMatch(page, dayBefore, wordBefore, monthMatch);
+                    }
+                }
+                // Not a recognized pattern
+                return null;
+            } else if (isRegexConnector(wordBefore.group(), lang)) {
+                // Pattern 2: connector + month + [prep] + year (month-year)
+                if (FinderUtils.isEmptyBlankOrSpaceAlias(text, wordBefore.end(), startMonth)) {
+                    MatchResult monthYearMatch = buildMonthYearMatch(page, wordBefore, monthMatch);
+                    if (monthYearMatch != null) {
+                        return monthYearMatch;
+                    }
+                }
+                // If month-year fails, fall through to try month-day-year below
+            } else if (isValidYear(text, wordBefore)) {
+                // Pattern 4: year [,] + month + day (year-month-day)
+                // Allow an optional comma between year and month
+                int afterYear = wordBefore.end();
+                if (afterYear < startMonth && text.charAt(afterYear) == ',') {
+                    afterYear++;
+                }
+                if (FinderUtils.isEmptyBlankOrSpaceAlias(text, afterYear, startMonth)) {
+                    // The part after the month (day) will be verified in the build method
+                    return buildYearMonthDayMatch(page, wordBefore, monthMatch);
+                }
+                return null;
+            }
+        }
+
+        // Look after the month (month is start of date: MonthDayYear)
+        MatchResult dayAfter = findDayAfter(text, endMonth);
+        if (dayAfter != null) {
+            // Pattern 3: month + day + [prep] + year (month-day-year)
+            return buildMonthDayYearMatch(page, monthMatch, dayAfter);
+        }
+
+        // No recognized pattern
+        return null;
+    }
+
+    /*
+     * Nested groups in the date MatchResult (unified for all patterns):
+     * group(1) = connector (may be empty, only for month-year pattern)
+     * group(2) = day
+     * group(3) = preposition before month (may be empty)
+     * group(4) = month
+     * group(5) = preposition after month (may be empty)
+     * group(6) = year
+     */
+
+    // Build a MatchResult for long date: day [prep] month [prep|,] year
+    @Nullable
+    private MatchResult buildLongDateMatch(
+        FinderPage page,
+        MatchResult dayMatch,
+        @Nullable MatchResult prepBeforeMatch,
+        MatchResult monthMatch
+    ) {
+        final String text = page.getContent();
+        MatchResult yearAfter = findYearAfter(page, monthMatch.end());
+        if (yearAfter == null) {
+            return null;
+        }
+        FinderMatchRange result = FinderMatchRange.ofNested(text, dayMatch.start(), yearAfter.end());
+        result.addGroup(FinderMatchRange.ofEmpty(text, dayMatch.start())); // group(1) = connector (empty)
+        result.addGroup(dayMatch); // group(2) = day
+        result.addGroup(prepBeforeMatch != null ? prepBeforeMatch : FinderMatchRange.ofEmpty(text, monthMatch.start())); // group(3) = prep before
+        result.addGroup(monthMatch); // group(4) = month
+        result.addGroup(((FinderMatchRange) yearAfter).getGroup(1)); // group(5) = prep after
+        result.addGroup(((FinderMatchRange) yearAfter).getGroup(2)); // group(6) = year
+        return result;
+    }
+
+    // Build a MatchResult for month-year: connector + month + [prep] + year
+    @Nullable
+    private MatchResult buildMonthYearMatch(FinderPage page, MatchResult connectorMatch, MatchResult monthMatch) {
+        final String text = page.getContent();
+        MatchResult yearAfter = findYearAfter(page, monthMatch.end());
+        if (yearAfter == null) {
+            return null;
+        }
+        FinderMatchRange result = FinderMatchRange.ofNested(text, connectorMatch.start(), yearAfter.end());
+        result.addGroup(connectorMatch); // group(1) = connector
+        result.addGroup(FinderMatchRange.ofEmpty(text, monthMatch.start())); // group(2) = day (empty)
+        result.addGroup(FinderMatchRange.ofEmpty(text, monthMatch.start())); // group(3) = prep before (empty)
+        result.addGroup(monthMatch); // group(4) = month
+        result.addGroup(((FinderMatchRange) yearAfter).getGroup(1)); // group(5) = prep after
+        result.addGroup(((FinderMatchRange) yearAfter).getGroup(2)); // group(6) = year
+        return result;
+    }
+
+    // Build a MatchResult for year-month-day: year [,] month day
+    @Nullable
+    private MatchResult buildYearMonthDayMatch(FinderPage page, MatchResult yearMatch, MatchResult monthMatch) {
+        final String text = page.getContent();
+        MatchResult dayMatch = findDayAfter(text, monthMatch.end());
+        if (dayMatch == null) {
+            return null;
+        }
+        FinderMatchRange result = FinderMatchRange.ofNested(text, yearMatch.start(), dayMatch.end());
+        result.addGroup(FinderMatchRange.ofEmpty(text, yearMatch.start())); // group(1) = connector (empty)
+        result.addGroup(dayMatch); // group(2) = day
+        result.addGroup(FinderMatchRange.ofEmpty(text, monthMatch.start())); // group(3) = prep before (empty)
+        result.addGroup(monthMatch); // group(4) = month
+        result.addGroup(FinderMatchRange.ofEmpty(text, yearMatch.start())); // group(5) = prep after (empty)
+        result.addGroup(yearMatch); // group(6) = year
+        return result;
+    }
+
+    // Build a MatchResult for month-day-year: month day [prep] year
+    @Nullable
+    private MatchResult buildMonthDayYearMatch(FinderPage page, MatchResult monthMatch, MatchResult dayMatch) {
+        final String text = page.getContent();
+        MatchResult yearAfter = findYearAfter(page, dayMatch.end());
+        if (yearAfter == null) {
+            return null;
+        }
+        FinderMatchRange result = FinderMatchRange.ofNested(text, monthMatch.start(), yearAfter.end());
+        result.addGroup(FinderMatchRange.ofEmpty(text, monthMatch.start())); // group(1) = connector (empty)
+        result.addGroup(dayMatch); // group(2) = day
+        result.addGroup(FinderMatchRange.ofEmpty(text, monthMatch.start())); // group(3) = prep before (empty)
+        result.addGroup(monthMatch); // group(4) = month
+        result.addGroup(((FinderMatchRange) yearAfter).getGroup(1)); // group(5) = prep after
+        result.addGroup(((FinderMatchRange) yearAfter).getGroup(2)); // group(6) = year
+        return result;
+    }
+
+    /**
+     * Find [prep] + year after the given position.
+     * Returns a MatchResult covering the full range (from prep or year start to year end),
+     * with nested groups: group(1) = preposition (may be empty), group(2) = year.
+     * Returns null if no valid year found.
+     */
+    @Nullable
+    private MatchResult findYearAfter(FinderPage page, int start) {
+        final String text = page.getContent();
+        final WikipediaLanguage lang = page.getPageKey().getLang();
+        MatchResult wordAfter = FinderUtils.findWordAfter(text, start, DOT);
+        if (wordAfter == null) {
+            return null;
+        }
+
+        // Allow an optional comma between the previous token and what follows
+        int afterStart = start;
+        if (afterStart < wordAfter.start() && text.charAt(afterStart) == ',') {
+            afterStart++;
+        }
+        if (!FinderUtils.isEmptyBlankOrSpaceAlias(text, afterStart, wordAfter.start())) {
+            return null;
+        }
+
+        if (isPreposition(wordAfter.group(), lang)) {
+            MatchResult yearMatch = findYear(text, wordAfter.end());
+            if (yearMatch == null) {
+                return null;
+            }
+            if (!FinderUtils.isEmptyBlankOrSpaceAlias(text, wordAfter.end(), yearMatch.start())) {
+                return null;
+            }
+            FinderMatchRange result = FinderMatchRange.ofNested(text, wordAfter.start(), yearMatch.end());
+            result.addGroup(wordAfter); // group(1) = preposition
+            result.addGroup(yearMatch); // group(2) = year
+            return result;
+        }
+
+        // Try as year directly
+        MatchResult yearMatch = trimTrailingDot(text, wordAfter);
+        if (isValidYear(text, yearMatch)) {
+            FinderMatchRange result = FinderMatchRange.ofNested(text, yearMatch.start(), yearMatch.end());
+            result.addGroup(FinderMatchRange.ofEmpty(text, yearMatch.start())); // group(1) = empty preposition
+            result.addGroup(yearMatch); // group(2) = year
+            return result;
+        }
+        return null;
+    }
+
+    /** Find a year after the given position, trimming trailing dot if needed. */
+    @Nullable
+    private MatchResult findYear(String text, int start) {
+        MatchResult match = FinderUtils.findWordAfter(text, start, DOT);
+        if (match == null) {
+            return null;
+        }
+        match = trimTrailingDot(text, match);
+        return isValidYear(text, match) ? match : null;
+    }
+
+    /** If the match ends with a dot that doesn't belong to a year pattern (e.g. "1999."), trim it. */
+    private MatchResult trimTrailingDot(String text, MatchResult match) {
+        if (match.end() > match.start() && text.charAt(match.end() - 1) == '.') {
+            int len = match.end() - match.start();
+            // A valid year with dot is like "2.019" (dot at position 1). Any other trailing dot is spurious.
+            if (len != 5 || text.charAt(match.start() + 1) != '.') {
+                return FinderMatchRange.of(text, match.start(), match.end() - 1);
+            }
+        }
+        return match;
+    }
+
+    // Conversion phase
 
     @Override
     public Replacement convertWithNoSuggestions(MatchResult matchResult, FinderPage page) {
@@ -212,267 +379,149 @@ public class DateFinder implements ReplacementFinder {
     @Nullable
     public Replacement convertDate(MatchResult match, FinderPage page) {
         final WikipediaLanguage lang = page.getPageKey().getLang();
-        if (!FinderUtils.isWordCompleteInText(match, page.getContent())) {
+        assert FinderUtils.isWordCompleteInText(match, page.getContent());
+
+        final String date = match.group();
+        boolean isDateValid = true;
+
+        // Extract components from nested groups
+        final String connector = match.group(1); // may be empty
+        String fixedDay = match.group(2); // may be empty (month-year pattern)
+        final String prepBefore = match.group(3); // may be empty
+        String fixedMonth = match.group(4);
+        String prepAfter = match.group(5); // may be empty
+        String fixedYear = match.group(6);
+
+        // Validate and fix day
+        if (!fixedDay.isEmpty()) {
+            if (isFixableDay(fixedDay)) {
+                fixedDay = fixDay(fixedDay);
+                isDateValid = false;
+            }
+        }
+
+        // Validate prep before month
+        if (prepBefore.isEmpty() && !fixedDay.isEmpty() && connector.isEmpty()) {
+            // Long date without preposition before month (e.g. "17 Agosto 2019")
+            isDateValid = false;
+        }
+
+        // Validate and fix month
+        if (isFixableMonth(fixedMonth)) {
+            fixedMonth = fixMonth(fixedMonth, lang);
+            isDateValid = false;
+        }
+
+        // Validate and fix prep after month
+        if (prepAfter.isEmpty() && !connector.isEmpty()) {
+            // Month-year without preposition (e.g. "Desde Agosto 2019")
+            prepAfter = getPrepositionDefault(lang);
+            isDateValid = false;
+        } else if (prepAfter.isEmpty() && !fixedDay.isEmpty() && fixedYear.isEmpty()) {
+            // This shouldn't happen with current patterns
+            prepAfter = getPrepositionDefault(lang);
+            isDateValid = false;
+        } else if (prepAfter.isEmpty()) {
+            prepAfter = getPrepositionDefault(lang);
+            isDateValid = false;
+        }
+
+        // Validate and fix year
+        if (isFixableYear(fixedYear)) {
+            fixedYear = fixYear(fixedYear);
+            isDateValid = false;
+        }
+
+        // If everything is already valid, nothing to fix
+        if (isDateValid) {
             return null;
         }
 
-        final String date = match.group();
-        final MatchResult matchWord = FinderUtils.findWordAfter(date, 0, DOT);
-        assert matchWord != null;
-        final String firstWord = matchWord.group();
-        if (isRegexDay(firstWord)) {
-            return convertLongDate(match, page);
-        }
-        if (isRegexConnector(firstWord, lang)) {
-            return convertMonthYear(match, page);
-        }
-        if (isRegexMonth(firstWord, lang)) {
-            return convertMonthDayYear(match, page);
-        }
-        if (isRegexYear(firstWord)) {
-            return convertYearMonthDay(match, page);
+        // Cosmetic fixes
+        fixedMonth = fixSeptember(fixedMonth, lang);
+        prepAfter = fixPrepositionAfter(prepAfter, lang);
+
+        // Build the fixed date depending on the pattern
+        final String fixedDate;
+        final String defaultPrep = getPrepositionDefault(lang);
+        if (!connector.isEmpty() && fixedDay.isEmpty()) {
+            // Month-year: connector + month + prep + year
+            fixedDate = connector + SPACE + fixedMonth + SPACE + prepAfter + SPACE + fixedYear;
         } else {
-            throw new IllegalStateException("Unknown date first word: " + firstWord);
+            // All other patterns produce: day + prep + month + prep + year
+            fixedDate = fixedDay + SPACE + defaultPrep + SPACE + fixedMonth + SPACE + prepAfter + SPACE + fixedYear;
         }
+
+        return buildDateReplacement(page, match.start(), date, fixedDate);
     }
 
-    private boolean isRegexDay(String token) {
-        return token.length() <= 2 && FinderUtils.isNumber(token);
+    private boolean isValidDay(String text, MatchResult match) {
+        int len = match.end() - match.start();
+        if (len < 1 || len > 2 || !FinderUtils.isNumber(text, match.start(), match.end())) {
+            return false;
+        }
+        // Reject day "0" (but allow "07" which will be fixed later)
+        return !(len == 1 && text.charAt(match.start()) == '0');
+    }
+
+    /** Find a day (1-2 digit number) after the given position, separated by space, or null if not found. */
+    @Nullable
+    private MatchResult findDayAfter(String text, int start) {
+        MatchResult wordAfter = FinderUtils.findWordAfter(text, start);
+        if (
+            wordAfter != null &&
+            isValidDay(text, wordAfter) &&
+            FinderUtils.isEmptyBlankOrSpaceAlias(text, start, wordAfter.start())
+        ) {
+            return wordAfter;
+        }
+        return null;
+    }
+
+    /**
+     * Find a day before a preposition, separated by space.
+     * Returns the day match, or null if not found.
+     */
+    @Nullable
+    private MatchResult findDayBefore(String text, MatchResult prepMatch) {
+        MatchResult wordBefore = FinderUtils.findWordBefore(text, prepMatch.start());
+        if (
+            wordBefore != null &&
+            isValidDay(text, wordBefore) &&
+            FinderUtils.isEmptyBlankOrSpaceAlias(text, wordBefore.end(), prepMatch.start())
+        ) {
+            return wordBefore;
+        }
+        return null;
     }
 
     private boolean isRegexConnector(String token, WikipediaLanguage lang) {
         return langConnectors.containsMapping(lang, FinderUtils.setFirstLowerCase(token));
     }
 
-    private boolean isRegexMonth(String month, WikipediaLanguage lang) {
-        final String monthLower = FinderUtils.setFirstLowerCase(month);
-        return (
-            isEnglishMonth(month) ||
-            langMonths.containsMapping(lang, monthLower) ||
-            (lang == WikipediaLanguage.SPANISH && "setiembre".equals(monthLower))
-        );
-    }
-
-    private boolean isRegexYear(String token) {
-        if (token.length() == 4) {
-            return FinderUtils.isNumber(token);
-        } else if (token.length() == 5) {
-            return FinderUtils.isAsciiDigit(token.charAt(0)) && token.charAt(1) == '.';
+    private boolean isValidYear(String text, MatchResult match) {
+        int len = match.end() - match.start();
+        int start = match.start();
+        boolean validFormat;
+        if (len == 4) {
+            validFormat = FinderUtils.isNumber(text, start, match.end());
+        } else if (len == 5) {
+            validFormat = FinderUtils.isAsciiDigit(text.charAt(start)) && text.charAt(start + 1) == '.';
         } else {
-            throw new IllegalStateException();
+            return false;
         }
-    }
-
-    @Nullable
-    private Replacement convertLongDate(MatchResult match, FinderPage page) {
-        final WikipediaLanguage lang = page.getPageKey().getLang();
-        final String date = match.group();
-        boolean isDateValid = true;
-
-        MatchResult matchWord = FinderUtils.findWordAfter(date, 0);
-        assert matchWord != null;
-        String fixedDay = matchWord.group();
-        if (isFixableDay(fixedDay)) {
-            fixedDay = fixDay(fixedDay);
-            isDateValid = false;
+        if (!validFormat) {
+            return false;
         }
-        if (isFalseDay(fixedDay)) {
-            return null;
-        }
-
-        matchWord = FinderUtils.findWordAfter(date, matchWord.end()); // Prep Before or Month
-        assert matchWord != null;
-        if (isPreposition(matchWord.group(), lang)) {
-            matchWord = FinderUtils.findWordAfter(date, matchWord.end());
-            assert matchWord != null;
+        // Reject years in the future
+        int year;
+        if (len == 4) {
+            year = Integer.parseInt(match.group());
         } else {
-            isDateValid = false;
+            // Format "X.YYY" → concatenate without the dot and parse
+            year = Integer.parseInt(text.substring(start, start + 1) + text.substring(start + 2, match.end()));
         }
-        String fixedMonth = matchWord.group();
-        if (isFixableMonth(fixedMonth)) {
-            fixedMonth = fixMonth(fixedMonth, lang);
-            isDateValid = false;
-        }
-
-        // Prep After or Year
-        matchWord = FinderUtils.findWordAfter(date, matchWord.end(), DOT);
-        assert matchWord != null;
-        String prepAfter = matchWord.group();
-        if (isPreposition(matchWord.group(), lang)) {
-            matchWord = FinderUtils.findWordAfter(date, matchWord.end(), DOT);
-            assert matchWord != null;
-        } else {
-            prepAfter = getPrepositionDefault(lang);
-            isDateValid = false;
-        }
-        String fixedYear = matchWord.group();
-        if (isFixableYear(fixedYear)) {
-            fixedYear = fixYear(fixedYear);
-            isDateValid = false;
-        }
-        if (isFalseYear(fixedYear)) {
-            return null;
-        }
-
-        // Validation
-        if (isDateValid) {
-            return null;
-        }
-
-        // Cosmetic fixes in case we actually fix the date
-        fixedMonth = fixSeptember(fixedMonth, lang);
-        prepAfter = fixPrepositionAfter(prepAfter, lang);
-
-        final String prepBefore = getPrepositionDefault(lang);
-        final String fixedDate =
-            fixedDay + SPACE + prepBefore + SPACE + fixedMonth + SPACE + prepAfter + SPACE + fixedYear;
-
-        return buildDateReplacement(page, match.start(), date, fixedDate);
-    }
-
-    @Nullable
-    private Replacement convertMonthYear(MatchResult match, FinderPage page) {
-        final WikipediaLanguage lang = page.getPageKey().getLang();
-        boolean isDateValid = true;
-
-        final String date = match.group();
-        MatchResult matchWord = FinderUtils.findWordAfter(date, 0);
-        assert matchWord != null;
-        final String connector = matchWord.group();
-
-        matchWord = FinderUtils.findWordAfter(date, matchWord.end());
-        assert matchWord != null;
-        String fixedMonth = matchWord.group();
-        if (isFixableMonth(fixedMonth)) {
-            fixedMonth = fixMonth(fixedMonth, lang);
-            isDateValid = false;
-        }
-
-        // Prep After or Year
-        matchWord = FinderUtils.findWordAfter(date, matchWord.end(), DOT);
-        assert matchWord != null;
-        String prepAfter = matchWord.group();
-        if (isPreposition(matchWord.group(), lang)) {
-            matchWord = FinderUtils.findWordAfter(date, matchWord.end(), DOT);
-            assert matchWord != null;
-        } else {
-            prepAfter = getPrepositionDefault(lang);
-            isDateValid = false;
-        }
-        String fixedYear = matchWord.group();
-        if (isFixableYear(fixedYear)) {
-            fixedYear = fixYear(fixedYear);
-            isDateValid = false;
-        }
-        if (isFalseYear(fixedYear)) {
-            return null;
-        }
-
-        // Validation
-        if (isDateValid) {
-            return null;
-        }
-
-        // Cosmetic fixes in case we actually fix the date
-        fixedMonth = fixSeptember(fixedMonth, lang);
-        prepAfter = fixPrepositionAfter(prepAfter, lang);
-
-        final String fixedDate = connector + SPACE + fixedMonth + SPACE + prepAfter + SPACE + fixedYear;
-
-        return buildDateReplacement(page, match.start(), date, fixedDate);
-    }
-
-    @Nullable
-    private Replacement convertMonthDayYear(MatchResult match, FinderPage page) {
-        final WikipediaLanguage lang = page.getPageKey().getLang();
-        final String date = match.group();
-
-        MatchResult matchWord = FinderUtils.findWordAfter(date, 0);
-        assert matchWord != null;
-        String fixedMonth = matchWord.group();
-        if (isFixableMonth(fixedMonth)) {
-            fixedMonth = fixMonth(fixedMonth, lang);
-        }
-
-        matchWord = FinderUtils.findWordAfter(date, matchWord.end());
-        assert matchWord != null;
-        String fixedDay = matchWord.group();
-        if (isFixableDay(fixedDay)) {
-            fixedDay = fixDay(fixedDay);
-        }
-        if (isFalseDay(fixedDay)) {
-            return null;
-        }
-
-        // Prep After or Year
-        matchWord = FinderUtils.findWordAfter(date, matchWord.end(), DOT);
-        assert matchWord != null;
-        String prepAfter = matchWord.group();
-        if (isPreposition(matchWord.group(), lang)) {
-            matchWord = FinderUtils.findWordAfter(date, matchWord.end(), DOT);
-            assert matchWord != null;
-        } else {
-            prepAfter = getPrepositionDefault(lang);
-        }
-        String fixedYear = matchWord.group();
-        if (isFixableYear(fixedYear)) {
-            fixedYear = fixYear(fixedYear);
-        }
-        if (isFalseYear(fixedYear)) {
-            return null;
-        }
-
-        // Cosmetic fixes in case we actually fix the date
-        fixedMonth = fixSeptember(fixedMonth, lang);
-        prepAfter = fixPrepositionAfter(prepAfter, lang);
-
-        final String prepBefore = getPrepositionDefault(lang);
-        final String fixedDate =
-            fixedDay + SPACE + prepBefore + SPACE + fixedMonth + SPACE + prepAfter + SPACE + fixedYear;
-
-        return buildDateReplacement(page, match.start(), date, fixedDate);
-    }
-
-    @Nullable
-    private Replacement convertYearMonthDay(MatchResult match, FinderPage page) {
-        final WikipediaLanguage lang = page.getPageKey().getLang();
-        final String date = match.group();
-
-        MatchResult matchWord = FinderUtils.findWordAfter(date, 0, DOT);
-        assert matchWord != null;
-        String fixedYear = matchWord.group();
-        if (isFixableYear(fixedYear)) {
-            fixedYear = fixYear(fixedYear);
-        }
-        if (isFalseYear(fixedYear)) {
-            return null;
-        }
-
-        matchWord = FinderUtils.findWordAfter(date, matchWord.end());
-        assert matchWord != null;
-        String fixedMonth = matchWord.group();
-        if (isFixableMonth(fixedMonth)) {
-            fixedMonth = fixMonth(fixedMonth, lang);
-        }
-
-        matchWord = FinderUtils.findWordAfter(date, matchWord.end());
-        assert matchWord != null;
-        String fixedDay = matchWord.group();
-        if (isFixableDay(fixedDay)) {
-            fixedDay = fixDay(fixedDay);
-        }
-        if (isFalseDay(fixedDay)) {
-            return null;
-        }
-
-        // Cosmetic fixes in case we actually fix the date
-        fixedMonth = fixSeptember(fixedMonth, lang);
-
-        final String preposition = getPrepositionDefault(lang);
-        final String fixedDate =
-            fixedDay + SPACE + preposition + SPACE + fixedMonth + SPACE + preposition + SPACE + fixedYear;
-
-        return buildDateReplacement(page, match.start(), date, fixedDate);
+        return year <= CURRENT_YEAR;
     }
 
     private boolean isFixableDay(String day) {
@@ -481,10 +530,6 @@ public class DateFinder implements ReplacementFinder {
 
     private String fixDay(String day) {
         return day.substring(1);
-    }
-
-    private boolean isFalseDay(String day) {
-        return "0".equals(day);
     }
 
     private boolean isPreposition(String token, WikipediaLanguage lang) {
@@ -522,12 +567,6 @@ public class DateFinder implements ReplacementFinder {
 
     private String fixYear(String year) {
         return year.charAt(0) + year.substring(2);
-    }
-
-    @SneakyThrows
-    private boolean isFalseYear(String year) {
-        // At this point the year string should match an integer
-        return Integer.parseInt(year) > CURRENT_YEAR;
     }
 
     private String getPrepositionDefault(WikipediaLanguage lang) {

@@ -271,12 +271,16 @@ public class FinderUtils {
     }
 
     public static boolean isNumber(String word) {
-        for (int i = 0; i < word.length(); i++) {
-            if (!isAsciiDigit(word.charAt(i))) {
+        return isNumber(word, 0, word.length());
+    }
+
+    public static boolean isNumber(String text, int start, int end) {
+        for (int i = start; i < end; i++) {
+            if (!isAsciiDigit(text.charAt(i))) {
                 return false;
             }
         }
-        return true;
+        return start < end;
     }
 
     public static String normalizeDecimalNumber(String number) {
