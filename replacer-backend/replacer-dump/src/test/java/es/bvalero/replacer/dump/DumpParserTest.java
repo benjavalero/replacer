@@ -19,6 +19,7 @@ import java.util.Objects;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.test.util.ReflectionTestUtils;
 
 class DumpParserTest {
 
@@ -36,7 +37,18 @@ class DumpParserTest {
     }
 
     @Test
-    void testParseDumpFile() throws ReplacerException, URISyntaxException {
+    void testParseDumpFileInParallel() throws ReplacerException, URISyntaxException {
+        ReflectionTestUtils.setField(dumpParser, "parallel", true);
+        testParseDumpFile();
+    }
+
+    @Test
+    void testParseDumpFileSequentially() throws ReplacerException, URISyntaxException {
+        ReflectionTestUtils.setField(dumpParser, "parallel", false);
+        testParseDumpFile();
+    }
+
+    private void testParseDumpFile() throws ReplacerException, URISyntaxException {
         // We need a real dump file to create the input stream
         Path dumpFile = Paths.get(
             Objects.requireNonNull(

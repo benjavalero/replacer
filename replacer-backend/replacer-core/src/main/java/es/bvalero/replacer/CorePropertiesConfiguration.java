@@ -17,9 +17,4 @@ public class CorePropertiesConfiguration {
     @PropertySource({ "classpath:application-core.properties", "classpath:application-core-offline.properties" })
     @Profile("offline")
     public static class CoreOfflineConfiguration {}
-
-    @Configuration
-    @PropertySource({ "classpath:application-core.properties", "classpath:application-core-prod.properties" })
-    @Profile("default")
-    public static class CoreProductionConfiguration {}
 }

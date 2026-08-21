@@ -24,6 +24,7 @@ import javax.xml.parsers.SAXParserFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.xml.sax.SAXException;
 
@@ -35,6 +36,9 @@ class DumpParser {
     // Dependency injection
     private final PageIndexApi pageIndexApi;
     private final DumpProperties dumpProperties;
+
+    @Value("${replacer.dump.parallel}")
+    private boolean parallel;
 
     // Initialized before parsing starts, then only read during parsing.
     // No synchronization needed.
@@ -64,15 +68,28 @@ class DumpParser {
             .map(f -> new DumpSaxHandler(lang, pageIndexApi))
             .collect(Collectors.toCollection(ArrayList::new));
 
-        // Parse dump files in parallel using the common ForkJoinPool.
-        // No other task in the application uses it, so there is no contention.
+        if (this.parallel) {
+            parseInParallel();
+        } else {
+            parseSequentially();
+        }
+    }
+
+    private void parseInParallel() {
+        LOGGER.info("Parsing {} dump file(s) in PARALLEL", this.dumpFiles.size());
         List<CompletableFuture<Void>> futures = IntStream.range(0, this.dumpFiles.size())
             .mapToObj(i ->
                 CompletableFuture.runAsync(() -> parseDumpFile(this.dumpFiles.get(i), this.dumpHandlers.get(i)))
             )
             .toList();
-
         CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
+    }
+
+    private void parseSequentially() {
+        LOGGER.info("Parsing {} dump file(s) SEQUENTIALLY", this.dumpFiles.size());
+        for (int i = 0; i < this.dumpFiles.size(); i++) {
+            parseDumpFile(this.dumpFiles.get(i), this.dumpHandlers.get(i));
+        }
     }
 
     private void parseDumpFile(DumpFile dumpFile, DumpSaxHandler dumpHandler) {
