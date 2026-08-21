@@ -1,5 +1,8 @@
 # Versions
 
+## 2.34.1 (21 Aug 2026)
+- Fix: make dump file parsing sequential in production to avoid database contention
+
 ## 2.34.0 (18 Aug 2026)
 - Feature: parallel dump file parsing and support for new dump locations
 - Feature: handle wiki-table header lines in the uppercase finder to avoid false positives
