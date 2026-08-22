@@ -51,9 +51,7 @@
       <app-alert type="warning">No se ha encontrado el estado de la última indexación</app-alert>
     }
     @if (!status.running) {
-      <form (ngSubmit)="onSubmit()" class="mb-3">
-        <button type="submit" class="btn btn-primary" id="button-index">Lanzar indexación</button>
-      </form>
+      <button (click)="onSubmit()" class="btn btn-primary mb-3" id="button-index">Lanzar indexación</button>
     }
   </div>
 } @else {
