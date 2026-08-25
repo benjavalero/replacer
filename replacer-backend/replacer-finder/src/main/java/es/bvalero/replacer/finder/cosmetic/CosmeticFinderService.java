@@ -99,7 +99,7 @@ class CosmeticFinderService implements FinderService<Cosmetic>, CosmeticApi {
             return fixedPage;
         } catch (Exception e) {
             // Handle and continue
-            LOGGER.error("ERROR Apply cosmetic", e);
+            LOGGER.error("ERROR Apply cosmetic: {}", e.getMessage(), e);
             return page;
         }
     }

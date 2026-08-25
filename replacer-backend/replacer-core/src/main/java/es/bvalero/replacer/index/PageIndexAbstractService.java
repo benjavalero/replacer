@@ -54,7 +54,7 @@ abstract class PageIndexAbstractService {
             return indexPage(page, dbPage);
         } catch (Exception e) {
             // Just in case capture possible exceptions to continue indexing other pages
-            LOGGER.error("Error indexing page: {}", page, e);
+            LOGGER.error("Error indexing: {} ({}, {})", page.getTitle(), page.getPageKey(), page.getLastUpdate(), e);
             return PageIndexResult.ofNotIndexed();
         }
     }
