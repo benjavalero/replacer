@@ -303,4 +303,15 @@ class DateFinderTest {
         assertEquals(expected, replacements.get(0).suggestions().get(1).getText());
         assertEquals(StandardType.DATE, replacements.get(0).type());
     }
+
+    @Test
+    void testNotValidDateWithVersionNumber() {
+        // Version numbers like "5.5.1" should not be parsed as years (they have multiple dots)
+        String text = "Solaris 2.5.1 || SunOS 5.5.1 || Mayo de 1996";
+
+        List<Replacement> replacements = dateFinder.findList(text);
+
+        // Version numbers must not trigger a NumberFormatException or be mistaken for years
+        assertTrue(replacements.stream().noneMatch(r -> r.text().contains("5.1")));
+    }
 }

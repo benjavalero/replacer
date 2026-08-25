@@ -506,7 +506,10 @@ public class DateFinder implements ReplacementFinder {
         if (len == 4) {
             validFormat = FinderUtils.isNumber(text, start, match.end());
         } else if (len == 5) {
-            validFormat = FinderUtils.isAsciiDigit(text.charAt(start)) && text.charAt(start + 1) == '.';
+            validFormat =
+                FinderUtils.isAsciiDigit(text.charAt(start)) &&
+                text.charAt(start + 1) == '.' &&
+                FinderUtils.isNumber(text, start + 2, match.end());
         } else {
             return false;
         }
