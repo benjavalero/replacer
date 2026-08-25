@@ -1,8 +1,17 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import bz2
+import sys
+import os
 import xml.sax
+
+# Import dump_utils from the shared location
+_script_dir = os.path.dirname(os.path.abspath(__file__))
+_project_root = _script_dir
+while _project_root != '/' and not os.path.exists(os.path.join(_project_root, 'pom.xml')):
+    _project_root = os.path.dirname(_project_root)
+sys.path.insert(0, os.path.join(_project_root, 'replacer-backend/replacer-finder/src/test/resources'))
+from dump_utils import parse_dump
 
 class DumpHandler(xml.sax.ContentHandler):
     def __init__(self):
@@ -45,15 +54,5 @@ class DumpHandler(xml.sax.ContentHandler):
         self.CurrentData += content
 
 if ( __name__ == "__main__"):
-    # create an XMLReader
-    parser = xml.sax.make_parser()
-    # turn off namepsaces
-    parser.setFeature(xml.sax.handler.feature_namespaces, 0)
-
-    # override the default ContextHandler
-    Handler = DumpHandler()
-    parser.setContentHandler(Handler)
-
     print("ID\tNS\tLength\tTimestamp\tRedirect")
-
-    parser.parse(bz2.BZ2File("/Users/benja/Developer/eswiki/20241020/eswiki-20241020-pages-articles.xml.bz2", "r"))
+    parse_dump(DumpHandler())

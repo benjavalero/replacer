@@ -3,13 +3,13 @@
 
 from __future__ import unicode_literals
 
-import bz2
 import xml.sax
 import re
+from dump_utils import parse_dump
 
 class DumpHandler(xml.sax.ContentHandler):
     def __init__(self):
-        self.CurrentData = ""
+        self.CurrentData = []
         self.ns = ""
         self.text = ""
         # WARNING: If using groups the group number must be indicated when printing
@@ -17,31 +17,22 @@ class DumpHandler(xml.sax.ContentHandler):
 
     # Call when an element starts
     def startElement(self, tag, attributes):
-        self.CurrentData = ""
+        self.CurrentData.clear()
 
     # Call when an elements ends
     def endElement(self, tag):
         if tag == "ns":
-            self.ns = self.CurrentData.strip()
+            self.ns = ''.join(self.CurrentData).strip()
         elif tag == "text":
-            self.text = self.CurrentData.strip()
+            self.text = ''.join(self.CurrentData)
         elif tag == "page":
-            if self.ns in ['0', '104']:
-                for res in re.finditer(self.regex, self.text):
+            if self.ns in ('0', '104'):
+                for res in self.regex.finditer(self.text):
                     print(res.group(0))
 
     # Call when a character is read
     def characters(self, content):
-        self.CurrentData += content
+        self.CurrentData.append(content)
 
 if ( __name__ == "__main__"):
-    # create an XMLReader
-    parser = xml.sax.make_parser()
-    # turn off namepsaces
-    parser.setFeature(xml.sax.handler.feature_namespaces, 0)
-
-    # override the default ContextHandler
-    Handler = DumpHandler()
-    parser.setContentHandler(Handler)
-
-    parser.parse(bz2.BZ2File("/Users/benja/Developer/eswiki/20220201/eswiki-20220201-pages-articles.xml.bz2", "r"))
+    parse_dump(DumpHandler())
