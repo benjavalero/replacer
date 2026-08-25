@@ -58,10 +58,13 @@ public class Suggestion {
             throw new IllegalArgumentException();
         }
 
-        // Only merge the non-null comments
-        List<String> comments = Stream.of(this.comment, suggestion.getComment()).filter(Objects::nonNull).toList();
+        // Merge the non-null comments, deduplicating individual parts
+        String mergedComment = Stream.of(this.comment, suggestion.getComment())
+            .filter(Objects::nonNull)
+            .flatMap(c -> Stream.of(c.split("; ")))
+            .distinct()
+            .collect(Collectors.joining("; "));
 
-        String mergedComment = String.join("; ", comments);
         return Suggestion.of(this.text, mergedComment);
     }
 

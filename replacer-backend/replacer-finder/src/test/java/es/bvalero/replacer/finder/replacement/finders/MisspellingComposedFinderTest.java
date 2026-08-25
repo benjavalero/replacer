@@ -322,25 +322,36 @@ class MisspellingComposedFinderTest {
 
     @Test
     void testChainedMisspelling() {
-        MisspellingComposedFinder spyFinder = spy(misspellingComposedFinder);
+        // curriculum-vitae||curriculum vitae + curriculum vitae||currículum vitae
+        // Finding "curriculum-vitae" suggests "curriculum vitae" which is itself a misspelling.
+        // The chained suggestions from "curriculum vitae" (i.e. "currículum vitae") should be added.
         ComposedMisspelling misspelling1 = ComposedMisspelling.of("curriculum-vitae", false, "curriculum vitae");
         ComposedMisspelling misspelling2 = ComposedMisspelling.of("curriculum vitae", false, "currículum vitae");
-        fakeUpdateMisspellingList(spyFinder, List.of(misspelling1, misspelling2));
+        fakeUpdateMisspellingList(List.of(misspelling1, misspelling2));
 
-        spyFinder.findList("Un curriculum-vitae.");
+        List<Replacement> results = misspellingComposedFinder.findList("Un curriculum-vitae.");
 
-        verify(spyFinder).logChainedMisspelling("curriculum-vitae", "curriculum vitae");
+        assertTrue(results.size() == 1);
+        List<Suggestion> suggestions = results.getFirst().suggestions();
+        // Should contain: "curriculum-vitae" (original), "curriculum vitae" (direct), "currículum vitae" (chained)
+        assertTrue(suggestions.stream().anyMatch(s -> s.getText().equals("curriculum-vitae")));
+        assertTrue(suggestions.stream().anyMatch(s -> s.getText().equals("curriculum vitae")));
+        assertTrue(suggestions.stream().anyMatch(s -> s.getText().equals("currículum vitae")));
     }
 
     @Test
     void testNoChainedMisspelling() {
-        MisspellingComposedFinder spyFinder = spy(misspellingComposedFinder);
         ComposedMisspelling misspelling = ComposedMisspelling.of("curriculum-vitae", false, "currículum vitae");
-        fakeUpdateMisspellingList(spyFinder, List.of(misspelling));
+        fakeUpdateMisspellingList(List.of(misspelling));
 
-        spyFinder.findList("Un curriculum-vitae.");
+        List<Replacement> results = misspellingComposedFinder.findList("Un curriculum-vitae.");
 
-        verify(spyFinder, never()).logChainedMisspelling(any(), any());
+        assertTrue(results.size() == 1);
+        List<Suggestion> suggestions = results.getFirst().suggestions();
+        // Should contain only: "curriculum-vitae" (original), "currículum vitae" (direct) — no chaining
+        assertTrue(suggestions.size() == 2);
+        assertTrue(suggestions.stream().anyMatch(s -> s.getText().equals("curriculum-vitae")));
+        assertTrue(suggestions.stream().anyMatch(s -> s.getText().equals("currículum vitae")));
     }
 
     @Test

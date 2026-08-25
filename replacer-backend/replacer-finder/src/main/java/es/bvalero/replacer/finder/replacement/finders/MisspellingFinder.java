@@ -101,19 +101,29 @@ public abstract class MisspellingFinder implements ReplacementFinder {
     }
 
     // Transform the case of the suggestion, e.g. "Habia" -> "Había"
+    // If a suggestion is itself a known misspelling (chained), its suggestions are also added (one level only).
+    // Duplicates will be merged later by Suggestion.mergeSuggestions() in the Replacement constructor.
+    // NOTE: Only one level of chaining is supported. If in the future a case requiring deeper propagation
+    // appears, this method could be made recursive with a visited set to avoid infinite loops.
     private List<Suggestion> findSuggestions(String originalWord, WikipediaLanguage lang) {
         // We are sure in this point that the Misspelling exists
         final StandardMisspelling misspelling = findMisspellingByWord(originalWord, lang).orElseThrow(
             IllegalArgumentException::new
         );
-        return applyMisspellingSuggestions(originalWord, misspelling)
-            .stream()
-            .peek(s -> {
-                if (!s.getText().equals(originalWord) && isExistingWord(s.getText(), lang)) {
-                    logChainedMisspelling(misspelling.getWord(), s.getText());
+        final List<Suggestion> directSuggestions = applyMisspellingSuggestions(originalWord, misspelling);
+
+        final List<Suggestion> resolved = new ArrayList<>();
+        for (Suggestion s : directSuggestions) {
+            resolved.add(s);
+            if (!s.getText().equals(originalWord)) {
+                final Optional<StandardMisspelling> chained = findMisspellingByWord(s.getText(), lang);
+                if (chained.isPresent() && !chained.get().equals(misspelling)) {
+                    // The suggestion is itself a different misspelling: add its suggestions too (one level)
+                    resolved.addAll(applyMisspellingSuggestions(s.getText(), chained.get()));
                 }
-            })
-            .toList();
+            }
+        }
+        return resolved;
     }
 
     protected List<Suggestion> applyMisspellingSuggestions(String word, Misspelling misspelling) {
@@ -148,10 +158,6 @@ public abstract class MisspellingFinder implements ReplacementFinder {
 
     private static Suggestion convertSuggestion(MisspellingSuggestion misspellingSuggestion) {
         return Suggestion.of(misspellingSuggestion.getText(), misspellingSuggestion.getComment());
-    }
-
-    void logChainedMisspelling(String word, String suggestion) {
-        LOGGER.warn("Chained misspelling: '{}' -> '{}' is itself a known misspelling", word, suggestion);
     }
 
     @Override

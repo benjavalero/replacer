@@ -460,38 +460,51 @@ class MisspellingSimpleFinderTest {
     @Test
     void testChainedMisspelling() {
         // master||máster + Máster|cs|máster => finding "Master" suggests "Máster" which is itself a misspelling
-        MisspellingSimpleFinder spyFinder = spy(misspellingFinder);
+        // The chained suggestions from "Máster" (i.e. "máster") should be added to the result
         SimpleMisspelling misspelling1 = SimpleMisspelling.ofCaseInsensitive("master", "máster");
         SimpleMisspelling misspelling2 = SimpleMisspelling.ofCaseSensitive("Máster", "máster");
-        fakeUpdateMisspellingList(spyFinder, List.of(misspelling1, misspelling2));
+        fakeUpdateMisspellingList(List.of(misspelling1, misspelling2));
 
-        spyFinder.findList("Un Master.");
+        List<Replacement> results = misspellingFinder.findList("Un Master.");
 
-        verify(spyFinder).logChainedMisspelling("master", "Máster");
+        assertEquals(1, results.size());
+        List<Suggestion> suggestions = results.getFirst().suggestions();
+        // Should contain: "Master" (original), "Máster" (direct), "máster" (chained from Máster)
+        assertTrue(suggestions.stream().anyMatch(s -> s.getText().equals("Master")));
+        assertTrue(suggestions.stream().anyMatch(s -> s.getText().equals("Máster")));
+        assertTrue(suggestions.stream().anyMatch(s -> s.getText().equals("máster")));
     }
 
     @Test
     void testNoChainedMisspelling() {
-        MisspellingSimpleFinder spyFinder = spy(misspellingFinder);
         SimpleMisspelling misspelling = SimpleMisspelling.ofCaseInsensitive("abadia", "abadía");
-        fakeUpdateMisspellingList(spyFinder, List.of(misspelling));
+        fakeUpdateMisspellingList(List.of(misspelling));
 
-        spyFinder.findList("Una abadia.");
+        List<Replacement> results = misspellingFinder.findList("Una abadia.");
 
-        verify(spyFinder, never()).logChainedMisspelling(any(), any());
+        assertEquals(1, results.size());
+        List<Suggestion> suggestions = results.getFirst().suggestions();
+        // Should contain only: "abadia" (original), "abadía" (direct) — no chaining
+        assertEquals(2, suggestions.size());
+        assertTrue(suggestions.stream().anyMatch(s -> s.getText().equals("abadia")));
+        assertTrue(suggestions.stream().anyMatch(s -> s.getText().equals("abadía")));
     }
 
     @Test
     void testNoChainedMisspellingWhenSuggestionEqualsOriginal() {
         // Bahía|cs|bahía => finding "Bahía" suggests "bahía" and adds "Bahía" (uppercase variant)
-        // "Bahía" is itself in the map but should NOT trigger the chaining warning
-        MisspellingSimpleFinder spyFinder = spy(misspellingFinder);
+        // "Bahía" is itself in the map but belongs to the same entry, so no chaining should occur
         SimpleMisspelling misspelling = SimpleMisspelling.ofCaseSensitive("Bahía", "bahía");
-        fakeUpdateMisspellingList(spyFinder, List.of(misspelling));
+        fakeUpdateMisspellingList(List.of(misspelling));
 
-        spyFinder.findList("La Bahía de Cádiz.");
+        List<Replacement> results = misspellingFinder.findList("La Bahía de Cádiz.");
 
-        verify(spyFinder, never()).logChainedMisspelling(any(), any());
+        assertEquals(1, results.size());
+        List<Suggestion> suggestions = results.getFirst().suggestions();
+        // Should contain only: "Bahía" (original), "bahía" (direct), "Bahía" (uppercase variant) — merged to 2
+        assertEquals(2, suggestions.size());
+        assertTrue(suggestions.stream().anyMatch(s -> s.getText().equals("Bahía")));
+        assertTrue(suggestions.stream().anyMatch(s -> s.getText().equals("bahía")));
     }
 
     @Test
