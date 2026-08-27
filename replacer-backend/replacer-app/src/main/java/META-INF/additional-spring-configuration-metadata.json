@@ -59,11 +59,6 @@
             "name": "replacer.max-editions-per-minute",
             "type": "java.lang.Integer",
             "description": "Maximum number of editions per minute allowed for a standard Wikipedia user."
-        },
-        {
-            "name": "replacer.count.page.delay.initial",
-            "type": "java.lang.String",
-            "description": "Delay (in milliseconds) until the first load of the not-reviewed replacement count grouped by page."
         }
     ]
 }

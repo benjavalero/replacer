@@ -141,10 +141,10 @@ class PageJdbcRepository implements PageRepository {
     @Override
     public Collection<PageTitle> findTitlesNotReviewedByType(WikipediaLanguage lang, StandardType type) {
         String sql =
-            "SELECT p.page_id, p.title FROM page p " +
-            "WHERE p.lang = :lang AND EXISTS " +
-            "(SELECT NULL FROM replacement r WHERE p.lang = r.lang AND p.page_id = r.page_id " +
-            "AND r.kind = :kind AND r.subtype = :subtype AND r.reviewer IS NULL)";
+            "SELECT p.page_id, p.title FROM (" +
+            "SELECT DISTINCT page_id FROM replacement " +
+            "WHERE lang = :lang AND kind = :kind AND subtype = :subtype AND reviewer IS NULL" +
+            ") sub JOIN page p ON p.lang = :lang AND p.page_id = sub.page_id";
         SqlParameterSource namedParameters = new MapSqlParameterSource()
             .addValue("lang", lang.getCode())
             .addValue("kind", type.getKind().getCode())

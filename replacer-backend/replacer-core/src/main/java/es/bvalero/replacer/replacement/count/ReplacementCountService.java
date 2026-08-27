@@ -33,7 +33,6 @@ class ReplacementCountService implements ReplacementCountApi {
 
     @Override
     public Collection<ResultCount<PageTitle>> countNotReviewedGroupedByPage(WikipediaLanguage lang) {
-        // This query is too heavy to update in real-time; it is cached and refreshed periodically
         return replacementCountRepository.countNotReviewedGroupedByPage(lang, NUM_RESULTS).stream().sorted().toList();
     }
 }

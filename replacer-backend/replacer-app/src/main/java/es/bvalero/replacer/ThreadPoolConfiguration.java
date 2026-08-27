@@ -12,7 +12,7 @@ public class ThreadPoolConfiguration {
     //   1. DumpScheduledTask    → @Scheduled triggers @Async indexLatestDumpFiles (long-running, hours)
     //   2. ListingScheduledLoader → @Scheduled, runs on startup and every hour (seconds)
     //   3. PageCountCacheRepository.init → @Scheduled, runs on startup (seconds)
-    //   4. ReplacementCountCacheRepository.init + initCountGroupedByPage → @Scheduled, startup + 7 min delay
+    //   4. ReplacementCountCacheRepository.init → @Scheduled, runs on startup (seconds)
     // All 4 can run concurrently, so 4 threads is the right fit.
     //
     // Note: DumpParser additionally parallelizes dump files using the JVM common ForkJoinPool (not this pool).

@@ -85,13 +85,13 @@ class ReplacementCountJdbcRepository implements ReplacementCountRepository {
     public Collection<ResultCount<PageTitle>> countNotReviewedGroupedByPage(WikipediaLanguage lang, int numResults) {
         LOGGER.debug("START Counting not reviewed pages grouped by page - {}…", lang);
         String sql =
-            "SELECT p.page_id, p.title, COUNT(*) AS num " +
-            "FROM replacement r JOIN page p ON p.lang = r.lang AND p.page_id = r.page_id " +
-            "WHERE r.lang = :lang AND r.reviewer IS NULL " +
-            "GROUP BY p.page_id, p.title " +
-            "ORDER BY num DESC " +
-            "LIMIT " +
-            numResults;
+            "SELECT sub.page_id, p.title, sub.num " +
+            "FROM (SELECT page_id, COUNT(*) AS num " +
+            "FROM replacement WHERE lang = :lang AND reviewer IS NULL " +
+            "GROUP BY page_id ORDER BY num DESC LIMIT " +
+            numResults +
+            ") sub " +
+            "JOIN page p ON p.lang = :lang AND p.page_id = sub.page_id";
         SqlParameterSource namedParameters = new MapSqlParameterSource().addValue("lang", lang.getCode());
         Collection<ResultCount<PageTitle>> counts = Objects.requireNonNull(
             jdbcTemplate.query(sql, namedParameters, (resultSet, rowNum) ->
