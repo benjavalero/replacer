@@ -69,8 +69,13 @@ ALTER TABLE replacement
   ADD CONSTRAINT fk_review_type FOREIGN KEY (review_type) REFERENCES review_type (code);
 
 -- Find and count pages to review by subtype (or no type)
--- According to the explain plan, we need to put the reviewer at first to use the index.
-CREATE INDEX IF NOT EXISTS idx_count ON replacement (reviewer, lang, kind, subtype, page_id);
+CREATE INDEX IF NOT EXISTS idx_count ON replacement (lang, reviewer, kind, subtype, page_id);
+
+-- Find not-reviewed replacements by id (for random page without type filter)
+CREATE INDEX IF NOT EXISTS idx_replacement_unreviewed_id ON replacement (lang, reviewer, id);
+
+-- Group not-reviewed replacements by page (for top pages with most replacements)
+CREATE INDEX IF NOT EXISTS idx_replacement_unreviewed_page ON replacement (lang, reviewer, page_id);
 
 CREATE TABLE IF NOT EXISTS custom (
 	id INTEGER NOT NULL AUTO_INCREMENT,
@@ -94,3 +99,9 @@ ADD CONSTRAINT fk_custom_page_id FOREIGN KEY (lang, page_id) REFERENCES page (la
 -- FK custom --> review type
 ALTER TABLE custom
   ADD CONSTRAINT fk_custom_review_type FOREIGN KEY (review_type) REFERENCES review_type (code);
+
+-- Find reviewed pages by custom type
+CREATE INDEX IF NOT EXISTS idx_custom_lookup ON custom (lang, replacement, cs, page_id);
+
+-- Count reviewed grouped by reviewer
+CREATE INDEX IF NOT EXISTS idx_custom_reviewer ON custom (lang, reviewer);
