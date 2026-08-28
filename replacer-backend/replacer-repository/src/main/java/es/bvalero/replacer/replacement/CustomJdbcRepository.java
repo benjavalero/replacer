@@ -1,6 +1,7 @@
 package es.bvalero.replacer.replacement;
 
 import es.bvalero.replacer.common.domain.PageKey;
+import es.bvalero.replacer.common.domain.ResultCount;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.CustomType;
 import es.bvalero.replacer.finder.StandardType;
@@ -8,6 +9,7 @@ import es.bvalero.replacer.page.IndexedCustomReplacement;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -47,6 +49,23 @@ class CustomJdbcRepository implements CustomRepository {
         SqlParameterSource namedParameters = new MapSqlParameterSource().addValue("lang", lang.getCode());
         return jdbcTemplate.query(sql, namedParameters, (rs, rowNum) ->
             CustomType.of(rs.getString("replacement"), rs.getByte("cs") == 1)
+        );
+    }
+
+    @Override
+    public Collection<ResultCount<CustomType>> countReviewedGroupedByType(WikipediaLanguage lang, int numResults) {
+        String sql =
+            "SELECT replacement, cs, COUNT(*) AS num FROM custom " +
+            "WHERE lang = :lang " +
+            "GROUP BY replacement, cs " +
+            "ORDER BY num DESC " +
+            "LIMIT " +
+            numResults;
+        SqlParameterSource namedParameters = new MapSqlParameterSource().addValue("lang", lang.getCode());
+        return Objects.requireNonNull(
+            jdbcTemplate.query(sql, namedParameters, (rs, rowNum) ->
+                ResultCount.of(CustomType.of(rs.getString("REPLACEMENT"), rs.getByte("CS") == 1), rs.getInt("NUM"))
+            )
         );
     }
 

@@ -29,5 +29,7 @@ export type { CountReviewedReplacementsGroupedByReviewer$Params as CountReviewed
 export { countReviewedReplacementsGroupedByReviewer as countReviewedReplacementsGroupedByReviewer } from './fn/replacement/count-reviewed-replacements-grouped-by-reviewer';
 export type { CountNotReviewedReplacementsGroupedByPage$Params as CountNotReviewedReplacementsGroupedByPage$Params } from './fn/replacement/count-not-reviewed-replacements-grouped-by-page';
 export { countNotReviewedReplacementsGroupedByPage as countNotReviewedReplacementsGroupedByPage } from './fn/replacement/count-not-reviewed-replacements-grouped-by-page';
+export type { CountReviewedGroupedByCustomType$Params as CountReviewedGroupedByCustomType$Params } from './fn/replacement/count-reviewed-grouped-by-custom-type';
+export { countReviewedGroupedByCustomType as countReviewedGroupedByCustomType } from './fn/replacement/count-reviewed-grouped-by-custom-type';
 export type { CountReplacements$Params as CountReplacements$Params } from './fn/replacement/count-replacements';
 export { countReplacements as countReplacements } from './fn/replacement/count-replacements';

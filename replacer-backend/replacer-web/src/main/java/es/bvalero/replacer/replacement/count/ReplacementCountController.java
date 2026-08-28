@@ -75,4 +75,19 @@ class ReplacementCountController {
         LOGGER.info("GET Count Replacements Not Reviewed By Page: {} items", counts.size());
         return counts;
     }
+
+    @Operation(summary = "Count the most common reviewed custom replacements grouped by type in descending order")
+    @ValidateAdminUser
+    @GetMapping(value = "/custom/count")
+    Collection<CustomCount> countReviewedGroupedByCustomType(@UserLanguage WikipediaLanguage lang) {
+        Collection<CustomCount> counts = replacementCountApi
+            .countReviewedGroupedByCustomType(lang)
+            .stream()
+            .map(count ->
+                CustomCount.of(count.getKey().getSubtype(), count.getKey().isCaseSensitive(), count.getCount())
+            )
+            .toList();
+        LOGGER.info("GET Count Reviewed Custom Replacements By Type: {} items", counts.size());
+        return counts;
+    }
 }

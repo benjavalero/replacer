@@ -14,8 +14,11 @@ import { countNotReviewedReplacementsGroupedByPage } from '../fn/replacement/cou
 import { CountNotReviewedReplacementsGroupedByPage$Params } from '../fn/replacement/count-not-reviewed-replacements-grouped-by-page';
 import { countReplacements } from '../fn/replacement/count-replacements';
 import { CountReplacements$Params } from '../fn/replacement/count-replacements';
+import { countReviewedGroupedByCustomType } from '../fn/replacement/count-reviewed-grouped-by-custom-type';
+import { CountReviewedGroupedByCustomType$Params } from '../fn/replacement/count-reviewed-grouped-by-custom-type';
 import { countReviewedReplacementsGroupedByReviewer } from '../fn/replacement/count-reviewed-replacements-grouped-by-reviewer';
 import { CountReviewedReplacementsGroupedByReviewer$Params } from '../fn/replacement/count-reviewed-replacements-grouped-by-reviewer';
+import { CustomCount } from '../models/custom-count';
 import { PageCount } from '../models/page-count';
 import { ReplacementCount } from '../models/replacement-count';
 import { ReviewerCount } from '../models/reviewer-count';
@@ -93,6 +96,41 @@ export class ReplacementApiService extends BaseService {
     const resp = this.countNotReviewedReplacementsGroupedByPage$Response(params, context);
     return resp.pipe(
       map((r: StrictHttpResponse<Array<PageCount>>): Array<PageCount> => r.body)
+    );
+  }
+
+  /** Path part for operation `countReviewedGroupedByCustomType()` */
+  static readonly CountReviewedGroupedByCustomTypePath = '/api/replacement/custom/count';
+
+  /**
+   * Count the most common reviewed custom replacements grouped by type in descending order.
+   *
+   *
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `countReviewedGroupedByCustomType()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  countReviewedGroupedByCustomType$Response(params?: CountReviewedGroupedByCustomType$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<CustomCount>>> {
+    const obs = countReviewedGroupedByCustomType(this.http, this.rootUrl, params, context);
+    return obs;
+  }
+
+  /**
+   * Count the most common reviewed custom replacements grouped by type in descending order.
+   *
+   *
+   *
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `countReviewedGroupedByCustomType$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  countReviewedGroupedByCustomType(params?: CountReviewedGroupedByCustomType$Params, context?: HttpContext): Observable<Array<CustomCount>> {
+    const resp = this.countReviewedGroupedByCustomType$Response(params, context);
+    return resp.pipe(
+      map((r: StrictHttpResponse<Array<CustomCount>>): Array<CustomCount> => r.body)
     );
   }
 

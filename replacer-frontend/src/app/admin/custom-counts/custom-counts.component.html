@@ -1,0 +1,26 @@
+<h3>Reemplazos personalizados más comunes</h3>
+
+@if (customCounts(); as customCounts) {
+  <div>
+    <table class="table" aria-describedby="Lista de reemplazos personalizados más comunes">
+      <thead>
+        <tr>
+          <th scope="col">Reemplazo</th>
+          <th scope="col">Case-sensitive</th>
+          <th scope="col"># revisiones</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (item of customCounts; track item) {
+          <tr>
+            <td>{{ item.subtype }}</td>
+            <td>{{ item.cs ? 'Sí' : 'No' }}</td>
+            <td>{{ item.count }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+} @else {
+  Calculando…
+}

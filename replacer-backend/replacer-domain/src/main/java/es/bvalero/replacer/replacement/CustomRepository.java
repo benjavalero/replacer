@@ -1,6 +1,7 @@
 package es.bvalero.replacer.replacement;
 
 import es.bvalero.replacer.common.domain.PageKey;
+import es.bvalero.replacer.common.domain.ResultCount;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.CustomType;
 import es.bvalero.replacer.finder.StandardType;
@@ -15,6 +16,9 @@ public interface CustomRepository {
 
     /** Find all distinct custom types (replacement + case-sensitivity) for the given language */
     Collection<CustomType> findDistinctCustomTypes(WikipediaLanguage lang);
+
+    /** Count reviewed custom replacements grouped by type in descending order by count */
+    Collection<ResultCount<CustomType>> countReviewedGroupedByType(WikipediaLanguage lang, int numResults);
 
     /**
      * Atomically migrate a batch of custom replacements to the standard replacement table.

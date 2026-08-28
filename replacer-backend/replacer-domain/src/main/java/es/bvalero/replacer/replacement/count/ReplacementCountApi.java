@@ -3,6 +3,7 @@ package es.bvalero.replacer.replacement.count;
 import es.bvalero.replacer.common.domain.PageTitle;
 import es.bvalero.replacer.common.domain.ResultCount;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
+import es.bvalero.replacer.finder.CustomType;
 import java.util.Collection;
 import org.jmolecules.architecture.hexagonal.PrimaryPort;
 
@@ -25,4 +26,7 @@ interface ReplacementCountApi {
 
     /** Count the number of replacements to review grouped by page in descending order by count */
     Collection<ResultCount<PageTitle>> countNotReviewedGroupedByPage(WikipediaLanguage lang);
+
+    /** Count the number of reviewed custom replacements grouped by type in descending order by count */
+    Collection<ResultCount<CustomType>> countReviewedGroupedByCustomType(WikipediaLanguage lang);
 }

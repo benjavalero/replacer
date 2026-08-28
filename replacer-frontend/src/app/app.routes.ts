@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { CustomCountsComponent } from './admin/custom-counts/custom-counts.component';
 import { DumpComponent } from './admin/dump-indexing/dump.component';
 import { UnreviewedComponent } from './admin/unreviewed/unreviewed.component';
 import { DashboardComponent } from './core/dashboard/dashboard.component';
@@ -27,7 +28,8 @@ export const routes: Routes = [
     canActivateChild: [authenticationGuard],
     children: [
       { path: 'dump-indexing', component: DumpComponent },
-      { path: 'unreviewed', component: UnreviewedComponent }
+      { path: 'unreviewed', component: UnreviewedComponent },
+      { path: 'custom-counts', component: CustomCountsComponent }
     ]
   },
   {

@@ -6,6 +6,7 @@ import static org.mockito.Mockito.*;
 import es.bvalero.replacer.common.domain.PageTitle;
 import es.bvalero.replacer.common.domain.ResultCount;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
+import es.bvalero.replacer.replacement.CustomRepository;
 import java.util.Collection;
 import java.util.List;
 import java.util.Random;
@@ -16,13 +17,15 @@ class ReplacementCountServiceTest {
 
     // Dependency injection
     private ReplacementCountRepository replacementCountRepository;
+    private CustomRepository customRepository;
 
     private ReplacementCountService replacementCountService;
 
     @BeforeEach
     public void setUp() {
         replacementCountRepository = mock(ReplacementCountRepository.class);
-        replacementCountService = new ReplacementCountService(replacementCountRepository);
+        customRepository = mock(CustomRepository.class);
+        replacementCountService = new ReplacementCountService(replacementCountRepository, customRepository);
     }
 
     @Test

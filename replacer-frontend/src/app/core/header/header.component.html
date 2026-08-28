@@ -98,6 +98,15 @@
                     title="Páginas con más reemplazos">
                     Páginas con más reemplazos
                   </button>
+                  <button
+                    ngbDropdownItem
+                    routerLinkActive="active"
+                    routerLink="/admin/custom-counts"
+                    #customCounts="routerLinkActive"
+                    (click)="isNavCollapsed.set(true)"
+                    title="Personalizados más comunes">
+                    Personalizados más comunes
+                  </button>
                 </div>
               </li>
             }
