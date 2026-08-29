@@ -22,8 +22,13 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 class PageJdbcRepository implements PageRepository {
 
-    private static final String FROM_REPLACEMENT_JOIN_PAGE =
-        "FROM page p LEFT JOIN replacement r ON p.lang = r.lang AND p.page_id = r.page_id ";
+    private static final String REPLACEMENT_COLUMNS =
+        "r.id, r.kind, r.subtype, r.start, r.context, " +
+        "NULL AS reviewer, 0 AS review_type, NULL AS review_timestamp, NULL AS old_rev_id, NULL AS new_rev_id ";
+
+    private static final String REVIEWED_COLUMNS =
+        "v.id, v.kind, v.subtype, v.start, v.context, " +
+        "v.reviewer, v.review_type, v.review_timestamp, v.old_rev_id, v.new_rev_id ";
 
     // Dependency injection
     private final NamedParameterJdbcTemplate jdbcTemplate;
@@ -36,9 +41,13 @@ class PageJdbcRepository implements PageRepository {
     public Optional<IndexedPage> findByKey(PageKey pageKey) {
         String sql =
             "SELECT p.lang, p.page_id, p.title, p.last_update, " +
-            "r.id, r.kind, r.subtype, r.start, r.context, r.reviewer, " +
-            "r.review_type, r.review_timestamp, r.old_rev_id, r.new_rev_id " +
-            FROM_REPLACEMENT_JOIN_PAGE +
+            REPLACEMENT_COLUMNS +
+            "FROM page p LEFT JOIN replacement r ON p.lang = r.lang AND p.page_id = r.page_id " +
+            "WHERE p.lang = :lang AND p.page_id = :pageId " +
+            "UNION ALL " +
+            "SELECT p.lang, p.page_id, p.title, p.last_update, " +
+            REVIEWED_COLUMNS +
+            "FROM page p INNER JOIN reviewed v ON p.lang = v.lang AND p.page_id = v.page_id " +
             "WHERE p.lang = :lang AND p.page_id = :pageId";
         SqlParameterSource namedParameters = new MapSqlParameterSource()
             .addValue("lang", pageKey.getLang().getCode())
@@ -51,9 +60,13 @@ class PageJdbcRepository implements PageRepository {
     public Collection<IndexedPage> findByIdRange(WikipediaLanguage lang, int minPageId, int maxPageId) {
         String sql =
             "SELECT p.lang, p.page_id, p.title, p.last_update, " +
-            "r.id, r.kind, r.subtype, r.start, r.context, r.reviewer, " +
-            "r.review_type, r.review_timestamp, r.old_rev_id, r.new_rev_id " +
-            FROM_REPLACEMENT_JOIN_PAGE +
+            REPLACEMENT_COLUMNS +
+            "FROM page p LEFT JOIN replacement r ON p.lang = r.lang AND p.page_id = r.page_id " +
+            "WHERE p.lang = :lang AND p.page_id BETWEEN :minPageId AND :maxPageId " +
+            "UNION ALL " +
+            "SELECT p.lang, p.page_id, p.title, p.last_update, " +
+            REVIEWED_COLUMNS +
+            "FROM page p INNER JOIN reviewed v ON p.lang = v.lang AND p.page_id = v.page_id " +
             "WHERE p.lang = :lang AND p.page_id BETWEEN :minPageId AND :maxPageId";
         SqlParameterSource namedParameters = new MapSqlParameterSource()
             .addValue("lang", lang.getCode())
@@ -81,12 +94,12 @@ class PageJdbcRepository implements PageRepository {
     private Collection<PageKey> findNotReviewedByNoType(WikipediaLanguage lang, int numResults) {
         // Find a random page without filtering by type takes a lot
         // Instead we find a random replacement and then the following pages
-        int randomStart = findRandomReplacementIdNotReviewed(lang, numResults);
+        int randomStart = findRandomReplacementId(lang, numResults);
 
         // Not worth to DISTINCT. Instead, we return the results as a set to avoid duplicates.
         String sql =
             "SELECT page_id FROM replacement " +
-            "WHERE lang = :lang AND reviewer IS NULL AND id > :start " +
+            "WHERE lang = :lang AND id > :start " +
             "ORDER BY id " +
             "LIMIT " +
             numResults;
@@ -100,13 +113,12 @@ class PageJdbcRepository implements PageRepository {
             .collect(Collectors.toUnmodifiableSet());
     }
 
-    private int findRandomReplacementIdNotReviewed(WikipediaLanguage lang, int chunkSize) {
-        // TODO: This query is very costly even with indexes, as it scans the full replacement table
-        //  filtering by reviewer IS NULL. It would improve significantly if reviewed and not-reviewed
-        //  replacements were stored in separate tables.
+    private int findRandomReplacementId(WikipediaLanguage lang, int chunkSize) {
+        // The following query was very costly even with indexes, as it scans the full replacement table.
+        //  It has improved significantly now that reviewed and not-reviewed are stored in separate tables.
         String sql =
             "SELECT FLOOR(MIN(id) + (MAX(id) - MIN(id) + 1 - :chunkSize) * RAND()) FROM replacement " +
-            "WHERE lang = :lang AND reviewer IS NULL";
+            "WHERE lang = :lang";
         SqlParameterSource namedParameters = new MapSqlParameterSource()
             .addValue("chunkSize", chunkSize)
             .addValue("lang", lang.getCode());
@@ -123,7 +135,7 @@ class PageJdbcRepository implements PageRepository {
         // Not worth to DISTINCT. Instead, we return the results as a set to avoid duplicates.
         String sql =
             "SELECT page_id FROM replacement " +
-            "WHERE lang = :lang AND kind = :kind AND subtype = :subtype AND reviewer IS NULL " +
+            "WHERE lang = :lang AND kind = :kind AND subtype = :subtype " +
             "ORDER BY RAND() " +
             "LIMIT " +
             numResults;
@@ -143,7 +155,7 @@ class PageJdbcRepository implements PageRepository {
         String sql =
             "SELECT p.page_id, p.title FROM (" +
             "SELECT DISTINCT page_id FROM replacement " +
-            "WHERE lang = :lang AND kind = :kind AND subtype = :subtype AND reviewer IS NULL" +
+            "WHERE lang = :lang AND kind = :kind AND subtype = :subtype" +
             ") sub JOIN page p ON p.lang = :lang AND p.page_id = sub.page_id";
         SqlParameterSource namedParameters = new MapSqlParameterSource()
             .addValue("lang", lang.getCode())

@@ -31,10 +31,9 @@ class ReplacementCountJdbcRepository implements ReplacementCountRepository {
     @Override
     public int countReviewed(WikipediaLanguage lang) {
         LOGGER.debug("START Counting reviewed pages - {}…", lang);
-        String sqlReplacement =
-            "SELECT COUNT(*) AS num FROM replacement WHERE lang = :lang AND reviewer IS NOT NULL AND reviewer <> :system";
+        String sqlReviewed = "SELECT COUNT(*) AS num FROM reviewed WHERE lang = :lang AND reviewer <> :system";
         String sqlCustom = "SELECT COUNT(*) AS num FROM custom WHERE lang = :lang";
-        String sqlUnion = String.format("(%s UNION %s) AS sqlUnion", sqlReplacement, sqlCustom);
+        String sqlUnion = String.format("(%s UNION %s) AS sqlUnion", sqlReviewed, sqlCustom);
         String sql = String.format("SELECT SUM(num) FROM %s GROUP BY NULL", sqlUnion);
 
         SqlParameterSource namedParameters = new MapSqlParameterSource()
@@ -48,7 +47,7 @@ class ReplacementCountJdbcRepository implements ReplacementCountRepository {
     @Override
     public int countNotReviewed(WikipediaLanguage lang) {
         LOGGER.debug("START Counting not reviewed pages - {}…", lang);
-        String sql = "SELECT COUNT(*) FROM replacement WHERE lang = :lang AND reviewer IS NULL";
+        String sql = "SELECT COUNT(*) FROM replacement WHERE lang = :lang";
         SqlParameterSource namedParameters = new MapSqlParameterSource().addValue("lang", lang.getCode());
         Integer result = jdbcTemplate.queryForObject(sql, namedParameters, Integer.class);
         LOGGER.debug("END Counting not reviewed pages - {}", lang);
@@ -58,13 +57,13 @@ class ReplacementCountJdbcRepository implements ReplacementCountRepository {
     @Override
     public Collection<ResultCount<String>> countReviewedGroupedByReviewer(WikipediaLanguage lang) {
         LOGGER.debug("START Counting reviewed pages grouped by reviewer - {}…", lang);
-        String sqlReplacement = """
-            SELECT reviewer, COUNT(*) AS num FROM replacement
-            WHERE lang = :lang AND reviewer IS NOT NULL AND reviewer <> :system
+        String sqlReviewed = """
+            SELECT reviewer, COUNT(*) AS num FROM reviewed
+            WHERE lang = :lang AND reviewer <> :system
             GROUP BY reviewer
             """;
         String sqlCustom = "SELECT reviewer, COUNT(*) AS num FROM custom WHERE lang = :lang GROUP BY reviewer";
-        String sqlUnion = String.format("(%s UNION %s) AS sqlUnion", sqlReplacement, sqlCustom);
+        String sqlUnion = String.format("(%s UNION %s) AS sqlUnion", sqlReviewed, sqlCustom);
         String sql =
             String.format("SELECT reviewer, SUM(num) AS numSum FROM %s ", sqlUnion) +
             "GROUP BY reviewer ORDER BY SUM(num) DESC";
@@ -87,7 +86,7 @@ class ReplacementCountJdbcRepository implements ReplacementCountRepository {
         String sql =
             "SELECT sub.page_id, p.title, sub.num " +
             "FROM (SELECT page_id, COUNT(*) AS num " +
-            "FROM replacement WHERE lang = :lang AND reviewer IS NULL " +
+            "FROM replacement WHERE lang = :lang " +
             "GROUP BY page_id ORDER BY num DESC LIMIT " +
             numResults +
             ") sub " +

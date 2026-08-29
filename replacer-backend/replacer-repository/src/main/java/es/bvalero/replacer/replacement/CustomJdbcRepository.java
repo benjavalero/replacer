@@ -85,7 +85,7 @@ class CustomJdbcRepository implements CustomRepository {
         }
 
         String insertSql =
-            "INSERT INTO replacement (lang, page_id, kind, subtype, start, context, reviewer, review_type, review_timestamp, old_rev_id, new_rev_id) " +
+            "INSERT INTO reviewed (lang, page_id, kind, subtype, start, context, reviewer, review_type, review_timestamp, old_rev_id, new_rev_id) " +
             "SELECT lang, page_id, :kind, :subtype, start, '', reviewer, review_type, review_timestamp, old_rev_id, new_rev_id " +
             "FROM custom WHERE lang = :lang AND replacement = :replacement AND cs = :cs";
 

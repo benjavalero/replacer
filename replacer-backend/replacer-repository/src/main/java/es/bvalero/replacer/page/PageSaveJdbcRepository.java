@@ -70,7 +70,7 @@ class PageSaveJdbcRepository implements PageSaveRepository {
                 .toList()
         );
 
-        // Add the replacements
+        // Add the replacements (pending)
         addReplacements(
             pages
                 .stream()
@@ -79,7 +79,7 @@ class PageSaveJdbcRepository implements PageSaveRepository {
                 .toList()
         );
 
-        // Update the replacements
+        // Update the replacements (pending)
         updateReplacements(
             pages
                 .stream()
@@ -88,7 +88,7 @@ class PageSaveJdbcRepository implements PageSaveRepository {
                 .toList()
         );
 
-        // Remove the obsolete replacements
+        // Remove the obsolete replacements (from both tables)
         removeReplacements(
             pages
                 .stream()
@@ -121,7 +121,7 @@ class PageSaveJdbcRepository implements PageSaveRepository {
     @Override
     public void review(IndexedPage page) {
         updateLastUpdate(page);
-        updateReviewer(page.getReplacements());
+        moveToReviewed(page.getReplacements());
         addCustomReplacements(page.getCustomReplacements());
     }
 
@@ -164,6 +164,7 @@ class PageSaveJdbcRepository implements PageSaveRepository {
     @Override
     public void removeByKey(Collection<PageKey> pageKeys) {
         // No need to delete first the replacements as they are deleted on cascade by the database
+        // (both replacement and reviewed tables have ON DELETE CASCADE)
         // Note the count caches will not be updated with this action
         SqlParameterSource[] namedParameters = SqlParameterSourceUtils.createBatch(pageKeys.toArray());
         String sqlPages = "DELETE FROM page WHERE lang = :lang.code AND page_id = :pageId";
@@ -172,17 +173,17 @@ class PageSaveJdbcRepository implements PageSaveRepository {
 
     //region Indexed Replacements
 
-    /** Add a collection of page replacements assuming the related pages already exist */
+    /** Add a collection of page replacements (pending) assuming the related pages already exist */
     private void addReplacements(Collection<IndexedReplacement> replacements) {
         assert replacements.stream().allMatch(r -> r.getStatus() == IndexedReplacementStatus.ADD);
         String sql =
-            "INSERT INTO replacement (page_id, lang, kind, subtype, start, context, reviewer) " +
-            "VALUES (:pageKey.pageId, :pageKey.lang.code, :type.kind.code, :type.subtype, :start, :context, :reviewer)";
+            "INSERT INTO replacement (page_id, lang, kind, subtype, start, context) " +
+            "VALUES (:pageKey.pageId, :pageKey.lang.code, :type.kind.code, :type.subtype, :start, :context)";
         SqlParameterSource[] namedParameters = SqlParameterSourceUtils.createBatch(replacements.toArray());
         jdbcTemplate.batchUpdate(sql, namedParameters);
     }
 
-    /** Update a collection of page replacements */
+    /** Update a collection of page replacements (pending) */
     private void updateReplacements(Collection<IndexedReplacement> replacements) {
         assert replacements.stream().allMatch(r -> r.getStatus() == IndexedReplacementStatus.UPDATE);
         String sql = "UPDATE replacement SET start = :start, context = :context WHERE id = :id";
@@ -190,7 +191,7 @@ class PageSaveJdbcRepository implements PageSaveRepository {
         jdbcTemplate.batchUpdate(sql, namedParameters);
     }
 
-    /** Delete a collection of page replacements */
+    /** Delete a collection of page replacements from both tables */
     private void removeReplacements(Collection<IndexedReplacement> replacements) {
         assert replacements.stream().allMatch(r -> r.getStatus() == IndexedReplacementStatus.REMOVE);
         if (replacements.isEmpty()) {
@@ -198,21 +199,37 @@ class PageSaveJdbcRepository implements PageSaveRepository {
             return;
         }
 
-        String sql = "DELETE FROM replacement WHERE id IN (:ids)";
-        Set<Integer> ids = replacements
+        // Remove from pending
+        Set<Integer> pendingIds = replacements
             .stream()
+            .filter(r -> r.getReviewer() == null)
             .map(r -> Objects.requireNonNull(r.getId()))
             .collect(Collectors.toUnmodifiableSet());
-        SqlParameterSource namedParameters = new MapSqlParameterSource().addValue("ids", ids);
-        jdbcTemplate.update(sql, namedParameters);
+        if (!pendingIds.isEmpty()) {
+            String sql = "DELETE FROM replacement WHERE id IN (:ids)";
+            SqlParameterSource namedParameters = new MapSqlParameterSource().addValue("ids", pendingIds);
+            jdbcTemplate.update(sql, namedParameters);
+        }
+
+        // Remove from reviewed
+        Set<Integer> reviewedIds = replacements
+            .stream()
+            .filter(r -> r.getReviewer() != null)
+            .map(r -> Objects.requireNonNull(r.getId()))
+            .collect(Collectors.toUnmodifiableSet());
+        if (!reviewedIds.isEmpty()) {
+            String sql = "DELETE FROM reviewed WHERE id IN (:ids)";
+            SqlParameterSource namedParameters = new MapSqlParameterSource().addValue("ids", reviewedIds);
+            jdbcTemplate.update(sql, namedParameters);
+        }
     }
 
     /**
-     * Update the reviewer of a collection of replacements.
-     * Only the replacements to review are updated.
-     * Note that the replacements to update are not identified by ID, but by page-key, type and start.
+     * Move replacements from the pending table to the reviewed table.
+     * This is the "review" operation: DELETE from replacement + INSERT into reviewed.
+     * Only the replacements to review (pending) are moved.
      */
-    private void updateReviewer(Collection<IndexedReplacement> replacements) {
+    private void moveToReviewed(Collection<IndexedReplacement> replacements) {
         if (replacements.isEmpty()) {
             return; // Do nothing
         }
@@ -231,34 +248,42 @@ class PageSaveJdbcRepository implements PageSaveRepository {
             .distinct()
             .forEach(type -> applicationEventPublisher.publishEvent(PageCountDecrementEvent.of(lang, type)));
 
-        String sql = """
-            UPDATE replacement
-            SET reviewer = :reviewer, review_type = :reviewType.code, review_timestamp = :reviewTimestamp, old_rev_id = :oldRevId, new_rev_id = :newRevId
-            WHERE lang = :pageKey.lang.code AND page_id = :pageKey.pageId AND kind = :type.kind.code AND subtype = :type.subtype
-            AND start = :start AND reviewer IS NULL
-            """;
+        // Insert into reviewed
+        String insertSql =
+            "INSERT INTO reviewed (lang, page_id, kind, subtype, start, context, reviewer, review_type, review_timestamp, old_rev_id, new_rev_id) " +
+            "VALUES (:pageKey.lang.code, :pageKey.pageId, :type.kind.code, :type.subtype, :start, :context, :reviewer, :reviewType.code, :reviewTimestamp, :oldRevId, :newRevId)";
         SqlParameterSource[] namedParameters = SqlParameterSourceUtils.createBatch(replacements.toArray());
-        jdbcTemplate.batchUpdate(sql, namedParameters);
+        jdbcTemplate.batchUpdate(insertSql, namedParameters);
+
+        // Delete from pending (match by page-key, type and start)
+        String deleteSql =
+            "DELETE FROM replacement " +
+            "WHERE lang = :pageKey.lang.code AND page_id = :pageKey.pageId " +
+            "AND kind = :type.kind.code AND subtype = :type.subtype AND start = :start";
+        jdbcTemplate.batchUpdate(deleteSql, namedParameters);
     }
 
     @Override
     public void updateReviewerByType(WikipediaLanguage lang, StandardType type, String reviewer) {
-        String sql =
-            "UPDATE replacement SET reviewer=:reviewer " +
-            "WHERE lang = :lang AND kind = :kind AND subtype = :subtype AND reviewer IS NULL";
+        // Move all pending replacements of this type to reviewed (as reviewed by system)
+        String insertSql =
+            "INSERT INTO reviewed (lang, page_id, kind, subtype, start, context, reviewer, review_type, review_timestamp) " +
+            "SELECT lang, page_id, kind, subtype, start, context, :reviewer, 0, NOW() " +
+            "FROM replacement WHERE lang = :lang AND kind = :kind AND subtype = :subtype";
         SqlParameterSource namedParameters = new MapSqlParameterSource()
             .addValue("reviewer", reviewer)
             .addValue("lang", lang.getCode())
             .addValue("kind", type.getKind().getCode())
             .addValue("subtype", type.getSubtype());
-        jdbcTemplate.update(sql, namedParameters);
+        jdbcTemplate.update(insertSql, namedParameters);
+
+        String deleteSql = "DELETE FROM replacement WHERE lang = :lang AND kind = :kind AND subtype = :subtype";
+        jdbcTemplate.update(deleteSql, namedParameters);
     }
 
     @Override
     public void removeByType(WikipediaLanguage lang, StandardType type) {
-        String sql =
-            "DELETE FROM replacement " +
-            "WHERE lang = :lang AND kind = :kind AND subtype = :subtype AND reviewer IS NULL";
+        String sql = "DELETE FROM replacement WHERE lang = :lang AND kind = :kind AND subtype = :subtype";
         SqlParameterSource namedParameters = new MapSqlParameterSource()
             .addValue("lang", lang.getCode())
             .addValue("kind", type.getKind().getCode())

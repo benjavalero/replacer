@@ -40,6 +40,7 @@ INSERT INTO review_type (code, name) VALUES (1, 'MODIFIED');
 INSERT INTO review_type (code, name) VALUES (2, 'NOT MODIFIED');
 INSERT INTO review_type (code, name) VALUES (3, 'IGNORED');
 
+-- Replacements pending review (no review columns needed)
 CREATE TABLE replacement (
     id INT UNSIGNED NOT NULL AUTO_INCREMENT,
     lang CHAR(2) CHARACTER SET ascii NOT NULL,
@@ -48,11 +49,6 @@ CREATE TABLE replacement (
     subtype VARCHAR(100) COLLATE utf8mb4_bin NOT NULL,
     start MEDIUMINT UNSIGNED NOT NULL,
     context VARCHAR(255) COLLATE utf8mb4_bin NOT NULL,
-    reviewer VARCHAR(40),
-    review_type TINYINT NOT NULL DEFAULT 0,
-    review_timestamp TIMESTAMP,
-    old_rev_id INTEGER UNSIGNED,
-    new_rev_id INTEGER UNSIGNED,
     PRIMARY KEY (id)
 );
 
@@ -64,18 +60,49 @@ ADD CONSTRAINT fk_page_id FOREIGN KEY (lang, page_id) REFERENCES page (lang, pag
 ALTER TABLE replacement
 ADD CONSTRAINT fk_replacement_kind FOREIGN KEY (kind) REFERENCES replacement_kind (code);
 
--- FK replacement --> review type
-ALTER TABLE replacement
-  ADD CONSTRAINT fk_review_type FOREIGN KEY (review_type) REFERENCES review_type (code);
-
 -- Find and count pages to review by subtype (or no type)
-CREATE INDEX idx_count ON replacement (lang, reviewer, kind, subtype, page_id);
+CREATE INDEX idx_replacement_type ON replacement (lang, kind, subtype, page_id);
 
 -- Find not-reviewed replacements by id (for random page without type filter)
-CREATE INDEX idx_replacement_unreviewed_id ON replacement (lang, reviewer, id);
+CREATE INDEX idx_replacement_id ON replacement (lang, id);
 
 -- Group not-reviewed replacements by page (for top pages with most replacements)
-CREATE INDEX idx_replacement_unreviewed_page ON replacement (lang, reviewer, page_id);
+CREATE INDEX idx_replacement_page ON replacement (lang, page_id);
+
+-- Reviewed replacements
+CREATE TABLE reviewed (
+    id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    lang CHAR(2) CHARACTER SET ascii NOT NULL,
+    page_id MEDIUMINT UNSIGNED NOT NULL,
+    kind TINYINT NOT NULL,
+    subtype VARCHAR(100) COLLATE utf8mb4_bin NOT NULL,
+    start MEDIUMINT UNSIGNED NOT NULL,
+    context VARCHAR(255) COLLATE utf8mb4_bin NOT NULL,
+    reviewer VARCHAR(40) NOT NULL,
+    review_type TINYINT NOT NULL,
+    review_timestamp TIMESTAMP NOT NULL,
+    old_rev_id INTEGER UNSIGNED,
+    new_rev_id INTEGER UNSIGNED,
+    PRIMARY KEY (id)
+);
+
+-- FK reviewed --> page
+ALTER TABLE reviewed
+ADD CONSTRAINT fk_reviewed_page_id FOREIGN KEY (lang, page_id) REFERENCES page (lang, page_id) ON DELETE CASCADE;
+
+-- FK reviewed --> kind
+ALTER TABLE reviewed
+ADD CONSTRAINT fk_reviewed_kind FOREIGN KEY (kind) REFERENCES replacement_kind (code);
+
+-- FK reviewed --> review type
+ALTER TABLE reviewed
+ADD CONSTRAINT fk_reviewed_review_type FOREIGN KEY (review_type) REFERENCES review_type (code);
+
+-- Count reviewed grouped by reviewer
+CREATE INDEX idx_reviewed_reviewer ON reviewed (lang, reviewer);
+
+-- Find reviewed replacements by page (for indexation comparison)
+CREATE INDEX idx_reviewed_page ON reviewed (lang, page_id);
 
 CREATE TABLE custom (
     id INT UNSIGNED NOT NULL AUTO_INCREMENT,

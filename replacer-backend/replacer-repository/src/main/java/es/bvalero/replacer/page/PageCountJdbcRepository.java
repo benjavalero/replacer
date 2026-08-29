@@ -29,7 +29,7 @@ class PageCountJdbcRepository implements PageCountRepository {
     @Override
     public int countNotReviewedByType(WikipediaLanguage lang, @Nullable StandardType type) {
         // This approach is slightly better than using a JOIN with the page table
-        String sql = "SELECT COUNT (DISTINCT page_id) FROM replacement WHERE lang = :lang AND reviewer IS NULL";
+        String sql = "SELECT COUNT(DISTINCT page_id) FROM replacement WHERE lang = :lang";
         MapSqlParameterSource namedParameters = new MapSqlParameterSource().addValue("lang", lang.getCode());
         if (type != null) {
             sql += " AND kind = :kind AND subtype = :subtype";
@@ -44,7 +44,7 @@ class PageCountJdbcRepository implements PageCountRepository {
         // Using the index this approach is better than executing several queries by kind
         String sql =
             "SELECT kind, subtype, COUNT(DISTINCT page_id) AS num FROM replacement " +
-            "WHERE lang = :lang AND reviewer IS NULL " +
+            "WHERE lang = :lang " +
             "GROUP BY kind, subtype";
         SqlParameterSource namedParameters = new MapSqlParameterSource().addValue("lang", lang.getCode());
         return jdbcTemplate.query(sql, namedParameters, (resultSet, rowNum) ->
