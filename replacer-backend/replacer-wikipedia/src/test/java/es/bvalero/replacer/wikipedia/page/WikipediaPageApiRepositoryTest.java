@@ -269,6 +269,32 @@ class WikipediaPageApiRepositoryTest {
     }
 
     @Test
+    void testGetPageContentByIdMissing() throws Exception {
+        // API response for a page queried by ID which has been deleted.
+        // The page object only contains the "pageid" and "missing" fields,
+        // in particular it lacks the "title" and "ns" fields.
+        String textResponse = """
+            {
+                "batchcomplete": true,
+                "curtimestamp": "2026-08-29T07:30:44Z",
+                "query": {
+                    "pages": [
+                        {
+                            "pageid": 9218418,
+                            "missing": true
+                        }
+                    ]
+                }
+            }
+            """;
+        InputStream textStream = new ByteArrayInputStream(textResponse.getBytes("UTF-8"));
+        when(wikipediaApiHelper.executeApiRequestAsStream(any(WikipediaApiRequest.class))).thenReturn(textStream);
+
+        PageKey pageKey = PageKey.of(WikipediaLanguage.SPANISH, 9218418);
+        assertFalse(wikipediaPageRepository.findByKey(pageKey, accessToken).isPresent());
+    }
+
+    @Test
     void testGetProtectedPage() throws Exception {
         // API response
         String textResponse = """

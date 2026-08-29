@@ -152,8 +152,14 @@ public class WikipediaJsonParser {
         }
 
         private WikipediaPage buildCurrentPage() {
-            // If the page is missing, it is possible the content is not available.
+            // If the page is missing (e.g. it has been deleted), the API response may lack
+            // several fields like the title, the namespace, the content or the timestamp.
+            // We provide placeholder values so the page can be built and later filtered out
+            // downstream by the "missing" flag.
             if (currentMissing) {
+                if (currentTitle == null) {
+                    currentTitle = "NO TITLE";
+                }
                 currentContent = "NO CONTENT";
                 currentTimestamp = WikipediaTimestamp.now().toString();
             }
@@ -172,6 +178,9 @@ public class WikipediaJsonParser {
         }
 
         private void resetCurrentValues() {
+            this.currentTitle = null;
+            this.currentNamespace = 0;
+            this.currentId = 0;
             this.currentTimestamp = null;
             this.currentContent = null;
             this.currentMissing = false;
